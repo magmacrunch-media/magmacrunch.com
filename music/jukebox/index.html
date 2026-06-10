@@ -1132,7 +1132,7 @@ const JUKEBOX_SONGS = [
     { title: "makemecookies! x4.", artist: "Jimmi", file: "Jimmi - JIMMI - 07 makemecookies! x4.ogg", duration: "0:51" },
     { title: "Millstone Woods May 2018", artist: "Dag Henderson", file: "Dag Henderson - Millstone Woods May 2018.ogg", duration: "3:38" },
     { title: "The End", artist: "Jon McCoy", file: "Jon McCoy - The End.ogg", duration: "3:26" },
-    { title: "Qikiqtarjuaq", artist: "Junaito Thompson", file: "Juanito Thompson - It's Twenty-Fourteen - 01 Qikiqtarjuaq.ogg", duration: "6:20" },
+    { title: "Qikiqtarjuaq", artist: "Juanito Thompson", file: "Juanito Thompson - It's Twenty-Fourteen - 01 Qikiqtarjuaq.ogg", duration: "6:20" },
     { title: "Everything is falling all together, all at once, even the universe", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 05 Everything is falling all together, all at once, even the universe.ogg", duration: "4:28" }
 ];
 
@@ -1174,13 +1174,19 @@ let totalPages = Math.ceil(JUKEBOX_SONGS.length / SONGS_PER_PAGE);
 const MC_STORAGE_KEY = 'mc-jukebox';
 let mcSaveInterval = null;
 
+/* ── RESTORE VOLUME FROM MINI-PLAYER ── */
+try {
+    const saved = JSON.parse(localStorage.getItem(MC_STORAGE_KEY));
+    if (saved && saved.volume != null && player) player.volume = saved.volume;
+} catch (e) {}
+
 function syncToMiniPlayer() {
     try {
         localStorage.setItem(MC_STORAGE_KEY, JSON.stringify({
             track: playingIdx,
             time: player ? player.currentTime : 0,
             playing: isPlaying,
-            volume: 0.7,
+            volume: player ? player.volume : 0.7,
             muted: false
         }));
     } catch (e) {}

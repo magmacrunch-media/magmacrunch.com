@@ -94,7 +94,7 @@
         breadcrumbEl.innerHTML = `
             <a href="${d}archive/index.html">archive</a>
             <span class="sep">›</span>
-            <a href="${d}archive/index.html">by artist</a>
+            <a href="${d}archive/by-artist/index.html">by artist</a>
             <span class="sep">›</span>
             <a href="index.html">${C.abbr.toLowerCase()}</a>
         `;
