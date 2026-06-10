@@ -1,0 +1,65 @@
+/* Juanito Thompson — about page (deep ember accent) */
+body.jt-page.jt-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.jt-page.jt-about-page main > * { background: var(--black); }
+
+body.jt-page.jt-about-page .breadcrumb a { color: var(--jt-taupe); }
+body.jt-page.jt-about-page .breadcrumb a:hover { color: var(--jt-main); }
+body.jt-page.jt-about-page .breadcrumb .sep { color: var(--jt-taupe); opacity: 0.5; }
+body.jt-page.jt-about-page .breadcrumb .current { color: var(--jt-taupe); }
+
+body.jt-page.jt-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jt-page.jt-about-page .artist-label,
+body.jt-page.jt-about-page .page-header .artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jt-taupe) !important;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+body.jt-page.jt-about-page .page-title,
+body.jt-page.jt-about-page .page-header .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--jt-taupe) !important;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(122,48,16,0.5) !important;
+}
+
+body.jt-page.jt-about-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.jt-page.jt-about-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--jt-taupe), var(--jt-amber), var(--jt-taupe), transparent); opacity: 0.4; margin-bottom: 40px; }
+
+body.jt-page.jt-about-page .place-body { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--jt-body); font-size: 16px; line-height: 1.7; }
+body.jt-page.jt-about-page .place-body p { margin-bottom: 1.5em; }
+body.jt-page.jt-about-page .place-body a { color: var(--jt-teal); }
+body.jt-page.jt-about-page .place-body a:hover { color: var(--jt-amber); }
+
+body.jt-page.jt-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+body.jt-page.jt-about-page .ext-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--jt-teal);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    padding: 7px 12px;
+    border: 1px solid var(--jt-teal);
+    transition: background 0.15s, color 0.15s;
+}
+body.jt-page.jt-about-page .ext-link:hover {
+    background: var(--jt-teal);
+    color: var(--jt-bg);
+}
+
+body.jt-page.jt-about-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--jt-taupe), var(--jt-amber), var(--jt-taupe), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+/* Back button: transparent + page accent */
+body.jt-page.jt-about-page .nav-card.c-back { background: transparent !important; color: var(--jt-taupe) !important; border-color: var(--jt-taupe) !important; }
+body.jt-page.jt-about-page .nav-card.c-back:hover { background: var(--jt-deep) !important; color: var(--jt-bg) !important; }
+
+
+body.jt-page.jt-about-page .nav-card::after { display: none; }
+
+@media (max-width: 500px) { }

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Four B's — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="4b-shared.css">
+    <style>
+        /* ══ PAGE: by-artist / four-bs ══ */
+
+        main { position: relative; }
+
+        /* ── BREADCRUMB ── */
+        body.fb-page .breadcrumb a { color: var(--4b-deep); }
+        body.fb-page .breadcrumb a:hover { color: var(--4b-amber); }
+        body.fb-page .breadcrumb .sep { color: var(--4b-deep); opacity: 0.6; }
+        body.fb-page .breadcrumb .current { color: var(--4b-deep); }
+
+        /* ── ARTIST HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 48px;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 35%;
+            filter: saturate(0.9) brightness(0.68);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(82, 176, 68, 0.08);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8, 8, 18, 0.15) 0%,
+                rgba(8, 8, 18, 0.0)  15%,
+                rgba(8, 8, 18, 0.0)  50%,
+                rgba(8, 8, 18, 0.60) 75%,
+                rgba(8, 8, 18, 1.0)  100%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--4b-brand);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--4b-heading);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(82, 176, 68, 0.5),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--4b-brand);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* ── SUB-NAV CARDS ── */
+        .sub-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 48px;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--4b-brand), var(--4b-amber), var(--4b-brand), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── LAYOUT ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--4b-brand);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--4b-brand);
+            opacity: 0.9;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--4b-heading);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--4b-sky);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--4b-sky);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover { background: var(--4b-sky); color: var(--4b-deep); }
+
+        /* ── PHOTO STRIP ── */
+        .photo-strip-section {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+        .photo-strip-wrap { position: relative; width: 100%; }
+        .photo-strip {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--4b-brand) #0a0a14;
+            padding-bottom: 10px;
+            cursor: grab;
+        }
+        .photo-strip:active { cursor: grabbing; }
+        .photo-strip::-webkit-scrollbar { height: 3px; }
+        .photo-strip::-webkit-scrollbar-track { background: #0a0a14; }
+        .photo-strip::-webkit-scrollbar-thumb { background: var(--4b-brand); }
+        .photo-item {
+            flex-shrink: 0;
+            position: relative;
+            height: clamp(200px, 35vw, 380px);
+            scroll-snap-align: start;
+            overflow: hidden;
+            border: 1px solid #1a1a2a;
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .photo-item:hover { border-color: var(--4b-brand); }
+        .photo-item.landscape { aspect-ratio: 16/9; }
+        .photo-item.square    { aspect-ratio: 1/1; }
+        .photo-item.wide      { aspect-ratio: 4/3; }
+        .photo-item img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+            transition: transform 0.4s ease, filter 0.3s ease;
+            filter: saturate(0.85) brightness(0.88);
+        }
+        .photo-item:hover img { transform: scale(1.03); filter: saturate(1.0) brightness(1.0); }
+        .photo-caption {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 22px 10px 8px;
+            background: linear-gradient(to top, rgba(8,8,18,0.88) 0%, transparent 100%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px; color: var(--dim); letter-spacing: 0.1em;
+            opacity: 0; transition: opacity 0.25s ease;
+        }
+        .photo-item:hover .photo-caption { opacity: 1; }
+        .strip-scroll-hint {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px; color: var(--dim); letter-spacing: 0.15em;
+            margin-top: 8px; opacity: 0.35; text-align: right; transition: opacity 0.4s;
+        }
+        .photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
+
+        /* ── PHOTO LIGHTBOX ── */
+        .photo-lightbox {
+            display: none; position: fixed; inset: 0;
+            background: rgba(4,4,12,0.96); z-index: 1000;
+            align-items: center; justify-content: center; flex-direction: column;
+        }
+        .photo-lightbox.open { display: flex; }
+        .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+        .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid #1a1a2a; }
+        .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+        .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim);
+            background: none; border: 1px solid #1a1a2a; padding: 7px 14px; cursor: pointer;
+            letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
+        .lb-btn:hover { color: var(--4b-brand); border-color: var(--4b-brand); }
+        .lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--dim);
+            background: none; border: none; cursor: pointer; padding: 8px;
+            letter-spacing: 0.1em; transition: color 0.15s; }
+        .lb-close:hover { color: var(--4b-brand); }
+        .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px;
+            color: var(--dim); letter-spacing: 0.12em; opacity: 0.55; min-width: 50px; text-align: center; }
+        .lb-cap { font-family: 'Press Start 2P', monospace; font-size: 6px;
+            color: var(--dim); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--4b-mid); text-decoration:none; border:1px solid var(--4b-mid); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--4b-amber); border-color:var(--4b-amber); }
+    </style>
+</head>
+<body class="fb-page">
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/index.html">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">bbbb</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/the-four-bs.jpg" alt="The Four B's">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jeff McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">THE FOUR B'S</div>
+                <div class="artist-abbr"><strong><i>YOU'LL FIND OUT SOMEDAY, KID.</i></strong></div>
+                <div class="sub-nav">
+                    <a href="about.html"        class="nav-card c-about">about</a>
+                    <a href="events.html"     class="nav-card c-events">events</a>
+                    <a href="photography.html"  class="nav-card c-photography">photography</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"   class="nav-card c-releases">releases</a>
+                    <a href="works.html"      class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a class="mb-link" href="https://musicbrainz.org/artist/bdf6e0d0-6886-4801-b7ce-c9ced5d377a8" target="_blank" rel="noopener">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const strip = document.getElementById('fbStrip');
+    const wrap  = document.getElementById('fbStripWrap');
+    let isDown = false, startX, scrollLeft;
+    strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
+    strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+})();
+
+(function() {
+    const items   = document.querySelectorAll('#fbStrip .photo-item');
+    const lb      = document.getElementById('fbLightbox');
+    const lbImg   = document.getElementById('fbLbImg');
+    const lbCap   = document.getElementById('fbLbCap');
+    const lbCount = document.getElementById('fbLbCounter');
+    const strip   = document.getElementById('fbStrip');
+    const photos  = Array.from(items).map(item => ({ src: item.querySelector('img').src, alt: item.querySelector('img').alt, caption: item.querySelector('.photo-caption').textContent.trim() }));
+    let current = 0;
+    function open(index) { current = index; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+    function show() { lbImg.src = photos[current].src; lbImg.alt = photos[current].alt; lbCap.textContent = photos[current].caption; lbCount.textContent = `${current + 1} / ${photos.length}`; }
+    function nav(dir) { current = (current + dir + photos.length) % photos.length; show(); }
+    items.forEach(item => { item.addEventListener('click', () => { if (!strip.classList.contains('dragging')) open(parseInt(item.dataset.index)); }); });
+    document.getElementById('fbLbClose').addEventListener('click', close);
+    document.getElementById('fbLbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('fbLbNext').addEventListener('click', () => nav(1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') nav(-1); if (e.key === 'ArrowRight') nav(1); });
+})();
+</script>
+</body>
+</html>

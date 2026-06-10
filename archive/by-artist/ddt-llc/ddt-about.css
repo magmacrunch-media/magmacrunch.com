@@ -1,0 +1,25 @@
+/* DDT LLC — about page (amber accent) */
+body.ddt-page.ddt-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.ddt-page.ddt-about-page main > * { background: var(--black); }
+
+body.ddt-page.ddt-about-page .breadcrumb a { color: var(--ddt-amber); }
+body.ddt-page.ddt-about-page .breadcrumb a:hover { color: var(--ddt-tan); }
+body.ddt-page.ddt-about-page .breadcrumb .sep { color: var(--ddt-amber); opacity: 0.5; }
+body.ddt-page.ddt-about-page .breadcrumb .current { color: var(--ddt-amber); }
+
+body.ddt-page.ddt-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ddt-page.ddt-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ddt-amber); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ddt-page.ddt-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ddt-amber); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(184, 120, 64, 0.5); }
+
+body.ddt-page.ddt-about-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--ddt-mid), var(--ddt-amber), var(--ddt-mid), transparent); margin: 0 0 36px; opacity: 0.4; }
+
+body.ddt-page.ddt-about-page .bio-section { width: 100%; max-width: 960px; padding: 0 20px; }
+body.ddt-page.ddt-about-page .bio-section p { font-family: 'Courier Prime', monospace; font-size: 15px; color: var(--ddt-heading); line-height: 1.8; margin-bottom: 16px; opacity: 0.9; }
+body.ddt-page.ddt-about-page .bio-section p a { color: var(--ddt-amber); text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.15s, border-color 0.15s; }
+body.ddt-page.ddt-about-page .bio-section p a:hover { color: var(--ddt-tan); border-bottom-color: var(--ddt-tan); }
+
+body.ddt-page.ddt-about-page .nav-card.c-back { background: transparent; color: var(--ddt-amber); border-color: var(--ddt-amber); }
+body.ddt-page.ddt-about-page .nav-card.c-back:hover { background: var(--ddt-amber); color: var(--ddt-offwhite); }
+
+body.ddt-page.ddt-about-page .nav-card::after { display: none; }
+body.ddt-page.ddt-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

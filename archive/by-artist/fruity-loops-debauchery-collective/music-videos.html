@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruity Loops Debauchery Bros. — music videos — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="fldc-shared.css">
+    <link rel="stylesheet" href="fldc-music-videos.css">
+    <script>
+    window.COLLECTIVE_CONFIG = {
+        ids:       [
+            'b7846e25-306e-4ca9-8db1-0391ab159a36',
+            'ce22522c-1193-4298-badf-0df5cdfa0415',
+            '3c3bc6e8-9d72-457f-a192-b6ef263fe4ae',
+        ],
+        name:      'Fruity Loops Debauchery Bros.',
+        abbr:      'FLDB',
+        accent:    'orange',
+        backColor: 'c-back',
+        siblings:  ['about', 'photography', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+        ticker:    ['fruity loops debauchery bros', 'magmacrunch media'],
+    };
+    </script>
+</head>
+<body class="fldc-page fldc-music-videos-page">
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+<main>
+    <div class="breadcrumb" id="breadcrumb-target"></div>
+    <div class="page-header">
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title">MUSIC VIDEOS</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="videos-section">
+        <div class="video-list" id="miniVideoList"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script>
+(function () {
+    const C = window.COLLECTIVE_CONFIG;
+    if (!C || !C.ids?.length) { console.error('COLLECTIVE_CONFIG missing or has no ids'); return; }
+
+    const d = C.depth || '../../../';
+
+    const COLOR_MAP = {
+        about: 'c-about', photography: 'c-photography', 'music-videos': 'c-music-videos', recordings: 'c-recordings', releases: 'c-releases', works: 'c-works',
+    };
+
+    const VIDEOS = [
+        { title: "Very Long Boards", year: "2024", ytId: "8xjZgv3us1Q", archiveId: "carlspatski-verylongboards", mbid: "e03053f6-51ad-4cac-a6c1-9190e7e8b3a3" },
+    ];
+
+    const delay = ms => new Promise(r => setTimeout(r, ms));
+    function esc(str) {
+        return String(str ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+    function formatDuration(ms) {
+        if (!ms) return null;
+        const s = Math.floor(ms / 1000);
+        return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    }
+    function formatRelDates(begin, end) {
+        if (!begin && !end) return null;
+        if (begin && end && begin === end) return begin;
+        if (begin && end) return `${begin} – ${end}`;
+        if (begin) return `from ${begin}`;
+        return `until ${end}`;
+    }
+    async function fetchWithRetry(url, retries = 4) {
+        for (let i = 0; i < retries; i++) {
+            let res;
+            try { res = await fetch(url); }
+            catch (networkErr) { if (i === retries - 1) throw networkErr; await delay(1500 * (i + 1)); continue; }
+            if (res.status === 429 || res.status === 503) { if (i === retries - 1) throw new Error(`HTTP ${res.status}`); await delay(2500 * (i + 1)); continue; }
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        }
+    }
+    function parseMBData(data) {
+        const out = {};
+        const dur = formatDuration(data.length);
+        if (dur) out.duration = dur;
+        if (data.disambiguation) out.disambiguation = esc(data.disambiguation);
+        if (data.annotation) out.annotation = esc(data.annotation);
+        if (data.isrcs?.length) out.isrcs = data.isrcs.map(esc);
+        if (data.tags?.length) out.tags = data.tags.sort((a, b) => b.count - a.count).map(t => esc(t.name));
+        if (data.releases?.length) {
+            out.releases = data.releases.slice(0, 3).map(rel => ({
+                title: esc(rel.title), date: rel.date ? esc(rel.date) : null,
+                country: rel.country ? esc(rel.country) : null, status: rel.status ? esc(rel.status) : null,
+            }));
+        }
+        if (data['artist-credit']?.length) out.artist = esc(data['artist-credit'].map(c => c.name ?? c.artist?.name ?? '').join(''));
+        const crew = [], labels = [], works = [], links = [], misc = [];
+        for (const r of (data.relations ?? [])) {
+            const type = r.type || '';
+            if (r['target-type'] === 'artist' && r.artist) {
+                const attrs = (r.attributes ?? []).map(a => { const credited = r['attribute-values']?.[a]; return credited ? esc(credited) : esc(a); });
+                const dates = formatRelDates(r.begin, r.end);
+                crew.push({ role: esc(type), name: esc(r.artist.name), attrs, dates });
+            } else if (r['target-type'] === 'label' && r.label) {
+                const dates = formatRelDates(r.begin, r.end);
+                labels.push({ role: esc(type), name: esc(r.label.name), dates });
+            } else if (r['target-type'] === 'work' && r.work) {
+                const w = r.work;
+                const workEntry = { role: esc(type), title: esc(w.title) };
+                if (w.disambiguation) workEntry.disambiguation = esc(w.disambiguation);
+                if (w.language) workEntry.language = esc(w.language);
+                if (w.iswcs?.length) workEntry.iswcs = w.iswcs.map(esc);
+                const workCrew = [];
+                for (const wr of (w.relations ?? [])) {
+                    const wType = wr.type || '';
+                    if (wr['target-type'] === 'artist' && wr.artist) {
+                        const attrs = (wr.attributes ?? []).map(a => { const credited = wr['attribute-values']?.[a]; return credited ? esc(credited) : esc(a); });
+                        const dates = formatRelDates(wr.begin, wr.end);
+                        workCrew.push({ role: esc(wType), name: esc(wr.artist.name), attrs, dates });
+                    }
+                    if (wr['target-type'] === 'label' && wr.label) workCrew.push({ role: esc(wType), name: esc(wr.label.name) });
+                }
+                if (workCrew.length) workEntry.crew = workCrew;
+                works.push(workEntry);
+            } else if (r['target-type'] === 'url' && r.url?.resource) {
+                try { links.push({ label: esc(type || 'link'), href: esc(r.url.resource), host: esc(new URL(r.url.resource).hostname) }); } catch {}
+            } else if (r['target-type'] && type) {
+                const name = r[r['target-type']]?.name || r[r['target-type']]?.title || '';
+                if (name) misc.push({ type: esc(type), name: esc(name) });
+            }
+        }
+        if (crew.length) out.crew = crew;
+        if (labels.length) out.labels = labels;
+        if (works.length) out.works = works;
+        if (links.length) out.links = links;
+        if (misc.length) out.misc = misc;
+        return out;
+    }
+    function row(label, val) {
+        return `<div class="mb-row"><span class="mb-label">${label}</span><span class="mb-val">${val}</span></div>`;
+    }
+    function renderMBPanel(el, data) {
+        const rows = [];
+        if (data.artist) rows.push(row('artist', data.artist));
+        if (data.duration) rows.push(row('duration', data.duration));
+        if (data.disambiguation) rows.push(row('note', data.disambiguation));
+        if (data.annotation) rows.push(row('annotation', data.annotation));
+        if (data.isrcs?.length) rows.push(row('isrc', data.isrcs.join(', ')));
+        if (data.tags?.length) rows.push(row('tags', data.tags.join(', ')));
+        for (const rel of (data.releases ?? [])) {
+            const meta = [rel.date, rel.country, rel.status].filter(Boolean).join(' · ');
+            rows.push(row('release', rel.title + (meta ? ` <span class="mb-date">(${meta})</span>` : '')));
+        }
+        for (const c of (data.crew ?? [])) {
+            let val = esc(c.name);
+            if (c.attrs?.length) val += ` <span class="mb-date">(${c.attrs.join(', ')})</span>`;
+            if (c.dates) val += ` <span class="mb-date">[${c.dates}]</span>`;
+            rows.push(row(c.role, val));
+        }
+        for (const l of (data.labels ?? [])) {
+            let val = esc(l.name);
+            if (l.dates) val += ` <span class="mb-date">[${l.dates}]</span>`;
+            rows.push(row(l.role || 'label', val));
+        }
+        for (const w of (data.works ?? [])) {
+            let titleVal = w.title;
+            if (w.disambiguation) titleVal += ` <span class="mb-date">(${w.disambiguation})</span>`;
+            if (w.language) titleVal += ` <span class="mb-date">[${w.language}]</span>`;
+            if (w.iswcs?.length) titleVal += ` <span class="mb-date">ISWC: ${w.iswcs.join(', ')}</span>`;
+            rows.push(row(w.role || 'work', titleVal));
+            for (const c of (w.crew ?? [])) {
+                let val = c.name;
+                if (c.attrs?.length) val += ` <span class="mb-date">(${c.attrs.join(', ')})</span>`;
+                if (c.dates) val += ` <span class="mb-date">[${c.dates}]</span>`;
+                rows.push(row(`\u21b3 ${c.role}`, val));
+            }
+        }
+        for (const l of (data.links ?? [])) {
+            rows.push(row(l.label, `<a href="${l.href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${l.host}</a>`));
+        }
+        for (const m of (data.misc ?? [])) rows.push(row(m.type, m.name));
+        el.innerHTML = rows.length ? `<div class="mb-table">${rows.join('')}</div>` : `<div class="mb-empty">no musicbrainz data</div>`;
+    }
+    function embedSrc(v) {
+        if (v.archiveId) return `https://archive.org/embed/${v.archiveId}`;
+        return `https://www.youtube.com/embed/${v.ytId}?rel=0`;
+    }
+
+    const breadcrumbEl = document.getElementById('breadcrumb-target');
+    if (breadcrumbEl) breadcrumbEl.innerHTML =
+        `<a href="${d}archive/index.html">archive</a>` +
+        `<span class="sep">\u203a</span>` +
+        `<a href="${d}archive/by-artist/index.html">by artist</a>` +
+        `<span class="sep">\u203a</span>` +
+        `<a href="index.html">${C.abbr.toLowerCase()}</a>`;
+
+    const artistLabelEl = document.getElementById('artist-label');
+    if (artistLabelEl) artistLabelEl.textContent = `// ${C.name} //`;
+
+    const subNavEl = document.getElementById('sub-nav');
+    if (subNavEl) subNavEl.innerHTML =
+        `<a href="index.html" class="nav-card ${C.backColor || 'c-back'}">\u2190 back</a>` +
+        (C.siblings || []).map(s => `<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-orange'}">${s.replace(/-/g, ' ')}</a>`).join('');
+
+    const videoList = document.getElementById('miniVideoList');
+    let mbQueue = Promise.resolve();
+
+    VIDEOS.forEach(v => {
+        const watchUrl = v.ytId ? `https://www.youtube.com/watch?v=${v.ytId}` : null;
+        const archiveUrl = v.archiveId ? `https://archive.org/details/${v.archiveId}` : null;
+        const dmUrl = v.dmId ? `https://www.dailymotion.com/video/${v.dmId}` : null;
+
+        const entry = document.createElement('div');
+        entry.className = 'video-entry';
+
+        const header = document.createElement('div');
+        header.className = 'video-header';
+
+        const titleWrap = document.createElement('div');
+        titleWrap.className = 'video-title-wrap';
+
+        const year = document.createElement('span');
+        year.className = 'video-year';
+        year.textContent = v.year;
+
+        const title = document.createElement('h2');
+        title.className = 'video-title';
+        title.textContent = v.title;
+
+        titleWrap.append(year, title);
+        header.append(titleWrap);
+
+        const embedWrap = document.createElement('div');
+        embedWrap.className = v.archiveId ? 'video-embed ia-embed' : 'video-embed';
+        embedWrap.innerHTML = `<iframe src="${embedSrc(v)}" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`;
+
+        const extLinks = document.createElement('div');
+        extLinks.className = 'video-ext-links';
+
+        if (archiveUrl) {
+            const a = document.createElement('a');
+            a.className = 'ext-link ext-archive';
+            a.href = archiveUrl; a.target = '_blank'; a.rel = 'noopener';
+            a.textContent = '\u2a21 internet archive';
+            extLinks.appendChild(a);
+        }
+        if (watchUrl) {
+            const yt = document.createElement('a');
+            yt.className = 'ext-link ext-yt';
+            yt.href = watchUrl; yt.target = '_blank'; yt.rel = 'noopener';
+            yt.textContent = '\u25b6 youtube';
+            extLinks.appendChild(yt);
+        }
+        if (dmUrl) {
+            const dm = document.createElement('a');
+            dm.className = 'ext-link ext-dm';
+            dm.href = dmUrl; dm.target = '_blank'; dm.rel = 'noopener';
+            dm.textContent = '\u25b6 dailymotion';
+            extLinks.appendChild(dm);
+        }
+
+        const mbPanel = document.createElement('div');
+        mbPanel.className = 'video-mb';
+        if (v.mbid) {
+            mbPanel.id = `mb-${v.mbid}`;
+            mbPanel.innerHTML = '<div class="mb-loading">loading musicbrainz\u2026</div>';
+        }
+
+        entry.append(header, embedWrap, extLinks, mbPanel);
+        videoList.appendChild(entry);
+
+        if (v.mbid) {
+            mbQueue = mbQueue.then(() => delay(1000)).then(() => fetchMB(v.mbid, `mb-${v.mbid}`));
+        }
+    });
+
+    async function fetchMB(mbid, elId) {
+        const el = document.getElementById(elId);
+        if (!el) return;
+        try {
+            const data = await fetchWithRetry(
+                `https://musicbrainz.org/ws/2/recording/${mbid}?inc=releases+artists+isrcs+annotation+tags+url-rels+artist-rels+label-rels+work-rels+work-level-rels&fmt=json`
+            );
+            renderMBPanel(el, parseMBData(data));
+        } catch (e) {
+            el.innerHTML = `<div class="mb-error">musicbrainz error: ${esc(e.message)}</div>`;
+        }
+    }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>music videos — magmacrunch media</title>
+    <meta name="referrer" content="no-referrer">
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../assets/archive.css">
+    <style>
+        /* breadcrumb override for cyan theme */
+        .breadcrumb a:hover { color: var(--cyan); }
+        .breadcrumb .sep { color: var(--cyan); opacity: 0.7; }
+        .breadcrumb .current { color: var(--cyan); }
+        /* ── PAGE-SPECIFIC: music videos ── */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 0 20px 40px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--cyan);
+            text-shadow: 0 0 16px rgba(0,245,255,0.6);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--rose);
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* ── VIDEO LIST ── */
+        .video-list {
+            width: 100%;
+        }
+
+        /* Each entry: full-width row with bg thumbnail */
+        .video-entry {
+            position: relative;
+            width: 100%;
+            min-height: 340px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-top: 1px solid #1a1a2a;
+            cursor: pointer;
+        }
+        .video-entry:last-child { border-bottom: 1px solid #1a1a2a; }
+
+        /* Background thumbnail */
+        .video-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.28) saturate(0.7);
+            transition: filter 0.4s ease;
+            z-index: 0;
+        }
+        .video-entry:hover .video-bg,
+        .video-entry.active .video-bg {
+            filter: brightness(0.18) saturate(0.5);
+        }
+
+        /* Dark overlay for readability */
+        .video-entry::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to right,
+                rgba(8,8,8,0.55) 0%,
+                rgba(8,8,8,0.1) 60%,
+                transparent 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Content layer */
+        .video-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            padding: 32px 48px;
+            width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            .video-content {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 24px 20px;
+                gap: 20px;
+            }
+            .video-entry { min-height: auto; }
+        }
+
+        /* ── EMBED AREA ── */
+        .video-embed-wrap {
+            flex-shrink: 0;
+            width: min(360px, 90vw);
+        }
+
+        /* Thumbnail placeholder (before click) */
+        .video-thumb {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 2px solid #2a2a3a;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .video-entry:hover .video-thumb { border-color: var(--cyan); }
+        .video-entry.active .video-thumb { border-color: var(--rose); }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        /* Play button overlay */
+        .play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        .video-entry:hover .play-btn { background: rgba(0,0,0,0.45); }
+
+        .play-icon {
+            width: 52px;
+            height: 52px;
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .play-icon::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 18px solid var(--white);
+            margin-left: 4px;
+            transition: border-left-color 0.2s;
+        }
+        .video-entry:hover .play-icon {
+            border-color: var(--cyan);
+            background: rgba(0,245,255,0.15);
+            transform: scale(1.08);
+        }
+        .video-entry:hover .play-icon::after { border-left-color: var(--cyan); }
+        .video-entry.active .play-icon {
+            border-color: var(--rose);
+            background: rgba(255,61,110,0.15);
+        }
+
+        /* Actual iframe (hidden until click) */
+        .video-iframe-wrap {
+            display: none;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: 2px solid var(--rose);
+        }
+        .video-iframe-wrap iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: none;
+        }
+        .video-entry.active .video-thumb    { display: none; }
+        .video-entry.active .video-iframe-wrap { display: block; }
+
+        /* ── TEXT SIDE ── */
+        .video-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .video-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--cyan);
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+
+        .video-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(9px, 1.6vw, 14px);
+            color: var(--white);
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .video-yt-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            text-decoration: none;
+            border: 1px solid #2a2a3a;
+            padding: 4px 10px;
+            letter-spacing: 0.08em;
+            transition: color 0.15s, border-color 0.15s;
+            display: inline-block;
+        }
+        .video-yt-link:hover {
+            color: var(--rose);
+            border-color: var(--rose);
+        }
+
+        /* duplicate warning */
+        .dupe-warn {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--orange);
+            margin-top: 10px;
+            border: 1px solid var(--orange);
+            padding: 4px 10px;
+            display: inline-block;
+        }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+            .video-content { padding: 20px 16px; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li>
+            <a href="../index.html">home</a>
+            <div class="dropdown">
+                <a href="../home/about.html">about</a>
+                <a href="../home/links/all-links.html">all links</a>
+            </div>
+        </li>
+        <li>
+            <a href="../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../music/jukebox/index.html">jukebox</a>
+                <a href="../music/distributed-music.html">distributed music</a>
+                <a href="../music/floppy-disk/index.html">floppy disk</a>
+                <a href="../music/catalog.html">full catalog</a>
+            </div>
+        </li>
+        <li>
+            <a href="../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../visual/music-videos.html">music videos</a>
+                <a href="../visual/collage.html">collage</a>
+                <a href="../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a></div></li>
+        <li>
+            <a href="../arcade/index.html">arcade</a>
+        </li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="ticker-wrap">
+        <span class="ticker">
+            no-budget productions <span class="sep">✦</span>
+            since 2023 <span class="sep">✦</span>
+            YouTube <span class="sep">✦</span>
+            Internet Archive <span class="sep">✦</span>
+            DailyMotion <span class="sep">✦</span>
+            Facebook video <span class="sep">✦</span>
+            Instagrtam <span class="sep">✦</span>
+        </span>
+    </div>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="../index.html">home</a><span class="sep">›</span>
+        <a href="index.html">visual</a><span class="sep">›</span>
+        <span class="current">music videos</span>
+    </div>
+
+    <div class="page-header">
+        <h1 class="page-title">// music videos //</h1>
+        <p class="page-subtitle">click to play ✦ newest first</p>
+    </div>
+
+    <div class="video-list" id="videoList"></div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+// ─────────────────────────────────────────────
+// VIDEO DATA
+// NOTE: "Film School" and "Ancient Weeds" share
+// the same ID (VN_5u6tBPts) — paste slip during
+// data entry. Replace the correct one below.
+// ─────────────────────────────────────────────
+const VIDEOS = [
+    { title: "Hologram of a Dream",                              year: "2025", id: "mby4C5PZzlQ", bg: "../assets/video-thumbs/hologram-of-a-dream.jpg" },
+    { title: "Sitting on a Dock in New Shoreham",               year: "2025", id: "BirxEyAj0u0", bg: "../assets/video-thumbs/sitting-on-a-dock.jpg"  },
+    { title: "Very Long Boards",                                 year: "2025", id: "8xjZgv3us1Q", bg: "../assets/video-thumbs/very-long-boards.jpg"  },
+    { title: "I'm gonna need more of a commitment than that",   year: "2025", id: "KiFWHj1cmOY", bg: "../assets/video-thumbs/more-of-a-commitment.jpg"  },
+    { title: "Leaves",                                          year: "2024", id: "wv_6z79fQjQ", bg: "../assets/video-thumbs/leaves.jpg" },
+    { title: "Summer Day",                                      
+        year: "2024", id: "QgJfLXhV15Y", bg: "../assets/video-thumbs/summer-day.jpg", bgPosition: "center 50%"  },
+    { title: "Gravitational Voltage",                           year: "2024", id: "gtclSfU8oDM", bg: "../assets/video-thumbs/gravitational-voltage.jpg" },
+    { title: "Beach Ave.",                                      year: "2024", id: "tkpoCxpsUAk", bg: "../assets/video-thumbs/beach-ave.jpg" },
+    { title: "Who is Richard Parker?",                          year: "2024", id: "xGzuJO_5364", bg: "../assets/video-thumbs/richard-parker.jpg" },
+    { title: "Parade Float Electronics",                        year: "2024", id: "gjo9FdBJGRk", bg: "../assets/video-thumbs/parade-float-electronics.jpg" },
+    { title: "Figure the Shoreline",                            year: "2024", id: "Gm9XVmj0iVM", bg: "../assets/video-thumbs/figure-the-shoreline.jpg" },
+    { title: "Point Judith",                                    year: "2024", id: "cCUC-a6v74E", bg: "../assets/video-thumbs/point-judith.jpg" },
+    { title: "Eternity spent in an arcade",                     year: "2024", id: "lTmHfMZAimQ", bg: "../assets/video-thumbs/eternity-spent-in-an-arcade.jpg" },
+    { title: "Try",                                             
+        year: "2024", id: "To6AJJ7-iCY" , bg: "../assets/video-thumbs/try.jpg", bgPosition: "center 75%" },
+    { title: "Contemplate the Plate Tectonic",                  year: "2024", id: "YnzQh-h5zq0", bg: "../assets/video-thumbs/contemplate-the-plate-tectonic.jpg" },
+    { title: "Area Does Not Exist",                             year: "2024", id: "T6lCJBrjFQ0", bg: "../assets/video-thumbs/area-does-not-exist.jpg" },
+    { title: "Daffodil & Sweet Pea",                            year: "2024", id: "0QwOELVzeSo", bg: "../assets/video-thumbs/daffodil_sweat_pea.jpg" },
+    { title: "Driving",                                         year: "2024", id: "vmUJ2O3xwJw", bg: "../assets/video-thumbs/driving.jpg" },
+    { title: "Ancient Weeds",                                   
+        year: "2023", id: "pX3G_dtyMPI", bg: "../assets/video-thumbs/ancient-weeds.jpg", bgPosition: "center 75%",
+        thumb: "../assets/video-thumbs/ancient-weeds.jpg" },
+    { title: "Film School",                                     year: "2023", id: "VN_5u6tBPts", bg: "../assets/video-thumbs/film-school.jpg" },
+    { title: "Little Piece No. 1",                              year: "2023", id: "hlOYgcDvyaE", bg: "../assets/video-thumbs/little-piece-no1.jpg" },
+    { title: "Millstone Woods May 2018",                        year: "2023", id: "3_jo3WEOPEI", bg: "../assets/video-thumbs/millstone-woods-may-2018.jpg" },
+    { title: "Bus full of time-traveling twenty-somethings",    year: "2023", id: "OebpP5m3jms", bg: "../assets/video-thumbs/bus-full-of-time-traveling.jpg" },
+];
+
+
+
+const list = document.getElementById('videoList');
+let activeEntry = null;
+
+VIDEOS.forEach((v, i) => {
+    const thumbUrl  = `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+    const embedUrl  = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+    const watchUrl  = `https://www.youtube.com/watch?v=${v.id}`;
+
+    const entry = document.createElement('div');
+    entry.className = 'video-entry';
+    entry.style.animationDelay = `${i * 0.03}s`;
+
+    entry.innerHTML = `
+        <div class="video-bg" style="background-image: url('${v.bg || thumbUrl}');"></div>
+        <div class="video-content">
+            <div class="video-embed-wrap">
+                <div class="video-thumb">
+                    <img src="${v.thumb || thumbUrl}" alt="${v.title}" loading="lazy" referrerpolicy="no-referrer"
+                         onerror="if(!this.dataset.tried){this.dataset.tried='hq';this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg';}else if(this.dataset.tried==='hq'){this.dataset.tried='mq';this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg';}">
+                    <div class="play-btn">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-iframe-wrap">
+                    <!-- iframe injected on click -->
+                </div>
+            </div>
+            <div class="video-meta">
+                <div class="video-year">${v.year}</div>
+                <div class="video-title">${v.title}</div>
+                <a class="video-yt-link" href="${watchUrl}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()">▶ open on youtube</a>
+                ${v.dupeFix ? `<div class="dupe-warn">⚠ duplicate ID — needs correct URL</div>` : ''}
+            </div>
+        </div>
+    `;
+
+    // Click to play: inject iframe, pause any other active
+    entry.addEventListener('click', function () {
+        if (this.classList.contains('active')) return;
+
+        // Deactivate previous
+        if (activeEntry && activeEntry !== this) {
+            activeEntry.classList.remove('active');
+            activeEntry.querySelector('.video-iframe-wrap').innerHTML = '';
+        }
+
+        this.classList.add('active');
+        activeEntry = this;
+
+        const iframeWrap = this.querySelector('.video-iframe-wrap');
+        iframeWrap.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    });
+
+    list.appendChild(entry);
+});
+</script>
+
+</body>
+</html>

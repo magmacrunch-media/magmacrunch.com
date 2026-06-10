@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contributors — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../assets/archive.css">
+</head>
+<body>
+<nav>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../index.html">home</a><div class="dropdown"><a href="../../home/about.html">about</a><a href="../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../music/index.html">music</a><div class="dropdown"><a href="../../music/jukebox/index.html">jukebox</a><a href="../../music/distributed-music.html">distributed music</a><a href="../../music/floppy-disk/index.html">floppy disk</a><a href="../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../visual/index.html">visual</a><div class="dropdown"><a href="../../visual/music-videos.html">music videos</a><a href="../../visual/collage.html">collage</a><a href="../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../archive/index.html">archive</a><div class="dropdown"><a href="../../archive/by-artist/index.html">by artist</a><a href="../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../arcade/index.html">arcade</a></li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../home/about.html">about</a><span class="sep">›</span>
+        <span class="current">contributors</span>
+    </div>
+    <div class="page-header">
+        <div class="place-label">// contributors //</div>
+        <div class="page-title">THANKS TO</div>
+        <div class="sub-nav">
+            <a href="../../home/about.html" class="nav-card c-cyan">← back</a>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="catalog-wrap">
+        <div id="status-bar">loading contributors…</div>
+        <div id="count-bar"></div>
+        <div id="artists-list"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../nav.js"></script>
+<script>
+const seriesId = '05095e26-d6a5-438c-82f3-23ae7136735f';
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+const formatDate = (begin, end, ended) => {
+    if (!begin && !end) return '';
+    if (begin && end && begin === end) return ` (${begin})`;
+    if (begin && !end) return ` (${begin}${ended ? '' : '–present'})`;
+    if (begin && end) return (begin.includes('-') && end.includes('-')) ? ` (${begin} to ${end})` : ` (${begin}–${end})`;
+    return '';
+};
+
+const cleanAttribute = (attr) => attr.includes(':') ? attr : attr.replace(/\s*\([^)]+\)/, '');
+
+const formatAttributes = (attributes) => {
+    if (!attributes || attributes.length === 0) return '';
+    return ` (${attributes.map(cleanAttribute).join(', ')})`;
+};
+
+const groupMembers = (memberRels) => {
+    const grouped = new Map();
+    for (const rel of memberRels) {
+        const artistId = rel.artist?.id;
+        if (!grouped.has(artistId)) {
+            grouped.set(artistId, { name: rel.artist?.name, id: artistId, attributes: new Set(), dateRanges: [] });
+        }
+        const entry = grouped.get(artistId);
+        if (rel.attributes) rel.attributes.forEach(attr => entry.attributes.add(cleanAttribute(attr)));
+        const dateStr = formatDate(rel.begin, rel.end, rel.ended);
+        if (dateStr && !entry.dateRanges.includes(dateStr)) entry.dateRanges.push(dateStr);
+    }
+    return Array.from(grouped.values()).map(entry => {
+        let result = `<a href="https://musicbrainz.org/artist/${entry.id}" target="_blank">${entry.name}</a>`;
+        if (entry.attributes.size > 0) result += ` (${Array.from(entry.attributes).join(', ')})`;
+        if (entry.dateRanges.length > 0) result += entry.dateRanges.join(', ');
+        return result;
+    });
+};
+
+async function fetchWithRetry(url, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                if (response.status === 503 || response.status === 429) { await delay(2000 * (i + 1)); continue; }
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            if (i === maxRetries - 1) throw error;
+            await delay(1000 * (i + 1));
+        }
+    }
+}
+
+(async () => {
+    try {
+        const seriesData = await fetchWithRetry(
+            `https://musicbrainz.org/ws/2/series/${seriesId}?inc=artist-rels&fmt=json`
+        );
+
+        const artistRels = (seriesData.relations || []).filter(r => r['target-type'] === 'artist');
+        artistRels.sort((a, b) => {
+            const na = a.artist?.['sort-name'] || a.artist?.name || '';
+            const nb = b.artist?.['sort-name'] || b.artist?.name || '';
+            return na.localeCompare(nb);
+        });
+
+        document.getElementById('status-bar').textContent = `loading contributors…`;
+        document.getElementById('count-bar').textContent = `found ${artistRels.length} contributors`;
+
+        const list = document.getElementById('artists-list');
+        const displayed = new Set();
+
+        for (let i = 0; i < artistRels.length; i++) {
+            const rel = artistRels[i];
+            const artistId = rel.artist?.id;
+            if (!artistId || displayed.has(artistId)) continue;
+            displayed.add(artistId);
+
+            document.getElementById('status-bar').textContent =
+                `loading ${displayed.size} of ${artistRels.length}…`;
+
+            try {
+                const artistData = await fetchWithRetry(
+                    `https://musicbrainz.org/ws/2/artist/${artistId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+aliases&fmt=json`
+                );
+
+                const artistType = artistData.type || '';
+                const lifeSpan = artistData['life-span'];
+                const lifeSpanStr = lifeSpan ? formatDate(lifeSpan.begin, lifeSpan.end, lifeSpan.ended) : '';
+
+                // Series relationship badge
+                let relDisplay = rel.type || 'member';
+                if (rel.attributes && rel.attributes.length > 0) relDisplay += formatAttributes(rel.attributes);
+                relDisplay += formatDate(rel.begin, rel.end, rel.ended);
+
+                const aliases = artistData.aliases
+                    ?.map(a => a.name).filter(n => n !== artistData.name).join(', ') || '';
+
+                const memberRels = (artistData.relations || []).filter(r =>
+                    r['target-type'] === 'artist' && r.type === 'member of band' && r.direction === 'backward'
+                );
+                const members = groupMembers(memberRels).join(', ');
+
+                const bandRels = (artistData.relations || []).filter(r =>
+                    r['target-type'] === 'artist' && r.type === 'member of band' && r.direction !== 'backward'
+                );
+                const bands = groupMembers(bandRels).join(', ');
+
+                const placeRels = (artistData.relations || []).filter(r => r['target-type'] === 'place');
+                const groupedPlaces = new Map();
+                for (const r of placeRels) {
+                    const pid = r.place?.id;
+                    const pname = r['target-credit'] || r.place?.name;
+                    if (!groupedPlaces.has(pid)) groupedPlaces.set(pid, { name: pname, id: pid, relationships: [] });
+                    groupedPlaces.get(pid).relationships.push(`${r.type}${formatAttributes(r.attributes)}${formatDate(r.begin, r.end, r.ended)}`);
+                }
+                const allPlaces = Array.from(groupedPlaces.values())
+                    .map(p => `<a href="https://musicbrainz.org/place/${p.id}" target="_blank">${p.name}</a> (${p.relationships.join(', ')})`)
+                    .join(', ');
+
+                const urlRels = (artistData.relations || []).filter(r => r['target-type'] === 'url');
+                const urls = urlRels.map(r => `${r.type}: <a href="${r.url?.resource}" target="_blank">${r.url?.resource}</a>`).join('<br>');
+
+                const tags = (artistData.tags || []).map(t => `<span class="tag">${t.name}</span>`).join('');
+
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="artist-card">
+                        <h3>
+                            <a href="https://musicbrainz.org/artist/${artistId}" target="_blank">${artistData.name}</a>
+                            ${artistType ? `<span class="artist-type">[${artistType.toLowerCase()}]</span>` : ''}
+                        </h3>
+                        <p><span class="badge badge-other">${relDisplay}</span></p>
+                        ${lifeSpanStr ? `<p><strong>active:</strong>${lifeSpanStr}</p>` : ''}
+                        ${aliases ? `<p><strong>aliases:</strong> ${aliases}</p>` : ''}
+                        ${members ? `<p><strong>members:</strong> ${members}</p>` : ''}
+                        ${bands ? `<p><strong>member of:</strong> ${bands}</p>` : ''}
+                        ${allPlaces ? `<p><strong>places:</strong> ${allPlaces}</p>` : ''}
+                        ${artistData.disambiguation ? `<p><strong>disambiguation:</strong> ${artistData.disambiguation}</p>` : ''}
+                        ${urls ? `<p><strong>links:</strong><br>${urls}</p>` : ''}
+                        ${tags ? `<div class="tags"><strong>tags:</strong> ${tags}</div>` : ''}
+                    </div>
+                `);
+
+                await delay(500);
+            } catch (err) {
+                console.error(`Error fetching artist ${artistId}:`, err);
+            }
+        }
+
+        document.getElementById('status-bar').textContent = `loaded all ${displayed.size} contributors`;
+    } catch (err) {
+        document.getElementById('status-bar').textContent = 'error loading contributors';
+        console.error(err);
+    }
+})();
+</script>
+</body>
+</html>

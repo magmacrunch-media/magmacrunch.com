@@ -1,0 +1,269 @@
+/* ================================================
+   RETRO PIXEL FONTS STYLESHEET
+   SNES-inspired typography throughout the game
+   ================================================ */
+
+/* Import pixel fonts from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ================================================
+   BASE FONT OVERRIDE
+   ================================================ */
+body {
+    font-family: 'Press Start 2P', monospace;
+    letter-spacing: 0;
+}
+
+/* ================================================
+   MODAL HEADINGS
+   ================================================ */
+.modal-content h2,
+.modal-content h3,
+#creditsModal h2,
+#scoreboardModal h3,
+#scoreboard h3 {
+    font-family: 'Press Start 2P', monospace;
+    text-transform: lowercase;
+    letter-spacing: 0;
+    line-height: 1.6;
+}
+
+/* Adjust sizes for readability with pixel font */
+.modal-content h2 {
+    font-size: clamp(14px, 3vw, 20px);
+}
+
+#creditsModal h2 {
+    font-size: clamp(16px, 3.5vw, 24px);
+}
+
+#scoreboard h3 {
+    font-size: clamp(14px, 2.5vw, 18px);
+}
+
+/* ================================================
+   TITLE SCREEN
+   ================================================ */
+#titleMessage {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 2vw, 14px);
+    letter-spacing: 0;
+    line-height: 1.8;
+    text-transform: lowercase;
+}
+
+/* ASCII title stays monospace but not pixel font */
+#asciiTitle {
+    font-family: monospace;
+    /* Keep original sizing */
+}
+
+/* ================================================
+   READY SCREEN
+   ================================================ */
+#readyContent h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(16px, 3vw, 22px);
+    text-transform: lowercase;
+    letter-spacing: 0;
+    line-height: 1.6;
+}
+
+#readyContent p {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(8px, 1.5vw, 12px);
+    letter-spacing: 0;
+    line-height: 1.8;
+    text-transform: lowercase;
+}
+
+#readyContent strong {
+    color: #00d4ff;
+    font-weight: normal; /* Press Start 2P doesn't have bold */
+}
+
+#readyMessage {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(8px, 1.8vw, 12px);
+    letter-spacing: 0;
+    line-height: 1.8;
+    text-transform: lowercase;
+}
+
+/* ================================================
+   GAME OVER
+   ================================================ */
+#gameOver {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(16px, 4vw, 28px);
+    letter-spacing: 0;
+    line-height: 1.6;
+    text-transform: lowercase;
+    font-weight: normal;
+}
+
+/* ================================================
+   SCORE DISPLAY
+   ================================================ */
+#score {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(14px, 2vw, 18px);
+    letter-spacing: 0;
+    text-transform: lowercase;
+}
+
+/* ================================================
+   HIGH SCORES / LEADERBOARD
+   ================================================ */
+.columnTitle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(8px, 1.5vw, 10px);
+    text-transform: lowercase;
+    letter-spacing: 0;
+    line-height: 1.6;
+}
+
+.scoreEntry {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 1.8vw, 12px);
+    letter-spacing: 0;
+}
+
+.scoreRank {
+    font-family: 'Press Start 2P', monospace;
+    font-weight: normal;
+}
+
+.scoreInitials {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(11px, 2vw, 14px);
+    font-weight: normal;
+}
+
+.scoreValue {
+    font-family: 'Press Start 2P', monospace;
+    font-weight: normal;
+}
+
+/* ================================================
+   INITIALS PROMPT
+   ================================================ */
+#initialsPrompt h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 2vw, 14px);
+    letter-spacing: 0;
+    line-height: 1.6;
+    text-transform: lowercase;
+    font-weight: normal;
+}
+
+/* Input field already styled in buttons-retro.css */
+
+/* ================================================
+   CHARACTER SELECTOR
+   ================================================ */
+.character-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(7px, 1.2vw, 10px);
+    letter-spacing: 0;
+    text-transform: lowercase;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+/* ================================================
+   CREDITS MODAL
+   ================================================ */
+.credits-content p {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(8px, 1.5vw, 11px);
+    line-height: 1.8;
+    letter-spacing: 0;
+    text-transform: none !important;
+}
+
+.credits-content strong {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(7px, 1.3vw, 9px);
+    text-transform: lowercase;
+    font-weight: normal;
+    letter-spacing: 0;
+}
+
+/* ================================================
+   INSTRUCTIONS
+   ================================================ */
+#instructions {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 1.8vw, 14px);
+    letter-spacing: 0;
+    line-height: 1.6;
+    text-transform: lowercase;
+}
+
+/* ================================================
+   LOADING SCREEN
+   ================================================ */
+.loading-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2vw, 16px);
+    letter-spacing: 0;
+    text-transform: lowercase;
+}
+
+/* ASCII art in loading screen stays monospace */
+.loading-ascii {
+    font-family: monospace;
+}
+
+/* ================================================
+   MOBILE ADJUSTMENTS
+   ================================================ */
+@media (max-width: 768px) {
+    .modal-content h2 {
+        font-size: 12px;
+        line-height: 1.8;
+    }
+    
+    #readyContent p {
+        font-size: 9px;
+        line-height: 2;
+    }
+    
+    .character-name {
+        font-size: 8px;
+        line-height: 1.6;
+    }
+    
+    .credits-content p {
+        font-size: 9px;
+        line-height: 2;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content h2 {
+        font-size: 10px;
+    }
+    
+    #gameOver {
+        font-size: 14px;
+        line-height: 1.8;
+    }
+    
+    .character-name {
+        font-size: 7px;
+        line-height: 1.8;
+    }
+}
+
+/* ================================================
+   IMPORTANT NOTES
+   ================================================ */
+/* 
+   - Press Start 2P doesn't have bold/italic variants
+   - Use font-weight: normal everywhere
+   - Increased line-height for readability (pixel fonts need breathing room)
+   - Everything lowercase for authentic retro feel
+   - Letter-spacing: 0 (pixel fonts have built-in spacing)
+*/

@@ -1,0 +1,71 @@
+/* Dino Spumoni shared color palette — twilight navy / steel blue theme */
+:root {
+    --ds-deep:       #141820;
+    --ds-surface:    #1e2a38;
+    --ds-mid:        #3a5878;
+    --ds-sky:        #6888a8;
+    --ds-brand:      #4060a0;
+    --ds-brick:      #8a3820;
+    --ds-cta:        #d4782a;
+    --ds-heading:    #f0d080;
+    --ds-rose:       #d06880;
+    --ds-teal:       #2a7868;
+    --ds-deep-teal:  #1a5048;
+    --ds-bright-teal:#40a888;
+    --ds-deep-rose:  #a04860;
+    --ds-light-rose: #e8a0b0;
+    --ds-mid-blue:   #5878b0;
+    --ds-light-warm: #f8c8a0;
+    --ds-dark-warm:  #5a2810;
+    --ds-cool-neutral:#6878a0;
+    --ds-warm-neutral:#c8a878;
+    --ds-offwhite:   #f4ede0;
+}
+
+/* Sub-nav layout */
+body.ds-page { --credit-color: var(--ds-mid); --nav-accent: var(--ds-cta); --nav-glow: rgba(212,120,42,0.4); --nav-brand: #e8a060; --nav-brand-glow: rgba(232,160,96,0.7); }
+body.ds-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.ds-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.ds-page .sub-nav .nav-card::after { display: none; }
+body.ds-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-back: transparent + brand (back button) */
+body.ds-page .nav-card.c-back { background: transparent; color: var(--ds-brand); border-color: var(--ds-brand); }
+body.ds-page .nav-card.c-back:hover { background: var(--ds-brand); border-color: var(--ds-brand); color: var(--ds-heading); }
+
+/* c-about: solid heading / about button */
+body.ds-page .nav-card.c-about { background: var(--ds-heading); color: var(--ds-deep); border-color: var(--ds-heading); }
+body.ds-page .nav-card.c-about:hover { background: transparent; border-color: var(--ds-heading); color: var(--ds-offwhite); }
+
+/* c-photography: solid light-warm (photography button) */
+body.ds-page .nav-card.c-photography { background: var(--ds-light-warm); color: var(--ds-deep); border-color: var(--ds-light-warm); }
+body.ds-page .nav-card.c-photography:hover { background: transparent; border-color: var(--ds-light-warm); color: var(--ds-offwhite); }
+
+/* c-events: solid bright-teal (events button) */
+body.ds-page .nav-card.c-events { background: var(--ds-bright-teal); color: var(--ds-deep); border-color: var(--ds-bright-teal); }
+body.ds-page .nav-card.c-events:hover { background: transparent; border-color: var(--ds-bright-teal); color: var(--ds-offwhite); }
+
+/* c-recordings: solid sky (recordings button) */
+body.ds-page .nav-card.c-recordings { background: var(--ds-sky); color: var(--ds-deep); border-color: var(--ds-sky); }
+body.ds-page .nav-card.c-recordings:hover { background: transparent; border-color: var(--ds-sky); color: var(--ds-offwhite); }
+
+/* c-releases: solid rose (releases button) */
+body.ds-page .nav-card.c-releases { background: var(--ds-rose); color: var(--ds-deep); border-color: var(--ds-rose); }
+body.ds-page .nav-card.c-releases:hover { background: transparent; border-color: var(--ds-rose); color: var(--ds-offwhite); }
+
+/* c-works: solid cta (works button) */
+body.ds-page .nav-card.c-works { background: var(--ds-cta); color: var(--ds-deep); border-color: var(--ds-cta); }
+body.ds-page .nav-card.c-works:hover { background: transparent; border-color: var(--ds-cta); color: var(--ds-offwhite); }
+
+/* c-blue: solid brand (music videos button) */
+body.ds-page .nav-card.c-blue { background: var(--ds-brand); color: var(--ds-heading); border-color: var(--ds-brand); }
+body.ds-page .nav-card.c-blue:hover { background: transparent; border-color: var(--ds-brand); color: var(--ds-offwhite); }
+
+body.ds-page .nav-card::after { display: none; }

@@ -1,0 +1,53 @@
+/* Bottle Boys Collective — about page — accent: c-about */
+body.bbc-page.bbc-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.bbc-page.bbc-about-page main > * { background: var(--black); }
+
+body.bbc-page.bbc-about-page .breadcrumb { color: var(--bbc-apricot); }
+body.bbc-page.bbc-about-page .breadcrumb a { color: var(--bbc-apricot); }
+body.bbc-page.bbc-about-page .breadcrumb a:hover { color: var(--bbc-warm-light); }
+body.bbc-page.bbc-about-page .breadcrumb .sep { color: var(--bbc-apricot); opacity: 0.6; }
+body.bbc-page.bbc-about-page .breadcrumb .current { color: var(--bbc-apricot); }
+
+body.bbc-page.bbc-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.bbc-page.bbc-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--bbc-apricot); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.bbc-page.bbc-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--bbc-apricot); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(240, 192, 160, 0.5); }
+
+body.bbc-page.bbc-about-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--bbc-warm-dark), var(--bbc-apricot), var(--bbc-warm-dark), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.bbc-page.bbc-about-page .bio-section {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 20px;
+}
+body.bbc-page.bbc-about-page .bio-section p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--bbc-cream);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.bbc-page.bbc-about-page .bio-section p a {
+    color: var(--bbc-apricot);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.bbc-page.bbc-about-page .bio-section p a:hover {
+    color: var(--bbc-warm-light);
+    border-bottom-color: var(--bbc-warm-light);
+}
+
+/* ── Nav card overrides ── */
+body.bbc-page.bbc-about-page .nav-card.c-back { background: transparent; color: var(--bbc-apricot); border-color: var(--bbc-apricot); }
+body.bbc-page.bbc-about-page .nav-card.c-back:hover { background: var(--bbc-apricot); color: var(--bbc-surface); }
+
+body.bbc-page.bbc-about-page .nav-card::after { display: none; }
+body.bbc-page.bbc-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

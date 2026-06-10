@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jon McCoy — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="jm-shared.css">
+    <style>
+        /* ══ PAGE: by-artist / jon-mccoy ══ */
+
+        main { position: relative; }
+
+        /* ── BREADCRUMB ── */
+        body.jm-page .breadcrumb a { color: var(--jm-muted); }
+        body.jm-page .breadcrumb a:hover { color: var(--jm-cream); }
+        body.jm-page .breadcrumb .sep { color: var(--jm-muted); opacity: 0.6; }
+        body.jm-page .breadcrumb .current { color: var(--jm-muted); }
+
+        /* ── ARTIST HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 48px;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 55%;
+            filter: saturate(0.9) brightness(0.72);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(122, 144, 128, 0.08);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8, 8, 18, 0.15) 0%,
+                rgba(8, 8, 18, 0.0)  15%,
+                rgba(8, 8, 18, 0.0)  50%,
+                rgba(8, 8, 18, 0.60) 75%,
+                rgba(8, 8, 18, 1.0)  100%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--jm-rose);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--jm-cream);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(184, 152, 152, 0.65),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--jm-rose);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--jm-rose), var(--jm-taupe), var(--jm-rose), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── LAYOUT ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--jm-rose);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--jm-rose);
+            opacity: 0.9;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--jm-sand);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--jm-sage);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--jm-sage);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover { background: var(--jm-sage); color: var(--jm-deep); }
+
+        /* ── PHOTO CAROUSEL PLACEHOLDER ── */
+        .carousel-wrap {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .carousel-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--jm-rose);
+            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+            opacity: 0.8;
+        }
+        .carousel-empty {
+            border: 1px dashed #1a2a2a;
+            padding: 32px;
+            text-align: center;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--jm-muted);
+            letter-spacing: 0.1em;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* ── MUSIC VIDEOS ── */
+        .videos-wrap {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.18s ease both;
+        }
+        .mini-video-list {
+            width: 100%;
+            border: 1px solid #1a1a2a;
+        }
+        .mini-video-entry {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-bottom: 1px solid #1a1a2a;
+            cursor: pointer;
+            min-height: 100px;
+        }
+        .mini-video-entry:last-child { border-bottom: none; }
+        .mini-video-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25) saturate(0.6);
+            transition: filter 0.3s ease;
+            z-index: 0;
+        }
+        .mini-video-entry:hover .mini-video-bg,
+        .mini-video-entry.active .mini-video-bg { filter: brightness(0.15) saturate(0.4); }
+        .mini-video-entry::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(8,8,8,0.5) 0%, transparent 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .mini-video-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            width: 100%;
+        }
+        .mini-thumb {
+            flex-shrink: 0;
+            width: 120px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 1px solid #2a2a3a;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .mini-video-entry:hover .mini-thumb { border-color: var(--jm-sage); }
+        .mini-video-entry.active .mini-thumb { border-color: var(--jm-taupe); }
+        .mini-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mini-play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+        }
+        .mini-play-icon {
+            width: 28px; height: 28px;
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, transform 0.2s, background 0.2s;
+        }
+        .mini-play-icon::after {
+            content: '';
+            display: block;
+            width: 0; height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 9px solid var(--white);
+            margin-left: 2px;
+            transition: border-left-color 0.2s;
+        }
+        .mini-video-entry:hover .mini-play-icon {
+            border-color: var(--jm-sage);
+            background: rgba(122,144,128,0.2);
+            transform: scale(1.1);
+        }
+        .mini-video-entry:hover .mini-play-icon::after { border-left-color: var(--jm-sage); }
+        .mini-video-entry.active .mini-play-icon { border-color: var(--jm-taupe); }
+        .mini-iframe-wrap {
+            display: none;
+            width: 120px;
+            aspect-ratio: 16/9;
+            flex-shrink: 0;
+            border: 1px solid var(--jm-taupe);
+        }
+        .mini-iframe-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
+        .mini-video-entry.active .mini-thumb       { display: none; }
+        .mini-video-entry.active .mini-iframe-wrap { display: block; }
+        .mini-video-meta { flex: 1; min-width: 0; }
+        .mini-video-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--jm-sage);
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+        .mini-video-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(7px, 1.2vw, 10px);
+            color: var(--jm-cream);
+            letter-spacing: 0.05em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .mini-yt-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px;
+            color: var(--jm-muted);
+            text-decoration: none;
+            border: 1px solid #2a2a3a;
+            padding: 3px 8px;
+            letter-spacing: 0.06em;
+            transition: color 0.15s, border-color 0.15s;
+            display: inline-block;
+        }
+        .mini-yt-link:hover { color: var(--jm-sage); border-color: var(--jm-sage); }
+
+        /* ── MusicBrainz link ── */
+        .mb-link-wrap {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+        .mb-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--jm-muted);
+            text-decoration: none;
+            border: 1px solid #1a1a2a;
+            padding: 6px 12px;
+            letter-spacing: 0.08em;
+            transition: color 0.15s, border-color 0.15s;
+            display: inline-block;
+        }
+        .mb-link:hover { color: var(--jm-sage); border-color: var(--jm-sage); }
+
+        @media (max-width: 640px) {
+            .sub-nav { flex-direction: column; }
+            .mini-thumb, .mini-iframe-wrap { width: 90px; }
+        }
+    </style>
+</head>
+<body class="jm-page">
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li>
+            <a href="../../../index.html">home</a>
+            <div class="dropdown">
+                <a href="../../../home/about.html">about</a>
+                <a href="../../../home/links/all-links.html">all links</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a>
+                <a href="../../../music/floppy-disk/index.html">floppy disk</a>
+                <a href="../../../music/catalog.html">full catalog</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../../../visual/music-videos.html">music videos</a>
+                <a href="../../../visual/collage.html">collage</a>
+                <a href="../../../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../archive/index.html">archive</a>
+            <div class="dropdown">
+                <a href="../../../archive/full-catalog/all-releases.html">all releases</a>
+                <a href="../../../archive/by-artist/index.html">by artist</a>
+                <a href="../../../archive/by-place/index.html">by place</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../arcade/index.html">arcade</a>
+        </li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/index.html">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">jhm</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/jon-mccoy-cover.jpg" alt="Jon McCoy">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Ben Nikitas</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">JON<br>MCCOY</div>
+                <div class="artist-abbr">[ JM ]</div>
+                <div class="sub-nav">
+                    <a href="about.html"      class="nav-card c-about">about</a>
+                    <a href="music-videos.html" class="nav-card c-music-videos">music videos</a>
+                    <a href="photography.html" class="nav-card c-photography">photography</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"   class="nav-card c-releases">releases</a>
+                    <a href="works.html"      class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a href="https://musicbrainz.org/artist/33c830f0-d5be-4baf-b8db-3dc754e74c16"
+           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+    <div class="artist-body">
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+<script>
+const VIDEOS = [
+    { title: "Try", year: "2024", id: "To6AJJ7-iCY" },
+];
+
+const miniList = document.getElementById('miniVideoList');
+let activeEntry = null;
+
+VIDEOS.forEach(v => {
+    const thumbUrl = `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+    const embedUrl = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+    const watchUrl = `https://www.youtube.com/watch?v=${v.id}`;
+
+    const entry = document.createElement('div');
+    entry.className = 'mini-video-entry';
+    entry.innerHTML = `
+        <div class="mini-video-bg" style="background-image: url('${thumbUrl}');"></div>
+        <div class="mini-video-content">
+            <div class="mini-thumb">
+                <img src="${thumbUrl}" alt="${v.title}" loading="lazy" referrerpolicy="no-referrer"
+                     onerror="if(!this.dataset.tried){this.dataset.tried='hq';this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg';}else if(this.dataset.tried==='hq'){this.dataset.tried='mq';this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg';}">
+                <div class="mini-play-btn"><div class="mini-play-icon"></div></div>
+            </div>
+            <div class="mini-iframe-wrap"></div>
+            <div class="mini-video-meta">
+                <div class="mini-video-year">${v.year}</div>
+                <div class="mini-video-title">${v.title}</div>
+                <a class="mini-yt-link" href="${watchUrl}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()">▶ open on youtube</a>
+            </div>
+        </div>
+    `;
+
+    entry.addEventListener('click', function () {
+        if (this.classList.contains('active')) return;
+        if (activeEntry && activeEntry !== this) {
+            activeEntry.classList.remove('active');
+            activeEntry.querySelector('.mini-iframe-wrap').innerHTML = '';
+        }
+        this.classList.add('active');
+        activeEntry = this;
+        this.querySelector('.mini-iframe-wrap').innerHTML =
+            `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    });
+
+    miniList.appendChild(entry);
+});
+</script>
+
+</body>
+</html>

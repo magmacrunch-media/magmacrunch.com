@@ -1,0 +1,47 @@
+/* Green Street Apt. — personnel (steel blue brand accent) */
+body.gs-page.gs-personnel-page main > * { background: var(--black); }
+
+body.gs-page.gs-personnel-page .breadcrumb { color: var(--dim); }
+body.gs-page.gs-personnel-page .breadcrumb a { color: var(--gs-brand); }
+body.gs-page.gs-personnel-page .breadcrumb a:hover { color: var(--gs-cream); }
+body.gs-page.gs-personnel-page .breadcrumb .sep { color: var(--gs-brand); opacity: 0.6; }
+body.gs-page.gs-personnel-page .breadcrumb .current { color: var(--gs-brand); }
+
+body.gs-page.gs-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.gs-page.gs-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--gs-brand); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.gs-page.gs-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--gs-brand) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(120, 136, 168, 0.5); }
+
+body.gs-page.gs-personnel-page .artist-card {
+    background: transparent !important;
+    border-color: var(--gs-surface);
+}
+body.gs-page.gs-personnel-page .artist-card h3 { color: var(--gs-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.gs-page.gs-personnel-page .artist-card h3 a { color: var(--gs-brand) !important; }
+body.gs-page.gs-personnel-page .artist-card h3 a:hover { color: var(--gs-cream) !important; }
+body.gs-page.gs-personnel-page .artist-card p { color: var(--gs-body) !important; }
+body.gs-page.gs-personnel-page .artist-card p strong { color: var(--gs-muted) !important; }
+body.gs-page.gs-personnel-page .artist-card a { color: var(--gs-brand) !important; }
+body.gs-page.gs-personnel-page .artist-card a:hover { color: var(--gs-cream) !important; }
+body.gs-page.gs-personnel-page .artist-card:hover { border-color: var(--gs-brand) !important; }
+body.gs-page.gs-personnel-page .badge { color: var(--gs-deep) !important; }
+body.gs-page.gs-personnel-page .badge-founded  { background: var(--gs-brand) !important; }
+body.gs-page.gs-personnel-page .badge-member   { background: var(--gs-green) !important; }
+body.gs-page.gs-personnel-page .badge-engineer { background: var(--gs-accent) !important; }
+body.gs-page.gs-personnel-page .badge-born     { background: var(--gs-warm) !important; }
+body.gs-page.gs-personnel-page .badge-other    { background: var(--gs-surface) !important; color: var(--gs-cream) !important; }
+body.gs-page.gs-personnel-page .tag { border-color: var(--gs-surface) !important; color: var(--gs-muted) !important; }
+
+/* Current page: personnel (c-personnel active) */
+body.gs-page.gs-personnel-page .nav-card.c-personnel {
+    background: var(--black);
+    color: var(--gs-brand);
+    border-color: var(--gs-brand);
+}
+body.gs-page.gs-personnel-page .nav-card.nav-card.c-personnel:hover {
+    background: transparent;
+    color: var(--gs-brand);
+}
+
+@media (max-width: 500px) {
+    body.gs-page.gs-personnel-page .artist-card { border-color: var(--gs-muted); }
+}

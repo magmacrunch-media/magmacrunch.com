@@ -1,0 +1,53 @@
+/* Juanito Thompson — network */
+body.jt-page.jt-network-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.jt-page.jt-network-page main > * { background: var(--black); }
+body.jt-page.jt-network-page .breadcrumb a { color: var(--jt-teal); }
+body.jt-page.jt-network-page .breadcrumb a:hover { color: var(--jt-teal-bright); }
+body.jt-page.jt-network-page .breadcrumb .sep { color: var(--jt-teal); opacity: 0.7; }
+body.jt-page.jt-network-page .breadcrumb .current { color: var(--jt-teal); }
+
+body.jt-page.jt-network-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jt-page.jt-network-page .artist-label,
+body.jt-page.jt-network-page .page-header .artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jt-teal) !important;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+body.jt-page.jt-network-page .page-title,
+body.jt-page.jt-network-page .page-header .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--jt-teal) !important;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(26,144,112,0.5) !important;
+}
+
+body.jt-page.jt-network-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+
+body.jt-page.jt-network-page #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jt-body); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
+body.jt-page.jt-network-page #status-bar.done { color: var(--jt-teal-bright); }
+body.jt-page.jt-network-page #status-bar.error { color: var(--jt-brick); }
+body.jt-page.jt-network-page #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--jt-mid); letter-spacing: 0.08em; margin-bottom: 24px; }
+body.jt-page.jt-network-page .mb-link { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--jt-mid); border: 1px solid var(--jt-mid); padding: 4px 10px; text-decoration: none; letter-spacing: 0.06em; margin-top: 14px; transition: color 0.15s, border-color 0.15s; }
+body.jt-page.jt-network-page .mb-link:hover { color: var(--jt-teal-bright); border-color: var(--jt-teal-bright); }
+body.jt-page.jt-network-page .tag { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--jt-teal); border: 1px solid var(--jt-teal); padding: 3px 7px; margin: 2px; letter-spacing: 0.06em; }
+body.jt-page.jt-network-page .disambiguation { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--jt-mid); font-style: italic; margin-left: 6px; }
+body.jt-page.jt-network-page .artist-item { border: 1px solid var(--jt-surface); border-left: 3px solid var(--jt-teal); padding: 14px 18px; margin-bottom: 10px; background: rgba(26,122,94,0.02); transition: background 0.2s; animation: fadeUp 0.3s ease both; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+body.jt-page.jt-network-page .artist-item:hover { background: rgba(26,122,94,0.05); }
+body.jt-page.jt-network-page .artist-name { font-family: 'Press Start 2P', monospace; font-size: 9px; color: var(--jt-teal); letter-spacing: 0.05em; text-decoration: none; }
+body.jt-page.jt-network-page .artist-name:hover { color: var(--jt-teal-bright); }
+body.jt-page.jt-network-page .artist-dates { font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--jt-mid); }
+body.jt-page.jt-network-page .artist-location { font-family: 'Courier Prime', monospace; font-size: 13px; color: rgba(240,234,216,0.5); }
+body.jt-page.jt-network-page .artist-rel-type { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--jt-mid); font-style: italic; }
+
+/* Nav card colors — matching other JT subpages */
+body.jt-page.jt-network-page .nav-card.jt-back { background: transparent !important; color: var(--jt-teal) !important; border-color: var(--jt-teal) !important; }
+body.jt-page.jt-network-page .nav-card.jt-back:hover { background: var(--jt-teal) !important; color: var(--jt-bg) !important; }
+
+body.jt-page.jt-network-page .nav-card::after { display: none; }
+body.jt-page.jt-network-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

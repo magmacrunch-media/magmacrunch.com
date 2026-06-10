@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>juanito thompson — about — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="juanito-thompson-shared.css">
+    <link rel="stylesheet" href="juanito-thompson-about.css">
+
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        'ddcbeb01-edb5-4e74-b5cd-23d1b64d3086',
+        name:      'juanito thompson',
+        abbr:      'JT',
+        accent:    'amber',
+        backColor: 'c-orange',
+        siblings:  ['about', 'photography', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="jt-page jt-about-page">
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title">ABOUT</div>
+        <div class="sub-nav">
+            <a href="index.html"         class="nav-card c-back">← back</a>
+            <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
+            <a href="network.html"      class="nav-card c-network">network</a>
+            <a href="photography.html"   class="nav-card c-photography">photography</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"      class="nav-card c-releases">releases</a>
+            <a href="works.html"         class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="place-body">
+        <p>A close relative to <a href="../vinny-bobarino/index.html">Vinny Bobarino</a>, Juanito Thompson started as a home recording project during summer &amp; winter breaks from college in 2009.</p>
+
+        <p>What began as improvised recordings in a spare bedroom evolved into a years-long collaboration with a rotating cast of musicians, all captured on cheap equipment in borrowed spaces.</p>
+
+        <p>The project has released ten albums across formats ranging from CDR home copies to streaming platforms, always operating outside any formal music industry structure.</p>
+
+        <div class="link-row">
+            <a href="https://linktr.ee/juanitothompson" target="_blank" rel="noopener" class="ext-link">▶ stream / download music</a>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const C = window.ARTIST_CONFIG;
+    if (!C) return;
+    const d = C.depth || '../../../';
+
+    const breadcrumbEl = document.querySelector('.breadcrumb');
+    if (breadcrumbEl) {
+        breadcrumbEl.innerHTML = `
+            <a href="${d}archive/index.html">archive</a>
+            <span class="sep">›</span>
+            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <span class="sep">›</span>
+            <a href="index.html">${C.abbr.toLowerCase()}</a>
+        `;
+    }
+
+    const artistLabelEl = document.getElementById('artist-label');
+    if (artistLabelEl) artistLabelEl.textContent = `// ${C.name} //`;
+})();
+</script>
+
+</body>
+</html>

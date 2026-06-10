@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by place — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #e500a5; }
+        .breadcrumb .sep { margin: 0 8px; color: #e500a5; opacity: 0.7; }
+        .breadcrumb .current { color: #e500a5; }
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: #e500a5;
+            text-shadow: 0 0 16px rgba(229,0,165,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            margin-bottom: 32px;
+            letter-spacing: 0.12em;
+        }
+        .grid-wrap {
+            width: min(900px, 95vw);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 2px solid #1e1e2e;
+            background: var(--deep);
+            padding: 16px;
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: #e500a5;
+            box-shadow: 0 0 16px rgba(229,0,165,0.3);
+        }
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--white);
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .card-soon {
+            border: 2px dashed #1e1e2e;
+            background: var(--deep);
+            padding: 16px;
+            opacity: 0.5;
+        }
+        .card-soon .card-sub {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../index.html">home</a><div class="dropdown"><a href="../../home/about.html">about</a><a href="../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../music/index.html">music</a><div class="dropdown"><a href="../../music/jukebox/index.html">jukebox</a><a href="../../music/distributed-music.html">distributed music</a><a href="../../music/floppy-disk/index.html">floppy disk</a><a href="../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../visual/index.html">visual</a><div class="dropdown"><a href="../../visual/music-videos.html">music videos</a><a href="../../visual/collage.html">collage</a><a href="../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../archive/index.html">archive</a><div class="dropdown"><a href="../../archive/by-artist/index.html">by artist</a><a href="../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../arcade/index.html">arcade</a></li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../index.html">home</a><span class="sep">›</span>
+        <a href="../index.html">archive</a><span class="sep">›</span>
+        <span class="current">by place</span>
+    </div>
+    <h1 class="page-title">// by place //</h1>
+    <p class="page-subtitle">the magmacrunch archive</p>
+
+    <div class="grid-wrap">
+        <a href="college-green-apt/index.html" class="card"><div class="card-title">College Green Apt.</div></a>
+        <a href="frogwood-manor/index.html" class="card"><div class="card-title">Frogwood Manor</div></a>
+        <a href="green-street-apt/index.html" class="card"><div class="card-title">Green Street Apt.</div></a>
+        <a href="irvin-house/index.html" class="card"><div class="card-title">Irvin House</div></a>
+        <a href="marvin-gardens-g12/index.html" class="card"><div class="card-title">Marvin Gardens G12</div></a>
+        <a href="melrose-house/index.html" class="card"><div class="card-title">Melrose House</div></a>
+        <a href="the-tuna-can/index.html" class="card"><div class="card-title">The Tuna Can</div></a>
+        <a href="twin-maples/index.html" class="card"><div class="card-title">Twin Maples</div></a>
+        <div class="card-soon"><div class="card-title">Riverside Estate</div><div class="card-sub">coming soon</div></div>
+        <div class="card-soon"><div class="card-title">Spirit Castle</div><div class="card-sub">coming soon</div></div>
+        <div class="card-soon"><div class="card-title">The Toadstool</div><div class="card-sub">coming soon</div></div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    h1 { 
+        font-size: 16px;
+        letter-spacing: 1px;
+    }
+    
+    .subtitle {
+        font-size: 8px;
+    }
+    
+    .controls {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .controls button {
+        padding: 10px 8px;
+        font-size: 8px;
+        letter-spacing: 0.5px;
+        flex: 1 1 calc(50% - 4px);
+        min-width: 0;
+    }
+    
+    .difficulty-content h3 {
+        font-size: 14px;
+    }
+    
+    .diff-label {
+        font-size: 10px;
+    }
+    
+    .diff-value {
+        font-size: 8px;
+    }
+    
+    .difficulty-menu-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .difficulty-menu-btn {
+        max-width: 100%;
+        font-size: 8px;
+        padding: 10px 12px;
+    }
+    
+    .tile { 
+        font-size: 18px; 
+    }
+    
+    .tile[data-value="128"],
+    .tile[data-value="256"],
+    .tile[data-value="512"] { 
+        font-size: 16px; 
+    }
+    
+    .tile[data-value="1024"],
+    .tile[data-value="2048"] { 
+        font-size: 14px; 
+    }
+    
+    .game-board {
+        gap: 8px;
+        padding: 8px;
+    }
+    
+    .score-columns {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .score-column {
+        max-width: 100%;
+        width: 100%;
+    }
+    
+    .score-label {
+        font-size: 8px;
+    }
+    
+    .score {
+        font-size: 14px;
+    }
+    
+    .scoreboard-content h3,
+    .instructions-content h3 {
+        font-size: 12px;
+    }
+    
+    .scoreboard-content {
+        padding: 12px;
+        max-height: 78vh;
+        width: 96%;
+    }
+    
+    .scoreboard-content h3 {
+        font-size: 11px;
+        margin-bottom: 10px;
+    }
+    
+    .mode-selector-container {
+        margin-bottom: 10px;
+        min-height: 40px;
+    }
+    
+    .dropdown-selected {
+        padding: 9px 14px;
+        font-size: 9px;
+    }
+    
+    .instructions-content p {
+        font-size: 8px;
+    }
+    
+    .game-over h2 {
+        font-size: 18px;
+    }
+    
+    .game-over p {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 400px) {
+    h1 {
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+    
+    .subtitle {
+        font-size: 7px;
+    }
+    
+    .score-container {
+        padding: 8px 12px;
+    }
+    
+    .score {
+        font-size: 12px;
+    }
+    
+    .score-label {
+        font-size: 7px;
+    }
+    
+    .controls {
+        gap: 6px;
+    }
+    
+    .controls button {
+        padding: 8px 6px;
+        font-size: 7px;
+        flex: 1 1 calc(50% - 3px);
+    }
+    
+    .difficulty-content h3 {
+        font-size: 12px;
+    }
+    
+    .diff-label {
+        font-size: 9px;
+    }
+    
+    .diff-value {
+        font-size: 7px;
+    }
+    
+    .tile {
+        font-size: 16px;
+    }
+    
+    .tile[data-value="128"],
+    .tile[data-value="256"],
+    .tile[data-value="512"] {
+        font-size: 14px;
+    }
+    
+    .tile[data-value="1024"],
+    .tile[data-value="2048"] {
+        font-size: 12px;
+    }
+}

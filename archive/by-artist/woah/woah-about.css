@@ -1,0 +1,42 @@
+/* Woah. — about page — accent: ocean */
+body.woah-page.woah-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.woah-page.woah-about-page main > * { background: var(--black); }
+
+body.woah-page.woah-about-page .breadcrumb { color: var(--woah-ocean); }
+body.woah-page.woah-about-page .breadcrumb a { color: var(--woah-ocean); }
+body.woah-page.woah-about-page .breadcrumb a:hover { color: var(--woah-coastal); }
+body.woah-page.woah-about-page .breadcrumb .sep { color: var(--woah-ocean); opacity: 0.6; }
+body.woah-page.woah-about-page .breadcrumb .current { color: var(--woah-ocean); }
+
+body.woah-page.woah-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.woah-page.woah-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--woah-ocean); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.woah-page.woah-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--woah-ocean); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(120, 128, 144, 0.5); }
+
+body.woah-page.woah-about-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--woah-ocean), var(--woah-coastal), var(--woah-ocean), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.woah-page.woah-about-page .bio-section {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 20px;
+}
+body.woah-page.woah-about-page .bio-section p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--woah-blush);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+
+body.woah-page.woah-about-page .nav-card.c-back { background: transparent; color: var(--woah-ocean); border-color: var(--woah-ocean); }
+body.woah-page.woah-about-page .nav-card.c-back:hover { background: var(--woah-ocean); color: var(--woah-pink-sky); }
+
+body.woah-page.woah-about-page .nav-card::after { display: none; }
+body.woah-page.woah-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

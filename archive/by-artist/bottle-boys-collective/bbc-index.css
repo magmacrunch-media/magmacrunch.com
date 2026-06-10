@@ -1,0 +1,46 @@
+/* Bottle Boys Collective — index page — accent: sky dark */
+
+/* ── Breadcrumb ── */
+body.bbc-page.bbc-index-page .breadcrumb a { color: var(--bbc-sky); }
+body.bbc-page.bbc-index-page .breadcrumb a:hover { color: var(--bbc-sky-light); }
+body.bbc-page.bbc-index-page .breadcrumb .sep { color: var(--bbc-sky); opacity: 0.6; }
+body.bbc-page.bbc-index-page .breadcrumb .current { color: var(--bbc-sky); }
+
+body.bbc-page.bbc-index-page .divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--bbc-sky-dark), var(--bbc-sky), var(--bbc-sky-dark), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.bbc-page.bbc-index-page .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--bbc-sky);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+}
+
+body.bbc-page.bbc-index-page .bio p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--bbc-cream);
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+body.bbc-page.bbc-index-page .bio p a {
+    color: var(--bbc-warm-light);
+    text-decoration: none;
+}
+body.bbc-page.bbc-index-page .bio p a:hover {
+    text-decoration: underline;
+}
+
+/* ── Nav card overrides ── */
+body.bbc-page.bbc-index-page .nav-card.c-back { background: transparent; color: var(--bbc-sky-dark); border-color: var(--bbc-sky-dark); }
+body.bbc-page.bbc-index-page .nav-card.c-back:hover { background: var(--bbc-sky-dark); color: var(--bbc-cream); }
+
+body.bbc-page.bbc-index-page .nav-card::after { display: none; }
+body.bbc-page.bbc-index-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

@@ -1,0 +1,70 @@
+/* Frogwood Manor shared color palette — umber / plum / cobalt theme */
+:root {
+    --fm-deep:     #382820;
+    --fm-dark:      #301828;
+    --fm-surface:   #2a2a50;
+    --fm-muted:     #9888a0;
+    --fm-light:     #f8d888;
+    --fm-cream:     #f8e8d8;
+    --fm-cobalt:    #4080f0;
+    --fm-brand:     #a85a18;
+    --fm-amber:     #e8a040;
+    --fm-sky:       #6080e8;
+    --fm-violet:    #a030c8;
+    --fm-sage:      #6a9878;
+    --fm-pink:      #f040a0;
+    --fm-pink-light:#e860c0;
+    --fm-rose:      #c02070;
+    --fm-lilac:     #c8a0d8;
+    --fm-plum:      #281838;
+    --fm-peach:     #f0b060;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.fm-page { --credit-color: var(--fm-muted); --nav-accent: var(--fm-brand); --nav-glow: rgba(168,90,24,0.4); --nav-brand: #d08838; --nav-brand-glow: rgba(208,136,56,0.7); }
+body.fm-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.fm-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.fm-page .sub-nav .nav-card::after { display: none; }
+body.fm-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-about: violet plum (formerly c-sage) */
+body.fm-page .sub-nav .nav-card.c-about { background: var(--fm-sage); color: var(--fm-deep); border-color: var(--fm-sage); }
+body.fm-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-sage); }
+
+/* c-recordings: sky blue (formerly c-cyan) */
+body.fm-page .sub-nav .nav-card.c-recordings { background: var(--fm-sky); color: var(--fm-deep); border-color: var(--fm-sky); }
+body.fm-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-sky); }
+
+/* c-works: amber (formerly c-yellow) */
+body.fm-page .sub-nav .nav-card.c-works { background: var(--fm-amber); color: var(--fm-deep); border-color: var(--fm-amber); }
+body.fm-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-amber); }
+
+/* c-events: brand umber (formerly c-green) */
+body.fm-page .sub-nav .nav-card.c-events { background: var(--fm-brand); color: var(--fm-deep); border-color: var(--fm-brand); }
+body.fm-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-brand); }
+
+/* c-rose: deep pink */
+body.fm-page .sub-nav .nav-card.c-rose { background: var(--fm-rose); color: var(--fm-deep); border-color: var(--fm-rose); }
+body.fm-page .sub-nav .nav-card.c-rose:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-rose); }
+
+/* c-personnel: cobalt (formerly c-blue) */
+body.fm-page .sub-nav .nav-card.c-personnel { background: var(--fm-rose); color: var(--fm-deep); border-color: var(--fm-rose); }
+body.fm-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-rose); }
+
+/* c-magenta: hot pink */
+body.fm-page .sub-nav .nav-card.c-magenta { background: var(--fm-pink); color: var(--fm-deep); border-color: var(--fm-pink); }
+body.fm-page .sub-nav .nav-card.c-magenta:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-pink); }
+
+/* About button self-link hider */
+body.fm-page .sub-nav a[href="about.html"] {
+    background: var(--fm-sage);
+    color: var(--fm-deep);
+    border-color: var(--fm-sage);
+}

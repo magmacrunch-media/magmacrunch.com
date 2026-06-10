@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOLD — J♦ Chunky Retro Redesign V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #111111;
+    --card-bg: #fdf8ee;
+    --art-bg: #f4ebd8;
+    --red: #cc1100;
+    --blue: #1a3a8c;
+    --gold: #e8c030;
+    --skin: #f0c070;
+    --steel: #a0a8b8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0000;
+    font-family: 'Press Start 2P', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 16px;
+    color: var(--gold);
+  }
+  h1 { font-size: 16px; margin-bottom: 10px; text-shadow: 2px 2px 0 var(--red); }
+  .sub { font-family: 'VT323', monospace; font-size: 20px; color: #ff7700; margin-bottom: 40px; }
+  
+  .row { display: flex; gap: 40px; align-items: flex-end; justify-content: center; flex-wrap: wrap; }
+  .wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .lbl { font-size: 10px; color: #ff7700; }
+  
+  .card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 #000, 8px 8px 0 rgba(204, 17, 0, 0.2);
+    overflow: hidden;
+  }
+  svg {
+    display: block;
+    shape-rendering: crispEdges;
+  }
+</style>
+</head>
+<body>
+
+<h1>TEXAS HOLD'EM LAVA DOME</h1>
+<p class="sub">— J♦ · Volume & Halberd Update —</p>
+
+<div class="row">
+  <div class="wrap">
+    <div class="card">
+      <svg width="128" height="176" viewBox="0 0 64 88" xmlns="http://www.w3.org/2000/svg">
+        <use href="#card-content" />
+      </svg>
+    </div>
+    <p class="lbl">Actual Size</p>
+  </div>
+
+  <div class="wrap">
+    <div class="card" style="border-radius: 12px;">
+      <svg width="256" height="352" viewBox="0 0 64 88" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <g id="half-card">
+            <text x="4" y="10" font-family="'Press Start 2P'" font-size="6" text-anchor="middle" fill="var(--red)">J</text>
+            <text x="4" y="19" font-family="'Press Start 2P'" font-size="7" text-anchor="middle" fill="var(--red)">♦</text>
+            <text x="14" y="20" font-family="'Press Start 2P'" font-size="12" text-anchor="middle" fill="var(--red)">♦</text>
+
+            <rect x="52" y="6" width="2" height="38" fill="var(--gold)"/> 
+            <rect x="48" y="8" width="4" height="8" fill="var(--steel)"/>
+            <rect x="46" y="10" width="2" height="4" fill="var(--steel)"/>
+            <rect x="54" y="10" width="2" height="4" fill="var(--steel)"/>
+
+            <rect x="24" y="10" width="20" height="2" fill="var(--black)"/> 
+            <rect x="26" y="6" width="16" height="4" fill="var(--red)"/> 
+            <rect x="30" y="6" width="2" height="4" fill="var(--blue)"/> 
+            <rect x="36" y="6" width="2" height="4" fill="var(--blue)"/> 
+
+            <rect x="20" y="12" width="6" height="14" fill="var(--gold)"/>
+            <rect x="18" y="22" width="6" height="6" fill="var(--gold)"/> 
+            <rect x="42" y="12" width="4" height="10" fill="var(--gold)"/>
+            <rect x="44" y="18" width="4" height="6" fill="var(--gold)"/>
+
+            <rect x="26" y="12" width="16" height="14" fill="var(--skin)"/> 
+            <rect x="42" y="18" width="2" height="4" fill="var(--skin)"/> 
+            <rect x="34" y="14" width="4" height="2" fill="var(--black)"/> 
+            <rect x="36" y="16" width="2" height="2" fill="var(--blue)"/> 
+            <rect x="38" y="22" width="6" height="2" fill="var(--black)"/> 
+            <rect x="32" y="26" width="6" height="2" fill="var(--black)"/> 
+
+            <rect x="10" y="28" width="14" height="12" fill="var(--gold)"/> 
+            <rect x="14" y="32" width="4" height="4" fill="var(--red)"/> 
+            
+            <rect x="24" y="28" width="16" height="12" fill="var(--red)"/> 
+            <rect x="28" y="28" width="8" height="12" fill="var(--blue)"/> 
+            
+            <rect x="40" y="28" width="10" height="12" fill="var(--gold)"/> 
+            <rect x="42" y="32" width="4" height="4" fill="var(--red)"/> 
+            
+            <rect x="48" y="28" width="6" height="6" fill="var(--skin)"/> 
+            
+            <rect x="10" y="40" width="14" height="4" fill="var(--blue)"/>
+            <rect x="24" y="40" width="16" height="4" fill="var(--red)"/>
+            <rect x="40" y="40" width="14" height="4" fill="var(--blue)"/>
+          </g>
+
+          <g id="card-content">
+            <rect x="8" y="4" width="48" height="80" fill="var(--art-bg)" />
+            <use href="#half-card" x="0" y="0" />
+            <use href="#half-card" x="0" y="0" transform="rotate(180 32 44)" />
+            <rect x="8" y="4" width="48" height="80" fill="none" stroke="var(--black)" stroke-width="1.5" />
+          </g>
+        </defs>
+
+        <use href="#card-content" />
+      </svg>
+    </div>
+    <p class="lbl">3x Zoom</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SORRY!</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/title.css" />
+  <link rel="stylesheet" href="css/board.css" />
+  <link rel="stylesheet" href="css/lobby.css" />
+  <link rel="stylesheet" href="css/game.css" />
+  <style>
+    .mc-back {
+      position: fixed;
+      top: 12px;
+      left: 14px;
+      z-index: 9999;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      color: rgba(255, 140, 0, 0.6);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+      pointer-events: auto;
+    }
+    .mc-back::before { content: '← '; }
+    .mc-back:hover { color: rgba(255, 200, 80, 0.95); }
+
+    #mute-btn {
+      margin-left: auto;
+      background: transparent;
+      border: 1px solid var(--net-border);
+      border-radius: 5px;
+      color: var(--net-dim);
+      font-size: 14px;
+      line-height: 1;
+      padding: 2px 7px;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      flex-shrink: 0;
+    }
+    #mute-btn:hover { border-color: var(--net-accent); color: var(--net-accent); }
+  </style>
+</head>
+<body>
+<a href="../../arcade/index.html" class="mc-back">magmacrunch arcade</a>
+
+<!-- ═══════════════════════════════════════════════════════
+     TITLE SCREEN  (shown first; dismissed by click or spacebar)
+════════════════════════════════════════════════════════ -->
+<div id="title-overlay">
+  <!-- Phosphor grid + scanlines -->
+  <div id="title-scanlines"></div>
+
+  <!-- Top server status bar — launch edition -->
+  <div id="title-sysline">
+    <span class="sysline-tag">SYS</span>
+    MAGMACRUNCH SERVER &nbsp;·&nbsp; RASPBERRY PI &nbsp;·&nbsp; FIRST BOOT &nbsp;·&nbsp; 2026-02-28
+  </div>
+
+  <!-- Central content -->
+  <div id="title-content">
+
+    <!-- Server brand -->
+    <div id="title-server-brand">
+      <span class="brand-prompt">&gt;</span>
+      <span class="brand-name">MAGMACRUNCH ARCADE</span>
+    </div>
+    <div id="title-server-sub">multiplayer&nbsp;—&nbsp; online</div>
+
+    <!-- Divider -->
+    <div class="title-rule"></div>
+
+    <!-- Launch badge -->
+    <div id="title-launch-badge">first&nbsp;game&nbsp;on&nbsp;the&nbsp;magmacrunch&nbsp;server&nbsp;</div>
+
+    <!-- Game logo with glitch layers -->
+    <div id="title-logo-wrap">
+      <div id="title-logo-glitch-a" aria-hidden="true">SORRY!</div>
+      <div id="title-logo-glitch-b" aria-hidden="true">SORRY!</div>
+      <div id="title-logo">SORRY<span class="logo-bang">!</span></div>
+    </div>
+
+    <div id="title-subtitle">2-4 players · adding more soon...</div>
+
+    <!-- All 12 palette colors as player pips -->
+    <div id="title-pawns">
+      <div class="title-pawn" style="--pc:#ff2d55" title="Cherry"></div>
+      <div class="title-pawn" style="--pc:#ff7c1e" title="Orange"></div>
+      <div class="title-pawn" style="--pc:#ffe135" title="Lemon"></div>
+      <div class="title-pawn" style="--pc:#39d353" title="Lime"></div>
+      <div class="title-pawn" style="--pc:#6cd4f5" title="Ice Blue"></div>
+      <div class="title-pawn" style="--pc:#4059c8" title="Blueberry"></div>
+      <div class="title-pawn" style="--pc:#9b30ff" title="Grape"></div>
+      <div class="title-pawn" style="--pc:#ff69b4" title="Bubblegum"></div>
+      <div class="title-pawn" style="--pc:#fff5e1" title="Cream"></div>
+      <div class="title-pawn" style="--pc:#00fa9a" title="Spearmint"></div>
+      <div class="title-pawn" style="--pc:#ff4f6d" title="Watermelon"></div>
+      <div class="title-pawn" style="--pc:#7b68ee" title="Bluebell"></div>
+    </div>
+
+    <!-- Blinking prompt -->
+    <div id="title-press-start">&gt;&gt; PRESS SPACE OR CLICK TO PLAY</div>
+  </div>
+
+  <!-- Bottom bar — commemorates the launch -->
+  <div id="title-copyright">
+    MAGMACRUNCH MEDIA &nbsp;·&nbsp; SORRY! &nbsp;·&nbsp; LAST UPDATED &nbsp;·&nbsp; MAR 2026
+  </div>
+</div><!-- /title-overlay -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     LOBBY OVERLAY  (covers everything until game starts)
+════════════════════════════════════════════════════════ -->
+<div id="lobby-overlay">
+  <h1>SORRY!</h1>
+
+  <div id="net-status-bar">
+    <div id="net-status-dot"></div>
+    <span id="net-status-text">Connecting to server…</span>
+    <span id="net-player-badge"></span>
+  </div>
+
+  <div id="lobby-inner">
+    <!-- Left: join form + player slots + start -->
+    <div id="lobby-left">
+      <div class="net-box" id="join-box">
+        <div class="net-box-label">Pick Your Color</div>
+        <div id="color-swatches"></div>
+        <div id="color-picker-hint">Pick a color (optional — one will be assigned if you skip).</div>
+
+        <div class="net-box-label" style="margin-top:4px;">Your Name</div>
+        <input id="name-input" type="text" placeholder="Enter name…" maxlength="20" />
+        <button id="join-btn" disabled>JOIN</button>
+        <button id="spectate-btn" disabled>👁 SPECTATE</button>
+      </div>
+
+      <div class="net-box">
+        <div class="net-box-label" id="players-label">Players (0 / 4)</div>
+        <div id="player-list"></div>
+      </div>
+
+      <div class="net-box">
+        <div class="net-box-label">Lobby</div>
+        <div id="lobby-status-text">Waiting for connection…</div>
+        <button id="start-btn" disabled>START GAME</button>
+        <div id="waiting-for-host">Waiting for<br/>host to start…</div>
+        <div id="lobby-help-row">
+          <button class="help-link-btn" onclick="openModal('how-to-play-modal')">📖 HOW TO PLAY</button>
+          <button class="help-link-btn" onclick="openModal('credits-modal')">★ CREDITS</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: lobby chat -->
+    <div id="lobby-right">
+      <div class="net-box" style="flex:1;display:flex;flex-direction:column;gap:10px;">
+        <div class="net-box-label">Chat</div>
+        <div id="lobby-chat-window" class="chat-window"></div>
+        <div class="chat-input-row">
+          <input id="lobby-msg-input" type="text" placeholder="Say something…" disabled />
+          <button id="lobby-send-btn" disabled>SEND</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /lobby-overlay -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     GAME VIEW  (hidden until game starts)
+════════════════════════════════════════════════════════ -->
+<div id="game-view" style="display:none;">
+
+  <h1>SORRY!</h1>
+
+  <!-- Status bar -->
+  <div id="net-status-bar-game">
+    <div id="net-status-dot-game"></div>
+    <span id="net-status-text-game"></span>
+    <span id="net-player-badge-game"></span>
+    <span id="my-color-badge"></span>
+    <span id="spectator-badge" style="display:none">👁 SPECTATING</span>
+    <button class="game-hdr-btn" onclick="openModal('how-to-play-modal')" title="How to play">📖</button>
+    <button class="game-hdr-btn" onclick="openModal('credits-modal')" title="Credits">★</button>
+    <button id="quit-game-btn" style="display:none" title="Leave game" onclick="openModal('quit-confirm-modal')">✕ QUIT</button>
+    <button id="mute-btn" title="Toggle sound" onclick="(function(){var m=SoundFX.toggleMute();document.getElementById('mute-btn').textContent=m?'🔇':'🔊';})()">🔊</button>
+  </div>
+
+  <!-- Main layout: board+log column on left, sidebar on right -->
+  <div id="game-layout">
+
+    <!-- Left column: board + game log -->
+    <div id="game-main-col">
+      <div class="board-frame">
+        <div class="board" id="board"></div>
+      </div>
+
+      <!-- Game log: move history, bumps, cards drawn — separate from chat -->
+      <div class="net-box" id="game-log-box">
+        <div class="net-box-label">📋 Game Log</div>
+        <div id="game-log-window" class="chat-window game-log-window"></div>
+      </div>
+    </div>
+
+    <!-- Right sidebar: turn + card + chat -->
+    <div id="game-sidebar">
+
+      <!-- Turn indicator -->
+      <div class="net-box" id="turn-box">
+        <div class="net-box-label">Current Turn</div>
+        <div id="hud-turn-name">—</div>
+        <div id="your-turn-flash">▶ YOUR TURN!</div>
+        <div id="opponent-thinking"></div>
+      </div>
+
+      <!-- Card draw -->
+      <div class="net-box" id="card-box">
+        <div class="net-box-label">Card</div>
+        <div id="card-display">
+          <div id="card-face">
+            <div id="card-value">?</div>
+            <div id="card-desc">Draw a card to begin your turn.</div>
+          </div>
+        </div>
+        <div id="card-drawn-by"></div>
+        <div id="cards-remaining"></div>
+        <button id="hud-draw-btn" disabled>DRAW CARD</button>
+        <button id="hud-discard-btn" style="display:none">✕ DISCARD</button>
+        <div id="turn-status"></div>
+      </div>
+
+      <!-- In-game chat: player messages only -->
+      <div class="net-box" style="flex:1;display:flex;flex-direction:column;gap:10px;min-height:0;">
+        <div class="net-box-label">💬 Chat</div>
+        <div id="game-chat-window" class="chat-window"></div>
+        <div class="chat-input-row">
+          <input id="game-msg-input" type="text" placeholder="Say something…" disabled />
+          <button id="game-send-btn" disabled>SEND</button>
+        </div>
+      </div>
+
+      <!-- Debug panel -->
+      <div class="net-box" id="debug-box">
+        <div class="net-box-label" style="cursor:pointer" id="debug-toggle">🔧 DEBUG ▶</div>
+        <div id="debug-body" style="display:none">
+          <div id="debug-log" class="debug-log"></div>
+          <button id="debug-clear" style="margin-top:6px;font-size:9px;padding:4px 8px;font-family:'IBM Plex Mono',monospace;background:#1a1a2e;color:#888;border:1px solid #333;border-radius:4px;cursor:pointer">CLEAR</button>
+        </div>
+      </div>
+
+    </div><!-- /game-sidebar -->
+
+  </div><!-- /game-layout -->
+</div><!-- /game-view -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     REJECTED OVERLAY
+════════════════════════════════════════════════════════ -->
+<div id="rejected-overlay">
+  <div id="rejected-box">
+    <h2>Game has already started...</h2>
+    <div id="rejected-reason"></div>
+    <div id="rejected-actions">
+      <button id="rejected-spectate-btn" onclick="doRejectedSpectate()">SPECTATE INSTEAD</button>
+      <button id="rejected-late-join-btn" onclick="doRejectedLateJoin()" style="display:none">JOIN LATE</button>
+      <a href="../../arcade/index.html" class="rejected-back-link">← back to arcade</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     GAME OVER OVERLAY
+════════════════════════════════════════════════════════ -->
+<div id="gameover-overlay">
+  <div id="gameover-box">
+    <div id="gameover-confetti"></div>
+    <div id="gameover-title">SORRY!</div>
+    <div id="gameover-subtitle">GAME OVER</div>
+    <div id="gameover-winner-line">
+      <span id="gameover-pip"></span>
+      <span id="gameover-winner-name"></span>
+      <span id="gameover-you-tag"></span>
+    </div>
+    <div id="gameover-message">wins the game!</div>
+    <div id="gameover-pawns"></div>
+    <button id="gameover-restart-btn" onclick="window.location.reload()">PLAY AGAIN</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     HOW TO PLAY MODAL
+════════════════════════════════════════════════════════ -->
+<div id="how-to-play-modal" class="modal-overlay" onclick="closeModalOutside(event,'how-to-play-modal')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('how-to-play-modal')">✕</button>
+    <h2 class="modal-title">📖 HOW TO PLAY</h2>
+    <div class="modal-body">
+      <div class="modal-section-title">GOAL</div>
+      <p>Be the first player to move all 4 of your pawns from <strong>Start</strong> to <strong>Home</strong>.</p>
+
+      <div class="modal-section-title">YOUR TURN</div>
+      <p>Draw a card, then move one of your pawns according to the card's instructions. If no legal move exists, your turn is automatically skipped.</p>
+
+      <div class="modal-section-title">ENTERING THE BOARD</div>
+      <p>A pawn can leave Start only on a <strong>1</strong>, <strong>2</strong>, or <strong>Sorry!</strong> card. It enters at your color's entry square.</p>
+
+      <div class="modal-section-title">CARDS</div>
+      <div class="modal-card-grid">
+        <span class="modal-card-pip">1</span><span>Move a pawn out of Start, or move forward 1.</span>
+        <span class="modal-card-pip">2</span><span>Move out of Start or forward 2.</span>
+        <span class="modal-card-pip">3</span><span>Move forward 3.</span>
+        <span class="modal-card-pip">4</span><span>Move <em>backward</em> 4.</span>
+        <span class="modal-card-pip">5</span><span>Move forward 5.</span>
+        <span class="modal-card-pip">7</span><span>Move forward 7, or split the moves between two pawns (1–6 + remainder).</span>
+        <span class="modal-card-pip">8</span><span>Move forward 8.</span>
+        <span class="modal-card-pip">10</span><span>Move forward 10 or backward 1.</span>
+        <span class="modal-card-pip">11</span><span>Move forward 11, or swap places with any opponent pawn on the perimeter.</span>
+        <span class="modal-card-pip">12</span><span>Move forward 12.</span>
+        <span class="modal-card-pip sorry-pip">Sorry!</span><span>Take a pawn from Start and place it on any opponent's square (bumping them home).</span>
+      </div>
+
+      <div class="modal-section-title">BUMPING</div>
+      <p>Landing on an opponent's pawn sends it back to Start. You cannot bump your own pawns.</p>
+
+      <div class="modal-section-title">SLIDES</div>
+      <p>Landing on the <strong>start</strong> of a colored slide (that isn't your color) sends your pawn zooming to the end — bumping anyone in between!</p>
+
+      <div class="modal-section-title">SAFE ZONE</div>
+      <p>After completing a full lap, your pawn may enter your color's Safe Zone. Pawns in the Safe Zone cannot be bumped. Move all 4 to the final Home square to win!</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     CREDITS MODAL
+════════════════════════════════════════════════════════ -->
+<div id="credits-modal" class="modal-overlay" onclick="closeModalOutside(event,'credits-modal')">
+  <div class="modal-box modal-box-narrow">
+    <button class="modal-close" onclick="closeModal('credits-modal')">✕</button>
+    <h2 class="modal-title">★ CREDITS</h2>
+    <div class="modal-body modal-body-centered">
+      <div class="credits-logo">SORRY!</div>
+      <div class="credits-tagline">magmacrunch edition</div>
+
+      <div class="credits-block">
+        <div class="credits-role">ORIGINAL GAME CONCEPT</div>
+        <div class="credits-name">Hasbro / Parker Brothers</div>
+        <div class="credits-note">classic SORRY! board game (1929)</div>
+      </div>
+
+      <div class="credits-block">
+        <div class="credits-role">TECHNOLOGY &amp; RESOURCES</div>
+        <div class="credits-name">magmacrunch arcade</div>
+        <div class="credits-note">Vanilla HTML · CSS · JavaScript<br/>Python WebSocket server<br/>Raspberry Pi</div>
+      </div>
+
+      <div class="credits-block">
+        <div class="credits-role">GAME DESIGN &amp; DEVELOPMENT</div>
+        <div class="credits-name">Jake McCoy</div>
+        <div class="credits-note">game design · web implementation · server infrastructure</div>
+        <div class="credits-name" style="margin-top: 10px;">James McCoy</div>
+        <div class="credits-note">online multiplayer concept · Python WebSocket architecture</div>
+      </div>
+
+      <div class="credits-block">
+        <div class="credits-role">FONTS</div>
+        <div class="credits-name">Press Start 2P &amp; IBM Plex Mono</div>
+        <div class="credits-note">Google Fonts</div>
+      </div>
+
+      <div class="credits-block">
+        <div class="credits-role">PUBLISHER</div>
+        <div class="credits-name">magmacrunch media</div>
+      </div>    
+     
+      <div class="credits-block">
+        <div class="credits-role">CHEAPNESS IMPACT FACTOR</div>
+        <div class="credits-name">7.5</div>
+      </div>          
+     
+      <div class="credits-block">
+        <div class="credits-role">LAST UPDATED</div>
+        <div class="credits-name">March 1, 2026</div>
+      </div>          
+
+      <div class="credits-divider"></div>
+      <div class="credits-footer">
+        supported by the magmacrunch server<br/>
+        <a href="../../arcade/index.html" class="credits-link">← back to magmacrunch arcade</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     QUIT CONFIRM MODAL
+════════════════════════════════════════════════════════ -->
+<div id="quit-confirm-modal" class="modal-overlay" onclick="closeModalOutside(event,'quit-confirm-modal')">
+  <div class="modal-box modal-box-narrow">
+    <button class="modal-close" onclick="closeModal('quit-confirm-modal')">✕</button>
+    <h2 class="modal-title" style="color:var(--net-accent2)">✕ LEAVE GAME?</h2>
+    <div class="modal-body modal-body-centered">
+      <p class="quit-warn">Your pawns will be removed from the board. Other players can continue without you.</p>
+      <p class="quit-warn-sub">If only one player remains, the game will end.</p>
+      <div class="quit-btn-row">
+        <button class="quit-cancel-btn" onclick="closeModal('quit-confirm-modal')">STAY</button>
+        <button class="quit-confirm-btn" onclick="doQuitGame()">LEAVE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS — load order matters: config → state → renderer → network → ui
+════════════════════════════════════════════════════════ -->
+<script src="js/board-config.js"></script>
+<script src="js/game-state.js"></script>
+<script src="js/board-renderer.js"></script>
+<script src="js/network.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/ui.js"></script>
+<script>
+// ── Modal helpers ─────────────────────────────────────────────────────────────
+function openModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('modal-open');
+}
+function closeModal(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('modal-open');
+}
+function closeModalOutside(event, id) {
+  if (event.target.id === id) closeModal(id);
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.modal-open').forEach(function(m) {
+      m.classList.remove('modal-open');
+    });
+  }
+});
+
+// ── Quit game ─────────────────────────────────────────────────────────────────
+function doQuitGame() {
+  closeModal('quit-confirm-modal');
+  if (typeof Network !== 'undefined' && Network.isConnected()) {
+    Network.quitGame();
+  }
+  setTimeout(function() { window.location.reload(); }, 350);
+}
+
+// ── Rejected overlay actions ──────────────────────────────────────────────────
+function doRejectedSpectate() {
+  document.getElementById('rejected-overlay').classList.remove('show');
+  var name = document.getElementById('name-input').value.trim() || 'Spectator';
+  Network.reconnectAndDo(function() {
+    Network.spectate(name);
+  });
+}
+function doRejectedLateJoin() {
+  document.getElementById('rejected-overlay').classList.remove('show');
+  var name = document.getElementById('name-input').value.trim() || 'Player';
+  // Use the color saved by onRejected — by the time this button is clicked,
+  // the server has already closed the socket and onDisconnected has wiped
+  // _selectedColor (and therefore UI_selectedColor) to null.
+  var color = (typeof Network !== 'undefined' && Network._savedColorForRejoin)
+    ? Network._savedColorForRejoin
+    : (typeof UI_selectedColor !== 'undefined' && UI_selectedColor) ? UI_selectedColor : '';
+  Network.reconnectAndDo(function() {
+    Network.joinLate(name, color);
+  });
+}
+
+// ── Board scale for mobile ───────────────────────────────────────────────────
+(function() {
+  var BOARD_PX = 662;  // matches .board-frame explicit width
+
+  function applyBoardScale() {
+    // Measure the actual usable width from the game-view container if it's
+    // visible, otherwise fall back to window.innerWidth. This correctly
+    // accounts for browser chrome, safe-area insets, and any container padding
+    // on iOS Safari and other mobile browsers.
+    var gameView = document.getElementById('game-view');
+    var containerWidth = (gameView && gameView.offsetWidth > 0)
+      ? gameView.offsetWidth
+      : window.innerWidth;
+
+    // Subtract the game-view's own horizontal padding (0 8px on mobile = 16px total)
+    // so the board never butts right up against the edge.
+    var SIDE_PADDING = containerWidth < 780 ? 16 : 0;
+    var available = containerWidth - SIDE_PADDING;
+
+    var scale = available < BOARD_PX ? available / BOARD_PX : 1;
+    scale = Math.round(scale * 1000) / 1000;  // 3dp is plenty
+    document.documentElement.style.setProperty('--board-scale', scale);
+  }
+
+  applyBoardScale();
+  window.addEventListener('resize', applyBoardScale);
+  // Re-measure once fonts/layout settle — offsetWidth can be 0 on first paint
+  window.addEventListener('load', applyBoardScale);
+})();
+
+// ── Title screen dismiss ──────────────────────────────────────────────────────
+(function() {
+  var titleOverlay = document.getElementById('title-overlay');
+  var dismissed = false;
+
+  function dismiss() {
+    if (dismissed) return;
+    dismissed = true;
+    titleOverlay.classList.add('dismissing');
+    // Remove from DOM after transition so it can't block clicks
+    setTimeout(function() {
+      titleOverlay.style.display = 'none';
+    }, 650);
+  }
+
+  titleOverlay.addEventListener('click', dismiss);
+
+  document.addEventListener('keydown', function(e) {
+    // Never steal keypresses from chat inputs or any other text field
+    var tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+    // Only intercept space/enter while the title is still showing
+    if (!dismissed && (e.code === 'Space' || e.key === ' ' || e.key === 'Enter')) {
+      e.preventDefault();
+      dismiss();
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

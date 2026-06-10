@@ -1,0 +1,89 @@
+/* THLD about — olive accent theme */
+body.thld-page.thld-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.thld-page.thld-about-page main > * { background: var(--black); }
+
+body.thld-page.thld-about-page .breadcrumb { color: var(--thld-muted); }
+body.thld-page.thld-about-page .breadcrumb a { color: var(--thld-olive); }
+body.thld-page.thld-about-page .breadcrumb a:hover { color: var(--thld-olive-alt); }
+body.thld-page.thld-about-page .breadcrumb .sep { color: var(--thld-olive); opacity: 0.7; }
+body.thld-page.thld-about-page .breadcrumb .current { color: var(--thld-olive); }
+
+body.thld-page.thld-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.thld-page.thld-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--thld-olive); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.thld-page.thld-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--thld-olive); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(90,120,64,0.5); }
+
+body.thld-page.thld-about-page .place-body { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--thld-text); font-size: 16px; line-height: 1.7; }
+body.thld-page.thld-about-page .place-body p { margin-bottom: 1.5em; }
+body.thld-page.thld-about-page .place-body .quote {
+    border-left: 2px solid var(--thld-highlight);
+    padding-left: 14px;
+    margin: 24px 0;
+    font-style: italic;
+    color: var(--thld-highlight);
+    opacity: 0.85;
+}
+body.thld-page.thld-about-page .place-body a { color: var(--thld-accent); }
+body.thld-page.thld-about-page .place-body a:hover { color: var(--thld-highlight); }
+
+body.thld-page.thld-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
+body.thld-page.thld-about-page .ext-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--thld-highlight);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    padding: 7px 12px;
+    border: 1px solid var(--thld-highlight);
+    transition: background 0.15s, color 0.15s;
+}
+body.thld-page.thld-about-page .ext-link:hover {
+    background: var(--thld-highlight);
+    color: var(--thld-deep);
+}
+
+body.thld-page.thld-about-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--thld-olive), #6a8850, var(--thld-olive), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+/* Back button: transparent + olive */
+body.thld-page.thld-about-page .nav-card.c-back { background: transparent !important; color: var(--thld-olive) !important; border-color: var(--thld-olive) !important; }
+body.thld-page.thld-about-page .nav-card.c-back:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.thld-page.thld-about-page .nav-card::after { display: none; }
+body.thld-page.thld-about-page .nav-card:hover { box-shadow: 0 0 22px currentColor; }
+
+/* ASCII LOGO — full bleed */
+body.thld-page.thld-about-page .ascii-logo-wrap {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-top: 48px;
+    background-color: transparent !important;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background-image: url('../../../assets/photos/evan-street-porch1.jpg');
+    background-size: cover;
+    background-position: center 8%;
+    padding: 28px 20px;
+}
+body.thld-page.thld-about-page .ascii-logo-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(26, 18, 9, 0.58);
+}
+body.thld-page.thld-about-page .ascii-logo-link { text-decoration: none; display: block; position: relative; z-index: 1; }
+body.thld-page.thld-about-page .ascii-logo {
+    font-family: 'Courier Prime', monospace;
+    font-size: clamp(4px, 0.9vw, 8px);
+    line-height: 1.2;
+    color: var(--thld-accent);
+    text-shadow: 0 0 8px rgba(201,75,26,0.4);
+    white-space: pre;
+    display: inline-block;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+body.thld-page.thld-about-page .ascii-logo-link:hover .ascii-logo {
+    color: var(--thld-highlight);
+    text-shadow: 0 0 12px rgba(240,192,96,0.6);
+}

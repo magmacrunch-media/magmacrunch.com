@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jon McCoy — photography — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="jm-shared.css">
+    <link rel="stylesheet" href="jm-photography.css">
+</head>
+<body class="jm-page jm-photography-page">
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/index.html">by artist</a>
+        <span class="sep">›</span>
+        <a href="index.html">jhm</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// Jon McCoy //</div>
+        <div class="page-title">PHOTOGRAPHY</div>
+        <div class="sub-nav">
+            <a href="index.html"          class="nav-card c-back">← back</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
+            <a href="music-videos.html" class="nav-card c-music-videos">music videos</a>
+            <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"     class="nav-card c-releases">releases</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="section-label" style="margin-bottom:16px;">// photos //</div>
+        <div class="photo-strip-wrap" id="jmStripWrap">
+            <div class="photo-strip" id="jmStrip">
+                <div class="photo-item square" data-index="0">
+                    <img src="../../../assets/photos/placeholder.jpg" alt="Jon McCoy">
+                    <div class="photo-caption">add caption here</div>
+                </div>
+                <!-- Add more photos above -->
+            </div>
+            <div class="strip-scroll-hint" id="jmScrollHint">← drag to scroll →</div>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<div class="photo-lightbox" id="jmLightbox">
+    <button class="lb-close" id="jmLbClose">[ close ]</button>
+    <div class="lb-img-wrap"><img id="jmLbImg" src="" alt=""></div>
+    <div class="lb-cap" id="jmLbCap"></div>
+    <div class="lb-nav">
+        <button class="lb-btn" id="jmLbPrev">← prev</button>
+        <span class="lb-counter" id="jmLbCounter"></span>
+        <button class="lb-btn" id="jmLbNext">next →</button>
+    </div>
+</div>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const strip = document.getElementById('jmStrip');
+    const wrap  = document.getElementById('jmStripWrap');
+    const hint  = document.getElementById('jmScrollHint');
+    let isDown = false, startX, scrollLeft;
+
+    strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
+    strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+})();
+(function() {
+    const items   = document.querySelectorAll('#jmStrip .photo-item');
+    const lb      = document.getElementById('jmLightbox');
+    const lbImg   = document.getElementById('jmLbImg');
+    const lbCap   = document.getElementById('jmLbCap');
+    const lbCount = document.getElementById('jmLbCounter');
+    const strip   = document.getElementById('jmStrip');
+
+    const photos = Array.from(items).map(item => ({
+        src:     item.querySelector('img').src,
+        alt:     item.querySelector('img').alt,
+        caption: item.querySelector('.photo-caption').textContent.trim()
+    }));
+
+    let current = 0;
+
+    function open(index) {
+        current = index;
+        show();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = `${current + 1} / ${photos.length}`;
+    }
+    function nav(dir) {
+        current = (current + dir + photos.length) % photos.length;
+        show();
+    }
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            if (!strip.classList.contains('dragging'))
+                open(parseInt(item.dataset.index));
+        });
+    });
+
+    document.getElementById('jmLbClose').addEventListener('click', close);
+    document.getElementById('jmLbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('jmLbNext').addEventListener('click', () => nav(1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   nav(-1);
+        if (e.key === 'ArrowRight')  nav(1);
+    });
+})();
+</script>
+</body>
+</html>

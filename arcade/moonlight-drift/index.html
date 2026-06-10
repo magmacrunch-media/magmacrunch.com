@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>MOONLIGHT DRIFT</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="shortcut icon" href="favicon.ico">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <link rel="stylesheet" href="css/stars.css">
+    <link rel="stylesheet" href="css/game-container.css">
+    <link rel="stylesheet" href="css/overlays.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/scoreboard.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/character-selector.css">
+    <link rel="stylesheet" href="css/credits.css">
+    <link rel="stylesheet" href="css/buttons-retro.css">
+    <link rel="stylesheet" href="css/fonts-retro.css">
+    <link rel="stylesheet" href="css/modals-retro.css">
+    <style>
+        /* ── magmacrunch arcade back link ── */
+        .mc-back {
+            position: fixed !important;
+            top: 12px !important;
+            left: 14px !important;
+            z-index: 99999 !important;
+            font-family: 'Press Start 2P', monospace !important;
+            font-size: 9px !important;
+            color: rgba(0, 212, 255, 0.5) !important;
+            text-decoration: none !important;
+            letter-spacing: 0.08em !important;
+            transition: color 0.2s !important;
+            pointer-events: auto !important;
+        }
+        .mc-back::before {
+            content: '← ';
+        }
+        .mc-back:hover {
+            color: rgba(0, 212, 255, 0.95);
+        }
+        body.game-active .mc-back {
+            display: none;
+        }
+
+        /* Custom override for ASCII title - black background with glow */
+        #titleOverlay {
+            background: #000000 !important;
+            width: auto !important;
+            max-width: 90vw !important;
+            padding: 30px 40px !important;
+            border: 3px solid #00d4ff !important;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6) !important;
+        }
+        #asciiTitle {
+            color: #00d4ff !important;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8) !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+        #titleMessage {
+            background: none !important;
+            padding: 0 !important;
+        }
+        
+        /* Custom override for Ready overlay - teal on transparent to match title */
+        #readyOverlay {
+            background: rgba(0, 0, 0, 0.85) !important;
+            width: fit-content !important;
+            max-width: 90vw !important;
+        }
+        #readyContent h2 {
+            color: #00d4ff !important;
+            background: transparent !important;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8) !important;
+            box-shadow: none !important;
+        }
+        /* Keep instruction text white */
+        #readyContent p {
+            color: #ffffff !important;
+        }
+        /* Keep "press [space]" message teal */
+        #readyMessage {
+            color: #00d4ff !important;
+        }
+        
+        /* Game Over styling - allow uppercase for "GAME OVER" */
+        #gameOver {
+            text-transform: none !important;
+        }
+        
+        /* Allow normal capitalization in credits */
+        #creditsModal .credits-content,
+        #creditsModal .credits-content p,
+        #creditsModal .credits-content strong {
+            text-transform: none !important;
+        }
+        
+        /* Pulse animation for all-time high score */
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: scale(1.05); 
+                opacity: 0.9; 
+            }
+        }
+        
+        /* Achievement message styling */
+        #achievementMessage {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        #gameOverAchievement {
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        /* FORCE credits button to match other buttons */
+        #creditsBtn {
+            background: #5a6988 !important;
+            color: #ffffff !important;
+            border: none !important;
+            padding: 12px 20px !important;
+            font-family: 'Press Start 2P', monospace !important;
+            font-size: 10px !important;
+            font-weight: normal !important;
+            cursor: pointer !important;
+            transition: none !important;
+            border-radius: 0 !important;
+            text-transform: lowercase !important;
+            letter-spacing: 0 !important;
+            position: relative !important;
+            margin-top: 0 !important;
+            
+            /* Chunky SNES-style border */
+            box-shadow: 
+                0 6px 0 #2a3344,
+                0 -4px 0 #7a89a8,
+                -4px 0 0 #4a5968,
+                4px 0 0 #4a5968,
+                -4px -4px 0 #6a7988,
+                4px -4px 0 #6a7988,
+                -4px 6px 0 #1a2334,
+                4px 6px 0 #1a2334 !important;
+        }
+
+        #creditsBtn:hover {
+            background: #00d4ff !important;
+            color: #000000 !important;
+            box-shadow: 
+                0 6px 0 #006a7f,
+                0 -4px 0 #33e0ff,
+                -4px 0 0 #00a0bf,
+                4px 0 0 #00a0bf,
+                -4px -4px 0 #00c4df,
+                4px -4px 0 #00c4df,
+                -4px 6px 0 #00505f,
+                4px 6px 0 #00505f !important;
+        }
+
+        #creditsBtn:active {
+            transform: translateY(4px) !important;
+            box-shadow: 
+                0 2px 0 #2a3344,
+                0 -4px 0 #7a89a8,
+                -4px 0 0 #4a5968,
+                4px 0 0 #4a5968 !important;
+        }
+        
+        /* Mobile character modal fix */
+        @media (max-width: 768px) {
+            #characterModal .modal-content {
+                max-width: 95vw !important;
+                max-height: 85vh !important;
+            }
+            
+            #characterGrid {
+                max-height: 60vh !important;
+            }
+            
+            #creditsBtn {
+                font-size: 8px !important;
+                padding: 10px 16px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #creditsBtn {
+                font-size: 7px !important;
+                padding: 8px 12px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../arcade/index.html" class="mc-back">magmacrunch arcade</a>
+    <div id="backgroundGradient"></div>
+    <!-- Loading Screen -->
+    <div id="loadingScreen">
+        <div class="loading-content">
+            <pre class="loading-ascii">   
+ _____ ______   ________  ________  ________   ___       ___  ________  ___  ___  _________   
+|\   _ \  _   \|\   __  \|\   __  \|\   ___  \|\  \     |\  \|\   ____\|\  \|\  \|\___   ___\ 
+\ \  \\\__\ \  \ \  \|\  \ \  \|\  \ \  \\ \  \ \  \    \ \  \ \  \___|\ \  \\\  \|___ \  \_| 
+ \ \  \\|__| \  \ \  \\\  \ \  \\\  \ \  \\ \  \ \  \    \ \  \ \  \  __\ \   __  \   \ \  \  
+  \ \  \    \ \  \ \  \\\  \ \  \\\  \ \  \\ \  \ \  \____\ \  \ \  \|\  \ \  \ \  \   \ \  \ 
+   \ \__\    \ \__\ \_______\ \_______\ \__\\ \__\ \_______\ \__\ \_______\ \__\ \__\   \ \__\
+    \|__|     \|__|\|_______|\|_______|\|__| \|__|\|_______|\|__|\|_______|\|__|\|__|    \|__|
+     ________  ________  ___  ________ _________                    _.._                      
+    |\   ___ \|\   __  \|\  \|\  _____\\___   ___\                .' .-'`                     
+    \ \  \_|\ \ \  \|\  \ \  \ \  \__/\|___ \  \_|               /  /                         
+     \ \  \ \\ \ \   _  _\ \  \ \   __\    \ \  \                |  |                         
+      \ \  \_\\ \ \  \\  \\ \  \ \  \_|     \ \  \               \  \                         
+       \ \_______\ \__\\ _\\ \__\ \__\       \ \__\               '._'-.                      
+        \|_______|\|__|\|__|\|__|\|__|        \|__|                  ```                       
+            </pre>
+            <div class="loading-spinner"></div>
+            <div class="loading-text">loading...</div>
+        </div>
+    </div>
+    <div id="desktopOnlyMessage">
+        <div class="icon">🖥️</div>
+        <div class="title">desktop only</div>
+        <div class="message">
+            MOONLIGHT DRIFT is designed for desktop play.<br><br>
+            Please visit this page on a desktop or laptop computer to play!
+        </div>
+    </div>
+    <div id="starLayer1"></div>
+    <div id="starLayer2"></div>
+    <div id="starLayer3"></div>
+    <div id="starLayer4"></div>
+    <div id="starLayer5"></div>
+    <div id="starLayer6"></div>
+    <div id="starLayer7"></div>
+    <div id="starLayer8"></div>
+    <div id="starLayer9"></div>
+    <div id="starLayer10"></div>
+    <div id="starLayer11"></div>
+    <div id="starLayer12"></div>
+    <div id="starLayer13"></div>
+    <div id="starLayer14"></div>
+    <div id="starLayer15"></div>
+    <div id="gameContainer">
+        <div id="canvasWrapper">
+            <canvas id="gameCanvas" width="1280" height="720"></canvas>
+        </div>
+        
+        <div id="characterSelector" style="display: none;">
+            <button id="changeCharacterBtn">change character</button>
+            <button id="scoreboardBtn">high scores</button>
+            <button id="creditsBtn">credits</button>
+            <button id="muteBtn">SFX ON</button>
+        </div>
+        
+        <div id="score">score: 0</div>
+        <div id="instructions">hold [space] or click to fly up / release to fall</div>
+        
+        <div id="gameOver">
+            <span style="font-size: 1.5em; font-weight: bold;">GAME OVER!</span>
+            <div id="gameOverAchievement"></div>
+            <span style="display: block; font-size: 1.3em; margin: 10px 0; color: #00d4ff; text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);">final score: <span id="finalScore">0</span></span>
+            <span style="display: block; font-style: italic; opacity: 0.8; margin-top: 10px;">too cheap for ya?!</span>
+            press [space] to restart
+        </div>
+        
+        <div id="titleOverlay">
+            <pre id="asciiTitle">   
+ _____ ______   ________  ________  ________   ___       ___  ________  ___  ___  _________   
+|\   _ \  _   \|\   __  \|\   __  \|\   ___  \|\  \     |\  \|\   ____\|\  \|\  \|\___   ___\ 
+\ \  \\\__\ \  \ \  \|\  \ \  \|\  \ \  \\ \  \ \  \    \ \  \ \  \___|\ \  \\\  \|___ \  \_| 
+ \ \  \\|__| \  \ \  \\\  \ \  \\\  \ \  \\ \  \ \  \    \ \  \ \  \  __\ \   __  \   \ \  \  
+  \ \  \    \ \  \ \  \\\  \ \  \\\  \ \  \\ \  \ \  \____\ \  \ \  \|\  \ \  \ \  \   \ \  \ 
+   \ \__\    \ \__\ \_______\ \_______\ \__\\ \__\ \_______\ \__\ \_______\ \__\ \__\   \ \__\
+    \|__|     \|__|\|_______|\|_______|\|__| \|__|\|_______|\|__|\|_______|\|__|\|__|    \|__|
+     ________  ________  ___  ________ _________                    _.._                      
+    |\   ___ \|\   __  \|\  \|\  _____\\___   ___\                .' .-'`                     
+    \ \  \_|\ \ \  \|\  \ \  \ \  \__/\|___ \  \_|               /  /                         
+     \ \  \ \\ \ \   _  _\ \  \ \   __\    \ \  \                |  |                         
+      \ \  \_\\ \ \  \\  \\ \  \ \  \_|     \ \  \               \  \                         
+       \ \_______\ \__\\ _\\ \__\ \__\       \ \__\               '._'-.                      
+        \|_______|\|__|\|__|\|__|\|__|        \|__|                  ```                       
+            </pre>
+            <div id="titleMessage">press [space] or click to start!</div>
+        </div>
+        
+        <div id="readyOverlay" style="display: none;">
+            <div id="readyContent">
+                <h2>how to play</h2>
+                <p><strong>hold [space]</strong> or <strong>click</strong> to fly up</p>
+                <p><strong>release</strong> to fall down</p>
+                <p>avoid hitting the obstacles and boundaries!</p>
+                <div id="readyMessage">press [space] or click to start!</div>
+            </div>
+        </div>
+        
+        <div id="initialsPrompt">
+            <div id="achievementMessage"></div>
+            <h3 id="initialsTitle">enter your initials:</h3>
+            <input type="text" id="initialsInput" maxlength="3" placeholder="ABC">
+            <button id="submitInitials">submit</button>
+        </div>
+
+    </div>
+
+    <!-- Modals (outside gameContainer) -->
+    <div id="characterModal" style="display: none;">
+        <div class="modal-content">
+            <h2>select your character</h2>
+            <div id="characterGrid"></div>
+            <div class="modal-buttons">
+                <button id="modalMuteBtn">SFX ON</button>
+                <button id="closeModal">done</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scoreboardModal" style="display: none;">
+        <div class="modal-content">
+            <div id="scoreboard">
+                <h3>all-time high scores</h3>
+                <div id="scoreList"></div>
+            </div>
+            <button id="closeScoreboardModal">close</button>
+        </div>
+    </div>   
+
+    <div id="creditsModal" style="display: none;">
+        <div class="modal-content">
+            <h2>credits</h2>
+            <div class="credits-content">
+                <p><strong>game design & development:</strong><br>Jake McCoy</p>
+                
+                <p><strong>music:</strong><br>"Moonlight Drift" by C.P. Rutledge</p>
+
+                <p><strong>original concept:</strong><br>This game is inspired by Simon Dorsey's <em>Jetman</em> (2007, Facebook), which was itself based on David McCandless's 2002 Flash game <em>Helicopter</em>. Similar gameplay also appears in <em>SFCave</em>, developed by Yohei Iwasaki in 1995.</p>
+                
+                <p><strong>technology & resources:</strong><br>
+                • Press Start 2P font by CodeMan38 (Google Fonts)<br>
+                • HTML5 Canvas API<br>
+                • Web Audio API (gapless music looping)<br>
+                • JSONBin.io (high score persistence)<br>
+                • pure vanilla JavaScript</p>
+
+                <p><strong>publisher:</strong><br>magmacrunch media</p>
+
+                <p><strong>cheapness impact factor:</strong><br>3.7</p>
+                
+                <p><strong>last updated:</strong><br>February 12, 2026</p>
+            </div>
+            <div class="modal-buttons">
+                <button id="closeCreditsModal">close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load in dependency order -->
+    <script src="js/config.js"></script>
+    <!-- Character system core -->
+    <script src="js/characters/index.js"></script>
+    <!-- Individual characters -->
+    <script src="js/characters/cat-synth.js"></script>
+    <script src="js/characters/beava.js"></script>
+    <script src="js/characters/vinny-bobarino.js"></script>
+    <script src="js/characters/darius-hodgekins.js"></script>
+    <script src="js/characters/roderick-tron.js"></script>
+    <script src="js/characters/juanito-thompson.js"></script>
+    <script src="js/characters/carl-spatski.js"></script>
+    <script src="js/characters/dspum-balloon.js"></script>
+    <script src="js/characters/foresters-soul.js"></script>
+    <script src="js/characters/grocery-harrison.js"></script>
+    <script src="js/characters/didgeridoo-man.js"></script>
+    <script src="js/characters/mountain-gnome.js"></script>
+    <script src="js/characters/prince-vince.js"></script>
+    <script src="js/characters/dag-henderson.js"></script>
+    <script src="js/characters/ban-daniel.js"></script>
+    <script src="js/characters/plantain-jane.js"></script>
+    <script src="js/characters/fire-toad.js"></script>
+    <script src="js/characters/backpack-man.js"></script>
+    <script src="js/characters/tollbooth-lady.js"></script>
+    <script src="js/characters/svfp-van.js"></script>
+    <script src="js/characters/tardigrade.js"></script>
+    <script src="js/characters/elektra.js"></script>
+    <script src="js/characters/strawberto.js"></script>
+    <script src="js/characters/carl.js"></script>
+    <!-- Other game modules -->
+    <script src="js/player.js"></script>
+    <script src="js/obstacles.js"></script>
+    <script src="js/stars.js"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/character-balance.js"></script>
+    <script src="js/character-selector-modal.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/scoreboard-modal.js"></script>
+</body>
+</html>

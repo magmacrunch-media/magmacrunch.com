@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twin Maples — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="tm-shared.css">
+    <style>
+        /* ══ PAGE: by-place / twin-maples ══ */
+
+        main { position: relative; }
+
+        /* ── BREADCRUMB ── */
+        body.tm-page .breadcrumb a { color: var(--tm-muted); }
+        body.tm-page .breadcrumb a:hover { color: var(--tm-cream); }
+        body.tm-page .breadcrumb .sep { color: var(--tm-muted); opacity: 0.6; }
+        body.tm-page .breadcrumb .current { color: var(--tm-muted); }
+
+        /* ── HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 48px;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 35%;
+            filter: saturate(0.7) brightness(0.72);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(74, 104, 88, 0.07);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8, 8, 18, 0.15) 0%,
+                rgba(8, 8, 18, 0.0)  15%,
+                rgba(8, 8, 18, 0.0)  55%,
+                rgba(8, 8, 18, 0.7)  78%,
+                rgba(8, 8, 18, 1.0)  100%
+            );
+        }
+
+        /* ── HERO INNER ── */
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            padding: 0 20px 36px;
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .artist-header {
+            width: 100%;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        /* ── ARTIST HEADER ── */
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #c83028;
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: #e8e4d0;
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(74, 104, 88, 0.55),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #c83028;
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--tm-brand), var(--tm-warm), var(--tm-brand), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--tm-muted); text-decoration:none; border:1px solid var(--tm-dark); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--tm-warm); border-color:var(--tm-warm); }
+
+        @media (max-width:640px) { .artist-name{font-size:13px;} .sub-nav{flex-direction:column;} }
+    </style>
+</head>
+<body class="tm-page">
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-place/index.html">by place</a>
+        <span class="sep">›</span>
+        <span class="current">twin maples</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/twin-maples.jpg" alt="Twin Maples">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by place //</div>
+                <div class="artist-name">TWIN MAPLES</div>
+                <div class="artist-abbr">BLOCK ISLAND</div>
+
+                <div class="sub-nav">
+                    <a href="about.html"      class="nav-card c-about">about</a>
+                    <a href="personnel.html"  class="nav-card c-personnel">personnel</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="works.html"       class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-link-wrap">
+        <a href="https://musicbrainz.org/place/e697fa03-e300-421a-8fd3-3b026d8d4f13"
+           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+</body>
+</html>

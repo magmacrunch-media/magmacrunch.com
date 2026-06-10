@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>guestbook — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ── PAGE-SPECIFIC: guestbook ── */
+        :root {
+            --nav-accent: var(--green);
+            --nav-glow: rgba(57,255,110,0.4);
+            --nav-brand: #90ffaa;
+            --nav-brand-glow: rgba(144,255,170,0.7);
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--nearwhite); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--nearwhite); opacity: 0.7; }
+        .breadcrumb .current { color: var(--nearwhite); }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--green);
+            text-shadow: 0 0 16px rgba(57,255,110,0.7), 0 0 32px rgba(57,255,110,0.3);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--green);
+            letter-spacing: 0.1em;
+            margin-bottom: 36px;
+            opacity: 0.7;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* page glow effect */
+        main {
+            box-shadow: 
+                inset 0 0 100px rgba(57,255,110,0.02),
+                inset 0 0 200px rgba(57,255,110,0.01);
+        }
+
+        .guestbook-wrap {
+            width: min(680px, 95vw);
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+/* ── FORM ── */
+        .form-container {
+            border: 2px solid var(--green);
+            background: #0a0a0a;
+            padding: 24px;
+            margin-bottom: 36px;
+            box-shadow:
+                0 0 0 1px var(--green),
+                0 0 20px rgba(57,255,110,0.15),
+                inset 0 0 60px rgba(57,255,110,0.03);
+            position: relative;
+        }
+
+        .form-container::before {
+            content: '// sign the guestbook //';
+            position: absolute;
+            top: -10px;
+            left: 16px;
+            background: #0a0a0a;
+            padding: 0 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--nearwhite);
+            letter-spacing: 0.12em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            background: #000;
+            border: 1px solid var(--nearwhite);
+            color: var(--nearwhite);
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            transition: all 0.2s;
+            outline: none;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 10px rgba(57,255,110,0.5), 0 0 20px rgba(240,240,240,0.1);
+            background: rgba(57,255,110,0.05);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--nearwhite);
+            opacity: 0.5;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+            margin-bottom: 16px;
+        }
+
+        .submit-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            background: var(--green);
+            color: #000;
+            border: 2px solid var(--green);
+            padding: 12px 24px;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .submit-btn:hover {
+            background: #000;
+            color: var(--nearwhite);
+            border-color: var(--nearwhite);
+            box-shadow: 0 0 20px rgba(57,255,110,0.4), 0 0 30px rgba(240,240,240,0.2);
+        }
+        .submit-btn:active {
+            transform: translate(2px, 2px);
+        }
+
+        .submit-status {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            margin-top: 12px;
+            min-height: 16px;
+            letter-spacing: 0.08em;
+        }
+        .submit-status.ok    { color: var(--green); }
+        .submit-status.error { color: var(--rose);  }
+
+        /* ── ENTRIES ── */
+        .entries-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--green);
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            text-shadow: 0 0 8px rgba(57,255,110,0.4);
+        }
+
+        .entries-list { display: flex; flex-direction: column; gap: 0; }
+
+        .entry {
+            border: 1px solid #0a1a0a;
+            border-bottom: none;
+            padding: 16px 18px;
+            background: #050a05;
+            transition: background 0.15s;
+        }
+        .entry:last-child { border-bottom: 1px solid #0a1a0a; }
+        .entry:hover { background: #0a150a; }
+
+        .entry-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--green);
+            margin-bottom: 8px;
+            letter-spacing: 0.06em;
+        }
+        .entry-name::before { content: '▶ '; color: var(--green); opacity: 0.6; }
+
+.entry-message {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--white);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .entry-time {
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: var(--green);
+            opacity: 0.5;
+            margin-top: 10px;
+        }
+
+        .entry-time {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--dim);
+        }
+
+        .loading-msg {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            text-align: center;
+            padding: 28px;
+            animation: blink 1s step-end infinite;
+            letter-spacing: 0.1em;
+        }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li>
+            <a href="../index.html">home</a>
+            <div class="dropdown">
+                <a href="../home/about.html">about</a>
+                <a href="../home/links/all-links.html">all links</a>
+            </div>
+        </li>
+        <li>
+            <a href="../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../music/jukebox/index.html">jukebox</a>
+                <a href="../music/distributed-music.html">distributed music</a>
+                <a href="../music/floppy-disk/index.html">floppy disk</a>
+                <a href="../music/catalog.html">full catalog</a>
+            </div>
+        </li>
+        <li>
+            <a href="../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../visual/music-videos.html">music videos</a>
+                <a href="../visual/collage.html">collage</a>
+                <a href="../visual/photography.html">photography</a>
+            </div>
+        </li>
+<li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a></div></li>
+        <li>
+            <a href="../arcade/index.html">arcade</a>
+        </li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <span class="current">guestbook</span>
+    </div>
+
+    <h1 class="page-title">// guestbook //</h1>
+    <p class="page-subtitle">say hi ✦ leave a note ✦ you were here</p>
+
+    <div class="guestbook-wrap">
+
+        <!-- FORM -->
+        <div class="form-container">
+            <input type="text" id="name" placeholder="your name" maxlength="80">
+            <textarea id="message" placeholder="leave a message..."></textarea>
+            <button class="submit-btn" onclick="submitEntry()">[ send ]</button>
+            <div class="submit-status" id="submitStatus"></div>
+        </div>
+
+        <!-- ENTRIES -->
+        <div class="entries-header">// entries //</div>
+        <div id="entries">
+            <div class="loading-msg">loading entries...</div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+    // ── Google Apps Script backend (unchanged from original) ──
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIKFyhLKbCR3VnOzl1vkKu8vQdWw8ENmUiHVgTBGSlQLYeTMn7hDiANlGbZACGElvc/exec';
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function loadEntries() {
+        fetch(SCRIPT_URL)
+            .then(r => r.json())
+            .then(data => {
+                const container = document.getElementById('entries');
+                if (!data.length) {
+                    container.innerHTML = '<div class="loading-msg">no entries yet — be the first!</div>';
+                    return;
+                }
+                container.innerHTML = '<div class="entries-list"></div>';
+                const list = container.querySelector('.entries-list');
+                [...data].reverse().forEach(entry => {
+                    const div = document.createElement('div');
+                    div.className = 'entry';
+                    div.innerHTML = `
+                        <div class="entry-name">${escapeHtml(entry.name)}</div>
+                        <div class="entry-message">${escapeHtml(entry.message)}</div>
+                        <div class="entry-time">${new Date(entry.timestamp).toLocaleString()}</div>
+                    `;
+                    list.appendChild(div);
+                });
+            })
+            .catch(() => {
+                document.getElementById('entries').innerHTML =
+                    '<div class="loading-msg">error loading entries</div>';
+            });
+    }
+
+    function submitEntry() {
+        const name    = document.getElementById('name').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const status  = document.getElementById('submitStatus');
+
+        if (!name || !message) {
+            status.textContent = '! please fill in both fields';
+            status.className = 'submit-status error';
+            return;
+        }
+
+        status.textContent = 'sending...';
+        status.className = 'submit-status';
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('message', message);
+
+        fetch(SCRIPT_URL, { method: 'POST', body: formData })
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.getElementById('name').value    = '';
+                    document.getElementById('message').value = '';
+                    status.textContent = '✦ message sent!';
+                    status.className = 'submit-status ok';
+                    loadEntries();
+                    setTimeout(() => { status.textContent = ''; }, 4000);
+                }
+            })
+            .catch(() => {
+                status.textContent = '! error sending — please try again';
+                status.className = 'submit-status error';
+            });
+    }
+
+    loadEntries();
+    const gbPollId = setInterval(loadEntries, 30000);
+    window.__pageCleanup = function() { clearInterval(gbPollId); };
+</script>
+
+</body>
+</html>

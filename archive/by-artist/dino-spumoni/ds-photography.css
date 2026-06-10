@@ -1,0 +1,24 @@
+/* Dino Spumoni — photography (light-warm accent) */
+body.ds-page.ds-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.ds-page.ds-photography-page main > * { background: var(--black); }
+
+body.ds-page.ds-photography-page .breadcrumb a { color: var(--ds-light-warm); }
+body.ds-page.ds-photography-page .breadcrumb a:hover { color: var(--ds-heading); }
+body.ds-page.ds-photography-page .breadcrumb .sep { color: var(--ds-light-warm); opacity: 0.5; }
+body.ds-page.ds-photography-page .breadcrumb .current { color: var(--ds-light-warm); }
+
+body.ds-page.ds-photography-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ds-page.ds-photography-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ds-light-warm) !important; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ds-page.ds-photography-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ds-light-warm) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(232, 160, 176, 0.5) !important; }
+
+body.ds-page.ds-photography-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--ds-light-warm), var(--ds-rose), var(--ds-light-warm), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+body.ds-page.ds-photography-page .photo-grid-section { width: 100%; max-width: 960px; padding: 0 20px; }
+body.ds-page.ds-photography-page .photo-grid-section p { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--ds-heading); line-height: 1.8; }
+
+/* Back button: transparent + page accent */
+body.ds-page.ds-photography-page .nav-card.c-back { background: transparent !important; color: var(--ds-light-warm) !important; border-color: var(--ds-light-warm) !important; }
+body.ds-page.ds-photography-page .nav-card.c-back:hover { background: var(--ds-light-warm) !important; color: var(--ds-deep) !important; }
+
+
+body.ds-page.ds-photography-page .nav-card::after { display: none; }

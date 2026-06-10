@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THLD — music videos — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="thld-shared.css">
+    <link rel="stylesheet" href="thld-music-videos.css">
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        '4d945923-9deb-4cd0-a477-6e1474cb306c',
+        name:      "texas hold'em lava dome, et al.",
+        abbr:      'THLD',
+        accent:    'slate',
+        backColor: 'c-orange',
+        siblings:  ['about', 'events', 'photography', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="thld-page thld-music-videos-page">
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/index.html">by artist</a>
+        <span class="sep">›</span>
+        <a href="index.html">thld</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// texas hold'em lava dome, et al. //</div>
+        <div class="page-title">MUSIC VIDEOS</div>
+        <div class="sub-nav" id="sub-nav">
+            <a href="index.html"        class="nav-card c-back">← back</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
+            <a href="events.html"       class="nav-card c-events">events</a>
+            <a href="photography.html"  class="nav-card c-photography">photography</a>
+            <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"     class="nav-card c-releases">releases</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="videos-section">
+        <div class="mini-video-list" id="miniVideoList"></div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+const VIDEOS = [
+    { title: "Figure the Shoreline",                         year: "2024", ytId: "Gm9XVmj0iVM", archiveId: "thld-figuretheshoreline", mbid: "ff5a70e3-f8a2-4409-be55-98304b3079ef" },
+    { title: "Contemplate the Plate Tectonic",               year: "2024", ytId: "YnzQh-h5zq0", archiveId: "thld-contemplate",        mbid: "99a038e2-4985-4771-8428-9579908a3065", dmId: "x9hg4hk",  lbSlug: "contemplate-the-plate-tectonic" },
+    { title: "Film School",                                  year: "2023", ytId: "MtAtKhfXLB8", archiveId: "thld-filmschool",         mbid: "02701169-81b5-4c70-99b3-3d1282ea2ac9", dmId: "x9hg26i",  lbSlug: "film-school-2023" },
+    { title: "Bus full of time-traveling twenty-somethings", year: "2023", ytId: "OebpP5m3jms", archiveId: "busfulloftimetraveling",   mbid: "b2705c1c-2f67-4eeb-9605-9aa345b72a2b", dmId: "x9hg172", lbSlug: "bus-full-of-time-traveling-twenty-somethings" },
+];
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+function esc(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function formatDuration(ms) {
+    if (!ms) return null;
+    const s = Math.floor(ms / 1000);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function formatRelDates(begin, end) {
+    if (!begin && !end) return null;
+    if (begin && end && begin === end) return begin;
+    if (begin && end) return `${begin} – ${end}`;
+    if (begin) return `from ${begin}`;
+    return `until ${end}`;
+}
+
+async function fetchWithRetry(url, retries = 4) {
+    for (let i = 0; i < retries; i++) {
+        let res;
+        try {
+            res = await fetch(url);
+        } catch (networkErr) {
+            if (i === retries - 1) throw networkErr;
+            await delay(1500 * (i + 1));
+            continue;
+        }
+        if (res.status === 429 || res.status === 503) {
+            if (i === retries - 1) throw new Error(`HTTP ${res.status} after ${retries} attempts`);
+            await delay(2500 * (i + 1));
+            continue;
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+    }
+}
+
+// ─── MusicBrainz data → structured object ────────────────────────────────────
+
+function parseMBData(data) {
+    const out = {};
+
+    // Basic fields
+    const dur = formatDuration(data.length);
+    if (dur) out.duration = dur;
+
+    if (data.disambiguation) out.disambiguation = esc(data.disambiguation);
+    if (data.annotation)     out.annotation     = esc(data.annotation);
+
+    // ISRCs
+    if (data.isrcs?.length) out.isrcs = data.isrcs.map(esc);
+
+    // Tags (genre/mood)
+    if (data.tags?.length) {
+        out.tags = data.tags
+            .sort((a, b) => b.count - a.count)
+            .map(t => esc(t.name));
+    }
+
+    // Releases — show up to 3
+    if (data.releases?.length) {
+        out.releases = data.releases.slice(0, 3).map(rel => ({
+            title:   esc(rel.title),
+            date:    rel.date ? esc(rel.date) : null,
+            country: rel.country ? esc(rel.country) : null,
+            status:  rel.status ? esc(rel.status) : null,
+        }));
+    }
+
+    // Artist credit
+    if (data['artist-credit']?.length) {
+        out.artist = esc(data['artist-credit'].map(c => c.name ?? c.artist?.name ?? '').join(''));
+    }
+
+    // Relations — bucket by target-type
+    const places = [], areas = [], crew = [], labels = [], works = [], links = [], misc = [];
+
+    for (const r of (data.relations ?? [])) {
+        const type = r.type || '';
+
+        if (r['target-type'] === 'place' && r.place) {
+            const p = r.place;
+            const nameParts = [esc(p.name)];
+            if (p.area?.name) nameParts.push(esc(p.area.name));
+            const entry = {
+                relType:   esc(type),
+                label:     nameParts.join(', '),
+                placeType: p.type ? esc(p.type) : null,
+                dates:     formatRelDates(r.begin, r.end),
+            };
+            if (p.coordinates) entry.coords = `${p.coordinates.latitude}, ${p.coordinates.longitude}`;
+            places.push(entry);
+        }
+
+        else if (r['target-type'] === 'area' && r.area) {
+            const a = r.area;
+            areas.push({
+                relType:  esc(type),
+                label:    esc(a.name),
+                areaType: a.type ? esc(a.type) : null,
+                dates:    formatRelDates(r.begin, r.end),
+            });
+        }
+
+        else if (r['target-type'] === 'artist' && r.artist) {
+            // Attributes: instrument names, credited-as values, etc.
+            const attrs = (r.attributes ?? []).map(a => {
+                const credited = r['attribute-values']?.[a];
+                return credited ? esc(credited) : esc(a);
+            });
+            // Date range on the relation itself
+            const dates = formatRelDates(r.begin, r.end);
+            crew.push({
+                role:   esc(type),
+                name:   esc(r.artist.name),
+                attrs:  attrs,
+                dates:  dates,
+            });
+        }
+
+        else if (r['target-type'] === 'label' && r.label) {
+            const dates = formatRelDates(r.begin, r.end);
+            labels.push({ role: esc(type), name: esc(r.label.name), dates });
+        }
+
+        else if (r['target-type'] === 'work' && r.work) {
+            const w = r.work;
+            const workEntry = {
+                role:  esc(type),
+                title: esc(w.title),
+            };
+            if (w.disambiguation) workEntry.disambiguation = esc(w.disambiguation);
+            if (w.language)       workEntry.language       = esc(w.language);
+            if (w.iswcs?.length)  workEntry.iswcs          = w.iswcs.map(esc);
+
+            // Work-level relations: composers, lyricists, arrangers, publishers, etc.
+            const workCrew = [];
+            for (const wr of (w.relations ?? [])) {
+                const wType = wr.type || '';
+                if (wr['target-type'] === 'artist' && wr.artist) {
+                    const attrs = (wr.attributes ?? []).map(a => {
+                        const credited = wr['attribute-values']?.[a];
+                        return credited ? esc(credited) : esc(a);
+                    });
+                    const dates = formatRelDates(wr.begin, wr.end);
+                    workCrew.push({ role: esc(wType), name: esc(wr.artist.name), attrs, dates });
+                }
+                if (wr['target-type'] === 'label' && wr.label) {
+                    workCrew.push({ role: esc(wType), name: esc(wr.label.name) });
+                }
+            }
+            if (workCrew.length) workEntry.crew = workCrew;
+
+            works.push(workEntry);
+        }
+
+        else if (r['target-type'] === 'url' && r.url?.resource) {
+            try {
+                links.push({
+                    label: esc(type || 'link'),
+                    href:  esc(r.url.resource),
+                    host:  esc(new URL(r.url.resource).hostname),
+                });
+            } catch {}
+        }
+
+        else if (r['target-type'] && type) {
+            // catch-all for recording-rels, event-rels, etc.
+            const name = r[r['target-type']]?.name || r[r['target-type']]?.title || '';
+            if (name) misc.push({ type: esc(type), name: esc(name) });
+        }
+    }
+
+    if (places.length) out.places = places;
+    if (areas.length)  out.areas  = areas;
+    if (crew.length)   out.crew   = crew;
+    if (labels.length) out.labels = labels;
+    if (works.length)  out.works  = works;
+    if (links.length)  out.links  = links;
+    if (misc.length)   out.misc   = misc;
+
+    return out;
+}
+
+// ─── Render MusicBrainz panel ─────────────────────────────────────────────────
+
+function row(label, val) {
+    return `<div class="mb-row"><span class="mb-label">${label}</span><span class="mb-val">${val}</span></div>`;
+}
+
+function renderMBPanel(el, data) {
+    const rows = [];
+
+    if (data.artist)         rows.push(row('artist', data.artist));
+    if (data.duration)       rows.push(row('duration', data.duration));
+    if (data.disambiguation) rows.push(row('note', data.disambiguation));
+    if (data.annotation)     rows.push(row('annotation', data.annotation));
+    if (data.isrcs?.length)  rows.push(row('isrc', data.isrcs.join(', ')));
+    if (data.tags?.length)   rows.push(row('tags', data.tags.join(', ')));
+
+    // Releases
+    for (const rel of (data.releases ?? [])) {
+        const meta = [rel.date, rel.country, rel.status].filter(Boolean).join(' · ');
+        rows.push(row('release', rel.title + (meta ? ` <span class="mb-date">(${meta})</span>` : '')));
+    }
+
+    // Crew (director, cinematographer, performer, etc.)
+    for (const c of (data.crew ?? [])) {
+        let val = esc(c.name);
+        if (c.attrs?.length) val += ` <span class="mb-date">(${c.attrs.join(', ')})</span>`;
+        if (c.dates)         val += ` <span class="mb-date">[${c.dates}]</span>`;
+        rows.push(row(c.role, val));
+    }
+
+    // Labels
+    for (const l of (data.labels ?? [])) {
+        let val = esc(l.name);
+        if (l.dates) val += ` <span class="mb-date">[${l.dates}]</span>`;
+        rows.push(row(l.role || 'label', val));
+    }
+
+    // Works and their own relations
+    for (const w of (data.works ?? [])) {
+        let titleVal = w.title;
+        if (w.disambiguation) titleVal += ` <span class="mb-date">(${w.disambiguation})</span>`;
+        if (w.language)       titleVal += ` <span class="mb-date">[${w.language}]</span>`;
+        if (w.iswcs?.length)  titleVal += ` <span class="mb-date">ISWC: ${w.iswcs.join(', ')}</span>`;
+        rows.push(row(w.role || 'work', titleVal));
+        for (const c of (w.crew ?? [])) {
+            let val = c.name;
+            if (c.attrs?.length) val += ` <span class="mb-date">(${c.attrs.join(', ')})</span>`;
+            if (c.dates)         val += ` <span class="mb-date">[${c.dates}]</span>`;
+            rows.push(row(`↳ ${c.role}`, val));
+        }
+    }
+
+    // Places ("shot at" for specific venues/studios)
+    for (const p of (data.places ?? [])) {
+        const placeLabel = p.relType || 'shot at';
+        let val = p.label;
+        if (p.placeType) val += ` <span class="mb-date">[${p.placeType}]</span>`;
+        if (p.dates)     val += ` <span class="mb-date">[${p.dates}]</span>`;
+        if (p.coords)    val += ` <span class="mb-coords">📍 ${p.coords}</span>`;
+        rows.push(row(placeLabel, val));
+    }
+
+    // Areas ("shot in" for cities/countries/regions)
+    for (const a of (data.areas ?? [])) {
+        const areaLabel = a.relType || 'shot in';
+        let val = a.label;
+        if (a.areaType) val += ` <span class="mb-date">[${a.areaType}]</span>`;
+        if (a.dates)    val += ` <span class="mb-date">[${a.dates}]</span>`;
+        rows.push(row(areaLabel, val));
+    }
+
+    // Misc catch-all relations
+    for (const m of (data.misc ?? [])) {
+        rows.push(row(m.type, m.name));
+    }
+
+    // URLs
+    for (const l of (data.links ?? [])) {
+        rows.push(row(l.label, `<a href="${l.href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${l.host}</a>`));
+    }
+
+    el.innerHTML = rows.length
+        ? `<div class="mb-table">${rows.join('')}</div>`
+        : `<div class="mb-empty">no musicbrainz data</div>`;
+}
+
+// ─── Build embed src ──────────────────────────────────────────────────────────
+
+function embedSrc(v) {
+    if (v.archiveId) return `https://archive.org/embed/${v.archiveId}`;
+    return `https://www.youtube.com/embed/${v.ytId}?rel=0`;
+}
+
+// ─── Build cards ──────────────────────────────────────────────────────────────
+
+const videoList = document.getElementById('miniVideoList');
+let mbQueue = Promise.resolve();
+
+VIDEOS.forEach(v => {
+    const watchUrl  = `https://www.youtube.com/watch?v=${v.ytId}`;
+    const archiveUrl = v.archiveId ? `https://archive.org/details/${v.archiveId}` : null;
+
+    // ── Outer entry ──
+    const entry = document.createElement('div');
+    entry.className = 'video-entry';
+
+    // ── Header: year + title + links ──
+    const header = document.createElement('div');
+    header.className = 'video-header';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'video-title-wrap';
+
+    const year = document.createElement('span');
+    year.className = 'video-year';
+    year.textContent = v.year;
+
+    const title = document.createElement('h2');
+    title.className = 'video-title';
+    title.textContent = v.title;
+
+    titleWrap.append(year, title);
+
+    header.append(titleWrap);
+
+    // ── Embed ──
+    const embedWrap = document.createElement('div');
+    embedWrap.className = v.archiveId ? 'video-embed ia-embed' : 'video-embed';
+    embedWrap.innerHTML = `<iframe src="${embedSrc(v)}" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`;
+
+    // ── External links ──
+    const extLinks = document.createElement('div');
+    extLinks.className = 'video-ext-links';
+
+    if (archiveUrl) {
+        const a = document.createElement('a');
+        a.className = 'ext-link ext-archive';
+        a.href = archiveUrl; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = '⬡ internet archive';
+        extLinks.appendChild(a);
+    }
+    const yt = document.createElement('a');
+    yt.className = 'ext-link ext-yt';
+    yt.href = watchUrl; yt.target = '_blank'; yt.rel = 'noopener';
+    yt.textContent = '▶ youtube';
+    extLinks.appendChild(yt);
+
+    if (v.dmId) {
+        const dm = document.createElement('a');
+        dm.className = 'ext-link ext-dm';
+        dm.href = `https://www.dailymotion.com/video/${v.dmId}`;
+        dm.target = '_blank'; dm.rel = 'noopener';
+        dm.textContent = '▶ dailymotion';
+        extLinks.appendChild(dm);
+    }
+
+    if (v.lbSlug) {
+        const lb = document.createElement('a');
+        lb.className = 'ext-link ext-lb';
+        lb.href = `https://letterboxd.com/film/${v.lbSlug}/`;
+        lb.target = '_blank'; lb.rel = 'noopener';
+        lb.textContent = '◈ letterboxd';
+        extLinks.appendChild(lb);
+    }
+
+    // ── MusicBrainz panel ──
+    const mbPanel = document.createElement('div');
+    mbPanel.className = 'video-mb';
+    if (v.mbid) {
+        mbPanel.id = `mb-${v.ytId}`;
+        mbPanel.innerHTML = '<div class="mb-loading">loading musicbrainz…</div>';
+    }
+
+    entry.append(header, embedWrap, extLinks, mbPanel);
+    videoList.appendChild(entry);
+
+    // Queue MB fetch with 1 s spacing
+    if (v.mbid) {
+        mbQueue = mbQueue
+            .then(() => delay(1000))
+            .then(() => fetchMB(v.mbid, `mb-${v.ytId}`));
+    }
+});
+
+// ─── MusicBrainz fetch ────────────────────────────────────────────────────────
+
+async function fetchMB(mbid, elId) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    try {
+        const data = await fetchWithRetry(
+            `https://musicbrainz.org/ws/2/recording/${mbid}?inc=releases+artists+isrcs+annotation+tags+url-rels+place-rels+area-rels+artist-rels+label-rels+work-rels+work-level-rels&fmt=json`
+        );
+        renderMBPanel(el, parseMBData(data));
+    } catch (e) {
+        el.innerHTML = `<div class="mb-error">musicbrainz error: ${esc(e.message)}</div>`;
+    }
+}
+</script>
+
+<style>
+/* ── Video entry ── */
+.video-entry {
+    margin-bottom: 3rem;
+}
+.mini-video-list {
+    width: 100%;
+}
+
+/* ── Header ── */
+.video-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0.6rem;
+}
+.video-title-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+.video-year {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.5;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+}
+.video-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ── External links ── */
+.video-ext-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+}
+.ext-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 3px;
+    text-decoration: none;
+    border: none;
+}
+.ext-archive {
+    border-color: #8a6040;
+    color: #8a6040;
+}
+.ext-archive:hover { background: #8a6040; color: var(--thld-deep); }
+.ext-yt {
+    border-color: #f0c060;
+    color: #f0c060;
+}
+.ext-yt:hover { background: #f0c060; color: var(--thld-deep); }
+.ext-dm {
+    border-color: #e07a2f;
+    color: #e07a2f;
+}
+.ext-dm:hover { background: #e07a2f; color: var(--thld-deep); }
+.ext-lb {
+    border-color: #6a5878;
+    color: #6a5878;
+}
+.ext-lb:hover { background: #6a5878; color: var(--thld-text); }
+
+/* ── MusicBrainz panel ── */
+.video-mb {
+    margin-top: 0.75rem;
+}
+.mb-table {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.mb-row { display: contents; }
+.mb-label {
+    color: #8a6040;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding-top: 3px;
+    white-space: nowrap;
+}
+.mb-val { color: #d4b896; }
+.mb-date { opacity: 0.6; }
+.mb-coords {
+    display: block;
+    font-size: 0.72rem;
+    opacity: 0.55;
+}
+.mb-loading {
+    font-size: 0.78rem;
+    opacity: 0.45;
+    font-style: italic;
+}
+.mb-empty {
+    font-size: 0.78rem;
+    opacity: 0.35;
+    font-style: italic;
+}
+.mb-error {
+    font-size: 0.78rem;
+    color: #4a7068;
+}
+/* ── Embed ── */
+.video-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+/* Crop the IA title bar — adjust --ia-bar to taste */
+.video-embed.ia-embed {
+    --ia-bar: 52px;
+}
+.video-embed.ia-embed iframe {
+    top: calc(-1 * var(--ia-bar));
+    height: calc(100% + var(--ia-bar));
+}
+
+/* ── MusicBrainz panel ── */
+.video-mb {
+    margin-top: 0.75rem;
+}
+.mb-table {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.mb-row { display: contents; }
+.mb-label {
+    color: var(--thld-muted, #888);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding-top: 3px;
+    white-space: nowrap;
+}
+.mb-val { color: inherit; }
+.mb-date { opacity: 0.6; }
+.mb-coords {
+    display: block;
+    font-size: 0.72rem;
+    opacity: 0.55;
+}
+.mb-loading {
+    font-size: 0.78rem;
+    opacity: 0.45;
+    font-style: italic;
+}
+.mb-empty {
+    font-size: 0.78rem;
+    opacity: 0.35;
+    font-style: italic;
+}
+.mb-error {
+    font-size: 0.78rem;
+    color: var(--c-rose, #f44);
+}
+</style>
+
+</body>
+</html>

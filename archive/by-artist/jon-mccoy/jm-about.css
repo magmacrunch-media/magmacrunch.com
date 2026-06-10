@@ -1,0 +1,22 @@
+/* Jon McCoy — about page — mid cool accent */
+body.jm-page.jm-about-page main { padding-top: 72px; }
+
+body.jm-page.jm-about-page .breadcrumb { color: var(--dim); }
+body.jm-page.jm-about-page .breadcrumb a { color: var(--jm-mid-cool); }
+body.jm-page.jm-about-page .breadcrumb a:hover { color: var(--jm-cream); }
+body.jm-page.jm-about-page .breadcrumb .sep { color: var(--jm-mid-cool); opacity: 0.6; }
+body.jm-page.jm-about-page .breadcrumb .current { color: var(--jm-mid-cool); }
+
+body.jm-page.jm-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jm-page.jm-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--jm-mid-cool); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.jm-page.jm-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--jm-mid-cool); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(96, 112, 160, 0.5); }
+
+body.jm-page.jm-about-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--jm-mid-cool), var(--jm-light-cool), var(--jm-mid-cool), transparent); margin: 0 0 36px; opacity: 0.4; }
+
+body.jm-page.jm-about-page .bio-section { width: 100%; max-width: 960px; padding: 0 20px; }
+body.jm-page.jm-about-page .bio-section p { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--jm-sand); line-height: 1.8; margin-bottom: 16px; }
+
+body.jm-page.jm-about-page .nav-card.c-back { background: transparent; color: var(--jm-mid-cool); border-color: var(--jm-mid-cool); }
+body.jm-page.jm-about-page .nav-card.c-back:hover { background: var(--jm-mid-cool); color: var(--jm-cream); }
+
+body.jm-page.jm-about-page .nav-card::after { display: none; }

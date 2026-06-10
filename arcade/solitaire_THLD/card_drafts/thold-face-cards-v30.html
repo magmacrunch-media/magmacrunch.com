@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOLD — J♠ v24 fresh start</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#0a0000; --deep-red:#3b0000;
+  --og:#ff7700; --yel:#ffcc00; --ylp:#ffe680; --ora:#dd4400;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--black);font-family:'Press Start 2P',monospace;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;padding:32px 16px 80px;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.18) 3px,rgba(0,0,0,0.18) 4px),
+    radial-gradient(ellipse 80% 60% at 50% 100%,rgba(180,40,0,0.35) 0%,transparent 70%);
+}
+h1,.sub,section,.row{position:relative;z-index:1;}
+h1{color:var(--yel);font-size:clamp(9px,2vw,13px);text-align:center;
+   letter-spacing:2px;margin-bottom:6px;
+   text-shadow:2px 2px 0 #cc2200,4px 4px 0 #3b0000;}
+.sub{font-family:'VT323',monospace;color:var(--og);font-size:18px;
+     letter-spacing:3px;text-align:center;margin-bottom:40px;}
+section{width:100%;max-width:1200px;margin-bottom:48px;}
+.lbl{font-size:7px;color:var(--og);letter-spacing:3px;text-transform:uppercase;
+     margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid var(--deep-red);}
+.row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.clbl{font-size:6px;color:var(--ora);letter-spacing:1px;}
+.note{font-family:'VT323',monospace;font-size:14px;color:var(--og);
+      text-align:center;line-height:1.5;max-width:200px;}
+.card{border-radius:6px;overflow:hidden;
+      box-shadow:3px 3px 0 var(--black),6px 6px 0 rgba(0,0,0,0.5);
+      transition:transform .12s,box-shadow .12s;}
+.card:hover{transform:translateY(-8px) scale(1.03);
+            box-shadow:3px 14px 0 var(--black),6px 18px 0 rgba(0,0,0,0.4);}
+</style>
+</head>
+<body>
+
+<h1>TEXAS HOLD'EM LAVA DOME</h1>
+<p class="sub">— J♠ v24 · fresh start · pip zones clean —</p>
+
+<!--
+╔══════════════════════════════════════════════════════════════════╗
+║  LAYOUT PLAN — all coordinates are in the defs space (0..110)   ║
+║  Figure is placed with: translate(9,11) scale(0.85)              ║
+║  So defs coords map to card coords as:                          ║
+║    card_x = 9 + def_x * 0.85                                    ║
+║    card_y = 8 + def_y * 0.85                                    ║
+║                                                                  ║
+║  PIP ZONES on card canvas (after placement):                    ║
+║    Corner text:  card x=2, y=8+15  (outside inner border)       ║
+║    Small pip:    card x=11..21, y=11..25  (10×14)               ║
+║    Large pip:    card x=11..33, y=18..44  (22×26)               ║
+║                                                                  ║
+║  Working back to def coords:                                     ║
+║    card x=11 → def x = (11-9)/0.85 = 2.4                        ║
+║    card x=33 → def x = (33-9)/0.85 = 28.2                       ║
+║    card y=18 → def y = (18-8)/0.85 = 11.8                       ║
+║    card y=44 → def y = (44-8)/0.85 = 42.4                       ║
+║                                                                  ║
+║  ⚠ KEEP DEF X < 28 ENTIRELY EMPTY in the figure ⚠              ║
+║    Nothing in the figure should be drawn at def x < 28.         ║
+║    The axe/weapon lives on the RIGHT: def x = 88..106           ║
+║    Face/head: def x = 44..88 (centred, more room)               ║
+║    Hair: def x = 28..58 (left edge starts at 28, safe)          ║
+╚══════════════════════════════════════════════════════════════════╝
+-->
+
+<svg width="0" height="0" xmlns="http://www.w3.org/2000/svg">
+<defs>
+
+<!-- ══════════════════════════════════════════════
+     J♠ FIGURE  (faces LEFT, profile)
+     Def space: 0..110 wide, 0..74 tall (half card)
+     Left ~28px reserved for pips — figure starts x=28
+     ══════════════════════════════════════════════ -->
+<g id="js">
+
+  <!--
+  ┌─────────────────────────────────────────────────┐
+  │ AXE / HALBERD  — RIGHT SIDE, def x=88..106      │
+  │ Shaft runs full height y=2..72                   │
+  │ Blade at top, crescent shape                     │
+  │ After scale: card x ≈ 84..99  (right side only) │
+  └─────────────────────────────────────────────────┘
+  -->
+  <!-- Shaft -->
+  <rect x="95" y="2"  width="3"  height="70" fill="#8890a8"/>
+  <rect x="96" y="2"  width="2"  height="70" fill="#c0c8d8"/>
+  <!-- Shaft highlight stripe -->
+  <rect x="96" y="2"  width="1"  height="70" fill="#d8e0f0"/>
+  <!-- Gold collar bands on shaft -->
+  <rect x="93" y="18" width="7"  height="3"  fill="#c8a010"/>
+  <rect x="93" y="18" width="7"  height="1"  fill="#e8c030"/>
+  <rect x="93" y="38" width="7"  height="3"  fill="#c8a010"/>
+  <rect x="93" y="38" width="7"  height="1"  fill="#e8c030"/>
+  <rect x="93" y="56" width="7"  height="3"  fill="#c8a010"/>
+  <rect x="93" y="56" width="7"  height="1"  fill="#e8c030"/>
+  <!-- Blade head — crescent top, gold-edged, at y=2..18 -->
+  <rect x="88" y="2"  width="14" height="2"  fill="#c8a010"/><!-- gold top edge -->
+  <rect x="86" y="4"  width="16" height="2"  fill="#d0d8e8"/>
+  <rect x="86" y="6"  width="16" height="2"  fill="#e0e8f8"/>
+  <rect x="87" y="8"  width="14" height="2"  fill="#d8e0f0"/>
+  <rect x="88" y="10" width="12" height="2"  fill="#c8d0e0"/>
+  <rect x="89" y="12" width="10" height="2"  fill="#b0b8c8"/>
+  <rect x="90" y="14" width="8"  height="2"  fill="#9098a8"/>
+  <rect x="91" y="16" width="6"  height="2"  fill="#788090"/>
+  <!-- Blade left gold accent edge -->
+  <rect x="86" y="4"  width="2"  height="14" fill="#c8a010"/>
+  <!-- Crossguard -->
+  <rect x="84" y="17" width="18" height="3"  fill="#c8a010"/>
+  <rect x="84" y="17" width="18" height="1"  fill="#e8c030"/>
+  <rect x="84" y="19" width="18" height="1"  fill="#a88008"/>
+  <!-- Blade tip shine -->
+  <rect x="86" y="5"  width="2"  height="2"  fill="#f0e060"/>
+
+  <!--
+  ┌─────────────────────────────────────────────────┐
+  │ HAT  — def x=28..96, y=0..20                    │
+  │ Crown block, red band, gold band, wide brim      │
+  └─────────────────────────────────────────────────┘
+  -->
+  <!-- Crown — black, flat top -->
+  <rect x="46" y="2"  width="46" height="13" fill="#141418"/>
+  <rect x="48" y="2"  width="42" height="2"  fill="#242428"/><!-- lighter top face -->
+  <rect x="46" y="2"  width="4"  height="13" fill="#080808"/><!-- left shadow -->
+  <!-- Red band -->
+  <rect x="46" y="12" width="46" height="4"  fill="#bb1100"/>
+  <rect x="46" y="12" width="46" height="1"  fill="#ee2200"/>
+  <!-- Gold band -->
+  <rect x="44" y="15" width="50" height="2"  fill="#c8a010"/>
+  <rect x="42" y="16" width="52" height="2"  fill="#e8c030"/>
+  <!-- Brim — sweeps left generously -->
+  <rect x="28" y="18" width="68" height="3"  fill="#c8a010"/>
+  <rect x="28" y="19" width="68" height="2"  fill="#d8b018"/>
+  <rect x="28" y="21" width="66" height="1"  fill="#b89010"/><!-- underside shadow -->
+
+  <!--
+  ┌─────────────────────────────────────────────────┐
+  │ HAIR — def x=28..58, y=14..50                   │
+  │ Stepped columns under brim, tapering left.      │
+  │ Left edge x=28 is safe (def x=28 → card x=33)  │
+  │ Curl lobes hang below brim bottom               │
+  └─────────────────────────────────────────────────┘
+  -->
+  <!-- Hair columns — tallest near head (x=56), shortest at left (x=28) -->
+  <!-- Reading right-to-left so innermost drawn first (under hat shadow) -->
+  <rect x="54" y="16" width="2"  height="22" fill="#c89818"/><!-- nearest head -->
+  <rect x="52" y="15" width="2"  height="22" fill="#d4a61e"/>
+  <rect x="50" y="14" width="2"  height="22" fill="#deb028"/>
+  <rect x="48" y="14" width="2"  height="23" fill="#e8b82c"/><!-- peak col -->
+  <rect x="46" y="14" width="2"  height="22" fill="#f0c030"/>
+  <rect x="44" y="14" width="2"  height="21" fill="#f4c434"/><!-- bright core -->
+  <rect x="42" y="14" width="2"  height="20" fill="#f0bc30"/>
+  <rect x="40" y="14" width="2"  height="19" fill="#e8b42c"/>
+  <rect x="38" y="15" width="2"  height="17" fill="#e0ac28"/>
+  <rect x="36" y="15" width="2"  height="16" fill="#d8a424"/>
+  <rect x="34" y="16" width="2"  height="14" fill="#d09c20"/>
+  <rect x="32" y="17" width="2"  height="12" fill="#c8941c"/>
+  <rect x="30" y="18" width="2"  height="10" fill="#c08c18"/>
+  <rect x="28" y="19" width="2"  height="8"  fill="#b88414"/><!-- leftmost wisp -->
+  <!-- Top highlight sheen -->
+  <rect x="44" y="13" width="8"  height="2"  fill="#fcd848"/>
+  <rect x="46" y="12" width="4"  height="2"  fill="#fce868"/><!-- peak glint -->
+  <!-- Underside shadow where hair meets collar -->
+  <rect x="36" y="33" width="20" height="2"  fill="#a07810"/>
+  <rect x="38" y="35" width="18" height="1"  fill="#906808"/>
+
+  <!-- Curl lobe A — leftmost, largest (x=28..44, y=32..48) -->
+  <rect x="30" y="30" width="14" height="2"  fill="#c08418"/>
+  <rect x="28" y="32" width="16" height="2"  fill="#c88c1c"/>
+  <rect x="26" y="34" width="16" height="2"  fill="#d09420"/><!-- widest point -->
+  <rect x="26" y="36" width="14" height="2"  fill="#c88c1c"/>
+  <rect x="28" y="38" width="12" height="2"  fill="#c08418"/>
+  <rect x="30" y="40" width="10" height="2"  fill="#b87c14"/>
+  <rect x="32" y="42" width="8"  height="2"  fill="#b07810"/>
+  <rect x="34" y="44" width="6"  height="2"  fill="#a87010"/>
+  <rect x="36" y="46" width="4"  height="2"  fill="#9c6808"/>
+  <rect x="38" y="48" width="2"  height="2"  fill="#906008"/><!-- wispy tip -->
+  <!-- Lobe A sheen -->
+  <rect x="28" y="33" width="10" height="1"  fill="#dca028"/>
+  <rect x="26" y="35" width="8"  height="1"  fill="#d09820"/>
+
+  <!-- Curl lobe B — middle (x=36..52, y=34..50) -->
+  <rect x="38" y="34" width="14" height="2"  fill="#c88c1c"/>
+  <rect x="36" y="36" width="16" height="2"  fill="#d49820"/>
+  <rect x="36" y="38" width="14" height="2"  fill="#cc9018"/>
+  <rect x="38" y="40" width="12" height="2"  fill="#c48814"/>
+  <rect x="40" y="42" width="10" height="2"  fill="#bc8010"/>
+  <rect x="42" y="44" width="8"  height="2"  fill="#b4780c"/>
+  <rect x="44" y="46" width="6"  height="2"  fill="#ac7008"/>
+  <rect x="46" y="48" width="4"  height="2"  fill="#a46808"/>
+  <rect x="48" y="50" width="2"  height="2"  fill="#986008"/><!-- tip -->
+  <!-- Lobe B sheen -->
+  <rect x="38" y="35" width="10" height="1"  fill="#e0a828"/>
+
+  <!-- Curl lobe C — rightmost, closest to head (x=46..58, y=36..50) -->
+  <rect x="48" y="36" width="10" height="2"  fill="#d4a020"/>
+  <rect x="46" y="38" width="12" height="2"  fill="#cc9818"/>
+  <rect x="46" y="40" width="10" height="2"  fill="#c49014"/>
+  <rect x="48" y="42" width="8"  height="2"  fill="#bc8810"/>
+  <rect x="50" y="44" width="6"  height="2"  fill="#b4800c"/>
+  <rect x="52" y="46" width="4"  height="2"  fill="#ac7808"/>
+  <rect x="54" y="48" width="2"  height="2"  fill="#a07008"/><!-- tip -->
+  <!-- Lobe C sheen -->
+  <rect x="48" y="37" width="8"  height="1"  fill="#dca428"/>
+
+  <!--
+  ┌─────────────────────────────────────────────────┐
+  │ HEAD & FACE  — profile facing LEFT               │
+  │ def x=44..86, y=19..40                          │
+  │ Wider face block than v21 — more readable        │
+  └─────────────────────────────────────────────────┘
+  -->
+  <!-- Neck -->
+  <rect x="56" y="34" width="20" height="8"  fill="#e8b060"/>
+  <rect x="58" y="34" width="16" height="8"  fill="#f0c070"/>
+  <!-- Face block — wider than v21 (x=44→86 vs 58→82) -->
+  <rect x="50" y="20" width="34" height="16" fill="#f0c070"/>
+  <!-- Forehead lighter -->
+  <rect x="56" y="20" width="22" height="7"  fill="#f8d080"/>
+  <!-- Temple / back-of-head shadow (left side) -->
+  <rect x="50" y="20" width="6"  height="16" fill="#d8a050"/>
+  <!-- Far cheek highlight (right side) -->
+  <rect x="76" y="24" width="8"  height="8"  fill="#f4c878"/>
+  <!-- Far ear -->
+  <rect x="82" y="24" width="4"  height="7"  fill="#c89040"/>
+  <rect x="84" y="25" width="3"  height="5"  fill="#e8b060"/>
+  <!-- Nose — protrudes left, more prominent -->
+  <rect x="44" y="27" width="8"  height="3"  fill="#d8a050"/>
+  <rect x="42" y="28" width="9"  height="2"  fill="#e8b060"/>
+  <rect x="44" y="30" width="6"  height="2"  fill="#c89040"/>
+  <rect x="42" y="29" width="2"  height="2"  fill="#7c3818"/><!-- nostril -->
+  <!-- Eye -->
+  <rect x="64" y="22" width="14" height="5"  fill="#f4ece0"/><!-- white -->
+  <rect x="64" y="22" width="14" height="1"  fill="#d0b888"/><!-- lid shadow -->
+  <rect x="66" y="23" width="8"  height="4"  fill="#2c1c08"/><!-- iris/pupil -->
+  <rect x="68" y="24" width="4"  height="2"  fill="#080604"/><!-- pupil dark -->
+  <rect x="72" y="23" width="1"  height="1"  fill="#f8f8f8"/><!-- highlight -->
+  <!-- Eyelash top line -->
+  <rect x="64" y="21" width="14" height="2"  fill="#1c1008"/>
+  <!-- Eyebrow -->
+  <rect x="62" y="19" width="16" height="2"  fill="#2c1c08"/>
+  <rect x="64" y="18" width="12" height="2"  fill="#1c1008"/>
+  <!-- Jaw / chin — protrudes left -->
+  <rect x="44" y="32" width="8"  height="4"  fill="#f0c070"/>
+  <rect x="42" y="33" width="6"  height="3"  fill="#e0b060"/>
+  <rect x="40" y="34" width="6"  height="3"  fill="#d0a050"/>
+  <!-- Mouth -->
+  <rect x="48" y="32" width="10" height="2"  fill="#b86040"/>
+  <rect x="50" y="34" width="8"  height="2"  fill="#984830"/>
+  <rect x="50" y="32" width="6"  height="1"  fill="#d08060"/><!-- lip highlight -->
+
+  <!--
+  ┌─────────────────────────────────────────────────┐
+  │ RUFF COLLAR  — y=40..46, full width             │
+  └─────────────────────────────────────────────────┘
+  -->
+  <rect x="28" y="40" width="72" height="6"  fill="#f0ece0"/>
+  <rect x="28" y="40" width="72" height="1"  fill="#ffffff"/>
+  <rect x="28" y="41" width="72" height="1"  fill="#d0c8b8"/>
+  <rect x="28" y="42" width="72" height="1"  fill="#ece8dc"/>
+  <rect x="28" y="43" width="72" height="1"  fill="#c0b8a8"/>
+  <rect x="28" y="44" width="72" height="1"  fill="#e4e0d4"/>
+  <rect x="28" y="45" width="72" height="1"  fill="#b0a898"/>
+  <!-- Pleats -->
+  <rect x="34" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="40" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="46" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="52" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="58" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="64" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="70" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="76" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="82" y="41" width="1"  height="4"  fill="#a8a090"/>
+  <rect x="88" y="41" width="1"  height="4"  fill="#a8a090"/>
+
+
+
+
+
+
+  <!--
+  TORSO — def y=46..70 (6 rows of 4px each).
+  Scale 0.85 + translate y=11: card y = 11 + def_y*0.85
+    top of torso: 11 + 46*0.85 = 50.1
+    bot of torso: 11 + 70*0.85 = 70.5  ← meets divider at card y=71 ✓
+
+  SILHOUETTE: not a rectangle — shaped like a real body.
+  Each row has a left-edge and right-edge defining body width:
+    y=46 (shoulders): x=38..96  (wide, shoulder line)
+    y=50 (chest):     x=34..94
+    y=54 (midriff):   x=32..92
+    y=58 (waist):     x=30..90
+    y=62 (hips):      x=30..88
+    y=66 (hem):       x=30..88
+
+  SASH CONTINUITY: with rotate(180,56,77), a card point (cx,cy) maps to
+    (112-cx, 154-cy). The sash must cross the center so top and bottom connect.
+    Sash center-line runs from (def x=84,y=46) to (def x=36,y=70).
+    That's 8px wide, stepping 8px left per row.
+    In card coords the sash exits at approximately (card x=23, card y=70.5)
+    which maps via 180° rotation to (card x=89, card y=83.5) — the entry
+    point of the bottom figure's sash. ✓
+  -->
+
+<!-- Body silhouette rows — navy base -->
+  <rect x="38" y="46" width="58" height="4" fill="#0c1840"/>
+  <rect x="34" y="50" width="60" height="4" fill="#0c1840"/>
+  <rect x="32" y="54" width="60" height="4" fill="#0c1840"/>
+  <rect x="30" y="58" width="60" height="4" fill="#0c1840"/>
+  <rect x="30" y="62" width="58" height="4" fill="#0c1840"/>
+  <rect x="30" y="66" width="58" height="4" fill="#0c1840"/>
+
+  <!--
+  SASH: steps 6px left per row. Centerline x: 91,85,79,73,67,61 at y=46,50,54,58,62,66
+  Exit at def(55,70) = card(55.75,70.5) ≈ card center x=56.
+  Mirror via rotate(180,56,77): (56,70.5)→(56,83.5). SAME x=56 → CONTINUOUS. ✓
+  Black panel fills left of sash. Blue fills right of sash.
+  -->
+
+  <!-- Black coat — left of sash each row -->
+  <rect x="38" y="46" width="49" height="4" fill="#0a0a14"/>
+  <rect x="34" y="50" width="43" height="4" fill="#0a0a14"/>
+  <rect x="32" y="54" width="37" height="4" fill="#0a0a14"/>
+  <rect x="30" y="58" width="31" height="4" fill="#0a0a14"/>
+  <rect x="30" y="62" width="25" height="4" fill="#0a0a14"/>
+  <rect x="30" y="66" width="19" height="4" fill="#0a0a14"/>
+
+  <!-- Red sash — 8px wide, left edge at: 87,81,75,69,63,57 -->
+  <rect x="87" y="46" width="8" height="4" fill="#cc1100"/>
+  <rect x="81" y="50" width="8" height="4" fill="#cc1100"/>
+  <rect x="75" y="54" width="8" height="4" fill="#cc1100"/>
+  <rect x="69" y="58" width="8" height="4" fill="#cc1100"/>
+  <rect x="63" y="62" width="8" height="4" fill="#cc1100"/>
+  <rect x="57" y="66" width="8" height="4" fill="#cc1100"/>
+  <!-- Gold right edge of sash -->
+  <rect x="93" y="46" width="2" height="4" fill="#e8c030"/>
+  <rect x="87" y="50" width="2" height="4" fill="#e8c030"/>
+  <rect x="81" y="54" width="2" height="4" fill="#e8c030"/>
+  <rect x="75" y="58" width="2" height="4" fill="#e8c030"/>
+  <rect x="69" y="62" width="2" height="4" fill="#e8c030"/>
+  <rect x="63" y="66" width="2" height="4" fill="#e8c030"/>
+  <!-- Dark left edge of sash -->
+  <rect x="87" y="46" width="2" height="4" fill="#880600"/>
+  <rect x="81" y="50" width="2" height="4" fill="#880600"/>
+  <rect x="75" y="54" width="2" height="4" fill="#880600"/>
+  <rect x="69" y="58" width="2" height="4" fill="#880600"/>
+  <rect x="63" y="62" width="2" height="4" fill="#880600"/>
+  <rect x="57" y="66" width="2" height="4" fill="#880600"/>
+
+  <!-- Blue coat — right of sash each row -->
+  <rect x="95" y="46" width="1"  height="4" fill="#1a3a8c"/>
+  <rect x="89" y="50" width="5"  height="4" fill="#1a3a8c"/>
+  <rect x="83" y="54" width="9"  height="4" fill="#1a3a8c"/>
+  <rect x="77" y="58" width="13" height="4" fill="#1a3a8c"/>
+  <rect x="71" y="62" width="17" height="4" fill="#1a3a8c"/>
+  <rect x="65" y="66" width="23" height="4" fill="#1a3a8c"/>
+  <!-- Blue depth stripe -->
+  <rect x="95" y="47" width="1"  height="1" fill="#142e70"/>
+  <rect x="89" y="51" width="5"  height="1" fill="#142e70"/>
+  <rect x="83" y="55" width="9"  height="1" fill="#142e70"/>
+  <rect x="77" y="59" width="13" height="1" fill="#142e70"/>
+  <rect x="71" y="63" width="17" height="1" fill="#142e70"/>
+  <rect x="65" y="67" width="23" height="1" fill="#142e70"/>
+
+  <!-- Shoulder gold band -->
+  <rect x="38" y="46" width="58" height="2" fill="#c8a010"/>
+  <rect x="38" y="46" width="58" height="1" fill="#e8c030"/>
+
+  <!-- Gold studs on black coat -->
+  <rect x="40" y="48" width="4" height="4" fill="#c8a010"/><rect x="41" y="49" width="2" height="2" fill="#0a0a14"/>
+  <rect x="52" y="48" width="4" height="4" fill="#c8a010"/><rect x="53" y="49" width="2" height="2" fill="#0a0a14"/>
+  <rect x="64" y="48" width="4" height="4" fill="#c8a010"/><rect x="65" y="49" width="2" height="2" fill="#0a0a14"/>
+  <rect x="36" y="52" width="4" height="4" fill="#c8a010"/><rect x="37" y="53" width="2" height="2" fill="#0a0a14"/>
+  <rect x="48" y="52" width="4" height="4" fill="#c8a010"/><rect x="49" y="53" width="2" height="2" fill="#0a0a14"/>
+  <rect x="60" y="52" width="4" height="4" fill="#c8a010"/><rect x="61" y="53" width="2" height="2" fill="#0a0a14"/>
+  <rect x="34" y="56" width="4" height="4" fill="#c8a010"/><rect x="35" y="57" width="2" height="2" fill="#0a0a14"/>
+  <rect x="46" y="56" width="4" height="4" fill="#c8a010"/><rect x="47" y="57" width="2" height="2" fill="#0a0a14"/>
+  <rect x="58" y="56" width="4" height="4" fill="#c8a010"/><rect x="59" y="57" width="2" height="2" fill="#0a0a14"/>
+  <rect x="32" y="60" width="4" height="4" fill="#c8a010"/><rect x="33" y="61" width="2" height="2" fill="#0a0a14"/>
+  <rect x="44" y="60" width="4" height="4" fill="#c8a010"/><rect x="45" y="61" width="2" height="2" fill="#0a0a14"/>
+  <rect x="32" y="64" width="4" height="4" fill="#c8a010"/><rect x="33" y="65" width="2" height="2" fill="#0a0a14"/>
+  <rect x="44" y="64" width="4" height="4" fill="#c8a010"/><rect x="45" y="65" width="2" height="2" fill="#0a0a14"/>
+  <rect x="32" y="68" width="4" height="4" fill="#c8a010"/><rect x="33" y="69" width="2" height="2" fill="#0a0a14"/>
+  <rect x="44" y="68" width="4" height="4" fill="#c8a010"/><rect x="45" y="69" width="2" height="2" fill="#0a0a14"/>
+
+  <!-- Gold studs on blue coat -->
+  <rect x="72" y="60" width="4" height="4" fill="#c8a010"/><rect x="73" y="61" width="2" height="2" fill="#1a3a8c"/>
+  <rect x="68" y="64" width="4" height="4" fill="#c8a010"/><rect x="69" y="65" width="2" height="2" fill="#1a3a8c"/>
+  <rect x="78" y="64" width="4" height="4" fill="#c8a010"/><rect x="79" y="65" width="2" height="2" fill="#1a3a8c"/>
+  <rect x="68" y="68" width="4" height="4" fill="#c8a010"/><rect x="69" y="69" width="2" height="2" fill="#1a3a8c"/>
+  <rect x="78" y="68" width="4" height="4" fill="#c8a010"/><rect x="79" y="69" width="2" height="2" fill="#1a3a8c"/>
+
+  <!-- Hem -->
+  <rect x="30" y="70" width="58" height="2" fill="#c8a010"/>
+  <rect x="30" y="70" width="58" height="1" fill="#e8c030"/>
+
+</g>
+
+</defs>
+</svg>
+
+<!-- ════════════════════════════════════════
+     CARD RENDERS
+     ════════════════════════════════════════ -->
+<section>
+  <p class="lbl">Jack of Spades — v25 · single solid pip</p>
+  <div class="row">
+
+  <!-- ── SHARED PIP MACRO (written inline each card, same coords) ──
+       Structure: outside corner text (x=2), then ONE inner pip.
+       The inner pip is a solid spade shape — no split rows, no gap.
+
+       Spade pixel shape (10×15 at card x=11..21, y=11..26):
+         row y=11: 2px point at x=15
+         row y=13: 6px at x=13
+         row y=15: 10px at x=11  (wide body)
+         row y=17: 10px at x=11  (wide body)
+         row y=19: 10px at x=11  (shoulder — SOLID full width, no split)
+         row y=21:  8px at x=12  (taper in)
+         row y=23:  4px at x=14  (stalk base)
+         row y=25:  4px at x=14  (stalk)
+  -->
+
+  <!-- 2× zoom -->
+  <div class="wrap">
+  <div class="card">
+  <svg width="220" height="308" viewBox="0 0 110 154"
+       xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+  <use href="#js" transform="translate(9,11) scale(0.85)"/>
+  <rect x="10" y="71" width="90" height="5" fill="#1c1c2a"/>
+  <rect x="10" y="71" width="90" height="1" fill="#c8a010"/>
+  <rect x="10" y="75" width="90" height="1" fill="#c8a010"/>
+  <rect x="14" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="23" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="32" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="41" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="50" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="59" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="68" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="77" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="86" y="72" width="3" height="3" fill="#c8a010"/>
+  <use href="#js" transform="rotate(180,56,77) translate(9,11) scale(0.85)"/>
+  <rect x="9" y="9" width="92" height="136" fill="none" stroke="#1c1c2a" stroke-width="1"/>
+  <!-- Corner index outside border -->
+  <text x="2" y="8"  font-family="'Press Start 2P'" font-size="5" fill="#111111">J</text>
+  <text x="2" y="15" font-family="'Press Start 2P'" font-size="5" fill="#111111">♠</text>
+  <g transform="rotate(180,55,77)">
+  <text x="2" y="8"  font-family="'Press Start 2P'" font-size="5" fill="#111111">J</text>
+  <text x="2" y="15" font-family="'Press Start 2P'" font-size="5" fill="#111111">♠</text>
+  </g>
+  <!-- Single inner pip TL — solid spade, no gap -->
+  <rect x="15" y="11" width="2"  height="2" fill="#111111"/>
+  <rect x="13" y="13" width="6"  height="2" fill="#111111"/>
+  <rect x="11" y="15" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="17" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="19" width="10" height="2" fill="#111111"/>
+  <rect x="12" y="21" width="8"  height="2" fill="#111111"/>
+  <rect x="14" y="23" width="4"  height="2" fill="#111111"/>
+  <rect x="14" y="25" width="4"  height="2" fill="#111111"/>
+  <!-- Single inner pip BR -->
+  <g transform="rotate(180,55,77)">
+  <rect x="15" y="11" width="2"  height="2" fill="#111111"/>
+  <rect x="13" y="13" width="6"  height="2" fill="#111111"/>
+  <rect x="11" y="15" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="17" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="19" width="10" height="2" fill="#111111"/>
+  <rect x="12" y="21" width="8"  height="2" fill="#111111"/>
+  <rect x="14" y="23" width="4"  height="2" fill="#111111"/>
+  <rect x="14" y="25" width="4"  height="2" fill="#111111"/>
+  </g>
+  </svg>
+  </div>
+  <p class="clbl">J♠ · 2× zoom</p>
+  </div>
+
+  <!-- 1× actual size -->
+  <div class="wrap">
+  <div class="card">
+  <svg width="110" height="154" viewBox="0 0 110 154"
+       xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+  <use href="#js" transform="translate(9,11) scale(0.85)"/>
+  <rect x="10" y="71" width="90" height="5" fill="#1c1c2a"/>
+  <rect x="10" y="71" width="90" height="1" fill="#c8a010"/>
+  <rect x="10" y="75" width="90" height="1" fill="#c8a010"/>
+  <rect x="14" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="23" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="32" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="41" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="50" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="59" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="68" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="77" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="86" y="72" width="3" height="3" fill="#c8a010"/>
+  <use href="#js" transform="rotate(180,56,77) translate(9,11) scale(0.85)"/>
+  <rect x="9" y="9" width="92" height="136" fill="none" stroke="#1c1c2a" stroke-width="1"/>
+  <text x="2" y="8"  font-family="'Press Start 2P'" font-size="5" fill="#111111">J</text>
+  <text x="2" y="15" font-family="'Press Start 2P'" font-size="5" fill="#111111">♠</text>
+  <g transform="rotate(180,55,77)">
+  <text x="2" y="8"  font-family="'Press Start 2P'" font-size="5" fill="#111111">J</text>
+  <text x="2" y="15" font-family="'Press Start 2P'" font-size="5" fill="#111111">♠</text>
+  </g>
+  <rect x="15" y="11" width="2"  height="2" fill="#111111"/>
+  <rect x="13" y="13" width="6"  height="2" fill="#111111"/>
+  <rect x="11" y="15" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="17" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="19" width="10" height="2" fill="#111111"/>
+  <rect x="12" y="21" width="8"  height="2" fill="#111111"/>
+  <rect x="14" y="23" width="4"  height="2" fill="#111111"/>
+  <rect x="14" y="25" width="4"  height="2" fill="#111111"/>
+  <g transform="rotate(180,55,77)">
+  <rect x="15" y="11" width="2"  height="2" fill="#111111"/>
+  <rect x="13" y="13" width="6"  height="2" fill="#111111"/>
+  <rect x="11" y="15" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="17" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="19" width="10" height="2" fill="#111111"/>
+  <rect x="12" y="21" width="8"  height="2" fill="#111111"/>
+  <rect x="14" y="23" width="4"  height="2" fill="#111111"/>
+  <rect x="14" y="25" width="4"  height="2" fill="#111111"/>
+  </g>
+  </svg>
+  </div>
+  <p class="clbl">J♠ · actual size</p>
+  </div>
+
+  <!-- 3× zoom for detail inspection -->
+  <div class="wrap">
+  <div class="card" style="border-radius:8px;">
+  <svg width="330" height="462" viewBox="0 0 110 154"
+       xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+  <use href="#js" transform="translate(9,11) scale(0.85)"/>
+  <rect x="10" y="71" width="90" height="5" fill="#1c1c2a"/>
+  <rect x="10" y="71" width="90" height="1" fill="#c8a010"/>
+  <rect x="10" y="75" width="90" height="1" fill="#c8a010"/>
+  <rect x="14" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="23" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="32" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="41" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="50" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="59" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="68" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="77" y="72" width="3" height="3" fill="#c8a010"/>
+  <rect x="86" y="72" width="3" height="3" fill="#c8a010"/>
+  <use href="#js" transform="rotate(180,56,77) translate(9,11) scale(0.85)"/>
+  <rect x="9" y="9" width="92" height="136" fill="none" stroke="#1c1c2a" stroke-width="1"/>
+  <text x="2" y="8"  font-family="'Press Start 2P'" font-size="5" fill="#111111">J</text>
+  <text x="2" y="15" font-family="'Press Start 2P'" font-size="5" fill="#111111">♠</text>
+  <g transform="rotate(180,55,77)">
+  <text x="2" y="8"  font-family="'Press Start 2P'" font-size="5" fill="#111111">J</text>
+  <text x="2" y="15" font-family="'Press Start 2P'" font-size="5" fill="#111111">♠</text>
+  </g>
+  <rect x="15" y="11" width="2"  height="2" fill="#111111"/>
+  <rect x="13" y="13" width="6"  height="2" fill="#111111"/>
+  <rect x="11" y="15" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="17" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="19" width="10" height="2" fill="#111111"/>
+  <rect x="12" y="21" width="8"  height="2" fill="#111111"/>
+  <rect x="14" y="23" width="4"  height="2" fill="#111111"/>
+  <rect x="14" y="25" width="4"  height="2" fill="#111111"/>
+  <g transform="rotate(180,55,77)">
+  <rect x="15" y="11" width="2"  height="2" fill="#111111"/>
+  <rect x="13" y="13" width="6"  height="2" fill="#111111"/>
+  <rect x="11" y="15" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="17" width="10" height="2" fill="#111111"/>
+  <rect x="11" y="19" width="10" height="2" fill="#111111"/>
+  <rect x="12" y="21" width="8"  height="2" fill="#111111"/>
+  <rect x="14" y="23" width="4"  height="2" fill="#111111"/>
+  <rect x="14" y="25" width="4"  height="2" fill="#111111"/>
+  </g>
+  </svg>
+  </div>
+  <p class="clbl">J♠ · 3× zoom</p>
+  </div>
+
+  </div><!-- /row -->
+</section>
+
+</body>
+</html>

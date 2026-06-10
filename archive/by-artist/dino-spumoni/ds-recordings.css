@@ -1,0 +1,34 @@
+/* Dino Spumoni — recordings (sky accent) */
+body.ds-page.ds-recordings-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.ds-page.ds-recordings-page main > * { background: var(--black); }
+
+body.ds-page.ds-recordings-page .breadcrumb a { color: var(--ds-sky); }
+body.ds-page.ds-recordings-page .breadcrumb a:hover { color: var(--ds-heading); }
+body.ds-page.ds-recordings-page .breadcrumb .sep { color: var(--ds-sky); opacity: 0.5; }
+body.ds-page.ds-recordings-page .breadcrumb .current { color: var(--ds-sky); }
+
+body.ds-page.ds-recordings-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ds-page.ds-recordings-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ds-sky) !important; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ds-page.ds-recordings-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ds-sky) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(104, 136, 168, 0.5) !important; }
+
+body.ds-page.ds-recordings-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--ds-brand), var(--ds-sky), var(--ds-brand), transparent); margin: 0 0 36px; opacity: 0.4; }
+
+body.ds-page.ds-recordings-page .recording-card { background: var(--black); border-color: var(--ds-surface); padding: 18px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
+body.ds-page.ds-recordings-page .recording-card:hover { border-color: var(--ds-sky); }
+body.ds-page.ds-recordings-page .recording-card h3 { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--ds-sky); letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.ds-page.ds-recordings-page .recording-card h3 a { color: var(--ds-sky); text-decoration: none; }
+body.ds-page.ds-recordings-page .recording-card h3 a:hover { color: var(--ds-heading); }
+body.ds-page.ds-recordings-page .recording-card p { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--ds-heading); opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.ds-page.ds-recordings-page .recording-card p strong { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--ds-mid); letter-spacing: 0.08em; margin-right: 6px; }
+body.ds-page.ds-recordings-page .recording-card a { color: var(--ds-sky); text-decoration: none; }
+body.ds-page.ds-recordings-page .recording-card a:hover { color: var(--ds-heading); }
+body.ds-page.ds-recordings-page .tag { display: inline-block; background: var(--ds-surface); border: 1px solid var(--ds-mid); padding: 2px 7px; margin: 2px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--ds-sky); }
+body.ds-page.ds-recordings-page .tag:hover { border-color: var(--ds-sky); }
+body.ds-page.ds-recordings-page .error-msg { color: var(--ds-brick); opacity: 0.7; }
+
+/* Back button: transparent + page accent */
+body.ds-page.ds-recordings-page .nav-card.c-back { background: transparent !important; color: var(--ds-sky) !important; border-color: var(--ds-sky) !important; }
+body.ds-page.ds-recordings-page .nav-card.c-back:hover { background: var(--ds-sky) !important; color: var(--ds-deep) !important; }
+
+
+body.ds-page.ds-recordings-page .nav-card::after { display: none; }

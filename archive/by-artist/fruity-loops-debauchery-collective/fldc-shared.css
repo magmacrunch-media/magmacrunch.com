@@ -1,0 +1,128 @@
+/* Fruity Loops Debauchery Bros — shared color palette */
+:root {
+    --fldc-black:          #080808;
+
+    /* Background layers (warm CRT) */
+    --fldc-bg-surface:     #2a3830;
+    --fldc-bg-raised:       #304838;
+    --fldc-bg-mid:         #485840;
+    --fldc-bg-neutral:     #8a9088;
+    --fldc-bg-light:       #c8c4b0;
+    --fldc-bg-wall:        #e8eee8;
+
+    /* Screen colors (monitor / taskbar blues) */
+    --fldc-bg-screen-dark:  #3060b0;
+    --fldc-bg-screen-mid:   #5898d8;
+    --fldc-bg-screen-light: #e8eee8;
+    --fldc-bg-screen-pale:  #f0f8f0;
+
+    /* Arc colors (neon accents) */
+    --fldc-arc-yellow:      #d8d040;
+    --fldc-arc-gold:        #c89820;
+    --fldc-arc-orange:      #d06020;
+    --fldc-arc-red:         #a82820;
+    --fldc-arc-red-light:   #e05030;
+    --fldc-arc-green:       #48a840;
+    --fldc-arc-teal:        #308878;
+    --fldc-arc-blue:        #3060b0;
+    --fldc-arc-blue-light:  #5898d8;
+    --fldc-arc-purple:      #7848a8;
+    --fldc-arc-white:       #f0f8f0;
+
+    /* Warm rust (deep) */
+    --fldc-arc-dark:        #602818;
+
+    /* Cool bridge (hazy cyan) */
+    --fldc-cool:           #60a8a0;
+
+    /* Pop accent (pixel pink) */
+    --fldc-pop:            #d05888;
+}
+
+body.fldc-page { background: var(--black); --credit-color: var(--fldc-cool); --nav-accent: var(--fldc-arc-yellow); --nav-glow: rgba(216,208,64,0.4); --nav-brand: var(--fldc-arc-yellow); --nav-brand-glow: rgba(216,208,64,0.7); }
+
+/* c-back: transparent + arc-dark */
+body.fldc-page .nav-card.c-back {
+    background: transparent;
+    color: var(--fldc-arc-dark);
+    border-color: var(--fldc-arc-dark);
+}
+body.fldc-page .nav-card.c-back:hover {
+    background: var(--fldc-arc-dark);
+    color: var(--fldc-bg-screen-pale);
+}
+
+/* c-about: arc blue (about) */
+body.fldc-page .nav-card.c-about {
+    background: var(--fldc-arc-blue);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-blue);
+}
+body.fldc-page .nav-card.c-about:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-blue);
+    color: var(--fldc-bg-screen-pale);
+}
+
+/* c-purple: arc purple (photography) */
+body.fldc-page .nav-card.c-photography {
+    background: var(--fldc-arc-purple);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-purple);
+}
+body.fldc-page .nav-card.c-photography:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-purple);
+    color: var(--fldc-bg-screen-pale);
+}
+
+/* c-cyan: arc blue light (recordings) */
+body.fldc-page .nav-card.c-recordings {
+    background: var(--fldc-arc-blue-light);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-blue-light);
+}
+body.fldc-page .nav-card.c-recordings:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-blue-light);
+    color: var(--fldc-bg-screen-pale);
+}
+
+/* c-orange: arc orange (music videos) */
+body.fldc-page .nav-card.c-music-videos {
+    background: var(--fldc-arc-orange);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-orange);
+}
+body.fldc-page .nav-card.c-music-videos:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-orange);
+    color: var(--fldc-arc-orange);
+}
+
+/* c-rose: arc red (releases) */
+body.fldc-page .nav-card.c-releases {
+    background: var(--fldc-arc-red);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-red);
+}
+body.fldc-page .nav-card.c-releases:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-red);
+    color: var(--fldc-bg-screen-pale);
+}
+
+/* c-yellow: arc yellow (works) */
+body.fldc-page .nav-card.c-works {
+    background: var(--fldc-arc-yellow);
+    color: var(--fldc-bg-surface);
+    border-color: var(--fldc-arc-yellow);
+}
+body.fldc-page .nav-card.c-works:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-yellow);
+    color: var(--fldc-bg-screen-pale);
+}
+
+body.fldc-page .nav-card::after { display: none; }
+body.fldc-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TETRIS — Helsinki 1989</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFFFFF'/%3E%3Crect x='0' y='11' width='32' height='10' fill='%23003580'/%3E%3Crect x='10' y='0' width='10' height='32' fill='%23003580'/%3E%3C/svg%3E">
+<style>
+    .mc-back {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        z-index: 10000;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        color: var(--slate);
+        text-decoration: none;
+        opacity: 0.6;
+        pointer-events: auto;
+        transition: opacity 0.15s, color 0.15s;
+    }
+    .mc-back::before { content: '← '; }
+    .mc-back:hover { opacity: 1; color: var(--ice); }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=block" rel="stylesheet">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="modals.css">
+<link rel="stylesheet" href="title.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-horizon"></div>
+<div class="bg-aurora"></div>
+
+<!-- Gameplay background snow -->
+<div id="gameplay-snow">
+  <div class="gs-particle gs-layer-a"></div>
+  <div class="gs-particle gs-layer-b"></div>
+</div>
+
+<a href="../../arcade/index.html" class="mc-back">magmacrunch arcade</a>
+
+<div id="app">
+  <header>
+    <h1>TETRIS</h1>
+    <div class="byline">Helsinki 1989</div>
+  </header>
+  <div class="neon-stripe"></div>
+
+  <div class="game-row">
+
+    <!-- LEFT PANEL: hold + stats -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="panel">
+        <div class="panel-label">PIDÄ</div>
+        <div class="panel-label-sub">hold</div>
+        <canvas id="hold-canvas" width="80" height="64"></canvas>
+      </div>
+      <div class="panel">
+        <div class="stat-block">
+          <div class="stat-label">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="6,0.5 7.6,4.1 11.5,4.6 8.8,7.2 9.5,11.2 6,9.4 2.5,11.2 3.2,7.2 0.5,4.6 4.4,4.1" fill="#4A6A7A"/>
+            </svg>
+            PISTEET
+          </div>
+          <div class="stat-en">score</div>
+          <div class="stat-value" id="score-display">0</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="8" width="2.5" height="4" fill="#4A6A7A"/>
+              <rect x="3.2" y="5.5" width="2.5" height="6.5" fill="#4A6A7A"/>
+              <rect x="6.3" y="3" width="2.5" height="9" fill="#4A6A7A"/>
+              <rect x="9.5" y="0.5" width="2.5" height="11.5" fill="#4A6A7A"/>
+            </svg>
+            TASO
+          </div>
+          <div class="stat-en">level</div>
+          <div class="stat-value" id="level-display">1</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="0" y="2.5" width="12" height="2" fill="#4A6A7A"/>
+              <rect x="0" y="7.5" width="12" height="2" fill="#4A6A7A"/>
+            </svg>
+            RIVIT
+          </div>
+          <div class="stat-en">lines</div>
+          <div class="stat-value" id="lines-display">0</div>
+        </div>
+        <button class="btn" id="btn-scores">TULOKSET / scores</button>
+        <button class="btn" id="btn-credits">HYVITYKSET / credits</button>
+      </div>
+    </div>
+
+    <!-- BOARD -->
+    <div id="board-wrap">
+      <canvas id="board" width="300" height="600"></canvas>
+    </div>
+
+    <!-- RIGHT PANEL: next + controls -->
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="panel">
+        <div class="panel-label">SEURAAVA</div>
+        <div class="panel-label-sub">next</div>
+        <canvas id="next-canvas" width="80" height="64"></canvas>
+      </div>
+      <div class="panel">
+        <div class="panel-label" style="margin-bottom:2px;">OHJAUS</div>
+        <div class="panel-label-sub" style="margin-bottom:10px;">controls</div>
+        <ul class="ctrl-list">
+          <li class="ctrl-row">
+            <span class="ctrl-key">←→</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><polygon points="0,8 5,5 5,11" fill="#7A9BAD"/><rect x="5" y="6.5" width="6" height="3" fill="#7A9BAD"/><polygon points="16,8 11,5 11,11" fill="#7A9BAD"/></svg>
+            <span class="ctrl-fi">SIIRTO<br><span class="ctrl-en">move</span></span>
+          </li>
+          <li class="ctrl-row">
+            <span class="ctrl-key">↑</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2 L13 7 L10.5 7 L10.5 12 L5.5 12 L5.5 7 L3 7 Z" fill="#7A9BAD"/><path d="M4.5 1.5 Q8 0 11.5 1.5" stroke="#7A9BAD" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+            <span class="ctrl-fi">KÄÄNNÄ<br><span class="ctrl-en">rotate</span></span>
+          </li>
+          <li class="ctrl-row">
+            <span class="ctrl-key">↓</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="6" y="2" width="4" height="7" fill="#7A9BAD"/><polygon points="2,9 14,9 8,15" fill="#7A9BAD"/></svg>
+            <span class="ctrl-fi">LASKE<br><span class="ctrl-en">soft drop</span></span>
+          </li>
+          <li class="ctrl-row">
+            <span class="ctrl-key" style="font-size:7px;min-width:26px;">SPC</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="6" y="1" width="4" height="9" fill="#AFCBD3"/><polygon points="2,10 14,10 8,15" fill="#AFCBD3"/></svg>
+            <span class="ctrl-fi">PUDOTA<br><span class="ctrl-en">hard drop</span></span>
+          </li>
+          <li class="ctrl-row">
+            <span class="ctrl-key">C</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="6" height="6" rx="1" stroke="#7A9BAD" stroke-width="1.5" fill="none"/><polygon points="9,7 14,4 14,10" fill="#7A9BAD"/><rect x="10" y="5" width="5" height="4" rx="1" fill="#7A9BAD" opacity="0.45"/></svg>
+            <span class="ctrl-fi">PIDÄ<br><span class="ctrl-en">hold</span></span>
+          </li>
+          <li class="ctrl-row" style="margin-bottom:0;">
+            <span class="ctrl-key">P</span>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="3" y="3" width="3.5" height="10" rx="1" fill="#7A9BAD"/><rect x="9.5" y="3" width="3.5" height="10" rx="1" fill="#7A9BAD"/></svg>
+            <span class="ctrl-fi">TAUKO<br><span class="ctrl-en">pause</span></span>
+          </li>
+        </ul>
+        <button class="btn cyan" id="btn-new" style="margin-top:12px;">UUSI PELI / new game</button>
+        <button class="btn" id="btn-pause" style="display:none;">TAUKO / pause</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="neon-stripe"></div>
+  <div style="font-size:8px;color:#2A4A5A;letter-spacing:3px;text-transform:uppercase;">© 2026 magmacrunch media · Yhdysvallat</div>
+</div>
+
+<!-- TITLE SCREEN -->
+<div id="title-overlay">
+  <div id="title-scanlines"></div>
+  <a href="../../arcade/index.html" class="mc-back">magmacrunch arcade</a>
+
+  <!-- Cathedral silhouette — behind all content -->
+  <div id="uspenski-haze">
+    <div class="nordic-snow snow-near"></div>
+    <div class="nordic-snow snow-far"></div>
+    <div class="cathedral-wrap">
+
+      <div class="base-tier tier-top"></div>
+      <div class="base-tier tier-middle"></div>
+      <div class="base-tier tier-bottom"></div>
+
+      <div class="spires-container">
+        <div class="spire spire-outer">
+          <div class="cross"></div><div class="onion-dome"></div><div class="eave"></div>
+          <div class="pillar"><div class="window"></div></div>
+        </div>
+        <div class="spire spire-inner">
+          <div class="cross"></div><div class="onion-dome"></div><div class="eave"></div>
+          <div class="pillar"><div class="window"></div></div>
+        </div>
+        <div class="spire spire-center">
+          <div class="cross"></div><div class="onion-dome"></div><div class="eave"></div>
+          <div class="pillar">
+            <div class="window"></div>
+            <div class="window"></div>
+          </div>
+        </div>
+        <div class="spire spire-inner">
+          <div class="cross"></div><div class="onion-dome"></div><div class="eave"></div>
+          <div class="pillar"><div class="window"></div></div>
+        </div>
+        <div class="spire spire-outer">
+          <div class="cross"></div><div class="onion-dome"></div><div class="eave"></div>
+          <div class="pillar"><div class="window"></div></div>
+        </div>
+      </div>
+
+      <div class="nordic-fog"></div>
+    </div>
+  </div>
+
+
+  <div id="title-flag-badge">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 11" width="28" height="17">
+      <rect width="18" height="11" fill="#FFFFFF" opacity="0.85"/>
+      <rect x="0" y="3.5" width="18" height="4" fill="#003580" opacity="0.85"/>
+      <rect x="5" y="0" width="4" height="11" fill="#003580" opacity="0.85"/>
+    </svg>
+    <span>FI</span>
+  </div>
+
+  <div id="title-content">
+    <div id="title-server-brand">
+      <span class="brand-prompt">&gt;</span>
+      <span class="brand-name">magmacrunch arcade</span>
+    </div>
+    <div id="title-server-sub">klassinen palapeli · yksin</div>
+
+    <div class="title-rule"></div>
+
+    <div id="title-logo-wrap">
+      <div id="title-logo-glitch-a" aria-hidden="true">TETRIS</div>
+      <div id="title-logo-glitch-b" aria-hidden="true">TETRIS</div>
+      <div id="title-logo">TETRIS</div>
+    </div>
+
+    <div id="title-subtitle">poista rivit · selviä · rakenna kombo</div>
+
+    <!-- Piece preview strip -->
+    <div id="title-pieces">
+      <div class="title-piece piece-i">
+        <div class="tp-row"><div class="tc"></div><div class="tc lit"></div><div class="tc lit"></div><div class="tc lit"></div><div class="tc lit"></div><div class="tc"></div></div>
+      </div>
+      <div class="title-piece piece-t">
+        <div class="tp-row"><div class="tc"></div><div class="tc lit"></div><div class="tc"></div></div>
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div><div class="tc lit"></div></div>
+      </div>
+      <div class="title-piece piece-s">
+        <div class="tp-row"><div class="tc"></div><div class="tc lit"></div><div class="tc lit"></div></div>
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div><div class="tc"></div></div>
+      </div>
+      <div class="title-piece piece-z">
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div><div class="tc"></div></div>
+        <div class="tp-row"><div class="tc"></div><div class="tc lit"></div><div class="tc lit"></div></div>
+      </div>
+      <div class="title-piece piece-l">
+        <div class="tp-row"><div class="tc lit"></div><div class="tc"></div></div>
+        <div class="tp-row"><div class="tc lit"></div><div class="tc"></div></div>
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div></div>
+      </div>
+      <div class="title-piece piece-o">
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div></div>
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div></div>
+      </div>
+      <div class="title-piece piece-j">
+        <div class="tp-row"><div class="tc"></div><div class="tc lit"></div></div>
+        <div class="tp-row"><div class="tc"></div><div class="tc lit"></div></div>
+        <div class="tp-row"><div class="tc lit"></div><div class="tc lit"></div></div>
+      </div>
+    </div>
+
+    <button class="btn cyan" id="btn-start-title" style="margin-top: -10px; font-size: 12px; padding: 14px 28px; position: relative; z-index: 99999; pointer-events: auto;">&gt;&gt; Paina VÄLILYÖNTIÄ / ALOITA</button>
+  </div>
+
+  <div id="title-copyright">
+    magmacrunch media &nbsp;·&nbsp; Tetris &nbsp;·&nbsp; Helsinki 1989 &nbsp;·&nbsp; 2026
+  </div>
+</div>
+
+<!-- hidden btn-start still wired by game.js -->
+<button id="btn-start" style="display:none;"></button>
+
+<!-- GAME OVER -->
+<div class="modal-overlay hidden" id="modal-gameover">
+  <div class="modal">
+    <h2>PELI OHI</h2>
+    <div class="modal-sub">Lopullinen tulos</div>
+    <div class="modal-sub-en">game over</div>
+    <div style="font-size:24px;color:var(--birch);text-shadow:var(--glow-birch);margin:10px 0;" id="final-score">0</div>
+    <div style="font-size:7px;color:var(--subtext);margin-bottom:16px;letter-spacing:2px;text-transform:uppercase;">Syötä nimikirjaimet</div>
+    <input class="initials-input" id="initials-input" maxlength="3" placeholder="AAA">
+    <button class="btn" id="btn-submit">TALLENNA / save</button>
+    <button class="btn cyan" id="btn-play-again">PELAA UUDELLEEN / play again</button>
+  </div>
+</div>
+
+<!-- PAUSE -->
+<div class="modal-overlay hidden" id="modal-pause">
+  <div class="modal">
+    <h2>TAUKO</h2>
+    <div class="modal-sub">Hengähdystauko</div>
+    <div class="modal-sub-en">pause</div>
+    <button class="btn cyan" id="btn-resume">JATKA / resume</button>
+    <button class="btn" id="btn-quit">LOPETA / quit</button>
+  </div>
+</div>
+
+<!-- HIGH SCORES -->
+<div class="modal-overlay hidden" id="modal-scores">
+  <div class="modal" style="max-width:440px;">
+    <h2>TULOKSET</h2>
+    <div class="modal-sub">Parhaat 10</div>
+    <div class="modal-sub-en">high scores</div>
+    <table class="scores-table">
+      <thead><tr>
+        <th>#</th>
+        <th>NIMI <span class="th-en">name</span></th>
+        <th>PISTEET <span class="th-en">score</span></th>
+        <th>TASO <span class="th-en">level</span></th>
+      </tr></thead>
+      <tbody id="scores-tbody"></tbody>
+    </table>
+    <button class="btn cyan" id="btn-close-scores">SULJE / close</button>
+  </div>
+</div>
+
+
+<!-- CREDITS -->
+<div class="modal-overlay hidden" id="modal-credits">
+  <div class="modal modal-credits">
+    <div class="modal-titlebar">
+      <h2>HYVITYKSET</h2>
+      <div class="modal-sub">Tekijätiedot</div>
+      <div class="modal-sub-en">credits</div>
+    </div>
+    <div class="modal-body">
+      <h3>TETRIS — Helsinki 1989</h3>
+
+      <div class="credits-section">
+        <div class="credits-label">ALKUPERÄINEN PELI</div>
+        <div class="credits-label-en">original game concept</div>
+        <div class="credits-value">Tetris was designed by Alexey Pajitnov and first released in 1984 on the Electronika 60 in the Soviet Union. In this version, it was always invented by Finland.</div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">SUUNNITTELU JA KEHITYS</div>
+        <div class="credits-label-en">design &amp; development</div>
+        <div class="credits-value">Jake A. McCoy</div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">KUSTANTAJA</div>
+        <div class="credits-label-en">publisher</div>
+        <div class="credits-value"><strong>magmacrunch media</strong></div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">RAKENNETTU</div>
+        <div class="credits-label-en">built with</div>
+        <div class="credits-value">Vanilla HTML, CSS &amp; JavaScript · Canvas API · Share Tech Mono font · JSONbin cloud scores</div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">HALPUUS VAIKUTUSKERROIN</div>
+        <div class="credits-label-en">cheapness impact factor</div>
+        <div class="credits-value"><span class="cif">1.8</span></div>
+      </div>
+
+      <div class="credits-section">
+        <div class="credits-label">PÄIVITETTY VIIMEKSI</div>
+        <div class="credits-label-en">last updated</div>
+        <div class="credits-value">March 18, 2026</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn cyan" id="btn-close-credits">SULJE / close</button>
+    </div>
+  </div>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>magmacrunch — logo animation preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  :root {
+    --black:  #080808;
+    --rose:   #ff5277; /* Adjusted to match your drawn logo closer */
+    --yellow: #ffe03a;
+    --cyan:   #00f5ff;
+    --orange: #ff7c1f;
+    --white:  #f0ead8;
+    --dark:   #120a10;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Press Start 2P', monospace;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px
+    );
+  }
+
+  /* ── CEREAL BOX WRAPPER ── */
+  .cereal-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 3px solid var(--rose);
+    border-radius: 8px;
+    background: radial-gradient(circle at center, #1a0a10 0%, #050002 100%);
+    padding: 32px 24px 20px;
+    box-shadow:
+      0 0 0 2px var(--black),
+      0 0 0 4px var(--rose),
+      0 0 30px rgba(255,82,119,0.25);
+    width: 300px;
+  }
+
+  /* top banner stripe */
+  .box-top-stripe {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 24px;
+    background: var(--yellow);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6px;
+    color: var(--black);
+    letter-spacing: 0.15em;
+  }
+
+  /* Main Title */
+  .title {
+    color: var(--rose);
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: center;
+    margin-bottom: 4px;
+    text-shadow: 2px 2px 0px var(--black), -1px -1px 0px var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  canvas {
+    display: block;
+    margin: 16px 0;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    /* pixel-art upscale: internal 64x64 → display 224x224 */
+    width: 224px;
+    height: 224px;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 124, 31, 0.2);
+  }
+
+  /* ── TAGLINE ── */
+  .tagline {
+    margin-top: 8px;
+    font-size: 6px;
+    color: var(--cyan);
+    letter-spacing: 0.14em;
+    text-align: center;
+    line-height: 2.2;
+    text-shadow: 0 0 8px rgba(0,245,255,0.4);
+  }
+  .tagline .highlight {
+    color: var(--yellow);
+    text-shadow: 0 0 8px rgba(255,224,58,0.6);
+  }
+
+  /* bottom strip */
+  .box-bottom {
+    margin-top: 16px;
+    font-size: 7px;
+    color: var(--rose);
+    letter-spacing: 0.1em;
+  }
+
+  .preview-note {
+    margin-top: 24px;
+    font-size: 7px;
+    color: #555;
+    letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="cereal-box">
+  <div class="box-top-stripe">✦ TEXAS TOAST MAGMA CRUNCH ✦</div>
+  
+  <div class="title">MAGMACRUNCH</div>
+
+  <canvas id="volcano" width="64" height="64"></canvas>
+
+  <div class="tagline">
+    SOMETIMES IT'S QUITE MELODIOUS;<br>
+    <span class="highlight">OTHER TIMES IT'S NOISE</span>
+  </div>
+
+  <div class="box-bottom">EST. 2023</div>
+</div>
+
+<div class="preview-note">[ copy this code into your project ]</div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('volcano');
+  const ctx    = canvas.getContext('2d');
+  const W = 64, H = 64;
+  const CENTER = 32;
+
+  // ── PALETTE ──
+  const C = {
+    bg:     '#080808',
+    ring:   '#f0ead8',
+    mount:  '#110505',
+    rock:   '#2a1414',
+    lava0:  '#ff7c1f',
+    lava1:  '#ffe03a',
+    lava2:  '#ff5277',
+    glow:   '#ff5500',
+    bolt:   '#ffe03a',
+    bolthi: '#ffffff',
+    cereal: ['#ff7c1f', '#ffe03a', '#ff5277', '#00f5ff']
+  };
+
+  const CRATER_TOP = 24;
+  const CRATER_L   = 24;
+  const CRATER_R   = 40;
+
+  let particles = [];
+  let bolts     = [];
+  let cerealBits = [];
+  let frame     = 0;
+
+  // ── SPAWNERS ──
+  function spawnLava() {
+    particles.push({
+      x: CRATER_L + 2 + Math.random() * (CRATER_R - CRATER_L - 4),
+      y: CRATER_TOP,
+      vx: (Math.random() - 0.5) * 1.5,
+      vy: -(Math.random() * 2.0 + 0.8),
+      life: 1,
+      decay: 0.015 + Math.random() * 0.02,
+      r: Math.random() < 0.5 ? 1 : 2,
+      col: Math.random() < 0.5 ? C.lava0 : C.lava1,
+      gravity: 0.08,
+    });
+  }
+
+  function spawnBolt() {
+    // Determine if it strikes left or right side based on image
+    const isLeft = Math.random() < 0.5;
+    const startX = isLeft ? (8 + Math.random() * 8) : (48 + Math.random() * 8);
+    const startY = 10 + Math.random() * 10;
+    
+    bolts.push({
+      x: startX,
+      y: startY,
+      life: 1,
+      decay: 0.1 + Math.random() * 0.1,
+      segs: 4 + Math.floor(Math.random() * 3),
+      angle: (Math.PI/2) + (Math.random()-0.5)*0.5, // pointing mostly down
+    });
+  }
+
+  function spawnCereal() {
+    cerealBits.push({
+      x: CENTER + (Math.random() - 0.5) * 10,
+      y: CRATER_TOP,
+      vx: (Math.random() - 0.5) * 2.5,
+      vy: -(Math.random() * 2.5 + 1.5),
+      life: 1,
+      decay: 0.01 + Math.random() * 0.015,
+      col: C.cereal[Math.floor(Math.random()*C.cereal.length)],
+      gravity: 0.09,
+    });
+  }
+
+  // ── PROCEDURAL MOUNTAIN & LAVA RIVERS ──
+  function drawMountain() {
+    for (let y = CRATER_TOP; y < H; y++) {
+      // Mountain slope
+      const widthAtY = (y - CRATER_TOP) * 0.85;
+      const l = CENTER - 8 - widthAtY;
+      const r = CENTER + 8 + widthAtY;
+
+      // Calculate winding paths for the two lava flows
+      const leftFlowCenter = CENTER - 2 - (y - CRATER_TOP) * 0.5 + Math.sin(y * 0.2 + frame * 0.05) * 2;
+      const rightFlowCenter = CENTER + 2 + (y - CRATER_TOP) * 0.5 + Math.sin(y * 0.25 - frame * 0.06) * 2;
+
+      for (let x = 0; x <= W; x++) {
+        // Only draw inside the circular boundary
+        const distFromCenter = Math.hypot(x - CENTER, y - CENTER);
+        if (distFromCenter > 30) continue;
+
+        if (x >= l && x <= r) {
+          // Check distance to our two lava flows
+          const distLeftFlow = Math.abs(x - leftFlowCenter);
+          const distRightFlow = Math.abs(x - rightFlowCenter);
+          const flowWidth = 1.5 + (y - CRATER_TOP) * 0.05; // Gets wider at the bottom
+
+          if (distLeftFlow < flowWidth || distRightFlow < flowWidth) {
+            // Lava flow animation colors
+            const t = (frame * 0.05 + y * 0.2) % 1;
+            ctx.fillStyle = t > 0.5 ? C.lava1 : C.lava0;
+          } else {
+            // Rock texture
+            ctx.fillStyle = (Math.random() > 0.8) ? C.rock : C.mount;
+          }
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+
+    // Crater Rim highlight
+    ctx.fillStyle = C.lava0;
+    ctx.fillRect(CRATER_L, CRATER_TOP, CRATER_R - CRATER_L, 1);
+  }
+
+  // ── DRAW PARTICLES ──
+  function drawParticles() {
+    for (const p of particles) {
+      ctx.globalAlpha = p.life * 0.95;
+      ctx.fillStyle = p.col;
+      ctx.fillRect(Math.round(p.x), Math.round(p.y), p.r, p.r);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ── DRAW CEREAL ──
+  function drawCereal() {
+    for (const c of cerealBits) {
+      ctx.globalAlpha = c.life;
+      const px = Math.round(c.x);
+      const py = Math.round(c.y);
+      // tiny 2x2 pixel "O" ring
+      ctx.fillStyle = c.col;
+      ctx.fillRect(px,   py,   2, 1);
+      ctx.fillRect(px,   py+2, 2, 1);
+      ctx.fillRect(px,   py,   1, 2);
+      ctx.fillRect(px+2, py,   1, 2);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ── DRAW LIGHTNING ──
+  function drawBolts() {
+    for (const b of bolts) {
+      ctx.globalAlpha = b.life;
+      let x = b.x, y = b.y;
+      const segLen = 5;
+      for (let i = 0; i < b.segs; i++) {
+        const nx = x + Math.cos(b.angle + (Math.random()-0.5)*1.5) * segLen;
+        const ny = y + Math.sin(b.angle) * segLen;
+        
+        // Glow
+        ctx.strokeStyle = C.lava1;
+        ctx.lineWidth = 2;
+        ctx.globalAlpha = b.life * 0.5;
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+        
+        // Core
+        ctx.strokeStyle = C.bolthi;
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = b.life;
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+        x = nx; y = ny;
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // ── DRAW BACKGROUND & RING ──
+  function drawBackground() {
+    ctx.fillStyle = C.bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Inner glow
+    const pulse = (Math.sin(frame * 0.05) + 1) / 2;
+    const grad = ctx.createRadialGradient(CENTER, CRATER_TOP, 0, CENTER, CRATER_TOP, 25 + pulse * 5);
+    grad.addColorStop(0, 'rgba(255,80,0,0.3)');
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Hand-drawn style circular ring outline
+    ctx.strokeStyle = C.ring;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(CENTER, CENTER, 30.5, 0, Math.PI * 2);
+    ctx.stroke();
+    
+    // Clear corners outside the circle to make it truly round
+    ctx.globalCompositeOperation = 'destination-in';
+    ctx.beginPath();
+    ctx.arc(CENTER, CENTER, 31.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  // ── UPDATE ──
+  function update() {
+    if (frame % 4 === 0) spawnLava();
+    if (frame % 30 === 0 && Math.random() > 0.3) spawnBolt();
+    if (frame % 15 === 0) spawnCereal();
+
+    for (const p of particles) {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.vy += p.gravity;
+      p.life -= p.decay;
+    }
+    particles = particles.filter(p => p.life > 0 && Math.hypot(p.x - CENTER, p.y - CENTER) < 30);
+
+    for (const b of bolts) { b.life -= b.decay; }
+    bolts = bolts.filter(b => b.life > 0);
+
+    for (const c of cerealBits) {
+      c.x  += c.vx;
+      c.y  += c.vy;
+      c.vy += c.gravity;
+      c.life -= c.decay;
+    }
+    cerealBits = cerealBits.filter(c => c.life > 0 && Math.hypot(c.x - CENTER, c.y - CENTER) < 30);
+  }
+
+  // ── RENDER ──
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    drawBackground();
+    drawBolts();
+    drawMountain();
+    drawParticles();
+    drawCereal();
+  }
+
+  // ── LOOP ──
+  const TARGET_FPS = 24;
+  const FRAME_MS   = 1000 / TARGET_FPS;
+  let lastTime = 0;
+  let rafId;
+
+  function loop(ts) {
+    rafId = requestAnimationFrame(loop);
+    if (ts - lastTime < FRAME_MS) return;
+    lastTime = ts;
+    update();
+    render();
+    frame++;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(rafId);
+    else { lastTime = 0; rafId = requestAnimationFrame(loop); }
+  });
+
+  rafId = requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

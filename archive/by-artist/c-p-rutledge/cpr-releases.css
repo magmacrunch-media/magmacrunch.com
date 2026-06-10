@@ -1,0 +1,43 @@
+/* C.P. Rutledge — releases */
+body.cpr-page.cpr-releases-page main > * { background: var(--black); }
+
+body.cpr-page.cpr-releases-page .breadcrumb { color: var(--dim); }
+body.cpr-page.cpr-releases-page .breadcrumb a { color: var(--cpr-red); }
+body.cpr-page.cpr-releases-page .breadcrumb a:hover { color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .breadcrumb .sep { color: var(--cpr-red); opacity: 0.6; }
+body.cpr-page.cpr-releases-page .breadcrumb .current { color: var(--cpr-red); }
+
+body.cpr-page.cpr-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cpr-page.cpr-releases-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cpr-red); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cpr-page.cpr-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cpr-red); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(240, 90, 90, 0.5); }
+
+body.cpr-page.cpr-releases-page .release-card:hover { border-color: var(--cpr-red); }
+body.cpr-page.cpr-releases-page .release-info h3 a { color: var(--cpr-red); }
+body.cpr-page.cpr-releases-page .release-info h3 a:hover { color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .release-info a { color: var(--cpr-red); }
+
+body.cpr-page.cpr-releases-page .nav-card.c-back {
+    background: transparent;
+    color: var(--cpr-red);
+    border-color: var(--cpr-red);
+}
+body.cpr-page.cpr-releases-page .nav-card.c-back:hover {
+    background: var(--cpr-red);
+    color: var(--cpr-cream);
+}
+
+body.cpr-page.cpr-releases-page .nav-card.c-about   { background: var(--cpr-deep); color: var(--cpr-cream); border-color: var(--cpr-deep); }
+body.cpr-page.cpr-releases-page .nav-card.c-about:hover { background: transparent; border-color: var(--cpr-deep); color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .nav-card.c-photography { background: var(--cpr-purple); color: var(--cpr-cream); border-color: var(--cpr-purple); }
+body.cpr-page.cpr-releases-page .nav-card.c-photography:hover { background: transparent; border-color: var(--cpr-purple); color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .nav-card.c-recordings   { background: var(--cpr-blue); color: var(--cpr-surface); border-color: var(--cpr-blue); }
+body.cpr-page.cpr-releases-page .nav-card.c-recordings:hover { background: transparent; border-color: var(--cpr-blue); color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .nav-card.c-releases   { background: var(--cpr-red); color: var(--cpr-cream); border-color: var(--cpr-red); }
+body.cpr-page.cpr-releases-page .nav-card.c-releases:hover { background: transparent; border-color: var(--cpr-red); color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .nav-card.c-works { background: var(--cpr-yellow); color: var(--cpr-surface); border-color: var(--cpr-yellow); }
+body.cpr-page.cpr-releases-page .nav-card.c-works:hover { background: transparent; border-color: var(--cpr-yellow); color: var(--cpr-cream); }
+body.cpr-page.cpr-releases-page .nav-card.c-green  { background: var(--cpr-green); color: var(--cpr-surface); border-color: var(--cpr-green); }
+body.cpr-page.cpr-releases-page .nav-card.c-green:hover { background: transparent; border-color: var(--cpr-green); color: var(--cpr-cream); }
+
+body.cpr-page.cpr-releases-page .nav-card::after { display: none; }
+body.cpr-page.cpr-releases-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

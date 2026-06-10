@@ -1,0 +1,176 @@
+/* ═══════════════════════════════════════════════
+   magmacrunch media — nav mini-player styles
+   assets/jukebox.css
+   ═══════════════════════════════════════════════ */
+
+/* ── MINI-PLAYER IN NAV ── */
+.nav-player {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    max-width: 320px;
+    margin: 0 12px;
+    min-width: 0;
+}
+
+.np-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--nav-brand, var(--yellow));
+    background: none;
+    border: 1px solid var(--nav-accent, var(--rose));
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.np-btn:hover {
+    background: var(--nav-accent, var(--rose));
+    color: var(--black);
+}
+
+.np-play {
+    min-width: 28px;
+    text-align: center;
+}
+
+.np-prev, .np-next {
+    font-size: 6px;
+    padding: 4px 5px;
+}
+
+/* ── TRACK TITLE ── */
+.np-track-link {
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    overflow: hidden;
+    display: block;
+}
+
+.np-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--nav-brand, var(--yellow));
+    white-space: nowrap;
+    display: inline-block;
+    text-shadow: 0 0 8px var(--nav-brand-glow, rgba(255,224,58,0.5));
+}
+
+.np-text.scroll {
+    animation: npScroll 10s linear infinite;
+    animation-delay: 1s;
+}
+
+@keyframes npScroll {
+    0%, 8%    { transform: translateX(0); }
+    92%, 100% { transform: translateX(var(--scroll-dist, -50%)); }
+}
+
+/* ── MUTE BUTTON ── */
+.np-mute {
+    font-size: 10px;
+    padding: 3px 6px;
+}
+
+.np-mute.muted {
+    opacity: 0.4;
+}
+
+/* ── VOLUME SLIDER ── */
+.np-vol-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.np-vol {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 50px;
+    height: 4px;
+    background: linear-gradient(
+        to right,
+        var(--nav-accent, var(--rose)) 0%,
+        var(--nav-accent, var(--rose)) var(--vol-pct, 70%),
+        rgba(240,234,216,0.15) var(--vol-pct, 70%),
+        rgba(240,234,216,0.15) 100%
+    );
+    opacity: 0.8;
+    outline: none;
+    border-radius: 0;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.np-vol:hover {
+    opacity: 1;
+}
+
+.np-vol::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 12px;
+    background: var(--nav-brand, var(--yellow));
+    border: none;
+    cursor: pointer;
+}
+
+.np-vol::-moz-range-thumb {
+    width: 8px;
+    height: 12px;
+    background: var(--nav-brand, var(--yellow));
+    border: none;
+    cursor: pointer;
+    border-radius: 0;
+}
+
+.np-vol-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--nav-brand, var(--yellow));
+    opacity: 0.5;
+    min-width: 16px;
+    text-align: right;
+}
+
+/* ── NAV PLAYING STATE ── */
+nav.nav-playing {
+    border-bottom-color: var(--nav-accent, var(--rose));
+}
+
+/* ── MOBILE ── */
+@media (max-width: 640px) {
+    .nav-player {
+        max-width: 180px;
+        margin: 0 8px;
+    }
+
+    .np-prev, .np-next {
+        display: none;
+    }
+
+    .np-text {
+        font-size: 5px;
+    }
+
+    .np-vol-wrap {
+        display: none;
+    }
+}
+
+@media (max-width: 400px) {
+    .nav-player {
+        max-width: 120px;
+    }
+
+    .np-mute {
+        display: none;
+    }
+}

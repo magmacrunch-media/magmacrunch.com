@@ -1,0 +1,43 @@
+/* Frogwood Manor — personnel (rose sub-theme) */
+body.fm-page.fm-personnel-page main > * { background: var(--black); }
+
+body.fm-page.fm-personnel-page .breadcrumb { color: var(--dim); }
+body.fm-page.fm-personnel-page .breadcrumb a { color: var(--fm-rose); }
+body.fm-page.fm-personnel-page .breadcrumb a:hover { color: var(--fm-cream); }
+body.fm-page.fm-personnel-page .breadcrumb .sep { color: var(--fm-rose); opacity: 0.6; }
+body.fm-page.fm-personnel-page .breadcrumb .current { color: var(--fm-rose); }
+
+body.fm-page.fm-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fm-page.fm-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--fm-rose); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fm-page.fm-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--fm-rose); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+
+body.fm-page.fm-personnel-page .artist-card {
+    background: transparent !important;
+    border-color: var(--fm-surface);
+}
+body.fm-page.fm-personnel-page .artist-card h3 { color: var(--fm-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.fm-page.fm-personnel-page .artist-card h3 a { color: var(--fm-rose) !important; }
+body.fm-page.fm-personnel-page .artist-card h3 a:hover { color: var(--fm-amber) !important; }
+body.fm-page.fm-personnel-page .artist-card p { color: var(--fm-cream) !important; }
+body.fm-page.fm-personnel-page .artist-card p strong { color: var(--fm-muted) !important; }
+body.fm-page.fm-personnel-page .artist-card a { color: var(--fm-rose) !important; }
+body.fm-page.fm-personnel-page .artist-card a:hover { color: var(--fm-amber) !important; }
+body.fm-page.fm-personnel-page .artist-card:hover { border-color: var(--fm-rose) !important; }
+body.fm-page.fm-personnel-page .badge { color: var(--black) !important; }
+body.fm-page.fm-personnel-page .badge-founded  { background: var(--fm-rose) !important; }
+body.fm-page.fm-personnel-page .badge-member   { background: var(--fm-amber) !important; }
+body.fm-page.fm-personnel-page .badge-engineer { background: var(--fm-cobalt) !important; }
+body.fm-page.fm-personnel-page .badge-born     { background: var(--fm-sky) !important; }
+body.fm-page.fm-personnel-page .badge-other    { background: var(--fm-surface) !important; color: var(--fm-cream) !important; }
+body.fm-page.fm-personnel-page .tag { border-color: var(--fm-surface) !important; color: var(--fm-muted) !important; }
+
+/* Current page: personnel (c-personnel active) */
+body.fm-page.fm-personnel-page .nav-card.c-personnel {
+    background: var(--black);
+    color: var(--fm-rose);
+    border-color: var(--fm-rose);
+}
+
+@media (max-width: 500px) {
+    body.fm-page.fm-personnel-page .artist-card { border-color: var(--fm-muted); }
+}

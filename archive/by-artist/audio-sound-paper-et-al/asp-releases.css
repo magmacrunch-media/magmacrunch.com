@@ -1,0 +1,28 @@
+/* Audio Sound Paper, et al. — releases page — accent: red */
+body.asp-page.asp-releases-page main > * { background: var(--black); }
+
+body.asp-page.asp-releases-page .breadcrumb { color: var(--asp-red); }
+body.asp-page.asp-releases-page .breadcrumb a { color: var(--asp-red); }
+body.asp-page.asp-releases-page .breadcrumb a:hover { color: var(--asp-red-light); }
+body.asp-page.asp-releases-page .breadcrumb .sep { color: var(--asp-red); opacity: 0.6; }
+body.asp-page.asp-releases-page .breadcrumb .current { color: var(--asp-red); }
+
+body.asp-page.asp-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.asp-page.asp-releases-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--asp-red); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.asp-page.asp-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--asp-red); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(192, 48, 32, 0.5); }
+
+body.asp-page.asp-releases-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--asp-red), var(--asp-brick), var(--asp-red), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+/* ── Nav card overrides ── */
+body.asp-page.asp-releases-page .nav-card.c-back { background: transparent; color: var(--asp-red); border-color: var(--asp-red); }
+body.asp-page.asp-releases-page .nav-card.c-back:hover { background: var(--asp-red); color: var(--asp-cream); }
+
+body.asp-page.asp-releases-page .nav-card::after { display: none; }
+body.asp-page.asp-releases-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

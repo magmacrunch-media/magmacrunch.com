@@ -1,0 +1,59 @@
+/* Twin Maples shared color palette — muted forest green / warm amber / cool blue theme */
+:root {
+    --tm-deep:     #1e2420;
+    --tm-dark:     #283028;
+    --tm-surface:  #3a4a38;
+    --tm-muted:    #6a7868;
+    --tm-light:    #98a888;
+    --tm-cream:    #d4d8c8;
+    --tm-heading:  #d4b898;
+    --tm-body:     #b8b098;
+    --tm-brand:    #4a6858;
+    --tm-accent:   #c07848;
+    --tm-warm:     #d4b870;
+    --tm-sage:     #7ab0c0;
+    --tm-wheat:    #d4b898;
+    --tm-leaf:     #8a9878;
+    --tm-bright:   #e8c870;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.tm-page { --credit-color: var(--tm-muted); --nav-accent: var(--tm-brand); --nav-glow: rgba(74,104,88,0.4); --nav-brand: var(--tm-warm); --nav-brand-glow: rgba(212,184,112,0.7); }
+body.tm-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.tm-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.tm-page .sub-nav .nav-card::after { display: none; }
+body.tm-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-about: teal */
+body.tm-page .sub-nav .nav-card.c-about { background: var(--tm-sage); color: var(--tm-deep); border-color: var(--tm-sage); }
+body.tm-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-sage); }
+
+/* c-personnel: forest brand */
+body.tm-page .sub-nav .nav-card.c-personnel { background: var(--tm-brand); color: var(--tm-deep); border-color: var(--tm-brand); }
+body.tm-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-brand); }
+
+/* c-recordings: copper accent */
+body.tm-page .sub-nav .nav-card.c-recordings { background: var(--tm-accent); color: var(--tm-deep); border-color: var(--tm-accent); }
+body.tm-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-accent); }
+
+/* c-works: warm */
+body.tm-page .sub-nav .nav-card.c-works { background: var(--tm-warm); color: var(--tm-deep); border-color: var(--tm-warm); }
+body.tm-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-warm); }
+
+/* c-green: leaf */
+body.tm-page .sub-nav .nav-card.c-green { background: var(--tm-leaf); color: var(--tm-deep); border-color: var(--tm-leaf); }
+body.tm-page .sub-nav .nav-card.c-green:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-leaf); }
+
+/* About button self-link hider */
+body.tm-page .sub-nav a[href="about.html"] {
+    background: var(--tm-sage);
+    color: var(--tm-deep);
+    border-color: var(--tm-sage);
+}

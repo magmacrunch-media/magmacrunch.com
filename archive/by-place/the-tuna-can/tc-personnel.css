@@ -1,0 +1,34 @@
+/* The Tuna Can — personnel */
+body.tc-page.tc-personnel-page main > * { background: var(--black); }
+
+body.tc-page.tc-personnel-page .breadcrumb { color: var(--dim); }
+body.tc-page.tc-personnel-page .breadcrumb a { color: var(--tc-green); }
+body.tc-page.tc-personnel-page .breadcrumb a:hover { color: var(--tc-cream); }
+body.tc-page.tc-personnel-page .breadcrumb .sep { color: var(--tc-green); opacity: 0.6; }
+body.tc-page.tc-personnel-page .breadcrumb .current { color: var(--tc-green); }
+
+body.tc-page.tc-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.tc-page.tc-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--tc-green); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.tc-page.tc-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--tc-green); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(80, 120, 64, 0.5); }
+
+/* Cards — transparent bg */
+body.tc-page.tc-personnel-page .artist-card { background: transparent; border-color: var(--tc-brand); }
+body.tc-page.tc-personnel-page .artist-card:hover { border-color: var(--tc-green); }
+body.tc-page.tc-personnel-page .artist-card h3 a { color: var(--tc-body); }
+body.tc-page.tc-personnel-page .artist-card h3 a:hover { color: var(--tc-cream); }
+body.tc-page.tc-personnel-page .artist-card a { color: var(--tc-green); }
+
+/* Current page: personnel (c-personnel active — back button) */
+body.tc-page.tc-personnel-page .nav-card.c-personnel {
+    background: var(--black);
+    color: var(--tc-green);
+    border-color: var(--tc-green);
+}
+body.tc-page.tc-personnel-page .nav-card.c-personnel:hover {
+    background: transparent;
+    color: var(--tc-green);
+}
+
+@media (max-width: 500px) {
+    body.tc-page.tc-personnel-page .artist-card { border-color: var(--tc-muted); }
+}

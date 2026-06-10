@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" shape-rendering="crispEdges">
+  <!-- Background -->
+  <rect width="32" height="32" fill="#1a1a2e"/>
+
+  <!-- Red zone hint (top-left) -->
+  <rect x="2" y="2" width="8" height="8" fill="#f03a47"/>
+  <!-- Blue zone hint (top-right) -->
+  <rect x="22" y="2" width="8" height="8" fill="#3a86ff"/>
+  <!-- Yellow zone hint (bottom-left) -->
+  <rect x="2" y="22" width="8" height="8" fill="#ffcc00"/>
+  <!-- Green zone hint (bottom-right) -->
+  <rect x="22" y="22" width="8" height="8" fill="#2ecc71"/>
+
+  <!-- Pawn body - white/cream -->
+  <!-- Head -->
+  <rect x="13" y="4" width="6" height="6" fill="#fdfbf7"/>
+  <!-- Body -->
+  <rect x="11" y="10" width="10" height="10" fill="#fdfbf7"/>
+  <!-- Collar -->
+  <rect x="12" y="20" width="8" height="3" fill="#fdfbf7"/>
+  <!-- Base -->
+  <rect x="9" y="23" width="14" height="5" fill="#fdfbf7"/>
+
+  <!-- Pawn shadow/detail pixels -->
+  <rect x="9" y="23" width="2" height="5" fill="#c9c4b5"/>
+  <rect x="21" y="23" width="2" height="5" fill="#c9c4b5"/>
+
+  <!-- Neon glow ring (CRT style) -->
+  <rect x="12" y="3" width="8" height="1" fill="#39ff14" opacity="0.7"/>
+  <rect x="10" y="5" width="1" height="4" fill="#39ff14" opacity="0.5"/>
+  <rect x="21" y="5" width="1" height="4" fill="#39ff14" opacity="0.5"/>
+  <rect x="8" y="9" width="2" height="2" fill="#39ff14" opacity="0.4"/>
+  <rect x="22" y="9" width="2" height="2" fill="#39ff14" opacity="0.4"/>
+</svg>

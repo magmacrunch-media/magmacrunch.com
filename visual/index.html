@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>visual — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ── PAGE-SPECIFIC: visual index ── */
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--purple); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--purple); opacity: 0.7; }
+        .breadcrumb .current { color: var(--purple); }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--rose);
+            text-shadow: 0 0 16px rgba(196,95,255,0.6);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--rose);
+            letter-spacing: 0.1em;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* ── PIXEL CANVAS ── */
+        .canvas-wrap {
+            width: min(600px, 90vw);
+            margin-bottom: 44px;
+            animation: fadeUp 0.5s 0.1s ease both;
+            position: relative;
+        }
+
+        #visualCanvas {
+            width: 100%;
+            height: 60px;
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        /* ── NAV CARDS ── */
+        .visual-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            width: min(520px, 90vw);
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+
+        .visual-card {
+            display: flex;
+            align-items: stretch;
+            text-decoration: none;
+            border: 2px solid #1e1e2e;
+            border-bottom: none;
+            background: var(--deep);
+            transition: background 0.15s, border-color 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .visual-card:last-child {
+            border-bottom: 2px solid #1e1e2e;
+        }
+
+        .visual-card::before {
+            content: '';
+            display: block;
+            width: 4px;
+            flex-shrink: 0;
+            background: var(--card-accent, var(--purple));
+            transition: width 0.15s;
+        }
+
+        .visual-card:hover:not(.coming-soon) {
+            background: #16161f;
+            border-color: var(--card-accent, var(--purple));
+        }
+        .visual-card:hover:not(.coming-soon)::before { width: 7px; }
+        .visual-card:hover:not(.coming-soon) .vc-arrow { opacity: 1; transform: translateX(0); }
+
+        /* coming soon state */
+        .visual-card.coming-soon {
+            cursor: default;
+            opacity: 0.45;
+        }
+        .visual-card.coming-soon::before {
+            background: var(--dim);
+        }
+
+        .vc-inner {
+            padding: 20px 22px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .vc-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            letter-spacing: 0.08em;
+            margin-bottom: 7px;
+            display: block;
+        }
+
+        .vc-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.5;
+        }
+
+        .vc-badge {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            border: 1px solid var(--dim);
+            padding: 2px 6px;
+            letter-spacing: 0.08em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .vc-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+            .vc-label { font-size: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li>
+            <a href="../index.html">home</a>
+            <div class="dropdown">
+                <a href="../home/about.html">about</a>
+                <a href="../home/links/all-links.html">all links</a>
+            </div>
+        </li>
+        <li>
+            <a href="../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../music/jukebox/index.html">jukebox</a>
+                <a href="../music/distributed-music.html">distributed music</a>
+                <a href="../music/floppy-disk/index.html">floppy disk</a>
+                <a href="../music/catalog.html">full catalog</a>
+            </div>
+        </li>
+        <li>
+            <a href="../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../visual/music-videos.html">music videos</a>
+                <a href="../visual/collage.html">collage</a>
+                <a href="../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a></div></li>
+        <li>
+            <a href="../arcade/index.html">arcade</a>
+        </li>
+            </div>
+        </li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <span class="current">visual</span>
+    </div>
+
+    <h1 class="page-title">// visual //</h1>
+
+    <!-- ANIMATED PIXEL CANVAS -->
+    <div class="canvas-wrap">
+        <canvas id="visualCanvas" width="600" height="60"></canvas>
+    </div>
+
+    <!-- VISUAL NAV CARDS -->
+    <div class="visual-cards">
+
+        <a href="music-videos.html" class="visual-card" style="--card-accent: var(--cyan);">
+            <div class="vc-inner">
+                <div>
+                    <span class="vc-label" style="color:var(--cyan);">music videos</span>
+                    <span class="vc-desc">no-budget video productions · avant-garde short film influences</span>
+                </div>
+                <span class="vc-arrow" style="color:var(--cyan);">▶</span>
+            </div>
+        </a>
+
+        <a href="collage.html" class="visual-card" style="--card-accent: var(--orange);">
+            <div class="vc-inner">
+                <div>
+                    <span class="vc-label" style="color:var(--orange);">collage art</span>
+                    <span class="vc-desc">mixed media · cut &amp; paste · visual experiments</span>
+                </div>
+                <span class="vc-arrow" style="color:var(--orange);">▶</span>
+            </div>
+        </a>
+
+<a href="photography.html" class="visual-card" style="--card-accent: var(--mintteal);">
+            <div class="vc-inner">
+                <div>
+                    <span class="vc-label" style="color:var(--mintteal);">photography</span>
+                    <span class="vc-desc">digital · film · scans · mixed formats</span>
+                </div>
+                <span class="vc-arrow" style="color:var(--mintteal);">▶</span>
+            </div>
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+// ── SCANLINE / STATIC PIXEL ANIMATION ──
+(function () {
+    const canvas = document.getElementById('visualCanvas');
+    const ctx    = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+
+    const palette = ['#ff3d6e','#c45fff','#ff7c1f','#ffe03a','#00f5ff','#39ff6e'];
+
+    // Horizontal scan lines that drift downward, plus random pixel static
+    let offset = 0;
+
+    let animId;
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Drifting gradient bands
+        for (let y = 0; y < H; y++) {
+            const band = Math.sin((y + offset) * 0.18) * 0.5 + 0.5;
+            const colorA = palette[Math.floor((y / H) * palette.length)];
+            ctx.fillStyle = colorA;
+            ctx.globalAlpha = band * 0.18;
+            ctx.fillRect(0, y, W, 1);
+        }
+        ctx.globalAlpha = 1;
+
+        // Moving scan line
+        const scanY = ((offset * 1.2) % (H + 4)) - 2;
+        ctx.fillStyle = '#ffffff';
+        ctx.globalAlpha = 0.06;
+        ctx.fillRect(0, scanY, W, 2);
+        ctx.globalAlpha = 1;
+
+        // Random pixel static
+        const staticCount = 60;
+        for (let i = 0; i < staticCount; i++) {
+            const x = Math.floor(Math.random() * W);
+            const y = Math.floor(Math.random() * H);
+            const col = palette[Math.floor(Math.random() * palette.length)];
+            ctx.fillStyle = col;
+            ctx.globalAlpha = 0.5 + Math.random() * 0.5;
+            ctx.fillRect(x, y, 2, 1);
+        }
+        ctx.globalAlpha = 1;
+
+        // Vertical glitch slice — occasional
+        if (Math.random() < 0.04) {
+            const sliceY = Math.floor(Math.random() * H);
+            const sliceH = Math.floor(Math.random() * 4) + 1;
+            const shift  = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 12) + 4);
+            const imgData = ctx.getImageData(0, sliceY, W, sliceH);
+            ctx.putImageData(imgData, shift, sliceY);
+        }
+
+        offset++;
+        animId = requestAnimationFrame(draw);
+    }
+
+    draw();
+    window.__pageCleanup = function() { cancelAnimationFrame(animId); };
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(animId);
+        } else {
+            draw();
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

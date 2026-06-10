@@ -1,0 +1,417 @@
+/* ══════════════════════════════════════════════════════════
+   modals.css — Solitaire Deluxe | MagmaCrunch Media © 2026
+   Win3.1 dialog boxes · neon Miami accent stripe
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Backdrop ─────────────────────────────────────────────── */
+.instructions-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.instructions-modal.active { display: flex; }
+
+/* ── Modal box — Win3.1 dialog ────────────────────────────── */
+.instructions-content {
+    background: var(--chrome-bg);
+    border: 3px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+    box-shadow:
+        inset 1px 1px 0 var(--chrome-light),
+        inset -1px -1px 0 var(--chrome-dark),
+        4px 4px 0 #000,
+        6px 6px 16px rgba(0,0,0,0.6);
+    max-width: 500px;
+    width: 92%;
+    overflow: hidden;
+    position: relative;
+}
+
+/* ── Title bar ────────────────────────────────────────────── */
+.modal-titlebar {
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    background: linear-gradient(90deg,
+        var(--title-left)  0%,
+        var(--title-mid)   40%,
+        #001840            70%,
+        var(--title-right) 100%
+    );
+    border-bottom: 2px solid #000;
+    min-height: 26px;
+    position: relative;
+}
+/* Neon top line on title bar */
+.modal-titlebar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--pink), var(--cyan), var(--pink));
+}
+.modal-titlebar span {
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    letter-spacing: 0;
+    text-shadow: 0 0 6px var(--cyan);
+}
+
+/* Neon stripe just below title bar */
+.modal-titlebar::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan));
+}
+
+/* ── Modal body ───────────────────────────────────────────── */
+.modal-body {
+    padding: 22px 20px 4px;
+}
+
+/* ── Headings ─────────────────────────────────────────────── */
+.modal-body h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--suit-black);
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.6;
+}
+.modal-body h4 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--purple);
+    margin: 14px 0 8px;
+    font-size: 10px;
+    letter-spacing: 0;
+    /* neon underline instead of AOL yellow */
+    border-bottom: 2px solid transparent;
+    border-image: linear-gradient(90deg, var(--pink), var(--cyan)) 1;
+    padding-bottom: 4px;
+}
+
+/* ── Body text ────────────────────────────────────────────── */
+.modal-body p {
+    font-family: 'Tahoma', Verdana, sans-serif;
+    color: var(--suit-black);
+    font-size: 12px;
+    line-height: 1.65;
+    margin-bottom: 6px;
+}
+.modal-body p strong { color: var(--purple); }
+
+/* ── Footer / buttons ─────────────────────────────────────── */
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    padding: 12px 4px 14px;
+    border-top: 2px solid;
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    margin-top: 14px;
+}
+.modal-footer button {
+    min-width: 80px;
+    font-size: 8px;
+    padding: 6px 20px;
+}
+
+/* ── High scores modal ────────────────────────────────────── */
+.scoreboard-modal { max-width: 540px; }
+
+.scoreboard-header {
+    display: grid;
+    grid-template-columns: 50px 1fr 90px 70px;
+    gap: 6px;
+    padding: 6px 10px;
+    background: linear-gradient(90deg, var(--title-left), var(--title-right));
+    border-bottom: 3px solid transparent;
+    border-image: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan)) 1;
+    margin-bottom: 0;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 6px var(--cyan);
+}
+
+/* ── Score entries ────────────────────────────────────────── */
+.score-entry {
+    display: grid;
+    grid-template-columns: 50px 1fr 90px 70px;
+    gap: 6px;
+    padding: 5px 10px;
+    border-bottom: 1px solid var(--chrome-dark);
+    font-family: 'Tahoma', Verdana, sans-serif;
+    font-size: 12px;
+    color: var(--suit-black);
+    align-items: center;
+    text-align: center;
+    background: var(--chrome-light);
+    transition: background 0.08s;
+}
+.score-entry:nth-child(even) { background: var(--chrome-bg); }
+.score-entry:hover { background: #d8d8ff; }
+.score-entry.new-score {
+    background: #1a0028;
+    color: var(--pink);
+    font-weight: bold;
+    animation: highlightEntry 0.9s ease-in-out;
+}
+@keyframes highlightEntry {
+    0%, 100% { background: #1a0028; }
+    50%       { background: #2a0044; box-shadow: inset 0 0 12px var(--pink-glow); }
+}
+
+.score-entry .rank {
+    font-size: 8px;
+    font-size: 9px;
+    color: var(--purple);
+}
+    font-size: 9px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: normal;
+    color: var(--suit-black);
+    letter-spacing: 2px;
+}
+.score-entry .score-value {
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    color: var(--pink);
+    text-shadow: 0 0 4px var(--pink-glow);
+}
+.score-entry .time {
+    color: var(--cyan-dim);
+    font-size: 11px;
+}
+
+/* ── No scores placeholder ────────────────────────────────── */
+#highScoresList:empty::after {
+    content: 'No scores yet. Be the first!';
+    display: block;
+    text-align: center;
+    padding: 20px;
+    color: var(--chrome-dark);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    line-height: 2;
+}
+
+/* ══════════════════════════════════════════════════════════
+   WIN SCREEN MODAL — vaporwave / Miami 80s aesthetic
+   ══════════════════════════════════════════════════════════ */
+
+.win-modal-content {
+    max-width: 480px;
+    background: #0a0018;
+    border-color: var(--pink);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Animated scanline sweep */
+.win-modal-content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255, 45, 120, 0.04) 3px,
+        rgba(255, 45, 120, 0.04) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* High score variant — cyan title bar */
+.win-is-highscore .win-titlebar-bar {
+    background: linear-gradient(90deg, #003050, #001840, #003050);
+}
+.win-is-highscore .win-titlebar-bar span {
+    color: var(--cyan);
+    text-shadow: 0 0 12px var(--cyan), 0 0 30px rgba(0,229,255,0.5);
+    animation: winTitlePulse 1.2s ease-in-out infinite alternate;
+}
+
+/* Regular win — pink title bar */
+.win-titlebar-bar {
+    background: linear-gradient(90deg,
+        #2a0040 0%, #1a0028 40%, #1a0028 60%, #2a0040 100%
+    );
+    padding: 10px 12px;
+    min-height: 40px;
+    justify-content: center;
+}
+.win-titlebar-bar span {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--pink);
+    text-shadow: 0 0 12px var(--pink), 0 0 30px rgba(255,45,120,0.5);
+    animation: winTitlePulse 1.2s ease-in-out infinite alternate;
+}
+@keyframes winTitlePulse {
+    from { text-shadow: 0 0 8px var(--pink),  0 0 20px rgba(255,45,120,0.4); }
+    to   { text-shadow: 0 0 20px var(--pink), 0 0 50px rgba(255,45,120,0.8), 0 0 80px rgba(255,45,120,0.3); }
+}
+
+/* Neon stripe below title */
+.win-titlebar-bar::after {
+    background: linear-gradient(90deg, var(--pink), var(--cyan), var(--gold), var(--cyan), var(--pink));
+    height: 4px;
+    animation: winStripe 3s linear infinite;
+    background-size: 200% 100%;
+}
+@keyframes winStripe {
+    0%   { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.win-modal-body {
+    padding: 20px 24px 8px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Suit symbols row */
+.win-suit-row {
+    text-align: center;
+    margin-bottom: 16px;
+}
+.win-suit {
+    font-size: 22px;
+    margin: 0 6px;
+    animation: winSuitBounce 0.6s ease-in-out infinite alternate;
+    display: inline-block;
+    color: var(--cyan);
+}
+.win-suit.red-suit { color: var(--pink); }
+.win-suit:nth-child(1) { animation-delay: 0s; }
+.win-suit:nth-child(2) { animation-delay: 0.15s; }
+.win-suit:nth-child(3) { animation-delay: 0.3s; }
+.win-suit:nth-child(4) { animation-delay: 0.45s; }
+@keyframes winSuitBounce {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-5px); }
+}
+
+/* Stats grid */
+.win-stats {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.win-stat {
+    background: #060018;
+    border: 1px solid var(--purple);
+    padding: 8px 12px;
+    text-align: center;
+    flex: 1;
+    box-shadow: 0 0 8px rgba(123,47,255,0.3);
+}
+.win-stat-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 7px;
+    color: var(--cyan-dim);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.win-stat-value {
+    font-family: 'VT323', monospace;
+    font-size: 28px;
+    color: var(--pink);
+    text-shadow: 0 0 8px var(--pink-glow);
+    line-height: 1;
+}
+
+/* Bonus line */
+.win-bonus-line {
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    color: var(--gold);
+    text-shadow: 0 0 6px var(--gold-dim);
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+/* High score badge */
+.win-high-score-badge {
+    display: none;
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-shadow: 0 0 10px var(--gold), 0 0 30px rgba(255,215,0,0.5);
+    padding: 8px;
+    border: 1px solid var(--gold);
+    background: rgba(255,215,0,0.06);
+    margin-bottom: 12px;
+    animation: winBadgePulse 1s ease-in-out infinite alternate;
+}
+@keyframes winBadgePulse {
+    from { box-shadow: 0 0 6px rgba(255,215,0,0.3); }
+    to   { box-shadow: 0 0 18px rgba(255,215,0,0.7); }
+}
+
+.win-footer {
+    border-top-color: var(--purple);
+}
+.win-footer button {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 2px;
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    padding: 10px 32px;
+    cursor: pointer;
+    text-shadow: none;
+    box-shadow: 0 0 16px var(--pink-glow);
+    transition: box-shadow 0.15s;
+}
+.win-footer button:hover {
+    box-shadow: 0 0 28px var(--pink-glow), 0 0 50px rgba(255,45,120,0.4);
+    background: var(--pink);
+    border: none;
+    color: #fff;
+}
+
+/* Particle container */
+.win-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2;
+}
+.win-particle {
+    position: absolute;
+    top: -20px;
+    font-size: 14px;
+    animation: winParticleFall linear forwards;
+    opacity: 0.9;
+}
+@keyframes winParticleFall {
+    0%   { transform: translateY(0)    rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(420px) rotate(360deg); opacity: 0; }
+}

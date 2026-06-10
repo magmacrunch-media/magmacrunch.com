@@ -1,0 +1,126 @@
+/* C.P. Rutledge — photography page — accent: purple (cpr-purple) */
+body.cpr-page.cpr-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.cpr-page.cpr-photography-page main > * { background: var(--black); }
+
+body.cpr-page.cpr-photography-page .breadcrumb { color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .breadcrumb a { color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .breadcrumb a:hover { color: var(--cpr-light-purple); }
+body.cpr-page.cpr-photography-page .breadcrumb .sep { color: var(--cpr-purple); opacity: 0.6; }
+body.cpr-page.cpr-photography-page .breadcrumb .current { color: var(--cpr-purple); }
+
+body.cpr-page.cpr-photography-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cpr-page.cpr-photography-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cpr-purple); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cpr-page.cpr-photography-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cpr-purple); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(144, 48, 176, 0.5); }
+
+body.cpr-page.cpr-photography-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cpr-purple), var(--cpr-deep), var(--cpr-purple), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+/* ── Nav card overrides ── */
+body.cpr-page.cpr-photography-page .nav-card.c-back { background: transparent; color: var(--cpr-purple); border-color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .nav-card.c-back:hover { background: var(--cpr-purple); color: var(--cpr-cream); }
+
+body.cpr-page.cpr-photography-page .nav-card.c-about   { background: var(--cpr-deep); color: var(--cpr-cream); border-color: var(--cpr-deep); }
+body.cpr-page.cpr-photography-page .nav-card.c-about:hover { background: transparent; border-color: var(--cpr-deep); color: var(--cpr-cream); }
+body.cpr-page.cpr-photography-page .nav-card.c-photography { background: var(--cpr-purple); color: var(--cpr-cream); border-color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .nav-card.c-photography:hover { background: transparent; border-color: var(--cpr-purple); color: var(--cpr-cream); }
+body.cpr-page.cpr-photography-page .nav-card.c-recordings   { background: var(--cpr-blue); color: var(--cpr-surface); border-color: var(--cpr-blue); }
+body.cpr-page.cpr-photography-page .nav-card.c-recordings:hover { background: transparent; border-color: var(--cpr-blue); color: var(--cpr-cream); }
+body.cpr-page.cpr-photography-page .nav-card.c-releases  { background: var(--cpr-red); color: var(--cpr-cream); border-color: var(--cpr-red); }
+body.cpr-page.cpr-photography-page .nav-card.c-releases:hover { background: transparent; border-color: var(--cpr-red); color: var(--cpr-cream); }
+body.cpr-page.cpr-photography-page .nav-card.c-works { background: var(--cpr-yellow); color: var(--cpr-surface); border-color: var(--cpr-yellow); }
+body.cpr-page.cpr-photography-page .nav-card.c-works:hover { background: transparent; border-color: var(--cpr-yellow); color: var(--cpr-cream); }
+body.cpr-page.cpr-photography-page .nav-card.c-green  { background: var(--cpr-green); color: var(--cpr-surface); border-color: var(--cpr-green); }
+body.cpr-page.cpr-photography-page .nav-card.c-green:hover { background: transparent; border-color: var(--cpr-green); color: var(--cpr-cream); }
+
+body.cpr-page.cpr-photography-page .nav-card::after { display: none; }
+body.cpr-page.cpr-photography-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* ── PHOTO STRIP ── */
+body.cpr-page.cpr-photography-page .photo-strip-section {
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s 0.25s ease both;
+}
+body.cpr-page.cpr-photography-page .photo-strip-wrap { position: relative; width: 100%; }
+body.cpr-page.cpr-photography-page .photo-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--cpr-purple) #0a0a14;
+    padding-bottom: 10px;
+    cursor: grab;
+}
+body.cpr-page.cpr-photography-page .photo-strip:active { cursor: grabbing; }
+body.cpr-page.cpr-photography-page .photo-strip::-webkit-scrollbar { height: 3px; }
+body.cpr-page.cpr-photography-page .photo-strip::-webkit-scrollbar-track { background: #0a0a14; }
+body.cpr-page.cpr-photography-page .photo-strip::-webkit-scrollbar-thumb { background: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .photo-item {
+    flex-shrink: 0;
+    position: relative;
+    height: clamp(200px, 35vw, 380px);
+    scroll-snap-align: start;
+    overflow: hidden;
+    border: 1px solid #1a1a2a;
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+body.cpr-page.cpr-photography-page .photo-item:hover { border-color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .photo-item.landscape { aspect-ratio: 16/9; }
+body.cpr-page.cpr-photography-page .photo-item.square    { aspect-ratio: 1/1; }
+body.cpr-page.cpr-photography-page .photo-item.wide      { aspect-ratio: 4/3; }
+body.cpr-page.cpr-photography-page .photo-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.4s ease, filter 0.3s ease;
+    filter: saturate(0.85) brightness(0.88);
+}
+body.cpr-page.cpr-photography-page .photo-item:hover img { transform: scale(1.03); filter: saturate(1.0) brightness(1.0); }
+body.cpr-page.cpr-photography-page .photo-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 22px 10px 8px;
+    background: linear-gradient(to top, rgba(8,8,18,0.88) 0%, transparent 100%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px; color: var(--dim); letter-spacing: 0.1em;
+    opacity: 0; transition: opacity 0.25s ease;
+}
+body.cpr-page.cpr-photography-page .photo-item:hover .photo-caption { opacity: 1; }
+body.cpr-page.cpr-photography-page .strip-scroll-hint {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px; color: var(--dim); letter-spacing: 0.15em;
+    margin-top: 8px; opacity: 0.35; text-align: right; transition: opacity 0.4s;
+}
+body.cpr-page.cpr-photography-page .photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
+
+/* ── PHOTO LIGHTBOX ── */
+body.cpr-page.cpr-photography-page .photo-lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(4,4,12,0.96); z-index: 1000;
+    align-items: center; justify-content: center; flex-direction: column;
+}
+body.cpr-page.cpr-photography-page .photo-lightbox.open { display: flex; }
+body.cpr-page.cpr-photography-page .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+body.cpr-page.cpr-photography-page .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid #1a1a2a; }
+body.cpr-page.cpr-photography-page .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+body.cpr-page.cpr-photography-page .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim);
+    background: none; border: 1px solid #1a1a2a; padding: 7px 14px; cursor: pointer;
+    letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
+body.cpr-page.cpr-photography-page .lb-btn:hover { color: var(--cpr-purple); border-color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--dim);
+    background: none; border: none; cursor: pointer; padding: 8px;
+    letter-spacing: 0.1em; transition: color 0.15s; }
+body.cpr-page.cpr-photography-page .lb-close:hover { color: var(--cpr-purple); }
+body.cpr-page.cpr-photography-page .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px;
+    color: var(--dim); letter-spacing: 0.12em; opacity: 0.55; min-width: 50px; text-align: center; }
+body.cpr-page.cpr-photography-page .lb-cap { font-family: 'Press Start 2P', monospace; font-size: 6px;
+    color: var(--dim); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }

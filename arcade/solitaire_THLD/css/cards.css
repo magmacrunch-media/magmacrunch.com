@@ -1,0 +1,261 @@
+/* cards.css - Texas Hold'Em Lava Dome card styles */
+
+/* ── Base card ─────────────────────────────────────────────── */
+.card {
+    width: 90px;
+    height: 126px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6px;
+    cursor: pointer;
+    position: relative;
+    box-shadow:
+        2px 2px 0 var(--black),
+        4px 4px 0 rgba(0,0,0,0.5);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        2px 6px 0 var(--black),
+        4px 8px 0 rgba(0,0,0,0.5);
+}
+
+/* ── Face up cards ─────────────────────────────────────────── */
+.card.face-up {
+    background-color: var(--white);
+    border: 2px solid #888;
+    border-top:   2px solid #ccc;
+    border-left:  2px solid #ccc;
+    border-bottom: 2px solid #444;
+    border-right:  2px solid #444;
+    z-index: 2;
+}
+
+.card.face-up.red {
+    color: #cc0000;
+}
+
+.card.face-up.black {
+    color: #0a0a0a;
+}
+
+/* ── Face down cards ───────────────────────────────────────── */
+.card.face-down {
+    cursor: default;
+    overflow: hidden;
+    background-color: var(--lava-dark);
+
+    border-top:    2px solid var(--orange);
+    border-left:   2px solid var(--orange);
+    border-bottom: 2px solid var(--deep-red);
+    border-right:  2px solid var(--deep-red);
+}
+
+.card.face-down:hover {
+    transform: none;
+}
+
+/* Card back wrapper */
+.card-back-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card-back-image {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+    object-position: center;
+    image-rendering: pixelated;
+}
+
+/* ── Card corners ──────────────────────────────────────────── */
+.card-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    line-height: 1;
+    font-family: var(--font-pixel);
+}
+
+.card-corner.top-left {
+    top: 4px;
+    left: 4px;
+}
+
+.card-corner.bottom-right {
+    bottom: 4px;
+    right: 4px;
+    transform: rotate(180deg);
+}
+
+.corner-rank {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.corner-suit {
+    font-size: 9px;
+    line-height: 1;
+}
+
+/* Compatibility stubs */
+.card-rank {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    font-weight: bold;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+}
+
+.card-rank-bottom {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    font-weight: bold;
+    transform: rotate(180deg);
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+}
+
+.card-suit {
+    font-size: 36px;
+    text-align: center;
+    line-height: 1;
+}
+
+/* ── Suit layout center ────────────────────────────────────── */
+.card-suit-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 22px 8px;
+}
+
+.card-suit-center.single {
+    padding: 0;
+}
+
+.suit-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+}
+
+.suit-symbol {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.suit-symbol.rotated {
+    transform: rotate(180deg);
+}
+
+/* Ace large symbol */
+.card-suit-center.single .suit-symbol {
+    font-size: 36px;
+}
+
+/* ── Face card styles ──────────────────────────────────────── */
+.face-card {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+.face-card-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.face-card-corner.top-left {
+    top: 4px;
+    left: 4px;
+}
+
+.face-card-corner.bottom-right {
+    bottom: 4px;
+    right: 4px;
+    transform: rotate(180deg);
+}
+
+.face-card-center {
+    text-align: center;
+}
+
+.face-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    image-rendering: pixelated;
+}
+
+.face-card-suit-large {
+    position: absolute;
+    font-size: 22px;
+    font-weight: bold;
+    z-index: 1;
+}
+
+.face-card-suit-large.top {
+    top: 18px;
+    left: 18px;
+}
+
+.face-card-suit-large.bottom {
+    bottom: 18px;
+    right: 18px;
+    transform: rotate(180deg);
+}
+
+/* ── Card selected state ───────────────────────────────────── */
+.card.selected {
+    border: 3px solid var(--yellow) !important;
+    box-shadow:
+        0 0 0 1px var(--black),
+        0 0 12px rgba(255, 200, 0, 0.8),
+        2px 2px 0 var(--black);
+}

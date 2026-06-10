@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frogwood Manor — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="fm-shared.css">
+    <style>
+        main { position: relative; }
+
+        body.fm-page .breadcrumb a { color: var(--fm-muted); }
+        body.fm-page .breadcrumb a:hover { color: var(--fm-cream); }
+        body.fm-page .breadcrumb .sep { color: var(--fm-muted); opacity: 0.6; }
+        body.fm-page .breadcrumb .current { color: var(--fm-muted); }
+
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 48px;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 75%;
+            filter: saturate(1.0) brightness(0.60);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(160, 48, 200, 0.08);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8, 8, 18, 0.20) 0%,
+                rgba(8, 8, 18, 0.0)  20%,
+                rgba(8, 8, 18, 0.0)  55%,
+                rgba(8, 8, 18, 0.70) 78%,
+                rgba(8, 8, 18, 1.0)  100%
+            );
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            padding: 0 20px 36px;
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .artist-header {
+            width: 100%;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--fm-brand);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--fm-cream);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(160, 48, 200, 0.65),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--fm-brand);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--fm-brand), var(--fm-amber), var(--fm-brand), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--fm-sage);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--fm-sage);
+            opacity: 0.9;
+        }
+
+        .place-body {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 0 20px;
+            color: var(--fm-light);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        .place-body p { margin-bottom: 1.5em; }
+
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--fm-muted); text-decoration:none; border:1px solid var(--fm-deep); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--fm-amber); border-color:var(--fm-amber); }
+
+        @media (max-width:640px) { .artist-name{font-size:13px;} .sub-nav{flex-direction:column;} }
+    </style>
+</head>
+<body class="fm-page">
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-place/index.html">by place</a>
+        <span class="sep">›</span>
+        <span class="current">frogwood</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/frogwood-manor.jpg" alt="Frogwood Manor">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by place //</div>
+                <div class="artist-name">FROGWOOD MANOR</div>
+                <div class="artist-abbr">NEW HAMPSHIRE</div>
+
+                <div class="sub-nav">
+                    <a href="about.html"      class="nav-card c-about">about</a>
+                    <a href="events.html"     class="nav-card c-events">events</a>
+                    <a href="personnel.html"  class="nav-card c-personnel">personnel</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="works.html"       class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a href="https://musicbrainz.org/place/362e9df6-ce39-4805-841e-c113e4e2a7c9"
+           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
+        </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="place-body">
+        <div class="section-label">// about //</div>
+        <p>
+            The Tuna Can was the de facto music space in the attic of a house on Evans Street in Iowa City.
+        </p>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+/* chip-animation.css — Poker chip styling for Texas Hold'Em Lava Dome */
+
+/* Chip display area */
+.chip-display {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 200px;
+    padding: 12px 16px 8px;
+    background-color: var(--black);
+    border-top:    2px solid var(--deep-red);
+    border-left:   2px solid var(--deep-red);
+    border-bottom: 2px solid var(--lava-dark);
+    border-right:  2px solid var(--lava-dark);
+    flex-wrap: wrap;
+}
+
+/* Stack wrapper: count badge + canvas stack */
+.chip-stack-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stack-count {
+    font-family: var(--font-pixel);
+    font-size: 7px;
+    color: var(--yellow);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.stack-canvas {
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* Bust message */
+.bust-msg {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: var(--lava-bright);
+    text-shadow: 0 0 10px var(--lava-bright);
+    letter-spacing: 4px;
+}
+
+/* Chip legend (denomination key) */
+.chip-legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 6px 8px;
+    background-color: var(--black);
+    border-top: 1px solid var(--lava-dark);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-pixel);
+    font-size: 6px;
+    color: var(--orange-glow);
+}
+
+.legend-item canvas {
+    image-rendering: pixelated;
+}

@@ -1,0 +1,50 @@
+/* DDT LLC shared color palette — warm amber / terracotta theme */
+:root {
+    --ddt-deep:     #5a3a20;
+    --ddt-mid:      #8a5a2a;
+    --ddt-amber:    #b87840;
+    --ddt-tan:      #c89858;
+    --ddt-heading:  #e8d098;
+    --ddt-cta:      #c04030;
+    --ddt-gold:     #d4a820;
+    --ddt-nature:   #607858;
+    --ddt-offwhite: #faf4e8;
+    --ddt-dark:     #0a0a14;
+}
+
+body.ddt-page { background: var(--black); --credit-color: var(--ddt-mid); --nav-accent: var(--ddt-amber); --nav-glow: rgba(184,120,64,0.4); --nav-brand: #d8a060; --nav-brand-glow: rgba(216,160,96,0.7); }
+
+/* Sub-nav layout */
+body.ddt-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.ddt-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.ddt-page .sub-nav .nav-card::after { display: none; }
+body.ddt-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-back: transparent + brand (back button) */
+body.ddt-page .nav-card.c-back { background: transparent; color: var(--ddt-mid); border-color: var(--ddt-mid); }
+body.ddt-page .nav-card.c-back:hover { background: var(--ddt-mid); border-color: var(--ddt-mid); color: var(--ddt-offwhite); }
+
+/* c-about: solid amber */
+body.ddt-page .nav-card.c-about { background: var(--ddt-amber); color: var(--ddt-deep); border-color: var(--ddt-amber); }
+body.ddt-page .nav-card.c-about:hover { background: transparent; border-color: var(--ddt-amber); color: var(--ddt-offwhite); }
+
+/* c-photography: solid nature */
+body.ddt-page .nav-card.c-photography { background: var(--ddt-nature); color: var(--ddt-heading); border-color: var(--ddt-nature); }
+body.ddt-page .nav-card.c-photography:hover { background: transparent; border-color: var(--ddt-nature); color: var(--ddt-offwhite); }
+
+/* c-events: solid gold */
+body.ddt-page .nav-card.c-events { background: var(--ddt-gold); color: var(--ddt-deep); border-color: var(--ddt-gold); }
+body.ddt-page .nav-card.c-events:hover { background: transparent; border-color: var(--ddt-gold); color: var(--ddt-offwhite); }
+
+/* c-releases: solid cta */
+body.ddt-page .nav-card.c-releases { background: var(--ddt-cta); color: var(--ddt-heading); border-color: var(--ddt-cta); }
+body.ddt-page .nav-card.c-releases:hover { background: transparent; border-color: var(--ddt-cta); color: var(--ddt-offwhite); }
+
+body.ddt-page .nav-card::after { display: none; }

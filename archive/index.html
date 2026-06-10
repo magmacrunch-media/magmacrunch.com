@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--mintteal); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--mintteal); opacity: 0.7; }
+        .breadcrumb .current { color: var(--mintteal); }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--mintteal);
+            text-shadow: 0 0 16px rgba(0,229,179,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.12em;
+            margin-bottom: 40px;
+        }
+
+        .intro {
+            width: min(700px, 95vw);
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.75;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .intro a {
+            color: var(--mintteal);
+            text-decoration: underline;
+            text-decoration-color: rgba(0,229,179,0.35);
+        }
+        .intro a:hover {
+            color: #e5b300;
+            text-decoration-color: #e5b300;
+        }
+
+        .browse-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .browse-card {
+            width: 200px;
+            padding: 24px 20px;
+            border: 2px solid var(--dim);
+            background: var(--deep);
+            text-decoration: none;
+            text-align: center;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+
+        .browse-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .browse-card.by-artist:hover {
+            border-color: var(--rose);
+            box-shadow: 0 0 20px rgba(255,61,110,0.3);
+        }
+
+        .browse-card.by-place:hover {
+            border-color: var(--green);
+            box-shadow: 0 0 20px rgba(57,255,110,0.3);
+        }
+
+        .browse-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+.by-artist .browse-card-title { color: #e54100; }
+.by-place .browse-card-title { color: #e500a5; }
+
+        .browse-card.by-place:hover {
+            border-color: #e500a5;
+            box-shadow: 0 0 20px rgba(229,0,165,0.3);
+        }
+
+        .browse-card.by-place:hover {
+            border-color: #b300e5;
+            box-shadow: 0 0 20px rgba(179,0,229,0.3);
+        }
+
+        .ticker { color: #e5b300; }
+
+        footer span { color: var(--rose); }
+
+        .browse-card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.4;
+        }
+
+        .note {
+            width: min(700px, 95vw);
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.6;
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #1e1e2e;
+        }
+
+        .note a {
+            color: var(--cyan);
+            text-decoration: underline;
+        }
+
+        /* EMERAC STYLES */
+        #mini-emerac {
+            width: min(600px, 95vw); /* Matches your .intro and .note widths */
+            margin-bottom: 40px;
+            border: 2px solid var(--dim);
+            background: var(--deep);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-sizing: border-box;
+        }
+
+        .emerac-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed var(--dim);
+            padding-bottom: 12px;
+        }
+
+        .mini-tape {
+            width: 32px; 
+            height: 32px;
+            border: 2px solid var(--dim);
+            border-radius: 50%;
+            background: #111;
+            position: relative;
+            animation: tape-spin 3s linear infinite;
+        }
+        
+        .mini-tape.reverse-spin {
+            animation-direction: reverse;
+            animation-duration: 4s;
+        }
+
+        .mini-tape-spokes {
+            position: absolute;
+            top: 10%; left: 10%;
+            width: 80%; height: 80%;
+            background-image: 
+                linear-gradient(0deg, transparent 40%, var(--dim) 40%, var(--dim) 60%, transparent 60%),
+                linear-gradient(90deg, transparent 40%, var(--dim) 40%, var(--dim) 60%, transparent 60%);
+            border-radius: 50%;
+        }
+
+        @keyframes tape-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .emerac-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #e500a5; /* Magenta from your place cards */
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+
+        .emerac-bottom {
+            display: flex;
+            gap: 16px;
+            height: 90px;
+        }
+
+        #emerac-crt {
+            flex: 1;
+            background: #0a0a10;
+            border: 2px solid #e5b300; /* Ticker gold */
+            padding: 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px; /* Perfectly chunky */
+            color: var(--mintteal); /* Glowing text */
+            text-shadow: 0 0 5px rgba(0,229,179,0.4);
+            overflow: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        #emerac-status {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+        }
+
+        #emerac-leds {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 4px;
+            background: #0a0a10;
+            border: 2px solid var(--dim);
+            padding: 6px;
+        }
+
+        .mini-led {
+            background: #222;
+            border-radius: 2px; /* Slightly squared for pixel aesthetic */
+            transition: background-color 0.05s ease;
+        }
+
+        /* Using your custom hex colors for the lights */
+        .mini-led.on-red { 
+            background: #e54100; 
+            box-shadow: 0 0 6px rgba(229,65,0,0.5); 
+        }
+        .mini-led.on-gold { 
+            background: #e5b300; 
+            box-shadow: 0 0 6px rgba(229,179,0,0.5); 
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">home</a><div class="dropdown"><a href="../home/about.html">about</a><a href="../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../music/index.html">music</a><div class="dropdown"><a href="../music/jukebox/index.html">jukebox</a><a href="../music/distributed-music.html">distributed music</a><a href="../music/floppy-disk/index.html">floppy disk</a><a href="../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../visual/index.html">visual</a><div class="dropdown"><a href="../visual/music-videos.html">music videos</a><a href="../visual/collage.html">collage</a><a href="../visual/photography.html">photography</a></div></li>
+        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../arcade/index.html">arcade</a></li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <span class="current">archive</span>
+    </div>
+
+    <div class="ticker-wrap"><span class="ticker">:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \/\/ [- |_ ( () |\/| [- ~|~ () ~|~ |-| [- /\ /? ( |-| | \/ [- _\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.</span></div>
+
+    <h1 class="page-title">// archive //</h1>
+    <p class="page-subtitle">the magmacrunch archive</p>
+
+    <!-- EMERAC COMPONENT START -->
+    <div id="mini-emerac">
+        <div class="emerac-top">
+            <div class="mini-tape"><div class="mini-tape-spokes"></div></div>
+            <div class="emerac-title">EMERAC // DB_ACCESS</div>
+            <div class="mini-tape reverse-spin"><div class="mini-tape-spokes"></div></div>
+        </div>
+        <div class="emerac-bottom">
+            <div id="emerac-crt">
+                <div id="emerac-status"></div>
+            </div>
+            <div id="emerac-leds"></div>
+        </div>
+    </div>
+    <!-- EMERAC COMPONENT END -->
+
+    <p class="intro">
+        the magmacrunch archive is a historical record of artists and places associated with magmacrunch's story — not a label catalog. the actual magmacrunch releases are in the <a href="../music/catalog.html">full catalog</a>.
+    </p>
+
+    <div class="browse-links">
+        <a href="by-artist/index.html" class="browse-card by-artist">
+            <div class="browse-card-title">by artist</div>
+            <div class="browse-card-desc">musicians and projects from the scene</div>
+        </a>
+        <a href="by-place/index.html" class="browse-card by-place">
+            <div class="browse-card-title">by place</div>
+            <div class="browse-card-desc">rehearsal spaces and recording locations</div>
+        </a>
+    </div>
+
+    <p class="note">
+        some artists listed may have no releases — or released elsewhere.
+    </p>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script>
+    const emeracGrid = document.getElementById('emerac-leds');
+        const totalLeds = 60; // 12x5 grid
+        const ledArray = [];
+
+        // 1. Build the blocky LED grid
+        for (let i = 0; i < totalLeds; i++) {
+            const led = document.createElement('div');
+            led.className = 'mini-led';
+            emeracGrid.appendChild(led);
+            ledArray.push(led);
+        }
+
+        // 2. Animate the processing lights
+        function processData() {
+            // Reset lights
+            ledArray.forEach(led => led.classList.remove('on-red', 'on-gold'));
+
+            // Turn on a random 25% of lights
+            const activeCount = Math.floor(totalLeds * 0.25);
+            for (let i = 0; i < activeCount; i++) {
+                const randomIdx = Math.floor(Math.random() * totalLeds);
+                const colorClass = Math.random() > 0.5 ? 'on-red' : 'on-gold';
+                ledArray[randomIdx].classList.add(colorClass);
+            }
+        }
+        
+        const processDataInterval = setInterval(processData, 150); // Hypnotic processing speed
+
+        // 3. Update the CRT Display
+        const statusDisplay = document.getElementById('emerac-status');
+        const archivePhrases = [
+            "> INDEXING TAPE...",
+            "> QUERYING ARTISTS",
+            "> LOCATING PLACES",
+            "> CONNECTING TO MUSICBRAINZ",
+            "> SIGNAL FOUND",
+            "> CHECKING CATALOG..."
+        ];
+
+        let crtLines = [
+            "> SYS_INIT...",
+            "> EMERAC ONLINE"
+        ];
+        
+        statusDisplay.innerHTML = crtLines.join('<br>');
+
+        function updateCrt() {
+            if (Math.random() > 0.6) { // 40% chance to print a new line
+                const randomText = archivePhrases[Math.floor(Math.random() * archivePhrases.length)];
+                crtLines.push(randomText);
+                if (crtLines.length > 4) crtLines.shift(); // Keep only 4 lines visible
+                statusDisplay.innerHTML = crtLines.join('<br>');
+            }
+        }
+
+        const crtInterval = setInterval(updateCrt, 1800);
+        window.__pageCleanup = function() { clearInterval(processDataInterval); clearInterval(crtInterval); };
+</script>
+
+<script src="../nav.js"></script>
+
+</body>
+</html>

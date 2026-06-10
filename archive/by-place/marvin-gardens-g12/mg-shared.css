@@ -1,0 +1,60 @@
+/* Marvin Gardens G12 shared color palette — burgundy / violet / amber theme */
+:root {
+    --mg-deep:     #283828;
+    --mg-dark:     #382848;
+    --mg-surface:  #4a2830;
+    --mg-muted:    #7848a0;
+    --mg-light:    #d880c0;
+    --mg-cream:    #f080a0;
+    --mg-brand:    #a02858;
+    --mg-accent:   #d04878;
+    --mg-cta:      #c87830;
+    --mg-heading:  #e8c060;
+    --mg-body:     #c8a868;
+    --mg-green:    #388040;
+    --mg-leaf:     #60b858;
+    --mg-sage:     #60a8c0;
+    --mg-offwhite: #f8f0f8;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.mg-page { --credit-color: var(--mg-muted); --nav-accent: var(--mg-brand); --nav-glow: rgba(160,40,88,0.4); --nav-brand: var(--mg-accent); --nav-brand-glow: rgba(208,72,120,0.7); }
+body.mg-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.mg-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.mg-page .sub-nav .nav-card::after { display: none; }
+body.mg-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-about: teal (formerly c-sage) */
+body.mg-page .sub-nav .nav-card.c-about { background: var(--mg-sage); color: var(--mg-deep); border-color: var(--mg-sage); }
+body.mg-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-sage); }
+
+/* c-personnel: magenta accent (formerly c-rose) */
+body.mg-page .sub-nav .nav-card.c-personnel { background: var(--mg-accent); color: var(--mg-deep); border-color: var(--mg-accent); }
+body.mg-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-accent); }
+
+/* c-recordings: light pink (formerly c-cyan) */
+body.mg-page .sub-nav .nav-card.c-recordings { background: var(--mg-light); color: var(--mg-deep); border-color: var(--mg-light); }
+body.mg-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-light); }
+
+/* c-works: amber CTA (formerly c-yellow) */
+body.mg-page .sub-nav .nav-card.c-works { background: var(--mg-cta); color: var(--mg-deep); border-color: var(--mg-cta); }
+body.mg-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-cta); }
+
+/* c-events: leaf (formerly c-green) */
+body.mg-page .sub-nav .nav-card.c-events { background: var(--mg-leaf); color: var(--mg-deep); border-color: var(--mg-leaf); }
+body.mg-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-leaf); }
+
+
+/* About button self-link hider */
+body.mg-page .sub-nav a[href="about.html"] {
+    background: var(--mg-sage);
+    color: var(--mg-deep);
+    border-color: var(--mg-sage);
+}

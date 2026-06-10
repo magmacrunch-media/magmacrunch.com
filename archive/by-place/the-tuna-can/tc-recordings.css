@@ -1,0 +1,34 @@
+/* The Tuna Can — recordings */
+body.tc-page.tc-recordings-page main > * { background: var(--black); }
+
+body.tc-page.tc-recordings-page .breadcrumb { color: var(--dim); }
+body.tc-page.tc-recordings-page .breadcrumb a { color: var(--tc-amber); }
+body.tc-page.tc-recordings-page .breadcrumb a:hover { color: var(--tc-cream); }
+body.tc-page.tc-recordings-page .breadcrumb .sep { color: var(--tc-amber); opacity: 0.6; }
+body.tc-page.tc-recordings-page .breadcrumb .current { color: var(--tc-amber); }
+
+body.tc-page.tc-recordings-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.tc-page.tc-recordings-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--tc-copper); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.tc-page.tc-recordings-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--tc-copper); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(192, 120, 74, 0.5); }
+
+/* Cards — transparent bg */
+body.tc-page.tc-recordings-page .recording-card { background: transparent; border-color: var(--tc-brand); }
+body.tc-page.tc-recordings-page .recording-card:hover { border-color: var(--tc-copper); }
+body.tc-page.tc-recordings-page .recording-card h3 a { color: var(--tc-body); }
+body.tc-page.tc-recordings-page .recording-card h3 a:hover { color: var(--tc-cream); }
+body.tc-page.tc-recordings-page .recording-card a { color: var(--tc-copper); }
+
+/* Current page: recordings (c-recordings active — back button) */
+body.tc-page.tc-recordings-page .nav-card.c-recordings {
+    background: var(--black);
+    color: var(--tc-copper);
+    border-color: var(--tc-copper);
+}
+body.tc-page.tc-recordings-page .nav-card.c-recordings:hover {
+    background: transparent;
+    color: var(--tc-copper);
+}
+
+@media (max-width: 500px) {
+    body.tc-page.tc-recordings-page .recording-card { border-color: var(--tc-muted); }
+}

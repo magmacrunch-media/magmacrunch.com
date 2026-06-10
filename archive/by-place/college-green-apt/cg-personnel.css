@@ -1,0 +1,43 @@
+/* College Green Apt. — personnel (surface / walnut sub-theme) */
+body.cg-page.cg-personnel-page main > * { background: var(--black); }
+
+body.cg-page.cg-personnel-page .breadcrumb { color: var(--dim); }
+body.cg-page.cg-personnel-page .breadcrumb a { color: var(--cg-surface); }
+body.cg-page.cg-personnel-page .breadcrumb a:hover { color: var(--cg-cream); }
+body.cg-page.cg-personnel-page .breadcrumb .sep { color: var(--cg-surface); opacity: 0.6; }
+body.cg-page.cg-personnel-page .breadcrumb .current { color: var(--cg-surface); }
+
+body.cg-page.cg-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cg-page.cg-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cg-cream); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cg-page.cg-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cg-cream); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+
+body.cg-page.cg-personnel-page .artist-card {
+    background: transparent !important;
+    border-color: var(--cg-muted);
+}
+body.cg-page.cg-personnel-page .artist-card h3 { color: var(--cg-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.cg-page.cg-personnel-page .artist-card h3 a { color: var(--cg-lavender) !important; }
+body.cg-page.cg-personnel-page .artist-card h3 a:hover { color: var(--cg-cream) !important; }
+body.cg-page.cg-personnel-page .artist-card p { color: var(--cg-light) !important; }
+body.cg-page.cg-personnel-page .artist-card p strong { color: var(--cg-muted) !important; }
+body.cg-page.cg-personnel-page .artist-card a { color: var(--cg-lavender) !important; }
+body.cg-page.cg-personnel-page .artist-card a:hover { color: var(--cg-cream) !important; }
+body.cg-page.cg-personnel-page .artist-card:hover { border-color: var(--cg-lavender) !important; }
+body.cg-page.cg-personnel-page .badge { color: var(--black) !important; }
+body.cg-page.cg-personnel-page .badge-founded  { background: var(--cg-lavender) !important; }
+body.cg-page.cg-personnel-page .badge-member   { background: var(--cg-cta) !important; }
+body.cg-page.cg-personnel-page .badge-engineer { background: var(--cg-cool) !important; }
+body.cg-page.cg-personnel-page .badge-born     { background: var(--cg-nature) !important; }
+body.cg-page.cg-personnel-page .badge-other    { background: var(--cg-surface) !important; color: var(--cg-cream) !important; }
+body.cg-page.cg-personnel-page .tag { border-color: var(--cg-muted) !important; color: var(--cg-muted) !important; }
+
+/* Current page: personnel (c-personnel active) */
+body.cg-page.cg-personnel-page .nav-card.c-personnel {
+    background: var(--black);
+    color: var(--cg-surface);
+    border-color: var(--cg-surface);
+}
+
+@media (max-width: 500px) {
+    body.cg-page.cg-personnel-page .artist-card { border-color: var(--cg-muted); }
+}

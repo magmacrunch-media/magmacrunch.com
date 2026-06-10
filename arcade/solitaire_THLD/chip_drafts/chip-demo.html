@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chip Stack Demo — TX Hold'Em Lava Dome</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --black:       #0a0000;
+    --dark-red:    #1c0000;
+    --deep-red:    #3b0000;
+    --lava-dark:   #6b0000;
+    --lava-bright: #cc2200;
+    --orange:      #dd4400;
+    --orange-hot:  #ff5500;
+    --orange-glow: #ff7700;
+    --yellow:      #ffcc00;
+    --font:        'Press Start 2P', monospace;
+}
+
+body {
+    background-color: var(--black);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    padding: 32px;
+}
+
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    background-image:
+        repeating-linear-gradient(0deg,
+            transparent, transparent 3px,
+            rgba(0,0,0,0.15) 3px, rgba(0,0,0,0.15) 4px),
+        radial-gradient(ellipse 80% 60% at 50% 100%,
+            rgba(180,40,0,0.4) 0%, transparent 70%);
+}
+
+.panel {
+    position: relative; z-index: 1;
+    background-color: var(--dark-red);
+    padding: 24px;
+    border-top:    4px solid var(--orange-glow);
+    border-left:   4px solid var(--orange-glow);
+    border-bottom: 4px solid var(--lava-dark);
+    border-right:  4px solid var(--lava-dark);
+    box-shadow:
+        0 0 0 2px var(--black), 0 0 0 6px var(--orange),
+        0 0 0 8px var(--black), 0 0 40px rgba(255,80,0,0.3);
+    width: 100%; max-width: 700px;
+}
+
+.panel-title {
+    font-size: 9px; color: var(--yellow);
+    letter-spacing: 2px; text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 0 var(--lava-bright);
+}
+
+.chip-totals {
+    display: flex; gap: 12px;
+    justify-content: center; align-items: baseline;
+    margin-bottom: 14px;
+}
+.total-label { font-size: 6px; color: var(--orange-glow); letter-spacing: 2px; }
+.total-value {
+    font-size: 22px; color: var(--yellow);
+    text-shadow: 2px 2px 0 var(--lava-bright); letter-spacing: 2px;
+}
+
+/* ── Display area ───────────────────────────────────────────── */
+.chip-display {
+    display: flex;
+    gap: 24px;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 220px;
+    padding: 16px 20px 12px;
+    background-color: var(--black);
+    border-top: 2px solid var(--deep-red); border-left: 2px solid var(--deep-red);
+    border-bottom: 2px solid var(--lava-dark); border-right: 2px solid var(--lava-dark);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+/* Each denomination column: count badge + canvas */
+.chip-stack-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.stack-count {
+    font-size: 7px; color: var(--yellow);
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 0 var(--black);
+}
+
+.stack-canvas {
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* ── Legend ─────────────────────────────────────────────────── */
+.legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    justify-content: center; align-items: center;
+    padding: 8px 12px;
+    background-color: var(--black);
+    border-left: 3px solid var(--lava-dark);
+    margin-bottom: 14px;
+}
+.legend-item {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 7px; color: var(--orange-glow); letter-spacing: 1px;
+}
+
+.divider {
+    height: 2px; margin: 10px 0;
+    background: linear-gradient(90deg,
+        transparent, var(--lava-dark), var(--orange), var(--lava-dark), transparent);
+}
+
+/* ── Controls ───────────────────────────────────────────────── */
+.controls { display: flex; flex-direction: column; gap: 10px; }
+.control-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.control-label { font-size: 6px; color: var(--orange-glow); letter-spacing: 1px; min-width: 60px; }
+
+.demo-btn {
+    font-family: var(--font); font-size: 7px; color: var(--yellow);
+    background-color: var(--lava-dark); border: none; cursor: pointer;
+    padding: 8px 10px;
+    border-top: 2px solid var(--orange-hot); border-left: 2px solid var(--orange-hot);
+    border-bottom: 2px solid var(--deep-red); border-right: 2px solid var(--deep-red);
+    box-shadow: 0 0 0 2px var(--black), 2px 2px 0 2px var(--black);
+    transition: filter 0.08s; position: relative; top: 0; left: 0;
+}
+.demo-btn:hover { filter: brightness(1.3); }
+.demo-btn:active {
+    border-top-color: var(--deep-red); border-left-color: var(--deep-red);
+    border-bottom-color: var(--orange-hot); border-right-color: var(--orange-hot);
+    top: 2px; left: 2px; box-shadow: 0 0 0 2px var(--black);
+}
+
+.amount-input {
+    font-family: var(--font); font-size: 10px;
+    background-color: var(--black); color: var(--yellow);
+    border-top: 2px solid var(--deep-red); border-left: 2px solid var(--deep-red);
+    border-bottom: 2px solid var(--orange); border-right: 2px solid var(--orange);
+    padding: 6px 8px; width: 100px; outline: none;
+}
+
+.bust-msg {
+    font-size: 11px; color: var(--lava-bright);
+    letter-spacing: 5px; text-align: center;
+    width: 100%; padding: 50px 0 30px;
+    text-shadow: 2px 2px 0 var(--black);
+}
+</style>
+</head>
+<body>
+<div class="panel">
+    <div class="panel-title">★ CHIP STACK DEMO — TX HOLD'EM LAVA DOME ★</div>
+
+    <div class="chip-totals">
+        <span class="total-label">CHIPS:</span>
+        <span class="total-value" id="chipCount">500</span>
+    </div>
+
+    <div class="chip-display" id="chipDisplay"></div>
+    <div class="legend"      id="chipLegend"></div>
+
+    <div class="divider"></div>
+
+    <div class="controls">
+        <div class="control-row">
+            <button class="demo-btn" onclick="adjustChips(50)">+50</button>
+            <button class="demo-btn" onclick="adjustChips(100)">+100</button>
+            <button class="demo-btn" onclick="adjustChips(250)">+250</button>
+            <button class="demo-btn" onclick="adjustChips(500)">+500</button>
+            <button class="demo-btn" onclick="adjustChips(-50)">-50</button>
+            <button class="demo-btn" onclick="adjustChips(-100)">-100</button>
+            <button class="demo-btn" onclick="adjustChips(-250)">-250</button>
+        </div>
+        <div class="control-row">
+            <span class="control-label">SET TO:</span>
+            <input class="amount-input" type="number" id="setAmount" value="500" min="0">
+            <button class="demo-btn" onclick="setChips()">SET</button>
+            <button class="demo-btn" onclick="animateWin()">★ WIN</button>
+            <button class="demo-btn" onclick="animateLose()">✕ LOSE</button>
+            <button class="demo-btn" onclick="setChipsDirect(0)">BUST</button>
+            <button class="demo-btn" onclick="setChipsDirect(3867)">TEST</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ── Chip definitions ─────────────────────────────────────────
+// face:  top ellipse color
+// mid:   stripe color on the edge band
+// edge:  main edge/side color (darker version of face)
+// dark:  shadow at very bottom
+const DENOMS = [
+    { value:500, face:'#7744cc', edge:'#3d1a77', mid:'#ffffff', dark:'#1a0044', label:'500' },
+    { value:100, face:'#444444', edge:'#111111', mid:'#aaaaaa', dark:'#000000', label:'100' },
+    { value: 25, face:'#22aa44', edge:'#0d5520', mid:'#ffffff', dark:'#062b10', label:'25'  },
+    { value:  5, face:'#dd2233', edge:'#770f18', mid:'#ffffff', dark:'#3b0009', label:'5'   },
+    { value:  1, face:'#ddddbb', edge:'#888866', mid:'#cc2200', dark:'#444433', label:'1'   },
+];
+
+// ── Canvas chip dimensions ───────────────────────────────────
+const CW        = 64;   // canvas / chip width
+const FACE_RY   = 10;   // half-height of the top ellipse (how "flat" the disc looks)
+const EDGE_H    = 9;    // pixel height of the side edge band
+const CHIP_H    = FACE_RY * 2 + EDGE_H; // total chip sprite height
+const OVERLAP   = FACE_RY * 2 + 2;      // how much each chip overlaps the one below
+const MAX_STACK = 12;
+
+// ── Draw a single chip sprite onto a canvas context ─────────
+// cx/cy = centre x, top-y of the face ellipse
+function drawChip(ctx, denom, cx, topY) {
+    const { face, edge, mid, dark } = denom;
+    const rx = CW / 2 - 4;
+    const faceY = topY + FACE_RY; // centre of face ellipse
+
+    // 1. Bottom shadow ellipse
+    ctx.beginPath();
+    ctx.ellipse(cx, faceY + EDGE_H + 3, rx - 1, FACE_RY - 2, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+    ctx.fill();
+
+    // 2. Edge / side band (a filled rect capped with bottom ellipse)
+    ctx.fillStyle = edge;
+    ctx.fillRect(cx - rx, faceY, rx * 2, EDGE_H);
+
+    // Bottom of edge — dark ellipse to close the cylinder
+    ctx.beginPath();
+    ctx.ellipse(cx, faceY + EDGE_H, rx, FACE_RY, 0, 0, Math.PI * 2);
+    ctx.fillStyle = dark;
+    ctx.fill();
+
+    // 3. Edge stripe — two thin lines of mid color for the classic chip pattern
+    ctx.fillStyle = mid;
+    ctx.globalAlpha = 0.55;
+    ctx.fillRect(cx - rx + 4, faceY + 2, rx * 2 - 8, 2);
+    ctx.fillRect(cx - rx + 4, faceY + EDGE_H - 4, rx * 2 - 8, 2);
+    ctx.globalAlpha = 1.0;
+
+    // 4. Face ellipse (top)
+    ctx.beginPath();
+    ctx.ellipse(cx, faceY, rx, FACE_RY, 0, 0, Math.PI * 2);
+    ctx.fillStyle = face;
+    ctx.fill();
+
+    // 5. Face detail: concentric ring + inner circle for that casino chip look
+    ctx.beginPath();
+    ctx.ellipse(cx, faceY, rx - 6, FACE_RY - 2, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = mid;
+    ctx.globalAlpha = 0.3;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.globalAlpha = 1.0;
+
+    ctx.beginPath();
+    ctx.ellipse(cx, faceY, rx - 12, FACE_RY - 4, 0, 0, Math.PI * 2);
+    ctx.fillStyle = mid;
+    ctx.globalAlpha = 0.18;
+    ctx.fill();
+    ctx.globalAlpha = 1.0;
+
+    // 6. Highlight on top-left of face
+    ctx.beginPath();
+    ctx.ellipse(cx - rx * 0.25, faceY - FACE_RY * 0.3, rx * 0.38, FACE_RY * 0.3, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fill();
+
+    // 7. Crisp pixel outline around face ellipse
+    ctx.beginPath();
+    ctx.ellipse(cx, faceY, rx, FACE_RY, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = dark;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+}
+
+// ── Render a full stack to a <canvas> element ────────────────
+function renderStack(canvas, denom, count) {
+    const drawn = Math.min(count, MAX_STACK);
+    // Canvas height: bottom chip bottom + top chip face top
+    // Stack grows upward; each chip exposes OVERLAP px of the one above
+    const totalH = CHIP_H + (drawn - 1) * OVERLAP + 6; // +6 for shadow
+    canvas.width  = CW;
+    canvas.height = totalH;
+    canvas.style.width  = CW + 'px';
+    canvas.style.height = totalH + 'px';
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, CW, totalH);
+
+    const cx = CW / 2;
+
+    // Draw bottom chip first, then stack upward
+    // Bottom chip top-y = totalH - CHIP_H - 3 (leave room for shadow)
+    for (let i = 0; i < drawn; i++) {
+        // i=0 is bottom, i=drawn-1 is top
+        const topY = totalH - CHIP_H - 3 - i * OVERLAP;
+        drawChip(ctx, denom, cx, topY);
+    }
+}
+
+// ── Legend chip (small, with value label) ───────────────────
+function renderLegendChip(canvas, denom) {
+    const scale = 0.65;
+    const w = Math.round(CW * scale);
+    const faceRY = Math.round(FACE_RY * scale);
+    const edgeH  = Math.round(EDGE_H * scale);
+    const h = faceRY * 2 + edgeH + 4;
+
+    canvas.width  = w;
+    canvas.height = h;
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.scale(scale, scale);
+    drawChip(ctx, denom, CW / 2, faceRY + 1);
+    ctx.restore();
+
+    // Value label in centre of face
+    ctx.font = '5px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = denom.mid;
+    ctx.globalAlpha = 0.85;
+    ctx.fillText(denom.label, w / 2, faceRY + 1);
+    ctx.globalAlpha = 1;
+}
+
+// ── Break amount into stacks ─────────────────────────────────
+function breakIntoStacks(amount) {
+    const out = [];
+    let rem = amount;
+    for (const d of DENOMS) {
+        const n = Math.floor(rem / d.value);
+        if (n > 0) { out.push({ denom: d, count: n }); rem -= n * d.value; }
+    }
+    return out;
+}
+
+// ── Main render ──────────────────────────────────────────────
+let currentChips = 500;
+
+function renderChips(chips) {
+    document.getElementById('chipCount').textContent = chips.toLocaleString();
+
+    const display = document.getElementById('chipDisplay');
+    display.innerHTML = '';
+
+    if (chips <= 0) {
+        display.innerHTML = '<div class="bust-msg">B U S T</div>';
+        return;
+    }
+
+    const stacks = breakIntoStacks(chips);
+
+    stacks.forEach(function(stack) {
+        const wrap = document.createElement('div');
+        wrap.className = 'chip-stack-wrap';
+
+        const badge = document.createElement('div');
+        badge.className = 'stack-count';
+        badge.textContent = '\u00d7' + stack.count;
+        wrap.appendChild(badge);
+
+        const canvas = document.createElement('canvas');
+        canvas.className = 'stack-canvas';
+        renderStack(canvas, stack.denom, stack.count);
+        wrap.appendChild(canvas);
+
+        display.appendChild(wrap);
+    });
+}
+
+function renderLegend() {
+    const legend = document.getElementById('chipLegend');
+    legend.innerHTML = '';
+    DENOMS.forEach(function(d) {
+        const item = document.createElement('div');
+        item.className = 'legend-item';
+
+        const canvas = document.createElement('canvas');
+        renderLegendChip(canvas, d);
+
+        const label = document.createElement('span');
+        label.textContent = '= ' + d.value;
+
+        item.appendChild(canvas);
+        item.appendChild(label);
+        legend.appendChild(item);
+    });
+}
+
+// ── Controls ─────────────────────────────────────────────────
+function adjustChips(delta) {
+    currentChips = Math.max(0, currentChips + delta);
+    document.getElementById('setAmount').value = currentChips;
+    renderChips(currentChips);
+}
+
+function setChips() {
+    setChipsDirect(parseInt(document.getElementById('setAmount').value) || 0);
+}
+
+function setChipsDirect(val) {
+    currentChips = Math.max(0, val);
+    document.getElementById('setAmount').value = currentChips;
+    renderChips(currentChips);
+}
+
+function animateWin() {
+    adjustChips([50, 100, 150, 250][Math.floor(Math.random() * 4)]);
+}
+
+function animateLose() {
+    var loss = Math.min(currentChips, [25, 50, 100][Math.floor(Math.random() * 3)]);
+    adjustChips(-loss);
+}
+
+// ── Init ─────────────────────────────────────────────────────
+renderLegend();
+renderChips(currentChips);
+</script>
+</body>
+</html>

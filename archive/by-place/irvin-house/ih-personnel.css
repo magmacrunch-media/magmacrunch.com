@@ -1,0 +1,47 @@
+/* Irvin House — personnel (sky blue brand accent) */
+body.ih-page.ih-personnel-page main > * { background: var(--black); }
+
+body.ih-page.ih-personnel-page .breadcrumb { color: var(--dim); }
+body.ih-page.ih-personnel-page .breadcrumb a { color: var(--ih-brand); }
+body.ih-page.ih-personnel-page .breadcrumb a:hover { color: var(--ih-cream); }
+body.ih-page.ih-personnel-page .breadcrumb .sep { color: var(--ih-brand); opacity: 0.6; }
+body.ih-page.ih-personnel-page .breadcrumb .current { color: var(--ih-brand); }
+
+body.ih-page.ih-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ih-page.ih-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ih-brand); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ih-page.ih-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ih-brand) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(112, 144, 184, 0.5); }
+
+body.ih-page.ih-personnel-page .artist-card {
+    background: transparent !important;
+    border-color: var(--ih-dark);
+}
+body.ih-page.ih-personnel-page .artist-card h3 { color: var(--ih-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.ih-page.ih-personnel-page .artist-card h3 a { color: var(--ih-brand) !important; }
+body.ih-page.ih-personnel-page .artist-card h3 a:hover { color: var(--ih-cream) !important; }
+body.ih-page.ih-personnel-page .artist-card p { color: var(--ih-body) !important; }
+body.ih-page.ih-personnel-page .artist-card p strong { color: var(--ih-muted) !important; }
+body.ih-page.ih-personnel-page .artist-card a { color: var(--ih-brand) !important; }
+body.ih-page.ih-personnel-page .artist-card a:hover { color: var(--ih-cream) !important; }
+body.ih-page.ih-personnel-page .artist-card:hover { border-color: var(--ih-brand) !important; }
+body.ih-page.ih-personnel-page .badge { color: var(--ih-deep) !important; }
+body.ih-page.ih-personnel-page .badge-founded  { background: var(--ih-brand) !important; }
+body.ih-page.ih-personnel-page .badge-member   { background: var(--ih-green) !important; }
+body.ih-page.ih-personnel-page .badge-engineer { background: var(--ih-cta) !important; }
+body.ih-page.ih-personnel-page .badge-born     { background: var(--ih-heading) !important; }
+body.ih-page.ih-personnel-page .badge-other    { background: var(--ih-deep) !important; color: var(--ih-cream) !important; }
+body.ih-page.ih-personnel-page .tag { border-color: var(--ih-dark) !important; color: var(--ih-muted) !important; }
+
+/* Current page: personnel (c-personnel active) */
+body.ih-page.ih-personnel-page .nav-card.c-personnel {
+    background: var(--black);
+    color: var(--ih-brand);
+    border-color: var(--ih-brand);
+}
+body.ih-page.ih-personnel-page .nav-card.c-personnel:hover {
+    background: transparent;
+    color: var(--ih-brand);
+}
+
+@media (max-width: 500px) {
+    body.ih-page.ih-personnel-page .artist-card { border-color: var(--ih-muted); }
+}

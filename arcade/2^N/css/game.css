@@ -1,0 +1,216 @@
+.game-board {
+    /* BERRY: Deep navy game board */
+    background: #150005;
+    border-radius: 0;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+    box-shadow: 
+        inset 0 0 0 4px #F23C8F,
+        inset 0 0 20px rgba(0, 0, 0, 0.9);
+    border: 4px solid #150005;
+    touch-action: none; 
+    user-select: none;
+}
+
+.tile {
+    background: #1e0810;
+    border-radius: 0;
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: normal;
+    color: #ffffff;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 
+        inset 2px 2px 0 rgba(20, 184, 255, 0.15),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.5);
+    border: 2px solid #05000f;
+    font-family: 'Press Start 2P', cursive;
+    letter-spacing: 1px;
+}
+
+/* ── BLUE ZONE: tiles 2–8 ── */
+
+/* 2 - Dim blue (just waking up) */
+.tile[data-value="2"] { 
+    background: linear-gradient(135deg, #0a2a4a 0%, #051428 100%); 
+    color: #5aaedd; 
+    border-color: #03080f;
+}
+
+/* 4 - Medium blue */
+.tile[data-value="4"] { 
+    background: linear-gradient(135deg, #0d4a7a 0%, #082a50 100%); 
+    color: #7ec8f0; 
+    border-color: #051428;
+}
+
+/* 8 - Bright blue */
+.tile[data-value="8"] { 
+    background: linear-gradient(135deg, #0a7abf 0%, #0a5a94 100%); 
+    color: #ffffff; 
+    border-color: #073a60;
+    box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.2),
+        inset -2px -2px 0 rgba(0,0,0,0.5),
+        0 0 12px rgba(20, 184, 255, 0.6);
+}
+
+/* ── MAGENTA ZONE: tiles 16–64 ── */
+
+/* 16 - Deep magenta-purple */
+.tile[data-value="16"] { 
+    background: linear-gradient(135deg, #6a0060 0%, #3a0040 100%); 
+    color: #f07ad0; 
+    border-color: #250030;
+}
+
+/* 32 - True magenta */
+.tile[data-value="32"] { 
+    background: linear-gradient(135deg, #b0006a 0%, #800050 100%); 
+    color: #ffffff; 
+    border-color: #500035;
+    box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.2),
+        inset -2px -2px 0 rgba(0,0,0,0.5),
+        0 0 15px rgba(242, 60, 143, 0.6);
+}
+
+/* 64 - Full hot magenta */
+.tile[data-value="64"] { 
+    background: linear-gradient(135deg, #F23C8F 0%, #b02070 100%); 
+    color: #ffffff; 
+    border-color: #8a0060;
+    box-shadow:
+        inset 2px 2px 0 rgba(255,255,255,0.25),
+        inset -2px -2px 0 rgba(0,0,0,0.5),
+        0 0 20px rgba(242, 60, 143, 0.9);
+}
+
+/* ── YELLOW ZONE: tiles 128–512 ── */
+
+/* 128 - Gold/amber  */
+.tile[data-value="128"] { 
+    background: linear-gradient(135deg, #c47a00 0%, #8b5500 100%); 
+    color: #fff0a0; 
+    font-size: 20px; 
+    border-color: #5a3600;
+    box-shadow: 
+        inset 2px 2px 0 rgba(255, 255, 255, 0.3),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(255, 213, 74, 0.7);
+}
+
+/* 256 - Bright yellow */
+.tile[data-value="256"] { 
+    background: linear-gradient(135deg, #FFD54A 0%, #c49a00 100%); 
+    color: #1a0a00; 
+    font-size: 20px; 
+    border-color: #8b6a00;
+    box-shadow: 
+        inset 2px 2px 0 rgba(255, 255, 255, 0.35),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.5),
+        0 0 25px rgba(255, 213, 74, 1);
+}
+
+/* 512 - Blazing yellow */
+.tile[data-value="512"] { 
+    background: linear-gradient(135deg, #ffe87a 0%, #FFD54A 100%); 
+    color: #1a0a00; 
+    font-size: 20px; 
+    border-color: #c49a00;
+    box-shadow: 
+        inset 2px 2px 0 rgba(255, 255, 255, 0.4),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 232, 120, 1);
+}
+
+/* ── WHITE ZONE: tiles 1024–2048 ── */
+
+/* 1024 - White with yellow tinge */
+.tile[data-value="1024"] { 
+    background: linear-gradient(135deg, #ffffff 0%, #fff5b0 100%); 
+    color: #1a0a00; 
+    font-size: 18px; 
+    border-color: #FFD54A;
+    box-shadow: 
+        inset 2px 2px 0 rgba(255, 255, 255, 0.5),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.4),
+        0 0 35px rgba(255, 255, 200, 1);
+}
+
+/* 2048 - VICTORY! Pure white */
+.tile[data-value="2048"] { 
+    background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%); 
+    color: #0a0020; 
+    font-size: 18px; 
+    border-color: #14B8FF;
+    box-shadow: 
+        inset 2px 2px 0 rgba(255, 255, 255, 0.6),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(255, 255, 255, 1);
+    animation: berrypulse 1s ease-in-out infinite;
+}
+
+/* 4096+ - Beyond: all three colors cycling in plasma glow */
+.tile[data-value="4096"],
+.tile[data-value="8192"] { 
+    background: linear-gradient(135deg, #ffffff 0%, #FFD54A 40%, #F23C8F 80%, #14B8FF 100%); 
+    color: #0a0020; 
+    font-size: 16px; 
+    border-color: #ffffff;
+    box-shadow: 
+        inset 2px 2px 0 rgba(255, 255, 255, 0.6),
+        inset -2px -2px 0 rgba(0, 0, 0, 0.5),
+        0 0 50px rgba(255, 255, 255, 1),
+        0 0 80px rgba(242, 60, 143, 0.7);
+    animation: berrypulse 0.7s ease-in-out infinite;
+}
+
+@keyframes berrypulse {
+    0%, 100% { 
+        box-shadow: 
+            inset 2px 2px 0 rgba(255, 255, 255, 0.5),
+            inset -2px -2px 0 rgba(0, 0, 0, 0.4),
+            0 0 35px rgba(20, 184, 255, 0.8),
+            0 0 60px rgba(242, 60, 143, 0.5);
+    }
+    33% {
+        box-shadow: 
+            inset 2px 2px 0 rgba(255, 255, 255, 0.5),
+            inset -2px -2px 0 rgba(0, 0, 0, 0.4),
+            0 0 45px rgba(242, 60, 143, 0.9),
+            0 0 70px rgba(255, 213, 74, 0.5);
+    }
+    66% {
+        box-shadow: 
+            inset 2px 2px 0 rgba(255, 255, 255, 0.5),
+            inset -2px -2px 0 rgba(0, 0, 0, 0.4),
+            0 0 45px rgba(255, 213, 74, 0.9),
+            0 0 70px rgba(20, 184, 255, 0.5);
+    }
+}
+
+.tile.new {
+    animation: pixelappear 0.2s steps(4);
+}
+
+.tile.merged {
+    animation: pixelpop 0.2s steps(2);
+}
+
+@keyframes pixelappear {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pixelpop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}

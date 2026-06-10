@@ -1,0 +1,420 @@
+/* =====================================================================
+   Helsinki 1989 — title.css
+   Title screen overlay: logo, glitch animations, piece strip,
+   Uspenski Cathedral silhouette, snowfall, Finnish flag badge
+   ===================================================================== */
+
+/* =====================================================================
+   piece colors (title strip)
+   ===================================================================== */
+.piece-i .tc.lit { background: #AFCBD3; box-shadow: 0 0 5px #AFCBD3, 0 0 10px rgba(175,203,211,0.4); }
+.piece-o .tc.lit { background: #D4C89A; box-shadow: 0 0 5px #D4C89A, 0 0 10px rgba(212,200,154,0.4); }
+.piece-t .tc.lit { background: #8A7EB5; box-shadow: 0 0 5px #8A7EB5, 0 0 10px rgba(138,126,181,0.4); }
+.piece-s .tc.lit { background: #5E7D6A; box-shadow: 0 0 5px #5E7D6A, 0 0 10px rgba(94,125,106,0.4); }
+.piece-z .tc.lit { background: #A26769; box-shadow: 0 0 5px #A26769, 0 0 10px rgba(162,103,105,0.4); }
+.piece-j .tc.lit { background: #6B8FA3; box-shadow: 0 0 5px #6B8FA3, 0 0 10px rgba(107,143,163,0.4); }
+.piece-l .tc.lit { background: #C4855A; box-shadow: 0 0 5px #C4855A, 0 0 10px rgba(196,133,90,0.4); }
+
+/* =====================================================================
+   title screen overlay
+   ===================================================================== */
+#title-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 7000;
+  overflow: hidden;
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+#title-overlay.dismissing {
+  opacity: 0;
+  transform: scale(1.03);
+  pointer-events: none;
+}
+
+#title-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.09) 3px,
+    rgba(0,0,0,0.09) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+#title-sysline {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  font-size: 9px;
+  color: var(--slate);
+  letter-spacing: 2px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.sysline-tag {
+  background: rgba(175,203,211,0.08);
+  color: var(--ice);
+  padding: 1px 5px;
+  border: 1px solid rgba(175,203,211,0.2);
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+#title-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  pointer-events: auto;
+  margin-top: -80px;
+}
+
+#title-server-brand {
+  font-size: 14px;
+  color: var(--slate);
+  letter-spacing: 4px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.brand-prompt { color: var(--ice); margin-right: 6px; }
+.brand-name   { color: var(--slate); pointer-events: none; }
+
+#title-server-sub {
+  font-size: 12px;
+  color: var(--subtext);
+  letter-spacing: 3px;
+  margin-bottom: 28px;
+  text-transform: uppercase;
+}
+
+.title-rule {
+  width: 260px;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, var(--dusk), var(--ice), var(--slate), var(--dusk), transparent);
+  box-shadow: 0 0 8px rgba(175,203,211,0.25);
+  margin-bottom: 24px;
+}
+
+/* Logo */
+#title-logo-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+#title-logo,
+#title-logo-glitch-a,
+#title-logo-glitch-b {
+  font-size: clamp(64px, 14vw, 96px);
+  letter-spacing: 20px;
+  line-height: 1;
+  color: var(--ice);
+  text-shadow:
+    0 0 12px var(--ice),
+    0 0 32px rgba(175,203,211,0.35),
+    0 0 65px rgba(175,203,211,0.12);
+  font-weight: normal;
+}
+#title-logo-glitch-a,
+#title-logo-glitch-b {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+#title-logo-glitch-a {
+  color: #A26769;
+  text-shadow: 0 0 12px #A26769;
+  animation: glitchA 7s infinite;
+  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+}
+#title-logo-glitch-b {
+  color: #5E7D6A;
+  text-shadow: 0 0 12px #5E7D6A;
+  animation: glitchB 7s infinite;
+  clip-path: polygon(0 62%, 100% 62%, 100% 76%, 0 76%);
+}
+@keyframes glitchA {
+  0%,93%,100% { transform: translateX(0); opacity: 0; }
+  94%          { transform: translateX(-3px); opacity: 0.6; }
+  95%          { transform: translateX(2px); opacity: 0.35; }
+  96%          { transform: translateX(0); opacity: 0; }
+}
+@keyframes glitchB {
+  0%,94%,100% { transform: translateX(0); opacity: 0; }
+  95%          { transform: translateX(3px); opacity: 0.5; }
+  96.5%        { transform: translateX(-2px); opacity: 0.3; }
+  97%          { transform: translateX(0); opacity: 0; }
+}
+
+#title-subtitle {
+  font-size: 14px;
+  color: var(--slate);
+  letter-spacing: 4px;
+  margin-bottom: 36px;
+  text-transform: uppercase;
+}
+
+/* Piece strip */
+#title-pieces {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 32px;
+  margin-top: -16px;
+}
+.title-piece {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: pieceBob 4.5s ease-in-out infinite;
+}
+.title-piece:nth-child(1) { animation-delay: 0s; }
+.title-piece:nth-child(2) { animation-delay: 0.4s; }
+.title-piece:nth-child(3) { animation-delay: 0.8s; }
+.title-piece:nth-child(4) { animation-delay: 1.2s; }
+.title-piece:nth-child(5) { animation-delay: 1.6s; }
+.title-piece:nth-child(6) { animation-delay: 2.0s; }
+.title-piece:nth-child(7) { animation-delay: 2.4s; }
+@keyframes pieceBob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.tp-row { display: flex; gap: 2px; }
+.tc { width: 14px; height: 14px; background: transparent; }
+.tc.lit { border-radius: 1px; position: relative; }
+
+/* Blink prompt */
+#title-press-start {
+  font-size: 11px;
+  color: var(--birch);
+  text-shadow: var(--glow-birch);
+  letter-spacing: 2px;
+  animation: blink 1.3s step-end infinite;
+  text-transform: uppercase;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* Bottom bar */
+#title-copyright {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  font-size: 10px;
+  color: var(--subtext);
+  letter-spacing: 2px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  z-index: 3;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
+/* =====================================================================
+   Uspenski Cathedral Silhouette
+   ===================================================================== */
+#uspenski-haze {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cathedral-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 38px;
+  opacity: 0.65;
+  width: 100%;
+}
+
+/* Tiered stepped foundation */
+.base-tier {
+  position: absolute;
+  background: #6B4E4E;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.tier-top    { bottom: 88px;  width: 150px; height: 28px; }
+.tier-middle { bottom: 68px;  width: 196px; height: 28px; }
+.tier-bottom { bottom: 38px;  width: 252px; height: 38px; }
+
+/* Spires container */
+.spires-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 30px;
+}
+
+/* Individual spires */
+.spire {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 0 -2px;
+}
+.spire-center { height: 162px; z-index: 3; }
+.spire-inner  { height: 112px; margin-bottom: 16px; }
+.spire-outer  { height: 72px;  margin-bottom: 6px; }
+
+/* Roof eave — copper-green lip between dome and pillar */
+.eave {
+  width: 110%;
+  height: 4px;
+  background: var(--pine);
+  border-radius: 1px;
+  z-index: 4;
+  margin-top: -2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+/* Orthodox cross */
+.cross {
+  width: 2px;
+  height: 16px;
+  background: var(--birch);
+  position: relative;
+  margin-bottom: -2px;
+  z-index: 4;
+  box-shadow: 0 0 4px rgba(212,200,154,0.4);
+}
+.cross::after {
+  content: '';
+  position: absolute;
+  top: 5px; left: -5px;
+  width: 12px; height: 2px;
+  background: var(--birch);
+}
+
+/* Onion dome — teardrop via border-radius + rotate */
+.onion-dome {
+  background: var(--birch);
+  border-radius: 0 50% 50% 50%;
+  transform: rotate(45deg);
+  box-shadow: 0 0 10px rgba(212,200,154,0.2);
+  margin-bottom: -5px;
+  z-index: 3;
+}
+.spire-center .onion-dome { width: 34px; height: 34px; }
+.spire-inner  .onion-dome { width: 24px; height: 24px; }
+.spire-outer  .onion-dome { width: 17px; height: 17px; }
+
+/* Tower pillars */
+.pillar {
+  background: #6B4E4E;
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding-top: 10px;
+}
+.spire-center .pillar { width: 40px; }
+.spire-inner  .pillar { width: 26px; }
+.spire-outer  .pillar { width: 16px; padding-top: 6px; }
+
+/* Arched windows */
+.window {
+  width: 4px;
+  height: 18px;
+  background: #3A2828;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+.spire-center .window { height: 28px; width: 6px; }
+.spire-outer  .window { height: 12px; width: 3px; }
+
+/* Fog — dissolves base into --bg */
+.nordic-fog {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 130px;
+  background: linear-gradient(to top, var(--bg) 25%, transparent);
+  z-index: 5;
+}
+
+/* Snowfall */
+.nordic-snow {
+  position: absolute;
+  top: -100px; left: 50%;
+  width: 2px; height: 2px;
+  background: transparent;
+  border-radius: 50%;
+  z-index: 0;
+}
+.snow-near {
+  box-shadow:
+    -180px  60px #C8D8DD,  130px 120px #C8D8DD,  -60px 220px #C8D8DD,
+     220px 270px #C8D8DD, -270px 320px #C8D8DD,   90px 420px #C8D8DD,
+    -110px 520px #C8D8DD,  190px 620px #C8D8DD, -190px 720px #C8D8DD,
+      50px 800px #C8D8DD, -240px 880px #C8D8DD,  160px 950px #C8D8DD;
+  animation: snowfall 14s linear infinite;
+  opacity: 0.45;
+}
+.snow-far {
+  box-shadow:
+     110px  30px #7A9BAD, -130px 160px #7A9BAD,   70px 300px #7A9BAD,
+    -210px 370px #7A9BAD,  160px 500px #7A9BAD,  -90px 570px #7A9BAD,
+     230px 650px #7A9BAD, -160px 740px #7A9BAD,   40px 820px #7A9BAD;
+  animation: snowfall 22s linear infinite;
+  opacity: 0.25;
+}
+@keyframes snowfall {
+  0%   { transform: translate(-50%,   0px); }
+  100% { transform: translate(-50%, 900px); }
+}
+
+/* =====================================================================
+   Finnish flag badge — title screen top-right
+   ===================================================================== */
+#title-flag-badge {
+  position: absolute;
+  top: 10px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 4;
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+#title-flag-badge svg {
+  border: 1px solid rgba(122,155,173,0.2);
+  display: block;
+}
+#title-flag-badge span {
+  font-size: 8px;
+  color: var(--slate);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}

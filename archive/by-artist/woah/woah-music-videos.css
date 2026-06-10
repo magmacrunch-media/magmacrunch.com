@@ -1,0 +1,119 @@
+/* Woah. — music videos page — accent: sunset */
+body.woah-page.woah-music-videos-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.woah-page.woah-music-videos-page main > * { background: var(--black); }
+
+body.woah-page.woah-music-videos-page .breadcrumb { color: var(--woah-sunset); }
+body.woah-page.woah-music-videos-page .breadcrumb a { color: var(--woah-sunset); }
+body.woah-page.woah-music-videos-page .breadcrumb a:hover { color: var(--woah-rose-sky); }
+body.woah-page.woah-music-videos-page .breadcrumb .sep { color: var(--woah-sunset); opacity: 0.6; }
+body.woah-page.woah-music-videos-page .breadcrumb .current { color: var(--woah-sunset); }
+
+body.woah-page.woah-music-videos-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.woah-page.woah-music-videos-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--woah-sunset); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.woah-page.woah-music-videos-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--woah-sunset); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(232, 160, 160, 0.5); }
+
+body.woah-page.woah-music-videos-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--woah-sunset), var(--woah-coastal), var(--woah-rose-sky), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.woah-page.woah-music-videos-page .videos-section {
+    width: 100%;
+    max-width: 960px;
+    animation: fadeUp 0.5s 0.25s ease both;
+}
+
+body.woah-page.woah-music-videos-page .no-videos {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--woah-ocean);
+    padding: 32px;
+    text-align: center;
+    opacity: 0.6;
+}
+
+/* ── Video entry ── */
+.video-entry { margin-bottom: 3rem; width: 100%; }
+
+/* ── Header ── */
+.video-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0.6rem;
+}
+.video-title-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+.video-year {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--woah-coastal);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+.video-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--woah-pink-sky);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ── External links ── */
+.video-ext-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+}
+.ext-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.1em;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: 1px solid;
+    transition: background 0.15s, color 0.15s;
+}
+.ext-yt {
+    border-color: var(--woah-sunset);
+    color: var(--woah-sunset);
+}
+.ext-yt:hover { background: var(--woah-sunset); color: var(--woah-pink-sky); }
+
+/* ── Embed ── */
+.video-embed {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+}
+.video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+body.woah-page.woah-music-videos-page .nav-card.c-back { background: transparent; color: var(--woah-sunset); border-color: var(--woah-sunset); }
+body.woah-page.woah-music-videos-page .nav-card.c-back:hover { background: var(--woah-sunset); color: var(--woah-bg); }
+
+body.woah-page.woah-music-videos-page .nav-card::after { display: none; }
+body.woah-page.woah-music-videos-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

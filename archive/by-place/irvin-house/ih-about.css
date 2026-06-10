@@ -1,0 +1,50 @@
+/* Irvin House — about (slate lavender sage accent) */
+body.ih-page.ih-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
+body.ih-page.ih-about-page main > * { background: var(--black); }
+
+body.ih-page.ih-about-page .breadcrumb { color: var(--dim); }
+body.ih-page.ih-about-page .breadcrumb a { color: var(--ih-sage); }
+body.ih-page.ih-about-page .breadcrumb a:hover { color: var(--ih-cream); }
+body.ih-page.ih-about-page .breadcrumb .sep { color: var(--ih-sage); opacity: 0.6; }
+body.ih-page.ih-about-page .breadcrumb .current { color: var(--ih-sage); }
+
+body.ih-page.ih-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ih-page.ih-about-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ih-sage); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ih-page.ih-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ih-sage); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(136, 136, 176, 0.5); }
+
+/* Current page: about (c-about active) */
+body.ih-page.ih-about-page .nav-card.c-about {
+    background: var(--black);
+    color: var(--ih-sage);
+    border-color: var(--ih-sage);
+}
+body.ih-page.ih-about-page .nav-card.c-about:hover {
+    background: transparent;
+    color: var(--ih-sage);
+}
+
+body.ih-page.ih-about-page .place-body {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 0 20px;
+    color: var(--ih-body);
+    font-size: 16px;
+    line-height: 1.7;
+}
+body.ih-page.ih-about-page .place-body p { margin-bottom: 1.5em; }
+body.ih-page.ih-about-page .place-body a { color: var(--ih-sage); text-decoration: underline; text-decoration-color: rgba(136, 136, 176, 0.35); transition: color 0.15s; }
+body.ih-page.ih-about-page .place-body a:hover { color: var(--ih-cream); }
+body.ih-page.ih-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+body.ih-page.ih-about-page .divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--ih-sage), var(--ih-brand), var(--ih-sage), transparent);
+    margin: 8px 0 40px;
+    opacity: 0.4;
+}
+
+body.ih-page.ih-about-page .mb-link-wrap { width:100%; max-width:700px; padding:0 20px; margin-top:40px; animation:fadeUp 0.5s 0.15s ease both; }
+body.ih-page.ih-about-page .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--ih-muted); text-decoration:none; border:1px solid var(--ih-dark); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+body.ih-page.ih-about-page .mb-link:hover { color:var(--ih-accent); border-color:var(--ih-accent); }

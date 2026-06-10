@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>floppy disk — music — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../assets/archive.css">
+    <style>
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        /* ── PAGE HEADER ── */
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(13px, 2.8vw, 22px);
+            color: var(--yellow);
+            text-shadow: 0 0 20px rgba(255,224,58,0.55);
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--rose);
+            letter-spacing: 0.1em;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* ── FLOPPY CANVAS ANIMATION ── */
+        .floppy-wrap {
+            animation: fadeUp 0.5s 0.1s ease both;
+            margin-bottom: 36px;
+        }
+
+        #floppyCanvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            width: 96px;
+            height: 96px;
+        }
+
+        /* ── INTRO TEXT ── */
+        .intro-wrap {
+            width: min(640px, 90vw);
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+
+        .intro-wrap p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.75;
+            opacity: 0.85;
+            text-align: center;
+        }
+
+        .intro-wrap p a {
+            color: var(--yellow);
+            text-decoration: underline;
+            text-decoration-color: rgba(255,224,58,0.4);
+            transition: color 0.15s;
+        }
+        .intro-wrap p a:hover { color: var(--rose); }
+
+        /* ── DIVIDER ── */
+        .section-divider {
+            width: min(640px, 90vw);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--yellow), var(--rose), var(--yellow), transparent);
+            margin-bottom: 48px;
+            opacity: 0.35;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        /* ── FLOPPY RELEASE CARDS ── */
+        .releases-wrap {
+            width: min(640px, 90vw);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            animation: fadeUp 0.5s 0.22s ease both;
+        }
+
+        .releases-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--yellow);
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .floppy-card {
+            display: flex;
+            gap: 0;
+            border: 2px solid #1e1e2e;
+            border-bottom: none;
+            background: var(--deep);
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .floppy-card:last-child { border-bottom: 2px solid #1e1e2e; }
+        .floppy-card:hover {
+            border-color: var(--yellow);
+            background: #16161f;
+        }
+
+        /* left accent bar */
+        .floppy-card::before {
+            content: '';
+            display: block;
+            width: 4px;
+            flex-shrink: 0;
+            background: var(--yellow);
+            transition: width 0.15s;
+        }
+        .floppy-card:hover::before { width: 7px; }
+
+        /* floppy icon slot */
+        .floppy-card-icon {
+            width: 72px;
+            min-width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-right: 1px solid #1e1e2e;
+            background: rgba(255,224,58,0.03);
+            overflow: hidden;
+        }
+
+        .floppy-card-icon img,
+        .floppy-card-icon canvas {
+            display: block;
+            image-rendering: pixelated;
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .floppy-card-info {
+            padding: 16px 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .floppy-card-text { flex: 1; }
+
+        .floppy-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 10px);
+            color: var(--yellow);
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            margin-bottom: 5px;
+        }
+
+        .floppy-card-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.5;
+        }
+
+        .floppy-card-meta .artist {
+            color: var(--white);
+            opacity: 0.75;
+        }
+
+        .floppy-card-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--yellow);
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .floppy-card:hover .floppy-card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── COMING SOON ── */
+        .coming-soon {
+            width: min(640px, 90vw);
+            margin-top: 32px;
+            border: 1px dashed #2a2a1a;
+            padding: 28px;
+            text-align: center;
+            background: rgba(255,224,58,0.02);
+            animation: fadeUp 0.5s 0.28s ease both;
+        }
+        .coming-soon p {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            line-height: 2.4;
+        }
+        .coming-soon span { color: var(--yellow); opacity: 0.5; }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li>
+            <a href="../../index.html">home</a>
+            <div class="dropdown">
+                <a href="../../home/about.html">about</a>
+                <a href="../../home/links/all-links.html">all links</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="jukebox/index.html">jukebox</a>
+                <a href="../../music/distributed-music.html">distributed music</a>
+                <a href="../../music/floppy-disk/index.html">floppy disk</a>
+                <a href="../../music/catalog.html">full catalog</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../../visual/music-videos.html">music videos</a>
+                <a href="../../visual/collage.html">collage</a>
+                <a href="../../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../archive/index.html">archive</a>
+            <div class="dropdown">
+                <a href="../../archive/by-artist/index.html">by artist</a>
+                <a href="../../archive/by-place/index.html">by place</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../arcade/index.html">arcade</a>
+        </li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="../../index.html">home</a><span class="sep">›</span>
+        <a href="../../music/index.html">music</a><span class="sep">›</span>
+        <span class="current">floppy disk</span>
+    </div>
+
+    <!-- ANIMATED FLOPPY ICON -->
+    <div class="floppy-wrap">
+        <canvas id="floppyCanvas" width="32" height="32"></canvas>
+    </div>
+
+    <h1 class="page-title">// floppy disk //</h1>
+    <!--<p class="page-subtitle">physical &amp; obscure media series ✦ est. july 2025</p> -->
+
+    <!-- INTRO -->
+    <div class="intro-wrap">
+        <p>a series of releases on 3.5″ floppy disk since 2025</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- RELEASES -->
+    <div class="releases-wrap">
+        <div class="releases-label">// releases //</div>
+
+<a href="pay2play-2025/pay2play-2025.html" class="floppy-card">
+            <div class="floppy-card-icon">
+                <img src="pay2play-2025/pay2play2025-thumb.jpg" alt="pay2play" width="40" height="40">
+            </div>
+            <div class="floppy-card-info">
+                <div class="floppy-card-text">
+                    <div class="floppy-card-title">pay2play (2025)</div>
+                    <div class="floppy-card-meta">
+                        <span class="artist">sex van floor plan</span>
+                        &nbsp;·&nbsp; 3.5″ floppy &nbsp;·&nbsp; jul 2025
+                    </div>
+                </div>
+                <span class="floppy-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <!-- ADD FUTURE FLOPPY RELEASES HERE — copy a .floppy-card block -->
+
+    </div>
+
+    <!-- COMING SOON -->
+    <div class="coming-soon">
+        <p>COMING SOON BY SVFP<br><span>✦</span><br>pay2play (2026)<br><span>✦</span><br> American Spirits (2026)</p>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+<script>
+// ── CLASSIC ANIMATED FLOPPY DISK (32x32 → rendered at 96px via CSS) ──
+(function () {
+    const canvas = document.getElementById('floppyCanvas');
+    if (!canvas) return; // Guard clause
+    
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false; // Crucial for chunky pixels
+    const W = 32, H = 32;
+
+    // Classic Retro Palette
+    const C = {
+        body:      '#2b2b2b', // Dark grey/black plastic
+        notch:     '#141414', // Shadow for notches
+        shutter:   '#c0c0c0', // Silver metal
+        shutterDk: '#808080', // Metal shadow
+        exposed:   '#111111', // Exposed magnetic disk inside shutter
+        label:     '#f4f4f4', // White paper
+        stripe:    '#d92b2b', // Classic red stripe
+        text:      '#555555'  // Faux text lines
+    };
+
+    let frame = 0;
+
+    function drawFloppy() {
+        ctx.clearRect(0, 0, W, H);
+
+        // 1. Main Plastic Body (with top-right chamfer)
+        ctx.fillStyle = C.body;
+        ctx.fillRect(3, 2, 23, 28); // Left main chunk
+        ctx.fillRect(26, 6, 3, 24); // Right chunk under the cut
+        
+        // Pixel stair-step for the top-right angled cut
+        ctx.fillRect(26, 5, 1, 1);
+        ctx.fillRect(27, 4, 1, 1);
+        ctx.fillRect(28, 3, 1, 1);
+
+        // Bottom cutouts (write-protect notches)
+        ctx.fillStyle = C.notch;
+        ctx.fillRect(6, 27, 2, 3);
+        ctx.fillRect(24, 27, 2, 3);
+
+        // 2. Metal Shutter (Top Left)
+        ctx.fillStyle = C.shutter;
+        ctx.fillRect(7, 2, 11, 11);
+        
+        // Shutter slider groove
+        ctx.fillStyle = C.shutterDk;
+        ctx.fillRect(15, 2, 1, 11);
+        
+        // Shutter opening (exposed disk)
+        ctx.fillStyle = C.exposed;
+        ctx.fillRect(9, 3, 4, 8);
+
+        // 3. Paper Label
+        ctx.fillStyle = C.label;
+        ctx.fillRect(6, 16, 20, 13);
+        
+        // Label header stripe
+        ctx.fillStyle = C.stripe;
+        ctx.fillRect(6, 16, 20, 3);
+
+        // Faux text lines on the label
+        ctx.fillStyle = C.text;
+        ctx.fillRect(8, 21, 10, 1);
+        ctx.fillRect(8, 23, 15, 1);
+        ctx.fillRect(8, 25, 12, 1);
+
+        // 4. Glint Animation (Metal shine sweeping across the shutter)
+        // Cycles every 60 frames
+        const glintCycle = frame % 60;
+        if (glintCycle < 20) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+            const baseGlintX = 4 + glintCycle;
+            
+            // Draw a diagonal line by offsetting X based on Y
+            for (let dy = 0; dy < 11; dy++) {
+                const px = baseGlintX - Math.floor(dy / 2);
+                
+                // Restrict the glint bounds strictly to the metal shutter
+                if (px >= 7 && px < 18) {
+                    ctx.fillRect(px, 2 + dy, 1, 1);
+                }
+            }
+        }
+
+        frame++;
+    }
+
+    let rafId;
+    const FRAME_MS = 1000 / 12; // 12 FPS locks in the retro feel
+    let lastTime = 0;
+    
+    function loop(ts) {
+        rafId = requestAnimationFrame(loop);
+        if (ts - lastTime < FRAME_MS) return;
+        lastTime = ts;
+        drawFloppy();
+    }
+    
+    // Pause animation when tab is inactive to save resources
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(rafId);
+        } else { 
+            lastTime = 0; 
+            rafId = requestAnimationFrame(loop); 
+        }
+    });
+    
+    rafId = requestAnimationFrame(loop);
+    window.__pageCleanup = function() { cancelAnimationFrame(rafId); };
+})();
+</script>
+
+</body>
+</html>

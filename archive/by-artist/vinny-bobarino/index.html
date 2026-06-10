@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinny Bobarino — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="vb-shared.css">
+    <style>
+        main { position: relative; }
+
+        /* ── BREADCRUMB ── */
+        body.vb-page .breadcrumb a { color: var(--vb-accent); }
+        body.vb-page .breadcrumb a:hover { color: var(--vb-amber); }
+        body.vb-page .breadcrumb .sep { color: var(--vb-body); opacity: 0.4; }
+        body.vb-page .breadcrumb .current { color: var(--vb-accent); }
+
+        /* ── PAGE BACKGROUND ── */
+        body.vb-page { background: var(--black); }
+
+        /* ── ARTIST HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 48px;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 40%;
+            filter: saturate(1.1) brightness(0.6);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(232, 96, 32, 0.06);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8, 8, 18, 0.10) 0%,
+                rgba(8, 8, 18, 0.0)  15%,
+                rgba(8, 8, 18, 0.0)  45%,
+                rgba(8, 8, 18, 0.85) 75%,
+                rgba(8, 8, 18, 1.0)  100%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--vb-accent);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.8;
+            text-shadow: 0 0 12px rgba(232, 96, 32, 0.5);
+        }
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--vb-accent);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(232, 96, 32, 0.6),
+                0 0 60px rgba(232, 96, 32, 0.2),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--vb-amber);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.75;
+            text-shadow: 0 0 12px rgba(245, 160, 48, 0.5);
+        }
+
+        /* ── ACTIVE YEARS BADGE ── */
+        .years-badge {
+            display: inline-block;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--vb-bg);
+            background: var(--vb-nature-glow);
+            padding: 4px 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        /* ── SUB-NAV CARDS ── */
+        .sub-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 48px;
+        }
+        body.vb-page .sub-nav .nav-card {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            letter-spacing: 0.08em;
+            padding: 10px 16px;
+            border: 1px solid;
+            transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+            text-decoration: none;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--vb-accent), var(--vb-amber), var(--vb-accent), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.35;
+        }
+
+        /* ── LAYOUT ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--vb-accent);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--vb-accent);
+            opacity: 0.9;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--vb-body);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--vb-sky);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--vb-sky);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover { background: var(--vb-sky); color: var(--vb-bg); }
+
+        /* ── PHOTO STRIP ── */
+        .photo-strip-section {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+        .photo-strip-wrap { position: relative; width: 100%; }
+        .photo-strip {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--vb-accent) var(--vb-surface);
+            padding-bottom: 10px;
+            cursor: grab;
+        }
+        .photo-strip:active { cursor: grabbing; }
+        .photo-strip::-webkit-scrollbar { height: 3px; }
+        .photo-strip::-webkit-scrollbar-track { background: var(--vb-surface); }
+        .photo-strip::-webkit-scrollbar-thumb { background: var(--vb-accent); }
+        .photo-item {
+            flex-shrink: 0;
+            position: relative;
+            height: clamp(200px, 35vw, 380px);
+            scroll-snap-align: start;
+            overflow: hidden;
+            border: 1px solid var(--vb-surface);
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .photo-item:hover { border-color: var(--vb-accent); }
+        .photo-item.landscape { aspect-ratio: 16/9; }
+        .photo-item.square    { aspect-ratio: 1/1; }
+        .photo-item.wide      { aspect-ratio: 4/3; }
+        .photo-item img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
+            transition: transform 0.4s ease, filter 0.3s ease;
+            filter: saturate(0.85) brightness(0.88);
+        }
+        .photo-item:hover img { transform: scale(1.03); filter: saturate(1.0) brightness(1.0); }
+        .photo-caption {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 22px 10px 8px;
+            background: linear-gradient(to top, rgba(30,34,53,0.88) 0%, transparent 100%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px; color: var(--vb-mid); letter-spacing: 0.1em;
+            opacity: 0; transition: opacity 0.25s ease;
+        }
+        .photo-item:hover .photo-caption { opacity: 1; }
+        .strip-scroll-hint {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px; color: var(--vb-mid); letter-spacing: 0.15em;
+            margin-top: 8px; opacity: 0.35; text-align: right; transition: opacity 0.4s;
+        }
+        .photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
+
+        /* ── PHOTO LIGHTBOX ── */
+        .photo-lightbox {
+            display: none; position: fixed; inset: 0;
+            background: rgba(30,34,53,0.96); z-index: 1000;
+            align-items: center; justify-content: center; flex-direction: column;
+        }
+        .photo-lightbox.open { display: flex; }
+        .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+        .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid var(--vb-surface); }
+        .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+        .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--vb-mid);
+            background: none; border: 1px solid var(--vb-surface); padding: 7px 14px; cursor: pointer;
+            letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
+        .lb-btn:hover { color: var(--vb-accent); border-color: var(--vb-accent); }
+        .lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--vb-mid);
+            background: none; border: none; cursor: pointer; padding: 8px;
+            letter-spacing: 0.1em; transition: color 0.15s; }
+        .lb-close:hover { color: var(--vb-accent); }
+        .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px;
+            color: var(--vb-mid); letter-spacing: 0.12em; opacity: 0.55; min-width: 50px; text-align: center; }
+        .lb-cap { font-family: 'Press Start 2P', monospace;             font-size: 6px;
+            color: var(--vb-mid); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
+
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; animation: fadeUp 0.5s 0.15s ease both; }
+
+        /* ── MB MEMBERS LINK ── */
+        .mb-members {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--vb-mid);
+            border: 1px solid var(--vb-surface);
+            padding: 6px 12px;
+            letter-spacing: 0.08em;
+            flex-wrap: wrap;
+            gap: 0 4px;
+        }
+        .mb-members .mb-abbr {
+            color: var(--vb-amber);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .mb-members .mb-abbr:hover { color: var(--vb-accent); }
+        .mb-members:hover { border-color: var(--vb-accent); }
+        .mb-members .mb-sep { color: var(--vb-surface); margin: 0 2px; }
+    </style>
+</head>
+<body class="vb-page">
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li>
+            <a href="../../../index.html">home</a>
+            <div class="dropdown">
+                <a href="../../../home/about.html">about</a>
+                <a href="../../../home/links/all-links.html">all links</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a>
+                <a href="../../../music/floppy-disk/index.html">floppy disk</a>
+                <a href="../../../music/catalog.html">full catalog</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../../../visual/music-videos.html">music videos</a>
+                <a href="../../../visual/collage.html">collage</a>
+                <a href="../../../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../../archive/index.html">archive</a>
+            <div class="dropdown">
+                <a href="../../../archive/full-catalog/all-releases.html">all releases</a>
+                <a href="../../../archive/by-artist/index.html">by artist</a>
+                <a href="../../../archive/by-place/index.html">by place</a>
+                
+            </div>
+        </li>
+        <li>
+            <a href="../../../arcade/index.html">arcade</a>
+        </li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../archive/index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/index.html">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">vinny b</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/vinny-bobarino.jpg" alt="Vinny Bobarino">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">VINNY BOBARINO, ET AL.</div>
+                <div class="artist-abbr"> <strong>Vinny Bobarino</strong> | <strong> Darius Hodgekins</strong> | <strong>Marcus Aurelius</strong> | <strong> Bears Crossing</strong> </div>
+                <div class="years-badge">2006 — 2010</div>
+
+                <div class="sub-nav">
+                    <a href="about.html"       class="nav-card c-about">about</a>
+                    <a href="photography.html" class="nav-card c-photography">photography</a>
+                    <a href="recordings.html"  class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"     class="nav-card c-releases">releases</a>
+                    <a href="works.html"        class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+            <div class="mb-members">
+                <span>▶ view on MusicBrainz —</span>
+                <a href="https://musicbrainz.org/artist/f701c2bc-6eb6-4e7b-b950-f0c2426cb91c" target="_blank" rel="noopener" class="mb-abbr">VB</a>
+                <span class="mb-sep">·</span>
+                <a href="https://musicbrainz.org/artist/856f7f94-8c21-49cb-9364-e1f7b429f9ef" target="_blank" rel="noopener" class="mb-abbr">DH</a>
+                <span class="mb-sep">·</span>
+                <a href="https://musicbrainz.org/artist/246bff13-d203-4879-a22b-9ad6b5ddae7c" target="_blank" rel="noopener" class="mb-abbr">MA</a>
+                <span class="mb-sep">·</span>
+                <a href="https://musicbrainz.org/artist/d9179190-dcf2-469e-b4c8-3624b97dc11a" target="_blank" rel="noopener" class="mb-abbr">BC</a>
+            </div>
+        </div>
+    </div>
+   
+    </div>
+
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+</body>
+</html>

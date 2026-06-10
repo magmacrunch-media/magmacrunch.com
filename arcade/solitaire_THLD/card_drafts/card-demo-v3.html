@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOLD — Face Cards v3: NES Pixel / 1885 Bicycle Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:       #0a0000;
+  --dark-red:    #1c0000;
+  --deep-red:    #3b0000;
+  --lava-dark:   #6b0000;
+  --orange:      #dd4400;
+  --orange-glow: #ff7700;
+  --yellow:      #ffcc00;
+  --yellow-pale: #ffe680;
+  --white:       #fff8f0;
+  --pixel: 'Press Start 2P', monospace;
+  --mono:  'VT323', monospace;
+
+  /* NES palette — flat, limited, bold */
+  --skin:    #f0c890;
+  --skin-d:  #c89858;
+  --hair:    #201008;
+  --red:     #cc1100;
+  --red-d:   #881000;
+  --gold:    #d4a820;
+  --gold-l:  #f0cc40;
+  --blue:    #1844a0;
+  --blue-l:  #3868c8;
+  --card-bg: #fdf6e8;
+  --outline: #111111;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--black);
+  font-family: var(--pixel);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 80px;
+  position: relative;
+}
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.18) 3px,rgba(0,0,0,0.18) 4px),
+    radial-gradient(ellipse 80% 60% at 50% 100%,rgba(180,40,0,0.35) 0%,transparent 70%);
+}
+h1, .subtitle, section, .card-row { position:relative; z-index:1; }
+
+h1 {
+  color:var(--yellow);
+  font-size:clamp(9px,2vw,13px);
+  text-align:center;
+  letter-spacing:2px;
+  margin-bottom:6px;
+  text-shadow:2px 2px 0 #cc2200,4px 4px 0 #3b0000;
+}
+.subtitle {
+  font-family:var(--mono);
+  color:var(--orange-glow);
+  font-size:18px;
+  letter-spacing:3px;
+  text-align:center;
+  margin-bottom:40px;
+}
+section { width:100%; max-width:900px; margin-bottom:48px; }
+.section-label {
+  font-family:var(--pixel);
+  font-size:7px;
+  color:var(--orange-glow);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-bottom:20px;
+  padding-bottom:8px;
+  border-bottom:2px solid var(--deep-red);
+}
+.card-row {
+  display:flex;
+  flex-wrap:wrap;
+  gap:32px;
+  align-items:flex-start;
+}
+.card-wrap {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+.card-label {
+  font-family:var(--pixel);
+  font-size:6px;
+  color:var(--orange);
+  letter-spacing:1px;
+  text-align:center;
+}
+.note {
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--orange-glow);
+  text-align:center;
+  line-height:1.5;
+  max-width:160px;
+}
+.divider {
+  width:100%;
+  max-width:900px;
+  height:3px;
+  background:linear-gradient(90deg,transparent,var(--orange),var(--yellow),var(--orange),transparent);
+  margin:8px 0 40px;
+  position:relative;
+  z-index:1;
+}
+
+/* ── Card shell ── */
+.card {
+  position: relative;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 var(--black), 6px 6px 0 rgba(0,0,0,0.3);
+  transition: transform 0.12s, box-shadow 0.12s;
+  cursor: default;
+  /* crisp pixel rendering */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.card:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 3px 12px 0 var(--black), 6px 16px 0 rgba(0,0,0,0.3);
+}
+.card svg { display:block; }
+</style>
+</head>
+<body>
+
+<h1>TEXAS HOLD'EM LAVA DOME</h1>
+<p class="subtitle">— face cards v3: nes pixel / 1885 bicycle —</p>
+
+<!-- ════════════════════════════════════════════════════════
+     JACK OF SPADES — profile, 1885 composition
+     The figure fills the card edge-to-edge.
+     Top half: figure upright. Bottom half: rotated 180°.
+     Suit pip floats in center gap.
+     NES palette: red / gold / blue / black / skin.
+     ════════════════════════════════════════════════════════ -->
+<section>
+  <p class="section-label">Jack — style proof</p>
+  <div class="card-row">
+
+    <div class="card-wrap">
+      <div class="card">
+        <!-- 110 × 154 px card, each "pixel" = 2 SVG units = chunky NES look -->
+        <svg width="110" height="154" viewBox="0 0 110 154"
+             xmlns="http://www.w3.org/2000/svg"
+             shape-rendering="crispEdges">
+
+          <!-- ── Card background ── -->
+          <rect width="110" height="154" fill="#fdf6e8"/>
+          <!-- thin border -->
+          <rect x="1" y="1" width="108" height="152" fill="none"
+                stroke="#aaa" stroke-width="1"/>
+
+          <!-- ══════════════════════════════════
+               TOP HALF: Jack profile facing RIGHT
+               Figure fills roughly y=0..74
+               ══════════════════════════════════ -->
+
+          <!-- ── HAT / FEATHERED CAP ── -->
+          <!-- Hat brim - red -->
+          <rect x="14" y="6"  width="72" height="6"  fill="#cc1100"/>
+          <rect x="10" y="8"  width="80" height="4"  fill="#cc1100"/>
+          <!-- Hat crown - gold band -->
+          <rect x="16" y="4"  width="68" height="5"  fill="#d4a820"/>
+          <rect x="18" y="2"  width="60" height="4"  fill="#f0cc40"/>
+          <!-- Feather plume - arcs right, gold/red -->
+          <rect x="78" y="2"  width="6"  height="2"  fill="#f0cc40"/>
+          <rect x="82" y="4"  width="6"  height="2"  fill="#f0cc40"/>
+          <rect x="86" y="6"  width="8"  height="2"  fill="#d4a820"/>
+          <rect x="88" y="8"  width="8"  height="2"  fill="#d4a820"/>
+          <rect x="90" y="10" width="6"  height="2"  fill="#cc1100"/>
+          <rect x="88" y="12" width="6"  height="2"  fill="#cc1100"/>
+          <rect x="86" y="14" width="4"  height="2"  fill="#881000"/>
+          <!-- Hat outline -->
+          <rect x="10" y="6"  width="2"  height="6"  fill="#111"/>
+          <rect x="82" y="6"  width="2"  height="4"  fill="#111"/>
+
+          <!-- ── FACE — profile facing right ── -->
+          <!-- Hair (long, behind face) -->
+          <rect x="14" y="10" width="8"  height="30" fill="#201008"/>
+          <rect x="16" y="38" width="8"  height="10" fill="#201008"/>
+          <!-- Head shape -->
+          <rect x="20" y="10" width="46" height="30" fill="#f0c890"/>
+          <!-- Forehead highlight -->
+          <rect x="22" y="12" width="30" height="6"  fill="#f8d8a8"/>
+          <!-- Cheek / jaw curve -->
+          <rect x="20" y="36" width="38" height="6"  fill="#f0c890"/>
+          <rect x="24" y="40" width="28" height="4"  fill="#f0c890"/>
+          <rect x="28" y="42" width="18" height="4"  fill="#c89858"/>
+          <!-- Chin -->
+          <rect x="32" y="44" width="10" height="4"  fill="#f0c890"/>
+          <!-- Ear -->
+          <rect x="60" y="20" width="6"  height="10" fill="#c89858"/>
+          <rect x="62" y="22" width="4"  height="6"  fill="#f0c890"/>
+          <!-- Eye — single, profile -->
+          <rect x="30" y="18" width="14" height="6"  fill="#fff"/>
+          <rect x="36" y="19" width="6"  height="5"  fill="#201008"/>
+          <rect x="38" y="20" width="3"  height="3"  fill="#3a2808"/>
+          <rect x="39" y="20" width="2"  height="2"  fill="#5a4828"/><!-- iris -->
+          <rect x="29" y="18" width="16" height="2"  fill="#201008"/><!-- brow -->
+          <!-- Nose — profile -->
+          <rect x="20" y="28" width="8"  height="4"  fill="#c89858"/>
+          <rect x="18" y="30" width="6"  height="4"  fill="#f0c890"/>
+          <rect x="16" y="32" width="6"  height="2"  fill="#c89858"/>
+          <!-- Mouth / lips -->
+          <rect x="22" y="36" width="14" height="3"  fill="#c07060"/>
+          <rect x="22" y="37" width="10" height="2"  fill="#a05040"/>
+          <!-- Chin curl / jawline detail -->
+          <rect x="28" y="40" width="6"  height="2"  fill="#c89858"/>
+
+          <!-- ── COLLAR / NECK ── -->
+          <rect x="28" y="44" width="30" height="4"  fill="#fdf6e8"/><!-- white ruff -->
+          <rect x="26" y="46" width="36" height="3"  fill="#e8e0d0"/>
+          <rect x="30" y="43" width="22" height="3"  fill="#fdf6e8"/>
+
+          <!-- ── TUNIC BODY — red with gold trim, fills wide ── -->
+          <!-- Main red body -->
+          <rect x="4"  y="48" width="102" height="26" fill="#cc1100"/>
+          <!-- Gold diagonal sash left-to-right -->
+          <rect x="4"  y="48" width="40" height="6"  fill="#d4a820"/>
+          <rect x="8"  y="54" width="36" height="6"  fill="#d4a820"/>
+          <rect x="12" y="60" width="32" height="4"  fill="#d4a820"/>
+          <rect x="16" y="64" width="28" height="4"  fill="#d4a820"/>
+          <rect x="20" y="68" width="24" height="6"  fill="#d4a820"/>
+          <!-- Blue panel right side -->
+          <rect x="60" y="48" width="46" height="26" fill="#1844a0"/>
+          <!-- Gold trim on blue panel -->
+          <rect x="60" y="48" width="4"  height="26" fill="#d4a820"/>
+          <rect x="100" y="48" width="6" height="26" fill="#d4a820"/>
+          <!-- Decorative squares on blue -->
+          <rect x="66" y="52" width="8"  height="8"  fill="#f0cc40"/>
+          <rect x="68" y="54" width="4"  height="4"  fill="#cc1100"/>
+          <rect x="78" y="52" width="8"  height="8"  fill="#f0cc40"/>
+          <rect x="80" y="54" width="4"  height="4"  fill="#1844a0"/>
+          <rect x="88" y="56" width="8"  height="8"  fill="#f0cc40"/>
+          <rect x="90" y="58" width="4"  height="4"  fill="#cc1100"/>
+          <!-- Black outline dots on red sash -->
+          <rect x="10" y="50" width="4"  height="4"  fill="#111"/>
+          <rect x="20" y="56" width="4"  height="4"  fill="#111"/>
+          <rect x="30" y="62" width="4"  height="4"  fill="#111"/>
+
+          <!-- ── ARM holding sword — extends up left ── -->
+          <!-- Upper arm -->
+          <rect x="4"  y="30" width="14" height="20" fill="#cc1100"/>
+          <!-- Forearm / gauntlet -->
+          <rect x="4"  y="20" width="12" height="14" fill="#d4a820"/>
+          <rect x="4"  y="22" width="10" height="10" fill="#f0cc40"/>
+          <!-- Sword blade — goes upward -->
+          <rect x="7"  y="2"  width="4"  height="22" fill="#d0d0d8"/>
+          <rect x="8"  y="2"  width="2"  height="20" fill="#e8e8f0"/>
+          <!-- Crossguard -->
+          <rect x="2"  y="22" width="14" height="3"  fill="#d4a820"/>
+          <!-- Grip -->
+          <rect x="7"  y="24" width="4"  height="6"  fill="#881000"/>
+          <!-- Pommel -->
+          <rect x="6"  y="29" width="6"  height="4"  fill="#d4a820"/>
+
+          <!-- ── CENTER DIVIDER + SUIT SYMBOL ── -->
+          <line x1="2" y1="77" x2="108" y2="77" stroke="#ccc0a8" stroke-width="1"/>
+          <!-- Spade suit pip - centered -->
+          <g transform="translate(55,77)">
+            <!-- spade shape -->
+            <rect x="-5" y="-10" width="10" height="10" fill="#111"/>
+            <rect x="-7" y="-4"  width="14" height="6"  fill="#111"/>
+            <rect x="-9" y="-1"  width="18" height="4"  fill="#111"/>
+            <rect x="-3" y="0"   width="6"  height="5"  fill="#111"/>
+            <rect x="-5" y="4"   width="10" height="3"  fill="#111"/>
+            <!-- refine spade top curve -->
+            <rect x="-3" y="-13" width="6"  height="4"  fill="#111"/>
+            <rect x="-1" y="-15" width="2"  height="3"  fill="#111"/>
+          </g>
+
+          <!-- ══════════════════════════════════
+               BOTTOM HALF: rotated 180°
+               ══════════════════════════════════ -->
+          <g transform="rotate(180, 55, 77)">
+            <!-- Hat -->
+            <rect x="14" y="6"  width="72" height="6"  fill="#cc1100"/>
+            <rect x="10" y="8"  width="80" height="4"  fill="#cc1100"/>
+            <rect x="16" y="4"  width="68" height="5"  fill="#d4a820"/>
+            <rect x="18" y="2"  width="60" height="4"  fill="#f0cc40"/>
+            <!-- Feather -->
+            <rect x="78" y="2"  width="6"  height="2"  fill="#f0cc40"/>
+            <rect x="82" y="4"  width="6"  height="2"  fill="#f0cc40"/>
+            <rect x="86" y="6"  width="8"  height="2"  fill="#d4a820"/>
+            <rect x="88" y="8"  width="8"  height="2"  fill="#d4a820"/>
+            <rect x="90" y="10" width="6"  height="2"  fill="#cc1100"/>
+            <rect x="88" y="12" width="6"  height="2"  fill="#cc1100"/>
+            <rect x="86" y="14" width="4"  height="2"  fill="#881000"/>
+            <!-- Hair -->
+            <rect x="14" y="10" width="8"  height="30" fill="#201008"/>
+            <rect x="16" y="38" width="8"  height="10" fill="#201008"/>
+            <!-- Head -->
+            <rect x="20" y="10" width="46" height="30" fill="#f0c890"/>
+            <rect x="22" y="12" width="30" height="6"  fill="#f8d8a8"/>
+            <rect x="20" y="36" width="38" height="6"  fill="#f0c890"/>
+            <rect x="24" y="40" width="28" height="4"  fill="#f0c890"/>
+            <rect x="28" y="42" width="18" height="4"  fill="#c89858"/>
+            <rect x="32" y="44" width="10" height="4"  fill="#f0c890"/>
+            <rect x="60" y="20" width="6"  height="10" fill="#c89858"/>
+            <rect x="62" y="22" width="4"  height="6"  fill="#f0c890"/>
+            <!-- Eye -->
+            <rect x="30" y="18" width="14" height="6"  fill="#fff"/>
+            <rect x="36" y="19" width="6"  height="5"  fill="#201008"/>
+            <rect x="38" y="20" width="3"  height="3"  fill="#3a2808"/>
+            <rect x="39" y="20" width="2"  height="2"  fill="#5a4828"/>
+            <rect x="29" y="18" width="16" height="2"  fill="#201008"/>
+            <!-- Nose -->
+            <rect x="20" y="28" width="8"  height="4"  fill="#c89858"/>
+            <rect x="18" y="30" width="6"  height="4"  fill="#f0c890"/>
+            <rect x="16" y="32" width="6"  height="2"  fill="#c89858"/>
+            <!-- Mouth -->
+            <rect x="22" y="36" width="14" height="3"  fill="#c07060"/>
+            <rect x="22" y="37" width="10" height="2"  fill="#a05040"/>
+            <rect x="28" y="40" width="6"  height="2"  fill="#c89858"/>
+            <!-- Collar -->
+            <rect x="28" y="44" width="30" height="4"  fill="#fdf6e8"/>
+            <rect x="26" y="46" width="36" height="3"  fill="#e8e0d0"/>
+            <rect x="30" y="43" width="22" height="3"  fill="#fdf6e8"/>
+            <!-- Tunic -->
+            <rect x="4"  y="48" width="102" height="26" fill="#cc1100"/>
+            <rect x="4"  y="48" width="40" height="6"  fill="#d4a820"/>
+            <rect x="8"  y="54" width="36" height="6"  fill="#d4a820"/>
+            <rect x="12" y="60" width="32" height="4"  fill="#d4a820"/>
+            <rect x="16" y="64" width="28" height="4"  fill="#d4a820"/>
+            <rect x="20" y="68" width="24" height="6"  fill="#d4a820"/>
+            <rect x="60" y="48" width="46" height="26" fill="#1844a0"/>
+            <rect x="60" y="48" width="4"  height="26" fill="#d4a820"/>
+            <rect x="100" y="48" width="6" height="26" fill="#d4a820"/>
+            <rect x="66" y="52" width="8"  height="8"  fill="#f0cc40"/>
+            <rect x="68" y="54" width="4"  height="4"  fill="#cc1100"/>
+            <rect x="78" y="52" width="8"  height="8"  fill="#f0cc40"/>
+            <rect x="80" y="54" width="4"  height="4"  fill="#1844a0"/>
+            <rect x="88" y="56" width="8"  height="8"  fill="#f0cc40"/>
+            <rect x="90" y="58" width="4"  height="4"  fill="#cc1100"/>
+            <rect x="10" y="50" width="4"  height="4"  fill="#111"/>
+            <rect x="20" y="56" width="4"  height="4"  fill="#111"/>
+            <rect x="30" y="62" width="4"  height="4"  fill="#111"/>
+            <!-- Sword arm -->
+            <rect x="4"  y="30" width="14" height="20" fill="#cc1100"/>
+            <rect x="4"  y="20" width="12" height="14" fill="#d4a820"/>
+            <rect x="4"  y="22" width="10" height="10" fill="#f0cc40"/>
+            <rect x="7"  y="2"  width="4"  height="22" fill="#d0d0d8"/>
+            <rect x="8"  y="2"  width="2"  height="20" fill="#e8e8f0"/>
+            <rect x="2"  y="22" width="14" height="3"  fill="#d4a820"/>
+            <rect x="7"  y="24" width="4"  height="6"  fill="#881000"/>
+            <rect x="6"  y="29" width="6"  height="4"  fill="#d4a820"/>
+          </g>
+
+          <!-- ── Corner rank labels — on top of everything ── -->
+          <!-- Top-left -->
+          <rect x="2" y="2" width="14" height="20" fill="#fdf6e8"/>
+          <text x="4" y="13"
+                font-family="'Press Start 2P'" font-size="10"
+                fill="#111" xml:space="preserve">J</text>
+          <text x="5" y="23"
+                font-family="'Press Start 2P'" font-size="9"
+                fill="#111">♠</text>
+          <!-- Bottom-right (rotated) -->
+          <rect x="94" y="132" width="14" height="20" fill="#fdf6e8"/>
+          <text x="96" y="143"
+                font-family="'Press Start 2P'" font-size="10"
+                fill="#111">J</text>
+          <text x="97" y="153"
+                font-family="'Press Start 2P'" font-size="9"
+                fill="#111">♠</text>
+
+        </svg>
+      </div>
+      <p class="card-label">jack of spades</p>
+      <p class="note">Profile face, full-bleed figure, red/gold/blue flat zones, sword up, suit pip in center gap</p>
+    </div>
+
+    <!-- 2× zoom version so you can really see the pixels -->
+    <div class="card-wrap">
+      <div class="card" style="transform-origin:top left;">
+        <svg width="220" height="308" viewBox="0 0 110 154"
+             xmlns="http://www.w3.org/2000/svg"
+             shape-rendering="crispEdges">
+          <rect width="110" height="154" fill="#fdf6e8"/>
+          <rect x="1" y="1" width="108" height="152" fill="none" stroke="#aaa" stroke-width="1"/>
+          <!-- Hat -->
+          <rect x="14" y="6"  width="72" height="6"  fill="#cc1100"/>
+          <rect x="10" y="8"  width="80" height="4"  fill="#cc1100"/>
+          <rect x="16" y="4"  width="68" height="5"  fill="#d4a820"/>
+          <rect x="18" y="2"  width="60" height="4"  fill="#f0cc40"/>
+          <rect x="78" y="2"  width="6"  height="2"  fill="#f0cc40"/>
+          <rect x="82" y="4"  width="6"  height="2"  fill="#f0cc40"/>
+          <rect x="86" y="6"  width="8"  height="2"  fill="#d4a820"/>
+          <rect x="88" y="8"  width="8"  height="2"  fill="#d4a820"/>
+          <rect x="90" y="10" width="6"  height="2"  fill="#cc1100"/>
+          <rect x="88" y="12" width="6"  height="2"  fill="#cc1100"/>
+          <rect x="86" y="14" width="4"  height="2"  fill="#881000"/>
+          <rect x="14" y="10" width="8"  height="30" fill="#201008"/>
+          <rect x="16" y="38" width="8"  height="10" fill="#201008"/>
+          <rect x="20" y="10" width="46" height="30" fill="#f0c890"/>
+          <rect x="22" y="12" width="30" height="6"  fill="#f8d8a8"/>
+          <rect x="20" y="36" width="38" height="6"  fill="#f0c890"/>
+          <rect x="24" y="40" width="28" height="4"  fill="#f0c890"/>
+          <rect x="28" y="42" width="18" height="4"  fill="#c89858"/>
+          <rect x="32" y="44" width="10" height="4"  fill="#f0c890"/>
+          <rect x="60" y="20" width="6"  height="10" fill="#c89858"/>
+          <rect x="62" y="22" width="4"  height="6"  fill="#f0c890"/>
+          <rect x="30" y="18" width="14" height="6"  fill="#fff"/>
+          <rect x="36" y="19" width="6"  height="5"  fill="#201008"/>
+          <rect x="38" y="20" width="3"  height="3"  fill="#3a2808"/>
+          <rect x="39" y="20" width="2"  height="2"  fill="#5a4828"/>
+          <rect x="29" y="18" width="16" height="2"  fill="#201008"/>
+          <rect x="20" y="28" width="8"  height="4"  fill="#c89858"/>
+          <rect x="18" y="30" width="6"  height="4"  fill="#f0c890"/>
+          <rect x="16" y="32" width="6"  height="2"  fill="#c89858"/>
+          <rect x="22" y="36" width="14" height="3"  fill="#c07060"/>
+          <rect x="22" y="37" width="10" height="2"  fill="#a05040"/>
+          <rect x="28" y="40" width="6"  height="2"  fill="#c89858"/>
+          <rect x="28" y="44" width="30" height="4"  fill="#fdf6e8"/>
+          <rect x="26" y="46" width="36" height="3"  fill="#e8e0d0"/>
+          <rect x="30" y="43" width="22" height="3"  fill="#fdf6e8"/>
+          <rect x="4"  y="48" width="102" height="26" fill="#cc1100"/>
+          <rect x="4"  y="48" width="40" height="6"  fill="#d4a820"/>
+          <rect x="8"  y="54" width="36" height="6"  fill="#d4a820"/>
+          <rect x="12" y="60" width="32" height="4"  fill="#d4a820"/>
+          <rect x="16" y="64" width="28" height="4"  fill="#d4a820"/>
+          <rect x="20" y="68" width="24" height="6"  fill="#d4a820"/>
+          <rect x="60" y="48" width="46" height="26" fill="#1844a0"/>
+          <rect x="60" y="48" width="4"  height="26" fill="#d4a820"/>
+          <rect x="100" y="48" width="6" height="26" fill="#d4a820"/>
+          <rect x="66" y="52" width="8"  height="8"  fill="#f0cc40"/>
+          <rect x="68" y="54" width="4"  height="4"  fill="#cc1100"/>
+          <rect x="78" y="52" width="8"  height="8"  fill="#f0cc40"/>
+          <rect x="80" y="54" width="4"  height="4"  fill="#1844a0"/>
+          <rect x="88" y="56" width="8"  height="8"  fill="#f0cc40"/>
+          <rect x="90" y="58" width="4"  height="4"  fill="#cc1100"/>
+          <rect x="10" y="50" width="4"  height="4"  fill="#111"/>
+          <rect x="20" y="56" width="4"  height="4"  fill="#111"/>
+          <rect x="30" y="62" width="4"  height="4"  fill="#111"/>
+          <rect x="4"  y="30" width="14" height="20" fill="#cc1100"/>
+          <rect x="4"  y="20" width="12" height="14" fill="#d4a820"/>
+          <rect x="4"  y="22" width="10" height="10" fill="#f0cc40"/>
+          <rect x="7"  y="2"  width="4"  height="22" fill="#d0d0d8"/>
+          <rect x="8"  y="2"  width="2"  height="20" fill="#e8e8f0"/>
+          <rect x="2"  y="22" width="14" height="3"  fill="#d4a820"/>
+          <rect x="7"  y="24" width="4"  height="6"  fill="#881000"/>
+          <rect x="6"  y="29" width="6"  height="4"  fill="#d4a820"/>
+          <line x1="2" y1="77" x2="108" y2="77" stroke="#ccc0a8" stroke-width="1"/>
+          <g transform="translate(55,77)">
+            <rect x="-5" y="-10" width="10" height="10" fill="#111"/>
+            <rect x="-7" y="-4"  width="14" height="6"  fill="#111"/>
+            <rect x="-9" y="-1"  width="18" height="4"  fill="#111"/>
+            <rect x="-3" y="0"   width="6"  height="5"  fill="#111"/>
+            <rect x="-5" y="4"   width="10" height="3"  fill="#111"/>
+            <rect x="-3" y="-13" width="6"  height="4"  fill="#111"/>
+            <rect x="-1" y="-15" width="2"  height="3"  fill="#111"/>
+          </g>
+          <g transform="rotate(180, 55, 77)">
+            <rect x="14" y="6"  width="72" height="6"  fill="#cc1100"/>
+            <rect x="10" y="8"  width="80" height="4"  fill="#cc1100"/>
+            <rect x="16" y="4"  width="68" height="5"  fill="#d4a820"/>
+            <rect x="18" y="2"  width="60" height="4"  fill="#f0cc40"/>
+            <rect x="78" y="2"  width="6"  height="2"  fill="#f0cc40"/>
+            <rect x="82" y="4"  width="6"  height="2"  fill="#f0cc40"/>
+            <rect x="86" y="6"  width="8"  height="2"  fill="#d4a820"/>
+            <rect x="88" y="8"  width="8"  height="2"  fill="#d4a820"/>
+            <rect x="90" y="10" width="6"  height="2"  fill="#cc1100"/>
+            <rect x="88" y="12" width="6"  height="2"  fill="#cc1100"/>
+            <rect x="86" y="14" width="4"  height="2"  fill="#881000"/>
+            <rect x="14" y="10" width="8"  height="30" fill="#201008"/>
+            <rect x="16" y="38" width="8"  height="10" fill="#201008"/>
+            <rect x="20" y="10" width="46" height="30" fill="#f0c890"/>
+            <rect x="22" y="12" width="30" height="6"  fill="#f8d8a8"/>
+            <rect x="20" y="36" width="38" height="6"  fill="#f0c890"/>
+            <rect x="24" y="40" width="28" height="4"  fill="#f0c890"/>
+            <rect x="28" y="42" width="18" height="4"  fill="#c89858"/>
+            <rect x="32" y="44" width="10" height="4"  fill="#f0c890"/>
+            <rect x="60" y="20" width="6"  height="10" fill="#c89858"/>
+            <rect x="62" y="22" width="4"  height="6"  fill="#f0c890"/>
+            <rect x="30" y="18" width="14" height="6"  fill="#fff"/>
+            <rect x="36" y="19" width="6"  height="5"  fill="#201008"/>
+            <rect x="38" y="20" width="3"  height="3"  fill="#3a2808"/>
+            <rect x="39" y="20" width="2"  height="2"  fill="#5a4828"/>
+            <rect x="29" y="18" width="16" height="2"  fill="#201008"/>
+            <rect x="20" y="28" width="8"  height="4"  fill="#c89858"/>
+            <rect x="18" y="30" width="6"  height="4"  fill="#f0c890"/>
+            <rect x="16" y="32" width="6"  height="2"  fill="#c89858"/>
+            <rect x="22" y="36" width="14" height="3"  fill="#c07060"/>
+            <rect x="22" y="37" width="10" height="2"  fill="#a05040"/>
+            <rect x="28" y="40" width="6"  height="2"  fill="#c89858"/>
+            <rect x="28" y="44" width="30" height="4"  fill="#fdf6e8"/>
+            <rect x="26" y="46" width="36" height="3"  fill="#e8e0d0"/>
+            <rect x="30" y="43" width="22" height="3"  fill="#fdf6e8"/>
+            <rect x="4"  y="48" width="102" height="26" fill="#cc1100"/>
+            <rect x="4"  y="48" width="40" height="6"  fill="#d4a820"/>
+            <rect x="8"  y="54" width="36" height="6"  fill="#d4a820"/>
+            <rect x="12" y="60" width="32" height="4"  fill="#d4a820"/>
+            <rect x="16" y="64" width="28" height="4"  fill="#d4a820"/>
+            <rect x="20" y="68" width="24" height="6"  fill="#d4a820"/>
+            <rect x="60" y="48" width="46" height="26" fill="#1844a0"/>
+            <rect x="60" y="48" width="4"  height="26" fill="#d4a820"/>
+            <rect x="100" y="48" width="6" height="26" fill="#d4a820"/>
+            <rect x="66" y="52" width="8"  height="8"  fill="#f0cc40"/>
+            <rect x="68" y="54" width="4"  height="4"  fill="#cc1100"/>
+            <rect x="78" y="52" width="8"  height="8"  fill="#f0cc40"/>
+            <rect x="80" y="54" width="4"  height="4"  fill="#1844a0"/>
+            <rect x="88" y="56" width="8"  height="8"  fill="#f0cc40"/>
+            <rect x="90" y="58" width="4"  height="4"  fill="#cc1100"/>
+            <rect x="10" y="50" width="4"  height="4"  fill="#111"/>
+            <rect x="20" y="56" width="4"  height="4"  fill="#111"/>
+            <rect x="30" y="62" width="4"  height="4"  fill="#111"/>
+            <rect x="4"  y="30" width="14" height="20" fill="#cc1100"/>
+            <rect x="4"  y="20" width="12" height="14" fill="#d4a820"/>
+            <rect x="4"  y="22" width="10" height="10" fill="#f0cc40"/>
+            <rect x="7"  y="2"  width="4"  height="22" fill="#d0d0d8"/>
+            <rect x="8"  y="2"  width="2"  height="20" fill="#e8e8f0"/>
+            <rect x="2"  y="22" width="14" height="3"  fill="#d4a820"/>
+            <rect x="7"  y="24" width="4"  height="6"  fill="#881000"/>
+            <rect x="6"  y="29" width="6"  height="4"  fill="#d4a820"/>
+          </g>
+          <rect x="2" y="2" width="14" height="20" fill="#fdf6e8"/>
+          <text x="4" y="13" font-family="'Press Start 2P'" font-size="10" fill="#111">J</text>
+          <text x="5" y="23" font-family="'Press Start 2P'" font-size="9"  fill="#111">♠</text>
+          <rect x="94" y="132" width="14" height="20" fill="#fdf6e8"/>
+          <text x="96" y="143" font-family="'Press Start 2P'" font-size="10" fill="#111">J</text>
+          <text x="97" y="153" font-family="'Press Start 2P'" font-size="9"  fill="#111">♠</text>
+        </svg>
+      </div>
+      <p class="card-label">2× zoom</p>
+      <p class="note">Same card at double size so you can see the pixel structure</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section style="position:relative;z-index:1;">
+  <p class="section-label">Style notes</p>
+  <div style="font-family:var(--mono);font-size:16px;color:var(--yellow-pale);line-height:2;letter-spacing:1px;max-width:660px;">
+    <p style="color:var(--orange-glow);margin-bottom:8px;">What's established here —</p>
+    <p>① Figure fills the full card edge-to-edge, no white border around it</p>
+    <p>② Profile face, single eye visible — matches 1885 Jack composition</p>
+    <p>③ Bold flat color zones: red tunic / gold sash / blue panel — NES palette</p>
+    <p>④ Sword extends up into the hat area, like the Bicycle originals</p>
+    <p>⑤ Suit pip floats in the center gap between the two mirrored halves</p>
+    <p>⑥ Corner rank labels sit on a small card-bg patch so they're always legible</p>
+    <br>
+    <p style="color:var(--yellow);">If this direction feels right, next steps would be:</p>
+    <p>→ Refine this Jack further if needed</p>
+    <p>→ Build Queen (frontal face, crown, flower/scepter)</p>
+    <p>→ Build King (3/4 face, beard, sword at side)</p>
+    <p>→ Then layer in the THOLD character tweaks</p>
+  </div>
+</section>
+
+</body>
+</html>

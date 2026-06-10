@@ -1,0 +1,50 @@
+/* DDT LLC — releases */
+body.ddt-page.ddt-releases-page main > * { background: var(--black); }
+
+body.ddt-page.ddt-releases-page .breadcrumb { color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .breadcrumb a { color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .breadcrumb a:hover { color: var(--ddt-tan); }
+body.ddt-page.ddt-releases-page .breadcrumb .sep { color: var(--ddt-cta); opacity: 0.6; }
+body.ddt-page.ddt-releases-page .breadcrumb .current { color: var(--ddt-cta); }
+
+body.ddt-page.ddt-releases-page .artist-label { color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ddt-page.ddt-releases-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ddt-cta); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ddt-page.ddt-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ddt-cta); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(192, 64, 48, 0.5); }
+
+body.ddt-page.ddt-releases-page .release-card {
+    background: var(--black);
+    border-color: var(--ddt-deep);
+}
+body.ddt-page.ddt-releases-page .release-card:hover { border-color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .release-info h3 a { color: var(--ddt-amber); }
+body.ddt-page.ddt-releases-page .release-info h3 a:hover { color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .release-info a { color: var(--ddt-amber); }
+
+body.ddt-page.ddt-releases-page .nav-card.c-about  { background: var(--ddt-amber); color: var(--ddt-deep); border-color: var(--ddt-amber); }
+body.ddt-page.ddt-releases-page .nav-card.c-about:hover { background: var(--ddt-tan); border-color: var(--ddt-tan); color: var(--ddt-deep); }
+body.ddt-page.ddt-releases-page .nav-card.c-photography { background: var(--ddt-nature); color: var(--ddt-heading); border-color: var(--ddt-nature); }
+body.ddt-page.ddt-releases-page .nav-card.c-photography:hover { background: var(--ddt-gold); border-color: var(--ddt-gold); color: var(--ddt-deep); }
+body.ddt-page.ddt-releases-page .nav-card.c-events  { background: var(--ddt-gold); color: var(--ddt-deep); border-color: var(--ddt-gold); }
+body.ddt-page.ddt-releases-page .nav-card.c-events:hover { background: var(--ddt-tan); border-color: var(--ddt-tan); color: var(--ddt-deep); }
+body.ddt-page.ddt-releases-page .nav-card.c-releases   { background: var(--ddt-cta); color: var(--ddt-heading); border-color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .nav-card.c-releases:hover { background: var(--ddt-deep); border-color: var(--ddt-cta); color: var(--ddt-tan); }
+body.ddt-page.ddt-releases-page .nav-card.c-back { background: transparent; color: var(--ddt-cta); border-color: var(--ddt-cta); }
+body.ddt-page.ddt-releases-page .nav-card.c-back:hover { background: var(--ddt-cta); color: var(--ddt-heading); }
+body.ddt-page.ddt-releases-page .nav-card::after { display: none; }
+body.ddt-page.ddt-releases-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.ddt-page.ddt-releases-page .nav-card.jt-back {
+    background: transparent;
+    color: var(--ddt-mid);
+    border-color: var(--ddt-mid);
+}
+body.ddt-page.ddt-releases-page .nav-card.jt-back:hover {
+    background: var(--ddt-mid);
+    color: var(--ddt-heading);
+    box-shadow: 0 0 22px rgba(138, 90, 42, 0.4);
+}
+
+@media (max-width: 500px) {
+    body.ddt-page.ddt-releases-page .release-card { border-color: var(--ddt-mid); }
+}

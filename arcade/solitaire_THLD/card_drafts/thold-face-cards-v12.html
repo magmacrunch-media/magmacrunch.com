@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOLD — Face Cards v12</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#0a0000; --deep-red:#3b0000;
+  --og:#ff7700; --yel:#ffcc00; --ylp:#ffe680; --ora:#dd4400;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--black);font-family:'Press Start 2P',monospace;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;padding:32px 16px 80px;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.18) 3px,rgba(0,0,0,0.18) 4px),
+    radial-gradient(ellipse 80% 60% at 50% 100%,rgba(180,40,0,0.35) 0%,transparent 70%);
+}
+h1,.sub,section,.row{position:relative;z-index:1;}
+h1{color:var(--yel);font-size:clamp(9px,2vw,13px);text-align:center;
+   letter-spacing:2px;margin-bottom:6px;
+   text-shadow:2px 2px 0 #cc2200,4px 4px 0 #3b0000;}
+.sub{font-family:'VT323',monospace;color:var(--og);font-size:18px;
+     letter-spacing:3px;text-align:center;margin-bottom:40px;}
+section{width:100%;max-width:1300px;margin-bottom:48px;}
+.lbl{font-size:7px;color:var(--og);letter-spacing:3px;text-transform:uppercase;
+     margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid var(--deep-red);}
+.row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.clbl{font-size:6px;color:var(--ora);letter-spacing:1px;}
+.note{font-family:'VT323',monospace;font-size:14px;color:var(--og);
+      text-align:center;line-height:1.5;max-width:180px;}
+.div{width:100%;max-width:1300px;height:3px;position:relative;z-index:1;
+     background:linear-gradient(90deg,transparent,var(--ora),var(--yel),var(--ora),transparent);
+     margin:8px 0 40px;}
+.card{border-radius:6px;overflow:hidden;
+      box-shadow:3px 3px 0 var(--black),6px 6px 0 rgba(0,0,0,0.5);
+      transition:transform .12s,box-shadow .12s;}
+.card:hover{transform:translateY(-8px) scale(1.03);
+            box-shadow:3px 14px 0 var(--black),6px 18px 0 rgba(0,0,0,0.4);}
+</style>
+</head>
+<body>
+
+<h1>TEXAS HOLD'EM LAVA DOME</h1>
+<p class="sub">— face cards v12 · rotation fix —</p>
+
+<!--
+════════════════════════════════════════════════════════════════
+  V11 CHANGES
+  ────────────────────────────────────────────────────────────
+  1. BORDER + PIP SYSTEM (matching 1885 Bicycle)
+     Card layout (from outside in):
+     - Card edge (cream #fdf8ee)
+     - Outer black border: rect x=1,y=1, w=108, h=152
+     - Outer cream margin: 3px
+     - INNER border (thin black line): rect x=8, y=8, w=94, h=138
+     - Inside inner border: figure + TWO LARGE PIPS in corners
+       Top-left inside border: large pip ~16px font
+       Bottom-right inside border: large pip rotated 180°
+
+     Corner rank + small pip sit OUTSIDE the inner border,
+     in the 8px margin between inner border and card edge:
+       "J" at x=2, y=14  (font-size 7px)
+       small pip at x=2, y=22 (font-size 6px)
+
+  2. FIGURE ZONE is now x=8..102, y=8..146 (inside inner border)
+     Hair and hat must fit within x=8..102.
+     The large pips overlap the figure slightly in corners —
+     they sit on an ivory patch drawn ON TOP of the figure.
+
+  3. HAT DRAW ORDER FIX for J♥
+     Hat (including brim) is drawn AFTER hair columns, so the
+     brim covers any hair tops that poke above it.
+     Previously the brim underside color (#c0980c) was leaking.
+
+  4. LARGE CORNER PIPS (inside border)
+     Top-left:     x=10, y=10, font-size ~18px
+     Bottom-right: x=72, y=128, font-size ~18px, rotated 180°
+     Both sit on a small ivory rect to clear the figure behind them.
+
+  Card viewBox: 0 0 110 154 (unchanged)
+  Inner border: x=8 y=8 w=94 h=138
+  Figure zone:  x=9..101, y=9..145
+════════════════════════════════════════════════════════════════
+-->
+
+<section>
+  <p class="lbl">Jack of Spades · Jack of Hearts — v12</p>
+  <div class="row">
+
+<!-- ═══════════════════════════════════════════════════
+     JACK OF SPADES  —  golden hair, faces LEFT
+     ═══════════════════════════════════════════════════ -->
+<div class="wrap">
+<div class="card">
+<svg width="220" height="308" viewBox="0 0 110 154"
+     xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+
+<!-- ══ CARD BACKGROUND ══ -->
+<rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+
+<!-- ══ OUTER BORDER ══ -->
+<rect x="1" y="1" width="108" height="152" rx="4" fill="none"
+      stroke="#1c1c2a" stroke-width="2"/>
+
+<!-- ══ OUTER CORNER LABELS (outside inner border) ══ -->
+<!-- Top-left: "J" then "♠" stacked, very small -->
+<text x="3"  y="8"  font-family="'Press Start 2P'" font-size="6" fill="#111111">J</text>
+<text x="3"  y="16" font-family="'Press Start 2P'" font-size="7" fill="#111111">♠</text>
+<!-- Bottom-right: rotated -->
+<text x="107" y="148" font-family="'Press Start 2P'" font-size="6"
+      fill="#111111" transform="rotate(180,107,144)">J</text>
+<text x="107" y="148" font-family="'Press Start 2P'" font-size="7"
+      fill="#111111" transform="rotate(180,106,140)">♠</text>
+
+<!-- ══ INNER BORDER ══ -->
+<rect x="8" y="18" width="94" height="118" fill="none"
+      stroke="#1c1c2a" stroke-width="1"/>
+
+<!-- ══ FIGURE CONTENT (inside inner border) ══ -->
+
+<!-- HAIR — drawn first, then hat on top -->
+
+<!-- Hair columns: J♠ faces LEFT, hair sweeps left from head (head at x≈58..82) -->
+<!-- Columns from near-head outward, each 2px wide, heights stepped -->
+<rect x="54" y="22" width="2" height="18" fill="#d4a61e"/><!-- nearest head -->
+<rect x="52" y="21" width="2" height="19" fill="#dca820"/>
+<rect x="50" y="20" width="2" height="20" fill="#e4b024"/>
+<rect x="48" y="19" width="2" height="21" fill="#ecbc2c"/><!-- getting taller -->
+<rect x="46" y="18" width="2" height="22" fill="#f2c230"/>
+<rect x="44" y="18" width="2" height="23" fill="#f6c832"/><!-- peak -->
+<rect x="42" y="18" width="2" height="22" fill="#f2c230"/>
+<rect x="40" y="19" width="2" height="20" fill="#eab828"/>
+<rect x="38" y="20" width="2" height="18" fill="#e0ae22"/>
+<rect x="36" y="21" width="2" height="15" fill="#d6a41c"/>
+<rect x="34" y="22" width="2" height="12" fill="#cc9a18"/>
+<rect x="32" y="23" width="2" height="9"  fill="#c09014"/>
+<rect x="30" y="24" width="2" height="6"  fill="#b48810"/>
+<rect x="28" y="25" width="2" height="4"  fill="#a87e0c"/>
+<rect x="26" y="26" width="2" height="2"  fill="#9c740a"/><!-- wispy tip -->
+<!-- Highlight sheen at crown -->
+<rect x="43" y="18" width="6"  height="2" fill="#fcd848"/>
+<rect x="45" y="17" width="4"  height="2" fill="#fee060"/>
+<!-- Shadow underside -->
+<rect x="36" y="36" width="20" height="2" fill="#a87810"/>
+<rect x="38" y="38" width="16" height="1" fill="#986808"/>
+
+<!-- Curl lobe A — leftmost, largest -->
+<rect x="24" y="32" width="14" height="2" fill="#b48810"/>
+<rect x="22" y="34" width="16" height="2" fill="#bc9014"/>
+<rect x="20" y="36" width="16" height="2" fill="#c49818"/>
+<rect x="20" y="38" width="14" height="2" fill="#bc9014"/>
+<rect x="22" y="40" width="12" height="2" fill="#b48810"/>
+<rect x="24" y="42" width="8"  height="2" fill="#ac800c"/>
+<rect x="26" y="44" width="6"  height="2" fill="#a47808"/>
+<rect x="28" y="46" width="4"  height="2" fill="#9c7008"/>
+<rect x="30" y="48" width="2"  height="2" fill="#946806"/><!-- tip -->
+<rect x="24" y="34" width="10" height="1" fill="#d8a020"/><!-- highlight -->
+
+<!-- Curl lobe B — middle -->
+<rect x="32" y="36" width="14" height="2" fill="#bc9014"/>
+<rect x="30" y="38" width="16" height="2" fill="#c49818"/>
+<rect x="30" y="40" width="14" height="2" fill="#bc9014"/>
+<rect x="32" y="42" width="12" height="2" fill="#b48810"/>
+<rect x="34" y="44" width="8"  height="2" fill="#ac800c"/>
+<rect x="36" y="46" width="6"  height="2" fill="#a47808"/>
+<rect x="38" y="48" width="4"  height="2" fill="#9c7008"/>
+<rect x="40" y="50" width="2"  height="2" fill="#946806"/><!-- tip -->
+<rect x="32" y="37" width="10" height="1" fill="#d8a020"/>
+
+<!-- Curl lobe C — nearest head -->
+<rect x="44" y="38" width="12" height="2" fill="#c49818"/>
+<rect x="42" y="40" width="14" height="2" fill="#bc9014"/>
+<rect x="42" y="42" width="12" height="2" fill="#b48810"/>
+<rect x="44" y="44" width="8"  height="2" fill="#ac800c"/>
+<rect x="46" y="46" width="6"  height="2" fill="#a47808"/>
+<rect x="48" y="48" width="4"  height="2" fill="#9c7008"/>
+<rect x="50" y="50" width="2"  height="2" fill="#946806"/>
+<rect x="44" y="39" width="8"  height="1" fill="#d8a020"/>
+
+<!-- HAT — drawn on top of hair to mask any overflow -->
+<rect x="52" y="19" width="42" height="11" fill="#141418"/>
+<rect x="54" y="19" width="38" height="2"  fill="#242428"/>
+<rect x="52" y="19" width="4"  height="11" fill="#080808"/>
+<!-- Red accent band -->
+<rect x="52" y="27" width="42" height="4"  fill="#bb1100"/>
+<rect x="52" y="27" width="42" height="1"  fill="#cc2200"/>
+<!-- Gold hat band -->
+<rect x="50" y="30" width="46" height="2"  fill="#c8a010"/>
+<rect x="48" y="31" width="48" height="1"  fill="#e8c030"/>
+<!-- Hat brim — covers hair tops -->
+<rect x="22" y="32" width="72" height="3"  fill="#c8a010"/>
+<rect x="20" y="33" width="74" height="2"  fill="#d8b018"/>
+<!-- Brim underside — solid, no bleed -->
+<rect x="20" y="35" width="74" height="1"  fill="#a88808"/>
+
+<!-- HEAD — profile LEFT, narrow -->
+<!-- Neck -->
+<rect x="60" y="47" width="16" height="6"  fill="#e8b060"/>
+<rect x="62" y="47" width="12" height="5"  fill="#f0c070"/>
+<!-- Face block x=58..82, y=36..53 -->
+<rect x="58" y="36" width="24" height="17" fill="#f0c070"/>
+<rect x="62" y="36" width="16" height="6"  fill="#f8d080"/><!-- forehead -->
+<rect x="58" y="36" width="6"  height="17" fill="#d8a050"/><!-- temple shadow -->
+<rect x="74" y="40" width="8"  height="7"  fill="#f4c878"/><!-- far cheek -->
+<rect x="80" y="40" width="4"  height="6"  fill="#c89040"/><!-- far ear -->
+<rect x="82" y="41" width="3"  height="4"  fill="#e8b060"/>
+<!-- Nose LEFT -->
+<rect x="52" y="43" width="8"  height="3"  fill="#d8a050"/>
+<rect x="50" y="44" width="9"  height="2"  fill="#e8b060"/>
+<rect x="52" y="46" width="6"  height="2"  fill="#c89040"/>
+<rect x="50" y="45" width="2"  height="2"  fill="#7c3818"/>
+<!-- Eye -->
+<rect x="68" y="38" width="10" height="5"  fill="#f4ece0"/>
+<rect x="68" y="38" width="10" height="1"  fill="#d0b888"/>
+<rect x="70" y="39" width="6"  height="4"  fill="#2c1c08"/>
+<rect x="72" y="40" width="2"  height="2"  fill="#080604"/>
+<rect x="74" y="39" width="1"  height="1"  fill="#f8f8f8"/>
+<!-- Eyebrow -->
+<rect x="66" y="36" width="14" height="2"  fill="#2c1c08"/>
+<!-- Jaw / chin LEFT -->
+<rect x="52" y="48" width="8"  height="4"  fill="#f0c070"/>
+<rect x="50" y="49" width="6"  height="3"  fill="#e0b060"/>
+<rect x="48" y="51" width="6"  height="3"  fill="#d0a050"/>
+<!-- Mouth -->
+<rect x="54" y="48" width="10" height="2"  fill="#b86040"/>
+<rect x="56" y="50" width="8"  height="2"  fill="#984830"/>
+<rect x="56" y="48" width="6"  height="1"  fill="#d08060"/>
+
+<!-- RUFF COLLAR -->
+<rect x="18" y="52" width="78" height="6"  fill="#f0ece0"/>
+<rect x="18" y="52" width="78" height="1"  fill="#ffffff"/>
+<rect x="18" y="53" width="78" height="1"  fill="#d0c8b8"/>
+<rect x="18" y="54" width="78" height="1"  fill="#ece8dc"/>
+<rect x="18" y="55" width="78" height="1"  fill="#c0b8a8"/>
+<rect x="18" y="56" width="78" height="1"  fill="#e4e0d4"/>
+<rect x="18" y="57" width="78" height="1"  fill="#b0a898"/>
+<rect x="22" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="28" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="34" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="40" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="46" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="52" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="58" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="64" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="70" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="76" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="82" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="88" y="53" width="1" height="4" fill="#a8a090"/>
+
+<!-- SWORD — left edge -->
+<rect x="9"  y="19" width="3"  height="52" fill="#b0b8cc"/>
+<rect x="10" y="19" width="2"  height="52" fill="#e0e4f4"/>
+<rect x="12" y="19" width="1"  height="52" fill="#8890a8"/>
+<rect x="9"  y="19" width="4"  height="3"  fill="#f0f4ff"/>
+<rect x="9"  y="67" width="18" height="4"  fill="#c8a010"/><!-- crossguard -->
+<rect x="8"  y="68" width="20" height="2"  fill="#e8c030"/>
+<rect x="10" y="55" width="3"  height="13" fill="#5c1a00"/><!-- grip -->
+<rect x="11" y="55" width="2"  height="13" fill="#7a2800"/>
+<rect x="10" y="57" width="3"  height="1"  fill="#3c0c00"/>
+<rect x="10" y="60" width="3"  height="1"  fill="#3c0c00"/>
+<rect x="10" y="63" width="3"  height="1"  fill="#3c0c00"/>
+<rect x="8"  y="51" width="8"  height="5"  fill="#c8a010"/><!-- pommel -->
+<rect x="9"  y="52" width="6"  height="3"  fill="#e8c030"/>
+
+<!-- LEFT SWORD ARM -->
+<rect x="9"  y="57" width="18" height="14" fill="#c01400"/>
+<rect x="11" y="59" width="14" height="2"  fill="#e02818"/>
+<rect x="11" y="63" width="14" height="2"  fill="#e02818"/>
+<rect x="9"  y="57" width="4"  height="14" fill="#880800"/>
+<rect x="9"  y="57" width="20" height="3"  fill="#c8a010"/>
+<rect x="9"  y="57" width="20" height="1"  fill="#e8c030"/>
+<rect x="13" y="58" width="2"  height="2"  fill="#f0d040"/>
+<rect x="19" y="58" width="2"  height="2"  fill="#f0d040"/>
+<rect x="9"  y="70" width="14" height="4"  fill="#c8a010"/>
+<rect x="10" y="71" width="12" height="2"  fill="#e8c030"/>
+<rect x="10" y="73" width="10" height="5"  fill="#f0c070"/><!-- hand -->
+
+<!-- TORSO -->
+<rect x="26" y="57" width="76" height="30" fill="#0c1840"/>
+<!-- Diagonal red sash top-right→bottom-left -->
+<rect x="56" y="57" width="14" height="4"  fill="#cc1100"/>
+<rect x="50" y="61" width="14" height="4"  fill="#cc1100"/>
+<rect x="44" y="65" width="14" height="4"  fill="#cc1100"/>
+<rect x="38" y="69" width="14" height="4"  fill="#cc1100"/>
+<rect x="32" y="73" width="14" height="4"  fill="#cc1100"/>
+<rect x="26" y="77" width="14" height="4"  fill="#cc1100"/>
+<rect x="26" y="81" width="6"  height="4"  fill="#cc1100"/>
+<!-- Sash gold trim -->
+<rect x="58" y="57" width="2"  height="4"  fill="#e8c030"/>
+<rect x="52" y="61" width="2"  height="4"  fill="#e8c030"/>
+<rect x="46" y="65" width="2"  height="4"  fill="#e8c030"/>
+<rect x="40" y="69" width="2"  height="4"  fill="#e8c030"/>
+<rect x="34" y="73" width="2"  height="4"  fill="#e8c030"/>
+<rect x="28" y="77" width="2"  height="4"  fill="#e8c030"/>
+<rect x="56" y="57" width="2"  height="4"  fill="#a88008"/>
+<rect x="50" y="61" width="2"  height="4"  fill="#a88008"/>
+<rect x="44" y="65" width="2"  height="4"  fill="#a88008"/>
+<rect x="38" y="69" width="2"  height="4"  fill="#a88008"/>
+<rect x="32" y="73" width="2"  height="4"  fill="#a88008"/>
+<rect x="26" y="77" width="2"  height="4"  fill="#a88008"/>
+<!-- Black panel upper-left of diagonal -->
+<rect x="26" y="57" width="30" height="4"  fill="#0a0a14"/>
+<rect x="26" y="61" width="24" height="4"  fill="#0a0a14"/>
+<rect x="26" y="65" width="18" height="4"  fill="#0a0a14"/>
+<rect x="26" y="69" width="12" height="4"  fill="#0a0a14"/>
+<rect x="26" y="73" width="6"  height="4"  fill="#0a0a14"/>
+<rect x="28" y="59" width="4" height="4" fill="#c8a010"/>
+<rect x="29" y="60" width="2" height="2" fill="#0a0a14"/>
+<rect x="36" y="59" width="4" height="4" fill="#c8a010"/>
+<rect x="37" y="60" width="2" height="2" fill="#0a0a14"/>
+<rect x="28" y="65" width="4" height="4" fill="#c8a010"/>
+<rect x="29" y="66" width="2" height="2" fill="#0a0a14"/>
+<!-- Blue panel lower-right of diagonal -->
+<rect x="70" y="57" width="32" height="4"  fill="#1a3a8c"/>
+<rect x="64" y="61" width="38" height="4"  fill="#1a3a8c"/>
+<rect x="58" y="65" width="44" height="4"  fill="#1a3a8c"/>
+<rect x="52" y="69" width="50" height="4"  fill="#1a3a8c"/>
+<rect x="46" y="73" width="56" height="4"  fill="#1a3a8c"/>
+<rect x="40" y="77" width="62" height="4"  fill="#1a3a8c"/>
+<rect x="34" y="81" width="68" height="4"  fill="#1a3a8c"/>
+<rect x="70" y="58" width="32" height="1"  fill="#142e70"/>
+<rect x="64" y="62" width="38" height="1"  fill="#142e70"/>
+<rect x="58" y="66" width="44" height="1"  fill="#142e70"/>
+<rect x="52" y="70" width="50" height="1"  fill="#142e70"/>
+<rect x="46" y="74" width="56" height="1"  fill="#142e70"/>
+<!-- Blue ornaments -->
+<rect x="72" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="74" y="61" width="2" height="2" fill="#1a3a8c"/>
+<rect x="82" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="84" y="61" width="2" height="2" fill="#1a3a8c"/>
+<rect x="92" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="94" y="61" width="2" height="2" fill="#1a3a8c"/>
+<rect x="66" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="68" y="65" width="2" height="2" fill="#1a3a8c"/>
+<rect x="76" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="78" y="65" width="2" height="2" fill="#1a3a8c"/>
+<rect x="86" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="88" y="65" width="2" height="2" fill="#1a3a8c"/>
+<rect x="96" y="63" width="4" height="6" fill="#c8a010"/>
+<rect x="60" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="62" y="73" width="2" height="2" fill="#1a3a8c"/>
+<rect x="70" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="72" y="73" width="2" height="2" fill="#1a3a8c"/>
+<rect x="80" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="82" y="73" width="2" height="2" fill="#1a3a8c"/>
+<rect x="90" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="92" y="73" width="2" height="2" fill="#1a3a8c"/>
+<rect x="100" y="71" width="2" height="6" fill="#c8a010"/>
+<rect x="54" y="75" width="6" height="6" fill="#c8a010"/>
+<rect x="56" y="77" width="2" height="2" fill="#1a3a8c"/>
+<rect x="64" y="75" width="6" height="6" fill="#c8a010"/>
+<rect x="66" y="77" width="2" height="2" fill="#1a3a8c"/>
+<rect x="74" y="75" width="6" height="6" fill="#c8a010"/>
+<rect x="76" y="77" width="2" height="2" fill="#1a3a8c"/>
+<rect x="84" y="75" width="6" height="6" fill="#c8a010"/>
+<rect x="86" y="77" width="2" height="2" fill="#1a3a8c"/>
+<rect x="94" y="75" width="6" height="6" fill="#c8a010"/>
+<rect x="96" y="77" width="2" height="2" fill="#1a3a8c"/>
+<rect x="48" y="81" width="6" height="4" fill="#c8a010"/>
+<rect x="60" y="81" width="6" height="4" fill="#c8a010"/>
+<rect x="72" y="81" width="6" height="4" fill="#c8a010"/>
+<rect x="84" y="81" width="6" height="4" fill="#c8a010"/>
+<rect x="96" y="81" width="4" height="4" fill="#c8a010"/>
+<!-- Right arm -->
+<rect x="90" y="57" width="12" height="14" fill="#1a3a8c"/>
+<rect x="92" y="59" width="8"  height="2"  fill="#c8a010"/>
+<rect x="92" y="63" width="8"  height="2"  fill="#c8a010"/>
+<rect x="100" y="57" width="2" height="14" fill="#0c2260"/>
+<rect x="88" y="57" width="14" height="3"  fill="#c8a010"/>
+<rect x="88" y="57" width="14" height="1"  fill="#e8c030"/>
+<!-- Hem -->
+<rect x="26" y="83" width="76" height="2"  fill="#c8a010"/>
+<rect x="26" y="83" width="76" height="1"  fill="#e8c030"/>
+
+<!-- CENTER DIVIDER -->
+<rect x="8" y="87" width="94" height="5" fill="#1c1c2a"/>
+<rect x="8" y="87" width="94" height="1" fill="#c8a010"/>
+<rect x="8" y="91" width="94" height="1" fill="#c8a010"/>
+<rect x="13" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="24" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="35" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="46" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="57" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="68" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="79" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="90" y="88" width="3" height="3" fill="#c8a010"/>
+
+<!-- BOTTOM HALF — rotate 180° around card centre -->
+<!-- Hair columns mirrored -->
+<rect x="54" y="114" width="2" height="18" fill="#d4a61e" transform="rotate(180,55,89)"/>
+<rect x="52" y="114" width="2" height="19" fill="#dca820" transform="rotate(180,55,89)"/>
+<rect x="50" y="114" width="2" height="20" fill="#e4b024" transform="rotate(180,55,89)"/>
+<rect x="48" y="114" width="2" height="21" fill="#ecbc2c" transform="rotate(180,55,89)"/>
+<rect x="46" y="114" width="2" height="22" fill="#f2c230" transform="rotate(180,55,89)"/>
+<rect x="44" y="114" width="2" height="23" fill="#f6c832" transform="rotate(180,55,89)"/>
+<rect x="42" y="114" width="2" height="22" fill="#f2c230" transform="rotate(180,55,89)"/>
+<rect x="40" y="114" width="2" height="20" fill="#eab828" transform="rotate(180,55,89)"/>
+<rect x="38" y="114" width="2" height="18" fill="#e0ae22" transform="rotate(180,55,89)"/>
+<rect x="36" y="114" width="2" height="15" fill="#d6a41c" transform="rotate(180,55,89)"/>
+<rect x="34" y="114" width="2" height="12" fill="#cc9a18" transform="rotate(180,55,89)"/>
+<rect x="32" y="114" width="2" height="9"  fill="#c09014" transform="rotate(180,55,89)"/>
+<rect x="30" y="114" width="2" height="6"  fill="#b48810" transform="rotate(180,55,89)"/>
+<rect x="28" y="114" width="2" height="4"  fill="#a87e0c" transform="rotate(180,55,89)"/>
+<rect x="26" y="114" width="2" height="2"  fill="#9c740a" transform="rotate(180,55,89)"/>
+<!-- Lobe A bottom -->
+<rect x="24" y="106" width="14" height="2" fill="#b48810" transform="rotate(180,55,89)"/>
+<rect x="22" y="104" width="16" height="2" fill="#bc9014" transform="rotate(180,55,89)"/>
+<rect x="20" y="102" width="16" height="2" fill="#c49818" transform="rotate(180,55,89)"/>
+<rect x="20" y="100" width="14" height="2" fill="#bc9014" transform="rotate(180,55,89)"/>
+<rect x="22" y="98"  width="12" height="2" fill="#b48810" transform="rotate(180,55,89)"/>
+<rect x="24" y="96"  width="8"  height="2" fill="#ac800c" transform="rotate(180,55,89)"/>
+<rect x="26" y="94"  width="6"  height="2" fill="#a47808" transform="rotate(180,55,89)"/>
+<rect x="28" y="92"  width="4"  height="2" fill="#9c7008" transform="rotate(180,55,89)"/>
+<rect x="30" y="90"  width="2"  height="2" fill="#946806" transform="rotate(180,55,89)"/>
+<!-- Lobe B bottom -->
+<rect x="32" y="102" width="14" height="2" fill="#bc9014" transform="rotate(180,55,89)"/>
+<rect x="30" y="100" width="16" height="2" fill="#c49818" transform="rotate(180,55,89)"/>
+<rect x="30" y="98"  width="14" height="2" fill="#bc9014" transform="rotate(180,55,89)"/>
+<rect x="32" y="96"  width="12" height="2" fill="#b48810" transform="rotate(180,55,89)"/>
+<rect x="34" y="94"  width="8"  height="2" fill="#ac800c" transform="rotate(180,55,89)"/>
+<rect x="36" y="92"  width="6"  height="2" fill="#a47808" transform="rotate(180,55,89)"/>
+<rect x="38" y="90"  width="4"  height="2" fill="#9c7008" transform="rotate(180,55,89)"/>
+<rect x="40" y="90"  width="2"  height="2" fill="#946806" transform="rotate(180,55,89)"/>
+<!-- Lobe C bottom -->
+<rect x="44" y="100" width="12" height="2" fill="#c49818" transform="rotate(180,55,89)"/>
+<rect x="42" y="98"  width="14" height="2" fill="#bc9014" transform="rotate(180,55,89)"/>
+<rect x="42" y="96"  width="12" height="2" fill="#b48810" transform="rotate(180,55,89)"/>
+<rect x="44" y="94"  width="8"  height="2" fill="#ac800c" transform="rotate(180,55,89)"/>
+<rect x="46" y="92"  width="6"  height="2" fill="#a47808" transform="rotate(180,55,89)"/>
+<rect x="48" y="90"  width="4"  height="2" fill="#9c7008" transform="rotate(180,55,89)"/>
+<rect x="50" y="90"  width="2"  height="2" fill="#946806" transform="rotate(180,55,89)"/>
+<!-- Hat bottom -->
+<rect x="52" y="119" width="42" height="11" fill="#141418" transform="rotate(180,55,89)"/>
+<rect x="52" y="119" width="42" height="4"  fill="#bb1100" transform="rotate(180,55,89)"/>
+<rect x="50" y="115" width="46" height="2"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="22" y="111" width="72" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="20" y="110" width="74" height="2"  fill="#d8b018" transform="rotate(180,55,89)"/>
+<rect x="20" y="109" width="74" height="1"  fill="#a88808" transform="rotate(180,55,89)"/>
+<!-- Head bottom -->
+<rect x="58" y="101" width="24" height="17" fill="#f0c070" transform="rotate(180,55,89)"/>
+<rect x="68" y="101" width="10" height="5"  fill="#f4ece0" transform="rotate(180,55,89)"/>
+<rect x="70" y="101" width="6"  height="4"  fill="#2c1c08" transform="rotate(180,55,89)"/>
+<rect x="52" y="105" width="8"  height="3"  fill="#d8a050" transform="rotate(180,55,89)"/>
+<rect x="52" y="110" width="8"  height="4"  fill="#f0c070" transform="rotate(180,55,89)"/>
+<rect x="66" y="100" width="14" height="2"  fill="#2c1c08" transform="rotate(180,55,89)"/>
+<!-- Collar bottom -->
+<rect x="18" y="97" width="78" height="6"  fill="#f0ece0" transform="rotate(180,55,89)"/>
+<!-- Sword bottom -->
+<rect x="9"  y="83" width="3"  height="52" fill="#b0b8cc" transform="rotate(180,55,89)"/>
+<rect x="10" y="83" width="2"  height="52" fill="#e0e4f4" transform="rotate(180,55,89)"/>
+<rect x="9"  y="83" width="18" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="8"  y="83" width="20" height="2"  fill="#e8c030" transform="rotate(180,55,89)"/>
+<!-- Arm bottom -->
+<rect x="9"  y="83" width="18" height="14" fill="#c01400" transform="rotate(180,55,89)"/>
+<rect x="9"  y="83" width="20" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="10" y="83" width="10" height="5"  fill="#f0c070" transform="rotate(180,55,89)"/>
+<!-- Torso bottom -->
+<rect x="26" y="83" width="76" height="30" fill="#0c1840" transform="rotate(180,55,89)"/>
+<rect x="56" y="83" width="14" height="4"  fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="50" y="87" width="14" height="4"  fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="44" y="91" width="14" height="4"  fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="38" y="95" width="14" height="4"  fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="32" y="99" width="14" height="4"  fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="26" y="103" width="14" height="4" fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="26" y="107" width="6"  height="4" fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="26" y="83" width="30" height="4"  fill="#0a0a14" transform="rotate(180,55,89)"/>
+<rect x="26" y="87" width="24" height="4"  fill="#0a0a14" transform="rotate(180,55,89)"/>
+<rect x="26" y="91" width="18" height="4"  fill="#0a0a14" transform="rotate(180,55,89)"/>
+<rect x="26" y="95" width="12" height="4"  fill="#0a0a14" transform="rotate(180,55,89)"/>
+<rect x="26" y="99" width="6"  height="4"  fill="#0a0a14" transform="rotate(180,55,89)"/>
+<rect x="70" y="83" width="32" height="4"  fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="64" y="87" width="38" height="4"  fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="58" y="91" width="44" height="4"  fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="52" y="95" width="50" height="4"  fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="46" y="99" width="56" height="4"  fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="40" y="103" width="62" height="4" fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="34" y="107" width="68" height="4" fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="90" y="83" width="12" height="14" fill="#1a3a8c" transform="rotate(180,55,89)"/>
+<rect x="88" y="83" width="14" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+
+<!-- ══ LARGE INNER PIPS ══ -->
+<!-- Top-left pip inside inner border -->
+<rect x="9" y="19" width="18" height="20" fill="#fdf8ee"/>
+<text x="10" y="36" font-family="'Press Start 2P'" font-size="18" fill="#111111">♠</text>
+<!-- Bottom-right pip inside inner border -->
+<rect x="83" y="115" width="18" height="20" fill="#fdf8ee"/>
+<text x="84" y="132" font-family="'Press Start 2P'" font-size="18"
+      fill="#111111" transform="rotate(180,92,128)">♠</text>
+
+</svg>
+</div>
+<p class="clbl">J♠ — 2× zoom</p>
+<p class="note">Small J+♠ outside border. Large ♠ pips inside. Hat redrawn over hair.</p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     JACK OF HEARTS  —  auburn hair, faces RIGHT
+     ═══════════════════════════════════════════════════ -->
+<div class="wrap">
+<div class="card">
+<svg width="220" height="308" viewBox="0 0 110 154"
+     xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+
+<rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+<rect x="1" y="1" width="108" height="152" rx="4" fill="none"
+      stroke="#1c1c2a" stroke-width="2"/>
+
+<!-- Outer corner labels -->
+<text x="3"  y="8"  font-family="'Press Start 2P'" font-size="6" fill="#cc1100">J</text>
+<text x="3"  y="16" font-family="'Press Start 2P'" font-size="7" fill="#cc1100">♥</text>
+<text x="107" y="148" font-family="'Press Start 2P'" font-size="6"
+      fill="#cc1100" transform="rotate(180,107,144)">J</text>
+<text x="107" y="148" font-family="'Press Start 2P'" font-size="7"
+      fill="#cc1100" transform="rotate(180,106,140)">♥</text>
+
+<!-- Inner border -->
+<rect x="8" y="18" width="94" height="118" fill="none"
+      stroke="#1c1c2a" stroke-width="1"/>
+
+<!-- HAIR — J♥ faces RIGHT, hair sweeps right from head (head at x≈28..52) -->
+<!-- Columns from near-head outward rightward -->
+<!-- IMPORTANT: drawn first, hat drawn on top after -->
+<rect x="54" y="22" width="2" height="18" fill="#c06818"/><!-- nearest head -->
+<rect x="56" y="21" width="2" height="19" fill="#c87020"/>
+<rect x="58" y="20" width="2" height="20" fill="#d07828"/>
+<rect x="60" y="19" width="2" height="21" fill="#d88030"/><!-- growing -->
+<rect x="62" y="18" width="2" height="22" fill="#e08838"/>
+<rect x="64" y="18" width="2" height="22" fill="#e88e3c"/><!-- peak -->
+<rect x="66" y="18" width="2" height="22" fill="#e08838"/>
+<rect x="68" y="19" width="2" height="20" fill="#d87e30"/>
+<rect x="70" y="20" width="2" height="17" fill="#d07428"/>
+<rect x="72" y="21" width="2" height="14" fill="#c86a20"/>
+<rect x="74" y="22" width="2" height="11" fill="#c06018"/>
+<rect x="76" y="23" width="2" height="8"  fill="#b85610"/>
+<rect x="78" y="24" width="2" height="5"  fill="#b04e0c"/>
+<rect x="80" y="25" width="2" height="3"  fill="#a8480c"/>
+<rect x="82" y="26" width="2" height="2"  fill="#a0440a"/><!-- wispy tip -->
+<!-- Highlight -->
+<rect x="62" y="18" width="6"  height="2" fill="#f8a050"/>
+<rect x="64" y="17" width="4"  height="2" fill="#ffb060"/>
+<!-- Shadow underside -->
+<rect x="54" y="36" width="22" height="2" fill="#8c4808"/>
+<rect x="56" y="38" width="18" height="1" fill="#7c3c06"/>
+
+<!-- Curl lobe A — rightmost, largest -->
+<rect x="70" y="32" width="14" height="2" fill="#b85610"/>
+<rect x="72" y="34" width="16" height="2" fill="#c06018"/>
+<rect x="74" y="36" width="16" height="2" fill="#c86820"/>
+<rect x="74" y="38" width="14" height="2" fill="#c06018"/>
+<rect x="72" y="40" width="12" height="2" fill="#b85610"/>
+<rect x="70" y="42" width="8"  height="2" fill="#b04e0c"/>
+<rect x="68" y="44" width="6"  height="2" fill="#a8480c"/>
+<rect x="66" y="46" width="4"  height="2" fill="#a0440a"/>
+<rect x="64" y="48" width="2"  height="2" fill="#984008"/><!-- tip -->
+<rect x="72" y="34" width="10" height="1" fill="#d87028"/>
+
+<!-- Curl lobe B — middle -->
+<rect x="58" y="36" width="14" height="2" fill="#c06018"/>
+<rect x="56" y="38" width="16" height="2" fill="#c86820"/>
+<rect x="56" y="40" width="14" height="2" fill="#c06018"/>
+<rect x="58" y="42" width="12" height="2" fill="#b85610"/>
+<rect x="60" y="44" width="8"  height="2" fill="#b04e0c"/>
+<rect x="62" y="46" width="6"  height="2" fill="#a8480c"/>
+<rect x="64" y="48" width="4"  height="2" fill="#a0440a"/>
+<rect x="66" y="50" width="2"  height="2" fill="#984008"/><!-- tip -->
+<rect x="58" y="37" width="10" height="1" fill="#d07028"/>
+
+<!-- Curl lobe C — nearest head, leftward -->
+<rect x="44" y="36" width="12" height="2" fill="#c86820"/>
+<rect x="42" y="38" width="14" height="2" fill="#c06018"/>
+<rect x="42" y="40" width="12" height="2" fill="#b85610"/>
+<rect x="44" y="42" width="10" height="2" fill="#b04e0c"/>
+<rect x="46" y="44" width="8"  height="2" fill="#a8480c"/>
+<rect x="48" y="46" width="6"  height="2" fill="#a0440a"/>
+<rect x="50" y="48" width="4"  height="2" fill="#984008"/>
+<rect x="52" y="50" width="2"  height="2" fill="#904008"/><!-- tip -->
+<rect x="44" y="37" width="8"  height="1" fill="#cc6820"/>
+
+<!-- HAT — drawn ON TOP of hair, crimson cap, sits left-of-centre -->
+<!-- Crown covers hair tops completely -->
+<rect x="16" y="19" width="42" height="11" fill="#7a0800"/>
+<rect x="18" y="19" width="38" height="2"  fill="#9a1000"/>
+<rect x="56" y="19" width="2"  height="11" fill="#560600"/>
+<!-- Hat accent stripe -->
+<rect x="16" y="27" width="42" height="4"  fill="#cc1100"/>
+<rect x="16" y="27" width="42" height="1"  fill="#e82010"/>
+<!-- Gold band -->
+<rect x="14" y="30" width="46" height="2"  fill="#c8a010"/>
+<rect x="12" y="31" width="48" height="1"  fill="#e8c030"/>
+<!-- Brim — covers all hair tops, solid -->
+<rect x="12" y="32" width="72" height="3"  fill="#c8a010"/>
+<rect x="10" y="33" width="74" height="2"  fill="#d8b018"/>
+<rect x="10" y="35" width="74" height="1"  fill="#a88808"/><!-- solid underside -->
+<!-- White feather sweeps RIGHT -->
+<rect x="58" y="19" width="30" height="2"  fill="#f0f0e0"/>
+<rect x="62" y="21" width="24" height="2"  fill="#e8e8d8"/>
+<rect x="66" y="23" width="18" height="2"  fill="#d0d0c0"/>
+<rect x="70" y="25" width="12" height="2"  fill="#b0b0a0"/>
+<rect x="72" y="27" width="8"  height="2"  fill="#909080"/>
+
+<!-- HEAD — profile RIGHT, narrow -->
+<rect x="34" y="47" width="16" height="6"  fill="#e8b060"/>
+<rect x="36" y="47" width="12" height="5"  fill="#f0c070"/>
+<!-- Face block x=28..52, y=36..53 -->
+<rect x="28" y="36" width="24" height="17" fill="#f0c070"/>
+<rect x="30" y="36" width="16" height="6"  fill="#f8d080"/>
+<rect x="46" y="36" width="6"  height="17" fill="#d8a050"/><!-- back shadow -->
+<rect x="28" y="40" width="8"  height="7"  fill="#f4c878"/><!-- near cheek -->
+<rect x="22" y="40" width="4"  height="6"  fill="#c89040"/><!-- far ear -->
+<rect x="20" y="41" width="3"  height="4"  fill="#e8b060"/>
+<!-- Nose RIGHT -->
+<rect x="50" y="43" width="8"  height="3"  fill="#d8a050"/>
+<rect x="53" y="44" width="8"  height="2"  fill="#e8b060"/>
+<rect x="50" y="46" width="6"  height="2"  fill="#c89040"/>
+<rect x="57" y="45" width="2"  height="2"  fill="#7c3818"/>
+<!-- Eye LEFT side (near side for right-facing) -->
+<rect x="32" y="38" width="10" height="5"  fill="#f4ece0"/>
+<rect x="32" y="38" width="10" height="1"  fill="#d0b888"/>
+<rect x="34" y="39" width="6"  height="4"  fill="#2c1c08"/>
+<rect x="36" y="40" width="2"  height="2"  fill="#080604"/>
+<rect x="32" y="39" width="1"  height="1"  fill="#f8f8f8"/>
+<!-- Eyebrow -->
+<rect x="30" y="36" width="14" height="2"  fill="#2c1c08"/>
+<!-- Jaw / chin RIGHT -->
+<rect x="50" y="48" width="8"  height="4"  fill="#f0c070"/>
+<rect x="54" y="49" width="6"  height="3"  fill="#e0b060"/>
+<rect x="56" y="51" width="6"  height="3"  fill="#d0a050"/>
+<!-- Mouth -->
+<rect x="46" y="48" width="10" height="2"  fill="#b86040"/>
+<rect x="48" y="50" width="8"  height="2"  fill="#984830"/>
+<rect x="46" y="48" width="6"  height="1"  fill="#d08060"/>
+
+<!-- RUFF COLLAR -->
+<rect x="12" y="52" width="80" height="6"  fill="#f0ece0"/>
+<rect x="12" y="52" width="80" height="1"  fill="#ffffff"/>
+<rect x="12" y="53" width="80" height="1"  fill="#d0c8b8"/>
+<rect x="12" y="54" width="80" height="1"  fill="#ece8dc"/>
+<rect x="12" y="55" width="80" height="1"  fill="#c0b8a8"/>
+<rect x="12" y="56" width="80" height="1"  fill="#e4e0d4"/>
+<rect x="12" y="57" width="80" height="1"  fill="#b0a898"/>
+<rect x="16" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="22" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="28" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="34" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="40" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="46" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="52" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="58" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="64" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="70" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="76" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="82" y="53" width="1" height="4" fill="#a8a090"/>
+<rect x="88" y="53" width="1" height="4" fill="#a8a090"/>
+
+<!-- SWORD — right edge -->
+<rect x="97" y="19" width="3"  height="52" fill="#b0b8cc"/>
+<rect x="98" y="19" width="2"  height="52" fill="#e0e4f4"/>
+<rect x="100" y="19" width="1" height="52" fill="#8890a8"/>
+<rect x="97" y="19" width="4"  height="3"  fill="#f0f4ff"/>
+<rect x="83" y="67" width="18" height="4"  fill="#c8a010"/>
+<rect x="82" y="68" width="20" height="2"  fill="#e8c030"/>
+<rect x="97" y="55" width="3"  height="13" fill="#5c1a00"/>
+<rect x="98" y="55" width="2"  height="13" fill="#7a2800"/>
+<rect x="97" y="57" width="3"  height="1"  fill="#3c0c00"/>
+<rect x="97" y="60" width="3"  height="1"  fill="#3c0c00"/>
+<rect x="97" y="63" width="3"  height="1"  fill="#3c0c00"/>
+<rect x="94" y="51" width="8"  height="5"  fill="#c8a010"/>
+<rect x="95" y="52" width="6"  height="3"  fill="#e8c030"/>
+
+<!-- RIGHT SWORD ARM -->
+<rect x="83" y="57" width="18" height="14" fill="#880c00"/>
+<rect x="85" y="59" width="14" height="2"  fill="#e02818"/>
+<rect x="85" y="63" width="14" height="2"  fill="#e02818"/>
+<rect x="97" y="57" width="4"  height="14" fill="#660800"/>
+<rect x="81" y="57" width="20" height="3"  fill="#c8a010"/>
+<rect x="81" y="57" width="20" height="1"  fill="#e8c030"/>
+<rect x="85" y="58" width="2"  height="2"  fill="#f0d040"/>
+<rect x="91" y="58" width="2"  height="2"  fill="#f0d040"/>
+<rect x="86" y="70" width="14" height="4"  fill="#c8a010"/>
+<rect x="87" y="71" width="12" height="2"  fill="#e8c030"/>
+<rect x="90" y="73" width="10" height="5"  fill="#f0c070"/>
+
+<!-- TORSO — J♥ gold diagonal top-left→bottom-right -->
+<rect x="10" y="57" width="74" height="30" fill="#880c00"/>
+<!-- Gold band -->
+<rect x="10" y="57" width="14" height="4"  fill="#c8a010"/>
+<rect x="16" y="61" width="14" height="4"  fill="#c8a010"/>
+<rect x="22" y="65" width="14" height="4"  fill="#c8a010"/>
+<rect x="28" y="69" width="14" height="4"  fill="#c8a010"/>
+<rect x="34" y="73" width="14" height="4"  fill="#c8a010"/>
+<rect x="40" y="77" width="14" height="4"  fill="#c8a010"/>
+<rect x="46" y="81" width="14" height="4"  fill="#c8a010"/>
+<rect x="12" y="57" width="10" height="1"  fill="#f0d040"/>
+<rect x="18" y="61" width="10" height="1"  fill="#f0d040"/>
+<rect x="24" y="65" width="10" height="1"  fill="#f0d040"/>
+<rect x="30" y="69" width="10" height="1"  fill="#f0d040"/>
+<rect x="36" y="73" width="10" height="1"  fill="#f0d040"/>
+<rect x="42" y="77" width="10" height="1"  fill="#f0d040"/>
+<rect x="48" y="81" width="10" height="1"  fill="#f0d040"/>
+<!-- Olive panel -->
+<rect x="24" y="57" width="60" height="4"  fill="#3c5210"/>
+<rect x="30" y="61" width="54" height="4"  fill="#3c5210"/>
+<rect x="36" y="65" width="48" height="4"  fill="#3c5210"/>
+<rect x="42" y="69" width="42" height="4"  fill="#3c5210"/>
+<rect x="48" y="73" width="36" height="4"  fill="#3c5210"/>
+<rect x="54" y="77" width="30" height="4"  fill="#3c5210"/>
+<rect x="60" y="81" width="24" height="4"  fill="#3c5210"/>
+<rect x="24" y="58" width="60" height="1"  fill="#2e4008"/>
+<rect x="30" y="62" width="54" height="1"  fill="#2e4008"/>
+<rect x="36" y="66" width="48" height="1"  fill="#2e4008"/>
+<rect x="42" y="70" width="42" height="1"  fill="#2e4008"/>
+<rect x="48" y="74" width="36" height="1"  fill="#2e4008"/>
+<rect x="54" y="78" width="30" height="1"  fill="#2e4008"/>
+<!-- Olive ornaments -->
+<rect x="26" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="28" y="61" width="2" height="2" fill="#3c5210"/>
+<rect x="36" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="38" y="61" width="2" height="2" fill="#3c5210"/>
+<rect x="46" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="48" y="61" width="2" height="2" fill="#3c5210"/>
+<rect x="56" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="58" y="61" width="2" height="2" fill="#3c5210"/>
+<rect x="66" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="68" y="61" width="2" height="2" fill="#3c5210"/>
+<rect x="76" y="59" width="6" height="6" fill="#c8a010"/>
+<rect x="78" y="61" width="2" height="2" fill="#3c5210"/>
+<rect x="42" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="44" y="65" width="2" height="2" fill="#3c5210"/>
+<rect x="52" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="54" y="65" width="2" height="2" fill="#3c5210"/>
+<rect x="62" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="64" y="65" width="2" height="2" fill="#3c5210"/>
+<rect x="72" y="63" width="6" height="6" fill="#c8a010"/>
+<rect x="74" y="65" width="2" height="2" fill="#3c5210"/>
+<rect x="82" y="63" width="2" height="6" fill="#c8a010"/>
+<rect x="50" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="52" y="73" width="2" height="2" fill="#3c5210"/>
+<rect x="60" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="62" y="73" width="2" height="2" fill="#3c5210"/>
+<rect x="70" y="71" width="6" height="6" fill="#c8a010"/>
+<rect x="72" y="73" width="2" height="2" fill="#3c5210"/>
+<rect x="80" y="71" width="4" height="6" fill="#c8a010"/>
+<rect x="56" y="79" width="6" height="6" fill="#c8a010"/>
+<rect x="58" y="81" width="2" height="2" fill="#3c5210"/>
+<rect x="66" y="79" width="6" height="6" fill="#c8a010"/>
+<rect x="68" y="81" width="2" height="2" fill="#3c5210"/>
+<rect x="76" y="79" width="4" height="6" fill="#c8a010"/>
+<!-- Red left panel -->
+<rect x="10" y="59" width="4"  height="4"  fill="#aa1400"/>
+<rect x="10" y="63" width="10" height="4"  fill="#aa1400"/>
+<rect x="10" y="67" width="16" height="4"  fill="#aa1400"/>
+<rect x="10" y="71" width="22" height="4"  fill="#aa1400"/>
+<rect x="10" y="75" width="28" height="4"  fill="#aa1400"/>
+<rect x="10" y="79" width="34" height="4"  fill="#aa1400"/>
+<rect x="10" y="83" width="40" height="2"  fill="#aa1400"/>
+<rect x="12" y="65" width="4" height="4" fill="#c8a010"/>
+<rect x="13" y="64" width="2" height="6" fill="#c8a010"/>
+<rect x="12" y="73" width="4" height="4" fill="#c8a010"/>
+<rect x="13" y="72" width="2" height="6" fill="#c8a010"/>
+<rect x="20" y="73" width="4" height="4" fill="#c8a010"/>
+<rect x="21" y="72" width="2" height="6" fill="#c8a010"/>
+<!-- Left arm -->
+<rect x="9"  y="57" width="14" height="14" fill="#3c5210"/>
+<rect x="11" y="59" width="10" height="2"  fill="#c8a010"/>
+<rect x="11" y="63" width="10" height="2"  fill="#c8a010"/>
+<rect x="9"  y="57" width="4"  height="14" fill="#2e4008"/>
+<rect x="9"  y="57" width="16" height="3"  fill="#c8a010"/>
+<rect x="9"  y="57" width="16" height="1"  fill="#e8c030"/>
+<!-- Hem -->
+<rect x="10" y="83" width="74" height="2"  fill="#c8a010"/>
+<rect x="10" y="83" width="74" height="1"  fill="#e8c030"/>
+
+<!-- CENTER DIVIDER -->
+<rect x="8" y="87" width="94" height="5" fill="#1c1c2a"/>
+<rect x="8" y="87" width="94" height="1" fill="#c8a010"/>
+<rect x="8" y="91" width="94" height="1" fill="#c8a010"/>
+<rect x="13" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="24" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="35" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="46" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="57" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="68" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="79" y="88" width="3" height="3" fill="#c8a010"/>
+<rect x="90" y="88" width="3" height="3" fill="#c8a010"/>
+
+<!-- BOTTOM HALF — mirrored elements for J♥ -->
+<!-- Hair columns bottom half -->
+<rect x="54" y="114" width="2" height="18" fill="#c06818" transform="rotate(180,55,89)"/>
+<rect x="56" y="114" width="2" height="19" fill="#c87020" transform="rotate(180,55,89)"/>
+<rect x="58" y="114" width="2" height="20" fill="#d07828" transform="rotate(180,55,89)"/>
+<rect x="60" y="114" width="2" height="21" fill="#d88030" transform="rotate(180,55,89)"/>
+<rect x="62" y="114" width="2" height="22" fill="#e08838" transform="rotate(180,55,89)"/>
+<rect x="64" y="114" width="2" height="22" fill="#e88e3c" transform="rotate(180,55,89)"/>
+<rect x="66" y="114" width="2" height="22" fill="#e08838" transform="rotate(180,55,89)"/>
+<rect x="68" y="114" width="2" height="20" fill="#d87e30" transform="rotate(180,55,89)"/>
+<rect x="70" y="114" width="2" height="17" fill="#d07428" transform="rotate(180,55,89)"/>
+<rect x="72" y="114" width="2" height="14" fill="#c86a20" transform="rotate(180,55,89)"/>
+<rect x="74" y="114" width="2" height="11" fill="#c06018" transform="rotate(180,55,89)"/>
+<rect x="76" y="114" width="2" height="8"  fill="#b85610" transform="rotate(180,55,89)"/>
+<rect x="78" y="114" width="2" height="5"  fill="#b04e0c" transform="rotate(180,55,89)"/>
+<rect x="80" y="114" width="2" height="3"  fill="#a8480c" transform="rotate(180,55,89)"/>
+<rect x="82" y="114" width="2" height="2"  fill="#a0440a" transform="rotate(180,55,89)"/>
+<!-- Curl lobes bottom -->
+<rect x="70" y="106" width="14" height="2" fill="#b85610" transform="rotate(180,55,89)"/>
+<rect x="72" y="104" width="16" height="2" fill="#c06018" transform="rotate(180,55,89)"/>
+<rect x="74" y="102" width="16" height="2" fill="#c86820" transform="rotate(180,55,89)"/>
+<rect x="74" y="100" width="14" height="2" fill="#c06018" transform="rotate(180,55,89)"/>
+<rect x="72" y="98"  width="12" height="2" fill="#b85610" transform="rotate(180,55,89)"/>
+<rect x="70" y="96"  width="8"  height="2" fill="#b04e0c" transform="rotate(180,55,89)"/>
+<rect x="68" y="94"  width="6"  height="2" fill="#a8480c" transform="rotate(180,55,89)"/>
+<rect x="66" y="92"  width="4"  height="2" fill="#a0440a" transform="rotate(180,55,89)"/>
+<rect x="64" y="90"  width="2"  height="2" fill="#984008" transform="rotate(180,55,89)"/>
+<rect x="58" y="102" width="14" height="2" fill="#c06018" transform="rotate(180,55,89)"/>
+<rect x="56" y="100" width="16" height="2" fill="#c86820" transform="rotate(180,55,89)"/>
+<rect x="56" y="98"  width="14" height="2" fill="#c06018" transform="rotate(180,55,89)"/>
+<rect x="58" y="96"  width="12" height="2" fill="#b85610" transform="rotate(180,55,89)"/>
+<rect x="60" y="94"  width="8"  height="2" fill="#b04e0c" transform="rotate(180,55,89)"/>
+<rect x="62" y="92"  width="6"  height="2" fill="#a8480c" transform="rotate(180,55,89)"/>
+<rect x="64" y="90"  width="4"  height="2" fill="#a0440a" transform="rotate(180,55,89)"/>
+<rect x="66" y="90"  width="2"  height="2" fill="#984008" transform="rotate(180,55,89)"/>
+<rect x="44" y="102" width="12" height="2" fill="#c86820" transform="rotate(180,55,89)"/>
+<rect x="42" y="100" width="14" height="2" fill="#c06018" transform="rotate(180,55,89)"/>
+<rect x="42" y="98"  width="12" height="2" fill="#b85610" transform="rotate(180,55,89)"/>
+<rect x="44" y="96"  width="10" height="2" fill="#b04e0c" transform="rotate(180,55,89)"/>
+<rect x="46" y="94"  width="8"  height="2" fill="#a8480c" transform="rotate(180,55,89)"/>
+<rect x="48" y="92"  width="6"  height="2" fill="#a0440a" transform="rotate(180,55,89)"/>
+<rect x="50" y="90"  width="4"  height="2" fill="#984008" transform="rotate(180,55,89)"/>
+<rect x="52" y="90"  width="2"  height="2" fill="#904008" transform="rotate(180,55,89)"/>
+<!-- Hat bottom — drawn over hair -->
+<rect x="16" y="119" width="42" height="11" fill="#7a0800" transform="rotate(180,55,89)"/>
+<rect x="16" y="119" width="42" height="4"  fill="#cc1100" transform="rotate(180,55,89)"/>
+<rect x="14" y="114" width="46" height="2"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="12" y="111" width="72" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="10" y="110" width="74" height="2"  fill="#d8b018" transform="rotate(180,55,89)"/>
+<rect x="10" y="109" width="74" height="1"  fill="#a88808" transform="rotate(180,55,89)"/>
+<!-- Head bottom -->
+<rect x="28" y="101" width="24" height="17" fill="#f0c070" transform="rotate(180,55,89)"/>
+<rect x="32" y="101" width="10" height="5"  fill="#f4ece0" transform="rotate(180,55,89)"/>
+<rect x="34" y="101" width="6"  height="4"  fill="#2c1c08" transform="rotate(180,55,89)"/>
+<rect x="50" y="105" width="8"  height="3"  fill="#d8a050" transform="rotate(180,55,89)"/>
+<rect x="50" y="110" width="8"  height="4"  fill="#f0c070" transform="rotate(180,55,89)"/>
+<rect x="30" y="100" width="14" height="2"  fill="#2c1c08" transform="rotate(180,55,89)"/>
+<!-- Collar bottom -->
+<rect x="12" y="97" width="80" height="6"  fill="#f0ece0" transform="rotate(180,55,89)"/>
+<!-- Sword bottom -->
+<rect x="97" y="83" width="3"  height="52" fill="#b0b8cc" transform="rotate(180,55,89)"/>
+<rect x="98" y="83" width="2"  height="52" fill="#e0e4f4" transform="rotate(180,55,89)"/>
+<rect x="83" y="83" width="18" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="82" y="83" width="20" height="2"  fill="#e8c030" transform="rotate(180,55,89)"/>
+<!-- Arm bottom -->
+<rect x="83" y="83" width="18" height="14" fill="#880c00" transform="rotate(180,55,89)"/>
+<rect x="81" y="83" width="20" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="90" y="83" width="10" height="5"  fill="#f0c070" transform="rotate(180,55,89)"/>
+<!-- Torso bottom -->
+<rect x="10" y="83" width="74" height="30" fill="#880c00" transform="rotate(180,55,89)"/>
+<rect x="10" y="83" width="14" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="16" y="87" width="14" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="22" y="91" width="14" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="28" y="95" width="14" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="34" y="99" width="14" height="4"  fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="40" y="103" width="14" height="4" fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="46" y="107" width="14" height="4" fill="#c8a010" transform="rotate(180,55,89)"/>
+<rect x="24" y="83" width="60" height="4"  fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="30" y="87" width="54" height="4"  fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="36" y="91" width="48" height="4"  fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="42" y="95" width="42" height="4"  fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="48" y="99" width="36" height="4"  fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="54" y="103" width="30" height="4" fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="60" y="107" width="24" height="4" fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="9"  y="83" width="14" height="14" fill="#3c5210" transform="rotate(180,55,89)"/>
+<rect x="9"  y="83" width="16" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+
+<!-- ══ LARGE INNER PIPS ══ -->
+<!-- Top-left pip inside inner border -->
+<rect x="9" y="19" width="18" height="20" fill="#fdf8ee"/>
+<text x="10" y="36" font-family="'Press Start 2P'" font-size="18" fill="#cc1100">♥</text>
+<!-- Bottom-right pip inside inner border -->
+<rect x="83" y="115" width="18" height="20" fill="#fdf8ee"/>
+<text x="84" y="132" font-family="'Press Start 2P'" font-size="18"
+      fill="#cc1100" transform="rotate(180,92,128)">♥</text>
+
+</svg>
+</div>
+<p class="clbl">J♥ — 2× zoom</p>
+<p class="note">Hat now drawn over hair — no grey bleed. Large ♥ pips inside border.</p>
+</div>
+
+
+<!-- ACTUAL SIZE PAIR -->
+<div class="wrap">
+  <div style="display:flex;flex-direction:column;gap:10px;align-items:center;">
+
+  <!-- J♠ actual -->
+  <div class="card">
+  <svg width="110" height="154" viewBox="0 0 110 154" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+  <rect x="1" y="1" width="108" height="152" rx="4" fill="none" stroke="#1c1c2a" stroke-width="2"/>
+  <text x="3" y="8"   font-family="'Press Start 2P'" font-size="6" fill="#111111">J</text>
+  <text x="3" y="16"  font-family="'Press Start 2P'" font-size="7" fill="#111111">♠</text>
+  <text x="107" y="148" font-family="'Press Start 2P'" font-size="6" fill="#111111" transform="rotate(180,107,144)">J</text>
+  <text x="107" y="148" font-family="'Press Start 2P'" font-size="7" fill="#111111" transform="rotate(180,106,140)">♠</text>
+  <rect x="8" y="18" width="94" height="118" fill="none" stroke="#1c1c2a" stroke-width="1"/>
+  <!-- Hair columns -->
+  <rect x="54" y="22" width="2" height="18" fill="#d4a61e"/>
+  <rect x="52" y="21" width="2" height="19" fill="#dca820"/>
+  <rect x="50" y="20" width="2" height="20" fill="#e4b024"/>
+  <rect x="48" y="19" width="2" height="21" fill="#ecbc2c"/>
+  <rect x="46" y="18" width="2" height="22" fill="#f2c230"/>
+  <rect x="44" y="18" width="2" height="23" fill="#f6c832"/>
+  <rect x="42" y="18" width="2" height="22" fill="#f2c230"/>
+  <rect x="40" y="19" width="2" height="20" fill="#eab828"/>
+  <rect x="38" y="20" width="2" height="18" fill="#e0ae22"/>
+  <rect x="36" y="21" width="2" height="15" fill="#d6a41c"/>
+  <rect x="34" y="22" width="2" height="12" fill="#cc9a18"/>
+  <rect x="32" y="23" width="2" height="9"  fill="#c09014"/>
+  <rect x="30" y="24" width="2" height="6"  fill="#b48810"/>
+  <rect x="28" y="25" width="2" height="4"  fill="#a87e0c"/>
+  <rect x="26" y="26" width="2" height="2"  fill="#9c740a"/>
+  <!-- Lobe A -->
+  <rect x="24" y="32" width="14" height="2" fill="#b48810"/>
+  <rect x="22" y="34" width="16" height="2" fill="#bc9014"/>
+  <rect x="20" y="36" width="16" height="2" fill="#c49818"/>
+  <rect x="20" y="38" width="14" height="2" fill="#bc9014"/>
+  <rect x="22" y="40" width="12" height="2" fill="#b48810"/>
+  <rect x="24" y="42" width="8"  height="2" fill="#ac800c"/>
+  <rect x="26" y="44" width="6"  height="2" fill="#a47808"/>
+  <rect x="28" y="46" width="4"  height="2" fill="#9c7008"/>
+  <rect x="30" y="48" width="2"  height="2" fill="#946806"/>
+  <!-- Lobe B -->
+  <rect x="32" y="36" width="14" height="2" fill="#bc9014"/>
+  <rect x="30" y="38" width="16" height="2" fill="#c49818"/>
+  <rect x="30" y="40" width="14" height="2" fill="#bc9014"/>
+  <rect x="32" y="42" width="12" height="2" fill="#b48810"/>
+  <rect x="34" y="44" width="8"  height="2" fill="#ac800c"/>
+  <rect x="36" y="46" width="6"  height="2" fill="#a47808"/>
+  <rect x="38" y="48" width="4"  height="2" fill="#9c7008"/>
+  <rect x="40" y="50" width="2"  height="2" fill="#946806"/>
+  <!-- Lobe C -->
+  <rect x="44" y="38" width="12" height="2" fill="#c49818"/>
+  <rect x="42" y="40" width="14" height="2" fill="#bc9014"/>
+  <rect x="42" y="42" width="12" height="2" fill="#b48810"/>
+  <rect x="44" y="44" width="8"  height="2" fill="#ac800c"/>
+  <rect x="46" y="46" width="6"  height="2" fill="#a47808"/>
+  <rect x="48" y="48" width="4"  height="2" fill="#9c7008"/>
+  <rect x="50" y="50" width="2"  height="2" fill="#946806"/>
+  <!-- Hat over hair -->
+  <rect x="52" y="19" width="42" height="11" fill="#141418"/>
+  <rect x="52" y="27" width="42" height="4"  fill="#bb1100"/>
+  <rect x="50" y="30" width="46" height="2"  fill="#c8a010"/>
+  <rect x="22" y="32" width="72" height="3"  fill="#c8a010"/>
+  <rect x="20" y="33" width="74" height="2"  fill="#d8b018"/>
+  <rect x="20" y="35" width="74" height="1"  fill="#a88808"/>
+  <!-- Head, collar, sword, arm, torso, divider (abbreviated for actual size) -->
+  <rect x="58" y="36" width="24" height="17" fill="#f0c070"/>
+  <rect x="68" y="38" width="10" height="5"  fill="#f4ece0"/>
+  <rect x="70" y="39" width="6"  height="4"  fill="#2c1c08"/>
+  <rect x="66" y="36" width="14" height="2"  fill="#2c1c08"/>
+  <rect x="52" y="43" width="8"  height="3"  fill="#d8a050"/>
+  <rect x="50" y="44" width="9"  height="2"  fill="#e8b060"/>
+  <rect x="52" y="48" width="8"  height="4"  fill="#f0c070"/>
+  <rect x="18" y="52" width="78" height="6"  fill="#f0ece0"/>
+  <rect x="9"  y="19" width="3"  height="52" fill="#e0e4f4"/>
+  <rect x="9"  y="67" width="18" height="4"  fill="#c8a010"/>
+  <rect x="9"  y="57" width="18" height="14" fill="#c01400"/>
+  <rect x="9"  y="57" width="20" height="3"  fill="#c8a010"/>
+  <rect x="26" y="57" width="76" height="30" fill="#0c1840"/>
+  <rect x="56" y="57" width="14" height="4"  fill="#cc1100"/>
+  <rect x="50" y="61" width="14" height="4"  fill="#cc1100"/>
+  <rect x="44" y="65" width="14" height="4"  fill="#cc1100"/>
+  <rect x="38" y="69" width="14" height="4"  fill="#cc1100"/>
+  <rect x="32" y="73" width="14" height="4"  fill="#cc1100"/>
+  <rect x="26" y="77" width="14" height="4"  fill="#cc1100"/>
+  <rect x="70" y="57" width="32" height="28" fill="#1a3a8c"/>
+  <rect x="8"  y="87" width="94" height="5"  fill="#1c1c2a"/>
+  <rect x="8"  y="87" width="94" height="1"  fill="#c8a010"/>
+  <rect x="8"  y="91" width="94" height="1"  fill="#c8a010"/>
+  <!-- Bottom half abbreviated -->
+  <rect x="26" y="92" width="76" height="30" fill="#0c1840" transform="rotate(180,55,89)"/>
+  <rect x="9"  y="92" width="18" height="14" fill="#c01400" transform="rotate(180,55,89)"/>
+  <rect x="58" y="92" width="24" height="17" fill="#f0c070" transform="rotate(180,55,89)"/>
+  <rect x="18" y="97" width="78" height="6"  fill="#f0ece0" transform="rotate(180,55,89)"/>
+  <rect x="9"  y="92" width="3"  height="42" fill="#e0e4f4" transform="rotate(180,55,89)"/>
+  <rect x="52" y="106" width="42" height="11" fill="#141418" transform="rotate(180,55,89)"/>
+  <rect x="22" y="111" width="72" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+  <!-- Large pips -->
+  <rect x="9" y="19" width="18" height="20" fill="#fdf8ee"/>
+  <text x="10" y="36" font-family="'Press Start 2P'" font-size="18" fill="#111111">♠</text>
+  <rect x="83" y="115" width="18" height="20" fill="#fdf8ee"/>
+  <text x="84" y="132" font-family="'Press Start 2P'" font-size="18" fill="#111111" transform="rotate(180,92,128)">♠</text>
+  </svg>
+  </div>
+
+  <!-- J♥ actual -->
+  <div class="card">
+  <svg width="110" height="154" viewBox="0 0 110 154" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <rect width="110" height="154" rx="5" fill="#fdf8ee"/>
+  <rect x="1" y="1" width="108" height="152" rx="4" fill="none" stroke="#1c1c2a" stroke-width="2"/>
+  <text x="3" y="8"   font-family="'Press Start 2P'" font-size="6" fill="#cc1100">J</text>
+  <text x="3" y="16"  font-family="'Press Start 2P'" font-size="7" fill="#cc1100">♥</text>
+  <text x="107" y="148" font-family="'Press Start 2P'" font-size="6" fill="#cc1100" transform="rotate(180,107,144)">J</text>
+  <text x="107" y="148" font-family="'Press Start 2P'" font-size="7" fill="#cc1100" transform="rotate(180,106,140)">♥</text>
+  <rect x="8" y="18" width="94" height="118" fill="none" stroke="#1c1c2a" stroke-width="1"/>
+  <!-- Hair -->
+  <rect x="54" y="22" width="2" height="18" fill="#c06818"/>
+  <rect x="56" y="21" width="2" height="19" fill="#c87020"/>
+  <rect x="58" y="20" width="2" height="20" fill="#d07828"/>
+  <rect x="60" y="19" width="2" height="21" fill="#d88030"/>
+  <rect x="62" y="18" width="2" height="22" fill="#e08838"/>
+  <rect x="64" y="18" width="2" height="22" fill="#e88e3c"/>
+  <rect x="66" y="18" width="2" height="22" fill="#e08838"/>
+  <rect x="68" y="19" width="2" height="20" fill="#d87e30"/>
+  <rect x="70" y="20" width="2" height="17" fill="#d07428"/>
+  <rect x="72" y="21" width="2" height="14" fill="#c86a20"/>
+  <rect x="74" y="22" width="2" height="11" fill="#c06018"/>
+  <rect x="76" y="23" width="2" height="8"  fill="#b85610"/>
+  <rect x="78" y="24" width="2" height="5"  fill="#b04e0c"/>
+  <rect x="80" y="25" width="2" height="3"  fill="#a8480c"/>
+  <rect x="82" y="26" width="2" height="2"  fill="#a0440a"/>
+  <!-- Curl lobes -->
+  <rect x="70" y="32" width="14" height="2" fill="#b85610"/>
+  <rect x="72" y="34" width="16" height="2" fill="#c06018"/>
+  <rect x="74" y="36" width="16" height="2" fill="#c86820"/>
+  <rect x="74" y="38" width="14" height="2" fill="#c06018"/>
+  <rect x="72" y="40" width="12" height="2" fill="#b85610"/>
+  <rect x="70" y="42" width="8"  height="2" fill="#b04e0c"/>
+  <rect x="68" y="44" width="6"  height="2" fill="#a8480c"/>
+  <rect x="66" y="46" width="4"  height="2" fill="#a0440a"/>
+  <rect x="64" y="48" width="2"  height="2" fill="#984008"/>
+  <rect x="58" y="36" width="14" height="2" fill="#c06018"/>
+  <rect x="56" y="38" width="16" height="2" fill="#c86820"/>
+  <rect x="56" y="40" width="14" height="2" fill="#c06018"/>
+  <rect x="58" y="42" width="12" height="2" fill="#b85610"/>
+  <rect x="60" y="44" width="8"  height="2" fill="#b04e0c"/>
+  <rect x="62" y="46" width="6"  height="2" fill="#a8480c"/>
+  <rect x="64" y="48" width="4"  height="2" fill="#a0440a"/>
+  <rect x="66" y="50" width="2"  height="2" fill="#984008"/>
+  <!-- Hat over hair -->
+  <rect x="16" y="19" width="42" height="11" fill="#7a0800"/>
+  <rect x="16" y="27" width="42" height="4"  fill="#cc1100"/>
+  <rect x="14" y="30" width="46" height="2"  fill="#c8a010"/>
+  <rect x="12" y="32" width="72" height="3"  fill="#c8a010"/>
+  <rect x="10" y="33" width="74" height="2"  fill="#d8b018"/>
+  <rect x="10" y="35" width="74" height="1"  fill="#a88808"/>
+  <rect x="58" y="19" width="30" height="2"  fill="#f0f0e0"/>
+  <rect x="62" y="21" width="24" height="2"  fill="#e8e8d8"/>
+  <!-- Head -->
+  <rect x="28" y="36" width="24" height="17" fill="#f0c070"/>
+  <rect x="32" y="38" width="10" height="5"  fill="#f4ece0"/>
+  <rect x="34" y="39" width="6"  height="4"  fill="#2c1c08"/>
+  <rect x="30" y="36" width="14" height="2"  fill="#2c1c08"/>
+  <rect x="50" y="43" width="8"  height="3"  fill="#d8a050"/>
+  <rect x="50" y="48" width="8"  height="4"  fill="#f0c070"/>
+  <rect x="12" y="52" width="80" height="6"  fill="#f0ece0"/>
+  <!-- Sword right -->
+  <rect x="97" y="19" width="3"  height="52" fill="#e0e4f4"/>
+  <rect x="83" y="67" width="18" height="4"  fill="#c8a010"/>
+  <rect x="83" y="57" width="18" height="14" fill="#880c00"/>
+  <rect x="81" y="57" width="20" height="3"  fill="#c8a010"/>
+  <!-- Torso -->
+  <rect x="10" y="57" width="74" height="30" fill="#880c00"/>
+  <rect x="10" y="57" width="14" height="4"  fill="#c8a010"/>
+  <rect x="16" y="61" width="14" height="4"  fill="#c8a010"/>
+  <rect x="22" y="65" width="14" height="4"  fill="#c8a010"/>
+  <rect x="28" y="69" width="14" height="4"  fill="#c8a010"/>
+  <rect x="34" y="73" width="14" height="4"  fill="#c8a010"/>
+  <rect x="40" y="77" width="14" height="4"  fill="#c8a010"/>
+  <rect x="24" y="57" width="60" height="28" fill="#3c5210"/>
+  <rect x="10" y="63" width="10" height="24" fill="#aa1400"/>
+  <rect x="8"  y="87" width="94" height="5"  fill="#1c1c2a"/>
+  <rect x="8"  y="87" width="94" height="1"  fill="#c8a010"/>
+  <rect x="8"  y="91" width="94" height="1"  fill="#c8a010"/>
+  <!-- Bottom half -->
+  <rect x="10" y="92" width="74" height="30" fill="#880c00" transform="rotate(180,55,89)"/>
+  <rect x="83" y="92" width="18" height="14" fill="#880c00" transform="rotate(180,55,89)"/>
+  <rect x="28" y="92" width="24" height="17" fill="#f0c070" transform="rotate(180,55,89)"/>
+  <rect x="12" y="97" width="80" height="6"  fill="#f0ece0" transform="rotate(180,55,89)"/>
+  <rect x="97" y="92" width="3"  height="42" fill="#e0e4f4" transform="rotate(180,55,89)"/>
+  <rect x="16" y="106" width="42" height="11" fill="#7a0800" transform="rotate(180,55,89)"/>
+  <rect x="12" y="111" width="72" height="3"  fill="#c8a010" transform="rotate(180,55,89)"/>
+  <!-- Large pips -->
+  <rect x="9" y="19" width="18" height="20" fill="#fdf8ee"/>
+  <text x="10" y="36" font-family="'Press Start 2P'" font-size="18" fill="#cc1100">♥</text>
+  <rect x="83" y="115" width="18" height="20" fill="#fdf8ee"/>
+  <text x="84" y="132" font-family="'Press Start 2P'" font-size="18" fill="#cc1100" transform="rotate(180,92,128)">♥</text>
+  </svg>
+  </div>
+
+  </div>
+  <p class="clbl">actual size</p>
+</div>
+
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section style="position:relative;z-index:1;">
+  <p class="lbl">Changes in v12</p>
+  <div style="font-family:'VT323',monospace;font-size:16px;color:var(--ylp);line-height:2.4;letter-spacing:1px;max-width:860px;">
+    <p>① <span style="color:var(--yel);">Rotation center corrected</span> — v11 shifted the center divider from y=74 to y=87 (to make room for the inner border at y=18), but kept <code>rotate(180,55,77)</code> for the bottom half. This was wrong: the new card midpoint is y=89. All 172 bottom-half transforms changed to <code>rotate(180,55,89)</code>.</p>
+    <p>② <span style="color:var(--yel);">Inner border + large pips inherited from v11</span> — the border system and large corner pip layout from v11 is preserved, now rendering correctly with the fixed rotation.</p>
+  </div>
+</section>
+
+</body>
+</html>

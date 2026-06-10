@@ -1,0 +1,118 @@
+body::before,
+body::after,
+#starLayer1,
+#starLayer2,
+#starLayer3,
+#starLayer4,
+#starLayer5,
+#starLayer6,
+#starLayer7,
+#starLayer8,
+#starLayer9,
+#starLayer10,
+#starLayer11,
+#starLayer12,
+#starLayer13,
+#starLayer14,
+#starLayer15 {
+    content: "";
+    position: fixed;
+    white-space: pre;
+    font-family: monospace;
+    font-size: 10px;
+    pointer-events: none;
+    z-index: 0;
+    line-height: 1.2;
+    width: 200vw;
+    height: 200vh;
+    max-width: 355.56vh; /* 200% of game container max-width */
+    max-height: 112.5vw; /* 200% of game container max-height */
+    /* Clip stars to center area matching game container */
+    left: 50%;
+    top: 50%;
+}
+
+body::before {
+    transform: translate(-100%, -100%);
+    color: rgba(255, 255, 255, 0.32);
+}
+
+body::after {
+    transform: translate(-50%, -100%);
+    color: rgba(255, 255, 255, 0.30);
+}
+
+#starLayer1 {
+    transform: translate(0%, -100%);
+    color: rgba(255, 255, 255, 0.31);
+}
+
+#starLayer2 {
+    transform: translate(-100%, -50%);
+    color: rgba(255, 255, 255, 0.33);
+}
+
+#starLayer3 {
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.29);
+}
+
+#starLayer4 {
+    transform: translate(0%, -50%);
+    color: rgba(255, 255, 255, 0.32);
+}
+
+#starLayer5 {
+    transform: translate(-100%, 0%);
+    color: rgba(255, 255, 255, 0.30);
+}
+
+#starLayer6 {
+    transform: translate(-50%, 0%);
+    color: rgba(255, 255, 255, 0.31);
+}
+
+#starLayer7 {
+    transform: translate(0%, 0%);
+    color: rgba(255, 255, 255, 0.33);
+}
+
+#starLayer8 {
+    transform: translate(-75%, -75%);
+    color: rgba(255, 255, 255, 0.28);
+}
+
+#starLayer9 {
+    transform: translate(-25%, -75%);
+    color: rgba(255, 255, 255, 0.30);
+}
+
+#starLayer10 {
+    transform: translate(-75%, -25%);
+    color: rgba(255, 255, 255, 0.29);
+}
+
+#starLayer11 {
+    transform: translate(-25%, -25%);
+    color: rgba(255, 255, 255, 0.31);
+}
+
+#starLayer12 {
+    transform: translate(25%, -25%);
+    color: rgba(255, 255, 255, 0.30);
+}
+
+#starLayer13 {
+    transform: translate(-75%, 25%);
+    color: rgba(255, 255, 255, 0.32);
+}
+
+#starLayer14 {
+    transform: translate(-25%, 25%);
+    color: rgba(255, 255, 255, 0.29);
+}
+
+#starLayer15 {
+    transform: translate(25%, 25%);
+    color: rgba(255, 255, 255, 0.31);
+}

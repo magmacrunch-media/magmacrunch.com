@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOLD — Face Cards v7</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black:#0a0000; --deep-red:#3b0000;
+  --og:#ff7700; --yel:#ffcc00; --ylp:#ffe680; --ora:#dd4400;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--black);font-family:'Press Start 2P',monospace;
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;padding:32px 16px 80px;position:relative;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.18) 3px,rgba(0,0,0,0.18) 4px),
+    radial-gradient(ellipse 80% 60% at 50% 100%,rgba(180,40,0,0.35) 0%,transparent 70%);
+}
+h1,.sub,section,.row{position:relative;z-index:1;}
+h1{color:var(--yel);font-size:clamp(9px,2vw,13px);text-align:center;
+   letter-spacing:2px;margin-bottom:6px;
+   text-shadow:2px 2px 0 #cc2200,4px 4px 0 #3b0000;}
+.sub{font-family:'VT323',monospace;color:var(--og);font-size:18px;
+     letter-spacing:3px;text-align:center;margin-bottom:40px;}
+section{width:100%;max-width:1200px;margin-bottom:48px;}
+.lbl{font-size:7px;color:var(--og);letter-spacing:3px;text-transform:uppercase;
+     margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid var(--deep-red);}
+.row{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start;}
+.wrap{display:flex;flex-direction:column;align-items:center;gap:10px;}
+.clbl{font-size:6px;color:var(--ora);letter-spacing:1px;}
+.note{font-family:'VT323',monospace;font-size:14px;color:var(--og);
+      text-align:center;line-height:1.5;max-width:160px;}
+.div{width:100%;max-width:1200px;height:3px;position:relative;z-index:1;
+     background:linear-gradient(90deg,transparent,var(--ora),var(--yel),var(--ora),transparent);
+     margin:8px 0 40px;}
+.card{border-radius:6px;overflow:hidden;
+      box-shadow:3px 3px 0 var(--black),6px 6px 0 rgba(0,0,0,0.3);
+      transition:transform .12s,box-shadow .12s;}
+.card:hover{transform:translateY(-8px) scale(1.03);
+            box-shadow:3px 12px 0 var(--black),6px 16px 0 rgba(0,0,0,0.3);}
+</style>
+</head>
+<body>
+
+<h1>TEXAS HOLD'EM LAVA DOME</h1>
+<p class="sub">— face cards v7 —</p>
+
+<!--
+═══════════════════════════════════════════════════════════
+  CHANGES IN v7
+  ─────────────
+  1. NO central suit pip.
+     The figure runs uninterrupted top to bottom.
+
+  2. LARGER corner labels.
+     Corner patch: 22×32px. Rank font: 13px. Suit font: 13px.
+     Both rank and suit are big and bold.
+
+  3. TAPERED body silhouette.
+     Instead of solid rectangles, the shoulder is wide (~100px)
+     and tapers to a narrower waist (~70px) using staggered
+     pixel rows — giving a proper tunic/doublet shape.
+     The red sash cuts diagonally across using stepped rows.
+     The blue panel on the right also has a stepped left edge.
+
+  4. Figure zone uses full card width more aggressively:
+     x=4..106 for the body, with only the corner patches
+     reserved at top-left and bottom-right.
+
+  Card: 110×154 viewBox.
+  Pivot for rotation: (55, 77).
+  Top half: y=0..77. Bottom: rotate(180,55,77) of same.
+  Head zone: y=4..32 (28px — still compact).
+  Body zone: y=32..77 (45px).
+═══════════════════════════════════════════════════════════
+-->
+
+<section>
+  <p class="lbl">Jack of Spades · Jack of Hearts — v7</p>
+  <div class="row">
+
+    <!-- ══════════════════════════════════
+         JACK OF SPADES  —  faces LEFT
+         ══════════════════════════════════ -->
+    <div class="wrap">
+    <div class="card">
+    <svg width="220" height="308" viewBox="0 0 110 154"
+         xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+    <defs>
+
+      <!--
+        TOP HALF for J♠ — faces LEFT.
+        Head: y=4..32.  Body: y=32..77.
+        Left side = back of head / sword arm.
+        Right side = face / blue panel.
+      -->
+      <g id="s-half">
+
+        <!-- ════ HAT ════ -->
+        <!-- Crown — red, slightly narrower than shoulders -->
+        <rect x="30" y="4"  width="52" height="8"  fill="#cc1100"/>
+        <!-- Brim — gold, spans wider -->
+        <rect x="22" y="11" width="68" height="4"  fill="#c8a820"/>
+        <rect x="20" y="13" width="72" height="3"  fill="#e8c040"/>
+        <!-- Hat top accent -->
+        <rect x="32" y="4"  width="48" height="2"  fill="#e8c040"/>
+        <!-- Feather — sweeps LEFT (facing-left jack) -->
+        <rect x="4"  y="4"  width="28" height="2"  fill="#e8c040"/>
+        <rect x="4"  y="6"  width="22" height="2"  fill="#e8c040"/>
+        <rect x="4"  y="8"  width="16" height="2"  fill="#cc1100"/>
+        <rect x="4"  y="10" width="12" height="2"  fill="#881000"/>
+
+        <!-- ════ HAIR — left strip ════ -->
+        <rect x="18" y="15" width="8"  height="18" fill="#1c1008"/>
+
+        <!-- ════ HEAD — profile facing LEFT ════ -->
+        <!--
+          Face block: x=24..90, y=15..32.
+          That's 66px wide × 17px tall — compact, not dominant.
+          Profile left means: nose/chin push LEFT, eye on RIGHT portion.
+        -->
+        <!-- Main skin block -->
+        <rect x="24" y="15" width="66" height="17" fill="#f0c070"/>
+        <!-- Lighter forehead -->
+        <rect x="38" y="15" width="34" height="6"  fill="#f8d080"/>
+        <!-- Back-of-head darker (left side) -->
+        <rect x="24" y="15" width="10" height="17" fill="#d8a858"/>
+        <!-- Ear — far ear, right side of head (near side when facing left) -->
+        <rect x="82" y="19" width="6"  height="8"  fill="#c08040"/>
+        <rect x="84" y="20" width="4"  height="6"  fill="#f0c070"/>
+        <!-- Nose bump — protrudes LEFT -->
+        <rect x="20" y="21" width="8"  height="4"  fill="#c08040"/>
+        <rect x="18" y="22" width="6"  height="3"  fill="#f0c070"/>
+        <!-- Jaw/chin — left protrusion -->
+        <rect x="20" y="27" width="10" height="4"  fill="#f0c070"/>
+        <rect x="18" y="28" width="8"  height="3"  fill="#c08040"/>
+        <!-- Eye — right portion of face (facing left) -->
+        <rect x="60" y="19" width="14" height="5"  fill="#f4ece0"/>
+        <rect x="64" y="20" width="8"  height="4"  fill="#1c1008"/>
+        <rect x="66" y="21" width="4"  height="2"  fill="#5858b0"/>
+        <!-- Brow -->
+        <rect x="58" y="18" width="18" height="2"  fill="#1c1008"/>
+        <!-- Mouth -->
+        <rect x="24" y="28" width="12" height="3"  fill="#b06040"/>
+        <rect x="26" y="29" width="8"  height="2"  fill="#803020"/>
+
+        <!-- ════ COLLAR ════ -->
+        <rect x="16" y="32" width="78" height="5"  fill="#f4ece0"/>
+        <rect x="18" y="33" width="74" height="3"  fill="#e4dcd0"/>
+        <!-- Pleat dashes -->
+        <rect x="20" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="26" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="32" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="38" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="44" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="50" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="56" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="62" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="68" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="74" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="80" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="86" y="33" width="2" height="3" fill="#f4ece0"/>
+
+        <!-- ════ SWORD ARM (LEFT SIDE) ════ -->
+        <!-- Shoulder puff — wide at top, tapers -->
+        <rect x="4"  y="37" width="18" height="10" fill="#cc1100"/><!-- shoulder -->
+        <rect x="4"  y="45" width="16" height="8"  fill="#cc1100"/><!-- upper arm taper -->
+        <rect x="4"  y="53" width="14" height="8"  fill="#cc1100"/><!-- forearm -->
+        <!-- Epaulette band -->
+        <rect x="4"  y="45" width="18" height="3"  fill="#c8a820"/>
+        <rect x="4"  y="46" width="18" height="1"  fill="#e8c040"/>
+        <!-- Gauntlet -->
+        <rect x="4"  y="61" width="14" height="8"  fill="#c8a820"/>
+        <rect x="5"  y="62" width="12" height="6"  fill="#e8c040"/>
+        <!-- Fist/hand -->
+        <rect x="4"  y="69" width="12" height="6"  fill="#f0c070"/>
+        <!-- Grip shadow on dark -->
+        <rect x="4"  y="37" width="4"  height="34" fill="#881000"/>
+
+        <!-- ════ SWORD ════ -->
+        <!-- Blade — from top of card, through hat, down to crossguard -->
+        <rect x="10" y="4"  width="4"  height="58" fill="#d8d8e8"/>
+        <rect x="11" y="4"  width="2"  height="58" fill="#f0f0f8"/>
+        <!-- Crossguard -->
+        <rect x="4"  y="60" width="20" height="4"  fill="#c8a820"/>
+        <rect x="2"  y="61" width="24" height="2"  fill="#e8c040"/>
+        <!-- Grip -->
+        <rect x="10" y="42" width="4"  height="20" fill="#6a2000"/>
+        <!-- Pommel -->
+        <rect x="8"  y="38" width="8"  height="5"  fill="#c8a820"/>
+        <rect x="9"  y="39" width="6"  height="3"  fill="#e8c040"/>
+
+        <!-- ════ MAIN TUNIC BODY — tapered silhouette ════ -->
+        <!--
+          SHAPE: wide at shoulders (x=22..106), tapers to waist.
+          Achieved by stepping left edge of blue panel and
+          stepping right edge of red panel row by row.
+          Red is LEFT portion, Blue is RIGHT portion.
+          They meet at a diagonal gold seam.
+
+          Row layout (each 4px tall):
+          y=37: red x=22..54, gold x=54..58, blue x=58..106  (shoulder — widest)
+          y=41: red x=22..52, gold x=52..56, blue x=56..106
+          y=45: red x=22..50, gold x=50..54, blue x=54..106
+          y=49: red x=22..48, gold x=48..52, blue x=52..106
+          y=53: red x=22..46, gold x=46..50, blue x=50..104
+          y=57: red x=22..44, gold x=44..48, blue x=48..102
+          y=61: red x=22..42, gold x=42..46, blue x=46..100
+          y=65: red x=22..42, gold x=42..46, blue x=46..100
+          y=69: red x=22..42, gold x=42..46, blue x=46..100
+          y=73: hem band
+
+          Left edge of red tapers: starts x=22, stays x=22 (sword arm fills left)
+          Right edge of blue tapers from 106 down to 100 (3 steps of 2px)
+        -->
+
+        <!-- Shoulder row y=37..41 -->
+        <rect x="22" y="37" width="32" height="4"  fill="#cc1100"/>
+        <rect x="54" y="37" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="58" y="37" width="48" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=41..45 -->
+        <rect x="22" y="41" width="30" height="4"  fill="#cc1100"/>
+        <rect x="52" y="41" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="56" y="41" width="48" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=45..49 -->
+        <rect x="22" y="45" width="28" height="4"  fill="#cc1100"/>
+        <rect x="50" y="45" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="54" y="45" width="50" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=49..53 -->
+        <rect x="22" y="49" width="26" height="4"  fill="#cc1100"/>
+        <rect x="48" y="49" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="52" y="49" width="52" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=53..57 -->
+        <rect x="22" y="53" width="24" height="4"  fill="#cc1100"/>
+        <rect x="46" y="53" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="50" y="53" width="54" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=57..61 -->
+        <rect x="22" y="57" width="22" height="4"  fill="#cc1100"/>
+        <rect x="44" y="57" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="48" y="57" width="56" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=61..65 (waist — narrowest) -->
+        <rect x="22" y="61" width="20" height="4"  fill="#cc1100"/>
+        <rect x="42" y="61" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="46" y="61" width="56" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=65..69 -->
+        <rect x="22" y="65" width="20" height="4"  fill="#cc1100"/>
+        <rect x="42" y="65" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="46" y="65" width="56" height="4"  fill="#1a46a8"/>
+
+        <!-- Row y=69..73 -->
+        <rect x="22" y="69" width="20" height="4"  fill="#cc1100"/>
+        <rect x="42" y="69" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="46" y="69" width="56" height="4"  fill="#1a46a8"/>
+
+        <!-- Gold hem band -->
+        <rect x="22" y="73" width="84" height="4"  fill="#c8a820"/>
+        <rect x="22" y="74" width="84" height="2"  fill="#e8c040"/>
+
+        <!-- ════ RED SASH DECORATION ════ -->
+        <!-- Small black dots running diagonally on the red sash -->
+        <rect x="26" y="41" width="4" height="4" fill="#111"/>
+        <rect x="26" y="49" width="4" height="4" fill="#111"/>
+        <rect x="26" y="57" width="4" height="4" fill="#111"/>
+        <rect x="32" y="45" width="4" height="4" fill="#111"/>
+        <rect x="32" y="53" width="4" height="4" fill="#111"/>
+        <rect x="32" y="61" width="4" height="4" fill="#111"/>
+
+        <!-- ════ BLUE PANEL DECORATION ════ -->
+        <!-- Gold ornament squares on blue -->
+        <rect x="62" y="41" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="64" y="43" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="74" y="41" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="76" y="43" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="86" y="41" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="88" y="43" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="62" y="55" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="64" y="57" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="74" y="55" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="76" y="57" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="86" y="55" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="88" y="57" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="62" y="65" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="64" y="67" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="74" y="65" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="76" y="67" width="4"  height="4"  fill="#1a46a8"/>
+
+      </g><!-- end spades-half -->
+
+    </defs><!-- end defs -->
+
+    <!-- Card bg + border -->
+    <rect width="110" height="154" fill="#fdf6e8"/>
+    <rect x="3" y="3" width="104" height="148" fill="none"
+          stroke="#c8b898" stroke-width="1"/>
+
+    <!-- TOP half -->
+    <use href="#s-half"/>
+
+    <!-- BOTTOM half — exact rotate(180) of top -->
+    <use href="#s-half" transform="rotate(180,55,77)"/>
+
+    <!-- ════ CORNER LABELS — large, on opaque patch ════ -->
+    <!-- Top-left -->
+    <rect x="3"  y="3"  width="22" height="34" fill="#fdf6e8"/>
+    <text x="5"  y="18" font-family="'Press Start 2P'" font-size="13" fill="#111111">J</text>
+    <text x="4"  y="33" font-family="'Press Start 2P'" font-size="13" fill="#111111">♠</text>
+    <!-- Bottom-right -->
+    <rect x="85" y="117" width="22" height="34" fill="#fdf6e8"/>
+    <text x="87" y="132" font-family="'Press Start 2P'" font-size="13"
+          fill="#111111" transform="rotate(180,96,133)">J</text>
+    <text x="86" y="147" font-family="'Press Start 2P'" font-size="13"
+          fill="#111111" transform="rotate(180,96,148)">♠</text>
+
+    </svg>
+    </div>
+    <p class="clbl">J♠ — 2× zoom</p>
+    <p class="note">No central pip. Large corner labels. Stepped diagonal body taper.</p>
+    </div>
+
+    <!-- ══════════════════════════════════
+         JACK OF HEARTS  —  faces RIGHT
+         Horizontal mirror via scale(-1,1)
+         ══════════════════════════════════ -->
+    <div class="wrap">
+    <div class="card">
+    <svg width="220" height="308" viewBox="0 0 110 154"
+         xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+    <defs>
+      <!-- J♥ = horizontal mirror of J♠ geometry -->
+      <g id="h-half" transform="translate(110,0) scale(-1,1)">
+        <rect x="30" y="4"  width="52" height="8"  fill="#cc1100"/>
+        <rect x="22" y="11" width="68" height="4"  fill="#c8a820"/>
+        <rect x="20" y="13" width="72" height="3"  fill="#e8c040"/>
+        <rect x="32" y="4"  width="48" height="2"  fill="#e8c040"/>
+        <rect x="4"  y="4"  width="28" height="2"  fill="#e8c040"/>
+        <rect x="4"  y="6"  width="22" height="2"  fill="#e8c040"/>
+        <rect x="4"  y="8"  width="16" height="2"  fill="#cc1100"/>
+        <rect x="4"  y="10" width="12" height="2"  fill="#881000"/>
+        <rect x="18" y="15" width="8"  height="18" fill="#1c1008"/>
+        <rect x="24" y="15" width="66" height="17" fill="#f0c070"/>
+        <rect x="38" y="15" width="34" height="6"  fill="#f8d080"/>
+        <rect x="24" y="15" width="10" height="17" fill="#d8a858"/>
+        <rect x="82" y="19" width="6"  height="8"  fill="#c08040"/>
+        <rect x="84" y="20" width="4"  height="6"  fill="#f0c070"/>
+        <rect x="20" y="21" width="8"  height="4"  fill="#c08040"/>
+        <rect x="18" y="22" width="6"  height="3"  fill="#f0c070"/>
+        <rect x="20" y="27" width="10" height="4"  fill="#f0c070"/>
+        <rect x="18" y="28" width="8"  height="3"  fill="#c08040"/>
+        <rect x="60" y="19" width="14" height="5"  fill="#f4ece0"/>
+        <rect x="64" y="20" width="8"  height="4"  fill="#1c1008"/>
+        <rect x="66" y="21" width="4"  height="2"  fill="#5858b0"/>
+        <rect x="58" y="18" width="18" height="2"  fill="#1c1008"/>
+        <rect x="24" y="28" width="12" height="3"  fill="#b06040"/>
+        <rect x="26" y="29" width="8"  height="2"  fill="#803020"/>
+        <rect x="16" y="32" width="78" height="5"  fill="#f4ece0"/>
+        <rect x="18" y="33" width="74" height="3"  fill="#e4dcd0"/>
+        <rect x="20" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="26" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="32" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="38" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="44" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="50" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="56" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="62" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="68" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="74" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="80" y="33" width="2" height="3" fill="#f4ece0"/>
+        <rect x="86" y="33" width="2" height="3" fill="#f4ece0"/>
+        <!-- Sword arm -->
+        <rect x="4"  y="37" width="18" height="10" fill="#cc1100"/>
+        <rect x="4"  y="45" width="16" height="8"  fill="#cc1100"/>
+        <rect x="4"  y="53" width="14" height="8"  fill="#cc1100"/>
+        <rect x="4"  y="45" width="18" height="3"  fill="#c8a820"/>
+        <rect x="4"  y="46" width="18" height="1"  fill="#e8c040"/>
+        <rect x="4"  y="61" width="14" height="8"  fill="#c8a820"/>
+        <rect x="5"  y="62" width="12" height="6"  fill="#e8c040"/>
+        <rect x="4"  y="69" width="12" height="6"  fill="#f0c070"/>
+        <rect x="4"  y="37" width="4"  height="34" fill="#881000"/>
+        <!-- Sword -->
+        <rect x="10" y="4"  width="4"  height="58" fill="#d8d8e8"/>
+        <rect x="11" y="4"  width="2"  height="58" fill="#f0f0f8"/>
+        <rect x="4"  y="60" width="20" height="4"  fill="#c8a820"/>
+        <rect x="2"  y="61" width="24" height="2"  fill="#e8c040"/>
+        <rect x="10" y="42" width="4"  height="20" fill="#6a2000"/>
+        <rect x="8"  y="38" width="8"  height="5"  fill="#c8a820"/>
+        <rect x="9"  y="39" width="6"  height="3"  fill="#e8c040"/>
+        <!-- Body rows — same coordinates, mirror handles flip -->
+        <rect x="22" y="37" width="32" height="4"  fill="#cc1100"/>
+        <rect x="54" y="37" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="58" y="37" width="48" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="41" width="30" height="4"  fill="#cc1100"/>
+        <rect x="52" y="41" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="56" y="41" width="48" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="45" width="28" height="4"  fill="#cc1100"/>
+        <rect x="50" y="45" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="54" y="45" width="50" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="49" width="26" height="4"  fill="#cc1100"/>
+        <rect x="48" y="49" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="52" y="49" width="52" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="53" width="24" height="4"  fill="#cc1100"/>
+        <rect x="46" y="53" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="50" y="53" width="54" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="57" width="22" height="4"  fill="#cc1100"/>
+        <rect x="44" y="57" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="48" y="57" width="56" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="61" width="20" height="4"  fill="#cc1100"/>
+        <rect x="42" y="61" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="46" y="61" width="56" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="65" width="20" height="4"  fill="#cc1100"/>
+        <rect x="42" y="65" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="46" y="65" width="56" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="69" width="20" height="4"  fill="#cc1100"/>
+        <rect x="42" y="69" width="4"  height="4"  fill="#c8a820"/>
+        <rect x="46" y="69" width="56" height="4"  fill="#1a46a8"/>
+        <rect x="22" y="73" width="84" height="4"  fill="#c8a820"/>
+        <rect x="22" y="74" width="84" height="2"  fill="#e8c040"/>
+        <!-- Sash dots -->
+        <rect x="26" y="41" width="4" height="4" fill="#111"/>
+        <rect x="26" y="49" width="4" height="4" fill="#111"/>
+        <rect x="26" y="57" width="4" height="4" fill="#111"/>
+        <rect x="32" y="45" width="4" height="4" fill="#111"/>
+        <rect x="32" y="53" width="4" height="4" fill="#111"/>
+        <rect x="32" y="61" width="4" height="4" fill="#111"/>
+        <!-- Blue ornaments -->
+        <rect x="62" y="41" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="64" y="43" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="74" y="41" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="76" y="43" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="86" y="41" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="88" y="43" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="62" y="55" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="64" y="57" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="74" y="55" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="76" y="57" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="86" y="55" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="88" y="57" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="62" y="65" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="64" y="67" width="4"  height="4"  fill="#1a46a8"/>
+        <rect x="74" y="65" width="8"  height="8"  fill="#e8c040"/>
+        <rect x="76" y="67" width="4"  height="4"  fill="#1a46a8"/>
+      </g>
+    </defs>
+
+    <rect width="110" height="154" fill="#fdf6e8"/>
+    <rect x="3" y="3" width="104" height="148" fill="none"
+          stroke="#c8b898" stroke-width="1"/>
+
+    <use href="#h-half"/>
+    <use href="#h-half" transform="rotate(180,55,77)"/>
+
+    <!-- Corner labels RED -->
+    <rect x="3"  y="3"  width="22" height="34" fill="#fdf6e8"/>
+    <text x="5"  y="18" font-family="'Press Start 2P'" font-size="13" fill="#cc1100">J</text>
+    <text x="4"  y="33" font-family="'Press Start 2P'" font-size="13" fill="#cc1100">♥</text>
+    <rect x="85" y="117" width="22" height="34" fill="#fdf6e8"/>
+    <text x="87" y="132" font-family="'Press Start 2P'" font-size="13"
+          fill="#cc1100" transform="rotate(180,96,133)">J</text>
+    <text x="86" y="147" font-family="'Press Start 2P'" font-size="13"
+          fill="#cc1100" transform="rotate(180,96,148)">♥</text>
+
+    </svg>
+    </div>
+    <p class="clbl">J♥ — 2× zoom</p>
+    <p class="note">Exact scale(-1,1) mirror of J♠. Faces right.</p>
+    </div>
+
+    <!-- ACTUAL SIZE COLUMN -->
+    <div class="wrap">
+      <div style="display:flex;flex-direction:column;gap:16px;align-items:center;">
+        <div class="card">
+        <svg width="110" height="154" viewBox="0 0 110 154"
+             xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect width="110" height="154" fill="#fdf6e8"/>
+          <rect x="3" y="3" width="104" height="148" fill="none" stroke="#c8b898" stroke-width="1"/>
+          <use href="#s-half"/>
+          <use href="#s-half" transform="rotate(180,55,77)"/>
+          <rect x="3"  y="3"  width="22" height="34" fill="#fdf6e8"/>
+          <text x="5"  y="18" font-family="'Press Start 2P'" font-size="13" fill="#111111">J</text>
+          <text x="4"  y="33" font-family="'Press Start 2P'" font-size="13" fill="#111111">♠</text>
+          <rect x="85" y="117" width="22" height="34" fill="#fdf6e8"/>
+          <text x="87" y="132" font-family="'Press Start 2P'" font-size="13"
+                fill="#111111" transform="rotate(180,96,133)">J</text>
+          <text x="86" y="147" font-family="'Press Start 2P'" font-size="13"
+                fill="#111111" transform="rotate(180,96,148)">♠</text>
+        </svg>
+        </div>
+        <div class="card">
+        <svg width="110" height="154" viewBox="0 0 110 154"
+             xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+          <rect width="110" height="154" fill="#fdf6e8"/>
+          <rect x="3" y="3" width="104" height="148" fill="none" stroke="#c8b898" stroke-width="1"/>
+          <use href="#h-half"/>
+          <use href="#h-half" transform="rotate(180,55,77)"/>
+          <rect x="3"  y="3"  width="22" height="34" fill="#fdf6e8"/>
+          <text x="5"  y="18" font-family="'Press Start 2P'" font-size="13" fill="#cc1100">J</text>
+          <text x="4"  y="33" font-family="'Press Start 2P'" font-size="13" fill="#cc1100">♥</text>
+          <rect x="85" y="117" width="22" height="34" fill="#fdf6e8"/>
+          <text x="87" y="132" font-family="'Press Start 2P'" font-size="13"
+                fill="#cc1100" transform="rotate(180,96,133)">J</text>
+          <text x="86" y="147" font-family="'Press Start 2P'" font-size="13"
+                fill="#cc1100" transform="rotate(180,96,148)">♥</text>
+        </svg>
+        </div>
+      </div>
+      <p class="clbl">actual size</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="div"></div>
+
+<section style="position:relative;z-index:1;">
+  <p class="lbl">Changes in v7</p>
+  <div style="font-family:'VT323',monospace;font-size:16px;color:var(--ylp);line-height:2.2;letter-spacing:1px;max-width:700px;">
+    <p>① <span style="color:var(--yel);">No central pip</span> — figure runs uninterrupted. The suit lives only in the corners.</p>
+    <p>② <span style="color:var(--yel);">Larger corners</span> — 22×34px patch, rank + suit both at 13px. Much more prominent.</p>
+    <p>③ <span style="color:var(--yel);">Tapered body</span> — the diagonal gold seam steps 2px left every 4px row, giving a genuine shoulder-to-waist taper rather than a square block. Same stepping on the right edge of the blue panel.</p>
+    <p>④ <span style="color:var(--yel);">J♥ is a true horizontal mirror</span> — scale(-1,1) on the same geometry. Zero drift.</p>
+  </div>
+</section>
+
+</body>
+</html>

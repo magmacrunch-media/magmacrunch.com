@@ -1,0 +1,60 @@
+/* Irvin House shared color palette — slate / steel blue / warm terracotta theme */
+:root {
+    --ih-deep:    #4a5058;
+    --ih-dark:    #6a7278;
+    --ih-muted:   #9098a0;
+    --ih-light:   #b8c8d8;
+    --ih-cream:   #dce8f0;
+    --ih-brand:   #7090b8;
+    --ih-accent:  #80b8c8;
+    --ih-green:   #608850;
+    --ih-cta:     #a86848;
+    --ih-heading: #c8b890;
+    --ih-body:    #907060;
+    --ih-leaf:    #4a7858;
+    --ih-warm:    #d4906a;
+    --ih-sage:    #8888b0;
+    --ih-wheat:   #b8d0b0;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.ih-page { --credit-color: var(--ih-muted); --nav-accent: var(--ih-brand); --nav-glow: rgba(112,144,184,0.4); --nav-brand: var(--ih-accent); --nav-brand-glow: rgba(128,184,200,0.7); }
+body.ih-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.ih-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.ih-page .sub-nav .nav-card::after { display: none; }
+body.ih-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-about: lavender (formerly c-sage) */
+body.ih-page .sub-nav .nav-card.c-about { background: var(--ih-sage); color: var(--ih-deep); border-color: var(--ih-sage); }
+body.ih-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-sage); }
+
+/* c-personnel: steel blue brand (formerly c-blue) */
+body.ih-page .sub-nav .nav-card.c-personnel { background: var(--ih-brand); color: var(--ih-deep); border-color: var(--ih-brand); }
+body.ih-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-brand); }
+
+/* c-recordings: warm terracotta accent (formerly c-cyan) */
+body.ih-page .sub-nav .nav-card.c-recordings { background: var(--ih-accent); color: var(--ih-deep); border-color: var(--ih-accent); }
+body.ih-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-accent); }
+
+/* c-works: terracotta CTA (formerly c-yellow) */
+body.ih-page .sub-nav .nav-card.c-works { background: var(--ih-cta); color: var(--ih-deep); border-color: var(--ih-cta); }
+body.ih-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-cta); }
+
+/* c-events: leaf (formerly c-sage) */
+body.ih-page .sub-nav .nav-card.c-events { background: var(--ih-green); color: var(--ih-deep); border-color: var(--ih-green); }
+body.ih-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-green); }
+
+
+/* About button self-link hider */
+body.ih-page .sub-nav a[href="about.html"] {
+    background: var(--ih-sage);
+    color: var(--ih-deep);
+    border-color: var(--ih-sage);
+}

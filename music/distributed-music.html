@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>distributed music — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../assets/archive.css">
+    <style>
+        /* ── page layout ── */
+        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
+
+        /* ── title color ── */
+        .green-title { color:var(--green); text-shadow:0 0 20px rgba(57,255,110,0.5); }
+        .page-eyebrow { color:var(--green); }
+
+        /* ── divider gradient ── */
+        .section-divider { background: linear-gradient(90deg, transparent, var(--green), var(--purple), var(--green), transparent); }
+
+        /* ── breadcrumb hover ── */
+        .breadcrumb a:hover { color:var(--green); }
+        .breadcrumb .sep { color:var(--green); }
+        .breadcrumb .current { color:var(--green); }
+
+        /* ── intro list ── */
+        .quick-list-wrap {
+            width:100%; max-width:700px;
+            margin-bottom:48px;
+            animation:fadeUp 0.5s 0.05s ease both;
+        }
+        .quick-list-label {
+            font-family:'Press Start 2P',monospace;
+            font-size:7px; color:var(--green);
+            letter-spacing:0.12em; margin-bottom:14px; opacity:0.8;
+            padding:8px 10px;
+            background:var(--green);
+            color:#080808;
+            display:inline-block;
+        }
+        .quick-list {
+            list-style:none; padding:0; margin:0;
+            border:2px solid var(--green);
+            max-height: 220px;
+            overflow-y: auto;
+            background: #080808;
+            image-rendering: pixelated;
+            
+            /* Pixelated box shadow effect */
+            box-shadow: 
+                4px 0 0 0 var(--green),
+                -4px 0 0 0 var(--green),
+                0 4px 0 0 var(--green),
+                0 -4px 0 0 var(--green),
+                0 0 20px rgba(57,255,110,0.2);
+            
+            /* Firefox scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: var(--green) #080808;
+        }
+        .quick-list li { 
+            border-bottom:2px solid #1a1a1a;
+            padding:8px 10px;
+        }
+        .quick-list li:nth-child(even) {
+            background: rgba(57,255,110,0.03);
+        }
+        .quick-list li:last-child { border-bottom: none; }
+        .quick-list li a { 
+            font-family:'Press Start 2P',monospace;
+            font-size:8px; 
+            color:var(--white); 
+            text-decoration:none; 
+            opacity:0.9;
+            transition:all 0.15s;
+            display: block;
+            padding:4px 6px;
+            margin:-4px -6px;
+        }
+        .quick-list li a:hover { 
+            color:var(--green); 
+            opacity:1; 
+            background:#080808;
+            padding-left:10px;
+        }
+
+        /* WebKit (Chrome/Safari/Edge) custom scrollbar styling */
+        .quick-list::-webkit-scrollbar { width: 12px; }
+        .quick-list::-webkit-scrollbar-track { background: #080808; }
+        .quick-list::-webkit-scrollbar-thumb {
+            background: var(--green);
+            border: 2px solid #080808;
+        }
+        .quick-list::-webkit-scrollbar-thumb:hover {
+            background: var(--white);
+        }
+
+        /* ── filter input ── */
+        .quick-list-filter {
+            width: 100%;
+            background: #080808;
+            border: 2px solid var(--green);
+            color: var(--green);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 10px 12px;
+            box-sizing: border-box;
+            outline: none;
+            box-shadow: 0 0 10px rgba(57,255,110,0.2);
+        }
+        .quick-list-filter:focus {
+            box-shadow: 0 0 20px rgba(57,255,110,0.35);
+        }
+        .quick-list-filter::placeholder {
+            color: var(--green);
+            opacity: 0.5;
+        }
+
+        /* ── back to top link ── */
+        .dist-top-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px; 
+            letter-spacing: 0.08em;
+            color: var(--dim); 
+            text-decoration: none;
+            padding: 4px 0;
+            transition: color 0.15s;
+            margin-left: auto; /* Pushes the link to the far right of the flex container */
+            display: flex;
+            align-items: center;
+        }
+        .dist-top-link:hover { 
+            color: var(--green); 
+        }
+
+        /* ── release cards ── */
+        .releases-wrap {
+            width:100%; max-width:700px;
+            animation:fadeUp 0.5s 0.1s ease both;
+        }
+        .releases-label {
+            font-family:'Press Start 2P',monospace;
+            font-size:7px; color:var(--green);
+            letter-spacing:0.12em; margin-bottom:20px; opacity:0.8;
+        }
+        .dist-card {
+            display:flex; gap:0;
+            border:1px solid #1e1e2e;
+            background:var(--deep);
+            margin-bottom:16px;
+            transition:border-color 0.15s;
+            overflow:hidden;
+        }
+        .dist-card:hover { border-color:var(--rose); }
+        .dist-art {
+            width:140px; min-width:140px; height:140px;
+            background:#0d0d18;
+            border-right:1px solid #1e1e2e;
+            flex-shrink:0; overflow:hidden;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .dist-art img {
+            width:100%; height:100%; object-fit:cover; display:block;
+        }
+        .dist-art-placeholder {
+            font-family:'Press Start 2P',monospace;
+            font-size:5px; color:#2a2a4a;
+            text-align:center; padding:10px; line-height:2;
+        }
+        .dist-info {
+            padding:18px 20px; flex:1;
+            display:flex; flex-direction:column; justify-content:center;
+            gap:6px;
+        }
+        .dist-title {
+            font-family:'Press Start 2P',monospace;
+            font-size:clamp(7px,1.4vw,10px);
+            color:var(--white); letter-spacing:0.05em;
+            line-height:1.7; margin-bottom:2px;
+        }
+        .dist-artist {
+            font-family:'Courier Prime',monospace;
+            font-size:13px; color:var(--dim);
+        }
+        .dist-artist a {
+            color:var(--green); text-decoration:none;
+            transition:color 0.15s;
+        }
+        .dist-artist a:hover { color:var(--white); }
+        .dist-links {
+            margin-top:6px;
+            display:flex; flex-wrap:wrap; gap:8px;
+        }
+        .dist-link {
+            font-family:'Press Start 2P',monospace;
+            font-size:5px; letter-spacing:0.08em;
+            color:var(--dim); text-decoration:none;
+            border:1px solid #2a2a3a; padding:4px 10px;
+            transition:color 0.15s, border-color 0.15s;
+            display:inline-block;
+        }
+        .dist-link:hover { color:var(--rose); border-color:var(--rose); }
+        .dist-link.placeholder {
+            opacity:0.3; cursor:default; pointer-events:none;
+        }
+
+        /* ── mb link ── */
+        .mb-link-wrap {
+            width:100%; max-width:700px;
+            margin-top:40px;
+            animation:fadeUp 0.5s 0.15s ease both;
+        }
+
+        @media (max-width:500px) {
+            .dist-art { width:90px; min-width:90px; height:90px; }
+        }
+
+        .dist-description {
+            margin-top: 6px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            font-style: italic;
+            opacity: 0.75;
+        }
+
+        /* ── DISTRIBUTION INFO ── */
+        .distro-block {
+            width: min(720px, 95vw);
+            border: 1px solid #2a2a3a;
+            border-left: 3px solid var(--green);
+            background: var(--deep);
+            padding: 18px 22px;
+            margin-bottom: 36px;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+
+        .distro-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--green);
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">home</a><div class="dropdown"><a href="../home/about.html">about</a><a href="../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../music/index.html">music</a><div class="dropdown"><a href="../music/jukebox/index.html">jukebox</a><a href="../music/distributed-music.html">distributed music</a><a href="../music/floppy-disk/index.html">floppy disk</a><a href="../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../visual/index.html">visual</a><div class="dropdown"><a href="../visual/music-videos.html">music videos</a><a href="../visual/collage.html">collage</a><a href="../visual/photography.html">photography</a></div></li>
+        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../arcade/index.html">arcade</a></li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a><span class="sep">›</span>
+        <a href="index.html">music</a><span class="sep">›</span>
+        <span class="current">distributed music</span>
+    </div>
+
+    <div class="ticker-wrap">
+        <span class="ticker">
+            magmacrunch media on streaming services <span class="sep">✦</span>
+            via LANDR since 2024 <span class="sep">✦</span>
+            YouTube Music <span class="sep">✦</span>
+            Spotify <span class="sep">✦</span>
+            Apple Music &amp; iTunes <span class="sep">✦</span>
+            Tidal <span class="sep">✦</span>
+            Deezer <span class="sep">✦</span>
+            Amazon Music <span class="sep">✦</span>
+            Qobuz streaming &amp; store <span class="sep">✦</span>
+            Pandora <span class="sep">✦</span>
+            iHeartRadio <span class="sep">✦</span>
+            Audiomack <span class="sep">✦</span>
+            KkBox <span class="sep">✦</span>
+            more... <span class="sep">✦</span>
+        </span>
+    </div>
+
+    <div class="page-header centered">
+        <div class="page-eyebrow">// magmacrunch media //</div>
+        <div class="page-title green-title">DISTRIBUTED MUSIC</div>
+        <div class="page-subtitle">stream · download · support</div>
+    </div>
+
+    <!-- DISTRIBUTION INFO -->
+    <div class="distro-block">
+        <div class="distro-label">// distribution to streaming services & online stores //</div>
+        <p>Since August 2024, magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> to distribute music to all the major streaming services. 
+            This does not include the additional music on <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener">Bandcamp</a> and <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener">YouTube</a>. 
+        </p>
+        <p>
+            Below is a list of all distributed releases in order of the most recent distribution date. 
+        </p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- quick jump list -->
+    <div class="quick-list-wrap">
+        <div class="quick-list-wrap" id="quick-jump-menu">
+        <input type="text" id="release-filter" class="quick-list-filter" placeholder="search releases...">
+        <ul class="quick-list" id="quick-list">
+            <li><a href="#hello-world">Texas Hold'Em Lava Dome - Lights (2016)</a></li>
+            <li><a href="#hello-world">Texas Hold'Em Lava Dome - Pine (2016)</a></li>
+            <li><a href="#hello-world">Texas Hold'Em Lava Dome - Birds (2016)</a></li>
+            <li><a href="#youll-understand-when-youre-older">Juanito Thompson - You'll Understand When You're Older (2014)</a></li>
+            <li><a href="#george-boole">Juanito Thompson - George Boole has entered the chat (2026)</a></li>
+            <li><a href="#hello-world">Texas Hold'Em Lava Dome - HELLO, WORLD / LOVE, SPACE (2015)</a></li>
+            <li><a href="#spooked">Juanito Thompson - Spooked (2025)</a></li>
+            <li><a href="#pay2play">Sex Van Floor Plan - pay2play (2025)</a></li>
+            <li><a href="#reverse-telescope">Juanito Thompson - Reverse Telescope Reversed (2025)</a></li>
+            <li><a href="#panic">The Four B's - Panic. (Don't Panic). Panic. (2023)</a></li>
+            <li><a href="#long-way-home">Jon McCoy - Long Way Home (2025)</a></li>
+            <li><a href="#pompous-fanfare">Texas Hold'Em Lava Dome - Pompous Fanfare for All Occasions (2019)</a></li>
+            <li><a href="#millstone-woods">Dag Henderson - Millstone Woods May 2018 (2023)</a></li>
+            <li><a href="#world-can-wait">Jon McCoy - World Can Wait (2021)</a></li>
+            <li><a href="#texas-toast-magma-crunch">Texas Hold'Em Lava Dome - TEXAS TOAST MAGMA CRUNCH (2016)</a></li>
+            <li><a href="#songs-2019">Jon McCoy - songs (2019)</a></li>
+            <li><a href="#much-better-than">Juanito Thompson - Much Better Than Carl Spatski (2013)</a></li>
+            <li><a href="#its-2014">Juanito Thompson - It's Twenty-Fourteen (2014)</a></li>
+            <li><a href="#adenosine">Texas Hold'Em Lava Dome -  - Adenosine (2016)</a></li>
+            <li><a href="#martial-law-in-garrison-oaks">Juanito Thompson - Martial Law in Garrison Oaks (2018)</a></li>
+            <li><a href="#ancient-weeds">Juanito Thompson - Ancient Weeds (2023)</a></li>
+            <li><a href="#that-definitely-did-destroy-me">Juanito Thompson - That Definitely Did Destroy Me (2013)</a></li>
+            <li><a href="#everything-is-falling-all-together">The Four B's - Everything is falling all together, all at once, even the universe (2013)</a></li>
+            <li><a href="#enter-stage-left-bowser">The Four B's - Enter Stage Left Bowser (2013)</a></li>
+            <li><a href="#transatlantic-colleague">Dag Henderson - Juanito Thompson's Transatlantic Colleague (2023)</a></li>
+            <li><a href="#the-four-bs">The Four B's - The Four B's (2012)</a></li>
+            <li><a href="#heavy-water">The Four B's - Heavy Water (2014)</a></li>
+            <li><a href="#close-relative-to-vinny-bobarino">Juanito Thompson - A Close Relative to Vinny Bobarino (2010)</a></li>
+            <li><a href="#hazardous-metals-in-ambient-air">Texas Hold'Em Lava Dome - Hazardous Metals in Ambient Air (2018)</a></li>
+            <li><a href="#sitting-on-a-dock">Juanito Thompson - Sitting on a Dock in New Shoreham (2023)</a></li>
+            <li><a href="#the-empty-west">Woah. - The Empty West (2024)</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- release cards -->
+    <div class="releases-wrap">
+        <div class="releases-label">// all releases //</div>
+
+        <!-- ═══ Lights ═══ -->
+        <div class="dist-card" id="youll-understand-when-youre-older">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/lights.jpg" alt="Birds">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Lights (2016)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        2026 remastered version. Distributed on April 19. 2026. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/coming_soon" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Pine ═══ -->
+        <div class="dist-card" id="youll-understand-when-youre-older">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/pine.jpg" alt="Birds">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Pine (2016)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        2026 remastered version. Distributed on April 18. 2026. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/thld-pine" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Birds ═══ -->
+        <div class="dist-card" id="youll-understand-when-youre-older">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/birds.jpg" alt="Birds">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Birds (2016)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        2026 remastered version. Distributed on April 18. 2026. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/thld-birds" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ You'll Understand When You're Older ═══ -->
+        <div class="dist-card" id="youll-understand-when-youre-older">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/youll-understand-when-youre-older.jpg" alt="You'll Understand When You're Older">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">You'll Understand When You're Older (2014)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        2026 remastered & edited version of an EP recorded in November 2013 and released in March 2014. 
+                        For copyright reaspons, the spoken-word Carl Sagan sample in the last track had to be removed using an online stem splitter (original mix files are currently lost). 
+                        Distributed on April 4, 2026. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/youllunderstandwhenyoureolder" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ George Boole has entered the chat ═══ -->
+        <div class="dist-card" id="george-boole">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/george-boole.jpg" alt="George Boole has entered the chat">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">George Boole has entered the chat (2026)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on March 22, 2026. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/george-boole" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ HELLO, WORLD / LOVE, SPACE ═══ -->
+        <div class="dist-card" id="hello-world">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/hello-world-love-space.jpg" alt="HELLO, WORLD / LOVE, SPACE">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">HELLO, WORLD / LOVE, SPACE (2015)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on November 9, 2025. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/helloworldlovespace" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Spooked ═══ -->
+        <div class="dist-card" id="spooked">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/spooked.jpg" alt="Spooked">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Spooked (2025)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed and first released on October 30, 2025. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/spooked" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ pay2play ═══ -->
+        <div class="dist-card" id="pay2play">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/pay2play.jpg" alt="pay2play">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">pay2play (2025)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/svfp/index.html">Sex Van Floor Plan</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed and first released on July 18, 2025. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/svfp_pay2play" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Reverse Telescope Reversed ═══ -->
+        <div class="dist-card" id="reverse-telescope-reversed">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/reverse-telescope.jpg" alt="Reverse Telescope Reversed">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Reverse Telescope Reversed (2025)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed and first released on June 28, 2025. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/reversetelescopereversed" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Panic. (Don't Panic). Panic. ═══ -->
+        <div class="dist-card" id="panic">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/panic-dont-panic.jpg" alt="Panic. (Don't Panic). Panic.">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Panic. (Don't Panic). Panic. (2023)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/four-bs/">The Four B's</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on June 11, 2025. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/the4bs_panic" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>     
+        
+        <!-- ═══ Long Way Home ═══ -->
+        <div class="dist-card" id="long-way-home">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/long-way-home.jpg" alt="Long Way Home">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Long Way Home (2025)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/jon-mccoy/">Jon McCoy</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed and first released on May 1, 2025. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/jm_longwayhomec" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+        
+        <!-- ═══ Pompous Fanfare for All Occasions ═══ -->
+        <div class="dist-card" id="pompous-fanfare">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/pompous-fanfare-for-all-occasions.jpg" alt="Pompous Fanfare for All Occasions">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Pompous Fanfare for All Occasions (2019)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on November 20, 2024 (previous version distributed from August 8 until November 19, 2024). 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/pompousfanfare" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ Millstone Woods May 2018 ═══ -->
+        <div class="dist-card" id="millstone-woods">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/millstone-woods.jpg" alt="Millstone Woods May 2018">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Millstone Woods May 2018 (2023)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/dag-henderson/">Dag Henderson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on November 17, 2024 (previous version distributed from September 30, 2024). 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/millstonewoodsmay2018" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ World Can Wait ═══ -->
+        <div class="dist-card" id="world-can-wait">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/world-can-wait.jpg" alt="World Can Wait">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">World Can Wait (2021)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/jon-mccoy/">Jon McCoy</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on November 11, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/jm_worldcanwait" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ TEXAS TOAST MAGMA CRUNCH ═══ -->
+        <div class="dist-card" id="texas-toast-magma-crunch">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/texas-toast-magma-crunch.jpg" alt="TEXAS TOAST MAGMA CRUNCH">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">TEXAS TOAST MAGMA CRUNCH (2016)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on November 5, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/texastoastmagmacrunch" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ songs ═══ -->
+        <div class="dist-card" id="songs-2019">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/jm-songs.jpg" alt="songs (2019)">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">songs (2019)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/jon-mccoy/">Jon McCoy</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on November 4, 2024 (previous version distributed from September 16, 2024). 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/jm_songs" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ Much Better Than Carl Spatski ═══ -->
+        <div class="dist-card" id="reverse-telescope-reversed">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/much-better-than.jpg" alt="Much Better Than Carl Spatski">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Much Better Than Carl Spatski (2013)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on October 22, 2024 (previous version distributed from August 29, 2024). 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/muchbetterthancarlspatski" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ It's Twenty-Fourteen ═══ -->
+        <div class="dist-card" id="its-2014">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/its-2014.jpg" alt="It's Twenty-Fourteen">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">It's Twenty-Fourteen (2014)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on October 22, 2024 (previous version distributed from August 13 until October 15, 2024). 
+                    </p>
+                </div>  
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/itstwentyfourteen" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Adenosine ═══ -->
+        <div class="dist-card" id="adenosine">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/adenosine.jpg" alt="Adenosine">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Adenosine (2016)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on October 21, 2024 (previous version distributed from August 21 until October 18, 2024). 
+                    </p>
+                </div>  
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/adenosine" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>   
+        
+        <!-- ═══ Martial Law in Garrison Oaks ═══ -->
+        <div class="dist-card" id="martial-law-in-garrison-oaks">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/martial-law-in-garrison-oaks.jpg" alt="Martial Law in Garrison Oaks">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Martial Law in Garrison Oaks (2018)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on October 19, 2024. 
+                    </p>
+                </div>                
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/martiallawingarrisonoaks" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>   
+
+        <!-- ═══ Ancient Weeds ═══ -->
+        <div class="dist-card" id="ancient-weeds">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/ancient-weeds.jpg" alt="Ancient Weeds">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Ancient Weeds (2023)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on October 19, 2024. 
+                    </p>
+                </div>    
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/ancientweeds" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ That Definitely Did Destroy Me ═══ -->
+        <div class="dist-card" id="that-definitely-did-destroy-me">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/that-definitely-did-destroy-me.jpg" alt="That Definitely Did Destroy Me">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">That Definitely Did Destroy Me (2013)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 29, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/thatdefinitelydiddestroyme" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Everything is falling all together, all at once, even the universe ═══ -->
+        <div class="dist-card" id="everything-is-falling-all-together">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/everything-is-falling-all-together.jpg" alt="Everything is falling all together, all at once, even the universe">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Everything is falling all together, all at once, even the universe (2013)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/four-bs/">The Four B's</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 29, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/everythingisfallingalltogetherc" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ Enter Stage Left Bowser ═══ -->
+        <div class="dist-card" id="enter-stage-left-bowser">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/enter-stage-left-bowser.jpg" alt="Enter Stage Left Bowser">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Enter Stage Left Bowser (2013)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/four-bs/">The Four B's</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 28, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/enterstageleftbowser" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ Juanito Thompson's Transatlantic Colleague ═══ -->
+        <div class="dist-card" id="transatlantic-colleague">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/transatlantic-colleague.jpg" alt="Juanito Thompson's Transatlantic Colleague">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Juanito Thompson's Transatlantic Colleague (2023)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/dag-henderson/">Dag Henderson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 28, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/transatlanticcolleague" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ The Four B's ═══ -->
+        <div class="dist-card" id="the-four-bs">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/the-four-bs.jpg" alt="The Four B's">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">The Four B's (2012)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/four-bs/">The Four B's</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 25, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/4bs_4bs" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ Heavy Water ═══ -->
+        <div class="dist-card" id="heavy-water">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/heavy-water.jpg" alt="Heavy Water">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Heavy Water (2014)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/four-bs/">The Four B's</a></div>
+                <div class="dist-links">
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 24, 2024. 
+                    </p>
+                </div>
+                    <a href="https://artists.landr.com/4bs_heavywater" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>  
+
+        <!-- ═══ A Close Relative to Vinny Bobarino ═══ -->
+        <div class="dist-card" id="close-relative-to-vinny-bobarino">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/close-relative-to-vinny-bobarino.jpg" alt="A Close Relative to Vinny Bobarino">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">A Close Relative to Vinny Bobarino (2010)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on September 24, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/acloserelativetovinnybobarino" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Hazardous Metals in Ambient Air ═══ -->
+        <div class="dist-card" id="hazardous-metals-in-ambient-air">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/hazardous-metals-in-ambient-air.jpg" alt="Hazardous Metals in Ambient Air">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Hazardous Metals in Ambient Air (2018)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on August 10, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/hazardousmetalsinambientair" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>   
+
+        <!-- ═══ Sitting on a Dock in New Shoreham ═══ -->
+        <div class="dist-card" id="sitting-on-a-dock">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/sitting-on-a-dock-in-new-shoreham.jpg" alt="Sitting on a Dock in New Shoreham">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">Sitting on a Dock in New Shoreham (2023)</div>
+                <div class="dist-artist">by <a href="#">Juanito Thompson</a></div>
+                <div class="dist-description">
+                    <p>
+                        Distributed on August 7, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/sittingonadockinnewshoreham" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ The Empty West ═══ -->
+        <div class="dist-card" id="the-empty-west">
+            <div class="dist-art">
+                <img class="release-hero-img" src="../../assets/album-art/the-empty-west.jpg" alt="The Empty West">
+            </div>
+            <div class="dist-info">
+                <div class="dist-title">The Empty West (2024)</div>
+                <div class="dist-artist">by <a href="../archive/by-artist/woah/index.html">Woah.</a></div>
+                <div class="dist-description">
+                    <p>
+                        Our first release on streaming services. Originally released on February 3, 2024 and distributed on August 5, 2024. 
+                    </p>
+                </div>
+                <div class="dist-links">
+                    <a href="https://artists.landr.com/theemptywest" class="dist-link" target="_blank">stream / download</a>
+                    <a href="#quick-jump-menu" class="dist-top-link">[ ^ top ]</a>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /releases-wrap -->
+
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../nav.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const filterInput = document.getElementById('release-filter');
+        const listItems = document.querySelectorAll('#quick-list li');
+
+        if (filterInput) {
+            filterInput.addEventListener('input', function() {
+                const filterText = this.value.toLowerCase();
+                
+                listItems.forEach(li => {
+                    const text = li.textContent.toLowerCase();
+                    if (text.includes(filterText)) {
+                        li.style.display = ''; // Shows the item
+                    } else {
+                        li.style.display = 'none'; // Hides the item
+                    }
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+  :root {
+    --black:#0a0000;--dark-red:#1c0000;--deep-red:#3b0000;--lava-dark:#6b0000;
+    --lava-mid:#9b0000;--lava-bright:#cc2200;--orange:#dd4400;--orange-hot:#ff5500;
+    --orange-glow:#ff7700;--yellow:#ffcc00;--yellow-pale:#ffe680;--white:#fff8f0;
+  }
+  .wrap{
+    background:var(--dark-red);
+    width:520px;height:520px;
+    margin:0 auto;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;font-family:'Press Start 2P',monospace;
+    border-top:4px solid var(--orange-glow);border-left:4px solid var(--orange-glow);
+    border-bottom:4px solid var(--lava-dark);border-right:4px solid var(--lava-dark);
+    box-shadow:0 0 0 4px var(--black),0 0 0 8px var(--orange),0 0 0 12px var(--black);
+    position:relative;box-sizing:border-box;padding:40px;
+  }
+  .publisher{font-size:8px;color:var(--orange-glow);letter-spacing:2px;margin-bottom:28px;}
+  .title{font-size:clamp(18px,4vw,26px);color:var(--yellow);line-height:1.6;
+    text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;
+    text-shadow:3px 3px 0 var(--lava-bright),6px 6px 0 var(--deep-red),9px 9px 0 var(--black);}
+  .subtitle{font-size:11px;color:var(--orange-glow);letter-spacing:3px;text-transform:uppercase;margin-bottom:0;}
+  .divider{width:100%;height:4px;margin:28px auto 0;
+    background:linear-gradient(90deg,transparent 0%,var(--lava-dark) 10%,var(--orange) 30%,var(--yellow) 50%,var(--orange) 70%,var(--lava-dark) 90%,transparent 100%);}
+  .corner{position:absolute;width:14px;height:14px;background:var(--yellow);}
+  .corner.tl{top:-4px;left:-4px;} .corner.tr{top:-4px;right:-4px;}
+  .corner.bl{bottom:-4px;left:-4px;} .corner.br{bottom:-4px;right:-4px;}
+</style>
+
+<div class="wrap">
+  <div class="corner tl"></div><div class="corner tr"></div>
+  <div class="corner bl"></div><div class="corner br"></div>
+  <p class="publisher">MAGMACRUNCH MEDIA PRESENTS</p>
+  <h1 class="title">TEXAS HOLD'EM<br>LAVA DOME</h1>
+  <p class="subtitle">poker solitaire</p>
+  <div class="divider"></div>
+</div>

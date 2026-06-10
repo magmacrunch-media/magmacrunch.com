@@ -1,0 +1,102 @@
+/* THLD music-videos — slate teal (c-slate) accent theme */
+body.thld-page.thld-music-videos-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.thld-page.thld-music-videos-page main > * { background: var(--black); }
+
+body.thld-page.thld-music-videos-page .breadcrumb { color: var(--thld-muted); }
+body.thld-page.thld-music-videos-page .breadcrumb a { color: var(--thld-teal); }
+body.thld-page.thld-music-videos-page .breadcrumb a:hover { color: #5a8078; }
+body.thld-page.thld-music-videos-page .breadcrumb .sep { color: var(--thld-teal); opacity: 0.7; }
+body.thld-page.thld-music-videos-page .breadcrumb .current { color: var(--thld-teal); }
+
+body.thld-page.thld-music-videos-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.thld-page.thld-music-videos-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--thld-teal); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.thld-page.thld-music-videos-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--thld-teal); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(74,112,104,0.5); }
+
+body.thld-page.thld-music-videos-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--thld-accent), var(--thld-amber), var(--thld-accent), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+body.thld-page.thld-music-videos-page .videos-section { width: 100%; max-width: 900px; margin-bottom: 48px; animation: fadeUp 0.5s 0.2s ease both; }
+body.thld-page.thld-music-videos-page .mini-video-list { width: 100%; border: none; }
+body.thld-page.thld-music-videos-page .mini-video-entry {
+    position: relative; width: 100%; display: flex; align-items: center;
+    overflow: hidden; cursor: pointer; min-height: 100px;
+}
+
+body.thld-page.thld-music-videos-page .mini-video-bg {
+    position: absolute; inset: 0; background-size: cover; background-position: center;
+    filter: brightness(0.25) saturate(0.6); transition: filter 0.3s ease; z-index: 0;
+}
+body.thld-page.thld-music-videos-page .mini-video-entry:hover .mini-video-bg,
+body.thld-page.thld-music-videos-page .mini-video-entry.active .mini-video-bg { filter: brightness(0.15) saturate(0.4); }
+body.thld-page.thld-music-videos-page .mini-video-entry::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(26,18,9,0.5) 0%, transparent 100%);
+    z-index: 1; pointer-events: none;
+}
+body.thld-page.thld-music-videos-page .mini-video-content {
+    position: relative; z-index: 2; display: flex; align-items: center; gap: 16px; padding: 14px 18px; width: 100%;
+}
+body.thld-page.thld-music-videos-page .mini-thumb {
+    flex-shrink: 0; width: 120px; aspect-ratio: 16/9; background: var(--thld-deep);
+    border: none; position: relative; overflow: hidden; transition: border-color 0.2s;
+}
+
+body.thld-page.thld-music-videos-page .mini-iframe-wrap {
+    display: none; width: 280px; aspect-ratio: 16/9; flex-shrink: 0;
+}
+body.thld-page.thld-music-videos-page .mini-iframe-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
+body.thld-page.thld-music-videos-page .mini-video-entry.active .mini-iframe-wrap { display: block; }
+
+body.thld-page.thld-music-videos-page .mini-video-entry.active {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+}
+body.thld-page.thld-music-videos-page .mini-video-entry.active .mini-video-content {
+    width: 100%;
+}
+body.thld-page.thld-music-videos-page .mini-video-entry.active .mini-iframe-wrap {
+    width: 100%;
+    max-width: 560px;
+}
+body.thld-page.thld-music-videos-page .mini-video-meta { flex: 1; min-width: 0; }
+body.thld-page.thld-music-videos-page .mini-video-year {
+    font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--thld-teal);
+    letter-spacing: 0.1em; margin-bottom: 8px; opacity: 0.9;
+}
+body.thld-page.thld-music-videos-page .video-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: #5a8078;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    margin: 0;
+}
+body.thld-page.thld-music-videos-page .mini-video-mb {
+    font-family: 'Courier Prime', monospace; font-size: 9px; color: var(--thld-teal);
+    margin-top: 6px; line-height: 1.4; min-height: 50px;
+    display: flex; flex-direction: column; gap: 4px;
+    border: 1px solid var(--thld-teal); padding: 6px 8px;
+    background: rgba(74,112,104,0.08);
+}
+body.thld-page.thld-music-videos-page .mini-video-mb:empty::after { content: 'loading…'; color: var(--thld-muted); }
+body.thld-page.thld-music-videos-page .mini-video-mb > div { word-break: break-word; }
+body.thld-page.thld-music-videos-page .mini-yt-link {
+    font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--thld-teal);
+    text-decoration: none; border: 1px solid var(--thld-teal); padding: 3px 8px;
+    letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: inline-block;
+}
+body.thld-page.thld-music-videos-page .mini-yt-link:hover { color: #5a8078; border-color: #5a8078; }
+body.thld-page.thld-music-videos-page .section-label {
+    font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--thld-teal);
+    letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--thld-teal); opacity: 0.9;
+}
+
+@media (max-width: 500px) { .mini-thumb, .mini-iframe-wrap { width: 80px; } }
+
+/* Back button: transparent + slate teal */
+body.thld-page.thld-music-videos-page .nav-card.c-back { background: transparent; color: var(--thld-teal); border-color: var(--thld-teal); }
+body.thld-page.thld-music-videos-page .nav-card.c-back:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.thld-page.thld-music-videos-page .nav-card::after { display: none; }
+body.thld-page.thld-music-videos-page .nav-card:hover { box-shadow: 0 0 22px currentColor; }

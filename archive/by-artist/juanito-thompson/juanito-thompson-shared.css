@@ -1,0 +1,71 @@
+/* Juanito Thompson shared color palette — warm ember / teal accent theme */
+:root {
+    --jt-bg:           #0a0a0c;
+    --jt-surface:      #1c1e22;
+    --jt-raised:        #2e3038;
+    --jt-mid:          #383c44;
+    --jt-borders:       #4a5060;
+    --jt-steel:         #606878;
+    --jt-deep:          #7a3010;
+    --jt-dark-rust:      #5a2008;
+    --jt-brick:         #a84830;
+    --jt-cta:           #c85a18;
+    --jt-amber:         #e8900a;
+    --jt-pale-warm:      #f0b878;
+    --jt-gold:          #f5c842;
+    --jt-body:          #f0b878;
+    --jt-teal:          #1a7a5e;
+    --jt-teal-bright:   #2a9070;
+    --jt-taupe:         #8a7060;
+    --jt-offwhite:      #f8f0e4;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.jt-page { --credit-color: var(--jt-mid); --nav-accent: var(--jt-cta); --nav-glow: rgba(200,90,24,0.4); --nav-brand: #e88848; --nav-brand-glow: rgba(232,136,72,0.7); }
+body.jt-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.jt-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 1px solid;
+    text-decoration: none;
+}
+body.jt-page .sub-nav .nav-card::after { display: none; }
+body.jt-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* Back button: transparent + page accent color */
+body.jt-page .sub-nav .nav-card.c-back,
+body.jt-page .sub-nav .nav-card.jt-back { background: transparent; color: var(--jt-cta); border-color: var(--jt-cta); }
+body.jt-page .sub-nav .nav-card.c-back:hover,
+body.jt-page .sub-nav .nav-card.jt-back:hover { background: var(--jt-cta); color: var(--jt-bg); }
+
+/* c-about: solid taupe (about page) */
+body.jt-page .sub-nav .nav-card.c-about { background: var(--jt-taupe); color: var(--jt-bg); border-color: var(--jt-taupe); }
+body.jt-page .sub-nav .nav-card.c-about:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-music-videos: solid pale warm (music videos) */
+body.jt-page .sub-nav .nav-card.c-music-videos { background: var(--jt-pale-warm); color: var(--jt-deep); border-color: var(--jt-pale-warm); }
+body.jt-page .sub-nav .nav-card.c-music-videos:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-network: solid teal (network) */
+body.jt-page .sub-nav .nav-card.c-network { background: var(--jt-teal); color: var(--jt-bg); border-color: var(--jt-teal); }
+body.jt-page .sub-nav .nav-card.c-network:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-photography: solid steel blue (photography) */
+body.jt-page .sub-nav .nav-card.c-photography { background: var(--jt-steel); color: var(--jt-bg); border-color: var(--jt-steel); }
+body.jt-page .sub-nav .nav-card.c-photography:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-recordings: solid amber (recordings) */
+body.jt-page .sub-nav .nav-card.c-recordings { background: var(--jt-amber); color: var(--jt-bg); border-color: var(--jt-amber); }
+body.jt-page .sub-nav .nav-card.c-recordings:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-releases: solid brick red (releases) */
+body.jt-page .sub-nav .nav-card.c-releases { background: var(--jt-brick); color: var(--jt-bg); border-color: var(--jt-brick); }
+body.jt-page .sub-nav .nav-card.c-releases:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-works: solid gold (works) */
+body.jt-page .sub-nav .nav-card.c-works { background: var(--jt-gold); color: var(--jt-bg); border-color: var(--jt-gold); }
+body.jt-page .sub-nav .nav-card.c-works:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+body.jt-page .nav-card::after { display: none; }

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- Lava dome chip stack favicon -->
+  <rect width="16" height="16" fill="#0a0000"/>
+  <!-- Chip 1 (bottom) - dark red -->
+  <ellipse cx="8" cy="13" rx="6" ry="2" fill="#3b0000"/>
+  <rect x="2" y="11" width="12" height="2" fill="#3b0000"/>
+  <ellipse cx="8" cy="11" rx="6" ry="2" fill="#6b0000"/>
+  <!-- Chip 2 (middle) - lava orange -->
+  <rect x="3" y="8" width="10" height="3" fill="#dd4400"/>
+  <ellipse cx="8" cy="8" rx="5" ry="1.5" fill="#cc2200"/>
+  <rect x="3" y="8" width="10" height="1" fill="#ff7700" opacity="0.4"/>
+  <!-- Chip 3 (top) - hot orange -->
+  <rect x="4" y="5" width="8" height="3" fill="#ff5500"/>
+  <ellipse cx="8" cy="5" rx="4" ry="1.5" fill="#ff7700"/>
+  <rect x="4" y="5" width="8" height="1" fill="#ffcc00" opacity="0.3"/>
+  <!-- Highlight -->
+  <ellipse cx="6" cy="4.5" rx="1.5" ry="0.5" fill="#fff8f0" opacity="0.4"/>
+</svg>

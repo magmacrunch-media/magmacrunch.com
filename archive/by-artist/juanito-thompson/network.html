@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>juanito thompson — network — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="juanito-thompson-shared.css">
+    <link rel="stylesheet" href="juanito-thompson-network.css">
+
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        'ddcbeb01-edb5-4e74-b5cd-23d1b64d3086',
+        name:      'juanito thompson',
+        abbr:      'JT',
+        accent:    'orange',
+        backColor: 'c-green',
+        siblings:  ['about', 'music-videos', 'photography', 'recordings', 'releases', 'works', 'network'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="jt-page jt-network-page">
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav><main>
+    <div class="breadcrumb"></div>
+    <div class="page-header">
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title" id="page-title">NETWORK</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+    <div class="catalog-wrap">
+        <div id="status-bar">initializing...</div>
+        <div id="count-bar"></div>
+        <div id="artist-list"></div>
+        <div id="mb-link-wrap"></div>
+    </div>
+</main>
+    <footer>
+        &copy; 2026 <span>magmacrunch media</span>
+    </footer>
+<script src="../../../nav.js"></script>
+<script>
+    (function() {
+        try {
+            const C = window.ARTIST_CONFIG;
+            if (!C) { console.error('ARTIST_CONFIG not found'); return; }
+            const d = C.depth || '../../../';
+            const accent = C.accent || 'cyan';
+            const accentVar = `var(--${accent})`;
+
+            const COLOR_MAP = {
+                about:        'c-about',
+                photography:  'c-photography',
+                'music-videos': 'c-music-videos',
+                recordings:  'c-recordings',
+                releases:    'c-releases',
+                works:       'c-works',
+                network:     'c-network',
+            };
+
+            const style = document.createElement('style');
+            style.textContent = `
+                .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+                .breadcrumb a:hover { color: ${accentVar}; }
+                .breadcrumb .sep { margin: 0 8px; color: ${accentVar}; opacity: 0.7; }
+                .breadcrumb .current { color: ${accentVar}; }
+            `;
+            document.head.appendChild(style);
+
+            const breadcrumbEl = document.querySelector('.breadcrumb');
+            if (breadcrumbEl) {
+                breadcrumbEl.innerHTML = `
+                    <a href="${d}archive/index.html">archive</a>
+                    <span class="sep">›</span>
+                    <a href="${d}archive/by-artist/index.html">by artist</a>
+                    <span class="sep">›</span>
+                    <a href="index.html">${C.abbr.toLowerCase()}</a>`;
+            }
+
+            const artistLabelEl = document.getElementById('artist-label');
+            if (artistLabelEl) artistLabelEl.textContent = `// ${C.name} //`;
+
+            const subNavEl = document.getElementById('sub-nav');
+            if (subNavEl) {
+                subNavEl.innerHTML = `
+                    <a href="index.html" class="nav-card jt-back">← back</a>
+                    ${(C.siblings || []).filter(s => s !== 'network').map(s => {
+                        const label = s.replace(/-/g, ' ');
+                        return `<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-cyan'}">${label}</a>`;
+                    }).join('\n')}`;
+            }
+        } catch (e) {
+            console.error('Network page script error:', e);
+        }
+    })();
+</script>
+<script>
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const statusEl = document.getElementById('status-bar');
+    const countEl  = document.getElementById('count-bar');
+    const listEl   = document.getElementById('artist-list');
+    const mbLinkEl = document.getElementById('mb-link-wrap');
+    function setStatus(msg, state='') {
+        statusEl.textContent = msg;
+        statusEl.className = 'status-bar' + (state ? ' ' + state : '');
+    }
+const SERIES_ID = 'fd8546e1-f391-42b6-9e00-39a32f9019d7';
+    mbLinkEl.innerHTML = `<a class="mb-link" href="https://musicbrainz.org/series/${SERIES_ID}" target="_blank" rel="noopener">▶ view on musicbrainz</a>`;
+    async function getFullAreaName(areaId) {
+        try {
+            const d = await fetch(`https://musicbrainz.org/ws/2/area/${areaId}?inc=area-rels&fmt=json`).then(r => r.json());
+            const names=[], seen=new Set(), skip=['County'];
+            async function chain(a) {
+                if(!a||!a.name||seen.has(a.id)) return; seen.add(a.id);
+                if(!skip.includes(a.type)) names.push(a.name);
+                const p=a.relations?.find(r=>r.type==='part of'&&r['target-type']==='area');
+                if(p?.area?.id&&names.length<4) { await delay(200); try { const pd=await fetch(`https://musicbrainz.org/ws/2/area/${p.area.id}?inc=area-rels&fmt=json`).then(r=>r.json()); await chain(pd); } catch(e) {} }
+            }
+            await chain(d); return names.join(', ');
+        } catch(e) { return ''; }
+    }
+    (async () => {
+        setStatus('fetching series data...');
+        const sd = await fetch(`https://musicbrainz.org/ws/2/series/${SERIES_ID}?inc=artist-rels&fmt=json`).then(r => r.json());
+        const artistRels = (sd.relations||[]).filter(r => r['target-type']==='artist');
+        artistRels.sort((a,b) => (a.artist?.['sort-name']||'').localeCompare(b.artist?.['sort-name']||''));
+        setStatus(`${artistRels.length} artists found — loading details...`);
+        countEl.textContent = `// ${artistRels.length} artists in this network //`;
+        for (let i=0;i<artistRels.length;i++) {
+            const rel=artistRels[i], artist=rel.artist; if(!artist) continue;
+            try {
+                const ad = await fetch(`https://musicbrainz.org/ws/2/artist/${artist.id}?fmt=json`).then(r => r.json());
+                let dateStr = '';
+                if(rel.begin||rel.end) { if(rel.begin&&rel.end) { dateStr=rel.begin.includes('-')&&rel.end.includes('-')?`(${rel.begin} to ${rel.end})`:`(${rel.begin}–${rel.end})`; } else if(rel.begin) { dateStr=rel.ended?`(${rel.begin})`:`(${rel.begin}–present)`; } else if(rel.end) { dateStr=`(–${rel.end})`; } }
+                let location = '';
+                if(ad.area?.id) { try { location=await getFullAreaName(ad.area.id); } catch(e) { location=ad.area?.name||''; } }
+                const item = document.createElement('div'); item.className='artist-item';
+                item.innerHTML = `<a class="artist-name" href="https://musicbrainz.org/artist/${artist.id}" target="_blank" rel="noopener">${artist.name}</a>${dateStr?`<span class="artist-dates">${dateStr}</span>`:''}${location?`<span class="artist-location">[${location}]</span>`:''}${rel.type&&rel.type!=='part of'?`<span class="artist-rel-type">[${rel.type}]</span>`:''}`;
+                listEl.appendChild(item);
+                setStatus(`loading details... ${i+1} of ${artistRels.length}`);
+                if(i<artistRels.length-1) await delay(1000);
+            } catch(e) { console.error(e); }
+        }
+        setStatus(`all ${artistRels.length} artists loaded`, 'done');
+    })();
+</script>
+</body>
+</html>

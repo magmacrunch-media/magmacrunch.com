@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Solitaire — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23003838'/%3E%3Crect x='4' y='3' width='24' height='26' fill='%23fffef5' rx='2'/%3E%3Crect x='6' y='5' width='4' height='4' fill='%23cc0000' rx='1'/%3E%3Ctext x='6' y='8' font-family='sans-serif' font-size='3.5' fill='%23cc0000'%3EA♥%3C/text%3E%3Ctext x='16' y='24' font-family='sans-serif' font-size='7' fill='%23cc0000'%3E♥%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/start-screen.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <a href="../index.html" class="mc-back">magmacrunch arcade</a>
+
+    <div class="container">
+
+        <!-- Window chrome title bar -->
+        <div class="win-titlebar">
+            <span class="win-title-icon">🃏</span>
+            <span class="win-title-text">Solitaire — magmacrunch media</span>
+            <span class="win-controls">
+                <span>&#x2501;</span>
+                <span>&#x25A1;</span>
+                <span class="win-close">&#x2715;</span>
+            </span>
+        </div>
+
+        <!-- Menu bar -->
+        <div class="win-menubar">
+            <span id="menuGame">New</span>
+            <span id="menuOptions">Scores</span>
+            <span id="menuHelp">Help</span>
+            <span id="menuCredits">Credits</span>
+        </div>
+
+        <!-- Neon accent stripe -->
+        <div class="neon-stripe"></div>
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+
+                <div class="pixel-banner">
+                    <span class="blink-slow">▓</span>
+                    &nbsp;magmacrunch arcade&nbsp;
+                    <span class="blink-slow">▓</span>
+                </div>
+
+                <h1 class="game-title">
+                    <span class="title-suit suit-pink">♥</span>
+                    Klondike
+                    <span class="title-suit suit-pink">♦</span>
+                    <br>
+                    <span class="title-suit suit-cyan">♠</span>
+                    &nbsp;Solitaire&nbsp;
+                    <span class="title-suit suit-cyan">♣</span>
+                </h1>
+
+                <div class="neon-divider"></div>
+
+                <p class="game-subtitle">// &copy; 2026 magmacrunch media //</p>
+
+                <div class="neon-divider"></div>
+
+                <div class="start-buttons">
+                    <button id="startGameBtn" class="start-btn primary">
+                        ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
+                    </button>
+                </div>
+
+                <div class="start-footer">
+                    <p>DRAW 3 &nbsp;·&nbsp; TIMED SCORING &nbsp;·&nbsp; TOP 10 LEADERBOARD</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" style="display: none;">
+
+            <div class="header">
+                <h1>
+                    <span class="suit-pink">♥</span>SOLITAIRE<span class="suit-pink">♦</span>
+                </h1>
+                <div class="stats">
+                    <div class="score-container">
+                        <div class="score-label">SCORE</div>
+                        <div class="score" id="score">0</div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-label">MOVES</div>
+                        <div class="score" id="moves">0</div>
+                    </div>
+                    <div class="score-container">
+                        <div class="score-label">TIME</div>
+                        <div class="score" id="timer">0:00</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="game-area">
+                <div class="top-row">
+                    <div class="stock-waste">
+                        <div class="card-spot" id="stock"></div>
+                        <div class="card-spot" id="waste"></div>
+                    </div>
+                    <div class="foundation-piles">
+                        <div class="card-spot foundation" id="foundation-0" data-suit="♠"></div>
+                        <div class="card-spot foundation" id="foundation-1" data-suit="♥"></div>
+                        <div class="card-spot foundation" id="foundation-2" data-suit="♦"></div>
+                        <div class="card-spot foundation" id="foundation-3" data-suit="♣"></div>
+                    </div>
+                </div>
+                <div class="tableau">
+                    <div class="tableau-column" id="tableau-0"></div>
+                    <div class="tableau-column" id="tableau-1"></div>
+                    <div class="tableau-column" id="tableau-2"></div>
+                    <div class="tableau-column" id="tableau-3"></div>
+                    <div class="tableau-column" id="tableau-4"></div>
+                    <div class="tableau-column" id="tableau-5"></div>
+                    <div class="tableau-column" id="tableau-6"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MODALS ═══════════════ -->
+
+    <div class="instructions-modal" id="instructionsModal">
+        <div class="instructions-content">
+            <div class="modal-titlebar"><span>HOW TO PLAY</span></div>
+            <div class="modal-body">
+                <h3>How to Play Solitaire</h3>
+                <p><strong>Click</strong> a card to select it, then click where to move it.</p>
+                <p>Build <strong>down</strong> in <strong>alternating colors</strong> on the tableau.</p>
+                <p>Build <strong>up by suit</strong> on the foundations (A → 2 → ... → K).</p>
+                <p>Click the stock pile to draw 3 cards. Only Kings on empty columns!</p>
+                <h4>Scoring</h4>
+                <p>+10 pts: Card to foundation &nbsp;|&nbsp; +5 pts: Reveal / waste→tableau</p>
+                <p>−15 pts: Foundation to tableau &nbsp;|&nbsp; −100 pts: Recycle deck</p>
+                <p>Win bonus: (700,000 ÷ seconds) × 35 — finish faster for a bigger bonus!</p>
+                <div class="modal-footer">
+                    <button id="closeInstructions">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions-modal" id="initialsModal">
+        <div class="instructions-content">
+            <div class="modal-titlebar"><span>★ NEW HIGH SCORE!</span></div>
+            <div class="modal-body">
+                <h3>You made the top 10!</h3>
+                <p style="text-align:center; margin-bottom:14px;">Enter your initials:</p>
+                <input type="text" id="initialsInput" maxlength="3" placeholder="AAA"
+                       style="width:100%; padding:10px; font-size:22px; text-align:center;
+                              text-transform:uppercase; font-family:'Press Start 2P', monospace;
+                              font-weight:bold; letter-spacing:8px;
+                              background:#0a0a1a; color:#ff2d78;
+                              border:2px solid #ff2d78; outline:none; margin-bottom:12px;
+                              box-shadow: 0 0 10px rgba(255,45,120,0.4);">
+                <div class="modal-footer">
+                    <button id="submitInitials">SUBMIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions-modal" id="highScoresModal">
+        <div class="instructions-content scoreboard-modal">
+            <div class="modal-titlebar"><span>HIGH SCORES</span></div>
+            <div class="modal-body">
+                <h3>Top 10 Players</h3>
+                <div class="scoreboard-header">
+                    <span>RANK</span>
+                    <span>NAME</span>
+                    <span>SCORE</span>
+                    <span>TIME</span>
+                </div>
+                <div id="highScoresList"></div>
+                <div class="modal-footer">
+                    <button id="closeHighScores">CLOSE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions-modal" id="creditsModal">
+        <div class="instructions-content">
+            <div class="modal-titlebar"><span>CREDITS</span></div>
+            <div class="modal-body">
+                <h3>Klondike Solitaire</h3>
+                <h4>Original Game Concept</h4>
+                <p>Klondike Solitaire’s exact origins are unknown, but the game has been popular since the late 1800s. This version is inspired in part by Microsoft Windows Solitaire (Wes Cherry, 1988; card art by Susan Kare).</p>
+                <h4>Design &amp; Development</h4>
+                <p>Jake A. McCoy</p>
+                <h4>Publisher</h4>
+                <p><strong>magmacrunch media</strong></p>
+                <h4>Built With</h4>
+                <p>Vanilla HTML, CSS & JavaScript · Inline SVG pixel art · Orbitron font · VT323 font</p>
+                <h4>Cheapness Impact Factor</h4>
+                <p>1.6</p>
+                <h4>Last Updated</h4>
+                <p>March 15, 2026</p>
+                <div class="modal-footer">
+                    <button id="closeCredits">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WIN SCREEN MODAL -->
+    <div class="instructions-modal" id="winModal">
+        <div class="instructions-content win-modal-content">
+            <div class="win-particles" id="winParticles"></div>
+            <div class="modal-titlebar win-titlebar-bar">
+                <span id="winTitleText">YOU WIN</span>
+            </div>
+            <div class="modal-body win-modal-body">
+                <div class="win-suit-row">
+                    <span class="win-suit red-suit">♥</span>
+                    <span class="win-suit">♠</span>
+                    <span class="win-suit red-suit">♦</span>
+                    <span class="win-suit">♣</span>
+                </div>
+                <div class="win-stats">
+                    <div class="win-stat">
+                        <div class="win-stat-label">SCORE</div>
+                        <div class="win-stat-value" id="winScore">0</div>
+                    </div>
+                    <div class="win-stat">
+                        <div class="win-stat-label">TIME</div>
+                        <div class="win-stat-value" id="winTime">0:00</div>
+                    </div>
+                    <div class="win-stat">
+                        <div class="win-stat-label">MOVES</div>
+                        <div class="win-stat-value" id="winMoves">0</div>
+                    </div>
+                </div>
+                <div class="win-bonus-line" id="winBonusLine"></div>
+                <div class="win-high-score-badge" id="winHighScoreBadge">
+                    ★ NEW HIGH SCORE ★
+                </div>
+                <div class="modal-footer win-footer">
+                    <button id="winContinueBtn">CONTINUE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script src="js/config.js"></script>
+    <script src="js/deck.js"></script>
+    <script src="js/face-cards.js"></script>
+    <script src="js/number-cards.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
