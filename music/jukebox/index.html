@@ -1357,14 +1357,17 @@ try {
         renderNowPlaying();
         renderSongList();
         player.src = 'songs/' + JUKEBOX_SONGS[saved.track].file;
-        if (saved.time > 0) {
+        function onReady() {
+            if (saved.time > 0 && saved.time < player.duration) player.currentTime = saved.time;
+            player.play();
+        }
+        if (player.readyState >= 1) {
+            onReady();
+        } else {
             player.addEventListener('loadedmetadata', function onMeta() {
                 player.removeEventListener('loadedmetadata', onMeta);
-                player.currentTime = saved.time;
-                player.play();
+                onReady();
             }, { once: true });
-        } else {
-            player.play();
         }
     }
 } catch (e) {}
