@@ -1348,6 +1348,27 @@ renderNowPlaying();
 renderSongList();
 renderQueue();
 
+// Auto-restore from mini-player state
+try {
+    const saved = JSON.parse(localStorage.getItem('mc-jukebox'));
+    if (saved && saved.playing && saved.track >= 0 && saved.track < JUKEBOX_SONGS.length) {
+        playingIdx = saved.track;
+        currentIdx = saved.track;
+        renderNowPlaying();
+        renderSongList();
+        player.src = 'songs/' + JUKEBOX_SONGS[saved.track].file;
+        if (saved.time > 0) {
+            player.addEventListener('loadedmetadata', function onMeta() {
+                player.removeEventListener('loadedmetadata', onMeta);
+                player.currentTime = saved.time;
+                player.play();
+            }, { once: true });
+        } else {
+            player.play();
+        }
+    }
+} catch (e) {}
+
 player.addEventListener('ended', () => {
     if (songQueue.length > 0) {
         const nextIdx = songQueue.shift();
