@@ -1112,13 +1112,13 @@
         <div class="juke-footer">select • play • enjoy</div>
         </div><!-- /jukebox-inner -->
     </div>
+
+    <audio id="audioPlayer" preload="none"></audio>
 </main>
 
 <footer>
     &copy; 2026 <span>magmacrunch media</span>
 </footer>
-
-<audio id="audioPlayer" preload="none"></audio>
 
 <script src="../../nav.js"></script>
 <script>
@@ -1382,6 +1382,11 @@ nextPageBtn.addEventListener('click', () => {
 
 playBtn.addEventListener('click', togglePlay);
 stopBtn.addEventListener('click', stopSong);
+
+window.__pageCleanup = function() {
+    if (player) { player.pause(); player.src = ''; }
+    stopMcSaveInterval();
+};
 </script>
 
 </body>
