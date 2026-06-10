@@ -1300,7 +1300,7 @@ function playSong(index) {
     renderNowPlaying();
     renderSongList();
     
-    player.src = 'songs/' + song.file;
+    player.src = new URL('songs/' + song.file, location.origin).pathname;
     player.play();
     setPlayingState(true);
     syncToMiniPlayer();
@@ -1356,7 +1356,7 @@ try {
         currentIdx = saved.track;
         renderNowPlaying();
         renderSongList();
-        player.src = 'songs/' + JUKEBOX_SONGS[saved.track].file;
+        player.src = new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
         function onReady() {
             if (saved.time > 0 && saved.time < player.duration) player.currentTime = saved.time;
             player.play();

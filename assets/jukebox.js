@@ -98,7 +98,7 @@
         // If seeking to a specific position, wait for metadata before seeking
         pendingSeek = (typeof seekTo === 'number' && seekTo > 0) ? seekTo : -1;
 
-        audio.src = track.file;
+        audio.src = new URL(track.file, location.origin).pathname;
         audio.volume = muted ? 0 : volume;
 
         if (pendingSeek >= 0) {
