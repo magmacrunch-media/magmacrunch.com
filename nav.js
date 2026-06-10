@@ -358,7 +358,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
     ];
 
     /* ── EXCLUDED PATHS: full page load ── */
-    const EXCLUDE_PATHS = ['/arcade/', '/music/jukebox/'];
+    const EXCLUDE_PATHS = ['/arcade/'];
 
     /* ── HELPERS ── */
     function abs(href, base) {
