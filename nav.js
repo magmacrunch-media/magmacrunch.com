@@ -524,6 +524,8 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
             await runScripts(doc, url);
 
+            if (push) history.pushState({ spa: true }, '', url);
+
             // Re-inject jukebox mini-player if missing (e.g. after leaving full jukebox page)
             if (!document.querySelector('.nav-player') && window.__jukeboxReady) {
                 await window.__jukeboxReady;
@@ -532,7 +534,6 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 }
             }
 
-            if (push) history.pushState({ spa: true }, '', url);
             window.scrollTo(0, 0);
 
         } catch (e) {

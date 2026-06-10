@@ -114,9 +114,7 @@
             audio.play().catch(() => {});
         }
 
-        isPlaying = true;
         updateUI();
-        saveState();
     }
 
     function togglePlay() {
@@ -231,11 +229,12 @@
         // Build player HTML
         const player = document.createElement('div');
         player.className = 'nav-player';
+        const jukeboxHref = new URL('music/jukebox/index.html', location.origin).pathname;
         player.innerHTML =
             '<button class="np-btn np-prev" aria-label="previous track">\u25C0\u25C0</button>' +
             '<button class="np-btn np-play" aria-label="play">\u25B6</button>' +
             '<button class="np-btn np-next" aria-label="next track">\u25B6\u25B6</button>' +
-            '<a href="music/jukebox/index.html" class="np-track-link">' +
+            '<a href="' + jukeboxHref + '" class="np-track-link">' +
                 '<span class="np-text">select a song on the jukebox \u2192</span>' +
             '</a>' +
             '<div class="np-vol-wrap">' +
