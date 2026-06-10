@@ -22,6 +22,14 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 │   ├── photos/                artist/place photos
 │   └── logos/                 social/brand logos
 ├── arcade/                    pixel art games (each self-contained)
+│   ├── 2^N/                   2048 clone — slide & merge tiles
+│   ├── crystal-mirror-maze/   navigate a shifting labyrinth of reflections
+│   ├── george-boole/          boolean logic puzzles — and, or, not
+│   ├── moonlight-drift/       coast through space, dodge obstacles
+│   ├── solitaire/             klondike solitaire with timed scoring
+│   ├── solitaire_THLD/        poker solitaire — build hands, score big
+│   ├── SORRY/                 classic board game, online multiplayer (up to 4)
+│   └── tetris/                helsinki 1989 — stack blocks, clear lines
 ├── home/                      about.html, guestbook.html, links/
 ├── music/                     jukebox, distributed music, floppy disk, catalog
 ├── templates/                 JS template scripts for archive subpages
@@ -33,12 +41,12 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ## key features
 
 ### persistent jukebox player
-A mini audio player injected into every page's `<nav>` via `nav.js`. Loads `assets/jukebox.js` and `assets/jukebox.css` dynamically — no HTML changes needed across 156+ pages. Skipped on the full jukebox page (`/music/jukebox/`). State saved to localStorage every second, restores on page load.
+A mini audio player injected into every page's `<nav>` via `nav.js`. Loads `assets/jukebox.js` and `assets/jukebox.css` dynamically — no HTML changes needed across 156+ pages. State saved to localStorage every second, restores on page load.
 
 ### SPA-style navigation
-`nav.js` intercepts same-site `<a>` clicks, fetches the target page, swaps `<main>` content, and manages CSS/script lifecycle. `<nav>` (with audio) persists across navigations. Arcade and jukebox pages do full page loads.
+`nav.js` intercepts same-site `<a>` clicks, fetches the target page, swaps `<main>` content, and manages CSS/script lifecycle. `<nav>` (with audio) persists across navigations. Arcade pages do full page loads.
 
-Excluded from SPA: `/arcade/`, `/music/jukebox/`
+Excluded from SPA: `/arcade/`
 
 ### themed nav bar
 All nav elements (border glow, brand text, dropdown hover, hamburger) use CSS variables (`--nav-accent`, `--nav-glow`, `--nav-brand`, `--nav-brand-glow`) set per-page in each artist/place shared CSS file.
