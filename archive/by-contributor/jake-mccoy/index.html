@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jake A. McCoy — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--cyan); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--cyan); opacity: 0.7; }
+        .breadcrumb .current { color: var(--cyan); }
+
+        /* ── HEADER ── */
+        .contrib-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .contrib-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--cyan);
+            text-shadow: 0 0 20px rgba(0,245,255,0.5);
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+        }
+        .contrib-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--dim);
+            letter-spacing: 0.05em;
+        }
+        .contrib-meta a {
+            color: var(--cyan);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .contrib-meta a:hover { color: var(--white); }
+        .contrib-ids {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--dim);
+            opacity: 0.6;
+            margin-top: 6px;
+        }
+
+        /* ── SECTIONS ── */
+        .section {
+            width: min(800px, 95vw);
+            margin-bottom: 32px;
+        }
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            margin-bottom: 24px;
+            opacity: 0.4;
+        }
+        .section-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--cyan);
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        /* ── ENTRY CARDS ── */
+        .entry {
+            border: 1px solid #1e1e2e;
+            background: var(--deep);
+            margin-bottom: 8px;
+            transition: border-color 0.15s;
+        }
+        .entry:hover { border-color: #2a2a4a; }
+
+        .entry-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .entry-header:hover { background: rgba(0,245,255,0.03); }
+
+        .entry-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--dim);
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        details[open] > .entry-header .entry-arrow { transform: rotate(90deg); }
+
+        .entry-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--white);
+            letter-spacing: 0.05em;
+            flex: 1;
+        }
+        .entry-name a {
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .entry-name a:hover { color: var(--cyan); }
+
+        .entry-dates {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--dim);
+            flex-shrink: 0;
+        }
+        .entry-status {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            padding: 2px 6px;
+            border: 1px solid;
+            letter-spacing: 0.08em;
+            flex-shrink: 0;
+        }
+        .entry-status.active {
+            color: var(--green);
+            border-color: var(--green);
+        }
+        .entry-status.former {
+            color: var(--dim);
+            border-color: #2a2a4a;
+        }
+
+        .entry-body {
+            padding: 0 16px 14px 36px;
+        }
+        .entry-instruments {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--white);
+            line-height: 1.6;
+            opacity: 0.8;
+        }
+        .entry-instruments .label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .instrument-tag {
+            display: inline-block;
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            padding: 2px 8px;
+            margin: 2px 4px 2px 0;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+        }
+        .instrument-tag.original {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        /* ── SIMPLE LIST (founder, pseudonyms) ── */
+        .simple-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .simple-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #1a1a1e;
+        }
+        .simple-list li:last-child { border-bottom: none; }
+        .simple-list a {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--white);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .simple-list a:hover { color: var(--cyan); }
+        .simple-list .sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--dim);
+            margin-left: 8px;
+        }
+
+        /* ── LOADING / ERROR ── */
+        .loading {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            padding: 40px 0;
+            text-align: center;
+        }
+        .loading::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+        .error-msg {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--rose);
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        /* ── LINK TO MB ── */
+        .mb-link {
+            display: inline-block;
+            margin-top: 40px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            text-decoration: none;
+            border: 1px solid #2a2a4a;
+            padding: 8px 14px;
+            letter-spacing: 0.08em;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .mb-link:hover { color: var(--cyan); border-color: var(--cyan); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a><a href="../../../archive/by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../index.html">home</a>
+        <span class="sep">›</span>
+        <a href="../../index.html">archive</a>
+        <span class="sep">›</span>
+        <a href="../index.html">by contributor</a>
+        <span class="sep">›</span>
+        <span class="current">jake mccoy</span>
+    </div>
+
+    <div class="contrib-header">
+        <h1 class="contrib-name">JAKE A. MCCOY</h1>
+        <div class="contrib-meta">Person · State College, IL · born 1990</div>
+        <div class="contrib-ids" id="contrib-ids"></div>
+    </div>
+
+    <div id="content">
+        <div class="loading">loading from MusicBrainz</div>
+    </div>
+
+    <a href="https://musicbrainz.org/artist/32bc1ac7-efd0-44f2-8645-8fecf6a40edb" target="_blank" rel="noopener" class="mb-link">VIEW ON MUSICBRAINZ ↗</a>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const MB_ID = '32bc1ac7-efd0-44f2-8645-8fecf6a40edb';
+    const API = 'https://musicbrainz.org/ws/2/artist/' + MB_ID + '?fmt=json&inc=artist-rels';
+    const contentEl = document.getElementById('content');
+    const idsEl = document.getElementById('contrib-ids');
+
+    /* ── ARCHIVE PAGE MAP — links to existing archive pages ── */
+    const ARCHIVE_LINKS = {
+        'ddcbeb01-edb5-4e74-b5cd-23d1b64d3086': '../juanito-thompson/index.html',
+        '4d945923-9deb-4cd0-a477-6e1474cb306c': '../thld/index.html',
+        '260e4953-a937-4355-8389-d1baaf24eca5': '../svfp/index.html',
+        '5b954c0a-1375-40de-ae5f-a245e4f942c6': '../dino-spumoni/index.html',
+        '0335c576-94a4-4adb-a323-6effff5914e0': '../ddt/index.html',
+        'bdf6e0d0-6886-4801-b7ce-c9ced5d377a8': '../four-bs/index.html',
+        '605cc914-2aff-4e2b-9657-524c7009cb18': '../dag-henderson/index.html',
+        'f701c2bc-6eb6-4e7b-b950-f0c2426cb91c': '../vinny-bobarino/index.html',
+        'd9179190-dcf2-469e-b4c8-3624b97dc11a': '../bears-crossing/index.html',
+        '76708e20-5d88-4699-adf6-a1f2118ef661': '../audio-sound-paper/index.html',
+        'cec7158c-d808-4792-a1bf-d6446e6a6904': '../grooves-mm/index.html',
+    };
+
+    function archiveLink(artist) {
+        const link = ARCHIVE_LINKS[artist.id];
+        if (link) return '<a href="' + link + '">' + esc(artist.name) + '</a>';
+        return esc(artist.name);
+    }
+
+    function esc(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    function formatDate(d) {
+        if (!d) return '';
+        return d.replace(/-01-01$/, '').replace(/-01$/, '');
+    }
+
+    function dateRange(begin, end, ended) {
+        if (!begin && !end) return 'present';
+        const b = formatDate(begin) || '?';
+        const e = ended ? (formatDate(end) || '?') : 'present';
+        return b + ' — ' + e;
+    }
+
+    function renderSection(title, html) {
+        if (!html) return '';
+        return '<div class="section">' +
+            '<div class="section-divider"></div>' +
+            '<div class="section-title">// ' + title + ' //</div>' +
+            html +
+            '</div>';
+    }
+
+    function renderEntry(artist, attrs, begin, end, ended) {
+        const dates = dateRange(begin, end, ended);
+        const statusClass = ended ? 'former' : 'active';
+        const statusText = ended ? 'former' : 'active';
+
+        let instrumentsHtml = '';
+        if (attrs && attrs.length > 0) {
+            const tags = attrs.map(function(a) {
+                const isOriginal = a.toLowerCase().includes('original');
+                return '<span class="instrument-tag' + (isOriginal ? ' original' : '') + '">' + esc(a) + '</span>';
+            }).join('');
+            instrumentsHtml = '<div class="entry-instruments">' +
+                '<div class="label">instruments / roles</div>' +
+                tags +
+                '</div>';
+        }
+
+        return '<details class="entry">' +
+            '<summary class="entry-header">' +
+                '<span class="entry-arrow">▶</span>' +
+                '<span class="entry-name">' + archiveLink(artist) + '</span>' +
+                '<span class="entry-dates">' + esc(dates) + '</span>' +
+                '<span class="entry-status ' + statusClass + '">' + statusText + '</span>' +
+            '</summary>' +
+            '<div class="entry-body">' + instrumentsHtml + '</div>' +
+            '</details>';
+    }
+
+    function renderSimpleEntry(artist, type) {
+        const link = archiveLink(artist);
+        const typeLabel = type === 'founder' ? 'founded' : type === 'is person' ? 'also known as' : '';
+        return '<li>' + link + (typeLabel ? '<span class="sub">' + typeLabel + '</span>' : '') + '</li>';
+    }
+
+    function render(data) {
+        const rels = data.relations || [];
+
+        /* ── GROUP BY TYPE ── */
+        const founders = [];
+        const members = [];
+        const supporting = [];
+        const aliases = [];
+        const seen = {};
+
+        rels.forEach(function(r) {
+            if (r['target-type'] !== 'artist' || !r.artist) return;
+
+            const key = r.type + ':' + r.artist.id + ':' + (r.begin || '') + ':' + (r.end || '');
+            if (seen[key]) return;
+            seen[key] = true;
+
+            switch (r.type) {
+                case 'founder':
+                    founders.push(r);
+                    break;
+                case 'member of band':
+                    members.push(r);
+                    break;
+                case 'instrumental supporting musician':
+                    supporting.push(r);
+                    break;
+                case 'is person':
+                    aliases.push(r);
+                    break;
+            }
+        });
+
+        /* ── SORT MEMBERSHIP BY BEGIN DATE ── */
+        members.sort(function(a, b) {
+            return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
+        });
+        supporting.sort(function(a, b) {
+            return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
+        });
+
+        /* ── RENDER ── */
+        let html = '';
+
+        /* Founders */
+        if (founders.length > 0) {
+            const items = founders.map(function(r) {
+                return renderSimpleEntry(r.artist, 'founder');
+            }).join('');
+            html += renderSection('founded', '<ul class="simple-list">' + items + '</ul>');
+        }
+
+        /* Memberships */
+        if (members.length > 0) {
+            const items = members.map(function(r) {
+                return renderEntry(r.artist, r.attributes, r.begin, r.end, r.ended);
+            }).join('');
+            html += renderSection('band memberships', items);
+        }
+
+        /* Supporting */
+        if (supporting.length > 0) {
+            const items = supporting.map(function(r) {
+                return renderEntry(r.artist, r.attributes, r.begin, r.end, r.ended);
+            }).join('');
+            html += renderSection('session / supporting', items);
+        }
+
+        /* Aliases */
+        if (aliases.length > 0) {
+            const items = aliases.map(function(r) {
+                return renderSimpleEntry(r.artist, 'is person');
+            }).join('');
+            html += renderSection('also known as', '<ul class="simple-list">' + items + '</ul>');
+        }
+
+        if (!html) {
+            html = '<div class="error-msg">no relationships found</div>';
+        }
+
+        contentEl.innerHTML = html;
+    }
+
+    /* ── FETCH ── */
+    fetch(API)
+        .then(function(res) {
+            if (!res.ok) throw new Error('API error: ' + res.status);
+            return res.json();
+        })
+        .then(function(data) {
+            /* Show IDs */
+            let ids = [];
+            if (data.isnis && data.isnis.length) ids.push('ISNI: ' + data.isnis[0]);
+            if (data.ipis && data.ipis.length) ids.push('IPI: ' + data.ipis[0]);
+            if (ids.length) idsEl.textContent = ids.join(' · ');
+
+            render(data);
+        })
+        .catch(function(e) {
+            contentEl.innerHTML = '<div class="error-msg">failed to load from MusicBrainz<br><span style="opacity:0.6;font-size:7px">' + esc(e.message) + '</span></div>';
+        });
+})();
+</script>
+
+</body>
+</html>
