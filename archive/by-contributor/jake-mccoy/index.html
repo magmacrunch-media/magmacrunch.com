@@ -174,10 +174,6 @@
             font-size: 11px;
             color: var(--cyan);
         }
-        .instrument-tag.original {
-            border-color: var(--cyan);
-            color: var(--cyan);
-        }
 
         /* ── SIMPLE LIST (founder, pseudonyms) ── */
         .simple-list {
@@ -358,9 +354,11 @@
 
         let instrumentsHtml = '';
         if (attrs && attrs.length > 0) {
-            const tags = attrs.map(function(a) {
-                const isOriginal = a.toLowerCase().includes('original');
-                return '<span class="instrument-tag' + (isOriginal ? ' original' : '') + '">' + esc(a) + '</span>';
+            const tags = attrs.filter(function(a) {
+                var lower = a.toLowerCase();
+                return !lower.includes('original') && !lower.includes('additional');
+            }).map(function(a) {
+                return '<span class="instrument-tag">' + esc(a) + '</span>';
             }).join('');
             instrumentsHtml = '<div class="entry-instruments">' +
                 '<div class="label">instruments / roles</div>' +
