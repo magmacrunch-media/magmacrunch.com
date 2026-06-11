@@ -385,13 +385,28 @@
         return '<li>' + link + (typeLabel ? '<span class="sub">' + typeLabel + '</span>' : '') + '</li>';
     }
 
+    function mergeRels(rels) {
+        const begins = rels.map(function(r) { return r.begin; }).filter(Boolean).sort();
+        const begin = begins[0] || null;
+        const ends = rels.map(function(r) { return r.end; });
+        const end = ends.indexOf(null) !== -1 ? null : ends.filter(Boolean).sort().reverse()[0];
+        const ended = rels.every(function(r) { return r.ended; });
+        const allAttrs = [];
+        rels.forEach(function(r) {
+            (r.attributes || []).forEach(function(a) {
+                if (allAttrs.indexOf(a) === -1) allAttrs.push(a);
+            });
+        });
+        return { begin: begin, end: end, ended: ended, attributes: allAttrs };
+    }
+
     function render(data) {
         const rels = data.relations || [];
 
         /* ── GROUP BY TYPE ── */
         const founders = [];
-        const members = [];
-        const supporting = [];
+        const members = {};
+        const supporting = {};
         const aliases = [];
         const seen = {};
 
@@ -407,10 +422,12 @@
                     founders.push(r);
                     break;
                 case 'member of band':
-                    members.push(r);
+                    if (!members[r.artist.id]) members[r.artist.id] = { artist: r.artist, rels: [] };
+                    members[r.artist.id].rels.push(r);
                     break;
                 case 'instrumental supporting musician':
-                    supporting.push(r);
+                    if (!supporting[r.artist.id]) supporting[r.artist.id] = { artist: r.artist, rels: [] };
+                    supporting[r.artist.id].rels.push(r);
                     break;
                 case 'is person':
                     aliases.push(r);
@@ -418,15 +435,7 @@
             }
         });
 
-        /* ── SORT MEMBERSHIP BY BEGIN DATE ── */
-        members.sort(function(a, b) {
-            return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
-        });
-        supporting.sort(function(a, b) {
-            return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
-        });
-
-        /* ── RENDER ── */
+        /* ── SORT AND RENDER ── */
         let html = '';
 
         /* Founders */
@@ -438,17 +447,31 @@
         }
 
         /* Memberships */
-        if (members.length > 0) {
-            const items = members.map(function(r) {
-                return renderEntry(r.artist, r.attributes, r.begin, r.end, r.ended);
+        const memberGroups = Object.values(members);
+        memberGroups.sort(function(a, b) {
+            var aB = a.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
+            var bB = b.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
+            return aB.localeCompare(bB);
+        });
+        if (memberGroups.length > 0) {
+            const items = memberGroups.map(function(g) {
+                const m = mergeRels(g.rels);
+                return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended);
             }).join('');
             html += renderSection('band memberships', items);
         }
 
         /* Supporting */
-        if (supporting.length > 0) {
-            const items = supporting.map(function(r) {
-                return renderEntry(r.artist, r.attributes, r.begin, r.end, r.ended);
+        const supportGroups = Object.values(supporting);
+        supportGroups.sort(function(a, b) {
+            var aB = a.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
+            var bB = b.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
+            return aB.localeCompare(bB);
+        });
+        if (supportGroups.length > 0) {
+            const items = supportGroups.map(function(g) {
+                const m = mergeRels(g.rels);
+                return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended);
             }).join('');
             html += renderSection('session / supporting', items);
         }
