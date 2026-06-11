@@ -332,13 +332,15 @@
 
     function formatDate(d) {
         if (!d) return '';
-        return d.replace(/-01-01$/, '').replace(/-01$/, '');
+        return d.split('-')[0];
     }
 
     function dateRange(begin, end, ended) {
-        if (!begin && !end) return 'present';
-        const b = formatDate(begin) || '?';
-        const e = ended ? (formatDate(end) || '?') : 'present';
+        const b = formatDate(begin);
+        const e = ended ? formatDate(end) : 'present';
+        if (!b && e === 'present') return 'present';
+        if (!b) return e;
+        if (b === e) return b;
         return b + ' — ' + e;
     }
 
