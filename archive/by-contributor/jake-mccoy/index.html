@@ -415,7 +415,7 @@
         rels.forEach(function(r) {
             if (r['target-type'] !== 'artist' || !r.artist) return;
 
-            const key = r.type + ':' + r.artist.id + ':' + (r.begin || '') + ':' + (r.end || '');
+            const key = r.type + ':' + r.artist.id;
             if (seen[key]) return;
             seen[key] = true;
 
