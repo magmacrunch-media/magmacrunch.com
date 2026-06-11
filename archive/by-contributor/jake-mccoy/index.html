@@ -127,7 +127,6 @@
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
             color: var(--dim);
-            flex-shrink: 0;
         }
         .entry-status {
             font-family: 'Press Start 2P', monospace;
@@ -349,8 +348,6 @@
 
     function renderEntry(artist, attrs, begin, end, ended) {
         const dates = dateRange(begin, end, ended);
-        const statusClass = ended ? 'former' : 'active';
-        const statusText = ended ? 'former' : 'active';
 
         let instrumentsHtml = '';
         if (attrs && attrs.length > 0) {
@@ -371,7 +368,6 @@
                 '<span class="entry-arrow">▶</span>' +
                 '<span class="entry-name">' + archiveLink(artist) + '</span>' +
                 '<span class="entry-dates">' + esc(dates) + '</span>' +
-                '<span class="entry-status ' + statusClass + '">' + statusText + '</span>' +
             '</summary>' +
             '<div class="entry-body">' + instrumentsHtml + '</div>' +
             '</details>';
