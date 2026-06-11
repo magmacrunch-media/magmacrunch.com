@@ -173,6 +173,14 @@
             font-size: 11px;
             color: var(--cyan);
         }
+        .entry-role {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
 
         /* ── SIMPLE LIST (founder, pseudonyms) ── */
         .simple-list {
@@ -346,8 +354,13 @@
             '</div>';
     }
 
-    function renderEntry(artist, attrs, begin, end, ended) {
+    function renderEntry(artist, attrs, begin, end, ended, role) {
         const dates = dateRange(begin, end, ended);
+
+        let roleHtml = '';
+        if (role === 'supporting') {
+            roleHtml = '<div class="entry-role">session / supporting</div>';
+        }
 
         let instrumentsHtml = '';
         if (attrs && attrs.length > 0) {
@@ -369,7 +382,7 @@
                 '<span class="entry-name">' + archiveLink(artist) + '</span>' +
                 '<span class="entry-dates">' + esc(dates) + '</span>' +
             '</summary>' +
-            '<div class="entry-body">' + instrumentsHtml + '</div>' +
+            '<div class="entry-body">' + roleHtml + instrumentsHtml + '</div>' +
             '</details>';
     }
 
@@ -442,34 +455,31 @@
             html += renderSection('founded', '<ul class="simple-list">' + items + '</ul>');
         }
 
-        /* Memberships */
+        /* Bands — combined and sorted */
         const memberGroups = Object.values(members);
-        memberGroups.sort(function(a, b) {
-            var aB = a.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
-            var bB = b.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
-            return aB.localeCompare(bB);
-        });
-        if (memberGroups.length > 0) {
-            const items = memberGroups.map(function(g) {
-                const m = mergeRels(g.rels);
-                return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended);
-            }).join('');
-            html += renderSection('band memberships', items);
-        }
-
-        /* Supporting */
         const supportGroups = Object.values(supporting);
-        supportGroups.sort(function(a, b) {
-            var aB = a.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
-            var bB = b.rels.map(function(r) { return r.begin; }).filter(Boolean).sort()[0] || 'zzzz';
+        const allBands = [];
+
+        memberGroups.forEach(function(g) {
+            var m = mergeRels(g.rels);
+            allBands.push({ artist: g.artist, merged: m, role: 'member' });
+        });
+        supportGroups.forEach(function(g) {
+            var m = mergeRels(g.rels);
+            allBands.push({ artist: g.artist, merged: m, role: 'supporting' });
+        });
+
+        allBands.sort(function(a, b) {
+            var aB = a.merged.begin || 'zzzz';
+            var bB = b.merged.begin || 'zzzz';
             return aB.localeCompare(bB);
         });
-        if (supportGroups.length > 0) {
-            const items = supportGroups.map(function(g) {
-                const m = mergeRels(g.rels);
-                return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended);
+
+        if (allBands.length > 0) {
+            const items = allBands.map(function(g) {
+                return renderEntry(g.artist, g.merged.attributes, g.merged.begin, g.merged.end, g.merged.ended, g.role);
             }).join('');
-            html += renderSection('session / supporting', items);
+            html += renderSection('bands', items);
         }
 
         /* Aliases */
