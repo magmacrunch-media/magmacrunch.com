@@ -175,6 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function showActionButtons() {
         actionButtons.innerHTML = '';
         const actions = game.getAvailableActions();
+        const enLabels = {
+            check: 'check',
+            call: 'call',
+            raise: 'raise',
+            fold: 'fold'
+        };
         
         actions.forEach(action => {
             const btn = document.createElement('button');
@@ -182,23 +188,25 @@ document.addEventListener('DOMContentLoaded', () => {
             
             switch (action) {
                 case 'check':
-                    btn.textContent = LABELS[lang].check;
+                    btn.innerHTML = `${LABELS[lang].check} <span class="btn-sub">/ ${enLabels.check}</span>`;
                     btn.classList.add('check');
                     btn.addEventListener('click', () => {
                         game.check(game.players[0]);
                         renderGame();
                     });
                     break;
-                case 'call':
-                    btn.textContent = `${LABELS[lang].call} ${game.currentBet - game.players[0].currentBet}`;
+                case 'call': {
+                    const amt = game.currentBet - game.players[0].currentBet;
+                    btn.innerHTML = `${LABELS[lang].call} <span class="btn-sub">/ ${enLabels.call} ${amt}</span>`;
                     btn.classList.add('call');
                     btn.addEventListener('click', () => {
                         game.call(game.players[0]);
                         renderGame();
                     });
                     break;
+                }
                 case 'raise':
-                    btn.textContent = LABELS[lang].raise;
+                    btn.innerHTML = `${LABELS[lang].raise} <span class="btn-sub">/ ${enLabels.raise}</span>`;
                     btn.classList.add('raise');
                     btn.addEventListener('click', () => {
                         game.raise(game.players[0]);
@@ -206,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     break;
                 case 'fold':
-                    btn.textContent = LABELS[lang].fold;
+                    btn.innerHTML = `${LABELS[lang].fold} <span class="btn-sub">/ ${enLabels.fold}</span>`;
                     btn.classList.add('fold');
                     btn.addEventListener('click', () => {
                         game.fold(game.players[0]);
@@ -233,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
                 <h2>${isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose}</h2>
                 <p>${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})</p>
-                <button id="nextHandBtn" class="action-btn">${LABELS[lang].newGame}</button>
+                <button id="nextHandBtn" class="action-btn">${LABELS[lang].newGame} <span class="btn-sub">/ new game</span></button>
             </div>
         `;
         
