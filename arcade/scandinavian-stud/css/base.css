@@ -14,7 +14,14 @@
     --slate: #4a6a7a;
     --card-face-bg: #ffffff;
     --card-back-bg: #0d0028;
-    --fc-red: #ff3d6e;
+    --fc-red: #cc1111;
+    --fc-art-bg: #fffef5;
+    --fc-card-bg: #fffef5;
+    --fc-black: #111111;
+    --fc-blue: #1a3a8a;
+    --fc-gold: #d4a017;
+    --fc-skin: #f5cba7;
+    --fc-steel: #8899aa;
 }
 
 * {
