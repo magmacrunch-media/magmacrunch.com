@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update displays
         potDisplay.textContent = state.pot;
         chipDisplay.textContent = game.players[0].chips;
-        roundDisplay.textContent = state.round + 1;
+        roundDisplay.textContent = state.round;
         
         const streetNames = LABELS[lang].streetNames;
         streetLabel.textContent = streetNames[state.round] || `Street ${state.round}`;
@@ -93,7 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Show action buttons for human player
         if (state.currentPlayerIndex === 0 && state.phase === 'betting') {
-            showActionButtons();
+            const actions = game.getAvailableActions();
+            if (actions.length > 0) {
+                showActionButtons();
+            } else {
+                // Human has no actions (all-in) — auto-advance
+                hideActionButtons();
+                setTimeout(() => {
+                    game.check(game.players[0]);
+                    renderGame();
+                }, 400);
+            }
         } else if (state.phase === 'betting') {
             // AI is thinking
             hideActionButtons();
@@ -234,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Show game over ─────────────────────────────────────
 
     function showGameOver(state) {
-        const winner = state.players.find(p => p.chips > 0);
+        const winner = state.lastWinner;
         const isPlayerWin = winner && winner.isHuman;
         
         messageArea.innerHTML = `

@@ -18,6 +18,7 @@ class SokoGame {
         this.totalRounds = 0;     // Total hands played
         this.handEvaluater = new HandEvaluator();
         this.language = 'fi';     // Finnish by default
+        this.lastWinner = null;   // Winner of the last hand
     }
 
     // ── Initialize a new hand ────────────────────────────────
@@ -30,6 +31,7 @@ class SokoGame {
         this.round = 0;
         this.bettingRound = 0;
         this.gameOver = false;
+        this.lastWinner = null;
         this.phase = 'dealing';
         this.betsThisRound = {};
         this.raisesThisRound = 0;
@@ -77,7 +79,7 @@ class SokoGame {
         this.betsThisRound = {};
 
         this.players.forEach(p => {
-            if (!p.folded && !p.allIn) {
+            if (!p.folded) {
                 const card = this.deck.deal();
                 card.faceUp = true;
                 p.cards.push(card);
@@ -107,9 +109,14 @@ class SokoGame {
         this.currentBet = 0;
         this.bettingRound = this.round - 1; // 0-indexed: round 1→br0, round 2→br1, etc.
 
+        // Reset active players' per-round bet tracking
+        this.players.forEach(p => {
+            if (!p.folded) p.currentBet = 0;
+        });
+
         // Find first active player after dealer
         this.currentPlayerIndex = this._nextActivePlayer(this.dealerIndex);
-        this._actionLog(`${LABELS[this.language].round} ${this.round + 1}`);
+        this._actionLog(`${LABELS[this.language].round} ${this.round}`);
     }
 
     // ── Get current player ──────────────────────────────────
@@ -166,7 +173,7 @@ class SokoGame {
         }
 
         const betIncrement = this.bettingRound < 2 ? SMALL_BET : BIG_BET;
-        const minRaise = Math.max(this.currentBet, ANTE_AMOUNT) + betIncrement;
+        const minRaise = this.currentBet + betIncrement;
         const raiseAmount = amount || minRaise;
         const totalBet = Math.min(raiseAmount, player.chips + player.currentBet);
         const additional = totalBet - player.currentBet;
@@ -290,6 +297,7 @@ class SokoGame {
     _endHand(winner) {
         this.gameOver = true;
         this.phase = 'complete';
+        this.lastWinner = winner;
         winner.chips += this.pot;
         this.totalRounds++;
         
@@ -348,7 +356,13 @@ class SokoGame {
             currentPlayerIndex: this.currentPlayerIndex,
             dealerIndex: this.dealerIndex,
             totalRounds: this.totalRounds,
-            gameOver: this.gameOver
+            gameOver: this.gameOver,
+            lastWinner: this.lastWinner ? {
+                id: this.lastWinner.id,
+                name: this.lastWinner.name,
+                isHuman: this.lastWinner.isHuman,
+                hand: this.lastWinner.hand
+            } : null
         };
     }
 
