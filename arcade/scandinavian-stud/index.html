@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SÖKÖ — Scandinavian Stud</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" href="../../arcade/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/start-screen.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+    <link rel="stylesheet" href="../solitaire/css/cards.css">
+    <link rel="stylesheet" href="css/modals.css">
+</head>
+<style>
+    .mc-back {
+        position: fixed;
+        top: 12px;
+        left: 14px;
+        z-index: 10000;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        color: #00f5ff;
+        text-decoration: none;
+        letter-spacing: 0.08em;
+    }
+    .mc-back::before {
+        content: '← ';
+    }
+    .mc-back:hover {
+        color: #00ffff;
+    }
+    body.game-active .mc-back {
+        display: none;
+    }
+</style>
+<body>
+<a href="../index.html" class="mc-back">magmacrunch arcade</a>
+
+<div class="container">
+    <!-- Start Screen -->
+    <div id="startScreen" class="start-screen">
+        <div class="start-content">
+            <h1 class="game-title">SÖKÖ</h1>
+            <p class="game-subtitle">skandinavialainen stud</p>
+
+            <div class="start-divider"></div>
+
+            <div class="start-buttons">
+                <button id="startGameBtn" class="start-btn primary">Aloita peli</button>
+                <button id="viewRulesBtn" class="start-btn">Ohjeet</button>
+                <button id="viewScoresBtn" class="start-btn">Ennätykset</button>
+            </div>
+
+            <p class="start-press-prompt">— paina aloita —</p>
+
+            <div class="start-footer">
+                <p>Suomen kansallispokeri &bull; 5 korttia &bull; Neljä panostuskierrosta</p>
+            </div>
+            <p class="start-copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" style="display: none;">
+        <div class="game-header">
+            <h1>SÖKÖ</h1>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Potti</span>
+                    <span class="stat-value" id="potAmount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Chipsiä</span>
+                    <span class="stat-value" id="playerChips">1000</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Kierros</span>
+                    <span class="stat-value" id="roundDisplay">1</span>
+                </div>
+            </div>
+            <div class="street-label" id="streetLabel">Piilokortti</div>
+        </div>
+
+        <!-- AI Players -->
+        <div id="aiAreas" class="ai-areas"></div>
+
+        <!-- Pot display -->
+        <div class="pot-display">
+            <div class="pot-icon">♠♥♦♣</div>
+        </div>
+
+        <!-- Human Player -->
+        <div id="playerArea" class="player-area"></div>
+
+        <!-- Action Buttons -->
+        <div id="actionButtons" class="action-buttons"></div>
+
+        <!-- Message Area -->
+        <div id="messageArea" class="message-area"></div>
+
+        <!-- Controls -->
+        <div class="game-controls">
+            <button id="newGameBtn" class="control-btn">Uusi peli</button>
+            <button id="menuBtn" class="control-btn">Valikko</button>
+        </div>
+    </div>
+</div>
+
+<script src="../solitaire/js/config.js"></script>
+<script src="../solitaire/js/deck.js"></script>
+<script src="../solitaire/js/face-cards.js"></script>
+<script src="../solitaire/js/number-cards.js"></script>
+<script src="js/config.js"></script>
+<script src="js/hand-eval.js"></script>
+<script src="js/game.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

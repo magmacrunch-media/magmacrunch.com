@@ -1,0 +1,110 @@
+/* start-screen.css — Sökö (Scandinavian Stud) */
+
+.start-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, var(--mid) 0%, var(--darker) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.start-screen::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0, 245, 255, 0.1) 0%, transparent 70%);
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+.start-content {
+    text-align: center;
+    z-index: 1;
+    padding: 20px;
+}
+
+.game-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(32px, 8vw, 64px);
+    color: var(--accent);
+    text-shadow: 
+        0 0 20px rgba(0, 245, 255, 0.8),
+        0 0 40px rgba(0, 245, 255, 0.4);
+    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+}
+
+.game-subtitle {
+    font-family: 'VT323', monospace;
+    font-size: 24px;
+    color: var(--slate);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.start-divider {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 30px auto;
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.start-btn {
+    font-size: 12px;
+    padding: 15px 30px;
+    min-width: 250px;
+}
+
+.start-btn.primary {
+    background: var(--accent);
+    color: var(--darker);
+    border-color: var(--accent);
+}
+
+.start-btn.primary:hover {
+    background: var(--green);
+    border-color: var(--green);
+}
+
+.start-press-prompt {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--accent-dim);
+    animation: blink 1.5s ease-in-out infinite;
+    margin-bottom: 40px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.start-footer {
+    font-size: 14px;
+    color: var(--slate);
+    margin-bottom: 20px;
+}
+
+.start-copyright {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--accent-dim);
+    letter-spacing: 0.1em;
+}

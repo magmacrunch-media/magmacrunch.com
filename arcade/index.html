@@ -535,6 +535,17 @@
                 </div>
             </a>
 
+            <a href="scandinavian-stud/index.html" class="game-card" style="--card-color: var(--green)">
+                <div class="card-inner">
+                    <div class="card-title">SÖKÖ</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cSoko" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">scandinavian stud. five card poker with a finnish twist. four-card straights & flushes.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
         </div>
     </div>
 
@@ -1135,6 +1146,86 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.fillStyle = '#111';
     ctx.font = '10px serif';
     ctx.fillText('♠', 56, 58);
+})();
+
+// cSoko — Scandinavian Stud card fan preview
+(function() {
+    const c = document.getElementById('cSoko');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark blue table background
+    ctx.fillStyle = '#0a1628';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // felt texture gradient
+    const grad = ctx.createRadialGradient(36, 36, 0, 36, 36, 40);
+    grad.addColorStop(0, '#1a2a44');
+    grad.addColorStop(1, '#0a1628');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 72, 72);
+
+    // card dimensions
+    const cardW = 14;
+    const cardH = 20;
+    const startY = 12;
+
+    // fan of 5 cards spread from center
+    const cards = [
+        { x: 10, suit: 'spades',   rank: 'K', faceUp: false },
+        { x: 22, suit: 'hearts',   rank: 'A', faceUp: true },
+        { x: 32, suit: 'diamonds', rank: 'Q', faceUp: true },
+        { x: 42, suit: 'clubs',    rank: 'J', faceUp: true },
+        { x: 52, suit: 'spades',   rank: '10', faceUp: true }
+    ];
+
+    cards.forEach(card => {
+        if (!card.faceUp) {
+            // Face down card - dark with pattern
+            ctx.fillStyle = '#162040';
+            ctx.fillRect(card.x, startY, cardW, cardH);
+            ctx.strokeStyle = '#00f5ff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(card.x, startY, cardW, cardH);
+            // pixel pattern
+            ctx.fillStyle = '#1e3050';
+            for (let py = 2; py < cardH - 2; py += 3) {
+                for (let px = 2; px < cardW - 2; px += 3) {
+                    ctx.fillRect(card.x + px, startY + py, 1, 1);
+                }
+            }
+        } else {
+            // Face up card - white with suit symbol
+            ctx.fillStyle = '#f0ead8';
+            ctx.fillRect(card.x, startY, cardW, cardH);
+            ctx.strokeStyle = '#00f5ff';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(card.x, startY, cardW, cardH);
+
+            // rank
+            ctx.fillStyle = card.suit === 'hearts' || card.suit === 'diamonds' ? '#ff3d6e' : '#0a1628';
+            ctx.font = '5px "Press Start 2P", monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(card.rank, card.x + 2, startY + 7);
+
+            // suit symbol
+            const symbols = { hearts: '♥', diamonds: '♦', clubs: '♣', spades: '♠' };
+            ctx.fillStyle = card.suit === 'hearts' || card.suit === 'diamonds' ? '#ff3d6e' : '#0a1628';
+            ctx.font = '8px serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(symbols[card.suit], card.x + cardW / 2, startY + 16);
+        }
+    });
+
+    // pot icon at bottom
+    ctx.fillStyle = '#00f5ff';
+    ctx.font = '8px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('♠♥♦♣', 36, 62);
+
+    // accent line
+    ctx.fillStyle = '#39ff6e';
+    ctx.fillRect(10, 68, 52, 2);
 })();
 
 // cTetris — falling T-piece on finnish flag

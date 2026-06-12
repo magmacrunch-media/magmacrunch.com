@@ -1,0 +1,287 @@
+/* game-layout.css — Sökö (Scandinavian Stud) */
+
+#gameScreen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    background: radial-gradient(ellipse at center, var(--mid) 0%, var(--darker) 100%);
+}
+
+.game-header {
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--accent-dim);
+    margin-bottom: 15px;
+}
+
+.game-header h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 10px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.stat-value {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--gold);
+}
+
+.street-label {
+    font-size: 14px;
+    color: var(--accent-dim);
+    letter-spacing: 0.1em;
+}
+
+/* AI Areas */
+.ai-areas {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.ai-area {
+    background: rgba(26, 42, 68, 0.5);
+    border: 1px solid var(--accent-dim);
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 120px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.ai-area.folded {
+    opacity: 0.4;
+    border-color: var(--red);
+}
+
+.ai-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--accent-dim);
+}
+
+.ai-name-text {
+    font-size: 12px;
+    color: var(--white);
+}
+
+.ai-chips {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--gold);
+}
+
+.ai-cards {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.ai-cards .card {
+    width: 50px;
+    height: 70px;
+    font-size: 10px;
+}
+
+.ai-hand {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 6px;
+}
+
+/* Pot Display */
+.pot-display {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.pot-icon {
+    font-size: 24px;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+/* Player Area */
+.player-area {
+    background: rgba(26, 42, 68, 0.7);
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.player-cards {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.player-cards .card {
+    width: 70px;
+    height: 100px;
+    font-size: 14px;
+}
+
+.player-hand {
+    font-size: 16px;
+    color: var(--green);
+    margin-top: 10px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    font-size: 11px;
+    padding: 12px 20px;
+    min-width: 100px;
+}
+
+.action-btn.check {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.action-btn.call {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.action-btn.raise {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.action-btn.fold {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+/* Message Area */
+.message-area {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.game-over-message {
+    background: rgba(26, 42, 68, 0.9);
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px auto;
+    max-width: 400px;
+}
+
+.game-over-message.win {
+    border-color: var(--green);
+}
+
+.game-over-message.lose {
+    border-color: var(--red);
+}
+
+.game-over-message h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.game-over-message.win h2 {
+    color: var(--green);
+}
+
+.game-over-message.lose h2 {
+    color: var(--red);
+}
+
+.game-over-message p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--accent-dim);
+    margin-top: auto;
+}
+
+.control-btn {
+    font-size: 10px;
+    padding: 8px 15px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .stats {
+        gap: 15px;
+    }
+    
+    .stat-label {
+        font-size: 10px;
+    }
+    
+    .stat-value {
+        font-size: 12px;
+    }
+    
+    .ai-area {
+        min-width: 100px;
+        padding: 8px;
+    }
+    
+    .ai-cards .card {
+        width: 40px;
+        height: 56px;
+        font-size: 8px;
+    }
+    
+    .player-cards .card {
+        width: 60px;
+        height: 84px;
+        font-size: 12px;
+    }
+}
