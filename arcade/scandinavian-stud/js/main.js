@@ -276,7 +276,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const modal = createModal(LABELS[lang].menu, `
             <div class="menu-buttons">
                 <button class="start-btn primary" onclick="location.reload()">${LABELS[lang].newGame}</button>
-                <button class="start-btn" onclick="this.closest('.modal-overlay').remove()">${LABELS[lang].check}</button>
+                <button class="start-btn" onclick="this.closest('.modal-overlay').remove()">${LABELS[lang].close}</button>
+            </div>
+            <div class="menu-rules" style="margin-top:20px;text-align:left;">
+                <div style="font-size:12px;color:var(--slate);margin-bottom:8px;">${LABELS[lang].rulesTitle}</div>
+                <ul class="rules-list">
+                    ${LABELS[lang].rules.map(r => `<li>${r}</li>`).join('')}
+                </ul>
             </div>
         `);
         document.body.appendChild(modal);
