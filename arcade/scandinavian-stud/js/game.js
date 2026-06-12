@@ -63,7 +63,7 @@ class SokoGame {
         // Deal hole card (face down) to each player
         this.players.forEach(p => {
             const card = this.deck.deal();
-            card.faceUp = false;
+            card.faceUp = p.isHuman;
             p.cards.push(card);
         });
 

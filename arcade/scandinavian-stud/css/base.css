@@ -13,6 +13,8 @@
     --white: #f0ead8;
     --slate: #4a6a7a;
     --card-face-bg: #ffffff;
+    --card-back-bg: #0d0028;
+    --fc-red: #ff3d6e;
 }
 
 * {
