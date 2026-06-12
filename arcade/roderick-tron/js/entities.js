@@ -22,10 +22,10 @@ Entities.prototype.spawnNote = function (x, y) {
     this.shootCooldown = CONFIG.FIRE_RATE;
 };
 
-// ── Spawn gargoyle on a rooftop ────────────────────────
-Entities.prototype.spawnGargoyle = function (roof) {
+// ── Spawn gargoyle on a rooftop (screen coordinates) ──
+Entities.prototype.spawnGargoyle = function (roof, cameraX) {
     this.gargoyles.push({
-        x: roof.x + roof.width * 0.5 + (Math.random() - 0.5) * roof.width * 0.3,
+        x: (roof.x - cameraX) + roof.width * 0.5 + (Math.random() - 0.5) * roof.width * 0.3,
         y: roof.y - CONFIG.GARGOYLE_H,
         state: 'idle',    // idle, alert, active, dead
         animFrame: 0,
@@ -35,7 +35,7 @@ Entities.prototype.spawnGargoyle = function (roof) {
 };
 
 // ── Update all entities ────────────────────────────────
-Entities.prototype.update = function (speed, player, rooftops) {
+Entities.prototype.update = function (speed, player, rooftops, cameraX) {
     // Cooldown
     if (this.shootCooldown > 0) this.shootCooldown--;
 
@@ -115,9 +115,9 @@ Entities.prototype.update = function (speed, player, rooftops) {
     for (let i = 0; i < rooftops.length; i++) {
         const r = rooftops[i];
         if (r.hasGargoyle && !r.gargoyleSpawned) {
-            // Only spawn if rooftop is on screen or about to be
-            if (r.x > 0 && r.x < CONFIG.CANVAS_W + 300) {
-                this.spawnGargoyle(r);
+            const screenX = r.x - cameraX;
+            if (screenX > -50 && screenX < CONFIG.CANVAS_W + 300) {
+                this.spawnGargoyle(r, cameraX);
                 r.gargoyleSpawned = true;
             }
         }

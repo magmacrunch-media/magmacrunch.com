@@ -65,7 +65,7 @@
         // Update modules
         world.update(scrollSpeed);
         player.update(world.rooftops);
-        entities.update(scrollSpeed, player, world.rooftops);
+        entities.update(scrollSpeed, player, world.rooftops, world.cameraX);
 
         // Shooting
         if (Input.shoot() && player.alive) {
@@ -78,6 +78,7 @@
             if (hit) {
                 player.loseLife();
                 spawnHitParticles(player.x, player.y + CONFIG.PLAYER_H / 2);
+                updateLivesDisplay();
                 if (player.lives <= 0) {
                     gameOver();
                 }
@@ -87,6 +88,7 @@
         // Check if player fell off screen
         if (player.y > CONFIG.CANVAS_H + 20 && player.alive) {
             player.loseLife();
+            updateLivesDisplay();
             if (player.lives <= 0) {
                 gameOver();
             } else {
@@ -178,7 +180,9 @@
         entities.reset();
 
         gameOverOverlay.classList.remove('active');
+        titleScreen.classList.add('hidden');
         hud.classList.add('active');
+        updateLivesDisplay();
     }
 
     // ── High Scores ────────────────────────────────────────
@@ -221,6 +225,15 @@
         saveHighScores();
         initialsPrompt.style.display = 'none';
         renderHighScores();
+    }
+
+    // ── Lives Display ──────────────────────────────────────
+    function updateLivesDisplay() {
+        let html = '';
+        for (let i = 0; i < CONFIG.MAX_LIVES; i++) {
+            html += `<div class="hud-life${i >= player.lives ? ' lost' : ''}"></div>`;
+        }
+        livesDisplay.innerHTML = html;
     }
 
     // ── Particles (simple) ────────────────────────────────
