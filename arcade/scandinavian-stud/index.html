@@ -44,20 +44,21 @@
     <div id="startScreen" class="start-screen">
         <div class="start-content">
             <h1 class="game-title">SÖKÖ</h1>
-            <p class="game-subtitle">skandinavialainen stud</p>
+            <p class="game-subtitle">skandinavialainen stud / scandinavian stud</p>
 
             <div class="start-divider"></div>
 
             <div class="start-buttons">
-                <button id="startGameBtn" class="start-btn primary">Aloita peli</button>
-                <button id="viewRulesBtn" class="start-btn">Ohjeet</button>
-                <button id="viewScoresBtn" class="start-btn">Ennätykset</button>
+                <button id="startGameBtn" class="start-btn primary">Aloita peli<span class="btn-sub">/ start game</span></button>
+                <button id="viewRulesBtn" class="start-btn">Ohjeet<span class="btn-sub">/ how to play</span></button>
+                <button id="viewScoresBtn" class="start-btn">Ennätykset<span class="btn-sub">/ high scores</span></button>
             </div>
 
-            <p class="start-press-prompt">— paina aloita —</p>
+            <p class="start-press-prompt">— paina aloita / press start —</p>
 
             <div class="start-footer">
-                <p>Suomen kansallispokeri &bull; 5 korttia &bull; Neljä panostuskierrosta</p>
+                <p>Suomen kansallispokeri / finnish national poker</p>
+                <p>5 korttia / 5 cards &bull; neljä panostuskierrosta / 4 betting rounds</p>
             </div>
             <p class="start-copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
         </div>
@@ -69,19 +70,19 @@
             <h1>SÖKÖ</h1>
             <div class="stats">
                 <div class="stat-item">
-                    <span class="stat-label">Potti</span>
+                    <span class="stat-label">Potti <span class="stat-en">/ pot</span></span>
                     <span class="stat-value" id="potAmount">0</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Chipsiä</span>
+                    <span class="stat-label">Chipsiä <span class="stat-en">/ chips</span></span>
                     <span class="stat-value" id="playerChips">1000</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-label">Kierros</span>
+                    <span class="stat-label">Kierros <span class="stat-en">/ round</span></span>
                     <span class="stat-value" id="roundDisplay">1</span>
                 </div>
             </div>
-            <div class="street-label" id="streetLabel">Piilokortti</div>
+            <div class="street-label" id="streetLabel">Piilokortti / hole card</div>
         </div>
 
         <!-- AI Players -->
@@ -103,8 +104,8 @@
 
         <!-- Controls -->
         <div class="game-controls">
-            <button id="newGameBtn" class="control-btn">Uusi peli</button>
-            <button id="menuBtn" class="control-btn">Valikko</button>
+            <button id="newGameBtn" class="control-btn">Uusi peli <span class="stat-en">/ new game</span></button>
+            <button id="menuBtn" class="control-btn">Valikko <span class="stat-en">/ menu</span></button>
         </div>
     </div>
 </div>

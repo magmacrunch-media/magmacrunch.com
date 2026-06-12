@@ -93,6 +93,7 @@ const LABELS = {
         start: 'Aloita peli',
         howToPlay: 'Ohjeet',
         highScores: 'Ennätykset',
+        noScores: 'Ei vielä ennätyksiä',
         credits: 'Tekijät',
         ante: 'Alkupanos',
         bet: 'Panoksen',
@@ -109,7 +110,7 @@ const LABELS = {
         dealer: 'Jakaja',
         player: 'Pelaaja',
         holeCard: 'Piilokortti',
-        streetNames: ['Piilokortti', 'Ensimmäinen avoin', 'Toinen avoin', 'Kolmas avoin', 'Neljäs avoin'],
+        streetNames: ['Piilokortti / hole card', 'Ensimmäinen avoin / first up', 'Toinen avoin / second up', 'Kolmas avoin / third up', 'Neljäs avoin / fourth up'],
         handNames: {
             'Royal Flush': 'Kuningasvärisuora',
             'Straight Flush': 'Värisuora',
@@ -127,6 +128,8 @@ const LABELS = {
         back: '← magmacrunch arcade',
         newGame: 'Uusi peli',
         menu: 'Valikko',
+        gameOverWin: 'Voitit potin',
+        gameOverLose: 'Hävisit',
         creditsText: 'Peli suunniteltu ja ohjelmoitu MagmaCrunch Median toimesta.',
         rulesTitle: 'Ohjeet',
         rules: [
@@ -144,6 +147,7 @@ const LABELS = {
         start: 'Start Game',
         howToPlay: 'How to Play',
         highScores: 'High Scores',
+        noScores: 'No scores yet',
         credits: 'Credits',
         ante: 'Ante',
         bet: 'Bet',
@@ -178,6 +182,8 @@ const LABELS = {
         back: '← magmacrunch arcade',
         newGame: 'New Game',
         menu: 'Menu',
+        gameOverWin: 'You won the pot',
+        gameOverLose: 'You lost',
         creditsText: 'Designed and coded by MagmaCrunch Media.',
         rulesTitle: 'How to Play',
         rules: [

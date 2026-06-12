@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messageArea.innerHTML = `
             <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
                 <h2>${isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose}</h2>
-                <p>${winner ? winner.name : LABELS[lang].player} ${isPlayerWin ? 'voittaa' : 'voittaa'} pottiin ${state.pot}</p>
+                <p>${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})</p>
                 <button id="nextHandBtn" class="action-btn">${LABELS[lang].newGame}</button>
             </div>
         `;
@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showHighScores() {
         const modal = createModal(LABELS[lang].highScores, `
             <div class="high-scores">
-                ${highScores.length === 0 ? '<p>Ei vielä ennätyksiä</p>' : 
+                ${highScores.length === 0 ? `<p>${LABELS[lang].noScores || 'Ei vielä ennätyksiä / no scores yet'}</p>` : 
                     highScores.map((s, i) => `
                         <div class="score-row">
                             <span class="rank">${i + 1}.</span>
