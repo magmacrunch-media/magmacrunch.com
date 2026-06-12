@@ -58,13 +58,13 @@ World.prototype.update = function (speed) {
     }
 };
 
-World.prototype.getNearestRoof = function (playerX) {
+World.prototype.getNearestRoof = function (playerX, cameraX) {
     let best = null;
     let bestDist = Infinity;
     for (let i = 0; i < this.rooftops.length; i++) {
         const r = this.rooftops[i];
-        const cx = r.x + r.width / 2;
-        const dist = Math.abs(cx - playerX);
+        const screenX = r.x - cameraX + r.width / 2;
+        const dist = Math.abs(screenX - playerX);
         if (dist < bestDist) {
             bestDist = dist;
             best = r;

@@ -64,7 +64,7 @@
 
         // Update modules
         world.update(scrollSpeed);
-        player.update(world.rooftops);
+        player.update(world.rooftops, world.cameraX);
         entities.update(scrollSpeed, player, world.rooftops, world.cameraX);
 
         // Shooting
@@ -92,7 +92,7 @@
             if (player.lives <= 0) {
                 gameOver();
             } else {
-                player.respawn(world.getNearestRoof(CONFIG.PLAYER_X));
+                player.respawn(world.getNearestRoof(CONFIG.PLAYER_X, world.cameraX));
             }
         }
 
@@ -223,6 +223,7 @@
         highScores.splice(newHighScoreIndex, 0, { initials: initials.slice(0, 3), score: score });
         if (highScores.length > 5) highScores.length = 5;
         saveHighScores();
+        newHighScoreIndex = -1;
         initialsPrompt.style.display = 'none';
         renderHighScores();
     }

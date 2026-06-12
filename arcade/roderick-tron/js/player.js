@@ -27,7 +27,7 @@ Player.prototype.reset = function () {
     this.runFrame = 0;
 };
 
-Player.prototype.update = function (rooftops) {
+Player.prototype.update = function (rooftops, cameraX) {
     // Jump
     if (Input.jump() && this.grounded && this.alive) {
         this.vy = CONFIG.JUMP_FORCE;
@@ -44,14 +44,12 @@ Player.prototype.update = function (rooftops) {
     if (this.alive) {
         for (let i = 0; i < rooftops.length; i++) {
             const r = rooftops[i];
-            // Player bottom edge
+            const screenX = r.x - cameraX;
             const playerBottom = this.y + CONFIG.PLAYER_H;
             const playerLeft = this.x;
             const playerRight = this.x + CONFIG.PLAYER_W;
 
-            // Check if player is over this rooftop
-            if (playerRight > r.x && playerLeft < r.x + r.width) {
-                // Landing on top
+            if (playerRight > screenX && playerLeft < screenX + r.width) {
                 if (playerBottom >= r.y && playerBottom <= r.y + 12 && this.vy >= 0) {
                     this.y = r.y - CONFIG.PLAYER_H;
                     this.vy = 0;
