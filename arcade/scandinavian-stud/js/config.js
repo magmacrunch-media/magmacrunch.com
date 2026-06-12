@@ -2,7 +2,7 @@
 
 // ── JSONBin (high scores) ────────────────────────────────────
 const JSONBIN_API_KEY = '$2a$10$JiB3vjivV/azBnUh7jKjbuiiU7T9UnaOKTC0C9WnTR5WfLhnGSS.W';
-const JSONBIN_BIN_ID  = '6995078143b1c97be9872948'; // New bin for Sökö
+const JSONBIN_BIN_ID  = '6a2c54f7f5f4af5e29e840a7';
 
 // ── Card configuration ───────────────────────────────────────
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];
