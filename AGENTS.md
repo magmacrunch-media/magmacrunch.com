@@ -53,3 +53,7 @@ See `README.md` for full docs. Short version:
 ## No verification needed
 
 Static HTML files - no lint/typecheck commands exist.
+
+## Known issues
+
+- **Roderick Tron jump physics** (`arcade/roderick-tron/`): The jump mechanics don't feel right. Multiple rounds of physics tuning (gravity, jump force, collision window, gap sizes) haven't solved it. Needs hands-on playtesting rather than math-only analysis. Last attempted fix: commit daef263.
