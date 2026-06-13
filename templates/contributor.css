@@ -6,6 +6,7 @@
     font-size: 7px;
     color: var(--dim);
     letter-spacing: 0.1em;
+    margin-top: -8px;
     margin-bottom: 16px;
     align-self: flex-start;
 }

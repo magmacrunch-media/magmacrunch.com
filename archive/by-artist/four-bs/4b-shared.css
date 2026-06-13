@@ -14,7 +14,7 @@
 }
 
 /* Sub-nav button colors — all pages use these */
-body.fb-page { --credit-color: var(--4b-mid); --nav-accent: var(--4b-amber); --nav-glow: rgba(240,168,48,0.4); --nav-brand: var(--4b-amber); --nav-brand-glow: rgba(240,168,48,0.7); }
+body.fb-page { --credit-color: var(--4b-mid); --nav-accent: var(--4b-leaf); --nav-glow: rgba(82,176,68,0.4); --nav-brand: var(--4b-amber); --nav-brand-glow: rgba(240,168,48,0.7); }
 body.fb-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.fb-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;

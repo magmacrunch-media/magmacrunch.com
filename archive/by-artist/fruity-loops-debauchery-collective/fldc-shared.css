@@ -39,7 +39,7 @@
     --fldc-pop:            #d05888;
 }
 
-body.fldc-page { background: var(--black); --credit-color: var(--fldc-cool); --nav-accent: var(--fldc-arc-yellow); --nav-glow: rgba(216,208,64,0.4); --nav-brand: var(--fldc-arc-yellow); --nav-brand-glow: rgba(216,208,64,0.7); }
+body.fldc-page { background: var(--black); --credit-color: var(--fldc-cool); --nav-accent: var(--fldc-arc-orange); --nav-glow: rgba(208,96,32,0.4); --nav-brand: var(--fldc-arc-yellow); --nav-brand-glow: rgba(216,208,64,0.7); }
 
 /* c-back: transparent + arc-dark */
 body.fldc-page .nav-card.c-back {

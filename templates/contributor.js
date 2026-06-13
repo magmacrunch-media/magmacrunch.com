@@ -18,7 +18,7 @@
     function archiveLink(artist) {
         var link = ENTITY_MAP[artist.id] || ARCHIVE_LINKS[artist.id];
         if (link) return '<a href="' + link + '">' + esc(artist.name) + '</a>';
-        return esc(artist.name);
+        return '<a href="https://musicbrainz.org/artist/' + esc(artist.id) + '" target="_blank" rel="noopener">' + esc(artist.name) + '</a>';
     }
 
     function esc(s) {
@@ -90,7 +90,8 @@
         if (attrs && attrs.length > 0) {
             var tags = attrs.filter(function(a) {
                 var lower = a.toLowerCase();
-                return !lower.includes('original') && !lower.includes('additional');
+                return !lower.includes('original') && !lower.includes('additional') &&
+                    lower !== 'member of band' && lower !== 'instrumental supporting musician';
             }).map(function(a) {
                 return '<span class="instrument-tag">' + esc(a) + '</span>';
             }).join('');
@@ -189,6 +190,7 @@
         var ended = rels.every(function(r) { return r.ended; });
         var allAttrs = [];
         rels.forEach(function(r) {
+            if (r.type && allAttrs.indexOf(r.type) === -1) allAttrs.push(r.type);
             (r.attributes || []).forEach(function(a) {
                 if (allAttrs.indexOf(a) === -1) allAttrs.push(a);
             });
@@ -313,6 +315,8 @@
             switch (r.type) {
                 case 'founder':
                     founders.push(r);
+                    if (!members[r.artist.id]) members[r.artist.id] = { artist: r.artist, rels: [] };
+                    members[r.artist.id].rels.push(r);
                     break;
                 case 'member of band':
                     if (!members[r.artist.id]) members[r.artist.id] = { artist: r.artist, rels: [] };
@@ -329,48 +333,6 @@
         });
 
         var html = '';
-
-        if (founders.length > 0) {
-            var items = founders.map(function(r) {
-                return renderSimpleEntry(r.artist);
-            }).join('');
-            html += renderSection('founded', '<ul class="simple-list">' + items + '</ul>');
-        }
-
-        if (aliases.length > 0) {
-            var items = aliases.map(function(r) {
-                return renderSimpleEntry(r.artist);
-            }).join('');
-            html += renderSection('also known as', '<ul class="simple-list">' + items + '</ul>');
-        }
-
-        var allBandMap = {};
-        Object.keys(members).forEach(function(id) {
-            allBandMap[id] = { artist: members[id].artist, rels: members[id].rels, role: 'member' };
-        });
-        Object.keys(supporting).forEach(function(id) {
-            if (allBandMap[id]) {
-                allBandMap[id].rels = allBandMap[id].rels.concat(supporting[id].rels);
-                allBandMap[id].role = 'supporting';
-            } else {
-                allBandMap[id] = { artist: supporting[id].artist, rels: supporting[id].rels, role: 'supporting' };
-            }
-        });
-
-        var allBands = Object.values(allBandMap);
-        allBands.sort(function(a, b) {
-            var aMerged = mergeRels(a.rels);
-            var bMerged = mergeRels(b.rels);
-            return (aMerged.begin || 'zzzz').localeCompare(bMerged.begin || 'zzzz');
-        });
-
-        if (allBands.length > 0) {
-            var items = allBands.map(function(g) {
-                var m = mergeRels(g.rels);
-                return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended, g.role);
-            }).join('');
-            html += renderSection('bands', items);
-        }
 
         /* Labels */
         if (labelData && labelData.relations) {
@@ -402,6 +364,43 @@
                 return renderLabelEntry(e.label, e.roles, e.begin, e.end, e.ended);
             }).join('');
             if (labelItems) html += renderSection('labels', labelItems);
+        }
+
+        /* Bands */
+        var allBandMap = {};
+        Object.keys(members).forEach(function(id) {
+            allBandMap[id] = { artist: members[id].artist, rels: members[id].rels, role: 'member' };
+        });
+        Object.keys(supporting).forEach(function(id) {
+            if (allBandMap[id]) {
+                allBandMap[id].rels = allBandMap[id].rels.concat(supporting[id].rels);
+                allBandMap[id].role = 'supporting';
+            } else {
+                allBandMap[id] = { artist: supporting[id].artist, rels: supporting[id].rels, role: 'supporting' };
+            }
+        });
+
+        var allBands = Object.values(allBandMap);
+        allBands.sort(function(a, b) {
+            var aMerged = mergeRels(a.rels);
+            var bMerged = mergeRels(b.rels);
+            return (aMerged.begin || 'zzzz').localeCompare(bMerged.begin || 'zzzz');
+        });
+
+        if (allBands.length > 0) {
+            var items = allBands.map(function(g) {
+                var m = mergeRels(g.rels);
+                return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended, g.role);
+            }).join('');
+            html += renderSection('bands', items);
+        }
+
+        /* Solo projects */
+        if (aliases.length > 0) {
+            var items = aliases.map(function(r) {
+                return renderSimpleEntry(r.artist);
+            }).join('');
+            html += renderSection('solo projects', '<ul class="simple-list">' + items + '</ul>');
         }
 
         /* Places */

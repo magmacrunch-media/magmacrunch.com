@@ -21,10 +21,12 @@
     --woah-gold:        #f0c890;
     --woah-mauve:       #9080a0;
     --deep:             transparent;
+    --woah-light-pink: #fadce8;
+    --woah-pop-pink:   #ff9ec4;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.woah-page { --credit-color: var(--woah-ocean); --nav-accent: var(--woah-sunset); --nav-glow: rgba(232,160,160,0.4); --nav-brand: var(--woah-sunset); --nav-brand-glow: rgba(232,160,160,0.7); }
+body.woah-page { --credit-color: var(--woah-ocean); --nav-accent: var(--woah-light-pink); --nav-glow: rgba(250,220,232,0.4); --nav-brand: var(--woah-pop-pink); --nav-brand-glow: rgba(255,158,196,0.7); }
 body.woah-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.woah-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;

@@ -28,7 +28,7 @@
     --bbc-apricot:     #f0c0a0;
 }
 
-body.bbc-page { background: var(--black); --credit-color: var(--bbc-mid); --nav-accent: var(--bbc-sky); --nav-glow: rgba(120,168,200,0.4); --nav-brand: var(--bbc-sky); --nav-brand-glow: rgba(120,168,200,0.7); }
+body.bbc-page { background: var(--black); --credit-color: var(--bbc-mid); --nav-accent: var(--bbc-apricot); --nav-glow: rgba(240,192,160,0.4); --nav-brand: var(--bbc-sky); --nav-brand-glow: rgba(120,168,200,0.7); }
 
 body.bbc-page .nav-card.c-back {
     background: transparent;

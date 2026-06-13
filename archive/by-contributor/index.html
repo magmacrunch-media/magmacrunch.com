@@ -6,6 +6,7 @@
     <title>by contributor — magmacrunch archive</title>
     <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
     <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../templates/contributor-theme.css">
     <style>
         main {
             flex: 1;
@@ -25,15 +26,15 @@
             align-self: flex-start;
         }
         .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--cyan); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--cyan); opacity: 0.7; }
-        .breadcrumb .current { color: var(--cyan); }
+        .breadcrumb a:hover { color: var(--ctb-light); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--ctb-cyan); opacity: 0.7; }
+        .breadcrumb .current { color: var(--ctb-cyan); }
 
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
-            color: var(--cyan);
-            text-shadow: 0 0 16px rgba(0,245,255,0.6);
+            color: var(--ctb-cyan);
+            text-shadow: 0 0 16px rgba(127,216,232,0.5);
             margin-bottom: 8px;
             letter-spacing: 0.1em;
         }
@@ -63,26 +64,26 @@
             gap: 16px;
         }
         .card {
-            border: 2px solid #1e1e2e;
-            background: var(--deep);
+            border: 2px solid var(--ctb-dark);
+            background: var(--ctb-darkest);
             padding: 16px;
             text-decoration: none;
             transition: border-color 0.15s, box-shadow 0.15s;
         }
         .card:hover {
-            border-color: var(--cyan);
-            box-shadow: 0 0 16px rgba(0,245,255,0.3);
+            border-color: var(--ctb-cyan);
+            box-shadow: 0 0 16px rgba(127,216,232,0.3);
         }
         .card-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: var(--white);
+            color: var(--ctb-pale);
             letter-spacing: 0.08em;
         }
         .card-sub {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: var(--dim);
+            color: var(--ctb-muted);
             margin-top: 6px;
         }
         .card-soon {
@@ -103,13 +104,13 @@
         .note {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: var(--dim);
+            color: var(--ctb-muted);
             margin-top: 40px;
             text-align: center;
         }
     </style>
 </head>
-<body>
+<body class="ctb-page">
 
 <nav>
     <a href="../index.html" class="nav-brand">magmacrunch.com</a>

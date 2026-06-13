@@ -27,7 +27,7 @@
 }
 
 /* Sub-nav button colors — all pages use these */
-body.jm-page { --credit-color: var(--jm-muted); --nav-accent: var(--jm-rose); --nav-glow: rgba(184,152,152,0.4); --nav-brand: var(--jm-rose); --nav-brand-glow: rgba(184,152,152,0.7); }
+body.jm-page { --credit-color: var(--jm-muted); --nav-accent: var(--jm-sage); --nav-glow: rgba(122,144,128,0.4); --nav-brand: var(--jm-rose); --nav-brand-glow: rgba(184,152,152,0.7); }
 body.jm-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.jm-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
