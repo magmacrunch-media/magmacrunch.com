@@ -62,8 +62,13 @@
         margin-bottom: 16px;
     }
 
-    .quick-actions {
+    .lore-quick-actions {
         margin-bottom: 14px;
+    }
+
+    .lore-action-btn {
+        font-size: 7px;
+        padding: 8px 10px;
     }
     
     .diff-label {
@@ -245,6 +250,36 @@
     .game-over p {
         font-size: 11px;
     }
+
+    /* Lore Screen Mobile */
+    .lore-content {
+        padding: 25px 18px;
+    }
+
+    .lore-quote {
+        font-size: 8px;
+    }
+
+    .lore-attribution {
+        font-size: 7px;
+    }
+
+    .lore-rule-text {
+        font-size: 8px;
+    }
+
+    .lore-rule-highlight {
+        font-size: 9px;
+    }
+
+    .lore-rule-gates {
+        font-size: 11px;
+    }
+
+    .lore-continue-btn {
+        font-size: 10px;
+        padding: 14px 24px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -355,5 +390,35 @@
     
     .mode-label {
         font-size: 8px;
+    }
+
+    /* Lore Screen Small Mobile */
+    .lore-content {
+        padding: 20px 14px;
+    }
+
+    .lore-quote {
+        font-size: 7px;
+    }
+
+    .lore-attribution {
+        font-size: 6px;
+    }
+
+    .lore-rule-text {
+        font-size: 7px;
+    }
+
+    .lore-rule-highlight {
+        font-size: 8px;
+    }
+
+    .lore-rule-gates {
+        font-size: 10px;
+    }
+
+    .lore-continue-btn {
+        font-size: 9px;
+        padding: 12px 20px;
     }
 }

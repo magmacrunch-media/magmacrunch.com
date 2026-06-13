@@ -21,7 +21,7 @@ let activeFadeInterval = null;
 let returnToSettings = false;
 
 // Track if we opened instructions from difficulty modal
-let returnToDifficultyModal = false;
+let returnToLoreScreen = false;
 
 // Binary display mode - enabled by default
 let binaryDisplayMode = true;
@@ -224,11 +224,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Title screen navigation
         const titleScreen = document.getElementById('titleScreen');
+        const loreScreen = document.getElementById('loreScreen');
         const difficultyModal = document.getElementById('difficultyModal');
         
-        // Function to start the game (show difficulty modal)
+        // Function to show the lore/rules screen
         const startGame = () => {
             titleScreen.classList.remove('active');
+            loreScreen.classList.add('active');
+            
+            // Start music with fade-in
+            if (gameMusic) {
+                fadeInMusic(gameMusic, 2000);
+            }
+        };
+        
+        // Function to advance from lore screen to difficulty selector
+        const showDifficulty = () => {
+            loreScreen.classList.remove('active');
             difficultyModal.classList.add('active');
             
             // Sync quick toggle states with current settings
@@ -252,22 +264,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 quickSfxToggle.querySelector('.toggle-state').textContent = sfxEnabled ? 'ON' : 'OFF';
             }
-            
-            // Start music with fade-in
-            if (gameMusic) {
-                fadeInMusic(gameMusic, 2000);
-            }
         };
         
-        // Click handler for start button
+        // Click handler for start button (title → lore)
         document.getElementById('startButton').addEventListener('click', startGame);
         
-        // Spacebar handler for start button (only on title screen)
+        // Click handler for continue button (lore → difficulty)
+        document.getElementById('loreContinue').addEventListener('click', showDifficulty);
+        
+        // Spacebar handler: title screen OR lore screen
         document.addEventListener('keydown', (e) => {
-            // Only trigger if title screen is active and spacebar is pressed
-            if (e.code === 'Space' && titleScreen.classList.contains('active')) {
-                e.preventDefault(); // Prevent page scroll
-                startGame();
+            if (e.code === 'Space') {
+                if (titleScreen.classList.contains('active')) {
+                    e.preventDefault();
+                    startGame();
+                } else if (loreScreen.classList.contains('active')) {
+                    e.preventDefault();
+                    showDifficulty();
+                }
             }
         });
         
@@ -278,7 +292,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // High Scores button - opens scoreboard from difficulty modal
         if (quickHighScores) {
             quickHighScores.addEventListener('click', () => {
-                returnToDifficultyModal = true;
+                returnToLoreScreen = true;
                 const scoreDefault = getScoreboardDefault();
                 updateCustomDropdownValue(scoreDefault);
                 updateScoreboard(scoreDefault);
@@ -289,7 +303,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Settings button - opens settings from difficulty modal
         if (quickSettings) {
             quickSettings.addEventListener('click', () => {
-                returnToDifficultyModal = true;
+                returnToLoreScreen = true;
                 document.getElementById('settingsModal').classList.add('active');
             });
         }
@@ -350,10 +364,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('closeScoreboard').addEventListener('click', () => {
             document.getElementById('scoreboardModal').classList.remove('active');
             
-            // If we came from difficulty modal, go back to it
-            if (returnToDifficultyModal) {
-                difficultyModal.classList.add('active');
-                returnToDifficultyModal = false;
+            // If we came from lore screen, go back to it
+            if (returnToLoreScreen) {
+                loreScreen.classList.add('active');
+                returnToLoreScreen = false;
             }
             
             setTimeout(() => {
@@ -366,10 +380,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.target.id === 'scoreboardModal') {
                 document.getElementById('scoreboardModal').classList.remove('active');
                 
-                // If we came from difficulty modal, go back to it
-                if (returnToDifficultyModal) {
-                    difficultyModal.classList.add('active');
-                    returnToDifficultyModal = false;
+                // If we came from lore screen, go back to it
+                if (returnToLoreScreen) {
+                    loreScreen.classList.add('active');
+                    returnToLoreScreen = false;
                 }
                 
                 setTimeout(() => {
@@ -463,10 +477,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('closeSettings').addEventListener('click', () => {
             document.getElementById('settingsModal').classList.remove('active');
             
-            // If we came from difficulty modal, go back to it
-            if (returnToDifficultyModal) {
-                difficultyModal.classList.add('active');
-                returnToDifficultyModal = false;
+            // If we came from lore screen, go back to it
+            if (returnToLoreScreen) {
+                loreScreen.classList.add('active');
+                returnToLoreScreen = false;
             }
         });
 
@@ -474,10 +488,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.target.id === 'settingsModal') {
                 document.getElementById('settingsModal').classList.remove('active');
                 
-                // If we came from difficulty modal, go back to it
-                if (returnToDifficultyModal) {
-                    difficultyModal.classList.add('active');
-                    returnToDifficultyModal = false;
+                // If we came from lore screen, go back to it
+                if (returnToLoreScreen) {
+                    loreScreen.classList.add('active');
+                    returnToLoreScreen = false;
                 }
             }
         });

@@ -175,11 +175,10 @@
 }
 
 .score-entry .rank {
-    font-size: 8px;
     font-size: 9px;
     color: var(--purple);
 }
-    font-size: 9px;
+.score-entry .initials {
     font-family: 'Orbitron', sans-serif;
     font-size: 10px;
     font-weight: normal;

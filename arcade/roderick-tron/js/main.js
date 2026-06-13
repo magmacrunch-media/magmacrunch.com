@@ -26,6 +26,7 @@
     let frameCount = 0;
     let highScores = [];
     let newHighScoreIndex = -1;
+    let lastTime = 0;
 
     // Modules (assigned after creation)
     let player, world, entities;
@@ -41,31 +42,35 @@
     }
 
     // ── Game Loop ──────────────────────────────────────────
-    function gameLoop() {
+    function gameLoop(timestamp) {
         requestAnimationFrame(gameLoop);
 
         if (state === STATE.TITLE) {
             drawTitle();
+            lastTime = timestamp;
             return;
         }
 
         if (state === STATE.PLAYING) {
-            update();
+            // Delta-time: 1.0 at 60fps, capped at 2.0 to prevent physics explosions
+            const dt = lastTime ? Math.min((timestamp - lastTime) / 16.667, 2.0) : 1.0;
+            lastTime = timestamp;
+            update(dt);
         }
 
         draw();
     }
 
     // ── Update ─────────────────────────────────────────────
-    function update() {
+    function update(dt) {
         frameCount++;
         scrollSpeed = CONFIG.SCROLL_SPEED + frameCount * CONFIG.SCROLL_ACCEL;
         score = Math.floor(frameCount * scrollSpeed * 0.1);
 
         // Update modules
-        world.update(scrollSpeed);
-        player.update(world.rooftops, world.cameraX);
-        entities.update(scrollSpeed, player, world.rooftops, world.cameraX);
+        world.update(scrollSpeed, dt);
+        player.update(world.rooftops, world.cameraX, dt);
+        entities.update(scrollSpeed, player, world.rooftops, world.cameraX, dt);
 
         // Shooting
         if (Input.shoot() && player.alive) {
@@ -174,6 +179,7 @@
         scrollSpeed = CONFIG.SCROLL_SPEED;
         frameCount = 0;
         newHighScoreIndex = -1;
+        lastTime = 0;
 
         player.reset();
         world.reset();

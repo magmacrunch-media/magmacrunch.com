@@ -29,7 +29,7 @@ Player.prototype.reset = function () {
     this.isJumping = false;
 };
 
-Player.prototype.update = function (rooftops, cameraX) {
+Player.prototype.update = function (rooftops, cameraX, dt) {
     // Jump
     if (Input.jump() && this.grounded && this.alive) {
         this.vy = CONFIG.JUMP_FORCE;
@@ -37,16 +37,21 @@ Player.prototype.update = function (rooftops, cameraX) {
         this.isJumping = true;
     }
 
-    // Variable jump: releasing space early cuts upward velocity
-    if (this.isJumping && !Input.isDown('Space') && this.vy < -2) {
-        this.vy = -2;
+    // Variable jump: releasing jump key early cuts upward velocity proportionally
+    if (this.isJumping && !Input.isDown('Space') && !Input.isDown('ArrowUp') && this.vy < 0) {
+        this.vy *= 0.6;
         this.isJumping = false;
     }
 
     // Gravity
-    this.vy += CONFIG.GRAVITY;
+    this.vy += CONFIG.GRAVITY * dt;
     if (this.vy > CONFIG.MAX_FALL) this.vy = CONFIG.MAX_FALL;
+
+    // Sweep collision — track previous bottom for tunneling prevention
+    const prevY = this.y;
     this.y += this.vy;
+    const playerBottom = this.y + CONFIG.PLAYER_H;
+    const prevBottom = prevY + CONFIG.PLAYER_H;
 
     // Collision with rooftops
     this.grounded = false;
@@ -54,12 +59,12 @@ Player.prototype.update = function (rooftops, cameraX) {
         for (let i = 0; i < rooftops.length; i++) {
             const r = rooftops[i];
             const screenX = r.x - cameraX;
-            const playerBottom = this.y + CONFIG.PLAYER_H;
             const playerLeft = this.x;
             const playerRight = this.x + CONFIG.PLAYER_W;
 
             if (playerRight > screenX && playerLeft < screenX + r.width) {
-                if (playerBottom >= r.y && playerBottom <= r.y + 22 && this.vy >= 0) {
+                // Sweep check: was above roof last frame, now at or below it
+                if (prevBottom <= r.y && playerBottom >= r.y && this.vy >= 0) {
                     this.y = r.y - CONFIG.PLAYER_H;
                     this.vy = 0;
                     this.grounded = true;
@@ -108,61 +113,61 @@ Player.prototype.draw = function (ctx) {
     const y = Math.round(this.y);
     const C = CONFIG.COLORS;
 
-    // Body — frock coat
+    // Body — frock coat (wider)
     ctx.fillStyle = C.robotCoat;
-    ctx.fillRect(x + 3, y + 8, 10, 12);
+    ctx.fillRect(x + 2, y + 7, 12, 13);
 
     // Coat tails (slight flare at bottom)
-    ctx.fillRect(x + 2, y + 16, 3, 5);
-    ctx.fillRect(x + 11, y + 16, 3, 5);
+    ctx.fillRect(x + 1, y + 16, 3, 5);
+    ctx.fillRect(x + 12, y + 16, 3, 5);
 
-    // Head
+    // Head (wider — 10px)
     ctx.fillStyle = C.robotSteel;
-    ctx.fillRect(x + 4, y + 1, 8, 7);
+    ctx.fillRect(x + 3, y + 0, 10, 7);
 
     // Ginger mutton chops
     ctx.fillStyle = C.muttonChops;
-    ctx.fillRect(x + 3, y + 4, 2, 4);
-    ctx.fillRect(x + 11, y + 4, 2, 4);
+    ctx.fillRect(x + 2, y + 3, 2, 4);
+    ctx.fillRect(x + 12, y + 3, 2, 4);
 
     // Glowing cyan eyes
     ctx.fillStyle = C.robotCyan;
-    ctx.fillRect(x + 5, y + 3, 2, 2);
-    ctx.fillRect(x + 9, y + 3, 2, 2);
+    ctx.fillRect(x + 4, y + 2, 2, 2);
+    ctx.fillRect(x + 10, y + 2, 2, 2);
 
     // Eye glow
     ctx.fillStyle = 'rgba(0, 245, 255, 0.3)';
-    ctx.fillRect(x + 4, y + 2, 4, 4);
-    ctx.fillRect(x + 8, y + 2, 4, 4);
+    ctx.fillRect(x + 3, y + 1, 4, 4);
+    ctx.fillRect(x + 9, y + 1, 4, 4);
 
-    // Clockwork joints (elbows)
+    // Blue shoulder joints (mechanical accent)
+    ctx.fillStyle = '#3d6db5';
+    ctx.fillRect(x + 0, y + 9, 2, 2);
+    ctx.fillRect(x + 14, y + 9, 2, 2);
+
+    // Legs (wider — 4px)
     ctx.fillStyle = C.robotSteel;
-    ctx.fillRect(x + 1, y + 10, 2, 2);
-    ctx.fillRect(x + 13, y + 10, 2, 2);
-
-    // Legs
-    ctx.fillStyle = C.robotCoat;
     if (this.grounded) {
         // Running animation — alternate legs
         if (this.runFrame === 0) {
-            ctx.fillRect(x + 4, y + 20, 3, 4);
-            ctx.fillRect(x + 9, y + 21, 3, 3);
+            ctx.fillRect(x + 3, y + 20, 4, 4);
+            ctx.fillRect(x + 9, y + 21, 4, 3);
         } else {
-            ctx.fillRect(x + 4, y + 21, 3, 3);
-            ctx.fillRect(x + 9, y + 20, 3, 4);
+            ctx.fillRect(x + 3, y + 21, 4, 3);
+            ctx.fillRect(x + 9, y + 20, 4, 4);
         }
     } else {
         // Jump pose — legs tucked
-        ctx.fillRect(x + 4, y + 20, 3, 3);
-        ctx.fillRect(x + 9, y + 20, 3, 3);
+        ctx.fillRect(x + 3, y + 20, 4, 3);
+        ctx.fillRect(x + 9, y + 20, 4, 3);
     }
 
-    // Clockwork knee joints
-    ctx.fillStyle = C.robotSteel;
-    ctx.fillRect(x + 5, y + 20, 1, 1);
-    ctx.fillRect(x + 10, y + 20, 1, 1);
+    // Boot accents
+    ctx.fillStyle = C.robotCyan;
+    ctx.fillRect(x + 4, y + 23, 1, 1);
+    ctx.fillRect(x + 11, y + 23, 1, 1);
 
     // Cravat (white neckwear)
     ctx.fillStyle = C.gableWhite;
-    ctx.fillRect(x + 6, y + 7, 4, 2);
+    ctx.fillRect(x + 6, y + 6, 4, 2);
 };

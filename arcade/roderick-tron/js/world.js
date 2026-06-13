@@ -32,7 +32,7 @@ World.prototype.reset = function () {
     }
 };
 
-World.prototype.update = function (speed) {
+World.prototype.update = function (speed, dt) {
     this.cameraX += speed;
     this.bgOffset1 += speed * 0.15;
     this.bgOffset2 += speed * 0.4;

@@ -29,8 +29,7 @@ class GameState {
         this.domeThreshold  = 0;           // Points needed to beat the dome this round
         this.beatDome       = false;       // Did the player beat the dome?
 
-        // ── High scores ──────────────────────────────────────
-        this.highScores     = [];
+        // High scores are loaded once from JSONBin — not cleared on reset
     }
 
     // ── Derived getters ──────────────────────────────────────

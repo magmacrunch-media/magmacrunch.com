@@ -56,6 +56,7 @@
     <link rel="stylesheet" href="css/container.css">
     <link rel="stylesheet" href="css/game.css">
     <link rel="stylesheet" href="css/modal-title.css">
+    <link rel="stylesheet" href="css/modal-lore.css">
     <link rel="stylesheet" href="css/modal-difficulty.css">
     <link rel="stylesheet" href="css/modal-scoreboard.css">
     <link rel="stylesheet" href="css/modal-settings.css">
@@ -225,21 +226,62 @@
         </div>
     </div>
     
+    <!-- Lore / Rules Intro Screen -->
+    <div class="lore-screen" id="loreScreen">
+        <div class="lore-content">
+            <div class="lore-flavor">
+                <div class="lore-quote">"No general method for the solution of<br>questions in the theory of probabilities<br>can be established."</div>
+                <div class="lore-attribution">— George Boole, <em>The Laws of Thought</em>, 1854</div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="lore-rules">
+                <div class="lore-rule">
+                    <span class="lore-rule-icon">&#8592;&#8593;&#8594;&#8595;</span>
+                    <span class="lore-rule-text">arrow keys or swipe to move tiles</span>
+                </div>
+                <div class="lore-rule">
+                    <span class="lore-rule-highlight">same + same = same</span>
+                    <span class="lore-rule-text">(idempotence &mdash; consolidates, not doubles)</span>
+                </div>
+                <div class="lore-rule">
+                    <span class="lore-rule-text">different numbers need a</span>
+                    <span class="lore-rule-highlight">gate</span>
+                    <span class="lore-rule-text">between them</span>
+                </div>
+                <div class="lore-rule">
+                    <span class="lore-rule-gates">&#8853; &#8744; &#8743; &#172;</span>
+                    <span class="lore-rule-text">sandwich binary gates, &#172;NOT slides into any tile</span>
+                </div>
+                <div class="lore-rule">
+                    <span class="lore-rule-text">reach max value &rarr; overflow bonus</span>
+                    <span class="lore-rule-highlight">3&times; max</span>
+                </div>
+            </div>
+
+            <div class="section-divider"></div>
+
+            <div class="lore-quick-actions">
+                <button class="lore-action-btn" id="quickHighScores">
+                    <span>HIGH SCORES</span>
+                </button>
+                <button class="lore-action-btn" id="quickSettings">
+                    <span>SETTINGS</span>
+                </button>
+            </div>
+
+            <button class="lore-continue-btn" id="loreContinue">
+                <span>SELECT MODE &rarr;</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Difficulty Selector Modal -->
     <div class="difficulty-modal" id="difficultyModal">
         <div class="difficulty-content">
             <h3>SELECT YOUR MODE</h3>
             <p class="difficulty-subtitle">how many bits?</p>
-            
-            <!-- Quick Access Buttons -->
-            <div class="quick-actions">
-                <button class="quick-action-btn" id="quickHighScores">
-                    <span>HIGH SCORES</span>
-                </button>
-                <button class="quick-action-btn" id="quickSettings">
-                    <span>SETTINGS</span>
-                </button>
-            </div>
             
             <div class="difficulty-buttons">
                 <!-- 2-BIT MODE -->

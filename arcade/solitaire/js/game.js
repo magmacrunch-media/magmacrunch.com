@@ -22,7 +22,7 @@ class Solitaire {
         this.cardBackImg.src = 'images/card-back.jpg';
         
         this.setupEventListeners();
-        this.loadHighScores();
+        this._scoresLoaded = this.loadHighScores();
         // Don't call init() yet - wait for start button
     }
     
@@ -184,7 +184,8 @@ class Solitaire {
             }
         });
 
-        document.getElementById('menuOptions').addEventListener('click', () => {
+        document.getElementById('menuOptions').addEventListener('click', async () => {
+            await this._scoresLoaded;
             this.displayHighScores();
             document.getElementById('highScoresModal').classList.add('active');
         });

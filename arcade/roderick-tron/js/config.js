@@ -6,9 +6,9 @@ const CONFIG = {
     CANVAS_H: 270,
 
     // Physics
-    GRAVITY: 0.55,
-    JUMP_FORCE: -7.5,
-    MAX_FALL: 10,
+    GRAVITY: 0.5,
+    JUMP_FORCE: -9,
+    MAX_FALL: 7,
 
     // Auto-scroll
     SCROLL_SPEED: 2,

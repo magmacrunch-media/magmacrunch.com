@@ -35,7 +35,7 @@ Entities.prototype.spawnGargoyle = function (roof, cameraX) {
 };
 
 // ── Update all entities ────────────────────────────────
-Entities.prototype.update = function (speed, player, rooftops, cameraX) {
+Entities.prototype.update = function (speed, player, rooftops, cameraX, dt) {
     // Cooldown
     if (this.shootCooldown > 0) this.shootCooldown--;
 

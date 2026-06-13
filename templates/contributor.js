@@ -7,6 +7,7 @@
 
     var MB_ID = config.MB_ID;
     var ARCHIVE_LINKS = config.ARCHIVE_LINKS || {};
+    var ENTITY_MAP = window.__ENTITY_MAP || {};
     var accent = config.accent || 'cyan';
     var API = 'https://musicbrainz.org/ws/2/artist/' + MB_ID + '?fmt=json&inc=artist-rels';
     var contentEl = document.getElementById('content');
@@ -15,7 +16,7 @@
     /* ── HELPERS ── */
 
     function archiveLink(artist) {
-        var link = ARCHIVE_LINKS[artist.id];
+        var link = ENTITY_MAP[artist.id] || ARCHIVE_LINKS[artist.id];
         if (link) return '<a href="' + link + '">' + esc(artist.name) + '</a>';
         return esc(artist.name);
     }
@@ -112,6 +113,72 @@
     function renderSimpleEntry(artist) {
         var link = archiveLink(artist);
         return '<li>' + link + '</li>';
+    }
+
+    function renderLabelEntry(label, roles, begin, end, ended) {
+        var dates = dateRange(begin, end, ended);
+        var link = '<a href="https://musicbrainz.org/label/' + label.id + '" target="_blank" rel="noopener">' + esc(label.name) + '</a>';
+        var roleTags = roles.map(function(r) {
+            return '<span class="instrument-tag">' + esc(r) + '</span>';
+        }).join('');
+        return '<details class="entry">' +
+            '<summary class="entry-header">' +
+                '<span class="entry-arrow">\u25b6</span>' +
+                '<span class="entry-name">' + link + '</span>' +
+                '<span class="entry-dates">' + esc(dates) + '</span>' +
+            '</summary>' +
+            '<div class="entry-body">' +
+                '<div class="entry-instruments">' +
+                    '<div class="label">roles</div>' + roleTags +
+                '</div>' +
+            '</div>' +
+            '</details>';
+    }
+
+    function renderPlaceEntry(place, roles, begin, end, ended) {
+        var dates = dateRange(begin, end, ended);
+        var internalPath = ENTITY_MAP[place.id];
+        var link = internalPath
+            ? '<a href="' + internalPath + '">' + esc(place.name) + '</a>'
+            : '<a href="https://musicbrainz.org/place/' + place.id + '" target="_blank" rel="noopener">' + esc(place.name) + '</a>';
+        var location = place.area ? esc(place.area.name) : '';
+        var type = place.type ? ' <span class="credit-sub">' + esc(place.type) + '</span>' : '';
+        var roleTags = roles.map(function(r) {
+            return '<span class="instrument-tag">' + esc(r) + '</span>';
+        }).join('');
+        return '<details class="entry">' +
+            '<summary class="entry-header">' +
+                '<span class="entry-arrow">\u25b6</span>' +
+                '<span class="entry-name">' + link + '</span>' +
+                '<span class="entry-dates">' + esc(dates) + '</span>' +
+            '</summary>' +
+            '<div class="entry-body">' +
+                '<div class="entry-instruments">' +
+                    '<div class="label">roles</div>' + roleTags +
+                '</div>' +
+                (location ? '<div class="credit-sub">' + location + type + '</div>' : '') +
+            '</div>' +
+            '</details>';
+    }
+
+    function renderEventEntry(event, roles, begin, end, ended) {
+        var dates = dateRange(begin, end, ended);
+        var link = '<a href="https://musicbrainz.org/event/' + event.id + '" target="_blank" rel="noopener">' + esc(event.name) + '</a>';
+        var roleTags = roles.map(function(r) {
+            return '<span class="instrument-tag">' + esc(r) + '</span>';
+        }).join('');
+        return '<details class="entry">' +
+            '<summary class="entry-header">' +
+                '<span class="entry-arrow">\u25b6</span>' +
+                '<span class="entry-name">' + link + '</span>' +
+                '<span class="entry-dates">' + esc(dates) + '</span>' +
+            '</summary>' +
+            '<div class="entry-body">' +
+                '<div class="entry-instruments">' +
+                    '<div class="label">roles</div>' + roleTags +
+                '</div>' +
+            '</div>' +
+            '</details>';
     }
 
     function mergeRels(rels) {
@@ -225,7 +292,7 @@
 
     /* ── RENDER ── */
 
-    function render(data, recordingData, workData, releaseData) {
+    function render(data, recordingData, workData, releaseData, labelData, placeData, eventData) {
         var rels = data.relations || [];
 
         var founders = [];
@@ -303,6 +370,79 @@
                 return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended, g.role);
             }).join('');
             html += renderSection('bands', items);
+        }
+
+        /* Labels */
+        if (labelData && labelData.relations) {
+            var labelRels = labelData.relations.filter(function(r) {
+                return r['target-type'] === 'label' && r.label;
+            });
+            var labelGroups = {};
+            labelRels.forEach(function(r) {
+                var id = r.label.id;
+                if (!labelGroups[id]) labelGroups[id] = { label: r.label, rels: [] };
+                labelGroups[id].rels.push(r);
+            });
+            var labelItems = Object.keys(labelGroups).map(function(id) {
+                var g = labelGroups[id];
+                var merged = mergeRels(g.rels);
+                var roles = [];
+                g.rels.forEach(function(r) {
+                    var t = r.type;
+                    if (t === 'label founder') t = 'founder';
+                    else if (t === 'executive position at') t = 'executive';
+                    if (roles.indexOf(t) === -1) roles.push(t);
+                });
+                return renderLabelEntry(g.label, roles, merged.begin, merged.end, merged.ended);
+            }).join('');
+            if (labelItems) html += renderSection('labels', labelItems);
+        }
+
+        /* Places */
+        if (placeData && placeData.relations) {
+            var placeRels = placeData.relations.filter(function(r) {
+                return r['target-type'] === 'place' && r.place;
+            });
+            var placeGroups = {};
+            placeRels.forEach(function(r) {
+                var id = r.place.id;
+                if (!placeGroups[id]) placeGroups[id] = { place: r.place, rels: [] };
+                placeGroups[id].rels.push(r);
+            });
+            var placeItems = Object.keys(placeGroups).map(function(id) {
+                var g = placeGroups[id];
+                var merged = mergeRels(g.rels);
+                var roles = [];
+                g.rels.forEach(function(r) {
+                    var t = r.type.replace(' position', '');
+                    if (roles.indexOf(t) === -1) roles.push(t);
+                });
+                return renderPlaceEntry(g.place, roles, merged.begin, merged.end, merged.ended);
+            }).join('');
+            if (placeItems) html += renderSection('places', placeItems);
+        }
+
+        /* Events */
+        if (eventData && eventData.relations) {
+            var eventRels = eventData.relations.filter(function(r) {
+                return r['target-type'] === 'event' && r.event;
+            });
+            var eventGroups = {};
+            eventRels.forEach(function(r) {
+                var id = r.event.id;
+                if (!eventGroups[id]) eventGroups[id] = { event: r.event, rels: [] };
+                eventGroups[id].rels.push(r);
+            });
+            var eventItems = Object.keys(eventGroups).map(function(id) {
+                var g = eventGroups[id];
+                var merged = mergeRels(g.rels);
+                var roles = [];
+                g.rels.forEach(function(r) {
+                    if (roles.indexOf(r.type) === -1) roles.push(r.type);
+                });
+                return renderEventEntry(g.event, roles, merged.begin, merged.end, merged.ended);
+            }).join('');
+            if (eventItems) html += renderSection('events', eventItems);
         }
 
         /* Compositions */
@@ -416,7 +556,19 @@
                     return delay(1100).then(function() {
                         return fetchMB(baseUrl + 'release-rels');
                     }).then(function(releaseData) {
-                        render(data, recordingData, workData, releaseData);
+                        return delay(1100).then(function() {
+                            return fetchMB(baseUrl + 'label-rels');
+                        }).then(function(labelData) {
+                            return delay(1100).then(function() {
+                                return fetchMB(baseUrl + 'place-rels');
+                            }).then(function(placeData) {
+                                return delay(1100).then(function() {
+                                    return fetchMB(baseUrl + 'event-rels');
+                                }).then(function(eventData) {
+                                    render(data, recordingData, workData, releaseData, labelData, placeData, eventData);
+                                });
+                            });
+                        });
                     });
                 });
             });
