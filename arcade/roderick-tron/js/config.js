@@ -6,9 +6,9 @@ const CONFIG = {
     CANVAS_H: 270,
 
     // Physics
-    GRAVITY: 0.35,
-    JUMP_FORCE: -6.5,
-    MAX_FALL: 8,
+    GRAVITY: 0.55,
+    JUMP_FORCE: -7.5,
+    MAX_FALL: 10,
 
     // Auto-scroll
     SCROLL_SPEED: 2,
@@ -20,10 +20,10 @@ const CONFIG = {
     PLAYER_H: 24,
 
     // Rooftops
-    ROOF_MIN_W: 70,
-    ROOF_MAX_W: 180,
-    ROOF_GAP_MIN: 40,
-    ROOF_GAP_MAX: 90,
+    ROOF_MIN_W: 120,
+    ROOF_MAX_W: 200,
+    ROOF_GAP_MIN: 35,
+    ROOF_GAP_MAX: 55,
     ROOF_HEIGHT_VAR: 50,
     ROOF_Y_BASE: 180,       // baseline Y for rooftops
 

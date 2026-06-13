@@ -13,6 +13,7 @@ function Player() {
     this.animFrame = 0;
     this.animTimer = 0;
     this.runFrame = 0;
+    this.isJumping = false;
 }
 
 Player.prototype.reset = function () {
@@ -25,6 +26,7 @@ Player.prototype.reset = function () {
     this.invincible = 0;
     this.shakeFrames = 0;
     this.runFrame = 0;
+    this.isJumping = false;
 };
 
 Player.prototype.update = function (rooftops, cameraX) {
@@ -32,6 +34,13 @@ Player.prototype.update = function (rooftops, cameraX) {
     if (Input.jump() && this.grounded && this.alive) {
         this.vy = CONFIG.JUMP_FORCE;
         this.grounded = false;
+        this.isJumping = true;
+    }
+
+    // Variable jump: releasing space early cuts upward velocity
+    if (this.isJumping && !Input.isDown('Space') && this.vy < -2) {
+        this.vy = -2;
+        this.isJumping = false;
     }
 
     // Gravity
@@ -50,10 +59,11 @@ Player.prototype.update = function (rooftops, cameraX) {
             const playerRight = this.x + CONFIG.PLAYER_W;
 
             if (playerRight > screenX && playerLeft < screenX + r.width) {
-                if (playerBottom >= r.y && playerBottom <= r.y + 12 && this.vy >= 0) {
+                if (playerBottom >= r.y && playerBottom <= r.y + 22 && this.vy >= 0) {
                     this.y = r.y - CONFIG.PLAYER_H;
                     this.vy = 0;
                     this.grounded = true;
+                    this.isJumping = false;
                 }
             }
         }
