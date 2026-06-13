@@ -28,6 +28,14 @@
     const d      = C.depth  || '../../../';
     const accent = C.accent || 'cyan';
 
+    const ENTITY_MAP = window.__ENTITY_MAP || {};
+    function archiveLink(id, name, type) {
+        if (!id || !name) return esc(name || '');
+        const path = ENTITY_MAP[id];
+        if (path) return '<a href="' + path + '">' + esc(name) + '</a>';
+        return '<a href="https://musicbrainz.org/' + (type || 'artist') + '/' + esc(id) + '" target="_blank" rel="noopener">' + esc(name) + '</a>';
+    }
+
     const COLOR_MAP = {
         events:     'c-events',
         recordings: 'c-recordings',
@@ -239,7 +247,7 @@
                         ? `<span class="disambiguation"> (${esc(d.disambiguation)})</span>` : '';
 
                     const artists = d['artist-credit']?.map(ac =>
-                        `<a href="https://musicbrainz.org/artist/${esc(ac.artist?.id)}" target="_blank" rel="noopener">${esc(ac.name)}</a>`
+                        archiveLink(ac.artist?.id, ac.name, 'artist')
                     ).join(', ') || 'various artists';
 
                     const aliases = d.aliases
@@ -256,7 +264,7 @@
 
                     // Other places this recording is linked to
                     const otherPlaces = (d.relations?.filter(r => r['target-type'] === 'place' && r.place?.id !== placeId) || [])
-                        .map(r => `<a href="https://musicbrainz.org/place/${esc(r.place?.id)}" target="_blank" rel="noopener">${esc(r['target-credit'] || r.place?.name)}</a> (${esc(r.type)}${formatAttrs(r.attributes)})${formatDate(r.begin, r.end, r.ended)}`)
+                        .map(r => archiveLink(r.place?.id, r['target-credit'] || r.place?.name, 'place') + ` (${esc(r.type)}${formatAttrs(r.attributes)})${formatDate(r.begin, r.end, r.ended)}`)
                         .join(', ');
 
                     // Works performed in this recording
@@ -301,13 +309,13 @@
                             }
                         });
                     const performers = Array.from(perfMap.values())
-                        .map(p => `<a href="https://musicbrainz.org/artist/${esc(p.id)}" target="_blank" rel="noopener">${esc(p.name)}</a>${p.roles.length ? ` (${p.roles.map(esc).join(', ')})` : ''}`)
+                        .map(p => archiveLink(p.id, p.name, 'artist') + (p.roles.length ? ` <span class="credit-sub">(${p.roles.map(esc).join(', ')})</span>` : ''))
                         .join(', ');
 
                     // Production credits
                     const production = d.relations
                         ?.filter(r => r['target-type'] === 'artist' && ['engineer', 'mix', 'producer', 'recording', 'mastering'].includes(r.type))
-                        .map(r => `<a href="https://musicbrainz.org/artist/${esc(r.artist?.id)}" target="_blank" rel="noopener">${esc(r.artist?.name)}</a> (${esc(r.type)})`)
+                        .map(r => archiveLink(r.artist?.id, r.artist?.name, 'artist') + ` (${esc(r.type)})`)
                         .join(', ') || '';
 
                     const tags = d.tags?.map(t => `<span class="tag">${esc(t.name)}</span>`).join('') || '';

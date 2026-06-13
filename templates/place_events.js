@@ -21,6 +21,14 @@
     const d      = C.depth  || '../../../';
     const accent = C.accent || 'green';
 
+    const ENTITY_MAP = window.__ENTITY_MAP || {};
+    function archiveLink(id, name, type) {
+        if (!id || !name) return esc(name || '');
+        const path = ENTITY_MAP[id];
+        if (path) return '<a href="' + path + '">' + esc(name) + '</a>';
+        return '<a href="https://musicbrainz.org/' + (type || 'artist') + '/' + esc(id) + '" target="_blank" rel="noopener">' + esc(name) + '</a>';
+    }
+
     const COLOR_MAP = {
         events:     'c-events',
         recordings: 'c-recordings',
@@ -230,7 +238,7 @@
                     ) || []).map(r => {
                         const wasCancelled = Array.isArray(r.attributes) && r.attributes.includes('cancelled');
                         const typeLabel = r.type !== 'main performer' ? ` (${r.type})` : '';
-                        return `<a href="https://musicbrainz.org/artist/${esc(r.artist.id)}" target="_blank" rel="noopener">${esc(r.artist.name)}</a>${typeLabel}${wasCancelled ? ' <span class="performer-cancelled">(cancelled)</span>' : ''}`;
+                        return archiveLink(r.artist.id, r.artist.name, 'artist') + typeLabel + (wasCancelled ? ' <span class="performer-cancelled">(cancelled)</span>' : '');
                     }).join(', ');
 
                     const eventType = d.type ? (d.type.toLowerCase() === 'concert' ? 'show' : esc(d.type.toLowerCase())) : 'event';

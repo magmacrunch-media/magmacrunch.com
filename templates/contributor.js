@@ -383,7 +383,7 @@
                 if (!labelGroups[id]) labelGroups[id] = { label: r.label, rels: [] };
                 labelGroups[id].rels.push(r);
             });
-            var labelItems = Object.keys(labelGroups).map(function(id) {
+            var labelEntries = Object.keys(labelGroups).map(function(id) {
                 var g = labelGroups[id];
                 var merged = mergeRels(g.rels);
                 var roles = [];
@@ -393,7 +393,13 @@
                     else if (t === 'executive position at') t = 'executive';
                     if (roles.indexOf(t) === -1) roles.push(t);
                 });
-                return renderLabelEntry(g.label, roles, merged.begin, merged.end, merged.ended);
+                return { label: g.label, roles: roles, begin: merged.begin, end: merged.end, ended: merged.ended };
+            });
+            labelEntries.sort(function(a, b) {
+                return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
+            });
+            var labelItems = labelEntries.map(function(e) {
+                return renderLabelEntry(e.label, e.roles, e.begin, e.end, e.ended);
             }).join('');
             if (labelItems) html += renderSection('labels', labelItems);
         }
@@ -409,7 +415,7 @@
                 if (!placeGroups[id]) placeGroups[id] = { place: r.place, rels: [] };
                 placeGroups[id].rels.push(r);
             });
-            var placeItems = Object.keys(placeGroups).map(function(id) {
+            var placeEntries = Object.keys(placeGroups).map(function(id) {
                 var g = placeGroups[id];
                 var merged = mergeRels(g.rels);
                 var roles = [];
@@ -417,7 +423,13 @@
                     var t = r.type.replace(' position', '');
                     if (roles.indexOf(t) === -1) roles.push(t);
                 });
-                return renderPlaceEntry(g.place, roles, merged.begin, merged.end, merged.ended);
+                return { place: g.place, roles: roles, begin: merged.begin, end: merged.end, ended: merged.ended };
+            });
+            placeEntries.sort(function(a, b) {
+                return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
+            });
+            var placeItems = placeEntries.map(function(e) {
+                return renderPlaceEntry(e.place, e.roles, e.begin, e.end, e.ended);
             }).join('');
             if (placeItems) html += renderSection('places', placeItems);
         }

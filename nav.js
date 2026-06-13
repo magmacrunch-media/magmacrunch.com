@@ -27,7 +27,9 @@ window.NAV_CONFIG = {
         ]},
         { label: 'archive', href: 'archive/index.html', items: [
             { href: 'archive/by-artist/index.html', label: 'by artist' },
-            { href: 'archive/by-place/index.html', label: 'by place' }
+            { href: 'archive/by-place/index.html', label: 'by place' },
+            { href: 'archive/by-label/index.html', label: 'by label' },
+            { href: 'archive/by-contributor/index.html', label: 'by contributor' }
         ]},
         { label: 'arcade', href: 'arcade/index.html' },
         { label: 'guestbook', href: 'home/guestbook.html' }
@@ -358,7 +360,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
     ];
 
     /* ── EXCLUDED PATHS: full page load ── */
-    const EXCLUDE_PATHS = ['/arcade/', '/by-contributor/'];
+    const EXCLUDE_PATHS = ['/arcade/', '/by-contributor/', '/by-label/'];
 
     /* ── HELPERS ── */
     function abs(href, base) {

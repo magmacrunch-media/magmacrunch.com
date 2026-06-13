@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by label — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--purple); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--purple); opacity: 0.7; }
+        .breadcrumb .current { color: var(--purple); }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--purple);
+            text-shadow: 0 0 16px rgba(196,95,255,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            margin-bottom: 32px;
+            letter-spacing: 0.12em;
+        }
+
+        .intro {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.7;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .grid-wrap {
+            width: min(900px, 95vw);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 2px solid #1e1e2e;
+            background: var(--deep);
+            padding: 16px;
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: var(--purple);
+            box-shadow: 0 0 16px rgba(196,95,255,0.3);
+        }
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--white);
+            letter-spacing: 0.08em;
+        }
+        .card-sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            margin-top: 6px;
+        }
+
+        .note {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../index.html">home</a><div class="dropdown"><a href="../../home/about.html">about</a><a href="../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../music/index.html">music</a><div class="dropdown"><a href="../../music/jukebox/index.html">jukebox</a><a href="../../music/distributed-music.html">distributed music</a><a href="../../music/floppy-disk/index.html">floppy disk</a><a href="../../music/catalog.html">full catalog</a></div></li>
+        <li><a href="../../visual/index.html">visual</a><div class="dropdown"><a href="../../visual/music-videos.html">music videos</a><a href="../../visual/collage.html">collage</a><a href="../../visual/photography.html">photography</a></div></li>
+        <li><a href="../index.html">archive</a><div class="dropdown"><a href="../by-artist/index.html">by artist</a><a href="../by-place/index.html">by place</a><a href="../by-label/index.html">by label</a><a href="../by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../../arcade/index.html">arcade</a></li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../index.html">home</a>
+        <span class="sep">&rsaquo;</span>
+        <a href="../index.html">archive</a>
+        <span class="sep">&rsaquo;</span>
+        <span class="current">by label</span>
+    </div>
+
+    <h1 class="page-title">// by label //</h1>
+
+    <p class="intro">
+        labels, publishers, and creative agencies associated with magmacrunch.
+    </p>
+
+    <div class="grid-wrap">
+        <a href="magmacrunch-media/index.html" class="card">
+            <div class="card-title">MAGMACRUNCH MEDIA</div>
+            <div class="card-sub">record label</div>
+        </a>
+
+        <a href="magmacrunch-music/index.html" class="card">
+            <div class="card-title">MAGMACRUNCH MUSIC</div>
+            <div class="card-sub">publisher</div>
+        </a>
+
+        <a href="the-slop-collective/index.html" class="card">
+            <div class="card-title">THE SLOP COLLECTIVE</div>
+            <div class="card-sub">creative agency</div>
+        </a>
+    </div>
+
+    <p class="note">
+        data sourced from MusicBrainz. contributions may be incomplete.
+    </p>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+
+</body>
+</html>

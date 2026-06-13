@@ -21,6 +21,14 @@
     const d      = C.depth  || '../../../';
     const accent = C.accent || 'blue';
 
+    const ENTITY_MAP = window.__ENTITY_MAP || {};
+    function archiveLink(id, name, type) {
+        if (!id || !name) return esc(name || '');
+        const path = ENTITY_MAP[id];
+        if (path) return '<a href="' + path + '">' + esc(name) + '</a>';
+        return '<a href="https://musicbrainz.org/' + (type || 'artist') + '/' + esc(id) + '" target="_blank" rel="noopener">' + esc(name) + '</a>';
+    }
+
     const COLOR_MAP = {
         events:     'c-events',
         recordings: 'c-recordings',
@@ -183,7 +191,7 @@
             if (dt && !e.dates.includes(dt)) e.dates.push(dt);
         }
         return Array.from(map.values()).map(e => {
-            let s = `<a href="https://musicbrainz.org/artist/${esc(e.id)}" target="_blank" rel="noopener">${esc(e.name)}</a>`;
+            let s = archiveLink(e.id, e.name, 'artist');
             if (e.attrs.size) s += ` (${Array.from(e.attrs).map(esc).join(', ')})`;
             if (e.dates.length) s += e.dates.join(', ');
             return s;
@@ -260,7 +268,7 @@
 
                     // other places (not this one)
                     const otherPlaces = (a.relations?.filter(r => r['target-type'] === 'place' && r.place?.id !== placeId) || [])
-                        .map(r => `<a href="https://musicbrainz.org/place/${esc(r.place?.id)}" target="_blank" rel="noopener">${esc(r['target-credit'] || r.place?.name)}</a> (${esc(r.type)}${formatDate(r.begin, r.end, r.ended)})`)
+                        .map(r => archiveLink(r.place?.id, r['target-credit'] || r.place?.name, 'place') + ` (${esc(r.type)}${formatDate(r.begin, r.end, r.ended)})`)
                         .join(', ');
 
                     // other relationships (artist-to-artist, excluding member of band and label/place/url/work/recording)
@@ -280,7 +288,7 @@
                         if (!otherMap.has(type)) otherMap.set(type, []);
                         const name = r.artist?.name;
                         if (!name) return;
-                        otherMap.get(type).push(`<a href="https://musicbrainz.org/artist/${esc(r.artist?.id)}" target="_blank" rel="noopener">${esc(name)}</a>${formatAttrs(r.attributes)}${formatDate(r.begin, r.end, r.ended)}`);
+                        otherMap.get(type).push(archiveLink(r.artist?.id, name, 'artist') + formatAttrs(r.attributes) + formatDate(r.begin, r.end, r.ended));
                     });
                     const otherRels = Array.from(otherMap.entries())
                         .map(([type, items]) => `${esc(type)}: ${items.join(', ')}`);
@@ -290,7 +298,7 @@
                     list.insertAdjacentHTML('beforeend', `
                         <div class="artist-card">
                             <h3>
-                                <a href="https://musicbrainz.org/artist/${esc(artistId)}" target="_blank" rel="noopener">${esc(a.name || 'unknown')}</a>
+                                ${archiveLink(artistId, a.name || 'unknown', 'artist')}
                                 ${artistType ? `<span class="artist-type">[${esc(artistType.toLowerCase())}]</span>` : ''}
                             </h3>
                             ${badges      ? `<p>${badges}</p>` : ''}

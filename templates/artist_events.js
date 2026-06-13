@@ -28,6 +28,14 @@
     const d      = C.depth  || '../../../';
     const accent = C.accent || 'green';
 
+    const ENTITY_MAP = window.__ENTITY_MAP || {};
+    function archiveLink(id, name, type) {
+        if (!id || !name) return esc(name || '');
+        const path = ENTITY_MAP[id];
+        if (path) return '<a href="' + path + '">' + esc(name) + '</a>';
+        return '<a href="https://musicbrainz.org/' + (type || 'artist') + '/' + esc(id) + '" target="_blank" rel="noopener">' + esc(name) + '</a>';
+    }
+
 const COLOR_MAP = {
         about:       'c-about',
         photography: 'c-photography',
@@ -298,7 +306,7 @@ const COLOR_MAP = {
                     const othersHtml = others.length
                         ? `<p><strong>also:</strong> ${others.map(r => {
                             const wasCancelled = Array.isArray(r.attributes) && r.attributes.includes('cancelled');
-                            return `<a href="https://musicbrainz.org/artist/${esc(r.artist.id)}" target="_blank">${esc(r.artist.name)}</a>${wasCancelled ? ' <span class="cancelled-tag">(cancelled)</span>' : ''}`;
+                            return archiveLink(r.artist.id, r.artist.name, 'artist') + (wasCancelled ? ' <span class="cancelled-tag">(cancelled)</span>' : '');
                         }).join(', ')}</p>` : '';
 
                     document.querySelector(`#event-${e.id} .event-info`).innerHTML = `

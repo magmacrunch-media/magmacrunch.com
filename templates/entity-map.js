@@ -70,4 +70,9 @@ window.__ENTITY_MAP = {
     '362e9df6-ce39-4805-841e-c113e4e2a7c9': '../../by-place/frogwood-manor/index.html',
     'e697fa03-e300-421a-8fd3-3b026d8d4f13': '../../by-place/twin-maples/index.html',
     '1fc551c6-d3d5-43d0-a3bb-9e5606bdbebe': '../../by-place/green-street-apt/index.html',
+
+    /* ── Labels → /archive/by-label/ ── */
+    '39446d03-fe9c-47d0-81a9-2b42d34fb400': '../../by-label/magmacrunch-media/index.html',
+    'c78b5612-2300-4ee1-8663-299ddcf9ce25': '../../by-label/magmacrunch-music/index.html',
+    'ad82d124-e41e-49e8-9bf9-53e836b44336': '../../by-label/the-slop-collective/index.html',
 };

@@ -21,6 +21,14 @@
     const d      = C.depth  || '../../../';
     const accent = C.accent || 'yellow';
 
+    const ENTITY_MAP = window.__ENTITY_MAP || {};
+    function archiveLink(id, name, type) {
+        if (!id || !name) return esc(name || '');
+        const path = ENTITY_MAP[id];
+        if (path) return '<a href="' + path + '">' + esc(name) + '</a>';
+        return '<a href="https://musicbrainz.org/' + (type || 'artist') + '/' + esc(id) + '" target="_blank" rel="noopener">' + esc(name) + '</a>';
+    }
+
     const COLOR_MAP = {
         events:     'c-events',
         recordings: 'c-recordings',
@@ -237,7 +245,7 @@
                         }).join('<br>');
 
                     const artistLink = (r) =>
-                        `<a href="https://musicbrainz.org/artist/${esc(r.artist?.id)}" target="_blank" rel="noopener">${esc(r.artist?.name)}</a>${formatAttrs(r.attributes)}${formatDate(r.begin, r.end, r.ended)}`;
+                        archiveLink(r.artist?.id, r.artist?.name, 'artist') + formatAttrs(r.attributes) + formatDate(r.begin, r.end, r.ended);
 
                     const composers  = (w.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'composer')  || []).map(artistLink).join(', ');
                     const lyricists  = (w.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'lyricist')  || []).map(artistLink).join(', ');
@@ -246,7 +254,7 @@
                         .map(r => `<a href="https://musicbrainz.org/label/${esc(r.label?.id)}" target="_blank" rel="noopener">${esc(r.label?.name)}</a>`).join(', ');
 
                     const otherPlaces = (w.relations?.filter(r => r['target-type'] === 'place' && r.place?.id !== placeId) || [])
-                        .map(r => `<a href="https://musicbrainz.org/place/${esc(r.place?.id)}" target="_blank" rel="noopener">${esc(r['target-credit'] || r.place?.name)}</a> (${esc(r.type)}${formatAttrs(r.attributes)})${formatDate(r.begin, r.end, r.ended)}`)
+                        .map(r => archiveLink(r.place?.id, r['target-credit'] || r.place?.name, 'place') + ` (${esc(r.type)}${formatAttrs(r.attributes)})${formatDate(r.begin, r.end, r.ended)}`)
                         .join(', ');
 
                     // recordings — fetch each to get video flag and disambiguation
@@ -294,7 +302,7 @@
                         if (type === 'parts' && r['target-type'] === 'work') type = r.direction === 'backward' ? 'part of' : 'has parts';
                         if (r['target-type'] === 'url')     return `${esc(type)}: <a href="${esc(r.url?.resource)}" target="_blank" rel="noopener">${esc(r.url?.resource)}</a>${as}${ds}`;
                         if (r['target-type'] === 'work')    return `${esc(type)}: <a href="https://musicbrainz.org/work/${esc(r.work?.id)}" target="_blank" rel="noopener">${esc(r.work?.title)}</a>${as}${ds}`;
-                        if (r['target-type'] === 'artist')  return `${esc(type)}: <a href="https://musicbrainz.org/artist/${esc(r.artist?.id)}" target="_blank" rel="noopener">${esc(r.artist?.name)}</a>${as}${ds}`;
+                        if (r['target-type'] === 'artist')  return `${esc(type)}: ${archiveLink(r.artist?.id, r.artist?.name, 'artist')}${as}${ds}`;
                         if (r['target-type'] === 'label')   return `${esc(type)}: <a href="https://musicbrainz.org/label/${esc(r.label?.id)}" target="_blank" rel="noopener">${esc(r.label?.name)}</a>${as}${ds}`;
                         return `${esc(type)}: ${esc(r.artist?.name || r.label?.name || r.work?.title || r.url?.resource || 'n/a')}${as}${ds}`;
                     });
