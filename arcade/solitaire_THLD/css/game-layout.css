@@ -528,6 +528,75 @@ h1 {
     color: var(--white);
 }
 
+/* ── Bet total & breakdown ─────────────────────────────────── */
+.bet-total {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: var(--yellow);
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.bet-breakdown {
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    color: var(--orange-glow);
+    text-align: center;
+    margin-bottom: 12px;
+    min-height: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* ── Chip denomination controls ────────────────────────────── */
+.chip-denom-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 12px;
+}
+
+.chip-denom-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 3px 0;
+}
+
+.chip-denom-label {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    width: 28px;
+    text-align: right;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.chip-btn {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.chip-btn.disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.chip-denom-count {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--yellow);
+    width: 22px;
+    text-align: center;
+}
+
 .withdraw-divider {
     font-family: var(--font-pixel);
     font-size: 6px;

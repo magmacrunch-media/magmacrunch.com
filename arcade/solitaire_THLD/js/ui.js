@@ -52,7 +52,7 @@ class UI {
         }
 
         this.dealer.dealHoleCards();
-        this._pendingBet = this.betting.minBet;
+        this._pendingBet = 0;
         this.render();
     }
 
@@ -248,11 +248,11 @@ class UI {
                            placeholder="Amount to withdraw">
                 </div>
                 ` : ''}
-                <div class="bet-quick-picks">
-                    ${bets.map(b => `
-                        <button class="bet-quick-btn ${b === this._pendingBet ? 'selected' : ''}"
-                                data-amount="${b}">${b}</button>
-                    `).join('')}
+                <div class="bet-total">BET: ${this._pendingBet}</div>
+                <div class="bet-breakdown">${this._chipBreakdown(this._pendingBet)}</div>
+
+                <div class="chip-denom-rows">
+                    ${this._chipDenomRowsHTML(this._pendingBet, status.maxBet)}
                 </div>
 
                 <div class="bet-custom">
@@ -310,11 +310,11 @@ class UI {
                 <div class="phase-subtitle">Total bet: ${status.currentBet} chips</div>
                 ${handPreview}
 
-                <div class="bet-quick-picks">
-                    ${this.betting.suggestedBets.map(b => `
-                        <button class="bet-quick-btn raise-quick-btn ${b === this._pendingBet ? 'selected' : ''}"
-                                data-amount="${b}">${b}</button>
-                    `).join('')}
+                <div class="bet-total">RAISE: ${this._pendingBet}</div>
+                <div class="bet-breakdown">${this._chipBreakdown(this._pendingBet)}</div>
+
+                <div class="chip-denom-rows">
+                    ${this._chipDenomRowsHTML(this._pendingBet, status.maxBet)}
                 </div>
 
                 <div class="bet-custom">
@@ -509,6 +509,25 @@ class UI {
             );
         });
 
+        // ── Chip denomination +/- buttons ────────────────────
+        this._onAll('.chip-plus', 'click', (e) => {
+            const denom = parseInt(e.currentTarget.dataset.denom);
+            this._pendingBet = Math.min(this._pendingBet + denom, this.betting.maxBet);
+            this._syncBetInput();
+            this._updateBetButton();
+            this._updateRiskIndicator();
+            this._renderPhasePanel();
+        });
+
+        this._onAll('.chip-minus', 'click', (e) => {
+            const denom = parseInt(e.currentTarget.dataset.denom);
+            this._pendingBet = Math.max(this._pendingBet - denom, 0);
+            this._syncBetInput();
+            this._updateBetButton();
+            this._updateRiskIndicator();
+            this._renderPhasePanel();
+        });
+
         this._on('btn-place-bet', 'click', () => {
             const result = this.betting.placeBet(this._pendingBet);
             if (!result.ok) { this._showError(result.error); return; }
@@ -522,7 +541,7 @@ class UI {
             const result = this.betting.withdrawFromBank(amount);
             if (!result.ok) { this._showError(result.error); return; }
             // Refresh bet constraints and re-render the panel
-            this._pendingBet = this.betting.minBet;
+            this._pendingBet = 0;
             this.render();
         });
 
@@ -717,8 +736,16 @@ class UI {
     }
 
     _updateBetButton() {
-        const btn = document.getElementById('btn-place-bet');
-        if (btn) btn.textContent = `BET ${this._pendingBet}`;
+        const betBtn = document.getElementById('btn-place-bet');
+        if (betBtn) betBtn.textContent = `BET ${this._pendingBet}`;
+        const raiseBtn = document.getElementById('btn-raise');
+        if (raiseBtn) raiseBtn.textContent = `RAISE ${this._pendingBet}`;
+    }
+
+    _syncBetInput() {
+        const input = document.getElementById('bet-input') ||
+                      document.getElementById('raise-input');
+        if (input) input.value = this._pendingBet;
     }
 
     _updateRiskIndicator() {
@@ -730,6 +757,33 @@ class UI {
         if (!amount) return '';
         const risk = this.betting.riskLevel(amount);
         return `<span class="risk-badge risk-${risk.level}">${risk.label}</span>`;
+    }
+
+    // ── Chip denomination helpers ────────────────────────────
+
+    _chipBreakdown(amount) {
+        if (!amount) return '';
+        const stacks = breakIntoStacks(amount);
+        return stacks.map(s => {
+            const label = s.denom.label;
+            return s.count > 1 ? `${label}×${s.count}` : `${label}`;
+        }).join(' + ');
+    }
+
+    _chipDenomRowsHTML(currentBet, maxBet) {
+        return DENOMS.map(d => {
+            const count = Math.floor(currentBet / d.value);
+            const canAdd = currentBet + d.value <= maxBet;
+            const canRemove = count > 0;
+            return `
+                <div class="chip-denom-row">
+                    <span class="chip-denom-label" style="color:${d.face}">${d.label}</span>
+                    <button class="chip-btn chip-minus${canRemove ? '' : ' disabled'}" data-denom="${d.value}">−</button>
+                    <span class="chip-denom-count">${count}</span>
+                    <button class="chip-btn chip-plus${canAdd ? '' : ' disabled'}" data-denom="${d.value}">+</button>
+                </div>
+            `;
+        }).join('');
     }
 
     _showError(message) {
