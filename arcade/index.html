@@ -429,6 +429,8 @@
             <div class="dropdown">
                 <a href="../archive/by-artist/index.html">by artist</a>
                 <a href="../archive/by-place/index.html">by place</a>
+                <a href="../archive/by-label/index.html">by label</a>
+                <a href="../archive/by-contributor/index.html">by contributor</a>
             </div>
         </li>
         <li>
@@ -592,6 +594,21 @@
                         <canvas id="cDrift" width="72" height="72"></canvas>
                     </div>
                     <div class="card-desc">coast through space. dodge obstacles. ride the moon.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="pay2play/pay2play.html" class="game-card" style="--card-color: #ff2e9c">
+                <div class="card-inner">
+                    <div class="card-tags">
+                        <span class="card-tag" style="color: #b537f2">SVFP-INSPIRED</span>
+                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
+                    </div>
+                    <div class="card-title">PAY2PLAY</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cPay2play" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">floppy disks, red telephones, coins. sex van floor plan universe.</div>
                     <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -1444,6 +1461,64 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.textAlign = 'center';
     ctx.fillText('A', 20, 20);
     ctx.fillText('♠', 25, 32);
+})();
+
+// cPay2play — SVFP-inspired floppy disk + red telephone
+(function() {
+    const c = document.getElementById('cPay2play');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark background
+    ctx.fillStyle = '#0a0808';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // red telephone (simplified)
+    ctx.fillStyle = '#cc2020';
+    ctx.fillRect(8, 10, 20, 28);
+    ctx.fillStyle = '#aa1818';
+    ctx.fillRect(10, 12, 16, 24);
+    // handset
+    ctx.fillStyle = '#222';
+    ctx.fillRect(12, 8, 12, 4);
+    ctx.fillRect(8, 6, 4, 6);
+    ctx.fillRect(24, 6, 4, 6);
+    // cord
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(18, 38);
+    ctx.quadraticCurveTo(18, 48, 28, 52);
+    ctx.stroke();
+
+    // floppy disk
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(40, 14, 24, 24);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(44, 16, 16, 10);
+    // label
+    ctx.fillStyle = '#ddd';
+    ctx.fillRect(44, 28, 16, 8);
+    // shutter
+    ctx.fillStyle = '#555';
+    ctx.fillRect(50, 16, 4, 6);
+
+    // coins
+    const coins = [[14, 56], [28, 58], [42, 54], [56, 57]];
+    coins.forEach(([x, y]) => {
+        ctx.fillStyle = '#FFD700';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#DAA520';
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // accent line
+    ctx.fillStyle = '#ff2e9c';
+    ctx.fillRect(4, 68, 64, 2);
 })();
 
 // ─────────────────────────────────────────────────────────
