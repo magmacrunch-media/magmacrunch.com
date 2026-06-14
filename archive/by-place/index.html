@@ -6,7 +6,25 @@
     <title>by place — magmacrunch archive</title>
     <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
     <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../templates/contributor-theme.css">
     <style>
+        body.ctb-page {
+            --ctb-void:     #2b0021;
+            --ctb-darkest:  #46002f;
+            --ctb-dark:     #6c0950;
+            --ctb-mid-dark: #9a1879;
+            --ctb-deep:     #b01b8c;
+            --ctb-bright:   #bf2c9d;
+            --ctb-muted:    #db85bd;
+            --ctb-cyan:     #dd4ec0;
+            --ctb-light:    #ff7dd0;
+            --ctb-pale:     #ffaae0;
+            --nav-brand:    #dd4ec0;
+            --nav-brand-glow: rgba(221,78,192,0.7);
+            --nav-accent:   #9a1879;
+            --nav-glow:     rgba(154,24,121,0.4);
+            background:     #2b0021;
+        }
         main {
             flex: 1;
             display: flex;
@@ -18,28 +36,28 @@
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #db85bd;
             letter-spacing: 0.1em;
             margin-top: -8px;
             margin-bottom: 16px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #e500a5; }
-        .breadcrumb .sep { margin: 0 8px; color: #e500a5; opacity: 0.7; }
-        .breadcrumb .current { color: #e500a5; }
+        .breadcrumb a { color: #db85bd; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #dd4ec0; }
+        .breadcrumb .sep { margin: 0 8px; color: #dd4ec0; opacity: 0.7; }
+        .breadcrumb .current { color: #dd4ec0; }
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
-            color: #e500a5;
-            text-shadow: 0 0 16px rgba(229,0,165,0.6);
+            color: #dd4ec0;
+            text-shadow: 0 0 16px rgba(221,78,192,0.6);
             margin-bottom: 8px;
             letter-spacing: 0.1em;
         }
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #db85bd;
             margin-bottom: 32px;
             letter-spacing: 0.12em;
         }
@@ -50,33 +68,33 @@
             gap: 16px;
         }
         .card {
-            border: 2px solid #1e1e2e;
-            background: var(--deep);
+            border: 2px solid #9a1879;
+            background: #2b0021;
             padding: 16px;
             text-decoration: none;
             transition: border-color 0.15s, box-shadow 0.15s;
         }
         .card:hover {
-            border-color: #e500a5;
-            box-shadow: 0 0 16px rgba(229,0,165,0.3);
+            border-color: #dd4ec0;
+            box-shadow: 0 0 16px rgba(221,78,192,0.3);
         }
         .card-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: var(--white);
+            color: #ffaae0;
             letter-spacing: 0.08em;
             margin-bottom: 6px;
         }
         .card-soon {
-            border: 2px dashed #1e1e2e;
-            background: var(--deep);
+            border: 2px dashed #9a1879;
+            background: #2b0021;
             padding: 16px;
             opacity: 0.5;
         }
         .card-soon .card-sub {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--dim);
+            color: #db85bd;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
@@ -84,7 +102,7 @@
         
     </style>
 </head>
-<body>
+<body class="ctb-page">
 
 <nav>
     <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
