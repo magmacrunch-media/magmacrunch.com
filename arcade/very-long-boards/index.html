@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Very Long Boards</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="../../arcade/index.html" class="mc-back">magmacrunch arcade</a>
+
+    <div id="game-container">
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+        <!-- TITLE SCREEN -->
+        <div id="titleScreen" class="overlay">
+            <div class="title-text">
+                <div class="title-main">VERY LONG<br>BOARDS</div>
+                <div class="title-sub">downhill skateboarding</div>
+                <div class="title-carl">a carl spatski game</div>
+            </div>
+            <div class="insert-coin" id="startPrompt">— PRESS ENTER TO START —</div>
+        </div>
+
+        <!-- CHARACTER SELECT -->
+        <div id="charSelect" class="overlay" style="display:none;">
+            <div class="cs-title">SELECT YOUR CARL</div>
+            <div class="cs-cards">
+                <div class="cs-card" data-char="office-carl">
+                    <canvas class="cs-preview" id="csOffice" width="64" height="80"></canvas>
+                    <div class="cs-name">OFFICE CARL</div>
+                    <div class="cs-desc">the everyman</div>
+                    <div class="cs-stats">SPD ████░ HAND ████░ CRV ████░</div>
+                </div>
+                <div class="cs-card" data-char="party-carl">
+                    <canvas class="cs-preview" id="csParty" width="64" height="80"></canvas>
+                    <div class="cs-name">PARTY CARL</div>
+                    <div class="cs-desc">the maniac</div>
+                    <div class="cs-stats">SPD █████ HAND ███░░ CRV ███░░</div>
+                </div>
+                <div class="cs-card" data-char="dark-carl">
+                    <canvas class="cs-preview" id="csDark" width="64" height="80"></canvas>
+                    <div class="cs-name">DARK CARL</div>
+                    <div class="cs-desc">the enigma</div>
+                    <div class="cs-stats">SPD █████ HAND ███░░ CRV ████░</div>
+                </div>
+            </div>
+            <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO PLAY</div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud" style="display:none;">
+            <div class="hud-score">SCORE: <span id="hudScore">0</span></div>
+            <div class="hud-speed">SPEED: <span id="hudSpeed">0</span></div>
+            <div class="hud-dist">DIST: <span id="hudDist">0</span>m</div>
+            <div class="hud-trick" id="hudTrick" style="display:none;">TRICK!</div>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="gameOver" class="overlay" style="display:none;">
+            <div class="go-title">GAME OVER</div>
+            <div class="go-cause" id="goCause">SPLAT!</div>
+            <div class="go-score">SCORE: <span id="goScore">0</span></div>
+            <div class="go-dist">DISTANCE: <span id="goDist">0</span>m</div>
+            <div class="go-best">BEST: <span id="goBest">0</span></div>
+            <div class="insert-coin">— PRESS ENTER TO RETRY —</div>
+        </div>
+
+        <!-- PAUSE -->
+        <div id="pauseScreen" class="overlay" style="display:none;">
+            <div class="pause-text">PAUSED</div>
+            <div class="insert-coin">— PRESS ESC TO RESUME —</div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/road.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/obstacles.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/hud.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

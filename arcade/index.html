@@ -613,6 +613,20 @@
                 </div>
             </a>
 
+            <a href="very-long-boards/index.html" class="game-card" style="--card-color: #b537f2">
+                <div class="card-inner">
+                    <div class="card-tags">
+                        <span class="card-tag" style="color: #ff2e9c">CARL SPATSKI</span>
+                    </div>
+                    <div class="card-title">VERY LONG<br>BOARDS</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cVLB" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">downhill longboarding. choose your carl. dodge everything.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
             <a href="roderick-tron/index.html" class="game-card" style="--card-color: #00f0ff">
                 <div class="card-inner">
                     <div class="card-tags">
@@ -1519,6 +1533,61 @@ animateCoin(document.getElementById('coinCanvas2'));
     // accent line
     ctx.fillStyle = '#ff2e9c';
     ctx.fillRect(4, 68, 64, 2);
+})();
+
+// cVLB — Very Long Boards (downhill road + Carl Spatski silhouette)
+(function() {
+    const c = document.getElementById('cVLB');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // Dark sky
+    ctx.fillStyle = '#1a1a3e';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // Mountains
+    ctx.fillStyle = '#2a3a2a';
+    ctx.beginPath();
+    ctx.moveTo(0, 30); ctx.lineTo(15, 15); ctx.lineTo(30, 28);
+    ctx.lineTo(45, 12); ctx.lineTo(60, 25); ctx.lineTo(72, 18); ctx.lineTo(72, 30);
+    ctx.fill();
+
+    // Road
+    ctx.fillStyle = '#444';
+    ctx.beginPath();
+    ctx.moveTo(20, 30); ctx.lineTo(52, 30);
+    ctx.lineTo(72, 72); ctx.lineTo(0, 72);
+    ctx.fill();
+
+    // Road markings
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 4]);
+    ctx.beginPath();
+    ctx.moveTo(36, 30); ctx.lineTo(36, 72);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Carl Spatski silhouette on longboard
+    ctx.fillStyle = '#ff2e9c';
+    ctx.fillRect(30, 38, 12, 16);
+    ctx.fillStyle = '#f0d5a8';
+    ctx.beginPath();
+    ctx.arc(36, 35, 4, 0, Math.PI * 2);
+    ctx.fill();
+    // Longboard
+    ctx.fillStyle = '#8B4513';
+    ctx.fillRect(28, 54, 16, 3);
+
+    // Speed lines
+    ctx.strokeStyle = 'rgba(255, 46, 156, 0.4)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(10 + i * 8, 40 + i * 5);
+        ctx.lineTo(4, 42 + i * 5);
+        ctx.stroke();
+    }
 })();
 
 // ─────────────────────────────────────────────────────────
