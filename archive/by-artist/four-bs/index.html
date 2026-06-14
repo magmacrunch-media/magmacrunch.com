@@ -11,13 +11,13 @@
     <style>
         /* ══ PAGE: by-artist / four-bs ══ */
 
-        main { position: relative; }
+        main { position: relative; padding: 0; }
 
         /* ── BREADCRUMB ── */
-        body.fb-page .breadcrumb a { color: var(--4b-deep); }
+        body.fb-page .breadcrumb a { color: var(--4b-ember); }
         body.fb-page .breadcrumb a:hover { color: var(--4b-amber); }
-        body.fb-page .breadcrumb .sep { color: var(--4b-deep); opacity: 0.6; }
-        body.fb-page .breadcrumb .current { color: var(--4b-deep); }
+        body.fb-page .breadcrumb .sep { color: var(--4b-ember); opacity: 0.6; }
+        body.fb-page .breadcrumb .current { color: var(--4b-ember); }
 
         /* ── ARTIST HERO ── */
         .artist-hero {
@@ -29,7 +29,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
-            margin-bottom: 48px;
+            margin-bottom: 0;
         }
         .artist-hero-img {
             position: absolute;
@@ -51,11 +51,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8, 8, 18, 0.15) 0%,
-                rgba(8, 8, 18, 0.0)  15%,
-                rgba(8, 8, 18, 0.0)  50%,
-                rgba(8, 8, 18, 0.60) 75%,
-                rgba(8, 8, 18, 1.0)  100%
+                rgba(12,10,4,0.0)  0%,
+                rgba(12,10,4,0.0)  85%,
+                rgba(12,10,4,0.85) 100%
             );
         }
         .hero-inner {
@@ -79,7 +77,7 @@
         .artist-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--4b-brand);
+            color: var(--4b-deep);
             letter-spacing: 0.2em;
             margin-bottom: 12px;
             opacity: 0.85;
@@ -98,7 +96,7 @@
         .artist-abbr {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: var(--4b-brand);
+            color: var(--4b-deep);
             letter-spacing: 0.15em;
             margin-top: -8px;
             margin-bottom: 16px;
@@ -257,9 +255,12 @@
             color: var(--dim); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
 
         /* ── MB LINK ── */
-        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
         .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--4b-mid); text-decoration:none; border:1px solid var(--4b-mid); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
         .mb-link:hover { color:var(--4b-amber); border-color:var(--4b-amber); }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
     </style>
 </head>
 <body class="fb-page">

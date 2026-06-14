@@ -1,5 +1,5 @@
 /* Green Street Apt. — personnel (steel blue brand accent) */
-body.gs-page.gs-personnel-page main > * { background: var(--black); }
+body.gs-page.gs-personnel-page main > * { background: var(--gs-bg); }
 
 body.gs-page.gs-personnel-page .breadcrumb { color: var(--dim); }
 body.gs-page.gs-personnel-page .breadcrumb a { color: var(--gs-brand); }
@@ -33,7 +33,7 @@ body.gs-page.gs-personnel-page .tag { border-color: var(--gs-surface) !important
 
 /* Current page: personnel (c-personnel active) */
 body.gs-page.gs-personnel-page .nav-card.c-personnel {
-    background: var(--black);
+    background: var(--gs-bg);
     color: var(--gs-brand);
     border-color: var(--gs-brand);
 }

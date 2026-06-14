@@ -1,6 +1,6 @@
 /* SVFP photography — cool blue theme */
 body.svfp-page.svfp-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.svfp-page.svfp-photography-page main > * { background: var(--black); }
+body.svfp-page.svfp-photography-page main > * { background: var(--svfp-bg); }
 
 body.svfp-photography-page .breadcrumb { color: var(--dim); }
 body.svfp-photography-page .breadcrumb a { color: #a8c8f0; }

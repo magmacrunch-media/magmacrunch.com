@@ -21,7 +21,7 @@
 }
 
 /* Sub-nav button colors — all pages use these */
-body.jt-page { --credit-color: var(--jt-mid); --nav-accent: var(--jt-cta); --nav-glow: rgba(200,90,24,0.4); --nav-brand: #e88848; --nav-brand-glow: rgba(232,136,72,0.7); }
+body.jt-page { background: var(--jt-bg); --credit-color: var(--jt-mid); --nav-accent: var(--jt-cta); --nav-glow: rgba(200,90,24,0.4); --nav-brand: #e88848; --nav-brand-glow: rgba(232,136,72,0.7); }
 body.jt-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.jt-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -69,3 +69,6 @@ body.jt-page .sub-nav .nav-card.c-works { background: var(--jt-gold); color: var
 body.jt-page .sub-nav .nav-card.c-works:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
 
 body.jt-page .nav-card::after { display: none; }
+
+body.jt-page footer { color: var(--jt-mid); }
+body.jt-page footer span { color: var(--jt-cta); }

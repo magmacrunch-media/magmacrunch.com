@@ -1,6 +1,6 @@
 /* Woah. — releases page — accent: sunset */
 body.woah-page.woah-releases-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.woah-page.woah-releases-page main > * { background: var(--black); }
+body.woah-page.woah-releases-page main > * { background: var(--woah-bg); }
 
 body.woah-page.woah-releases-page .catalog-wrap,
 body.woah-page.woah-releases-page .release-card,

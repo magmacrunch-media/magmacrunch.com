@@ -1,5 +1,5 @@
 /* Jon McCoy — works — deep sage accent */
-body.jm-page.jm-works-page main > * { background: var(--black); }
+body.jm-page.jm-works-page main > * { background: var(--jm-near-black); }
 
 body.jm-page.jm-works-page .breadcrumb { color: var(--dim); }
 body.jm-page.jm-works-page .breadcrumb a { color: var(--jm-deep-sage); }
@@ -11,7 +11,7 @@ body.jm-page.jm-works-page .page-header { width: 100%; max-width: 960px; margin-
 body.jm-page.jm-works-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--jm-deep-sage); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
 body.jm-page.jm-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--jm-deep-sage); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(88, 120, 104, 0.5); }
 
-body.jm-page.jm-works-page .work-card { background: var(--black); border-color: var(--jm-surface); }
+body.jm-page.jm-works-page .work-card { background: var(--jm-near-black); border-color: var(--jm-surface); }
 body.jm-page.jm-works-page .work-card:hover { border-color: var(--jm-deep-sage); }
 body.jm-page.jm-works-page .work-card h3 a { color: var(--jm-sand); }
 body.jm-page.jm-works-page .work-card h3 a:hover { color: var(--jm-cream); }

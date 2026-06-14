@@ -8,10 +8,11 @@
 <link rel="stylesheet" href="../../../style.css">
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="dh-shared.css">
+    <link rel="preload" as="image" href="../../../assets/photos/dag-henderson-cover.jpg">
     <style>
         /* ══ PAGE: by-artist / dag-henderson ══ */
 
-        main { position: relative; }
+        main { position: relative; padding: 0; }
 
         /* ── BREADCRUMB ── */
         body.dh-page .breadcrumb a { color: var(--dh-body); }
@@ -29,7 +30,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
-            margin-bottom: 48px;
+            margin-bottom: 0;
         }
         .artist-hero-img {
             position: absolute;
@@ -39,6 +40,7 @@
             object-fit: cover;
             object-position: center 35%;
             filter: saturate(0.95) brightness(0.72);
+            will-change: transform;
         }
         .artist-hero-tint {
             position: absolute;
@@ -51,11 +53,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8, 8, 18, 0.15) 0%,
-                rgba(8, 8, 18, 0.0)  15%,
-                rgba(8, 8, 18, 0.0)  50%,
-                rgba(8, 8, 18, 0.60) 75%,
-                rgba(8, 8, 18, 1.0)  100%
+                rgba(8,10,6,0.0)  0%,
+                rgba(8,10,6,0.0)  85%,
+                rgba(8,10,6,0.85) 100%
             );
         }
         .hero-inner {
@@ -189,7 +189,7 @@
             top: -11px;
             left: 50%;
             transform: translateX(-50%);
-            background: var(--black);
+            background: var(--dh-bg);
             padding: 0 10px;
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
@@ -394,9 +394,12 @@
         }
 
         /* ── MB LINK ── */
-        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
         .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dh-body); text-decoration:none; border:1px solid var(--dh-muted); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
         .mb-link:hover { color:var(--dh-amber); border-color:var(--dh-amber); }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
     </style>
 </head>
 <body class="dh-page">
@@ -457,7 +460,7 @@
     </div>
 
     <div class="artist-hero">
-        <img class="artist-hero-img" src="../../../assets/photos/dag-henderson-cover.jpg" alt="Dag Henderson">
+        <img class="artist-hero-img" style="object-position: center 35%" src="../../../assets/photos/dag-henderson-cover.jpg" alt="Dag Henderson">
         <div class="artist-hero-tint"></div>
         <div class="artist-hero-gradient"></div>
         <span class="photo-credit">photo: Jake McCoy</span>

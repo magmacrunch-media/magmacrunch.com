@@ -1,5 +1,5 @@
 /* Audio Sound Paper, et al. — works page — accent: amber glow */
-body.asp-page.asp-works-page main > * { background: var(--black); }
+body.asp-page.asp-works-page main > * { background: var(--asp-bg); }
 
 body.asp-page.asp-works-page .breadcrumb { color: var(--asp-amber-glow); }
 body.asp-page.asp-works-page .breadcrumb a { color: var(--asp-amber-glow); }

@@ -1,5 +1,5 @@
 /* Twin Maples — recordings (warm copper accent) */
-body.tm-page.tm-recordings-page main > * { background: var(--black); }
+body.tm-page.tm-recordings-page main > * { background: var(--tm-bg); }
 
 body.tm-page.tm-recordings-page .breadcrumb { color: var(--dim); }
 body.tm-page.tm-recordings-page .breadcrumb a { color: var(--tm-accent); }
@@ -31,7 +31,7 @@ body.tm-page.tm-recordings-page .error-msg { color: var(--tm-warm) !important; }
 
 /* Current page: recordings (c-recordings active) */
 body.tm-page.tm-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--tm-bg);
     color: var(--tm-accent);
     border-color: var(--tm-accent);
 }

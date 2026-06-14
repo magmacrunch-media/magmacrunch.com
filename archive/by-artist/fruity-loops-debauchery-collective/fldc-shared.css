@@ -37,9 +37,10 @@
 
     /* Pop accent (pixel pink) */
     --fldc-pop:            #d05888;
+    --fldc-bg:             #10160e;
 }
 
-body.fldc-page { background: var(--black); --credit-color: var(--fldc-cool); --nav-accent: var(--fldc-arc-orange); --nav-glow: rgba(208,96,32,0.4); --nav-brand: var(--fldc-arc-yellow); --nav-brand-glow: rgba(216,208,64,0.7); }
+body.fldc-page { background: var(--fldc-bg); --credit-color: var(--fldc-cool); --nav-accent: var(--fldc-arc-orange); --nav-glow: rgba(208,96,32,0.4); --nav-brand: var(--fldc-arc-yellow); --nav-brand-glow: rgba(216,208,64,0.7); }
 
 /* c-back: transparent + arc-dark */
 body.fldc-page .nav-card.c-back {
@@ -126,3 +127,6 @@ body.fldc-page .nav-card.c-works:hover {
 
 body.fldc-page .nav-card::after { display: none; }
 body.fldc-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.fldc-page footer { color: var(--fldc-bg-neutral); }
+body.fldc-page footer span { color: var(--fldc-arc-orange); }

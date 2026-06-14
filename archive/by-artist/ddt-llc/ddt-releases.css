@@ -1,5 +1,5 @@
 /* DDT LLC — releases */
-body.ddt-page.ddt-releases-page main > * { background: var(--black); }
+body.ddt-page.ddt-releases-page main > * { background: var(--ddt-bg); }
 
 body.ddt-page.ddt-releases-page .breadcrumb { color: var(--ddt-cta); }
 body.ddt-page.ddt-releases-page .breadcrumb a { color: var(--ddt-cta); }
@@ -13,7 +13,7 @@ body.ddt-page.ddt-releases-page .artist-label { font-family: 'Press Start 2P', m
 body.ddt-page.ddt-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ddt-cta); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(192, 64, 48, 0.5); }
 
 body.ddt-page.ddt-releases-page .release-card {
-    background: var(--black);
+    background: var(--ddt-bg);
     border-color: var(--ddt-deep);
 }
 body.ddt-page.ddt-releases-page .release-card:hover { border-color: var(--ddt-cta); }

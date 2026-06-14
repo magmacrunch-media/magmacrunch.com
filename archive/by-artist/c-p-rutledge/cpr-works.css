@@ -1,5 +1,5 @@
 /* C.P. Rutledge — works */
-body.cpr-page.cpr-works-page main > * { background: var(--black); }
+body.cpr-page.cpr-works-page main > * { background: var(--cpr-bg); }
 
 body.cpr-page.cpr-works-page .breadcrumb { color: var(--dim); }
 body.cpr-page.cpr-works-page .breadcrumb a { color: var(--cpr-yellow); }
@@ -12,7 +12,7 @@ body.cpr-page.cpr-works-page .artist-label { font-family: 'Press Start 2P', mono
 body.cpr-page.cpr-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cpr-yellow); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(245, 192, 32, 0.5); }
 
 body.cpr-page.cpr-works-page .work-card {
-    background: var(--black);
+    background: var(--cpr-bg);
     border-color: var(--cpr-raised);
 }
 body.cpr-page.cpr-works-page .work-card:hover { border-color: var(--cpr-yellow); }

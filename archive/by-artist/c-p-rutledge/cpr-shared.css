@@ -18,10 +18,13 @@
     --cpr-light-purple:  #c080e0;
     --cpr-light-green:   #90d8a8;
     --cpr-warm-bridge:   #f07850;
+    --cpr-bg:            #070612;
+    --cpr-heading:       #f5e8c0;
+    --cpr-gold:          #f5c020;
 }
 
 /* ── BUTTON DEFINITIONS (match index sub-nav) ── */
-body.cpr-page { --credit-color: var(--cpr-raised); --nav-accent: var(--cpr-red); --nav-glow: rgba(240,90,90,0.4); --nav-brand: #f08080; --nav-brand-glow: rgba(240,128,128,0.7); }
+body.cpr-page { background: var(--cpr-bg); --credit-color: var(--cpr-raised); --nav-accent: var(--cpr-red); --nav-glow: rgba(240,90,90,0.4); --nav-brand: #f08080; --nav-brand-glow: rgba(240,128,128,0.7); }
 body.cpr-page .nav-card.c-about {
     background: var(--cpr-deep);
     color: var(--cpr-cream);
@@ -106,3 +109,6 @@ body.cpr-page .nav-card.c-back:hover {
 
 body.cpr-page .nav-card::after { display: none; }
 body.cpr-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.cpr-page footer { color: var(--cpr-cream); }
+body.cpr-page footer span { color: var(--cpr-dark-blue); }

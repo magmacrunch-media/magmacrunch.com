@@ -11,7 +11,7 @@
     <style>
         /* ══ PAGE: by-place / melrose-house ══ */
 
-        main { position: relative; }
+        main { position: relative; padding: 0; }
 
         /* ── BREADCRUMB ── */
         body.mh-page .breadcrumb a { color: var(--mh-bread); }
@@ -29,7 +29,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
-            margin-bottom: 48px;
+            margin-bottom: 0;
         }
         .artist-hero-img {
             position: absolute;
@@ -51,11 +51,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8, 8, 18, 0.05) 0%,
-                rgba(8, 8, 18, 0.0)  15%,
-                rgba(8, 8, 18, 0.0)  55%,
-                rgba(8, 8, 18, 0.65) 78%,
-                rgba(8, 8, 18, 1.0)  100%
+                rgba(12,13,15,0.0)  0%,
+                rgba(12,13,15,0.0)  85%,
+                rgba(12,13,15,0.85) 100%
             );
         }
 
@@ -119,10 +117,12 @@
         }
 
         /* ── MB LINK ── */
-        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
         .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--mh-muted); text-decoration:none; border:1px solid var(--mh-deep); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
         .mb-link:hover { color:var(--mh-gold); border-color:var(--mh-gold); }
 
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
     </style>
 </head>
 <body class="mh-page">

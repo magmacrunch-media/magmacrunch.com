@@ -1,6 +1,6 @@
 /* Dag Henderson — photography page (steel accent) */
 body.dh-page.dh-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.dh-page.dh-photography-page main > * { background: var(--black); }
+body.dh-page.dh-photography-page main > * { background: var(--dh-bg); }
 
 body.dh-page.dh-photography-page .breadcrumb a { color: var(--dh-steel); }
 body.dh-page.dh-photography-page .breadcrumb a:hover { color: var(--dh-amber); }

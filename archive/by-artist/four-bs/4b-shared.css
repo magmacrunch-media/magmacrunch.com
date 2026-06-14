@@ -11,10 +11,13 @@
     --4b-blue:     #1e60b0;
     --4b-sky:      #5890c8;
     --4b-offwhite: #f5f2e8;
+    --4b-bg:       #0c0a04;
+    --4b-dust:     #7a6040;
+    --4b-ember:    #e85838;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.fb-page { --credit-color: var(--4b-mid); --nav-accent: var(--4b-leaf); --nav-glow: rgba(82,176,68,0.4); --nav-brand: var(--4b-amber); --nav-brand-glow: rgba(240,168,48,0.7); }
+body.fb-page { background: var(--4b-bg); --credit-color: var(--4b-mid); --nav-accent: var(--4b-leaf); --nav-glow: rgba(82,176,68,0.4); --nav-brand: var(--4b-amber); --nav-brand-glow: rgba(240,168,48,0.7); }
 body.fb-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.fb-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -56,3 +59,6 @@ body.fb-page .sub-nav .nav-card.c-works { background: var(--4b-amber); color: va
 body.fb-page .sub-nav .nav-card.c-works:hover { background: transparent; border-color: var(--4b-amber); color: var(--4b-offwhite); }
 
 body.fb-page .nav-card::after { display: none; }
+
+body.fb-page footer { color: var(--4b-mid); }
+body.fb-page footer span { color: var(--4b-leaf); }

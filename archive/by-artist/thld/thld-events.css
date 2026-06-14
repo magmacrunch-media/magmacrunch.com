@@ -1,6 +1,6 @@
 /* THLD events — mid/green (c-green) accent theme */
 body.thld-page.thld-events-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.thld-page.thld-events-page main > * { background: var(--black); }
+body.thld-page.thld-events-page main > * { background: var(--thld-bg); }
 
 body.thld-page.thld-events-page .breadcrumb { color: var(--thld-muted); }
 body.thld-page.thld-events-page .breadcrumb a { color: var(--thld-warm-brown); }
@@ -21,7 +21,7 @@ body.thld-page.thld-events-page .event-card { display: flex; gap: 16px; border: 
 body.thld-page.thld-events-page .event-card:hover { border-color: var(--thld-amber); }
 body.thld-page.thld-events-page .event-card.cancelled-event { border-color: #2a2a3a; opacity: 0.65; }
 
-body.thld-page.thld-events-page .event-art { width: 110px; min-width: 110px; height: 110px; background: var(--black); border-right: 1px solid var(--thld-mid); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+body.thld-page.thld-events-page .event-art { width: 110px; min-width: 110px; height: 110px; background: var(--thld-bg); border-right: 1px solid var(--thld-mid); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 body.thld-page.thld-events-page .event-art img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
 body.thld-page.thld-events-page .event-art .no-art-msg { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--thld-mid); text-align: center; padding: 8px; line-height: 1.8; }
 

@@ -1,5 +1,5 @@
 /* Marvin Gardens G12 — works (amber/gold accent) */
-body.mg-page.mg-works-page main > * { background: var(--black); }
+body.mg-page.mg-works-page main > * { background: var(--mg-near-black); }
 
 body.mg-page.mg-works-page .breadcrumb { color: var(--dim); }
 body.mg-page.mg-works-page .breadcrumb a { color: var(--mg-heading); }
@@ -39,7 +39,7 @@ body.mg-page.mg-works-page .tag { background: var(--mg-dark) !important; border:
 
 /* Current page: works (c-works active) */
 body.mg-page.mg-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--mg-near-black);
     color: var(--mg-heading);
     border-color: var(--mg-heading);
 }

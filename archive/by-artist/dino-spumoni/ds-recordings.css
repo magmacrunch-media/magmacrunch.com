@@ -1,6 +1,6 @@
 /* Dino Spumoni — recordings (sky accent) */
 body.ds-page.ds-recordings-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.ds-page.ds-recordings-page main > * { background: var(--black); }
+body.ds-page.ds-recordings-page main > * { background: var(--ds-bg); }
 
 body.ds-page.ds-recordings-page .breadcrumb a { color: var(--ds-sky); }
 body.ds-page.ds-recordings-page .breadcrumb a:hover { color: var(--ds-heading); }
@@ -13,7 +13,7 @@ body.ds-page.ds-recordings-page .page-title { font-family: 'Press Start 2P', mon
 
 body.ds-page.ds-recordings-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--ds-brand), var(--ds-sky), var(--ds-brand), transparent); margin: 0 0 36px; opacity: 0.4; }
 
-body.ds-page.ds-recordings-page .recording-card { background: var(--black); border-color: var(--ds-surface); padding: 18px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
+body.ds-page.ds-recordings-page .recording-card { background: var(--ds-bg); border-color: var(--ds-surface); padding: 18px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
 body.ds-page.ds-recordings-page .recording-card:hover { border-color: var(--ds-sky); }
 body.ds-page.ds-recordings-page .recording-card h3 { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--ds-sky); letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
 body.ds-page.ds-recordings-page .recording-card h3 a { color: var(--ds-sky); text-decoration: none; }

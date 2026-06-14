@@ -1,5 +1,5 @@
 /* Green Street Apt. — recordings (warm amber accent) */
-body.gs-page.gs-recordings-page main > * { background: var(--black); }
+body.gs-page.gs-recordings-page main > * { background: var(--gs-bg); }
 
 body.gs-page.gs-recordings-page .breadcrumb { color: var(--dim); }
 body.gs-page.gs-recordings-page .breadcrumb a { color: var(--gs-accent); }
@@ -31,7 +31,7 @@ body.gs-page.gs-recordings-page .error-msg { color: var(--gs-warm) !important; }
 
 /* Current page: recordings (c-recordings active) */
 body.gs-page.gs-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--gs-bg);
     color: var(--gs-accent);
     border-color: var(--gs-accent);
 }

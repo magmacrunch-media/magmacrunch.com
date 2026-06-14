@@ -1,5 +1,5 @@
 /* C.P. Rutledge — recordings */
-body.cpr-page.cpr-recordings-page main > * { background: var(--black); }
+body.cpr-page.cpr-recordings-page main > * { background: var(--cpr-bg); }
 
 body.cpr-page.cpr-recordings-page .breadcrumb { color: var(--dim); }
 body.cpr-page.cpr-recordings-page .breadcrumb a { color: var(--cpr-blue); }
@@ -12,7 +12,7 @@ body.cpr-page.cpr-recordings-page .artist-label { font-family: 'Press Start 2P',
 body.cpr-page.cpr-recordings-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cpr-blue); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(104, 200, 240, 0.5); }
 
 body.cpr-page.cpr-recordings-page .recording-card {
-    background: var(--black);
+    background: var(--cpr-bg);
     border-color: var(--cpr-raised);
 }
 body.cpr-page.cpr-recordings-page .recording-card:hover { border-color: var(--cpr-blue); }

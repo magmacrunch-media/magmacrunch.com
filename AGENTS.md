@@ -44,11 +44,12 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 
 ## Adding archive pages
 
-See `README.md` for full docs. Short version:
-1. Create folder under `archive/by-artist/` or `archive/by-place/`
-2. Copy stub template
-3. Set `window.ARTIST_CONFIG` or `window.PLACE_CONFIG` with MusicBrainz UUID
+See `archive/ARCHIVE_THEMING.md` for detailed theming patterns. Short version:
+1. Create folder under `archive/by-artist/`, `archive/by-place/`, or `archive/by-contributor/`
+2. Copy stub template from existing page
+3. Set `window.ARTIST_CONFIG`, `window.PLACE_CONFIG`, or `window.__CONTRIBUTOR_CONFIG` with MusicBrainz UUID
 4. Choose `accent` color per page type (green/cyan/rose/yellow/blue)
+5. For contributor pages, also load `entity-map.js` before `contributor.js`
 
 ## No verification needed
 

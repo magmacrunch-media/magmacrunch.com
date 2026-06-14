@@ -1,5 +1,5 @@
 /* Green Street Apt. — works (window plant green accent) */
-body.gs-page.gs-works-page main > * { background: var(--black); }
+body.gs-page.gs-works-page main > * { background: var(--gs-bg); }
 
 body.gs-page.gs-works-page .breadcrumb { color: var(--dim); }
 body.gs-page.gs-works-page .breadcrumb a { color: var(--gs-green); }
@@ -41,7 +41,7 @@ body.gs-page.gs-works-page .tag { background: var(--gs-dark) !important; border:
 
 /* Current page: works (c-works active) */
 body.gs-page.gs-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--gs-bg);
     color: var(--gs-green);
     border-color: var(--gs-green);
 }

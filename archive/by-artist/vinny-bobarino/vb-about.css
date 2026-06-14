@@ -1,6 +1,6 @@
 /* Vinny Bobarino — about page (deep red accent) */
 body.vb-page.vb-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.vb-page.vb-about-page main > * { background: var(--black); }
+body.vb-page.vb-about-page main > * { background: var(--vb-near-black); }
 
 body.vb-page.vb-about-page .breadcrumb a { color: var(--vb-deep); }
 body.vb-page.vb-about-page .breadcrumb a:hover { color: var(--vb-amber); }

@@ -1,5 +1,5 @@
 /* The Four B's — events */
-body.fb-page.fb-events-page main > * { background: var(--black); }
+body.fb-page.fb-events-page main > * { background: var(--4b-bg); }
 
 body.fb-page.fb-events-page .breadcrumb { color: var(--dim); }
 body.fb-page.fb-events-page .breadcrumb a { color: var(--4b-leaf); }
@@ -12,7 +12,7 @@ body.fb-page.fb-events-page .artist-label { font-family: 'Press Start 2P', monos
 body.fb-page.fb-events-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--4b-leaf); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(82, 176, 68, 0.5); }
 
 body.fb-page.fb-events-page .event-card {
-    background: var(--black);
+    background: var(--4b-bg);
     border-color: var(--4b-deep);
 }
 body.fb-page.fb-events-page .event-card:hover { border-color: var(--4b-brand); }

@@ -1,6 +1,6 @@
 /* Fruity Loops Debauchery Bros — works page — accent: c-yellow */
 body.fldc-page.fldc-works-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.fldc-page.fldc-works-page main > * { background: var(--fldc-black); }
+body.fldc-page.fldc-works-page main > * { background: var(--fldc-bg); }
 
 body.fldc-page.fldc-works-page .breadcrumb { color: var(--fldc-arc-yellow); }
 body.fldc-page.fldc-works-page .breadcrumb a { color: var(--fldc-arc-yellow); }
@@ -39,9 +39,9 @@ body.fldc-page.fldc-works-page .work-card a { color: var(--fldc-arc-yellow); tex
 body.fldc-page.fldc-works-page .work-card a:hover { color: var(--fldc-bg-wall); }
 body.fldc-page.fldc-works-page .alternate-names { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--fldc-bg-neutral); font-style: italic; }
 body.fldc-page.fldc-works-page .rec-label { display: inline-block; padding: 1px 5px; margin-left: 4px; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.05em; }
-body.fldc-page.fldc-works-page .rec-label.live { background: var(--fldc-arc-red); color: var(--fldc-black); }
-body.fldc-page.fldc-works-page .rec-label.partial { background: var(--fldc-arc-orange); color: var(--fldc-black); }
-body.fldc-page.fldc-works-page .rec-label.video { background: var(--fldc-arc-blue-light); color: var(--fldc-black); }
+body.fldc-page.fldc-works-page .rec-label.live { background: var(--fldc-arc-red); color: var(--fldc-bg); }
+body.fldc-page.fldc-works-page .rec-label.partial { background: var(--fldc-arc-orange); color: var(--fldc-bg); }
+body.fldc-page.fldc-works-page .rec-label.video { background: var(--fldc-arc-blue-light); color: var(--fldc-bg); }
 body.fldc-page.fldc-works-page .tag { display: inline-block; background: var(--fldc-bg-raised); border: 1px solid var(--fldc-arc-dark); padding: 2px 7px; margin: 2px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--fldc-bg-neutral); }
 body.fldc-page.fldc-works-page .tag:hover { border-color: var(--fldc-arc-yellow); }
 body.fldc-page.fldc-works-page .error-msg { color: var(--fldc-arc-red); opacity: 0.7; }

@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="vb-shared.css">
     <style>
-        main { position: relative; }
+        main { position: relative; padding: 0; }
 
         /* ── BREADCRUMB ── */
         body.vb-page .breadcrumb a { color: var(--vb-accent); }
@@ -18,7 +18,7 @@
         body.vb-page .breadcrumb .current { color: var(--vb-accent); }
 
         /* ── PAGE BACKGROUND ── */
-        body.vb-page { background: var(--black); }
+        body.vb-page { background: var(--vb-near-black); }
 
         /* ── ARTIST HERO ── */
         .artist-hero {
@@ -30,7 +30,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
-            margin-bottom: 48px;
+            margin-bottom: 0;
         }
         .artist-hero-img {
             position: absolute;
@@ -52,11 +52,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8, 8, 18, 0.10) 0%,
-                rgba(8, 8, 18, 0.0)  15%,
-                rgba(8, 8, 18, 0.0)  45%,
-                rgba(8, 8, 18, 0.85) 75%,
-                rgba(8, 8, 18, 1.0)  100%
+                rgba(13,14,22,0.0)  0%,
+                rgba(13,14,22,0.0)  85%,
+                rgba(13,14,22,0.85) 100%
             );
         }
         .hero-inner {
@@ -281,7 +279,7 @@
         .lb-cap { font-family: 'Press Start 2P', monospace;             font-size: 6px;
             color: var(--vb-mid); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
 
-        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; animation: fadeUp 0.5s 0.15s ease both; }
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
 
         /* ── MB MEMBERS LINK ── */
         .mb-members {
@@ -304,6 +302,9 @@
         .mb-members .mb-abbr:hover { color: var(--vb-accent); }
         .mb-members:hover { border-color: var(--vb-accent); }
         .mb-members .mb-sep { color: var(--vb-surface); margin: 0 2px; }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
     </style>
 </head>
 <body class="vb-page">

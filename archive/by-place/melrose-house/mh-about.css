@@ -1,6 +1,6 @@
 /* Melrose House — about */
 body.mh-page.mh-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
-body.mh-page.mh-about-page main > * { background: var(--black); }
+body.mh-page.mh-about-page main > * { background: var(--mh-bg); }
 
 body.mh-page.mh-about-page .breadcrumb { color: var(--dim); }
 body.mh-page.mh-about-page .breadcrumb a { color: var(--mh-sage); }
@@ -14,7 +14,7 @@ body.mh-page.mh-about-page .page-title { font-family: 'Press Start 2P', monospac
 
 /* Current page: about (c-about active) */
 body.mh-page.mh-about-page .nav-card.c-about {
-    background: var(--black);
+    background: var(--mh-bg);
     color: var(--mh-sage);
     border-color: var(--mh-sage);
 }

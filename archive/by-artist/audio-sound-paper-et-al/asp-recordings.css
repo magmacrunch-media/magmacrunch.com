@@ -1,5 +1,5 @@
 /* Audio Sound Paper, et al. — recordings page — accent: amber */
-body.asp-page.asp-recordings-page main > * { background: var(--black); }
+body.asp-page.asp-recordings-page main > * { background: var(--asp-bg); }
 
 body.asp-page.asp-recordings-page .breadcrumb { color: var(--asp-amber); }
 body.asp-page.asp-recordings-page .breadcrumb a { color: var(--asp-amber); }

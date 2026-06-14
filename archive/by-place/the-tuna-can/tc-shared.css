@@ -19,10 +19,11 @@
     --tc-copper:  #c0784a;
     --tc-khaki:   #a8a870;
     --tc-offwhite: #f5f0e0;
+    --tc-bg:       #0e0d09;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.tc-page { --credit-color: var(--tc-muted); --nav-accent: var(--tc-amber); --nav-glow: rgba(184,120,40,0.4); --nav-brand: #d0a050; --nav-brand-glow: rgba(208,160,80,0.7); }
+body.tc-page { background: var(--tc-bg); --credit-color: var(--tc-muted); --nav-accent: var(--tc-amber); --nav-glow: rgba(184,120,40,0.4); --nav-brand: #d0a050; --nav-brand-glow: rgba(208,160,80,0.7); }
 body.tc-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.tc-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -61,3 +62,6 @@ body.tc-page .sub-nav a[href="about.html"] {
     color: var(--tc-dark);
     border-color: var(--tc-khaki);
 }
+
+body.tc-page footer { color: var(--tc-muted); }
+body.tc-page footer span { color: var(--tc-amber); }

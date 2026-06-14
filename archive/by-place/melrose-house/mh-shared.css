@@ -17,10 +17,11 @@
     --mh-amber:     #e8b870;
     --mh-slate:     #5a6890;
     --mh-dark:      #2a2c30;
+    --mh-bg:        #0c0d0f;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.mh-page { --credit-color: var(--mh-muted); --nav-accent: var(--mh-brand); --nav-glow: rgba(104,120,160,0.4); --nav-brand: var(--mh-gold); --nav-brand-glow: rgba(212,160,96,0.7); }
+body.mh-page { background: var(--mh-bg); --credit-color: var(--mh-muted); --nav-accent: var(--mh-brand); --nav-glow: rgba(104,120,160,0.4); --nav-brand: var(--mh-gold); --nav-brand-glow: rgba(212,160,96,0.7); }
 body.mh-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.mh-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -67,3 +68,6 @@ body.mh-page .sub-nav a[href="about.html"] {
     color: var(--mh-dark);
     border-color: var(--mh-sage);
 }
+
+body.mh-page footer { color: var(--mh-muted); }
+body.mh-page footer span { color: var(--mh-brand); }

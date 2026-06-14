@@ -1,5 +1,5 @@
 /* Audio Sound Paper, et al. — releases page — accent: red */
-body.asp-page.asp-releases-page main > * { background: var(--black); }
+body.asp-page.asp-releases-page main > * { background: var(--asp-bg); }
 
 body.asp-page.asp-releases-page .breadcrumb { color: var(--asp-red); }
 body.asp-page.asp-releases-page .breadcrumb a { color: var(--asp-red); }

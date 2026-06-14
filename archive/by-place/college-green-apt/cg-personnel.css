@@ -1,5 +1,5 @@
 /* College Green Apt. — personnel (surface / walnut sub-theme) */
-body.cg-page.cg-personnel-page main > * { background: var(--black); }
+body.cg-page.cg-personnel-page main > * { background: var(--cg-bg); }
 
 body.cg-page.cg-personnel-page .breadcrumb { color: var(--dim); }
 body.cg-page.cg-personnel-page .breadcrumb a { color: var(--cg-surface); }
@@ -23,7 +23,7 @@ body.cg-page.cg-personnel-page .artist-card p strong { color: var(--cg-muted) !i
 body.cg-page.cg-personnel-page .artist-card a { color: var(--cg-lavender) !important; }
 body.cg-page.cg-personnel-page .artist-card a:hover { color: var(--cg-cream) !important; }
 body.cg-page.cg-personnel-page .artist-card:hover { border-color: var(--cg-lavender) !important; }
-body.cg-page.cg-personnel-page .badge { color: var(--black) !important; }
+body.cg-page.cg-personnel-page .badge { color: var(--cg-bg) !important; }
 body.cg-page.cg-personnel-page .badge-founded  { background: var(--cg-lavender) !important; }
 body.cg-page.cg-personnel-page .badge-member   { background: var(--cg-cta) !important; }
 body.cg-page.cg-personnel-page .badge-engineer { background: var(--cg-cool) !important; }
@@ -33,7 +33,7 @@ body.cg-page.cg-personnel-page .tag { border-color: var(--cg-muted) !important; 
 
 /* Current page: personnel (c-personnel active) */
 body.cg-page.cg-personnel-page .nav-card.c-personnel {
-    background: var(--black);
+    background: var(--cg-bg);
     color: var(--cg-surface);
     border-color: var(--cg-surface);
 }

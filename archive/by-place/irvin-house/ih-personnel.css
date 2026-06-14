@@ -1,5 +1,5 @@
 /* Irvin House — personnel (sky blue brand accent) */
-body.ih-page.ih-personnel-page main > * { background: var(--black); }
+body.ih-page.ih-personnel-page main > * { background: var(--ih-bg); }
 
 body.ih-page.ih-personnel-page .breadcrumb { color: var(--dim); }
 body.ih-page.ih-personnel-page .breadcrumb a { color: var(--ih-brand); }
@@ -33,7 +33,7 @@ body.ih-page.ih-personnel-page .tag { border-color: var(--ih-dark) !important; c
 
 /* Current page: personnel (c-personnel active) */
 body.ih-page.ih-personnel-page .nav-card.c-personnel {
-    background: var(--black);
+    background: var(--ih-bg);
     color: var(--ih-brand);
     border-color: var(--ih-brand);
 }

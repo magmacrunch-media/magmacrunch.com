@@ -24,10 +24,11 @@
     --jm-periwinkle:#9090b8;
     --jm-pale-sage: #b0c8b8;
     --jm-dusty-plum: #786878;
+    --jm-near-black: #0e1014;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.jm-page { --credit-color: var(--jm-muted); --nav-accent: var(--jm-sage); --nav-glow: rgba(122,144,128,0.4); --nav-brand: var(--jm-rose); --nav-brand-glow: rgba(184,152,152,0.7); }
+body.jm-page { background: var(--jm-near-black); --credit-color: var(--jm-muted); --nav-accent: var(--jm-sage); --nav-glow: rgba(122,144,128,0.4); --nav-brand: var(--jm-rose); --nav-brand-glow: rgba(184,152,152,0.7); }
 body.jm-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.jm-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -69,3 +70,6 @@ body.jm-page .sub-nav .nav-card.c-music-videos { background: var(--jm-light-cool
 body.jm-page .sub-nav .nav-card.c-music-videos:hover { background: transparent; border-color: var(--jm-light-cool); color: var(--jm-near-white); }
 
 body.jm-page .nav-card::after { display: none; }
+
+body.jm-page footer { color: var(--jm-muted); }
+body.jm-page footer span { color: var(--jm-sage); }

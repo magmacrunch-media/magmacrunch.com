@@ -1,5 +1,5 @@
 /* C.P. Rutledge — releases */
-body.cpr-page.cpr-releases-page main > * { background: var(--black); }
+body.cpr-page.cpr-releases-page main > * { background: var(--cpr-bg); }
 
 body.cpr-page.cpr-releases-page .breadcrumb { color: var(--dim); }
 body.cpr-page.cpr-releases-page .breadcrumb a { color: var(--cpr-red); }

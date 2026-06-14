@@ -12,13 +12,13 @@
     <style>
         /* ══ PAGE: by-artist / bottle-boys-collective ══ */
 
-        main { position: relative; }
+        main { position: relative; padding: 0; }
 
         /* ── BREADCRUMB ── */
-        body.bbc-page .breadcrumb a { color: var(--bbc-sky); }
-        body.bbc-page .breadcrumb a:hover { color: var(--bbc-sky-light); }
-        body.bbc-page .breadcrumb .sep { color: var(--bbc-sky); opacity: 0.6; }
-        body.bbc-page .breadcrumb .current { color: var(--bbc-sky); }
+        body.bbc-page .breadcrumb a { color: var(--bbc-warm); }
+        body.bbc-page .breadcrumb a:hover { color: var(--bbc-warm-light); }
+        body.bbc-page .breadcrumb .sep { color: var(--bbc-warm); opacity: 0.6; }
+        body.bbc-page .breadcrumb .current { color: var(--bbc-warm); }
 
         /* ── HERO ── */
         .artist-hero {
@@ -30,7 +30,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
-            margin-bottom: 48px;
+            margin-bottom: 0;
         }
         .artist-hero-img {
             position: absolute;
@@ -52,11 +52,9 @@
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8, 8, 18, 0.15) 0%,
-                rgba(8, 8, 18, 0.0)  15%,
-                rgba(8, 8, 18, 0.0)  50%,
-                rgba(8, 8, 18, 0.60) 75%,
-                rgba(8, 8, 18, 1.0)  100%
+                rgba(7,9,6,0.0)  0%,
+                rgba(7,9,6,0.0)  85%,
+                rgba(7,9,6,0.85) 100%
             );
         }
 
@@ -80,7 +78,7 @@
         .artist-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: var(--bbc-sky-dark);
+            color: var(--bbc-warm-light);
             letter-spacing: 0.2em;
             margin-bottom: 10px;
             opacity: 0.8;
@@ -170,7 +168,10 @@
         }
         .ext-link:hover { background: var(--bbc-sky); color: var(--bbc-surface); }
 
-        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; animation: fadeUp 0.5s 0.15s ease both; }
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
 
         /* ── MB MEMBERS LINK ── */
         .mb-members {
@@ -195,7 +196,7 @@
         .mb-members .mb-sep { color: var(--bbc-dark); margin: 0 2px; }
 
         /* ── MB LINK ── */
-        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; animation: fadeUp 0.5s 0.15s ease both; }
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
         .mb-link { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--bbc-sky); text-decoration: none; border: 1px solid var(--bbc-sky-dark); padding: 6px 12px; letter-spacing: 0.08em; transition: color 0.15s, border-color 0.15s; display: inline-block; }
         .mb-link:hover { color: var(--bbc-sky-light); border-color: var(--bbc-sky-light); }
 

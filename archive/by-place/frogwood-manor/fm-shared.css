@@ -18,10 +18,11 @@
     --fm-lilac:     #c8a0d8;
     --fm-plum:      #281838;
     --fm-peach:     #f0b060;
+    --fm-bg:        #0c0810;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.fm-page { --credit-color: var(--fm-muted); --nav-accent: var(--fm-brand); --nav-glow: rgba(168,90,24,0.4); --nav-brand: #d08838; --nav-brand-glow: rgba(208,136,56,0.7); }
+body.fm-page { background: var(--fm-bg); --credit-color: var(--fm-muted); --nav-accent: var(--fm-brand); --nav-glow: rgba(168,90,24,0.4); --nav-brand: #d08838; --nav-brand-glow: rgba(208,136,56,0.7); }
 body.fm-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.fm-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -68,3 +69,6 @@ body.fm-page .sub-nav a[href="about.html"] {
     color: var(--fm-deep);
     border-color: var(--fm-sage);
 }
+
+body.fm-page footer { color: var(--fm-muted); }
+body.fm-page footer span { color: var(--fm-brand); }

@@ -1,5 +1,5 @@
 /* Twin Maples — personnel (forest green brand accent) */
-body.tm-page.tm-personnel-page main > * { background: var(--black); }
+body.tm-page.tm-personnel-page main > * { background: var(--tm-bg); }
 
 body.tm-page.tm-personnel-page .breadcrumb { color: var(--dim); }
 body.tm-page.tm-personnel-page .breadcrumb a { color: var(--tm-brand); }
@@ -23,7 +23,7 @@ body.tm-page.tm-personnel-page .artist-card p strong { color: var(--tm-muted) !i
 body.tm-page.tm-personnel-page .artist-card a { color: var(--tm-brand) !important; }
 body.tm-page.tm-personnel-page .artist-card a:hover { color: var(--tm-light) !important; }
 body.tm-page.tm-personnel-page .artist-card:hover { border-color: var(--tm-brand) !important; }
-body.tm-page.tm-personnel-page .badge { color: var(--black) !important; }
+body.tm-page.tm-personnel-page .badge { color: var(--tm-bg) !important; }
 body.tm-page.tm-personnel-page .badge-founded  { background: var(--tm-brand) !important; }
 body.tm-page.tm-personnel-page .badge-member   { background: var(--tm-leaf) !important; }
 body.tm-page.tm-personnel-page .badge-engineer { background: var(--tm-accent) !important; }
@@ -33,7 +33,7 @@ body.tm-page.tm-personnel-page .tag { border-color: var(--tm-surface) !important
 
 /* Current page: personnel (c-personnel active) */
 body.tm-page.tm-personnel-page .nav-card.c-personnel {
-    background: var(--black);
+    background: var(--tm-bg);
     color: var(--tm-brand);
     border-color: var(--tm-brand);
 }

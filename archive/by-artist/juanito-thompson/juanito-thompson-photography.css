@@ -1,6 +1,6 @@
 /* Juanito Thompson — photography page (steel blue accent) */
 body.jt-page.jt-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.jt-page.jt-photography-page main > * { background: var(--black); }
+body.jt-page.jt-photography-page main > * { background: var(--jt-bg); }
 
 body.jt-page.jt-photography-page .breadcrumb a { color: var(--jt-steel); }
 body.jt-page.jt-photography-page .breadcrumb a:hover { color: var(--jt-amber); }

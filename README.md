@@ -10,9 +10,10 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 
 ```
 /                              root: index.html, style.css, nav.js
-├── archive/                   artist and place archive pages
+├── archive/                   artist, place, and contributor archive pages
 │   ├── by-artist/             14 artist subfolders (thld, svfp, ds, etc.)
 │   ├── by-place/              8 place subfolders (twin-maples, melrose-house, etc.)
+│   ├── by-contributor/        musician credit pages (jake-mccoy, elias-grey, etc.)
 │   └── full-catalog/          all-recordings, all-releases, all-works
 ├── assets/                    shared assets
 │   ├── archive.css            shared archive page styles
@@ -33,6 +34,10 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ├── home/                      about.html, guestbook.html, links/
 ├── music/                     jukebox, distributed music, floppy disk, catalog
 ├── templates/                 JS template scripts for archive subpages
+│   ├── artist_*.js            events, releases, recordings, works templates
+│   ├── place_*.js             personnel, recordings, works, events templates
+│   ├── contributor.js         by-contributor credit page template
+│   └── entity-map.js          MB ID → internal path mapping for contributor links
 └── visual/                    gallery pages (collage, photography, music-videos)
 ```
 
@@ -71,7 +76,7 @@ Defined in `style.css` `:root`:
 | `--white`     | #f0ead8   | body text      |
 | `--black`     | #080808   | background     |
 
-Each artist/place defines its own scoped palette in `*-shared.css` (e.g., `--thld-accent`, `--jt-amber`, `--ds-cta`).
+Each artist/place defines its own scoped palette in `*-shared.css` (e.g., `--thld-accent`, `--jt-amber`, `--ds-cta`). Each also defines a dedicated near-black background variable (e.g., `--thld-bg: #0e0905`, `--jt-bg: #0a0a0c`) set on `body`, with hero gradients and footer overlay colors matched to it.
 
 ---
 
@@ -97,9 +102,19 @@ window.ARTIST_CONFIG = {
 
 6. Load the template script: `<script src="../../../templates/artist_events.js"></script>`
 
+For detailed theming patterns (3-layer CSS, COLOR_MAP, nav-card conventions, hero structure), see `archive/ARCHIVE_THEMING.md`.
+
 ### adding a new place
 
 Same pattern but use `window.PLACE_CONFIG` and place templates. Place subpages use `personnel.html` instead of `events.html`.
+
+### adding a new contributor
+
+1. Create folder: `archive/by-contributor/your-name/`
+2. Create `index.html` following the pattern in `archive/by-contributor/jake-mccoy/`
+3. Set `window.__CONTRIBUTOR_CONFIG` with `MB_ID`, `NAME`, and `ARCHIVE_LINKS`
+4. Load `entity-map.js` then `contributor.js`
+5. Add a card in `archive/by-contributor/index.html` and any new MB ID mappings to `templates/entity-map.js`
 
 ---
 

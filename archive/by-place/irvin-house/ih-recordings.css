@@ -1,5 +1,5 @@
 /* Irvin House — recordings (lawn chair blue accent) */
-body.ih-page.ih-recordings-page main > * { background: var(--black); }
+body.ih-page.ih-recordings-page main > * { background: var(--ih-bg); }
 
 body.ih-page.ih-recordings-page .breadcrumb { color: var(--dim); }
 body.ih-page.ih-recordings-page .breadcrumb a { color: var(--ih-accent); }
@@ -31,7 +31,7 @@ body.ih-page.ih-recordings-page .error-msg { color: var(--ih-cta) !important; }
 
 /* Current page: recordings (c-recordings active) */
 body.ih-page.ih-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--ih-bg);
     color: var(--ih-accent);
     border-color: var(--ih-accent);
 }

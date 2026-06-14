@@ -1,5 +1,5 @@
 /* Irvin House — works (neighbor brick warm accent) */
-body.ih-page.ih-works-page main > * { background: var(--black); }
+body.ih-page.ih-works-page main > * { background: var(--ih-bg); }
 
 body.ih-page.ih-works-page .breadcrumb { color: var(--dim); }
 body.ih-page.ih-works-page .breadcrumb a { color: var(--ih-cta); }
@@ -41,7 +41,7 @@ body.ih-page.ih-works-page .tag { background: var(--ih-dark) !important; border:
 
 /* Current page: works (c-works active) */
 body.ih-page.ih-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--ih-bg);
     color: var(--ih-cta);
     border-color: var(--ih-cta);
 }

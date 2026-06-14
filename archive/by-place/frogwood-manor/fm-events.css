@@ -1,5 +1,5 @@
 /* Frogwood Manor — events (brand / warm amber sub-theme) */
-body.fm-page.fm-events-page main > * { background: var(--black); }
+body.fm-page.fm-events-page main > * { background: var(--fm-bg); }
 
 body.fm-page.fm-events-page .breadcrumb { color: var(--dim); }
 body.fm-page.fm-events-page .breadcrumb a { color: var(--fm-brand); }
@@ -28,7 +28,7 @@ body.fm-page.fm-events-page .tag { border-color: var(--fm-surface) !important; c
 
 /* Current page: events (c-events active) */
 body.fm-page.fm-events-page .nav-card.c-events {
-    background: var(--black);
+    background: var(--fm-bg);
     color: var(--fm-brand);
     border-color: var(--fm-brand);
 }

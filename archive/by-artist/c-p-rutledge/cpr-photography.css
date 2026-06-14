@@ -1,6 +1,6 @@
 /* C.P. Rutledge — photography page — accent: purple (cpr-purple) */
 body.cpr-page.cpr-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.cpr-page.cpr-photography-page main > * { background: var(--black); }
+body.cpr-page.cpr-photography-page main > * { background: var(--cpr-bg); }
 
 body.cpr-page.cpr-photography-page .breadcrumb { color: var(--cpr-purple); }
 body.cpr-page.cpr-photography-page .breadcrumb a { color: var(--cpr-purple); }

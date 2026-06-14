@@ -1,5 +1,5 @@
 /* Melrose House — recordings (blue-grey / brand sub-theme) */
-body.mh-page.mh-recordings-page main > * { background: var(--black); }
+body.mh-page.mh-recordings-page main > * { background: var(--mh-bg); }
 
 body.mh-page.mh-recordings-page .breadcrumb { color: var(--dim); }
 body.mh-page.mh-recordings-page .breadcrumb a { color: var(--mh-brand); }
@@ -31,7 +31,7 @@ body.mh-page.mh-recordings-page .error-msg { color: var(--mh-coral) !important; 
 
 /* Current page: recordings (c-recordings active) */
 body.mh-page.mh-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--mh-bg);
     color: var(--mh-brand);
     border-color: var(--mh-brand);
 }

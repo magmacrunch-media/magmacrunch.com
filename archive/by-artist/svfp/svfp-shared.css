@@ -27,10 +27,11 @@
     /* ── light ── */
     --svfp-white:     #f8b0ff;   /* Near white — Pale pink-white */
     --svfp-offwhite:  #f5f0ff;   /* Off-white — Lavender mist */
+    --svfp-bg:        #0a0a14;
 }
 
 /* Sub-nav layout */
-body.svfp-page { --credit-color: var(--svfp-raised); --nav-accent: var(--svfp-accent); --nav-glow: rgba(217,70,239,0.4); --nav-brand: var(--svfp-body); --nav-brand-glow: rgba(245,208,255,0.7); }
+body.svfp-page { background: var(--svfp-bg); --credit-color: var(--svfp-raised); --nav-accent: var(--svfp-accent); --nav-glow: rgba(217,70,239,0.4); --nav-brand: var(--svfp-body); --nav-brand-glow: rgba(245,208,255,0.7); }
 body.svfp-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 
 /* Back button: transparent + brand (per-page files override with page accent) */
@@ -63,3 +64,6 @@ body.svfp-page .nav-card.c-works:hover { background: transparent !important; col
 
 body.svfp-page .nav-card::after { display: none; }
 body.svfp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.svfp-page footer { color: var(--svfp-bright); }
+body.svfp-page footer span { color: var(--svfp-accent); }

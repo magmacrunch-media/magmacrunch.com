@@ -19,10 +19,11 @@
     --vb-peach:     #f0c8a0;
     --vb-dusk:      #3a2e48;
     --vb-party:     #e84838;
+    --vb-near-black: #0d0e16;
 }
 
 /* Sub-nav button colors — all pages use these */
-body.vb-page { --credit-color: var(--vb-mid); --nav-accent: var(--vb-accent); --nav-glow: rgba(232,96,32,0.4); --nav-brand: #f0a050; --nav-brand-glow: rgba(240,160,80,0.7); }
+body.vb-page { background: var(--vb-near-black); --credit-color: var(--vb-mid); --nav-accent: var(--vb-accent); --nav-glow: rgba(232,96,32,0.4); --nav-brand: #f0a050; --nav-brand-glow: rgba(240,160,80,0.7); }
 body.vb-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.vb-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
@@ -64,3 +65,6 @@ body.vb-page .sub-nav .nav-card.c-works { background: var(--vb-bulb); color: var
 body.vb-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--vb-body); }
 
 body.vb-page .nav-card::after { display: none; }
+
+body.vb-page footer { color: var(--vb-mid); }
+body.vb-page footer span { color: var(--vb-amber); }

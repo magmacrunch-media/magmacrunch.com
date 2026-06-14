@@ -1,6 +1,6 @@
 /* Dag Henderson — about page (brand green accent) */
 body.dh-page.dh-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.dh-page.dh-about-page main > * { background: var(--black); }
+body.dh-page.dh-about-page main > * { background: var(--dh-bg); }
 
 body.dh-page.dh-about-page .breadcrumb a { color: var(--dh-brand); }
 body.dh-page.dh-about-page .breadcrumb a:hover { color: var(--dh-leaf); }

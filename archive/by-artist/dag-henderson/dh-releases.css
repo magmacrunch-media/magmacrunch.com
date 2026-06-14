@@ -1,6 +1,6 @@
 /* Dag Henderson — releases page (violet-mid accent) */
 body.dh-page.dh-releases-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.dh-page.dh-releases-page main > * { background: var(--black); }
+body.dh-page.dh-releases-page main > * { background: var(--dh-bg); }
 
 body.dh-page.dh-releases-page .breadcrumb a { color: var(--dh-violet-mid); }
 body.dh-page.dh-releases-page .breadcrumb a:hover { color: var(--dh-gold); }

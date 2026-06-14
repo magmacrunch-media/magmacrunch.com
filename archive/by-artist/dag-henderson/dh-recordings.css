@@ -1,6 +1,6 @@
 /* Dag Henderson — recordings page (sage accent) */
 body.dh-page.dh-recordings-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.dh-page.dh-recordings-page main > * { background: var(--black); }
+body.dh-page.dh-recordings-page main > * { background: var(--dh-bg); }
 
 body.dh-page.dh-recordings-page .breadcrumb a { color: var(--dh-sage); }
 body.dh-page.dh-recordings-page .breadcrumb a:hover { color: var(--dh-amber); }

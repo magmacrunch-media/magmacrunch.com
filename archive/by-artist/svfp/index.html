@@ -11,7 +11,7 @@
     <style>
         
 
-        main { position: relative; }
+        main { position: relative; padding: 0; }
 
         /* ── SVFP THEME OVERRIDES ── */
         body.svfp-page .breadcrumb a          { color: #e87040; }
@@ -48,7 +48,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
-            margin-bottom: 48px;
+            margin-bottom: 0;
         }
         .artist-hero-img {
             position: absolute;
@@ -67,11 +67,9 @@
             position: absolute; inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8,8,18,0.15) 0%,
-                rgba(8,8,18,0.0)  15%,
-                rgba(8,8,18,0.0)  50%,
-                rgba(8,8,18,0.60) 75%,
-                rgba(8,8,18,1.0)  100%
+                rgba(10,10,20,0.0)  0%,
+                rgba(10,10,20,0.0)  85%,
+                rgba(10,10,20,0.85) 100%
             );
         }
 
@@ -235,7 +233,7 @@
         .bio-link { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim); border: 1px solid #2a2a3a; padding: 5px 12px; text-decoration: none; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; }
         .bio-link:hover    { color: var(--svfp-brand); border-color: var(--svfp-brand); }
         .bio-link.stream { color: var(--svfp-accent); border-color: var(--svfp-accent); }
-        .bio-link.stream:hover { background: var(--svfp-accent); color: var(--black); }
+        .bio-link.stream:hover { background: var(--svfp-accent); color: var(--svfp-bg); }
         .floppy-link { font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--svfp-heading); margin-top: 6px; }
         .floppy-link a { color: var(--svfp-brand); text-decoration: none; }
         .floppy-link a:hover { text-decoration: underline; }
@@ -384,6 +382,9 @@
             color: #ffffff;
             text-shadow: 0 0 14px rgba(224, 48, 112, 0.7);
         }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
     </style>
 </head>
 <body class="svfp-page">

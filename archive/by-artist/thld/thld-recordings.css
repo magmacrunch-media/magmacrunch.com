@@ -1,6 +1,6 @@
 /* THLD recordings — glow/amber (c-cyan) accent theme */
 body.thld-page.thld-recordings-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.thld-page.thld-recordings-page main > * { background: var(--black); }
+body.thld-page.thld-recordings-page main > * { background: var(--thld-bg); }
 
 body.thld-page.thld-recordings-page .breadcrumb { color: var(--thld-muted); }
 body.thld-page.thld-recordings-page .breadcrumb a { color: var(--thld-amber); }

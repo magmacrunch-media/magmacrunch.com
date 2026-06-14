@@ -1,6 +1,6 @@
 /* SVFP about — deep purple theme */
 body.svfp-page.svfp-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.svfp-page.svfp-about-page main > * { background: var(--black); }
+body.svfp-page.svfp-about-page main > * { background: var(--svfp-bg); }
 
 body.svfp-about-page .breadcrumb { color: var(--dim); }
 body.svfp-about-page .breadcrumb a { color: #a020c8; }

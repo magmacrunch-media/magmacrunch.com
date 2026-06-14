@@ -1,6 +1,6 @@
 /* Green Street Apt. — about (dusty violet sage accent) */
 body.gs-page.gs-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
-body.gs-page.gs-about-page main > * { background: var(--black); }
+body.gs-page.gs-about-page main > * { background: var(--gs-bg); }
 
 body.gs-page.gs-about-page .breadcrumb { color: var(--dim); }
 body.gs-page.gs-about-page .breadcrumb a { color: var(--gs-sage); }
@@ -14,7 +14,7 @@ body.gs-page.gs-about-page .page-title { font-family: 'Press Start 2P', monospac
 
 /* Current page: about (c-about active) */
 body.gs-page.gs-about-page .nav-card.c-about {
-    background: var(--black);
+    background: var(--gs-bg);
     color: var(--gs-sage);
     border-color: var(--gs-sage);
 }

@@ -2,7 +2,7 @@
 body.svfp-events-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.svfp-events-page main > .breadcrumb,
 body.svfp-events-page main > .page-header,
-body.svfp-events-page main > .catalog-wrap { background: var(--black); }
+body.svfp-events-page main > .catalog-wrap { background: var(--svfp-bg); }
 
 body.svfp-events-page .breadcrumb { color: var(--dim); }
 body.svfp-events-page .breadcrumb a { color: #c8a0d8; }
@@ -23,7 +23,7 @@ body.svfp-events-page .event-card { display: flex; gap: 16px; border: 1px solid 
 body.svfp-events-page .event-card:hover { border-color: #9d7fe3; }
 body.svfp-events-page .event-card.cancelled { border-color: #2a2a3a; opacity: 0.65; }
 
-body.svfp-events-page .event-art { width: 110px; min-width: 110px; height: 110px; background: var(--black); border-right: 1px solid #1e1e2e; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+body.svfp-events-page .event-art { width: 110px; min-width: 110px; height: 110px; background: var(--svfp-bg); border-right: 1px solid #1e1e2e; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 body.svfp-events-page .event-art img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
 body.svfp-events-page .event-art .no-art-msg { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--dim); text-align: center; padding: 8px; line-height: 1.8; }
 

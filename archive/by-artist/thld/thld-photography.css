@@ -1,6 +1,6 @@
 /* THLD photography — dusty purple (c-slate) accent theme */
 body.thld-page.thld-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.thld-page.thld-photography-page main > * { background: var(--black); }
+body.thld-page.thld-photography-page main > * { background: var(--thld-bg); }
 
 body.thld-page.thld-photography-page .breadcrumb { color: var(--thld-muted); }
 body.thld-page.thld-photography-page .breadcrumb a { color: var(--thld-purple); }

@@ -1,6 +1,6 @@
 /* Dino Spumoni — releases (rose accent) */
 body.ds-page.ds-releases-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.ds-page.ds-releases-page main > * { background: var(--black); }
+body.ds-page.ds-releases-page main > * { background: var(--ds-bg); }
 
 body.ds-page.ds-releases-page .breadcrumb a { color: var(--ds-rose); }
 body.ds-page.ds-releases-page .breadcrumb a:hover { color: var(--ds-deep-rose); }

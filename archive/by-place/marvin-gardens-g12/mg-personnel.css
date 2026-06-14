@@ -1,5 +1,5 @@
 /* Marvin Gardens G12 — personnel (pink/magenta accent) */
-body.mg-page.mg-personnel-page main > * { background: var(--black); }
+body.mg-page.mg-personnel-page main > * { background: var(--mg-near-black); }
 
 body.mg-page.mg-personnel-page .breadcrumb { color: var(--dim); }
 body.mg-page.mg-personnel-page .breadcrumb a { color: var(--mg-accent); }
@@ -33,7 +33,7 @@ body.mg-page.mg-personnel-page .tag { border-color: var(--mg-accent) !important;
 
 /* Current page: personnel (c-personnel active) */
 body.mg-page.mg-personnel-page .nav-card.c-personnel {
-    background: var(--black);
+    background: var(--mg-near-black);
     color: var(--mg-accent);
     border-color: var(--mg-accent);
 }

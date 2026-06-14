@@ -1,5 +1,5 @@
 /* The Tuna Can — works */
-body.tc-page.tc-works-page main > * { background: var(--black); }
+body.tc-page.tc-works-page main > * { background: var(--tc-bg); }
 
 body.tc-page.tc-works-page .breadcrumb { color: var(--dim); }
 body.tc-page.tc-works-page .breadcrumb a { color: var(--tc-bright); }
@@ -20,7 +20,7 @@ body.tc-page.tc-works-page .work-card a { color: var(--tc-bright); }
 
 /* Current page: works (c-works active — back button) */
 body.tc-page.tc-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--tc-bg);
     color: var(--tc-bright);
     border-color: var(--tc-bright);
 }

@@ -1,6 +1,6 @@
 /* Twin Maples — about (sage blue accent) */
 body.tm-page.tm-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
-body.tm-page.tm-about-page main > * { background: var(--black); }
+body.tm-page.tm-about-page main > * { background: var(--tm-bg); }
 
 body.tm-page.tm-about-page .breadcrumb { color: var(--dim); }
 body.tm-page.tm-about-page .breadcrumb a { color: var(--tm-sage); }
@@ -14,7 +14,7 @@ body.tm-page.tm-about-page .page-title { font-family: 'Press Start 2P', monospac
 
 /* Current page: about (c-about active) */
 body.tm-page.tm-about-page .nav-card.c-about {
-    background: var(--black);
+    background: var(--tm-bg);
     color: var(--tm-sage);
     border-color: var(--tm-sage);
 }

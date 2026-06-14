@@ -1,5 +1,5 @@
 /* College Green Apt. — works (warm amber / cta sub-theme) */
-body.cg-page.cg-works-page main > * { background: var(--black); }
+body.cg-page.cg-works-page main > * { background: var(--cg-bg); }
 
 body.cg-page.cg-works-page .breadcrumb { color: var(--dim); }
 body.cg-page.cg-works-page .breadcrumb a { color: var(--cg-cta); }
@@ -28,7 +28,7 @@ body.cg-page.cg-works-page .tag { border-color: var(--cg-dark) !important; color
 
 /* Current page: works (c-works active) */
 body.cg-page.cg-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--cg-bg);
     color: var(--cg-cta);
     border-color: var(--cg-cta);
 }

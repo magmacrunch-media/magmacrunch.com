@@ -26,9 +26,10 @@
     --bbc-mauve:       #a07888;
     --bbc-sage:        #3a5840;
     --bbc-apricot:     #f0c0a0;
+    --bbc-bg:          #070906;
 }
 
-body.bbc-page { background: var(--black); --credit-color: var(--bbc-mid); --nav-accent: var(--bbc-apricot); --nav-glow: rgba(240,192,160,0.4); --nav-brand: var(--bbc-sky); --nav-brand-glow: rgba(120,168,200,0.7); }
+body.bbc-page { background: var(--bbc-bg); --credit-color: var(--bbc-mid); --nav-accent: var(--bbc-apricot); --nav-glow: rgba(240,192,160,0.4); --nav-brand: var(--bbc-sky); --nav-brand-glow: rgba(120,168,200,0.7); }
 
 body.bbc-page .nav-card.c-back {
     background: transparent;
@@ -103,9 +104,9 @@ body.bbc-page .nav-card.c-mauve {
 }
 
 body.bbc-page .nav-card.c-works {
-    background: var(--bbc-sage);
-    color: var(--bbc-cream);
-    border-color: var(--bbc-sage);
+    background: var(--bbc-green-light);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-green-light);
 }
 
 body.bbc-page .nav-card.c-about {
@@ -129,5 +130,8 @@ body.bbc-page .nav-card.c-purple:hover { background: transparent; color: var(--b
 body.bbc-page .nav-card.c-photography:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sea-mist); }
 body.bbc-page .nav-card.c-grey-warm:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-warm-grey); }
 body.bbc-page .nav-card.c-mauve:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-mauve); }
-body.bbc-page .nav-card.c-works:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sage); }
+body.bbc-page .nav-card.c-works:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-green-light); }
 body.bbc-page .nav-card.c-about:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-apricot); }
+
+body.bbc-page footer { color: var(--bbc-mid); }
+body.bbc-page footer span { color: var(--bbc-sky); }

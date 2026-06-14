@@ -1,5 +1,5 @@
 /* Melrose House — works (amber / warm sub-theme) */
-body.mh-page.mh-works-page main > * { background: var(--black); }
+body.mh-page.mh-works-page main > * { background: var(--mh-bg); }
 
 body.mh-page.mh-works-page .breadcrumb { color: var(--dim); }
 body.mh-page.mh-works-page .breadcrumb a { color: var(--mh-gold); }
@@ -41,7 +41,7 @@ body.mh-page.mh-works-page .tag { background: #1a1a2e !important; border: 1px so
 
 /* Current page: works (c-works active) */
 body.mh-page.mh-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--mh-bg);
     color: var(--mh-amber);
     border-color: var(--mh-amber);
 }

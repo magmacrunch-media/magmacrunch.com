@@ -1,6 +1,6 @@
 /* Dag Henderson — works page (amber-glow accent) */
 body.dh-page.dh-works-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.dh-page.dh-works-page main > * { background: var(--black); }
+body.dh-page.dh-works-page main > * { background: var(--dh-bg); }
 
 body.dh-page.dh-works-page .breadcrumb a { color: var(--dh-amber-glow); }
 body.dh-page.dh-works-page .breadcrumb a:hover { color: var(--dh-gold); }

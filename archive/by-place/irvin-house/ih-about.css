@@ -1,6 +1,6 @@
 /* Irvin House — about (slate lavender sage accent) */
 body.ih-page.ih-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
-body.ih-page.ih-about-page main > * { background: var(--black); }
+body.ih-page.ih-about-page main > * { background: var(--ih-bg); }
 
 body.ih-page.ih-about-page .breadcrumb { color: var(--dim); }
 body.ih-page.ih-about-page .breadcrumb a { color: var(--ih-sage); }
@@ -14,7 +14,7 @@ body.ih-page.ih-about-page .page-title { font-family: 'Press Start 2P', monospac
 
 /* Current page: about (c-about active) */
 body.ih-page.ih-about-page .nav-card.c-about {
-    background: var(--black);
+    background: var(--ih-bg);
     color: var(--ih-sage);
     border-color: var(--ih-sage);
 }

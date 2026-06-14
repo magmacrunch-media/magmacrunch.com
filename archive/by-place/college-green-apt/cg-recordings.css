@@ -1,5 +1,5 @@
 /* College Green Apt. — recordings (nature / window plant green sub-theme) */
-body.cg-page.cg-recordings-page main > * { background: var(--black); }
+body.cg-page.cg-recordings-page main > * { background: var(--cg-bg); }
 
 body.cg-page.cg-recordings-page .breadcrumb { color: var(--dim); }
 body.cg-page.cg-recordings-page .breadcrumb a { color: var(--cg-nature); }
@@ -31,7 +31,7 @@ body.cg-page.cg-recordings-page .error-msg { color: var(--cg-cta) !important; }
 
 /* Current page: recordings (c-recordings active) */
 body.cg-page.cg-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--cg-bg);
     color: var(--cg-nature);
     border-color: var(--cg-nature);
 }

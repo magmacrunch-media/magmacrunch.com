@@ -1,5 +1,5 @@
 /* The Tuna Can — recordings */
-body.tc-page.tc-recordings-page main > * { background: var(--black); }
+body.tc-page.tc-recordings-page main > * { background: var(--tc-bg); }
 
 body.tc-page.tc-recordings-page .breadcrumb { color: var(--dim); }
 body.tc-page.tc-recordings-page .breadcrumb a { color: var(--tc-amber); }
@@ -20,7 +20,7 @@ body.tc-page.tc-recordings-page .recording-card a { color: var(--tc-copper); }
 
 /* Current page: recordings (c-recordings active — back button) */
 body.tc-page.tc-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--tc-bg);
     color: var(--tc-copper);
     border-color: var(--tc-copper);
 }

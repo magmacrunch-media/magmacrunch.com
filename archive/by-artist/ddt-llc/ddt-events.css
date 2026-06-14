@@ -1,5 +1,5 @@
 /* DDT LLC — events */
-body.ddt-page.ddt-events-page main > * { background: var(--black); }
+body.ddt-page.ddt-events-page main > * { background: var(--ddt-bg); }
 
 body.ddt-page.ddt-events-page .breadcrumb { color: var(--ddt-gold); }
 body.ddt-page.ddt-events-page .breadcrumb a { color: var(--ddt-gold); }
@@ -13,7 +13,7 @@ body.ddt-page.ddt-events-page .artist-label { font-family: 'Press Start 2P', mon
 body.ddt-page.ddt-events-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ddt-gold); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(212, 168, 32, 0.5); }
 
 body.ddt-page.ddt-events-page .event-card {
-    background: var(--black);
+    background: var(--ddt-bg);
     border-color: var(--ddt-deep);
 }
 body.ddt-page.ddt-events-page .event-card:hover { border-color: var(--ddt-gold); }

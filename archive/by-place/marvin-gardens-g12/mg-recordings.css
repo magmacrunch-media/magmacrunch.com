@@ -1,5 +1,5 @@
 /* Marvin Gardens G12 — recordings (light pink neon blush accent) */
-body.mg-page.mg-recordings-page main > * { background: var(--black); }
+body.mg-page.mg-recordings-page main > * { background: var(--mg-near-black); }
 
 body.mg-page.mg-recordings-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
 body.mg-page.mg-recordings-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--mg-cream); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
@@ -32,7 +32,7 @@ body.mg-page.mg-recordings-page .breadcrumb .current { color: var(--mg-cream); }
 
 /* Current page: recordings (c-recordings active) */
 body.mg-page.mg-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--mg-near-black);
     color: var(--mg-cream);
     border-color: var(--mg-cream);
 }

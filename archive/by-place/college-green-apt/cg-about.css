@@ -1,6 +1,6 @@
 /* College Green Apt. — about */
 body.cg-page.cg-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
-body.cg-page.cg-about-page main > * { background: var(--black); }
+body.cg-page.cg-about-page main > * { background: var(--cg-bg); }
 
 body.cg-page.cg-about-page .breadcrumb { color: var(--dim); }
 body.cg-page.cg-about-page .breadcrumb a { color: var(--cg-lavender); }
@@ -14,7 +14,7 @@ body.cg-page.cg-about-page .page-title { font-family: 'Press Start 2P', monospac
 
 /* Current page: about (c-about active) */
 body.cg-page.cg-about-page .nav-card.c-about {
-    background: var(--black);
+    background: var(--cg-bg);
     color: var(--cg-lavender);
     border-color: var(--cg-lavender);
 }

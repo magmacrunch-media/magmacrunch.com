@@ -1,5 +1,5 @@
 /* The Four B's — releases */
-body.fb-page.fb-releases-page main > * { background: var(--black); }
+body.fb-page.fb-releases-page main > * { background: var(--4b-bg); }
 
 body.fb-page.fb-releases-page .breadcrumb { color: var(--dim); }
 body.fb-page.fb-releases-page .breadcrumb a { color: var(--4b-rust); }
@@ -12,7 +12,7 @@ body.fb-page.fb-releases-page .artist-label { font-family: 'Press Start 2P', mon
 body.fb-page.fb-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--4b-rust); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(200, 72, 16, 0.5); }
 
 body.fb-page.fb-releases-page .release-card {
-    background: var(--black);
+    background: var(--4b-bg);
     border-color: var(--4b-deep);
 }
 body.fb-page.fb-releases-page .release-card:hover { border-color: var(--4b-rust); }

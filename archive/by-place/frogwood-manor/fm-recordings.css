@@ -1,5 +1,5 @@
 /* Frogwood Manor — recordings (sky / cyan sub-theme) */
-body.fm-page.fm-recordings-page main > * { background: var(--black); }
+body.fm-page.fm-recordings-page main > * { background: var(--fm-bg); }
 
 body.fm-page.fm-recordings-page .breadcrumb { color: var(--dim); }
 body.fm-page.fm-recordings-page .breadcrumb a { color: var(--fm-sky); }
@@ -31,7 +31,7 @@ body.fm-page.fm-recordings-page .error-msg { color: var(--fm-brand) !important; 
 
 /* Current page: recordings (c-recordings active) */
 body.fm-page.fm-recordings-page .nav-card.c-recordings {
-    background: var(--black);
+    background: var(--fm-bg);
     color: var(--fm-sky);
     border-color: var(--fm-sky);
 }

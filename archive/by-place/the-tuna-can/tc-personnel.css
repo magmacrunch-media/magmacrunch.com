@@ -1,5 +1,5 @@
 /* The Tuna Can — personnel */
-body.tc-page.tc-personnel-page main > * { background: var(--black); }
+body.tc-page.tc-personnel-page main > * { background: var(--tc-bg); }
 
 body.tc-page.tc-personnel-page .breadcrumb { color: var(--dim); }
 body.tc-page.tc-personnel-page .breadcrumb a { color: var(--tc-green); }
@@ -20,7 +20,7 @@ body.tc-page.tc-personnel-page .artist-card a { color: var(--tc-green); }
 
 /* Current page: personnel (c-personnel active — back button) */
 body.tc-page.tc-personnel-page .nav-card.c-personnel {
-    background: var(--black);
+    background: var(--tc-bg);
     color: var(--tc-green);
     border-color: var(--tc-green);
 }

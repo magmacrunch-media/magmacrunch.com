@@ -1,6 +1,6 @@
 /* Juanito Thompson — about page (deep ember accent) */
 body.jt-page.jt-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.jt-page.jt-about-page main > * { background: var(--black); }
+body.jt-page.jt-about-page main > * { background: var(--jt-bg); }
 
 body.jt-page.jt-about-page .breadcrumb a { color: var(--jt-taupe); }
 body.jt-page.jt-about-page .breadcrumb a:hover { color: var(--jt-main); }

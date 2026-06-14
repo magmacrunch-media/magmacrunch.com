@@ -1,5 +1,5 @@
 /* Fruity Loops Debauchery Bros — index page */
-body.fldc-page.fldc-index-page main { position: relative; }
+body.fldc-page.fldc-index-page main { position: relative; padding: 0; }
 
 body.fldc-page.fldc-index-page .breadcrumb a { color: var(--fldc-bg-screen-light); }
 body.fldc-page.fldc-index-page .breadcrumb a:hover { color: var(--fldc-arc-yellow); }
@@ -15,7 +15,7 @@ body.fldc-page.fldc-index-page .breadcrumb .current { color: var(--fldc-bg-scree
     align-items: center;
     justify-content: flex-end;
     overflow: hidden;
-    margin-bottom: 48px;
+    margin-bottom: 0;
 }
 .artist-hero-img {
     position: absolute;
@@ -37,11 +37,9 @@ body.fldc-page.fldc-index-page .breadcrumb .current { color: var(--fldc-bg-scree
     inset: 0;
     background: linear-gradient(
         to bottom,
-        rgba(8, 8, 18, 0.15) 0%,
-        rgba(8, 8, 18, 0.0)  15%,
-        rgba(8, 8, 18, 0.0)  50%,
-        rgba(8, 8, 18, 0.60) 75%,
-        rgba(8, 8, 18, 1.0)  100%
+        rgba(16,22,14,0.0)  0%,
+        rgba(16,22,14,0.0)  85%,
+        rgba(16,22,14,0.85) 100%
     );
 }
 
@@ -231,7 +229,7 @@ body.fldc-page.fldc-index-page .breadcrumb .current { color: var(--fldc-bg-scree
 
 @media (max-width: 640px) { .artist-name { font-size: 12px; } .sub-nav { flex-direction: column; } }
 
-.fldc-page .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; animation: fadeUp 0.5s 0.15s ease both; }
+.fldc-page .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
 
 /* ── MB MEMBERS LINK ── */
 .fldc-page .mb-members {
@@ -254,3 +252,6 @@ body.fldc-page.fldc-index-page .breadcrumb .current { color: var(--fldc-bg-scree
 .fldc-page .mb-members .mb-abbr:hover { color: var(--fldc-arc-yellow); }
 .fldc-page .mb-members:hover { border-color: var(--fldc-arc-yellow); }
 .fldc-page .mb-members .mb-sep { color: var(--fldc-arc-dark); margin: 0 2px; }
+
+/* ── FOOTER ── */
+.fldc-page footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }

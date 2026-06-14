@@ -1,5 +1,5 @@
 /* Twin Maples — works (golden amber warm accent) */
-body.tm-page.tm-works-page main > * { background: var(--black); }
+body.tm-page.tm-works-page main > * { background: var(--tm-bg); }
 
 body.tm-page.tm-works-page .breadcrumb { color: var(--dim); }
 body.tm-page.tm-works-page .breadcrumb a { color: var(--tm-warm); }
@@ -41,7 +41,7 @@ body.tm-page.tm-works-page .tag { background: var(--tm-dark) !important; border:
 
 /* Current page: works (c-works active) */
 body.tm-page.tm-works-page .nav-card.c-works {
-    background: var(--black);
+    background: var(--tm-bg);
     color: var(--tm-warm);
     border-color: var(--tm-warm);
 }
