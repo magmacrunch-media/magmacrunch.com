@@ -65,7 +65,9 @@ body.ddt-page.ddt-photography-page .photo-lightbox {
 }
 body.ddt-page.ddt-photography-page .photo-lightbox.open { display: flex; }
 body.ddt-page.ddt-photography-page .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+body.ddt-page.ddt-photography-page .lb-img-wrap.vertical { max-width: 50vw; max-height: 85vh; }
 body.ddt-page.ddt-photography-page .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid var(--ddt-deep); }
+body.ddt-page.ddt-photography-page .lb-img-wrap.vertical img { max-width: 50vw; max-height: 85vh; }
 body.ddt-page.ddt-photography-page .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
 body.ddt-page.ddt-photography-page .lb-btn {
     font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--ddt-mid);

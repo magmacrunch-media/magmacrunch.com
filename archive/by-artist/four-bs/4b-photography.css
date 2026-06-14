@@ -11,21 +11,6 @@ body.fb-page.fb-photography-page .page-header { width: 100%; max-width: 960px; m
 body.fb-page.fb-photography-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--4b-sky); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
 body.fb-page.fb-photography-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--4b-sky); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(88, 144, 200, 0.5); }
 
-body.fb-page.fb-photography-page .photo-grid-section {
-    width: 100%;
-    max-width: 960px;
-    padding: 0 20px;
-}
-body.fb-page.fb-photography-page .photo-grid-section p {
-    font-family: 'Courier Prime', monospace;
-    font-size: 14px;
-    color: var(--4b-heading);
-    line-height: 1.8;
-}
-
-body.fb-page.fb-photography-page .nav-card.c-back { background: transparent; color: var(--4b-sky); border-color: var(--4b-sky); }
-body.fb-page.fb-photography-page .nav-card.c-back:hover { background: var(--4b-sky); color: var(--4b-heading); }
-
 body.fb-page.fb-photography-page .nav-card::after { display: none; }
 
 /* ── PHOTO STRIP ── */
@@ -97,7 +82,9 @@ body.fb-page.fb-photography-page .nav-card::after { display: none; }
 }
 .photo-lightbox.open { display: flex; }
 .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+.lb-img-wrap.vertical { max-width: 50vw; max-height: 85vh; }
 .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid #1a1a2a; }
+.lb-img-wrap.vertical img { max-width: 50vw; max-height: 85vh; }
 .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
 .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim);
     background: none; border: 1px solid #1a1a2a; padding: 7px 14px; cursor: pointer;

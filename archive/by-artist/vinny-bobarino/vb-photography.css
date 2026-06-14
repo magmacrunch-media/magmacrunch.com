@@ -40,6 +40,7 @@ body.vb-page.vb-photography-page .nav-card::after { display: none; }
 
 /* Photo strip */
 body.vb-page.vb-photography-page .photo-strip-section { width: 100%; max-width: 900px; margin-bottom: 48px; animation: fadeUp 0.5s 0.25s ease both; }
+body.vb-page.vb-photography-page .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--vb-sky); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--vb-sky); opacity: 0.9; }
 body.vb-page.vb-photography-page .photo-strip-wrap { position: relative; width: 100%; }
 body.vb-page.vb-photography-page .photo-strip { display: flex; gap: 6px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--vb-accent) var(--vb-surface); padding-bottom: 10px; cursor: grab; }
 body.vb-page.vb-photography-page .photo-strip:active { cursor: grabbing; }
@@ -62,7 +63,9 @@ body.vb-page.vb-photography-page .photo-strip-wrap.scrolled .strip-scroll-hint {
 body.vb-page.vb-photography-page .photo-lightbox { display: none; position: fixed; inset: 0; background: rgba(30,34,53,0.96); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
 body.vb-page.vb-photography-page .photo-lightbox.open { display: flex; }
 body.vb-page.vb-photography-page .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+body.vb-page.vb-photography-page .lb-img-wrap.vertical { max-width: 50vw; max-height: 85vh; }
 body.vb-page.vb-photography-page .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid var(--vb-surface); }
+body.vb-page.vb-photography-page .lb-img-wrap.vertical img { max-width: 50vw; max-height: 85vh; }
 body.vb-page.vb-photography-page .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
 body.vb-page.vb-photography-page .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--vb-mid); background: none; border: 1px solid var(--vb-surface); padding: 7px 14px; cursor: pointer; letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
 body.vb-page.vb-photography-page .lb-btn:hover { color: var(--vb-accent); border-color: var(--vb-accent); }

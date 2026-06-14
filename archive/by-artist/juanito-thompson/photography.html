@@ -56,19 +56,22 @@
 
     <div class="divider"></div>
 
-    <!-- NIGEL — MASCOT BANNER -->
-    <div class="mascot-banner">
-        <img class="mascot-banner-img" src="../../../assets/photos/nigel-the-bulldog.jpg" alt="Nigel the bulldog, mascot of Juanito Thompson">
-        <div class="mascot-banner-text">
-            <span class="mascot-name">NIGEL</span>
-            <span class="mascot-tagline">official mascot of juanito thompson</span>
+    <!-- PHOTO STRIP -->
+    <div class="photo-strip-section">
+        <div class="section-label">YOU'LL UNDERSTAND WHEN YOU'RE OLDER</div>
+        <div class="photo-strip-wrap" id="photoStripWrap">
+            <div class="photo-strip" id="photoStrip"></div>
+            <div class="strip-scroll-hint">← drag to scroll →</div>
         </div>
     </div>
 
-    <!-- PHOTO STRIP (photos go here — replace PHOTOS array with actual paths) -->
+    <div class="divider"></div>
+
+    <!-- THAT DEFINITELY DID DESTROY ME -->
     <div class="photo-strip-section">
-        <div class="photo-strip-wrap" id="photoStripWrap">
-            <div class="photo-strip" id="photoStrip"></div>
+        <div class="section-label">THAT DEFINITELY DID DESTROY ME</div>
+        <div class="photo-strip-wrap" id="ddStripWrap">
+            <div class="photo-strip" id="ddStrip"></div>
             <div class="strip-scroll-hint">← drag to scroll →</div>
         </div>
     </div>
@@ -110,20 +113,64 @@
 })();
 </script>
 <script>
-const PHOTOS = [
-    // Add your photos here — e.g.:
-    // { src: '../../../assets/photos/your-photo.jpg', alt: 'Description', caption: 'Caption', aspect: 'landscape' },
+const PHOTOS_YUO = [
+    { src: '../../../assets/photos/frogwood_manor/outside/jt-youllunderstandwhenyoureolder/IMG_1159.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1159', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/outside/jt-youllunderstandwhenyoureolder/IMG_1160.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1160', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/outside/jt-youllunderstandwhenyoureolder/IMG_1162.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1162', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/outside/jt-youllunderstandwhenyoureolder/IMG_1163.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1163', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/outside/jt-youllunderstandwhenyoureolder/IMG_1165.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1165', aspect: 'wide' },
 ];
 
-const strip = document.getElementById('photoStrip');
-const wrap  = document.getElementById('photoStripWrap');
-const hint  = document.querySelector('.strip-scroll-hint');
+const PHOTOS_DD = [
+    { src: '../../../assets/photos/juanito_thompson/that_definitely_did_destroy_me/IMG_0856.jpg', alt: 'Juanito Thompson - that definitely did destroy me', caption: 'IMG 0856', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/that_definitely_did_destroy_me/IMG_0857.jpg', alt: 'Juanito Thompson - that definitely did destroy me', caption: 'IMG 0857', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/that_definitely_did_destroy_me/IMG_0858.jpg', alt: 'Juanito Thompson - that definitely did destroy me', caption: 'IMG 0858', aspect: 'wide' },
+];
 
-if (PHOTOS.length === 0) {
-    strip.innerHTML = '<div style="padding:20px;font-family:\'Courier Prime\',monospace;color:var(--jt-mid);font-size:14px;">no photos yet — check back soon</div>';
-    hint.style.display = 'none';
-} else {
-    PHOTOS.forEach((p, i) => {
+const lb = document.getElementById('photoLightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCap = document.getElementById('lbCap');
+const lbCount = document.getElementById('lbCounter');
+let currentPhotoSet = [];
+let current = 0;
+
+function openLightbox(photos, i) {
+    currentPhotoSet = photos;
+    current = i;
+    showPhoto();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+function showPhoto() {
+    lbImg.src = currentPhotoSet[current].src;
+    lbImg.alt = currentPhotoSet[current].alt;
+    lbCap.textContent = currentPhotoSet[current].caption;
+    lbCount.textContent = `${current + 1} / ${currentPhotoSet.length}`;
+    const wrap = lbImg.closest('.lb-img-wrap');
+    wrap.classList.remove('vertical');
+    if (lbImg.complete && lbImg.naturalWidth && lbImg.naturalHeight) {
+        if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+    }
+    lbImg.onload = () => {
+        if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+        else wrap.classList.remove('vertical');
+    };
+}
+function navLightbox(dir) { current = (current + dir + currentPhotoSet.length) % currentPhotoSet.length; showPhoto(); }
+
+function initStrip(photos, stripId, wrapId) {
+    const strip = document.getElementById(stripId);
+    const wrap  = document.getElementById(wrapId);
+    const hint  = wrap.querySelector('.strip-scroll-hint');
+
+    if (photos.length === 0) {
+        strip.innerHTML = '<div style="padding:20px;font-family:\'Courier Prime\',monospace;color:var(--jt-mid);font-size:14px;">no photos yet — check back soon</div>';
+        hint.style.display = 'none';
+        return;
+    }
+
+    photos.forEach((p, i) => {
         const item = document.createElement('div');
         item.className = `photo-item ${p.aspect}`;
         item.dataset.index = i;
@@ -131,7 +178,6 @@ if (PHOTOS.length === 0) {
         strip.appendChild(item);
     });
 
-    // Drag to scroll
     let isDown = false, startX, scrollLeft;
     strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
     strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
@@ -139,40 +185,26 @@ if (PHOTOS.length === 0) {
     strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
     strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
 
-    // Lightbox
-    const lb = document.getElementById('photoLightbox');
-    const lbImg = document.getElementById('lbImg');
-    const lbCap = document.getElementById('lbCap');
-    const lbCount = document.getElementById('lbCounter');
-
-    let current = 0;
-    function open(i) { current = i; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
-    function show() {
-        lbImg.src = PHOTOS[current].src;
-        lbImg.alt = PHOTOS[current].alt;
-        lbCap.textContent = PHOTOS[current].caption;
-        lbCount.textContent = `${current + 1} / ${PHOTOS.length}`;
-    }
-    function nav(dir) { current = (current + dir + PHOTOS.length) % PHOTOS.length; show(); }
-
-    document.querySelectorAll('.photo-item').forEach(item => {
+    strip.querySelectorAll('.photo-item').forEach(item => {
         item.addEventListener('click', () => {
-            if (!strip.classList.contains('dragging')) open(parseInt(item.dataset.index));
+            if (!strip.classList.contains('dragging')) openLightbox(photos, parseInt(item.dataset.index));
         });
     });
-
-    document.getElementById('lbClose').addEventListener('click', close);
-    document.getElementById('lbPrev').addEventListener('click', () => nav(-1));
-    document.getElementById('lbNext').addEventListener('click', () => nav(1));
-    lb.addEventListener('click', e => { if (e.target === lb) close(); });
-    document.addEventListener('keydown', e => {
-        if (!lb.classList.contains('open')) return;
-        if (e.key === 'Escape')     close();
-        if (e.key === 'ArrowLeft')  nav(-1);
-        if (e.key === 'ArrowRight') nav(1);
-    });
 }
+
+initStrip(PHOTOS_YUO, 'photoStrip', 'photoStripWrap');
+initStrip(PHOTOS_DD, 'ddStrip', 'ddStripWrap');
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => navLightbox(-1));
+document.getElementById('lbNext').addEventListener('click', () => navLightbox(1));
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  navLightbox(-1);
+    if (e.key === 'ArrowRight') navLightbox(1);
+});
 </script>
 
 </body>

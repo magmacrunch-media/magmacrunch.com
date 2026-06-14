@@ -54,6 +54,10 @@
                     <img src="../../../assets/photos/ddt/ddt-llc.png" alt="DDT LLC">
                     <div class="photo-caption">ddt llc</div>
                 </div>
+                <div class="photo-item wide" data-index="1">
+                    <img src="../../../assets/photos/ddt/13315308_10206838407101887_4489703493977700708_n.jpg" alt="DDT LLC">
+                    <div class="photo-caption">ddt llc</div>
+                </div>
             </div>
             <div class="strip-scroll-hint" id="ddtScrollHint">scroll →</div>
         </div>
@@ -97,7 +101,21 @@
     var current = 0;
     function open(index) { current = index; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
     function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
-    function show() { lbImg.src = photos[current].src; lbImg.alt = photos[current].alt; lbCap.textContent = photos[current].caption; lbCount.textContent = (current + 1) + ' / ' + photos.length; }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = (current + 1) + ' / ' + photos.length;
+        var wrap = lbImg.closest('.lb-img-wrap');
+        wrap.classList.remove('vertical');
+        if (lbImg.complete && lbImg.naturalWidth && lbImg.naturalHeight) {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+        }
+        lbImg.onload = function() {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+            else wrap.classList.remove('vertical');
+        };
+    }
     function nav(dir) { current = (current + dir + photos.length) % photos.length; show(); }
     items.forEach(function(item) { item.addEventListener('click', function() { if (!strip.classList.contains('dragging')) open(parseInt(item.dataset.index)); }); });
     document.getElementById('ddtLbClose').addEventListener('click', close);

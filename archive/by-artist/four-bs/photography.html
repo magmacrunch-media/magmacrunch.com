@@ -52,24 +52,48 @@
     <div class="photo-strip-section">
         <div class="photo-strip-wrap" id="4bStripWrap">
             <div class="photo-strip" id="4bStrip">
-
-                <div class="photo-item square" data-index="0">
-                    <img src="photos/your-photo-1.jpg" alt="The Four B's">
-                    <div class="photo-caption">add caption here</div>
+                <div class="photo-item wide" data-index="0">
+                    <img src="../../../assets/photos/four_bs/the-four-bs.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">the four b's</div>
                 </div>
-                <div class="photo-item square" data-index="1">
-                    <img src="photos/your-photo-2.jpg" alt="The Four B's">
-                    <div class="photo-caption">add caption here</div>
+                <div class="photo-item wide" data-index="1">
+                    <img src="../../../assets/photos/four_bs/fourBs-linkbanner.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">link banner</div>
                 </div>
-                <div class="photo-item square" data-index="2">
-                    <img src="photos/your-photo-3.jpg" alt="The Four B's">
-                    <div class="photo-caption">add caption here</div>
+                <div class="photo-item wide" data-index="2">
+                    <img src="../../../assets/photos/four_bs/cover .jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">cover</div>
                 </div>
-
-                <!-- Add more photos above — use incrementing data-index values -->
-
+                <div class="photo-item wide" data-index="3">
+                    <img src="../../../assets/photos/four_bs/ohwowfourbs.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">oh wow four bs</div>
+                </div>
+                <div class="photo-item wide" data-index="4">
+                    <img src="../../../assets/photos/four_bs/2013-01-16 17.36.31.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">2013</div>
+                </div>
+                <div class="photo-item wide" data-index="5">
+                    <img src="../../../assets/photos/four_bs/IMG_0437.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">IMG 0437</div>
+                </div>
+                <div class="photo-item wide" data-index="6">
+                    <img src="../../../assets/photos/four_bs/IMG_0592.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">IMG 0592</div>
+                </div>
+                <div class="photo-item wide" data-index="7">
+                    <img src="../../../assets/photos/four_bs/P1000274.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">P1000274</div>
+                </div>
+                <div class="photo-item wide" data-index="8">
+                    <img src="../../../assets/photos/four_bs/P1000276.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">P1000276</div>
+                </div>
+                <div class="photo-item wide" data-index="9">
+                    <img src="../../../assets/photos/four_bs/P1000277.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">P1000277</div>
+                </div>
             </div>
-            <div class="strip-scroll-hint" id="4bScrollHint">scroll →</div>
+            <div class="strip-scroll-hint" id="4bScrollHint">← drag to scroll →</div>
         </div>
     </div>
 
@@ -142,6 +166,15 @@
         lbImg.alt = photos[current].alt;
         lbCap.textContent = photos[current].caption;
         lbCount.textContent = `${current + 1} / ${photos.length}`;
+        const wrap = lbImg.closest('.lb-img-wrap');
+        wrap.classList.remove('vertical');
+        if (lbImg.complete && lbImg.naturalWidth && lbImg.naturalHeight) {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+        }
+        lbImg.onload = () => {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+            else wrap.classList.remove('vertical');
+        };
     }
     function nav(dir) {
         current = (current + dir + photos.length) % photos.length;

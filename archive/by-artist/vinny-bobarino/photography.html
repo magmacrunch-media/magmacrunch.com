@@ -59,11 +59,78 @@
 
     <div class="divider"></div>
 
-    <!-- PHOTO STRIP -->
+    <!-- BAND -->
     <div class="photo-strip-section">
-        <div class="photo-strip-wrap" id="vbStripWrap">
-            <div class="photo-strip" id="vbStrip"></div>
-            <div class="strip-scroll-hint" id="vbScrollHint">← drag to scroll →</div>
+        <div class="section-label">BAND</div>
+        <div class="photo-strip-wrap" id="bandWrap">
+            <div class="photo-strip" id="bandStrip"></div>
+            <div class="strip-scroll-hint" id="bandHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- PRACTICES -->
+    <div class="photo-strip-section">
+        <div class="section-label">PRACTICES</div>
+        <div class="photo-strip-wrap" id="practicesWrap">
+            <div class="photo-strip" id="practicesStrip"></div>
+            <div class="strip-scroll-hint" id="practicesHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- GUITAR HERO -->
+    <div class="photo-strip-section">
+        <div class="section-label">GUITAR HERO</div>
+        <div class="photo-strip-wrap" id="ghWrap">
+            <div class="photo-strip" id="ghStrip"></div>
+            <div class="strip-scroll-hint" id="ghHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SKATEBOARDING -->
+    <div class="photo-strip-section">
+        <div class="section-label">SKATEBOARDING</div>
+        <div class="photo-strip-wrap" id="skateWrap">
+            <div class="photo-strip" id="skateStrip"></div>
+            <div class="strip-scroll-hint" id="skateHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SKY & TREES -->
+    <div class="photo-strip-section">
+        <div class="section-label">SKY &amp; TREES</div>
+        <div class="photo-strip-wrap" id="skyWrap">
+            <div class="photo-strip" id="skyStrip"></div>
+            <div class="strip-scroll-hint" id="skyHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- FROGWOOD MANOR -->
+    <div class="photo-strip-section">
+        <div class="section-label">FROGWOOD MANOR</div>
+        <div class="photo-strip-wrap" id="fwWrap">
+            <div class="photo-strip" id="fwStrip"></div>
+            <div class="strip-scroll-hint" id="fwHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- BEARS CROSSING -->
+    <div class="photo-strip-section">
+        <div class="section-label">BEARS CROSSING — JANUARY 2010</div>
+        <div class="photo-strip-wrap" id="bcWrap">
+            <div class="photo-strip" id="bcStrip"></div>
+            <div class="strip-scroll-hint" id="bcHint">← drag to scroll →</div>
         </div>
     </div>
 </main>
@@ -83,27 +150,182 @@
 
 <script src="../../../nav.js"></script>
 <script>
-const PHOTOS = [
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino.jpg', alt: 'Vinny Bobarino — sunset', caption: 'sunset', aspect: 'landscape' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-1.jpg', alt: 'Vinny Bobarino — string lights', caption: 'string lights', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-2.png', alt: 'Vinny Bobarino — autumn dusk', caption: 'autumn dusk', aspect: 'square' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-3.jpg', alt: 'Vinny Bobarino — in the car', caption: 'in the car', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-4.jpg', alt: 'Vinny Bobarino — skateboarder', caption: 'skateboarder', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-5.jpg', alt: 'Vinny Bobarino — fall road', caption: 'fall road', aspect: 'landscape' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-6.jpg', alt: 'Vinny Bobarino — guitar hero', caption: 'guitar hero', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-7.jpg', alt: 'Vinny Bobarino — sun flare', caption: 'sun flare', aspect: 'square' },
-    { src: '../../../assets/photos/vinny-bobarino/vinny-bobarino-8.jpg', alt: 'Vinny Bobarino — drum kit', caption: 'drum kit', aspect: 'wide' },
+const BAND = [
+    { src: '../../../assets/photos/vinny-bobarino/band/vinny-bobarino-7.jpg', alt: 'Vinny Bobarino — band', caption: 'vinny-bobarino-7', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/bobby\'s myspace 2.jpeg', alt: 'Vinny Bobarino — bobby\'s myspace', caption: 'bobby\'s myspace', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/bright 2.JPG', alt: 'Vinny Bobarino — bright', caption: 'bright', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/cool.jpg', alt: 'Vinny Bobarino — cool', caption: 'cool', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/eighties.jpg', alt: 'Vinny Bobarino — eighties', caption: 'eighties', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/emo.jpg', alt: 'Vinny Bobarino — emo', caption: 'emo', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/soda.JPG', alt: 'Vinny Bobarino — soda', caption: 'soda', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/truck.JPG', alt: 'Vinny Bobarino — truck', caption: 'truck', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/weird dude.JPG', alt: 'Vinny Bobarino — weird dude', caption: 'weird dude', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/what.jpg', alt: 'Vinny Bobarino — what', caption: 'what', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/why.jpg', alt: 'Vinny Bobarino — why', caption: 'why', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/band/wow.jpg', alt: 'Vinny Bobarino — wow', caption: 'wow', aspect: 'wide' },
 ];
 
-const strip = document.getElementById('vbStrip');
-const wrap  = document.getElementById('vbStripWrap');
-const hint  = document.getElementById('vbScrollHint');
+const PRACTICES = [
+    { src: '../../../assets/photos/vinny-bobarino/practices/vinny-bobarino-2.png', alt: 'Vinny Bobarino — practices', caption: 'vinny-bobarino-2', aspect: 'square' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/bass.jpg', alt: 'Vinny Bobarino — bass', caption: 'bass', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/jake guitar.JPG', alt: 'Vinny Bobarino — jake guitar', caption: 'jake guitar', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/jam 4.jpg', alt: 'Vinny Bobarino — jam 4', caption: 'jam 4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/jam 5.jpg', alt: 'Vinny Bobarino — jam 5', caption: 'jam 5', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/jon on drums.jpg', alt: 'Vinny Bobarino — jon on drums', caption: 'jon on drums', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/old practices.jpg', alt: 'Vinny Bobarino — old practices', caption: 'old practices', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/pops.jpg', alt: 'Vinny Bobarino — pops', caption: 'pops', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/practices/tuning action.JPG', alt: 'Vinny Bobarino — tuning action', caption: 'tuning action', aspect: 'wide' },
+];
 
-if (PHOTOS.length === 0) {
-    strip.innerHTML = '<div style="padding:20px;font-family:\'Courier Prime\',monospace;color:var(--vb-mid);font-size:14px;">no photos yet — check back soon</div>';
-    hint.style.display = 'none';
-} else {
-    PHOTOS.forEach((p, i) => {
+const GUITAR_HERO = [
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/vinny-bobarino-4.jpg', alt: 'Vinny Bobarino — guitar hero', caption: 'vinny-bobarino-4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/guitar hero.jpg', alt: 'Vinny Bobarino — guitar hero', caption: 'guitar hero', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/guitar hero 2.JPG', alt: 'Vinny Bobarino — guitar hero 2', caption: 'guitar hero 2', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/guitar hero 3.JPG', alt: 'Vinny Bobarino — guitar hero 3', caption: 'guitar hero 3', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/guitar hero and drinks.jpg', alt: 'Vinny Bobarino — guitar hero and drinks', caption: 'guitar hero and drinks', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/guitar hero and hot dog 1.jpg', alt: 'Vinny Bobarino — guitar hero and hot dog', caption: 'guitar hero and hot dog', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/guitar_hero/guitar hero screen.jpg', alt: 'Vinny Bobarino — guitar hero screen', caption: 'guitar hero screen', aspect: 'wide' },
+];
+
+const SKATEBOARDING = [
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/vinny-bobarino-6.jpg', alt: 'Vinny Bobarino — skateboarding', caption: 'vinny-bobarino-6', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/autumn skate 2.jpg', alt: 'Vinny Bobarino — autumn skate 2', caption: 'autumn skate 2', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/autumn skate 4.jpg', alt: 'Vinny Bobarino — autumn skate 4', caption: 'autumn skate 4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/autumn skate 5.jpg', alt: 'Vinny Bobarino — autumn skate 5', caption: 'autumn skate 5', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/autumn skate 6.jpg', alt: 'Vinny Bobarino — autumn skate 6', caption: 'autumn skate 6', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bike 1.JPG', alt: 'Vinny Bobarino — bike 1', caption: 'bike 1', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bike 2.JPG', alt: 'Vinny Bobarino — bike 2', caption: 'bike 2', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bike 3.JPG', alt: 'Vinny Bobarino — bike 3', caption: 'bike 3', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bike 4.JPG', alt: 'Vinny Bobarino — bike 4', caption: 'bike 4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bobby skate 1.JPG', alt: 'Vinny Bobarino — bobby skate 1', caption: 'bobby skate 1', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bobby skate 4.JPG', alt: 'Vinny Bobarino — bobby skate 4', caption: 'bobby skate 4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bobby skate 7.JPG', alt: 'Vinny Bobarino — bobby skate 7', caption: 'bobby skate 7', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/bobby skate 8.JPG', alt: 'Vinny Bobarino — bobby skate 8', caption: 'bobby skate 8', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/dave skate 1.JPG', alt: 'Vinny Bobarino — dave skate 1', caption: 'dave skate 1', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/dave skate 9.JPG', alt: 'Vinny Bobarino — dave skate 9', caption: 'dave skate 9', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/dave skate 10.JPG', alt: 'Vinny Bobarino — dave skate 10', caption: 'dave skate 10', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/dave with bobby\'s shoes.JPG', alt: 'Vinny Bobarino — dave with bobby\'s shoes', caption: 'dave with bobby\'s shoes', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/hill 1.jpg', alt: 'Vinny Bobarino — hill 1', caption: 'hill 1', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/hill 2.jpg', alt: 'Vinny Bobarino — hill 2', caption: 'hill 2', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/hill 3.jpg', alt: 'Vinny Bobarino — hill 3', caption: 'hill 3', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/hill 4.jpg', alt: 'Vinny Bobarino — hill 4', caption: 'hill 4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/jake\'s feet.JPG', alt: 'Vinny Bobarino — jake\'s feet', caption: 'jake\'s feet', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/jon skating.JPG', alt: 'Vinny Bobarino — jon skating', caption: 'jon skating', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/light through leaves 2.jpg', alt: 'Vinny Bobarino — light through leaves', caption: 'light through leaves', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/road 1.jpg', alt: 'Vinny Bobarino — road', caption: 'road', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/skate board.jpg', alt: 'Vinny Bobarino — skate board', caption: 'skate board', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/summer skate 2.jpg', alt: 'Vinny Bobarino — summer skate 2', caption: 'summer skate 2', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/summer skate 3.jpg', alt: 'Vinny Bobarino — summer skate 3', caption: 'summer skate 3', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/skateboarding/sweatshirt.jpg', alt: 'Vinny Bobarino — sweatshirt', caption: 'sweatshirt', aspect: 'wide' },
+];
+
+const SKY_TREES = [
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/vinny-bobarino-3.jpg', alt: 'Vinny Bobarino — sky & trees', caption: 'vinny-bobarino-3', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/vinny-bobarino-5.jpg', alt: 'Vinny Bobarino — sky & trees', caption: 'vinny-bobarino-5', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/vinny-bobarino-8.jpg', alt: 'Vinny Bobarino — sky & trees', caption: 'vinny-bobarino-8', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/sky 2.jpg', alt: 'Vinny Bobarino — sky 2', caption: 'sky 2', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/sky 3.jpg', alt: 'Vinny Bobarino — sky 3', caption: 'sky 3', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/sky 4.jpg', alt: 'Vinny Bobarino — sky 4', caption: 'sky 4', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/sky 5.jpg', alt: 'Vinny Bobarino — sky 5', caption: 'sky 5', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/sky 7.jpg', alt: 'Vinny Bobarino — sky 7', caption: 'sky 7', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/sky_trees/sky 14.jpg', alt: 'Vinny Bobarino — sky 14', caption: 'sky 14', aspect: 'wide' },
+];
+
+const FROGWOOD_MANOR = [
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/vinny-bobarino-1.jpg', alt: 'Vinny Bobarino — string lights', caption: 'string lights', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/IMG_0711.jpg', alt: 'Vinny Bobarino — IMG 0711', caption: 'IMG 0711', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/basketball hoop on fire 1.JPG', alt: 'Vinny Bobarino — basketball hoop on fire', caption: 'basketball hoop on fire', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/dave drums 1.JPG', alt: 'Vinny Bobarino — dave drums', caption: 'dave drums', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/james on truck.JPG', alt: 'Vinny Bobarino — james on truck', caption: 'james on truck', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/mullet mccoy.JPG', alt: 'Vinny Bobarino — mullet mccoy', caption: 'mullet mccoy', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/nintendo.JPG', alt: 'Vinny Bobarino — nintendo', caption: 'nintendo', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30045220_976.jpg', alt: 'Vinny Bobarino — frogwood manor', caption: 'frogwood manor', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30076859_5776.jpg', alt: 'Vinny Bobarino — frogwood manor', caption: 'frogwood manor', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30076862_8637-mitchell.jpg', alt: 'Vinny Bobarino — mitchell', caption: 'mitchell', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30076865_9839.jpg', alt: 'Vinny Bobarino — frogwood manor', caption: 'frogwood manor', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30087609_3475.jpg', alt: 'Vinny Bobarino — frogwood manor', caption: 'frogwood manor', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30087819_3175.jpg', alt: 'Vinny Bobarino — frogwood manor', caption: 'frogwood manor', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/n1327710305_30089205_5387.jpg', alt: 'Vinny Bobarino — frogwood manor', caption: 'frogwood manor', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/sick setup.JPG', alt: 'Vinny Bobarino — sick setup', caption: 'sick setup', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/sweettt.JPG', alt: 'Vinny Bobarino — sweettt', caption: 'sweettt', aspect: 'wide' },
+    { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/trophys.JPG', alt: 'Vinny Bobarino — trophys', caption: 'trophys', aspect: 'wide' },
+];
+
+const BEARS_CROSSING = [
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0042.JPG', alt: 'Bears Crossing — IMG 0042', caption: 'IMG 0042', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0069.JPG', alt: 'Bears Crossing — IMG 0069', caption: 'IMG 0069', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0070.JPG', alt: 'Bears Crossing — IMG 0070', caption: 'IMG 0070', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0087.JPG', alt: 'Bears Crossing — IMG 0087', caption: 'IMG 0087', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0093.JPG', alt: 'Bears Crossing — IMG 0093', caption: 'IMG 0093', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0120.JPG', alt: 'Bears Crossing — IMG 0120', caption: 'IMG 0120', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0127.JPG', alt: 'Bears Crossing — IMG 0127', caption: 'IMG 0127', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0128.JPG', alt: 'Bears Crossing — IMG 0128', caption: 'IMG 0128', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0129.JPG', alt: 'Bears Crossing — IMG 0129', caption: 'IMG 0129', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0130.JPG', alt: 'Bears Crossing — IMG 0130', caption: 'IMG 0130', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0131.JPG', alt: 'Bears Crossing — IMG 0131', caption: 'IMG 0131', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0132.JPG', alt: 'Bears Crossing — IMG 0132', caption: 'IMG 0132', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0133.JPG', alt: 'Bears Crossing — IMG 0133', caption: 'IMG 0133', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0151.JPG', alt: 'Bears Crossing — IMG 0151', caption: 'IMG 0151', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0152.JPG', alt: 'Bears Crossing — IMG 0152', caption: 'IMG 0152', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0153.JPG', alt: 'Bears Crossing — IMG 0153', caption: 'IMG 0153', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0154.JPG', alt: 'Bears Crossing — IMG 0154', caption: 'IMG 0154', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0155.JPG', alt: 'Bears Crossing — IMG 0155', caption: 'IMG 0155', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0156.JPG', alt: 'Bears Crossing — IMG 0156', caption: 'IMG 0156', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0157.JPG', alt: 'Bears Crossing — IMG 0157', caption: 'IMG 0157', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0158.JPG', alt: 'Bears Crossing — IMG 0158', caption: 'IMG 0158', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0160.JPG', alt: 'Bears Crossing — IMG 0160', caption: 'IMG 0160', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0161.JPG', alt: 'Bears Crossing — IMG 0161', caption: 'IMG 0161', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0162.JPG', alt: 'Bears Crossing — IMG 0162', caption: 'IMG 0162', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0163.JPG', alt: 'Bears Crossing — IMG 0163', caption: 'IMG 0163', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0164.JPG', alt: 'Bears Crossing — IMG 0164', caption: 'IMG 0164', aspect: 'wide' },
+    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/17436_1228487355472_936747_n-mitchell.jpg', alt: 'Bears Crossing — mitchell', caption: 'mitchell', aspect: 'wide' },
+];
+
+const lb = document.getElementById('vbLightbox');
+const lbImg = document.getElementById('vbLbImg');
+const lbCap = document.getElementById('vbLbCap');
+const lbCount = document.getElementById('vbLbCounter');
+let currentPhotoSet = [];
+let current = 0;
+
+function openLightbox(photos, i) {
+    currentPhotoSet = photos;
+    current = i;
+    showPhoto();
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+function showPhoto() {
+    lbImg.src = currentPhotoSet[current].src;
+    lbImg.alt = currentPhotoSet[current].alt;
+    lbCap.textContent = currentPhotoSet[current].caption;
+    lbCount.textContent = `${current + 1} / ${currentPhotoSet.length}`;
+    lbImg.className = '';
+    const wrap = lbImg.closest('.lb-img-wrap');
+    wrap.classList.remove('vertical');
+    if (lbImg.complete && lbImg.naturalWidth && lbImg.naturalHeight) {
+        if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+    }
+    lbImg.onload = () => {
+        if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+        else wrap.classList.remove('vertical');
+    };
+}
+function navLightbox(dir) { current = (current + dir + currentPhotoSet.length) % currentPhotoSet.length; showPhoto(); }
+
+function initStrip(photos, stripId, wrapId, hintId) {
+    const strip = document.getElementById(stripId);
+    const wrap  = document.getElementById(wrapId);
+    const hint  = document.getElementById(hintId);
+
+    if (photos.length === 0) {
+        strip.innerHTML = '<div style="padding:20px;font-family:\'Courier Prime\',monospace;color:var(--vb-mid);font-size:14px;">no photos yet — check back soon</div>';
+        hint.style.display = 'none';
+        return;
+    }
+
+    photos.forEach((p, i) => {
         const item = document.createElement('div');
         item.className = `photo-item ${p.aspect}`;
         item.dataset.index = i;
@@ -111,7 +333,6 @@ if (PHOTOS.length === 0) {
         strip.appendChild(item);
     });
 
-    // Drag to scroll
     let isDown = false, startX, scrollLeft;
     strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
     strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
@@ -119,40 +340,31 @@ if (PHOTOS.length === 0) {
     strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
     strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
 
-    // Lightbox
-    const lb = document.getElementById('vbLightbox');
-    const lbImg = document.getElementById('vbLbImg');
-    const lbCap = document.getElementById('vbLbCap');
-    const lbCount = document.getElementById('vbLbCounter');
-
-    let current = 0;
-    function open(i) { current = i; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
-    function show() {
-        lbImg.src = PHOTOS[current].src;
-        lbImg.alt = PHOTOS[current].alt;
-        lbCap.textContent = PHOTOS[current].caption;
-        lbCount.textContent = `${current + 1} / ${PHOTOS.length}`;
-    }
-    function nav(dir) { current = (current + dir + PHOTOS.length) % PHOTOS.length; show(); }
-
-    document.querySelectorAll('.photo-item').forEach(item => {
+    strip.querySelectorAll('.photo-item').forEach(item => {
         item.addEventListener('click', () => {
-            if (!strip.classList.contains('dragging')) open(parseInt(item.dataset.index));
+            if (!strip.classList.contains('dragging')) openLightbox(photos, parseInt(item.dataset.index));
         });
     });
-
-    document.getElementById('vbLbClose').addEventListener('click', close);
-    document.getElementById('vbLbPrev').addEventListener('click', () => nav(-1));
-    document.getElementById('vbLbNext').addEventListener('click', () => nav(1));
-    lb.addEventListener('click', e => { if (e.target === lb) close(); });
-    document.addEventListener('keydown', e => {
-        if (!lb.classList.contains('open')) return;
-        if (e.key === 'Escape')     close();
-        if (e.key === 'ArrowLeft')  nav(-1);
-        if (e.key === 'ArrowRight') nav(1);
-    });
 }
+
+initStrip(BAND, 'bandStrip', 'bandWrap', 'bandHint');
+initStrip(PRACTICES, 'practicesStrip', 'practicesWrap', 'practicesHint');
+initStrip(GUITAR_HERO, 'ghStrip', 'ghWrap', 'ghHint');
+initStrip(SKATEBOARDING, 'skateStrip', 'skateWrap', 'skateHint');
+initStrip(SKY_TREES, 'skyStrip', 'skyWrap', 'skyHint');
+initStrip(FROGWOOD_MANOR, 'fwStrip', 'fwWrap', 'fwHint');
+initStrip(BEARS_CROSSING, 'bcStrip', 'bcWrap', 'bcHint');
+
+document.getElementById('vbLbClose').addEventListener('click', closeLightbox);
+document.getElementById('vbLbPrev').addEventListener('click', () => navLightbox(-1));
+document.getElementById('vbLbNext').addEventListener('click', () => navLightbox(1));
+lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  navLightbox(-1);
+    if (e.key === 'ArrowRight') navLightbox(1);
+});
 </script>
 
 </body>
