@@ -8,19 +8,27 @@
     <link rel="stylesheet" href="../style.css">
     <style>
         /* ══ PAGE: arcade ══ */
+        body {
+            --nav-accent: #ff2e9c;
+            --nav-brand: #ff2e9c;
+            --nav-glow: rgba(255,46,156,0.4);
+            --nav-brand-glow: rgba(255,46,156,0.7);
+            background: #0a0612;
+        }
+
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #8a7fa8;
             letter-spacing: 0.1em;
             margin-top: -8px;
             margin-bottom: 16px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--softpink); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--softpink); opacity: 0.7; }
-        .breadcrumb .current { color: var(--softpink); }
+        .breadcrumb a { color: #8a7fa8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #00f0ff; }
+        .breadcrumb .sep { margin: 0 8px; color: #00f0ff; opacity: 0.7; }
+        .breadcrumb .current { color: #00f0ff; }
 
         main {
             flex: 1;
@@ -62,8 +70,8 @@
             font-family: 'Courier Prime', monospace;
             font-size: 7px;
             line-height: 1.25;
-            color: var(--softpink);
-            text-shadow: 0 0 8px rgba(255,158,181,0.5);
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0,240,255,0.5);
             white-space: pre;
             text-align: left;
             margin: 0;
@@ -77,10 +85,10 @@
         .arcade-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: var(--rose);
+            color: #ff2e9c;
             letter-spacing: 0.15em;
             margin-top: 10px;
-            text-shadow: 0 0 8px rgba(255,61,110,0.6);
+            text-shadow: 0 0 8px rgba(255,46,156,0.6);
         }
 
         /* ── COIN + INSERT COIN ── */
@@ -102,9 +110,9 @@
         .insert-coin {
             font-family: 'Press Start 2P', monospace;
             font-size: 11px;
-            color: var(--yellow);
+            color: #fff733;
             letter-spacing: 0.15em;
-            text-shadow: 0 0 12px rgba(255,224,58,0.8);
+            text-shadow: 0 0 12px rgba(255,247,51,0.8);
             animation: blink 1s step-end infinite;
         }
 
@@ -128,8 +136,8 @@
         .game-card {
             display: block;
             text-decoration: none;
-            border: 2px solid var(--dim);
-            background: var(--deep);
+            border: 2px solid #3a2d5c;
+            background: #150b29;
             padding: 0;
             position: relative;
             transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
@@ -137,18 +145,9 @@
             cursor: pointer;
         }
 
-        /* top color bar per game */
-        .game-card::before {
-            content: '';
-            display: block;
-            height: 4px;
-            background: var(--card-color, var(--rose));
-            transition: height 0.15s;
-        }
-
         .game-card:hover {
-            border-color: var(--card-color, var(--rose));
-            box-shadow: 0 0 24px var(--card-color, var(--rose)),
+            border-color: var(--card-color, #ff2e9c);
+            box-shadow: 0 0 24px var(--card-color, #ff2e9c),
                         inset 0 0 40px rgba(0,0,0,0.3);
             transform: translateY(-3px);
         }
@@ -163,7 +162,7 @@
         .card-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(8px, 1.4vw, 11px);
-            color: var(--white);
+            color: #f0f8ff;
             line-height: 1.7;
             margin-bottom: 14px;
             letter-spacing: 0.05em;
@@ -188,7 +187,7 @@
         .card-desc {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: var(--dim);
+            color: #8a7fa8;
             line-height: 1.5;
             margin-bottom: 16px;
         }
@@ -196,7 +195,7 @@
         .card-play {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--card-color, var(--rose));
+            color: var(--card-color, #ff2e9c);
             letter-spacing: 0.1em;
             display: flex;
             align-items: center;
@@ -213,20 +212,20 @@
         .credits-row {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #8a7fa8;
             letter-spacing: 0.1em;
             text-align: center;
             animation: fadeUp 0.5s 0.35s ease both;
         }
 
         .credits-row a {
-            color: var(--cyan);
+            color: #00f0ff;
             text-decoration: none;
             transition: color 0.15s, text-shadow 0.15s;
         }
         .credits-row a:hover {
-            color: var(--white);
-            text-shadow: 0 0 8px var(--cyan);
+            color: #ffffff;
+            text-shadow: 0 0 8px #00f0ff;
         }
 
         /* ── HIGH SCORE BOARD ── */
@@ -234,15 +233,15 @@
             margin-top: 36px;
             width: 100%;
             max-width: 500px;
-            border: 2px solid var(--yellow);
-            background: var(--deep);
+            border: 2px solid #fff733;
+            background: #150b29;
             box-shadow: 0 0 16px rgba(255,224,58,0.15);
             animation: fadeUp 0.5s 0.4s ease both;
         }
 
         .scoreboard-header {
-            background: var(--yellow);
-            color: var(--black);
+            background: #fff733;
+            color: #0a0612;
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
             padding: 8px 16px;
@@ -264,9 +263,9 @@
             letter-spacing: 0.08em;
         }
         .score-row:last-child { border-bottom: none; }
-        .score-rank { color: var(--rose); width: 28px; }
-        .score-name { color: var(--white); flex: 1; }
-        .score-pts  { color: var(--yellow); }
+        .score-rank { color: #ff2e9c; width: 28px; }
+        .score-name { color: #f0f8ff; flex: 1; }
+        .score-pts  { color: #fff733; }
 
         @media (max-width: 640px) {
             .insert-coin { font-size: 8px; }
@@ -282,12 +281,12 @@
         .section-header {
             font-family: 'Press Start 2P', monospace;
             font-size: 12px;
-            color: var(--yellow);
+            color: #fff733;
             letter-spacing: 0.15em;
             margin-bottom: 20px;
             padding: 12px 16px;
-            border: 2px solid var(--yellow);
-            background: var(--deep);
+            border: 2px solid #fff733;
+            background: #150b29;
             text-align: center;
             text-shadow: 0 0 12px rgba(255,224,58,0.6);
         }
@@ -295,11 +294,11 @@
         .section-header-multiplayer {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: var(--rose);
+            color: #ff2e9c;
             letter-spacing: 0.12em;
             margin: 30px 0 16px;
             padding: 8px 12px;
-            border: 1px dashed var(--rose);
+            border: 1px dashed #ff2e9c;
             background: transparent;
             text-align: center;
             opacity: 0.9;
@@ -319,8 +318,8 @@
             border: 1px solid currentColor;
             opacity: 0.7;
         }
-        .card-tag-original  { color: var(--green); }
-        .card-tag-demo      { color: var(--yellow); }
+        .card-tag-original  { color: #39ff84; }
+        .card-tag-demo      { color: #fff733; }
 
         .preview-title-screen {
             display: flex;
@@ -335,16 +334,16 @@
         .preview-title-large {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
-            color: var(--cyan);
+            color: #00f0ff;
             margin: 0 0 4px 0;
-            text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+            text-shadow: 0 0 10px rgba(0,240,255,0.5);
             line-height: 1;
         }
 
         .preview-title-subtitle {
             font-family: 'Courier Prime', monospace;
             font-size: 6px;
-            color: var(--white);
+            color: #f0f8ff;
             margin: 0;
             letter-spacing: 0.2em;
             opacity: 0.8;
@@ -376,7 +375,7 @@
         .server-text {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #8a7fa8;
             letter-spacing: 0.1em;
             text-align: center;
             line-height: 1.5;
@@ -385,11 +384,15 @@
 
         /* Occasional flicker effect on hover */
         .server-status:hover .server-text {
-            filter: drop-shadow(0 0 24px rgba(0, 245, 255, 0.4));
-            color: var(--cyan);
-            text-shadow: 0 0 8px rgba(0, 245, 255, 0.8);
+            filter: drop-shadow(0 0 24px rgba(0,240,255,0.4));
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0,240,255,0.8);
             animation: blink 0.2s step-end 3;
         }
+
+        /* ── FOOTER ── */
+        footer { border-top-color: #3a2d5c; }
+        footer span { color: #ff2e9c; }
     </style>
 </head>
 <body>
@@ -488,7 +491,7 @@
         <div class="section-header">// CLASSIC GAMES //</div>
         <div class="game-grid">
 
-            <a href="2^N/index.html" class="game-card" style="--card-color: var(--cyan)">
+            <a href="2^N/index.html" class="game-card" style="--card-color: #00f0ff">
                 <div class="card-inner">
                     <div class="card-title">2048 (actually, 2^N)</div>
                     <div class="card-canvas-wrap">
@@ -499,7 +502,7 @@
                 </div>
             </a>
 
-            <a href="solitaire/index.html" class="game-card" style="--card-color: var(--cyan)">
+            <a href="solitaire/index.html" class="game-card" style="--card-color: #00f0ff">
                 <div class="card-inner">
                     <div class="card-title">KLONDIKE<br>SOLITAIRE</div>
                     <div class="card-canvas-wrap">
@@ -510,7 +513,7 @@
                 </div>
             </a>
 
-            <a href="tetris/index.html" class="game-card" style="--card-color: var(--white)">
+            <a href="tetris/index.html" class="game-card" style="--card-color: #f0f8ff">
                 <div class="card-inner">
                     <div class="card-title">TETRIS</div>
                     <div class="card-canvas-wrap">
@@ -521,10 +524,10 @@
                 </div>
             </a>
 
-            <a href="SORRY/index.html" class="game-card" style="--card-color: var(--orange)">
+            <a href="SORRY/index.html" class="game-card" style="--card-color: #ff6f1a">
                 <div class="card-inner">
                     <div class="card-tags">
-                        <span class="card-tag" style="color: var(--rose)">MULTIPLAYER</span>
+                        <span class="card-tag" style="color: #ff1744">MULTIPLAYER</span>
                     </div>
                     <div class="card-title">SORRY!</div>
                     <div class="card-canvas-wrap">
@@ -535,8 +538,11 @@
                 </div>
             </a>
 
-            <a href="scandinavian-stud/index.html" class="game-card" style="--card-color: var(--green)">
+            <a href="scandinavian-stud/index.html" class="game-card" style="--card-color: #39ff84">
                 <div class="card-inner">
+                    <div class="card-tags">
+                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
+                    </div>
                     <div class="card-title">SÖKÖ</div>
                     <div class="card-canvas-wrap">
                         <canvas id="cSoko" width="72" height="72"></canvas>
@@ -551,13 +557,13 @@
 
     <!-- Music-Inspired Section -->
     <div class="game-section">
-        <div class="section-header" style="--card-color: var(--green); border-color: var(--green); color: var(--green); text-shadow: 0 0 12px rgba(57,255,110,0.6);">// MUSIC-INSPIRED //</div>
+        <div class="section-header" style="--card-color: #39ff84; border-color: #39ff84; color: #39ff84; text-shadow: 0 0 12px rgba(57,255,132,0.6);">// MUSIC-INSPIRED //</div>
         <div class="game-grid">
 
-            <a href="crystal-mirror-maze/index.html" class="game-card" style="--card-color: var(--purple)">
+            <a href="crystal-mirror-maze/index.html" class="game-card" style="--card-color: #b537f2">
                 <div class="card-inner">
                     <div class="card-tags">
-                        <span class="card-tag card-tag-demo">DEMO</span>
+                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
                     </div>
                     <div class="card-title">CRYSTAL<br>MIRROR MAZE</div>
                     <div class="card-canvas-wrap">
@@ -568,7 +574,7 @@
                 </div>
             </a>
 
-            <a href="george-boole/index.html" class="game-card" style="--card-color: var(--green)">
+            <a href="george-boole/index.html" class="game-card" style="--card-color: #39ff84">
                 <div class="card-inner">
                     <div class="card-title">GEORGE BOOLE<br>HAS ENTERED<br>THE CHAT</div>
                     <div class="card-canvas-wrap">
@@ -579,7 +585,7 @@
                 </div>
             </a>
 
-            <a href="moonlight-drift/index.html" class="game-card" style="--card-color: var(--rose)">
+            <a href="moonlight-drift/index.html" class="game-card" style="--card-color: #ff2e9c">
                 <div class="card-inner">
                     <div class="card-title">MOONLIGHT<br>DRIFT</div>
                     <div class="card-canvas-wrap">
@@ -590,10 +596,11 @@
                 </div>
             </a>
 
-            <a href="roderick-tron/index.html" class="game-card" style="--card-color: var(--cyan)">
+            <a href="roderick-tron/index.html" class="game-card" style="--card-color: #00f0ff">
                 <div class="card-inner">
                     <div class="card-tags">
                         <span class="card-tag card-tag-demo">NEW</span>
+                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
                     </div>
                     <div class="card-title">RODERICK<br>TRON</div>
                     <div class="card-canvas-wrap">
@@ -604,9 +611,8 @@
                 </div>
             </a>
 
-            <a href="solitaire_THLD/index.html" class="game-card" style="--card-color: var(--orange)">
+            <a href="solitaire_THLD/index.html" class="game-card" style="--card-color: #ff6f1a">
                 <div class="card-inner">
-                    <div class="card-tags"><span class="card-tag card-tag-demo">DEMO</span></div>
                     <div class="card-title">TEXAS HOLD'EM<br>LAVA DOME</div>
                     <div class="card-canvas-wrap">
                         <canvas id="cTHLD" width="72" height="72"></canvas>
@@ -1459,7 +1465,7 @@ animateCoin(document.getElementById('coinCanvas2'));
         cards.forEach((c, i) => {
             c.style.transform = i === selected ? 'translateY(-3px)' : '';
             c.style.boxShadow = i === selected
-                ? `0 0 28px var(--card-color, var(--rose))`
+                ? `0 0 28px var(--card-color, #ff2e9c)`
                 : '';
         });
     });
