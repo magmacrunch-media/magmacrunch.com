@@ -156,7 +156,7 @@ class Road {
             slopeSum += next.y - prev.y;
         }
         const avgSlope = slopeSum / CONFIG.HORIZON_LOOKAHEAD;
-        this.horizonOffset = Math.max(-120, Math.min(120, -avgSlope * CONFIG.HORIZON_TILT_SCALE * 10));
+        this.horizonOffset = Math.max(-60, Math.min(60, -avgSlope * CONFIG.HORIZON_TILT_SCALE * 10));
 
         this._recycleSegs();
         this._recycleTrees();
