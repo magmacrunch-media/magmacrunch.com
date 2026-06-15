@@ -75,6 +75,17 @@
             <div class="strip-scroll-hint">← drag to scroll →</div>
         </div>
     </div>
+
+    <div class="divider"></div>
+
+    <!-- THE EARTH IS A COLD DEAD PLACE -->
+    <div class="photo-strip-section">
+        <div class="section-label">THE EARTH IS A COLD DEAD PLACE AND I AM VERY AFRAID TO DIE</div>
+        <div class="photo-strip-wrap" id="earthStripWrap">
+            <div class="photo-strip" id="earthStrip"></div>
+            <div class="strip-scroll-hint">← drag to scroll →</div>
+        </div>
+    </div>
 </main>
 
 <footer>&copy; 2026 <span>magmacrunch media</span></footer>
@@ -123,6 +134,13 @@ const PHOTOS_DD = [
     { src: '../../../assets/photos/juanito_thompson/that_definitely_did_destroy_me/IMG_0856.jpg', alt: 'Juanito Thompson - that definitely did destroy me', caption: 'IMG 0856', aspect: 'wide' },
     { src: '../../../assets/photos/juanito_thompson/that_definitely_did_destroy_me/IMG_0857.jpg', alt: 'Juanito Thompson - that definitely did destroy me', caption: 'IMG 0857', aspect: 'wide' },
     { src: '../../../assets/photos/juanito_thompson/that_definitely_did_destroy_me/IMG_0858.jpg', alt: 'Juanito Thompson - that definitely did destroy me', caption: 'IMG 0858', aspect: 'wide' },
+];
+
+const PHOTOS_EARTH = [
+    { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3616.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3616', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3618.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3618', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3621.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3621', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3622.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3622', aspect: 'wide' },
 ];
 
 const lb = document.getElementById('photoLightbox');
@@ -192,6 +210,7 @@ function initStrip(photos, stripId, wrapId) {
 
 initStrip(PHOTOS_YUO, 'photoStrip', 'photoStripWrap');
 initStrip(PHOTOS_DD, 'ddStrip', 'ddStripWrap');
+initStrip(PHOTOS_EARTH, 'earthStrip', 'earthStripWrap');
 
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', () => navLightbox(-1));
