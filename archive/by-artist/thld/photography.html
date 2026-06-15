@@ -104,6 +104,82 @@
         </div>
     </div>
 
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="section-label">PINE</div>
+        <div class="photo-strip-wrap" id="pineStripWrap">
+            <div class="photo-strip" id="pineStrip">
+                <div class="photo-item wide" data-index="0">
+                    <img src="../../../assets/photos/THLD/pine/IMG_0721.JPG" alt="THLD — pine" loading="lazy">
+                    <div class="photo-caption">IMG 0721</div>
+                </div>
+                <div class="photo-item wide" data-index="1">
+                    <img src="../../../assets/photos/THLD/pine/IMG_0724.JPG" alt="THLD — pine" loading="lazy">
+                    <div class="photo-caption">IMG 0724</div>
+                </div>
+                <div class="photo-item wide" data-index="2">
+                    <img src="../../../assets/photos/THLD/pine/IMG_0726.JPG" alt="THLD — pine" loading="lazy">
+                    <div class="photo-caption">IMG 0726</div>
+                </div>
+            </div>
+            <div class="strip-scroll-hint">scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="section-label">SECRET CONFERENCE ROOMS</div>
+        <div class="photo-strip-wrap" id="scrStripWrap">
+            <div class="photo-strip" id="scrStrip">
+                <div class="photo-item wide" data-index="0">
+                    <img src="../../../assets/photos/secret_conference_rooms/IMG_0186.jpg" alt="Secret Conference Rooms" loading="lazy">
+                    <div class="photo-caption">IMG 0186</div>
+                </div>
+                <div class="photo-item wide" data-index="1">
+                    <img src="../../../assets/photos/secret_conference_rooms/IMG_0187.jpg" alt="Secret Conference Rooms" loading="lazy">
+                    <div class="photo-caption">IMG 0187</div>
+                </div>
+                <div class="photo-item wide" data-index="2">
+                    <img src="../../../assets/photos/secret_conference_rooms/IMG_0188.jpg" alt="Secret Conference Rooms" loading="lazy">
+                    <div class="photo-caption">IMG 0188</div>
+                </div>
+                <div class="photo-item wide" data-index="3">
+                    <img src="../../../assets/photos/secret_conference_rooms/IMG_0189.jpg" alt="Secret Conference Rooms" loading="lazy">
+                    <div class="photo-caption">IMG 0189</div>
+                </div>
+                <div class="photo-item wide" data-index="4">
+                    <img src="../../../assets/photos/secret_conference_rooms/IMG_0190.jpg" alt="Secret Conference Rooms" loading="lazy">
+                    <div class="photo-caption">IMG 0190</div>
+                </div>
+            </div>
+            <div class="strip-scroll-hint">scroll →</div>
+        </div>
+    </div>
+
+    <div class="photo-lightbox" id="scrLightbox">
+        <button class="lb-close" id="scrLbClose">[ close ]</button>
+        <div class="lb-img-wrap"><img id="scrLbImg" src="" alt=""></div>
+        <div class="lb-cap" id="scrLbCap"></div>
+        <div class="lb-nav">
+            <button class="lb-btn" id="scrLbPrev">← prev</button>
+            <span class="lb-counter" id="scrLbCounter"></span>
+            <button class="lb-btn" id="scrLbNext">next →</button>
+        </div>
+    </div>
+
+    <div class="photo-lightbox" id="pineLightbox">
+        <button class="lb-close" id="pineLbClose">[ close ]</button>
+        <div class="lb-img-wrap"><img id="pineLbImg" src="" alt=""></div>
+        <div class="lb-cap" id="pineLbCap"></div>
+        <div class="lb-nav">
+            <button class="lb-btn" id="pineLbPrev">← prev</button>
+            <span class="lb-counter" id="pineLbCounter"></span>
+            <button class="lb-btn" id="pineLbNext">next →</button>
+        </div>
+    </div>
+
     <div class="photo-lightbox" id="thldLightbox">
         <button class="lb-close" id="thldLbClose">[ close ]</button>
         <div class="lb-img-wrap"><img id="thldLbImg" src="" alt=""></div>
@@ -187,6 +263,162 @@
     document.getElementById('thldLbClose').addEventListener('click', close);
     document.getElementById('thldLbPrev').addEventListener('click', () => nav(-1));
     document.getElementById('thldLbNext').addEventListener('click', () => nav(1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   nav(-1);
+        if (e.key === 'ArrowRight')  nav(1);
+    });
+})();
+</script>
+<script>
+(function() {
+    const strip = document.getElementById('pineStrip');
+    const wrap  = document.getElementById('pineStripWrap');
+    let isDown = false, startX, scrollLeft;
+
+    strip.addEventListener('mousedown', e => {
+        isDown = true; strip.classList.add('dragging');
+        startX = e.pageX - strip.offsetLeft;
+        scrollLeft = strip.scrollLeft;
+    });
+    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  e => {
+        if (!isDown) return;
+        e.preventDefault();
+        strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2;
+    });
+    strip.addEventListener('scroll', () => {
+        if (strip.scrollLeft > 30) wrap.classList.add('scrolled');
+    }, { passive: true });
+})();
+(function() {
+    const items   = document.querySelectorAll('#pineStrip .photo-item');
+    const lb      = document.getElementById('pineLightbox');
+    const lbImg   = document.getElementById('pineLbImg');
+    const lbCap   = document.getElementById('pineLbCap');
+    const lbCount = document.getElementById('pineLbCounter');
+    const strip   = document.getElementById('pineStrip');
+
+    const photos = Array.from(items).map(item => ({
+        src:     item.querySelector('img').src,
+        alt:     item.querySelector('img').alt,
+        caption: item.querySelector('.photo-caption').textContent.trim()
+    }));
+
+    let current = 0;
+
+    function open(index) {
+        current = index;
+        show();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = `${current + 1} / ${photos.length}`;
+    }
+    function nav(dir) {
+        current = (current + dir + photos.length) % photos.length;
+        show();
+    }
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            if (!strip.classList.contains('dragging'))
+                open(parseInt(item.dataset.index));
+        });
+    });
+
+    document.getElementById('pineLbClose').addEventListener('click', close);
+    document.getElementById('pineLbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('pineLbNext').addEventListener('click', () => nav(1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   nav(-1);
+        if (e.key === 'ArrowRight')  nav(1);
+    });
+})();
+</script>
+<script>
+(function() {
+    const strip = document.getElementById('scrStrip');
+    const wrap  = document.getElementById('scrStripWrap');
+    let isDown = false, startX, scrollLeft;
+
+    strip.addEventListener('mousedown', e => {
+        isDown = true; strip.classList.add('dragging');
+        startX = e.pageX - strip.offsetLeft;
+        scrollLeft = strip.scrollLeft;
+    });
+    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  e => {
+        if (!isDown) return;
+        e.preventDefault();
+        strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2;
+    });
+    strip.addEventListener('scroll', () => {
+        if (strip.scrollLeft > 30) wrap.classList.add('scrolled');
+    }, { passive: true });
+})();
+(function() {
+    const items   = document.querySelectorAll('#scrStrip .photo-item');
+    const lb      = document.getElementById('scrLightbox');
+    const lbImg   = document.getElementById('scrLbImg');
+    const lbCap   = document.getElementById('scrLbCap');
+    const lbCount = document.getElementById('scrLbCounter');
+    const strip   = document.getElementById('scrStrip');
+
+    const photos = Array.from(items).map(item => ({
+        src:     item.querySelector('img').src,
+        alt:     item.querySelector('img').alt,
+        caption: item.querySelector('.photo-caption').textContent.trim()
+    }));
+
+    let current = 0;
+
+    function open(index) {
+        current = index;
+        show();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = `${current + 1} / ${photos.length}`;
+    }
+    function nav(dir) {
+        current = (current + dir + photos.length) % photos.length;
+        show();
+    }
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            if (!strip.classList.contains('dragging'))
+                open(parseInt(item.dataset.index));
+        });
+    });
+
+    document.getElementById('scrLbClose').addEventListener('click', close);
+    document.getElementById('scrLbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('scrLbNext').addEventListener('click', () => nav(1));
     lb.addEventListener('click', e => { if (e.target === lb) close(); });
     document.addEventListener('keydown', e => {
         if (!lb.classList.contains('open')) return;
