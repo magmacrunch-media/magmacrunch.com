@@ -29,20 +29,20 @@
         :root {
             --nav-accent: #FF00CC;
             --nav-glow: rgba(255,0,204,0.4);
-            --nav-brand: #00FFEE;
-            --nav-brand-glow: rgba(0,255,238,0.7);
+            --nav-brand: #FFD700;
+            --nav-brand-glow: transparent;
         }
 
         /* ── PAGE OVERRIDES ── */
         body.mtv {
-            --black: #0A0A0F;
-            --deep: #0A0A0F;
+            --black: #1A0533;
+            --deep: #1A0533;
             --white: #C8C0B8;
             --rose: #FF00CC;
             --yellow: #FFD700;
             --cyan: #00FFEE;
             --dim: #4A4A4A;
-            background: #0A0A0F;
+            background: #1A0533;
         }
 
         /* ── TICKER OVERRIDES ── */
@@ -124,6 +124,17 @@
             color: var(--mtv-pink);
             letter-spacing: 0.1em;
             animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        .ascii-tv {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--mtv-violet);
+            line-height: 1.3;
+            margin: 16px 0;
+            text-shadow: 0 0 8px rgba(123,104,238,0.4);
+            animation: fadeUp 0.5s 0.03s ease both;
+            white-space: pre;
         }
 
         /* ── VIDEO LIST ── */
@@ -390,6 +401,16 @@
 
     <div class="page-header">
         <h1 class="page-title">// music videos //</h1>
+        <pre class="ascii-tv">
+ _______________     
+|,----------.  |\    
+||           |=| |   
+||          || | |   
+||       . _o| | | __
+|`-----------' |/ / /
+ ~~~~~~~~~~~~~~~ / / 
+                 ~~  
+        </pre>
         <p class="page-subtitle">click to play ✦ newest first</p>
     </div>
 
