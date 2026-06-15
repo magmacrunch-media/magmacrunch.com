@@ -257,7 +257,7 @@ footer span { color: var(--rose); }
         top: 48px; left: 0; right: 0;
         background: var(--black);
         flex-direction: column;
-        border-bottom: 2px solid var(--rose);
+        border-bottom: 2px solid var(--nav-accent, var(--rose));
         overflow-y: auto;
         max-height: calc(100vh - 48px);
     }
@@ -276,7 +276,7 @@ footer span { color: var(--rose); }
         border: none;
         border-top: 1px solid #1e1e2e;
         box-shadow: none;
-        background: #0e0e16;
+        background: var(--deep);
         display: none;
         flex-direction: column;
     }

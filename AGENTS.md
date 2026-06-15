@@ -27,6 +27,51 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 - **Canvas pixel art**: Use `image-rendering: pixelated` and draw at low resolution (64x64), scale up with CSS
 - **Config via `window.*_CONFIG`**: Archive pages define config objects inline, templates read them
 
+## Theming nav colors
+
+When overriding nav colors (border, brand text, glow), set CSS variables on `:root`, NOT on a body class. The `body.class` approach does not reliably override the fallback values in style.css.
+
+```css
+/* CORRECT — matches guestbook pattern */
+:root {
+    --nav-accent: #FF1F5B;
+    --nav-glow: rgba(255,31,91,0.4);
+    --nav-brand: #00C2FF;
+    --nav-brand-glow: rgba(0,194,255,0.7);
+}
+
+/* WRONG — does not work */
+body.my-theme {
+    --nav-accent: #FF1F5B;
+    /* ... */
+}
+```
+
+Use `body.my-theme` only for non-nav overrides (background, text colors, etc.).
+
+## Page-specific color themes
+
+Visual pages use a two-part theming pattern:
+
+1. **`:root`** — nav overrides (accent, glow, brand, brand-glow) + theme palette CSS variables
+2. **`body.theme-name`** — page overrides (background, text, dim, rose, yellow, etc.)
+
+Existing themes:
+- `visual/index.html` — Pop Art (`:root` + `body.pop-art`)
+- `visual/music-videos.html` — MTV (`:root` + `body.mtv`)
+- `visual/collage.html` — Editorial Magazine (`:root` + `body.editorial`)
+
+Dropdown menus can be styled with colored left borders per item:
+```css
+body.theme .dropdown a { border-left: 3px solid transparent; }
+body.theme .dropdown a:nth-child(1) { border-left-color: #color1; }
+body.theme .dropdown a:nth-child(2) { border-left-color: #color2; }
+/* etc. */
+body.theme .dropdown a:hover { background: #accent; }
+```
+
+Planned: color theme overhauls for `music/` and `home/` pages.
+
 ## Color palette (defined in style.css)
 
 ```

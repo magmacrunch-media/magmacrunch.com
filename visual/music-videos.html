@@ -9,10 +9,91 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../assets/archive.css">
     <style>
-        /* breadcrumb override for cyan theme */
-        .breadcrumb a:hover { color: var(--cyan); }
-        .breadcrumb .sep { color: var(--cyan); opacity: 0.7; }
-        .breadcrumb .current { color: var(--cyan); }
+        /* ── MTV PALETTE ── */
+        :root {
+            --mtv-black:       #0A0A0F;
+            --mtv-deep-purple: #1A0533;
+            --mtv-midnight:    #0D1F3C;
+            --mtv-oxide-red:   #3D0000;
+            --mtv-static:      #4A4A4A;
+            --mtv-beige:       #C8C0B8;
+            --mtv-magenta:     #FF00CC;
+            --mtv-teal:        #00FFEE;
+            --mtv-phosphor:    #AAFF00;
+            --mtv-pink:        #FF6EC7;
+            --mtv-violet:      #7B68EE;
+            --mtv-gold:        #FFD700;
+        }
+
+        /* ── NAV OVERRIDES (must use :root) ── */
+        :root {
+            --nav-accent: #FF00CC;
+            --nav-glow: rgba(255,0,204,0.4);
+            --nav-brand: #00FFEE;
+            --nav-brand-glow: rgba(0,255,238,0.7);
+        }
+
+        /* ── PAGE OVERRIDES ── */
+        body.mtv {
+            --black: #0A0A0F;
+            --deep: #0A0A0F;
+            --white: #C8C0B8;
+            --rose: #FF00CC;
+            --yellow: #FFD700;
+            --cyan: #00FFEE;
+            --dim: #4A4A4A;
+            background: #0A0A0F;
+        }
+
+        /* ── TICKER OVERRIDES ── */
+        body.mtv .ticker-wrap {
+            border-top-color: var(--mtv-gold);
+            border-bottom-color: var(--mtv-gold);
+            box-shadow: 0 0 12px rgba(255,215,0,0.2);
+        }
+        body.mtv .ticker {
+            color: var(--mtv-gold);
+        }
+        body.mtv .ticker .sep {
+            color: var(--mtv-magenta);
+        }
+
+        /* ── FOOTER OVERRIDES ── */
+        body.mtv footer {
+            border-top-color: #1A0533;
+        }
+        body.mtv footer span {
+            color: var(--mtv-magenta);
+        }
+
+        /* ── LINK OVERRIDES ── */
+        body.mtv a {
+            color: var(--mtv-magenta);
+        }
+
+        /* ── DROPDOWN OVERRIDES ── */
+        body.mtv .dropdown {
+            border-color: var(--mtv-magenta);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7), 0 0 12px rgba(255,0,204,0.3);
+        }
+        body.mtv .dropdown a {
+            border-left: 3px solid transparent;
+            border-bottom-color: #1A0533;
+        }
+        body.mtv .dropdown a:nth-child(1) { border-left-color: var(--mtv-teal); }
+        body.mtv .dropdown a:nth-child(2) { border-left-color: var(--mtv-violet); }
+        body.mtv .dropdown a:nth-child(3) { border-left-color: var(--mtv-phosphor); }
+        body.mtv .dropdown a:nth-child(4) { border-left-color: var(--mtv-pink); }
+        body.mtv .dropdown a:nth-child(5) { border-left-color: var(--mtv-gold); }
+        body.mtv .dropdown a:hover {
+            color: var(--mtv-black);
+            background: var(--mtv-teal);
+        }
+
+        /* breadcrumb override for magenta theme */
+        .breadcrumb a:hover { color: var(--mtv-magenta); }
+        .breadcrumb .sep { color: var(--mtv-magenta); opacity: 0.7; }
+        .breadcrumb .current { color: var(--mtv-magenta); }
         /* ── PAGE-SPECIFIC: music videos ── */
         main {
             flex: 1;
@@ -30,8 +111,8 @@
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 18px;
-            color: var(--cyan);
-            text-shadow: 0 0 16px rgba(0,245,255,0.6);
+            color: var(--mtv-teal);
+            text-shadow: 0 0 16px rgba(0,255,238,0.6);
             margin-bottom: 10px;
             letter-spacing: 0.1em;
             animation: fadeUp 0.5s ease both;
@@ -40,7 +121,7 @@
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--rose);
+            color: var(--mtv-pink);
             letter-spacing: 0.1em;
             animation: fadeUp 0.5s 0.05s ease both;
         }
@@ -58,10 +139,10 @@
             display: flex;
             align-items: center;
             overflow: hidden;
-            border-top: 1px solid #1a1a2a;
+            border-top: 1px solid #1A0533;
             cursor: pointer;
         }
-        .video-entry:last-child { border-bottom: 1px solid #1a1a2a; }
+        .video-entry:last-child { border-bottom: 1px solid #1A0533; }
 
         /* Background thumbnail */
         .video-bg {
@@ -126,12 +207,12 @@
             width: 100%;
             aspect-ratio: 16/9;
             background: #000;
-            border: 2px solid #2a2a3a;
+            border: 2px solid #1A0533;
             overflow: hidden;
             transition: border-color 0.2s;
         }
-        .video-entry:hover .video-thumb { border-color: var(--cyan); }
-        .video-entry.active .video-thumb { border-color: var(--rose); }
+        .video-entry:hover .video-thumb { border-color: var(--mtv-teal); }
+        .video-entry.active .video-thumb { border-color: var(--mtv-magenta); }
 
         .video-thumb img {
             width: 100%;
@@ -156,7 +237,7 @@
         .play-icon {
             width: 52px;
             height: 52px;
-            border: 2px solid var(--white);
+            border: 2px solid var(--mtv-beige);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -170,19 +251,19 @@
             height: 0;
             border-top: 10px solid transparent;
             border-bottom: 10px solid transparent;
-            border-left: 18px solid var(--white);
+            border-left: 18px solid var(--mtv-beige);
             margin-left: 4px;
             transition: border-left-color 0.2s;
         }
         .video-entry:hover .play-icon {
-            border-color: var(--cyan);
-            background: rgba(0,245,255,0.15);
+            border-color: var(--mtv-teal);
+            background: #0D1F3C;
             transform: scale(1.08);
         }
-        .video-entry:hover .play-icon::after { border-left-color: var(--cyan); }
+        .video-entry:hover .play-icon::after { border-left-color: var(--mtv-teal); }
         .video-entry.active .play-icon {
-            border-color: var(--rose);
-            background: rgba(255,61,110,0.15);
+            border-color: var(--mtv-magenta);
+            background: #3D0000;
         }
 
         /* Actual iframe (hidden until click) */
@@ -190,7 +271,7 @@
             display: none;
             width: 100%;
             aspect-ratio: 16/9;
-            border: 2px solid var(--rose);
+            border: 2px solid var(--mtv-magenta);
         }
         .video-iframe-wrap iframe {
             width: 100%;
@@ -210,7 +291,7 @@
         .video-year {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--cyan);
+            color: var(--mtv-violet);
             letter-spacing: 0.15em;
             margin-bottom: 12px;
             opacity: 0.8;
@@ -219,7 +300,7 @@
         .video-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(9px, 1.6vw, 14px);
-            color: var(--white);
+            color: var(--mtv-beige);
             letter-spacing: 0.06em;
             line-height: 1.7;
             margin-bottom: 16px;
@@ -228,26 +309,26 @@
         .video-yt-link {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--dim);
+            color: var(--mtv-static);
             text-decoration: none;
-            border: 1px solid #2a2a3a;
+            border: 1px solid #1A0533;
             padding: 4px 10px;
             letter-spacing: 0.08em;
             transition: color 0.15s, border-color 0.15s;
             display: inline-block;
         }
         .video-yt-link:hover {
-            color: var(--rose);
-            border-color: var(--rose);
+            color: var(--mtv-magenta);
+            border-color: var(--mtv-magenta);
         }
 
         /* duplicate warning */
         .dupe-warn {
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
-            color: var(--orange);
+            color: var(--mtv-phosphor);
             margin-top: 10px;
-            border: 1px solid var(--orange);
+            border: 1px solid var(--mtv-phosphor);
             padding: 4px 10px;
             display: inline-block;
         }
@@ -258,7 +339,7 @@
         }
     </style>
 </head>
-<body>
+<body class="mtv">
 
 <nav>
     <a href="../index.html" class="nav-brand">magmacrunch.com</a>
