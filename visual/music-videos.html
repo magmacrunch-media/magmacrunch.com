@@ -59,6 +59,7 @@
         body.mtv .ticker-wrap {
             border-top-color: var(--mtv-warm-gray);
             border-bottom-color: var(--mtv-warm-gray);
+            background: transparent;
             box-shadow: none;
         }
         body.mtv .ticker {
@@ -186,22 +187,24 @@
             inset: 0;
             background-size: cover;
             background-position: center;
+            filter: brightness(1.15);
             transition: filter 0.4s ease;
             z-index: 0;
         }
         .video-entry:hover .video-bg,
         .video-entry.active .video-bg {
+            filter: brightness(1.25);
         }
 
-        /* Dark overlay for readability */
+        /* Subtle overlay for text readability */
         .video-entry::after {
             content: '';
             position: absolute;
             inset: 0;
             background: linear-gradient(
                 to right,
-                rgba(240,238,255,0.55) 0%,
-                rgba(240,238,255,0.1) 60%,
+                rgba(0,0,0,0.35) 0%,
+                rgba(0,0,0,0.1) 60%,
                 transparent 100%
             );
             z-index: 1;
@@ -263,10 +266,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(240,238,255,0.3);
+            background: rgba(0,0,0,0.3);
             transition: background 0.2s;
         }
-        .video-entry:hover .play-btn { background: rgba(240,238,255,0.45); }
+        .video-entry:hover .play-btn { background: rgba(0,0,0,0.45); }
 
         .play-icon {
             width: 52px;

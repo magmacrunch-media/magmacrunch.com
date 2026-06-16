@@ -36,8 +36,8 @@
         :root {
             --nav-accent: #FF2D9B;
             --nav-glow: rgba(255,45,155,0.4);
-            --nav-brand: #0057FF;
-            --nav-brand-glow: rgba(0,87,255,0.7);
+            --nav-brand: #F0E8D8;
+            --nav-brand-glow: rgba(240,232,216,0.7);
         }
 
         /* ── PAGE OVERRIDES ── */
@@ -50,7 +50,17 @@
             --orange: #FF6B00;
             --dim: #C8C0B8;
             --cyan: #00D4FF;
-            background: #F0E8D8;
+            background-color: #F0E8D8;
+            background-image:
+                radial-gradient(circle, rgba(255,45,155,0.18) 1.5px, transparent 1.5px),
+                radial-gradient(circle, rgba(0,87,255,0.15) 1px, transparent 1px);
+            background-size: 24px 24px, 32px 32px;
+            background-position: 0 0, 12px 12px;
+            animation: memphis-drift 20s linear infinite;
+        }
+        @keyframes memphis-drift {
+            from { background-position: 0 0, 12px 12px; }
+            to   { background-position: 24px 24px, 44px 44px; }
         }
 
         /* ── FOOTER OVERRIDES ── */
@@ -84,6 +94,28 @@
         .breadcrumb a:hover { color: #0057FF; }
         .breadcrumb .sep { color: #0057FF; opacity: 0.7; }
         .breadcrumb .current { color: #0057FF; }
+
+        /* ── NAV OVERRIDES (memphis light theme) ── */
+        body.memphis nav {
+            background: linear-gradient(90deg, #FF3B30 0%, #FFD600 25%, #0057FF 50%, #00C853 75%, #FF2D9B 100%);
+        }
+        body.memphis nav::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.08;
+            background-image: radial-gradient(circle, #FF2D9B 1px, transparent 1px);
+            background-size: 16px 16px;
+            pointer-events: none;
+        }
+        body.memphis .nav-links a {
+            color: #F0E8D8;
+            border-left-color: rgba(255,255,255,0.2);
+        }
+        body.memphis .nav-links > li > a:hover {
+            color: #1A1A1A;
+            background: #FF2D9B;
+        }
 
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
         
