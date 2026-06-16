@@ -243,6 +243,8 @@
             text-shadow: 0 0 12px rgba(255,45,155,0.5);
         }
 
+        /* Float ASCII art for text wrapping */
+
         /* ── LOGO ── */
         .logo-wrap {
             margin-bottom: 24px;
@@ -264,45 +266,6 @@
             color: #666670;
             text-align: center;
             margin-top: 8px;
-        }
-
-        /* ── CLASSIFIED ADS (distribution block) ── */
-        .distro-block {
-            border: 1px solid #FF2D9B;
-            background: #0A0A0F;
-            padding: 16px;
-            margin-bottom: 24px;
-            width: 100%;
-            box-shadow: 0 0 12px rgba(255,45,155,0.1);
-        }
-        .distro-label {
-            font-family: 'Playfair Display', serif;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #FF2D9B;
-            border-bottom: 1px solid #222230;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-            text-shadow: 0 0 6px rgba(255,45,155,0.3);
-        }
-        .distro-block p {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: #F5F0E0;
-            line-height: 1.7;
-            margin-bottom: 10px;
-        }
-        .distro-block p:last-child { margin-bottom: 0; }
-        .distro-block a {
-            color: #00D4FF;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(0,212,255,0.3);
-        }
-        .distro-block a:hover {
-            color: #FF2D9B;
-            border-bottom-color: #FF2D9B;
         }
 
         /* ── IN THIS ISSUE (footer links) ── */
@@ -490,32 +453,6 @@ ___          ___  __       ___ .  __           __     __   ___ ..
         <!-- LEFT COLUMN: ASCII art + body text -->
         <div class="newspaper-main">
 
-            <!-- ASCII: "founded by JAM, CPR, JHM" -->
-            <div class="ascii-block color-burntorange">
-                <pre>
-  __                       _          _   _                
- / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
-| |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
-|  _| (_) | |_| | | | | (_| |  __/ (_| | | |_) | |_| |     
-|_|  \___/ \__,_|_| |_|\__,_|\___|\__,_| |_.__/ \__, |     
-     _       _          __  __       ____       |___/      
-    | | __ _| | _____  |  \/  | ___ / ___|___  _   _       
- _  | |/ _` | |/ / _ \ | |\/| |/ __| |   / _ \| | | |      
-| |_| | (_| |   <  __/ | |  | | (__| |__| (_) | |_| |_     
- \___/ \__,_|_|\_\___| |_|  |_|\___|\____\___/ \__, ( )    
-  ____   ____    ____        _   _          _  |___/|/     
- / ___| |  _ \  |  _ \ _   _| |_| | ___  __| | __ _  ___   
-| |     | |_) | | |_) | | | | __| |/ _ \/ _` |/ _` |/ _ \  
-| |___ _|  __/  |  _ <| |_| | |_| |  __/ (_| | (_| |  __/_ 
- \____(_)_| (_) |_| \_\\__,_|\__|_|\___|\__,_|\__, |\___( )
-  ___         _               __  __       ___|___/     |/ 
- ( _ )       | | ___  _ __   |  \/  | ___ / ___|___  _   _ 
- / _ \/\  _  | |/ _ \| '_ \  | |\/| |/ __| |   / _ \| | | |
-| (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
- \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
-                                                     |___/ </pre>
-            </div>
-
             <!-- ASCII: "with producers & musicians" -->
             <div class="ascii-block color-cyan">
                 <pre>
@@ -567,12 +504,40 @@ ___          ___  __       ___ .  __           __     __   ___ ..
                     many of which draw inspiration from avant-garde short films. We are primarily digital, but hold a special appreciation for physical or otherwise obscure media formats. 
                     In July 2025, we officially started our <a href="../music/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
 
+                <!-- ASCII: "founded by JAM, CPR, JHM" -->
+                <div class="ascii-block color-burntorange">
+                    <pre>
+  __                       _          _   _                
+ / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
+| |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
+|  _| (_) | |_| | | | | (_| |  __/ (_| | | |_) | |_| |     
+|_|  \___/ \__,_|_| |_|\__,_|\___|\__,_| |_.__/ \__, |     
+     _       _          __  __       ____       |___/      
+    | | __ _| | _____  |  \/  | ___ / ___|___  _   _       
+ _  | |/ _` | |/ / _ \ | |\/| |/ __| |   / _ \| | | |      
+| |_| | (_| |   <  __/ | |  | | (__| |__| (_) | |_| |_     
+ \___/ \__,_|_|\_\___| |_|  |_|\___|\____\___/ \__, ( )    
+  ____   ____    ____        _   _          _  |___/|/     
+ / ___| |  _ \  |  _ \ _   _| |_| | ___  __| | __ _  ___   
+| |     | |_) | | |_) | | | | __| |/ _ \/ _` |/ _` |/ _ \  
+| |___ _|  __/  |  _ <| |_| | |_| |  __/ (_| | (_| |  __/_ 
+ \____(_)_| (_) |_| \_\\__,_|\__|_|\___|\__,_|\__, |\___( )
+  ___         _               __  __       ___|___/     |/ 
+ ( _ )       | | ___  _ __   |  \/  | ___ / ___|___  _   _ 
+ / _ \/\  _  | |/ _ \| '_ \  | |\/| |/ __| |   / _ \| | | |
+| (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
+ \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
+                                                     |___/ </pre>
+                </div>
+
                 <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
+
+                <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024, with our catalog also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>. magmacrunch music is registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>. See our <a href="../music/distributed-music.html">distributed music</a> page for more details.</p>
             </div>
 
         </div>
 
-        <!-- RIGHT COLUMN: Logo, Distribution, Links -->
+        <!-- RIGHT COLUMN: Logo, Links -->
         <div class="newspaper-sidebar">
 
             <!-- Logo -->
@@ -581,15 +546,8 @@ ___          ___  __       ___ .  __           __     __   ___ ..
                 <div class="photo-caption">magmacrunch media logo</div>
             </div>
 
-            <!-- CLASSIFIED ADS -->
-            <div class="distro-block">
-                <div class="distro-label">Classified Ads</div>
-                <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024; see our <a href="../music/distributed-music.html">distributed music</a> page. Prior to that, magmacrunch started mainly on <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener">Bandcamp</a> and <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener">YouTube</a>. Our catalog is also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>.</p>
-                <p>magmacrunch music is in the process of registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>; these can be viewed in the <a href="https://www.ascap.com/repertory#/ace/works/publisher/8244968/MAGMACRUNCH%20MUSIC" target="_blank" rel="noopener">ACE repertory</a>.</p>
-            </div>
-
-            <!-- IN THIS ISSUE -->
-            <div class="about-links-label">In This Issue</div>
+            <!-- QUICK LINKS -->
+            <div class="about-links-label">Quick Links</div>
             <div class="about-links">
                 <a href="../archive/by-label/magmacrunch-media/">magmacrunch media</a>
                 <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a>
