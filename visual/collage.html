@@ -8,79 +8,82 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../assets/archive.css">
     <style>
-        /* ── EDITORIAL MAGAZINE PALETTE ── */
+        /* ── MEMPHIS DESIGN PALETTE ── */
         :root {
-            --ed-newsprint:   #F5EFE0;
-            --ed-linen:       #E8DDD0;
-            --ed-warmgray:    #D6CBC0;
-            --ed-espresso:    #2C2825;
-            --ed-bone:        #F9F6F0;
-            --ed-pressblack:  #1A1A1A;
-            --ed-red:         #D94F3D;
-            --ed-gold:        #E8A820;
-            --ed-blue:        #2E7D9E;
-            --ed-green:       #4A9C6F;
-            --ed-rose:        #C4607A;
-            --ed-violet:      #7B5EA7;
-            --ed-peach:       #F2C4A0;
-            --ed-sage:        #A8C5B8;
-            --ed-butter:      #E8D5A3;
-            --ed-lavender:    #C9B8D8;
-            --ed-sky:         #B8D4E8;
-            --ed-putty:       #D4C5B0;
+            --mem-black:           #1A1A1A;
+            --mem-white:           #F5F5F0;
+            --mem-cream:           #F0E8D8;
+            --mem-red:             #FF3B30;
+            --mem-yellow:          #FFD600;
+            --mem-blue:            #0057FF;
+            --mem-green:           #00C853;
+            --mem-hot-pink:        #FF2D9B;
+            --mem-orange:          #FF6B00;
+            --mem-cyan:            #00D4FF;
+            --mem-violet:          #7B2FFF;
+            --mem-coral:           #FF5A5A;
+            --mem-mint:            #A8FFD8;
+            --mem-sky:             #A8D8FF;
+            --mem-blush:           #FFB8D8;
+            --mem-lemon:           #FFF176;
+            --mem-lilac:           #D8B8FF;
+            --mem-peach:           #FFD0A8;
+            --mem-aqua:            #B8FFF0;
+            --mem-squiggle-gray:   #C8C0B8;
         }
 
         /* ── NAV OVERRIDES (must use :root) ── */
         :root {
-            --nav-accent: #D94F3D;
-            --nav-glow: rgba(217,79,61,0.4);
-            --nav-brand: #E8A820;
-            --nav-brand-glow: rgba(232,168,32,0.7);
+            --nav-accent: #FF2D9B;
+            --nav-glow: rgba(255,45,155,0.4);
+            --nav-brand: #0057FF;
+            --nav-brand-glow: rgba(0,87,255,0.7);
         }
 
         /* ── PAGE OVERRIDES ── */
-        body.editorial {
+        body.memphis {
             --black: #1A1A1A;
-            --deep: #1A1A1A;
-            --white: #F9F6F0;
-            --rose: #D94F3D;
-            --yellow: #E8A820;
-            --orange: #D94F3D;
-            --dim: #D6CBC0;
-            background: #1A1A1A;
+            --deep: #F5F5F0;
+            --white: #1A1A1A;
+            --rose: #FF2D9B;
+            --yellow: #FFD600;
+            --orange: #FF6B00;
+            --dim: #C8C0B8;
+            --cyan: #00D4FF;
+            background: #F0E8D8;
         }
 
         /* ── FOOTER OVERRIDES ── */
-        body.editorial footer {
-            border-top-color: #2C2825;
+        body.memphis footer {
+            border-top-color: #1A1A1A;
         }
-        body.editorial footer span {
-            color: #D94F3D;
+        body.memphis footer span {
+            color: #FF2D9B;
         }
 
         /* ── DROPDOWN OVERRIDES ── */
-        body.editorial .dropdown {
-            border-color: #D94F3D;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.7), 0 0 12px rgba(217,79,61,0.3);
+        body.memphis .dropdown {
+            border-color: #FF2D9B;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 12px rgba(255,45,155,0.3);
         }
-        body.editorial .dropdown a {
+        body.memphis .dropdown a {
             border-left: 3px solid transparent;
-            border-bottom-color: #2C2825;
+            border-bottom-color: #E8DDD0;
         }
-        body.editorial .dropdown a:nth-child(1) { border-left-color: #2E7D9E; }
-        body.editorial .dropdown a:nth-child(2) { border-left-color: #7B5EA7; }
-        body.editorial .dropdown a:nth-child(3) { border-left-color: #4A9C6F; }
-        body.editorial .dropdown a:nth-child(4) { border-left-color: #C4607A; }
-        body.editorial .dropdown a:nth-child(5) { border-left-color: #E8A820; }
-        body.editorial .dropdown a:hover {
-            color: #1A1A1A;
-            background: #2E7D9E;
+        body.memphis .dropdown a:nth-child(1) { border-left-color: #FF3B30; }
+        body.memphis .dropdown a:nth-child(2) { border-left-color: #0057FF; }
+        body.memphis .dropdown a:nth-child(3) { border-left-color: #00C853; }
+        body.memphis .dropdown a:nth-child(4) { border-left-color: #FFD600; }
+        body.memphis .dropdown a:nth-child(5) { border-left-color: #FF6B00; }
+        body.memphis .dropdown a:hover {
+            color: #F0E8D8;
+            background: #FF2D9B;
         }
 
-        /* breadcrumb override for blue theme */
-        .breadcrumb a:hover { color: var(--ed-blue); }
-        .breadcrumb .sep { color: var(--ed-blue); opacity: 0.7; }
-        .breadcrumb .current { color: var(--ed-blue); }
+        /* ── BREADCRUMB ── */
+        .breadcrumb a:hover { color: #0057FF; }
+        .breadcrumb .sep { color: #0057FF; opacity: 0.7; }
+        .breadcrumb .current { color: #0057FF; }
 
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
         
@@ -94,8 +97,8 @@
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(13px, 2.8vw, 22px);
-            color: var(--ed-gold);
-            text-shadow: 0 0 20px rgba(232,168,32,0.6);
+            color: #FF3B30;
+            text-shadow: 0 0 20px rgba(255,59,48,0.5);
             margin-bottom: 10px;
             letter-spacing: 0.08em;
         }
@@ -103,7 +106,7 @@
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--ed-rose);
+            color: #0057FF;
             letter-spacing: 0.1em;
             animation: fadeUp 0.5s 0.05s ease both;
         }
@@ -113,7 +116,7 @@
             width: 100%;
             max-width: 960px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--ed-red), var(--ed-gold), var(--ed-blue), transparent);
+            background: linear-gradient(90deg, transparent, #FF3B30, #FFD600, #0057FF, #00C853, #FF2D9B, transparent);
             margin: 0 20px 48px;
             opacity: 0.35;
             animation: fadeUp 0.5s 0.08s ease both;
@@ -139,14 +142,14 @@
         .series-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(9px, 1.6vw, 13px);
-            color: var(--ed-bone);
+            color: #1A1A1A;
             letter-spacing: 0.08em;
         }
 
         .series-meta {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--ed-warmgray);
+            color: #C8C0B8;
             letter-spacing: 0.12em;
             opacity: 0.7;
         }
@@ -154,7 +157,7 @@
         .series-desc {
             font-family: 'Courier Prime', monospace;
             font-size: 13px;
-            color: var(--ed-putty);
+            color: #1A1A1A;
             line-height: 1.7;
             letter-spacing: 0.02em;
             margin-bottom: 24px;
@@ -178,15 +181,23 @@
         .collage-item {
             position: relative;
             overflow: hidden;
-            border: 1px solid var(--ed-espresso);
+            border: 2px solid #C8C0B8;
             cursor: pointer;
-            background: var(--ed-espresso);
+            background: #E8DDD0;
             transition: border-color 0.2s;
             aspect-ratio: 4/3;
         }
 
+        /* Rotating Memphis border colors */
+        .collage-item:nth-child(6n+1) { border-color: #FF2D9B; }
+        .collage-item:nth-child(6n+2) { border-color: #FFD600; }
+        .collage-item:nth-child(6n+3) { border-color: #0057FF; }
+        .collage-item:nth-child(6n+4) { border-color: #00C853; }
+        .collage-item:nth-child(6n+5) { border-color: #FF6B00; }
+        .collage-item:nth-child(6n+6) { border-color: #00D4FF; }
+
         .collage-item:hover {
-            border-color: var(--ed-red);
+            border-color: #FF3B30;
         }
 
         .collage-item img {
@@ -195,7 +206,7 @@
             object-fit: cover;
             display: block;
             transition: transform 0.45s ease, filter 0.3s ease;
-            filter: saturate(0.88) brightness(0.92);
+            filter: saturate(1.1) brightness(1.0);
         }
 
         .collage-item:hover img {
@@ -208,10 +219,10 @@
             position: absolute;
             bottom: 0; left: 0; right: 0;
             padding: 28px 14px 12px;
-            background: linear-gradient(to top, rgba(44,40,37,0.92) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(26,26,26,0.92) 0%, transparent 100%);
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--ed-peach);
+            color: #F0E8D8;
             letter-spacing: 0.12em;
             opacity: 0;
             transition: opacity 0.25s ease;
@@ -229,8 +240,8 @@
             left: 10px;
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--ed-gold);
-            background: rgba(44,40,37,0.75);
+            color: #1A1A1A;
+            background: #FFD600;
             padding: 3px 7px;
             letter-spacing: 0.1em;
             opacity: 0;
@@ -269,13 +280,13 @@
             max-height: 82vh;
             object-fit: contain;
             display: block;
-            border: 1px solid var(--ed-espresso);
+            border: 2px solid #FF2D9B;
         }
 
         .lightbox-caption {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--ed-gold);
+            color: #FFD600;
             letter-spacing: 0.12em;
             margin-top: 14px;
             opacity: 0.7;
@@ -293,22 +304,22 @@
         .lb-btn {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: var(--dim);
+            color: #0057FF;
             background: none;
-            border: 1px solid var(--ed-espresso);
+            border: 1px solid #1A1A1A;
             padding: 8px 16px;
             cursor: pointer;
             letter-spacing: 0.1em;
             transition: color 0.15s, border-color 0.15s;
         }
-        .lb-btn:hover { color: var(--ed-red); border-color: var(--ed-red); }
+        .lb-btn:hover { color: #FF3B30; border-color: #FF3B30; }
 
         .lb-close {
             position: fixed;
             top: 18px; right: 22px;
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: var(--dim);
+            color: #C8C0B8;
             background: none;
             border: none;
             cursor: pointer;
@@ -316,12 +327,12 @@
             padding: 8px;
             transition: color 0.15s;
         }
-        .lb-close:hover { color: var(--ed-rose); }
+        .lb-close:hover { color: #FF2D9B; }
 
         .lb-counter {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--ed-warmgray);
+            color: #C8C0B8;
             letter-spacing: 0.12em;
             opacity: 0.55;
             min-width: 60px;
@@ -337,14 +348,14 @@
         }
 
         .coming-soon-inner {
-            border: 1px dashed var(--ed-warmgray);
+            border: 2px dashed #FF2D9B;
             padding: 32px;
             text-align: center;
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #1A1A1A;
             letter-spacing: 0.1em;
-            background: rgba(168,197,184,0.05);
+            background: rgba(255,45,155,0.05);
             line-height: 2.4;
         }
 
@@ -353,7 +364,7 @@
         }
     </style>
 </head>
-<body class="editorial">
+<body class="memphis">
 
 <nav>
     <a href="../index.html" class="nav-brand">magmacrunch.com</a>
@@ -456,7 +467,7 @@
     <div class="coming-soon-block">
         <div class="coming-soon-inner">
             [ more series coming soon ]<br>
-            <span style="color:var(--ed-green);opacity:0.5;">✦</span>
+            <span style="color:#00C853;opacity:0.5;">✦</span>
         </div>
     </div>
 
