@@ -8,37 +8,116 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../assets/archive.css">
     <style>
-        /* breadcrumb override for mintteal theme */
-        .breadcrumb a:hover { color: var(--mintteal); }
-        .breadcrumb .sep { color: var(--mintteal); opacity: 0.7; }
-        .breadcrumb .current { color: var(--mintteal); }
+        /* ── CITY POP PALETTE ── */
+        :root {
+            --cp-night-sky:      #0D0D2B;
+            --cp-deep-navy:      #141438;
+            --cp-twilight:       #1E1E4A;
+            --cp-smoked-glass:   #2A2A5A;
+            --cp-soft-white:     #F0EEF8;
+            --cp-sakura-pink:    #FF8FB0;
+            --cp-coral-sunrise:  #FF6E6E;
+            --cp-peach-glow:     #FFB48A;
+            --cp-butter-neon:    #FFE97A;
+            --cp-mint-flash:     #7AFFD4;
+            --cp-aqua-haze:      #5EEEF0;
+            --cp-periwinkle:     #A0A8FF;
+            --cp-lavender-mist:  #C8AEFF;
+            --cp-blush-lilac:    #E8B0FF;
+            --cp-horizon-pink:   #FF4FA0;
+            --cp-electric-teal:  #00E5CC;
+            --cp-neon-periwinkle:#6B6BFF;
+            --cp-chrome-silver:  #C0C8E0;
+            --cp-rose-gold:      #E8A0B0;
+            --cp-cassette-gold:  #E8C86A;
+        }
+
+        /* ── NAV OVERRIDES (must use :root) ── */
+        :root {
+            --nav-accent: #FF4FA0;
+            --nav-glow: rgba(255,79,160,0.4);
+            --nav-brand: #C0C8E0;
+            --nav-brand-glow: rgba(192,200,224,0.7);
+        }
+
+        /* ── PAGE OVERRIDES ── */
+        body.city-pop {
+            --black: #0D0D2B;
+            --deep: #141438;
+            --white: #F0EEF8;
+            --rose: #FF8FB0;
+            --yellow: #E8C86A;
+            --cyan: #5EEEF0;
+            --dim: #C0C8E0;
+            --orange: #FF6E6E;
+            --mintteal: #00E5CC;
+            background: #0D0D2B;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(107,107,255,0.18) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,79,160,0.15) 0%, transparent 40%),
+                radial-gradient(ellipse at 50% 80%, rgba(0,229,204,0.12) 0%, transparent 45%),
+                linear-gradient(180deg, #0D0D2B 0%, #141438 40%, #1E1E4A 100%);
+            background-attachment: fixed;
+        }
+
+        /* ── FOOTER OVERRIDES ── */
+        body.city-pop footer {
+            border-top-color: #2A2A5A;
+        }
+        body.city-pop footer span {
+            color: #FF8FB0;
+        }
+
+        /* ── DROPDOWN OVERRIDES ── */
+        body.city-pop .dropdown {
+            border-color: #FF4FA0;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7), 0 0 12px rgba(255,79,160,0.3);
+        }
+        body.city-pop .dropdown a {
+            border-left: 3px solid transparent;
+            border-bottom-color: #1E1E4A;
+        }
+        body.city-pop .dropdown a:nth-child(1) { border-left-color: #FF8FB0; }
+        body.city-pop .dropdown a:nth-child(2) { border-left-color: #00E5CC; }
+        body.city-pop .dropdown a:nth-child(3) { border-left-color: #C8AEFF; }
+        body.city-pop .dropdown a:nth-child(4) { border-left-color: #FFB48A; }
+        body.city-pop .dropdown a:nth-child(5) { border-left-color: #6B6BFF; }
+        body.city-pop .dropdown a:hover {
+            color: #0D0D2B;
+            background: #00E5CC;
+        }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb a:hover { color: #00E5CC; }
+        .breadcrumb .sep { color: #00E5CC; opacity: 0.7; }
+        .breadcrumb .current { color: #00E5CC; }
 
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
-        .page-title { font-family:'Press Start 2P',monospace; font-size:clamp(13px,2.8vw,22px); color:var(--mintteal); text-shadow:0 0 20px rgba(0,229,179,0.4); margin-bottom:10px; letter-spacing:0.08em; }
-        .page-subtitle { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--dim); letter-spacing:0.12em; }
+        .page-title { font-family:'Press Start 2P',monospace; font-size:clamp(13px,2.8vw,22px); color:#FF8FB0; text-shadow:0 0 20px rgba(255,143,176,0.5); margin-bottom:10px; letter-spacing:0.08em; }
+        .page-subtitle { font-family:'Press Start 2P',monospace; font-size:7px; color:#FFB48A; letter-spacing:0.12em; }
 
         .ascii-camera {
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
-            color: var(--mintteal);
+            color: #FF8FB0;
             line-height: 1.2;
             margin: 16px 0;
-            text-shadow: 0 0 8px rgba(0,229,179,0.4);
+            text-shadow: 0 0 8px rgba(255,143,176,0.4);
             animation: fadeUp 0.5s 0.03s ease both;
             white-space: pre;
         }
 
-        .section-divider { width:100%; max-width:900px; height:1px; background:linear-gradient(90deg,transparent,var(--mintteal),var(--orange),var(--mintteal),transparent); margin:0 20px 56px; opacity:0.3; animation:fadeUp 0.5s 0.05s ease both; }
+        .section-divider { width:100%; max-width:900px; height:1px; background:linear-gradient(90deg,transparent,#FF8FB0,#5EEEF0,#C8AEFF,transparent); margin:0 20px 56px; opacity:0.3; animation:fadeUp 0.5s 0.05s ease both; }
 
         /* ── SERIES BLOCK ── */
         .series { width:100%; max-width:960px; padding:0 20px; margin-bottom:72px; animation:fadeUp 0.5s ease both; }
         #series-summer12 { animation: none !important; opacity: 1 !important; }
 
         .series-header { display:flex; align-items:baseline; gap:20px; margin-bottom:6px; }
-        .series-title { font-family:'Press Start 2P',monospace; font-size:clamp(9px,1.6vw,13px); color:var(--white); letter-spacing:0.08em; }
-        .series-meta { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dim); letter-spacing:0.12em; opacity:0.7; }
+        .series-title { font-family:'Press Start 2P',monospace; font-size:clamp(9px,1.6vw,13px); color:#F0EEF8; letter-spacing:0.08em; }
+        .series-meta { font-family:'Press Start 2P',monospace; font-size:6px; color:#A0A8FF; letter-spacing:0.12em; opacity:0.7; }
 
-        .series-desc { font-family:'Courier Prime',monospace; font-size:13px; color:var(--dim); line-height:1.7; letter-spacing:0.02em; margin-bottom:20px; max-width:600px; opacity:0.8; }
+        .series-desc { font-family:'Courier Prime',monospace; font-size:13px; color:#C0C8E0; line-height:1.7; letter-spacing:0.02em; margin-bottom:20px; max-width:600px; opacity:0.8; }
 
         /* ── HORIZONTAL SCROLL STRIP ── */
         .photo-strip-wrap {
@@ -53,14 +132,14 @@
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
-            scrollbar-color: var(--mintteal) #0a0a14;
+            scrollbar-color: #00E5CC #141438;
             padding-bottom: 10px;
             cursor: grab;
         }
         .photo-strip:active { cursor: grabbing; }
         .photo-strip::-webkit-scrollbar { height: 3px; }
-        .photo-strip::-webkit-scrollbar-track { background: #0a0a14; }
-        .photo-strip::-webkit-scrollbar-thumb { background: var(--mintteal); opacity: 0.5; }
+        .photo-strip::-webkit-scrollbar-track { background: #141438; }
+        .photo-strip::-webkit-scrollbar-thumb { background: #00E5CC; opacity: 0.5; }
 
         .photo-item {
             flex-shrink: 0;
@@ -68,11 +147,11 @@
             height: clamp(220px, 38vw, 420px);
             scroll-snap-align: start;
             overflow: hidden;
-            border: 1px solid #1a1a2a;
+            border: 1px solid #2A2A5A;
             transition: border-color 0.2s;
             cursor: pointer;
         }
-        .photo-item:hover { border-color: var(--mintteal); }
+        .photo-item:hover { border-color: #00E5CC; }
 
         /* vary widths based on aspect ratio of each image */
         .photo-item.landscape { aspect-ratio: 4/3; }
@@ -86,7 +165,7 @@
             object-position: center;
             display: block;
             transition: transform 0.4s ease, filter 0.3s ease;
-            filter: saturate(0.85) brightness(0.92);
+            filter: saturate(1.1) brightness(1.0);
         }
         .photo-item:hover img {
             transform: scale(1.03);
@@ -98,10 +177,10 @@
             position: absolute;
             bottom: 0; left: 0; right: 0;
             padding: 24px 12px 10px;
-            background: linear-gradient(to top, rgba(8,8,18,0.85) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(13,13,43,0.85) 0%, transparent 100%);
             font-family: 'Press Start 2P', monospace;
             font-size: 5px;
-            color: var(--dim);
+            color: #F0EEF8;
             letter-spacing: 0.1em;
             opacity: 0;
             transition: opacity 0.25s ease;
@@ -112,7 +191,7 @@
         .strip-scroll-hint {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--dim);
+            color: #C0C8E0;
             letter-spacing: 0.15em;
             margin-top: 10px;
             opacity: 0.4;
@@ -127,7 +206,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(4, 4, 12, 0.96);
+            background: rgba(13,13,43,0.97);
             z-index: 1000;
             align-items: center;
             justify-content: center;
@@ -148,7 +227,7 @@
             max-height: 82vh;
             object-fit: contain;
             display: block;
-            border: 1px solid #1a1a2a;
+            border: 1px solid #2A2A5A;
         }
 
         .lightbox-nav {
@@ -160,19 +239,19 @@
         .lb-btn {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: var(--dim);
+            color: #A0A8FF;
             background: none;
-            border: 1px solid #1a1a2a;
+            border: 1px solid #2A2A5A;
             padding: 8px 16px;
             cursor: pointer;
             letter-spacing: 0.1em;
             transition: color 0.15s, border-color 0.15s;
         }
-        .lb-btn:hover { color: var(--mintteal); border-color: var(--mintteal); }
+        .lb-btn:hover { color: #00E5CC; border-color: #00E5CC; }
         .lb-close {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #C0C8E0;
             background: none;
             border: none;
             cursor: pointer;
@@ -180,11 +259,11 @@
             transition: color 0.15s;
             padding: 8px;
         }
-        .lb-close:hover { color: var(--mintteal); }
+        .lb-close:hover { color: #FF8FB0; }
         .lb-counter {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--dim);
+            color: #C0C8E0;
             letter-spacing: 0.12em;
             opacity: 0.6;
             min-width: 60px;
@@ -193,7 +272,7 @@
         .lb-caption {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--dim);
+            color: #FFB48A;
             letter-spacing: 0.1em;
             margin-top: 10px;
             opacity: 0.5;
@@ -206,7 +285,7 @@
         }
     </style>
 </head>
-<body>
+<body class="city-pop">
 <nav>
     <a href="../index.html" class="nav-brand">magmacrunch.com</a>
     <ul class="nav-links" id="navLinks">
