@@ -9,6 +9,52 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="bbc-shared.css">
     <link rel="stylesheet" href="bbc-about.css">
+    <style>
+        /* ── NEWSPAPER BIO STYLES ── */
+        .bio-section {
+            max-width: 720px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+        .bio-section p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--bbc-cream);
+            text-align: justify;
+            margin-bottom: 24px;
+        }
+        .bio-section p:last-child { margin-bottom: 0; }
+        .bio-section a {
+            color: var(--bbc-sky);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--bbc-dark);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .bio-section a:hover {
+            color: var(--bbc-sky-light);
+            border-bottom-color: var(--bbc-sky-light);
+        }
+
+        /* Drop cap on first paragraph only */
+        .bio-section p:first-of-type::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: var(--bbc-apricot);
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(240,192,160,0.4);
+        }
+
+        /* Divider glow */
+        main > .divider {
+            background: linear-gradient(90deg, transparent, var(--bbc-apricot), transparent);
+            box-shadow: 0 0 8px rgba(240,192,160,0.3);
+        }
+    </style>
 </head>
 <body class="bbc-page bbc-about-page">
 
