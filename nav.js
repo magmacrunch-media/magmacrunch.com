@@ -518,6 +518,19 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             swapCSS(doc, url);
             document.body.className = doc.body.className;
 
+            // Update favicon
+            const newFavicon = doc.querySelector('link[rel="icon"]');
+            if (newFavicon) {
+                let favicon = document.querySelector('link[rel="icon"]');
+                if (!favicon) {
+                    favicon = document.createElement('link');
+                    favicon.rel = 'icon';
+                    document.head.appendChild(favicon);
+                }
+                favicon.href = newFavicon.href;
+                if (newFavicon.type) favicon.type = newFavicon.type;
+            }
+
             const newMain = doc.querySelector('main');
             if (newMain) mainEl.innerHTML = newMain.innerHTML;
 
