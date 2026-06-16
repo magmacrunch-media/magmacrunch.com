@@ -148,6 +148,43 @@
             position: relative;
             margin-bottom: 36px;
         }
+
+        /* ── DISTRIBUTION BLOCK ── */
+        .distro-block {
+            width: min(680px, 90vw);
+            border: 1px solid #2a2a3a;
+            border-left: 3px solid var(--burntorange);
+            background: var(--deep);
+            padding: 18px 22px;
+            margin-bottom: 36px;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+        .distro-block p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.75;
+            margin-bottom: 10px;
+        }
+        .distro-block p:last-child { margin-bottom: 0; }
+        .distro-block a {
+            color: var(--burntorange);
+            text-decoration: underline;
+            text-decoration-color: rgba(255,107,53,0.35);
+            transition: color 0.15s, text-decoration-color 0.15s;
+        }
+        .distro-block a:hover {
+            color: var(--yellow);
+            text-decoration-color: var(--yellow);
+        }
+        .distro-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--cyan);
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
         .logo-wrap img {
             width: min(180px, 40vw);
             height: auto;
@@ -234,7 +271,6 @@
                 <a href="../music/jukebox/index.html">jukebox</a>
                 <a href="../music/distributed-music.html">distributed music</a>
                 <a href="../music/floppy-disk/index.html">floppy disk</a>
-                <a href="../music/catalog.html">full catalog</a>
             </div>
         </li>
         <li>
@@ -405,8 +441,17 @@ ___          ___  __       ___ .  __           __     __   ___ ..
         <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
     </div>
 
-    <!-- Footer links -->
+    <!-- DISTRIBUTION & REGISTRATION -->
+    <div class="distro-block">
+        <div class="distro-label">// distribution & registration //</div>
+        <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024; see our <a href="../music/distributed-music.html">distributed music</a> page. Prior to that, magmacrunch started mainly on <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener">Bandcamp</a> and <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener">YouTube</a>. Our catalog is also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>.</p>
+        <p>magmacrunch music is in the process of registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>; these can be viewed in the <a href="https://www.ascap.com/repertory#/ace/works/publisher/8244968/MAGMACRUNCH%20MUSIC" target="_blank" rel="noopener">ACE repertory</a>.</p>
+    </div>
+
+    <!-- BY-LABEL LINKS -->
     <div class="about-links">
+        <a href="../archive/by-label/magmacrunch-media/" class="nav-card c-yellow">magmacrunch media</a>
+        <a href="../archive/by-label/magmacrunch-music/" class="nav-card c-orange">magmacrunch music</a>
         <a href="../home/links/all-links.html" class="nav-card c-yellow">see all links</a>
         <a href="../home/guestbook.html"       class="nav-card c-nearwhite">sign the guestbook</a>
         <a href="../archive/more/contributors.html" class="nav-card c-purple">contributors</a>

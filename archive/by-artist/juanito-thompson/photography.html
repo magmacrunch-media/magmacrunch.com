@@ -28,7 +28,6 @@
     <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
     <ul class="nav-links" id="navLinks">
         <li><a href="../../../index.html">home</a><div class="dropdown"><a href="../../../home/about.html">about</a><a href="../../../home/links/all-links.html">all links</a></div></li>
-        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/floppy-disk/index.html">floppy disk</a><a href="../../../music/catalog.html">full catalog</a></div></li>
         <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
                                 <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../by-place/index.html">by place</a><a href="../../by-label/index.html">by label</a><a href="../../by-contributor/index.html">by contributor</a></div></li>
         <li><a href="../../../arcade/index.html">arcade</a></li>
@@ -86,6 +85,28 @@
             <div class="strip-scroll-hint">← drag to scroll →</div>
         </div>
     </div>
+
+    <div class="divider"></div>
+
+    <!-- REVERSE TELESCOPE REVERSED -->
+    <div class="photo-strip-section portrait">
+        <div class="section-label">REVERSE TELESCOPE REVERSED</div>
+        <div class="photo-strip-wrap" id="rtStripWrap">
+            <div class="photo-strip" id="rtStrip"></div>
+            <div class="strip-scroll-hint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- RECORDING OF OSMOSIS REVERSED -->
+    <div class="photo-strip-section">
+        <div class="section-label">RECORDING OF REVERSE OSMOSIS REVERSED</div>
+        <div style="max-width:500px;">
+            <img src="../../../assets/photos/juanito_thompson/IMG_0826.JPG" alt="Juanito Thompson — recording of osmosis reversed" style="width:100%;display:block;border:1px solid var(--jt-borders);">
+            <div style="font-family:'Press Start 2P',monospace;font-size:6px;color:var(--jt-mid);letter-spacing:0.1em;margin-top:12px;opacity:1.0;">frogwood manor · august 2013</div>
+        </div>
+    </div>
 </main>
 
 <footer>&copy; 2026 <span>magmacrunch media</span></footer>
@@ -141,6 +162,12 @@ const PHOTOS_EARTH = [
     { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3618.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3618', aspect: 'wide' },
     { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3621.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3621', aspect: 'wide' },
     { src: '../../../assets/photos/juanito_thompson/the_earth_is_a_cold_dead_place/IMG_3622.JPG', alt: 'Juanito Thompson - the earth is a cold dead place', caption: 'IMG 3622', aspect: 'wide' },
+];
+
+const PHOTOS_RT = [
+    { src: '../../../assets/photos/juanito_thompson/reverse_telescope_reversed/IMG_1217.jpg', alt: 'Juanito Thompson - reverse telescope reversed', caption: 'IMG 1217', aspect: 'portrait' },
+    { src: '../../../assets/photos/juanito_thompson/reverse_telescope_reversed/IMG_1219.JPG', alt: 'Juanito Thompson - reverse telescope reversed', caption: 'IMG 1219', aspect: 'portrait' },
+    { src: '../../../assets/photos/juanito_thompson/reverse_telescope_reversed/IMG_1220.JPG', alt: 'Juanito Thompson - reverse telescope reversed', caption: 'IMG 1220', aspect: 'portrait' },
 ];
 
 const lb = document.getElementById('photoLightbox');
@@ -211,6 +238,7 @@ function initStrip(photos, stripId, wrapId) {
 initStrip(PHOTOS_YUO, 'photoStrip', 'photoStripWrap');
 initStrip(PHOTOS_DD, 'ddStrip', 'ddStripWrap');
 initStrip(PHOTOS_EARTH, 'earthStrip', 'earthStripWrap');
+initStrip(PHOTOS_RT, 'rtStrip', 'rtStripWrap');
 
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', () => navLightbox(-1));

@@ -75,6 +75,11 @@ body.jt-page.jt-photography-page .photo-item:hover { border-color: var(--jt-ambe
 body.jt-page.jt-photography-page .photo-item.landscape { aspect-ratio: 16/9; }
 body.jt-page.jt-photography-page .photo-item.square    { aspect-ratio: 1/1; }
 body.jt-page.jt-photography-page .photo-item.wide      { aspect-ratio: 4/3; }
+body.jt-page.jt-photography-page .photo-item.portrait  { aspect-ratio: 3/4; }
+
+body.jt-page.jt-photography-page .photo-strip-section.portrait .photo-item {
+    height: clamp(300px, 50vw, 500px);
+}
 
 body.jt-page.jt-photography-page .photo-item img {
     width: 100%; height: 100%;
