@@ -6,250 +6,371 @@
     <title>about — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
     <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-        /* ── PAGE-SPECIFIC: about ── */
+        /* ── NEON NOIR PALETTE ── */
+        :root {
+            --nn-black: #0A0A0F;
+            --nn-cream: #F5F0E0;
+            --nn-white: #F0F0F0;
+            --nn-magenta: #FF2D9B;
+            --nn-cyan: #00D4FF;
+            --nn-purple: #1A1028;
+            --nn-gray: #888890;
+            --nn-dim: #666670;
+            --nn-dark-border: #222230;
+        }
+
+        body {
+            background-color: #0A0A0F;
+            background-image: repeating-linear-gradient(
+                0deg, transparent, transparent 2px,
+                rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+            );
+            color: #F5F0E0;
+        }
+
+        /* Nav overrides */
+        nav {
+            background: #0A0A0F !important;
+            border-bottom-color: #FF2D9B !important;
+            box-shadow: 0 0 18px rgba(255,45,155,0.3) !important;
+        }
+        .nav-brand {
+            color: #F5F0E0 !important;
+            text-shadow: none !important;
+            font-family: 'Press Start 2P', monospace !important;
+            font-size: 9px !important;
+            letter-spacing: 0.1em;
+        }
+        .nav-links a {
+            color: #F5F0E0 !important;
+            border-left-color: #222230 !important;
+        }
+        .nav-links > li > a:hover {
+            color: #0A0A0F !important;
+            background: #FF2D9B !important;
+        }
+        .hamburger span { background: #F5F0E0 !important; }
+
+        /* ── BREADCRUMB ── */
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--dim);
+            color: #888890;
             letter-spacing: 0.1em;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--yellow); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--yellow); opacity: 0.7; }
-        .breadcrumb .current { color: var(--yellow); }
+        .breadcrumb a { color: #888890; text-decoration: none; }
+        .breadcrumb a:hover { color: #FF2D9B; }
+        .breadcrumb .sep { margin: 0 8px; color: #444450; }
+        .breadcrumb .current { color: #F5F0E0; font-weight: 700; }
 
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 80px 20px 60px;
+            padding: 72px 20px 60px;
             gap: 0;
         }
 
-        /* Page title */
-        .page-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-            color: var(--burntorange);
-            text-shadow: 0 0 16px rgba(255,107,53,0.7);
-            margin-bottom: 32px;
-            letter-spacing: 0.1em;
-            animation: fadeUp 0.5s ease both;
-        }
-
-        /* ASCII sections */
-        .ascii-block {
+        /* ── DATELINE ── */
+        .dateline {
             width: 100%;
-            max-width: 1200px;
-            margin-bottom: 12px;
-            overflow-x: auto;
-            animation: fadeUp 0.5s ease both;
-            /* center block without touching internal pre alignment */
+            max-width: 960px;
             display: flex;
             justify-content: center;
-        }
-        .ascii-block pre {
-            font-family: 'Courier Prime', monospace;
-            font-size: clamp(2.5px, 0.52vw, 5.5px);
-            line-height: 1.2;
-            white-space: pre;
-            display: inline-block;
-            text-align: left; /* preserve internal character spacing */
-            flex-shrink: 0;
-        }
-        .ascii-block.color-burntorange pre {
-            color: var(--burntorange);
-            text-shadow: 0 0 6px rgba(255,107,53,0.4);
-        }
-        .ascii-block.color-cyan pre {
-            color: var(--cyan);
-            text-shadow: 0 0 6px rgba(0,245,255,0.4);
-        }
-        .ascii-block.color-yellow pre {
-            color: var(--yellow);
-            text-shadow: 0 0 6px rgba(255,224,58,0.4);
-        }
-
-        /* Divider */
-        .divider {
-            width: min(500px, 90vw);
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--burntorange), var(--yellow), var(--burntorange), transparent);
-            margin: 28px 0;
-            animation: fadeUp 0.5s ease both;
-        }
-
-        /* Photo */
-        .photo-wrap {
-            margin-bottom: 32px;
-            animation: fadeUp 0.5s 0.1s ease both;
-            position: relative;
-        }
-        .photo-wrap img {
-            width: min(480px, 90vw);
-            height: auto;
-            display: block;
-            border: 2px solid var(--burntorange);
-            box-shadow:
-                0 0 0 2px var(--black),
-                0 0 0 4px var(--yellow),
-                0 0 24px rgba(255,107,53,0.4);
-        }
-        .photo-caption {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--dim);
-            text-align: center;
-            margin-top: 10px;
-            letter-spacing: 0.08em;
-        }
-
-        /* Body text */
-        .about-text {
-            width: min(680px, 90vw);
-            animation: fadeUp 0.5s 0.2s ease both;
-            margin-bottom: 36px;
-        }
-        .about-text p {
-            font-family: 'Courier Prime', monospace;
-            font-size: 15px;
-            line-height: 1.75;
-            color: var(--white);
-            margin-bottom: 20px;
-        }
-        .about-text p:last-child { margin-bottom: 0; }
-        .about-text a {
-            color: var(--burntorange);
-            text-decoration: underline;
-            text-decoration-color: rgba(255,107,53,0.4);
-            transition: color 0.15s, text-decoration-color 0.15s;
-        }
-        .about-text a:hover {
-            color: var(--yellow);
-            text-decoration-color: var(--yellow);
-        }
-
-        /* Footer links */
-        .about-links {
-            display: flex;
+            align-items: center;
+            gap: 16px;
             flex-wrap: wrap;
-            gap: 12px;
-            justify-content: center;
-            animation: fadeUp 0.5s 0.3s ease both;
+            padding: 10px 0;
+            border-top: 2px solid #FF2D9B;
+            border-bottom: 1px solid #222230;
+            margin-bottom: 24px;
+            font-family: 'Playfair Display', serif;
+            font-size: 9px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #888890;
+            box-shadow: 0 2px 12px rgba(255,45,155,0.15);
         }
+        .dateline-sep { color: #FF2D9B; }
 
-        /* ── LOGO ON ABOUT ── */
-        .logo-wrap {
-            animation: fadeUp 0.5s ease both;
-            position: relative;
-            margin-bottom: 36px;
-        }
-
-        /* ── DISTRIBUTION BLOCK ── */
-        .distro-block {
-            width: min(680px, 90vw);
-            border: 1px solid #2a2a3a;
-            border-left: 3px solid var(--burntorange);
-            background: var(--deep);
-            padding: 18px 22px;
-            margin-bottom: 36px;
-            animation: fadeUp 0.5s 0.25s ease both;
-        }
-        .distro-block p {
-            font-family: 'Courier Prime', monospace;
+        /* ── PAGE TITLE ── */
+        .page-title {
+            font-family: 'Playfair Display', serif;
             font-size: 14px;
-            color: var(--white);
-            line-height: 1.75;
-            margin-bottom: 10px;
+            font-weight: 400;
+            font-style: italic;
+            color: #888890;
+            letter-spacing: 0.2em;
+            margin-bottom: 8px;
+            text-transform: lowercase;
         }
-        .distro-block p:last-child { margin-bottom: 0; }
-        .distro-block a {
-            color: var(--burntorange);
-            text-decoration: underline;
-            text-decoration-color: rgba(255,107,53,0.35);
-            transition: color 0.15s, text-decoration-color 0.15s;
-        }
-        .distro-block a:hover {
-            color: var(--yellow);
-            text-decoration-color: var(--yellow);
-        }
-        .distro-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: var(--cyan);
-            letter-spacing: 0.12em;
-            margin-bottom: 12px;
-            opacity: 0.7;
-        }
-        .logo-wrap img {
-            width: min(180px, 40vw);
-            height: auto;
-            display: block;
-            border: 3px solid var(--burntorange);
-            box-shadow:
-                0 0 0 3px var(--black),
-                0 0 0 5px var(--yellow),
-                0 0 30px rgba(255,107,53,0.5),
-                0 0 60px rgba(255,107,53,0.2);
-            border-radius: 4px;
-        }
-        .logo-wrap::before, .logo-wrap::after {
-            content: '★';
-            position: absolute;
-            font-size: 16px;
-            color: var(--yellow);
-            text-shadow: 0 0 8px var(--yellow);
-            animation: blink 1.2s step-end infinite;
-        }
-        .logo-wrap::before { top: -14px; left: -14px; }
-        .logo-wrap::after  { bottom: -14px; right: -14px; }
 
-        /* ── ASCII BLOCKS (moved from home) ── */
+        /* ── MASTHEAD ASCII ── */
         .ascii-main {
             width: 100%;
-            max-width: 1100px;
-            margin-bottom: 16px;
+            max-width: 960px;
+            margin-bottom: 8px;
             overflow-x: auto;
-            animation: fadeUp 0.5s 0.05s ease both;
             display: flex;
             justify-content: center;
         }
         .ascii-main pre {
             font-family: 'Courier Prime', monospace;
-            font-size: clamp(4px, 0.85vw, 8px);
+            font-size: clamp(3px, 0.7vw, 7px);
             line-height: 1.2;
-            color: var(--burntorange);
-            text-shadow: 0 0 8px rgba(255,107,53,0.4);
+            color: #F5F0E0;
+            text-shadow: 0 0 10px rgba(255,45,155,0.3);
             white-space: pre;
             display: inline-block;
             text-align: left;
             flex-shrink: 0;
         }
+
         .ascii-since {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             overflow-x: auto;
-            animation: fadeUp 0.5s 0.1s ease both;
             display: flex;
             justify-content: center;
         }
         .ascii-since pre {
             font-family: 'Courier Prime', monospace;
-            font-size: clamp(2.2px, 0.44vw, 5px);
+            font-size: clamp(2px, 0.4vw, 4.5px);
             line-height: 1.25;
-            color: var(--cyan);
-            text-shadow: 0 0 6px rgba(0,245,255,0.4);
+            color: #888890;
             white-space: pre;
             display: inline-block;
             flex-shrink: 0;
         }
 
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 960px;
+            height: 1px;
+            background: #FF2D9B;
+            box-shadow: 0 0 8px rgba(255,45,155,0.4);
+            margin: 16px 0;
+        }
+
+        /* ── TWO-COLUMN LAYOUT ── */
+        .newspaper-body {
+            width: 100%;
+            max-width: 960px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 0 36px;
+            margin-top: 8px;
+        }
+        .newspaper-body > .newspaper-main {
+            min-width: 0;
+        }
+        .newspaper-body > .newspaper-sidebar {
+            border-left: 1px solid #FF2D9B;
+            padding-left: 36px;
+            min-width: 0;
+            background: #1A1028;
+            padding: 20px;
+            margin: -20px -20px -20px 16px;
+        }
+
+        /* ── ASCII BLOCKS (sidebar items) ── */
+        .ascii-block {
+            width: 100%;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .ascii-block pre {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(2px, 0.45vw, 5px);
+            line-height: 1.2;
+            white-space: pre;
+            display: inline-block;
+            text-align: left;
+            flex-shrink: 0;
+        }
+        .ascii-block.color-burntorange pre {
+            color: #FF2D9B;
+            text-shadow: 0 0 8px rgba(255,45,155,0.4);
+        }
+        .ascii-block.color-cyan pre {
+            color: #00D4FF;
+            text-shadow: 0 0 8px rgba(0,212,255,0.4);
+        }
+
+        /* ── BODY TEXT ── */
+        .about-text {
+            animation: none;
+        }
+        .about-text p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #F5F0E0;
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+        .about-text p:last-child { margin-bottom: 0; }
+        .about-text a {
+            color: #00D4FF;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0,212,255,0.3);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .about-text a:hover {
+            color: #FF2D9B;
+            border-bottom-color: #FF2D9B;
+        }
+
+        /* Drop cap */
+        .about-text p:first-of-type::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.8em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: #FF2D9B;
+            font-weight: 900;
+            text-shadow: 0 0 12px rgba(255,45,155,0.5);
+        }
+
+        /* ── LOGO ── */
+        .logo-wrap {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .logo-wrap img {
+            width: min(160px, 100%);
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #FF2D9B;
+            box-shadow: 0 0 12px rgba(255,45,155,0.2);
+        }
+        .logo-wrap::before, .logo-wrap::after { display: none; }
+        .photo-caption {
+            font-family: 'Playfair Display', serif;
+            font-size: 9px;
+            font-style: italic;
+            color: #666670;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* ── CLASSIFIED ADS (distribution block) ── */
+        .distro-block {
+            border: 1px solid #FF2D9B;
+            background: #0A0A0F;
+            padding: 16px;
+            margin-bottom: 24px;
+            width: 100%;
+            box-shadow: 0 0 12px rgba(255,45,155,0.1);
+        }
+        .distro-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #FF2D9B;
+            border-bottom: 1px solid #222230;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 6px rgba(255,45,155,0.3);
+        }
+        .distro-block p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #F5F0E0;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .distro-block p:last-child { margin-bottom: 0; }
+        .distro-block a {
+            color: #00D4FF;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0,212,255,0.3);
+        }
+        .distro-block a:hover {
+            color: #FF2D9B;
+            border-bottom-color: #FF2D9B;
+        }
+
+        /* ── IN THIS ISSUE (footer links) ── */
+        .about-links-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #FF2D9B;
+            border-bottom: 1px solid #222230;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 6px rgba(255,45,155,0.3);
+        }
+        .about-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+        }
+        .about-links a {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #F5F0E0;
+            text-decoration: none;
+            padding: 8px 0;
+            border-bottom: 1px solid #222230;
+            transition: color 0.15s;
+        }
+        .about-links a::before {
+            content: '→ ';
+            color: #FF2D9B;
+        }
+        .about-links a:hover {
+            color: #FF2D9B;
+        }
+
+        /* Hide nav-cards on about page */
+        .nav-card { display: none; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: #0A0A0F !important;
+            border-top-color: #222230 !important;
+            color: #666670 !important;
+        }
+        footer span { color: #FF2D9B !important; }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            .newspaper-body {
+                grid-template-columns: 1fr;
+            }
+            .newspaper-sidebar {
+                border-left: none;
+                border-top: 1px solid #FF2D9B;
+                padding: 20px;
+                margin: 24px 0 0 0;
+            }
+            .ascii-main pre {
+                font-size: clamp(2px, 1.5vw, 5px);
+            }
+        }
         @media (max-width: 640px) {
-            .page-title { font-size: 13px; }
-            .about-text p { font-size: 14px; }
+            .page-title { font-size: 12px; }
+            .about-text p { font-size: 13px; }
+            .dateline { font-size: 8px; gap: 10px; }
         }
     </style>
 </head>
@@ -300,19 +421,26 @@
         <span class="current">about</span>
     </div>
 
-    <div class="ticker-wrap">
-        <span class="ticker">
-            magmacrunch media <span class="sep">✦</span>
-            est. 2023 <span class="sep">✦</span>
-            DIY music collective &amp; independent record label <span class="sep">✦</span>
-            no-budget music videos <span class="sep">✦</span>
-            archive <span class="sep">✦</span>
-            music publishing <span class="sep">✦</span>
-            html video games <span class="sep">✦</span>
-            photography <span class="sep">✦</span>
-            collage <span class="sep">✦</span>
-            currently supporting Sex Van Floor Plan <span class="sep">✦</span>
-        </span>
+    <div class="dateline">
+        <span>Est. 2023</span>
+        <span class="dateline-sep">✦</span>
+        <span>magmacrunch media</span>
+        <span class="dateline-sep">✦</span>
+        <span>DIY music collective &amp; independent record label</span>
+        <span class="dateline-sep">✦</span>
+        <span>no-budget music videos</span>
+        <span class="dateline-sep">✦</span>
+        <span>archive</span>
+        <span class="dateline-sep">✦</span>
+        <span>music publishing</span>
+        <span class="dateline-sep">✦</span>
+        <span>html video games</span>
+        <span class="dateline-sep">✦</span>
+        <span>photography</span>
+        <span class="dateline-sep">✦</span>
+        <span>collage</span>
+        <span class="dateline-sep">✦</span>
+        <span>currently supporting Sex Van Floor Plan</span>
     </div>
 
     <h1 class="page-title">// about //</h1>
@@ -356,9 +484,15 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 
     <div class="divider"></div>
 
-    <!-- ASCII: "founded by JAM, CPR, JHM" -->
-    <div class="ascii-block color-burntorange" style="animation-delay:0.05s">
-        <pre>
+    <!-- TWO-COLUMN LAYOUT -->
+    <div class="newspaper-body">
+
+        <!-- LEFT COLUMN: ASCII art + body text -->
+        <div class="newspaper-main">
+
+            <!-- ASCII: "founded by JAM, CPR, JHM" -->
+            <div class="ascii-block color-burntorange">
+                <pre>
   __                       _          _   _                
  / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
 | |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
@@ -380,82 +514,93 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 | (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
  \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
                                                      |___/ </pre>
-    </div>
+            </div>
 
-    <!-- ASCII: "with producers & musicians" -->
-    <div class="ascii-block color-cyan" style="animation-delay:0.1s">
-        <pre>
+            <!-- ASCII: "with producers & musicians" -->
+            <div class="ascii-block color-cyan">
+                <pre>
            ,--.  ,--.  ,--.                                                                                                                       
-,--.   ,--.`--',-'  '-.|  ,---.                                                                                                                   
-|  |.'.|  |,--.'-.  .-'|  .-.  |                                                                                                                  
-|   .'.   ||  |  |  |  |  | |  |                                                                                                                  
-'--'   '--'`--'  `--'  `--' `--'                                   ,--.                                                                           
+ ,--.   ,--.`--',-'  '-.|  ,---.                                                                                                                   
+ |  |.'.|  |,--.'-.  .-'|  .-.  |                                                                                                                  
+ |   .'.   ||  |  |  |  |  | |  |                                                                                                                  
+ '--'   '--'`--'  `--'  `--' `--'                                   ,--.                                                                           
                         ,--.                                      /  /                        ,--.      ,--.                                      
  ,---. ,--.--. ,---.  ,-|  |,--.,--. ,---. ,---. ,--.--. ,---.   /  /,--,--,--.,--.,--. ,---. `--' ,---.`--' ,--,--.,--,--,  ,---.                
-| .-. ||  .--'| .-. |' .-. ||  ||  || .--'| .-. :|  .--'(  .-'  /  / |        ||  ||  |(  .-' ,--.| .--',--.' ,-.  ||      \(  .-'                
-| '-' '|  |   ' '-' '\ `-' |'  ''  '\ `--.\   --.|  |   .-'  `)/  /  |  |  |  |'  ''  '.-'  `)|  |\ `--.|  |\ '-'  ||  ||  |.-'  `)               
-|  |-' `--'    `---'  `---'  `----'  `---' `----'`--'   `----'/  /   `--`--`--' `----' `----' `--' `---'`--' `--`--'`--''--'`----'                
-`--'                                                         `--'                                                                                 
-,--------.                                           ,------.       ,------. ,--.                    ,-----.,--.                   ,--.           
-'--.  .--',---.  ,--,--. ,---. ,--.,--. ,---.        |  .---'       |  .--. '|  ,---.  ,---.        '  .--./|  ,---. ,--.,--. ,---.|  |,-.        
-   |  |  | .-. :' ,-.  || .-. ||  ||  || .-. :       |  `--,        |  '--'.'|  .-.  || .-. |       |  |    |  .-.  ||  ||  || .--'|     /        
-   |  |  \   --.\ '-'  |' '-' ''  ''  '\   --.,--.   |  `---.,--.   |  |\  \ |  | |  |' '-' ',--.   '  '--'\|  | |  |'  ''  '\ `--.|  \  \ ,--.   
-   `--'   `----' `--`--'.`-  /  `----'  `----''-,/   `------''-,/   `--' '--'`--' `--' `---' '-,/    `-----'`--' `--' `----'  `---'`--'`--''-,/   
-                        `---'                                                                                                                     
-,------.,--.,--.       ,--.   ,--.                         ,--.  ,--.        ,--.                          ,-----.                                
-|  .---'|  |`--'       |   `.'   | ,--,--.,--.  ,--.       |  '--'  | ,--,--.|  |,-. ,--,--.,--,--,        |  |) /_  ,---. ,--,--,                
-|  `--, |  |,--.       |  |'.'|  |' ,-.  | \  `'  /        |  .--.  |' ,-.  ||     /' ,-.  ||      \       |  .-.  \| .-. :|      \               
-|  `---.|  ||  |,--.   |  |   |  |\ '-'  | /  /.  \ ,--.   |  |  |  |\ '-'  ||  \  \\ '-'  ||  ||  |,--.   |  '--' /\   --.|  ||  |,--.           
-`------'`--'`--''-,/   `--'   `--' `--`--''--'  '--''-,/   `--'  `--' `--`--'`--'`--'`--`--'`--''--''-,/   `------'  `----'`--''--''-,/           
-     ,--.                                            ,--.        ,--.             ,--------.        ,------.         ,------.        ,-----.      
-     |  | ,--,--.,--,--,--. ,---.  ,---.             |  | ,--,--.|  |,-. ,---.    '--.  .--'        |  .-.  \ ,-----.|  .--. ' ,---. |  |) /_     
-,--. |  |' ,-.  ||        || .-. :(  .-'        ,--. |  |' ,-.  ||     /| .-. :      |  |           |  |  \  :'-----'|  '--'.'| .-. ||  .-.  \    
-|  '-'  /\ '-'  ||  |  |  |\   --..-'  `),--.   |  '-'  /\ '-'  ||  \  \\   --.      |  |.--.,--.   |  '--'  /       |  |\  \ ' '-' '|  '--' /,--.
+ | .-. ||  .--'| .-. |' .-. ||  ||  || .--'| .-. :|  .--'(  .-'  /  / |        ||  ||  |(  .-' ,--.| .--',--.' ,-.  ||      \(  .-'                
+ | '-' '|  |   ' '-' '\ `-' |'  ''  '\ `--.\   --.|  |   .-'  `)/  /  |  |  |  |'  ''  '.-'  `)|  |\ `--.|  |\ '-'  ||  ||  |.-'  `)               
+ |  |-' `--'    `---'  `---'  `----'  `---' `----'`--'   `----'/  /   `--`--`--' `----' `----' `--' `---'`--' `--`--'`--''--'`----'                
+ `--'                                                         `--'                                                                                 
+ ,--------.                                           ,------.       ,------. ,--.                    ,-----.,--.                   ,--.           
+ '--.  .--',---.  ,--,--. ,---. ,--.,--. ,---.        |  .---'       |  .--. '|  ,---.  ,---.        '  .--./|  ,---. ,--.,--. ,---.|  |,-.        
+    |  |  | .-. :' ,-.  || .-. ||  ||  || .-. :       |  `--,        |  '--'.'|  .-.  || .-. |       |  |    |  .-.  ||  ||  || .--'|     /        
+    |  |  \   --.\ '-'  |' '-' ''  ''  '\   --.,--.   |  `---.,--.   |  |\  \ |  | |  |' '-' ',--.   '  '--'\|  | |  |'  ''  '\ `--.|  \  \ ,--.   
+    `--'   `----' `--`--'.`-  /  `----'  `----''-,/   `------''-,/   `--' '--'`--' `--' `---' '-,/    `-----'`--' `--' `----'  `---'`--'`--''-,/   
+                         `---'                                                                                                                     
+ ,------.,--.,--.       ,--.   ,--.                         ,--.  ,--.        ,--.                          ,-----.                                
+ |  .---'|  |`--'       |   `.'   | ,--,--.,--.  ,--.       |  '--'  | ,--,--.|  |,-. ,--,--.,--,--,        |  |) /_  ,---. ,--,--,                
+ |  `--, |  |,--.       |  |'.'|  |' ,-.  | \  `'  /        |  .--.  |' ,-.  ||     /' ,-.  ||      \       |  .-.  \| .-. :|      \               
+ |  `---.|  ||  |,--.   |  |   |  |\ '-'  | /  /.  \ ,--.   |  |  |  |\ '-'  ||  \  \\ '-'  ||  ||  |,--.   |  '--' /\   --.|  ||  |,--.           
+ `------'`--'`--''-,/   `--'   `--' `--`--''--'  '--''-,/   `--'  `--' `--`--'`--'`--'`--`--'`--''--''-,/   `------'  `----'`--''--''-,/           
+      ,--.                                            ,--.        ,--.             ,--------.        ,------.         ,------.        ,-----.      
+      |  | ,--,--.,--,--,--. ,---.  ,---.             |  | ,--,--.|  |,-. ,---.    '--.  .--'        |  .-.  \ ,-----.|  .--. ' ,---. |  |) /_     
+ ,--. |  |' ,-.  ||        || .-. :(  .-'        ,--. |  |' ,-.  ||     /| .-. :      |  |           |  |  \  :'-----'|  '--'.'| .-. ||  .-.  \    
+ |  '-'  /\ '-'  ||  |  |  |\   --..-'  `),--.   |  '-'  /\ '-'  ||  \  \\   --.      |  |.--.,--.   |  '--'  /       |  |\  \ ' '-' '|  '--' /,--.
  `-----'  `--`--'`--`--`--' `----'`----' '-,/    `-----'  `--`--'`--'`--'`----'      `--''--''-,/   `-------'        `--' '--' `---' `------' '-,/
  ,---.                ,--.  ,--.                                                                                                                  
-|  o ,-.      ,---. ,-'  '-.|  ,---.  ,---. ,--.--. ,---.                                                                                         
-.'     /_    | .-. |'-.  .-'|  .-.  || .-. :|  .--'(  .-'                                                                                         
-|  o  .__)   ' '-' '  |  |  |  | |  |\   --.|  |   .-'  `)                                                                                        
+ |  o ,-.      ,---. ,-'  '-.|  ,---.  ,---. ,--.--. ,---.                                                                                         
+ .'     /_    | .-. |'-.  .-'|  .-.  || .-. :|  .--'(  .-'                                                                                         
+ |  o  .__)   ' '-' '  |  |  |  | |  |\   --.|  |   .-'  `)                                                                                        
  `---'        `---'   `--'  `--' `--' `----'`--'   `----'                                                                                          </pre>
-    </div>
+            </div>
 
-    <div class="divider"></div>
+            <div class="divider"></div>
 
-    <!-- logo.jpg (moved from home) -->
-    <div class="logo-wrap">
-        <img src="../assets/logo.jpg" alt="magmacrunch media logo">
-    </div>
+            <!-- Body text -->
+            <div class="about-text">
+                <p>Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
+                    That's why we decided to take a do-it-yourself approach by <a href="../archive/index.html">releasing our own music</a>. 
+                    This is the music we actually want to make, not just what we think people might want to hear.</p>
 
-    <!-- Body text -->
-    <div class="about-text">
-        <p>Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
-            That's why we decided to take a do-it-yourself approach by <a href="../archive/index.html">releasing our own music</a>. 
-            This is the music we actually want to make, not just what we think people might want to hear.</p>
+                <p>Since 2023, <a href="../archive/full-catalog/all-releases.html">magmacrunch media</a> has operated as a DIY music collective and independent record label with an associated music publishing entity 
+                    called <a href="../archive/full-catalog/all-works.html">magmacrunch music</a>, established in October 2025. Based in the United States, we have been making music in some form or another since the mid-00s. 
+                    In addition to releasing a variety of genres ranging from post-rock to indie folk to riot grrrl, we also film and produce no-budget <a href="../visual/music-videos.html">music videos</a>, 
+                    many of which draw inspiration from avant-garde short films. We are primarily digital, but hold a special appreciation for physical or otherwise obscure media formats. 
+                    In July 2025, we officially started our <a href="../music/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
 
-        <p>Since 2023, <a href="../archive/full-catalog/all-releases.html">magmacrunch media</a> has operated as a DIY music collective and independent record label with an associated music publishing entity 
-            called <a href="../archive/full-catalog/all-works.html">magmacrunch music</a>, established in October 2025. Based in the United States, we have been making music in some form or another since the mid-00s. 
-            In addition to releasing a variety of genres ranging from post-rock to indie folk to riot grrrl, we also film and produce no-budget <a href="../visual/music-videos.html">music videos</a>, 
-            many of which draw inspiration from avant-garde short films. We are primarily digital, but hold a special appreciation for physical or otherwise obscure media formats. 
-            In July 2025, we officially started our <a href="../music/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
+                <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
+            </div>
 
-        <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
-    </div>
+        </div>
 
-    <!-- DISTRIBUTION & REGISTRATION -->
-    <div class="distro-block">
-        <div class="distro-label">// distribution & registration //</div>
-        <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024; see our <a href="../music/distributed-music.html">distributed music</a> page. Prior to that, magmacrunch started mainly on <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener">Bandcamp</a> and <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener">YouTube</a>. Our catalog is also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>.</p>
-        <p>magmacrunch music is in the process of registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>; these can be viewed in the <a href="https://www.ascap.com/repertory#/ace/works/publisher/8244968/MAGMACRUNCH%20MUSIC" target="_blank" rel="noopener">ACE repertory</a>.</p>
-    </div>
+        <!-- RIGHT COLUMN: Logo, Distribution, Links -->
+        <div class="newspaper-sidebar">
 
-    <!-- BY-LABEL LINKS -->
-    <div class="about-links">
-        <a href="../archive/by-label/magmacrunch-media/" class="nav-card c-yellow">magmacrunch media</a>
-        <a href="../archive/by-label/magmacrunch-music/" class="nav-card c-orange">magmacrunch music</a>
-        <a href="../home/links/all-links.html" class="nav-card c-yellow">see all links</a>
-        <a href="../home/guestbook.html"       class="nav-card c-nearwhite">sign the guestbook</a>
-        <a href="../archive/more/contributors.html" class="nav-card c-purple">contributors</a>
-        <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4" class="nav-card c-rose">email us</a>
+            <!-- Logo -->
+            <div class="logo-wrap">
+                <img src="../assets/logo.jpg" alt="magmacrunch media logo">
+                <div class="photo-caption">magmacrunch media logo</div>
+            </div>
+
+            <!-- CLASSIFIED ADS -->
+            <div class="distro-block">
+                <div class="distro-label">Classified Ads</div>
+                <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024; see our <a href="../music/distributed-music.html">distributed music</a> page. Prior to that, magmacrunch started mainly on <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener">Bandcamp</a> and <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener">YouTube</a>. Our catalog is also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>.</p>
+                <p>magmacrunch music is in the process of registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>; these can be viewed in the <a href="https://www.ascap.com/repertory#/ace/works/publisher/8244968/MAGMACRUNCH%20MUSIC" target="_blank" rel="noopener">ACE repertory</a>.</p>
+            </div>
+
+            <!-- IN THIS ISSUE -->
+            <div class="about-links-label">In This Issue</div>
+            <div class="about-links">
+                <a href="../archive/by-label/magmacrunch-media/">magmacrunch media</a>
+                <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a>
+                <a href="../home/links/all-links.html">see all links</a>
+                <a href="../home/guestbook.html">sign the guestbook</a>
+                <a href="../archive/more/contributors.html">contributors</a>
+                <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4">email us</a>
+            </div>
+
+        </div>
+
     </div>
 
 </main>
