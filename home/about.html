@@ -74,7 +74,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 72px 20px 60px;
+            padding: 80px 20px 60px;
             gap: 0;
         }
 
@@ -134,6 +134,8 @@
         }
 
         .ascii-since {
+            width: 100%;
+            max-width: 960px;
             margin-bottom: 12px;
             overflow-x: auto;
             display: flex;
@@ -149,6 +151,23 @@
             flex-shrink: 0;
         }
 
+        /* ── ASCII BLOCK COLORS ── */
+        .ascii-block.ascii-masthead pre {
+            color: #FF2D9B;
+            text-shadow: 0 0 10px rgba(255,45,155,0.4);
+        }
+        .ascii-block.ascii-since pre {
+            color: #666670;
+        }
+        .ascii-block.ascii-founded pre {
+            color: #00D4FF;
+            text-shadow: 0 0 10px rgba(0,212,255,0.4);
+        }
+        .ascii-block.ascii-producers pre {
+            color: #ffe03a;
+            text-shadow: 0 0 10px rgba(255,224,58,0.3);
+        }
+
         /* ── DIVIDER ── */
         .divider {
             width: 100%;
@@ -159,55 +178,96 @@
             margin: 16px 0;
         }
 
-        /* ── TWO-COLUMN LAYOUT ── */
+        /* ── SINGLE COLUMN LAYOUT ── */
         .newspaper-body {
             width: 100%;
             max-width: 960px;
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 0 36px;
-            margin-top: 8px;
-        }
-        .newspaper-body > .newspaper-main {
-            min-width: 0;
-        }
-        .newspaper-body > .newspaper-sidebar {
-            border-left: 1px solid #FF2D9B;
-            padding-left: 36px;
-            min-width: 0;
-            background: #1A1028;
-            padding: 20px;
-            margin: -20px -20px -20px 16px;
+            margin: 0 auto;
         }
 
-        /* ── ASCII BLOCKS (sidebar items) ── */
-        .ascii-block {
-            width: 100%;
-            margin-bottom: 16px;
-            overflow-x: auto;
-            display: flex;
-            justify-content: flex-start;
+        /* ── ZINE ELEMENTS ── */
+        .ascii-large pre {
+            font-size: clamp(4px, 0.85vw, 8px) !important;
         }
-        .ascii-block pre {
-            font-family: 'Courier Prime', monospace;
-            font-size: clamp(2px, 0.45vw, 5px);
-            line-height: 1.2;
-            white-space: pre;
-            display: inline-block;
-            text-align: left;
-            flex-shrink: 0;
-        }
-        .ascii-block.color-burntorange pre {
+        .ascii-rotate { transform: rotate(-2deg); }
+        .ascii-rotate-alt { transform: rotate(1.5deg); }
+
+        .pull-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
             color: #FF2D9B;
-            text-shadow: 0 0 8px rgba(255,45,155,0.4);
+            border-left: 4px solid #FF2D9B;
+            padding: 16px 20px;
+            margin: 24px 0;
+            text-shadow: 0 0 8px rgba(255,45,155,0.3);
+            background: rgba(255,45,155,0.05);
         }
-        .ascii-block.color-cyan pre {
+
+        .zine-bg-magenta {
+            background: rgba(255,45,155,0.08);
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .zine-bg-cyan {
+            background: rgba(0,212,255,0.08);
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .zine-border-magenta { border: 2px solid #FF2D9B; padding: 8px; }
+        .zine-border-cyan { border: 2px solid #00D4FF; padding: 8px; }
+
+        .zine-overlap { margin-top: -24px; }
+        .zine-mt-sm { margin-top: 8px; }
+        .zine-mt-lg { margin-top: 32px; }
+        .zine-mb-lg { margin-bottom: 32px; }
+        .zine-mb-xl { margin-bottom: 48px; }
+
+        /* Zine logo */
+        .zine-logo {
+            text-align: center;
+            margin: 32px 0;
+            transform: rotate(2deg);
+        }
+        .zine-logo img {
+            width: min(180px, 50vw);
+            height: auto;
+            border: 2px solid #FF2D9B;
+            box-shadow: 0 0 16px rgba(255,45,155,0.3);
+        }
+
+        /* Zine links */
+        .zine-links {
+            margin-top: 48px;
+            padding: 24px 0;
+            border-top: 2px solid #FF2D9B;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            box-shadow: 0 -2px 12px rgba(255,45,155,0.15);
+        }
+        .zine-links a {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
             color: #00D4FF;
-            text-shadow: 0 0 8px rgba(0,212,255,0.4);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid #00D4FF;
+            transition: all 0.15s;
+        }
+        .zine-links a:hover {
+            color: #0A0A0F;
+            background: #00D4FF;
+            box-shadow: 0 0 8px rgba(0,212,255,0.4);
         }
 
         /* ── BODY TEXT ── */
         .about-text {
+            width: 100%;
+            max-width: 960px;
+            padding: 0 20px;
             animation: none;
         }
         .about-text p {
@@ -268,41 +328,7 @@
             margin-top: 8px;
         }
 
-        /* ── IN THIS ISSUE (footer links) ── */
-        .about-links-label {
-            font-family: 'Playfair Display', serif;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #FF2D9B;
-            border-bottom: 1px solid #222230;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-            text-shadow: 0 0 6px rgba(255,45,155,0.3);
-        }
-        .about-links {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            width: 100%;
-        }
-        .about-links a {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: #F5F0E0;
-            text-decoration: none;
-            padding: 8px 0;
-            border-bottom: 1px solid #222230;
-            transition: color 0.15s;
-        }
-        .about-links a::before {
-            content: '→ ';
-            color: #FF2D9B;
-        }
-        .about-links a:hover {
-            color: #FF2D9B;
-        }
+        /* ── QUICK LINKS (old sidebar, now unused) ── */
 
         /* Hide nav-cards on about page */
         .nav-card { display: none; }
@@ -316,24 +342,12 @@
         footer span { color: #FF2D9B !important; }
 
         /* ── MOBILE ── */
-        @media (max-width: 768px) {
-            .newspaper-body {
-                grid-template-columns: 1fr;
-            }
-            .newspaper-sidebar {
-                border-left: none;
-                border-top: 1px solid #FF2D9B;
-                padding: 20px;
-                margin: 24px 0 0 0;
-            }
-            .ascii-main pre {
-                font-size: clamp(2px, 1.5vw, 5px);
-            }
-        }
         @media (max-width: 640px) {
             .page-title { font-size: 12px; }
             .about-text p { font-size: 13px; }
             .dateline { font-size: 8px; gap: 10px; }
+            .ascii-main pre { font-size: clamp(2px, 1.5vw, 5px); }
+            .zine-links { flex-direction: column; align-items: center; }
         }
     </style>
 </head>
@@ -409,7 +423,7 @@
     <h1 class="page-title">// about //</h1>
 
     <!-- BIG ASCII (moved from home) -->
-    <div class="ascii-main">
+    <div class="ascii-main ascii-block ascii-masthead">
         <pre>
                                                                                        __                               __                  
                                                                                       /\ \                             /\ \  __             
@@ -432,7 +446,7 @@
     </div>
 
     <!-- SMALLER "SINCE 2023 / MELODIES TO THEIR NOISE" ASCII -->
-    <div class="ascii-since"><pre>
+    <div class="ascii-since ascii-block"><pre>
 .. __   __         ___ ___          ___  __       ___ .  __      __         ___  ___
 ''/__` /  \  |\/| |__   |  |  |\/| |__  /__`    |  |  ' /__`    /  \ |  | |  |  |__ 
   .__/ \__/  |  | |___  |  |  |  | |___ .__/    |  |    .__/    \__X \__/ |  |  |___
@@ -447,15 +461,57 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 
     <div class="divider"></div>
 
-    <!-- TWO-COLUMN LAYOUT -->
-    <div class="newspaper-body">
+    <!-- ASCII: "founded by JAM, CPR, JHM" — LARGE, overlapping -->
+    <div class="ascii-block ascii-founded ascii-large zine-overlap zine-mb-lg">
+        <pre>
+  __                       _          _   _                
+ / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
+| |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
+|  _| (_) | |_| | | | | (_| |  __/ (_| | | |_) | |_| |     
+|_|  \___/ \__,_|_| |_|\__,_|\___|\__,_| |_.__/ \__, |     
+     _       _          __  __       ____       |___/      
+    | | __ _| | _____  |  \/  | ___ / ___|___  _   _       
+ _  | |/ _` | |/ / _ \ | |\/| |/ __| |   / _ \| | | |      
+| |_| | (_| |   <  __/ | |  | | (__| |__| (_) | |_| |_     
+ \___/ \__,_|_|\_\___| |_|  |_|\___|\____\___/ \__, ( )    
+  ____   ____    ____        _   _          _  |___/|/     
+ / ___| |  _ \  |  _ \ _   _| |_| | ___  __| | __ _  ___   
+| |     | |_) | | |_) | | | | __| |/ _ \/ _` |/ _` |/ _ \  
+| |___ _|  __/  |  _ <| |_| | |_| |  __/ (_| | (_| |  __/_ 
+ \____(_)_| (_) |_| \_\\__,_|\__|_|\___|\__,_|\__, |\___( )
+  ___         _               __  __       ___|___/     |/ 
+ ( _ )       | | ___  _ __   |  \/  | ___ / ___|___  _   _ 
+ / _ \/\  _  | |/ _ \| '_ \  | |\/| |/ __| |   / _ \| | | |
+| (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
+ \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
+                                                     |___/ </pre>
+    </div>
 
-        <!-- LEFT COLUMN: ASCII art + body text -->
-        <div class="newspaper-main">
+    <!-- Logo — zine-style centered, rotated -->
+    <div class="zine-logo">
+        <img src="../assets/logo.jpg" alt="magmacrunch media logo">
+    </div>
 
-            <!-- ASCII: "with producers & musicians" -->
-            <div class="ascii-block color-cyan">
-                <pre>
+    <!-- Body text -->
+    <div class="about-text">
+        <!-- Pull quote: first paragraph -->
+        <div class="pull-quote">
+            Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
+            That's why we decided to take a do-it-yourself approach by releasing our own music. 
+            This is the music we actually want to make, not just what we think people might want to hear.
+        </div>
+
+        <div class="zine-bg-magenta">
+            <p>Since 2023, <a href="../archive/full-catalog/all-releases.html">magmacrunch media</a> has operated as a DIY music collective and independent record label with an associated music publishing entity 
+                called <a href="../archive/full-catalog/all-works.html">magmacrunch music</a>, established in October 2025. Based in the United States, we have been making music in some form or another since the mid-00s. 
+                In addition to releasing a variety of genres ranging from post-rock to indie folk to riot grrrl, we also film and produce no-budget <a href="../visual/music-videos.html">music videos</a>, 
+                many of which draw inspiration from avant-garde short films. We are primarily digital, but hold a special appreciation for physical or otherwise obscure media formats. 
+                In July 2025, we officially started our <a href="../music/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
+        </div>
+
+        <!-- ASCII: "with producers & musicians" — ROTATED, yellow -->
+        <div class="ascii-block ascii-producers ascii-rotate zine-mb-lg">
+            <pre>
            ,--.  ,--.  ,--.                                                                                                                       
  ,--.   ,--.`--',-'  '-.|  ,---.                                                                                                                   
  |  |.'.|  |,--.'-.  .-'|  .-.  |                                                                                                                  
@@ -488,77 +544,23 @@ ___          ___  __       ___ .  __           __     __   ___ ..
  .'     /_    | .-. |'-.  .-'|  .-.  || .-. :|  .--'(  .-'                                                                                         
  |  o  .__)   ' '-' '  |  |  |  | |  |\   --.|  |   .-'  `)                                                                                        
  `---'        `---'   `--'  `--' `--' `----'`--'   `----'                                                                                          </pre>
-            </div>
-
-            <div class="divider"></div>
-
-            <!-- Body text -->
-            <div class="about-text">
-                <p>Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
-                    That's why we decided to take a do-it-yourself approach by <a href="../archive/index.html">releasing our own music</a>. 
-                    This is the music we actually want to make, not just what we think people might want to hear.</p>
-
-                <p>Since 2023, <a href="../archive/full-catalog/all-releases.html">magmacrunch media</a> has operated as a DIY music collective and independent record label with an associated music publishing entity 
-                    called <a href="../archive/full-catalog/all-works.html">magmacrunch music</a>, established in October 2025. Based in the United States, we have been making music in some form or another since the mid-00s. 
-                    In addition to releasing a variety of genres ranging from post-rock to indie folk to riot grrrl, we also film and produce no-budget <a href="../visual/music-videos.html">music videos</a>, 
-                    many of which draw inspiration from avant-garde short films. We are primarily digital, but hold a special appreciation for physical or otherwise obscure media formats. 
-                    In July 2025, we officially started our <a href="../music/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
-
-                <!-- ASCII: "founded by JAM, CPR, JHM" -->
-                <div class="ascii-block color-burntorange">
-                    <pre>
-  __                       _          _   _                
- / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
-| |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
-|  _| (_) | |_| | | | | (_| |  __/ (_| | | |_) | |_| |     
-|_|  \___/ \__,_|_| |_|\__,_|\___|\__,_| |_.__/ \__, |     
-     _       _          __  __       ____       |___/      
-    | | __ _| | _____  |  \/  | ___ / ___|___  _   _       
- _  | |/ _` | |/ / _ \ | |\/| |/ __| |   / _ \| | | |      
-| |_| | (_| |   <  __/ | |  | | (__| |__| (_) | |_| |_     
- \___/ \__,_|_|\_\___| |_|  |_|\___|\____\___/ \__, ( )    
-  ____   ____    ____        _   _          _  |___/|/     
- / ___| |  _ \  |  _ \ _   _| |_| | ___  __| | __ _  ___   
-| |     | |_) | | |_) | | | | __| |/ _ \/ _` |/ _` |/ _ \  
-| |___ _|  __/  |  _ <| |_| | |_| |  __/ (_| | (_| |  __/_ 
- \____(_)_| (_) |_| \_\\__,_|\__|_|\___|\__,_|\__, |\___( )
-  ___         _               __  __       ___|___/     |/ 
- ( _ )       | | ___  _ __   |  \/  | ___ / ___|___  _   _ 
- / _ \/\  _  | |/ _ \| '_ \  | |\/| |/ __| |   / _ \| | | |
-| (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
- \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
-                                                     |___/ </pre>
-                </div>
-
-                <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
-
-                <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024, with our catalog also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>. magmacrunch music is registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>. See our <a href="../music/distributed-music.html">distributed music</a> page for more details.</p>
-            </div>
-
         </div>
 
-        <!-- RIGHT COLUMN: Logo, Links -->
-        <div class="newspaper-sidebar">
+        <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
 
-            <!-- Logo -->
-            <div class="logo-wrap">
-                <img src="../assets/logo.jpg" alt="magmacrunch media logo">
-                <div class="photo-caption">magmacrunch media logo</div>
-            </div>
-
-            <!-- QUICK LINKS -->
-            <div class="about-links-label">Quick Links</div>
-            <div class="about-links">
-                <a href="../archive/by-label/magmacrunch-media/">magmacrunch media</a>
-                <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a>
-                <a href="../home/links/all-links.html">see all links</a>
-                <a href="../home/guestbook.html">sign the guestbook</a>
-                <a href="../archive/more/contributors.html">contributors</a>
-                <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4">email us</a>
-            </div>
-
+        <div class="zine-bg-cyan">
+            <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024, with our catalog also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>. magmacrunch music is registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>. See our <a href="../music/distributed-music.html">distributed music</a> page for more details.</p>
         </div>
+    </div>
 
+    <!-- Links — zine-style footer -->
+    <div class="zine-links">
+        <a href="../archive/by-label/magmacrunch-media/">magmacrunch media</a>
+        <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a>
+        <a href="../home/links/all-links.html">see all links</a>
+        <a href="../home/guestbook.html">sign the guestbook</a>
+        <a href="../archive/more/contributors.html">contributors</a>
+        <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4">email us</a>
     </div>
 
 </main>
