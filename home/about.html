@@ -168,6 +168,16 @@
             text-shadow: 0 0 10px rgba(255,224,58,0.3);
         }
 
+        /* ── FLOAT ASCII FOR TEXT WRAPPING ── */
+        .ascii-float-right {
+            float: right;
+            margin: 0 0 20px 24px;
+            max-width: 50%;
+        }
+        .ascii-float-right pre {
+            font-size: clamp(2px, 0.5vw, 5px) !important;
+        }
+
         /* ── DIVIDER ── */
         .divider {
             width: 100%;
@@ -269,6 +279,7 @@
             max-width: 960px;
             padding: 0 20px;
             animation: none;
+            overflow: auto;
         }
         .about-text p {
             font-family: 'Courier Prime', monospace;
@@ -461,9 +472,25 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 
     <div class="divider"></div>
 
-    <!-- ASCII: "founded by JAM, CPR, JHM" — LARGE, overlapping -->
-    <div class="ascii-block ascii-founded ascii-large zine-overlap zine-mb-lg">
-        <pre>
+    <!-- Logo — zine-style centered, rotated -->
+    <div class="zine-logo">
+        <img src="../assets/logo.jpg" alt="magmacrunch media logo">
+    </div>
+
+    <!-- Body text -->
+    <div class="about-text">
+        <!-- Pull quote: first paragraph -->
+        <div class="pull-quote">
+            Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
+            That's why we decided to take a do-it-yourself approach by releasing our own music. 
+            This is the music we actually want to make, not just what we think people might want to hear.
+        </div>
+
+        <p>It started with three people in a basement — JAM, CPR, and JHM — armed with nothing but a handful of cracked DAWs and a shared conviction that the music industry's gatekeeping model was fundamentally broken. There was no business plan, no investors, no five-year roadmap. Just the idea that if you make something honest and put it out yourself, the right people will eventually find it. That ethos has guided every decision since.</p>
+
+        <!-- ASCII: "founded by JAM, CPR, JHM" — floated right -->
+        <div class="ascii-block ascii-founded ascii-float-right">
+            <pre>
   __                       _          _   _                
  / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
 | |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
@@ -485,20 +512,6 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 | (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
  \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
                                                      |___/ </pre>
-    </div>
-
-    <!-- Logo — zine-style centered, rotated -->
-    <div class="zine-logo">
-        <img src="../assets/logo.jpg" alt="magmacrunch media logo">
-    </div>
-
-    <!-- Body text -->
-    <div class="about-text">
-        <!-- Pull quote: first paragraph -->
-        <div class="pull-quote">
-            Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
-            That's why we decided to take a do-it-yourself approach by releasing our own music. 
-            This is the music we actually want to make, not just what we think people might want to hear.
         </div>
 
         <div class="zine-bg-magenta">
@@ -509,8 +522,10 @@ ___          ___  __       ___ .  __           __     __   ___ ..
                 In July 2025, we officially started our <a href="../music/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
         </div>
 
-        <!-- ASCII: "with producers & musicians" — ROTATED, yellow -->
-        <div class="ascii-block ascii-producers ascii-rotate zine-mb-lg">
+        <p>What makes magmacrunch different from a traditional label is the relationship between the people involved. There are no signed contracts, no royalty splits negotiated in conference rooms. The collective works with a rotating cast of producers and musicians who share the same DIY values — people who would rather spend a weekend recording in a living room than wait for a studio to validate their work.</p>
+
+        <!-- ASCII: "with producers & musicians" — floated right -->
+        <div class="ascii-block ascii-producers ascii-float-right">
             <pre>
            ,--.  ,--.  ,--.                                                                                                                       
  ,--.   ,--.`--',-'  '-.|  ,---.                                                                                                                   
