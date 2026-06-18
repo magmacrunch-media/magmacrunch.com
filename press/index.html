@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>press — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ── NAV ZINE OVERRIDES ── */
+        :root {
+            --nav-accent: #c02828;
+            --nav-glow: rgba(192,40,40,0.4);
+            --nav-brand: #c02828;
+            --nav-brand-glow: rgba(192,40,40,0.6);
+        }
+
+        body {
+            background-color: #f0e4c8;
+            color: #1a1a1a;
+            /* subtle paper texture */
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #999;
+            letter-spacing: 0.1em;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #999; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c02828; }
+        .breadcrumb .sep { margin: 0 8px; color: #c8c0a8; }
+        .breadcrumb .current { color: #c02828; }
+
+        /* ── PAGE HEADER ── */
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: #c02828;
+            text-shadow: 2px 2px 0 rgba(192,40,40,0.15);
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #777;
+            letter-spacing: 0.12em;
+            margin-bottom: 32px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* ── INTRO ── */
+        .press-intro {
+            width: min(640px, 90vw);
+            text-align: center;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .press-intro p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .press-intro a {
+            color: #c02828;
+            text-decoration: underline;
+            text-decoration-color: rgba(192,40,40,0.3);
+        }
+        .press-intro a:hover { color: #8a1a1a; }
+
+        /* ── DIVIDER ── */
+        .section-divider {
+            width: min(640px, 90vw);
+            height: 2px;
+            background: #c8c0a8;
+            margin-bottom: 48px;
+            position: relative;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+        .section-divider::after {
+            content: '✦';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #f0e4c8;
+            padding: 0 12px;
+            color: #c02828;
+            font-size: 10px;
+        }
+
+        /* ── PIECE CARDS ── */
+        .pieces-wrap {
+            width: min(640px, 90vw);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            animation: fadeUp 0.5s 0.18s ease both;
+        }
+
+        .pieces-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #999;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+        }
+
+        .piece-card {
+            display: flex;
+            gap: 0;
+            border: 2px solid #c8c0a8;
+            border-bottom: none;
+            background: #e8dcc0;
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .piece-card:last-child { border-bottom: 2px solid #c8c0a8; }
+        .piece-card:hover {
+            border-color: #c02828;
+            background: #e0d4b8;
+        }
+
+        /* left accent bar */
+        .piece-card::before {
+            content: '';
+            display: block;
+            width: 4px;
+            flex-shrink: 0;
+            background: #c02828;
+            transition: width 0.15s;
+        }
+        .piece-card:hover::before { width: 7px; }
+
+        .piece-card-info {
+            padding: 16px 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .piece-card-text { flex: 1; }
+
+        .piece-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 10px);
+            color: #c02828;
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            margin-bottom: 5px;
+        }
+
+        .piece-card-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #777;
+            line-height: 1.5;
+        }
+
+        .piece-card-meta .type {
+            display: inline-block;
+            background: #c02828;
+            color: #f0e4c8;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            padding: 2px 6px;
+            letter-spacing: 0.08em;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .piece-card-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #c02828;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .piece-card:hover .piece-card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── FOOTER OVERRIDE ── */
+        footer {
+            background: #e8dcc0 !important;
+            border-top-color: #c8c0a8 !important;
+            color: #999 !important;
+        }
+        footer span { color: #c02828 !important; }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">home</a><div class="dropdown"><a href="../home/about.html">about</a><a href="../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../music/index.html">music</a><div class="dropdown"><a href="../music/jukebox/index.html">jukebox</a><a href="../music/distributed-music.html">distributed music</a><a href="../music/floppy-disk/index.html">floppy disk</a></div></li>
+        <li><a href="../visual/index.html">visual</a><div class="dropdown"><a href="../visual/music-videos.html">music videos</a><a href="../visual/collage.html">collage</a><a href="../visual/photography.html">photography</a></div></li>
+        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a><a href="../archive/by-label/index.html">by label</a><a href="../archive/by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../arcade/index.html">arcade</a></li>
+        <li><a href="../press/index.html">press</a><div class="dropdown"><a href="../press/index.html">all pieces</a><a href="../press/submissions.html">submissions</a></div></li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <span class="current">press</span>
+    </div>
+
+    <h1 class="page-title">// press //</h1>
+    <p class="page-subtitle">magmacrunch press</p>
+
+    <div class="press-intro">
+        <p>a diy publishing house for essays, poetry, fiction, and experimental writing. no gatekeepers, no advance, no permission needed.</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="pieces-wrap">
+        <div class="pieces-label">// pieces //</div>
+
+        <a href="photon-quantum.html" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">On the Quantum Nature of Photons</div>
+                    <div class="piece-card-meta">
+                        <span class="type">essay</span>
+                        jake mccoy &nbsp;·&nbsp; 2025
+                    </div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <!-- ADD FUTURE PIECES HERE — copy a .piece-card block -->
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+</body>
+</html>

@@ -31,6 +31,10 @@ window.NAV_CONFIG = {
             { href: 'archive/by-contributor/index.html', label: 'by contributor' }
         ]},
         { label: 'arcade', href: 'arcade/index.html' },
+        { label: 'press', href: 'press/index.html', items: [
+            { href: 'press/index.html', label: 'all pieces' },
+            { href: 'press/submissions.html', label: 'submissions' }
+        ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]
 };
