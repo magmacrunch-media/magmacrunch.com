@@ -7,6 +7,14 @@
     <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
     <link rel="stylesheet" href="../../style.css">
     <style>
+        /* ── NAV DINER OVERRIDES ── */
+        :root {
+            --nav-accent: #c8202a;
+            --nav-glow: rgba(200,32,42,0.4);
+            --nav-brand: #30c8c0;
+            --nav-brand-glow: rgba(48,200,192,0.6);
+        }
+
         main {
             flex: 1;
             display: flex;
@@ -24,16 +32,16 @@
             margin-bottom: 24px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--violet); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--violet); opacity: 0.7; }
-        .breadcrumb .current { color: var(--violet); }
+        .breadcrumb a { color: #7ec8b8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #f0b840; }
+        .breadcrumb .sep { margin: 0 8px; color: #d49830; opacity: 0.7; }
+        .breadcrumb .current { color: #f0b840; }
 
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 14px;
-            color: var(--cyan);
-            text-shadow: 0 0 16px rgba(0,245,255,0.6);
+            color: #30c8c0;
+            text-shadow: 0 0 16px rgba(48,200,192,0.6);
             margin-bottom: 8px;
             letter-spacing: 0.15em;
             animation: fadeUp 0.5s ease both;
@@ -50,16 +58,16 @@
 
         /* ── JUKEBOX SCOPED PALETTE ── */
         .jukebox {
-            --j-purple:  #c45fff;
-            --j-pink:    #ff5fd4;
-            --j-gold:    #ffdf00;
-            --j-mint:    #00ffb3;
-            --j-orange:  #ff6b35;
-            --j-blue:    #5f7fff;
-            --j-bg:      #12001a;
-            --j-panel:   #1c0028;
-            --j-border:  #3a1050;
-            --j-screen:  #060010;
+            --j-purple:  #c8202a;
+            --j-pink:    #e8303a;
+            --j-gold:    #f0b840;
+            --j-mint:    #7ec8b8;
+            --j-orange:  #d49830;
+            --j-blue:    #7ab8d8;
+            --j-bg:      #1a1418;
+            --j-panel:   #2e1418;
+            --j-border:  #4a1820;
+            --j-screen:  #1a1418;
         }
 
         /* ── JUKEBOX CABINET ── */
@@ -70,17 +78,17 @@
                     0deg,
                     transparent,
                     transparent 3px,
-                    rgba(196,95,255,0.03) 3px,
-                    rgba(196,95,255,0.03) 4px
+                    rgba(200,32,42,0.03) 3px,
+                    rgba(200,32,42,0.03) 4px
                 ),
-                linear-gradient(180deg, #200030 0%, #0a0012 60%, #050008 100%);
+                linear-gradient(180deg, #2e1418 0%, #1a1418 60%, #140e10 100%);
             border: 6px solid var(--j-purple);
             border-top: 10px solid var(--j-purple);
             border-radius: 8px 8px 0 0;
             padding: 0;
             box-shadow:
-                0 0 48px rgba(196,95,255,0.25),
-                0 0 12px rgba(196,95,255,0.4),
+                0 0 48px rgba(200,32,42,0.25),
+                0 0 12px rgba(200,32,42,0.4),
                 inset 0 0 40px rgba(0,0,0,0.6);
             animation: fadeUp 0.5s 0.1s ease both;
             overflow: hidden;
@@ -92,12 +100,12 @@
             display: block;
             height: 8px;
             background: linear-gradient(90deg,
-                #3a1050 0%,
-                #c45fff 20%,
-                #ffdf00 40%,
-                #c45fff 60%,
-                #ffdf00 80%,
-                #3a1050 100%
+                #4a1820 0%,
+                #5a5a60 20%,
+                #c0c4c8 40%,
+                #5a5a60 60%,
+                #c0c4c8 80%,
+                #4a1820 100%
             );
             animation: shimmer 3s linear infinite;
             background-size: 200% 100%;
@@ -119,7 +127,7 @@
             gap: 16px;
             margin-bottom: 12px;
             padding: 10px;
-            background: linear-gradient(180deg, #1c0028 0%, #0a0012 100%);
+            background: linear-gradient(180deg, #2e1418 0%, #1a1418 100%);
             border: 3px solid var(--j-border);
         }
 
@@ -132,8 +140,8 @@
         .pj-speaker {
             width: 32px;
             height: 24px;
-            background: #08000f;
-            border: 2px solid #3a1050;
+            background: #140e10;
+            border: 2px solid #4a1820;
         }
 
         .pj-speaker.active {
@@ -151,8 +159,8 @@
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            background: #08000f;
-            border: 4px solid #3a1050;
+            background: #140e10;
+            border: 4px solid #4a1820;
             position: relative;
             transition: transform 0.3s ease-out;
         }
@@ -170,8 +178,8 @@
             position: absolute;
             inset: 6px;
             border-radius: 50%;
-            background: #1c0028;
-            border: 2px solid #3a1050;
+            background: #2e1418;
+            border: 2px solid #4a1820;
         }
 
         .pj-disc-label {
@@ -196,7 +204,7 @@
         .pj-vent-line {
             width: 24px;
             height: 3px;
-            background: #3a1050;
+            background: #4a1820;
         }
 
         .pj-coins {
@@ -227,38 +235,38 @@
 
         .neon-light {
             height: 10px;
-            background: #1c0028;
-            border: 2px solid #3a1050;
+            background: #2e1418;
+            border: 2px solid #4a1820;
         }
 
-        .neon-lights.active .neon-light:nth-child(1) { background: var(--j-pink);   border-color: var(--j-pink);   box-shadow: 0 0 6px var(--j-pink); }
+        .neon-lights.active .neon-light:nth-child(1) { background: var(--j-purple);   border-color: var(--j-purple);   box-shadow: 0 0 6px var(--j-purple); }
         .neon-lights.active .neon-light:nth-child(2) { background: var(--j-gold);   border-color: var(--j-gold);   box-shadow: 0 0 6px var(--j-gold); }
-        .neon-lights.active .neon-light:nth-child(3) { background: var(--j-purple); border-color: var(--j-purple); box-shadow: 0 0 6px var(--j-purple); }
+        .neon-lights.active .neon-light:nth-child(3) { background: var(--j-pink); border-color: var(--j-pink); box-shadow: 0 0 6px var(--j-pink); }
         .neon-lights.active .neon-light:nth-child(4) { background: var(--j-mint);   border-color: var(--j-mint);   box-shadow: 0 0 6px var(--j-mint); }
         .neon-lights.active .neon-light:nth-child(5) { background: var(--j-orange); border-color: var(--j-orange); box-shadow: 0 0 6px var(--j-orange); }
         .neon-lights.active .neon-light:nth-child(6) { background: var(--j-blue);   border-color: var(--j-blue);   box-shadow: 0 0 6px var(--j-blue); }
 
         /* ── TITLE STRIP WITH LIGHTS ── */
         .title-strip {
-            background: linear-gradient(90deg, #1c0028 0%, #2a003c 50%, #1c0028 100%);
+            background: linear-gradient(90deg, #2e1418 0%, #3a1c24 50%, #2e1418 100%);
             border: 2px solid var(--j-purple);
             border-left: 6px solid var(--j-purple);
             border-right: 6px solid var(--j-purple);
             padding: 10px 14px;
-            margin-bottom: 16px;
+            margin-bottom: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 0 16px rgba(196,95,255,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 0 16px rgba(200,32,42,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
         .title-strip-text {
             font-family: 'Press Start 2P', monospace;
             font-size: 11px;
-            color: var(--j-purple);
+            color: #30c8c0;
             letter-spacing: 0.3em;
-            text-shadow: 0 0 12px rgba(196,95,255,0.9), 0 0 24px rgba(196,95,255,0.4);
+            text-shadow: 0 0 12px rgba(48,200,192,0.9), 0 0 24px rgba(48,200,192,0.4);
         }
 
         .title-strip .neon-lights {
@@ -268,23 +276,29 @@
             background: transparent;
         }
 
+        /* ── CHECKERBOARD STRIP ── */
+        .checker-strip {
+            height: 10px;
+            background: repeating-conic-gradient(#181818 0% 25%, #f0ece0 0% 50%) 0 0 / 10px 10px;
+        }
+
         /* ── NOW PLAYING (top display) ── */
         .now-playing {
             background:
                 repeating-linear-gradient(
                     0deg,
-                    rgba(196,95,255,0.03) 0px,
-                    rgba(196,95,255,0.03) 1px,
+                    rgba(200,32,42,0.03) 0px,
+                    rgba(200,32,42,0.03) 1px,
                     transparent 1px,
                     transparent 3px
                 ),
-                #040008;
+                #140e10;
             border: 4px solid var(--j-purple);
             border-radius: 4px;
             padding: 14px;
             margin-bottom: 14px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(196,95,255,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(200,32,42,0.15), inset 0 0 30px rgba(0,0,0,0.5);
         }
 
         .np-label {
@@ -303,15 +317,15 @@
             color: var(--j-gold);
             letter-spacing: 0.1em;
             margin-bottom: 8px;
-            text-shadow: 0 0 10px rgba(255,223,0,0.6), 2px 2px 0 #000;
+            text-shadow: 0 0 10px rgba(248,216,120,0.6), 2px 2px 0 #000;
         }
 
         .np-artist {
             font-family: 'Courier Prime', monospace;
             font-size: 14px;
-            color: var(--j-pink);
+            color: var(--j-mint);
             margin-bottom: 16px;
-            text-shadow: 0 0 6px rgba(255,95,212,0.4);
+            text-shadow: 0 0 6px rgba(126,200,184,0.4);
         }
 
         .np-time {
@@ -359,7 +373,7 @@
 
         /* ── SONG LIST (main browser) ── */
         .song-list {
-            background: #04000a;
+            background: #140e10;
             border: 4px solid var(--j-border);
             margin-bottom: 12px;
         }
@@ -369,7 +383,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 16px;
-            background: #1c0028;
+            background: #2e1418;
             border-bottom: 3px solid var(--j-border);
         }
 
@@ -389,7 +403,7 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
             color: var(--j-purple);
-            background: #0a0012;
+            background: #1a1418;
             border: 2px solid var(--j-purple);
             padding: 4px 8px;
             cursor: pointer;
@@ -403,7 +417,7 @@
         .sl-page {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: #6a406a;
+            color: #8a5050;
             padding: 4px 8px;
         }
 
@@ -417,7 +431,7 @@
             display: flex;
             align-items: center;
             padding: 12px;
-            border: 3px solid #1c0028;
+            border: 3px solid #2e1418;
             margin-bottom: 6px;
             cursor: pointer;
             transition: all 0.15s;
@@ -425,17 +439,17 @@
 
         .song-item:hover {
             border-color: var(--j-purple);
-            background: rgba(196,95,255,0.07);
+            background: rgba(200,32,42,0.07);
         }
 
         .song-item.playing {
             border-color: var(--j-pink);
-            background: rgba(255,95,212,0.1);
+            background: rgba(232,48,58,0.1);
         }
 
         .song-item.selected {
             border-color: var(--j-gold);
-            background: rgba(255,223,0,0.08);
+            background: rgba(240,184,64,0.08);
         }
 
         .song-num {
@@ -512,7 +526,7 @@
         .selector-wrap {
             position: relative;
             height: 80px;
-            background: #04000a;
+            background: #140e10;
             border: 4px solid var(--j-purple);
             margin-bottom: 12px;
             overflow: hidden;
@@ -534,8 +548,8 @@
             padding: 0 24px;
             gap: 20px;
             cursor: pointer;
-            background: #04000a;
-            border-right: 4px solid #1c0028;
+            background: #140e10;
+            border-right: 4px solid #2e1418;
         }
 
         .selector-row:last-child {
@@ -543,11 +557,11 @@
         }
 
         .selector-row:hover {
-            background: #0e0018;
+            background: #221818;
         }
 
         .selector-row.current {
-            background: #0a0014;
+            background: #1e1416;
         }
 
         .selector-row.prev,
@@ -560,7 +574,7 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 24px;
             color: var(--j-purple);
-            background: #1c0028;
+            background: #2e1418;
             padding: 8px 12px;
             border: 3px solid var(--j-purple);
         }
@@ -610,32 +624,32 @@
             padding: 0 20px;
             gap: 16px;
             cursor: pointer;
-            background: #0a0a12;
-            border: 3px solid #3a1050;
+            background: #1a1418;
+            border: 3px solid #4a1820;
             image-rendering: pixelated;
         }
 
         .selector-row:hover {
-            background: #0e0018;
+            background: #221818;
         }
 
         .selector-row.current {
             border: 3px solid var(--j-purple);
-            background: #0a0014;
+            background: #1e1416;
         }
 
         .selector-row.prev,
         .selector-row.next {
             opacity: 0.3;
             cursor: default;
-            border-color: #1c0028;
+            border-color: #2e1418;
         }
 
         .sr-num {
             font-family: 'Press Start 2P', monospace;
             font-size: 14px;
             color: var(--j-purple);
-            background: #1c0028;
+            background: #2e1418;
             padding: 6px 8px;
             border: 2px solid var(--j-purple);
         }
@@ -662,13 +676,13 @@
             color: var(--j-gold);
             letter-spacing: 0.08em;
             margin-bottom: 6px;
-            text-shadow: 0 0 6px rgba(255,223,0,0.4);
+            text-shadow: 0 0 6px rgba(248,216,120,0.4);
         }
 
         .sr-artist {
             font-family: 'Courier Prime', monospace;
             font-size: 10px;
-            color: var(--j-pink);
+            color: var(--j-mint);
         }
 
         .selector-inner {
@@ -688,11 +702,11 @@
         }
 
         .selector-row:hover {
-            background: rgba(196,95,255,0.06);
+            background: rgba(200,32,42,0.06);
         }
 
         .selector-row.current {
-            background: rgba(196,95,255,0.12);
+            background: rgba(200,32,42,0.12);
         }
 
         .selector-row.prev,
@@ -765,7 +779,7 @@
 
         /* ── QUEUE ── */
         .queue-display {
-            background: #04000a;
+            background: #140e10;
             border: 2px solid var(--j-gold);
             border-left: 4px solid var(--j-gold);
             padding: 8px;
@@ -780,7 +794,7 @@
             letter-spacing: 0.2em;
             margin-bottom: 8px;
             opacity: 0.9;
-            text-shadow: 0 0 6px rgba(255,223,0,0.5);
+            text-shadow: 0 0 6px rgba(240,184,64,0.5);
         }
 
         .queue-list {
@@ -794,7 +808,7 @@
             font-size: 9px;
             color: var(--white);
             padding: 4px 6px;
-            background: rgba(255,223,0,0.07);
+            background: rgba(240,184,64,0.07);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -803,7 +817,7 @@
         .queue-empty {
             font-family: 'Courier Prime', monospace;
             font-size: 9px;
-            color: #6a406a;
+            color: #8a5050;
             opacity: 0.7;
         }
 
@@ -818,7 +832,7 @@
         .sr-artist {
             font-family: 'Courier Prime', monospace;
             font-size: 9px;
-            color: var(--j-pink);
+            color: var(--j-mint);
             margin-top: 4px;
             white-space: nowrap;
             overflow: hidden;
@@ -850,18 +864,18 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
             color: var(--j-purple);
-            background: #0a0012;
+            background: #1a1418;
             border: 4px solid var(--j-purple);
             padding: 16px 12px;
             cursor: pointer;
             transition: all 0.15s;
-            box-shadow: 0 0 8px rgba(196,95,255,0.3);
+            box-shadow: 0 0 8px rgba(200,32,42,0.3);
         }
 
         .juke-arrow:hover {
             background: var(--j-purple);
             color: #fff;
-            box-shadow: 0 0 16px rgba(196,95,255,0.6);
+            box-shadow: 0 0 16px rgba(200,32,42,0.6);
         }
 
         .juke-arrow:disabled {
@@ -871,7 +885,7 @@
         }
 
         .juke-arrow:disabled:hover {
-            background: #0a0012;
+            background: #1a1418;
             color: var(--j-purple);
         }
 
@@ -891,24 +905,24 @@
             padding: 10px 20px;
             cursor: pointer;
             transition: all 0.15s;
-            box-shadow: 0 0 12px rgba(196,95,255,0.4);
+            box-shadow: 0 0 12px rgba(200,32,42,0.4);
             letter-spacing: 0.1em;
         }
 
         .ctrl-btn:hover {
             background: var(--j-pink);
             border-color: var(--j-pink);
-            box-shadow: 0 0 18px rgba(255,95,212,0.5);
+            box-shadow: 0 0 18px rgba(232,48,58,0.5);
         }
 
         .ctrl-btn.playing {
             background: var(--j-pink);
             border-color: var(--j-pink);
-            box-shadow: 0 0 14px rgba(255,95,212,0.5);
+            box-shadow: 0 0 14px rgba(232,48,58,0.5);
         }
 
         .ctrl-btn.stop {
-            background: #0a0012;
+            background: #1a1418;
             color: var(--j-pink);
             border-color: var(--j-pink);
             box-shadow: none;
@@ -917,14 +931,14 @@
         .ctrl-btn.stop:hover {
             background: var(--j-pink);
             color: #fff;
-            box-shadow: 0 0 14px rgba(255,95,212,0.4);
+            box-shadow: 0 0 14px rgba(232,48,58,0.4);
         }
 
         /* ── FOOTER ── */
         .juke-footer {
             font-family: 'Press Start 2P', monospace;
             font-size: 5px;
-            color: #6a406a;
+            color: #8a5050;
             text-align: center;
             margin-top: 10px;
             letter-spacing: 0.2em;
@@ -956,8 +970,8 @@
             gap: 10px;
             margin-bottom: 14px;
             padding: 6px 10px;
-            background: #0a0012;
-            border: 2px solid #3a1050;
+            background: #1a1418;
+            border: 2px solid #4a1820;
         }
 
         .coin-slot-label {
@@ -965,7 +979,7 @@
             font-size: 6px;
             color: var(--j-gold);
             letter-spacing: 0.2em;
-            text-shadow: 0 0 6px rgba(255,223,0,0.4);
+            text-shadow: 0 0 6px rgba(248,216,120,0.4);
         }
 
         .coin-slot {
@@ -974,7 +988,7 @@
             background: #000;
             border: 2px solid var(--j-gold);
             border-radius: 2px;
-            box-shadow: 0 0 6px rgba(255,223,0,0.3), inset 0 1px 3px rgba(0,0,0,0.8);
+            box-shadow: 0 0 6px rgba(248,216,120,0.3), inset 0 1px 3px rgba(0,0,0,0.8);
         }
 
         .cabinet-stripes {
@@ -1049,6 +1063,7 @@
                 <div class="neon-light" id="light6"></div>
             </div>
         </div>
+        <div class="checker-strip"></div>
 
         <div class="cabinet-stripes">
             <div class="cabinet-stripe"></div>

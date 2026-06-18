@@ -8,7 +8,18 @@
     <link rel="stylesheet" href="../../style.css">
     <link rel="stylesheet" href="../../assets/archive.css">
     <style>
-        
+        /* ── IBM PC CONVERTIBLE OVERRIDES ── */
+        :root {
+            --nav-accent: #c8202a;
+            --nav-glow: rgba(200,32,42,0.4);
+            --nav-brand: #1858c0;
+            --nav-brand-glow: rgba(24,88,192,0.6);
+        }
+
+        body {
+            background-color: #0e1210;
+        }
+
         main {
             flex: 1;
             display: flex;
@@ -21,8 +32,8 @@
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(13px, 2.8vw, 22px);
-            color: var(--yellow);
-            text-shadow: 0 0 20px rgba(255,224,58,0.55);
+            color: #1858c0;
+            text-shadow: 0 0 20px rgba(24,88,192,0.55);
             margin-bottom: 10px;
             letter-spacing: 0.08em;
             animation: fadeUp 0.5s ease both;
@@ -31,7 +42,7 @@
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--rose);
+            color: #30d0d0;
             letter-spacing: 0.1em;
             margin-bottom: 48px;
             animation: fadeUp 0.5s 0.05s ease both;
@@ -68,18 +79,18 @@
         }
 
         .intro-wrap p a {
-            color: var(--yellow);
+            color: #1858c0;
             text-decoration: underline;
-            text-decoration-color: rgba(255,224,58,0.4);
+            text-decoration-color: rgba(24,88,192,0.4);
             transition: color 0.15s;
         }
-        .intro-wrap p a:hover { color: var(--rose); }
+        .intro-wrap p a:hover { color: #6890d0; }
 
         /* ── DIVIDER ── */
         .section-divider {
             width: min(640px, 90vw);
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--yellow), var(--rose), var(--yellow), transparent);
+            background: linear-gradient(90deg, transparent, #1858c0, #6890d0, #1858c0, transparent);
             margin-bottom: 48px;
             opacity: 0.35;
             animation: fadeUp 0.5s 0.2s ease both;
@@ -97,7 +108,7 @@
         .releases-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: var(--yellow);
+            color: #0040a0;
             letter-spacing: 0.15em;
             margin-bottom: 20px;
             opacity: 0.7;
@@ -106,18 +117,18 @@
         .floppy-card {
             display: flex;
             gap: 0;
-            border: 2px solid #1e1e2e;
+            border: 2px solid #5a5c58;
             border-bottom: none;
-            background: var(--deep);
+            background: #2a2c28;
             text-decoration: none;
             transition: border-color 0.15s, background 0.15s;
             position: relative;
             overflow: hidden;
         }
-        .floppy-card:last-child { border-bottom: 2px solid #1e1e2e; }
+        .floppy-card:last-child { border-bottom: 2px solid #5a5c58; }
         .floppy-card:hover {
-            border-color: var(--yellow);
-            background: #16161f;
+            border-color: #1858c0;
+            background: #3a3c38;
         }
 
         /* left accent bar */
@@ -126,7 +137,7 @@
             display: block;
             width: 4px;
             flex-shrink: 0;
-            background: var(--yellow);
+            background: #1858c0;
             transition: width 0.15s;
         }
         .floppy-card:hover::before { width: 7px; }
@@ -140,8 +151,8 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            border-right: 1px solid #1e1e2e;
-            background: rgba(255,224,58,0.03);
+            border-right: 1px solid #5a5c58;
+            background: rgba(24,88,192,0.03);
             overflow: hidden;
         }
 
@@ -168,7 +179,7 @@
         .floppy-card-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(8px, 1.4vw, 10px);
-            color: var(--yellow);
+            color: #1858c0;
             letter-spacing: 0.06em;
             line-height: 1.7;
             margin-bottom: 5px;
@@ -189,7 +200,7 @@
         .floppy-card-arrow {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
-            color: var(--yellow);
+            color: #1858c0;
             opacity: 0;
             transform: translateX(-6px);
             transition: opacity 0.15s, transform 0.15s;
@@ -204,10 +215,10 @@
         .coming-soon {
             width: min(640px, 90vw);
             margin-top: 32px;
-            border: 1px dashed #2a2a1a;
+            border: 1px dashed #5a5c58;
             padding: 28px;
             text-align: center;
-            background: rgba(255,224,58,0.02);
+            background: rgba(24,88,192,0.02);
             animation: fadeUp 0.5s 0.28s ease both;
         }
         .coming-soon p {
@@ -217,7 +228,13 @@
             letter-spacing: 0.1em;
             line-height: 2.4;
         }
-        .coming-soon span { color: var(--yellow); opacity: 0.5; }
+        .coming-soon span { color: #1858c0; opacity: 0.5; }
+
+        /* ── BREADCRUMB OVERRIDE (IBM theme) ── */
+        main .breadcrumb a { color: #1858c0; }
+        main .breadcrumb a:hover { color: #6890d0; }
+        main .breadcrumb .sep { color: #8a8878; }
+        main .breadcrumb .current { color: #0040a0; }
 
         @media (max-width: 640px) {
             .page-title { font-size: 13px; }
@@ -341,16 +358,16 @@
     ctx.imageSmoothingEnabled = false; // Crucial for chunky pixels
     const W = 32, H = 32;
 
-    // Classic Retro Palette
+    // Classic Retro Palette (IBM PC Convertible)
     const C = {
-        body:      '#2b2b2b', // Dark grey/black plastic
-        notch:     '#141414', // Shadow for notches
-        shutter:   '#c0c0c0', // Silver metal
-        shutterDk: '#808080', // Metal shadow
-        exposed:   '#111111', // Exposed magnetic disk inside shutter
-        label:     '#f4f4f4', // White paper
-        stripe:    '#d92b2b', // Classic red stripe
-        text:      '#555555'  // Faux text lines
+        body:      '#1a1a1c', // Floppy disk shell black
+        notch:     '#101012', // Shadow for notches
+        shutter:   '#9098a0', // Disk metal shutter grey
+        shutterDk: '#70787e', // Metal shadow
+        exposed:   '#0e1010', // Exposed magnetic disk inside shutter
+        label:     '#f0ece0', // Disk label white (vintage)
+        stripe:    '#c8202a', // IBM red stripe
+        text:      '#8a8878'  // Faux text lines (beige-grey)
     };
 
     let frame = 0;
