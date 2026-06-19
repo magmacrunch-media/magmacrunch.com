@@ -6,6 +6,32 @@
     <title>On the Quantum Nature of Photons — press — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
     <link rel="stylesheet" href="../style.css">
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'all',
+        macros: {
+          vb: ['{\\mathbf{#1}}', 1],
+          vu: ['{\\hat{#1}}', 1],
+          dv: ['\\frac{\\mathrm{d} #1}{\\mathrm{d} #2}', 2],
+          pdv: ['\\frac{\\partial #1}{\\partial #2}', 2],
+          expval: ['\\langle #1 \\rangle', 1],
+          comm: ['[#1, #2]', 2],
+          ket: ['|#1\\rangle', 1],
+          bra: ['\\langle #1|', 1],
+          braket: ['\\langle #1 | #2 \\rangle', 2],
+          dyad: ['|#1\\rangle\\langle #1|', 1],
+          norm: ['\\|#1\\|', 1],
+          abs: ['|#1|', 1],
+          matrixel: ['\\langle #1 | #2 | #3 \\rangle', 3]
+        }
+      },
+      loader: {load: ['[tex]/physics']}
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     <style>
         :root {
             --nav-accent: #c02828;
@@ -42,9 +68,8 @@
         .breadcrumb .sep { margin: 0 8px; color: #c8c0a8; }
         .breadcrumb .current { color: #c02828; }
 
-        /* ── ARTICLE HEADER ── */
         .article-header {
-            width: min(640px, 90vw);
+            width: min(700px, 90vw);
             text-align: center;
             margin-bottom: 40px;
             animation: fadeUp 0.5s ease both;
@@ -63,7 +88,7 @@
 
         .article-title {
             font-family: 'Press Start 2P', monospace;
-            font-size: clamp(12px, 2.5vw, 18px);
+            font-size: clamp(11px, 2.2vw, 16px);
             color: #1a1a1a;
             letter-spacing: 0.06em;
             line-height: 1.8;
@@ -77,29 +102,46 @@
             line-height: 1.6;
         }
 
-        .article-meta .author {
-            color: #c02828;
-            font-weight: 700;
-        }
+        .article-meta .author { color: #c02828; font-weight: 700; }
 
         /* ── ARTICLE BODY ── */
         .article-body {
-            width: min(600px, 90vw);
+            width: min(700px, 90vw);
             animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .article-body h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #c02828;
+            letter-spacing: 0.08em;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .article-body h3 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #444;
+            letter-spacing: 0.06em;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            line-height: 1.8;
         }
 
         .article-body p {
             font-family: 'Courier Prime', monospace;
-            font-size: 15px;
-            line-height: 1.9;
+            font-size: 14px;
+            line-height: 1.85;
             color: #222;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             text-align: justify;
         }
 
         .article-body p:first-of-type::first-letter {
             font-family: 'Press Start 2P', monospace;
-            font-size: 2.4em;
+            font-size: 2.2em;
             float: left;
             line-height: 0.85;
             margin-right: 8px;
@@ -114,18 +156,65 @@
         }
         .article-body a:hover { color: #8a1a1a; }
 
+        .article-body ul {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.85;
+            color: #222;
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+        .article-body li { margin-bottom: 4px; }
+
+        .article-body strong { color: #1a1a1a; }
+        .article-body em { color: #444; }
+
+        /* ── EQUATIONS ── */
+        .equation {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .subequations {
+            margin: 16px 0;
+        }
+
+        .article-body .mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+
+        .appendix-divider {
+            width: 100%;
+            height: 2px;
+            background: #c8c0a8;
+            margin: 48px 0 32px;
+            position: relative;
+        }
+        .appendix-divider::after {
+            content: 'APPENDICES';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #f0e4c8;
+            padding: 0 16px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #999;
+            letter-spacing: 0.15em;
+        }
+
         .article-end {
-            width: min(600px, 90vw);
+            width: min(700px, 90vw);
             text-align: center;
             margin-top: 40px;
             margin-bottom: 40px;
-            animation: fadeUp 0.5s 0.15s ease both;
         }
 
-        .article-end span {
-            color: #c02828;
-            font-size: 12px;
-        }
+        .article-end span { color: #c02828; font-size: 12px; }
 
         .article-back {
             display: inline-block;
@@ -151,8 +240,11 @@
         footer span { color: #c02828 !important; }
 
         @media (max-width: 640px) {
-            .article-title { font-size: 12px; }
-            .article-body p { font-size: 14px; }
+            .article-title { font-size: 11px; }
+            .article-body p { font-size: 13px; }
+            .article-body h2 { font-size: 9px; }
+            .article-body h3 { font-size: 7px; }
+            .equation { overflow-x: auto; }
         }
     </style>
 </head>
@@ -187,16 +279,528 @@
         <h1 class="article-title">On the Quantum Nature of Photons</h1>
         <div class="article-meta">
             <span class="author">jake mccoy</span><br>
-            2025 &nbsp;·&nbsp; ~5 min read
+            september 2024
         </div>
     </div>
 
     <div class="article-body">
-        <p>Placeholder text. The full essay on photon quantum mechanics will appear here — exploring wave-particle duality, the double-slit experiment, and what it means that light can be in two places at once.</p>
 
-        <p>This is a placeholder paragraph. The actual essay will dig into how photons behave as both waves and particles, the strange implications of quantum superposition, and why the act of observation changes everything. Science writing doesn't have to be dry — it can be visceral, strange, and beautiful, just like the phenomena it describes.</p>
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 1: Classical Harmonic Oscillator       -->
+<!-- ═══════════════════════════════════════════════ -->
 
-        <p>More placeholder text. The essay will conclude with reflections on how quantum mechanics challenges our intuitive understanding of reality, and why that matters beyond the physics lab.</p>
+<h2 id="sec:classical_HO">Classical Harmonic Oscillator</h2>
+
+<p>The Hamiltonian for a 1D harmonic oscillator with mass $m$ and angular frequency $\omega$ can be written in terms of position, $x$, and momentum, $p_x$, in phase space as</p>
+
+<div class="equation" id="eq:H_classical_HO">
+$$
+H = \frac{p_x^2}{2 m} + \frac{1}{2} m \omega^2 x^2 .
+$$
+</div>
+
+<p>Hamilton's equations give</p>
+
+<div class="equation" id="eq:Hamiton_motion1">
+$$
+\dot{x} = \frac{\partial H}{\partial p_x} = \frac{p_x}{m} \quad \text{and} \quad \dot{p_x} = -\frac{\partial H}{\partial x} = -m \omega^2 x .
+$$
+</div>
+
+<p>Combining these yields the differential equation $\ddot{x} + \omega^2 x = 0$, which has solutions of the form</p>
+
+<div class="equation" id="eq:classical_pos_mom">
+$$
+x(t) = x_0 \cos\!\left(\phi - \omega t\right) \quad \text{with} \quad p_x(t) = m \dot{x}(t) = p_0 \sin\!\left(\phi - \omega t\right) ,
+$$
+</div>
+
+<p>where $x_0$ and $p_0 \equiv m \omega x_0$ are the amplitudes associated with the oscillating position and momentum while $\phi$ is an arbitrary phase shift.</p>
+
+<p>These simple equations can be written in a different way by defining a complex, unit-less function:</p>
+
+<div class="equation" id="eq:classical_afunc">
+$$
+a(t) \equiv \sqrt{\frac{m \omega}{2 \hbar}} \left[ x(t) + \frac{i}{m \omega} p(t) \right] = a_0 \, e^{i(\phi - \omega t)} \quad \text{with} \quad a_0 \equiv \sqrt{\frac{m \omega}{2 \hbar}} \, x_0 ,
+$$
+</div>
+
+<p>where, in anticipation of the quantum treatment described next, $\hbar$ is introduced to have its amplitude of $a_0$ be scaled in terms of quantum units. This function $a(t)$ can be thought of as a rotation in phase space defined by $(x, p_x)$, where there is also a scaling related to $\hbar \omega$.</p>
+
+<p>Using $a(t)$ and its complex conjugate, $a^*(t)$, the position and momentum can be expressed alternatively as</p>
+
+<div class="equation" id="eq:classical_pos2">
+$$
+x(t) = \frac{x_0}{2} \left[ e^{-i(\phi - \omega t)} + e^{i(\phi - \omega t)} \right] = \sqrt{\frac{\hbar}{2 m \omega}} \left[ a^*(t) + a(t) \right] \equiv \sqrt{\frac{2\hbar}{m\omega}} \, \Re\!\left[a(t)\right]
+$$
+</div>
+
+<p>and</p>
+
+<div class="equation" id="eq:classical_mom2">
+$$
+p_x(t) = \frac{i p_0}{2} \left[ e^{-i(\phi - \omega t)} - e^{i(\phi - \omega t)} \right] = i \sqrt{\frac{\hbar m \omega}{2}} \left[ a^*(t) - a(t) \right] \equiv \sqrt{2\hbar m\omega} \, \Im\!\left[a(t)\right] .
+$$
+</div>
+
+<p>Inserting these relations with $a(t)$ into the Hamiltonian and noting $|a(t)|^2 = a_0^2$ yields</p>
+
+<div class="equation" id="eq:energy_classical_HO">
+$$
+\mathcal{E} = \hbar\omega \, a_0^2 = \frac{1}{2} m \omega^2 x_0^2 = \frac{p_0^2}{2m} ,
+$$
+</div>
+
+<p>which describes the total energy of the oscillator in terms of $a_0^2$ being a multiplicative factor of $\hbar\omega$, which has so far been introduced as an arbitrary unit scale.</p>
+
+<p>A key property of the harmonic oscillator to note is that despite $\phi$ and $t$ appearing in $x(t)$ and $p_x(t)$, the total energy of the system is independent of these parameters. These classical equations of motion will be used as a reference for their quantum counterparts in the following sections.</p>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 2: Quantum Harmonic Oscillator         -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<h2 id="sec:QHO">Quantum Harmonic Oscillator</h2>
+
+<p>Consider the quantum version of the 1D harmonic oscillator with a Hamiltonian operator analogous to the classical case:</p>
+
+<div class="equation" id="eq:H_quantum_HO1">
+$$
+\underline{H} = \frac{\underline{P_x}^2}{2m} + \frac{1}{2} m \omega^2 \underline{X}^2 ,
+$$
+</div>
+
+<p>where $\underline{X}$ and $\underline{P_x}$ are Hermitian operators for position and momentum, respectively. These can be written in terms of a non-Hermitian operator, $\underline{a}$, and its adjoint, $\underline{a}^\dagger$, defined in analogy to the classical function as</p>
+
+<div class="equation" id="eq:ladder_ops">
+$$
+\underline{a} = \sqrt{\frac{m\omega}{2\hbar}} \left( \underline{X} + \frac{i}{m\omega} \underline{P_x} \right) \quad \text{with} \quad \underline{a}^\dagger = \sqrt{\frac{m\omega}{2\hbar}} \left( \underline{X} - \frac{i}{m\omega} \underline{P_x} \right) ,
+$$
+</div>
+
+<p>such that</p>
+
+<div class="equation" id="eq:pos_mom_ops">
+$$
+\underline{X} = \sqrt{\frac{\hbar}{2m\omega}} \left( \underline{a}^\dagger + \underline{a} \right) \quad \text{and} \quad \underline{P_x} = i\sqrt{\frac{\hbar m\omega}{2}} \left( \underline{a}^\dagger - \underline{a} \right) ,
+$$
+</div>
+
+<p>where it is noted that the canonical commutation relation, $[\underline{X}, \underline{P_x}] = i\hbar$, can be expressed equivalently as $[\underline{a}, \underline{a}^\dagger] = 1$. The Hamiltonian can then be written as</p>
+
+<div class="equation">
+$$
+\underline{H} = \hbar\omega \left( \underline{N} + \frac{1}{2} \right) \quad \text{with} \quad \underline{N} \equiv \underline{a}^\dagger \underline{a} ,
+$$
+</div>
+
+<p>where $\underline{N}$ is the <strong>number operator</strong>: a Hermitian operator associated with a measured number of excited energy quanta in a given quantum state.</p>
+
+<!-- ── Subsection: Energy eigenstates ── -->
+
+<h3 id="sec:energy_eigenstates">Energy eigenstates are like particles</h3>
+
+<p>Energy eigenstates of a quantum oscillator, written as $|n\rangle$, can be thought of as <em>stationary states</em> as a result of $\underline{H}$ being independent of time (and phase). These states are parameterized by $n$, the number of energy quanta, such that $\underline{N} |n\rangle = n |n\rangle$. Energy eigenstates are all independent from one another and form a complete ortho-normal set:</p>
+
+<div class="equation">
+$$
+\braket{n}{n'} = \delta_{nn'} \equiv \begin{cases} 1, & \text{if } n = n' \\ 0, & \text{if } n \neq n' \end{cases} \quad \text{and} \quad \sum_{n=0}^{\infty} |n\rangle\langle n| = \underline{I} .
+$$
+</div>
+
+<p>The energy eigenvalue is then given by</p>
+
+<div class="equation">
+$$
+\underline{H} |n\rangle = \hbar\omega \left( \underline{N} + \frac{1}{2} \right) |n\rangle = \hbar\omega \left( n + \frac{1}{2} \right) |n\rangle \equiv \mathcal{E}_n |n\rangle ,
+$$
+</div>
+
+<p>which describes a unit of energy $\hbar\omega$ being added for each integer increase of $n$. Note that $\mathcal{E}_n$ here has the same form as the classical energy, but with an additional term $\mathcal{E}_0$ that corresponds to the energy of the quantum <em>vacuum state</em> with $n=0$, written as $|0\rangle$.</p>
+
+<p>Through application of the unitary evolution operator, a wave function for a quantum oscillator defined by a single energy eigenstate, $|\psi\rangle = |n\rangle$, can be shown to oscillate with a frequency $\omega$ and a phase shift $\phi$ that are both scaled by $n + 1/2$:</p>
+
+<div class="equation" id="eq:energy_state_osc">
+$$
+|n(t,\phi)\rangle \equiv \underline{U}(t,\phi) |n\rangle = e^{\frac{i}{2}(\phi - \omega t)} e^{i(\phi - \omega t)\underline{N}} |n\rangle = e^{i(n + \frac{1}{2})\phi} \, e^{-i(n + \frac{1}{2})\omega t} |n\rangle .
+$$
+</div>
+
+<p>It can be readily seen that the total energy is completely certain and time-independent in a single eigenstate:</p>
+
+<div class="equation">
+$$
+\bar{\mathcal{E}}_n \equiv \langle \underline{H} \rangle(t,\phi) = \matrixel{n}{\underline{H}}{n} = \mathcal{E}_n \quad \text{with} \quad \Delta \mathcal{E}_n \equiv \sqrt{\langle \underline{H}^2 \rangle - \langle \underline{H} \rangle^2} = 0 ,
+$$
+</div>
+
+<p>which is equivalent to a definite number of energy quanta with $\bar{N} \equiv \langle \underline{N} \rangle = n$ and $\Delta N = 0$.</p>
+
+<p>It has been established that a quantum oscillator defined by a single energy eigenstate, $|\psi\rangle = |n\rangle$, has a definite energy composed of $n$ energy quanta. Although such a state is associated with an oscillating wave function, the behavior of the physical quantum oscillator does not <em>physically</em> oscillate in this case.</p>
+
+<p>Crucially, position and momentum both have vanishing expectation values in a single energy eigenstate with finite uncertainties that are independent of time and phase:</p>
+
+<div class="equation" id="eq:particle_xeval">
+$$
+\bar{x}_n \equiv \langle \underline{X} \rangle(t,\phi) = 0 \quad \text{with} \quad \Delta x_n = \sqrt{\frac{\hbar}{m\omega} \left( n + \frac{1}{2} \right)}
+$$
+</div>
+
+<p>and</p>
+
+<div class="equation" id="eq:particle_pxeval">
+$$
+\bar{p}_{x,n} \equiv \langle \underline{P_x} \rangle(t,\phi) = 0 \quad \text{with} \quad \Delta p_{x,n} = \sqrt{m\hbar\omega \left( n + \frac{1}{2} \right)} ,
+$$
+</div>
+
+<p>which together satisfy the <strong>Heisenberg uncertainty principle</strong>:</p>
+
+<div class="equation">
+$$
+\Delta x_n \, \Delta p_{x,n} = \hbar \left( n + \frac{1}{2} \right) \geq \frac{\hbar}{2} \quad \text{for } n \geq 0 ,
+$$
+</div>
+
+<p>where only $n=0$ corresponds to a state of minimum uncertainty. In this scenario where the expectation values for position and momentum are constant, the quantum oscillator in a single energy eigenstate can be thought of as a <strong>particle-like</strong>, excited state, rather than some sort of physically oscillating system.</p>
+
+<!-- ── Subsection: Uncertainty in amplitude and phase ── -->
+
+<h3>Uncertainty in amplitude and phase</h3>
+
+<p>The number $\bar{N} \equiv \langle \underline{N} \rangle = n$ in an energy eigenstate, $|\psi\rangle = |n\rangle$, can be thought of as a precisely-defined, quantized amplitude associated with the oscillator. For other $|\psi\rangle$, generally there will be some uncertainty in this amplitude such that $\bar{N} \neq n$ and $\Delta N \neq 0$.</p>
+
+<p>There will correspondingly be some <em>uncertainty in phase</em>, which can be addressed by first noting that the unitary phase-translation operator $\underline{U}(\phi)$ shifts the phase of the wave function $|\psi\rangle = |n\rangle$ by $(n + 1/2)\phi$:</p>
+
+<div class="equation">
+$$
+\underline{U}(\phi) |n\rangle = e^{i\phi(\underline{N} + \frac{1}{2})} |n\rangle = e^{i\phi(n + \frac{1}{2})} |n\rangle ,
+$$
+</div>
+
+<p>Because the Hamiltonian is independent of phase, this unitary translation in $\phi$ can be interpreted as the phase behavior of the $n^{\text{th}}$ energy-eigenstate wave function:</p>
+
+<div class="equation">
+$$
+\psi_n(\phi) \equiv e^{i\phi(n + \frac{1}{2})} ,
+$$
+</div>
+
+<p>which can be introduced as a multiplier to other dependencies of $|\psi\rangle$.</p>
+
+<p>A wave function defined by a specified phase $\phi$ can be expanded in the energy-eigenstate basis as</p>
+
+<div class="equation">
+$$
+|\phi\rangle = \underline{I} \, |\phi\rangle = \sum_{n=0}^{\infty} \braket{n}{\phi} |n\rangle = \sum_{n=0}^{\infty} e^{-i\phi(n + \frac{1}{2})} |n\rangle ,
+$$
+</div>
+
+<p>with $\braket{n}{\phi} = \psi_n^*(\phi)$ thought of as $\phi$ projected onto the <em>phase basis</em>. However, this state cannot be normalized and hence can be regarded as a mathematical tool rather than a true physical scenario. It can be shown from the orthogonality of phasors that</p>
+
+<div class="equation">
+$$
+\underline{I} = \frac{1}{2\pi} \int_0^{2\pi} d\phi \, |\phi\rangle\langle\phi|
+$$
+</div>
+
+<p>is the relevant identity relation with $|\phi\rangle$ defining an <em>over-complete basis</em> such that $\braket{\phi'}{\phi} \neq \delta_{\phi,\phi'}$.</p>
+
+<p>Probabilities for measuring given values for $n$ and $\phi$ from a generic state $|\psi\rangle \neq |\phi\rangle$ can then be determined using</p>
+
+<div class="equation">
+$$
+\mathcal{P}(n) = \norm{\braket{n}{\psi}}^2 \quad \text{and} \quad \mathcal{P}(\phi) = \frac{1}{2\pi} \norm{\braket{\phi}{\psi}}^2 ,
+$$
+</div>
+
+<p>where $|\psi\rangle = |n\rangle$ is consistent with a spiked energy distribution, $\mathcal{P}(n) = 1$, and a flat phase distribution, $\mathcal{P}(\phi) = 1/2\pi$. In an opposite fashion to $|\psi\rangle = |n\rangle$, it can be shown that $\bar{N}$ and $\Delta N$ both tend toward infinity if $|\psi\rangle = |\phi\rangle$. This is indicative of the <strong>uncertainty trade-off between amplitude and phase for a quantum harmonic oscillator</strong>.</p>
+
+<p>As an example, consider a superposition of two energy eigenstates:</p>
+
+<div class="equation">
+$$
+|\psi\rangle = c_n |n\rangle + c_{n+1} |n+1\rangle
+$$
+</div>
+
+<p>where $|c_{n+1}|^2 + |c_n|^2 = 1$ while $c_n$ and $c_{n+1}$ are taken to be real coefficients. The probability to measure $n$ energy quanta is</p>
+
+<div class="equation">
+$$
+\mathcal{P}(n) = \norm{\braket{n}{\psi}}^2 = |c_n|^2
+$$
+</div>
+
+<p>while the expectation value and corresponding uncertainty are</p>
+
+<div class="equation">
+$$
+\bar{N} = \langle \underline{N} \rangle = n + |c_{n+1}|^2 \quad \text{and} \quad \Delta N = \sqrt{\langle \underline{N}^2 \rangle - \langle \underline{N} \rangle^2} = |c_{n+1}| \, |c_n| .
+$$
+</div>
+
+<p>The probabilistic phase distribution then is</p>
+
+<div class="equation">
+$$
+\mathcal{P}(\phi) = \frac{1}{2\pi} \norm{\braket{\phi}{\psi}}^2 = \frac{1}{2\pi} \left[ 1 + 2 c_n c_{n+1} \cos(\phi) \right] ,
+$$
+</div>
+
+<p>where dependence on $\phi$ emerges. Also, whether or not there is a true Hermitian phase operator seems controversial...</p>
+
+<p>Meanwhile, $|\phi\rangle$ is an eigenstate of the unitary lowering operator associated with $\underline{a}$:</p>
+
+<div class="equation">
+$$
+\underline{U}_a |\phi\rangle = e^{i\phi} |\phi\rangle ,
+$$
+</div>
+
+<p>which can be shown noting $\underline{U}_a |n\rangle = |n-1\rangle$, where phase information is now contained in the complex eigenvalue.</p>
+
+<!-- ── Subsection: Coherent states ── -->
+
+<h3>Coherent states are the real oscillators</h3>
+
+<p>Expectation values for the observable quantities of position, $\langle x \rangle \equiv \langle \underline{X} \rangle$, and momentum, $\langle p_x \rangle \equiv \langle \underline{P_x} \rangle$, should yield physically meaningful results that are compatible with the classical limit in the limit of very large $n$.</p>
+
+<p>It can be shown that a single eigenstate $|\psi\rangle \to |n\rangle$ does not describe harmonic oscillations with quantum uncertainties, but rather are ill-defined quantities; this is where the idea of a <em>coherent state</em> comes in. This is defined by</p>
+
+<div class="equation">
+$$
+|\alpha\rangle = e^{-\frac{1}{2}|\alpha|^2} \sum_{n=0}^{\infty} \frac{\alpha^n}{\sqrt{n!}} |n\rangle = e^{-\frac{1}{2}\bar{n}} \sum_{n=0}^{\infty} \frac{\bar{n}^{n/2} \, e^{in\bar{\phi}}}{\sqrt{n!}} |n\rangle
+$$
+</div>
+
+<p>where $\alpha = \bar{n}^{1/2} e^{i\bar{\phi}}$ is a complex number that contains information on the average number of oscillation modes, $\bar{n}$, and the average phase, $\bar{\phi}$, associated with this mixed state. It can be shown that $|\alpha\rangle$ is an eigenstate of $\underline{a}$ with $\underline{a} |\alpha\rangle = \alpha |\alpha\rangle$, and hence the creation and annihilation operators can be expressed in terms of $\underline{N}$ and a phase operator, $\underline{\Phi}$:</p>
+
+<div class="equation">
+$$
+\underline{a}^\dagger = \sqrt{\underline{N}} \, e^{i\underline{\Phi}} \quad \text{and} \quad \underline{a} = \sqrt{\underline{N}} \, e^{-i\underline{\Phi}} .
+$$
+</div>
+
+<p>It should also be noted that, unlike energy eigenstates, two different coherent states are, in general, not orthogonal.</p>
+
+<p>The probability of measuring $n$ oscillation modes from a coherent state $|\alpha\rangle$ can be calculated as (double check)</p>
+
+<div class="equation">
+$$
+\mathcal{P}(n) = \norm{\braket{n}{\alpha}}^2 = e^{-\bar{n}} \frac{\bar{n}^n}{n!} ,
+$$
+</div>
+
+<p>which describes a <em>Poisson distribution</em>.</p>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 3: Classical Electromagnetic Field     -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<h2 id="sec:EM_field">Classical Electromagnetic Field</h2>
+
+<p>A single mode of a classical, electromagnetic (EM) wave in vacuum can be written in terms of the oscillating electric and magnetic fields as</p>
+
+<div class="equation">
+$$
+\vb{E}(\vb{r}, t) = \frac{E_0}{2} \left[ \vu{e} \, e^{i(\vb{k} \cdot \vb{r} - \omega t)} + \vu{e}^* \, e^{-i(\vb{k} \cdot \vb{r} - \omega t)} \right]
+$$
+</div>
+
+<p>and</p>
+
+<div class="equation">
+$$
+\vb{B}(\vb{r}, t) = \frac{E_0}{2\omega} \vb{k} \times \left[ \vu{e} \, e^{i(\vb{k} \cdot \vb{r} - \omega t)} + \vu{e}^* \, e^{-i(\vb{k} \cdot \vb{r} - \omega t)} \right] ,
+$$
+</div>
+
+<p>where $\vb{k}$ is the wave vector, $\omega$ is angular frequency, and $E_0$ is the amplitude of the electric field. These are mathematically real expressions that contain a polarization unit vector, $\vu{e}$, that is in general complex, and a complex phasor, $a \equiv e^{i\phi}$ to take into account an arbitrary phase offset $\phi$.</p>
+
+<p>In the <em>Coulomb gauge</em> with $\nabla \cdot \vb{A}(\vb{r}, t) = 0$, these fields can be written in terms of the EM vector potential (while the scalar potential is null):</p>
+
+<div class="equation">
+$$
+\vb{E}(\vb{r}, t) = -\frac{\partial \vb{A}(\vb{r}, t)}{\partial t} \quad \text{and} \quad \vb{B}(\vb{r}, t) = \nabla \times \vb{A}(\vb{r}, t) .
+$$
+</div>
+
+<p>The vector potential can be written as</p>
+
+<div class="equation">
+$$
+\vb{A}(\vb{r}, t) = \frac{1}{2} \left[ \vb{A}_0 \, e^{i(\vb{k} \cdot \vb{r} - \omega t)} + \vb{A}_0^* \, e^{-i(\vb{k} \cdot \vb{r} - \omega t)} \right] ,
+$$
+</div>
+
+<p>where the vector amplitude $\vb{A}_0 = -i\vb{E}_0/\omega$ now carries the polarization state.</p>
+
+<p>$\vb{E}_0 = i\omega\vb{A}_0$</p>
+
+<p>$E_0 \vu{e} = i\omega\vb{A}_0$</p>
+
+<p>Consider the energy stored in the electromagnetic (EM) field over a volume $\mathcal{V}$:</p>
+
+<div class="equation" id="eq:EM_energy_density">
+$$
+U = \frac{\epsilon_0}{2} \int_{\mathcal{V}} \left( |\vb{E}(\vb{r}, t)|^2 + c^2 |\vb{B}(\vb{r}, t)|^2 \right) d^3\vb{r} ,
+$$
+</div>
+
+<p>Lagrangian:</p>
+
+<div class="equation">
+$$
+\mathcal{L}\!\left(\dot{\vb{A}}, \vb{A}, t\right) = \frac{\epsilon_0}{2} \int_{\mathcal{V}} \left[ |\dot{\vb{A}}(\vb{r},t)|^2 - c^2 |\nabla \times \vb{A}(\vb{r},t)|^2 \right] d^3\vb{r}
+$$
+</div>
+
+<ul>
+    <li>In the <em>Coulomb gauge</em> with $\nabla \cdot \vb{A}(\vb{r}, t) = 0$, the electromagnetic (EM) fields are:
+    <div class="equation">
+    $$
+    \vb{E}(\vb{r}, t) = -\frac{\partial \vb{A}(\vb{r}, t)}{\partial t} \quad \text{and} \quad \vb{B}(\vb{r}, t) = \nabla \times \vb{A}(\vb{r}, t)
+    $$
+    </div>
+    </li>
+    <li>A classical EM wave is described by solutions to the wave equation:
+    <div class="equation">
+    $$
+    \nabla^2 \vb{A}(\vb{r}, t) - \frac{1}{c^2} \frac{\partial^2 \vb{A}(\vb{r}, t)}{\partial t^2} = 0
+    $$
+    </div>
+    with constraints $\frac{\partial}{\partial t}(\nabla \cdot \vb{A}) = 0$ and $\nabla \cdot \vb{A} = 0$.</li>
+    <li>A general, real solution can be written as a summation of discrete wave modes indexed by $\vb{k}$ and $\upsilon$ with a temporal frequency $\omega_{\vb{k}} \equiv |\vb{k}|c_0$:
+    <div class="equation" id="eq:potential_wave_solution">
+    $$
+    \vb{A}(\vb{r}, t) = \sum_{\vb{k}} \sum_{\upsilon=1}^{2} \frac{1}{\sqrt{\mathcal{V}}} \vu{e}_{\vb{k},\upsilon} \left[ C_{\vb{k},\upsilon} \, e^{i(\vb{k} \cdot \vb{r} - \omega_{\vb{k}} t)} + C_{\vb{k},\upsilon}^* \, e^{-i(\vb{k} \cdot \vb{r} - \omega_{\vb{k}} t)} \right] ,
+    $$
+    </div>
+    where it is assumed (as a mathematical trick) that there are boundaries imposed by a large box of volume $\mathcal{V}$.</li>
+</ul>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- APPENDICES                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<div class="appendix-divider"></div>
+
+<h2 id="ap:quantum_frame">Appendix A: Quantum framework</h2>
+
+<p>In my notation, underlined quantities are taken to be quantum operators and $\dagger$ indicates a Hermitian conjugate: <em>e.g.</em> the Hamiltonian operator is Hermitian because $\underline{H} = \underline{H}^\dagger$. Recall that all Hermitian operators are expected to be associated with physically-observable quantities. That is, if $\underline{O}$ is a Hermitian operator and $|\psi\rangle$ is a given wave state, then it should be associated with an expectation value:</p>
+
+<div class="equation" id="eq:gen_expval">
+$$
+\bar{O} \equiv \langle \underline{O} \rangle \equiv \langle \underline{O} \rangle_\psi
+$$
+</div>
+
+<p>and a corresponding uncertainty variance:</p>
+
+<div class="equation">
+$$
+\Delta O^2 = \langle \underline{O}^2 \rangle - \langle \underline{O} \rangle^2 .
+$$
+</div>
+
+<h2 id="ap:ladde_ops">Appendix B: Ladder operators</h2>
+
+<p>Calculations of other expectation values can be facilitated by considering the effect of $\underline{a}$ and $\underline{a}^\dagger$ on an energy eigenstate $|n\rangle$. By considering the operations $\underline{N} \underline{a} |n\rangle$ and $\underline{N} \underline{a}^\dagger |n\rangle$, while noting the commutation relations $[\underline{N}, \underline{a}] = -\underline{a}$ and $[\underline{N}, \underline{a}^\dagger] = \underline{a}^\dagger$, it can be shown that</p>
+
+<div class="equation" id="eq:ladder_ops_energystate_1">
+$$
+\underline{a} |n\rangle = \sqrt{n} |n-1\rangle \quad \text{and} \quad \underline{a}^\dagger |n\rangle = \sqrt{n+1} |n+1\rangle .
+$$
+</div>
+
+<p>Hence, $\underline{a}$ and $\underline{a}^\dagger$ are <em>creation and annihilation operators</em> related to quantized amplitude of the oscillating wave function. These non-Hermitian operators can be thought of as being composed of two operations: a square-root number count and an energy-level shift. This can be written as</p>
+
+<div class="equation" id="eq:ladder_decomp">
+$$
+\underline{a} = \underline{U}_a \sqrt{\underline{N}} \quad \text{and} \quad \underline{a}^\dagger = \sqrt{\underline{N}} \, \underline{U}_a^\dagger \quad \text{with} \quad \underline{U}_a^\dagger \, \underline{U}_a = \underline{I} ,
+$$
+</div>
+
+<p>where $\underline{U}_a$ is a unitary operator with $\underline{U}_a |n\rangle = |n-1\rangle$ and $\underline{U}_a^\dagger |n\rangle = |n+1\rangle$. Using the time-dependent version, we have</p>
+
+<div class="equation" id="eq:ladder_ops_energystate_2">
+$$
+\underline{a}(t) |n\rangle = e^{i(\phi - \omega t)} \sqrt{n} |n-1\rangle \quad \text{and} \quad \underline{a}^\dagger(t) |n\rangle = e^{-i(\phi - \omega t)} \sqrt{n+1} |n+1\rangle ,
+$$
+</div>
+
+<p>where a complex phasor appears similar to the classical analogs $a(t)$ and $a^*(t)$.</p>
+
+<p>Moreover, $\underline{a}$ and $\underline{a}^\dagger$ together can be used to define a Hermitian operator that is directly related to $\underline{H}$:</p>
+
+<div class="equation">
+$$
+\underline{a}^\dagger \underline{a} = \frac{m\omega}{2\hbar} \left( \underline{x}^2 + \frac{\underline{p_x}^2}{m^2\omega^2} + \frac{i}{m\omega} [\underline{x}, \underline{p_x}] \right) = \frac{1}{\hbar\omega} \left( \underline{H} - \frac{\hbar\omega}{2} \right) \equiv \underline{N}
+$$
+</div>
+
+<p>which makes use of $[\underline{x}, \underline{p_x}] = i\hbar$. This is the <em>number operator</em>, denoted $\underline{N}$, that is directly related to $\underline{H}$ scaled by $\hbar\omega$. In other words, $\underline{N}$ counts the number, $n$, of excitation quanta with energy $\hbar\omega$ relative to a ground-state energy $\mathcal{E}_0 \equiv \hbar\omega/2$.</p>
+
+<h2 id="ap:time_phase">Appendix C: Operator for time and phase evolution</h2>
+
+<p>Time evolution in quantum mechanics can be handled using special unitary operators that are compatible with the Schrödinger equation for a given Hamiltonian. Recall that an operator $\underline{U}$ is <em>unitary</em> if $\underline{U}^\dagger \underline{U} = \underline{I}$, where $\underline{I}$ is the identity operator such that $\underline{I} |\psi\rangle = |\psi\rangle$. Given a time-independent Hamiltonian operator, $\underline{H}$, a unitary time-evolution operator can be expressed as</p>
+
+<div class="equation" id="eq:unitary_t_evol1">
+$$
+\underline{U}(t) = e^{-i\frac{t}{\hbar}\underline{H}} ,
+$$
+</div>
+
+<p>which is compatible with the Schrödinger equation:</p>
+
+<div class="equation">
+$$
+i\hbar \frac{d}{dt} \underline{U}(t) = \underline{H} \, \underline{U}(t) .
+$$
+</div>
+
+<p>For the quantum harmonic oscillator, $\underline{H} = \hbar\omega(\underline{N} + 1/2)$ and then the time-evolution operator becomes</p>
+
+<div class="equation" id="eq:unitary_t_evol2">
+$$
+\underline{U}(t) = e^{-\frac{i}{2}\omega t} \, e^{-i\omega t \underline{N}} ,
+$$
+</div>
+
+<p>where $\underline{N}$ is the number operator.</p>
+
+<p>An arbitrary phase shift can be included with this oscillatory behavior using the unitary operator</p>
+
+<div class="equation" id="eq:unitary_t_evol3">
+$$
+\underline{U}(t,\phi) \equiv \underline{U}(\phi) \, \underline{U}(t) \equiv e^{\frac{i}{\hbar\omega}(\phi - \omega t)\underline{H}} = e^{\frac{i}{2}(\phi - \omega t)} \, e^{i(\phi - \omega t)\underline{N}} ,
+$$
+</div>
+
+<p>which is also compatible with the Schrödinger equation. This operator can be used to shift the time and phase of a given wave state $|\psi\rangle$:</p>
+
+<div class="equation">
+$$
+|\psi(t,\phi)\rangle = \underline{U}(t,\phi) |\psi\rangle ,
+$$
+</div>
+
+<p>or, in the interaction picture of quantum mechanics, it can be used to grant time and phase dependence to an operator $\underline{O}$ in the Schrödinger picture:</p>
+
+<div class="equation" id="eq:operator_timephase">
+$$
+\underline{O}(t,\phi) = \underline{U}^\dagger(t,\phi) \, \underline{O} \, \underline{U}(t,\phi) = e^{-i(\phi - \omega t)\underline{N}} \, \underline{O} \, e^{i(\phi - \omega t)\underline{N}} ,
+$$
+</div>
+
+<p>where the phasor $e^{\frac{i}{2}(\phi - \omega t)}$ cancels. Either approach yields the same result for an expectation value that takes into account time and phase:</p>
+
+<div class="equation" id="eq:gen_expval_evol">
+$$
+\langle \underline{O} \rangle(\phi,t) = \langle \underline{O} | \psi(\phi,t) \rangle = \langle \underline{O}(\phi,t) | \psi \rangle
+$$
+</div>
+
     </div>
 
     <div class="article-end">

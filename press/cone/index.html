@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why is off-plane diffraction conical? — press — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'all',
+        macros: {
+          vb: ['{\\mathbf{#1}}', 1],
+          vu: ['{\\hat{#1}}', 1],
+          dv: ['\\frac{\\mathrm{d} #1}{\\mathrm{d} #2}', 2],
+          pdv: ['\\frac{\\partial #1}{\\partial #2}', 2],
+          dd: ['\\mathrm{d}#1', 1],
+          expval: ['\\langle #1 \\rangle', 1],
+          comm: ['[#1, #2]', 2],
+          ket: ['|#1\\rangle', 1],
+          bra: ['\\langle #1|', 1],
+          braket: ['\\langle #1 | #2 \\rangle', 2],
+          dyad: ['|#1\\rangle\\langle #1|', 1],
+          norm: ['\\|#1\\|', 1],
+          abs: ['|#1|', 1],
+          matrixel: ['\\langle #1 | #2 | #3 \\rangle', 3]
+        }
+      },
+      loader: {load: ['[tex]/physics']}
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --nav-accent: #c02828;
+            --nav-glow: rgba(192,40,40,0.4);
+            --nav-brand: #c02828;
+            --nav-brand-glow: rgba(192,40,40,0.6);
+        }
+
+        body {
+            background-color: #f0e4c8;
+            color: #1a1a1a;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #999;
+            letter-spacing: 0.1em;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #999; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c02828; }
+        .breadcrumb .sep { margin: 0 8px; color: #c8c0a8; }
+        .breadcrumb .current { color: #c02828; }
+
+        .article-header {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .article-type {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #f0e4c8;
+            background: #c02828;
+            display: inline-block;
+            padding: 3px 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .article-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(10px, 2vw, 15px);
+            color: #1a1a1a;
+            letter-spacing: 0.06em;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .article-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #777;
+            line-height: 1.6;
+        }
+
+        .article-meta .author { color: #c02828; font-weight: 700; }
+
+        .article-body {
+            width: min(700px, 90vw);
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .article-body h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #c02828;
+            letter-spacing: 0.08em;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .article-body p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.85;
+            color: #222;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .article-body p:first-of-type::first-letter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
+            float: left;
+            line-height: 0.85;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: #c02828;
+        }
+
+        .article-body a {
+            color: #c02828;
+            text-decoration: underline;
+            text-decoration-color: rgba(192,40,40,0.3);
+        }
+        .article-body a:hover { color: #8a1a1a; }
+
+        .article-body strong { color: #1a1a1a; }
+        .article-body em { color: #444; }
+
+        /* ── EQUATIONS ── */
+        .equation {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .article-body .mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+
+        /* ── FIGURES ── */
+        figure {
+            margin: 28px 0;
+            text-align: center;
+        }
+
+        figure img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #c8c0a8;
+            image-rendering: auto;
+        }
+
+        figcaption {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #777;
+            margin-top: 8px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .article-end {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .article-end span { color: #c02828; font-size: 12px; }
+
+        .article-back {
+            display: inline-block;
+            margin-top: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #c02828;
+            text-decoration: none;
+            border: 2px solid #c02828;
+            padding: 8px 16px;
+            transition: all 0.15s;
+        }
+        .article-back:hover {
+            background: #c02828;
+            color: #f0e4c8;
+        }
+
+        footer {
+            background: #e8dcc0 !important;
+            border-top-color: #c8c0a8 !important;
+            color: #999 !important;
+        }
+        footer span { color: #c02828 !important; }
+
+        @media (max-width: 640px) {
+            .article-title { font-size: 10px; }
+            .article-body p { font-size: 13px; }
+            .article-body h2 { font-size: 9px; }
+            .equation { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../index.html">home</a><div class="dropdown"><a href="../../home/about.html">about</a><a href="../../home/links/all-links.html">all links</a></div></li>
+        <li><a href="../../music/index.html">music</a><div class="dropdown"><a href="../../music/jukebox/index.html">jukebox</a><a href="../../music/distributed-music.html">distributed music</a><a href="../../music/floppy-disk/index.html">floppy disk</a></div></li>
+        <li><a href="../../visual/index.html">visual</a><div class="dropdown"><a href="../../visual/music-videos.html">music videos</a><a href="../../visual/collage.html">collage</a><a href="../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../archive/index.html">archive</a><div class="dropdown"><a href="../../archive/by-artist/index.html">by artist</a><a href="../../archive/by-place/index.html">by place</a><a href="../../archive/by-label/index.html">by label</a><a href="../../archive/by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../../arcade/index.html">arcade</a></li>
+        <li><a href="../../press/index.html">press</a><div class="dropdown"><a href="../../press/index.html">all pieces</a><a href="../../press/submissions.html">submissions</a></div></li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../index.html">home</a>
+        <span class="sep">›</span>
+        <a href="../../press/index.html">press</a>
+        <span class="sep">›</span>
+        <span class="current">Why is off-plane diffraction conical?</span>
+    </div>
+
+    <div class="article-header">
+        <div class="article-type">essay</div>
+        <h1 class="article-title">Why is off-plane diffraction conical?</h1>
+        <div class="article-meta">
+            <span class="author">jake mccoy</span><br>
+            2022
+        </div>
+    </div>
+
+    <div class="article-body">
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- INTRODUCTION                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<p>The equation for a cone oriented along the $z$-axis with an opening angle $2\gamma$ is given by</p>
+
+<div class="equation" id="eq:spatial_cone">
+$$
+x^2 + y^2 = z^2 \tan^2\!\left(\gamma\right) ,
+$$
+</div>
+
+<p>where $r = |z| \tan(\gamma)$ is the radius of a circular slice of the cone at an axial position $z$, as shown in <a href="#fig:spatial_cone">Figure 1</a>.</p>
+
+<figure id="fig:spatial_cone">
+    <img src="cone1.png" alt="Projection of a cone given by the cone equation">
+    <figcaption>Figure 1. Projection of a cone given by Equation 1.</figcaption>
+</figure>
+
+<p>To see how off-plane-diffracted orders are confined to the surface of a cone, the trick is to replace $x$, $y$ and $z$ with analogous $\mathbf{k}$-space components for a diffracted wave vector, and to consider why it is justified to do so. This boils down to thinking of a reflection grating as something that <em>functions like a grating in one direction but a mirror in the other</em>. The punchline is that the components of the $n^{\text{th}}$-order vector, $\mathbf{k}_n'$, satisfy</p>
+
+<div class="equation">
+$$
+k_{x,n}'^{\,2} + k_{y,n}'^{\,2} = k_z^2 \tan^2\!\left(\gamma\right) ,
+$$
+</div>
+
+<p>which is made possible by the $z$-component, $k_z$, being preserved from the incident wave vector, $\mathbf{k}$; this is a result of $z$ being the groove direction. The components $k_{x,n}'$ and $k_{y,n}'$ then describe the location of the $n^{\text{th}}$ order on the arc of diffraction. The reasons for all of this are outlined as follows.</p>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 1                                       -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<h2 id="sec:wave_vectors">Wave Vectors and the Grating Equation</h2>
+
+<p>Let's consider a generic wave vector that represents the incident ray on a diffraction grating, illustrated in <a href="#fig:wave_vectors">Figure 2</a>:</p>
+
+<div class="equation">
+$$
+\mathbf{k} = k_x \hat{x} + k_y \hat{y} + k_z \hat{z} ,
+$$
+</div>
+
+<p>which can be written in terms of the angles $\alpha$ and $\gamma$ as</p>
+
+<div class="equation" id="eq:inc_vec_angles">
+$$
+\mathbf{k} = -k \left[ \sin(\alpha)\sin(\gamma)\,\hat{x} + \cos(\alpha)\sin(\gamma)\,\hat{y} - \cos(\gamma)\,\hat{z} \right] ,
+$$
+</div>
+
+<p>where the length of the vector, $|\mathbf{k}| = k \equiv 2\pi/\lambda$, is the wavenumber of radiation and $\lambda$ is the wavelength.</p>
+
+<figure id="fig:wave_vectors">
+    <img src="diffraction_arc37.png" alt="Basic geometry for a grating of uniform period d">
+    <figcaption>Figure 2. Basic geometry for a grating of uniform period $d$, where $\hat{x}$ is the <em>dispersion direction</em> and $z$ is the <em>groove direction</em>: the principal incident wave vector $\mathbf{k}$ strikes the grating at a point $I$ and diffracts into the $n^{\text{th}}$ order, where the wave vector is denoted $\mathbf{k}_n'$.</figcaption>
+</figure>
+
+<p>Here, $\gamma$ can be thought of as the angle between $\mathbf{k}$ and the groove direction, $\hat{z}$, while $\alpha$ can be thought of the angle between $\mathbf{k} - k_z \hat{z}$ (<em>i.e.</em>, $\mathbf{k}$ projected into the $\hat{x}$-$\hat{y}$ plane) and the grating normal, $\hat{y}$. Note that nothing has been spoken of a cone yet; rather, the components of $\mathbf{k}$ have simply been defined using an established coordinate system.</p>
+
+<p>Let's also consider another generic wave vector that represents the $n^{\text{th}}$ diffracted order that reflects from the grating (also illustrated in <a href="#fig:wave_vectors">Figure 2</a>):</p>
+
+<div class="equation">
+$$
+\mathbf{k}_n' = k_{x,n}' \,\hat{x} + k_{y,n}' \,\hat{y} + k_{z,n}' \,\hat{z} ,
+$$
+</div>
+
+<p>where the components are, for the moment, undefined but it is assumed that $|\mathbf{k}_n'| = k = 2\pi/\lambda$. To ensure phase continuity between the incident wave and the diffracted orders, boundary conditions involving $k_x$, $k_z$, $k_{x,n}'$ and $k_{z,n}'$ can be applied while $k_{y,n}'$ (for reflected orders) is determined from:</p>
+
+<div class="equation" id="eq:wave_mag">
+$$
+|\mathbf{k}_n'|^2 = k^2 = k_{x,n}'^{\,2} + k_{y,n}'^{\,2} + k_{z,n}'^{\,2} \implies k_{y,n}' = \sqrt{k^2 - k_{x,n}'^{\,2} - k_{z,n}'^{\,2}} ,
+$$
+</div>
+
+<p>where values of $n$ consistent with $k_{y,n}'$ being real describe propagating orders.</p>
+
+<p>For a mirror with the $y$-axis as its surface normal, the boundary conditions are $k_x = k_x'$ and $k_z = k_z'$, which together state that the components of the incident and reflected rays parallel to the surface are equal; this leads to the law of reflection.</p>
+
+<p>A reflection grating can be thought of as a mirror with the added feature that grooves define spatial periodicity in $\hat{x}$ (<em>i.e.</em>, the cross-groove direction in <a href="#fig:wave_vectors">Figure 2</a>). This is described by the grating wave vector:</p>
+
+<div class="equation" id="eq:grating_vector">
+$$
+\mathbf{K} = K\,\hat{x} = \frac{2\pi}{d}\,\hat{x} ,
+$$
+</div>
+
+<p>with $K = 2\pi/d$ as the grating wavenumber. The surface-relief grating boundary can be defined by</p>
+
+<div class="equation" id="eq:groove_fourier_series">
+$$
+g(x) = \sum_{n=-\infty}^{\infty} g_n \, e^{inKx} \equiv \sum_{n=-\infty}^{\infty} g_n(x),
+$$
+</div>
+
+<p>where the complex Fourier coefficients are given by</p>
+
+<div class="equation" id="eq:groove_fourier_coeff">
+$$
+g_n = \frac{1}{d} \int_0^d g(x) \, e^{-inKx} \dd{x} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 \dotsc
+$$
+</div>
+
+<p>Owing to the periodicity of the groove border with $g(x) = g(x+d)$, spatial harmonics can be picked up along $\hat{x}$ such that the relation $k_x = k_x'$ for a mirror is replaced by $k_{x,n}' = k_x + nK$ in the case of a grating. With the direction of grating periodicity being purely confined to $\hat{x}$ by the grating wave vector, however, $k_z = k_z'$ for the case of a mirror is still valid such that $k_{z,n}' = k_z$. This is because the grating <em>behaves like a mirror along the groove direction</em>; it only <em>behaves like a grating along the dispersion direction</em>.</p>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 2                                       -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<h2 id="sec:conical_diffraction">Conical Diffraction</h2>
+
+<p>It has just been argued that the $n^{\text{th}}$ diffracted order has a wave vector of the form</p>
+
+<div class="equation">
+$$
+\mathbf{k}_n' = k_{x,n}' \,\hat{x} + k_{y,n}' \,\hat{y} + k_z \,\hat{z}
+$$
+</div>
+
+<p>due to $k_z$ being preserved from the incident wave vector, $\mathbf{k}$.</p>
+
+<figure id="fig:conical_diff">
+    <img src="diffraction_arc38.png" alt="Off-plane conical diffraction geometry">
+    <figcaption>Figure 3. Off-plane, conical diffraction, where the incident wave vector $\mathbf{k}$ is given by Equation 5 and the $n^{\text{th}}$-order diffracted wave vector $\mathbf{k}_n'$ is given by Equation 10.</figcaption>
+</figure>
+
+<p>Knowing that $k_z = k\cos(\gamma)$ from Equation 5, $\mathbf{k}_n'$ can now be written as</p>
+
+<div class="equation" id="eq:diff_vec_angles">
+$$
+\mathbf{k}_n' = k \left[ \sin(\beta_n)\sin(\gamma)\,\hat{x} + \cos(\beta_n)\sin(\gamma)\,\hat{y} + \cos(\gamma)\,\hat{z} \right] ,
+$$
+</div>
+
+<p>where $\beta_n$ is introduced as the $n^{\text{th}}$-order diffraction angle and the boundary condition $k_{x,n}' = k_x + nK$ now yields</p>
+
+<div class="equation">
+$$
+\sin(\alpha) + \sin(\beta_n) = \frac{n\lambda}{d\sin(\gamma)} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 \dotsc ,
+$$
+</div>
+
+<p>which is recognized as the generalized grating equation. To see how the propagating orders define the surface of a cone with an opening angle $2\gamma$ as in <a href="#fig:spatial_cone">Figure 1</a>, the norm squared of $\mathbf{k}_n'$ as in Equation 7 can now be written as</p>
+
+<div class="equation" id="eq:wave_mag2">
+$$
+|\mathbf{k}_n'|^2 = k^2 = k_{x,n}'^{\,2} + k_{y,n}'^{\,2} + k_z^2 .
+$$
+</div>
+
+<p>This can be rearranged as</p>
+
+<div class="equation" id="eq:wave_mag3">
+$$
+k_{x,n}'^{\,2} + k_{y,n}'^{\,2} = k^2 - k_z^2 = k_z^2 \left[ \sec^2(\gamma) - 1 \right]
+$$
+</div>
+
+<p>using $k = k_z \sec(\gamma)$ from $k_z = k\cos(\gamma)$. From $\tan^2(\gamma) = \sec^2(\gamma) - 1$, it is seen that</p>
+
+<div class="equation">
+$$
+k_{x,n}'^{\,2} + k_{y,n}'^{\,2} = k_z^2 \tan^2(\gamma) ,
+$$
+</div>
+
+<p>which is equivalent to Equation 1: the equation for a cone. This is why the usual off-plane grating figure, shown in <a href="#fig:conical_diff">Figure 3</a> is drawn in the way that it is, where the $0^{\text{th}}$ and $n^{\text{th}}$ orders define the surface of a cone.</p>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SECTION 3                                       -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<h2 id="sec:effective_wavelength">Effective Wavelength for Diffraction</h2>
+
+<p>With Equation 12 defining a cone in $\mathbf{k}$-space, its circular base has radius $k_r = k_z \tan(\gamma)$ in analogy with $r = |z|\tan(\gamma)$ from Equation 1. The relations $k_r = k_z \tan(\gamma)$ and $k_z = k\cos(\gamma)$ can be combined to show that $k_r' = k\sin(\gamma)$.</p>
+
+<p>By defining $k_r = 2\pi/\bar{\lambda}$ with $\bar{\lambda}$ as an effective wavelength:</p>
+
+<div class="equation">
+$$
+k_r = k\sin(\gamma) \implies \bar{\lambda} = \lambda\csc(\gamma) ,
+$$
+</div>
+
+<p>it is gleaned that conical, off-plane diffraction can be understood as being equivalent to the scenario of classical, in-plane diffraction (where $k_z = 0$; see <a href="#fig:classical_diff">Figure 4</a>) but with an increased effective wavelength $\bar{\lambda}$.</p>
+
+<figure id="fig:classical_diff">
+    <img src="diffraction_arc36.png" alt="In-plane classical diffraction with kz=0">
+    <figcaption>Figure 4. In-plane, classical diffraction with $k_z=0$. By the theorem of invariance, this can be thought of being equivalent to the off-plane scenario in <a href="#fig:conical_diff">Figure 3</a> projected onto the $\hat{x}$-$\hat{y}$ plane with an effective wavelength $\bar{\lambda} = \lambda\csc(\gamma)$.</figcaption>
+</figure>
+
+<p>This is known as the <em>theorem of invariance</em>, which can be shown to be true using Green's theorem for a perfectly conducting grating boundary.</p>
+
+<figure id="fig:k_space_cone">
+    <img src="cone2.png" alt="Projection of a cone in k-space">
+    <figcaption>Figure 5. Projection of a cone in $\mathbf{k}_n'$-space given by Equation 12, where $k_r = k_z \tan(\gamma)$ is the radius of the cone base. The origin corresponds to point $I$ in <a href="#fig:wave_vectors">Figure 2</a>.</figcaption>
+</figure>
+
+<p>The grating equation can then be written as</p>
+
+<div class="equation">
+$$
+\sin(\alpha) + \sin(\beta_n) = \frac{n\bar{\lambda}}{d} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 \dotsc ,
+$$
+</div>
+
+<p>which elucidates the need for $\bar{\lambda}$ to be comparable to $d$ while the actual wavelength can be much smaller: by $\lambda = \bar{\lambda}\sin(\gamma)$.</p>
+
+    </div>
+
+    <div class="article-end">
+        <span>✦</span><br>
+        <a href="../index.html" class="article-back">← back to press</a>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+</body>
+</html>

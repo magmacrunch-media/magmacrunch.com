@@ -475,6 +475,17 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         });
 
         for (const t of configs) {
+            // Special handling: MathJax config — merge macros without destroying runtime
+            if (t.includes('MathJax') && t.includes('tex')) {
+                try {
+                    const cfg = eval('(' + t.replace(/MathJax\s*=\s*/, '') + ')');
+                    if (cfg && cfg.tex && cfg.tex.macros && MathJax.config && MathJax.config.tex) {
+                        if (!MathJax.config.tex.macros) MathJax.config.tex.macros = {};
+                        Object.assign(MathJax.config.tex.macros, cfg.tex.macros);
+                    }
+                } catch (e) { console.warn('SPA MathJax config:', e); }
+                continue;
+            }
             const m = t.match(/window\.([\w]+)\s*=/);
             if (m && window[m[1]] !== undefined) {
                 try { delete window[m[1]]; } catch {}
@@ -536,11 +547,31 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             }
 
             const newMain = doc.querySelector('main');
-            if (newMain) mainEl.innerHTML = newMain.innerHTML;
+            if (newMain) {
+                // Resolve relative src/href to absolute using target page URL
+                newMain.querySelectorAll('[src]').forEach(el => {
+                    const src = el.getAttribute('src');
+                    if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
+                        el.setAttribute('src', new URL(src, url).href);
+                    }
+                });
+                newMain.querySelectorAll('[href]').forEach(el => {
+                    const href = el.getAttribute('href');
+                    if (href && !href.startsWith('http') && !href.startsWith('/') && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:')) {
+                        el.setAttribute('href', new URL(href, url).href);
+                    }
+                });
+                mainEl.innerHTML = newMain.innerHTML;
+            }
 
             document.title = doc.title;
 
             await runScripts(doc, url);
+
+            // Re-render MathJax if present (for pages with equations)
+            if (window.MathJax && MathJax.typesetPromise) {
+                try { await MathJax.typesetPromise(); } catch (e) {}
+            }
 
             if (push) history.pushState({ spa: true }, '', url);
 
