@@ -89,6 +89,25 @@
         return '<a href="https://musicbrainz.org/' + path + '/' + target.id + '" target="_blank" rel="noopener">' + esc(target.title) + '</a>';
     }
 
+    /* ── CONSTANTS ── */
+
+    var PERSONNEL_TYPES = [
+        'label founder', 'founder', 'owner', 'executive position at',
+        'employed by', 'producer position', 'engineer position', 'creative position'
+    ];
+
+    var ROLE_DISPLAY = {
+        'label founder': 'founder',
+        'founder': 'founder',
+        'owner': 'owner',
+        'executive position at': 'executive',
+        'employed by': 'employed by',
+        'producer position': 'producer',
+        'engineer position': 'engineer',
+        'creative position': 'creative',
+        'artists and repertoire persons': 'A&R'
+    };
+
     /* ── RENDER ── */
 
     function render(artistData, labelData, eventData, recordingData, workData, releaseData) {
@@ -97,81 +116,61 @@
         var eventRels = eventData.relations || [];
         var html = '';
 
-        /* Founders */
-        var founders = artistRels.filter(function(r) {
-            return r['target-type'] === 'artist' && r.artist && r.type === 'founder';
+        /* Personnel + Signed Artists (relationship-level filtering — artist can appear in both) */
+        var allArtistRels = artistRels.filter(function(r) {
+            return r['target-type'] === 'artist' && r.artist;
         });
-        if (founders.length > 0) {
-            var items = founders.map(function(r) {
-                return renderSimpleEntry(r.artist, 'artist');
-            }).join('');
-            html += renderSection('founders', '<ul class="simple-list">' + items + '</ul>');
-        }
 
-        /* Owners */
-        var owners = artistRels.filter(function(r) {
-            return r['target-type'] === 'artist' && r.artist && r.type === 'owner';
+        var personnelRels = allArtistRels.filter(function(r) {
+            return PERSONNEL_TYPES.indexOf(r.type) !== -1;
         });
-        if (owners.length > 0) {
-            var items = owners.map(function(r) {
-                return renderSimpleEntry(r.artist, 'artist');
-            }).join('');
-            html += renderSection('owners', '<ul class="simple-list">' + items + '</ul>');
-        }
+        var signedRels = allArtistRels.filter(function(r) {
+            return PERSONNEL_TYPES.indexOf(r.type) === -1;
+        });
 
-        /* Executives */
-        var executives = artistRels.filter(function(r) {
-            return r['target-type'] === 'artist' && r.artist && r.type === 'executive position at';
-        });
-        if (executives.length > 0) {
-            var execGroups = {};
-            executives.forEach(function(r) {
+        function groupByArtist(rels) {
+            var groups = {};
+            rels.forEach(function(r) {
                 var id = r.artist.id;
-                if (!execGroups[id]) execGroups[id] = { artist: r.artist, rels: [] };
-                execGroups[id].rels.push(r);
+                if (!groups[id]) groups[id] = { artist: r.artist, rels: [] };
+                groups[id].rels.push(r);
             });
-            var execEntries = Object.keys(execGroups).map(function(id) {
-                var g = execGroups[id];
+            return Object.keys(groups).map(function(id) {
+                var g = groups[id];
                 var merged = mergeRels(g.rels);
-                return { artist: g.artist, begin: merged.begin, end: merged.end, ended: merged.ended };
+                var roles = [];
+                g.rels.forEach(function(r) {
+                    var display = ROLE_DISPLAY[r.type] || r.type;
+                    if (roles.indexOf(display) === -1) roles.push(display);
+                });
+                return { target: g.artist, roles: roles, begin: merged.begin, end: merged.end, ended: merged.ended };
             });
-            execEntries.sort(function(a, b) {
+        }
+
+        function sortEntries(entries) {
+            entries.sort(function(a, b) {
                 return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
             });
-            var items = execEntries.map(function(e) {
-                return renderEntry(e.artist, [], e.begin, e.end, e.ended, 'artist');
-            }).join('');
-            html += renderSection('executives', items);
         }
 
-        /* Associated artists (exclude founders, owners, executives) */
-        var skipTypes = ['founder', 'owner', 'executive position at'];
-        var assocArtistRels = artistRels.filter(function(r) {
-            return r['target-type'] === 'artist' && r.artist && skipTypes.indexOf(r.type) === -1;
-        });
-        var artistGroups = {};
-        assocArtistRels.forEach(function(r) {
-            var id = r.artist.id;
-            if (!artistGroups[id]) artistGroups[id] = { artist: r.artist, rels: [] };
-            artistGroups[id].rels.push(r);
-        });
-        var artistEntries = Object.keys(artistGroups).map(function(id) {
-            var g = artistGroups[id];
-            var merged = mergeRels(g.rels);
-            var roles = [];
-            g.rels.forEach(function(r) {
-                if (roles.indexOf(r.type) === -1) roles.push(r.type);
-            });
-            return { artist: g.artist, roles: roles, begin: merged.begin, end: merged.end, ended: merged.ended };
-        });
-        artistEntries.sort(function(a, b) {
-            return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
-        });
-        if (artistEntries.length > 0) {
-            var items = artistEntries.map(function(e) {
-                return renderEntry(e.artist, e.roles, e.begin, e.end, e.ended, 'artist');
+        /* Personnel section */
+        var personnelEntries = groupByArtist(personnelRels);
+        sortEntries(personnelEntries);
+        if (personnelEntries.length > 0) {
+            var items = personnelEntries.map(function(e) {
+                return renderEntry(e.target, e.roles, e.begin, e.end, e.ended, 'artist');
             }).join('');
-            html += renderSection('associated artists', items);
+            html += renderSection('personnel', items);
+        }
+
+        /* Signed artists section */
+        var signedEntries = groupByArtist(signedRels);
+        sortEntries(signedEntries);
+        if (signedEntries.length > 0) {
+            var items = signedEntries.map(function(e) {
+                return renderEntry(e.target, e.roles, e.begin, e.end, e.ended, 'artist');
+            }).join('');
+            html += renderSection('signed artists', items);
         }
 
         /* Label relationships — broken out by type */
@@ -360,6 +359,23 @@
             if (artistData.isnis && artistData.isnis.length) ids.push('ISNI: ' + artistData.isnis[0]);
             if (artistData.ipis && artistData.ipis.length) ids.push('IPI: ' + artistData.ipis[0]);
             if (ids.length) idsEl.textContent = ids.join(' \u00b7 ');
+
+            /* Label type and years active */
+            var meta = [];
+            if (artistData.type) meta.push(artistData.type.toLowerCase());
+            var ls = artistData['life-span'];
+            if (ls && ls.begin) {
+                var beginYear = ls.begin.split('-')[0];
+                if (ls.ended && ls.end) {
+                    meta.push(beginYear + ' \u2014 ' + ls.end.split('-')[0]);
+                } else {
+                    meta.push('est ' + beginYear);
+                }
+            }
+            if (meta.length) {
+                idsEl.insertAdjacentHTML('beforebegin',
+                    '<div class="contrib-meta">' + meta.join(' \u00b7 ') + '</div>');
+            }
 
             var baseUrl = 'https://musicbrainz.org/ws/2/label/' + MB_ID + '?fmt=json&inc=';
             return delay(1100).then(function() {
