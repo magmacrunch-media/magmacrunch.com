@@ -216,6 +216,40 @@
         @media (max-width: 640px) {
             .page-title { font-size: 14px; }
         }
+        /* ── CONTACT BOX ── */
+        .contact-box {
+            width: min(600px, 90vw);
+            border: 2px solid #c8c0a8;
+            background: #e8dcc0;
+            padding: 28px;
+            margin-top: 48px;
+            text-align: center;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .contact-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+        .contact-box p {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #777;
+            letter-spacing: 0.08em;
+            line-height: 2.2;
+            margin-bottom: 12px;
+        }
+        .contact-box a {
+            color: #c02828;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .contact-box a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -283,6 +317,15 @@
 
         <!-- ADD FUTURE PIECES HERE — copy a .piece-card block -->
 
+    </div>
+
+    <!-- SUBMISSIONS -->
+    <div class="section-divider"></div>
+
+    <div class="contact-box">
+        <div class="contact-label">// submissions //</div>
+        <p>send submissions to<br><a href="mailto:press@magmacrunch.com">press@magmacrunch.com</a></p>
+        <p>include your name (or pseudonym) and a short bio<br>if you want</p>
     </div>
 
 </main>

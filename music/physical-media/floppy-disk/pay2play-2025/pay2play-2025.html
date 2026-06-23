@@ -37,14 +37,14 @@
 
         /* breadcrumb */
         .breadcrumb {
-            position: relative;
+            position: absolute;
+            top: 60px;
+            left: 20px;
             z-index: 10;
             font-family:'Press Start 2P',monospace;
             font-size:7px;
             color:var(--dim);
             letter-spacing:.1em;
-            margin-bottom:24px;
-            align-self:flex-start;
         }
         .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
         .breadcrumb a:hover { color:var(--rose); }
@@ -221,7 +221,7 @@
         <li><a href="../../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../../visual/music-videos.html">music videos</a><a href="../../../../visual/collage.html">collage</a><a href="../../../../visual/photography.html">photography</a></div></li>
         <li><a href="../../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../../archive/full-catalog/all-releases.html">all releases</a><a href="../../../../archive/full-catalog/all-recordings.html">all recordings</a><a href="../../../../archive/full-catalog/all-works.html">all works</a><a href="../../../../archive/index.html">browse by artist / place →</a></div></li>
         <li><a href="../../../../arcade/index.html">arcade</a></li>
-        <li><a href="../../../../press/index.html">press</a><div class="dropdown"><a href="../../../../press/index.html">all pieces</a><a href="../../../../press/submissions.html">submissions</a></div></li>
+        <li><a href="../../../../press/index.html">press</a></li>
         <li><a href="../../../../home/guestbook.html">guestbook</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
@@ -234,12 +234,15 @@
         <div class="release-hero-tint"></div>
         <div class="release-hero-gradient"></div>
 
+        <div class="breadcrumb">
+            <a href="../../../../index.html">home</a><span class="sep">›</span>
+            <a href="../../../../music/index.html">music</a><span class="sep">›</span>
+            <a href="../../physical-media/index.html">physical media</a><span class="sep">›</span>
+            <a href="../index.html">floppy disk</a><span class="sep">›</span>
+            <span class="current">pay2play (2025)</span>
+        </div>
+
         <div class="hero-inner">
-            <div class="breadcrumb">
-                <a href="../../../../music/index.html">music</a><span class="sep">›</span>
-                <a href="../../../../music/physical-media/index.html">physical media</a><span class="sep">›</span>
-                <span class="current">pay2play (2025)</span>
-            </div>
             <div class="release-header">
                 <div class="release-eyebrow">// floppy disk series #1 · MCS043 //</div>
                 <h1 class="release-title">pay2play (2025)</h1>
