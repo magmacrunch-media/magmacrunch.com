@@ -10,10 +10,8 @@
 window.NAV_CONFIG = {
     brand: { href: 'index.html', text: 'magmacrunch.com' },
     sections: [
-        { label: 'home', href: 'index.html', items: [
-            { href: 'home/about.html', label: 'about' },
-            { href: 'home/links/all-links.html', label: 'all links' }
-        ]},
+        { label: 'home', href: 'index.html' },
+        { label: 'about', href: 'home/about.html' },
         { label: 'music', href: 'music/index.html', items: [
             { href: 'music/jukebox/index.html', label: 'jukebox' },
             { href: 'music/distributed-music.html', label: 'distributed music' },

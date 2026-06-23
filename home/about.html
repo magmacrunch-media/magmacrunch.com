@@ -344,6 +344,172 @@
             .ascii-main pre { font-size: clamp(2px, 1.5vw, 5px); }
             .zine-links { flex-direction: column; align-items: center; }
         }
+
+        /* ── ARTIST LINK STRIPS ── */
+        .link-strip {
+            position: relative;
+            width: 100%;
+            max-width: 960px;
+            height: 140px;
+            overflow: hidden;
+            border: 1px solid #222230;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .link-strip:hover {
+            border-color: #FF2D9B;
+            box-shadow: 0 0 20px rgba(255,45,155,0.25);
+        }
+        .link-strip-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25) saturate(0.5);
+            transition: filter 0.3s;
+        }
+        .link-strip:hover .link-strip-bg {
+            filter: brightness(0.35) saturate(0.7);
+        }
+        .link-strip-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: #F5F0E0;
+            padding: 12px 20px;
+            box-sizing: border-box;
+        }
+        .link-strip-inner pre {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(2px, 0.5vw, 5px);
+            line-height: 1.15;
+            white-space: pre;
+            text-shadow: 0 0 8px rgba(255,45,155,0.3);
+            overflow: hidden;
+        }
+        .strip-hover-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #FF2D9B;
+            letter-spacing: 0.06em;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            text-shadow: 0 0 8px rgba(255,45,155,0.5);
+        }
+        .link-strip:hover .strip-hover-tag { opacity: 1; }
+        .strips-divider {
+            width: 100%;
+            max-width: 960px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FF2D9B, #00D4FF, #FF2D9B, transparent);
+            margin-bottom: 24px;
+            opacity: 0.4;
+        }
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #FF2D9B;
+            letter-spacing: 0.18em;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            text-shadow: 0 0 10px rgba(255,45,155,0.3);
+        }
+
+        @media (max-width: 640px) {
+            .link-strip { height: 110px; }
+            .link-strip-inner pre { font-size: clamp(1.5px, 1.2vw, 4px); }
+        }
+
+        /* ── PIXELATED LOGO GRID ── */
+        .logo-grid-section {
+            width: 100%;
+            background: var(--deep);
+            border-top: 2px solid #1a1a2a;
+            border-bottom: 2px solid #1a1a2a;
+            padding: 48px 28px 52px;
+            animation: fadeUp 0.5s 0.3s ease both;
+            margin-top: 48px;
+        }
+        .logo-grid-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--yellow);
+            letter-spacing: 0.18em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 12px rgba(255,224,58,0.4);
+        }
+        .logo-grid-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .logo-group { display: flex; flex-direction: column; gap: 12px; }
+        .logo-group-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.55;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #1a1a2a;
+        }
+        .logo-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+        .logo-link {
+            display: block;
+            position: relative;
+            text-decoration: none;
+            transition: transform 0.15s ease, filter 0.15s ease;
+            margin-bottom: 20px;
+        }
+        .logo-link:hover {
+            transform: scale(1.18);
+            filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,224,58,0.55));
+        }
+        .logo-link::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 4.5px;
+            color: var(--yellow);
+            white-space: nowrap;
+            letter-spacing: 0.06em;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            pointer-events: none;
+        }
+        .logo-link:hover::after { opacity: 0.85; }
+        .pixel-logo {
+            width: 48px;
+            height: 48px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            display: block;
+            filter: saturate(0.85) brightness(0.9);
+            transition: filter 0.15s ease;
+        }
+        .logo-link:hover .pixel-logo { filter: saturate(1.1) brightness(1.1); }
+
+        @media (max-width: 640px) {
+            .logo-grid-section { padding: 36px 20px 44px; }
+            .pixel-logo { width: 40px; height: 40px; }
+        }
     </style>
 </head>
 <body>
@@ -351,13 +517,8 @@
 <nav>
     <a href="../index.html" class="nav-brand">magmacrunch.com</a>
     <ul class="nav-links" id="navLinks">
-        <li>
-            <a href="../index.html">home</a>
-            <div class="dropdown">
-                <a href="../home/about.html">about</a>
-                <a href="../home/links/all-links.html">all links</a>
-            </div>
-        </li>
+        <li><a href="../index.html">home</a></li>
+        <li><a href="../home/about.html">about</a></li>
         <li>
             <a href="../music/index.html">music</a>
             <div class="dropdown">
@@ -517,7 +678,7 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 
         <p>What makes magmacrunch different from a traditional label is the relationship between the people involved. There are no signed contracts, no royalty splits negotiated in conference rooms. The collective works with a rotating cast of producers and musicians who share the same DIY values — people who would rather spend a weekend recording in a living room than wait for a studio to validate their work.</p>
 
-        <!-- ASCII: "with producers & musicians" — floated right -->
+        <!-- ASCII: "with producers & musicians" — floated right
         <div class="ascii-block ascii-producers ascii-float-right">
             <pre>
            ,--.  ,--.  ,--.                                                                                                                       
@@ -553,6 +714,7 @@ ___          ___  __       ___ .  __           __     __   ___ ..
  |  o  .__)   ' '-' '  |  |  |  | |  |\   --.|  |   .-'  `)                                                                                        
  `---'        `---'   `--'  `--' `--' `----'`--'   `----'                                                                                          </pre>
         </div>
+        -->
 
         <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
 
@@ -561,19 +723,321 @@ ___          ___  __       ___ .  __           __     __   ___ ..
         </div>
     </div>
 
+    <div class="strips-divider"></div>
+    <div class="section-label">// artists //</div>
+
+    <!-- SVFP -->
+    <div class="link-strip svfp">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/svfp/svfp-linkbanner.jpg'); background-position: center 40%;"></div>
+        <a href="https://linktr.ee/sexvanfloorplan" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Sex Van Floor Plan links">
+            <pre>
+   ,-,--.     ,----.          ,-.--,              ,-.-.  ,---.      .-._                                             
+ ,-.'-  _\ ,-.--` , \.--.-.  /=/, .'       ,--.-./=/ ,/.--.'  \    /==/ \  .-._                                      
+/==/_ ,_.'|==|-  _.-`\==\ -\/=/- /        /==/, ||=| -|\==\-/\ \   |==|, \/ /, /                                     
+\==\  \   |==|   `.-. \==\ `-' ,/         \==\,  \ / ,|/==/-|_\ |  |==|-  \|  |                                      
+ \==\ -\ /==/_ ,    /  |==|,  - |          \==\ - ' - /\==\,   - \ |==| ,  | -|                                      
+ _\==\ ,\|==|    .-'  /==/   ,   \          \==\ ,   | /==/ -   ,| |==| -   _ |                                      
+/==/\/ _ |==|_  ,`-._/==/, .--, - \         |==| -  ,//==/-  /\ - \|==|  /\ , |                                      
+\==\ - , /==/ ,     /\==\- \/=/ , /         \==\  _ / \==\ _.\=\.-'/==/, | |- |                                      
+ `--`---'`--`-----``  `--`-'  `--`           `--`--'   `--`        `--`./  `--`                                      
+     _,---.              _,.---._       _,.---._                           _ __               ,---.      .-._        
+  .-`.' ,  \   _.-.    ,-.' , -  `.   ,-.' , -  `.   .-.,.---.          .-`.' ,`.   _.-.    .--.'  \    /==/ \  .-._ 
+ /==/_  _.-' .-,.'|   /==/_,  ,  - \ /==/_,  ,  - \ /==/  `   \        /==/, -   \.-,.'|    \==\-/\ \   |==|, \/ /, /
+/==/-  '..-.|==|, |  |==|   .=.     |==|   .=.     |==|-, .=., |      |==| _ .=. |==|, |    /==/-|_\ |  |==|-  \|  | 
+|==|_ ,    /|==|- |  |==|_ : ;=:  - |==|_ : ;=:  - |==|   '='  /      |==| , '=',|==|- |    \==\,   - \ |==| ,  | -| 
+|==|   .--' |==|, |  |==| , '='     |==| , '='     |==|- ,   .'       |==|-  '..'|==|, |    /==/ -   ,| |==| -   _ | 
+|==|-  |    |==|- `-._\==\ -    ,_ / \==\ -    ,_ /|==|_  ,','.       |==|,  |   |==|- `-._/==/-  /\ - \|==|  /\ , | 
+/==/   \    /==/ - , ,/'.='. -   .'   '.='. -   .' /==/  /\ ,  )      /==/ - |   /==/ - , ,|==\ _.\=\.-'/==/, | |- | 
+`--`---'    `--`-----'   `--`--''       `--`--''   `--`-`--`--'       `--`---'   `--`-----' `--`        `--`./  `--` </pre>
+            <span class="strip-hover-tag">↗ linktr.ee/sexvanfloorplan</span>
+        </a>
+    </div>
+
+    <!-- THLD -->
+    <div class="link-strip thld">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/THLD/thld-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/texasholdemlavadome" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Texas Hold'Em Lava Dome links">
+            <pre>
+        ,----,                                                                                     ,--,                   ,---,                          
+      ,/   .`|                                                                ,--,    ,----..   ,---.'|                ,`--.' |                    ____  
+    ,`   .'  :   ,---,. ,--,     ,--,    ,---,       .--.--.                ,--.'|   /   /   \  |   | :       ,---,    |   :  :    ,---,.        ,'  , `.
+  ;    ;     / .'  .' | |'. \   / .`|   '  .' \     /  /    '.           ,--,  | :  /   .     : :   : |     .'  .' `\  |   |  '  ,'  .' |     ,-+-,.' _ |
+.'___,/    ,',---.'   | ; \ `\ /' / ;  /  ;    '.  |  :  /`. /        ,---.'|  : ' .   /   ;.  \|   ' :   ,---.'     \ '   :  |,---.'   |  ,-+-. ;   , ||
+|    :     | |   |   .' `. \  /  / .' :  :       \ ;  |  |--`         |   | : _' |.   ;   /  ` ;;   ; '   |   |  .`\  |;   |.' |   |   .' ,--.'|'   |  ;|
+;    |.';  ; :   :  |-,  \  \/  / ./  :  |   /\   \|  :  ;_           :   : |.'  |;   |  ; \ ; |'   | |__ :   : |  '  |'---'   :   :  |-,|   |  ,', |  ':
+`----'  |  | :   |  ;/|   \  \.'  /   |  :  ' ;.   :\  \    `.        |   ' '  ; :|   :  | ; | '|   | :.'||   ' '  ;  :        :   |  ;/||   | /  | |  ||
+    '   :  ; |   :   .'    \  ;  ;    |  |  ;/  \   \`----.   \       |   |  .'. |.   |  ' ' ' :'   :    ;'   | ;  .  |        |   :   .''   | :  | :  |,
+    |   |  ' |   |  |-,   / \  \  \   '  :  | \  \ ,'__ \  \  |       |   | :  | ''   ;  \; /  ||   |  ./ |   | :  |  '        |   |  |-,;   . |  ; |--' 
+    '   :  | '   :  ;/|  ;  /\  \  \  |  |  '  '--' /  /`--'  /       '   : |  : ; \   \  ',  / ;   : ;   '   : | /  ;         '   :  ;/||   : |  | ,    
+    ;   |.'  |   |    \./__;  \  ;  \ |  |  :      '--'.     /        |   | '  ,/   ;   :    /  |   ,/    |   | '` ,/          |   :    \|   : '  |/     
+    '---'    |   :   .'|   : / \  \  ;|  | ,'        `--'---'         ;   : ;--'     \   \ .'   '---'     ;   :  .'            |   :   .';   | |`-'      
+   ,--,      |   | ,'  ;   |/   \  ' |`--''                           |   ,/          `---`               |   ,.'              |   | ,'  |   ;/          
+,---.'|      `----'    `---'     `--`                                 '---',----..             ____       '---'                `----'    '---'           
+|   | :      ,---,                     ,---,                  ,---,       /   /   \          ,'  , `.    ,---,.                                          
+:   : |     '  .' \            ,---.  '  .' \               .'  .' `\    /   .     :      ,-+-,.' _ |  ,'  .' |                                          
+|   ' :    /  ;    '.         /__./| /  ;    '.           ,---.'     \  .   /   ;.  \  ,-+-. ;   , ||,---.'   |                                          
+;   ; '   :  :       \   ,---.;  ; |:  :       \          |   |  .`\  |.   ;   /  ` ; ,--.'|'   |  ;||   |   .'                                          
+'   | |__ :  |   /\   \ /___/ \  | |:  |   /\   \         :   : |  '  |;   |  ; \ ; ||   |  ,', |  '::   :  |-,                                          
+|   | :.'||  :  ' ;.   :\   ;  \ ' ||  :  ' ;.   :        |   ' '  ;  :|   :  | ; | '|   | /  | |  ||:   |  ;/|                                          
+'   :    ;|  |  ;/  \   \\   \  \: ||  |  ;/  \   \       '   | ;  .  |.   |  ' ' ' :'   | :  | :  |,|   :   .'                                          
+|   |  ./ '  :  | \  \ ,' ;   \  ' .'  :  | \  \ ,'       |   | :  |  ''   ;  \; /  |;   . |  ; |--' |   |  |-,                                          
+;   : ;   |  |  '  '--'    \   \   '|  |  '  '--'         '   : | /  ;  \   \  ',  / |   : |  | ,    '   :  ;/|                                          
+|   ,/    |  :  :           \   `  ;|  :  :               |   | '` ,/    ;   :    /  |   : '  |/     |   |    \                                          
+'---'     |  | ,'            :   \ ||  | ,'               ;   :  .'       \   \ .'   ;   | |`-'      |   :   .'                                          
+          `--''               '---" `--''                 |   ,.'          `---`     |   ;/          |   | ,'                                            
+                                                           '---'                      '---'           `----'                                                  
+</pre>
+            <span class="strip-hover-tag">↗ linktr.ee/texasholdemlavadome</span>
+        </a>
+    </div>
+
+    <!-- JUANITO THOMPSON -->
+    <div class="link-strip jt">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/juanito_thompson/juanitothompson-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/juanitothompson" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Juanito Thompson links">
+            <pre>
+                                         __    __                                       
+                                        /  |  /  |                                      
+       __  __    __   ______   _______  $$/  $$ |_     ______                          
+      /  |/  |  /  | /      \ /       \ /  |/ $$   |   /      \                         
+      $$/ $$ |  $$ | $$$$$$  |$$$$$$$  |$$ |$$$$$$/   /$$$$$$  |                        
+      /  |$$ |  $$ | /    $$ |$$ |  $$ |$$ |  $$ | __ $$ |  $$ |                        
+      $$ |$$ \__$$ |/$$$$$$$ |$$ |  $$ |$$ |  $$ |/  |$$ \__$$ |                        
+      $$ |$$    $$/ $$    $$ |$$ |  $$ |$$ |  $$  $$/ $$    $$/                         
+ __   $$ | $$$$$$/   $$$$$$$/ $$/   $$/ $$/    $$$$/   $$$$$$/                          
+/  \__$$ |                                                                              
+$$    $$/                                                                               
+ $$$$$$/                                                                                
+   __      __                                                                           
+  /  |    /  |                                                                          
+ _$$ |_   $$ |____    ______   _____  ____    ______    _______   ______   _______      
+/ $$   |  $$      \  /      \ /     \/    \  /      \  /       | /      \ /       \     
+$$$$$$/   $$$$$$$  |/$$$$$$  |$$$$$$ $$$$  |/$$$$$$  |/$$$$$$$/ /$$$$$$  |$$$$$$$  |    
+  $$ | __ $$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$ |  $$ |$$      \ $$ |  $$ |$$ |  $$ |    
+  $$ |/  |$$ |  $$ |$$ \__$$ |$$ | $$ | $$ |$$ |__$$ | $$$$$$  |$$ \__$$ |$$ |  $$ | __ 
+  $$  $$/ $$ |  $$ |$$    $$/ $$ | $$ | $$ |$$    $$/ /     $$/ $$    $$/ $$ |  $$ |/  |
+   $$$$/  $$/   $$/  $$$$$$/  $$/  $$/  $$/ $$$$$$$/  $$$$$$$/   $$$$$$/  $$/   $$/ $$/ 
+                                            $$ |                                        
+                                            $$ |                                        
+                                             $$/                                        </pre>
+            <span class="strip-hover-tag">↗ linktr.ee/juanitothompson</span>
+        </a>
+    </div>
+
+    <!-- WOAH. -->
+    <div class="link-strip woah">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/woah/woah-linkbanner.jpg'); background-position: center 40%;"></div>
+        <a href="https://linktr.ee/woah.music" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Woah. links">
+            <pre>
+`8.`888b                 ,8'  ,o888888o.           .8.          8 8888        8
+ `8.`888b               ,8'. 8888     `88.        .888.         8 8888        8
+  `8.`888b             ,8',8 8888       `8b      :88888.        8 8888        8
+   `8.`888b     .b    ,8' 88 8888        `8b    . `88888.       8 8888        8
+    `8.`888b    88b  ,8'  88 8888         88   .8. `88888.      8 8888        8
+     `8.`888b .`888b,8'   88 8888         88  .8`8. `88888.     8 8888        8
+      `8.`888b8.`8888'    88 8888        ,8P .8' `8. `88888.    8 8888888888888
+       `8.`888`8.`88'     `8 8888       ,8P .8'   `8. `88888.   8 8888        8
+        `8.`8' `8,`'       ` 8888     ,88' .888888888. `88888.  8 8888        8
+         `8.`   `8'           `8888888P'  .8'       `8. `88888. 8 8888        8</pre>
+            <span class="strip-hover-tag">↗ linktr.ee/woah.music</span>
+        </a>
+    </div>
+
+    <!-- DAG HENDERSON -->
+    <div class="link-strip dag">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/dag_henderson/daghenderson-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/daghenderson" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Dag Henderson links">
+            <pre>
+_________/\\\______________________________                                                                                             
+ ________\/\\\______________________________                                                                                            
+  ________\/\\\___________________/\\\\\\\\__                                                                                           
+   ________\/\\\___/\\\\\\\\\_____/\\\////\\\_                                                                                          
+    ___/\\\\\\\\\__\////////\\\___\//\\\\\\\\\_                                                                                        
+     __/\\\////\\\____/\\\\\\\\\\___\///////\\\_                                                                                        
+      _\/\\\__\/\\\___/\\\/////\\\___/\\_____\\\_                                                                                       
+       _\//\\\\\\\/\\_\//\\\\\\\\/\\_\//\\\\\\\\__                                                                                      
+        __\///////\//___\////////\//___\___________                                                                                     
+__/\\\______________________________________________/\\\________________________________________________________________________        
+ _\/\\\_____________________________________________\/\\\________________________________________________________________________       
+  _\/\\\_____________________________________________\/\\\________________________________________________________________________      
+   _\/\\\_____________/\\\\\\\\___/\\/\\\\\\__________\/\\\______/\\\\\\\\___/\\/\\\\\\\___/\\\\\\\\\\_____/\\\\\_____/\\/\\\\\\___     
+    _\/\\\\\\\\\\____/\\\/////\\\_\/\\\////\\\____/\\\\\\\\\____/\\\/////\\\_\/\\\/////\\\_\/\\\//////____/\\\///\\\__\/\\\////\\\__    
+     _\/\\\/////\\\__/\\\\\\\\\\\__\/\\\__\//\\\__/\\\////\\\___/\\\\\\\\\\\__\/\\\___\///__\/\\\\\\\\\\__/\\\__\//\\\_\/\\\__\//\\\_   
+      _\/\\\___\/\\\_\//\\///////___\/\\\___\/\\\_\/\\\__\/\\\__\//\\///////___\/\\\_________\////////\\\_\//\\\__/\\\__\/\\\___\/\\\_  
+       _\/\\\___\/\\\__\//\\\\\\\\\\_\/\\\___\/\\\_\//\\\\\\\/\\__\//\\\\\\\\\\_\/\\\__________/\\\\\\\\\\__\///\\\\\/___\/\\\___\/\\\_ 
+        _\///____\///____\//////////__\///____\///___\///////\//____\//////////__\///__________\//////////_____\/////_____\///____\///__ </pre>
+            <span class="strip-hover-tag">↗ linktr.ee/daghenderson</span>
+        </a>
+    </div>
+
+    <!-- JON McCOY -->
+    <div class="link-strip jonm">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/jon_mccoy/jonmccoy-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://artists.landr.com/jm_longwayhome" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Jon McCoy links">
+            <pre>
+                      ,__ __         ___            
+ /\                  /|  |  |       / (_)           
+|  |  __   _  _       |  |  |   __ |      __        
+|  | /  \_/ |/ |      |  |  |  /   |     /  \_|   | 
+ \_|/\__/   |  |_/    |  |  |_/\___/\___/\__/  \_/|/
+  /|                                             /| 
+  \|                                             \| </pre>
+            <span class="strip-hover-tag">↗ artists.landr.com/jm_longwayhome</span>
+        </a>
+    </div>
+
+    <!-- THE FOUR B'S -->
+    <div class="link-strip fourbs">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/four_bs/fourBs-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/the4bs" class="link-strip-inner" target="_blank" rel="noopener" aria-label="The Four B's links">
+            <pre>
+:::==== :::  === :::=====      :::===== :::====  :::  === :::====       :::====   == :::=== 
+:::==== :::  === :::           :::      :::  === :::  === :::  ===      :::  === ==  :::    
+  ===   ======== ======        ======   ===  === ===  === =======       =======       ===== 
+  ===   ===  === ===           ===      ===  === ===  === === ===       ===  ===         ===
+  ===   ===  === ========      ===       ======   ======  ===  ===      =======      ======</pre>
+            <span class="strip-hover-tag">↗ linktr.ee/the4bs</span>
+        </a>
+    </div>
+
+    <!-- PIXELATED LOGO GRID -->
+    <div class="logo-grid-section">
+        <div class="logo-grid-label">// find us everywhere //</div>
+
+        <div class="logo-grid-groups">
+            <div class="logo-group">
+                <div class="logo-group-label">streaming &amp; music</div>
+                <div class="logo-row">
+                    <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener" class="logo-link" data-label="bandcamp">
+                        <canvas class="pixel-logo" data-src="../assets/logos/bandcamp-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://open.spotify.com/playlist/7IUU00YYlHLDBTC7tvXNEY" target="_blank" rel="noopener" class="logo-link" data-label="spotify">
+                        <canvas class="pixel-logo" data-src="../assets/logos/spotify-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://soundcloud.com/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="soundcloud">
+                        <canvas class="pixel-logo" data-src="../assets/logos/soundcloud-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="landr">
+                        <canvas class="pixel-logo" data-src="../assets/logos/landr-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.qobuz.com/us-en/label/magmacrunch-media/download-streaming-albums/6939549" target="_blank" rel="noopener" class="logo-link" data-label="qobuz">
+                        <canvas class="pixel-logo" data-src="../assets/logos/qboz-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+            <div class="logo-group">
+                <div class="logo-group-label">video</div>
+                <div class="logo-row">
+                    <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="youtube">
+                        <canvas class="pixel-logo" data-src="../assets/logos/youtube-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.dailymotion.com/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="dailymotion">
+                        <canvas class="pixel-logo" data-src="../assets/logos/dailymotion-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://archive.org/search?query=magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="archive.org">
+                        <canvas class="pixel-logo" data-src="../assets/logos/internetarchive-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+            <div class="logo-group">
+                <div class="logo-group-label">catalog &amp; data</div>
+                <div class="logo-row">
+                    <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener" class="logo-link" data-label="discogs">
+                        <canvas class="pixel-logo" data-src="../assets/logos/discogs-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener" class="logo-link" data-label="musicbrainz">
+                        <canvas class="pixel-logo" data-src="../assets/logos/musicbrainz-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://letterboxd.com/studio/magmacrunch-media/" target="_blank" rel="noopener" class="logo-link" data-label="letterboxd">
+                        <canvas class="pixel-logo" data-src="../assets/logos/letterboxd-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+            <div class="logo-group">
+                <div class="logo-group-label">social</div>
+                <div class="logo-row">
+                    <a href="https://linktr.ee/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="linktree">
+                        <canvas class="pixel-logo" data-src="../assets/logos/linktree-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.instagram.com/magmacrunch/" target="_blank" rel="noopener" class="logo-link" data-label="instagram">
+                        <canvas class="pixel-logo" data-src="../assets/logos/instagram-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.tiktok.com/@magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="tiktok">
+                        <canvas class="pixel-logo" data-src="../assets/logos/tiktok-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.facebook.com/magmacrunch/" target="_blank" rel="noopener" class="logo-link" data-label="facebook">
+                        <canvas class="pixel-logo" data-src="../assets/logos/facebook-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.threads.com/@magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="threads">
+                        <canvas class="pixel-logo" data-src="../assets/logos/threads-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://bsky.app/profile/magmacrunch.bsky.social" target="_blank" rel="noopener" class="logo-link" data-label="bluesky">
+                        <canvas class="pixel-logo" data-src="../assets/logos/bluesky-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.tumblr.com/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="tumblr">
+                        <canvas class="pixel-logo" data-src="../assets/logos/tumblr-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://pixelfed.social/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="pixelfed">
+                        <canvas class="pixel-logo" data-src="../assets/logos/pixelfed-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://substack.com/@magmacrunchmedia" target="_blank" rel="noopener" class="logo-link" data-label="substack">
+                        <canvas class="pixel-logo" data-src="../assets/logos/substack-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Links — zine-style footer -->
     <div class="zine-links">
         <a href="../archive/by-label/magmacrunch-media/">magmacrunch media</a>
         <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a>
-        <a href="../home/links/all-links.html">see all links</a>
         <a href="../home/guestbook.html">sign the guestbook</a>
         <a href="../archive/more/contributors.html">contributors</a>
         <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4">email us</a>
     </div>
 
-</main>
-
-<footer>
+<script>
+(function () {
+    var PIXEL_SIZE = 16;
+    function pixelate(canvas) {
+        var src = canvas.dataset.src;
+        if (!src) return;
+        var img = new Image();
+        img.onload = function () {
+            var off = document.createElement('canvas');
+            off.width = PIXEL_SIZE;
+            off.height = PIXEL_SIZE;
+            var offCtx = off.getContext('2d');
+            offCtx.imageSmoothingEnabled = true;
+            offCtx.drawImage(img, 0, 0, PIXEL_SIZE, PIXEL_SIZE);
+            var ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(off, 0, 0, PIXEL_SIZE, PIXEL_SIZE, 0, 0, canvas.width, canvas.height);
+        };
+        img.onerror = function () {
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#1e1e2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+        img.src = src;
+    }
+    document.querySelectorAll('canvas.pixel-logo').forEach(pixelate);
+})();
+</script>
+<script>
+(function () {
+    document.querySelectorAll('.link-strip').forEach(function (strip) {
+        strip.addEventListener('click', function (e) {
+            var link = strip.querySelector('a.link-strip-inner');
+            if (link && e.target !== link && !link.contains(e.target)) {
+                window.open(link.href, '_blank', 'noopener');
+            }
+        });
+    });
+})();
+</script>
+</body>
     &copy; 2026 <span>magmacrunch media</span>
 </footer>
 

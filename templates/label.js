@@ -187,9 +187,20 @@
         var ownedByLabels = labelRels.filter(function(r) {
             return r['target-type'] === 'label' && r.label && r.type === 'label ownership' && r.direction === 'backward';
         });
-        if (ownedByLabels.length > 0) {
-            var items = ownedByLabels.map(function(r) {
-                return '<li>' + archiveLink(r.label.id, r.label.name, 'label') + '</li>';
+        var ownedByArtists = artistRels.filter(function(r) {
+            return r['target-type'] === 'artist' && r.artist && r.type === 'owner' && r.direction === 'backward';
+        });
+        var ownedByAll = ownedByLabels.map(function(r) {
+            return { name: r.label.name, id: r.label.id, type: 'label' };
+        });
+        ownedByArtists.forEach(function(r) {
+            if (!ownedByAll.some(function(e) { return e.name === r.artist.name; })) {
+                ownedByAll.push({ name: r.artist.name, id: r.artist.id, type: 'artist' });
+            }
+        });
+        if (ownedByAll.length > 0) {
+            var items = ownedByAll.map(function(e) {
+                return '<li>' + archiveLink(e.id, e.name, e.type) + '</li>';
             }).join('');
             html += renderSection('owned by', '<ul class="simple-list">' + items + '</ul>');
         }
@@ -298,6 +309,31 @@
                     return '<li>' + creditLink(e.release, 'release') + (e.begin ? ' <span class="credit-sub">' + esc(formatDate(e.begin)) + '</span>' : '') + '</li>';
                 }).join('');
                 html += renderSection('releases', '<ul class="simple-list">' + items + '</ul>');
+            }
+
+            /* Manufactured releases */
+            var manufacturedRels = releaseRels.filter(function(r) {
+                return r.type === 'manufactured';
+            });
+            if (manufacturedRels.length > 0) {
+                var mfgGroups = {};
+                manufacturedRels.forEach(function(r) {
+                    var key = r.release.title.toLowerCase();
+                    if (!mfgGroups[key]) mfgGroups[key] = { release: r.release, rels: [] };
+                    mfgGroups[key].rels.push(r);
+                });
+                var mfgEntries = Object.keys(mfgGroups).map(function(key) {
+                    var g = mfgGroups[key];
+                    var merged = mergeRels(g.rels);
+                    return { release: g.release, begin: merged.begin, end: merged.end, ended: merged.ended };
+                });
+                mfgEntries.sort(function(a, b) {
+                    return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
+                });
+                var items = mfgEntries.map(function(e) {
+                    return '<li>' + creditLink(e.release, 'release') + (e.begin ? ' <span class="credit-sub">' + esc(formatDate(e.begin)) + '</span>' : '') + '</li>';
+                }).join('');
+                html += renderSection('manufactured', '<ul class="simple-list">' + items + '</ul>');
             }
         }
 
