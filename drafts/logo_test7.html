@@ -131,15 +131,18 @@
 
   // ── PALETTE ──
   const C = {
-    mount:  '#1a0505', // Dark red/black mountain
-    mountOut:'#ff3d6e',// Red outline from logo
-    lava0:  '#ffe03a', // Bright yellow lava
-    lava1:  '#ffad1f', // Orange lava shading
-    bolt:   '#ffe03a',
-    cereal: ['#ff3d6e', '#00f5ff', '#c45fff', '#39ff14', '#ffffff'] // Candy colors
+    mount:   '#2b0a12', // Dark, warm mountain base
+    mountDark:'#110206',// Rock texture shading
+    mountOut:'#ff3d6e', // Red outline from logo
+    lava0:   '#ffe03a', // Bright yellow lava
+    lava1:   '#ffad1f', // Orange lava shading
+    bolt:    '#ffe03a',
+    // Pastel marshmallows and toasted oat loops
+    cereal:  ['#ff85a2', '#70ffea', '#d694ff', '#8aff75', '#ffffff'], 
+    toast:   '#d4a373' 
   };
 
-  const CRATER_TOP = 28;
+  const CRATER_TOP = 32;
 
   let cerealBits = [];
   let bolts      = [];
@@ -147,16 +150,18 @@
 
   // ── SPAWNERS ──
   function spawnCereal() {
+    const isMarshmallow = Math.random() < 0.35; // 35% chance for marshmallow
+    
     cerealBits.push({
-      x: CENTER + (Math.random() - 0.5) * 10,
-      y: CRATER_TOP + 2,
+      x: CENTER + (Math.random() - 0.5) * 14, // Spawns within the wider crater
+      y: CRATER_TOP - 2, 
       vx: (Math.random() - 0.5) * 3,
       vy: -(Math.random() * 3.5 + 1.5),
       life: 1,
       decay: 0.015 + Math.random() * 0.02,
-      col: C.cereal[Math.floor(Math.random() * C.cereal.length)],
+      col: isMarshmallow ? C.cereal[Math.floor(Math.random() * C.cereal.length)] : C.toast,
       gravity: 0.18,
-      size: Math.random() < 0.6 ? 1 : 2 
+      type: isMarshmallow ? 'marshmallow' : 'loop'
     });
   }
 
@@ -177,36 +182,70 @@
 
   // ── DRAWING FUNCTIONS ──
   function drawMountain() {
-    for (let y = CRATER_TOP; y < H; y++) {
-      // Wider angle for an unbounded base
-      const widthAtY = (y - CRATER_TOP) * 1.2;
-      const l = Math.floor(CENTER - 8 - widthAtY);
-      const r = Math.floor(CENTER + 8 + widthAtY);
+    // 1. Draw glowing lava pool at the top (The Caldera)
+    const rx = 10; 
+    const ry = 4;
+    for (let y = CRATER_TOP - ry; y <= CRATER_TOP; y++) {
+      for (let x = CENTER - rx - 2; x <= CENTER + rx + 2; x++) {
+        const dx = (x - CENTER) / rx;
+        const dy = (y - CRATER_TOP) / ry;
+        if (dx * dx + dy * dy <= 1) {
+          // Inner glow vs outer lip
+          if (dx * dx + dy * dy < 0.6) {
+             ctx.fillStyle = C.lava0; // Hot core
+          } else if (y < CRATER_TOP - ry + 1.5) {
+            ctx.fillStyle = C.mountOut; // Back rim
+          } else {
+            ctx.fillStyle = C.lava1; // Cooling edge
+          }
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
 
-      const leftFlow = Math.floor(CENTER - 3 - (y - CRATER_TOP) * 0.5 + Math.sin(y * 0.3 + frame * 0.1) * 2);
-      const rightFlow = Math.floor(CENTER + 3 + (y - CRATER_TOP) * 0.5 + Math.sin(y * 0.4 - frame * 0.1) * 2);
+    // 2. Draw the main mountain body with a curved, sweeping silhouette
+    for (let y = CRATER_TOP; y < H; y++) {
+      const depth = y - CRATER_TOP;
+      // Exponential curve for classic volcano sweeping base
+      const widthAtY = Math.pow(depth, 1.2) * 0.5 + 10; 
+      const l = Math.floor(CENTER - widthAtY);
+      const r = Math.floor(CENTER + widthAtY);
+
+      // Thicker, dynamic lava flows
+      const flow1 = Math.floor(CENTER - 5 - depth * 0.4 + Math.sin(depth * 0.2 - frame * 0.1) * 3);
+      const flow2 = Math.floor(CENTER + 5 + depth * 0.4 + Math.sin(depth * 0.25 - frame * 0.15) * 3);
+      const flow3 = Math.floor(CENTER + Math.sin(depth * 0.15 - frame * 0.05) * 2); // Center flow
 
       for (let x = 0; x <= W; x++) {
         if (x >= l && x <= r) {
-          // Draw mountain outline
-          if (x === l || x === r || y === CRATER_TOP) {
+          // Draw Neon Outline
+          if (x === l || x === r) {
             ctx.fillStyle = C.mountOut;
             ctx.fillRect(x, y, 1, 1);
             continue;
           }
 
-          const distLeft = Math.abs(x - leftFlow);
-          const distRight = Math.abs(x - rightFlow);
-          const flowWidth = 1 + (y - CRATER_TOP) * 0.08;
+          // Distance to lava flows
+          const dist1 = Math.abs(x - flow1);
+          const dist2 = Math.abs(x - flow2);
+          const dist3 = Math.abs(x - flow3);
+          const flowWidth = 1.5 + depth * 0.06;
 
-          // Draw Lava or Rock
-          if (distLeft <= flowWidth || distRight <= flowWidth) {
-            const t = (frame * 0.2 + y * 0.3) % 1;
-            ctx.fillStyle = t > 0.5 ? C.lava0 : C.lava1;
+          // Render Lava or Rock
+          if (dist1 <= flowWidth || dist2 <= flowWidth || dist3 <= flowWidth) {
+            const t = (frame * 0.15 + y * 0.2) % 1;
+            ctx.fillStyle = t > 0.5 ? C.lava0 : C.lava1; // Pulsing lava
           } else {
-            // Slight noise in the mountain rock
-            ctx.fillStyle = (Math.sin(x*y) > 0.8) ? '#2a0a0a' : C.mount;
+             // Stable pseudo-random rocky texture
+            const isDark = (Math.sin(x * 12.3 + y * 45.6) > 0.7);
+            ctx.fillStyle = isDark ? C.mountDark : C.mount; 
           }
+          
+          // Hide lava behind the front lip of the crater rim
+          if (y === CRATER_TOP && Math.abs(x - CENTER) < rx) {
+              ctx.fillStyle = C.mountOut;
+          }
+
           ctx.fillRect(x, y, 1, 1);
         }
       }
@@ -217,7 +256,18 @@
     for (const c of cerealBits) {
       if (c.y < H) {
         ctx.fillStyle = c.col;
-        ctx.fillRect(Math.floor(c.x), Math.floor(c.y), c.size, c.size);
+        const x = Math.floor(c.x);
+        const y = Math.floor(c.y);
+        
+        if (c.type === 'loop') {
+          // Draw a 3x3 hollow square to look like an oat loop
+          ctx.fillRect(x, y, 3, 3);
+          ctx.clearRect(x + 1, y + 1, 1, 1); 
+        } else {
+          // Draw a chunky cross shape for marshmallows
+          ctx.fillRect(x + 1, y, 2, 4);
+          ctx.fillRect(x, y + 1, 4, 2);
+        }
       }
     }
   }
@@ -244,8 +294,8 @@
 
   // ── UPDATE & LOOP ──
   function update() {
-    if (frame % 2 === 0) spawnCereal();
-    if (Math.random() > 0.90) spawnBolt();
+    if (frame % 3 === 0) spawnCereal(); // Slightly slower spawn rate for clarity
+    if (Math.random() > 0.92) spawnBolt();
 
     for (const b of bolts) { b.life -= b.decay; }
     bolts = bolts.filter(b => b.life > 0);
@@ -260,7 +310,6 @@
   }
 
   function render() {
-    // Clear canvas completely to make it transparent/unbounded against the page body
     ctx.clearRect(0, 0, W, H);
     drawBolts();
     drawMountain();
