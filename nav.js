@@ -15,7 +15,7 @@ window.NAV_CONFIG = {
         { label: 'music', href: 'music/index.html', items: [
             { href: 'music/jukebox/index.html', label: 'jukebox' },
             { href: 'music/distributed-music.html', label: 'distributed music' },
-            { href: 'music/floppy-disk/index.html', label: 'floppy disk' }
+            { href: 'music/physical-media/index.html', label: 'physical media' }
         ]},
         { label: 'visual', href: 'visual/index.html', items: [
             { href: 'visual/music-videos.html', label: 'music videos' },

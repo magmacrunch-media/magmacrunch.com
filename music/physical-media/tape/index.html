@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tape — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        :root {
+            --nav-accent: #39ff6e;
+            --nav-glow: rgba(57,255,110,0.4);
+            --nav-brand: #39ff6e;
+            --nav-brand-glow: rgba(57,255,110,0.6);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 60px;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--green); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--green); opacity: 0.7; }
+        .breadcrumb .current { color: var(--green); }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--green);
+            text-shadow: 0 0 20px rgba(57,255,110,0.5);
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.12em;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        .coming-soon {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--dim);
+            line-height: 1.8;
+            max-width: 480px;
+            margin-bottom: 32px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .back-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--green);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            padding: 10px 16px;
+            border: 2px solid var(--green);
+            transition: background 0.15s, color 0.15s;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+        .back-link:hover {
+            background: var(--green);
+            color: var(--black);
+        }
+
+        footer {
+            border-top-color: #1e1e2e !important;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../index.html">home</a></li>
+        <li><a href="../../../home/about.html">about</a></li>
+        <li>
+            <a href="../../index.html">music</a>
+            <div class="dropdown">
+                <a href="../../jukebox/index.html">jukebox</a>
+                <a href="../../distributed-music.html">distributed music</a>
+                <a href="../index.html">physical media</a>
+            </div>
+        </li>
+        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a><a href="../../../archive/by-label/index.html">by label</a><a href="../../../archive/by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../press/index.html">press</a><div class="dropdown"><a href="../../../press/index.html">all pieces</a><a href="../../../press/submissions.html">submissions</a></div></li>
+        <li><a href="../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../index.html">home</a>
+        <span class="sep">&rsaquo;</span>
+        <a href="../../index.html">music</a>
+        <span class="sep">&rsaquo;</span>
+        <a href="../index.html">physical media</a>
+        <span class="sep">&rsaquo;</span>
+        <span class="current">tape</span>
+    </div>
+
+    <h1 class="page-title">// tape //</h1>
+    <p class="page-subtitle">coming soon</p>
+
+    <p class="coming-soon">
+        tape releases are in development. check back later.
+    </p>
+
+    <a href="../index.html" class="back-link">&larr; back to physical media</a>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+
+</body>
+</html>
