@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basement Creature — press — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+    </script>
+    <style>
+        :root {
+            --nav-accent: #c02828;
+            --nav-glow: rgba(192,40,40,0.4);
+            --nav-brand: #c02828;
+            --nav-brand-glow: rgba(192,40,40,0.6);
+        }
+
+        body {
+            background-color: #18191b;
+            color: #c8c8c8;
+            background-image: none;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 0.1em;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #666; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c02828; }
+        .breadcrumb .sep { margin: 0 8px; color: #444; }
+        .breadcrumb .current { color: #c02828; }
+
+        .article-header {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .article-type {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #f0e4c8;
+            background: #c02828;
+            display: inline-block;
+            padding: 3px 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .article-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(12px, 2.5vw, 18px);
+            color: #e7000e;
+            font-style: italic;
+            letter-spacing: 0.06em;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .article-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        .article-body {
+            width: min(600px, 90vw);
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .article-body p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 15px;
+            line-height: 1.9;
+            color: #e0e0e0;
+            margin-bottom: 16px;
+        }
+
+        .article-body p.centered {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .article-body .voice-green { color: #39d84a; }
+        .article-body .voice-blue { color: #5aa0e0; }
+        .article-body .voice-magenta { color: #e040a0; }
+        .article-body .voice-yellow { color: #f9de27; }
+        .article-body .voice-orange { color: #f5ad09; }
+        .article-body .voice-grey { color: #999; }
+
+        .article-end {
+            width: min(600px, 90vw);
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .article-end span { color: #c02828; font-size: 12px; }
+
+        .article-back {
+            display: inline-block;
+            margin-top: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #c02828;
+            text-decoration: none;
+            border: 2px solid #c02828;
+            padding: 8px 16px;
+            transition: all 0.15s;
+        }
+        .article-back:hover {
+            background: #c02828;
+            color: #f0e4c8;
+        }
+
+        footer {
+            background: #18191b !important;
+            border-top-color: #333 !important;
+            color: #666 !important;
+        }
+        footer span { color: #c02828 !important; }
+
+        @media (max-width: 640px) {
+            .article-title { font-size: 12px; }
+            .article-body p { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">home</a></li>
+        <li><a href="../home/about.html">about</a></li>
+        <li><a href="../music/index.html">music</a><div class="dropdown"><a href="../music/jukebox/index.html">jukebox</a><a href="../music/distributed-music.html">distributed music</a><a href="../music/physical-media/index.html">physical media</a></div></li>
+        <li><a href="../visual/index.html">visual</a><div class="dropdown"><a href="../visual/music-videos.html">music videos</a><a href="../visual/collage.html">collage</a><a href="../visual/photography.html">photography</a></div></li>
+        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a><a href="../archive/by-label/index.html">by label</a><a href="../archive/by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../arcade/index.html">arcade</a></li>
+        <li><a href="../press/index.html">press</a></li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <a href="../press/index.html">press</a>
+        <span class="sep">›</span>
+        <span class="current">basement creature</span>
+    </div>
+
+    <div class="article-header">
+        <div class="article-type">essay</div>
+        <h1 class="article-title">Basement Creature</h1>
+        <div class="article-meta">
+            april 2023
+        </div>
+    </div>
+
+    <div class="article-body">
+
+        <p class="voice-green">I'm not saying that I don't want you to think that you shouldn't do that. And I'm not saying I don't disagree with you.</p>
+
+        <p class="voice-blue">But you didn't say you wouldn't concede to their terms. I've never known you to be someone who couldn't say no.</p>
+
+        <p class="voice-green">I'm not saying nothing is not fair game. And I can't say I haven't been there before.</p>
+
+        <p class="centered voice-magenta">Is is is?</p>
+
+        <p class="centered voice-yellow">Is is is.</p>
+
+        <p class="centered voice-magenta">What do you mean by is?</p>
+
+        <p class="centered voice-yellow">What do you mean by mean?</p>
+
+        <p class="centered voice-magenta">Mean means mean. But what is what?</p>
+
+        <p class="centered voice-yellow">What is what what is. And is is it.</p>
+
+        <p class="centered voice-magenta">And is is it??</p>
+
+        <p class="centered voice-yellow">Is is is.</p>
+
+        <p class="voice-blue">I never thought you wouldn't deceive me.</p>
+
+        <p class="voice-green">I'm not thinking I couldn't never make it right.</p>
+
+        <p class="voice-blue">I wouldn't think you didn't; wouldn't you?</p>
+
+        <p class="voice-green">I didn't think you wouldn't; wouldn't you?</p>
+
+        <p class="voice-blue">I couldn't conceive that nothing wouldn't matter.</p>
+
+        <p class="voice-green">I don't think it wasn't nothing.</p>
+
+        <p class="voice-blue">It ain't nothing.</p>
+
+        <p class="voice-green">Even nothing is something.</p>
+
+        <p class="voice-blue">I couldn't possibly not care less.</p>
+
+        <p class="voice-green">I could, but do I should?</p>
+
+        <p class="voice-blue">No.</p>
+
+        <p class="centered voice-magenta">It's not not a loft&hellip;</p>
+
+        <p class="centered voice-orange">Tell me about it.</p>
+
+        <p class="centered voice-magenta">I shouldn't not but I won't.</p>
+
+        <p class="centered voice-orange">So you won't, won't you?</p>
+
+        <p class="centered voice-magenta">I wouldn't, couldn't, but I shouldn't stop.</p>
+
+        <p class="centered voice-orange">I can't say I wouldn't mean you wouldn't stop stopping.</p>
+
+        <p class="centered voice-magenta">I wouldn't be able to not laugh if you didn't.</p>
+
+        <p class="centered voice-orange">I didn't not.</p>
+
+        <p class="voice-blue">I won't not bite.</p>
+
+        <p class="voice-blue">And I didn't promise to never punch you!</p>
+
+        <p class="voice-blue">Good talk, I'll see you out there.</p>
+
+        <p class="centered voice-grey">Yah, right!</p>
+
+    </div>
+
+    <div class="article-end">
+        <span>&#10022;</span><br>
+        <a href="../press/index.html" class="article-back">&larr; back to press</a>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+</body>
+</html>
