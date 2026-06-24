@@ -71,6 +71,9 @@ window.__ENTITY_MAP = {
     /* chuck j'ob — no by-artist page, maps to by-contributor */
     'c8ba82bf-cfa1-49a0-98bf-0cf8f931099f': '../../by-contributor/chuck-job/index.html',
 
+    /* jake thomas — no by-artist page, maps to by-contributor */
+    'a492cd5d-b090-48e3-8bbb-0f8f5cefc34a': '../../by-contributor/jake-thomas/index.html',
+
     /* ── Places → /archive/by-place/ ── */
     'c6c69d44-8408-4a0a-9dbf-8b3ee903bc5f': '../../by-place/college-green-apt/index.html',
     '3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2': '../../by-place/the-tuna-can/index.html',
