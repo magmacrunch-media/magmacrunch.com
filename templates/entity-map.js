@@ -62,6 +62,9 @@ window.__ENTITY_MAP = {
     /* jake mccoy — no by-artist page, maps to by-contributor */
     '32bc1ac7-efd0-44f2-8645-8fecf6a40edb': '../../by-contributor/jake-mccoy/index.html',
 
+    /* rho k. — no by-artist page, maps to by-contributor */
+    'b0d4d4fd-d500-4439-b401-5c15f231e41f': '../../by-contributor/rho-k/index.html',
+
     /* ── Places → /archive/by-place/ ── */
     'c6c69d44-8408-4a0a-9dbf-8b3ee903bc5f': '../../by-place/college-green-apt/index.html',
     '3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2': '../../by-place/the-tuna-can/index.html',
