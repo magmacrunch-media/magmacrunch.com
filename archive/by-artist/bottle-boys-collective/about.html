@@ -36,6 +36,49 @@
             border-bottom-color: var(--bbc-sky-light);
         }
 
+        /* ── MEMBERS SIDEBAR ── */
+        .members-sidebar {
+            float: right;
+            width: 220px;
+            margin: 0 0 20px 24px;
+            border: 2px solid var(--bbc-apricot);
+            padding: 14px;
+            background: rgba(240,192,160,0.06);
+            display: none;
+        }
+        .members-sidebar .members-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--bbc-apricot);
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(240,192,160,0.3);
+        }
+        .members-sidebar .member-entry {
+            margin-bottom: 10px;
+        }
+        .members-sidebar .member-entry:last-child { margin-bottom: 0; }
+        .members-sidebar .member-name {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--bbc-sky);
+            font-weight: 700;
+        }
+        .members-sidebar .member-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--bbc-mid);
+            margin-top: 2px;
+        }
+        @media (max-width: 640px) {
+            .members-sidebar {
+                float: none;
+                width: 100%;
+                margin: 0 0 20px 0;
+            }
+        }
+
         /* Drop cap on first paragraph only */
         .bio-section p:first-of-type::first-letter {
             font-family: 'Playfair Display', serif;
@@ -55,6 +98,9 @@
             box-shadow: 0 0 8px rgba(240,192,160,0.3);
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
 </head>
 <body class="bbc-page bbc-about-page">
 
@@ -97,6 +143,7 @@
     <div class="divider"></div>
 
     <div class="bio-section">
+        <div class="members-sidebar" id="artist-sidebar"></div>
         <p><b>Bottle Boys</b> started in late 2017 when Jon, Cole, and Jake T. got together to make some noise at <a href="../../by-place/frogwood-manor/index.html">Frogwood Manor</a>.
                 This is beleived to have occured in September of that year, but some Bottle Boys scholars argue for December of that year.
                 Using some recorded samples from the show <i>SpongeBob SquarePants</i> along with ambient guitar and synthesizer,
@@ -122,5 +169,12 @@
 <footer>&copy; 2026 <span>magmacrunch media</span></footer>
 
 <script src="../../../nav.js"></script>
+<script>
+window.ARTIST_CONFIG = {
+    id: 'e33d1006-01a5-4266-aade-b7f6c1dff8e3',
+    name: 'Bottle Boys'
+};
+</script>
+<script src="../../../templates/artist_members.js"></script>
 </body>
 </html>

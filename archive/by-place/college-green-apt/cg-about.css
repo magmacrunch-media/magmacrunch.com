@@ -20,20 +20,45 @@ body.cg-page.cg-about-page .nav-card.c-about {
 }
 
 body.cg-page.cg-about-page .place-body {
-    max-width: 700px;
-    margin: 60px auto;
+    width: 100%;
+    max-width: 960px;
     padding: 0 20px;
-    color: var(--cg-light);
-    font-size: 16px;
-    line-height: 1.7;
+    color: var(--cg-cream);
 }
-body.cg-page.cg-about-page .place-body p { margin-bottom: 1.5em; }
-body.cg-page.cg-about-page .place-body a { color: var(--cg-light); text-decoration: underline; text-decoration-color: rgba(200, 190, 168, 0.35); transition: color 0.15s; }
-body.cg-page.cg-about-page .place-body a:hover { color: var(--cg-cream); }
-body.cg-page.cg-about-page .place-body a[target="_blank"] { color: var(--cg-lavender); text-decoration-color: rgba(184, 160, 200, 0.35); }
-body.cg-page.cg-about-page .place-body a[target="_blank"]:hover { color: var(--cg-cta); }
+body.cg-page.cg-about-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--cg-cream);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.cg-page.cg-about-page .place-body a {
+    color: var(--cg-lavender);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.cg-page.cg-about-page .place-body a:hover {
+    color: var(--cg-cream);
+    border-bottom-color: var(--cg-cream);
+}
+body.cg-page.cg-about-page .place-body a[target="_blank"] { color: var(--cg-cta); border-bottom-color: transparent; }
+body.cg-page.cg-about-page .place-body a[target="_blank"]:hover { color: var(--cg-cream); border-bottom-color: var(--cg-cream); }
 body.cg-page.cg-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
-body.cg-page.cg-about-page .place-body strong { color: var(--cg-cream); }
+body.cg-page.cg-about-page .place-body strong { color: var(--cg-white); }
+
+body.cg-page.cg-about-page .place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--cg-lavender);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(184,160,200,0.4);
+}
 
 body.cg-page.cg-about-page .section-label {
     font-family: 'Press Start 2P', monospace;

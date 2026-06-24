@@ -46,6 +46,18 @@ body.asp-page.asp-about-page .bio-section strong {
     font-weight: normal;
 }
 
+body.asp-page.asp-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--asp-brick);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(168,72,40,0.4);
+}
+
 /* ── Nav card overrides ── */
 body.asp-page.asp-about-page .nav-card.c-back { background: transparent; color: var(--asp-brick); border-color: var(--asp-brick); }
 body.asp-page.asp-about-page .nav-card.c-back:hover { background: var(--asp-brick); color: var(--asp-night); }

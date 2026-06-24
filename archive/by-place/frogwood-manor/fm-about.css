@@ -20,19 +20,42 @@ body.fm-page.fm-about-page .nav-card.c-about {
 }
 
 body.fm-page.fm-about-page .place-body {
-    max-width: 700px;
-    margin: 60px auto;
+    max-width: 960px;
+    width: 100%;
     padding: 0 20px;
     color: var(--fm-light);
-    font-size: 16px;
-    line-height: 1.7;
+    font-size: 15px;
+    line-height: 1.8;
 }
-body.fm-page.fm-about-page .place-body p { margin-bottom: 1.5em; }
-body.fm-page.fm-about-page .place-body a { color: var(--fm-light); text-decoration: underline; text-decoration-color: rgba(248, 216, 136, 0.35); transition: color 0.15s; }
-body.fm-page.fm-about-page .place-body a:hover { color: var(--fm-cream); }
-body.fm-page.fm-about-page .place-body a[target="_blank"] { color: var(--fm-sage); text-decoration-color: rgba(160, 48, 200, 0.35); }
-body.fm-page.fm-about-page .place-body a[target="_blank"]:hover { color: var(--fm-amber); }
+body.fm-page.fm-about-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.fm-page.fm-about-page .place-body a {
+    color: var(--fm-light);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.fm-page.fm-about-page .place-body a:hover { color: var(--fm-cream); border-bottom-color: var(--fm-cream); }
+body.fm-page.fm-about-page .place-body a[target="_blank"] { color: var(--fm-sage); border-bottom-color: transparent; }
+body.fm-page.fm-about-page .place-body a[target="_blank"]:hover { color: var(--fm-amber); border-bottom-color: var(--fm-amber); }
 body.fm-page.fm-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+body.fm-page.fm-about-page .place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--fm-sage);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(106,152,120,0.4);
+}
 
 body.fm-page.fm-about-page .section-label {
     font-family: 'Press Start 2P', monospace;
@@ -60,7 +83,7 @@ body.fm-page.fm-about-page .place-photo-row img {
 
 body.fm-page.fm-about-page .place-figure {
     margin: 40px auto;
-    max-width: 700px;
+    max-width: 960px;
 }
 body.fm-page.fm-about-page .place-figure img {
     width: 95%;

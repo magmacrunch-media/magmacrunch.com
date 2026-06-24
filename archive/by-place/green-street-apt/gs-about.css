@@ -24,17 +24,42 @@ body.gs-page.gs-about-page .nav-card.c-about:hover {
 }
 
 body.gs-page.gs-about-page .place-body {
-    max-width: 700px;
-    margin: 60px auto;
+    max-width: 960px;
+    width: 100%;
     padding: 0 20px;
     color: var(--gs-body);
-    font-size: 16px;
-    line-height: 1.7;
+    font-size: 15px;
+    line-height: 1.8;
 }
-body.gs-page.gs-about-page .place-body p { margin-bottom: 1.5em; }
-body.gs-page.gs-about-page .place-body a { color: var(--gs-sage); text-decoration: underline; text-decoration-color: rgba(136, 120, 168, 0.35); transition: color 0.15s; }
-body.gs-page.gs-about-page .place-body a:hover { color: var(--gs-cream); }
+body.gs-page.gs-about-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.gs-page.gs-about-page .place-body a {
+    color: var(--gs-sage);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.gs-page.gs-about-page .place-body a:hover { color: var(--gs-cream); border-bottom-color: var(--gs-cream); }
+body.gs-page.gs-about-page .place-body a[target="_blank"] { color: var(--gs-accent); border-bottom-color: transparent; }
+body.gs-page.gs-about-page .place-body a[target="_blank"]:hover { color: var(--gs-warm); border-bottom-color: var(--gs-warm); }
 body.gs-page.gs-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+body.gs-page.gs-about-page .place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--gs-sage);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(136,120,168,0.4);
+}
 
 body.gs-page.gs-about-page .divider {
     width: 100%;
