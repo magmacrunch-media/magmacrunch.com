@@ -65,6 +65,9 @@ window.__ENTITY_MAP = {
     /* rho k. — no by-artist page, maps to by-contributor */
     'b0d4d4fd-d500-4439-b401-5c15f231e41f': '../../by-contributor/rho-k/index.html',
 
+    /* alex s. — no by-artist page, maps to by-contributor */
+    '0bfa85f1-5138-4790-8439-e709399944df': '../../by-contributor/alex-s/index.html',
+
     /* ── Places → /archive/by-place/ ── */
     'c6c69d44-8408-4a0a-9dbf-8b3ee903bc5f': '../../by-place/college-green-apt/index.html',
     '3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2': '../../by-place/the-tuna-can/index.html',
