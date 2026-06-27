@@ -166,6 +166,21 @@ subNavEl.innerHTML = [
     const artistId = C.id;
     const delay    = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/artists/' + artistId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     async function fetchWithRetry(url, retries = 4) {
         for (let i = 0; i < retries; i++) {
             let res;
@@ -207,15 +222,21 @@ subNavEl.innerHTML = [
         try {
             // ── fetch all recording stubs with pagination ──
             let all = [], offset = 0, hasMore = true;
-            statusEl.textContent = 'fetching recordings…';
-            while (hasMore) {
-                try {
-                    const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording?artist=${artistId}&limit=100&offset=${offset}&fmt=json`);
-                    all = all.concat(data.recordings || []);
-                    statusEl.textContent = `fetching recordings… ${all.length} found`;
-                    if (data.recordings?.length === 100) { offset += 100; await delay(1000); }
-                    else hasMore = false;
-                } catch { hasMore = false; }
+            const cachedList = _cache?.subpages?.recordings?.list;
+            if (cachedList) {
+                all = cachedList.recordings || [];
+                statusEl.textContent = `loaded ${all.length} recordings from cache`;
+            } else {
+                statusEl.textContent = 'fetching recordings…';
+                while (hasMore) {
+                    try {
+                        const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording?artist=${artistId}&limit=100&offset=${offset}&fmt=json`);
+                        all = all.concat(data.recordings || []);
+                        statusEl.textContent = `fetching recordings… ${all.length} found`;
+                        if (data.recordings?.length === 100) { offset += 100; await delay(1000); }
+                        else hasMore = false;
+                    } catch { hasMore = false; }
+                }
             }
 
             const total = all.length;
@@ -231,7 +252,7 @@ subNavEl.innerHTML = [
             for (let i = 0; i < all.length; i++) {
                 const rec = all[i];
                 try {
-                    const d = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
+                    const d = await cached(`recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`, _cache?.subpages?.recordings?.details?.[rec.id]);
 
                     const artists = d['artist-credit']?.map(ac =>
                         archiveLink(ac.artist?.id, ac.name, 'artist')

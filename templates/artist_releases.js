@@ -160,6 +160,21 @@ const COLOR_MAP = {
     const artistId = C.id;
     const delay    = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/artists/' + artistId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     // Escape HTML special chars to safely insert API text into innerHTML
     function esc(str) {
         return String(str ?? '')
@@ -198,14 +213,21 @@ const COLOR_MAP = {
         try {
             // ── fetch all release stubs with pagination ──
             let allReleases = [], offset = 0, totalCount = 0;
-            do {
-                const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/release?artist=${artistId}&limit=100&offset=${offset}&fmt=json`);
-                totalCount  = data['release-count'];
-                allReleases = allReleases.concat(data.releases);
-                offset += 100;
-                statusEl.textContent = `fetching releases… ${allReleases.length} of ${totalCount}`;
-                if (offset < totalCount) await delay(1000);
-            } while (offset < totalCount);
+            const cachedList = _cache?.subpages?.releases?.list;
+            if (cachedList) {
+                totalCount = cachedList['release-count'];
+                allReleases = cachedList.releases || [];
+                statusEl.textContent = `loaded ${allReleases.length} releases from cache`;
+            } else {
+                do {
+                    const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/release?artist=${artistId}&limit=100&offset=${offset}&fmt=json`);
+                    totalCount  = data['release-count'];
+                    allReleases = allReleases.concat(data.releases);
+                    offset += 100;
+                    statusEl.textContent = `fetching releases… ${allReleases.length} of ${totalCount}`;
+                    if (offset < totalCount) await delay(1000);
+                } while (offset < totalCount);
+            }
 
             if (totalCount === 0) { statusEl.textContent = 'no releases found.'; return; }
 
@@ -219,7 +241,7 @@ const COLOR_MAP = {
             for (let i = 0; i < allReleases.length; i++) {
                 const rel = allReleases[i];
                 try {
-                    const d = await fetchWithRetry(`https://musicbrainz.org/ws/2/release/${rel.id}?inc=artists+labels+recordings+release-groups&fmt=json`);
+                    const d = await cached(`release/${rel.id}?inc=artists+labels+recordings+release-groups&fmt=json`, _cache?.subpages?.releases?.details?.[rel.id]);
 
                     const artists     = d['artist-credit']?.map(ac => esc(ac.name)).join(', ') || 'various artists';
                     const format      = esc(d.media?.[0]?.format?.toLowerCase() || 'n/a');
@@ -240,9 +262,9 @@ const COLOR_MAP = {
                     let tags = '';
                     if (d['release-group']?.id) {
                         try {
-                            const rg = await fetchWithRetry(`https://musicbrainz.org/ws/2/release-group/${d['release-group'].id}?inc=tags&fmt=json`);
+                            const rg = await cached(`release-group/${d['release-group'].id}?inc=tags&fmt=json`, _cache?.subpages?.releases?.releaseGroups?.[d['release-group'].id]);
                             tags = rg.tags?.map(t => `<span class="tag">${esc(t.name)}</span>`).join('') || '';
-                            await delay(500);
+                            if (!_cache?.subpages?.releases?.releaseGroups?.[d['release-group'].id]) await delay(500);
                         } catch {}
                     }
 

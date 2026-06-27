@@ -152,6 +152,21 @@
     const placeId = C.id;
     const delay   = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/places/' + placeId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     function esc(str) {
         return String(str ?? '')
             .replace(/&/g, '&amp;')
@@ -207,7 +222,7 @@
             // The most reliable route is fetching the place entity with recording-rels,
             // then walking each recording's full detail record.
             statusEl.textContent = 'fetching place data…';
-            const placeData = await fetchWithRetry(
+            const placeData = _cache?.subpages?.recordings?.placeData || await fetchWithRetry(
                 `https://musicbrainz.org/ws/2/place/${placeId}?inc=recording-rels&fmt=json`
             );
             const recRels = placeData.relations?.filter(r => r['target-type'] === 'recording') || [];
@@ -235,7 +250,7 @@
                 statusEl.textContent = `loading details… ${completed + 1} of ${unique.length}${failed ? ` (${failed} failed)` : ''}`;
 
                 try {
-                    const d = await fetchWithRetry(
+                    const d = _cache?.subpages?.recordings?.details?.[recId] || await fetchWithRetry(
                         `https://musicbrainz.org/ws/2/recording/${recId}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`
                     );
 

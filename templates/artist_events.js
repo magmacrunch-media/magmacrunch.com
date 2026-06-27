@@ -150,6 +150,21 @@ const COLOR_MAP = {
     const PERFORMER_TYPES = ['main performer', 'support act', 'performer', 'guest'];
     const delay           = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/artists/' + artistId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     // Escape HTML special chars to safely insert API text into innerHTML
     function esc(str) {
         return String(str ?? '')
@@ -206,6 +221,8 @@ const COLOR_MAP = {
 
     async function getFullAreaName(areaId) {
         if (areaCache.has(areaId)) return areaCache.get(areaId);
+        const cachedArea = _cache?.subpages?.events?.areaChains?.[areaId];
+        if (cachedArea !== undefined) { areaCache.set(areaId, cachedArea); return cachedArea; }
         try {
             const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/area/${areaId}?inc=area-rels&fmt=json`);
             const names = [], seen = new Set();
@@ -240,14 +257,21 @@ const COLOR_MAP = {
         try {
             // ── fetch all event stubs with pagination ──
             let allEvents = [], offset = 0, totalCount = 0;
-            do {
-                const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/event?artist=${artistId}&limit=100&offset=${offset}&fmt=json`);
-                totalCount = data['event-count'];
-                allEvents  = allEvents.concat(data.events);
-                offset += 100;
-                statusEl.textContent = `fetching events… ${allEvents.length} of ${totalCount}`;
-                if (offset < totalCount) await delay(1000);
-            } while (offset < totalCount);
+            const cachedList = _cache?.subpages?.events?.list;
+            if (cachedList) {
+                totalCount = cachedList['event-count'];
+                allEvents = cachedList.events || [];
+                statusEl.textContent = `loaded ${allEvents.length} events from cache`;
+            } else {
+                do {
+                    const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/event?artist=${artistId}&limit=100&offset=${offset}&fmt=json`);
+                    totalCount = data['event-count'];
+                    allEvents  = allEvents.concat(data.events);
+                    offset += 100;
+                    statusEl.textContent = `fetching events… ${allEvents.length} of ${totalCount}`;
+                    if (offset < totalCount) await delay(1000);
+                } while (offset < totalCount);
+            }
 
             if (totalCount === 0) {
                 statusEl.textContent = 'no events found.';
@@ -278,7 +302,7 @@ const COLOR_MAP = {
             for (let i = 0; i < allEvents.length; i++) {
                 const e = allEvents[i];
                 try {
-                    const d = await fetchWithRetry(`https://musicbrainz.org/ws/2/event/${e.id}?inc=place-rels+artist-rels&fmt=json`);
+                    const d = await cached(`event/${e.id}?inc=place-rels+artist-rels&fmt=json`, _cache?.subpages?.events?.details?.[e.id]);
                     const placeRel    = d.relations?.find(r => r.type === 'held at');
                     const place       = placeRel?.place;
                     const isCancelled = d.cancelled === true;

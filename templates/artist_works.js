@@ -171,6 +171,21 @@ const COLOR_MAP = {
     const artistId = C.id;
     const delay    = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/artists/' + artistId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     // Escape HTML special chars to safely insert API text into innerHTML
     function esc(str) {
         return String(str ?? '')
@@ -219,7 +234,7 @@ const COLOR_MAP = {
 
         try {
             statusEl.textContent = 'fetching works list…';
-            const artistData = await fetchWithRetry(`https://musicbrainz.org/ws/2/artist/${artistId}?inc=work-rels&fmt=json`);
+            const artistData = await cached(`artist/${artistId}?inc=work-rels&fmt=json`, _cache?.subpages?.works?.artistWorkRels);
             let workRels = artistData.relations?.filter(r => r['target-type'] === 'work') || [];
 
             if (workRels.length === 0) { statusEl.textContent = 'no works found.'; return; }
@@ -240,7 +255,7 @@ const COLOR_MAP = {
                 statusEl.textContent = `loading works… ${displayed.size} of ${workRels.length}`;
 
                 try {
-                    const w = await fetchWithRetry(`https://musicbrainz.org/ws/2/work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`);
+                    const w = await cached(`work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`, _cache?.subpages?.works?.details?.[workId]);
 
                     const workType  = w.type && w.type.toLowerCase() !== 'song' ? esc(w.type.toLowerCase()) : '';
                     const aliases   = w.aliases?.map(a => a.name).filter(n => n !== w.title).map(esc).join(', ') || '';
@@ -278,9 +293,14 @@ const COLOR_MAP = {
                         const recId = r.recording?.id;
                         if (!recId) continue;
                         try {
-                            const rd = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${recId}?fmt=json`);
-                            recsWithDetails.push({ rel: r, isVideo: rd.video === true, disambiguation: rd.disambiguation || '' });
-                            await delay(100);
+                            const cachedFlags = _cache?.subpages?.works?.recordingFlags?.[recId];
+                            if (cachedFlags) {
+                                recsWithDetails.push({ rel: r, isVideo: cachedFlags.video === true, disambiguation: cachedFlags.disambiguation || '' });
+                            } else {
+                                const rd = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${recId}?fmt=json`);
+                                recsWithDetails.push({ rel: r, isVideo: rd.video === true, disambiguation: rd.disambiguation || '' });
+                                await delay(100);
+                            }
                         } catch {
                             recsWithDetails.push({ rel: r, isVideo: false, disambiguation: '' });
                         }

@@ -150,6 +150,21 @@
     const placeId = C.id;
     const delay   = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/places/' + placeId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     function esc(str) {
         return String(str ?? '')
             .replace(/&/g, '&amp;')
@@ -191,7 +206,7 @@
 
         try {
             statusEl.textContent = 'fetching place data…';
-            const placeData = await fetchWithRetry(`https://musicbrainz.org/ws/2/place/${placeId}?inc=work-rels&fmt=json`);
+            const placeData = await cached(`place/${placeId}?inc=work-rels&fmt=json`, _cache?.subpages?.works?.placeData);
             const workRels  = placeData.relations?.filter(r => r['target-type'] === 'work') || [];
 
             workRels.sort(() => Math.random() - 0.5);
@@ -209,9 +224,7 @@
                 statusEl.textContent = `loading details… ${displayed.size} of ${workRels.length}`;
 
                 try {
-                    const w = await fetchWithRetry(
-                        `https://musicbrainz.org/ws/2/work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`
-                    );
+                    const w = await cached(`work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`, _cache?.subpages?.works?.details?.[workId]);
                     const workType = w.type && w.type.toLowerCase() !== 'song' ? w.type.toLowerCase() : '';
 
                     // badges for this place
@@ -264,9 +277,14 @@
                         const recId = r.recording?.id;
                         if (!recId) continue;
                         try {
-                            const rd = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${recId}?fmt=json`);
-                            recsWithDetails.push({ rel: r, isVideo: rd.video === true, disambiguation: rd.disambiguation || '' });
-                            await delay(100);
+                            const cachedFlags = _cache?.subpages?.works?.recordingFlags?.[recId];
+                            if (cachedFlags) {
+                                recsWithDetails.push({ rel: r, isVideo: cachedFlags.video === true, disambiguation: cachedFlags.disambiguation || '' });
+                            } else {
+                                const rd = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${recId}?fmt=json`);
+                                recsWithDetails.push({ rel: r, isVideo: rd.video === true, disambiguation: rd.disambiguation || '' });
+                                await delay(100);
+                            }
                         } catch {
                             recsWithDetails.push({ rel: r, isVideo: false, disambiguation: '' });
                         }

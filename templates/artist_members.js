@@ -27,6 +27,18 @@
         });
     }
 
+    /* ── CACHE ── */
+    var _cache = null;
+    function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return Promise.resolve(); }
+        var C = window.ARTIST_CONFIG;
+        if (!C || !C.id) return Promise.resolve();
+        return fetch('../../../archive/_cache/artists/' + C.id + '.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(j) { if (j && j.fetchedAt) _cache = j; })
+            .catch(function() {});
+    }
+
     function delay(ms) {
         return new Promise(function(resolve) { setTimeout(resolve, ms); });
     }
@@ -79,14 +91,21 @@
     }
 
     function fetchAndRender(sidebar) {
-        const C = window.ARTIST_CONFIG;
+        var C = window.ARTIST_CONFIG;
         if (!C || !C.id) return;
         if (lastConfigId === C.id && sidebar.innerHTML.trim() !== '') return;
         lastConfigId = C.id;
 
-        const API = 'https://musicbrainz.org/ws/2/artist/' + C.id + '?fmt=json&inc=artist-rels';
+        var API = 'https://musicbrainz.org/ws/2/artist/' + C.id + '?fmt=json&inc=artist-rels';
 
-        fetchJSON(API)
+        loadCache().then(function() {
+            var mainData;
+            if (_cache?.subpages?.members?.main) {
+                mainData = _cache.subpages.members.main;
+                return Promise.resolve(mainData);
+            }
+            return fetchJSON(API);
+        })
             .then(function(data) {
                 const rels = data.relations || [];
                 const members = rels.filter(function(r) {
@@ -99,6 +118,14 @@
                 });
 
                 const subgroupFetches = subgroups.map(function(sg, i) {
+                    var cachedSg = _cache?.subpages?.members?.subgroups?.[sg.artist.id];
+                    if (cachedSg) {
+                        const sgMembers = (cachedSg.relations || []).filter(function(r) {
+                            return r['target-type'] === 'artist' && r.artist && r.type === 'member of band';
+                        });
+                        sgMembers.forEach(function(m) { m.project = sg.artist.name; });
+                        return Promise.resolve(sgMembers);
+                    }
                     return delay(1100 * i).then(function() {
                         return fetchJSON('https://musicbrainz.org/ws/2/artist/' + sg.artist.id + '?fmt=json&inc=artist-rels');
                     }).then(function(sgData) {

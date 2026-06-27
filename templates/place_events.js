@@ -148,6 +148,21 @@
     const PERFORMER_TYPES = ['main performer', 'support act', 'performer', 'guest'];
     const delay           = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/places/' + placeId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     function esc(str) {
         return String(str ?? '')
             .replace(/&/g, '&amp;')
@@ -198,14 +213,21 @@
 
         try {
             let allEvents = [], offset = 0, totalCount = 0;
-            do {
-                const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/event?place=${placeId}&limit=100&offset=${offset}&fmt=json`);
-                totalCount = data['event-count'];
-                allEvents  = allEvents.concat(data.events);
-                offset += 100;
-                statusEl.textContent = `fetching events… ${allEvents.length} of ${totalCount}`;
-                if (offset < totalCount) await delay(1000);
-            } while (offset < totalCount);
+            const cachedList = _cache?.subpages?.events?.list;
+            if (cachedList) {
+                totalCount = cachedList['event-count'];
+                allEvents = cachedList.events || [];
+                statusEl.textContent = `loaded ${allEvents.length} events from cache`;
+            } else {
+                do {
+                    const data = await fetchWithRetry(`https://musicbrainz.org/ws/2/event?place=${placeId}&limit=100&offset=${offset}&fmt=json`);
+                    totalCount = data['event-count'];
+                    allEvents  = allEvents.concat(data.events);
+                    offset += 100;
+                    statusEl.textContent = `fetching events… ${allEvents.length} of ${totalCount}`;
+                    if (offset < totalCount) await delay(1000);
+                } while (offset < totalCount);
+            }
 
             if (totalCount === 0) { statusEl.textContent = 'no events found.'; return; }
 
@@ -229,7 +251,7 @@
             for (let i = 0; i < allEvents.length; i++) {
                 const e = allEvents[i];
                 try {
-                    const d = await fetchWithRetry(`https://musicbrainz.org/ws/2/event/${e.id}?inc=place-rels+artist-rels&fmt=json`);
+                    const d = await cached(`event/${e.id}?inc=place-rels+artist-rels&fmt=json`, _cache?.subpages?.events?.details?.[e.id]);
                     const isCancelled = d.cancelled === true;
                     if (isCancelled) document.getElementById(`event-${e.id}`)?.classList.add('cancelled');
 

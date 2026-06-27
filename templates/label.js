@@ -389,8 +389,25 @@
         return new Promise(function(resolve) { setTimeout(resolve, ms); });
     }
 
-    fetchMB(API)
-        .then(function(artistData) {
+    /* ── CACHE ── */
+    var _cache = null;
+    function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return Promise.resolve(); }
+        return fetch('../../../archive/_cache/labels/' + MB_ID + '.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(j) { if (j && j.fetchedAt) _cache = j; })
+            .catch(function() {});
+    }
+    function cachedFetch(inc) {
+        if (_cache && _cache.responses && _cache.responses[inc]) {
+            return Promise.resolve(_cache.responses[inc]);
+        }
+        return fetchMB('https://musicbrainz.org/ws/2/label/' + MB_ID + '?fmt=json&inc=' + inc);
+    }
+
+    loadCache().then(function() {
+        return cachedFetch('artist-rels');
+    }).then(function(artistData) {
             var ids = [];
             if (artistData.isnis && artistData.isnis.length) ids.push('ISNI: ' + artistData.isnis[0]);
             if (artistData.ipis && artistData.ipis.length) ids.push('IPI: ' + artistData.ipis[0]);
@@ -413,21 +430,21 @@
                     '<div class="contrib-meta">' + meta.join(' \u00b7 ') + '</div>');
             }
 
-            var baseUrl = 'https://musicbrainz.org/ws/2/label/' + MB_ID + '?fmt=json&inc=';
-            return delay(1100).then(function() {
-                return fetchMB(baseUrl + 'label-rels');
+            var useCache = _cache && _cache.responses;
+            return (useCache ? Promise.resolve() : delay(1100)).then(function() {
+                return cachedFetch('label-rels');
             }).then(function(labelData) {
-                return delay(1100).then(function() {
-                    return fetchMB(baseUrl + 'event-rels');
+                return (useCache ? Promise.resolve() : delay(1100)).then(function() {
+                    return cachedFetch('event-rels');
                 }).then(function(eventData) {
-                    return delay(1100).then(function() {
-                        return fetchMB(baseUrl + 'recording-rels');
+                    return (useCache ? Promise.resolve() : delay(1100)).then(function() {
+                        return cachedFetch('recording-rels');
                     }).then(function(recordingData) {
-                        return delay(1100).then(function() {
-                            return fetchMB(baseUrl + 'work-rels');
+                        return (useCache ? Promise.resolve() : delay(1100)).then(function() {
+                            return cachedFetch('work-rels');
                         }).then(function(workData) {
-                            return delay(1100).then(function() {
-                                return fetchMB(baseUrl + 'release-rels');
+                            return (useCache ? Promise.resolve() : delay(1100)).then(function() {
+                                return cachedFetch('release-rels');
                             }).then(function(releaseData) {
                                 render(artistData, labelData, eventData, recordingData, workData, releaseData);
                             });

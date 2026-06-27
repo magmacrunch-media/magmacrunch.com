@@ -145,6 +145,21 @@
     const placeId = C.id;
     const delay   = ms => new Promise(r => setTimeout(r, ms));
 
+    // ── CACHE ──
+    let _cache = null;
+    async function loadCache() {
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
+        try {
+            const r = await fetch(d + 'archive/_cache/places/' + placeId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+    async function cached(path, cacheData) {
+        if (cacheData !== undefined) return cacheData;
+        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
+    }
+    await loadCache();
+
     function esc(str) {
         return String(str ?? '')
             .replace(/&/g, '&amp;')
@@ -205,7 +220,7 @@
 
         try {
             statusEl.textContent = 'fetching place data…';
-            const placeData  = await fetchWithRetry(`https://musicbrainz.org/ws/2/place/${placeId}?inc=artist-rels&fmt=json`);
+            const placeData  = await cached(`place/${placeId}?inc=artist-rels&fmt=json`, _cache?.subpages?.personnel?.placeData);
             const artistRels = placeData.relations?.filter(r => r['target-type'] === 'artist') || [];
 
             artistRels.sort(() => Math.random() - 0.5);
@@ -223,9 +238,7 @@
                 statusEl.textContent = `loading details… ${displayed.size} of ${artistRels.length}`;
 
                 try {
-                    const a = await fetchWithRetry(
-                        `https://musicbrainz.org/ws/2/artist/${artistId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels+release-groups&fmt=json`
-                    );
+                    const a = await cached(`artist/${artistId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels+release-groups&fmt=json`, _cache?.subpages?.personnel?.details?.[artistId]);
 
                     const artistType = a.type || '';
                     const lifeSpan   = a['life-span'];
