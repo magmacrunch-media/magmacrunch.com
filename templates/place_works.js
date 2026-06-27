@@ -163,7 +163,6 @@
         if (cacheData !== undefined) return cacheData;
         return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
-    await loadCache();
 
     function esc(str) {
         return String(str ?? '')
@@ -200,6 +199,7 @@
     const formatAttrs = a => a?.length ? ` (${a.join(', ')})` : '';
 
     (async () => {
+        await loadCache();
         const statusEl = document.getElementById('status-bar');
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('works-list');

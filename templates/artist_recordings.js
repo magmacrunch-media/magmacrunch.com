@@ -179,7 +179,6 @@ subNavEl.innerHTML = [
         if (cacheData !== undefined) return cacheData;
         return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
-    await loadCache();
 
     async function fetchWithRetry(url, retries = 4) {
         for (let i = 0; i < retries; i++) {
@@ -215,6 +214,7 @@ subNavEl.innerHTML = [
     }
 
     (async () => {
+        await loadCache();
         const statusEl = document.getElementById('status-bar');
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('recordings-list');

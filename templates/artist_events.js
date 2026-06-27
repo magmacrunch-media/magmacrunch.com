@@ -163,7 +163,6 @@ const COLOR_MAP = {
         if (cacheData !== undefined) return cacheData;
         return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
-    await loadCache();
 
     // Escape HTML special chars to safely insert API text into innerHTML
     function esc(str) {
@@ -250,6 +249,7 @@ const COLOR_MAP = {
     }
 
     (async () => {
+        await loadCache();
         const statusEl = document.getElementById('status-bar');
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('events-list');
