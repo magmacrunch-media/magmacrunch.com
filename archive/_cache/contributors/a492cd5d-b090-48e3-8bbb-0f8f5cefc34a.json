@@ -1,0 +1,1495 @@
+{
+  "fetchedAt": "2026-06-27T22:29:09.878Z",
+  "entityType": "contributor",
+  "uuid": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+  "name": "Jake Thomas",
+  "responses": {
+    "artist-rels": {
+      "area": {
+        "sort-name": "Colorado",
+        "disambiguation": "",
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+        "type-id": null,
+        "type": null,
+        "name": "Colorado",
+        "iso-3166-2-codes": [
+          "US-CO"
+        ]
+      },
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "sort-name": "Thomas, Jake",
+      "disambiguation": "Bottle Boys",
+      "gender": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "country": "US",
+      "life-span": {
+        "begin": null,
+        "ended": false,
+        "end": null
+      },
+      "name": "Jake Thomas",
+      "relations": [
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "end": null,
+          "source-credit": "",
+          "type": "founder",
+          "attributes": [],
+          "artist": {
+            "name": "Bottle Boys",
+            "country": "US",
+            "disambiguation": "",
+            "sort-name": "Bottle Boys",
+            "id": "e33d1006-01a5-4266-aade-b7f6c1dff8e3",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "type": "Group"
+          },
+          "ended": false,
+          "direction": "forward",
+          "target-credit": "",
+          "begin": null,
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "target-type": "artist"
+        },
+        {
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "begin": null,
+          "target-type": "artist",
+          "end": null,
+          "source-credit": "",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "member of band",
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "type": "Group",
+            "disambiguation": "",
+            "sort-name": "Bottle Boys",
+            "id": "e33d1006-01a5-4266-aade-b7f6c1dff8e3",
+            "name": "Bottle Boys",
+            "country": "US"
+          },
+          "attributes": [],
+          "direction": "forward",
+          "ended": false
+        }
+      ],
+      "end-area": null,
+      "type": "Person",
+      "isnis": [
+        "0000000529381940"
+      ],
+      "ipis": [],
+      "gender-id": null,
+      "begin-area": null
+    },
+    "recording-rels": {
+      "end-area": null,
+      "name": "Jake Thomas",
+      "area": {
+        "type-id": null,
+        "name": "Colorado",
+        "type": null,
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+        "disambiguation": "",
+        "sort-name": "Colorado",
+        "iso-3166-2-codes": [
+          "US-CO"
+        ]
+      },
+      "sort-name": "Thomas, Jake",
+      "gender-id": null,
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "disambiguation": "Bottle Boys",
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      },
+      "gender": null,
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "begin-area": null,
+      "ipis": [],
+      "isnis": [
+        "0000000529381940"
+      ],
+      "country": "US",
+      "relations": [
+        {
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "acoustic guitar": "00beaf8e-a781-431c-8130-7c2871696b7d"
+          },
+          "attributes": [
+            "acoustic guitar"
+          ],
+          "attribute-credits": {},
+          "source-credit": "",
+          "type": "instrument",
+          "attribute-values": {},
+          "recording": {
+            "length": 64000,
+            "video": false,
+            "title": "(stage banter)",
+            "disambiguation": "",
+            "id": "3122a7f3-a4fb-4edf-bf78-1ea986a967e5"
+          },
+          "ended": true,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2018-08-23",
+          "begin": "2018-08-23"
+        },
+        {
+          "source-credit": "",
+          "type": "instrument",
+          "recording": {
+            "title": "Casserole",
+            "disambiguation": "",
+            "id": "57b2b2ae-3134-400f-86ce-a0097860b1e0",
+            "length": 223000,
+            "video": false
+          },
+          "attribute-values": {},
+          "ended": true,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2018-08-23",
+          "begin": "2018-08-23",
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "acoustic guitar": "00beaf8e-a781-431c-8130-7c2871696b7d"
+          },
+          "attributes": [
+            "acoustic guitar"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "attributes": [
+            "acoustic guitar"
+          ],
+          "attribute-credits": {},
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "acoustic guitar": "00beaf8e-a781-431c-8130-7c2871696b7d"
+          },
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "end": "2018-08-23",
+          "begin": "2018-08-23",
+          "source-credit": "",
+          "recording": {
+            "length": 319000,
+            "video": false,
+            "id": "b6559a30-be7f-4238-8303-4aa4ae5955ce",
+            "disambiguation": "",
+            "title": "Grocery Harrison"
+          },
+          "attribute-values": {},
+          "type": "instrument"
+        },
+        {
+          "attribute-credits": {},
+          "attributes": [
+            "acoustic guitar"
+          ],
+          "attribute-ids": {
+            "acoustic guitar": "00beaf8e-a781-431c-8130-7c2871696b7d"
+          },
+          "target-type": "recording",
+          "direction": "forward",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "ended": true,
+          "begin": "2018-08-23",
+          "end": "2018-08-23",
+          "source-credit": "",
+          "recording": {
+            "title": "Pirate's Life",
+            "id": "89b24d5d-9234-40de-8b37-ecc0207fe452",
+            "disambiguation": "",
+            "video": false,
+            "length": 332000
+          },
+          "attribute-values": {},
+          "type": "instrument"
+        },
+        {
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": [],
+          "type": "recording",
+          "attribute-values": {},
+          "recording": {
+            "video": false,
+            "length": 76000,
+            "title": "All the pretty things in my backpack",
+            "disambiguation": "",
+            "id": "113c78f2-1e01-4b75-9409-9fbb3e27df12"
+          },
+          "source-credit": "",
+          "end": "2023-08",
+          "begin": "2023-08",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926"
+        },
+        {
+          "source-credit": "",
+          "type": "recording",
+          "attribute-values": {},
+          "recording": {
+            "title": "Bottom of the bag (Extra Fingers)",
+            "disambiguation": "",
+            "id": "4f4f286a-9cfe-48c6-b772-a281961c7e5a",
+            "length": 98000,
+            "video": false
+          },
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "ended": true,
+          "begin": "2023-08",
+          "end": "2023-08",
+          "attribute-ids": {},
+          "target-type": "recording",
+          "direction": "forward",
+          "attributes": []
+        },
+        {
+          "type": "recording",
+          "recording": {
+            "disambiguation": "",
+            "id": "607a3b98-f7e1-44d2-b04a-d7638668fa79",
+            "title": "King of the Worms",
+            "video": false,
+            "length": 180000
+          },
+          "attribute-values": {},
+          "source-credit": "",
+          "end": "2023-08",
+          "begin": "2023-08",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {},
+          "attributes": []
+        },
+        {
+          "attributes": [],
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {},
+          "end": "2023-08",
+          "begin": "2023-08",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "type": "recording",
+          "attribute-values": {},
+          "recording": {
+            "title": "The Backpack Man",
+            "disambiguation": "",
+            "id": "369c0dee-4a5e-4c03-9bd5-6bf7df6fe69e",
+            "video": false,
+            "length": 128000
+          },
+          "source-credit": ""
+        },
+        {
+          "source-credit": "",
+          "attribute-values": {},
+          "recording": {
+            "length": 64000,
+            "video": false,
+            "title": "(stage banter)",
+            "disambiguation": "",
+            "id": "3122a7f3-a4fb-4edf-bf78-1ea986a967e5"
+          },
+          "type": "vocal",
+          "ended": true,
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "target-credit": "",
+          "end": "2018-08-23",
+          "begin": "2018-08-23",
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "spoken vocals": "d3a36e62-a7c4-4eb9-839f-adfebe87ac12"
+          },
+          "attributes": [
+            "spoken vocals"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "attributes": [
+            "lead vocals"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "end": "2018-08-23",
+          "begin": "2018-08-23",
+          "ended": true,
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "target-credit": "",
+          "recording": {
+            "disambiguation": "",
+            "id": "b6559a30-be7f-4238-8303-4aa4ae5955ce",
+            "title": "Grocery Harrison",
+            "length": 319000,
+            "video": false
+          },
+          "attribute-values": {},
+          "type": "vocal",
+          "source-credit": ""
+        },
+        {
+          "attribute-values": {},
+          "recording": {
+            "video": false,
+            "length": 332000,
+            "disambiguation": "",
+            "id": "89b24d5d-9234-40de-8b37-ecc0207fe452",
+            "title": "Pirate's Life"
+          },
+          "type": "vocal",
+          "source-credit": "",
+          "begin": "2018-08-23",
+          "end": "2018-08-23",
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "target-credit": "",
+          "ended": true,
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-credits": {},
+          "attributes": [
+            "lead vocals"
+          ]
+        }
+      ]
+    },
+    "work-rels": {
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "disambiguation": "Bottle Boys",
+      "sort-name": "Thomas, Jake",
+      "gender-id": null,
+      "area": {
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+        "disambiguation": "",
+        "sort-name": "Colorado",
+        "iso-3166-2-codes": [
+          "US-CO"
+        ],
+        "type": null,
+        "name": "Colorado",
+        "type-id": null
+      },
+      "name": "Jake Thomas",
+      "end-area": null,
+      "country": "US",
+      "isnis": [
+        "0000000529381940"
+      ],
+      "relations": [
+        {
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-ids": {},
+          "type": "composer",
+          "attribute-values": {},
+          "attributes": [],
+          "ended": true,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "language": null,
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "2722d6b7-a8cc-467d-8f84-8d202d798c72",
+            "type": "Song",
+            "title": "SpongeBob Drone #1"
+          },
+          "end": "2017-09",
+          "begin": "2017-09"
+        },
+        {
+          "ended": true,
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "end": "2017-09",
+          "work": {
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "e1543c95-84e8-4dbe-9fd1-61640412eb66",
+            "type": "Song",
+            "title": "SpongeBob Drone #2",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "language": null,
+            "languages": []
+          },
+          "begin": "2017-09",
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-values": {},
+          "type": "composer",
+          "attribute-ids": {}
+        },
+        {
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "work",
+          "type": "composer",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "attributes": [],
+          "ended": true,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "language": null,
+            "languages": [],
+            "iswcs": [],
+            "id": "4dc84d76-61ab-4d4b-a4f9-b6c2d68e7c30",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "SpongeBob Drone #3"
+          },
+          "end": "2017-09",
+          "begin": "2017-09"
+        },
+        {
+          "target-type": "work",
+          "direction": "forward",
+          "type": "composer",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "source-credit": "",
+          "work": {
+            "language": null,
+            "languages": [],
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "disambiguation": "",
+            "id": "2c14c9a7-88ca-452f-80f0-77c072f26f41",
+            "title": "SpongeBob Drone #4",
+            "type": "Song",
+            "iswcs": []
+          },
+          "end": "2017-09",
+          "begin": "2017-09",
+          "attributes": [],
+          "ended": true,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "attribute-values": {},
+          "type": "composer",
+          "attribute-ids": {},
+          "ended": true,
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "end": "2017-12",
+          "work": {
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "iswcs": [],
+            "id": "ddf472d9-357f-40f8-ab4d-b340bf0092d2",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "Go to Bed"
+          },
+          "begin": "2017-12"
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "type": "composer",
+          "attribute-values": {},
+          "attributes": [
+            "additional"
+          ],
+          "ended": true,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "iswcs": [],
+            "id": "f0f34b27-0454-41f5-828b-4659dfe2b420",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "Merlin's Magic",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "language": "eng",
+            "languages": [
+              "eng"
+            ]
+          },
+          "end": "2021-09",
+          "begin": "2021-09"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "ended": false,
+          "attributes": [],
+          "begin": null,
+          "end": null,
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "1b64d942-aacd-4393-aeab-4befe547c988",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "Big Boy",
+            "iswcs": []
+          },
+          "source-credit": "",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "composer",
+          "direction": "forward",
+          "target-type": "work"
+        },
+        {
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "composer",
+          "source-credit": "",
+          "end": null,
+          "work": {
+            "iswcs": [],
+            "title": "Georgie",
+            "type": "Song",
+            "id": "24f5dba0-8e54-4799-9606-b581dd016f2d",
+            "disambiguation": "",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ]
+          },
+          "begin": null,
+          "ended": false,
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": ""
+        },
+        {
+          "ended": false,
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "end": null,
+          "work": {
+            "disambiguation": "",
+            "id": "bb1f8eeb-d9e0-43e1-9b21-7fc860490a9b",
+            "type": "Song",
+            "title": "I wouldn't want to wish away a fish a way to shower",
+            "iswcs": [],
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "begin": null,
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "composer"
+        },
+        {
+          "attributes": [
+            "additional"
+          ],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "type": "Song",
+            "title": "Moon King",
+            "disambiguation": "",
+            "id": "739300e9-712d-4750-8fdb-87492e375f8a",
+            "iswcs": []
+          },
+          "end": null,
+          "begin": null,
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "type": "composer",
+          "attribute-values": {}
+        },
+        {
+          "target-type": "work",
+          "direction": "forward",
+          "type": "composer",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "source-credit": "",
+          "work": {
+            "title": "Pirate's Life",
+            "type": "Song",
+            "disambiguation": "",
+            "id": "2e508b56-46a5-4600-8705-7047f7253d68",
+            "iswcs": [],
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": []
+          },
+          "end": null,
+          "begin": null,
+          "attributes": [],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "end": null,
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "iswcs": [],
+            "type": "Song",
+            "title": "Prince Vince",
+            "id": "e884887a-6977-486e-a573-a0a8f6033657",
+            "disambiguation": ""
+          },
+          "begin": null,
+          "ended": false,
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "composer",
+          "source-credit": ""
+        },
+        {
+          "attributes": [],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "iswcs": [],
+            "type": "Song",
+            "title": "Sink Man",
+            "disambiguation": "",
+            "id": "b438b63c-a12f-4f19-9c1c-4ffd1eac54bd",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ]
+          },
+          "end": null,
+          "begin": null,
+          "source-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "type": "composer",
+          "attribute-ids": {},
+          "attribute-values": {}
+        },
+        {
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-ids": {},
+          "type": "composer",
+          "attribute-values": {},
+          "source-credit": "",
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "type": "Song",
+            "title": "Spaghetti Ravioli",
+            "id": "78cd4ce9-17c9-454d-942d-c66aa1b15df6",
+            "disambiguation": "",
+            "iswcs": []
+          },
+          "end": null,
+          "begin": null,
+          "attributes": [],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "ended": false,
+          "attributes": [],
+          "begin": null,
+          "end": null,
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "type": "Song",
+            "title": "The Eyes",
+            "disambiguation": "",
+            "id": "f7244b14-a979-40b4-b088-64db9840fc4c",
+            "iswcs": []
+          },
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "composer",
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "work"
+        },
+        {
+          "type": "lyricist",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "target-type": "work",
+          "direction": "forward",
+          "source-credit": "",
+          "begin": "2017-12",
+          "work": {
+            "iswcs": [],
+            "id": "ddf472d9-357f-40f8-ab4d-b340bf0092d2",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "Go to Bed",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "language": "eng"
+          },
+          "end": "2017-12",
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "attributes": [],
+          "ended": true
+        },
+        {
+          "begin": "2021-09",
+          "work": {
+            "type": "Song",
+            "title": "Merlin's Magic",
+            "id": "f0f34b27-0454-41f5-828b-4659dfe2b420",
+            "disambiguation": "",
+            "iswcs": [],
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": []
+          },
+          "end": "2021-09",
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "attributes": [],
+          "ended": true,
+          "type": "lyricist",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "target-type": "work",
+          "direction": "forward",
+          "source-credit": ""
+        },
+        {
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-ids": {},
+          "type": "lyricist",
+          "attribute-values": {},
+          "source-credit": "",
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "iswcs": [],
+            "type": "Song",
+            "title": "Big Boy",
+            "id": "1b64d942-aacd-4393-aeab-4befe547c988",
+            "disambiguation": ""
+          },
+          "end": null,
+          "begin": null,
+          "attributes": [],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c"
+        },
+        {
+          "source-credit": "",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "lyricist",
+          "target-type": "work",
+          "direction": "forward",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "target-credit": "",
+          "ended": false,
+          "attributes": [],
+          "begin": null,
+          "end": null,
+          "work": {
+            "iswcs": [],
+            "id": "24f5dba0-8e54-4799-9606-b581dd016f2d",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "Georgie",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "language": "eng",
+            "languages": [
+              "eng"
+            ]
+          }
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "lyricist",
+          "ended": false,
+          "attributes": [],
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "target-credit": "",
+          "end": null,
+          "work": {
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "bb1f8eeb-d9e0-43e1-9b21-7fc860490a9b",
+            "title": "I wouldn't want to wish away a fish a way to shower",
+            "type": "Song",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "language": "eng"
+          },
+          "begin": null
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "type": "lyricist",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attribute-values": {},
+          "attributes": [
+            "additional"
+          ],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "work": {
+            "type": "Song",
+            "title": "Moon King",
+            "id": "739300e9-712d-4750-8fdb-87492e375f8a",
+            "disambiguation": "",
+            "iswcs": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": []
+          },
+          "end": null,
+          "begin": null
+        },
+        {
+          "source-credit": "",
+          "type": "lyricist",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "direction": "forward",
+          "target-type": "work",
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "attributes": [],
+          "ended": false,
+          "begin": null,
+          "work": {
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "2e508b56-46a5-4600-8705-7047f7253d68",
+            "title": "Pirate's Life",
+            "type": "Song"
+          },
+          "end": null
+        },
+        {
+          "end": null,
+          "work": {
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "disambiguation": "",
+            "id": "e884887a-6977-486e-a573-a0a8f6033657",
+            "title": "Prince Vince",
+            "type": "Song",
+            "iswcs": []
+          },
+          "begin": null,
+          "ended": false,
+          "attributes": [],
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "target-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "attribute-values": {},
+          "type": "lyricist",
+          "attribute-ids": {},
+          "source-credit": ""
+        },
+        {
+          "work": {
+            "iswcs": [],
+            "title": "Sink Man",
+            "type": "Song",
+            "disambiguation": "",
+            "id": "b438b63c-a12f-4f19-9c1c-4ffd1eac54bd",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "attributes": [],
+            "languages": [
+              "eng"
+            ],
+            "language": "eng"
+          },
+          "end": null,
+          "begin": null,
+          "attributes": [],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "target-type": "work",
+          "direction": "forward",
+          "type": "lyricist",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "source-credit": ""
+        },
+        {
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "target-credit": "",
+          "ended": false,
+          "attributes": [],
+          "begin": null,
+          "end": null,
+          "work": {
+            "iswcs": [],
+            "id": "78cd4ce9-17c9-454d-942d-c66aa1b15df6",
+            "disambiguation": "",
+            "title": "Spaghetti Ravioli",
+            "type": "Song",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "language": "eng"
+          },
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "lyricist",
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "work"
+        },
+        {
+          "direction": "forward",
+          "target-type": "work",
+          "attribute-ids": {},
+          "type": "lyricist",
+          "attribute-values": {},
+          "source-credit": "",
+          "work": {
+            "id": "f7244b14-a979-40b4-b088-64db9840fc4c",
+            "disambiguation": "",
+            "type": "Song",
+            "title": "The Eyes",
+            "iswcs": [],
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "end": null,
+          "begin": null,
+          "attributes": [],
+          "ended": false,
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c"
+        }
+      ],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "ipis": [],
+      "begin-area": null,
+      "type": "Person",
+      "gender": null
+    },
+    "release-rels": {
+      "ipis": [],
+      "disambiguation": "Bottle Boys",
+      "isnis": [
+        "0000000529381940"
+      ],
+      "relations": [
+        {
+          "begin": "2023-08",
+          "target-credit": "",
+          "type": "mix",
+          "attribute-values": {},
+          "type-id": "6cc958c0-533b-4540-a281-058fbb941890",
+          "attributes": [],
+          "release": {
+            "barcode": "",
+            "status-id": null,
+            "release-events": [
+              {
+                "area": {
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": "",
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "type-id": null,
+                  "sort-name": "[Worldwide]"
+                },
+                "date": "2023-08-15"
+              }
+            ],
+            "date": "2023-08-15",
+            "packaging-id": null,
+            "country": "XW",
+            "disambiguation": "",
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "id": "3e8b8b04-7876-412f-afd0-4060c8d97bd1",
+            "quality": "normal",
+            "title": "The Legend of the Backpack Man",
+            "packaging": null,
+            "status": null
+          },
+          "end": "2023-08",
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "ended": true,
+          "target-type": "release"
+        },
+        {
+          "target-credit": "",
+          "begin": "2017-09",
+          "attribute-values": {},
+          "type": "producer",
+          "type-id": "8bf377ba-8d71-4ecc-97f2-7bb2d8a2a75f",
+          "attributes": [],
+          "end": "2017-09",
+          "release": {
+            "barcode": null,
+            "status-id": null,
+            "release-events": [
+              {
+                "date": "2017-09-17",
+                "area": {
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "type": null,
+                  "name": "[Worldwide]",
+                  "disambiguation": "",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]",
+                  "type-id": null
+                }
+              }
+            ],
+            "date": "2017-09-17",
+            "packaging-id": null,
+            "country": "XW",
+            "disambiguation": "original release",
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "id": "25435b29-7f21-425e-b916-f7b3424d6168",
+            "quality": "normal",
+            "packaging": null,
+            "status": null,
+            "title": "SquarePants Dose Drone Vol. 1"
+          },
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": "",
+          "ended": true,
+          "target-type": "release"
+        },
+        {
+          "direction": "forward",
+          "source-credit": "",
+          "attribute-ids": {},
+          "ended": true,
+          "target-type": "release",
+          "attributes": [],
+          "release": {
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "country": "XW",
+            "disambiguation": "",
+            "quality": "normal",
+            "packaging": null,
+            "title": "The Legend of the Backpack Man",
+            "status": null,
+            "id": "3e8b8b04-7876-412f-afd0-4060c8d97bd1",
+            "release-events": [
+              {
+                "date": "2023-08-15",
+                "area": {
+                  "sort-name": "[Worldwide]",
+                  "type-id": null,
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": ""
+                }
+              }
+            ],
+            "barcode": "",
+            "status-id": null,
+            "date": "2023-08-15",
+            "packaging-id": null
+          },
+          "end": "2023-08",
+          "type-id": "8bf377ba-8d71-4ecc-97f2-7bb2d8a2a75f",
+          "target-credit": "",
+          "begin": "2023-08",
+          "type": "producer",
+          "attribute-values": {}
+        },
+        {
+          "begin": null,
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "producer",
+          "type-id": "8bf377ba-8d71-4ecc-97f2-7bb2d8a2a75f",
+          "attributes": [
+            "executive"
+          ],
+          "end": null,
+          "release": {
+            "status-id": null,
+            "barcode": "",
+            "release-events": [
+              {
+                "area": {
+                  "sort-name": "[Worldwide]",
+                  "type-id": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": "",
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+                },
+                "date": "2023-08-15"
+              }
+            ],
+            "packaging-id": null,
+            "date": "2023-08-15",
+            "disambiguation": "",
+            "country": "XW",
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "id": "3e8b8b04-7876-412f-afd0-4060c8d97bd1",
+            "title": "The Legend of the Backpack Man",
+            "packaging": null,
+            "status": null,
+            "quality": "normal"
+          },
+          "direction": "forward",
+          "attribute-ids": {
+            "executive": "e0039285-6667-4f94-80d6-aa6520c6d359"
+          },
+          "source-credit": "",
+          "ended": false,
+          "target-type": "release"
+        }
+      ],
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": null
+      },
+      "gender-id": null,
+      "sort-name": "Thomas, Jake",
+      "type": "Person",
+      "name": "Jake Thomas",
+      "country": "US",
+      "begin-area": null,
+      "gender": null,
+      "end-area": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "iso-3166-2-codes": [
+          "US-CO"
+        ],
+        "type-id": null,
+        "sort-name": "Colorado",
+        "disambiguation": "",
+        "name": "Colorado",
+        "type": null,
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01"
+      }
+    },
+    "label-rels": {
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "country": "US",
+      "relations": [],
+      "gender": null,
+      "area": {
+        "type-id": null,
+        "name": "Colorado",
+        "type": null,
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+        "iso-3166-2-codes": [
+          "US-CO"
+        ],
+        "disambiguation": "",
+        "sort-name": "Colorado"
+      },
+      "ipis": [],
+      "isnis": [
+        "0000000529381940"
+      ],
+      "name": "Jake Thomas",
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "disambiguation": "Bottle Boys",
+      "begin-area": null,
+      "end-area": null,
+      "sort-name": "Thomas, Jake",
+      "gender-id": null,
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      }
+    },
+    "place-rels": {
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "relations": [
+        {
+          "target-credit": "",
+          "place": {
+            "coordinates": null,
+            "area": {
+              "disambiguation": "",
+              "name": "Colorado",
+              "type": "Subdivision",
+              "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+              "iso-3166-2-codes": [
+                "US-CO"
+              ],
+              "sort-name": "Colorado",
+              "type-id": "fd3d44c5-80a1-3842-9745-2c4972d35afa"
+            },
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "type": "Studio",
+            "name": "The Bunckle",
+            "disambiguation": "",
+            "address": "",
+            "id": "9dbd53f3-16e9-4973-afdc-b0b9a9951a63"
+          },
+          "begin": null,
+          "attribute-values": {},
+          "type": "owner",
+          "type-id": "6f238bfb-0108-45ad-a1da-960c919a7066",
+          "attributes": [],
+          "end": null,
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": "",
+          "target-type": "place",
+          "ended": false
+        }
+      ],
+      "isnis": [
+        "0000000529381940"
+      ],
+      "ipis": [],
+      "disambiguation": "Bottle Boys",
+      "sort-name": "Thomas, Jake",
+      "gender-id": null,
+      "life-span": {
+        "end": null,
+        "ended": false,
+        "begin": null
+      },
+      "gender": null,
+      "name": "Jake Thomas",
+      "type": "Person",
+      "begin-area": null,
+      "country": "US",
+      "area": {
+        "type": null,
+        "name": "Colorado",
+        "disambiguation": "",
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+        "iso-3166-2-codes": [
+          "US-CO"
+        ],
+        "sort-name": "Colorado",
+        "type-id": null
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "end-area": null
+    },
+    "event-rels": {
+      "country": "US",
+      "isnis": [
+        "0000000529381940"
+      ],
+      "relations": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "begin-area": null,
+      "ipis": [],
+      "type": "Person",
+      "gender": null,
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "gender-id": null,
+      "sort-name": "Thomas, Jake",
+      "disambiguation": "Bottle Boys",
+      "id": "a492cd5d-b090-48e3-8bbb-0f8f5cefc34a",
+      "end-area": null,
+      "name": "Jake Thomas",
+      "area": {
+        "type": null,
+        "iso-3166-2-codes": [
+          "US-CO"
+        ],
+        "sort-name": "Colorado",
+        "disambiguation": "",
+        "id": "373183af-56db-44d7-b06a-5877c02c5f01",
+        "type-id": null,
+        "name": "Colorado"
+      }
+    }
+  }
+}

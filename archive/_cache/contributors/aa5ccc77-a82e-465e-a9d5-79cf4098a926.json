@@ -1,0 +1,975 @@
+{
+  "fetchedAt": "2026-06-27T22:29:01.905Z",
+  "entityType": "contributor",
+  "uuid": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+  "name": "Elias Grey",
+  "responses": {
+    "artist-rels": {
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "name": "Elias Grey",
+      "country": "US",
+      "end-area": null,
+      "relations": [
+        {
+          "target-credit": "",
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "begin": null,
+          "target-type": "artist",
+          "end": null,
+          "source-credit": "",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "type": "founder",
+          "artist": {
+            "country": "US",
+            "name": "Sex Van Floor Plan",
+            "id": "260e4953-a937-4355-8389-d1baaf24eca5",
+            "disambiguation": "",
+            "sort-name": "Sex Van Floor Plan",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "type": "Group"
+          },
+          "attributes": [],
+          "direction": "forward",
+          "ended": false
+        },
+        {
+          "attribute-ids": {
+            "bass": "6505f98c-f698-4406-8bf4-8ca43d05c36f",
+            "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c"
+          },
+          "attribute-values": {},
+          "source-credit": "",
+          "end": null,
+          "type": "member of band",
+          "attributes": [
+            "bass",
+            "original"
+          ],
+          "attribute-credits": {},
+          "artist": {
+            "name": "Sex Van Floor Plan",
+            "country": "US",
+            "disambiguation": "",
+            "sort-name": "Sex Van Floor Plan",
+            "id": "260e4953-a937-4355-8389-d1baaf24eca5",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "type": "Group"
+          },
+          "ended": false,
+          "direction": "forward",
+          "target-credit": "",
+          "begin": "2024",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-type": "artist"
+        }
+      ],
+      "disambiguation": "",
+      "sort-name": "Grey, Elias",
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "area": {
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "name": "Pennsylvania",
+        "type": null,
+        "type-id": null,
+        "disambiguation": "",
+        "sort-name": "Pennsylvania",
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b"
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "gender": null,
+      "isnis": [
+        "0000000529384228"
+      ],
+      "begin-area": null,
+      "gender-id": null,
+      "ipis": [],
+      "type": "Person"
+    },
+    "recording-rels": {
+      "gender": null,
+      "type": "Person",
+      "begin-area": null,
+      "ipis": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "relations": [
+        {
+          "end": "2025-07-16",
+          "begin": "2025-07-16",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "type": "instrument",
+          "attribute-values": {},
+          "recording": {
+            "video": false,
+            "length": 92000,
+            "id": "7f496b0d-d52e-441d-afea-af07d8a90ff1",
+            "disambiguation": "2025 demo",
+            "title": "pay2play"
+          },
+          "source-credit": "",
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-credits": {},
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          }
+        },
+        {
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-credits": {},
+          "recording": {
+            "length": 116000,
+            "video": false,
+            "title": "iou a pack of american spirits",
+            "disambiguation": "",
+            "id": "9ca539bc-84fe-49c6-8958-42c197f56a86"
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": "",
+          "end": "2026-01-10",
+          "begin": "2026-01-10",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": ""
+        },
+        {
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "end": "2026",
+          "begin": "2026",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "recording": {
+            "disambiguation": "",
+            "id": "d87c1a5d-63b9-4e04-8002-8aacec932e9c",
+            "title": "afab",
+            "video": false,
+            "length": 75000
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": ""
+        },
+        {
+          "attribute-credits": {},
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "direction": "forward",
+          "target-type": "recording",
+          "begin": "2026",
+          "end": "2026",
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "ended": true,
+          "type": "instrument",
+          "recording": {
+            "video": false,
+            "length": 115000,
+            "id": "4c39612b-6290-424c-9c56-ec3f623a81f1",
+            "disambiguation": "",
+            "title": "i changed my availability 4 u"
+          },
+          "attribute-values": {},
+          "source-credit": ""
+        },
+        {
+          "attribute-values": {},
+          "recording": {
+            "disambiguation": "",
+            "id": "f681bd3a-f123-4d19-a99c-02d4527af56e",
+            "title": "pay2play",
+            "length": 88000,
+            "video": false
+          },
+          "type": "instrument",
+          "source-credit": "",
+          "begin": "2026",
+          "end": "2026",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "ended": true,
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-credits": {},
+          "attributes": [
+            "electric bass guitar"
+          ]
+        },
+        {
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-credits": {},
+          "source-credit": "",
+          "type": "instrument",
+          "attribute-values": {},
+          "recording": {
+            "video": false,
+            "length": 141000,
+            "title": "u.d.s.",
+            "disambiguation": "",
+            "id": "4193b96f-b978-4000-95c6-1464629f2b10"
+          },
+          "ended": true,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2026",
+          "begin": "2026"
+        },
+        {
+          "attributes": [],
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {},
+          "ended": true,
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "end": "2026-01-10",
+          "begin": "2026-01-10",
+          "source-credit": "",
+          "type": "recording",
+          "attribute-values": {},
+          "recording": {
+            "length": 116000,
+            "video": false,
+            "id": "9ca539bc-84fe-49c6-8958-42c197f56a86",
+            "disambiguation": "",
+            "title": "iou a pack of american spirits"
+          }
+        },
+        {
+          "source-credit": "",
+          "type": "recording",
+          "attribute-values": {},
+          "recording": {
+            "disambiguation": "",
+            "id": "d87c1a5d-63b9-4e04-8002-8aacec932e9c",
+            "title": "afab",
+            "length": 75000,
+            "video": false
+          },
+          "ended": true,
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "end": "2026",
+          "begin": "2026",
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": []
+        },
+        {
+          "source-credit": "",
+          "type": "recording",
+          "attribute-values": {},
+          "recording": {
+            "length": 115000,
+            "video": false,
+            "title": "i changed my availability 4 u",
+            "disambiguation": "",
+            "id": "4c39612b-6290-424c-9c56-ec3f623a81f1"
+          },
+          "target-credit": "",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "ended": true,
+          "begin": "2026",
+          "end": "2026",
+          "attribute-ids": {},
+          "target-type": "recording",
+          "direction": "forward",
+          "attributes": []
+        },
+        {
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": [],
+          "source-credit": "",
+          "attribute-values": {},
+          "recording": {
+            "disambiguation": "",
+            "id": "f681bd3a-f123-4d19-a99c-02d4527af56e",
+            "title": "pay2play",
+            "video": false,
+            "length": 88000
+          },
+          "type": "recording",
+          "ended": true,
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "target-credit": "",
+          "end": "2026",
+          "begin": "2026"
+        },
+        {
+          "attribute-values": {},
+          "recording": {
+            "id": "4193b96f-b978-4000-95c6-1464629f2b10",
+            "disambiguation": "",
+            "title": "u.d.s.",
+            "length": 141000,
+            "video": false
+          },
+          "type": "recording",
+          "source-credit": "",
+          "begin": "2026",
+          "end": "2026",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "target-credit": "",
+          "ended": true,
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attributes": []
+        },
+        {
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attributes": [
+            "additional"
+          ],
+          "source-credit": "",
+          "recording": {
+            "length": 92000,
+            "video": false,
+            "disambiguation": "2025 demo",
+            "id": "7f496b0d-d52e-441d-afea-af07d8a90ff1",
+            "title": "pay2play"
+          },
+          "attribute-values": {},
+          "type": "vocal",
+          "ended": true,
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "target-credit": "",
+          "end": "2025-07-17",
+          "begin": "2025-07-17"
+        }
+      ],
+      "country": "US",
+      "isnis": [
+        "0000000529384228"
+      ],
+      "end-area": null,
+      "area": {
+        "type": null,
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "disambiguation": "",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "sort-name": "Pennsylvania",
+        "type-id": null,
+        "name": "Pennsylvania"
+      },
+      "name": "Elias Grey",
+      "sort-name": "Grey, Elias",
+      "gender-id": null,
+      "disambiguation": "",
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      }
+    },
+    "work-rels": {
+      "end-area": null,
+      "relations": [
+        {
+          "type": "composer",
+          "end": "2024-11",
+          "source-credit": "",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "direction": "forward",
+          "ended": true,
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2024-11",
+          "target-credit": "",
+          "target-type": "work",
+          "work": {
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "a9a17f2a-4e26-4048-a20b-4c6812877b0a",
+            "language": "eng",
+            "title": "U.D.S.",
+            "languages": [
+              "eng"
+            ],
+            "attributes": []
+          }
+        },
+        {
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "attributes": [],
+            "title": "pay2play",
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "b5d8ec34-e488-4e94-8aa7-af05136e9322",
+            "language": "eng",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "target-type": "work",
+          "target-credit": "",
+          "begin": "2024-11",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attributes": [],
+          "ended": true,
+          "direction": "forward",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "end": "2024-12",
+          "source-credit": "",
+          "type": "composer"
+        },
+        {
+          "target-credit": "",
+          "begin": "2024",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "title": "American Spirits",
+            "languages": [
+              "eng"
+            ],
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "disambiguation": "",
+            "iswcs": [],
+            "language": "eng",
+            "id": "bda0308b-2896-4443-bd1b-cbb2c95ad3ae"
+          },
+          "target-type": "work",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attribute-values": {},
+          "source-credit": "",
+          "end": "2025",
+          "type": "composer",
+          "attributes": [
+            "additional"
+          ],
+          "ended": true,
+          "direction": "forward"
+        },
+        {
+          "work": {
+            "id": "d1cdc0d4-44c6-4e7a-9438-68f70c769dd3",
+            "language": "eng",
+            "iswcs": [],
+            "disambiguation": "",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "attributes": [],
+            "languages": [
+              "eng"
+            ],
+            "title": "Wait, does this make me gay?"
+          },
+          "target-type": "work",
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2025-06",
+          "attributes": [],
+          "direction": "forward",
+          "ended": true,
+          "source-credit": "",
+          "end": "2025-06",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "type": "composer"
+        },
+        {
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "language": "eng",
+            "id": "a9a17f2a-4e26-4048-a20b-4c6812877b0a",
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "U.D.S.",
+            "attributes": [],
+            "languages": [
+              "eng"
+            ]
+          },
+          "target-type": "work",
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "begin": "2024-11",
+          "attributes": [],
+          "direction": "forward",
+          "ended": true,
+          "end": "2024-11",
+          "source-credit": "",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type": "lyricist"
+        },
+        {
+          "work": {
+            "iswcs": [],
+            "disambiguation": "",
+            "id": "b5d8ec34-e488-4e94-8aa7-af05136e9322",
+            "language": "eng",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "attributes": [],
+            "title": "pay2play"
+          },
+          "target-type": "work",
+          "target-credit": "",
+          "begin": "2024-11",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "attributes": [],
+          "ended": true,
+          "direction": "forward",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "source-credit": "",
+          "end": "2024-12",
+          "type": "lyricist"
+        },
+        {
+          "target-type": "work",
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "attributes": [],
+            "title": "Wait, does this make me gay?",
+            "disambiguation": "",
+            "iswcs": [],
+            "language": "eng",
+            "id": "d1cdc0d4-44c6-4e7a-9438-68f70c769dd3",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song"
+          },
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "begin": "2025-06",
+          "target-credit": "",
+          "direction": "forward",
+          "ended": true,
+          "attributes": [],
+          "type": "lyricist",
+          "source-credit": "",
+          "end": "2025-06",
+          "attribute-values": {},
+          "attribute-ids": {}
+        }
+      ],
+      "life-span": {
+        "end": null,
+        "ended": false,
+        "begin": null
+      },
+      "name": "Elias Grey",
+      "country": "US",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "gender": null,
+      "disambiguation": "",
+      "sort-name": "Grey, Elias",
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "area": {
+        "name": "Pennsylvania",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "disambiguation": "",
+        "sort-name": "Pennsylvania",
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "type": null,
+        "type-id": null
+      },
+      "begin-area": null,
+      "gender-id": null,
+      "ipis": [],
+      "isnis": [
+        "0000000529384228"
+      ],
+      "type": "Person"
+    },
+    "release-rels": {
+      "end-area": null,
+      "area": {
+        "type-id": null,
+        "name": "Pennsylvania",
+        "type": null,
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "sort-name": "Pennsylvania",
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "disambiguation": ""
+      },
+      "name": "Elias Grey",
+      "sort-name": "Grey, Elias",
+      "gender-id": null,
+      "disambiguation": "",
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "gender": null,
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "begin-area": null,
+      "ipis": [],
+      "country": "US",
+      "isnis": [
+        "0000000529384228"
+      ],
+      "relations": [
+        {
+          "release": {
+            "country": "US",
+            "status-id": null,
+            "packaging-id": null,
+            "quality": "normal",
+            "barcode": "",
+            "packaging": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "status": null,
+            "title": "pay2play",
+            "disambiguation": "",
+            "id": "c235b965-e1ff-448f-9487-2567e4eec9a9",
+            "release-events": [
+              {
+                "date": "2025-07-19",
+                "area": {
+                  "name": "United States",
+                  "type-id": null,
+                  "iso-3166-1-codes": [
+                    "US"
+                  ],
+                  "sort-name": "United States",
+                  "disambiguation": "",
+                  "id": "489ce91b-6658-3307-9877-795b68554c98",
+                  "type": null
+                }
+              }
+            ],
+            "date": "2025-07-19"
+          },
+          "attributes": [
+            "task"
+          ],
+          "attribute-ids": {
+            "task": "39867b3b-0f1e-40d5-b602-4f3936b7f486"
+          },
+          "target-type": "release",
+          "direction": "forward",
+          "begin": "2025-07",
+          "end": "2025-07",
+          "target-credit": "",
+          "type-id": "9c02ea37-7680-4fb5-8555-e330c7aa885b",
+          "ended": true,
+          "type": "design",
+          "attribute-values": {
+            "task": "sticker design"
+          },
+          "source-credit": ""
+        },
+        {
+          "attribute-ids": {
+            "task": "39867b3b-0f1e-40d5-b602-4f3936b7f486"
+          },
+          "direction": "forward",
+          "target-type": "release",
+          "release": {
+            "quality": "normal",
+            "packaging-id": null,
+            "status-id": null,
+            "country": "XW",
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "packaging": null,
+            "barcode": "057829025783",
+            "status": null,
+            "date": "2025-07-18",
+            "id": "b2d580ea-a056-499a-ae5f-ae3d5e54fede",
+            "release-events": [
+              {
+                "area": {
+                  "name": "[Worldwide]",
+                  "type-id": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]",
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "type": null
+                },
+                "date": "2025-07-18"
+              }
+            ],
+            "disambiguation": "",
+            "title": "pay2play"
+          },
+          "attributes": [
+            "task"
+          ],
+          "attribute-values": {
+            "task": "phone design"
+          },
+          "type": "design",
+          "source-credit": "",
+          "begin": "2025-07",
+          "end": "2025-07",
+          "type-id": "9c02ea37-7680-4fb5-8555-e330c7aa885b",
+          "target-credit": "",
+          "ended": true
+        }
+      ]
+    },
+    "label-rels": {
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": null
+      },
+      "gender-id": null,
+      "sort-name": "Grey, Elias",
+      "disambiguation": "",
+      "ipis": [],
+      "relations": [
+        {
+          "attribute-values": {},
+          "type": "executive position at",
+          "label": {
+            "disambiguation": "",
+            "type": "Creative Agency",
+            "name": "The Slop Collective",
+            "label-code": null,
+            "id": "ad82d124-e41e-49e8-9bf9-53e836b44336",
+            "type-id": "eb91c0bb-bf46-4c7b-82fd-b237f49c515e",
+            "sort-name": "The Slop Collective"
+          },
+          "target-credit": "",
+          "begin": null,
+          "type-id": "e375b657-ed87-4ea3-97ef-2c6b7a5ff226",
+          "end": null,
+          "attributes": [],
+          "ended": false,
+          "target-type": "label",
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": ""
+        }
+      ],
+      "isnis": [
+        "0000000529384228"
+      ],
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "end-area": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "disambiguation": "",
+        "type": null,
+        "name": "Pennsylvania",
+        "type-id": null,
+        "sort-name": "Pennsylvania",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ]
+      },
+      "begin-area": null,
+      "country": "US",
+      "name": "Elias Grey",
+      "type": "Person",
+      "gender": null
+    },
+    "place-rels": {
+      "ipis": [],
+      "begin-area": null,
+      "end-area": null,
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "country": "US",
+      "relations": [
+        {
+          "begin": "2025",
+          "attribute-values": {},
+          "type": "artist-in-residence",
+          "attribute-ids": {},
+          "direction": "forward",
+          "type-id": "9e338897-2b63-40a8-b7c1-fca0dbbaa3cd",
+          "target-type": "place",
+          "ended": true,
+          "attributes": [],
+          "source-credit": "",
+          "target-credit": "",
+          "end": "2026",
+          "place": {
+            "coordinates": null,
+            "address": "",
+            "id": "bc25ba1c-77e3-4288-b33f-dbf821c4625a",
+            "area": {
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "type": "City",
+              "name": "State College",
+              "disambiguation": "",
+              "sort-name": "State College",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496"
+            },
+            "type": null,
+            "disambiguation": "",
+            "name": "The Slop House",
+            "type-id": null
+          }
+        },
+        {
+          "attribute-ids": {},
+          "type": "recording engineer position",
+          "attribute-values": {},
+          "begin": "2026",
+          "target-type": "place",
+          "type-id": "350f7ab7-c2d9-4f00-98e0-e1973bf4a2bf",
+          "direction": "forward",
+          "source-credit": "",
+          "attributes": [],
+          "ended": false,
+          "place": {
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "name": "Irvin House",
+            "disambiguation": "",
+            "type": "Studio",
+            "area": {
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "name": "State College",
+              "disambiguation": "",
+              "type": "City",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496",
+              "sort-name": "State College"
+            },
+            "id": "26cbb244-48c7-49e5-863c-5dde5388dde1",
+            "address": "",
+            "coordinates": null
+          },
+          "end": null,
+          "target-credit": ""
+        }
+      ],
+      "disambiguation": "",
+      "gender": null,
+      "gender-id": null,
+      "sort-name": "Grey, Elias",
+      "name": "Elias Grey",
+      "area": {
+        "sort-name": "Pennsylvania",
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "type-id": null,
+        "type": null,
+        "name": "Pennsylvania",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "disambiguation": ""
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "isnis": [
+        "0000000529384228"
+      ],
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "type": "Person"
+    },
+    "event-rels": {
+      "end-area": null,
+      "name": "Elias Grey",
+      "area": {
+        "name": "Pennsylvania",
+        "type-id": null,
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "disambiguation": "",
+        "sort-name": "Pennsylvania",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "type": null
+      },
+      "gender-id": null,
+      "sort-name": "Grey, Elias",
+      "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+      "disambiguation": "",
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "gender": null,
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "begin-area": null,
+      "ipis": [],
+      "isnis": [
+        "0000000529384228"
+      ],
+      "country": "US",
+      "relations": []
+    }
+  }
+}

@@ -1,0 +1,1560 @@
+{
+  "fetchedAt": "2026-06-27T21:40:32.114Z",
+  "entityType": "artist",
+  "uuid": "0335c576-94a4-4adb-a323-6effff5914e0",
+  "name": "DDT LLC",
+  "subpages": {
+    "events": {
+      "list": {
+        "event-count": 3,
+        "events": [
+          {
+            "name": "Midwest Slam Seminar: Puberty Wounds /// ConeTrauma /// DDT LLC",
+            "type": "Concert",
+            "id": "693a8a50-4b43-4aff-aede-4bca8e572fdf",
+            "setlist": "",
+            "time": "21:00",
+            "cancelled": false,
+            "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+            "disambiguation": "",
+            "life-span": {
+              "ended": true,
+              "begin": "2016-02-24",
+              "end": "2016-02-24"
+            }
+          },
+          {
+            "life-span": {
+              "begin": "2016-05-04",
+              "end": "2016-05-04",
+              "ended": true
+            },
+            "disambiguation": "",
+            "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+            "cancelled": false,
+            "time": "21:00",
+            "setlist": "",
+            "id": "927431e8-8359-4a50-b530-143bcd46abd2",
+            "name": "CALI PUNK INVASION ! RONiiA, DDT LLC, Sex Tyrant",
+            "type": "Concert"
+          },
+          {
+            "cancelled": false,
+            "time": "20:00",
+            "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+            "id": "d745b5b3-0b06-499b-a7a7-acb3320372d4",
+            "name": "Rabble Rouser / Person / Groggy Darko / DDT LLC",
+            "type": "Concert",
+            "setlist": "",
+            "life-span": {
+              "ended": true,
+              "end": "2016-05-15",
+              "begin": "2016-05-15"
+            },
+            "disambiguation": ""
+          }
+        ]
+      },
+      "details": {
+        "693a8a50-4b43-4aff-aede-4bca8e572fdf": {
+          "setlist": "",
+          "life-span": {
+            "end": "2016-02-24",
+            "ended": true,
+            "begin": "2016-02-24"
+          },
+          "time": "21:00",
+          "cancelled": false,
+          "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+          "disambiguation": "",
+          "type": "Concert",
+          "name": "Midwest Slam Seminar: Puberty Wounds /// ConeTrauma /// DDT LLC",
+          "id": "693a8a50-4b43-4aff-aede-4bca8e572fdf",
+          "relations": [
+            {
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "type": "main performer",
+              "attribute-values": {},
+              "target-credit": "",
+              "begin": null,
+              "target-type": "artist",
+              "ended": false,
+              "source-credit": "",
+              "attribute-ids": {},
+              "direction": "backward",
+              "artist": {
+                "id": "a28953d5-d8b3-4e76-84d1-aea94859b9f8",
+                "disambiguation": "",
+                "country": "US",
+                "name": "ConeTrauma",
+                "type": "Group",
+                "sort-name": "ConeTrauma",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "end": null,
+              "attributes": []
+            },
+            {
+              "ended": false,
+              "target-type": "artist",
+              "source-credit": "",
+              "attribute-ids": {},
+              "direction": "backward",
+              "artist": {
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                "type": "Group",
+                "name": "DDT LLC",
+                "disambiguation": "",
+                "country": "US",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "sort-name": "DDT LLC"
+              },
+              "end": null,
+              "attributes": [],
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "type": "main performer",
+              "attribute-values": {},
+              "begin": null,
+              "target-credit": ""
+            },
+            {
+              "source-credit": "",
+              "attribute-ids": {},
+              "direction": "backward",
+              "target-type": "artist",
+              "ended": false,
+              "attributes": [],
+              "artist": {
+                "sort-name": "Puberty Wounds",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "country": "US",
+                "disambiguation": "American hardcore punk band from Columbus, Ohio.",
+                "name": "Puberty Wounds",
+                "type": "Group",
+                "id": "1589cb61-6530-40f4-918b-d34c8265b42f"
+              },
+              "end": null,
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "begin": null,
+              "target-credit": "",
+              "type": "main performer",
+              "attribute-values": {}
+            },
+            {
+              "target-type": "place",
+              "ended": false,
+              "direction": "forward",
+              "attribute-ids": {},
+              "source-credit": "",
+              "end": null,
+              "attributes": [],
+              "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532",
+              "attribute-values": {},
+              "type": "held at",
+              "begin": null,
+              "target-credit": "Dick's Jiggly Conference Center",
+              "place": {
+                "type-id": null,
+                "area": {
+                  "sort-name": "Iowa City",
+                  "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                  "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                  "name": "Iowa City",
+                  "type": "City",
+                  "disambiguation": ""
+                },
+                "coordinates": null,
+                "id": "f50110b0-dd2a-4a54-a519-0d0c564c1b61",
+                "address": "",
+                "disambiguation": "",
+                "type": null,
+                "name": "The Jiggly Room"
+              }
+            }
+          ]
+        },
+        "927431e8-8359-4a50-b530-143bcd46abd2": {
+          "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+          "life-span": {
+            "end": "2016-05-04",
+            "begin": "2016-05-04",
+            "ended": true
+          },
+          "cancelled": false,
+          "time": "21:00",
+          "relations": [
+            {
+              "direction": "backward",
+              "target-type": "artist",
+              "attribute-ids": {},
+              "attributes": [],
+              "source-credit": "",
+              "type": "artwork",
+              "attribute-values": {},
+              "ended": false,
+              "target-credit": "",
+              "type-id": "a66ea135-5dd0-4dc2-8ecb-59e3026d1ecc",
+              "end": null,
+              "artist": {
+                "name": "Brady Wülf",
+                "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+                "disambiguation": "",
+                "id": "2bdcde03-775a-40de-bca3-1128fdb38e7d",
+                "sort-name": "Wülf, Brady",
+                "country": "US",
+                "type": "Person"
+              },
+              "begin": null
+            },
+            {
+              "ended": false,
+              "target-credit": "",
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "artist": {
+                "sort-name": "DDT LLC",
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                "disambiguation": "",
+                "type": "Group",
+                "country": "US",
+                "name": "DDT LLC",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "end": null,
+              "begin": null,
+              "source-credit": "",
+              "type": "main performer",
+              "attribute-values": {},
+              "attributes": [],
+              "direction": "backward",
+              "target-type": "artist",
+              "attribute-ids": {}
+            },
+            {
+              "attribute-values": {},
+              "type": "main performer",
+              "source-credit": "",
+              "begin": null,
+              "end": null,
+              "artist": {
+                "name": "RONiiA",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "sort-name": "RONiiA",
+                "id": "4f3a2c0b-de9a-4e30-8046-3276731b7b7d",
+                "disambiguation": "",
+                "type": "Group",
+                "country": "US"
+              },
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "target-credit": "",
+              "ended": false,
+              "attribute-ids": {},
+              "direction": "backward",
+              "target-type": "artist",
+              "attributes": []
+            },
+            {
+              "attributes": [],
+              "target-type": "artist",
+              "direction": "backward",
+              "attribute-ids": {},
+              "end": null,
+              "artist": {
+                "id": "cfc0cb59-fbf6-4dc9-b339-dba17b752942",
+                "disambiguation": "",
+                "sort-name": "Sex Tyrant",
+                "country": null,
+                "type": "Group",
+                "name": "Sex Tyrant",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "begin": null,
+              "ended": false,
+              "target-credit": "",
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "type": "main performer",
+              "attribute-values": {},
+              "source-credit": ""
+            },
+            {
+              "begin": null,
+              "end": null,
+              "place": {
+                "address": "",
+                "name": "The Governor's Mansion",
+                "area": {
+                  "name": "Iowa City",
+                  "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                  "sort-name": "Iowa City",
+                  "disambiguation": "",
+                  "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                  "type": "City"
+                },
+                "type": null,
+                "coordinates": null,
+                "disambiguation": "",
+                "id": "adbb0132-4ea6-464e-9651-6f1ee3da494f",
+                "type-id": null
+              },
+              "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532",
+              "target-credit": "",
+              "ended": false,
+              "attributes": [],
+              "attribute-values": {},
+              "attribute-ids": {},
+              "type": "held at",
+              "target-type": "place",
+              "direction": "forward",
+              "source-credit": ""
+            }
+          ],
+          "name": "CALI PUNK INVASION ! RONiiA, DDT LLC, Sex Tyrant",
+          "type": "Concert",
+          "id": "927431e8-8359-4a50-b530-143bcd46abd2",
+          "disambiguation": "",
+          "setlist": ""
+        },
+        "d745b5b3-0b06-499b-a7a7-acb3320372d4": {
+          "id": "d745b5b3-0b06-499b-a7a7-acb3320372d4",
+          "relations": [
+            {
+              "direction": "backward",
+              "source-credit": "",
+              "attribute-ids": {},
+              "ended": false,
+              "target-type": "artist",
+              "attributes": [],
+              "end": null,
+              "artist": {
+                "id": "64358ef2-02ad-4c2e-91d1-102ad1340bff",
+                "disambiguation": "",
+                "country": "US",
+                "name": "Groggy Darko and the Influence",
+                "type": null,
+                "type-id": null,
+                "sort-name": "Darko, Groggy"
+              },
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "target-credit": "",
+              "begin": null,
+              "type": "main performer",
+              "attribute-values": {}
+            },
+            {
+              "attribute-values": {},
+              "type": "main performer",
+              "target-credit": "",
+              "begin": null,
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "end": null,
+              "artist": {
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "sort-name": "DDT LLC",
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                "name": "DDT LLC",
+                "type": "Group",
+                "country": "US",
+                "disambiguation": ""
+              },
+              "attributes": [],
+              "ended": false,
+              "target-type": "artist",
+              "direction": "backward",
+              "attribute-ids": {},
+              "source-credit": ""
+            },
+            {
+              "begin": null,
+              "target-credit": "",
+              "attribute-values": {},
+              "type": "main performer",
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "attributes": [],
+              "artist": {
+                "sort-name": "Person",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "id": "e9f3a94c-f39e-476f-9829-82e73ac031f1",
+                "name": "Person",
+                "type": "Group",
+                "disambiguation": "Rad punk jamz from Chicago",
+                "country": "US"
+              },
+              "end": null,
+              "attribute-ids": {},
+              "source-credit": "",
+              "direction": "backward",
+              "target-type": "artist",
+              "ended": false
+            },
+            {
+              "target-credit": "",
+              "begin": null,
+              "type": "main performer",
+              "attribute-values": {},
+              "type-id": "936c7c95-3156-3889-a062-8a0cd57f8946",
+              "attributes": [],
+              "end": null,
+              "artist": {
+                "sort-name": "Rabble Rouser",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "type": "Group",
+                "name": "Rabble Rouser",
+                "country": "US",
+                "disambiguation": "",
+                "id": "cf9674f8-63be-461c-8e01-92a68d71bf2d"
+              },
+              "direction": "backward",
+              "source-credit": "",
+              "attribute-ids": {},
+              "ended": false,
+              "target-type": "artist"
+            },
+            {
+              "type": "held at",
+              "attribute-values": {},
+              "place": {
+                "type-id": null,
+                "area": {
+                  "type": "City",
+                  "name": "Iowa City",
+                  "disambiguation": "",
+                  "sort-name": "Iowa City",
+                  "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                  "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78"
+                },
+                "coordinates": null,
+                "id": "adbb0132-4ea6-464e-9651-6f1ee3da494f",
+                "address": "",
+                "disambiguation": "",
+                "type": null,
+                "name": "The Governor's Mansion"
+              },
+              "target-credit": "",
+              "begin": null,
+              "type-id": "e2c6f697-07dc-38b1-be0b-83d740165532",
+              "end": null,
+              "attributes": [],
+              "target-type": "place",
+              "ended": false,
+              "direction": "forward",
+              "source-credit": "",
+              "attribute-ids": {}
+            }
+          ],
+          "disambiguation": "",
+          "type": "Concert",
+          "name": "Rabble Rouser / Person / Groggy Darko / DDT LLC",
+          "cancelled": false,
+          "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+          "setlist": "",
+          "time": "20:00",
+          "life-span": {
+            "end": "2016-05-15",
+            "ended": true,
+            "begin": "2016-05-15"
+          }
+        }
+      },
+      "areaChains": {
+        "3fc3b364-665e-4875-a9ff-3699cd716152": "Iowa City, Iowa"
+      }
+    },
+    "releases": {
+      "list": {
+        "release-count": 2,
+        "releases": [
+          {
+            "id": "0ed0c48b-cc04-44da-92c6-1298c89cc019",
+            "packaging": null,
+            "disambiguation": "",
+            "country": "XW",
+            "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+            "release-events": [
+              {
+                "date": "2017-01-01",
+                "area": {
+                  "disambiguation": "",
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "type-id": null,
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "sort-name": "[Worldwide]"
+                }
+              }
+            ],
+            "status": "Withdrawn",
+            "quality": "normal",
+            "cover-art-archive": {
+              "count": 0,
+              "artwork": false,
+              "back": false,
+              "darkened": false,
+              "front": false
+            },
+            "title": "How To Hollow Shells And Pierce Skulls: An Instructional",
+            "asin": null,
+            "date": "2017-01-01",
+            "text-representation": {
+              "language": null,
+              "script": null
+            },
+            "packaging-id": null,
+            "barcode": null
+          },
+          {
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "date": "2025-02-25",
+            "packaging-id": null,
+            "barcode": null,
+            "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+            "release-events": [
+              {
+                "date": "2025-02-25",
+                "area": {
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "sort-name": "[Worldwide]",
+                  "name": "[Worldwide]",
+                  "disambiguation": "",
+                  "type": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "type-id": null
+                }
+              }
+            ],
+            "disambiguation": "",
+            "country": "XW",
+            "id": "3b76e26b-f98b-4a2b-9140-84aba6f774cf",
+            "packaging": null,
+            "asin": null,
+            "title": "Shopping",
+            "quality": "normal",
+            "cover-art-archive": {
+              "artwork": false,
+              "count": 0,
+              "front": false,
+              "darkened": false,
+              "back": false
+            },
+            "status": "Official"
+          }
+        ]
+      },
+      "details": {
+        "0ed0c48b-cc04-44da-92c6-1298c89cc019": {
+          "asin": null,
+          "title": "How To Hollow Shells And Pierce Skulls: An Instructional",
+          "cover-art-archive": {
+            "artwork": false,
+            "count": 0,
+            "front": false,
+            "darkened": false,
+            "back": false
+          },
+          "quality": "normal",
+          "status": "Withdrawn",
+          "media": [
+            {
+              "track-count": 2,
+              "tracks": [
+                {
+                  "number": "1",
+                  "length": 354000,
+                  "title": "I CAME HERE TO STEAL CHROMIE // WADING FOR JESUS",
+                  "artist-credit": [
+                    {
+                      "artist": {
+                        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                        "country": "US",
+                        "disambiguation": "",
+                        "name": "DDT LLC",
+                        "type": "Group",
+                        "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                        "sort-name": "DDT LLC"
+                      },
+                      "name": "DDT LLC",
+                      "joinphrase": ""
+                    }
+                  ],
+                  "recording": {
+                    "disambiguation": "",
+                    "artist-credit": [
+                      {
+                        "artist": {
+                          "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                          "type": "Group",
+                          "country": "US",
+                          "name": "DDT LLC",
+                          "disambiguation": "",
+                          "sort-name": "DDT LLC",
+                          "id": "0335c576-94a4-4adb-a323-6effff5914e0"
+                        },
+                        "joinphrase": "",
+                        "name": "DDT"
+                      }
+                    ],
+                    "id": "638501dd-6827-4bff-9a74-36e960ee4acb",
+                    "video": false,
+                    "length": 354000,
+                    "title": "I CAME HERE TO STEAL CHROMIE // WADING FOR JESUS",
+                    "first-release-date": "2017-01-01"
+                  },
+                  "id": "ba944719-0e86-413e-a323-1e8f82727453",
+                  "position": 1
+                },
+                {
+                  "position": 2,
+                  "id": "f12af785-1a60-459f-b0d8-07e543f0f00d",
+                  "recording": {
+                    "first-release-date": "2017-01-01",
+                    "title": "ARE YOU READY TO ROCK? // FASHION ADVICE FOR BARNBABY (WHO HAS A BRIGHT FUTURE AHEAD OF HIMSELF)",
+                    "length": 304000,
+                    "id": "0fee71d8-aa86-4a38-8516-33b653a8540e",
+                    "video": false,
+                    "disambiguation": "",
+                    "artist-credit": [
+                      {
+                        "name": "DDT",
+                        "joinphrase": "",
+                        "artist": {
+                          "sort-name": "DDT LLC",
+                          "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                          "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                          "type": "Group",
+                          "disambiguation": "",
+                          "country": "US",
+                          "name": "DDT LLC"
+                        }
+                      }
+                    ]
+                  },
+                  "artist-credit": [
+                    {
+                      "name": "DDT LLC",
+                      "joinphrase": "",
+                      "artist": {
+                        "sort-name": "DDT LLC",
+                        "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                        "type": "Group",
+                        "country": "US",
+                        "disambiguation": "",
+                        "name": "DDT LLC"
+                      }
+                    }
+                  ],
+                  "title": "ARE YOU READY TO ROCK? // FASHION ADVICE FOR BARNBABY (WHO HAS A BRIGHT FUTURE AHEAD OF HIMSELF)",
+                  "length": 304000,
+                  "number": "2"
+                }
+              ],
+              "format": "Digital Media",
+              "id": "c22973d5-1ce7-4827-b75b-ea21d4612fb2",
+              "track-offset": 0,
+              "format-id": "907a28d9-b3b2-3ef6-89a8-7b18d91d4794",
+              "title": "",
+              "position": 1
+            }
+          ],
+          "release-events": [
+            {
+              "date": "2017-01-01",
+              "area": {
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "type": null,
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "type-id": null,
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "sort-name": "[Worldwide]"
+              }
+            }
+          ],
+          "release-group": {
+            "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+            "first-release-date": "2017-01-01",
+            "title": "How To Hollow Shells And Pierce Skulls: An Instructional",
+            "id": "95457820-1dd5-49b0-966e-22a186d9e95b",
+            "secondary-type-ids": [],
+            "artist-credit": [
+              {
+                "artist": {
+                  "type": "Group",
+                  "country": "US",
+                  "disambiguation": "",
+                  "name": "DDT LLC",
+                  "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                  "sort-name": "DDT LLC",
+                  "id": "0335c576-94a4-4adb-a323-6effff5914e0"
+                },
+                "name": "DDT",
+                "joinphrase": ""
+              }
+            ],
+            "disambiguation": "",
+            "secondary-types": [],
+            "primary-type": "EP"
+          },
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "country": "XW",
+          "disambiguation": "",
+          "packaging": null,
+          "id": "0ed0c48b-cc04-44da-92c6-1298c89cc019",
+          "barcode": null,
+          "packaging-id": null,
+          "date": "2017-01-01",
+          "text-representation": {
+            "language": null,
+            "script": null
+          },
+          "artist-credit": [
+            {
+              "artist": {
+                "type": "Group",
+                "country": "US",
+                "disambiguation": "",
+                "name": "DDT LLC",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "sort-name": "DDT LLC",
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0"
+              },
+              "name": "DDT",
+              "joinphrase": ""
+            }
+          ],
+          "label-info": []
+        },
+        "3b76e26b-f98b-4a2b-9140-84aba6f774cf": {
+          "packaging": null,
+          "title": "Shopping",
+          "status": "Official",
+          "label-info": [],
+          "country": "XW",
+          "release-group": {
+            "primary-type": "EP",
+            "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+            "secondary-type-ids": [],
+            "secondary-types": [],
+            "title": "How To Hollow Shells And Pierce Skulls: An Instructional",
+            "artist-credit": [
+              {
+                "artist": {
+                  "country": "US",
+                  "disambiguation": "",
+                  "name": "DDT LLC",
+                  "type": "Group",
+                  "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                  "sort-name": "DDT LLC",
+                  "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+                },
+                "name": "DDT",
+                "joinphrase": ""
+              }
+            ],
+            "first-release-date": "2017-01-01",
+            "id": "95457820-1dd5-49b0-966e-22a186d9e95b",
+            "disambiguation": ""
+          },
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "packaging-id": null,
+          "cover-art-archive": {
+            "count": 0,
+            "darkened": false,
+            "back": false,
+            "artwork": false,
+            "front": false
+          },
+          "release-events": [
+            {
+              "area": {
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "type": null,
+                "sort-name": "[Worldwide]",
+                "type-id": null
+              },
+              "date": "2025-02-25"
+            }
+          ],
+          "artist-credit": [
+            {
+              "joinphrase": "",
+              "name": "DDT",
+              "artist": {
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "sort-name": "DDT LLC",
+                "name": "DDT LLC",
+                "type": "Group",
+                "disambiguation": "",
+                "country": "US",
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0"
+              }
+            }
+          ],
+          "id": "3b76e26b-f98b-4a2b-9140-84aba6f774cf",
+          "quality": "normal",
+          "disambiguation": "",
+          "media": [
+            {
+              "title": "",
+              "position": 1,
+              "format": "Digital Media",
+              "id": "b475fc4b-6886-4bd8-b8d3-7e6ebd78621e",
+              "track-offset": 0,
+              "track-count": 2,
+              "tracks": [
+                {
+                  "recording": {
+                    "disambiguation": "",
+                    "video": false,
+                    "id": "638501dd-6827-4bff-9a74-36e960ee4acb",
+                    "first-release-date": "2017-01-01",
+                    "artist-credit": [
+                      {
+                        "joinphrase": "",
+                        "name": "DDT",
+                        "artist": {
+                          "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                          "type": "Group",
+                          "name": "DDT LLC",
+                          "country": "US",
+                          "disambiguation": "",
+                          "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                          "sort-name": "DDT LLC"
+                        }
+                      }
+                    ],
+                    "title": "I CAME HERE TO STEAL CHROMIE // WADING FOR JESUS",
+                    "length": 354000
+                  },
+                  "position": 1,
+                  "length": 354000,
+                  "number": "1",
+                  "title": "going to target / fucking the kids up",
+                  "id": "a4681aaa-9499-46c3-80ad-3ff1103d48a7",
+                  "artist-credit": [
+                    {
+                      "name": "DDT",
+                      "joinphrase": "",
+                      "artist": {
+                        "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                        "name": "DDT LLC",
+                        "type": "Group",
+                        "disambiguation": "",
+                        "country": "US",
+                        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                        "sort-name": "DDT LLC"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "title": "are you ready to rock?? / fashion advice",
+                  "artist-credit": [
+                    {
+                      "artist": {
+                        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                        "sort-name": "DDT LLC",
+                        "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                        "country": "US",
+                        "disambiguation": "",
+                        "name": "DDT LLC",
+                        "type": "Group"
+                      },
+                      "joinphrase": "",
+                      "name": "DDT"
+                    }
+                  ],
+                  "id": "0e25ac13-33b2-4cff-9daf-85bdd13bbff8",
+                  "position": 2,
+                  "number": "2",
+                  "length": 304000,
+                  "recording": {
+                    "id": "0fee71d8-aa86-4a38-8516-33b653a8540e",
+                    "artist-credit": [
+                      {
+                        "joinphrase": "",
+                        "name": "DDT",
+                        "artist": {
+                          "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                          "name": "DDT LLC",
+                          "type": "Group",
+                          "disambiguation": "",
+                          "country": "US",
+                          "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                          "sort-name": "DDT LLC"
+                        }
+                      }
+                    ],
+                    "first-release-date": "2017-01-01",
+                    "title": "ARE YOU READY TO ROCK? // FASHION ADVICE FOR BARNBABY (WHO HAS A BRIGHT FUTURE AHEAD OF HIMSELF)",
+                    "disambiguation": "",
+                    "video": false,
+                    "length": 304000
+                  }
+                }
+              ],
+              "format-id": "907a28d9-b3b2-3ef6-89a8-7b18d91d4794"
+            }
+          ],
+          "asin": null,
+          "date": "2025-02-25",
+          "barcode": null,
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe"
+        }
+      },
+      "releaseGroups": {
+        "95457820-1dd5-49b0-966e-22a186d9e95b": {
+          "tags": [],
+          "secondary-types": [],
+          "secondary-type-ids": [],
+          "primary-type": "EP",
+          "first-release-date": "2017-01-01",
+          "primary-type-id": "6d0c5bf6-7a33-3420-a519-44fc63eedebf",
+          "disambiguation": "",
+          "id": "95457820-1dd5-49b0-966e-22a186d9e95b",
+          "title": "How To Hollow Shells And Pierce Skulls: An Instructional"
+        }
+      }
+    },
+    "recordings": {
+      "list": {
+        "recordings": [
+          {
+            "title": "ARE YOU READY TO ROCK? // FASHION ADVICE FOR BARNBABY (WHO HAS A BRIGHT FUTURE AHEAD OF HIMSELF)",
+            "disambiguation": "",
+            "length": 304000,
+            "video": false,
+            "first-release-date": "2017-01-01",
+            "id": "0fee71d8-aa86-4a38-8516-33b653a8540e"
+          },
+          {
+            "length": 354000,
+            "id": "638501dd-6827-4bff-9a74-36e960ee4acb",
+            "video": false,
+            "first-release-date": "2017-01-01",
+            "title": "I CAME HERE TO STEAL CHROMIE // WADING FOR JESUS",
+            "disambiguation": ""
+          }
+        ]
+      },
+      "details": {
+        "0fee71d8-aa86-4a38-8516-33b653a8540e": {
+          "releases": [
+            {
+              "packaging-id": null,
+              "barcode": null,
+              "tags": [],
+              "text-representation": {
+                "language": null,
+                "script": null
+              },
+              "date": "2017-01-01",
+              "artist-credit": [
+                {
+                  "artist": {
+                    "country": "US",
+                    "disambiguation": "",
+                    "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                    "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                    "tags": [
+                      {
+                        "name": "post-punk",
+                        "count": 1
+                      }
+                    ],
+                    "type": "Group",
+                    "name": "DDT LLC",
+                    "aliases": [],
+                    "sort-name": "DDT LLC"
+                  },
+                  "joinphrase": "",
+                  "name": "DDT"
+                }
+              ],
+              "quality": "normal",
+              "status": "Withdrawn",
+              "aliases": [],
+              "title": "How To Hollow Shells And Pierce Skulls: An Instructional",
+              "id": "0ed0c48b-cc04-44da-92c6-1298c89cc019",
+              "packaging": null,
+              "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+              "release-events": [
+                {
+                  "area": {
+                    "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                    "sort-name": "[Worldwide]",
+                    "iso-3166-1-codes": [
+                      "XW"
+                    ],
+                    "type-id": null,
+                    "disambiguation": "",
+                    "name": "[Worldwide]",
+                    "type": null
+                  },
+                  "date": "2017-01-01"
+                }
+              ],
+              "country": "XW",
+              "disambiguation": ""
+            },
+            {
+              "title": "Shopping",
+              "aliases": [],
+              "status": "Official",
+              "quality": "normal",
+              "disambiguation": "",
+              "country": "XW",
+              "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+              "release-events": [
+                {
+                  "date": "2025-02-25",
+                  "area": {
+                    "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                    "sort-name": "[Worldwide]",
+                    "name": "[Worldwide]",
+                    "disambiguation": "",
+                    "type": null,
+                    "iso-3166-1-codes": [
+                      "XW"
+                    ],
+                    "type-id": null
+                  }
+                }
+              ],
+              "id": "3b76e26b-f98b-4a2b-9140-84aba6f774cf",
+              "packaging": null,
+              "packaging-id": null,
+              "barcode": null,
+              "artist-credit": [
+                {
+                  "joinphrase": "",
+                  "name": "DDT",
+                  "artist": {
+                    "sort-name": "DDT LLC",
+                    "type": "Group",
+                    "name": "DDT LLC",
+                    "aliases": [],
+                    "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                    "tags": [
+                      {
+                        "count": 1,
+                        "name": "post-punk"
+                      }
+                    ],
+                    "country": "US",
+                    "disambiguation": "",
+                    "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+                  }
+                }
+              ],
+              "text-representation": {
+                "language": "eng",
+                "script": null
+              },
+              "date": "2025-02-25",
+              "tags": []
+            }
+          ],
+          "tags": [],
+          "artist-credit": [
+            {
+              "name": "DDT",
+              "joinphrase": "",
+              "artist": {
+                "sort-name": "DDT LLC",
+                "aliases": [],
+                "name": "DDT LLC",
+                "type": "Group",
+                "tags": [
+                  {
+                    "count": 1,
+                    "name": "post-punk"
+                  }
+                ],
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "disambiguation": "",
+                "country": "US"
+              }
+            }
+          ],
+          "first-release-date": "2017-01-01",
+          "isrcs": [],
+          "video": false,
+          "id": "0fee71d8-aa86-4a38-8516-33b653a8540e",
+          "disambiguation": "",
+          "relations": [],
+          "title": "ARE YOU READY TO ROCK? // FASHION ADVICE FOR BARNBABY (WHO HAS A BRIGHT FUTURE AHEAD OF HIMSELF)",
+          "length": 304000,
+          "aliases": []
+        },
+        "638501dd-6827-4bff-9a74-36e960ee4acb": {
+          "video": false,
+          "disambiguation": "",
+          "relations": [],
+          "title": "I CAME HERE TO STEAL CHROMIE // WADING FOR JESUS",
+          "first-release-date": "2017-01-01",
+          "artist-credit": [
+            {
+              "artist": {
+                "tags": [
+                  {
+                    "count": 1,
+                    "name": "post-punk"
+                  }
+                ],
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                "sort-name": "DDT LLC",
+                "name": "DDT LLC",
+                "type": "Group",
+                "disambiguation": "",
+                "country": "US",
+                "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                "aliases": []
+              },
+              "joinphrase": "",
+              "name": "DDT"
+            }
+          ],
+          "id": "638501dd-6827-4bff-9a74-36e960ee4acb",
+          "aliases": [],
+          "tags": [],
+          "releases": [
+            {
+              "release-events": [
+                {
+                  "area": {
+                    "sort-name": "[Worldwide]",
+                    "type-id": null,
+                    "disambiguation": "",
+                    "iso-3166-1-codes": [
+                      "XW"
+                    ],
+                    "type": null,
+                    "name": "[Worldwide]",
+                    "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+                  },
+                  "date": "2017-01-01"
+                }
+              ],
+              "packaging-id": null,
+              "text-representation": {
+                "script": null,
+                "language": null
+              },
+              "country": "XW",
+              "title": "How To Hollow Shells And Pierce Skulls: An Instructional",
+              "packaging": null,
+              "status": "Withdrawn",
+              "aliases": [],
+              "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+              "tags": [],
+              "barcode": null,
+              "date": "2017-01-01",
+              "disambiguation": "",
+              "quality": "normal",
+              "id": "0ed0c48b-cc04-44da-92c6-1298c89cc019",
+              "artist-credit": [
+                {
+                  "joinphrase": "",
+                  "name": "DDT",
+                  "artist": {
+                    "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                    "sort-name": "DDT LLC",
+                    "tags": [
+                      {
+                        "count": 1,
+                        "name": "post-punk"
+                      }
+                    ],
+                    "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                    "aliases": [],
+                    "disambiguation": "",
+                    "country": "US",
+                    "type": "Group",
+                    "name": "DDT LLC"
+                  }
+                }
+              ]
+            },
+            {
+              "disambiguation": "",
+              "quality": "normal",
+              "id": "3b76e26b-f98b-4a2b-9140-84aba6f774cf",
+              "artist-credit": [
+                {
+                  "artist": {
+                    "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                    "sort-name": "DDT LLC",
+                    "tags": [
+                      {
+                        "name": "post-punk",
+                        "count": 1
+                      }
+                    ],
+                    "aliases": [],
+                    "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+                    "disambiguation": "",
+                    "country": "US",
+                    "type": "Group",
+                    "name": "DDT LLC"
+                  },
+                  "name": "DDT",
+                  "joinphrase": ""
+                }
+              ],
+              "tags": [],
+              "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+              "barcode": null,
+              "date": "2025-02-25",
+              "text-representation": {
+                "script": null,
+                "language": "eng"
+              },
+              "country": "XW",
+              "status": "Official",
+              "packaging": null,
+              "title": "Shopping",
+              "aliases": [],
+              "release-events": [
+                {
+                  "date": "2025-02-25",
+                  "area": {
+                    "sort-name": "[Worldwide]",
+                    "type-id": null,
+                    "name": "[Worldwide]",
+                    "type": null,
+                    "disambiguation": "",
+                    "iso-3166-1-codes": [
+                      "XW"
+                    ],
+                    "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+                  }
+                }
+              ],
+              "packaging-id": null
+            }
+          ],
+          "isrcs": [],
+          "length": 354000
+        }
+      }
+    },
+    "works": {
+      "artistWorkRels": {
+        "sort-name": "DDT LLC",
+        "isnis": [],
+        "area": {
+          "name": "Iowa City",
+          "type-id": null,
+          "disambiguation": "",
+          "sort-name": "Iowa City",
+          "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+          "type": null
+        },
+        "disambiguation": "",
+        "gender": null,
+        "name": "DDT LLC",
+        "begin-area": {
+          "name": "Iowa City",
+          "type-id": null,
+          "disambiguation": "",
+          "sort-name": "Iowa City",
+          "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+          "type": null
+        },
+        "country": "US",
+        "gender-id": null,
+        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+        "relations": [],
+        "life-span": {
+          "ended": false,
+          "begin": "2016",
+          "end": null
+        },
+        "end-area": null,
+        "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+        "type": "Group",
+        "ipis": []
+      },
+      "details": {},
+      "recordingFlags": {}
+    },
+    "members": {
+      "main": {
+        "life-span": {
+          "ended": false,
+          "begin": "2016",
+          "end": null
+        },
+        "gender-id": null,
+        "sort-name": "DDT LLC",
+        "disambiguation": "",
+        "id": "0335c576-94a4-4adb-a323-6effff5914e0",
+        "end-area": null,
+        "area": {
+          "disambiguation": "",
+          "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+          "sort-name": "Iowa City",
+          "type": null,
+          "name": "Iowa City",
+          "type-id": null
+        },
+        "name": "DDT LLC",
+        "relations": [
+          {
+            "attributes": [],
+            "target-type": "artist",
+            "direction": "backward",
+            "attribute-ids": {},
+            "ended": false,
+            "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+            "target-credit": "",
+            "artist": {
+              "country": null,
+              "type": "Person",
+              "disambiguation": "",
+              "id": "f66aa6fd-80e2-4622-a654-db53d206ea49",
+              "sort-name": "Dugan, Jack",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Jack Dugan"
+            },
+            "end": null,
+            "begin": null,
+            "source-credit": "",
+            "attribute-values": {},
+            "type": "founder"
+          },
+          {
+            "attributes": [],
+            "target-type": "artist",
+            "direction": "backward",
+            "attribute-ids": {},
+            "artist": {
+              "name": "Jake A. McCoy",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "McCoy, Jake A.",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+              "disambiguation": "",
+              "type": "Person",
+              "country": "US"
+            },
+            "end": null,
+            "begin": null,
+            "ended": false,
+            "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+            "target-credit": "",
+            "attribute-values": {},
+            "type": "founder",
+            "source-credit": ""
+          },
+          {
+            "attribute-credits": {},
+            "attributes": [
+              "drums (drum set)",
+              "original"
+            ],
+            "attribute-ids": {
+              "drums (drum set)": "12092505-6ee1-46af-a15a-b5b468b6b155",
+              "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c"
+            },
+            "target-type": "artist",
+            "direction": "backward",
+            "begin": "2016",
+            "end": "2016",
+            "artist": {
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Jake A. McCoy",
+              "country": "US",
+              "type": "Person",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+              "disambiguation": "",
+              "sort-name": "McCoy, Jake A."
+            },
+            "target-credit": "",
+            "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+            "ended": true,
+            "type": "member of band",
+            "attribute-values": {},
+            "source-credit": ""
+          },
+          {
+            "type": "member of band",
+            "attribute-values": {},
+            "source-credit": "",
+            "end": null,
+            "artist": {
+              "disambiguation": "",
+              "id": "f66aa6fd-80e2-4622-a654-db53d206ea49",
+              "sort-name": "Dugan, Jack",
+              "country": null,
+              "type": "Person",
+              "name": "Jack Dugan",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+            },
+            "begin": "2016",
+            "ended": true,
+            "target-credit": "",
+            "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+            "target-type": "artist",
+            "direction": "backward",
+            "attribute-ids": {
+              "background vocals": "75052401-7340-4e5b-a71d-ea024a128849",
+              "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c"
+            },
+            "attributes": [
+              "background vocals",
+              "original"
+            ],
+            "attribute-credits": {}
+          },
+          {
+            "artist": {
+              "type": "Person",
+              "country": null,
+              "sort-name": "Dugan, Jack",
+              "disambiguation": "",
+              "id": "f66aa6fd-80e2-4622-a654-db53d206ea49",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Jack Dugan"
+            },
+            "end": null,
+            "begin": "2016",
+            "ended": true,
+            "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+            "target-credit": "",
+            "attribute-values": {},
+            "type": "member of band",
+            "source-credit": "",
+            "attributes": [
+              "electric guitar",
+              "original"
+            ],
+            "attribute-credits": {},
+            "target-type": "artist",
+            "direction": "backward",
+            "attribute-ids": {
+              "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c",
+              "electric guitar": "7ee8ebf5-3aed-4fc8-8004-49f4a8c45a87"
+            }
+          },
+          {
+            "direction": "backward",
+            "target-type": "artist",
+            "attribute-ids": {
+              "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+            },
+            "attributes": [
+              "lead vocals"
+            ],
+            "attribute-credits": {},
+            "source-credit": "",
+            "attribute-values": {},
+            "type": "member of band",
+            "ended": true,
+            "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+            "target-credit": "",
+            "artist": {
+              "name": "Brad Highnam",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": "",
+              "id": "db8106ee-d028-4a39-9a91-ab9a432180d6",
+              "sort-name": "Highnam, Brad",
+              "country": null,
+              "type": "Person"
+            },
+            "end": null,
+            "begin": "2016"
+          },
+          {
+            "attribute-values": {},
+            "type": "member of band",
+            "source-credit": "",
+            "begin": "2016",
+            "artist": {
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Brad Highnam",
+              "country": null,
+              "type": "Person",
+              "id": "db8106ee-d028-4a39-9a91-ab9a432180d6",
+              "disambiguation": "",
+              "sort-name": "Highnam, Brad"
+            },
+            "end": null,
+            "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+            "target-credit": "",
+            "ended": true,
+            "attribute-ids": {
+              "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+            },
+            "target-type": "artist",
+            "direction": "backward",
+            "attribute-credits": {},
+            "attributes": [
+              "electric bass guitar"
+            ]
+          },
+          {
+            "end": null,
+            "artist": {
+              "type": "Person",
+              "country": null,
+              "sort-name": "Noise Rock Dan",
+              "id": "57b2f974-201f-4af0-82ad-02ac0f44a28e",
+              "disambiguation": "",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Noise Rock Dan"
+            },
+            "begin": "2016",
+            "ended": true,
+            "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+            "target-credit": "",
+            "attribute-values": {},
+            "type": "member of band",
+            "source-credit": "",
+            "attributes": [
+              "electric guitar"
+            ],
+            "attribute-credits": {},
+            "direction": "backward",
+            "target-type": "artist",
+            "attribute-ids": {
+              "electric guitar": "7ee8ebf5-3aed-4fc8-8004-49f4a8c45a87"
+            }
+          }
+        ],
+        "country": "US",
+        "isnis": [],
+        "begin-area": {
+          "name": "Iowa City",
+          "type-id": null,
+          "sort-name": "Iowa City",
+          "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+          "disambiguation": "",
+          "type": null
+        },
+        "ipis": [],
+        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+        "type": "Group",
+        "gender": null
+      },
+      "subgroups": {}
+    }
+  }
+}

@@ -1,0 +1,824 @@
+{
+  "fetchedAt": "2026-06-27T22:28:38.848Z",
+  "entityType": "contributor",
+  "uuid": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f",
+  "name": "Chuck J'OB",
+  "responses": {
+    "artist-rels": {
+      "name": "Chuck J'OB",
+      "gender-id": null,
+      "sort-name": "J'OB, Chuck",
+      "relations": [
+        {
+          "target-type": "artist",
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "type": "founder",
+          "begin": null,
+          "end": null,
+          "target-credit": "",
+          "source-credit": "",
+          "attributes": [],
+          "artist": {
+            "id": "260e4953-a937-4355-8389-d1baaf24eca5",
+            "sort-name": "Sex Van Floor Plan",
+            "country": "US",
+            "name": "Sex Van Floor Plan",
+            "disambiguation": "",
+            "type": "Group",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "ended": false
+        },
+        {
+          "end": null,
+          "target-credit": "",
+          "ended": false,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Sex Van Floor Plan",
+            "country": "US",
+            "disambiguation": "",
+            "type": "Group",
+            "id": "260e4953-a937-4355-8389-d1baaf24eca5",
+            "sort-name": "Sex Van Floor Plan"
+          },
+          "attributes": [
+            "lead vocals",
+            "original"
+          ],
+          "source-credit": "",
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "artist",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "begin": "2024",
+          "type": "member of band",
+          "attribute-values": {},
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5",
+            "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c"
+          }
+        }
+      ],
+      "disambiguation": "",
+      "country": "US",
+      "gender": null,
+      "begin-area": null,
+      "ipis": [],
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f",
+      "end-area": null,
+      "type": "Person",
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "isnis": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "sort-name": "Pennsylvania",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "disambiguation": "",
+        "name": "Pennsylvania",
+        "type": null,
+        "type-id": null
+      }
+    },
+    "recording-rels": {
+      "ipis": [],
+      "relations": [
+        {
+          "ended": true,
+          "attribute-values": {},
+          "end": "2026-01-10",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "recording": {
+            "length": 116000,
+            "disambiguation": "",
+            "video": false,
+            "id": "9ca539bc-84fe-49c6-8958-42c197f56a86",
+            "title": "iou a pack of american spirits"
+          },
+          "source-credit": "",
+          "target-type": "recording",
+          "type": "recording",
+          "direction": "forward",
+          "begin": "2026-01-10"
+        },
+        {
+          "direction": "forward",
+          "begin": "2026",
+          "recording": {
+            "length": 75000,
+            "id": "d87c1a5d-63b9-4e04-8002-8aacec932e9c",
+            "title": "afab",
+            "video": false,
+            "disambiguation": ""
+          },
+          "type": "recording",
+          "source-credit": "",
+          "target-type": "recording",
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2026"
+        },
+        {
+          "begin": "2026",
+          "direction": "forward",
+          "type": "recording",
+          "source-credit": "",
+          "target-type": "recording",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "id": "4c39612b-6290-424c-9c56-ec3f623a81f1",
+            "title": "i changed my availability 4 u",
+            "length": 115000
+          },
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2026",
+          "attribute-values": {},
+          "ended": true
+        },
+        {
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "type": "recording",
+          "target-type": "recording",
+          "source-credit": "",
+          "recording": {
+            "length": 88000,
+            "title": "pay2play",
+            "id": "f681bd3a-f123-4d19-a99c-02d4527af56e",
+            "video": false,
+            "disambiguation": ""
+          },
+          "end": "2026",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "begin": "2026",
+          "direction": "forward"
+        },
+        {
+          "type-id": "a01ee869-80a8-45ef-9447-c59e91aa7926",
+          "type": "recording",
+          "source-credit": "",
+          "target-type": "recording",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "u.d.s.",
+            "id": "4193b96f-b978-4000-95c6-1464629f2b10",
+            "length": 141000
+          },
+          "end": "2026",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "begin": "2026",
+          "direction": "forward"
+        },
+        {
+          "begin": "2025-07-17",
+          "direction": "forward",
+          "end": "2025-07-17",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "type": "vocal",
+          "source-credit": "",
+          "target-type": "recording",
+          "recording": {
+            "length": 92000,
+            "title": "pay2play",
+            "id": "7f496b0d-d52e-441d-afea-af07d8a90ff1",
+            "disambiguation": "2025 demo",
+            "video": false
+          }
+        },
+        {
+          "attribute-credits": {},
+          "direction": "forward",
+          "begin": "2026-01-10",
+          "recording": {
+            "length": 116000,
+            "title": "iou a pack of american spirits",
+            "id": "9ca539bc-84fe-49c6-8958-42c197f56a86",
+            "video": false,
+            "disambiguation": ""
+          },
+          "type": "vocal",
+          "target-type": "recording",
+          "source-credit": "",
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "target-credit": "",
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "attributes": [
+            "lead vocals"
+          ],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2026-01-10"
+        },
+        {
+          "attribute-credits": {},
+          "direction": "forward",
+          "begin": "2026",
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "recording": {
+            "title": "afab",
+            "id": "d87c1a5d-63b9-4e04-8002-8aacec932e9c",
+            "video": false,
+            "disambiguation": "",
+            "length": 75000
+          },
+          "target-type": "recording",
+          "source-credit": "",
+          "type": "vocal",
+          "attribute-values": {},
+          "ended": true,
+          "end": "2026",
+          "target-credit": "",
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "attributes": [
+            "lead vocals"
+          ]
+        },
+        {
+          "direction": "forward",
+          "begin": "2026",
+          "attribute-credits": {},
+          "target-credit": "",
+          "attributes": [
+            "lead vocals"
+          ],
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "attribute-values": {},
+          "ended": true,
+          "end": "2026",
+          "recording": {
+            "id": "4c39612b-6290-424c-9c56-ec3f623a81f1",
+            "title": "i changed my availability 4 u",
+            "disambiguation": "",
+            "video": false,
+            "length": 115000
+          },
+          "type": "vocal",
+          "source-credit": "",
+          "target-type": "recording",
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa"
+        },
+        {
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "attributes": [
+            "lead vocals"
+          ],
+          "target-credit": "",
+          "end": "2026",
+          "ended": true,
+          "attribute-values": {},
+          "source-credit": "",
+          "target-type": "recording",
+          "type": "vocal",
+          "recording": {
+            "length": 88000,
+            "id": "f681bd3a-f123-4d19-a99c-02d4527af56e",
+            "title": "pay2play",
+            "disambiguation": "",
+            "video": false
+          },
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "begin": "2026",
+          "direction": "forward",
+          "attribute-credits": {}
+        },
+        {
+          "recording": {
+            "length": 141000,
+            "video": false,
+            "disambiguation": "",
+            "id": "4193b96f-b978-4000-95c6-1464629f2b10",
+            "title": "u.d.s."
+          },
+          "target-type": "recording",
+          "source-credit": "",
+          "type": "vocal",
+          "type-id": "0fdbe3c6-7700-4a31-ae54-b53f06ae1cfa",
+          "target-credit": "",
+          "attributes": [
+            "lead vocals"
+          ],
+          "attribute-ids": {
+            "lead vocals": "8e2a3255-87c2-4809-a174-98cb3704f1a5"
+          },
+          "ended": true,
+          "attribute-values": {},
+          "end": "2026",
+          "attribute-credits": {},
+          "direction": "forward",
+          "begin": "2026"
+        }
+      ],
+      "area": {
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "disambiguation": "",
+        "sort-name": "Pennsylvania",
+        "type-id": null,
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "type": null,
+        "name": "Pennsylvania"
+      },
+      "gender": null,
+      "country": "US",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "type": "Person",
+      "gender-id": null,
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "begin-area": null,
+      "disambiguation": "",
+      "end-area": null,
+      "sort-name": "J'OB, Chuck",
+      "name": "Chuck J'OB",
+      "isnis": [],
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f"
+    },
+    "work-rels": {
+      "end-area": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "sort-name": "Pennsylvania",
+        "type-id": null,
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "disambiguation": "",
+        "type": null,
+        "name": "Pennsylvania"
+      },
+      "name": "Chuck J'OB",
+      "type": "Person",
+      "begin-area": null,
+      "country": "US",
+      "gender": null,
+      "gender-id": null,
+      "life-span": {
+        "end": null,
+        "ended": false,
+        "begin": null
+      },
+      "sort-name": "J'OB, Chuck",
+      "ipis": [],
+      "disambiguation": "",
+      "isnis": [],
+      "relations": [
+        {
+          "target-credit": "",
+          "begin": "2023-11",
+          "attribute-values": {},
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attributes": [],
+          "end": "2023-11",
+          "work": {
+            "attributes": [],
+            "id": "fed2cead-e2e3-405e-ac10-37eab3abaa94",
+            "title": "Availability",
+            "type": "Song",
+            "disambiguation": "",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "language": "eng",
+            "languages": [
+              "eng"
+            ]
+          },
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": "",
+          "ended": true,
+          "target-type": "work"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "begin": "2024-01",
+          "type": "composer",
+          "attribute-values": {},
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "work",
+          "ended": true,
+          "attributes": [],
+          "work": {
+            "disambiguation": "",
+            "type": "Song",
+            "attributes": [],
+            "id": "183795f0-d446-49d0-bbdd-faae9522761d",
+            "title": "Not Linear",
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "end": "2024-03"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2024",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "composer",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "work",
+          "ended": true,
+          "attributes": [
+            "additional"
+          ],
+          "end": "2025",
+          "work": {
+            "disambiguation": "",
+            "type": "Song",
+            "title": "American Spirits",
+            "id": "bda0308b-2896-4443-bd1b-cbb2c95ad3ae",
+            "attributes": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": []
+          }
+        },
+        {
+          "attributes": [],
+          "work": {
+            "languages": [
+              "eng"
+            ],
+            "language": "eng",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "disambiguation": "",
+            "type": "Song",
+            "id": "a14f75ed-663c-4501-a457-d98a9f94118b",
+            "attributes": [],
+            "title": "Scorched Earth"
+          },
+          "end": "2025-06",
+          "direction": "forward",
+          "source-credit": "",
+          "attribute-ids": {},
+          "ended": true,
+          "target-type": "work",
+          "target-credit": "",
+          "begin": "2025-05",
+          "type": "composer",
+          "attribute-values": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "begin": "2023-11",
+          "target-credit": "",
+          "type": "lyricist",
+          "attribute-values": {},
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "attributes": [],
+          "work": {
+            "type": "Song",
+            "disambiguation": "",
+            "title": "Availability",
+            "attributes": [],
+            "id": "fed2cead-e2e3-405e-ac10-37eab3abaa94",
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": []
+          },
+          "end": "2023-11",
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "ended": true,
+          "target-type": "work"
+        },
+        {
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [],
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "title": "Not Linear",
+            "attributes": [],
+            "id": "183795f0-d446-49d0-bbdd-faae9522761d",
+            "disambiguation": "",
+            "type": "Song"
+          },
+          "end": "2024-03",
+          "attributes": [],
+          "target-type": "work",
+          "ended": true,
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "type": "lyricist",
+          "attribute-values": {},
+          "begin": "2024-01",
+          "target-credit": "",
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c"
+        },
+        {
+          "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+          "begin": "2025-05",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "lyricist",
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": "",
+          "ended": true,
+          "target-type": "work",
+          "attributes": [],
+          "end": "2025-06",
+          "work": {
+            "type": "Song",
+            "disambiguation": "",
+            "attributes": [],
+            "id": "a14f75ed-663c-4501-a457-d98a9f94118b",
+            "title": "Scorched Earth",
+            "language": "eng",
+            "languages": [
+              "eng"
+            ],
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          }
+        }
+      ],
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f"
+    },
+    "release-rels": {
+      "type": "Person",
+      "country": "US",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "relations": [],
+      "gender": null,
+      "area": {
+        "type-id": null,
+        "type": null,
+        "name": "Pennsylvania",
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "sort-name": "Pennsylvania",
+        "disambiguation": ""
+      },
+      "ipis": [],
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f",
+      "isnis": [],
+      "name": "Chuck J'OB",
+      "sort-name": "J'OB, Chuck",
+      "begin-area": null,
+      "disambiguation": "",
+      "end-area": null,
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "gender-id": null
+    },
+    "label-rels": {
+      "sort-name": "J'OB, Chuck",
+      "disambiguation": "",
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f",
+      "area": {
+        "type": null,
+        "type-id": null,
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "disambiguation": "",
+        "sort-name": "Pennsylvania",
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "name": "Pennsylvania"
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "gender": null,
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "name": "Chuck J'OB",
+      "country": "US",
+      "end-area": null,
+      "relations": [
+        {
+          "direction": "forward",
+          "ended": false,
+          "attributes": [],
+          "type": "executive position at",
+          "source-credit": "",
+          "end": null,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "target-type": "label",
+          "type-id": "e375b657-ed87-4ea3-97ef-2c6b7a5ff226",
+          "begin": null,
+          "target-credit": "",
+          "label": {
+            "sort-name": "The Slop Collective",
+            "disambiguation": "",
+            "id": "ad82d124-e41e-49e8-9bf9-53e836b44336",
+            "type": "Creative Agency",
+            "type-id": "eb91c0bb-bf46-4c7b-82fd-b237f49c515e",
+            "label-code": null,
+            "name": "The Slop Collective"
+          }
+        }
+      ],
+      "type": "Person",
+      "isnis": [],
+      "begin-area": null,
+      "ipis": [],
+      "gender-id": null
+    },
+    "place-rels": {
+      "end-area": null,
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "ipis": [],
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f",
+      "type": "Person",
+      "country": "US",
+      "begin-area": null,
+      "name": "Chuck J'OB",
+      "gender": null,
+      "area": {
+        "type-id": null,
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "type": null,
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "disambiguation": "",
+        "name": "Pennsylvania",
+        "sort-name": "Pennsylvania"
+      },
+      "disambiguation": "",
+      "isnis": [],
+      "sort-name": "J'OB, Chuck",
+      "relations": [
+        {
+          "target-credit": "",
+          "attributes": [],
+          "direction": "forward",
+          "attribute-values": {},
+          "type-id": "9e338897-2b63-40a8-b7c1-fca0dbbaa3cd",
+          "begin": "2025",
+          "place": {
+            "address": "",
+            "type-id": null,
+            "type": null,
+            "id": "bc25ba1c-77e3-4288-b33f-dbf821c4625a",
+            "area": {
+              "sort-name": "State College",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496",
+              "type": "City",
+              "name": "State College",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "disambiguation": ""
+            },
+            "disambiguation": "",
+            "coordinates": null,
+            "name": "The Slop House"
+          },
+          "attribute-ids": {},
+          "source-credit": "",
+          "type": "artist-in-residence",
+          "end": "2026",
+          "ended": true,
+          "target-type": "place"
+        },
+        {
+          "attribute-ids": {},
+          "type": "recording engineer position",
+          "source-credit": "",
+          "ended": false,
+          "target-type": "place",
+          "end": null,
+          "attributes": [],
+          "direction": "forward",
+          "target-credit": "",
+          "attribute-values": {},
+          "begin": "2026",
+          "type-id": "350f7ab7-c2d9-4f00-98e0-e1973bf4a2bf",
+          "place": {
+            "name": "Irvin House",
+            "area": {
+              "disambiguation": "",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "name": "State College",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496",
+              "type": "City",
+              "sort-name": "State College"
+            },
+            "disambiguation": "",
+            "coordinates": null,
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "address": "",
+            "id": "26cbb244-48c7-49e5-863c-5dde5388dde1",
+            "type": "Studio"
+          }
+        }
+      ],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "gender-id": null
+    },
+    "event-rels": {
+      "end-area": null,
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "ipis": [],
+      "id": "c8ba82bf-cfa1-49a0-98bf-0cf8f931099f",
+      "type": "Person",
+      "isnis": [],
+      "sort-name": "J'OB, Chuck",
+      "country": "US",
+      "begin-area": null,
+      "name": "Chuck J'OB",
+      "gender": null,
+      "disambiguation": "",
+      "area": {
+        "type-id": null,
+        "id": "75d8fdcf-03e9-43d9-9399-131b8e118b0b",
+        "type": null,
+        "iso-3166-2-codes": [
+          "US-PA"
+        ],
+        "disambiguation": "",
+        "name": "Pennsylvania",
+        "sort-name": "Pennsylvania"
+      },
+      "gender-id": null,
+      "relations": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+    }
+  }
+}

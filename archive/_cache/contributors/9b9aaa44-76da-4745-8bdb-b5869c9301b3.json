@@ -1,0 +1,527 @@
+{
+  "fetchedAt": "2026-06-27T22:29:32.815Z",
+  "entityType": "contributor",
+  "uuid": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+  "name": "Rob Tomer",
+  "responses": {
+    "artist-rels": {
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "relations": [
+        {
+          "begin": null,
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "founder",
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "attributes": [],
+          "end": null,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Vinny Bobarino",
+            "country": "US",
+            "disambiguation": "",
+            "type": "Group",
+            "name": "Vinny Bobarino",
+            "id": "f701c2bc-6eb6-4e7b-b950-f0c2426cb91c"
+          },
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": "",
+          "ended": false,
+          "target-type": "artist"
+        },
+        {
+          "type": "member of band",
+          "attribute-values": {},
+          "target-credit": "",
+          "begin": "2006",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "artist": {
+            "id": "f701c2bc-6eb6-4e7b-b950-f0c2426cb91c",
+            "country": "US",
+            "disambiguation": "",
+            "type": "Group",
+            "name": "Vinny Bobarino",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Vinny Bobarino"
+          },
+          "end": "2007",
+          "attribute-credits": {},
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "target-type": "artist",
+          "ended": true,
+          "source-credit": "",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "direction": "forward"
+        }
+      ],
+      "isnis": [],
+      "disambiguation": "",
+      "ipis": [],
+      "sort-name": "Tomer, Rob",
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "life-span": {
+        "end": null,
+        "ended": false,
+        "begin": null
+      },
+      "gender": "Male",
+      "begin-area": null,
+      "country": "US",
+      "type": "Person",
+      "name": "Rob Tomer",
+      "area": {
+        "sort-name": "Massachusetts",
+        "type-id": null,
+        "iso-3166-2-codes": [
+          "US-MA"
+        ],
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043",
+        "name": "Massachusetts",
+        "type": null,
+        "disambiguation": ""
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "end-area": null
+    },
+    "recording-rels": {
+      "gender": "Male",
+      "type": "Person",
+      "begin-area": null,
+      "ipis": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "relations": [],
+      "isnis": [],
+      "country": "US",
+      "end-area": null,
+      "name": "Rob Tomer",
+      "area": {
+        "name": "Massachusetts",
+        "type-id": null,
+        "disambiguation": "",
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043",
+        "iso-3166-2-codes": [
+          "US-MA"
+        ],
+        "sort-name": "Massachusetts",
+        "type": null
+      },
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "sort-name": "Tomer, Rob",
+      "disambiguation": "",
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      }
+    },
+    "work-rels": {
+      "sort-name": "Tomer, Rob",
+      "isnis": [],
+      "area": {
+        "sort-name": "Massachusetts",
+        "disambiguation": "",
+        "name": "Massachusetts",
+        "type": null,
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043",
+        "iso-3166-2-codes": [
+          "US-MA"
+        ],
+        "type-id": null
+      },
+      "disambiguation": "",
+      "gender": "Male",
+      "country": "US",
+      "begin-area": null,
+      "name": "Rob Tomer",
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "relations": [
+        {
+          "target-type": "work",
+          "ended": true,
+          "end": "2007",
+          "source-credit": "",
+          "type": "composer",
+          "attribute-ids": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "type": "Song",
+            "id": "fe4a39ee-2df3-4074-8ab0-6d81918685f1",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "attributes": [],
+            "language": null,
+            "disambiguation": "",
+            "title": "Cereal"
+          },
+          "begin": "2006",
+          "attribute-values": {},
+          "attributes": [],
+          "direction": "forward",
+          "target-credit": ""
+        },
+        {
+          "begin": "2006",
+          "work": {
+            "type": "Song",
+            "id": "e2873167-66c1-4ffc-903a-5b17ade366bf",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "attributes": [],
+            "language": null,
+            "title": "Light Through Leaves",
+            "disambiguation": ""
+          },
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attribute-values": {},
+          "direction": "forward",
+          "attributes": [],
+          "target-credit": "",
+          "target-type": "work",
+          "ended": true,
+          "end": "2007",
+          "type": "composer",
+          "source-credit": "",
+          "attribute-ids": {}
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "work": {
+            "type": "Song",
+            "id": "c15b3c43-1948-4caa-a791-fa1d8d2e0286",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [],
+            "language": null,
+            "attributes": [],
+            "disambiguation": "",
+            "title": "The Drug Song"
+          },
+          "begin": "2006",
+          "attribute-values": {},
+          "target-credit": "",
+          "direction": "forward",
+          "attributes": [],
+          "end": "2007",
+          "target-type": "work",
+          "ended": true,
+          "type": "composer",
+          "source-credit": "",
+          "attribute-ids": {}
+        },
+        {
+          "source-credit": "",
+          "type": "composer",
+          "ended": true,
+          "target-type": "work",
+          "end": "2007",
+          "attribute-ids": {},
+          "work": {
+            "title": "This Summer's Last",
+            "disambiguation": "",
+            "language": null,
+            "attributes": [],
+            "languages": [],
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "5a597713-5429-446d-a8db-4762b25a14f7"
+          },
+          "begin": "2006",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "attributes": [],
+          "target-credit": "",
+          "attribute-values": {}
+        }
+      ],
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "end-area": null,
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "type": "Person",
+      "ipis": []
+    },
+    "release-rels": {
+      "relations": [
+        {
+          "source-credit": "",
+          "type": "design",
+          "attribute-values": {},
+          "target-credit": "",
+          "type-id": "9c02ea37-7680-4fb5-8555-e330c7aa885b",
+          "ended": true,
+          "begin": "2005",
+          "end": "2005",
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "release",
+          "release": {
+            "id": "4f0fb7da-d00a-477b-b0cb-056c91eb6532",
+            "disambiguation": "2023 reissue",
+            "release-events": [
+              {
+                "area": {
+                  "name": "[Worldwide]",
+                  "type-id": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "disambiguation": "",
+                  "type": null
+                },
+                "date": "2023-04-08"
+              }
+            ],
+            "title": "Anabolic Steroids and a Beaver Tranquilizer I",
+            "date": "2023-04-08",
+            "status": null,
+            "barcode": "",
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "packaging": null,
+            "packaging-id": null,
+            "country": "XW",
+            "status-id": null,
+            "quality": "normal"
+          },
+          "attributes": []
+        },
+        {
+          "target-credit": "",
+          "type-id": "9c02ea37-7680-4fb5-8555-e330c7aa885b",
+          "ended": true,
+          "begin": "2005",
+          "end": "2005",
+          "source-credit": "",
+          "type": "design",
+          "attribute-values": {},
+          "release": {
+            "status": null,
+            "title": "Anabolic Steroids and a Beaver Tranquilizer I",
+            "id": "2ae50462-cebe-4e2d-b834-2db69f7cd0cf",
+            "release-events": [
+              {
+                "area": {
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "disambiguation": "",
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "type": null,
+                  "name": "[Worldwide]",
+                  "type-id": null
+                },
+                "date": "2005-10-31"
+              }
+            ],
+            "disambiguation": "",
+            "date": "2005-10-31",
+            "country": "XW",
+            "status-id": null,
+            "packaging-id": null,
+            "quality": "normal",
+            "barcode": "",
+            "packaging": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            }
+          },
+          "attributes": [],
+          "attribute-ids": {},
+          "target-type": "release",
+          "direction": "forward"
+        },
+        {
+          "release": {
+            "barcode": "",
+            "packaging": null,
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "status-id": null,
+            "country": "XW",
+            "packaging-id": null,
+            "quality": "normal",
+            "title": "Early Morning Recordings",
+            "disambiguation": "2023 reissue",
+            "id": "ae274b3c-d9b9-4a0d-8cd4-3f139e6df7fc",
+            "release-events": [
+              {
+                "area": {
+                  "type": null,
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "type-id": null,
+                  "name": "[Worldwide]"
+                },
+                "date": "2023-05-10"
+              }
+            ],
+            "date": "2023-05-10",
+            "status": null
+          },
+          "attributes": [],
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "release",
+          "target-credit": "",
+          "type-id": "0b58dc9b-9c49-4b19-bb58-9c06d41c8fbf",
+          "ended": false,
+          "begin": null,
+          "end": null,
+          "source-credit": "",
+          "type": "photography",
+          "attribute-values": {}
+        }
+      ],
+      "isnis": [],
+      "country": "US",
+      "ipis": [],
+      "begin-area": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "type": "Person",
+      "gender": "Male",
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "disambiguation": "",
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "sort-name": "Tomer, Rob",
+      "area": {
+        "name": "Massachusetts",
+        "type-id": null,
+        "sort-name": "Massachusetts",
+        "iso-3166-2-codes": [
+          "US-MA"
+        ],
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043",
+        "disambiguation": "",
+        "type": null
+      },
+      "name": "Rob Tomer",
+      "end-area": null
+    },
+    "label-rels": {
+      "sort-name": "Tomer, Rob",
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "life-span": {
+        "begin": null,
+        "ended": false,
+        "end": null
+      },
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "isnis": [],
+      "relations": [],
+      "disambiguation": "",
+      "ipis": [],
+      "area": {
+        "type": null,
+        "name": "Massachusetts",
+        "disambiguation": "",
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043",
+        "iso-3166-2-codes": [
+          "US-MA"
+        ],
+        "sort-name": "Massachusetts",
+        "type-id": null
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "end-area": null,
+      "gender": "Male",
+      "country": "US",
+      "begin-area": null,
+      "name": "Rob Tomer",
+      "type": "Person"
+    },
+    "place-rels": {
+      "type": "Person",
+      "isnis": [],
+      "begin-area": null,
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "ipis": [],
+      "disambiguation": "",
+      "sort-name": "Tomer, Rob",
+      "area": {
+        "iso-3166-2-codes": [
+          "US-MA"
+        ],
+        "name": "Massachusetts",
+        "type": null,
+        "type-id": null,
+        "disambiguation": "",
+        "sort-name": "Massachusetts",
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043"
+      },
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "gender": "Male",
+      "life-span": {
+        "begin": null,
+        "ended": false,
+        "end": null
+      },
+      "name": "Rob Tomer",
+      "country": "US",
+      "end-area": null,
+      "relations": []
+    },
+    "event-rels": {
+      "relations": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "gender-id": "36d3d30a-839d-3eda-8cb3-29be4384e4a9",
+      "gender": "Male",
+      "disambiguation": "",
+      "area": {
+        "disambiguation": "",
+        "name": "Massachusetts",
+        "sort-name": "Massachusetts",
+        "type-id": null,
+        "type": null,
+        "id": "05f68b4c-10f3-49b5-b28c-260a1b707043",
+        "iso-3166-2-codes": [
+          "US-MA"
+        ]
+      },
+      "begin-area": null,
+      "name": "Rob Tomer",
+      "country": "US",
+      "sort-name": "Tomer, Rob",
+      "isnis": [],
+      "id": "9b9aaa44-76da-4745-8bdb-b5869c9301b3",
+      "type": "Person",
+      "ipis": [],
+      "end-area": null,
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": null
+      }
+    }
+  }
+}

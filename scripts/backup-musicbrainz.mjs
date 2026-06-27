@@ -16,6 +16,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const CACHE_DIR = resolve(ROOT, 'archive/_cache');
 const DRY_RUN = process.argv.includes('--dry-run');
+const SKIP_EXISTING = process.argv.includes('--skip-existing');
 
 const API = 'https://musicbrainz.org/ws/2';
 const DELAY_MS = 1100;
@@ -31,7 +32,9 @@ async function fetchMB(path) {
     const url = path.startsWith('http') ? path : `${API}/${path}`;
     for (let i = 0; i < 4; i++) {
         try {
-            const res = await fetch(url);
+            const res = await fetch(url, {
+                headers: { 'User-Agent': 'magmacrunch-backup/1.0 (https://magmacrunch.com)' }
+            });
             if (res.status === 429 || res.status === 503) {
                 const wait = 2000 * (i + 1);
                 log(`  rate-limited (${res.status}), waiting ${wait}ms…`);
@@ -121,6 +124,10 @@ async function writeCache(type, uuid, data) {
     await writeFile(file, JSON.stringify(data, null, 2));
     const size = (JSON.stringify(data).length / 1024).toFixed(1);
     log(`  cached ${size} KB → ${type}/${uuid}.json`);
+}
+
+function cacheExists(type, uuid) {
+    return existsSync(resolve(CACHE_DIR, type, `${uuid}.json`));
 }
 
 // ─── paginated list fetch ──────────────────────────────────────────
@@ -492,30 +499,35 @@ async function main() {
     console.log();
 
     if (DRY_RUN) console.log('[DRY RUN — no files will be written]\n');
+    if (SKIP_EXISTING) console.log('[SKIP EXISTING — already-cached entities will be skipped]\n');
 
     const start = Date.now();
-    let completed = 0;
+    let completed = 0, skipped = 0;
     const total = ARTISTS.length + PLACES.length + CONTRIBUTORS.length + LABELS.length;
 
     for (const entity of ARTISTS) {
+        if (SKIP_EXISTING && cacheExists('artists', entity.uuid)) { log(`[${completed + 1}/${total}] [artist] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupArtist(entity);
         completed++;
     }
 
     for (const entity of PLACES) {
+        if (SKIP_EXISTING && cacheExists('places', entity.uuid)) { log(`[${completed + 1}/${total}] [place] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupPlace(entity);
         completed++;
     }
 
     for (const entity of CONTRIBUTORS) {
+        if (SKIP_EXISTING && cacheExists('contributors', entity.uuid)) { log(`[${completed + 1}/${total}] [contributor] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupContributor(entity);
         completed++;
     }
 
     for (const entity of LABELS) {
+        if (SKIP_EXISTING && cacheExists('labels', entity.uuid)) { log(`[${completed + 1}/${total}] [label] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupLabel(entity);
         completed++;
@@ -524,7 +536,7 @@ async function main() {
     const elapsed = ((Date.now() - start) / 1000).toFixed(0);
     const min = Math.floor(elapsed / 60);
     const sec = elapsed % 60;
-    console.log(`\nDone! ${total} entities backed up in ${min}m ${sec}s`);
+    console.log(`\nDone! ${completed - skipped} entities backed up, ${skipped} skipped in ${min}m ${sec}s`);
     if (DRY_RUN) console.log('(dry run — no files were written)');
 }
 

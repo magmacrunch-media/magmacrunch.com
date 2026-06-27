@@ -16,7 +16,7 @@ jobs:
           node-version: 20
 
       - name: Run backup script
-        run: node scripts/backup-musicbrainz.mjs
+        run: node scripts/backup-musicbrainz.mjs --skip-existing
 
       - name: Commit and push if changed
         run: |

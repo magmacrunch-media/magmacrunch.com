@@ -1,0 +1,2149 @@
+{
+  "fetchedAt": "2026-06-27T22:28:54.210Z",
+  "entityType": "contributor",
+  "uuid": "d0a8ae01-3443-42da-b258-490300f1249c",
+  "name": "James McCoy",
+  "responses": {
+    "artist-rels": {
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "sort-name": "McCoy, James R.",
+      "gender-id": null,
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+      "disambiguation": "",
+      "end-area": null,
+      "name": "James R. McCoy",
+      "area": {
+        "type": null,
+        "disambiguation": "",
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee",
+        "iso-3166-2-codes": [
+          "US-NH"
+        ],
+        "sort-name": "New Hampshire",
+        "type-id": null,
+        "name": "New Hampshire"
+      },
+      "relations": [
+        {
+          "attribute-credits": {},
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "target-credit": "",
+          "type-id": "ed6a7891-ce70-4e08-9839-1f2f62270497",
+          "ended": true,
+          "begin": "2010",
+          "end": "2010",
+          "artist": {
+            "name": "Juanito Thompson",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Juanito Thompson",
+            "id": "ddcbeb01-edb5-4e74-b5cd-23d1b64d3086",
+            "disambiguation": "",
+            "type": "Group",
+            "country": "US"
+          },
+          "source-credit": "",
+          "type": "instrumental supporting musician",
+          "attribute-values": {}
+        },
+        {
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": [],
+          "source-credit": "",
+          "type": "member of band",
+          "attribute-values": {},
+          "ended": true,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Janet, You're Overreacting",
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Janet, You're Overreacting",
+            "id": "20f00b7f-59a0-4c32-b65e-03602e694726",
+            "disambiguation": ""
+          },
+          "end": "2010",
+          "begin": "2010"
+        },
+        {
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f",
+            "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c",
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-credits": {},
+          "attributes": [
+            "additional",
+            "electric bass guitar",
+            "original"
+          ],
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "member of band",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "ended": false,
+          "begin": "2012",
+          "artist": {
+            "sort-name": "Four B's, The",
+            "disambiguation": "New Hampshire",
+            "id": "bdf6e0d0-6886-4801-b7ce-c9ced5d377a8",
+            "type": "Group",
+            "country": "US",
+            "name": "The Four B's",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "end": null
+        },
+        {
+          "ended": false,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "end": null,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "The Four B's",
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Four B's, The",
+            "disambiguation": "New Hampshire",
+            "id": "bdf6e0d0-6886-4801-b7ce-c9ced5d377a8"
+          },
+          "begin": "2012",
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "member of band",
+          "attributes": [
+            "additional",
+            "piano"
+          ],
+          "attribute-credits": {},
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {
+            "piano": "b3eac5f9-7859-4416-ac39-7154e2e8d348",
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          }
+        },
+        {
+          "attribute-credits": {},
+          "attributes": [
+            "additional",
+            "violin"
+          ],
+          "attribute-ids": {
+            "violin": "089f123c-0f7d-4105-a64e-49de81ca8fa4",
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "ended": false,
+          "begin": "2013",
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Juanito Thompson",
+            "country": "US",
+            "type": "Group",
+            "disambiguation": "",
+            "id": "ddcbeb01-edb5-4e74-b5cd-23d1b64d3086",
+            "sort-name": "Juanito Thompson"
+          },
+          "end": null,
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "member of band"
+        },
+        {
+          "attribute-credits": {},
+          "attributes": [
+            "additional",
+            "melodica"
+          ],
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f",
+            "melodica": "8ab40df2-106b-4b9b-a50c-0798ee95da8f"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "begin": "2013",
+          "artist": {
+            "sort-name": "Juanito Thompson",
+            "id": "ddcbeb01-edb5-4e74-b5cd-23d1b64d3086",
+            "disambiguation": "",
+            "type": "Group",
+            "country": "US",
+            "name": "Juanito Thompson",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "end": null,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "ended": false,
+          "attribute-values": {},
+          "type": "member of band",
+          "source-credit": ""
+        },
+        {
+          "attributes": [
+            "cello"
+          ],
+          "attribute-credits": {},
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {
+            "cello": "0db03a60-1142-4b25-ab1b-72027d0dc357"
+          },
+          "ended": true,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "end": "2019",
+          "artist": {
+            "name": "The Rootin' Tooters",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Rootin' Tooters, The",
+            "id": "8e601fc6-7273-4afa-a332-c47d4f4040e2",
+            "disambiguation": "",
+            "type": "Group",
+            "country": "US"
+          },
+          "begin": "2018",
+          "source-credit": "",
+          "type": "member of band",
+          "attribute-values": {}
+        },
+        {
+          "end": null,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Juanito Thompson",
+            "country": "US",
+            "type": "Group",
+            "disambiguation": "",
+            "id": "ddcbeb01-edb5-4e74-b5cd-23d1b64d3086",
+            "sort-name": "Juanito Thompson"
+          },
+          "begin": "2023",
+          "ended": false,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "type": "member of band",
+          "attribute-values": {},
+          "source-credit": "",
+          "attributes": [
+            "acoustic bass guitar",
+            "additional"
+          ],
+          "attribute-credits": {},
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {
+            "acoustic bass guitar": "15861569-249d-4b24-8ce4-d0b001b1f978",
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          }
+        },
+        {
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f",
+            "piano": "b3eac5f9-7859-4416-ac39-7154e2e8d348"
+          },
+          "attributes": [
+            "additional",
+            "piano"
+          ],
+          "attribute-credits": {},
+          "source-credit": "",
+          "type": "member of band",
+          "attribute-values": {},
+          "ended": false,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "artist": {
+            "name": "Juanito Thompson",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Juanito Thompson",
+            "disambiguation": "",
+            "id": "ddcbeb01-edb5-4e74-b5cd-23d1b64d3086",
+            "type": "Group",
+            "country": "US"
+          },
+          "end": null,
+          "begin": "2023"
+        },
+        {
+          "type": "member of band",
+          "attribute-values": {},
+          "source-credit": "",
+          "begin": null,
+          "end": null,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "The Neighbors",
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Neighbors, The",
+            "id": "06d2f4ca-6de1-489d-93fa-8fcadce0f53f",
+            "disambiguation": "Frogwood"
+          },
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "ended": false,
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915",
+            "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-credits": {},
+          "attributes": [
+            "electric bass guitar",
+            "original"
+          ]
+        },
+        {
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": [],
+          "attribute-values": {},
+          "type": "member of band",
+          "source-credit": "",
+          "end": null,
+          "artist": {
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Rat Bastard",
+            "disambiguation": "New Hampshire",
+            "id": "1d71047b-dfaa-4665-93d3-dbc342fee672",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Rat Bastard"
+          },
+          "begin": null,
+          "ended": false,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": ""
+        },
+        {
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "The Evergreen Drive",
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Evergreen Drive, The",
+            "disambiguation": "",
+            "id": "ce48deb5-2c12-4291-a4e5-392d1d0ceaa7"
+          },
+          "end": null,
+          "begin": null,
+          "ended": false,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "member of band",
+          "source-credit": "",
+          "attributes": [
+            "electric piano",
+            "original"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-ids": {
+            "original": "4fd3b255-a7d7-4424-9a63-40fa543b601c",
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          }
+        },
+        {
+          "end": null,
+          "artist": {
+            "name": "The Green Piano Band",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Green Piano Band, The",
+            "disambiguation": "",
+            "id": "36b1df20-0aa8-41ff-86c0-8ab17d6a9264",
+            "type": "Group",
+            "country": "US"
+          },
+          "begin": null,
+          "ended": false,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "type": "member of band",
+          "attribute-values": {},
+          "source-credit": "",
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          }
+        },
+        {
+          "attributes": [],
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "artist",
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "ended": false,
+          "begin": null,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "The Wild Mary Janes",
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Wild Mary Janes, The",
+            "id": "3e22e375-0d3e-4552-94cd-404835dc2f58",
+            "disambiguation": ""
+          },
+          "end": null,
+          "source-credit": "",
+          "type": "member of band",
+          "attribute-values": {}
+        }
+      ],
+      "isnis": [
+        "0000000529403054"
+      ],
+      "country": "US",
+      "begin-area": null,
+      "ipis": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "type": "Person",
+      "gender": null
+    },
+    "recording-rels": {
+      "gender": null,
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "ipis": [],
+      "begin-area": null,
+      "country": "US",
+      "isnis": [
+        "0000000529403054"
+      ],
+      "relations": [
+        {
+          "end": "2010-01-15",
+          "begin": "2010-01-15",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "type": "instrument",
+          "recording": {
+            "title": "Neopolitan Mood",
+            "id": "f0ba9ab3-fa44-4a4a-9a2b-d35313fb234d",
+            "disambiguation": "",
+            "length": 196000,
+            "video": false
+          },
+          "attribute-values": {},
+          "source-credit": "",
+          "attributes": [
+            "electric piano"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          }
+        },
+        {
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "end": "2012-01",
+          "begin": "2012-01",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "recording": {
+            "length": 378000,
+            "video": false,
+            "title": "The Four B's",
+            "disambiguation": "",
+            "id": "29f47ccb-e33d-4c26-ae01-9e959cc59a63"
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": ""
+        },
+        {
+          "recording": {
+            "disambiguation": "",
+            "id": "09f9da69-4e42-4c12-8b21-ebea924e0ab8",
+            "title": "Little Piece No. 1",
+            "length": 71000,
+            "video": true
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": "",
+          "end": "2012-05-09",
+          "begin": "2012-05-09",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "double bass": "7bd32b95-416f-4244-a98b-1311ec69c7db"
+          },
+          "attributes": [
+            "double bass"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "end": "2012-05-09",
+          "begin": "2012-05-09",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "type": "instrument",
+          "recording": {
+            "length": 71000,
+            "video": false,
+            "title": "Little Piece No. 1",
+            "id": "2f658a1a-6f32-49a4-8a92-10462362e6c7",
+            "disambiguation": ""
+          },
+          "attribute-values": {},
+          "source-credit": "",
+          "attributes": [
+            "double bass"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "double bass": "7bd32b95-416f-4244-a98b-1311ec69c7db"
+          }
+        },
+        {
+          "attribute-values": {},
+          "recording": {
+            "title": "Enter Stage Left Bowser",
+            "id": "c21dc15e-b110-479f-860a-80906fa67c75",
+            "disambiguation": "",
+            "length": 352000,
+            "video": false
+          },
+          "type": "instrument",
+          "source-credit": "",
+          "end": "2013-01",
+          "begin": "2013-01",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "piano": "b3eac5f9-7859-4416-ac39-7154e2e8d348",
+            "solo": "63daa0d3-9b63-4434-acff-4977c07808ca"
+          },
+          "attributes": [
+            "piano",
+            "solo"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "attribute-ids": {
+            "electric bass guitar": "0b9d87fa-93fa-4956-8b6a-a419566cc915"
+          },
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-credits": {
+            "electric bass guitar": "6-string bass"
+          },
+          "attributes": [
+            "electric bass guitar"
+          ],
+          "source-credit": "JRM",
+          "recording": {
+            "id": "5cb00443-fa75-461f-86d9-ee0e814d2dc2",
+            "disambiguation": "",
+            "title": "Panic. (Don't Panic). Panic.",
+            "length": 490000,
+            "video": false
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "ended": true,
+          "begin": "2023-06-25",
+          "end": "2023-06-25"
+        },
+        {
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "solo": "63daa0d3-9b63-4434-acff-4977c07808ca",
+            "piano": "b3eac5f9-7859-4416-ac39-7154e2e8d348"
+          },
+          "attributes": [
+            "piano",
+            "solo"
+          ],
+          "attribute-credits": {},
+          "source-credit": "",
+          "attribute-values": {},
+          "recording": {
+            "disambiguation": "",
+            "id": "c96e0f9e-3f57-4e57-ad87-e3678211e850",
+            "title": "Ancient Weeds",
+            "video": false,
+            "length": 146000
+          },
+          "type": "instrument",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "end": "2023-07-08",
+          "begin": "2023-07-08"
+        },
+        {
+          "attributes": [
+            "piano",
+            "solo"
+          ],
+          "attribute-credits": {},
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "piano": "b3eac5f9-7859-4416-ac39-7154e2e8d348",
+            "solo": "63daa0d3-9b63-4434-acff-4977c07808ca"
+          },
+          "end": "2023-07-08",
+          "begin": "2023-07-08",
+          "ended": true,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "recording": {
+            "video": false,
+            "length": 51000,
+            "disambiguation": "",
+            "id": "4b5f05a4-af13-4f1a-a578-c8692b6a2875",
+            "title": "Gravitational Voltage"
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": ""
+        },
+        {
+          "type": "instrument",
+          "attribute-values": {},
+          "recording": {
+            "video": false,
+            "length": 252000,
+            "title": "Exploding Brain Syndrome",
+            "disambiguation": "",
+            "id": "00b3dfe5-9e3d-4200-8952-167064d87261"
+          },
+          "source-credit": "James McCoy",
+          "begin": null,
+          "end": null,
+          "target-credit": "",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "ended": false,
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          },
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-credits": {
+            "electric piano": "piano"
+          },
+          "attributes": [
+            "electric piano"
+          ]
+        },
+        {
+          "source-credit": "James McCoy",
+          "recording": {
+            "title": "Leaving",
+            "id": "b42e7d83-613e-4ef0-af01-0f745dd113a1",
+            "disambiguation": "",
+            "video": false,
+            "length": 266000
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "ended": false,
+          "begin": null,
+          "end": null,
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          },
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-credits": {
+            "electric piano": "piano"
+          },
+          "attributes": [
+            "electric piano"
+          ]
+        },
+        {
+          "ended": false,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "end": null,
+          "begin": null,
+          "source-credit": "James McCoy",
+          "recording": {
+            "video": false,
+            "length": 233000,
+            "disambiguation": "",
+            "id": "c030f9c2-cc80-47b3-b4e6-5a137b218b9e",
+            "title": "Plans"
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "attributes": [
+            "electric piano"
+          ],
+          "attribute-credits": {
+            "electric piano": "piano"
+          },
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          }
+        },
+        {
+          "recording": {
+            "disambiguation": "",
+            "id": "74861746-d40d-4dee-b496-d362e810bc5e",
+            "title": "The Grass Is Greener",
+            "video": false,
+            "length": 209000
+          },
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": "James McCoy",
+          "end": null,
+          "begin": null,
+          "ended": false,
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "target-credit": "",
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          },
+          "attributes": [
+            "electric piano"
+          ],
+          "attribute-credits": {
+            "electric piano": "piano"
+          }
+        },
+        {
+          "source-credit": "",
+          "type": "phonographic copyright",
+          "recording": {
+            "title": "Neopolitan Mood",
+            "disambiguation": "",
+            "id": "f0ba9ab3-fa44-4a4a-9a2b-d35313fb234d",
+            "video": false,
+            "length": 196000
+          },
+          "attribute-values": {},
+          "target-credit": "",
+          "type-id": "7fd5fbc0-fbf4-4d04-be23-417d50a4dc30",
+          "ended": true,
+          "begin": "2010",
+          "end": "2010",
+          "attribute-ids": {},
+          "target-type": "recording",
+          "direction": "forward",
+          "attributes": []
+        },
+        {
+          "source-credit": "",
+          "attribute-values": {},
+          "recording": {
+            "video": true,
+            "length": 71000,
+            "disambiguation": "",
+            "id": "09f9da69-4e42-4c12-8b21-ebea924e0ab8",
+            "title": "Little Piece No. 1"
+          },
+          "type": "phonographic copyright",
+          "ended": true,
+          "type-id": "7fd5fbc0-fbf4-4d04-be23-417d50a4dc30",
+          "target-credit": "",
+          "end": "2012",
+          "begin": "2012",
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": []
+        },
+        {
+          "attributes": [],
+          "direction": "forward",
+          "target-type": "recording",
+          "attribute-ids": {},
+          "end": "2012-05-12",
+          "begin": "2012-05-12",
+          "ended": true,
+          "type-id": "601fc03e-1058-4ee6-a546-b914d55aa6ba",
+          "target-credit": "",
+          "attribute-values": {},
+          "recording": {
+            "video": true,
+            "length": 71000,
+            "disambiguation": "",
+            "id": "09f9da69-4e42-4c12-8b21-ebea924e0ab8",
+            "title": "Little Piece No. 1"
+          },
+          "type": "video appearance",
+          "source-credit": ""
+        },
+        {
+          "begin": "2012",
+          "end": "2012",
+          "type-id": "601fc03e-1058-4ee6-a546-b914d55aa6ba",
+          "target-credit": "",
+          "ended": true,
+          "recording": {
+            "disambiguation": "",
+            "id": "5ec3fe38-6fcb-413c-bf4a-eaca08aa5009",
+            "title": "Driving",
+            "video": true,
+            "length": 245000
+          },
+          "attribute-values": {},
+          "type": "video appearance",
+          "source-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "recording"
+        },
+        {
+          "begin": "2024-08-23",
+          "end": "2024-08-23",
+          "type-id": "601fc03e-1058-4ee6-a546-b914d55aa6ba",
+          "target-credit": "",
+          "ended": true,
+          "recording": {
+            "video": true,
+            "length": 386000,
+            "title": "Summer Day",
+            "disambiguation": "",
+            "id": "43ddc7fb-5200-4e52-820a-e7a4f8485e12"
+          },
+          "attribute-values": {},
+          "type": "video appearance",
+          "source-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "recording"
+        }
+      ],
+      "area": {
+        "name": "New Hampshire",
+        "type-id": null,
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee",
+        "disambiguation": "",
+        "sort-name": "New Hampshire",
+        "iso-3166-2-codes": [
+          "US-NH"
+        ],
+        "type": null
+      },
+      "name": "James R. McCoy",
+      "end-area": null,
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+      "disambiguation": "",
+      "sort-name": "McCoy, James R.",
+      "gender-id": null,
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": null
+      }
+    },
+    "work-rels": {
+      "area": {
+        "name": "New Hampshire",
+        "type": null,
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee",
+        "type-id": null,
+        "sort-name": "New Hampshire",
+        "disambiguation": "",
+        "iso-3166-2-codes": [
+          "US-NH"
+        ]
+      },
+      "relations": [
+        {
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "6d0edea7-e228-4e7c-8473-b281e411a579",
+            "type": "Song",
+            "language": null,
+            "attributes": [],
+            "title": "The True Class of Darius Hodgekins",
+            "iswcs": [],
+            "disambiguation": ""
+          },
+          "direction": "forward",
+          "begin": "2009-12",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attributes": [
+            "additional"
+          ],
+          "attribute-values": {},
+          "ended": true,
+          "end": "2010-01"
+        },
+        {
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2010-01",
+          "attribute-values": {},
+          "ended": true,
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2010-01",
+          "direction": "forward",
+          "work": {
+            "language": null,
+            "disambiguation": "",
+            "title": "Neopolitan Mood",
+            "attributes": [],
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "id": "a1a043e7-92e1-488d-8a89-6d8224aacc0b",
+            "type": "Song"
+          }
+        },
+        {
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "attribute-values": {},
+          "ended": true,
+          "end": "2012-01",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2012-01",
+          "work": {
+            "id": "3cc30b5f-975f-4ea3-a136-0fb89a4b82e2",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "title": "The Four B's",
+            "attributes": [],
+            "iswcs": [],
+            "language": null
+          }
+        },
+        {
+          "begin": "2012",
+          "direction": "forward",
+          "work": {
+            "type": "Song",
+            "id": "7c983e81-9faf-4df1-9258-e409d3c2f42b",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [],
+            "title": "Phaedrus' Knife",
+            "attributes": [],
+            "disambiguation": "",
+            "language": null
+          },
+          "end": "2012",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": ""
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "ended": true,
+          "attribute-values": {},
+          "end": "2012",
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "ad9e394c-7994-478e-86d2-51f6497e23c8",
+            "type": "Song",
+            "language": null,
+            "attributes": [],
+            "title": "Well I studied astrophysics at Oxford last semester and received Four A's",
+            "iswcs": [],
+            "disambiguation": ""
+          },
+          "direction": "forward",
+          "begin": "2012"
+        },
+        {
+          "direction": "forward",
+          "begin": "2012",
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "type": "Song",
+            "id": "587219e6-0821-4b15-9896-c3ba603ac1fe",
+            "language": null,
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Yeah, my dad always talked about the Three B's",
+            "attributes": []
+          },
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "attribute-values": {},
+          "ended": true,
+          "end": "2012",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "direction": "forward",
+          "begin": "2012",
+          "work": {
+            "type": "Song",
+            "id": "04955801-ca8c-441f-a003-b1a8798de86d",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [],
+            "attributes": [],
+            "title": "91919",
+            "disambiguation": "",
+            "language": null
+          },
+          "attribute-values": {},
+          "ended": true,
+          "end": "2013",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "end": "2013-01",
+          "ended": true,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "work": {
+            "iswcs": [],
+            "title": "Enter Stage Left Bowser",
+            "attributes": [],
+            "disambiguation": "",
+            "language": null,
+            "type": "Song",
+            "id": "daf5e084-de37-43b4-afba-ff481865b3c6",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "begin": "2013-01",
+          "direction": "forward"
+        },
+        {
+          "direction": "forward",
+          "begin": "2013-03",
+          "work": {
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "The Extensive Conservation Following Hi Jeff, how were you",
+            "attributes": [],
+            "language": null,
+            "type": "Song",
+            "id": "b0a607d2-d8f1-4216-a699-84388f7e2711",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          },
+          "attribute-values": {},
+          "ended": true,
+          "end": "2013-03",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work"
+        },
+        {
+          "attribute-values": {},
+          "ended": true,
+          "end": "2013-07",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "direction": "forward",
+          "begin": "2013-07",
+          "work": {
+            "type": "Song",
+            "id": "b02108b5-511d-4867-a1ee-c0f99a89a188",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Drinking Beer",
+            "attributes": [],
+            "language": null
+          }
+        },
+        {
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attributes": [
+            "additional"
+          ],
+          "target-credit": "",
+          "end": "2013-07",
+          "ended": true,
+          "attribute-values": {},
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2013-07",
+          "direction": "forward",
+          "work": {
+            "language": null,
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "Earth as a Place of Human Occupation",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "type": "Song",
+            "id": "75f03627-db4c-407b-9b18-5623f94f4d68"
+          }
+        },
+        {
+          "direction": "forward",
+          "begin": "2013-07",
+          "work": {
+            "title": "I want Deadwood dead",
+            "attributes": [],
+            "iswcs": [],
+            "disambiguation": "",
+            "language": null,
+            "id": "ff992027-a2e5-4ce2-b349-3b1fd8f74650",
+            "type": "Song",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "attribute-values": {},
+          "ended": true,
+          "end": "2013-07",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2014",
+          "attribute-values": {},
+          "ended": true,
+          "work": {
+            "language": null,
+            "iswcs": [],
+            "title": "Heavy Water",
+            "attributes": [],
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "e84c8a4a-71be-41f3-bb22-5a7de3a3b3c2"
+          },
+          "begin": "2014",
+          "direction": "forward"
+        },
+        {
+          "work": {
+            "language": null,
+            "disambiguation": "",
+            "attributes": [],
+            "title": "Panic. (Don't Panic). Panic.",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "id": "2d1cc958-cb0c-44e5-8ad0-ad6d36ad2db1",
+            "type": "Song"
+          },
+          "direction": "forward",
+          "begin": "2023-06-25",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "JRM",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2023-06-25"
+        },
+        {
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2023-07-08",
+          "ended": true,
+          "attribute-values": {},
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2023-07-08",
+          "direction": "forward",
+          "work": {
+            "title": "Ancient Weeds",
+            "attributes": [],
+            "iswcs": [],
+            "disambiguation": "",
+            "language": null,
+            "id": "0e31060f-c36a-40d8-a08c-ba168b57047a",
+            "type": "Song",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          }
+        },
+        {
+          "begin": "2023-07-08",
+          "direction": "forward",
+          "work": {
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "Gravitational Voltage",
+            "language": null,
+            "type": "Song",
+            "id": "736545e9-81b4-4556-a45f-856c3757002d",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          },
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2023-07-08",
+          "attribute-values": {},
+          "ended": true,
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2023-07",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2023-07",
+          "work": {
+            "disambiguation": "",
+            "attributes": [],
+            "title": "Beach Ave.",
+            "iswcs": [],
+            "language": null,
+            "id": "f9f2f2c6-a986-4053-93a2-26cef3cdbeae",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          }
+        },
+        {
+          "begin": "2023-07",
+          "direction": "forward",
+          "work": {
+            "iswcs": [],
+            "title": "Daffodil & Sweet Pea",
+            "attributes": [],
+            "disambiguation": "",
+            "language": null,
+            "type": "Song",
+            "id": "79316f49-5431-435e-9f03-0e5d46b76b0f",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2023-07",
+          "ended": true,
+          "attribute-values": {},
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "end": "2023-07",
+          "attribute-values": {},
+          "ended": true,
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "begin": "2023-07",
+          "direction": "forward",
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "2b5ad671-2ccd-497f-9948-4d1451b9545a",
+            "language": null,
+            "iswcs": [],
+            "title": "Packed Bags",
+            "attributes": [],
+            "disambiguation": ""
+          }
+        },
+        {
+          "direction": "forward",
+          "begin": "2023-07",
+          "work": {
+            "language": null,
+            "disambiguation": "",
+            "attributes": [],
+            "title": "Sitting on a Dock in New Shoreham",
+            "iswcs": [],
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "languages": [],
+            "id": "b49379c5-5638-4430-9072-c626647ffe8e",
+            "type": "Song-cycle"
+          },
+          "ended": true,
+          "attribute-values": {},
+          "end": "2023-07",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer"
+        },
+        {
+          "type": "misc",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "7d166271-99c7-3a13-ae96-d2aab758029d",
+          "target-credit": "",
+          "attribute-ids": {
+            "task": "39867b3b-0f1e-40d5-b602-4f3936b7f486"
+          },
+          "attributes": [
+            "task"
+          ],
+          "ended": false,
+          "attribute-values": {
+            "task": "song name"
+          },
+          "end": null,
+          "work": {
+            "id": "cf948def-c392-4bd5-9fa6-4844fd4827f3",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "title": "Bender Bending Rodriguez ascends to heaven",
+            "attributes": [],
+            "iswcs": [],
+            "language": null
+          },
+          "direction": "forward",
+          "begin": null
+        },
+        {
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "daf5e084-de37-43b4-afba-ff481865b3c6",
+            "type": "Song",
+            "language": null,
+            "title": "Enter Stage Left Bowser",
+            "attributes": [],
+            "iswcs": [],
+            "disambiguation": ""
+          },
+          "begin": "2013-01",
+          "direction": "forward",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "publishing",
+          "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2013-01",
+          "attribute-values": {},
+          "ended": true
+        }
+      ],
+      "gender": null,
+      "ipis": [],
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "country": "US",
+      "begin-area": null,
+      "end-area": null,
+      "disambiguation": "",
+      "sort-name": "McCoy, James R.",
+      "gender-id": null,
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      },
+      "isnis": [
+        "0000000529403054"
+      ],
+      "name": "James R. McCoy",
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c"
+    },
+    "release-rels": {
+      "country": "US",
+      "isnis": [
+        "0000000529403054"
+      ],
+      "relations": [
+        {
+          "source-credit": "",
+          "type": "copyright",
+          "attribute-values": {},
+          "target-credit": "",
+          "type-id": "730b5251-7432-4896-8fc6-e1cba943bfe1",
+          "ended": true,
+          "begin": "2023",
+          "end": "2023",
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "release",
+          "release": {
+            "title": "Little Piece No. 1",
+            "release-events": [
+              {
+                "area": {
+                  "type-id": null,
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "disambiguation": "",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]"
+                },
+                "date": "2023-03-05"
+              }
+            ],
+            "id": "8212741c-18aa-4405-9a75-bb7ce6dc6f09",
+            "disambiguation": "music video",
+            "date": "2023-03-05",
+            "status": null,
+            "barcode": "",
+            "packaging": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "country": "XW",
+            "status-id": null,
+            "packaging-id": null,
+            "quality": "normal"
+          },
+          "attributes": []
+        },
+        {
+          "attribute-ids": {},
+          "target-type": "release",
+          "direction": "forward",
+          "release": {
+            "title": "Ancient Weeds",
+            "disambiguation": "",
+            "id": "642f7920-248d-4d3a-9d24-dc0437ec9abb",
+            "release-events": [
+              {
+                "date": "2023-08-18",
+                "area": {
+                  "type-id": null,
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+                }
+              }
+            ],
+            "date": "2023-08-18",
+            "status": null,
+            "barcode": "055855810724",
+            "packaging": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "country": "XW",
+            "status-id": null,
+            "packaging-id": null,
+            "quality": "normal"
+          },
+          "attributes": [],
+          "attribute-values": {},
+          "type": "instrument",
+          "source-credit": "",
+          "begin": "2023-07-08",
+          "end": "2023-07-08",
+          "type-id": "67555849-61e5-455b-96e3-29733f0115f5",
+          "target-credit": "",
+          "ended": true
+        },
+        {
+          "attributes": [
+            "electric piano"
+          ],
+          "attribute-credits": {
+            "electric piano": "piano"
+          },
+          "release": {
+            "date": "2016-11-18",
+            "id": "f4d7a604-bf30-4bfe-b6c4-4cb4c03452c5",
+            "disambiguation": "",
+            "release-events": [
+              {
+                "date": "2016-11-18",
+                "area": {
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]",
+                  "type": null,
+                  "name": "[Worldwide]",
+                  "type-id": null
+                }
+              }
+            ],
+            "title": "More Than This",
+            "status": null,
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "packaging": null,
+            "barcode": null,
+            "quality": "normal",
+            "packaging-id": null,
+            "country": "XW",
+            "status-id": null
+          },
+          "direction": "forward",
+          "target-type": "release",
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          },
+          "ended": false,
+          "target-credit": "",
+          "type-id": "67555849-61e5-455b-96e3-29733f0115f5",
+          "end": null,
+          "begin": null,
+          "source-credit": "James McCoy",
+          "type": "instrument",
+          "attribute-values": {}
+        },
+        {
+          "type-id": "67555849-61e5-455b-96e3-29733f0115f5",
+          "target-credit": "",
+          "ended": false,
+          "begin": null,
+          "end": null,
+          "source-credit": "James McCoy",
+          "attribute-values": {},
+          "type": "instrument",
+          "attribute-credits": {
+            "electric piano": "piano"
+          },
+          "release": {
+            "barcode": null,
+            "packaging": null,
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "status-id": null,
+            "country": "XW",
+            "packaging-id": null,
+            "quality": "normal",
+            "title": "Plans",
+            "disambiguation": "",
+            "id": "51f320cd-fec0-4978-bdce-3cf2002a0f4e",
+            "release-events": [
+              {
+                "date": "2015-09-15",
+                "area": {
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "disambiguation": "",
+                  "type": null,
+                  "name": "[Worldwide]",
+                  "type-id": null
+                }
+              }
+            ],
+            "date": "2015-09-15",
+            "status": null
+          },
+          "attributes": [
+            "electric piano"
+          ],
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          },
+          "direction": "forward",
+          "target-type": "release"
+        },
+        {
+          "attribute-ids": {
+            "electric piano": "75b8297f-d9fe-455d-85cf-d62843f14da5"
+          },
+          "direction": "forward",
+          "target-type": "release",
+          "attribute-credits": {
+            "electric piano": "piano"
+          },
+          "release": {
+            "date": "2018-06-23",
+            "id": "80667321-1b65-441a-ba6f-b02df961a822",
+            "release-events": [
+              {
+                "date": "2018-06-23",
+                "area": {
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "type": null,
+                  "name": "[Worldwide]",
+                  "type-id": null
+                }
+              }
+            ],
+            "disambiguation": "",
+            "title": "The Evergreen Drive",
+            "status": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "packaging": null,
+            "barcode": null,
+            "quality": "normal",
+            "packaging-id": null,
+            "status-id": null,
+            "country": "XW"
+          },
+          "attributes": [
+            "electric piano"
+          ],
+          "source-credit": "James McCoy",
+          "attribute-values": {},
+          "type": "instrument",
+          "type-id": "67555849-61e5-455b-96e3-29733f0115f5",
+          "target-credit": "",
+          "ended": false,
+          "begin": null,
+          "end": null
+        },
+        {
+          "ended": true,
+          "target-credit": "",
+          "type-id": "01d3488d-8d2a-4cff-9226-5250404db4dc",
+          "end": "2010",
+          "begin": "2010",
+          "source-credit": "",
+          "type": "phonographic copyright",
+          "attribute-values": {},
+          "attributes": [],
+          "release": {
+            "packaging-id": null,
+            "status-id": null,
+            "country": "XW",
+            "quality": "normal",
+            "barcode": "",
+            "text-representation": {
+              "script": null,
+              "language": null
+            },
+            "packaging": null,
+            "status": null,
+            "id": "d045ebe5-9b60-469b-9aa1-32b9545193f2",
+            "disambiguation": "2023 reissue",
+            "release-events": [
+              {
+                "area": {
+                  "name": "[Worldwide]",
+                  "type-id": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]",
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "type": null
+                },
+                "date": "2023-07-25"
+              }
+            ],
+            "title": "Neopolitan Mood",
+            "date": "2023-07-25"
+          },
+          "direction": "forward",
+          "target-type": "release",
+          "attribute-ids": {}
+        },
+        {
+          "attributes": [],
+          "release": {
+            "barcode": "",
+            "packaging": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "country": "XW",
+            "status-id": null,
+            "packaging-id": null,
+            "quality": "normal",
+            "title": "Little Piece No. 1",
+            "id": "8212741c-18aa-4405-9a75-bb7ce6dc6f09",
+            "release-events": [
+              {
+                "date": "2023-03-05",
+                "area": {
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "type": null,
+                  "name": "[Worldwide]",
+                  "type-id": null
+                }
+              }
+            ],
+            "disambiguation": "music video",
+            "date": "2023-03-05",
+            "status": null
+          },
+          "direction": "forward",
+          "target-type": "release",
+          "attribute-ids": {},
+          "ended": true,
+          "target-credit": "",
+          "type-id": "01d3488d-8d2a-4cff-9226-5250404db4dc",
+          "end": "2023",
+          "begin": "2023",
+          "source-credit": "",
+          "type": "phonographic copyright",
+          "attribute-values": {}
+        },
+        {
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "release",
+          "release": {
+            "date": "2023-08-08",
+            "id": "59bdfdb8-099e-4019-af9f-0dcf51b7c085",
+            "release-events": [
+              {
+                "date": "2023-08-08",
+                "area": {
+                  "type-id": null,
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ]
+                }
+              }
+            ],
+            "disambiguation": "original release",
+            "title": "Panic. (Don't Panic). Panic.",
+            "status": null,
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "packaging": null,
+            "barcode": "",
+            "quality": "normal",
+            "packaging-id": null,
+            "country": "XW",
+            "status-id": null
+          },
+          "attributes": [],
+          "source-credit": "",
+          "type": "producer",
+          "attribute-values": {},
+          "target-credit": "",
+          "type-id": "8bf377ba-8d71-4ecc-97f2-7bb2d8a2a75f",
+          "ended": true,
+          "begin": "2023-06-25",
+          "end": "2023-06-25"
+        },
+        {
+          "type-id": "8bf377ba-8d71-4ecc-97f2-7bb2d8a2a75f",
+          "target-credit": "",
+          "ended": true,
+          "begin": "2023-07-08",
+          "end": "2023-07-08",
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "producer",
+          "release": {
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "packaging": null,
+            "barcode": "055855810724",
+            "quality": "normal",
+            "packaging-id": null,
+            "country": "XW",
+            "status-id": null,
+            "date": "2023-08-18",
+            "id": "642f7920-248d-4d3a-9d24-dc0437ec9abb",
+            "disambiguation": "",
+            "release-events": [
+              {
+                "area": {
+                  "type-id": null,
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+                },
+                "date": "2023-08-18"
+              }
+            ],
+            "title": "Ancient Weeds",
+            "status": null
+          },
+          "attributes": [],
+          "attribute-ids": {},
+          "target-type": "release",
+          "direction": "forward"
+        }
+      ],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "begin-area": null,
+      "ipis": [],
+      "type": "Person",
+      "gender": null,
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": null
+      },
+      "sort-name": "McCoy, James R.",
+      "gender-id": null,
+      "disambiguation": "",
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+      "end-area": null,
+      "name": "James R. McCoy",
+      "area": {
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee",
+        "disambiguation": "",
+        "iso-3166-2-codes": [
+          "US-NH"
+        ],
+        "sort-name": "New Hampshire",
+        "type": null,
+        "name": "New Hampshire",
+        "type-id": null
+      }
+    },
+    "label-rels": {
+      "disambiguation": "",
+      "ipis": [],
+      "isnis": [
+        "0000000529403054"
+      ],
+      "relations": [],
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+      "life-span": {
+        "begin": null,
+        "ended": false,
+        "end": null
+      },
+      "gender-id": null,
+      "sort-name": "McCoy, James R.",
+      "begin-area": null,
+      "country": "US",
+      "type": "Person",
+      "name": "James R. McCoy",
+      "gender": null,
+      "end-area": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "sort-name": "New Hampshire",
+        "type-id": null,
+        "iso-3166-2-codes": [
+          "US-NH"
+        ],
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee",
+        "name": "New Hampshire",
+        "type": null,
+        "disambiguation": ""
+      }
+    },
+    "place-rels": {
+      "sort-name": "McCoy, James R.",
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      },
+      "gender-id": null,
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+      "isnis": [
+        "0000000529403054"
+      ],
+      "relations": [
+        {
+          "type": "artist-in-residence",
+          "attribute-values": {},
+          "place": {
+            "area": {
+              "disambiguation": "",
+              "name": "Rockingham County",
+              "type": "County",
+              "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa",
+              "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+              "sort-name": "Rockingham County"
+            },
+            "type-id": null,
+            "coordinates": null,
+            "address": "",
+            "id": "362e9df6-ce39-4805-841e-c113e4e2a7c9",
+            "name": "Frogwood Manor",
+            "type": null,
+            "disambiguation": ""
+          },
+          "target-credit": "",
+          "begin": null,
+          "type-id": "9e338897-2b63-40a8-b7c1-fca0dbbaa3cd",
+          "end": null,
+          "attributes": [],
+          "target-type": "place",
+          "ended": false,
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward"
+        },
+        {
+          "type-id": "54fcf574-eb3a-40da-839f-986d46997b97",
+          "type": "founder",
+          "attribute-values": {},
+          "target-credit": "",
+          "place": {
+            "disambiguation": "",
+            "name": "Frogwood Manor",
+            "type": null,
+            "id": "362e9df6-ce39-4805-841e-c113e4e2a7c9",
+            "address": "",
+            "coordinates": null,
+            "type-id": null,
+            "area": {
+              "disambiguation": "",
+              "type": "County",
+              "name": "Rockingham County",
+              "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa",
+              "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+              "sort-name": "Rockingham County"
+            }
+          },
+          "begin": null,
+          "ended": false,
+          "target-type": "place",
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "end": null,
+          "attributes": []
+        }
+      ],
+      "ipis": [],
+      "disambiguation": "",
+      "area": {
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee",
+        "name": "New Hampshire",
+        "type": null,
+        "disambiguation": "",
+        "sort-name": "New Hampshire",
+        "type-id": null,
+        "iso-3166-2-codes": [
+          "US-NH"
+        ]
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "end-area": null,
+      "gender": null,
+      "name": "James R. McCoy",
+      "type": "Person",
+      "begin-area": null,
+      "country": "US"
+    },
+    "event-rels": {
+      "begin-area": null,
+      "country": "US",
+      "type": "Person",
+      "name": "James R. McCoy",
+      "gender": null,
+      "end-area": null,
+      "area": {
+        "iso-3166-2-codes": [
+          "US-NH"
+        ],
+        "sort-name": "New Hampshire",
+        "type-id": null,
+        "type": null,
+        "name": "New Hampshire",
+        "disambiguation": "",
+        "id": "4ca644d9-18a6-4605-9d71-3eae8b3ab2ee"
+      },
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "disambiguation": "",
+      "ipis": [],
+      "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+      "isnis": [
+        "0000000529403054"
+      ],
+      "relations": [],
+      "gender-id": null,
+      "life-span": {
+        "begin": null,
+        "ended": false,
+        "end": null
+      },
+      "sort-name": "McCoy, James R."
+    }
+  }
+}

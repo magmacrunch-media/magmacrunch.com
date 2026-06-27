@@ -1,0 +1,2647 @@
+{
+  "fetchedAt": "2026-06-27T22:29:17.455Z",
+  "entityType": "contributor",
+  "uuid": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+  "name": "Stephen McMillan",
+  "responses": {
+    "artist-rels": {
+      "gender-id": null,
+      "sort-name": "McMillan, Stephen",
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+      "disambiguation": "",
+      "end-area": null,
+      "area": {
+        "name": "Spain",
+        "type-id": null,
+        "disambiguation": "",
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4",
+        "iso-3166-1-codes": [
+          "ES"
+        ],
+        "sort-name": "Spain",
+        "type": null
+      },
+      "name": "Stephen McMillan",
+      "life-span": {
+        "ended": false,
+        "begin": null,
+        "end": null
+      },
+      "type": "Person",
+      "gender": null,
+      "isnis": [],
+      "country": "ES",
+      "relations": [
+        {
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "target-credit": "",
+          "ended": false,
+          "begin": null,
+          "end": null,
+          "artist": {
+            "name": "Audio Sound Paper",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Audio Sound Paper",
+            "disambiguation": "",
+            "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+            "type": "Group",
+            "country": "US"
+          },
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "founder",
+          "attributes": [],
+          "attribute-ids": {},
+          "target-type": "artist",
+          "direction": "forward"
+        },
+        {
+          "attributes": [],
+          "attribute-ids": {},
+          "target-type": "artist",
+          "direction": "forward",
+          "target-credit": "",
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "ended": false,
+          "begin": null,
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Texas Hold'Em Lava Dome",
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Texas Hold'Em Lava Dome",
+            "id": "4d945923-9deb-4cd0-a477-6e1474cb306c",
+            "disambiguation": ""
+          },
+          "end": null,
+          "source-credit": "",
+          "type": "founder",
+          "attribute-values": {}
+        },
+        {
+          "source-credit": "",
+          "type": "founder",
+          "attribute-values": {},
+          "target-credit": "",
+          "type-id": "6ed4bfc4-0a0d-44c0-b025-b7fc4d900b67",
+          "ended": false,
+          "begin": null,
+          "artist": {
+            "name": "Tornado Massacre",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Tornado Massacre",
+            "disambiguation": "",
+            "id": "e1e53b08-af12-4d5a-8508-c620d5279ba3",
+            "type": "Group",
+            "country": "US"
+          },
+          "end": null,
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "artist",
+          "attributes": []
+        },
+        {
+          "attribute-values": {},
+          "type": "member of band",
+          "source-credit": "",
+          "artist": {
+            "id": "e1e53b08-af12-4d5a-8508-c620d5279ba3",
+            "disambiguation": "",
+            "sort-name": "Tornado Massacre",
+            "country": "US",
+            "type": "Group",
+            "name": "Tornado Massacre",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "end": "2016-07",
+          "begin": "2015-11",
+          "ended": true,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "type": "member of band",
+          "attribute-values": {},
+          "source-credit": "",
+          "begin": "2015-11",
+          "end": "2016-07",
+          "artist": {
+            "country": "US",
+            "type": "Group",
+            "id": "e1e53b08-af12-4d5a-8508-c620d5279ba3",
+            "disambiguation": "",
+            "sort-name": "Tornado Massacre",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Tornado Massacre"
+          },
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "ended": true,
+          "attribute-ids": {
+            "electronic instruments": "a51219e5-fc36-4427-93a9-743e616c6f0c"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-credits": {},
+          "attributes": [
+            "electronic instruments"
+          ]
+        },
+        {
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "type": "member of band",
+          "attribute-values": {},
+          "source-credit": "",
+          "end": "2016",
+          "artist": {
+            "name": "Texas Hold'Em Lava Dome",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "sort-name": "Texas Hold'Em Lava Dome",
+            "disambiguation": "",
+            "id": "4d945923-9deb-4cd0-a477-6e1474cb306c",
+            "type": "Group",
+            "country": "US"
+          },
+          "begin": "2015",
+          "ended": true,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821"
+        },
+        {
+          "attribute-ids": {
+            "keyboard": "95b0c3d2-9606-4ef5-a019-9b7437f3adda"
+          },
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-credits": {},
+          "attributes": [
+            "keyboard"
+          ],
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "member of band",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "ended": true,
+          "begin": "2015",
+          "artist": {
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Texas Hold'Em Lava Dome",
+            "country": "US",
+            "type": "Group",
+            "id": "4d945923-9deb-4cd0-a477-6e1474cb306c",
+            "disambiguation": "",
+            "sort-name": "Texas Hold'Em Lava Dome"
+          },
+          "end": "2016"
+        },
+        {
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "member of band",
+          "ended": true,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "end": "2016",
+          "artist": {
+            "sort-name": "Audio Sound Paper",
+            "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+            "disambiguation": "",
+            "type": "Group",
+            "country": "US",
+            "name": "Audio Sound Paper",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+          },
+          "begin": "2015",
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {},
+          "attributes": []
+        },
+        {
+          "target-type": "artist",
+          "direction": "forward",
+          "attribute-ids": {
+            "drums (drum set)": "12092505-6ee1-46af-a15a-b5b468b6b155"
+          },
+          "attributes": [
+            "drums (drum set)"
+          ],
+          "attribute-credits": {},
+          "source-credit": "",
+          "type": "member of band",
+          "attribute-values": {},
+          "ended": true,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "artist": {
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Texas Hold'Em Lava Dome",
+            "id": "4d945923-9deb-4cd0-a477-6e1474cb306c",
+            "disambiguation": "",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Texas Hold'Em Lava Dome"
+          },
+          "end": "2016",
+          "begin": "2016"
+        },
+        {
+          "begin": null,
+          "artist": {
+            "type": "Group",
+            "country": "US",
+            "sort-name": "Murder Finger",
+            "disambiguation": "",
+            "id": "5c860d63-acfa-4584-82db-4a76339b2f1e",
+            "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+            "name": "Murder Finger"
+          },
+          "end": null,
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "target-credit": "",
+          "ended": false,
+          "attribute-values": {},
+          "type": "member of band",
+          "source-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "direction": "forward",
+          "target-type": "artist"
+        },
+        {
+          "ended": false,
+          "target-credit": "",
+          "type-id": "5be4c609-9afa-4ea0-910b-12ffb71e3821",
+          "artist": {
+            "name": "Puma Man",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "Puma Man",
+            "id": "8b11928f-4013-4ac9-a39b-826bbc01b25c",
+            "disambiguation": "",
+            "type": "Person",
+            "country": "US"
+          },
+          "end": null,
+          "begin": null,
+          "source-credit": "",
+          "type": "member of band",
+          "attribute-values": {},
+          "attributes": [],
+          "direction": "forward",
+          "target-type": "artist",
+          "attribute-ids": {}
+        }
+      ],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "begin-area": {
+        "name": "United States",
+        "type-id": null,
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "disambiguation": "",
+        "iso-3166-1-codes": [
+          "US"
+        ],
+        "sort-name": "United States",
+        "type": null
+      },
+      "ipis": []
+    },
+    "recording-rels": {
+      "type": "Person",
+      "name": "Stephen McMillan",
+      "country": "ES",
+      "begin-area": {
+        "name": "United States",
+        "type": null,
+        "iso-3166-1-codes": [
+          "US"
+        ],
+        "disambiguation": "",
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "type-id": null,
+        "sort-name": "United States"
+      },
+      "gender": null,
+      "end-area": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "type": null,
+        "name": "Spain",
+        "disambiguation": "",
+        "iso-3166-1-codes": [
+          "ES"
+        ],
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4",
+        "type-id": null,
+        "sort-name": "Spain"
+      },
+      "ipis": [],
+      "disambiguation": "",
+      "isnis": [],
+      "relations": [
+        {
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "target-type": "recording",
+          "ended": true,
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "end": "2015-11-07",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "length": 36000,
+            "id": "30cff2de-f9ce-4bb1-8d92-bfd939da92c1",
+            "title": "Bus full of time-traveling twenty-somethings"
+          },
+          "target-credit": "",
+          "begin": "2015-11-07",
+          "attribute-values": {},
+          "type": "instrument"
+        },
+        {
+          "type": "instrument",
+          "attribute-values": {},
+          "target-credit": "",
+          "begin": "2015-11-18",
+          "recording": {
+            "title": "What happened to you in all the confusion?",
+            "id": "56979979-a978-43cc-87c1-3e5f85c38353",
+            "length": 244000,
+            "video": false,
+            "disambiguation": ""
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2015-11-18",
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "ended": true,
+          "target-type": "recording",
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward"
+        },
+        {
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "title": "Contemplate the Plate Tectonic",
+            "length": 589000,
+            "id": "7022586c-e032-4e2b-ad19-6c54bf67e90b",
+            "video": false,
+            "disambiguation": ""
+          },
+          "begin": "2015-11-19",
+          "target-credit": "",
+          "type": "instrument",
+          "attribute-values": {},
+          "direction": "forward",
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "ended": true,
+          "target-type": "recording",
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "end": "2015-11-19"
+        },
+        {
+          "recording": {
+            "length": 590000,
+            "id": "99a038e2-4985-4771-8428-9579908a3065",
+            "title": "Contemplate the Plate Tectonic",
+            "disambiguation": "",
+            "video": true
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "type": "instrument",
+          "attribute-values": {},
+          "target-credit": "",
+          "begin": "2015-11-19",
+          "ended": true,
+          "target-type": "recording",
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "end": "2015-11-19",
+          "attributes": []
+        },
+        {
+          "direction": "forward",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "ended": true,
+          "target-type": "recording",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "end": "2015-11-19",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "Live at Governor's Mansion 11.19.15",
+            "id": "85012a3e-6cd3-4573-9202-05f6e8f4345a",
+            "length": 2101000
+          },
+          "begin": "2015-11-19",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "instrument"
+        },
+        {
+          "begin": "2016-01-28",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "instrument",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "length": 1147000,
+            "id": "6808cf75-49ea-4267-a4b4-8b2fec045f94",
+            "title": "Live at Governor's Mansion 1.28.16"
+          },
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "end": "2016-01-28",
+          "direction": "forward",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "target-type": "recording",
+          "ended": true
+        },
+        {
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "id": "66491c13-00cc-46b1-a684-8a4ea29df963",
+            "length": 287000,
+            "title": "Birds"
+          },
+          "begin": "2016-01-29",
+          "target-credit": "",
+          "type": "instrument",
+          "attribute-values": {},
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward",
+          "target-type": "recording",
+          "ended": true,
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "end": "2016-01-29"
+        },
+        {
+          "type": "instrument",
+          "attribute-values": {},
+          "target-credit": "",
+          "begin": "2016-02-07",
+          "recording": {
+            "title": "Red candy icicles",
+            "id": "56ca8395-635b-470d-8cbe-a034e68c0111",
+            "length": 548000,
+            "video": false,
+            "disambiguation": ""
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2016-02-07",
+          "attribute-credits": {},
+          "attributes": [
+            "keyboard"
+          ],
+          "ended": true,
+          "target-type": "recording",
+          "direction": "forward",
+          "source-credit": "",
+          "attribute-ids": {
+            "keyboard": "95b0c3d2-9606-4ef5-a019-9b7437f3adda"
+          }
+        },
+        {
+          "target-type": "recording",
+          "ended": true,
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward",
+          "end": "2016-02-27",
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "id": "8d7960d5-3d21-4de2-94c8-4d79065d90d9",
+            "length": 178000,
+            "title": "Pine"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "type": "instrument",
+          "attribute-values": {},
+          "begin": "2016-02-27",
+          "target-credit": ""
+        },
+        {
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "end": "2016-03-03",
+          "direction": "forward",
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "ended": true,
+          "target-type": "recording",
+          "begin": "2016-03-03",
+          "target-credit": "",
+          "type": "instrument",
+          "attribute-values": {},
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "title": "Texas",
+            "length": 478000,
+            "id": "8564e807-32f1-45be-bad6-eb08a0636b35",
+            "video": false,
+            "disambiguation": ""
+          }
+        },
+        {
+          "type": "instrument",
+          "attribute-values": {},
+          "target-credit": "",
+          "begin": "2016-03-03",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "Toast",
+            "length": 756000,
+            "id": "0b9dc483-1803-4685-aa63-26afffd7a95a"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2016-03-03",
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "ended": true,
+          "target-type": "recording",
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward"
+        },
+        {
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "id": "4b94a518-d211-4678-94ce-361bda257acf",
+            "length": 640000,
+            "title": "0101"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "attribute-values": {},
+          "type": "instrument",
+          "begin": "2016-03-10",
+          "target-credit": "",
+          "target-type": "recording",
+          "ended": true,
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "end": "2016-03-10",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "length": 532000,
+            "id": "1ace4dc9-ce7c-4e3e-8397-1e4427bc4de9",
+            "title": "Adenosine"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "attribute-values": {},
+          "type": "instrument",
+          "target-credit": "",
+          "begin": "2016-03-24",
+          "ended": true,
+          "target-type": "recording",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "end": "2016-03-24",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "begin": "2016-04-16",
+          "target-credit": "",
+          "type": "instrument",
+          "attribute-values": {},
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "length": 484000,
+            "id": "ff565375-330c-4a33-ae5e-dd2a21da66d6",
+            "title": "Crunch",
+            "disambiguation": "",
+            "video": false
+          },
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "end": "2016-04-16",
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward",
+          "ended": true,
+          "target-type": "recording"
+        },
+        {
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "Magma",
+            "id": "2e67c8b1-96a5-40b6-a208-049a639b389b",
+            "length": 1014000
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "attribute-values": {},
+          "type": "instrument",
+          "target-credit": "",
+          "begin": "2016-04-16",
+          "ended": true,
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "end": "2016-04-16",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward",
+          "ended": true,
+          "target-type": "recording",
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "end": "2016-04-21",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "title": "0001",
+            "id": "e82241b3-79b1-421f-a6e9-60d83c071135",
+            "length": 592000,
+            "video": false,
+            "disambiguation": ""
+          },
+          "begin": "2016-04-21",
+          "target-credit": "",
+          "type": "instrument",
+          "attribute-values": {}
+        },
+        {
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "end": "2016-04-21",
+          "direction": "forward",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "target-type": "recording",
+          "ended": true,
+          "target-credit": "",
+          "begin": "2016-04-21",
+          "attribute-values": {},
+          "type": "instrument",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "length": 440000,
+            "id": "80b536b1-c436-442b-a930-36a975a7838f",
+            "title": "0010",
+            "disambiguation": "",
+            "video": false
+          }
+        },
+        {
+          "target-type": "recording",
+          "ended": true,
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "end": "2016-04-21",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "id": "66766c74-a86b-4ef6-a044-58862735e967",
+            "length": 368000,
+            "title": "0011"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "attribute-values": {},
+          "type": "instrument",
+          "target-credit": "",
+          "begin": "2016-04-21"
+        },
+        {
+          "type": "instrument",
+          "attribute-values": {},
+          "target-credit": "",
+          "begin": "2016-04-21",
+          "recording": {
+            "title": "0100",
+            "length": 475000,
+            "id": "4297f9e3-4683-4f90-a86c-7c63e6047554",
+            "video": false,
+            "disambiguation": ""
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2016-04-21",
+          "attribute-credits": {},
+          "attributes": [
+            "synthesizer"
+          ],
+          "ended": true,
+          "target-type": "recording",
+          "source-credit": "",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "direction": "forward"
+        },
+        {
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "ended": true,
+          "target-type": "recording",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "end": "2016",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "title": "Devastate the Environment",
+            "id": "5b583117-c440-4837-a60a-0e1f2c7a80f5",
+            "length": 602000,
+            "video": false,
+            "disambiguation": ""
+          },
+          "begin": "2016",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "instrument"
+        },
+        {
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "title": "Haunter",
+            "id": "075693bf-5c47-45dc-b1ec-807dff5349d8",
+            "length": 329000,
+            "video": false,
+            "disambiguation": ""
+          },
+          "begin": "2016",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "instrument",
+          "attribute-ids": {
+            "drums (drum set)": "12092505-6ee1-46af-a15a-b5b468b6b155"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "ended": true,
+          "target-type": "recording",
+          "attributes": [
+            "drums (drum set)"
+          ],
+          "attribute-credits": {},
+          "end": "2016"
+        },
+        {
+          "end": "2016",
+          "attributes": [
+            "drums (drum set)"
+          ],
+          "attribute-credits": {},
+          "ended": true,
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "drums (drum set)": "12092505-6ee1-46af-a15a-b5b468b6b155"
+          },
+          "source-credit": "",
+          "attribute-values": {},
+          "type": "instrument",
+          "begin": "2016",
+          "target-credit": "",
+          "recording": {
+            "id": "1857685f-3228-41cb-9aee-1d6937728e60",
+            "length": 681000,
+            "title": "I would go up to the hot lava and I would climb mountains",
+            "disambiguation": "",
+            "video": false
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461"
+        },
+        {
+          "end": "2016",
+          "attributes": [
+            "drums (drum set)"
+          ],
+          "attribute-credits": {},
+          "ended": true,
+          "target-type": "recording",
+          "attribute-ids": {
+            "drums (drum set)": "12092505-6ee1-46af-a15a-b5b468b6b155"
+          },
+          "source-credit": "",
+          "direction": "forward",
+          "attribute-values": {},
+          "type": "instrument",
+          "begin": "2016",
+          "target-credit": "",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "Intent",
+            "length": 285000,
+            "id": "b3b775ab-d6de-45ab-a3a8-12a6c5bf854e"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461"
+        },
+        {
+          "attribute-values": {},
+          "type": "instrument",
+          "target-credit": "",
+          "begin": "2016",
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "id": "e6614e16-b720-4117-b576-43f0b5252655",
+            "length": 523000,
+            "title": "It's Twenty-Sixteen"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "end": "2016",
+          "attributes": [
+            "synthesizer"
+          ],
+          "attribute-credits": {},
+          "ended": true,
+          "target-type": "recording",
+          "direction": "forward",
+          "attribute-ids": {
+            "synthesizer": "4a29230c-5ab5-4eff-ac59-4a253f3561a0"
+          },
+          "source-credit": ""
+        },
+        {
+          "source-credit": "",
+          "attribute-ids": {
+            "drums (drum set)": "12092505-6ee1-46af-a15a-b5b468b6b155"
+          },
+          "direction": "forward",
+          "ended": true,
+          "target-type": "recording",
+          "attribute-credits": {},
+          "attributes": [
+            "drums (drum set)"
+          ],
+          "end": "2016",
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "Purposes",
+            "length": 185000,
+            "id": "094474e5-3a51-4e79-bad5-38e8d6bcb74d"
+          },
+          "begin": "2016",
+          "target-credit": "",
+          "type": "instrument",
+          "attribute-values": {}
+        },
+        {
+          "recording": {
+            "disambiguation": "",
+            "video": false,
+            "length": 427000,
+            "id": "ad18379c-c2cc-4aa1-8817-80174ab18bec",
+            "title": "I keep my cards close to my heart"
+          },
+          "type-id": "59054b12-01ac-43ee-a618-285fd397e461",
+          "attribute-values": {},
+          "type": "instrument",
+          "begin": null,
+          "target-credit": "",
+          "target-type": "recording",
+          "ended": false,
+          "direction": "forward",
+          "attribute-ids": {
+            "keyboard": "95b0c3d2-9606-4ef5-a019-9b7437f3adda"
+          },
+          "source-credit": "",
+          "end": null,
+          "attributes": [
+            "keyboard"
+          ],
+          "attribute-credits": {}
+        },
+        {
+          "attributes": [],
+          "end": "2023",
+          "direction": "forward",
+          "attribute-ids": {},
+          "source-credit": "",
+          "target-type": "recording",
+          "ended": true,
+          "begin": "2023",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "phonographic copyright",
+          "type-id": "7fd5fbc0-fbf4-4d04-be23-417d50a4dc30",
+          "recording": {
+            "title": "Ishmael",
+            "length": 120000,
+            "id": "faaac205-c8df-462e-98c5-322005adc9b5",
+            "video": false,
+            "disambiguation": ""
+          }
+        },
+        {
+          "attribute-values": {},
+          "type": "producer",
+          "begin": "2018",
+          "target-credit": "",
+          "recording": {
+            "video": false,
+            "disambiguation": "",
+            "title": "Ishmael",
+            "id": "faaac205-c8df-462e-98c5-322005adc9b5",
+            "length": 120000
+          },
+          "type-id": "5c0ceac3-feb4-41f0-868d-dc06f6e27fc0",
+          "end": "2018",
+          "attributes": [],
+          "ended": true,
+          "target-type": "recording",
+          "attribute-ids": {},
+          "source-credit": "",
+          "direction": "forward"
+        }
+      ],
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+      "gender-id": null,
+      "life-span": {
+        "end": null,
+        "ended": false,
+        "begin": null
+      },
+      "sort-name": "McMillan, Stephen"
+    },
+    "work-rels": {
+      "ipis": [],
+      "area": {
+        "iso-3166-1-codes": [
+          "ES"
+        ],
+        "disambiguation": "",
+        "sort-name": "Spain",
+        "type-id": null,
+        "name": "Spain",
+        "type": null,
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4"
+      },
+      "relations": [
+        {
+          "end": "2015-11",
+          "ended": true,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "begin": "2015-10",
+          "direction": "forward",
+          "work": {
+            "id": "402d1aa5-9fbc-403c-b329-061bfe2a0bae",
+            "type": "Song-cycle",
+            "languages": [],
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "attributes": [],
+            "title": "Hello World. Love, Space.",
+            "iswcs": [
+              "T-337.058.285-3"
+            ],
+            "disambiguation": "",
+            "language": null
+          }
+        },
+        {
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "id": "f01cff45-48ea-4869-958b-bda6e7105572",
+            "type": "Song",
+            "language": null,
+            "disambiguation": "",
+            "title": "Bus full of time-traveling twenty-somethings",
+            "attributes": [],
+            "iswcs": [
+              "T-337.060.108-0"
+            ]
+          },
+          "begin": "2015-11-07",
+          "direction": "forward",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2015-11-07",
+          "attribute-values": {},
+          "ended": true
+        },
+        {
+          "direction": "forward",
+          "begin": "2015-11-17",
+          "work": {
+            "type": "Song",
+            "id": "0937c8a5-2c19-4804-8527-673df01cabe3",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "Eager for second chances",
+            "language": null
+          },
+          "attribute-values": {},
+          "ended": true,
+          "end": "2015-11-17",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer"
+        },
+        {
+          "ended": true,
+          "attribute-values": {},
+          "end": "2015-11-18",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "direction": "forward",
+          "begin": "2015-11-18",
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "id": "0ac34bd5-c8b2-4a47-b0a7-d3ec804fadf8",
+            "type": "Song",
+            "language": null,
+            "disambiguation": "",
+            "title": "What happened to you in all the confusion?",
+            "attributes": [],
+            "iswcs": [
+              "T-337.060.057-6"
+            ]
+          }
+        },
+        {
+          "ended": true,
+          "attribute-values": {},
+          "end": "2015-11",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "direction": "forward",
+          "begin": "2015-11",
+          "work": {
+            "disambiguation": "",
+            "iswcs": [
+              "T-337.058.302-7"
+            ],
+            "title": "Seeing Stars",
+            "attributes": [],
+            "language": "eng",
+            "type": "Song",
+            "id": "6e78a287-f50a-4416-a6f6-2f31b23b35ae",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ]
+          }
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "end": "2015-11",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "work": {
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Tuna Can",
+            "attributes": [],
+            "language": null,
+            "type": "Song",
+            "id": "b86d26a6-522e-4b3d-9638-8eab98611799",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          },
+          "begin": "2015-11",
+          "direction": "forward"
+        },
+        {
+          "work": {
+            "language": "eng",
+            "disambiguation": "",
+            "title": "Contemplate the Plate Tectonic",
+            "attributes": [],
+            "iswcs": [
+              "T-337.058.315-2"
+            ],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "id": "9143547e-3632-4835-b78c-0751cbb713d3",
+            "type": "Song"
+          },
+          "direction": "forward",
+          "begin": "2015",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "attribute-values": {},
+          "ended": true,
+          "end": "2015",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": []
+        },
+        {
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2015",
+          "direction": "forward",
+          "work": {
+            "id": "c77001e7-c9ee-4c78-91d9-f0ca9af6beb2",
+            "type": "Song",
+            "languages": [
+              "eng"
+            ],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "title": "7/8",
+            "attributes": [],
+            "iswcs": [],
+            "disambiguation": "",
+            "language": "eng"
+          }
+        },
+        {
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attributes": [
+            "additional"
+          ],
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016",
+          "work": {
+            "language": "eng",
+            "iswcs": [],
+            "title": "Dead Girl",
+            "attributes": [],
+            "disambiguation": "",
+            "languages": [
+              "eng"
+            ],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "d6bd97ae-547b-4424-822f-522c697b177a"
+          },
+          "direction": "forward",
+          "begin": "2015"
+        },
+        {
+          "begin": "2015",
+          "direction": "forward",
+          "work": {
+            "language": "eng",
+            "disambiguation": "",
+            "attributes": [],
+            "title": "ex-D",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ],
+            "id": "2817055d-1175-43a5-8589-601a773726a8",
+            "type": "Song"
+          },
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "attributes": [
+            "additional"
+          ],
+          "target-credit": "",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016",
+          "work": {
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Gay Bar Soldier",
+            "attributes": [],
+            "language": "eng",
+            "type": "Song",
+            "id": "eb052660-fb71-404a-a04e-74a7f1cc055e",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [
+              "eng"
+            ]
+          },
+          "direction": "forward",
+          "begin": "2015"
+        },
+        {
+          "begin": "2015",
+          "direction": "forward",
+          "work": {
+            "id": "6b402bbb-1ac0-4300-8448-db026abefd23",
+            "type": "Song-cycle",
+            "languages": [
+              "eng"
+            ],
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "title": "Martial Law in Garrison Oaks",
+            "attributes": [],
+            "iswcs": [
+              "T-337.058.170-3"
+            ],
+            "disambiguation": "",
+            "language": "eng"
+          },
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer"
+        },
+        {
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2015",
+          "work": {
+            "language": null,
+            "iswcs": [],
+            "attributes": [],
+            "title": "Pompous Fanfare for All Occasions",
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "type": "Song-cycle",
+            "id": "7b794e64-94da-44a6-badf-0322aab75c31"
+          }
+        },
+        {
+          "begin": "2015",
+          "direction": "forward",
+          "work": {
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "Sorry, Honey",
+            "language": null,
+            "type": "Song",
+            "id": "9ca35986-6fa5-4024-84f9-b90e64ada987",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          },
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2016-01-19",
+          "ended": true,
+          "attribute-values": {},
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2016-01-19",
+          "direction": "forward",
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "type": "Song",
+            "id": "036e1752-452f-43a6-af50-58509e5c42fa",
+            "language": null,
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "It's Twenty-Sixteen"
+          }
+        },
+        {
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016-01",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2016-01",
+          "work": {
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "languages": [],
+            "id": "d8747def-44e8-4126-a5ef-036cba7b5bdb",
+            "type": "Song-cycle",
+            "language": null,
+            "disambiguation": "",
+            "title": "Mushroom",
+            "attributes": [],
+            "iswcs": []
+          }
+        },
+        {
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016-02",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2016-01",
+          "work": {
+            "type": "Song",
+            "id": "54864c6a-16b9-4a5a-b360-59047e810db2",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [
+              "T-337.058.347-0"
+            ],
+            "title": "Birds",
+            "attributes": [],
+            "disambiguation": "",
+            "language": null
+          }
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2016-02",
+          "ended": true,
+          "attribute-values": {},
+          "work": {
+            "iswcs": [
+              "T-337.058.320-9"
+            ],
+            "attributes": [],
+            "title": "Pine",
+            "disambiguation": "",
+            "language": null,
+            "type": "Song",
+            "id": "41995c0f-01a1-4e6a-93f0-86101130a0a1",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "begin": "2016-01",
+          "direction": "forward"
+        },
+        {
+          "direction": "forward",
+          "begin": "2016-02-07",
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "ce365f7d-44d8-4556-8699-f92c5fbb20ec",
+            "language": null,
+            "iswcs": [],
+            "attributes": [],
+            "title": "Red Candy Icicles",
+            "disambiguation": ""
+          },
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016-02-07",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer"
+        },
+        {
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "791796b1-8a14-4e4b-bab3-d28016dd5277",
+            "type": "Song",
+            "language": null,
+            "attributes": [],
+            "title": "Figure the Shoreline",
+            "iswcs": [
+              "T-337.058.330-1"
+            ],
+            "disambiguation": ""
+          },
+          "direction": "forward",
+          "begin": "2016-02",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016-02"
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2016-02",
+          "ended": true,
+          "attribute-values": {},
+          "work": {
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "languages": [],
+            "type": "Song-cycle",
+            "id": "56830050-7db9-4b55-a71b-43a0a0ad32ba",
+            "language": null,
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "Texas Toast"
+          },
+          "begin": "2016-02",
+          "direction": "forward"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016-03-10",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "work": {
+            "type": "Song",
+            "id": "f960fe4c-a7f1-4e65-98ad-2b9e79c9263d",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Lights",
+            "attributes": [],
+            "language": null
+          },
+          "direction": "forward",
+          "begin": "2016-03-10"
+        },
+        {
+          "end": "2016-03-24",
+          "ended": true,
+          "attribute-values": {},
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "begin": "2016-03-24",
+          "direction": "forward",
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "8bee2c39-34ca-4084-b04d-e9cdcafd471a",
+            "language": null,
+            "iswcs": [
+              "T-337.058.264-8"
+            ],
+            "title": "Adenosine",
+            "attributes": [],
+            "disambiguation": ""
+          }
+        },
+        {
+          "direction": "forward",
+          "begin": "2016-03",
+          "work": {
+            "disambiguation": "",
+            "attributes": [],
+            "title": "I would go up to the hot lava and I would climb mountains",
+            "iswcs": [
+              "T-337.058.160-1"
+            ],
+            "language": null,
+            "id": "85f65d40-90a9-4f23-ab94-f465b57abed9",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          },
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016-04",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": ""
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "end": "2016-04-21",
+          "attribute-values": {},
+          "ended": true,
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "work": {
+            "type": "Song-cycle",
+            "id": "2ab0eb48-e5af-4247-a207-003dfe622671",
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "languages": [],
+            "disambiguation": "",
+            "iswcs": [],
+            "attributes": [],
+            "title": "THLD432",
+            "language": null
+          },
+          "begin": "2016-04-21",
+          "direction": "forward"
+        },
+        {
+          "work": {
+            "type": "Song-cycle",
+            "id": "cb241c8f-ae46-415b-811d-ad530fafb9fd",
+            "languages": [],
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "iswcs": [],
+            "title": "Magma Crunch",
+            "attributes": [],
+            "disambiguation": "",
+            "language": null
+          },
+          "direction": "forward",
+          "begin": "2016-04",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016-04"
+        },
+        {
+          "work": {
+            "type": "Song",
+            "id": "1ee2d251-3183-4d20-86c8-6bd3220f26bc",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [
+              "T-337.058.276-2"
+            ],
+            "attributes": [],
+            "title": "All All & All",
+            "disambiguation": "",
+            "language": null
+          },
+          "begin": "2016",
+          "direction": "forward",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": ""
+        },
+        {
+          "work": {
+            "disambiguation": "",
+            "iswcs": [
+              "T-337.058.186-1"
+            ],
+            "attributes": [],
+            "title": "Devastate the Environment",
+            "language": null,
+            "type": "Song",
+            "id": "2720331c-6f20-414b-8c1b-f540a2bc1638",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": []
+          },
+          "direction": "forward",
+          "begin": "2016",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016"
+        },
+        {
+          "work": {
+            "language": null,
+            "attributes": [],
+            "title": "Film School",
+            "iswcs": [],
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "98db5233-1084-44d5-ac03-f880d9c1152c",
+            "type": "Song"
+          },
+          "begin": "2016",
+          "direction": "forward",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": ""
+        },
+        {
+          "begin": "2016",
+          "direction": "forward",
+          "work": {
+            "id": "6d53401c-774e-452a-92f8-67d5cdf0d5da",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "title": "Friendship 7 4 Fun",
+            "attributes": [],
+            "iswcs": [
+              "T-337.058.305-0"
+            ],
+            "language": null
+          },
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "work": {
+            "type": "Song",
+            "id": "7e6a7929-7e64-419c-a0ab-a2be395abc8a",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Garden Vines",
+            "attributes": [],
+            "language": null
+          },
+          "begin": "2016",
+          "direction": "forward"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "work": {
+            "type": "Song",
+            "id": "60655fd1-a544-4735-9831-2c8903dfd2cf",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "iswcs": [
+              "T-337.058.150-9"
+            ],
+            "attributes": [],
+            "title": "Haunter",
+            "language": null
+          },
+          "begin": "2016",
+          "direction": "forward"
+        },
+        {
+          "work": {
+            "id": "72936748-bf75-4760-b1cc-4ba51d64df98",
+            "type": "Song-cycle",
+            "languages": [],
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "title": "Hazardous Metals in Ambient Air",
+            "attributes": [],
+            "iswcs": [
+              "T-337.058.193-0"
+            ],
+            "disambiguation": "",
+            "language": null
+          },
+          "begin": "2016",
+          "direction": "forward",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": ""
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "work": {
+            "language": null,
+            "disambiguation": "",
+            "iswcs": [],
+            "title": "Hypnopompia",
+            "attributes": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "type": "Song",
+            "id": "c1395647-157d-470c-829a-2075f3eb77e9"
+          },
+          "begin": "2016",
+          "direction": "forward"
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "work": {
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "27dd6ac5-5447-4f86-9f2b-cedb92972dbb",
+            "language": null,
+            "iswcs": [
+              "T-337.058.322-1"
+            ],
+            "attributes": [],
+            "title": "I keep my cards close to my heart",
+            "disambiguation": ""
+          },
+          "begin": "2016",
+          "direction": "forward"
+        },
+        {
+          "direction": "forward",
+          "begin": "2016",
+          "work": {
+            "type": "Song",
+            "id": "dc90d5cb-79cc-4739-ad5f-94da7c3618ad",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [
+              "T-337.058.120-3"
+            ],
+            "attributes": [],
+            "title": "Intent",
+            "disambiguation": "",
+            "language": null
+          },
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016",
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+        },
+        {
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "work": {
+            "language": null,
+            "iswcs": [
+              "T-337.058.307-2"
+            ],
+            "title": "Lithosphere",
+            "attributes": [],
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "5f8c3b9d-ecf2-4b1d-885f-252691bc8f32"
+          },
+          "begin": "2016",
+          "direction": "forward"
+        },
+        {
+          "source-credit": "",
+          "target-type": "work",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016",
+          "work": {
+            "id": "8d3d766d-f035-45da-8d4e-8b93537653db",
+            "type": "Song",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "disambiguation": "",
+            "title": "Maybe the instruments failed and maybe they didn't",
+            "attributes": [],
+            "iswcs": [],
+            "language": null
+          },
+          "direction": "forward",
+          "begin": "2016"
+        },
+        {
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "begin": "2016",
+          "direction": "forward",
+          "work": {
+            "language": null,
+            "iswcs": [
+              "T-337.058.288-6"
+            ],
+            "attributes": [],
+            "title": "Millstone, 2063",
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "188d9a75-4d7a-4a72-a376-456fff8d4191"
+          }
+        },
+        {
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2016",
+          "work": {
+            "language": null,
+            "iswcs": [],
+            "title": "Ocean of Storms",
+            "attributes": [],
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "2c0373f4-d5b0-4f06-9ac0-205d1bd623d4"
+          }
+        },
+        {
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "direction": "forward",
+          "begin": "2016",
+          "work": {
+            "language": null,
+            "attributes": [],
+            "title": "Pompous Fanfare for All Occasions",
+            "iswcs": [],
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "e57d6723-face-4b7c-ad9e-e06c8720b8f0",
+            "type": "Song"
+          }
+        },
+        {
+          "target-type": "work",
+          "source-credit": "",
+          "type": "composer",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "target-credit": "",
+          "attributes": [],
+          "attribute-ids": {},
+          "attribute-values": {},
+          "ended": true,
+          "end": "2016",
+          "work": {
+            "language": null,
+            "disambiguation": "",
+            "iswcs": [
+              "T-337.058.194-1"
+            ],
+            "attributes": [],
+            "title": "Purposes",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "type": "Song",
+            "id": "833ab8db-9ad8-46d2-ac8a-03e1b2a86619"
+          },
+          "direction": "forward",
+          "begin": "2016"
+        },
+        {
+          "direction": "forward",
+          "begin": "2016",
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "id": "27411427-49e3-428a-802e-5de3057fd8af",
+            "type": "Song",
+            "language": null,
+            "disambiguation": "",
+            "attributes": [],
+            "title": "Secret Conference Rooms",
+            "iswcs": []
+          },
+          "ended": true,
+          "attribute-values": {},
+          "end": "2016",
+          "target-credit": "",
+          "attribute-ids": {},
+          "attributes": [],
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "target-type": "work",
+          "source-credit": ""
+        },
+        {
+          "work": {
+            "language": null,
+            "iswcs": [],
+            "title": "This has always been true",
+            "attributes": [],
+            "disambiguation": "",
+            "languages": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "type": "Song",
+            "id": "b1a07a73-1dba-4276-8920-07cb15a9d270"
+          },
+          "begin": "2016",
+          "direction": "forward",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "end": "2016",
+          "ended": true,
+          "attribute-values": {},
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": ""
+        },
+        {
+          "end": "2016",
+          "attribute-values": {},
+          "ended": true,
+          "attributes": [],
+          "attribute-ids": {},
+          "target-credit": "",
+          "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+          "type": "composer",
+          "source-credit": "",
+          "target-type": "work",
+          "begin": "2016",
+          "direction": "forward",
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "languages": [],
+            "id": "51ceb5df-4680-4292-89c0-1e93b2fea857",
+            "type": "Song",
+            "language": null,
+            "disambiguation": "",
+            "attributes": [],
+            "title": "Walking Distance",
+            "iswcs": []
+          }
+        }
+      ],
+      "gender": null,
+      "country": "ES",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "type": "Person",
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      },
+      "gender-id": null,
+      "sort-name": "McMillan, Stephen",
+      "disambiguation": "",
+      "begin-area": {
+        "type-id": null,
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "type": null,
+        "name": "United States",
+        "iso-3166-1-codes": [
+          "US"
+        ],
+        "disambiguation": "",
+        "sort-name": "United States"
+      },
+      "end-area": null,
+      "isnis": [],
+      "name": "Stephen McMillan",
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e"
+    },
+    "release-rels": {
+      "begin-area": {
+        "name": "United States",
+        "type-id": null,
+        "disambiguation": "",
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "iso-3166-1-codes": [
+          "US"
+        ],
+        "sort-name": "United States",
+        "type": null
+      },
+      "ipis": [],
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "relations": [
+        {
+          "type": "photography",
+          "attribute-values": {},
+          "source-credit": "",
+          "begin": null,
+          "end": null,
+          "target-credit": "",
+          "type-id": "0b58dc9b-9c49-4b19-bb58-9c06d41c8fbf",
+          "ended": false,
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          },
+          "direction": "forward",
+          "target-type": "release",
+          "release": {
+            "disambiguation": "original release",
+            "id": "d087b8fe-1bf9-4e3c-a080-4350f98a0151",
+            "release-events": [
+              {
+                "area": {
+                  "name": "[Worldwide]",
+                  "type-id": null,
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "sort-name": "[Worldwide]",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "type": null
+                },
+                "date": "2020-04-15"
+              }
+            ],
+            "title": "remote recordings, vol. 1",
+            "date": "2020-04-15",
+            "status": null,
+            "barcode": "",
+            "text-representation": {
+              "script": null,
+              "language": "eng"
+            },
+            "packaging": null,
+            "packaging-id": null,
+            "status-id": null,
+            "country": "XW",
+            "quality": "normal"
+          },
+          "attributes": [
+            "additional"
+          ]
+        },
+        {
+          "ended": true,
+          "target-credit": "",
+          "type-id": "8bf377ba-8d71-4ecc-97f2-7bb2d8a2a75f",
+          "end": "2016",
+          "begin": "2016",
+          "source-credit": "",
+          "type": "producer",
+          "attribute-values": {},
+          "attributes": [],
+          "release": {
+            "quality": "normal",
+            "packaging-id": null,
+            "status-id": null,
+            "country": "XW",
+            "text-representation": {
+              "script": null,
+              "language": null
+            },
+            "packaging": null,
+            "barcode": "",
+            "status": null,
+            "date": "2018-12-18",
+            "id": "0d7156f5-1d8e-4262-a63b-c5723a7a042e",
+            "release-events": [
+              {
+                "date": "2018-12-18",
+                "area": {
+                  "type": null,
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "sort-name": "[Worldwide]",
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "type-id": null,
+                  "name": "[Worldwide]"
+                }
+              }
+            ],
+            "disambiguation": "original release",
+            "title": "Hazardous Metals in Ambient Air"
+          },
+          "target-type": "release",
+          "direction": "forward",
+          "attribute-ids": {}
+        }
+      ],
+      "country": "ES",
+      "isnis": [],
+      "gender": null,
+      "type": "Person",
+      "life-span": {
+        "begin": null,
+        "end": null,
+        "ended": false
+      },
+      "end-area": null,
+      "name": "Stephen McMillan",
+      "area": {
+        "name": "Spain",
+        "type-id": null,
+        "iso-3166-1-codes": [
+          "ES"
+        ],
+        "sort-name": "Spain",
+        "disambiguation": "",
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4",
+        "type": null
+      },
+      "sort-name": "McMillan, Stephen",
+      "gender-id": null,
+      "disambiguation": "",
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e"
+    },
+    "label-rels": {
+      "area": {
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4",
+        "sort-name": "Spain",
+        "disambiguation": "",
+        "type": null,
+        "type-id": null,
+        "name": "Spain",
+        "iso-3166-1-codes": [
+          "ES"
+        ]
+      },
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+      "sort-name": "McMillan, Stephen",
+      "disambiguation": "",
+      "gender": null,
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "country": "ES",
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "name": "Stephen McMillan",
+      "relations": [],
+      "end-area": null,
+      "type": "Person",
+      "isnis": [],
+      "ipis": [],
+      "gender-id": null,
+      "begin-area": {
+        "sort-name": "United States",
+        "disambiguation": "",
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "type": null,
+        "type-id": null,
+        "name": "United States",
+        "iso-3166-1-codes": [
+          "US"
+        ]
+      }
+    },
+    "place-rels": {
+      "relations": [
+        {
+          "end": "2015",
+          "attributes": [],
+          "target-type": "place",
+          "ended": true,
+          "source-credit": "",
+          "attribute-ids": {},
+          "direction": "forward",
+          "type": "founder",
+          "attribute-values": {},
+          "target-credit": "",
+          "place": {
+            "type": "Studio",
+            "name": "The Tuna Can",
+            "disambiguation": "",
+            "address": "",
+            "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+            "coordinates": null,
+            "area": {
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+              "sort-name": "Iowa City",
+              "disambiguation": "",
+              "type": "City",
+              "name": "Iowa City"
+            },
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38"
+          },
+          "begin": "2015",
+          "type-id": "54fcf574-eb3a-40da-839f-986d46997b97"
+        },
+        {
+          "attribute-values": {},
+          "type": "recording engineer position",
+          "target-credit": "",
+          "place": {
+            "area": {
+              "sort-name": "Iowa City",
+              "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "type": "City",
+              "name": "Iowa City",
+              "disambiguation": ""
+            },
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "coordinates": null,
+            "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+            "address": "",
+            "disambiguation": "",
+            "type": "Studio",
+            "name": "The Tuna Can"
+          },
+          "begin": "2015",
+          "type-id": "350f7ab7-c2d9-4f00-98e0-e1973bf4a2bf",
+          "end": "2017",
+          "attributes": [],
+          "target-type": "place",
+          "ended": true,
+          "attribute-ids": {},
+          "source-credit": "",
+          "direction": "forward"
+        }
+      ],
+      "isnis": [],
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+      "disambiguation": "",
+      "ipis": [],
+      "sort-name": "McMillan, Stephen",
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": null
+      },
+      "gender-id": null,
+      "gender": null,
+      "country": "ES",
+      "begin-area": {
+        "type": null,
+        "name": "United States",
+        "disambiguation": "",
+        "iso-3166-1-codes": [
+          "US"
+        ],
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "sort-name": "United States",
+        "type-id": null
+      },
+      "name": "Stephen McMillan",
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "area": {
+        "type-id": null,
+        "sort-name": "Spain",
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4",
+        "disambiguation": "",
+        "iso-3166-1-codes": [
+          "ES"
+        ],
+        "type": null,
+        "name": "Spain"
+      },
+      "end-area": null
+    },
+    "event-rels": {
+      "relations": [],
+      "gender": null,
+      "area": {
+        "iso-3166-1-codes": [
+          "ES"
+        ],
+        "sort-name": "Spain",
+        "disambiguation": "",
+        "type-id": null,
+        "id": "471c46a7-afc5-31c4-923c-d0444f5053a4",
+        "type": null,
+        "name": "Spain"
+      },
+      "ipis": [],
+      "type": "Person",
+      "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+      "country": "ES",
+      "sort-name": "McMillan, Stephen",
+      "disambiguation": "",
+      "begin-area": {
+        "type-id": null,
+        "id": "489ce91b-6658-3307-9877-795b68554c98",
+        "name": "United States",
+        "type": null,
+        "iso-3166-1-codes": [
+          "US"
+        ],
+        "sort-name": "United States",
+        "disambiguation": ""
+      },
+      "end-area": null,
+      "gender-id": null,
+      "life-span": {
+        "end": null,
+        "begin": null,
+        "ended": false
+      },
+      "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+      "isnis": [],
+      "name": "Stephen McMillan"
+    }
+  }
+}
