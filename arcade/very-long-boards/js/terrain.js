@@ -75,7 +75,7 @@ window.createTerrain = function(scene) {
     }
 
     const roadMat = new BABYLON.StandardMaterial('roadMat', scene);
-    roadMat.diffuseColor = new BABYLON.Color3(0.22, 0.22, 0.24);
+    roadMat.diffuseColor = new BABYLON.Color3(0.35, 0.35, 0.38);
     roadMat.specularColor = BABYLON.Color3.Black();
 
     const shoulderMat = new BABYLON.StandardMaterial('shoulderMat', scene);
@@ -91,7 +91,7 @@ window.createTerrain = function(scene) {
     const road = BABYLON.MeshBuilder.CreateRibbon('road', {
         pathArray: buildRoadPaths(0),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.FRONTSIDE
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     road.material = roadMat;
     road.convertToFlatShadedMesh();
@@ -99,28 +99,28 @@ window.createTerrain = function(scene) {
     const shoulderL = BABYLON.MeshBuilder.CreateRibbon('shoulderL', {
         pathArray: buildShoulderPaths(0, -1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.FRONTSIDE
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     shoulderL.material = shoulderMat;
 
     const shoulderR = BABYLON.MeshBuilder.CreateRibbon('shoulderR', {
         pathArray: buildShoulderPaths(0, 1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.FRONTSIDE
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     shoulderR.material = shoulderMat;
 
     const grassL = BABYLON.MeshBuilder.CreateRibbon('grassL', {
         pathArray: buildGrassPaths(0, -1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.FRONTSIDE
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     grassL.material = grassMat;
 
     const grassR = BABYLON.MeshBuilder.CreateRibbon('grassR', {
         pathArray: buildGrassPaths(0, 1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.FRONTSIDE
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     grassR.material = grassMat;
 
@@ -129,7 +129,7 @@ window.createTerrain = function(scene) {
     startPadMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.12);
     startPadMat.specularColor = BABYLON.Color3.Black();
     startPad.material = startPadMat;
-    startPad.position = new BABYLON.Vector3(0, -0.05, -100);
+    startPad.position = new BABYLON.Vector3(0, -2, -100);
 
     const mountains = [];
     for (let i = 0; i < 25; i++) {
