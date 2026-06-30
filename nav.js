@@ -457,6 +457,14 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             if (t && !t.includes('NAV_CONFIG')) configs.push(t);
         });
 
+        // Collect head external scripts (e.g. MathJax CDN)
+        doc.querySelectorAll('head script[src]').forEach(s => {
+            const src = abs(s.getAttribute('src'), baseURL);
+            if (src && !src.includes('nav.js') && !src.includes('jukebox')) {
+                externals.push(src);
+            }
+        });
+
         doc.querySelectorAll('body script').forEach(s => {
             const src = s.getAttribute('src');
             if (src) {
@@ -568,8 +576,18 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             await runScripts(doc, url);
 
             // Re-render MathJax if present (for pages with equations)
-            if (window.MathJax && MathJax.typesetPromise) {
-                try { await MathJax.typesetPromise(); } catch (e) {}
+            if (window.MathJax) {
+                if (MathJax.typesetPromise) {
+                    try { await MathJax.typesetPromise(); } catch (e) {}
+                } else if (MathJax.startup) {
+                    // MathJax loaded but typeset not ready yet — wait for it
+                    await new Promise(r => {
+                        const check = setInterval(() => {
+                            if (MathJax.typesetPromise) { clearInterval(check); MathJax.typesetPromise().then(r).catch(r); }
+                        }, 100);
+                        setTimeout(() => { clearInterval(check); r(); }, 5000);
+                    });
+                }
             }
 
             if (push) history.pushState({ spa: true }, '', url);
