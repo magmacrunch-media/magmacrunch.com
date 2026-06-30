@@ -465,7 +465,14 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 }
             } else {
                 const t = s.textContent.trim();
-                if (t && !t.includes('NAV_CONFIG')) inits.push(t);
+                if (t && !t.includes('NAV_CONFIG')) {
+                    // Config scripts (window.*_CONFIG = ...) must run before templates
+                    if (/window\.[A-Z_]+CONFIG\s*=/.test(t)) {
+                        configs.push(t);
+                    } else {
+                        inits.push(t);
+                    }
+                }
             }
         });
 
