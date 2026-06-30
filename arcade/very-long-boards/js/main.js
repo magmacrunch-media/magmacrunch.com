@@ -154,7 +154,7 @@ function gameLogic() {
             break;
 
         case 'gameover':
-            terrain.update(0);
+            terrain.update(player.distance);
             window.updatePlayerMesh(terrain, frame);
             if (inp.enter) startCountdown();
             break;

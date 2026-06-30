@@ -106,6 +106,8 @@ window.createPlayer = function(scene) {
 
     for (const m of root.getChildMeshes()) m.isPickable = false;
 
+    root.rotation.y = Math.PI / 2;
+
     playerMesh = root;
     return root;
 };
