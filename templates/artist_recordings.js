@@ -169,14 +169,11 @@ subNavEl.innerHTML = [
     // ── CACHE ──
     let _cache = null;
     async function loadCache() {
-        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; console.log('[MB recordings] cache from window'); return; }
-        const url = d + 'archive/_cache/artists/' + artistId + '.json';
+        if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
         try {
-            console.log('[MB recordings] fetching cache:', url);
-            const r = await fetch(url);
-            console.log('[MB recordings] cache response:', r.status, r.ok);
-            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; console.log('[MB recordings] cache parsed, entries:', Object.keys(j?.subpages?.recordings?.details || {}).length); }
-        } catch (e) { console.log('[MB recordings] cache fetch error:', e.message); }
+            const r = await fetch(d + 'archive/_cache/artists/' + artistId + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
     }
     async function cached(path, cacheData) {
         if (cacheData !== undefined) return cacheData;
@@ -217,13 +214,10 @@ subNavEl.innerHTML = [
     }
 
     (async () => {
-        console.log('[MB recordings] starting, artistId:', artistId, 'depth:', d);
         await loadCache();
-        console.log('[MB recordings] cache loaded:', !!_cache);
         const statusEl = document.getElementById('status-bar');
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('recordings-list');
-        console.log('[MB recordings] DOM elements:', { statusEl: !!statusEl, countBar: !!countBar, list: !!list });
 
         try {
             // ── fetch all recording stubs with pagination ──
