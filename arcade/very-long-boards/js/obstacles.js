@@ -1,127 +1,125 @@
-const obstacles = [];
+// ═══════════════════════════════════════════════
+// Very Long Boards — Obstacles (3D)
+// ═══════════════════════════════════════════════
+
+window.obstacles = [];
 let obsMaxZ = 0;
+let obsMeshes = [];
+let obsMaterials = {};
 
-function spawnObstacle(z) {
-    const t = CONFIG.OBS_TYPES[Math.floor(Math.random() * CONFIG.OBS_TYPES.length)];
-    const worldX = (Math.random() - 0.5) * 0.8;
+window.createObstacles = function(scene) {
+    obsMaterials = {
+        cone: (() => { const m = new BABYLON.StandardMaterial('coneMat', scene); m.diffuseColor = new BABYLON.Color3(1, 0.42, 0.21); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        rock: (() => { const m = new BABYLON.StandardMaterial('rockMat', scene); m.diffuseColor = new BABYLON.Color3(0.47, 0.47, 0.47); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        skater: (() => { const m = new BABYLON.StandardMaterial('skaterMat', scene); m.diffuseColor = new BABYLON.Color3(1, 0.18, 0.61); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        sign: (() => { const m = new BABYLON.StandardMaterial('signMat', scene); m.diffuseColor = new BABYLON.Color3(1, 0.88, 0.23); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        puddle: (() => { const m = new BABYLON.StandardMaterial('puddleMat', scene); m.diffuseColor = new BABYLON.Color3(0.29, 0.56, 0.85); m.specularColor = BABYLON.Color3.Black(); m.alpha = 0.6; return m; })()
+    };
+};
 
-    obstacles.push({
-        worldX,
-        z,
-        w: t.w, h: t.h,
-        points: t.points || 0,
-        type: t.type,
-        color: t.color,
-        active: true,
-        nearMissed: false,
-    });
+function spawnObstacle(z, scene) {
+    const types = CONFIG.OBS_TYPES;
+    const t = types[Math.floor(Math.random() * types.length)];
+    const worldX = (Math.random() - 0.5) * 4;
+
+    const obs = {
+        worldX, z, w: t.w, h: t.h, points: t.points || 0,
+        type: t.type, active: true, nearMissed: false, mesh: null
+    };
+
+    let mesh;
+    switch (t.type) {
+        case 'cone':
+            mesh = BABYLON.MeshBuilder.CreateCylinder('cone', { diameterTop: 0, diameterBottom: 0.4, height: 0.7, tessellation: 6 }, scene);
+            break;
+        case 'rock':
+            mesh = BABYLON.MeshBuilder.CreateSphere('rock', { diameter: 0.5, segments: 4 }, scene);
+            break;
+        case 'sign':
+            mesh = BABYLON.MeshBuilder.CreateBox('sign', { width: 0.3, height: 0.8, depth: 0.05 }, scene);
+            break;
+        case 'puddle':
+            mesh = BABYLON.MeshBuilder.CreateDisc('puddle', { radius: 0.6, tessellation: 6 }, scene);
+            mesh.rotation.x = Math.PI / 2;
+            break;
+        case 'skater':
+            mesh = BABYLON.MeshBuilder.CreateBox('skater', { width: 0.3, height: 0.7, depth: 0.2 }, scene);
+            break;
+    }
+
+    if (mesh) {
+        mesh.material = obsMaterials[t.type];
+        mesh.isPickable = false;
+        obs.mesh = mesh;
+    }
+
+    obstacles.push(obs);
     obsMaxZ = z;
 }
 
-function initObstacles() {
+window.initObstacles = function(scene) {
+    for (const o of obstacles) { if (o.mesh) o.mesh.dispose(); }
     obstacles.length = 0;
+    obsMeshes = [];
     obsMaxZ = 0;
-    let z = CONFIG.OBS_FIRST;
+    let z = CONFIG.OBS_FIRST * 0.1;
     for (let i = 0; i < 6; i++) {
-        spawnObstacle(z);
-        z += CONFIG.OBS_MIN_GAP + Math.random() * (CONFIG.OBS_MAX_GAP - CONFIG.OBS_MIN_GAP);
+        spawnObstacle(z, scene);
+        z += CONFIG.OBS_MIN_GAP * 0.1 + Math.random() * (CONFIG.OBS_MAX_GAP - CONFIG.OBS_MIN_GAP) * 0.1;
     }
-}
+};
 
-function updateObstacles() {
+window.updateObstacles = function(scene, terrain) {
+    const dt = 1;
     for (let i = obstacles.length - 1; i >= 0; i--) {
-        if (obstacles[i].z < player.distance - 300) obstacles.splice(i, 1);
+        if (obstacles[i].z < player.distance - 50) {
+            if (obstacles[i].mesh) obstacles[i].mesh.dispose();
+            obstacles.splice(i, 1);
+        }
     }
-    const dd = CONFIG.DRAW_DISTANCE * CONFIG.SEGMENT_LENGTH;
-    if (obsMaxZ < player.distance + dd) {
-        spawnObstacle(obsMaxZ + CONFIG.OBS_MIN_GAP + Math.random() * (CONFIG.OBS_MAX_GAP - CONFIG.OBS_MIN_GAP));
+    if (obsMaxZ < player.distance + 200) {
+        spawnObstacle(obsMaxZ + CONFIG.OBS_MIN_GAP * 0.1 + Math.random() * (CONFIG.OBS_MAX_GAP - CONFIG.OBS_MIN_GAP) * 0.1, scene);
     }
-}
+};
 
-function renderObstacles(ctx, road) {
-    const dd = CONFIG.DRAW_DISTANCE * CONFIG.SEGMENT_LENGTH;
+window.updateObstaclePositions = function(terrain, scrollOffset) {
+    for (const obs of obstacles) {
+        if (!obs.mesh) continue;
+        const relZ = obs.z - scrollOffset;
+        const curve = terrain.curveAt(obs.z);
+        const cx = curve * (obs.z - scrollOffset);
+        obs.mesh.position.x = obs.worldX + cx;
+        obs.mesh.position.y = terrain.hillAt(obs.z) + 0.35;
+        obs.mesh.position.z = relZ;
+        obs.mesh.setEnabled(obs.active);
+    }
+};
 
-    const sorted = [...obstacles].filter(o => o.active).sort((a, b) => b.z - a.z);
+window.checkObstacleCollisions = function(terrain) {
+    if (player.invincible || player.bailing) return false;
+    const char = CHARACTERS[currentCharacter];
+    const hitW = (char.hitbox.w / 40) * 0.5;
+    const hitH = (char.hitbox.h / 60) * 0.5;
 
-    for (const obs of sorted) {
-        const relZ = obs.z - player.distance;
-        if (relZ < CONFIG.CAMERA_DEPTH || relZ > dd) continue;
+    for (const obs of obstacles) {
+        if (!obs.active) continue;
+        const dz = obs.z - player.distance;
+        if (dz < -2 || dz > 3) continue;
 
-        const seg = road.findSegment(obs.z);
-        if (!seg) continue;
-        const proj = road._project(relZ, obs.worldX * CONFIG.ROAD_WIDTH, seg.y);
-        if (!proj) continue;
-        const sx = proj.cx;
-        const sy = proj.screenY;
-        const sw = obs.w * proj.scale;
-        const sh = obs.h * proj.scale;
-        const alpha = Math.min(1, 0.35 + proj.scale * 80 * 0.65);
+        const curve = terrain.curveAt(obs.z);
+        const cx = curve * dz;
+        const ox = obs.worldX + cx;
 
-        ctx.globalAlpha = alpha;
-
-        ctx.fillStyle = 'rgba(0,0,0,0.3)';
-        if (obs.type !== 'puddle') {
-            ctx.beginPath();
-            ctx.ellipse(sx, sy + 2 * proj.scale * 80, sw * 0.6, sh * 0.2, 0, 0, Math.PI * 2);
-            ctx.fill();
+        if (Math.abs(player.x - ox) < hitW + 0.3 && Math.abs(dz) < hitH + 0.5) {
+            obs.active = false;
+            return true;
         }
 
-        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
-        ctx.lineWidth = Math.max(1, 2 * proj.scale * 80);
-
-        if (obs.type === 'cone') {
-            ctx.fillStyle = '#ff6b35';
-            ctx.beginPath();
-            ctx.moveTo(sx, sy - sh);
-            ctx.lineTo(sx - sw / 2, sy);
-            ctx.lineTo(sx + sw / 2, sy);
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(sx - sw / 4, sy - sh * 0.6, sw / 2, sh * 0.12);
-        } else if (obs.type === 'rock') {
-            ctx.fillStyle = '#777';
-            ctx.beginPath();
-            ctx.ellipse(sx, sy - sh * 0.3, sw / 2, sh / 2, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = 'rgba(255,255,255,0.15)';
-            ctx.beginPath();
-            ctx.ellipse(sx - sw * 0.1, sy - sh * 0.4, sw * 0.25, sh * 0.2, -0.3, 0, Math.PI * 2);
-            ctx.fill();
-        } else if (obs.type === 'skater') {
-            ctx.fillStyle = '#ff2e9c';
-            ctx.fillRect(sx - sw / 4, sy - sh, sw / 2, sh * 0.6);
-            ctx.strokeRect(sx - sw / 4, sy - sh, sw / 2, sh * 0.6);
-            ctx.fillStyle = '#f0d5a8';
-            ctx.beginPath();
-            ctx.arc(sx, sy - sh * 0.8, sw * 0.2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
-        } else if (obs.type === 'sign') {
-            ctx.fillStyle = '#8B4513';
-            ctx.fillRect(sx - 2 * proj.scale * 80, sy - sh, 4 * proj.scale * 80, sh);
-            ctx.fillStyle = '#ffe03a';
-            ctx.fillRect(sx - sw / 2, sy - sh, sw, sh * 0.4);
-            ctx.strokeRect(sx - sw / 2, sy - sh, sw, sh * 0.4);
-            ctx.fillStyle = '#000';
-            ctx.font = `${Math.max(6, 8 * proj.scale * 80)}px "Press Start 2P", monospace`;
-            ctx.textAlign = 'center';
-            ctx.fillText('!', sx, sy - sh * 0.7);
-        } else if (obs.type === 'puddle') {
-            ctx.fillStyle = 'rgba(74,144,217,0.5)';
-            ctx.beginPath();
-            ctx.ellipse(sx, sy, sw / 2, sh / 2, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(100,180,255,0.4)';
-            ctx.stroke();
-            ctx.fillStyle = 'rgba(200,230,255,0.3)';
-            ctx.beginPath();
-            ctx.ellipse(sx - sw * 0.15, sy - sh * 0.1, sw * 0.2, sh * 0.15, -0.2, 0, Math.PI * 2);
-            ctx.fill();
+        if (!obs.nearMissed && Math.abs(player.x - ox) < hitW + 0.6 && Math.abs(dz) < hitH + 0.8) {
+            obs.nearMissed = true;
+            player.score += CONFIG.NEAR_MISS_POINTS;
+            playNearMissSound();
         }
-
-        ctx.globalAlpha = 1;
     }
-}
+    return false;
+};

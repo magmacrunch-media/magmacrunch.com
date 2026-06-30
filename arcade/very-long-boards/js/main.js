@@ -1,53 +1,75 @@
-// ═══════════════════════════════════-════════════
-// Very Long Boards — Main Game Loop
+// ═══════════════════════════════════════════════
+// Very Long Boards — Main Game Loop (Babylon.js)
 // ═══════════════════════════════════════════════
 
 let gameState = 'title';
 let currentCharacter = 'office-carl';
 let selectedCharIndex = 0;
 const charKeys = Object.keys(CHARACTERS);
-let road = null;
 let frame = 0;
-let trailTimer = 0;
 let bestScore = parseInt(localStorage.getItem('vlb-best') || '0');
-
 let countdownStart = 0;
 let lastCountNum = 0;
+
+let sceneObj = null;
+let terrain = null;
 
 const titleScreen = document.getElementById('titleScreen');
 const charSelect = document.getElementById('charSelect');
 const hud = document.getElementById('hud');
 const gameOver = document.getElementById('gameOver');
 const pauseScreen = document.getElementById('pauseScreen');
+const countdownOverlay = document.getElementById('countdownOverlay');
 
 function init() {
-    road = new Road();
+    const canvas = document.getElementById('renderCanvas');
+    sceneObj = window.createScene(canvas);
+    const { scene, whiteTex } = sceneObj;
+
+    terrain = window.createTerrain(scene);
+    window.createObstacles(scene);
+    window.createScenery(scene);
+    window.createPlayer(scene);
+    window.createParticles(scene, whiteTex);
+
     initAudio();
     renderCharacterPreview('csOffice', 'office-carl');
     renderCharacterPreview('csParty', 'party-carl');
     renderCharacterPreview('csDark', 'dark-carl');
-    requestAnimationFrame(gameLoop);
+
+    scene.registerBeforeRender(gameLogic);
+    sceneObj.engine.runRenderLoop(() => scene.render());
 }
 
-function gameLoop(timestamp) {
+function showOverlay(el) { if (el) el.classList.add('active'); }
+function hideOverlay(el) { if (el) el.classList.remove('active'); }
+
+function gameLogic() {
     frame++;
+    const dt = sceneObj.engine.getDeltaTime() / 1000;
     const inp = consumeInput();
 
     switch (gameState) {
         case 'title':
-            if (road) {
-                road.update(0.3);
-                renderGame(road, 0, frame, 0.3);
-            }
+            terrain.update(0.3);
+            window.updateObstaclePositions(terrain, 0.3);
+            window.updateSceneryPositions(terrain, 0.3);
+            sceneObj.updateCamera(playerMesh, 0, 0);
+            sceneObj.updateSky(playerMesh);
             if (inp.enter) {
                 gameState = 'select';
-                titleScreen.style.display = 'none';
-                charSelect.style.display = 'flex';
+                hideOverlay(titleScreen);
+                showOverlay(charSelect);
                 playSelectSound();
             }
             break;
 
         case 'select':
+            terrain.update(0.3);
+            window.updateObstaclePositions(terrain, 0.3);
+            window.updateSceneryPositions(terrain, 0.3);
+            sceneObj.updateCamera(playerMesh, 0, 0);
+            sceneObj.updateSky(playerMesh);
             if (inp.left) {
                 selectedCharIndex = (selectedCharIndex - 1 + charKeys.length) % charKeys.length;
                 currentCharacter = charKeys[selectedCharIndex];
@@ -63,104 +85,99 @@ function gameLoop(timestamp) {
             }
             break;
 
-        case 'countdown':
-            road.update(0.2);
+        case 'countdown': {
+            terrain.update(player.speed);
+            window.updateObstaclePositions(terrain, terrain.getScrollOffset());
+            window.updateSceneryPositions(terrain, terrain.getScrollOffset());
+            window.updatePlayerMesh(terrain, frame);
+            const curve = terrain.curveAt(player.distance);
+            const slope = terrain.hillAt(player.distance + 5) - terrain.hillAt(player.distance);
+            sceneObj.updateCamera(playerMesh, slope, curve);
+            sceneObj.updateSky(playerMesh);
             const elapsed = (Date.now() - countdownStart) / 1000;
             const remaining = CONFIG.COUNTDOWN_SECS - elapsed;
             if (remaining <= 0) {
                 gameState = 'playing';
+                hideOverlay(countdownOverlay);
                 hud.style.display = 'block';
             } else {
                 const countNum = Math.ceil(remaining);
-                if (countNum !== lastCountNum && countNum > 0) {
-                    playSelectSound();
-                    lastCountNum = countNum;
-                }
+                if (countNum !== lastCountNum && countNum > 0) { playSelectSound(); lastCountNum = countNum; }
                 renderCountdown(countNum);
             }
             break;
+        }
 
         case 'playing':
             if (inp.escape) {
                 gameState = 'paused';
-                pauseScreen.style.display = 'flex';
+                showOverlay(pauseScreen);
                 break;
             }
 
-            road.update(player.speed);
-            const result = updatePlayer(inp, road);
-            updateObstacles();
-            updateParticles();
+            terrain.update(player.distance);
+            const result = window.updatePlayer(inp, terrain, dt);
+            window.updateObstacles(sceneObj.scene, terrain);
+            window.updateScenery(sceneObj.scene);
+            window.updateObstaclePositions(terrain, terrain.getScrollOffset());
+            window.updateSceneryPositions(terrain, terrain.getScrollOffset());
+            window.updatePlayerMesh(terrain, frame);
+            window.updateTrailParticles(CHARACTERS[currentCharacter].trail, player.speed);
 
-            // Check for bail (stability ran out)
             if (result === 'bail') {
-                spawnCrashParticles(player.x, getPlayerScreenY());
+                window.spawnCrashParticles();
                 playCrashSound();
                 endGame('BAIL!');
                 break;
             }
-
-            // Trail particles
-            trailTimer++;
-            if (trailTimer % 3 === 0 && player.speed > 1) {
-                const sy = getPlayerScreenY();
-                spawnTrailParticle(player.x, sy + 40, CHARACTERS[currentCharacter].trail);
-            }
-
-            // Obstacle collisions
-            if (checkCollision(obstacles, road)) {
-                spawnCrashParticles(player.x, getPlayerScreenY());
+            if (window.checkObstacleCollisions(terrain)) {
+                window.spawnCrashParticles();
                 playCrashSound();
                 endGame('SPLAT!');
                 break;
             }
-
-            // Trick
             if (inp.trick) {
-                if (performTrick()) {
-                    spawnTrickParticles(player.x, getPlayerScreenY());
+                if (window.performTrick()) {
+                    window.spawnTrickParticles();
                     playTrickSound();
                 }
             }
 
-            renderGame(road, player.lean, frame, player.speed);
+            const curve2 = terrain.curveAt(player.distance);
+            const slope2 = terrain.hillAt(player.distance + 5) - terrain.hillAt(player.distance);
+            sceneObj.updateCamera(playerMesh, slope2, curve2);
+            sceneObj.updateSky(playerMesh);
             updateHUD();
             break;
 
         case 'paused':
-            updateParticles();
-            road.update(0);
-            renderGame(road, player.lean, frame, player.speed);
+            terrain.update(player.distance);
+            window.updatePlayerMesh(terrain, frame);
             if (inp.escape) {
                 gameState = 'playing';
-                pauseScreen.style.display = 'none';
+                hideOverlay(pauseScreen);
             }
             break;
 
         case 'gameover':
-            updateParticles();
-            road.update(0);
-            renderGame(road, player.lean, frame, player.speed);
-            if (inp.enter) {
-                startCountdown();
-            }
+            terrain.update(0);
+            window.updatePlayerMesh(terrain, frame);
+            if (inp.enter) startCountdown();
             break;
     }
-
-    requestAnimationFrame(gameLoop);
 }
 
 function startCountdown() {
-    resetPlayer();
-    initObstacles();
-    road = new Road();
-    road.playerX = 0;
+    window.resetPlayer();
+    window.initObstacles(sceneObj.scene);
+    window.initScenery(sceneObj.scene);
     countdownStart = Date.now();
     lastCountNum = CONFIG.COUNTDOWN_SECS + 1;
     gameState = 'countdown';
-    charSelect.style.display = 'none';
-    gameOver.style.display = 'none';
-    pauseScreen.style.display = 'none';
+    hideOverlay(charSelect);
+    hideOverlay(gameOver);
+    hideOverlay(pauseScreen);
+    showOverlay(countdownOverlay);
     hud.style.display = 'none';
     playStartSound();
 }
@@ -169,7 +186,7 @@ function endGame(cause) {
     player.alive = false;
     gameState = 'gameover';
     hud.style.display = 'none';
-    gameOver.style.display = 'flex';
+    showOverlay(gameOver);
     if (player.score > bestScore) {
         bestScore = player.score;
         localStorage.setItem('vlb-best', String(bestScore));
@@ -177,7 +194,6 @@ function endGame(cause) {
     document.getElementById('goScore').textContent = player.score;
     document.getElementById('goDist').textContent = Math.floor(player.distance);
     document.getElementById('goBest').textContent = bestScore;
-    // Show cause of death
     const causeEl = document.getElementById('goCause');
     if (causeEl) causeEl.textContent = cause || 'SPLAT!';
     playGameOverSound();
@@ -189,16 +205,38 @@ function updateCharSelection() {
     });
 }
 
+function renderCharacterPreview(canvasId, charKey) {
+    const pc = document.getElementById(canvasId);
+    if (!pc) return;
+    const pctx = pc.getContext('2d');
+    pctx.clearRect(0, 0, 64, 80);
+    const ch = characterSprites[charKey];
+    if (ch) ch.draw(pctx, 16, 10, 0, 0);
+}
+
+function renderCountdown(count) {
+    const countEl = document.getElementById('countdownText');
+    if (countEl) {
+        countEl.textContent = count > 0 ? String(count) : 'GO!';
+        countEl.style.color = count > 0 ? '#ffe03a' : '#39ff6e';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', init);
 document.addEventListener('keydown', (e) => {
     if (e.code === 'KeyD' && gameState === 'playing') {
-        road.debugMode = !road.debugMode;
+        terrain.debugMode = !terrain.debugMode;
     }
 });
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && gameState === 'playing') {
         gameState = 'paused';
-        pauseScreen.style.display = 'flex';
+        showOverlay(pauseScreen);
     }
 });
-window.__pageCleanup = function() {};
+window.__pageCleanup = function() {
+    if (sceneObj) {
+        sceneObj.engine.stopRenderLoop();
+        window.disposeParticles();
+    }
+};

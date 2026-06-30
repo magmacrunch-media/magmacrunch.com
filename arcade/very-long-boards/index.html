@@ -14,10 +14,10 @@
     <a href="../../arcade/index.html" class="mc-back">magmacrunch arcade</a>
 
     <div id="game-container">
-        <canvas id="gameCanvas" width="960" height="540"></canvas>
+        <canvas id="renderCanvas"></canvas>
 
         <!-- TITLE SCREEN -->
-        <div id="titleScreen" class="overlay">
+        <div id="titleScreen" class="overlay active">
             <div class="title-text">
                 <div class="title-main">VERY LONG<br>BOARDS</div>
                 <div class="title-sub">downhill skateboarding</div>
@@ -27,7 +27,7 @@
         </div>
 
         <!-- CHARACTER SELECT -->
-        <div id="charSelect" class="overlay" style="display:none;">
+        <div id="charSelect" class="overlay">
             <div class="cs-title">SELECT YOUR CARL</div>
             <div class="cs-cards">
                 <div class="cs-card" data-char="office-carl">
@@ -52,6 +52,11 @@
             <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO PLAY</div>
         </div>
 
+        <!-- COUNTDOWN -->
+        <div id="countdownOverlay" class="overlay" style="background:rgba(10,6,18,0.6);">
+            <div id="countdownText" style="font-size:72px; color:#ffe03a; text-shadow:0 0 30px rgba(255,224,58,0.8);">3</div>
+        </div>
+
         <!-- HUD -->
         <div id="hud" style="display:none;">
             <div class="hud-score">SCORE: <span id="hudScore">0</span></div>
@@ -61,7 +66,7 @@
         </div>
 
         <!-- GAME OVER -->
-        <div id="gameOver" class="overlay" style="display:none;">
+        <div id="gameOver" class="overlay">
             <div class="go-title">GAME OVER</div>
             <div class="go-cause" id="goCause">SPLAT!</div>
             <div class="go-score">SCORE: <span id="goScore">0</span></div>
@@ -71,19 +76,21 @@
         </div>
 
         <!-- PAUSE -->
-        <div id="pauseScreen" class="overlay" style="display:none;">
+        <div id="pauseScreen" class="overlay">
             <div class="pause-text">PAUSED</div>
             <div class="insert-coin">— PRESS ESC TO RESUME —</div>
         </div>
     </div>
 
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="js/config.js"></script>
     <script src="js/characters.js"></script>
-    <script src="js/road.js"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/terrain.js"></script>
     <script src="js/player.js"></script>
     <script src="js/obstacles.js"></script>
+    <script src="js/scenery.js"></script>
     <script src="js/particles.js"></script>
-    <script src="js/renderer.js"></script>
     <script src="js/hud.js"></script>
     <script src="js/input.js"></script>
     <script src="js/audio.js"></script>
