@@ -1,11 +1,13 @@
 // ═══════════════════════════════════════════════
 // Very Long Boards — Terrain
-// Single road ribbon on a ground plane
+// Road + ground as synchronized ribbons
 // ═══════════════════════════════════════════════
 
 window.createTerrain = function(scene) {
     const ROAD_W = 8;
+    const GROUND_W = 200;
     const SEGS = 300;
+    const BACK = 50;
     const SEG_LEN = 3;
 
     function curveAt(z) {
@@ -20,16 +22,28 @@ window.createTerrain = function(scene) {
                Math.sin(z * 0.01) * 1.5;
     }
 
-    function buildPaths(scrollOffset) {
-        const left = [];
-        const right = [];
+    function buildRoadPaths(scrollOffset) {
+        const left = [], right = [];
         for (let i = 0; i < SEGS; i++) {
-            const z = (i - 50) * SEG_LEN;
-            const worldZ = z + scrollOffset;
-            const cx = curveAt(worldZ) * z;
+            const localZ = (i - BACK) * SEG_LEN;
+            const worldZ = localZ + scrollOffset;
+            const cx = curveAt(worldZ) * localZ;
             const cy = hillAt(worldZ);
-            left.push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
-            right.push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
+            left.push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, localZ));
+            right.push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, localZ));
+        }
+        return [left, right];
+    }
+
+    function buildGroundPaths(scrollOffset) {
+        const left = [], right = [];
+        for (let i = 0; i < SEGS; i++) {
+            const localZ = (i - BACK) * SEG_LEN;
+            const worldZ = localZ + scrollOffset;
+            const cx = curveAt(worldZ) * localZ;
+            const cy = hillAt(worldZ) - 0.3;
+            left.push(new BABYLON.Vector3(cx - GROUND_W / 2, cy, localZ));
+            right.push(new BABYLON.Vector3(cx + GROUND_W / 2, cy, localZ));
         }
         return [left, right];
     }
@@ -44,12 +58,15 @@ window.createTerrain = function(scene) {
 
     let scrollOffset = 0;
 
-    const ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 500, height: 500 }, scene);
+    const ground = BABYLON.MeshBuilder.CreateRibbon('ground', {
+        pathArray: buildGroundPaths(0),
+        updatable: true,
+        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+    }, scene);
     ground.material = groundMat;
-    ground.position.y = -0.3;
 
     const road = BABYLON.MeshBuilder.CreateRibbon('road', {
-        pathArray: buildPaths(0),
+        pathArray: buildRoadPaths(0),
         updatable: true,
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
@@ -78,14 +95,14 @@ window.createTerrain = function(scene) {
     function update(playerZ) {
         scrollOffset = playerZ;
 
+        BABYLON.MeshBuilder.CreateRibbon('ground', {
+            pathArray: buildGroundPaths(scrollOffset),
+            instance: ground
+        });
         BABYLON.MeshBuilder.CreateRibbon('road', {
-            pathArray: buildPaths(scrollOffset),
+            pathArray: buildRoadPaths(scrollOffset),
             instance: road
         });
-
-        ground.position.x = 0;
-        ground.position.y = hillAt(playerZ - 7) - 2;
-        ground.position.z = 150;
 
         for (const m of mountains) {
             m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
