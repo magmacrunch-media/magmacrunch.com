@@ -173,11 +173,6 @@ window.updatePlayer = function(input, terrain, dt) {
     }
     player.lean += (player.targetLean - player.lean) * 0.12 * dtScale;
 
-    if (terrain) {
-        const curve = terrain.curveAt(player.distance);
-        player.x += curve * player.speed * 1.5 * dtScale;
-    }
-
     player.speed = Math.max(0.02, Math.min(maxSpd, player.speed));
     player.x = Math.max(-3.5, Math.min(3.5, player.x));
 

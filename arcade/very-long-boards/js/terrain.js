@@ -6,7 +6,7 @@
 window.createTerrain = function(scene) {
     const ROAD_W = 8;
     const SHOULDER_W = 3;
-    const GRASS_W = 25;
+    const GRASS_W = 40;
     const SEGS = 300;
     const SEG_LEN = 3;
 
@@ -62,7 +62,7 @@ window.createTerrain = function(scene) {
             const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
             const edgeY = -0.15;
-            const farY = -1.0;
+            const farY = -1.5;
             if (side < 0) {
                 paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W - GRASS_W, cy + farY, z));
                 paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + edgeY, z));
@@ -75,15 +75,15 @@ window.createTerrain = function(scene) {
     }
 
     const roadMat = new BABYLON.StandardMaterial('roadMat', scene);
-    roadMat.diffuseColor = new BABYLON.Color3(0.35, 0.35, 0.38);
+    roadMat.diffuseColor = new BABYLON.Color3(0.38, 0.38, 0.4);
     roadMat.specularColor = BABYLON.Color3.Black();
 
     const shoulderMat = new BABYLON.StandardMaterial('shoulderMat', scene);
-    shoulderMat.diffuseColor = new BABYLON.Color3(0.42, 0.35, 0.25);
+    shoulderMat.diffuseColor = new BABYLON.Color3(0.45, 0.38, 0.28);
     shoulderMat.specularColor = BABYLON.Color3.Black();
 
     const grassMat = new BABYLON.StandardMaterial('grassMat', scene);
-    grassMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.12);
+    grassMat.diffuseColor = new BABYLON.Color3(0.2, 0.45, 0.15);
     grassMat.specularColor = BABYLON.Color3.Black();
 
     let scrollOffset = 0;
@@ -94,7 +94,6 @@ window.createTerrain = function(scene) {
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     road.material = roadMat;
-    road.convertToFlatShadedMesh();
 
     const shoulderL = BABYLON.MeshBuilder.CreateRibbon('shoulderL', {
         pathArray: buildShoulderPaths(0, -1),
@@ -124,12 +123,9 @@ window.createTerrain = function(scene) {
     }, scene);
     grassR.material = grassMat;
 
-    const startPad = BABYLON.MeshBuilder.CreateGround('startPad', { width: 100, height: 200 }, scene);
-    const startPadMat = new BABYLON.StandardMaterial('startPadMat', scene);
-    startPadMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.12);
-    startPadMat.specularColor = BABYLON.Color3.Black();
-    startPad.material = startPadMat;
-    startPad.position = new BABYLON.Vector3(0, -2, -100);
+    const bgGround = BABYLON.MeshBuilder.CreateGround('bg', { width: 400, height: 400 }, scene);
+    bgGround.material = grassMat;
+    bgGround.position.y = -2;
 
     const mountains = [];
     for (let i = 0; i < 25; i++) {
@@ -147,7 +143,6 @@ window.createTerrain = function(scene) {
         mat.specularColor = BABYLON.Color3.Black();
         mat.freeze();
         m.material = mat;
-        m.convertToFlatShadedMesh();
         m._baseX = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.random() * 150);
         m._baseZ = Math.random() * 600;
         m._h = h;
@@ -178,7 +173,8 @@ window.createTerrain = function(scene) {
             instance: grassR
         });
 
-        startPad.position.z = -20 - playerZ;
+        bgGround.position.x = 0;
+        bgGround.position.z = playerZ + 100;
 
         for (const m of mountains) {
             m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
