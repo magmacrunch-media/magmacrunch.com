@@ -49,8 +49,8 @@ body.svfp-about-page .ascii-logo-wrap {
     width: 100%; max-width: 100%; margin-top: 48px; margin-bottom: 0;
     display: flex; justify-content: center; animation: fadeUp 0.5s 0.2s ease both;
     position: relative; overflow: hidden;
-    background-image: url('../../../assets/photos/svfp/svfp-november2025-motel1.jpg');
-    background-size: cover; background-position: center 40%; padding: 28px 20px;
+    background: url('../../../assets/photos/svfp/svfp-november2025-motel1.jpg') center 40% / cover no-repeat;
+    padding: 28px 20px;
 }
 body.svfp-about-page .ascii-logo-wrap::before { content: ''; position: absolute; inset: 0; background: rgba(8, 8, 18, 0.62); }
 body.svfp-about-page .ascii-logo-link { text-decoration: none; display: block; position: relative; z-index: 1; }
