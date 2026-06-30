@@ -12,9 +12,13 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 ├── archive/            # artist/place pages with MusicBrainz API integration
 │   ├── by-artist/     # artist stubs with window.ARTIST_CONFIG
 │   ├── by-place/      # place stubs with window.PLACE_CONFIG
-│   └── full-catalog/
+│   ├── by-label/      # label stubs with window.__LABEL_CONFIG
+│   ├── by-contributor/ # contributor stubs with window.__CONTRIBUTOR_CONFIG
+│   └── _cache/        # MusicBrainz data backups (JSON)
 ├── home/              # about.html, guestbook.html, links/
 ├── music/             # distributed-music.html, floppy-disk/
+├── press/             # journals: scientific/, experimental/
+├── scripts/           # backup-musicbrainz.mjs
 ├── templates/         # JS template scripts for archive pages
 └── visual/            # gallery pages (collage, photography, music-videos)
 ```
@@ -24,8 +28,14 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 - **Retro aesthetic required**: Keep "Press Start 2P" font, CRT scanlines, neon colors, pixel art
 - **Self-contained games**: Each arcade subfolder works standalone - don't add cross-game dependencies
 - **MusicBrainz rate limit**: API allows ~1 req/sec. `fetchWithRetry` handles backoff - don't batch-fetch
-- **Canvas pixel art**: Use `image-rendering: pixelated` and draw at low resolution (64x64), scale up with CSS
+- **Canvas pixel art**: Use `image-rendering: pixelated` and draw at low resolution (64x64), scale with CSS
 - **Config via `window.*_CONFIG`**: Archive pages define config objects inline, templates read them
+
+## MusicBrainz cache
+
+Templates check local JSON cache before hitting the MusicBrainz API. Run `node scripts/backup-musicbrainz.mjs` to snapshot all data. A GitHub Action runs this weekly with `--skip-existing`.
+
+Cache location: `archive/_cache/{artists,places,contributors,labels}/{uuid}.json`
 
 ## Theming nav colors
 
@@ -70,8 +80,6 @@ body.theme .dropdown a:nth-child(2) { border-left-color: #color2; }
 body.theme .dropdown a:hover { background: #accent; }
 ```
 
-Planned: color theme overhauls for `music/` and `home/` pages.
-
 ## Color palette (defined in style.css)
 
 ```
@@ -95,11 +103,3 @@ See `archive/ARCHIVE_THEMING.md` for detailed theming patterns. Short version:
 3. Set `window.ARTIST_CONFIG`, `window.PLACE_CONFIG`, or `window.__CONTRIBUTOR_CONFIG` with MusicBrainz UUID
 4. Choose `accent` color per page type (green/cyan/rose/yellow/blue)
 5. For contributor pages, also load `entity-map.js` before `contributor.js`
-
-## No verification needed
-
-Static HTML files - no lint/typecheck commands exist.
-
-## Known issues
-
-- **Roderick Tron jump physics** (`arcade/roderick-tron/`): The jump mechanics don't feel right. Multiple rounds of physics tuning (gravity, jump force, collision window, gap sizes) haven't solved it. Needs hands-on playtesting rather than math-only analysis. Last attempted fix: commit daef263.

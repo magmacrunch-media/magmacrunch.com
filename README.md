@@ -11,10 +11,11 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ```
 /                              root: index.html, style.css, nav.js
 ├── archive/                   artist, place, and contributor archive pages
-│   ├── by-artist/             14 artist subfolders (thld, svfp, ds, etc.)
-│   ├── by-place/              8 place subfolders (twin-maples, melrose-house, etc.)
+│   ├── by-artist/             artist subfolders (thld, svfp, ds, etc.)
+│   ├── by-place/              place subfolders (twin-maples, melrose-house, etc.)
+│   ├── by-label/              label pages (magmacrunch-media, etc.)
 │   ├── by-contributor/        musician credit pages (jake-mccoy, elias-grey, etc.)
-│   └── full-catalog/          all-recordings, all-releases, all-works
+│   └── _cache/                MusicBrainz data backups (JSON)
 ├── assets/                    shared assets
 │   ├── archive.css            shared archive page styles
 │   ├── jukebox.js             persistent mini-player logic
@@ -33,10 +34,15 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 │   └── tetris/                helsinki 1989 — stack blocks, clear lines
 ├── home/                      about.html, guestbook.html, links/
 ├── music/                     jukebox, distributed music, floppy disk, catalog
+├── press/                     journals
+│   ├── scientific/            science & technology essays
+│   └── experimental/          experimental writing
+├── scripts/                   backup-musicbrainz.mjs
 ├── templates/                 JS template scripts for archive subpages
 │   ├── artist_*.js            events, releases, recordings, works templates
 │   ├── place_*.js             personnel, recordings, works, events templates
 │   ├── contributor.js         by-contributor credit page template
+│   ├── label.js               by-label page template
 │   └── entity-map.js          MB ID → internal path mapping for contributor links
 └── visual/                    gallery pages (collage, photography, music-videos)
 ```
@@ -51,13 +57,13 @@ A mini audio player injected into every page's `<nav>` via `nav.js`. Loads `asse
 ### SPA-style navigation
 `nav.js` intercepts same-site `<a>` clicks, fetches the target page, swaps `<main>` content, and manages CSS/script lifecycle. `<nav>` (with audio) persists across navigations. Arcade pages do full page loads.
 
-Excluded from SPA: `/arcade/`
+Excluded from SPA: `/arcade/`, `/by-contributor/`, `/by-label/`
 
 ### themed nav bar
 All nav elements (border glow, brand text, dropdown hover, hamburger) use CSS variables (`--nav-accent`, `--nav-glow`, `--nav-brand`, `--nav-brand-glow`) set per-page in each artist/place shared CSS file.
 
 ### archive template system
-Each artist/place has a thin HTML stub that sets a config object (`window.ARTIST_CONFIG` or `window.PLACE_CONFIG`). A shared template script injects styles, populates the sub-nav, and fetches data from MusicBrainz.
+Each artist/place has a thin HTML stub that sets a config object (`window.ARTIST_CONFIG` or `window.PLACE_CONFIG`). A shared template script injects styles, populates the sub-nav, and fetches data from MusicBrainz. Templates check a local JSON cache first — run `node scripts/backup-musicbrainz.mjs` to snapshot all data.
 
 ---
 
@@ -120,14 +126,12 @@ Same pattern but use `window.PLACE_CONFIG` and place templates. Place subpages u
 
 ## API notes
 
-All archive data is fetched live from the [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API). Rate-limited to ~1 req/sec for anonymous clients.
+All archive data is fetched from the [MusicBrainz API](https://musicbrainz.org/doc/MusicBrainz_API). A local JSON cache (`archive/_cache/`) is checked first — run `node scripts/backup-musicbrainz.mjs` to update it. A GitHub Action runs this weekly.
 
 - Records fetched sequentially with 1000ms delay between detail requests
 - `fetchWithRetry` handles 429/503 with exponential backoff (up to 4 retries)
 - Event poster art fetched from [Event Art Archive](https://eventartarchive.org) in background queue
 - Area name lookups cached per session
-
-Loading is slow by design — patience required for artists with large catalogs.
 
 ---
 
@@ -136,5 +140,4 @@ Loading is slow by design — patience required for artists with large catalogs.
 - Open `index.html` directly in browser — no build server needed
 - Arcade games are fully self-contained (own CSS/JS/audio, no `style.css` or `nav.js`)
 - Nav links are absolutized on page load to survive SPA `pushState` URL changes
-- `nav.js` auto-nav generator exists but is unused — all pages have hardcoded `<nav>`
 - Guestbook uses formsubmit.co for email delivery (no backend)
