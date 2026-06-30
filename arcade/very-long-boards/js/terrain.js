@@ -1,24 +1,26 @@
 // ═══════════════════════════════════════════════
 // Very Long Boards — Terrain Generation
+// Downhill mountain slope with curves, bumps, drops
 // ═══════════════════════════════════════════════
 
 window.createTerrain = function(scene) {
-    const ROAD_W = 6;
-    const GRASS_W = 30;
+    const ROAD_W = 14;
+    const GRASS_W = 40;
     const SEGS = 300;
     const SEG_LEN = 3;
 
     function curveAt(z) {
-        return Math.sin(z * 0.003) * 0.08 +
-               Math.sin(z * 0.001) * 0.12 +
-               Math.sin(z * 0.007) * 0.04;
+        return Math.sin(z * 0.004) * 0.15 +
+               Math.sin(z * 0.0015) * 0.2 +
+               Math.sin(z * 0.009) * 0.06;
     }
 
     function hillAt(z) {
-        return Math.sin(z * 0.005) * 6 +
-               Math.sin(z * 0.012) * 2.5 +
-               Math.sin(z * 0.002) * 10 -
-               z * 0.02;
+        const steepBase = -z * 0.18;
+        const bigWaves = Math.sin(z * 0.003) * 8 + Math.sin(z * 0.007) * 4;
+        const moguls = Math.sin(z * 0.04) * 1.2 + Math.sin(z * 0.07) * 0.6;
+        const drops = Math.sin(z * 0.015) > 0.85 ? -8 : 0;
+        return steepBase + bigWaves + moguls + drops;
     }
 
     function buildRoadPaths(scrollOffset) {
@@ -28,8 +30,9 @@ window.createTerrain = function(scene) {
             const worldZ = z + scrollOffset;
             const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
-            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
-            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
+            const bumpX = Math.sin(worldZ * 0.1) * 0.3;
+            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 + bumpX, cy, z));
+            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + bumpX, cy, z));
         }
         return paths;
     }
@@ -41,23 +44,24 @@ window.createTerrain = function(scene) {
             const worldZ = z + scrollOffset;
             const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
+            const grassDrop = -1.5;
             if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - GRASS_W, cy - 0.1, z));
+                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - GRASS_W, cy + grassDrop, z));
                 paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
             } else {
                 paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + GRASS_W, cy - 0.1, z));
+                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + GRASS_W, cy + grassDrop, z));
             }
         }
         return paths;
     }
 
     const roadMat = new BABYLON.StandardMaterial('roadMat', scene);
-    roadMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.42);
+    roadMat.diffuseColor = new BABYLON.Color3(0.35, 0.35, 0.38);
     roadMat.specularColor = BABYLON.Color3.Black();
 
     const grassMat = new BABYLON.StandardMaterial('grassMat', scene);
-    grassMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.16);
+    grassMat.diffuseColor = new BABYLON.Color3(0.22, 0.5, 0.2);
     grassMat.specularColor = BABYLON.Color3.Black();
 
     let scrollOffset = 0;
@@ -87,9 +91,9 @@ window.createTerrain = function(scene) {
     grassR.convertToFlatShadedMesh();
 
     const mountains = [];
-    for (let i = 0; i < 20; i++) {
-        const h = 30 + Math.random() * 50;
-        const d = 20 + Math.random() * 30;
+    for (let i = 0; i < 30; i++) {
+        const h = 40 + Math.random() * 80;
+        const d = 25 + Math.random() * 40;
         const m = BABYLON.MeshBuilder.CreateCylinder('mnt' + i, {
             diameterTop: 0,
             diameterBottom: d,
@@ -97,15 +101,15 @@ window.createTerrain = function(scene) {
             tessellation: 5 + Math.floor(Math.random() * 3)
         }, scene);
         const mat = new BABYLON.StandardMaterial('mntMat' + i, scene);
-        const g = 0.25 + Math.random() * 0.2;
-        mat.diffuseColor = new BABYLON.Color3(g * 0.7, g, g * 0.6);
+        const g = 0.2 + Math.random() * 0.25;
+        mat.diffuseColor = new BABYLON.Color3(g * 0.6, g, g * 0.5);
         mat.specularColor = BABYLON.Color3.Black();
         mat.freeze();
         m.material = mat;
         m.convertToFlatShadedMesh();
-        m.position.y = h / 2 - 10;
-        m._baseX = (Math.random() - 0.5) * 300;
-        m._baseZ = Math.random() * 500;
+        m._baseX = (Math.random() > 0.5 ? 1 : -1) * (30 + Math.random() * 120);
+        m._baseZ = Math.random() * 600;
+        m._h = h;
         mountains.push(m);
     }
 
@@ -126,7 +130,8 @@ window.createTerrain = function(scene) {
         });
 
         for (const m of mountains) {
-            m.position.x = m._baseX;
+            m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
+            m.position.y = hillAt(m._baseZ) + m._h / 2;
             m.position.z = m._baseZ - scrollOffset;
         }
     }
