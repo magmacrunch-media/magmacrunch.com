@@ -45,7 +45,7 @@ body.svfp-about-page .release-flyer-caption a { color: var(--svfp-cta); text-dec
 body.svfp-about-page .release-flyer-caption a:hover { opacity: 1; }
 
 /* ── ASCII BANNER ── */
-body.svfp-about-page .ascii-logo-wrap {
+body.svfp-page.svfp-about-page main .ascii-logo-wrap {
     width: 100%; max-width: 100%; margin-top: 48px; margin-bottom: 0;
     display: flex; justify-content: center; animation: fadeUp 0.5s 0.2s ease both;
     position: relative; overflow: hidden;
