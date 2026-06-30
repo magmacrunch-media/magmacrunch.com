@@ -577,13 +577,16 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
             // Re-render MathJax if present (for pages with equations)
             if (window.MathJax) {
+                const doTypeset = async () => {
+                    if (MathJax.typesetClear) MathJax.typesetClear();
+                    if (MathJax.typesetPromise) await MathJax.typesetPromise();
+                };
                 if (MathJax.typesetPromise) {
-                    try { await MathJax.typesetPromise(); } catch (e) {}
+                    try { await doTypeset(); } catch (e) {}
                 } else if (MathJax.startup) {
-                    // MathJax loaded but typeset not ready yet — wait for it
                     await new Promise(r => {
                         const check = setInterval(() => {
-                            if (MathJax.typesetPromise) { clearInterval(check); MathJax.typesetPromise().then(r).catch(r); }
+                            if (MathJax.typesetPromise) { clearInterval(check); doTypeset().then(r).catch(r); }
                         }, 100);
                         setTimeout(() => { clearInterval(check); r(); }, 5000);
                     });
