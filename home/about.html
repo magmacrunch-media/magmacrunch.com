@@ -510,65 +510,6 @@
             .logo-grid-section { padding: 36px 20px 44px; }
             .pixel-logo { width: 40px; height: 40px; }
         }
-
-        /* ── SVFP SECTION ── */
-        .svfp-section { margin-top: 40px; margin-bottom: 40px; }
-
-        .svfp-section .bio-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-        .svfp-section .bio-link { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 6px; color: #888890; border: 1px solid #2a2a3a; padding: 5px 12px; text-decoration: none; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; }
-        .svfp-section .bio-link:hover { color: #FF2D9B; border-color: #FF2D9B; }
-        .svfp-section .bio-link.stream { color: #00D4FF; border-color: #00D4FF; }
-        .svfp-section .bio-link.stream:hover { background: #00D4FF; color: #0A0A0F; }
-        .svfp-section .floppy-link { font-family: 'Courier Prime', monospace; font-size: 13px; color: #F5F0E0; margin-top: 6px; }
-        .svfp-section .floppy-link a { color: #FF2D9B; text-decoration: none; }
-        .svfp-section .floppy-link a:hover { text-decoration: underline; }
-
-        .svfp-section .release-flyer-link {
-            display: block; width: 100%; max-width: 480px; margin: 24px auto 0;
-            border: 1px solid #2a1a3a; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .svfp-section .release-flyer-link:hover {
-            border-color: #00D4FF; box-shadow: 0 0 24px rgba(0, 212, 255, 0.28);
-        }
-        .svfp-section .release-flyer-link img {
-            width: 100%; display: block; filter: saturate(0.92) brightness(0.96); transition: filter 0.3s ease;
-        }
-        .svfp-section .release-flyer-link:hover img { filter: saturate(1.0) brightness(1.0); }
-        .svfp-section .release-flyer-caption { margin-top: 10px; text-align: center; }
-        .svfp-section .release-flyer-caption span { font-family: 'Press Start 2P', monospace; font-size: 5.5px; color: #888890; letter-spacing: 0.1em; opacity: 0.6; }
-        .svfp-section .release-flyer-caption a { color: #00D4FF; text-decoration: none; opacity: 0.85; transition: opacity 0.15s; }
-        .svfp-section .release-flyer-caption a:hover { opacity: 1; }
-
-        .svfp-ascii-banner {
-            width: 100%; margin-top: 48px; display: flex; justify-content: center; position: relative; overflow: hidden;
-            background-image: url('../assets/photos/svfp/svfp-november2025-motel1.jpg');
-            background-size: cover; background-position: center 40%; padding: 28px 20px;
-        }
-        .svfp-ascii-banner::before { content: ''; position: absolute; inset: 0; background: rgba(8, 8, 18, 0.62); }
-        .svfp-ascii-banner a { text-decoration: none; display: block; position: relative; z-index: 1; }
-        .svfp-ascii-banner pre {
-            font-family: 'Courier Prime', monospace; font-size: clamp(4px, 0.9vw, 8px); line-height: 1.2;
-            color: #00D4FF; text-shadow: 0 0 8px rgba(0, 212, 255, 0.45); white-space: pre;
-            display: inline-block; transition: color 0.2s, text-shadow 0.2s;
-        }
-        .svfp-ascii-banner a:hover pre { color: #ffffff; text-shadow: 0 0 14px rgba(0, 212, 255, 0.7); }
-
-        .lightbox { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(5, 5, 14, 0.96); align-items: center; justify-content: center; }
-        .lightbox.open { display: flex; }
-        .lightbox-img-wrap { position: relative; max-width: min(90vw, 900px); max-height: 88vh; display: flex; align-items: center; justify-content: center; }
-        .lightbox-img-wrap img { max-width: 100%; max-height: 88vh; object-fit: contain; display: block; border: 1px solid #2a1a3a; }
-        .lightbox-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(8,8,18,0.82); border: 1px solid #2a1a3a; color: #888890; font-family: 'Press Start 2P', monospace; font-size: 8px; padding: 10px 12px; cursor: pointer; z-index: 2; line-height: 1; transition: color 0.15s, border-color 0.15s, background 0.15s; }
-        .lightbox-btn:hover { color: #00D4FF; border-color: #00D4FF; background: rgba(8,8,18,0.98); }
-        .lightbox-prev { left: -48px; }
-        .lightbox-next { right: -48px; }
-        .lightbox-close { position: fixed; top: 18px; right: 22px; background: none; border: none; color: #888890; font-family: 'Press Start 2P', monospace; font-size: 9px; cursor: pointer; z-index: 1001; padding: 8px; transition: color 0.15s; }
-        .lightbox-close:hover { color: #00D4FF; }
-        .lightbox-counter { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); font-family: 'Press Start 2P', monospace; font-size: 6px; color: #888890; letter-spacing: 0.1em; opacity: 0.55; }
-        @media (max-width: 640px) {
-            .lightbox-prev { left: 4px; }
-            .lightbox-next { right: 4px; }
-            .lightbox-btn { font-size: 6px; padding: 8px 9px; }
-        }
     </style>
 </head>
 <body>
@@ -804,46 +745,6 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 `--`---'    `--`-----'   `--`--''       `--`--''   `--`-`--`--'       `--`---'   `--`-----' `--`        `--`./  `--` </pre>
             <span class="strip-hover-tag">↗ linktr.ee/sexvanfloorplan</span>
         </a>
-    </div>
-
-    <!-- SVFP PROMO SECTION -->
-    <div class="svfp-section">
-        <div class="bio-links">
-            <a class="bio-link stream" href="https://artists.landr.com/svfp_pay2play" target="_blank" rel="noopener">▶ stream / download pay2play</a>
-            <a class="bio-link" href="https://musicbrainz.org/artist/260e4953-a937-4355-8389-d1baaf24eca5" target="_blank" rel="noopener">▶ view on MusicBrainz</a>
-            <a class="bio-link" href="https://linktr.ee/sexvanfloorplan" target="_blank" rel="noopener">linktree</a>
-            <a class="bio-link" href="https://www.instagram.com/sexvanfloorplan" target="_blank" rel="noopener">instagram</a>
-            <a class="bio-link" href="https://www.tiktok.com/@sexvanfloorplan" target="_blank" rel="noopener">tiktok</a>
-        </div>
-        <p class="floppy-link">also check out the <a href="../music/physical-media/floppy-disk/pay2play-2025.html">first floppy disk single →</a></p>
-
-        <a class="release-flyer-link" href="https://www.instagram.com/p/DMRvSkjs3Qd/" target="_blank" rel="noopener" aria-label="pay2play — view on Instagram">
-            <img src="../assets/flyers/svfp/pay2play-flyer.png" alt="1-800-PAY2PLAY — Sex Van Floor Plan single advertisement">
-        </a>
-        <div class="release-flyer-caption">
-            <span>flyer by <a href="../archive/by-artist/svfp/index.html">Elias Grey</a> &nbsp;·&nbsp; ↗ view on instagram</span>
-        </div>
-
-        <!-- LIGHTBOX -->
-        <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-            <button class="lightbox-close" id="lbClose">✕</button>
-            <div class="lightbox-img-wrap">
-                <button class="lightbox-btn lightbox-prev" id="lbPrev">◀</button>
-                <img id="lbImg" src="" alt="">
-                <button class="lightbox-btn lightbox-next" id="lbNext">▶</button>
-            </div>
-            <div class="lightbox-counter" id="lbCounter"></div>
-        </div>
-
-        <div class="svfp-ascii-banner">
-            <a href="https://www.instagram.com/sexvanfloorplan/" target="_blank">
-                <pre>
-▗▄▄▄▖▗▖   ▗▄▄▄▖        ▗▄▄▖ ▗▖ ▗▖ ▗▄▖          ▗▄▄▖▗▖ ▗▖▗▖ ▗▖ ▗▄▄▖▗▖ ▗▖           ▗▖ ▗▄▖ ▗▖ ▗▖▗▄▄▄▖
-▐▌   ▐▌     █          ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌        ▐▌   ▐▌ ▐▌▐▌ ▐▌▐▌   ▐▌▗▞▘           ▐▌▐▌ ▐▌▐▌▗▞▘▐▌   
-▐▛▀▀▘▐▌     █          ▐▛▀▚▖▐▛▀▜▌▐▌ ▐▌        ▐▌   ▐▛▀▜▌▐▌ ▐▌▐▌   ▐▛▚▖            ▐▌▐▛▀▜▌▐▛▚▖ ▐▛▀▀▘
-▐▙▄▄▖▐▙▄▄▖▗▄█▄▖        ▐▌ ▐▌▐▌ ▐▌▝▚▄▞▘        ▝▚▄▄▖▐▌ ▐▌▝▚▄▞▘▝▚▄▄▖▐▌ ▐▌        ▗▄▄▞▘▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖</pre>
-            </a>
-        </div>
     </div>
 
     <!-- THLD -->
@@ -1128,36 +1029,6 @@ __/\\\______________________________________________/\\\________________________
             }
         });
     });
-})();
-</script>
-<script>
-// ── SVFP PHOTO LIGHTBOX ──
-(function() {
-    var PHOTOS = [
-        { src: '../assets/photos/svfp/svfp-may2025-1.jpg', alt: 'SVFP — green light' },
-        { src: '../assets/photos/svfp/svfp-may2025-2.jpg', alt: 'SVFP — blue light guitar' },
-        { src: '../assets/photos/svfp/svfp-may2025-3.jpg', alt: 'SVFP — light streaks teal' },
-        { src: '../assets/photos/svfp/svfp-may2025-4.jpg', alt: 'SVFP — blue blur' },
-        { src: '../assets/photos/svfp/svfp-may2025-5.jpg', alt: 'SVFP — purple pizza' },
-        { src: '../assets/photos/svfp/svfp-may2025-6.jpg', alt: 'SVFP — red light two' },
-        { src: '../assets/photos/svfp/svfp-may2025-7.jpg', alt: 'SVFP — band portrait blue' },
-        { src: '../assets/photos/svfp/svfp-may2025-8.jpg', alt: 'SVFP — red cameras' },
-        { src: '../assets/photos/svfp/svfp-may2025-9.jpg', alt: 'SVFP — purple eating' },
-    ];
-    var lb = document.getElementById('lightbox');
-    if (!lb) return;
-    var lbImg = document.getElementById('lbImg');
-    var lbCount = document.getElementById('lbCounter');
-    var lbCurrent = 0;
-    function lbOpen(idx) { lbCurrent = idx; lbImg.src = PHOTOS[idx].src; lbImg.alt = PHOTOS[idx].alt; lbCount.textContent = (idx + 1) + ' / ' + PHOTOS.length; lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
-    function lbClose() { lb.classList.remove('open'); document.body.style.overflow = ''; lbImg.src = ''; }
-    function lbGo(dir) { lbOpen(((lbCurrent + dir) + PHOTOS.length) % PHOTOS.length); }
-    document.querySelectorAll('.photo-slot').forEach(function(slot) { slot.addEventListener('click', function() { lbOpen(+slot.dataset.idx); }); });
-    document.getElementById('lbClose').addEventListener('click', lbClose);
-    document.getElementById('lbPrev').addEventListener('click', function() { lbGo(-1); });
-    document.getElementById('lbNext').addEventListener('click', function() { lbGo(1); });
-    lb.addEventListener('click', function(e) { if (e.target === lb) lbClose(); });
-    document.addEventListener('keydown', function(e) { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') lbClose(); if (e.key === 'ArrowLeft') lbGo(-1); if (e.key === 'ArrowRight') lbGo(1); });
 })();
 </script>
 </body>
