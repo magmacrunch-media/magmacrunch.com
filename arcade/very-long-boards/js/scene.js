@@ -23,7 +23,7 @@ window.createScene = function(canvas) {
 
     scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
     scene.fogDensity = 0.005;
-    scene.fogColor = new BABYLON.Color3(0.58, 0.78, 0.92);
+    scene.fogColor = new BABYLON.Color3(0.6, 0.78, 0.9);
 
     const skyTex = new BABYLON.DynamicTexture('skyTex', { width: 1, height: 64 }, scene);
     const skyCtx = skyTex.getContext();
@@ -58,10 +58,10 @@ window.createScene = function(canvas) {
         const pPos = playerMesh.position;
         const slopeFactor = Math.max(0, Math.min(1, -slope / 2));
 
-        const camHeight = 8 + slopeFactor * 5;
-        const camDist = 5 + slopeFactor * 2;
+        const camHeight = 5 + slopeFactor * 3;
+        const camDist = 7 + slopeFactor * 2;
 
-        const targetX = pPos.x * 0.5;
+        const targetX = pPos.x * 0.4;
         const targetY = pPos.y + camHeight;
         const targetZ = pPos.z - camDist;
 
@@ -73,11 +73,11 @@ window.createScene = function(canvas) {
         camera.position.y = camY;
         camera.position.z = camZ;
 
-        const lookAhead = 20;
-        const lookCurve = roadCurve * 40;
+        const lookAhead = 12;
+        const lookCurve = roadCurve * 30;
         camera.setTarget(new BABYLON.Vector3(
             pPos.x + lookCurve,
-            pPos.y - 2 - slopeFactor * 3,
+            pPos.y + 1,
             pPos.z + lookAhead
         ));
     }

@@ -75,15 +75,15 @@ window.createTerrain = function(scene) {
     }
 
     const roadMat = new BABYLON.StandardMaterial('roadMat', scene);
-    roadMat.diffuseColor = new BABYLON.Color3(0.28, 0.28, 0.3);
+    roadMat.diffuseColor = new BABYLON.Color3(0.22, 0.22, 0.24);
     roadMat.specularColor = BABYLON.Color3.Black();
 
     const shoulderMat = new BABYLON.StandardMaterial('shoulderMat', scene);
-    shoulderMat.diffuseColor = new BABYLON.Color3(0.45, 0.4, 0.35);
+    shoulderMat.diffuseColor = new BABYLON.Color3(0.42, 0.35, 0.25);
     shoulderMat.specularColor = BABYLON.Color3.Black();
 
     const grassMat = new BABYLON.StandardMaterial('grassMat', scene);
-    grassMat.diffuseColor = new BABYLON.Color3(0.25, 0.48, 0.2);
+    grassMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.12);
     grassMat.specularColor = BABYLON.Color3.Black();
 
     let scrollOffset = 0;
@@ -102,7 +102,6 @@ window.createTerrain = function(scene) {
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     shoulderL.material = shoulderMat;
-    shoulderL.convertToFlatShadedMesh();
 
     const shoulderR = BABYLON.MeshBuilder.CreateRibbon('shoulderR', {
         pathArray: buildShoulderPaths(0, 1),
@@ -110,7 +109,6 @@ window.createTerrain = function(scene) {
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     shoulderR.material = shoulderMat;
-    shoulderR.convertToFlatShadedMesh();
 
     const grassL = BABYLON.MeshBuilder.CreateRibbon('grassL', {
         pathArray: buildGrassPaths(0, -1),
@@ -118,7 +116,6 @@ window.createTerrain = function(scene) {
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     grassL.material = grassMat;
-    grassL.convertToFlatShadedMesh();
 
     const grassR = BABYLON.MeshBuilder.CreateRibbon('grassR', {
         pathArray: buildGrassPaths(0, 1),
@@ -126,7 +123,6 @@ window.createTerrain = function(scene) {
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     grassR.material = grassMat;
-    grassR.convertToFlatShadedMesh();
 
     const mountains = [];
     for (let i = 0; i < 25; i++) {

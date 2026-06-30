@@ -29,17 +29,17 @@ window.createPlayer = function(scene) {
     wheelMat.diffuseColor = new BABYLON.Color3(0.15, 0.15, 0.15);
     wheelMat.specularColor = BABYLON.Color3.Black();
 
-    const deck = BABYLON.MeshBuilder.CreateBox('deck', { width: 0.55, height: 0.05, depth: 1.5 }, scene);
+    const deck = BABYLON.MeshBuilder.CreateBox('deck', { width: 0.7, height: 0.06, depth: 1.8 }, scene);
     deck.material = deckMat;
     deck.parent = root;
-    deck.position.y = 0.12;
+    deck.position.y = 0.15;
 
-    const grip = BABYLON.MeshBuilder.CreateBox('grip', { width: 0.52, height: 0.02, depth: 1.3 }, scene);
+    const grip = BABYLON.MeshBuilder.CreateBox('grip', { width: 0.66, height: 0.02, depth: 1.6 }, scene);
     grip.material = gripMat;
     grip.parent = root;
-    grip.position.y = 0.155;
+    grip.position.y = 0.19;
 
-    const wheelPos = [[-0.22, 0.04, 0.45], [0.22, 0.04, 0.45], [-0.22, 0.04, -0.45], [0.22, 0.04, -0.45]];
+    const wheelPos = [[-0.28, 0.05, 0.55], [0.28, 0.05, 0.55], [-0.28, 0.05, -0.55], [0.28, 0.05, -0.55]];
     for (const [wx, wy, wz] of wheelPos) {
         const w = BABYLON.MeshBuilder.CreateCylinder('wh', { height: 0.1, diameter: 0.12, tessellation: 6 }, scene);
         w.material = wheelMat;
@@ -64,41 +64,41 @@ window.createPlayer = function(scene) {
     hairMat.diffuseColor = new BABYLON.Color3(0.35, 0.22, 0.12);
     hairMat.specularColor = BABYLON.Color3.Black();
 
-    const body = BABYLON.MeshBuilder.CreateBox('body', { width: 0.38, height: 0.42, depth: 0.2 }, scene);
+    const body = BABYLON.MeshBuilder.CreateBox('body', { width: 0.5, height: 0.55, depth: 0.28 }, scene);
     body.material = shirtMat;
     body.parent = root;
-    body.position.y = 0.6;
+    body.position.y = 0.75;
 
-    const legL = BABYLON.MeshBuilder.CreateBox('legL', { width: 0.13, height: 0.26, depth: 0.13 }, scene);
+    const legL = BABYLON.MeshBuilder.CreateBox('legL', { width: 0.16, height: 0.32, depth: 0.16 }, scene);
     legL.material = pantsMat;
     legL.parent = root;
-    legL.position = new BABYLON.Vector3(-0.11, 0.28, 0);
+    legL.position = new BABYLON.Vector3(-0.14, 0.35, 0);
 
-    const legR = BABYLON.MeshBuilder.CreateBox('legR', { width: 0.13, height: 0.26, depth: 0.13 }, scene);
+    const legR = BABYLON.MeshBuilder.CreateBox('legR', { width: 0.16, height: 0.32, depth: 0.16 }, scene);
     legR.material = pantsMat;
     legR.parent = root;
-    legR.position = new BABYLON.Vector3(0.11, 0.28, 0);
+    legR.position = new BABYLON.Vector3(0.14, 0.35, 0);
 
-    const head = BABYLON.MeshBuilder.CreateBox('head', { size: 0.22 }, scene);
+    const head = BABYLON.MeshBuilder.CreateBox('head', { size: 0.28 }, scene);
     head.material = skinMat;
     head.parent = root;
-    head.position.y = 0.95;
+    head.position.y = 1.2;
 
-    const hair = BABYLON.MeshBuilder.CreateBox('hair', { width: 0.24, height: 0.07, depth: 0.24 }, scene);
+    const hair = BABYLON.MeshBuilder.CreateBox('hair', { width: 0.3, height: 0.09, depth: 0.3 }, scene);
     hair.material = hairMat;
     hair.parent = root;
-    hair.position.y = 1.1;
+    hair.position.y = 1.38;
 
-    const armL = BABYLON.MeshBuilder.CreateBox('armL', { width: 0.08, height: 0.3, depth: 0.08 }, scene);
+    const armL = BABYLON.MeshBuilder.CreateBox('armL', { width: 0.1, height: 0.38, depth: 0.1 }, scene);
     armL.material = skinMat;
     armL.parent = root;
-    armL.position = new BABYLON.Vector3(-0.26, 0.65, 0);
+    armL.position = new BABYLON.Vector3(-0.34, 0.82, 0);
     armL.rotation.z = 0.2;
 
-    const armR = BABYLON.MeshBuilder.CreateBox('armR', { width: 0.08, height: 0.3, depth: 0.08 }, scene);
+    const armR = BABYLON.MeshBuilder.CreateBox('armR', { width: 0.1, height: 0.38, depth: 0.1 }, scene);
     armR.material = skinMat;
     armR.parent = root;
-    armR.position = new BABYLON.Vector3(0.26, 0.65, 0);
+    armR.position = new BABYLON.Vector3(0.34, 0.82, 0);
     armR.rotation.z = -0.2;
 
     root._armL = armL;
