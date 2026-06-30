@@ -7,8 +7,9 @@ window.createTerrain = function(scene) {
     const ROAD_W = 8;
     const SHOULDER_W = 3;
     const GRASS_W = 25;
-    const SEGS = 300;
+    const SEGS = 350;
     const SEG_LEN = 3;
+    const BACK_SEGS = 30;
 
     function curveAt(z) {
         return Math.sin(z * 0.003) * 0.12 +
@@ -25,12 +26,12 @@ window.createTerrain = function(scene) {
     function buildRoadPaths(scrollOffset) {
         const paths = [[], []];
         for (let i = 0; i < SEGS; i++) {
-            const z = i * SEG_LEN;
-            const worldZ = z + scrollOffset;
-            const cx = curveAt(worldZ) * z;
+            const worldZ = (i - BACK_SEGS) * SEG_LEN + scrollOffset;
+            const localZ = i * SEG_LEN;
+            const cx = curveAt(worldZ) * (worldZ - scrollOffset);
             const cy = hillAt(worldZ);
-            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
-            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
+            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, localZ));
+            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, localZ));
         }
         return paths;
     }
@@ -38,17 +39,17 @@ window.createTerrain = function(scene) {
     function buildShoulderPaths(scrollOffset, side) {
         const paths = [[], []];
         for (let i = 0; i < SEGS; i++) {
-            const z = i * SEG_LEN;
-            const worldZ = z + scrollOffset;
-            const cx = curveAt(worldZ) * z;
+            const worldZ = (i - BACK_SEGS) * SEG_LEN + scrollOffset;
+            const localZ = i * SEG_LEN;
+            const cx = curveAt(worldZ) * (worldZ - scrollOffset);
             const cy = hillAt(worldZ);
             const dy = -0.15;
             if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + dy, z));
-                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
+                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + dy, localZ));
+                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, localZ));
             } else {
-                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + dy, z));
+                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, localZ));
+                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + dy, localZ));
             }
         }
         return paths;
@@ -57,18 +58,18 @@ window.createTerrain = function(scene) {
     function buildGrassPaths(scrollOffset, side) {
         const paths = [[], []];
         for (let i = 0; i < SEGS; i++) {
-            const z = i * SEG_LEN;
-            const worldZ = z + scrollOffset;
-            const cx = curveAt(worldZ) * z;
+            const worldZ = (i - BACK_SEGS) * SEG_LEN + scrollOffset;
+            const localZ = i * SEG_LEN;
+            const cx = curveAt(worldZ) * (worldZ - scrollOffset);
             const cy = hillAt(worldZ);
             const edgeY = -0.15;
             const farY = -1.0;
             if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W - GRASS_W, cy + farY, z));
-                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + edgeY, z));
+                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W - GRASS_W, cy + farY, localZ));
+                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + edgeY, localZ));
             } else {
-                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + edgeY, z));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W + GRASS_W, cy + farY, z));
+                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + edgeY, localZ));
+                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W + GRASS_W, cy + farY, localZ));
             }
         }
         return paths;
@@ -91,7 +92,7 @@ window.createTerrain = function(scene) {
     const road = BABYLON.MeshBuilder.CreateRibbon('road', {
         pathArray: buildRoadPaths(0),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        sideOrientation: BABYLON.Mesh.FRONTSIDE
     }, scene);
     road.material = roadMat;
     road.convertToFlatShadedMesh();
@@ -99,28 +100,28 @@ window.createTerrain = function(scene) {
     const shoulderL = BABYLON.MeshBuilder.CreateRibbon('shoulderL', {
         pathArray: buildShoulderPaths(0, -1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        sideOrientation: BABYLON.Mesh.FRONTSIDE
     }, scene);
     shoulderL.material = shoulderMat;
 
     const shoulderR = BABYLON.MeshBuilder.CreateRibbon('shoulderR', {
         pathArray: buildShoulderPaths(0, 1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        sideOrientation: BABYLON.Mesh.FRONTSIDE
     }, scene);
     shoulderR.material = shoulderMat;
 
     const grassL = BABYLON.MeshBuilder.CreateRibbon('grassL', {
         pathArray: buildGrassPaths(0, -1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        sideOrientation: BABYLON.Mesh.FRONTSIDE
     }, scene);
     grassL.material = grassMat;
 
     const grassR = BABYLON.MeshBuilder.CreateRibbon('grassR', {
         pathArray: buildGrassPaths(0, 1),
         updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        sideOrientation: BABYLON.Mesh.FRONTSIDE
     }, scene);
     grassR.material = grassMat;
 
