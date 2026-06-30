@@ -1,12 +1,10 @@
 // ═══════════════════════════════════════════════
-// Very Long Boards — Terrain Generation
-// New Hampshire forest road — gentle downhill
+// Very Long Boards — Terrain
+// Single road ribbon on a ground plane
 // ═══════════════════════════════════════════════
 
 window.createTerrain = function(scene) {
     const ROAD_W = 8;
-    const SHOULDER_W = 3;
-    const GRASS_W = 40;
     const SEGS = 300;
     const SEG_LEN = 3;
 
@@ -22,119 +20,47 @@ window.createTerrain = function(scene) {
                Math.sin(z * 0.01) * 1.5;
     }
 
-    function buildRoadPaths(scrollOffset) {
-        const paths = [[], []];
+    function buildPaths(scrollOffset) {
+        const left = [];
+        const right = [];
         for (let i = 0; i < SEGS; i++) {
-            const z = i * SEG_LEN;
+            const z = (i - 50) * SEG_LEN;
             const worldZ = z + scrollOffset;
             const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
-            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
-            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
+            left.push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
+            right.push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
         }
-        return paths;
-    }
-
-    function buildShoulderPaths(scrollOffset, side) {
-        const paths = [[], []];
-        for (let i = 0; i < SEGS; i++) {
-            const z = i * SEG_LEN;
-            const worldZ = z + scrollOffset;
-            const cx = curveAt(worldZ) * z;
-            const cy = hillAt(worldZ);
-            const dy = -0.15;
-            if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + dy, z));
-                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
-            } else {
-                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + dy, z));
-            }
-        }
-        return paths;
-    }
-
-    function buildGrassPaths(scrollOffset, side) {
-        const paths = [[], []];
-        for (let i = 0; i < SEGS; i++) {
-            const z = i * SEG_LEN;
-            const worldZ = z + scrollOffset;
-            const cx = curveAt(worldZ) * z;
-            const cy = hillAt(worldZ);
-            const edgeY = -0.15;
-            const farY = -1.5;
-            if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W - GRASS_W, cy + farY, z));
-                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + edgeY, z));
-            } else {
-                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + edgeY, z));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W + GRASS_W, cy + farY, z));
-            }
-        }
-        return paths;
+        return [left, right];
     }
 
     const roadMat = new BABYLON.StandardMaterial('roadMat', scene);
-    roadMat.diffuseColor = new BABYLON.Color3(0.38, 0.38, 0.4);
+    roadMat.diffuseColor = new BABYLON.Color3(0.4, 0.4, 0.42);
     roadMat.specularColor = BABYLON.Color3.Black();
 
-    const shoulderMat = new BABYLON.StandardMaterial('shoulderMat', scene);
-    shoulderMat.diffuseColor = new BABYLON.Color3(0.45, 0.38, 0.28);
-    shoulderMat.specularColor = BABYLON.Color3.Black();
-
-    const grassMat = new BABYLON.StandardMaterial('grassMat', scene);
-    grassMat.diffuseColor = new BABYLON.Color3(0.2, 0.45, 0.15);
-    grassMat.specularColor = BABYLON.Color3.Black();
+    const groundMat = new BABYLON.StandardMaterial('groundMat', scene);
+    groundMat.diffuseColor = new BABYLON.Color3(0.22, 0.48, 0.16);
+    groundMat.specularColor = BABYLON.Color3.Black();
 
     let scrollOffset = 0;
 
+    const ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 500, height: 500 }, scene);
+    ground.material = groundMat;
+    ground.position.y = -0.3;
+
     const road = BABYLON.MeshBuilder.CreateRibbon('road', {
-        pathArray: buildRoadPaths(0),
+        pathArray: buildPaths(0),
         updatable: true,
         sideOrientation: BABYLON.Mesh.DOUBLESIDE
     }, scene);
     road.material = roadMat;
 
-    const shoulderL = BABYLON.MeshBuilder.CreateRibbon('shoulderL', {
-        pathArray: buildShoulderPaths(0, -1),
-        updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
-    }, scene);
-    shoulderL.material = shoulderMat;
-
-    const shoulderR = BABYLON.MeshBuilder.CreateRibbon('shoulderR', {
-        pathArray: buildShoulderPaths(0, 1),
-        updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
-    }, scene);
-    shoulderR.material = shoulderMat;
-
-    const grassL = BABYLON.MeshBuilder.CreateRibbon('grassL', {
-        pathArray: buildGrassPaths(0, -1),
-        updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
-    }, scene);
-    grassL.material = grassMat;
-
-    const grassR = BABYLON.MeshBuilder.CreateRibbon('grassR', {
-        pathArray: buildGrassPaths(0, 1),
-        updatable: true,
-        sideOrientation: BABYLON.Mesh.DOUBLESIDE
-    }, scene);
-    grassR.material = grassMat;
-
-    const bgGround = BABYLON.MeshBuilder.CreateGround('bg', { width: 400, height: 400 }, scene);
-    bgGround.material = grassMat;
-    bgGround.position.y = -2;
-
     const mountains = [];
-    for (let i = 0; i < 25; i++) {
+    for (let i = 0; i < 20; i++) {
         const h = 50 + Math.random() * 100;
         const d = 30 + Math.random() * 50;
         const m = BABYLON.MeshBuilder.CreateCylinder('mnt' + i, {
-            diameterTop: 0,
-            diameterBottom: d,
-            height: h,
+            diameterTop: 0, diameterBottom: d, height: h,
             tessellation: 5 + Math.floor(Math.random() * 3)
         }, scene);
         const mat = new BABYLON.StandardMaterial('mntMat' + i, scene);
@@ -144,7 +70,7 @@ window.createTerrain = function(scene) {
         mat.freeze();
         m.material = mat;
         m._baseX = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.random() * 150);
-        m._baseZ = Math.random() * 600;
+        m._baseZ = Math.random() * 500;
         m._h = h;
         mountains.push(m);
     }
@@ -153,28 +79,12 @@ window.createTerrain = function(scene) {
         scrollOffset = playerZ;
 
         BABYLON.MeshBuilder.CreateRibbon('road', {
-            pathArray: buildRoadPaths(scrollOffset),
+            pathArray: buildPaths(scrollOffset),
             instance: road
         });
-        BABYLON.MeshBuilder.CreateRibbon('shoulderL', {
-            pathArray: buildShoulderPaths(scrollOffset, -1),
-            instance: shoulderL
-        });
-        BABYLON.MeshBuilder.CreateRibbon('shoulderR', {
-            pathArray: buildShoulderPaths(scrollOffset, 1),
-            instance: shoulderR
-        });
-        BABYLON.MeshBuilder.CreateRibbon('grassL', {
-            pathArray: buildGrassPaths(scrollOffset, -1),
-            instance: grassL
-        });
-        BABYLON.MeshBuilder.CreateRibbon('grassR', {
-            pathArray: buildGrassPaths(scrollOffset, 1),
-            instance: grassR
-        });
 
-        bgGround.position.x = 0;
-        bgGround.position.z = playerZ + 100;
+        ground.position.x = 0;
+        ground.position.z = playerZ + 150;
 
         for (const m of mountains) {
             m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
@@ -183,11 +93,12 @@ window.createTerrain = function(scene) {
         }
     }
 
+    function getRoadCenterX(dist) {
+        return curveAt(dist) * (dist - scrollOffset);
+    }
+
     return {
-        update,
-        curveAt,
-        hillAt,
-        ROAD_W,
+        update, curveAt, hillAt, ROAD_W, getRoadCenterX,
         getScrollOffset: () => scrollOffset
     };
 };
