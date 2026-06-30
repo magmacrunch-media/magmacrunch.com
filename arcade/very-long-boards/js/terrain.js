@@ -84,8 +84,8 @@ window.createTerrain = function(scene) {
         });
 
         ground.position.x = 0;
-        ground.position.y = hillAt(playerZ) - 1;
-        ground.position.z = playerZ + 150;
+        ground.position.y = hillAt(playerZ - 7) - 2;
+        ground.position.z = 150;
 
         for (const m of mountains) {
             m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
