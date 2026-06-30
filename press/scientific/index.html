@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>press — magmacrunch media</title>
-    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
-    <link rel="stylesheet" href="../style.css">
+    <title>scientific — press — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
     <style>
-        /* ── NAV ZINE OVERRIDES ── */
         :root {
             --nav-accent: #c02828;
             --nav-glow: rgba(192,40,40,0.4);
@@ -18,7 +17,6 @@
         body {
             background-color: #f0e4c8;
             color: #1a1a1a;
-            /* subtle paper texture */
             background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
         }
 
@@ -44,7 +42,6 @@
         .breadcrumb .sep { margin: 0 8px; color: #c8c0a8; }
         .breadcrumb .current { color: #c02828; }
 
-        /* ── PAGE HEADER ── */
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(14px, 3vw, 24px);
@@ -64,14 +61,12 @@
             animation: fadeUp 0.5s 0.05s ease both;
         }
 
-        /* ── INTRO ── */
         .press-intro {
             width: min(640px, 90vw);
             text-align: center;
             margin-bottom: 48px;
             animation: fadeUp 0.5s 0.1s ease both;
         }
-
         .press-intro p {
             font-family: 'Courier Prime', monospace;
             font-size: 14px;
@@ -79,14 +74,6 @@
             color: #333;
         }
 
-        .press-intro a {
-            color: #c02828;
-            text-decoration: underline;
-            text-decoration-color: rgba(192,40,40,0.3);
-        }
-        .press-intro a:hover { color: #8a1a1a; }
-
-        /* ── DIVIDER ── */
         .section-divider {
             width: min(640px, 90vw);
             height: 2px;
@@ -107,7 +94,6 @@
             font-size: 10px;
         }
 
-        /* ── PIECE CARDS ── */
         .pieces-wrap {
             width: min(640px, 90vw);
             display: flex;
@@ -141,7 +127,6 @@
             background: #e0d4b8;
         }
 
-        /* left accent bar */
         .piece-card::before {
             content: '';
             display: block;
@@ -205,7 +190,6 @@
             transform: translateX(0);
         }
 
-        /* ── FOOTER OVERRIDE ── */
         footer {
             background: #e8dcc0 !important;
             border-top-color: #c8c0a8 !important;
@@ -216,55 +200,21 @@
         @media (max-width: 640px) {
             .page-title { font-size: 14px; }
         }
-        /* ── CONTACT BOX ── */
-        .contact-box {
-            width: min(600px, 90vw);
-            border: 2px solid #c8c0a8;
-            background: #e8dcc0;
-            padding: 28px;
-            margin-top: 48px;
-            text-align: center;
-            animation: fadeUp 0.5s 0.2s ease both;
-        }
-        .contact-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: #c02828;
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-        }
-        .contact-box p {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: #777;
-            letter-spacing: 0.08em;
-            line-height: 2.2;
-            margin-bottom: 12px;
-        }
-        .contact-box a {
-            color: #c02828;
-            font-weight: 700;
-            text-decoration: none;
-        }
-        .contact-box a:hover {
-            text-decoration: underline;
-        }
-
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
     <ul class="nav-links" id="navLinks">
-        <li><a href="../index.html">home</a></li>
-        <li><a href="../home/about.html">about</a></li>
-        <li><a href="../music/index.html">music</a><div class="dropdown"><a href="../music/jukebox/index.html">jukebox</a><a href="../music/distributed-music.html">distributed music</a><a href="../music/physical-media/index.html">physical media</a></div></li>
-        <li><a href="../visual/index.html">visual</a><div class="dropdown"><a href="../visual/music-videos.html">music videos</a><a href="../visual/collage.html">collage</a><a href="../visual/photography.html">photography</a></div></li>
-        <li><a href="../archive/index.html">archive</a><div class="dropdown"><a href="../archive/by-artist/index.html">by artist</a><a href="../archive/by-place/index.html">by place</a><a href="../archive/by-label/index.html">by label</a><a href="../archive/by-contributor/index.html">by contributor</a></div></li>
-        <li><a href="../arcade/index.html">arcade</a></li>
-        <li><a href="../press/index.html">press</a></li>
-        <li><a href="../home/guestbook.html">guestbook</a></li>
+        <li><a href="../../index.html">home</a></li>
+        <li><a href="../../home/about.html">about</a></li>
+        <li><a href="../../music/index.html">music</a><div class="dropdown"><a href="../../music/jukebox/index.html">jukebox</a><a href="../../music/distributed-music.html">distributed music</a><a href="../../music/physical-media/index.html">physical media</a></div></li>
+        <li><a href="../../visual/index.html">visual</a><div class="dropdown"><a href="../../visual/music-videos.html">music videos</a><a href="../../visual/collage.html">collage</a><a href="../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../archive/index.html">archive</a><div class="dropdown"><a href="../../archive/by-artist/index.html">by artist</a><a href="../../archive/by-place/index.html">by place</a><a href="../../archive/by-label/index.html">by label</a><a href="../../archive/by-contributor/index.html">by contributor</a></div></li>
+        <li><a href="../../arcade/index.html">arcade</a></li>
+        <li><a href="../../press/index.html">press</a></li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
     </ul>
     <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
 </nav>
@@ -272,60 +222,51 @@
 <main>
 
     <div class="breadcrumb">
-        <a href="../index.html">home</a>
+        <a href="../../index.html">home</a>
         <span class="sep">›</span>
-        <span class="current">press</span>
+        <a href="../../press/index.html">press</a>
+        <span class="sep">›</span>
+        <span class="current">scientific</span>
     </div>
 
-    <h1 class="page-title">// press //</h1>
-    <p class="page-subtitle">magmacrunch press</p>
+    <h1 class="page-title">// scientific //</h1>
+    <p class="page-subtitle">a journal of science &amp; technology</p>
 
     <div class="press-intro">
-        <p>a diy publishing house for essays, poetry, fiction, and experimental writing. no gatekeepers, no advance, no permission needed.</p>
+        <p>essays on physics, mathematics, and the machinery of the universe.</p>
     </div>
 
     <div class="section-divider"></div>
 
     <div class="pieces-wrap">
-        <div class="pieces-label">// journals //</div>
+        <div class="pieces-label">// pieces //</div>
 
-        <a href="scientific/index.html" class="piece-card">
+        <a href="photon-quantum.html" class="piece-card">
             <div class="piece-card-info">
                 <div class="piece-card-text">
-                    <div class="piece-card-title">scientific</div>
+                    <div class="piece-card-title">On the Quantum Nature of Photons</div>
                     <div class="piece-card-meta">
-                        <span class="type">journal</span>
-                        science &amp; technology &nbsp;·&nbsp; 2 pieces
+                        <span class="type">essay</span>
+                        jake mccoy &nbsp;·&nbsp; sep 2024
                     </div>
                 </div>
                 <span class="piece-card-arrow">▶</span>
             </div>
         </a>
 
-        <a href="experimental/index.html" class="piece-card">
+        <a href="cone/index.html" class="piece-card">
             <div class="piece-card-info">
                 <div class="piece-card-text">
-                    <div class="piece-card-title">experimental</div>
+                    <div class="piece-card-title">Why is off-plane diffraction conical?</div>
                     <div class="piece-card-meta">
-                        <span class="type">journal</span>
-                        experimental writing &nbsp;·&nbsp; 1 piece
+                        <span class="type">essay</span>
+                        jake mccoy &nbsp;·&nbsp; 2022
                     </div>
                 </div>
                 <span class="piece-card-arrow">▶</span>
             </div>
         </a>
 
-        <!-- ADD FUTURE JOURNALS HERE -->
-
-    </div>
-
-    <!-- SUBMISSIONS -->
-    <div class="section-divider"></div>
-
-    <div class="contact-box">
-        <div class="contact-label">// submissions //</div>
-        <p>send submissions to<br><a href="mailto:press@magmacrunch.com">press@magmacrunch.com</a></p>
-        <p>include your name (or pseudonym) and a short bio<br>if you want</p>
     </div>
 
 </main>
@@ -334,6 +275,6 @@
     &copy; 2026 <span>magmacrunch media</span>
 </footer>
 
-<script src="../nav.js"></script>
+<script src="../../nav.js"></script>
 </body>
 </html>
