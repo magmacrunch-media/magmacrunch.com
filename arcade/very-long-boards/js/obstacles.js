@@ -1,49 +1,72 @@
 // ═══════════════════════════════════════════════
 // Very Long Boards — Obstacles (3D)
+// Realistic road hazards
 // ═══════════════════════════════════════════════
 
 window.obstacles = [];
 let obsMaxZ = 0;
-let obsMeshes = [];
 let obsMaterials = {};
 
 window.createObstacles = function(scene) {
     obsMaterials = {
-        cone: (() => { const m = new BABYLON.StandardMaterial('coneMat', scene); m.diffuseColor = new BABYLON.Color3(1, 0.42, 0.21); m.specularColor = BABYLON.Color3.Black(); return m; })(),
-        rock: (() => { const m = new BABYLON.StandardMaterial('rockMat', scene); m.diffuseColor = new BABYLON.Color3(0.47, 0.47, 0.47); m.specularColor = BABYLON.Color3.Black(); return m; })(),
-        skater: (() => { const m = new BABYLON.StandardMaterial('skaterMat', scene); m.diffuseColor = new BABYLON.Color3(1, 0.18, 0.61); m.specularColor = BABYLON.Color3.Black(); return m; })(),
-        sign: (() => { const m = new BABYLON.StandardMaterial('signMat', scene); m.diffuseColor = new BABYLON.Color3(1, 0.88, 0.23); m.specularColor = BABYLON.Color3.Black(); return m; })(),
-        puddle: (() => { const m = new BABYLON.StandardMaterial('puddleMat', scene); m.diffuseColor = new BABYLON.Color3(0.29, 0.56, 0.85); m.specularColor = BABYLON.Color3.Black(); m.alpha = 0.6; return m; })()
+        rock: (() => { const m = new BABYLON.StandardMaterial('rockMat', scene); m.diffuseColor = new BABYLON.Color3(0.5, 0.48, 0.44); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        branch: (() => { const m = new BABYLON.StandardMaterial('branchMat', scene); m.diffuseColor = new BABYLON.Color3(0.35, 0.22, 0.1); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        puddle: (() => { const m = new BABYLON.StandardMaterial('puddleMat', scene); m.diffuseColor = new BABYLON.Color3(0.3, 0.45, 0.55); m.specularColor = BABYLON.Color3.Black(); m.alpha = 0.7; return m; })(),
+        pinecone: (() => { const m = new BABYLON.StandardMaterial('pineconeMat', scene); m.diffuseColor = new BABYLON.Color3(0.45, 0.3, 0.15); m.specularColor = BABYLON.Color3.Black(); return m; })(),
+        stick: (() => { const m = new BABYLON.StandardMaterial('stickMat', scene); m.diffuseColor = new BABYLON.Color3(0.4, 0.28, 0.12); m.specularColor = BABYLON.Color3.Black(); return m; })()
     };
 };
 
+const OBS_TYPES = [
+    { type: 'rock', w: 0.5, h: 0.3, prob: 0.25 },
+    { type: 'branch', w: 1.0, h: 0.15, prob: 0.25 },
+    { type: 'puddle', w: 1.2, h: 0.05, prob: 0.2 },
+    { type: 'pinecone', w: 0.2, h: 0.15, prob: 0.2 },
+    { type: 'stick', w: 0.6, h: 0.1, prob: 0.1 }
+];
+
+function pickObsType() {
+    const r = Math.random();
+    let acc = 0;
+    for (const t of OBS_TYPES) {
+        acc += t.prob;
+        if (r < acc) return t;
+    }
+    return OBS_TYPES[0];
+}
+
 function spawnObstacle(z, scene) {
-    const types = CONFIG.OBS_TYPES;
-    const t = types[Math.floor(Math.random() * types.length)];
-    const worldX = (Math.random() - 0.5) * 4;
+    const t = pickObsType();
+    const worldX = (Math.random() - 0.5) * 5;
 
     const obs = {
-        worldX, z, w: t.w, h: t.h, points: t.points || 0,
+        worldX, z, w: t.w, h: t.h,
         type: t.type, active: true, nearMissed: false, mesh: null
     };
 
     let mesh;
     switch (t.type) {
-        case 'cone':
-            mesh = BABYLON.MeshBuilder.CreateCylinder('cone', { diameterTop: 0, diameterBottom: 0.4, height: 0.7, tessellation: 6 }, scene);
-            break;
         case 'rock':
-            mesh = BABYLON.MeshBuilder.CreateSphere('rock', { diameter: 0.5, segments: 4 }, scene);
+            mesh = BABYLON.MeshBuilder.CreateSphere('rock', { diameter: 0.35, segments: 4 }, scene);
+            mesh.scaling.y = 0.6;
             break;
-        case 'sign':
-            mesh = BABYLON.MeshBuilder.CreateBox('sign', { width: 0.3, height: 0.8, depth: 0.05 }, scene);
+        case 'branch':
+            mesh = BABYLON.MeshBuilder.CreateCylinder('branch', { height: 1.0, diameter: 0.06, tessellation: 5 }, scene);
+            mesh.rotation.z = Math.PI / 2;
+            mesh.rotation.y = Math.random() * Math.PI;
             break;
         case 'puddle':
-            mesh = BABYLON.MeshBuilder.CreateDisc('puddle', { radius: 0.6, tessellation: 6 }, scene);
+            mesh = BABYLON.MeshBuilder.CreateDisc('puddle', { radius: 0.6, tessellation: 8 }, scene);
             mesh.rotation.x = Math.PI / 2;
             break;
-        case 'skater':
-            mesh = BABYLON.MeshBuilder.CreateBox('skater', { width: 0.3, height: 0.7, depth: 0.2 }, scene);
+        case 'pinecone':
+            mesh = BABYLON.MeshBuilder.CreateSphere('pinecone', { diameter: 0.12, segments: 4 }, scene);
+            mesh.scaling.y = 1.4;
+            break;
+        case 'stick':
+            mesh = BABYLON.MeshBuilder.CreateCylinder('stick', { height: 0.5, diameter: 0.04, tessellation: 4 }, scene);
+            mesh.rotation.z = Math.PI / 2;
+            mesh.rotation.y = Math.random() * Math.PI;
             break;
     }
 
@@ -60,25 +83,23 @@ function spawnObstacle(z, scene) {
 window.initObstacles = function(scene) {
     for (const o of obstacles) { if (o.mesh) o.mesh.dispose(); }
     obstacles.length = 0;
-    obsMeshes = [];
     obsMaxZ = 0;
-    let z = CONFIG.OBS_FIRST * 0.1;
-    for (let i = 0; i < 6; i++) {
+    let z = 30;
+    for (let i = 0; i < 8; i++) {
         spawnObstacle(z, scene);
-        z += CONFIG.OBS_MIN_GAP * 0.1 + Math.random() * (CONFIG.OBS_MAX_GAP - CONFIG.OBS_MIN_GAP) * 0.1;
+        z += 15 + Math.random() * 25;
     }
 };
 
 window.updateObstacles = function(scene, terrain) {
-    const dt = 1;
     for (let i = obstacles.length - 1; i >= 0; i--) {
-        if (obstacles[i].z < player.distance - 50) {
+        if (obstacles[i].z < player.distance - 30) {
             if (obstacles[i].mesh) obstacles[i].mesh.dispose();
             obstacles.splice(i, 1);
         }
     }
-    if (obsMaxZ < player.distance + 200) {
-        spawnObstacle(obsMaxZ + CONFIG.OBS_MIN_GAP * 0.1 + Math.random() * (CONFIG.OBS_MAX_GAP - CONFIG.OBS_MIN_GAP) * 0.1, scene);
+    if (obsMaxZ < player.distance + 150) {
+        spawnObstacle(obsMaxZ + 15 + Math.random() * 25, scene);
     }
 };
 
@@ -87,9 +108,16 @@ window.updateObstaclePositions = function(terrain, scrollOffset) {
         if (!obs.mesh) continue;
         const relZ = obs.z - scrollOffset;
         const curve = terrain.curveAt(obs.z);
-        const cx = curve * (obs.z - scrollOffset);
+        const cx = curve * relZ;
         obs.mesh.position.x = obs.worldX + cx;
-        obs.mesh.position.y = terrain.hillAt(obs.z) + 0.35;
+
+        let yOff = 0.1;
+        if (obs.type === 'rock') yOff = 0.12;
+        else if (obs.type === 'branch' || obs.type === 'stick') yOff = 0.03;
+        else if (obs.type === 'puddle') yOff = 0.01;
+        else if (obs.type === 'pinecone') yOff = 0.06;
+
+        obs.mesh.position.y = terrain.hillAt(obs.z) + yOff;
         obs.mesh.position.z = relZ;
         obs.mesh.setEnabled(obs.active);
     }
@@ -97,25 +125,22 @@ window.updateObstaclePositions = function(terrain, scrollOffset) {
 
 window.checkObstacleCollisions = function(terrain) {
     if (player.invincible || player.bailing) return false;
-    const char = CHARACTERS[currentCharacter];
-    const hitW = (char.hitbox.w / 40) * 0.5;
-    const hitH = (char.hitbox.h / 60) * 0.5;
 
     for (const obs of obstacles) {
         if (!obs.active) continue;
         const dz = obs.z - player.distance;
-        if (dz < -2 || dz > 3) continue;
+        if (dz < -1.5 || dz > 2) continue;
 
         const curve = terrain.curveAt(obs.z);
         const cx = curve * dz;
         const ox = obs.worldX + cx;
 
-        if (Math.abs(player.x - ox) < hitW + 0.3 && Math.abs(dz) < hitH + 0.5) {
+        if (Math.abs(player.x - ox) < 0.5 && Math.abs(dz) < 0.8) {
             obs.active = false;
             return true;
         }
 
-        if (!obs.nearMissed && Math.abs(player.x - ox) < hitW + 0.6 && Math.abs(dz) < hitH + 0.8) {
+        if (!obs.nearMissed && Math.abs(player.x - ox) < 0.8 && Math.abs(dz) < 1.2) {
             obs.nearMissed = true;
             player.score += CONFIG.NEAR_MISS_POINTS;
             playNearMissSound();

@@ -133,14 +133,8 @@ function gameLogic() {
             if (window.checkObstacleCollisions(terrain)) {
                 window.spawnCrashParticles();
                 playCrashSound();
-                endGame('SPLAT!');
+                endGame('WIPED OUT!');
                 break;
-            }
-            if (inp.trick) {
-                if (window.performTrick()) {
-                    window.spawnTrickParticles();
-                    playTrickSound();
-                }
             }
 
             const curve2 = terrain.curveAt(player.distance);
