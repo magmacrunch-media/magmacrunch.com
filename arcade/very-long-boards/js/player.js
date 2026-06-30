@@ -9,7 +9,7 @@ window.player = {
     invincible: false, invincibleTimer: 0,
     stability: 100, wobbling: false, wobblePhase: 0,
     bailing: false, bailTimer: 0,
-    groundY: 0
+    groundY: 0, kicked: false
 };
 
 window.playerMesh = null;
@@ -126,6 +126,7 @@ window.resetPlayer = function() {
     player.bailing = false;
     player.bailTimer = 0;
     player.groundY = 0;
+    player.kicked = false;
 };
 
 window.updatePlayer = function(input, terrain, dt) {
@@ -143,8 +144,17 @@ window.updatePlayer = function(input, terrain, dt) {
         return null;
     }
 
+    if (!player.kicked) {
+        if (input.trick) {
+            player.kicked = true;
+            player.speed = 0.15;
+        }
+        player.groundY = terrain ? terrain.hillAt(0) : 0;
+        return null;
+    }
+
     const slope = terrain ? (terrain.hillAt(player.distance + 3) - terrain.hillAt(player.distance)) / 3 : 0;
-    const slopeAccel = -slope * 0.08;
+    const slopeAccel = -slope * 0.06;
     player.speed += slopeAccel * dtScale;
     player.speed *= Math.pow(0.997, dtScale);
 
@@ -165,7 +175,7 @@ window.updatePlayer = function(input, terrain, dt) {
 
     if (terrain) {
         const curve = terrain.curveAt(player.distance);
-        player.x += curve * player.speed * CONFIG.CURVE_PUSH * 6 * dtScale;
+        player.x += curve * player.speed * 1.5 * dtScale;
     }
 
     player.speed = Math.max(0.02, Math.min(maxSpd, player.speed));
@@ -228,9 +238,14 @@ window.updatePlayerMesh = function(terrain, frame) {
     }
 
     if (playerMesh._armL) {
-        const armSwing = Math.sin(frame * 0.1) * 0.3 * Math.min(1, player.speed * 2);
-        playerMesh._armL.rotation.z = 0.2 + armSwing;
-        playerMesh._armR.rotation.z = -0.2 - armSwing;
+        if (!player.kicked) {
+            playerMesh._armL.rotation.z = 0.6;
+            playerMesh._armR.rotation.z = -0.6;
+        } else {
+            const armSwing = Math.sin(frame * 0.1) * 0.3 * Math.min(1, player.speed * 2);
+            playerMesh._armL.rotation.z = 0.2 + armSwing;
+            playerMesh._armR.rotation.z = -0.2 - armSwing;
+        }
     }
 };
 

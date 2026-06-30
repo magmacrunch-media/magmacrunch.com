@@ -84,10 +84,10 @@ window.initObstacles = function(scene) {
     for (const o of obstacles) { if (o.mesh) o.mesh.dispose(); }
     obstacles.length = 0;
     obsMaxZ = 0;
-    let z = 30;
-    for (let i = 0; i < 8; i++) {
+    let z = 60;
+    for (let i = 0; i < 4; i++) {
         spawnObstacle(z, scene);
-        z += 15 + Math.random() * 25;
+        z += 40 + Math.random() * 40;
     }
 };
 
@@ -99,7 +99,7 @@ window.updateObstacles = function(scene, terrain) {
         }
     }
     if (obsMaxZ < player.distance + 150) {
-        spawnObstacle(obsMaxZ + 15 + Math.random() * 25, scene);
+        spawnObstacle(obsMaxZ + 40 + Math.random() * 40, scene);
     }
 };
 

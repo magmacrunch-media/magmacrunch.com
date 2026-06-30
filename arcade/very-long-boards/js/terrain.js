@@ -124,12 +124,12 @@ window.createTerrain = function(scene) {
     }, scene);
     grassR.material = grassMat;
 
-    const startPad = BABYLON.MeshBuilder.CreateGround('startPad', { width: 80, height: 40 }, scene);
+    const startPad = BABYLON.MeshBuilder.CreateGround('startPad', { width: 100, height: 200 }, scene);
     const startPadMat = new BABYLON.StandardMaterial('startPadMat', scene);
     startPadMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.12);
     startPadMat.specularColor = BABYLON.Color3.Black();
     startPad.material = startPadMat;
-    startPad.position = new BABYLON.Vector3(0, -0.05, -20);
+    startPad.position = new BABYLON.Vector3(0, -0.05, -100);
 
     const mountains = [];
     for (let i = 0; i < 25; i++) {

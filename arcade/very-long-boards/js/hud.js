@@ -6,7 +6,9 @@ function updateHUD() {
     const elScore = document.getElementById('hudScore');
     const elSpeed = document.getElementById('hudSpeed');
     const elDist = document.getElementById('hudDist');
+    const kickPrompt = document.getElementById('kickPrompt');
     if (elScore) elScore.textContent = player.score;
     if (elSpeed) elSpeed.textContent = Math.floor(player.speed * CONFIG.SPEED_DISPLAY_FACTOR);
     if (elDist) elDist.textContent = Math.floor(player.distance);
+    if (kickPrompt) kickPrompt.style.display = player.kicked ? 'none' : 'block';
 }
