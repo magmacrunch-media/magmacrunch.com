@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 6 * * 1'
 
+permissions:
+  contents: write
+
 jobs:
   backup:
     runs-on: ubuntu-latest
@@ -13,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Run backup script
         run: node scripts/backup-musicbrainz.mjs --skip-existing
