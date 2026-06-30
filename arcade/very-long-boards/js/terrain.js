@@ -84,6 +84,7 @@ window.createTerrain = function(scene) {
         });
 
         ground.position.x = 0;
+        ground.position.y = hillAt(playerZ) - 1;
         ground.position.z = playerZ + 150;
 
         for (const m of mountains) {
