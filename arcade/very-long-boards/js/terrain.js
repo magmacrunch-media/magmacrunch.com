@@ -7,9 +7,8 @@ window.createTerrain = function(scene) {
     const ROAD_W = 8;
     const SHOULDER_W = 3;
     const GRASS_W = 25;
-    const SEGS = 350;
+    const SEGS = 300;
     const SEG_LEN = 3;
-    const BACK_SEGS = 30;
 
     function curveAt(z) {
         return Math.sin(z * 0.003) * 0.12 +
@@ -26,12 +25,12 @@ window.createTerrain = function(scene) {
     function buildRoadPaths(scrollOffset) {
         const paths = [[], []];
         for (let i = 0; i < SEGS; i++) {
-            const worldZ = (i - BACK_SEGS) * SEG_LEN + scrollOffset;
-            const localZ = i * SEG_LEN;
-            const cx = curveAt(worldZ) * (worldZ - scrollOffset);
+            const z = i * SEG_LEN;
+            const worldZ = z + scrollOffset;
+            const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
-            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, localZ));
-            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, localZ));
+            paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
+            paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
         }
         return paths;
     }
@@ -39,17 +38,17 @@ window.createTerrain = function(scene) {
     function buildShoulderPaths(scrollOffset, side) {
         const paths = [[], []];
         for (let i = 0; i < SEGS; i++) {
-            const worldZ = (i - BACK_SEGS) * SEG_LEN + scrollOffset;
-            const localZ = i * SEG_LEN;
-            const cx = curveAt(worldZ) * (worldZ - scrollOffset);
+            const z = i * SEG_LEN;
+            const worldZ = z + scrollOffset;
+            const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
             const dy = -0.15;
             if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + dy, localZ));
-                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, localZ));
+                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + dy, z));
+                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2, cy, z));
             } else {
-                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, localZ));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + dy, localZ));
+                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2, cy, z));
+                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + dy, z));
             }
         }
         return paths;
@@ -58,18 +57,18 @@ window.createTerrain = function(scene) {
     function buildGrassPaths(scrollOffset, side) {
         const paths = [[], []];
         for (let i = 0; i < SEGS; i++) {
-            const worldZ = (i - BACK_SEGS) * SEG_LEN + scrollOffset;
-            const localZ = i * SEG_LEN;
-            const cx = curveAt(worldZ) * (worldZ - scrollOffset);
+            const z = i * SEG_LEN;
+            const worldZ = z + scrollOffset;
+            const cx = curveAt(worldZ) * z;
             const cy = hillAt(worldZ);
             const edgeY = -0.15;
             const farY = -1.0;
             if (side < 0) {
-                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W - GRASS_W, cy + farY, localZ));
-                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + edgeY, localZ));
+                paths[0].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W - GRASS_W, cy + farY, z));
+                paths[1].push(new BABYLON.Vector3(cx - ROAD_W / 2 - SHOULDER_W, cy + edgeY, z));
             } else {
-                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + edgeY, localZ));
-                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W + GRASS_W, cy + farY, localZ));
+                paths[0].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W, cy + edgeY, z));
+                paths[1].push(new BABYLON.Vector3(cx + ROAD_W / 2 + SHOULDER_W + GRASS_W, cy + farY, z));
             }
         }
         return paths;
@@ -125,6 +124,13 @@ window.createTerrain = function(scene) {
     }, scene);
     grassR.material = grassMat;
 
+    const startPad = BABYLON.MeshBuilder.CreateGround('startPad', { width: 80, height: 40 }, scene);
+    const startPadMat = new BABYLON.StandardMaterial('startPadMat', scene);
+    startPadMat.diffuseColor = new BABYLON.Color3(0.18, 0.42, 0.12);
+    startPadMat.specularColor = BABYLON.Color3.Black();
+    startPad.material = startPadMat;
+    startPad.position = new BABYLON.Vector3(0, -0.05, -20);
+
     const mountains = [];
     for (let i = 0; i < 25; i++) {
         const h = 50 + Math.random() * 100;
@@ -171,6 +177,8 @@ window.createTerrain = function(scene) {
             pathArray: buildGrassPaths(scrollOffset, 1),
             instance: grassR
         });
+
+        startPad.position.z = -20 - playerZ;
 
         for (const m of mountains) {
             m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
