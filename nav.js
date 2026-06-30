@@ -489,15 +489,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         }
 
         for (const src of externals) {
-            const alreadyLoaded = Array.from(document.querySelectorAll('script[src]')).some(s => {
-                try { return new URL(s.getAttribute('src'), location.href).href === src; }
-                catch { return false; }
-            });
-            if (alreadyLoaded) continue;
             try {
+                const bustSrc = src + (src.includes('?') ? '&' : '?') + '_spa=' + Date.now();
                 await new Promise((res, rej) => {
                     const s = document.createElement('script');
-                    s.src = src;
+                    s.src = bustSrc;
                     s.onload = res;
                     s.onerror = rej;
                     document.body.appendChild(s);
@@ -522,6 +518,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 window.__pageCleanup();
                 window.__pageCleanup = null;
             }
+            window.__MB_CACHE = null;
 
             const doc = await fetchDoc(url);
 
