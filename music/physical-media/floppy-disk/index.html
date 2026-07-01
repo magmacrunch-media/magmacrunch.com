@@ -329,13 +329,29 @@
             </div>
         </a>
 
+<a href="iou-american-spirits/index.html" class="floppy-card">
+            <div class="floppy-card-icon">
+                <canvas id="floppyIcon2" width="32" height="32" style="width:40px;height:40px;image-rendering:pixelated;"></canvas>
+            </div>
+            <div class="floppy-card-info">
+                <div class="floppy-card-text">
+                    <div class="floppy-card-title">iou a pack of american spirits (2026)</div>
+                    <div class="floppy-card-meta">
+                        <span class="artist">sex van floor plan</span>
+                        &nbsp;·&nbsp; 3.5″ floppy &nbsp;·&nbsp; 2026
+                    </div>
+                </div>
+                <span class="floppy-card-arrow">▶</span>
+            </div>
+        </a>
+
         <!-- ADD FUTURE FLOPPY RELEASES HERE — copy a .floppy-card block -->
 
     </div>
 
     <!-- COMING SOON -->
     <div class="coming-soon">
-        <p>COMING SOON BY SVFP<br><span>✦</span><br>pay2play (2026)<br><span>✦</span><br> American Spirits (2026)</p>
+        <p>COMING SOON<br><span>✦</span><br>pay2play (2026)<br><span>✦</span><br>check back for more</p>
     </div>
 
 </main>
@@ -457,6 +473,24 @@
     
     rafId = requestAnimationFrame(loop);
     window.__pageCleanup = function() { cancelAnimationFrame(rafId); };
+})();
+</script>
+<script>
+// static floppy icon for iou card
+(function() {
+    var c = document.getElementById('floppyIcon2');
+    if (!c) return;
+    var x = c.getContext('2d');
+    x.imageSmoothingEnabled = false;
+    x.fillStyle='#1a1a1c'; x.fillRect(3,2,23,28); x.fillRect(26,6,3,24);
+    x.fillRect(26,5,1,1); x.fillRect(27,4,1,1); x.fillRect(28,3,1,1);
+    x.fillStyle='#101012'; x.fillRect(6,27,2,3); x.fillRect(24,27,2,3);
+    x.fillStyle='#9098a0'; x.fillRect(7,2,11,11);
+    x.fillStyle='#70787e'; x.fillRect(15,2,1,11);
+    x.fillStyle='#0e1010'; x.fillRect(9,3,4,8);
+    x.fillStyle='#f0ece0'; x.fillRect(6,16,20,13);
+    x.fillStyle='#c8202a'; x.fillRect(6,16,20,3);
+    x.fillStyle='#8a8878'; x.fillRect(8,21,10,1); x.fillRect(8,23,15,1); x.fillRect(8,25,12,1);
 })();
 </script>
 
