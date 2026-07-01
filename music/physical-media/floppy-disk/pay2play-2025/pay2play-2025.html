@@ -9,68 +9,38 @@
     <style>
         :root { --bubblegum: #FF8584; }
         
-        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:0 0 60px; }
-
-        /* ── HERO ── */
-        .release-hero {
-            width:100%; position:relative; min-height:100vh;
-            display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
-            overflow:hidden; margin-bottom:48px;
-            background: radial-gradient(ellipse at 30% 20%, rgba(200,32,42,0.12) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(24,88,192,0.08) 0%, transparent 50%),
-                        #0a0a0e;
-        }
-        .release-hero::before {
-            content:''; position:absolute; inset:0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.015) 2px, rgba(255,255,255,0.015) 4px);
-            pointer-events:none;
-        }
-        .release-hero-gradient {
-            position:absolute; inset:0;
-            background:linear-gradient(to bottom,rgba(8,8,18,.25) 0%,rgba(8,8,18,0) 15%,rgba(8,8,18,0) 46%,rgba(8,8,18,.62) 74%,rgba(8,8,18,1) 100%);
-        }
-        .hero-inner {
-            position:relative; z-index:1; width:100%; max-width:900px;
-            padding:0 20px 36px; display:flex; flex-direction:column;
-        }
+        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
 
         /* breadcrumb */
         .breadcrumb {
-            position: absolute;
-            top: 60px;
-            left: 20px;
-            z-index: 10;
             font-family:'Press Start 2P',monospace;
-            font-size:7px;
-            color:var(--dim);
-            letter-spacing:.1em;
+            font-size:7px; color:var(--dim); letter-spacing:.1em;
+            margin-bottom:32px; align-self:flex-start;
         }
         .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
         .breadcrumb a:hover { color:var(--rose); }
         .breadcrumb .sep { margin:0 8px; color:var(--rose); opacity:.7; }
         .breadcrumb .current { color:var(--rose); }
-        .breadcrumb .current { color:var(--rose); }
 
         /* header */
-        .release-header { animation:fadeUp .5s ease both; }
+        .release-header { text-align:center; margin-bottom:40px; animation:fadeUp .5s ease both; }
         .release-eyebrow { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--purple); letter-spacing:.25em; margin-bottom:12px; opacity:.85; }
         .release-title {
-            font-family:'Press Start 2P',monospace; font-size:clamp(20px,4.5vw,40px);
-            color:#fff; line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
-            text-shadow:0 0 36px rgba(255,61,110,.75),0 0 72px rgba(255,61,110,.22),0 2px 14px rgba(0,0,0,.95);
+            font-family:'Press Start 2P',monospace; font-size:clamp(16px,3.5vw,28px);
+            color:var(--white); line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
         }
-        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--purple); letter-spacing:.15em; margin-bottom:24px; opacity:.9; }
-        .sub-nav { display:flex; flex-wrap:wrap; gap:10px; }
+        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--purple); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+        .sub-nav { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
 
         /* divider */
         .section-divider {
             width:100%; max-width:900px; height:1px;
             background:linear-gradient(90deg,transparent,var(--rose),var(--purple),var(--rose),transparent);
-            margin:0 20px 40px; opacity:.35; animation:fadeUp .5s .05s ease both;
+            margin:0 0 40px; opacity:.35; animation:fadeUp .5s .05s ease both;
         }
 
         /* content */
-        .content-wrap { width:100%; max-width:900px; padding:0 20px; }
+        .content-wrap { width:100%; max-width:900px; }
         .section-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--bubblegum); letter-spacing:.15em; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--bubblegum); opacity:.9; }
 
         /* release block */
@@ -228,28 +198,22 @@
 
 <main>
 
-    <div class="release-hero">
-        <div class="release-hero-gradient"></div>
+    <div class="breadcrumb">
+        <a href="../../../../index.html">home</a><span class="sep">›</span>
+        <a href="../../../../music/index.html">music</a><span class="sep">›</span>
+        <a href="../../physical-media/index.html">physical media</a><span class="sep">›</span>
+        <a href="../index.html">floppy disk</a><span class="sep">›</span>
+        <span class="current">pay2play (2025)</span>
+    </div>
 
-        <div class="breadcrumb">
-            <a href="../../../../index.html">home</a><span class="sep">›</span>
-            <a href="../../../../music/index.html">music</a><span class="sep">›</span>
-            <a href="../../physical-media/index.html">physical media</a><span class="sep">›</span>
-            <a href="../index.html">floppy disk</a><span class="sep">›</span>
-            <span class="current">pay2play (2025)</span>
-        </div>
-
-        <div class="hero-inner">
-            <div class="release-header">
-                <div class="release-eyebrow">// floppy disk series #1 · MCS043 //</div>
-                <h1 class="release-title">pay2play (2025)</h1>
-                <div class="release-artist">[ sex van floor plan ]</div>
-                <div class="sub-nav">
-                    <a href="https://artists.landr.com/svfp_pay2play" class="nav-card c-green" target="_blank" rel="noopener">▶ stream / download</a>
-                    <a href="https://www.discogs.com/master/3913738-Sex-Van-Floor-Plan-pay2play" class="nav-card c-yellow" target="_blank" rel="noopener">discogs</a>
-                    <a href="https://musicbrainz.org/release-group/2641925c-1d77-42a1-ba22-8b5c6eaed5d1" class="nav-card c-purple">musicbrainz</a>
-                </div>
-            </div>
+    <div class="release-header">
+        <div class="release-eyebrow">// floppy disk series #1 · MCS043 //</div>
+        <h1 class="release-title">pay2play (2025)</h1>
+        <div class="release-artist">[ sex van floor plan ]</div>
+        <div class="sub-nav">
+            <a href="https://artists.landr.com/svfp_pay2play" class="nav-card c-green" target="_blank" rel="noopener">▶ stream / download</a>
+            <a href="https://www.discogs.com/master/3913738-Sex-Van-Floor-Plan-pay2play" class="nav-card c-yellow" target="_blank" rel="noopener">discogs</a>
+            <a href="https://musicbrainz.org/release-group/2641925c-1d77-42a1-ba22-8b5c6eaed5d1" class="nav-card c-purple">musicbrainz</a>
         </div>
     </div>
 
