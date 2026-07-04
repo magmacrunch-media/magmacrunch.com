@@ -1,5 +1,5 @@
 /* ── contributor.js — shared template for by-contributor pages ── */
-/* Requires: window.__CONTRIBUTOR_CONFIG = { MB_ID, NAME, ARCHIVE_LINKS, accent? } */
+/* Requires: window.__CONTRIBUTOR_CONFIG = { MB_ID, NAME, ARCHIVE_LINKS, accent?, STATIC_SECTIONS? } */
 
 (function() {
     var config = window.__CONTRIBUTOR_CONFIG;
@@ -134,6 +134,42 @@
                 '</div>' +
             '</div>' +
             '</details>';
+    }
+
+    function renderStaticLabelEntry(item) {
+        var link = item.url ? '<a href="' + esc(item.url) + '">' + esc(item.name) + '</a>' : esc(item.name);
+        var dates = item.dates ? esc(item.dates) : '';
+        var roleTags = '';
+        if (item.roles && item.roles.length > 0) {
+            roleTags = '<div class="entry-instruments">' +
+                '<div class="label">roles</div>' +
+                item.roles.map(function(r) {
+                    return '<span class="instrument-tag">' + esc(r) + '</span>';
+                }).join('') +
+                '</div>';
+        }
+        return '<details class="entry">' +
+            '<summary class="entry-header">' +
+                '<span class="entry-arrow">\u25b6</span>' +
+                '<span class="entry-name">' + link + '</span>' +
+                (dates ? '<span class="entry-dates">' + dates + '</span>' : '') +
+            '</summary>' +
+            (roleTags ? '<div class="entry-body">' + roleTags + '</div>' : '') +
+            '</details>';
+    }
+
+    function renderStaticSection(section) {
+        if (!section.items || section.items.length === 0) return '';
+        var items = section.items.map(function(item) {
+            return renderStaticLabelEntry(item);
+        }).join('');
+        return renderSection(section.title, items);
+    }
+
+    function renderStaticSections() {
+        var staticSections = config.STATIC_SECTIONS;
+        if (!staticSections || staticSections.length === 0) return '';
+        return staticSections.map(renderStaticSection).join('');
     }
 
     function renderPlaceEntry(place, roles, begin, end, ended) {
@@ -534,7 +570,7 @@
             html = '<div class="error-msg">no relationships found</div>';
         }
 
-        contentEl.innerHTML = html;
+        contentEl.innerHTML = html + renderStaticSections();
     }
 
     /* ── FETCH WITH RATE LIMITING ── */
@@ -602,6 +638,6 @@
             });
         })
         .catch(function(e) {
-            contentEl.innerHTML = '<div class="error-msg">failed to load from MusicBrainz<br><span style="opacity:0.6;font-size:7px">' + esc(e.message) + '</span></div>';
+            contentEl.innerHTML = '<div class="error-msg">failed to load from MusicBrainz<br><span style="opacity:0.6;font-size:7px">' + esc(e.message) + '</span></div>' + renderStaticSections();
         });
 })();

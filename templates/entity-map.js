@@ -86,5 +86,6 @@ window.__ENTITY_MAP = {
     /* ── Labels → /archive/by-label/ ── */
     '39446d03-fe9c-47d0-81a9-2b42d34fb400': '../../by-label/magmacrunch-media/index.html',
     'c78b5612-2300-4ee1-8663-299ddcf9ce25': '../../by-label/magmacrunch-music/index.html',
+    '1d3190cc-b700-4409-bdb4-2ee8b93f3d8c': '../../by-label/magmacrunch-arcade/index.html',
     'ad82d124-e41e-49e8-9bf9-53e836b44336': '../../by-label/the-slop-collective/index.html',
 };

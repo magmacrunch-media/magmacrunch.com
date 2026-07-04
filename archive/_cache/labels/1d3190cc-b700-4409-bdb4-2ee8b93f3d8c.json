@@ -1,0 +1,472 @@
+{
+  "fetchedAt": "2026-07-04T05:19:06.981Z",
+  "entityType": "label",
+  "uuid": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c",
+  "name": "magmacrunch arcade",
+  "responses": {
+    "artist-rels": {
+      "ipis": [],
+      "disambiguation": "",
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": "2025-12"
+      },
+      "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+      "type": "Imprint",
+      "area": null,
+      "sort-name": "magmacrunch arcade",
+      "label-code": null,
+      "isnis": [],
+      "relations": [
+        {
+          "ended": false,
+          "end": null,
+          "source-credit": "",
+          "direction": "backward",
+          "attributes": [],
+          "artist": {
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "type": "Person",
+            "sort-name": "McCoy, Jake A.",
+            "name": "Jake A. McCoy",
+            "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+            "country": "US"
+          },
+          "target-credit": "",
+          "type-id": "85d1947c-1986-42f0-947c-80aab72a548f",
+          "attribute-ids": {},
+          "attribute-values": {},
+          "type": "creative position at",
+          "begin": "2025-12",
+          "target-type": "artist"
+        },
+        {
+          "artist": {
+            "disambiguation": "",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "type": "Person",
+            "sort-name": "McCoy, Jon",
+            "name": "Jon McCoy",
+            "country": "US",
+            "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16"
+          },
+          "source-credit": "",
+          "ended": false,
+          "end": null,
+          "attributes": [],
+          "direction": "backward",
+          "begin": "2026-06",
+          "target-type": "artist",
+          "type": "creative position at",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type-id": "85d1947c-1986-42f0-947c-80aab72a548f",
+          "target-credit": ""
+        },
+        {
+          "type-id": "85d1947c-1986-42f0-947c-80aab72a548f",
+          "attribute-ids": {},
+          "target-credit": "",
+          "type": "creative position at",
+          "attribute-values": {},
+          "begin": "2026-07",
+          "target-type": "artist",
+          "source-credit": "",
+          "end": null,
+          "ended": false,
+          "direction": "backward",
+          "attributes": [],
+          "artist": {
+            "name": "Ethan Burk-McCoy",
+            "id": "976afe24-0ce0-4d3c-bee1-4b4cfa24ba78",
+            "country": null,
+            "sort-name": "Burk-McCoy, Ethan",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": ""
+          }
+        },
+        {
+          "type": "creative position at",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type-id": "85d1947c-1986-42f0-947c-80aab72a548f",
+          "target-credit": "",
+          "begin": "2026-07",
+          "target-type": "artist",
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "attributes": [],
+          "direction": "backward",
+          "artist": {
+            "disambiguation": "",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "McCoy, Tina Hextell",
+            "name": "Tina Hextell McCoy",
+            "id": "2d9e3cfc-48b8-4b6d-9011-7a6d68b32189",
+            "country": "US"
+          }
+        },
+        {
+          "artist": {
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "type": "Person",
+            "disambiguation": "",
+            "name": "James McCoy",
+            "id": "42b20ae9-6b10-48ef-87a8-6edac5006af7",
+            "country": "US",
+            "sort-name": "McCoy, James"
+          },
+          "direction": "backward",
+          "attributes": [],
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "target-type": "artist",
+          "begin": null,
+          "type-id": "85d1947c-1986-42f0-947c-80aab72a548f",
+          "target-credit": "",
+          "attribute-ids": {},
+          "type": "creative position at",
+          "attribute-values": {}
+        },
+        {
+          "artist": {
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "type": "Person",
+            "disambiguation": "",
+            "name": "Jake A. McCoy",
+            "country": "US",
+            "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+            "sort-name": "McCoy, Jake A."
+          },
+          "direction": "backward",
+          "attributes": [],
+          "source-credit": "",
+          "end": null,
+          "ended": false,
+          "target-type": "artist",
+          "begin": "2025-12",
+          "attribute-ids": {},
+          "type-id": "5f9374d2-a0fa-4958-8a6f-80ca67e4aaa5",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "engineer position at"
+        },
+        {
+          "source-credit": "",
+          "end": null,
+          "ended": false,
+          "direction": "backward",
+          "attributes": [],
+          "artist": {
+            "sort-name": "McCoy, James R.",
+            "name": "James R. McCoy",
+            "country": "US",
+            "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+            "disambiguation": "",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-ids": {},
+          "type-id": "5f9374d2-a0fa-4958-8a6f-80ca67e4aaa5",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "engineer position at",
+          "begin": "2026-03",
+          "target-type": "artist"
+        },
+        {
+          "type-id": "e375b657-ed87-4ea3-97ef-2c6b7a5ff226",
+          "attribute-ids": {},
+          "target-credit": "",
+          "type": "executive position at",
+          "attribute-values": {},
+          "begin": null,
+          "target-type": "artist",
+          "ended": false,
+          "end": null,
+          "source-credit": "",
+          "direction": "backward",
+          "attributes": [],
+          "artist": {
+            "sort-name": "Burk-McCoy, Ethan",
+            "name": "Ethan Burk-McCoy",
+            "id": "976afe24-0ce0-4d3c-bee1-4b4cfa24ba78",
+            "country": null,
+            "disambiguation": "",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          }
+        },
+        {
+          "begin": null,
+          "target-type": "artist",
+          "type": "executive position at",
+          "attribute-values": {},
+          "target-credit": "",
+          "type-id": "e375b657-ed87-4ea3-97ef-2c6b7a5ff226",
+          "attribute-ids": {},
+          "artist": {
+            "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+            "country": "US",
+            "name": "Jake A. McCoy",
+            "sort-name": "McCoy, Jake A.",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": ""
+          },
+          "ended": false,
+          "end": null,
+          "source-credit": "",
+          "attributes": [],
+          "direction": "backward"
+        },
+        {
+          "artist": {
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "type": "Person",
+            "disambiguation": "",
+            "country": "US",
+            "id": "d0a8ae01-3443-42da-b258-490300f1249c",
+            "name": "James R. McCoy",
+            "sort-name": "McCoy, James R."
+          },
+          "attributes": [],
+          "direction": "backward",
+          "ended": false,
+          "end": null,
+          "source-credit": "",
+          "target-type": "artist",
+          "begin": null,
+          "attribute-values": {},
+          "type": "executive position at",
+          "attribute-ids": {},
+          "target-credit": "",
+          "type-id": "e375b657-ed87-4ea3-97ef-2c6b7a5ff226"
+        },
+        {
+          "artist": {
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "disambiguation": "",
+            "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+            "country": "US",
+            "name": "Jon McCoy",
+            "sort-name": "McCoy, Jon"
+          },
+          "source-credit": "",
+          "ended": false,
+          "end": null,
+          "direction": "backward",
+          "attributes": [],
+          "begin": null,
+          "target-type": "artist",
+          "attribute-ids": {},
+          "type-id": "e375b657-ed87-4ea3-97ef-2c6b7a5ff226",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "executive position at"
+        },
+        {
+          "attributes": [],
+          "direction": "backward",
+          "end": "2026",
+          "ended": true,
+          "source-credit": "",
+          "artist": {
+            "sort-name": "McCoy, Jake A.",
+            "name": "Jake A. McCoy",
+            "country": "US",
+            "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+            "disambiguation": "",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+          },
+          "attribute-values": {},
+          "type": "label founder",
+          "type-id": "577996f3-7ff9-45cf-877e-740fb1267a63",
+          "target-credit": "",
+          "attribute-ids": {},
+          "target-type": "artist",
+          "begin": "2026"
+        },
+        {
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "direction": "backward",
+          "attributes": [],
+          "artist": {
+            "disambiguation": "",
+            "type": "Person",
+            "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+            "sort-name": "McCoy, Jake A.",
+            "name": "Jake A. McCoy",
+            "country": "US",
+            "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb"
+          },
+          "type-id": "610fa594-eeaa-407b-a9f1-49f509ab5559",
+          "target-credit": "",
+          "attribute-ids": {},
+          "type": "owner",
+          "attribute-values": {},
+          "begin": null,
+          "target-type": "artist"
+        }
+      ],
+      "name": "magmacrunch arcade",
+      "id": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c",
+      "country": null
+    },
+    "label-rels": {
+      "sort-name": "magmacrunch arcade",
+      "ipis": [],
+      "disambiguation": "",
+      "type": "Imprint",
+      "area": null,
+      "life-span": {
+        "end": null,
+        "ended": false,
+        "begin": "2025-12"
+      },
+      "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+      "name": "magmacrunch arcade",
+      "id": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c",
+      "country": null,
+      "isnis": [],
+      "relations": [
+        {
+          "begin": null,
+          "target-type": "label",
+          "attribute-ids": {},
+          "type-id": "ab7a9be0-c060-4852-8f2e-4faf5b33231e",
+          "target-credit": "",
+          "attribute-values": {},
+          "type": "label ownership",
+          "label": {
+            "type": null,
+            "label-code": null,
+            "type-id": null,
+            "disambiguation": "",
+            "id": "39446d03-fe9c-47d0-81a9-2b42d34fb400",
+            "name": "magmacrunch media",
+            "sort-name": "magmacrunch media"
+          },
+          "source-credit": "",
+          "ended": false,
+          "end": null,
+          "direction": "backward",
+          "attributes": []
+        }
+      ],
+      "label-code": null
+    },
+    "event-rels": {
+      "isnis": [],
+      "ipis": [],
+      "id": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c",
+      "relations": [],
+      "sort-name": "magmacrunch arcade",
+      "label-code": null,
+      "disambiguation": "",
+      "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+      "name": "magmacrunch arcade",
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": "2025-12"
+      },
+      "country": null,
+      "area": null,
+      "type": "Imprint"
+    },
+    "recording-rels": {
+      "country": null,
+      "area": null,
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": "2025-12"
+      },
+      "sort-name": "magmacrunch arcade",
+      "isnis": [],
+      "label-code": null,
+      "relations": [],
+      "ipis": [],
+      "name": "magmacrunch arcade",
+      "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+      "type": "Imprint",
+      "disambiguation": "",
+      "id": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c"
+    },
+    "work-rels": {
+      "type": "Imprint",
+      "area": null,
+      "life-span": {
+        "begin": "2025-12",
+        "end": null,
+        "ended": false
+      },
+      "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+      "ipis": [],
+      "disambiguation": "",
+      "sort-name": "magmacrunch arcade",
+      "relations": [
+        {
+          "work": {
+            "iswcs": [],
+            "id": "cb241c8f-ae46-415b-811d-ad530fafb9fd",
+            "languages": [],
+            "attributes": [],
+            "type": "Song-cycle",
+            "title": "Magma Crunch",
+            "type-id": "0f24ce27-96cc-3746-a16c-e6617d7a80f3",
+            "language": null,
+            "disambiguation": ""
+          },
+          "end": null,
+          "ended": false,
+          "source-credit": "",
+          "attributes": [],
+          "direction": "forward",
+          "begin": null,
+          "target-type": "work",
+          "attribute-values": {},
+          "type": "named after work",
+          "target-credit": "",
+          "type-id": "6bc17c65-5a4b-47a2-bcb6-61543bb01a78",
+          "attribute-ids": {}
+        }
+      ],
+      "isnis": [],
+      "label-code": null,
+      "name": "magmacrunch arcade",
+      "id": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c",
+      "country": null
+    },
+    "release-rels": {
+      "life-span": {
+        "ended": false,
+        "end": null,
+        "begin": "2025-12"
+      },
+      "type-id": "b6285b2a-3514-3d43-80df-fcf528824ded",
+      "type": "Imprint",
+      "area": null,
+      "ipis": [],
+      "disambiguation": "",
+      "sort-name": "magmacrunch arcade",
+      "label-code": null,
+      "relations": [],
+      "isnis": [],
+      "name": "magmacrunch arcade",
+      "id": "1d3190cc-b700-4409-bdb4-2ee8b93f3d8c",
+      "country": null
+    }
+  }
+}
