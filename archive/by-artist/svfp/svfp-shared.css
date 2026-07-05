@@ -50,8 +50,8 @@ body.svfp-page .nav-card.c-events:hover { background: transparent !important; co
 body.svfp-page .nav-card.c-photography   { background: var(--svfp-sky); color: var(--svfp-offwhite); border-color: var(--svfp-sky); }
 body.svfp-page .nav-card.c-photography:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
 
-/* c-recordings formerly c-cyan */
-body.svfp-page .nav-card.c-recordings   { background: var(--svfp-rose); color: var(--svfp-offwhite); border-color: var(--svfp-rose); }
+/* c-recordings: warm amber */
+body.svfp-page .nav-card.c-recordings   { background: var(--svfp-warm); color: var(--svfp-offwhite); border-color: var(--svfp-warm); }
 body.svfp-page .nav-card.c-recordings:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
 
 /* c-releases: formerly c-rose */
@@ -61,6 +61,10 @@ body.svfp-page .nav-card.c-releases:hover { background: transparent !important; 
 /* c-works: formerly c-yellow */
 body.svfp-page .nav-card.c-works { background: var(--svfp-cta); color: var(--svfp-offwhite); border-color: var(--svfp-cta); }
 body.svfp-page .nav-card.c-works:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
+
+/* c-documentary: rose accent */
+body.svfp-page .nav-card.c-documentary { background: var(--svfp-rose); color: var(--svfp-offwhite); border-color: var(--svfp-rose); }
+body.svfp-page .nav-card.c-documentary:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
 
 body.svfp-page .nav-card::after { display: none; }
 body.svfp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

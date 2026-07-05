@@ -1,0 +1,265 @@
+/* SVFP documentary — rose accent theme */
+body.svfp-page.svfp-documentary-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.svfp-page.svfp-documentary-page main > * { background: var(--svfp-bg); }
+
+/* ── BREADCRUMB ── */
+body.svfp-documentary-page .breadcrumb { color: var(--dim); }
+body.svfp-documentary-page .breadcrumb a { color: #e060a0; }
+body.svfp-documentary-page .breadcrumb a:hover { color: #d946ef; }
+body.svfp-documentary-page .breadcrumb .sep { color: #e060a0; opacity: 0.7; }
+body.svfp-documentary-page .breadcrumb .current { color: #e060a0; }
+
+/* ── PAGE HEADER ── */
+body.svfp-documentary-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.svfp-documentary-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #e060a0; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.svfp-documentary-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #e060a0; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+
+/* ── HERO ── */
+body.svfp-documentary-page .doc-hero {
+    width: 100%; max-width: 960px;
+    position: relative;
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    margin-bottom: 36px;
+    border: 1px solid #2a1a3a;
+    animation: fadeUp 0.5s 0.05s ease both;
+}
+body.svfp-documentary-page .doc-hero-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: saturate(0.85) brightness(0.55);
+}
+body.svfp-documentary-page .doc-hero-tint {
+    position: absolute; inset: 0;
+    background: rgba(224, 96, 160, 0.10);
+    mix-blend-mode: screen;
+}
+body.svfp-documentary-page .doc-hero-gradient {
+    position: absolute; inset: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(10,10,20,0.0)  0%,
+        rgba(10,10,20,0.0)  60%,
+        rgba(10,10,20,0.88) 100%
+    );
+}
+body.svfp-documentary-page .doc-hero-inner {
+    position: relative; z-index: 1;
+    padding: 28px 24px;
+}
+body.svfp-documentary-page .doc-hero-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 2vw, 16px);
+    color: #f8b0ff;
+    line-height: 1.6;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 20px rgba(224, 96, 160, 0.6), 0 2px 8px rgba(0,0,0,0.9);
+    margin-bottom: 8px;
+}
+body.svfp-documentary-page .doc-hero-tagline {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--svfp-heading);
+    font-style: italic;
+    line-height: 1.5;
+    opacity: 0.85;
+    margin-bottom: 12px;
+}
+body.svfp-documentary-page .doc-hero-badges {
+    display: flex; flex-wrap: wrap; gap: 8px;
+}
+body.svfp-documentary-page .doc-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    background: rgba(224, 96, 160, 0.18);
+    color: #e060a0;
+    border: 1px solid rgba(224, 96, 160, 0.35);
+}
+
+/* ── YOUTUBE EMBED ── */
+body.svfp-documentary-page .video-wrap {
+    width: 100%; max-width: 960px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s 0.1s ease both;
+}
+body.svfp-documentary-page .video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border: 1px solid #2a1a3a;
+    background: #0a0a14;
+}
+body.svfp-documentary-page .video-container iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: 0;
+}
+
+/* ── DETAIL SECTIONS ── */
+body.svfp-documentary-page .doc-details {
+    width: 100%; max-width: 960px;
+    animation: fadeUp 0.5s 0.15s ease both;
+    margin-bottom: 36px;
+}
+body.svfp-documentary-page .doc-section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #e060a0;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e060a0;
+    opacity: 0.9;
+}
+body.svfp-documentary-page .doc-overview {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--svfp-body);
+    line-height: 1.75;
+    opacity: 0.85;
+    margin-bottom: 28px;
+}
+
+/* ── TAGLINE CALLOUT ── */
+body.svfp-documentary-page .doc-tagline-wrap {
+    width: 100%; max-width: 960px;
+    margin-bottom: 36px;
+    padding: 20px 24px;
+    border-left: 3px solid #e060a0;
+    background: rgba(224, 96, 160, 0.06);
+    animation: fadeUp 0.5s 0.18s ease both;
+}
+body.svfp-documentary-page .doc-tagline-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 16px;
+    color: var(--svfp-heading);
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* ── CAST ── */
+body.svfp-documentary-page .doc-cast {
+    width: 100%; max-width: 960px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s 0.2s ease both;
+}
+body.svfp-documentary-page .cast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+}
+body.svfp-documentary-page .cast-card {
+    background: var(--svfp-raised);
+    border: 1px solid #2a1a3a;
+    padding: 16px;
+    transition: border-color 0.2s;
+}
+body.svfp-documentary-page .cast-card:hover { border-color: #e060a0; }
+body.svfp-documentary-page .cast-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #e060a0;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+body.svfp-documentary-page .cast-role {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--dim);
+    opacity: 0.7;
+}
+
+/* ── INFO TABLE ── */
+body.svfp-documentary-page .doc-info {
+    width: 100%; max-width: 960px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s 0.22s ease both;
+}
+body.svfp-documentary-page .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+body.svfp-documentary-page .info-item {
+    background: var(--svfp-raised);
+    border: 1px solid #2a1a3a;
+    padding: 14px 16px;
+}
+body.svfp-documentary-page .info-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.6;
+}
+body.svfp-documentary-page .info-value {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--svfp-heading);
+    line-height: 1.5;
+}
+
+/* ── KEYWORDS ── */
+body.svfp-documentary-page .doc-keywords {
+    width: 100%; max-width: 960px;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s 0.25s ease both;
+}
+body.svfp-documentary-page .keyword-list {
+    display: flex; flex-wrap: wrap; gap: 8px;
+}
+body.svfp-documentary-page .keyword-tag {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5.5px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    padding: 5px 12px;
+    border: 1px solid #2a2a3a;
+    background: transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.svfp-documentary-page .keyword-tag:hover { color: #e060a0; border-color: #e060a0; }
+
+/* ── TMDB LINK ── */
+body.svfp-documentary-page .doc-external {
+    width: 100%; max-width: 960px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.5s 0.28s ease both;
+}
+body.svfp-documentary-page .tmdb-link {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #e060a0;
+    border: 1px solid #e060a0;
+    padding: 8px 18px;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: background 0.2s, color 0.2s;
+}
+body.svfp-documentary-page .tmdb-link:hover { background: #e060a0; color: #0a0a14; }
+
+/* ── NAV CARD OVERRIDES ── */
+body.svfp-documentary-page .nav-card.c-back { background: transparent; color: #e060a0; border-color: #e060a0; }
+body.svfp-documentary-page .nav-card.c-back:hover { background: #e060a0; color: #080810; }
+
+body.svfp-documentary-page .nav-card.c-documentary { display: none; }
+
+@media (max-width: 640px) {
+    body.svfp-documentary-page .doc-hero { min-height: 220px; }
+    body.svfp-documentary-page .cast-grid { grid-template-columns: repeat(2, 1fr); }
+    body.svfp-documentary-page .info-grid { grid-template-columns: 1fr; }
+}
