@@ -681,7 +681,7 @@
             if (footer) {
                 footer.insertAdjacentHTML('beforeend',
                     '<div class="tmdb-attribution">' +
-                        '<img src="' + (config.depth || '../../../') + 'assets/logos/TMDB_blue_square.svg" alt="TMDB">' +
+                        '<img src="' + (config.depth || '../../../') + 'assets/logos/TMDB_blue_long.svg" alt="TMDB">' +
                         '<p>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.</p>' +
                     '</div>'
                 );
