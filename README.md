@@ -138,6 +138,6 @@ All archive data is fetched from the [MusicBrainz API](https://musicbrainz.org/d
 ## dev notes
 
 - Open `index.html` directly in browser — no build server needed
-- Arcade games are fully self-contained (own CSS/JS/audio, no `style.css` or `nav.js`)
+- Arcade games are fully self-contained (own CSS/JS/audio, no `style.css` or `nav.js`). See `arcade/README.md` for the full game list, shared patterns, and the Tauri desktop sample pack roadmap.
 - Nav links are absolutized on page load to survive SPA `pushState` URL changes
 - Guestbook uses formsubmit.co for email delivery (no backend)
