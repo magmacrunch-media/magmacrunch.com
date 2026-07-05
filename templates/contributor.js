@@ -1,11 +1,12 @@
 /* ── contributor.js — shared template for by-contributor pages ── */
-/* Requires: window.__CONTRIBUTOR_CONFIG = { MB_ID, NAME, ARCHIVE_LINKS, accent?, STATIC_SECTIONS? } */
+/* Requires: window.__CONTRIBUTOR_CONFIG = { MB_ID, NAME, ARCHIVE_LINKS, accent?, STATIC_SECTIONS?, TMDB_ID? } */
 
 (function() {
     var config = window.__CONTRIBUTOR_CONFIG;
     if (!config || !config.MB_ID) return;
 
     var MB_ID = config.MB_ID;
+    var TMDB_ID = config.TMDB_ID;
     var ARCHIVE_LINKS = config.ARCHIVE_LINKS || {};
     var ENTITY_MAP = window.__ENTITY_MAP || {};
     var accent = config.accent || 'cyan';
@@ -328,6 +329,89 @@
         return '<a href="https://musicbrainz.org/' + path + '/' + target.id + '" target="_blank" rel="noopener">' + esc(target.title) + '</a>';
     }
 
+    /* ── TMDB ── */
+
+    var _tmdb = null;
+    function loadTMDBCache() {
+        if (!TMDB_ID) return Promise.resolve();
+        return fetch('../../../archive/_cache/tmdb/person/' + TMDB_ID + '.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(j) { if (j && j.fetchedAt) _tmdb = j; })
+            .catch(function() {});
+    }
+
+    function renderProfilePhoto() {
+        if (!_tmdb || !_tmdb.profile_path) return;
+        var header = document.querySelector('.contrib-header');
+        if (!header) return;
+        var img = document.createElement('img');
+        img.className = 'contrib-profile-photo';
+        img.src = 'https://image.tmdb.org/t/p/w185' + _tmdb.profile_path;
+        img.alt = _tmdb.name + ' photo';
+        img.loading = 'lazy';
+        header.insertBefore(img, header.firstChild);
+    }
+
+    function tmdbFilmLink(credit) {
+        var mediaType = credit.media_type || 'movie';
+        var path = mediaType === 'tv' ? 'tv' : 'movie';
+        return '<a href="https://www.themoviedb.org/' + path + '/' + credit.id + '" target="_blank" rel="noopener">' + esc(credit.title) + '</a>';
+    }
+
+    function renderTMDBSections() {
+        if (!_tmdb || !_tmdb.credits) return '';
+        var html = '';
+        var cast = _tmdb.credits.cast || [];
+        var crew = _tmdb.credits.crew || [];
+
+        /* Group crew by department */
+        var crewByDept = {};
+        crew.forEach(function(c) {
+            var dept = c.department || 'Other';
+            if (!crewByDept[dept]) crewByDept[dept] = [];
+            crewByDept[dept].push(c);
+        });
+
+        /* Department order */
+        var deptOrder = ['Directing', 'Production', 'Crew', 'Sound', 'Camera', 'Editing', 'Lighting', 'Writing'];
+        var depts = Object.keys(crewByDept);
+        depts.sort(function(a, b) {
+            var ai = deptOrder.indexOf(a);
+            var bi = deptOrder.indexOf(b);
+            if (ai === -1) ai = 99;
+            if (bi === -1) bi = 99;
+            return ai - bi;
+        });
+
+        /* Render crew departments */
+        depts.forEach(function(dept) {
+            var items = crewByDept[dept].map(function(c) {
+                var year = c.release_date ? c.release_date.split('-')[0] : '';
+                return { html: tmdbFilmLink(c), year: year, roles: [c.job] };
+            });
+            items.sort(function(a, b) { return (b.year || '0').localeCompare(a.year || '0'); });
+            html += renderCreditSection(dept.toLowerCase(), items);
+        });
+
+        /* Render acting */
+        if (cast.length > 0) {
+            var items = cast.map(function(c) {
+                var year = c.release_date ? c.release_date.split('-')[0] : '';
+                var role = c.character || 'Self';
+                return { html: tmdbFilmLink(c), year: year, roles: [role] };
+            });
+            items.sort(function(a, b) { return (b.year || '0').localeCompare(a.year || '0'); });
+            html += renderCreditSection('acting', items);
+        }
+
+        return html;
+    }
+
+    function renderTMDBLink() {
+        if (!_tmdb) return '';
+        return '<a href="https://www.themoviedb.org/person/' + TMDB_ID + '" target="_blank" rel="noopener" class="mb-link tmdb-link">VIEW ON TMDB ↗</a>';
+    }
+
     /* ── RENDER ── */
 
     function render(data, recordingData, workData, releaseData, labelData, placeData, eventData) {
@@ -570,7 +654,34 @@
             html = '<div class="error-msg">no relationships found</div>';
         }
 
+        html += renderTMDBSections();
+
         contentEl.innerHTML = html + renderStaticSections();
+
+        /* TMDB link */
+        var tmdbLink = renderTMDBLink();
+        if (tmdbLink) {
+            var mbLink = document.querySelector('.mb-link');
+            if (mbLink) {
+                mbLink.insertAdjacentHTML('afterend', tmdbLink);
+            }
+        }
+
+        /* TMDB attribution */
+        if (_tmdb) {
+            var footer = document.querySelector('footer');
+            if (footer) {
+                footer.insertAdjacentHTML('beforeend',
+                    '<div class="tmdb-attribution">' +
+                        '<img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-128cf4da1dea603e8da3c077b5ac4e137f5067e280a80c080e86664661df669d.svg" alt="TMDB">' +
+                        '<p>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.</p>' +
+                    '</div>'
+                );
+            }
+        }
+
+        /* Profile photo */
+        renderProfilePhoto();
     }
 
     /* ── FETCH WITH RATE LIMITING ── */
@@ -603,6 +714,8 @@
     }
 
     loadCache().then(function() {
+        return loadTMDBCache();
+    }).then(function() {
         return cachedFetch('artist-rels');
     }).then(function(data) {
             var ids = [];

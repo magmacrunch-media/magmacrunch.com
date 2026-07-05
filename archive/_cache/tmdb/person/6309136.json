@@ -1,0 +1,25 @@
+{
+  "fetchedAt": "2026-07-05T04:10:28.530Z",
+  "entityType": "tmdb-person",
+  "id": 6309136,
+  "name": "Rho Kalupson",
+  "profile_path": null,
+  "known_for_department": "Acting",
+  "place_of_birth": null,
+  "biography": "",
+  "birthday": null,
+  "gender": 0,
+  "external_ids": {},
+  "credits": {
+    "cast": [
+      {
+        "id": 1721141,
+        "title": "Sex Van Floor Plan: The Documentary",
+        "release_date": "2026-06-26",
+        "character": "Self",
+        "poster_path": "/6fNbU4qgWj3y8KgSK0czhbb7D9K.jpg"
+      }
+    ],
+    "crew": []
+  }
+}

@@ -1,0 +1,181 @@
+#!/usr/bin/env node
+/* backup-tmdb.mjs
+ *
+ * Snapshots TMDB person data for contributors with film credits
+ * into local JSON files. Run manually or via GitHub Action.
+ *
+ * Usage:  node scripts/backup-tmdb.mjs [--dry-run] [--skip-existing]
+ *
+ * Requires TMDB_API_KEY env var (get one at https://www.themoviedb.org/settings/api)
+ */
+
+import { writeFile, mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(__dirname, '..');
+const CACHE_DIR = resolve(ROOT, 'archive/_cache');
+const DRY_RUN = process.argv.includes('--dry-run');
+const SKIP_EXISTING = process.argv.includes('--skip-existing');
+
+const API_KEY = process.env.TMDB_API_KEY;
+if (!API_KEY) {
+    console.error('Error: TMDB_API_KEY environment variable is required.');
+    console.error('Get one at https://www.themoviedb.org/settings/api');
+    process.exit(1);
+}
+
+const API = 'https://api.themoviedb.org/3';
+const DELAY_MS = 300;
+
+// ─── rate-limited fetch ────────────────────────────────────────────
+
+let lastFetch = 0;
+async function fetchTMDB(path) {
+    const elapsed = Date.now() - lastFetch;
+    if (elapsed < DELAY_MS) await delay(DELAY_MS - elapsed);
+    lastFetch = Date.now();
+
+    // Support both v3 (query param) and v4 (Bearer token) auth
+    const separator = path.includes('?') ? '&' : '?';
+    const url = path.startsWith('http') ? path : `${API}/${path}${separator}api_key=${API_KEY}`;
+
+    for (let i = 0; i < 4; i++) {
+        try {
+            const res = await fetch(url);
+            if (res.status === 429) {
+                const wait = 2000 * (i + 1);
+                log(`  rate-limited (429), waiting ${wait}ms…`);
+                await delay(wait);
+                continue;
+            }
+            if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+            return await res.json();
+        } catch (err) {
+            if (i === 3) throw err;
+            await delay(1500 * (i + 1));
+        }
+    }
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── logging ───────────────────────────────────────────────────────
+
+let indent = 0;
+function log(msg) { console.log('  '.repeat(indent) + msg); }
+
+// ─── entity definitions ────────────────────────────────────────────
+
+const TMDB_PERSONS = [
+    { id: 5285267, name: 'Jake A. McCoy',   mbContributor: 'jake-mccoy' },
+    { id: 6309136, name: 'Rho Kalupson',     mbContributor: 'rho-k' },
+    { id: 6309139, name: "Chuck Jones O'Brien", mbContributor: 'chuck-job' },
+    { id: 6309134, name: 'Ellis Hester',     mbContributor: 'elias-grey' },
+];
+
+// ─── write cache file ──────────────────────────────────────────────
+
+async function writeCache(type, id, data) {
+    const dir = resolve(CACHE_DIR, type);
+    if (!existsSync(dir)) await mkdir(dir, { recursive: true });
+    const file = resolve(dir, `${id}.json`);
+    if (DRY_RUN) {
+        log(`  [dry-run] would write ${file} (${(JSON.stringify(data).length / 1024).toFixed(1)} KB)`);
+        return;
+    }
+    await writeFile(file, JSON.stringify(data, null, 2));
+    const size = (JSON.stringify(data).length / 1024).toFixed(1);
+    log(`  cached ${size} KB → ${type}/${id}.json`);
+}
+
+function cacheExists(type, id) {
+    return existsSync(resolve(CACHE_DIR, type, `${id}.json`));
+}
+
+// ─── backup: person ────────────────────────────────────────────────
+
+async function backupPerson(entity) {
+    log(`[tmdb-person] ${entity.name} (ID: ${entity.id})`);
+    indent++;
+
+    log('  fetching person + credits…');
+    const data = await fetchTMDB(`person/${entity.id}?append_to_response=credits&language=en-US`);
+
+    const cache = {
+        fetchedAt: new Date().toISOString(),
+        entityType: 'tmdb-person',
+        id: data.id,
+        name: data.name,
+        profile_path: data.profile_path,
+        known_for_department: data.known_for_department,
+        place_of_birth: data.place_of_birth,
+        biography: data.biography,
+        birthday: data.birthday,
+        gender: data.gender,
+        external_ids: data.external_ids || {},
+        credits: {
+            cast: (data.credits?.cast || []).map(c => ({
+                id: c.id,
+                title: c.title || c.name,
+                release_date: c.release_date,
+                character: c.character,
+                poster_path: c.poster_path,
+                media_type: c.media_type,
+            })),
+            crew: (data.credits?.crew || []).map(c => ({
+                id: c.id,
+                title: c.title || c.name,
+                release_date: c.release_date,
+                department: c.department,
+                job: c.job,
+                poster_path: c.poster_path,
+                media_type: c.media_type,
+            })),
+        },
+    };
+
+    indent--;
+    await writeCache('tmdb/person', entity.id, cache);
+}
+
+// ─── main ──────────────────────────────────────────────────────────
+
+async function main() {
+    console.log('╔══════════════════════════════════════════╗');
+    console.log('║  TMDB Backup — magmacrunch.com           ║');
+    console.log('╚══════════════════════════════════════════╝');
+    console.log();
+
+    if (DRY_RUN) console.log('[DRY RUN — no files will be written]\n');
+    if (SKIP_EXISTING) console.log('[SKIP EXISTING — already-cached entities will be skipped]\n');
+
+    const start = Date.now();
+    let completed = 0, skipped = 0;
+    const total = TMDB_PERSONS.length;
+
+    for (const entity of TMDB_PERSONS) {
+        if (SKIP_EXISTING && cacheExists('tmdb/person', entity.id)) {
+            log(`[${completed + 1}/${total}] ${entity.name} — already cached, skipping`);
+            completed++;
+            skipped++;
+            continue;
+        }
+        log(`[${completed + 1}/${total}]`);
+        await backupPerson(entity);
+        completed++;
+    }
+
+    const elapsed = ((Date.now() - start) / 1000).toFixed(0);
+    const min = Math.floor(elapsed / 60);
+    const sec = elapsed % 60;
+    console.log(`\nDone! ${completed - skipped} persons backed up, ${skipped} skipped in ${min}m ${sec}s`);
+    if (DRY_RUN) console.log('(dry run — no files were written)');
+}
+
+main().catch(err => {
+    console.error('\nBackup failed:', err);
+    process.exit(1);
+});
