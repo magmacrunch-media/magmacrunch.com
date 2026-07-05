@@ -681,7 +681,7 @@
             if (footer) {
                 footer.insertAdjacentHTML('beforeend',
                     '<div class="tmdb-attribution">' +
-                        '<img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-128cf4da1dea603e8da3c077b5ac4e137f5067e280a80c080e86664661df669d.svg" alt="TMDB">' +
+                        '<img src="' + (config.depth || '../../../') + 'assets/logos/TMDB_blue_square.svg" alt="TMDB">' +
                         '<p>This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.</p>' +
                     '</div>'
                 );
