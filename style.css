@@ -207,6 +207,33 @@ footer span { color: var(--rose); }
     line-height: 1.4;
 }
 
+/* ── MUSICBRAINZ DATA ATTRIBUTION ── */
+.mb-data-attribution {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a2a;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+.mb-data-attribution:hover { opacity: 0.8; }
+.mb-data-attribution img {
+    height: 16px;
+    opacity: 0.7;
+}
+.mb-data-attribution p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px;
+    color: var(--dim);
+    max-width: 400px;
+    line-height: 1.4;
+}
+.mb-data-attribution a { color: var(--cyan); text-decoration: none; }
+.mb-data-attribution a:hover { text-decoration: underline; }
+
 /* ── SHARED ANIMATIONS ── */
 @keyframes ticker {
     from { transform: translateX(100vw); }

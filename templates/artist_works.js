@@ -390,7 +390,21 @@ const COLOR_MAP = {
 
         } catch (err) {
             statusEl.textContent = 'error loading works — check your connection and refresh.';
-            console.error('artist_works.js fetch failed:', err);
-        }
-    })();
+    console.error('artist_works.js fetch failed:', err);
+}
+
+// MusicBrainz attribution
+(function() {
+    var footer = document.querySelector('footer');
+    if (footer && !footer.querySelector('.mb-data-attribution')) {
+        footer.insertAdjacentHTML('beforeend',
+            '<div class="mb-data-attribution">' +
+                '<img src="' + d + 'assets/logos/MB_logo.svg" alt="MusicBrainz">' +
+                '<p>Music data provided by <a href="https://musicbrainz.org" target="_blank" rel="noopener">MusicBrainz</a>. ' +
+                'Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">CC BY-NC-SA 3.0</a>.</p>' +
+            '</div>'
+        );
+    }
+})();
+})();
 })();
