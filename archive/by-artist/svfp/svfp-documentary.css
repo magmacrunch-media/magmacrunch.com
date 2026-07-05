@@ -173,6 +173,14 @@ body.svfp-documentary-page .cast-name {
     line-height: 1.6;
     margin-bottom: 6px;
 }
+body.svfp-documentary-page .cast-name a {
+    color: #e060a0;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+body.svfp-documentary-page .cast-name a:hover {
+    color: #f8b0ff;
+}
 body.svfp-documentary-page .cast-role {
     font-family: 'Courier Prime', monospace;
     font-size: 13px;
