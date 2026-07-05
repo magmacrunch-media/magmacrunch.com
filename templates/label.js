@@ -56,7 +56,6 @@
     }
 
     function renderStaticLabelEntry(item) {
-        var link = item.url ? '<a href="' + esc(item.url) + '">' + esc(item.name) + '</a>' : esc(item.name);
         var dates = item.dates ? esc(item.dates) : '';
         var roleTags = '';
         if (item.roles && item.roles.length > 0) {
@@ -67,13 +66,18 @@
                 }).join('') +
                 '</div>';
         }
+        var desc = '';
+        if (item.description) {
+            desc = '<div class="entry-description">' + item.description + '</div>';
+        }
+        var body = roleTags || desc ? '<div class="entry-body">' + roleTags + desc + '</div>' : '';
         return '<details class="entry">' +
             '<summary class="entry-header">' +
                 '<span class="entry-arrow">\u25b6</span>' +
-                '<span class="entry-name">' + link + '</span>' +
+                '<span class="entry-name">' + esc(item.name) + '</span>' +
                 (dates ? '<span class="entry-dates">' + dates + '</span>' : '') +
             '</summary>' +
-            (roleTags ? '<div class="entry-body">' + roleTags + '</div>' : '') +
+            body +
             '</details>';
     }
 

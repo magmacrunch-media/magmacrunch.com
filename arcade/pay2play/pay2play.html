@@ -1017,7 +1017,7 @@ function drawOuterFrame(){
     if(rect.width>0&&rect.height>0){ canvas.width=rect.width; canvas.height=rect.height; }
     const W=canvas.width, H=canvas.height;
     ctx.imageSmoothingEnabled=false; ctx.clearRect(0,0,W,H);
-    const STEP=8, STEPS=10;
+    const STEP=8, STEPS=6;
     const SL=6, SR=W-6, ST=6, SB=H-6;
     const archBaseY=ST+STEPS*STEP, baseH=44, baseExtraW=12, baseY=SB-baseH;
     ctx.save();
