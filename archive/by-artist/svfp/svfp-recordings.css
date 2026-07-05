@@ -20,6 +20,12 @@ body.svfp-recordings-page #count-bar { font-family: 'Press Start 2P', monospace;
 body.svfp-recordings-page .recording-item { display: flex; gap: 16px; border: 1px solid #1e1e2e; background: var(--deep); padding: 0; margin-bottom: 12px; transition: border-color 0.15s; overflow: hidden; }
 body.svfp-recordings-page .recording-item:hover { border-color: #e87040; }
 
+body.svfp-recordings-page .recording-card { border: 1px solid #1e1e2e !important; background: var(--deep) !important; padding: 18px 20px !important; margin-bottom: 12px !important; transition: border-color 0.15s !important; }
+body.svfp-recordings-page .recording-card:hover { border-color: #e87040 !important; }
+body.svfp-recordings-page .recording-card h3 a { color: #e87040 !important; }
+body.svfp-recordings-page .recording-card a { color: #e87040 !important; }
+body.svfp-recordings-page .recording-card a:hover { color: var(--white) !important; }
+
 body.svfp-recordings-page .rec-art { width: 80px; min-width: 80px; height: 80px; background: var(--svfp-bg); border-right: 1px solid #1e1e2e; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 body.svfp-recordings-page .rec-art img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
 body.svfp-recordings-page .rec-art .no-art-msg { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--dim); text-align: center; padding: 8px; line-height: 1.8; }
