@@ -331,6 +331,10 @@
 
     /* ── TMDB ── */
 
+    var LOCAL_FILM_MAP = {
+        1721141: '../../by-artist/svfp/documentary.html',
+    };
+
     var _tmdb = null;
     function loadTMDBCache() {
         if (!TMDB_ID) return Promise.resolve();
@@ -353,6 +357,10 @@
     }
 
     function tmdbFilmLink(credit) {
+        var localPath = LOCAL_FILM_MAP[credit.id];
+        if (localPath) {
+            return '<a href="' + localPath + '">' + esc(credit.title) + '</a>';
+        }
         var mediaType = credit.media_type || 'movie';
         var path = mediaType === 'tv' ? 'tv' : 'movie';
         return '<a href="https://www.themoviedb.org/' + path + '/' + credit.id + '" target="_blank" rel="noopener">' + esc(credit.title) + '</a>';
