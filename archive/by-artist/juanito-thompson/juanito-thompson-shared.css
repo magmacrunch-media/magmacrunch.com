@@ -18,6 +18,7 @@
     --jt-teal-bright:   #2a9070;
     --jt-taupe:         #8a7060;
     --jt-offwhite:      #f8f0e4;
+    --jt-green:         #39ff84;
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -27,7 +28,7 @@ body.jt-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
     letter-spacing: 0.08em;
-    padding: 10px 16px;
+    padding: 10px 12px;
     border: 1px solid;
     text-decoration: none;
 }
@@ -67,6 +68,10 @@ body.jt-page .sub-nav .nav-card.c-releases:hover { background: inherit !importan
 /* c-works: solid gold (works) */
 body.jt-page .sub-nav .nav-card.c-works { background: var(--jt-gold); color: var(--jt-bg); border-color: var(--jt-gold); }
 body.jt-page .sub-nav .nav-card.c-works:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-games: solid green (games) */
+body.jt-page .sub-nav .nav-card.c-games { background: var(--jt-green); color: var(--jt-bg); border-color: var(--jt-green); }
+body.jt-page .sub-nav .nav-card.c-games:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
 
 body.jt-page .nav-card::after { display: none; }
 
