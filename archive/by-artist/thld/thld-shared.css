@@ -37,7 +37,7 @@ body.thld-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
     letter-spacing: 0.08em;
-    padding: 10px 16px;
+    padding: 10px 12px;
     border: 2px solid;
     text-decoration: none;
 }
@@ -79,6 +79,10 @@ body.thld-page .sub-nav .nav-card.c-accent:hover { background: inherit !importan
 /* c-works: solid highlight (formerly c-yellow) */
 body.thld-page .sub-nav .nav-card.c-works { background: var(--thld-highlight); color: var(--thld-bg); border-color: var(--thld-highlight); }
 body.thld-page .sub-nav .nav-card.c-works:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
+
+/* c-games: solid apricot (games) */
+body.thld-page .sub-nav .nav-card.c-games { background: var(--thld-apricot); color: var(--thld-bg); border-color: var(--thld-apricot); }
+body.thld-page .sub-nav .nav-card.c-games:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
 
 body.thld-page footer { color: var(--thld-muted); }
 body.thld-page footer span { color: var(--thld-highlight); }

@@ -1,0 +1,118 @@
+/* THLD — games page — accent: apricot */
+body.thld-page.thld-games-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.thld-page.thld-games-page main > * { background: var(--thld-bg); }
+
+body.thld-page.thld-games-page .breadcrumb a { color: var(--thld-apricot); }
+body.thld-page.thld-games-page .breadcrumb a:hover { color: var(--thld-highlight); }
+body.thld-page.thld-games-page .breadcrumb .sep { color: var(--thld-apricot); opacity: 0.6; }
+body.thld-page.thld-games-page .breadcrumb .current { color: var(--thld-apricot); }
+
+body.thld-page.thld-games-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.thld-page.thld-games-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--thld-apricot); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.thld-page.thld-games-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--thld-apricot); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(240,160,80,0.5); }
+
+body.thld-page.thld-games-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--thld-apricot), var(--thld-amber), var(--thld-apricot), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.thld-page.thld-games-page .place-body {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 20px;
+    animation: fadeUp 0.5s 0.2s ease both;
+}
+body.thld-page.thld-games-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--thld-text);
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+/* Nav card overrides */
+body.thld-page.thld-games-page .nav-card.c-back { background: transparent; color: var(--thld-apricot); border-color: var(--thld-apricot); }
+body.thld-page.thld-games-page .nav-card.c-back:hover { background: var(--thld-apricot); color: var(--thld-bg); }
+
+body.thld-page.thld-games-page .nav-card::after { display: none; }
+body.thld-page.thld-games-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* Games grid */
+.games-grid { width: 100%; max-width: 960px; padding: 0 20px; }
+
+.game-card-link { text-decoration: none; display: block; }
+.game-card-link:hover .game-card { border-color: var(--thld-apricot); box-shadow: 0 0 24px rgba(240,160,80,0.15); }
+.game-card-link:hover .game-card-badge { background: var(--thld-apricot); color: var(--thld-bg); }
+
+.game-card {
+    border: 2px solid var(--thld-mid);
+    background: var(--thld-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.game-card-header {
+    padding: 20px 24px;
+    border-bottom: 2px solid var(--thld-mid);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.game-card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--thld-apricot);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 14px rgba(240,160,80,0.35);
+}
+
+.game-card-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--thld-apricot);
+    border: 2px solid var(--thld-apricot);
+    padding: 5px 12px;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+
+.game-card-body { padding: 20px 24px; }
+
+.game-card-desc {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--thld-text);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    opacity: 0.85;
+}
+
+.game-card-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.game-card-tag {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: var(--thld-bg);
+    background: var(--thld-amber);
+    padding: 3px 8px;
+    letter-spacing: 0.08em;
+}
+
+.game-card-note {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--thld-muted);
+    opacity: 0.7;
+}
+
+@media (max-width: 500px) {
+    .game-card-header { flex-direction: column; gap: 12px; }
+}
