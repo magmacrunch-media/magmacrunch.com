@@ -37,6 +37,7 @@ const COLOR_MAP = {
         releases:    'c-releases',
         works:       'c-works',
         'music-videos': 'c-events',
+        games:       'c-green',
     };
 
     const BACK_COLOR_VAR = {

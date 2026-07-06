@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C.P. Rutledge — about — magmacrunch media</title>
+    <title>C.P. Rutledge — games — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
     <link rel="stylesheet" href="../../../style.css">
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="cpr-shared.css">
-    <link rel="stylesheet" href="cpr-about.css">
+    <link rel="stylesheet" href="cpr-games.css">
+
     <script>
     window.ARTIST_CONFIG = {
         id:        '44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc',
         name:      'C.P. Rutledge',
         abbr:      'CPR',
-        accent:    'magenta',
-        backColor: 'c-back',
+        accent:    'green',
+        backColor: 'c-green',
         siblings:  ['about', 'games', 'photography', 'recordings', 'releases', 'works'],
         depth:     '../../../',
     };
     </script>
 </head>
-<body class="cpr-page cpr-about-page">
+<body class="cpr-page cpr-games-page">
 
 <nav>
     <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
@@ -39,20 +40,14 @@
 </nav>
 
 <main>
-    <div class="breadcrumb">
-        <a href="../../../archive/index.html">archive</a>
-        <span class="sep">›</span>
-        <a href="../../../archive/by-artist/index.html">by artist</a>
-        <span class="sep">›</span>
-        <a href="index.html">cpr</a>
-    </div>
+    <div class="breadcrumb"></div>
 
     <div class="page-header">
-        <div class="artist-label">// C.P. Rutledge //</div>
-        <div class="page-title">ABOUT</div>
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title">GAMES</div>
         <div class="sub-nav">
             <a href="index.html"        class="nav-card c-back">← back</a>
-            <a href="games.html"        class="nav-card c-green">games</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
             <a href="photography.html"  class="nav-card c-photography">photography</a>
             <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
             <a href="releases.html"     class="nav-card c-releases">releases</a>
@@ -63,12 +58,52 @@
     <div class="divider"></div>
 
     <div class="bio-section">
-        <p>Add a bio here.</p>
+        <p>Music-inspired games from the magmacrunch arcade.</p>
+    </div>
+
+    <div class="games-grid">
+        <a href="../../../arcade/moonlight-drift/index.html" class="game-card-link">
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-card-title">MOONLIGHT<br>DRIFT</div>
+                    <div class="game-card-badge">PLAY</div>
+                </div>
+                <div class="game-card-body">
+                    <div class="game-card-desc">coast through space. dodge obstacles. ride the moon.</div>
+                    <div class="game-card-meta">
+                        <span class="game-card-tag">music-inspired</span>
+                        <span class="game-card-note">named after a C.P. Rutledge song</span>
+                    </div>
+                </div>
+            </div>
+        </a>
     </div>
 </main>
 
 <footer>&copy; 2026 <span>magmacrunch media</span></footer>
 
 <script src="../../../nav.js"></script>
+<script>
+(function() {
+    const C = window.ARTIST_CONFIG;
+    if (!C) return;
+    const d = C.depth || '../../../';
+
+    const breadcrumbEl = document.querySelector('.breadcrumb');
+    if (breadcrumbEl) {
+        breadcrumbEl.innerHTML = `
+            <a href="${d}archive/index.html">archive</a>
+            <span class="sep">›</span>
+            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <span class="sep">›</span>
+            <a href="index.html">${C.abbr.toLowerCase()}</a>
+        `;
+    }
+
+    const artistLabelEl = document.getElementById('artist-label');
+    if (artistLabelEl) artistLabelEl.textContent = `// ${C.name} //`;
+})();
+</script>
+
 </body>
 </html>
