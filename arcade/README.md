@@ -9,6 +9,7 @@ Pixel art games — vanilla HTML/CSS/JS, no frameworks, no build step.
 | game | type | status |
 |------|------|--------|
 | 2^N | tile puzzle (2048) | complete |
+| cribbage | card game (cribbage) | under construction |
 | crystal-mirror-maze | exploration | under construction |
 | george-boole | logic puzzle | complete |
 | moonlight-drift | side-scroller | complete |
@@ -44,7 +45,7 @@ arcade/shared/cards/
 
 Each game provides its own `config.js` (SUITS, RANKS, RANK_VALUES, etc.) — the shared pipeline reads these as globals.
 
-Used by: solitaire, solitaire_THLD, scandinavian-stud
+Used by: solitaire, solitaire_THLD, scandinavian-stud, cribbage
 
 ### poker chip rendering (shared by poker games)
 
@@ -56,7 +57,7 @@ arcade/shared/chips/
 
 Each game defines CSS variables (`--black`, `--font-pixel`, etc.) for theming. The `ChipAnim.init(displayId, legendId)` call configures DOM element IDs.
 
-Used by: solitaire_THLD, scandinavian-stud (future: cribbage, etc.)
+Used by: solitaire_THLD, scandinavian-stud, cribbage
 
 ---
 

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cribbage — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231e4d2b'/%3E%3Crect x='4' y='3' width='24' height='26' fill='%23fffef5' rx='2'/%3E%3Crect x='6' y='5' width='4' height='4' fill='%23cc0000' rx='1'/%3E%3Ctext x='6' y='8' font-family='sans-serif' font-size='3.5' fill='%23cc0000'%3EA♥%3C/text%3E%3Ctext x='16' y='24' font-family='sans-serif' font-size='7' fill='%23cc0000'%3E♥%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/start-screen.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+    <link rel="stylesheet" href="../shared/cards/cards.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/modals.css">
+</head>
+<style>
+    .mc-back {
+        position: fixed;
+        top: 12px;
+        left: 14px;
+        z-index: 10000;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 9px;
+        color: #ffd700;
+        text-decoration: none;
+        letter-spacing: 0.08em;
+    }
+    .mc-back::before {
+        content: '← ';
+    }
+    .mc-back:hover {
+        color: #ffff00;
+    }
+    body.game-active .mc-back {
+        display: block;
+    }
+</style>
+<body>
+
+    <a href="../index.html" class="mc-back">magmacrunch arcade</a>
+
+    <div class="container">
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+                <h1 class="game-title">CRIBBAGE</h1>
+                <p class="game-subtitle">The classic card game</p>
+
+                <div class="start-divider"></div>
+
+                <div class="start-buttons">
+                    <button id="startGameBtn" class="start-btn primary">Start Game</button>
+                    <button id="viewRulesBtn" class="start-btn">How to Play</button>
+                    <button id="viewScoresBtn" class="start-btn">High Scores</button>
+                </div>
+
+                <p class="start-press-prompt">— press start —</p>
+
+                <div class="start-footer">
+                    <p>First to 121 points wins</p>
+                    <p>Standard 52-card deck &bull; 2 players</p>
+                </div>
+                <p class="start-copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" class="game-screen" style="display: none;">
+
+            <!-- Header -->
+            <div class="game-header">
+                <h1>CRIBBAGE</h1>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">You</span>
+                        <span class="stat-value" id="playerScore">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Opponent</span>
+                        <span class="stat-value" id="aiScore">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main game area -->
+            <div class="game-main">
+
+                <!-- Left panel - AI and crib -->
+                <div class="left-panel">
+                    <div class="ai-hand-area">
+                        <div class="section-title">Opponent's Hand</div>
+                        <div id="aiHand" class="hand-cards"></div>
+                    </div>
+
+                    <div class="starter-area">
+                        <div class="section-title">Starter</div>
+                        <div id="starterCard" class="starter-card"></div>
+                    </div>
+
+                    <div class="crib-area">
+                        <div class="section-title">Crib</div>
+                        <div id="cribArea" class="hand-cards"></div>
+                    </div>
+                </div>
+
+                <!-- Center - Board -->
+                <div class="center-panel">
+                    <div id="cribbageBoard" class="cribbage-board"></div>
+
+                    <div class="count-display">
+                        <div>
+                            <div id="countDisplay" class="count-value">0</div>
+                            <div class="count-label">Count</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right panel - Player -->
+                <div class="right-panel">
+                    <div class="player-hand-area">
+                        <div class="section-title">Your Hand</div>
+                        <div id="playerHand" class="hand-cards"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message area -->
+            <div id="messageArea" class="message-area">
+                <div class="game-message">Welcome to Cribbage!</div>
+            </div>
+
+            <!-- Action buttons -->
+            <div id="actionButtons" class="action-buttons"></div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script src="../shared/cards/deck.js"></script>
+    <script src="../shared/cards/face-cards.js"></script>
+    <script src="../shared/cards/number-cards.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/hand-eval.js"></script>
+    <script src="js/cribbage-board.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

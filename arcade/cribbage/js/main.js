@@ -1,0 +1,434 @@
+// main.js — Cribbage UI management | MagmaCrunch Media © 2026
+// Handles user interactions and updates the display
+
+document.addEventListener('DOMContentLoaded', () => {
+    const game = new CribbageGame();
+
+    // ── DOM Elements ────────────────────────────────────────────
+    const startScreen = document.getElementById('startScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const startBtn = document.getElementById('startGameBtn');
+    const rulesBtn = document.getElementById('viewRulesBtn');
+    const scoresBtn = document.getElementById('viewScoresBtn');
+    const newGameBtn = document.getElementById('newGameBtn');
+    const menuBtn = document.getElementById('menuBtn');
+    const backLink = document.querySelector('.mc-back');
+
+    // Game areas
+    const playerHandEl = document.getElementById('playerHand');
+    const aiHandEl = document.getElementById('aiHand');
+    const cribAreaEl = document.getElementById('cribArea');
+    const starterCardEl = document.getElementById('starterCard');
+    const countDisplayEl = document.getElementById('countDisplay');
+    const messageAreaEl = document.getElementById('messageArea');
+    const actionButtonsEl = document.getElementById('actionButtons');
+
+    // ── Event Listeners ─────────────────────────────────────────
+    startBtn.addEventListener('click', startGame);
+    rulesBtn.addEventListener('click', showRules);
+    scoresBtn.addEventListener('click', showHighScores);
+    newGameBtn.addEventListener('click', startGame);
+    menuBtn.addEventListener('click', showMenu);
+
+    // ── Start new game ──────────────────────────────────────────
+    function startGame() {
+        startScreen.style.display = 'none';
+        gameScreen.style.display = 'block';
+
+        game.reset();
+        CribbageBoard.init('cribbageBoard');
+
+        dealNewHand();
+    }
+
+    // ── Deal new hand ───────────────────────────────────────────
+    function dealNewHand() {
+        const { playerHand, aiHand } = game.deal();
+        renderHands();
+        showMessage(`Select 2 cards for the crib (${game.isPlayerDealer ? 'your' : "opponent's"} crib)`);
+        showCribSelectionButtons();
+    }
+
+    // ── Render hands ────────────────────────────────────────────
+    function renderHands() {
+        const state = game.getState();
+
+        // Player hand
+        playerHandEl.innerHTML = '';
+        state.playerHand.forEach(card => {
+            const cardEl = createCardElement(card, true);
+            cardEl.addEventListener('click', () => handleCardClick(card));
+            playerHandEl.appendChild(cardEl);
+        });
+
+        // AI hand (face down)
+        aiHandEl.innerHTML = '';
+        state.aiHand.forEach(card => {
+            const cardEl = createCardElement(card, false);
+            aiHandEl.appendChild(cardEl);
+        });
+
+        // Update crib display
+        cribAreaEl.innerHTML = '';
+        state.crib.forEach(card => {
+            const cardEl = createCardElement(card, false);
+            cribAreaEl.appendChild(cardEl);
+        });
+
+        // Update starter card
+        starterCardEl.innerHTML = '';
+        if (state.starter) {
+            const cardEl = createCardElement(state.starter, true);
+            starterCardEl.appendChild(cardEl);
+        }
+
+        // Update count display
+        countDisplayEl.textContent = state.currentCount;
+    }
+
+    // ── Create card element ─────────────────────────────────────
+    function createCardElement(card, faceUp) {
+        const div = document.createElement('div');
+        div.className = `card ${faceUp ? 'face-up' : 'face-down'} ${card.suit}`;
+
+        if (faceUp) {
+            div.innerHTML = `
+                <div class="card-corner top-left">
+                    <span class="corner-rank">${card.rank}</span>
+                    <span class="corner-suit">${SUIT_SYMBOLS[card.suit]}</span>
+                </div>
+                <div class="card-center">${SUIT_SYMBOLS[card.suit]}</div>
+                <div class="card-corner bottom-right">
+                    <span class="corner-rank">${card.rank}</span>
+                    <span class="corner-suit">${SUIT_SYMBOLS[card.suit]}</span>
+                </div>
+            `;
+        } else {
+            div.innerHTML = `<div class="card-back">🂠</div>`;
+        }
+
+        return div;
+    }
+
+    // ── Handle card click ───────────────────────────────────────
+    function handleCardClick(card) {
+        const state = game.getState();
+
+        switch (state.phase) {
+            case PHASE.CRIB_SELECTION:
+                game.selectForCrib(card);
+                renderHands();
+                updateCribSelectionButtons();
+                break;
+
+            case PHASE.PEGGING:
+                if (state.currentTurn === 'player') {
+                    const result = game.playPeggingCard(card, 'player');
+                    if (result) {
+                        renderHands();
+                        updatePeggingDisplay(result);
+                        checkGamePhase();
+                    }
+                }
+                break;
+        }
+    }
+
+    // ── Show crib selection buttons ─────────────────────────────
+    function showCribSelectionButtons() {
+        actionButtonsEl.innerHTML = '';
+        updateCribSelectionButtons();
+    }
+
+    // ── Update crib selection buttons ───────────────────────────
+    function updateCribSelectionButtons() {
+        const state = game.getState();
+        const selected = state.selectedForCrib.length;
+
+        actionButtonsEl.innerHTML = '';
+
+        if (selected === 2) {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn confirm';
+            btn.textContent = `Send to Crib`;
+            btn.addEventListener('click', confirmCrib);
+            actionButtonsEl.appendChild(btn);
+        } else {
+            const msg = document.createElement('div');
+            msg.className = 'selection-hint';
+            msg.textContent = `Select ${2 - selected} more card${selected === 1 ? '' : 's'}`;
+            actionButtonsEl.appendChild(msg);
+        }
+    }
+
+    // ── Confirm crib selection ──────────────────────────────────
+    function confirmCrib() {
+        game.confirmCribSelection();
+        renderHands();
+        showMessage('Cut for starter...');
+        showStarterCutButton();
+    }
+
+    // ── Show starter cut button ─────────────────────────────────
+    function showStarterCutButton() {
+        actionButtonsEl.innerHTML = '';
+        const btn = document.createElement('button');
+        btn.className = 'action-btn cut';
+        btn.textContent = 'Cut Deck';
+        btn.addEventListener('click', cutStarter);
+        actionButtonsEl.appendChild(btn);
+    }
+
+    // ── Cut for starter ─────────────────────────────────────────
+    function cutStarter() {
+        const starter = game.cutStarter();
+        renderHands();
+
+        if (starter.rank === 'J') {
+            showMessage(`His Heels! Jack turned - ${game.isPlayerDealer ? 'You' : 'Opponent'} gets 2 points`);
+        } else {
+            showMessage(`Starter: ${starter.rank}${SUIT_SYMBOLS[starter.suit]}`);
+        }
+
+        setTimeout(() => {
+            showMessage(`${game.isPlayerDealer ? "Opponent's" : 'Your'} turn to play`);
+            showPeggingButtons();
+        }, 1500);
+    }
+
+    // ── Show pegging buttons ────────────────────────────────────
+    function showPeggingButtons() {
+        actionButtonsEl.innerHTML = '';
+        const state = game.getState();
+
+        if (state.currentTurn === 'player') {
+            // Show playable cards
+            const playable = state.playerHand.filter(c =>
+                RANK_VALUES[c.rank] + state.currentCount <= MAX_PEG_COUNT
+            );
+
+            if (playable.length === 0) {
+                // Must say Go
+                const btn = document.createElement('button');
+                btn.className = 'action-btn go';
+                btn.textContent = 'Go';
+                btn.addEventListener('click', sayGo);
+                actionButtonsEl.appendChild(btn);
+            } else {
+                showMessage('Your turn - click a card to play');
+            }
+        } else {
+            // AI's turn
+            setTimeout(aiPlay, 1000);
+        }
+    }
+
+    // ── AI play ─────────────────────────────────────────────────
+    function aiPlay() {
+        const state = game.getState();
+        if (state.currentTurn !== 'ai' || state.phase !== PHASE.PEGGING) return;
+
+        const card = CribbageAI.selectPeggingCard(state.aiHand, state.currentCount, state.playedCards);
+
+        if (card) {
+            const result = game.playPeggingCard(card, 'ai');
+            renderHands();
+            updatePeggingDisplay(result);
+            checkGamePhase();
+        } else {
+            sayGo();
+        }
+    }
+
+    // ── Say Go ──────────────────────────────────────────────────
+    function sayGo() {
+        const state = game.getState();
+        const playerWhoCantPlay = state.currentTurn;
+        const playerWhoPlayedLast = playerWhoCantPlay === 'player' ? 'ai' : 'player';
+
+        // Point already added in game.playPeggingCard(), just need to reset and switch turns
+        game.resetCount();
+
+        // After Go, the player who couldn't play goes first next round
+        game.currentTurn = playerWhoCantPlay;
+
+        renderHands();
+        showMessage('Go!');
+        CribbageBoard.updatePegs(game.scores.player, game.scores.ai);
+
+        setTimeout(() => {
+            checkGamePhase();
+        }, 1000);
+    }
+
+    // ── Update pegging display ──────────────────────────────────
+    function updatePeggingDisplay(result) {
+        CribbageBoard.updatePegs(game.scores.player, game.scores.ai);
+
+        if (result && result.description) {
+            showMessage(result.description);
+        }
+
+        countDisplayEl.textContent = game.currentCount;
+    }
+
+    // ── Check game phase and proceed ────────────────────────────
+    function checkGamePhase() {
+        const state = game.getState();
+
+        // Check for winner
+        const winner = game.checkWinner();
+        if (winner) {
+            showGameOver(winner);
+            return;
+        }
+
+        switch (state.phase) {
+            case PHASE.PEGGING:
+                showPeggingButtons();
+                break;
+
+            case PHASE.HAND_SCORING:
+                showHandScoring();
+                break;
+
+            case PHASE.DEAL:
+                setTimeout(dealNewHand, 2000);
+                break;
+        }
+    }
+
+    // ── Show hand scoring ──────────────────────────────────────
+    function showHandScoring() {
+        const results = game.scoreHands();
+        if (!results) return;
+
+        let message = 'Hand scoring:\n';
+        results.forEach(result => {
+            const playerName = result.player === 'crib' ? 'Crib' :
+                             result.player === 'player' ? 'You' : 'Opponent';
+            message += `${playerName}: ${result.score.total} points\n`;
+
+            // Show breakdown
+            const b = result.score.breakdown;
+            if (b.fifteens > 0) message += `  15s: ${b.fifteens}\n`;
+            if (b.pairs > 0) message += `  Pairs: ${b.pairs}\n`;
+            if (b.runs > 0) message += `  Runs: ${b.runs}\n`;
+            if (b.flush > 0) message += `  Flush: ${b.flush}\n`;
+            if (b.nobs > 0) message += `  Nobs: ${b.nobs}\n`;
+        });
+
+        showMessage(message);
+        CribbageBoard.updatePegs(game.scores.player, game.scores.ai);
+
+        // Check for winner
+        const winner = game.checkWinner();
+        if (winner) {
+            setTimeout(() => showGameOver(winner), 2000);
+        } else {
+            // Proceed to next hand after delay
+            setTimeout(() => {
+                checkGamePhase();
+            }, 3000);
+        }
+    }
+
+    // ── Show game over ──────────────────────────────────────────
+    function showGameOver(winner) {
+        const isPlayerWin = winner === 'player';
+        messageAreaEl.innerHTML = `
+            <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
+                <h2>${isPlayerWin ? 'You Win!' : 'Opponent Wins!'}</h2>
+                <p>Final Score: ${game.scores.player} - ${game.scores.ai}</p>
+                <button id="playAgainBtn" class="action-btn">Play Again</button>
+            </div>
+        `;
+
+        document.getElementById('playAgainBtn').addEventListener('click', startGame);
+    }
+
+    // ── Show message ────────────────────────────────────────────
+    function showMessage(text) {
+        messageAreaEl.innerHTML = `<div class="game-message">${text.replace(/\n/g, '<br>')}</div>`;
+    }
+
+    // ── Show rules ──────────────────────────────────────────────
+    function showRules() {
+        const modal = createModal('Cribbage Rules', `
+            <div class="rules-content">
+                <h3>Objective</h3>
+                <p>Be the first to 121 points.</p>
+
+                <h3>Card Values</h3>
+                <p>A=1, 2-10 face value, J=11, Q=12, K=13</p>
+
+                <h3>Phases</h3>
+                <ol>
+                    <li><strong>Deal:</strong> 6 cards to each player</li>
+                    <li><strong>Crib:</strong> Each player discards 2 cards to the crib</li>
+                    <li><strong>Starter:</strong> Cut deck, top card turned face up</li>
+                    <li><strong>Pegging:</strong> Alternate playing cards, scoring points</li>
+                    <li><strong>Scoring:</strong> Count hands and crib</li>
+                </ol>
+
+                <h3>Pegging Points</h3>
+                <ul>
+                    <li>15: 2 points</li>
+                    <li>31: 2 points</li>
+                    <li>Pair: 2 points</li>
+                    <li>Three of a kind: 6 points</li>
+                    <li>Four of a kind: 12 points</li>
+                    <li>Run: points = run length</li>
+                    <li>Go: 1 point</li>
+                </ul>
+
+                <h3>Hand Scoring</h3>
+                <ul>
+                    <li>15s: 2 points each</li>
+                    <li>Pairs: 2 points</li>
+                    <li>Runs: points = run length</li>
+                    <li>Flush (4 cards): 4 points</li>
+                    <li>Flush (5 cards): 5 points</li>
+                    <li>Nobs (Jack matching starter): 1 point</li>
+                </ul>
+            </div>
+        `);
+        document.body.appendChild(modal);
+    }
+
+    // ── Show high scores ────────────────────────────────────────
+    function showHighScores() {
+        const modal = createModal('High Scores', `
+            <p>High scores coming soon!</p>
+        `);
+        document.body.appendChild(modal);
+    }
+
+    // ── Show menu ───────────────────────────────────────────────
+    function showMenu() {
+        const modal = createModal('Menu', `
+            <div class="menu-buttons">
+                <button class="start-btn primary" onclick="location.reload()">New Game</button>
+                <button class="start-btn" onclick="this.closest('.modal-overlay').remove()">Close</button>
+            </div>
+        `);
+        document.body.appendChild(modal);
+    }
+
+    // ── Create modal ────────────────────────────────────────────
+    function createModal(title, content) {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.innerHTML = `
+            <div class="modal">
+                <h2>${title}</h2>
+                ${content}
+                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
+            </div>
+        `;
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+        return overlay;
+    }
+});
