@@ -4,22 +4,28 @@
 
 Open `index.html` directly in browser. No build server, no package manager, no tests.
 
-## Dependencies on sibling games
+## Dependencies on shared card pipeline
 
-**Card rendering borrows from `../solitaire/`** — do not modify those files unless fixing cross-game issues:
-- `../solitaire/css/cards.css`
-- `../solitaire/js/deck.js`
-- `../solitaire/js/face-cards.js`
-- `../solitaire/js/number-cards.js`
+**Card rendering uses shared files from `../shared/cards/`** — do not modify those files unless fixing cross-game issues:
+- `../shared/cards/cards.css`
+- `../shared/cards/deck.js`
+- `../shared/cards/face-cards.js`
+- `../shared/cards/number-cards.js`
+
+## Dependencies on shared chip animation
+
+**Chip rendering uses shared files from `../shared/chips/`** — do not modify those files unless fixing cross-game issues:
+- `../shared/chips/chip-animation.css`
+- `../shared/chips/chip-animation.js`
 
 ## Script load order
 
 `index.html` scripts must load in this order (dependencies matter):
-1. `js/chip-animation.js`
+1. `../shared/chips/chip-animation.js` (shared chip rendering)
 2. `js/config.js`
-3. `../solitaire/js/deck.js` (shared card/deck logic)
-4. `../solitaire/js/face-cards.js`
-5. `../solitaire/js/number-cards.js`
+3. `../shared/cards/deck.js` (shared card/deck logic)
+4. `../shared/cards/face-cards.js`
+5. `../shared/cards/number-cards.js`
 6. `js/state.js`
 7. `js/dealer.js`
 8. `js/hand-eval.js`

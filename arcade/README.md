@@ -32,13 +32,31 @@ Pixel art games — vanilla HTML/CSS/JS, no frameworks, no build step.
 - **fonts** — Press Start 2P, VT323, Orbitron via Google Fonts CDN
 - **canvas pixel art** — low-res draw, CSS `image-rendering: pixelated`
 
-### card rendering pipeline (shared by solitaire family)
+### card rendering pipeline (shared by card games)
 
 ```
-config.js → face-cards.js → number-cards.js → deck.js → game.js → main.js
+arcade/shared/cards/
+├── deck.js           # Card class, Deck class, card back SVG
+├── face-cards.js     # 12 pixel-art SVG face cards (J/Q/K × 4 suits)
+├── number-cards.js   # Number card HTML generators (A-10)
+└── cards.css         # Card shell, corners, pips
 ```
+
+Each game provides its own `config.js` (SUITS, RANKS, RANK_VALUES, etc.) — the shared pipeline reads these as globals.
 
 Used by: solitaire, solitaire_THLD, scandinavian-stud
+
+### poker chip rendering (shared by poker games)
+
+```
+arcade/shared/chips/
+├── chip-animation.js   # Canvas-based chip stack rendering
+└── chip-animation.css  # Chip display styling
+```
+
+Each game defines CSS variables (`--black`, `--font-pixel`, etc.) for theming. The `ChipAnim.init(displayId, legendId)` call configures DOM element IDs.
+
+Used by: solitaire_THLD, scandinavian-stud (future: cribbage, etc.)
 
 ---
 
@@ -48,14 +66,21 @@ Used by: solitaire, solitaire_THLD, scandinavian-stud
 
 Downloadable desktop app bundling select games. Lego architecture — each game is a self-contained "brick," the app shell is the "base plate." Add new games by copying a folder and rebuilding.
 
-### initial games
+### packs
 
+#### card games (shared rendering pipeline)
 1. solitaire
 2. solitaire_THLD
-3. george-boole
-4. 2^N
-5. tetris
-6. moonlight-drift
+3. scandinavian-stud
+
+#### board games (multiplayer-first, WebSocket)
+4. SORRY!
+5. backgammon (future)
+
+#### puzzles
+6. 2^N
+7. george-boole
+8. tetris
 
 ### planned structure
 
@@ -66,28 +91,36 @@ arcade-sample-pack/           # new project root (sibling to website/)
 │   ├── tauri.conf.json       # window config, bundle settings
 │   └── src/main.rs
 ├── src/                      # web assets served by webview
-│   ├── index.html            # sample pack hub / launcher
-│   ├── shared/fonts/         # bundled Press Start 2P, VT323, Orbitron
-│   ├── solitaire/
-│   ├── solitaire_THLD/
-│   ├── george-boole/
-│   ├── 2^N/
-│   ├── tetris/
-│   └── moonlight-drift/
+│   ├── index.html            # hub / launcher
+│   ├── shared/
+│   │   ├── fonts/            # bundled Press Start 2P, VT323, Orbitron
+│   │   └── card-pipeline/    # deck.js, face-cards.js, number-cards.js, cards.css
+│   ├── card-games/
+│   │   ├── solitaire/
+│   │   ├── solitaire_THLD/
+│   │   └── scandinavian-stud/
+│   ├── board-games/
+│   │   ├── SORRY/
+│   │   └── backgammon/       # future
+│   └── puzzles/
+│       ├── 2^N/
+│       ├── george-boole/
+│       └── tetris/
 └── package.json
 ```
 
 ### steps
 
 1. **scaffold Tauri v2** — vanilla HTML/CSS/JS template, verify macOS build
-2. **create hub page** — retro launcher listing all games
+2. **create hub page** — retro launcher listing all packs/games
 3. **copy game assets** — preserve directory structure, relative paths
 4. **bundle fonts locally** — download .woff2, replace Google CDN links with local @font-face
-5. **replace JSONBin with localStorage** — solitaire, 2^N, tetris, solitaire_THLD use api.jsonbin.io for scoring; swap to local storage
+5. **replace JSONBin with localStorage** — solitaire, 2^N, tetris, solitaire_THLD, scandinavian-stud use api.jsonbin.io for scoring; swap to local storage
 6. **fix navigation** — `.mc-back` links → hub page
 7. **configure Tauri** — window size, app icon, bundle metadata
 8. **build and test** — `npm run tauri dev` / `npm run tauri build`
 9. **cross-platform** — same codebase → Windows (.msi), Linux (.deb, .AppImage)
+10. **multiplayer (board games)** — SORRY! connects to WebSocket server (sorry.magmacrunch.com); same protocol works in Tauri webview
 
 ### external dependencies to localize
 
@@ -105,10 +138,11 @@ arcade-sample-pack/           # new project root (sibling to website/)
 
 ### adding a game later
 
-1. Copy game folder into `src/`
-2. Add link on hub page
-3. Localize any external deps (fonts, APIs)
-4. Rebuild
+1. Copy game folder into the appropriate pack directory (`card-games/`, `board-games/`, or `puzzles/`)
+2. For card games: ensure the card pipeline paths resolve to `../shared/card-pipeline/`
+3. Add link on hub page
+4. Localize any external deps (fonts, APIs)
+5. Rebuild
 
 ---
 
@@ -203,8 +237,10 @@ Games to update: 2^N, george-boole, moonlight-drift, tetris, solitaire, scandina
 
 ### cross-game dependencies (service worker must cache)
 
-- `solitaire_THLD` → `../solitaire/css/cards.css`, `../solitaire/js/deck.js`, `../solitaire/js/face-cards.js`, `../solitaire/js/number-cards.js`
-- `scandinavian-stud` → `../solitaire/css/cards.css`
+- `shared/cards/` — shared card rendering pipeline (deck.js, face-cards.js, number-cards.js, cards.css)
+- `solitaire` → `../shared/cards/`
+- `solitaire_THLD` → `../shared/cards/`
+- `scandinavian-stud` → `../shared/cards/`
 
 ### games to update (13 files)
 

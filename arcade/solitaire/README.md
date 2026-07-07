@@ -22,19 +22,24 @@ solitaire/
 │   ├── base.css            # CSS variables, desktop, window chrome, base button styles
 │   ├── start-screen.css    # Start screen / splash layout
 │   ├── game-layout.css     # Game board header, felt table, card spots
-│   ├── cards.css           # Card shell, corners, pips, face card wrappers
 │   ├── modals.css          # All modal dialogs (rules, scores, initials, credits)
 │   └── responsive.css      # Mobile/tablet breakpoints
 └── js/
     ├── config.js           # SUITS, RANKS, SUIT_SYMBOLS, SUIT_COLORS, RANK_VALUES
-    ├── face-cards.js       # Pixel-art SVG face cards (J/Q/K × 4 suits)
-    ├── number-cards.js     # Number card (2–10) and Ace HTML generators
-    ├── deck.js             # Card class, Deck class, getCardBackSVG()
     ├── game.js             # Solitaire class — all game logic and rendering
     └── main.js             # Entry point, instantiates Solitaire
 ```
 
-> **Script load order matters:** `config.js` → `face-cards.js` → `number-cards.js` → `deck.js` → `game.js` → `main.js`
+**Shared card rendering pipeline** (used by solitaire, solitaire_THLD, scandinavian-stud):
+```
+arcade/shared/cards/
+├── deck.js             # Card class, Deck class, getCardBackSVG()
+├── face-cards.js       # Pixel-art SVG face cards (J/Q/K × 4 suits)
+├── number-cards.js     # Number card (2–10) and Ace HTML generators
+└── cards.css           # Card shell, corners, pips, face card wrappers
+```
+
+> **Script load order matters:** `config.js` → `../shared/cards/deck.js` → `../shared/cards/face-cards.js` → `../shared/cards/number-cards.js` → `game.js` → `main.js`
 
 ---
 
@@ -95,20 +100,20 @@ Score cannot go below 0.
 
 ## Architecture
 
-### Card Rendering Pipeline
+### Card Rendering Pipeline (shared across card games)
 
 ```
-config.js          SUITS, RANKS, SUIT_COLORS, RANK_VALUES
-    ↓
-face-cards.js      FC_CORNERS() + FACE_CARD_SVG lookup (12 pixel-art SVGs)
-number-cards.js    cornerHTML() + getSuitLayout() + Unicode pips
-deck.js            Card.getHTML() → dispatches to face-cards / number-cards / getCardBackSVG()
-game.js            _doRender() → builds DOM from game state
+arcade/shared/cards/
+├── config.js          SUITS, RANKS, SUIT_COLORS, RANK_VALUES (per-game, not shared)
+├── face-cards.js      FC_CORNERS() + FACE_CARD_SVG lookup (12 pixel-art SVGs)
+├── number-cards.js    cornerHTML() + getSuitLayout() + Unicode pips
+├── deck.js            Card.getHTML() → dispatches to face-cards / number-cards / getCardBackSVG()
+└── cards.css          Card shell, corners, pips, face card wrappers
 ```
 
 ### Corner Label Config (face-cards.js)
 
-Adjust these constants at the top of `face-cards.js` to tune face card corner labels:
+Adjust these constants at the top of `../shared/cards/face-cards.js` to tune face card corner labels:
 
 ```javascript
 const FC_RANK_SIZE  = 10;    // rank letter font size (SVG units)
@@ -119,7 +124,7 @@ const FC_GLYPH_Y    = 21;    // suit glyph baseline (increase = move down)
 
 ### Volcano Badge (deck.js)
 
-The card back badge is centered at (32, 44) in the 64×88 SVG viewBox. The dark panel is `x=15, y=29, width=34, height=30`. To shift the volcano vertically, add/subtract from all `y` and `y1`/`y2` values in the badge section.
+The card back badge is centered at (32, 44) in the 64×88 SVG viewBox. The dark panel is `x=15, y=29, width=34, height=30`. To shift the volcano vertically, add/subtract from all `y` and `y1`/`y2` values in the badge section of `../shared/cards/deck.js`.
 
 ### Solitaire Class (game.js)
 

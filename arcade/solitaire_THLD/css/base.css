@@ -38,6 +38,11 @@
     --fc-gold: #d4a017;
     --fc-skin: #e8b89d;
     --fc-art-bg: #f8f9fa;
+
+    /* Chip animation variables */
+    --chip-bg: #0a0000;
+    --chip-border: #3b0000;
+    --chip-text: #ffcc00;
 }
 
 /* ── Reset ─────────────────────────────────────────────────── */

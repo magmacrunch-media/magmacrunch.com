@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/start-screen.css">
     <link rel="stylesheet" href="css/game-layout.css">
-    <link rel="stylesheet" href="../solitaire/css/cards.css">
+    <link rel="stylesheet" href="../shared/cards/cards.css">
+    <link rel="stylesheet" href="../shared/chips/chip-animation.css">
     <link rel="stylesheet" href="css/modals.css">
 </head>
 <style>
@@ -96,6 +97,10 @@
         <!-- Human Player -->
         <div id="playerArea" class="player-area"></div>
 
+        <!-- Chip Display -->
+        <div id="chipAnimDisplay" class="chip-display"></div>
+        <div class="chip-legend" id="chipAnimLegend"></div>
+
         <!-- Action Buttons -->
         <div id="actionButtons" class="action-buttons"></div>
 
@@ -110,9 +115,10 @@
     </div>
 </div>
 
-<script src="../solitaire/js/deck.js"></script>
-<script src="../solitaire/js/face-cards.js"></script>
-<script src="../solitaire/js/number-cards.js"></script>
+<script src="../shared/chips/chip-animation.js"></script>
+<script src="../shared/cards/deck.js"></script>
+<script src="../shared/cards/face-cards.js"></script>
+<script src="../shared/cards/number-cards.js"></script>
 <script src="js/config.js"></script>
 <script src="js/hand-eval.js"></script>
 <script src="js/game.js"></script>

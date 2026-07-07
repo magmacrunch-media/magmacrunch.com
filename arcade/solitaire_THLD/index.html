@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="css/start-screen.css">
     <link rel="stylesheet" href="css/game-layout.css">
     <!-- Using Klondike's card styles -->
-    <link rel="stylesheet" href="../solitaire/css/cards.css">
-    <link rel="stylesheet" href="css/chip-animation.css">
+    <link rel="stylesheet" href="../shared/cards/cards.css">
+    <link rel="stylesheet" href="../shared/chips/chip-animation.css">
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -236,12 +236,12 @@
     </div>
 
     <!-- JavaScript files - ORDER MATTERS! -->
-    <script src="js/chip-animation.js"></script>
+    <script src="../shared/chips/chip-animation.js"></script>
     <script src="js/config.js"></script>
-    <!-- Using Klondike's card rendering -->
-    <script src="../solitaire/js/deck.js"></script>
-    <script src="../solitaire/js/face-cards.js"></script>
-    <script src="../solitaire/js/number-cards.js"></script>
+    <!-- Using shared card rendering pipeline -->
+    <script src="../shared/cards/deck.js"></script>
+    <script src="../shared/cards/face-cards.js"></script>
+    <script src="../shared/cards/number-cards.js"></script>
     <script src="js/state.js"></script>
     <script src="js/dealer.js"></script>
     <script src="js/hand-eval.js"></script>

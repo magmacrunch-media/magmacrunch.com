@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const lang = game.language;
     let highScores = [];
 
+    // Initialize chip animation
+    ChipAnim.init('chipAnimDisplay', 'chipAnimLegend');
+
     // ── DOM Elements ────────────────────────────────────────
     const startScreen = document.getElementById('startScreen');
     const gameScreen = document.getElementById('gameScreen');
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game.dealerIndex = 0;
         game.newHand();
         game.startBettingRound();
+        ChipAnim.setChips(game.players[0].chips);
         renderGame();
     }
 
@@ -63,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update displays
         potDisplay.textContent = state.pot;
         chipDisplay.textContent = game.players[0].chips;
+        ChipAnim.setChips(game.players[0].chips);
         roundDisplay.textContent = state.round;
         
         const streetNames = LABELS[lang].streetNames;
