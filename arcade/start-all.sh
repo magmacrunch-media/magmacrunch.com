@@ -23,6 +23,25 @@ if [[ "$1" == "--setup" ]]; then
     exit 0
 fi
 
+# ── Auto-setup venv if missing ───────────────────────────────────────────────
+VENV_DIR="$SCRIPT_DIR/venv"
+
+if [[ ! -d "$VENV_DIR" ]]; then
+    echo "Creating virtual environment..."
+    python3 -m venv "$VENV_DIR"
+    echo "✓ Virtual environment created."
+fi
+
+# Activate venv
+source "$VENV_DIR/bin/activate"
+
+# Install websockets if missing
+if ! python3 -c "import websockets" 2>/dev/null; then
+    echo "Installing websockets..."
+    pip install websockets --quiet
+    echo "✓ Websockets installed."
+fi
+
 # ── Game servers ─────────────────────────────────────────────────────────────
 # Format: "directory:port:name"
 # Add new games here as you create them
