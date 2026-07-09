@@ -1,0 +1,289 @@
+/* lobby.css — Shared multiplayer lobby/chat styles */
+
+/* ── Lobby Overlay ──────────────────────────────────────────────────────── */
+
+.lobby-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(6, 14, 26, 0.95);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lobby-panel {
+    background: var(--bg-mid, #1a2a44);
+    border: 2px solid var(--accent, #00f5ff);
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 40px rgba(0, 245, 255, 0.15);
+}
+
+.lobby-title {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 16px;
+    color: var(--accent, #00f5ff);
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+/* ── Player List ────────────────────────────────────────────────────────── */
+
+.lobby-players {
+    margin-bottom: 20px;
+}
+
+.lobby-players-title {
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 14px;
+    color: var(--cream, #f0ead8);
+    opacity: 0.7;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.lobby-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    margin-bottom: 6px;
+}
+
+.lobby-player-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.lobby-player-name {
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 16px;
+    color: var(--cream, #f0ead8);
+    flex: 1;
+}
+
+.lobby-player-host {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 8px;
+    color: var(--gold, #ffe03a);
+    text-transform: uppercase;
+}
+
+/* ── Color Picker ───────────────────────────────────────────────────────── */
+
+.lobby-colors {
+    margin-bottom: 20px;
+}
+
+.lobby-colors-title {
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 14px;
+    color: var(--cream, #f0ead8);
+    opacity: 0.7;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.lobby-color-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lobby-color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.lobby-color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.lobby-color-swatch.selected {
+    border-color: white;
+    box-shadow: 0 0 12px currentColor;
+}
+
+.lobby-color-swatch.taken {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ── Room Code ──────────────────────────────────────────────────────────── */
+
+.lobby-room-code {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.lobby-room-label {
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 14px;
+    color: var(--cream, #f0ead8);
+    opacity: 0.7;
+    margin-bottom: 5px;
+}
+
+.lobby-room-value {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 24px;
+    color: var(--accent, #00f5ff);
+    letter-spacing: 0.3em;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+/* ── Chat ───────────────────────────────────────────────────────────────── */
+
+.lobby-chat {
+    margin-top: 20px;
+}
+
+.lobby-chat-messages {
+    height: 120px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border, #1a2a44);
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.lobby-chat-msg {
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 14px;
+    color: var(--cream, #f0ead8);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.lobby-chat-msg .chat-name {
+    font-weight: bold;
+}
+
+.lobby-chat-msg.system {
+    color: var(--slate, #4a6a7a);
+    font-style: italic;
+}
+
+.lobby-chat-input {
+    display: flex;
+    gap: 8px;
+}
+
+.lobby-chat-input input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border, #1a2a44);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 16px;
+    color: var(--cream, #f0ead8);
+    outline: none;
+}
+
+.lobby-chat-input input:focus {
+    border-color: var(--accent, #00f5ff);
+}
+
+.lobby-chat-input button {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 10px;
+    padding: 8px 16px;
+    background: var(--accent, #00f5ff);
+    color: var(--bg-dark, #060e1a);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.lobby-chat-input button:hover {
+    opacity: 0.9;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+
+.lobby-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.lobby-btn {
+    flex: 1;
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 11px;
+    padding: 12px 16px;
+    border: 2px solid var(--accent, #00f5ff);
+    background: transparent;
+    color: var(--accent, #00f5ff);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.lobby-btn:hover {
+    background: var(--accent, #00f5ff);
+    color: var(--bg-dark, #060e1a);
+}
+
+.lobby-btn.primary {
+    background: var(--accent, #00f5ff);
+    color: var(--bg-dark, #060e1a);
+}
+
+.lobby-btn.primary:hover {
+    opacity: 0.9;
+}
+
+.lobby-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ── Status ─────────────────────────────────────────────────────────────── */
+
+.lobby-status {
+    text-align: center;
+    font-family: var(--font-mono, 'VT323', monospace);
+    font-size: 14px;
+    color: var(--cream, #f0ead8);
+    opacity: 0.7;
+    margin-top: 15px;
+}
+
+.lobby-status.waiting {
+    color: var(--gold, #ffe03a);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 500px) {
+    .lobby-panel {
+        padding: 20px;
+    }
+
+    .lobby-room-value {
+        font-size: 20px;
+    }
+
+    .lobby-color-swatch {
+        width: 28px;
+        height: 28px;
+    }
+}

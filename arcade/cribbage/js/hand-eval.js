@@ -43,60 +43,59 @@ const CribbageHandEval = {
     },
 
     // ── Count runs in a set of cards ──────────────────────────
-    // Returns points for longest run found (3+ cards)
+    // Returns points for all runs found (3+ cards)
     countRuns(cards) {
+        if (cards.length < 3) return 0;
+
         // Sort cards by value
         const sorted = [...cards].sort((a, b) => RANK_VALUES[a.rank] - RANK_VALUES[b.rank]);
 
-        // Get unique values (for run detection)
-        const values = [...new Set(sorted.map(c => RANK_VALUES[c.rank]))];
-
-        // Find longest consecutive sequence
-        let longestRun = 0;
-        let currentRun = 1;
-        let runStart = 0;
-        let bestRunStart = 0;
-
-        for (let i = 1; i < values.length; i++) {
-            if (values[i] === values[i - 1] + 1) {
-                currentRun++;
-            } else {
-                if (currentRun > longestRun) {
-                    longestRun = currentRun;
-                    bestRunStart = runStart;
-                }
-                currentRun = 1;
-                runStart = i;
-            }
-        }
-        if (currentRun > longestRun) {
-            longestRun = currentRun;
-            bestRunStart = runStart;
-        }
-
-        // Only score runs of 3+
-        if (longestRun < 3) return 0;
-
-        // Get the run values
-        const runValues = values.slice(bestRunStart, bestRunStart + longestRun);
-
-        // Count how many cards of each rank are in the run
-        const rankCounts = {};
+        // Get unique values and their counts
+        const valueCounts = {};
         for (const card of cards) {
             const val = RANK_VALUES[card.rank];
-            if (runValues.includes(val)) {
-                rankCounts[card.rank] = (rankCounts[card.rank] || 0) + 1;
+            valueCounts[val] = (valueCounts[val] || 0) + 1;
+        }
+
+        // Get sorted unique values
+        const uniqueValues = Object.keys(valueCounts).map(Number).sort((a, b) => a - b);
+
+        // Find all consecutive sequences of 3+ cards
+        let totalPoints = 0;
+        let i = 0;
+
+        while (i < uniqueValues.length) {
+            // Find the end of the current consecutive sequence
+            let j = i;
+            while (j + 1 < uniqueValues.length && uniqueValues[j + 1] === uniqueValues[j] + 1) {
+                j++;
             }
+
+            const seqLength = j - i + 1;
+
+            // Only score sequences of 3+
+            if (seqLength >= 3) {
+                // For each starting position in the sequence, calculate the score
+                // A sequence of length N contains N-2 runs of length 3, N-3 runs of length 4, etc.
+                for (let start = i; start <= j - 2; start++) {
+                    for (let end = start + 2; end <= j; end++) {
+                        const runLength = end - start + 1;
+
+                        // Calculate multiplier (product of card counts in this run)
+                        let multiplier = 1;
+                        for (let k = start; k <= end; k++) {
+                            multiplier *= valueCounts[uniqueValues[k]];
+                        }
+
+                        totalPoints += runLength * multiplier;
+                    }
+                }
+            }
+
+            i = j + 1;
         }
 
-        // Multiply run length by product of card counts
-        // e.g., 3-4-5-5 = run of 3 × 2 fives = 6 points
-        let multiplier = 1;
-        for (const rank in rankCounts) {
-            multiplier *= rankCounts[rank];
-        }
-
-        return longestRun * multiplier;
+        return totalPoints;
     },
 
     // ── Count flush ───────────────────────────────────────────
@@ -160,38 +159,40 @@ const CribbageHandEval = {
     scorePeggingPlay(card, playedCards) {
         const count = playedCards.reduce((sum, c) => sum + RANK_VALUES[c.rank], 0) + RANK_VALUES[card.rank];
         let points = 0;
-        let description = '';
+        let descriptions = [];
 
         // Check for 31
         if (count === 31) {
             points += SCORE.THIRTY_ONE;
-            description = 'Thirty-one!';
-            return { points, description };
+            descriptions.push('Thirty-one!');
+            return { points, description: descriptions.join(' + ') };
         }
 
         // Check for 15
         if (count === 15) {
             points += SCORE.FIFTEEN;
-            description = 'Fifteen!';
+            descriptions.push('Fifteen!');
         }
 
-        // Check for pairs (last two cards same rank)
+        // Check for pairs (last cards same rank)
         if (playedCards.length >= 1) {
             const lastCard = playedCards[playedCards.length - 1];
             if (card.rank === lastCard.rank) {
-                points += SCORE.PAIR;
-                description = 'Pair!';
-
-                // Check for three of a kind
-                if (playedCards.length >= 2 && playedCards[playedCards.length - 2].rank === card.rank) {
-                    points = SCORE.THREE_OF_KIND;
-                    description = 'Three of a kind!';
-                }
-
                 // Check for four of a kind
-                if (playedCards.length >= 3 && playedCards[playedCards.length - 3].rank === card.rank) {
-                    points = SCORE.FOUR_OF_KIND;
-                    description = 'Four of a kind!';
+                if (playedCards.length >= 3 && playedCards[playedCards.length - 2].rank === card.rank &&
+                    playedCards[playedCards.length - 3].rank === card.rank) {
+                    points += SCORE.FOUR_OF_KIND;
+                    descriptions.push('Four of a kind!');
+                }
+                // Check for three of a kind
+                else if (playedCards.length >= 2 && playedCards[playedCards.length - 2].rank === card.rank) {
+                    points += SCORE.THREE_OF_KIND;
+                    descriptions.push('Three of a kind!');
+                }
+                // Pair
+                else {
+                    points += SCORE.PAIR;
+                    descriptions.push('Pair!');
                 }
             }
         }
@@ -200,34 +201,35 @@ const CribbageHandEval = {
         if (playedCards.length >= 2) {
             // Look back through played cards to find longest run ending with current card
             const allPlayed = [...playedCards, card];
-            let runLength = 1;
+            let runLength = 0;
 
-            // Check backwards from the end
-            for (let i = allPlayed.length - 2; i >= 0; i--) {
-                if (RANK_VALUES[allPlayed[i].rank] === RANK_VALUES[allPlayed[i + 1].rank] - 1) {
-                    runLength++;
-                } else {
+            // Check all possible run lengths (from 3 up to all played cards)
+            for (let len = Math.min(allPlayed.length, 7); len >= 3; len--) {
+                // Check the last 'len' cards
+                const lastN = allPlayed.slice(-len);
+                const values = lastN.map(c => RANK_VALUES[c.rank]).sort((a, b) => a - b);
+
+                // Check if values are consecutive
+                let isRun = true;
+                for (let i = 1; i < values.length; i++) {
+                    if (values[i] !== values[i - 1] + 1) {
+                        isRun = false;
+                        break;
+                    }
+                }
+
+                if (isRun) {
+                    runLength = len;
                     break;
                 }
             }
 
-            // Also check forwards (in case the new card extends a run)
-            if (runLength === 1 && allPlayed.length >= 2) {
-                for (let i = allPlayed.length - 2; i >= 0; i--) {
-                    if (RANK_VALUES[allPlayed[i].rank] === RANK_VALUES[allPlayed[i + 1].rank] + 1) {
-                        runLength++;
-                    } else {
-                        break;
-                    }
-                }
-            }
-
             if (runLength >= 3) {
-                points = runLength;
-                description = `Run of ${runLength}!`;
+                points += runLength;
+                descriptions.push(`Run of ${runLength}!`);
             }
         }
 
-        return { points, description };
+        return { points, description: descriptions.join(' + ') || '' };
     }
 };

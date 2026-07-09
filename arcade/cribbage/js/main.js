@@ -208,12 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             if (playable.length === 0) {
-                // Must say Go
-                const btn = document.createElement('button');
-                btn.className = 'action-btn go';
-                btn.textContent = 'Go';
-                btn.addEventListener('click', sayGo);
-                actionButtonsEl.appendChild(btn);
+                // Must say Go (only if count > 0, otherwise we just started a new round)
+                if (state.currentCount > 0) {
+                    const btn = document.createElement('button');
+                    btn.className = 'action-btn go';
+                    btn.textContent = 'Go';
+                    btn.addEventListener('click', sayGo);
+                    actionButtonsEl.appendChild(btn);
+                } else {
+                    // Count is 0 but no playable cards = hand is empty, auto-advance
+                    showMessage('Waiting...');
+                    setTimeout(() => {
+                        game.phase = PHASE.HAND_SCORING;
+                        checkGamePhase();
+                    }, 500);
+                }
             } else {
                 showMessage('Your turn - click a card to play');
             }
@@ -235,8 +244,16 @@ document.addEventListener('DOMContentLoaded', () => {
             renderHands();
             updatePeggingDisplay(result);
             checkGamePhase();
-        } else {
+        } else if (state.currentCount > 0) {
+            // AI can't play, count > 0 = Go
             sayGo();
+        } else {
+            // Count is 0 but AI has no cards = hand is empty, auto-advance
+            showMessage('Waiting...');
+            setTimeout(() => {
+                game.phase = PHASE.HAND_SCORING;
+                checkGamePhase();
+            }, 500);
         }
     }
 
@@ -244,9 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function sayGo() {
         const state = game.getState();
         const playerWhoCantPlay = state.currentTurn;
-        const playerWhoPlayedLast = playerWhoCantPlay === 'player' ? 'ai' : 'player';
 
-        // Point already added in game.playPeggingCard(), just need to reset and switch turns
+        // Point already added in game.playPeggingCard(), just reset and switch turns
         game.resetCount();
 
         // After Go, the player who couldn't play goes first next round
@@ -285,7 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         switch (state.phase) {
             case PHASE.PEGGING:
-                showPeggingButtons();
+                // If a Go was just called (count is 0 and it's a new round), auto-proceed
+                if (game.currentCount === 0 && game.goCalled) {
+                    // Go was just handled, proceed to next player's turn
+                    showPeggingButtons();
+                } else {
+                    showPeggingButtons();
+                }
                 break;
 
             case PHASE.HAND_SCORING:
@@ -430,5 +452,363 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target === overlay) overlay.remove();
         });
         return overlay;
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // MULTIPLAYER MODE
+    // ══════════════════════════════════════════════════════════════════════
+
+    let isMultiplayer = false;
+    let myName = '';
+    let myColor = '';
+    let roomCode = '';
+
+    const multiplayerBtn = document.getElementById('multiplayerBtn');
+    const lobbyOverlay = document.getElementById('lobbyOverlay');
+    const lobbyPlayerList = document.getElementById('lobbyPlayerList');
+    const lobbyColorGrid = document.getElementById('lobbyColorGrid');
+    const lobbyChatMessages = document.getElementById('lobbyChatMessages');
+    const lobbyChatInput = document.getElementById('lobbyChatInput');
+    const lobbyChatSend = document.getElementById('lobbyChatSend');
+    const lobbyCreateRoom = document.getElementById('lobbyCreateRoom');
+    const lobbyJoinRoom = document.getElementById('lobbyJoinRoom');
+    const lobbyStartGame = document.getElementById('lobbyStartGame');
+    const lobbyLeave = document.getElementById('lobbyLeave');
+    const lobbyStatus = document.getElementById('lobbyStatus');
+    const lobbyRoomCode = document.getElementById('lobbyRoomCode');
+    const roomCodeValue = document.getElementById('roomCodeValue');
+
+    multiplayerBtn.addEventListener('click', showLobby);
+
+    function showLobby() {
+        startScreen.style.display = 'none';
+        lobbyOverlay.style.display = 'flex';
+        initColorPicker();
+        connectToServer();
+    }
+
+    function initColorPicker() {
+        lobbyColorGrid.innerHTML = '';
+        MP_PALETTE.forEach(color => {
+            const swatch = document.createElement('div');
+            swatch.className = 'lobby-color-swatch';
+            swatch.style.backgroundColor = color;
+            swatch.dataset.color = color;
+            swatch.addEventListener('click', () => selectColor(color));
+            lobbyColorGrid.appendChild(swatch);
+        });
+    }
+
+    function selectColor(color) {
+        myColor = color;
+        document.querySelectorAll('.lobby-color-swatch').forEach(s => {
+            s.classList.toggle('selected', s.dataset.color === color);
+        });
+    }
+
+    function connectToServer() {
+        lobbyStatus.textContent = 'Connecting to server...';
+        lobbyStatus.className = 'lobby-status';
+
+        MP.onConnected = function() {
+            lobbyStatus.textContent = 'Connected! Enter your name and create or join a room.';
+        };
+
+        MP.onDisconnected = function() {
+            lobbyStatus.textContent = 'Disconnected from server.';
+            lobbyStatus.className = 'lobby-status';
+        };
+
+        MP.onRejected = function(reason) {
+            lobbyStatus.textContent = 'Rejected: ' + reason;
+            lobbyStatus.className = 'lobby-status';
+        };
+
+        MP.onWelcome = function(data) {
+            myName = data.playerName;
+            myColor = data.chosenColor;
+            roomCode = data.room;
+            updateLobbyUI(data);
+        };
+
+        MP.onLobbyUpdate = function(data) {
+            updatePlayerList(data.players);
+            updateTakenColors(data.takenColors);
+            lobbyStartGame.style.display = data.canStart ? 'block' : 'none';
+        };
+
+        MP.onGameStarted = function(data) {
+            lobbyOverlay.style.display = 'none';
+            startMultiplayerGame(data);
+        };
+
+        MP.onChatMessage = function(from, text, color) {
+            addLobbyChatMessage(from, text, color);
+        };
+
+        MP.onSystemMessage = function(text) {
+            addLobbyChatMessage('System', text, '');
+        };
+
+        MP.onPlayerQuit = function(data) {
+            addLobbyChatMessage('System', data.playerName + ' left the game', '');
+        };
+
+        MP.onGameAction = function(action) {
+            handleMultiplayerAction(action);
+        };
+
+        MP.onGameState = function(state) {
+            syncMultiplayerState(state);
+        };
+
+        MP.connect();
+    }
+
+    function updateLobbyUI(data) {
+        lobbyRoomCode.style.display = 'block';
+        roomCodeValue.textContent = data.room;
+        lobbyStatus.textContent = `Welcome, ${data.playerName}! Room: ${data.room}`;
+
+        if (data.isHost) {
+            lobbyStartGame.style.display = 'block';
+            lobbyStatus.textContent += ' (You are the host)';
+        }
+    }
+
+    function updatePlayerList(players) {
+        lobbyPlayerList.innerHTML = '';
+        if (!players) return;
+
+        players.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'lobby-player';
+            div.innerHTML = `
+                <div class="lobby-player-color" style="background-color: ${p.color}"></div>
+                <div class="lobby-player-name">${p.name}</div>
+                ${p.isHost ? '<div class="lobby-player-host">HOST</div>' : ''}
+            `;
+            lobbyPlayerList.appendChild(div);
+        });
+    }
+
+    function updateTakenColors(takenColors) {
+        document.querySelectorAll('.lobby-color-swatch').forEach(swatch => {
+            const color = swatch.dataset.color;
+            const isTaken = takenColors && takenColors.includes(color);
+            const isMine = color === myColor;
+            swatch.classList.toggle('taken', isTaken && !isMine);
+        });
+    }
+
+    function addLobbyChatMessage(from, text, color) {
+        const div = document.createElement('div');
+        div.className = 'lobby-chat-msg';
+        div.innerHTML = `<span class="chat-name" style="color: ${color || '#4a6a7a'}">${from}:</span> ${text}`;
+        lobbyChatMessages.appendChild(div);
+        lobbyChatMessages.scrollTop = lobbyChatMessages.scrollHeight;
+    }
+
+    // Lobby button handlers
+    lobbyCreateRoom.addEventListener('click', () => {
+        const name = prompt('Enter your name:');
+        if (!name) return;
+        if (!myColor) myColor = MP_PALETTE[0];
+        MP.createRoom(name, myColor, null);
+    });
+
+    lobbyJoinRoom.addEventListener('click', () => {
+        const name = prompt('Enter your name:');
+        if (!name) return;
+        const code = prompt('Enter room code:');
+        if (!code) return;
+        if (!myColor) myColor = MP_PALETTE[0];
+        MP.joinRoom(name, myColor, code.toUpperCase());
+    });
+
+    lobbyStartGame.addEventListener('click', () => {
+        MP.startGame();
+    });
+
+    lobbyLeave.addEventListener('click', () => {
+        MP.quit();
+        lobbyOverlay.style.display = 'none';
+        startScreen.style.display = 'flex';
+    });
+
+    lobbyChatSend.addEventListener('click', sendLobbyChat);
+    lobbyChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendLobbyChat();
+    });
+
+    function sendLobbyChat() {
+        const text = lobbyChatInput.value.trim();
+        if (!text) return;
+        MP.sendChat(text);
+        addLobbyChatMessage(myName, text, myColor);
+        lobbyChatInput.value = '';
+    }
+
+    // ── Multiplayer Game Logic ─────────────────────────────────
+
+    function startMultiplayerGame(data) {
+        isMultiplayer = true;
+        startScreen.style.display = 'none';
+        gameScreen.style.display = 'block';
+
+        // Initialize game state from server
+        if (data.state) {
+            syncMultiplayerState(data.state);
+        }
+
+        CribbageBoard.init('cribbageBoard');
+        showMessage('Game started! Waiting for cards...');
+    }
+
+    function syncMultiplayerState(state) {
+        if (!state) return;
+
+        // Update scores
+        if (state.scores) {
+            document.getElementById('playerScore').textContent = state.scores[myName] || 0;
+            const opponentName = state.players ? state.players.find(p => p !== myName) : 'Opponent';
+            document.getElementById('aiScore').textContent = state.scores[opponentName] || 0;
+        }
+
+        // Update hands
+        if (state.playerHands && state.playerHands[myName]) {
+            renderMultiplayerHand(state.playerHands[myName], 'playerHand', true);
+        }
+
+        // Update crib
+        if (state.crib) {
+            cribAreaEl.innerHTML = '';
+            state.crib.forEach(card => {
+                const cardEl = createCardElement(card, false);
+                cribAreaEl.appendChild(cardEl);
+            });
+        }
+
+        // Update starter
+        if (state.starter) {
+            starterCardEl.innerHTML = '';
+            const cardEl = createCardElement(state.starter, true);
+            starterCardEl.appendChild(cardEl);
+        }
+
+        // Update count
+        if (state.currentCount !== undefined) {
+            countDisplayEl.textContent = state.currentCount;
+        }
+
+        // Update board
+        if (state.scores) {
+            CribbageBoard.updatePegs(state.scores[myName] || 0, getOpponentScore(state.scores));
+        }
+    }
+
+    function renderMultiplayerHand(cards, containerId, faceUp) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = '';
+        cards.forEach(card => {
+            const cardEl = createCardElement(card, faceUp);
+            cardEl.addEventListener('click', () => handleMultiplayerCardClick(card));
+            container.appendChild(cardEl);
+        });
+    }
+
+    function handleMultiplayerCardClick(card) {
+        const state = lastMultiplayerState;
+        if (!state) return;
+
+        switch (state.phase) {
+            case 'crib_selection':
+                MP.sendAction({ type: 'select_crib', card: card });
+                break;
+            case 'pegging':
+                if (state.currentTurn === myName) {
+                    MP.sendAction({ type: 'play_card', card: card });
+                }
+                break;
+        }
+    }
+
+    let lastMultiplayerState = null;
+
+    function handleMultiplayerAction(action) {
+        if (!action) return;
+
+        lastMultiplayerState = action.state || lastMultiplayerState;
+
+        switch (action.type) {
+            case 'crib_selection_update':
+                if (action.player === myName) {
+                    // Update our selection UI
+                    renderMultiplayerHand(getMyHandFromState(lastMultiplayerState), 'playerHand', true);
+                    updateMultiplayerCribButtons(action.selectedCount);
+                }
+                break;
+
+            case 'crib_confirmed':
+                showMessage(`${action.player} confirmed their crib selection`);
+                break;
+
+            case 'starter_cut':
+                if (action.starter) {
+                    starterCardEl.innerHTML = '';
+                    const cardEl = createCardElement(action.starter, true);
+                    starterCardEl.appendChild(cardEl);
+                    showMessage(`Starter: ${action.starter.rank}${SUIT_SYMBOLS[action.starter.suit]}`);
+                }
+                break;
+
+            case 'card_played':
+                if (action.player !== myName) {
+                    // Show opponent's card in their hand area
+                    // For now, just show it played
+                }
+                showMessage(`${action.player} played ${action.card.rank}${SUIT_SYMBOLS[action.card.card.suit]} - Count: ${action.count}`);
+                if (action.description) {
+                    showMessage(action.description);
+                }
+                break;
+
+            case 'go_called':
+                showMessage(`${action.player} says Go!`);
+                break;
+
+            case 'game_over':
+                showMessage(`${action.winner} wins! Final score: ${JSON.stringify(action.scores)}`);
+                break;
+        }
+    }
+
+    function getMyHandFromState(state) {
+        if (!state || !state.playerHands) return [];
+        return state.playerHands[myName] || [];
+    }
+
+    function getOpponentScore(scores) {
+        const opponentName = Object.keys(scores).find(k => k !== myName);
+        return opponentName ? scores[opponentName] : 0;
+    }
+
+    function updateMultiplayerCribButtons(selectedCount) {
+        actionButtonsEl.innerHTML = '';
+
+        if (selectedCount === 2) {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn confirm';
+            btn.textContent = 'Send to Crib';
+            btn.addEventListener('click', () => {
+                MP.sendAction({ type: 'confirm_crib' });
+            });
+            actionButtonsEl.appendChild(btn);
+        } else {
+            const msg = document.createElement('div');
+            msg.className = 'selection-hint';
+            msg.textContent = `Select ${2 - selectedCount} more card${selectedCount === 1 ? '' : 's'}`;
+            actionButtonsEl.appendChild(msg);
+        }
     }
 });

@@ -4,8 +4,8 @@
 const CribbageBoard = {
     // Board configuration
     TRACKS: 3,           // Number of tracks per player
-    HOLES_PER_TRACK: 30, // Holes per track
-    TOTAL_HOLES: 121,    // Total holes (90 in tracks + 31st in each + game hole)
+    HOLES_PER_TRACK: 41, // Holes per track (41 × 3 = 123, enough for 121)
+    TOTAL_HOLES: 121,    // Total holes
 
     // Player colors
     COLORS: {
@@ -31,6 +31,7 @@ const CribbageBoard = {
         this.boardEl = document.getElementById(containerId);
         if (!this.boardEl) return;
 
+        this.reset();
         this.render();
         this.updatePegs(0, 0);
     },
