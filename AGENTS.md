@@ -111,5 +111,5 @@ When deploying multiplayer games to the Pi:
 1. **Sync file structure** — Copy `arcade/shared/multiplayer/` to Pi's `~/arcade/shared/multiplayer/`
 2. **Update start-all.sh** — Copy `arcade/start-all.sh` to Pi's `~/arcade/start-all.sh`
 3. **Install websockets** — `pip3 install websockets` on Pi
-4. **Add DNS** — Point `cribbage.magmacrunch.com` to Pi's IP
+4. **Add DNS** — Point `cribbage.magmacrunch.com` and `soko.magmacrunch.com` to Pi's IP
 5. **Run** — `cd ~/arcade && ./start-all.sh`

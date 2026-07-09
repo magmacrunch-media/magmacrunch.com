@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../shared/cards/cards.css">
     <link rel="stylesheet" href="../shared/chips/chip-animation.css">
     <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="../shared/multiplayer/lobby.css">
 </head>
 <style>
     .mc-back {
@@ -50,7 +51,8 @@
             <div class="start-divider"></div>
 
             <div class="start-buttons">
-                <button id="startGameBtn" class="start-btn primary">Aloita peli<span class="btn-sub">/ start game</span></button>
+                <button id="multiplayerBtn" class="start-btn primary">Multiplayer</button>
+                <button id="startGameBtn" class="start-btn">Solo Game<span class="btn-sub">/ yksinpeli</span></button>
                 <button id="viewRulesBtn" class="start-btn">Ohjeet<span class="btn-sub">/ how to play</span></button>
                 <button id="viewScoresBtn" class="start-btn">Ennätykset<span class="btn-sub">/ high scores</span></button>
             </div>
@@ -118,10 +120,58 @@
     </div>
 </div>
 
+<!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
+<div id="lobbyOverlay" class="lobby-overlay" style="display: none;">
+    <div class="lobby-panel">
+        <h2 class="lobby-title">MULTIPLAYER LOBBY</h2>
+
+        <!-- Room Code -->
+        <div id="lobbyRoomCode" class="lobby-room-code" style="display: none;">
+            <div class="lobby-room-label">ROOM CODE</div>
+            <div id="roomCodeValue" class="lobby-room-value">----</div>
+        </div>
+
+        <!-- Player List -->
+        <div class="lobby-players">
+            <div class="lobby-players-title">Players</div>
+            <div id="lobbyPlayerList"></div>
+        </div>
+
+        <!-- Color Picker -->
+        <div class="lobby-colors">
+            <div class="lobby-colors-title">Your Color</div>
+            <div id="lobbyColorGrid" class="lobby-color-grid"></div>
+        </div>
+
+        <!-- Chat -->
+        <div class="lobby-chat">
+            <div id="lobbyChatMessages" class="lobby-chat-messages"></div>
+            <div class="lobby-chat-input">
+                <input id="lobbyChatInput" type="text" placeholder="Type a message..." maxlength="200">
+                <button id="lobbyChatSend">Send</button>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="lobby-buttons">
+            <button id="lobbyCreateRoom" class="lobby-btn primary">Create Room</button>
+            <button id="lobbyJoinRoom" class="lobby-btn">Join Room</button>
+            <button id="lobbyStartGame" class="lobby-btn primary" style="display: none;">Start Game</button>
+            <button id="lobbyLeave" class="lobby-btn">Leave</button>
+        </div>
+
+        <!-- Status -->
+        <div id="lobbyStatus" class="lobby-status"></div>
+    </div>
+</div>
+
 <script src="../shared/chips/chip-animation.js"></script>
 <script src="../shared/cards/deck.js"></script>
 <script src="../shared/cards/face-cards.js"></script>
 <script src="../shared/cards/number-cards.js"></script>
+<script>var MP_DEFAULT_SERVER = 'localhost:8767';</script>
+<script src="../shared/multiplayer/protocol.js"></script>
+<script src="../shared/multiplayer/network.js"></script>
 <script src="js/config.js"></script>
 <script src="js/hand-eval.js"></script>
 <script src="js/game.js"></script>

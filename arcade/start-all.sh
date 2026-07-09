@@ -30,8 +30,9 @@ fi
 GAMES=(
     "SORRY:8765:SORRY"
     "cribbage:8766:Cribbage"
+    "scandinavian-stud:8767:Scandinavian Stud"
     # Add more games below:
-    # "newgame:8767:New Game"
+    # "newgame:8768:New Game"
 )
 
 # ── Colors ───────────────────────────────────────────────────────────────────

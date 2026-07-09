@@ -404,4 +404,450 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadHighScores();
+
+    // ══════════════════════════════════════════════════════════════════════
+    // MULTIPLAYER MODE
+    // ══════════════════════════════════════════════════════════════════════
+
+    let isMultiplayer = false;
+    let myName = '';
+    let myColor = '';
+    let roomCode = '';
+    let myPlayerId = null;
+
+    const multiplayerBtn = document.getElementById('multiplayerBtn');
+    const lobbyOverlay = document.getElementById('lobbyOverlay');
+    const lobbyPlayerList = document.getElementById('lobbyPlayerList');
+    const lobbyColorGrid = document.getElementById('lobbyColorGrid');
+    const lobbyChatMessages = document.getElementById('lobbyChatMessages');
+    const lobbyChatInput = document.getElementById('lobbyChatInput');
+    const lobbyChatSend = document.getElementById('lobbyChatSend');
+    const lobbyCreateRoom = document.getElementById('lobbyCreateRoom');
+    const lobbyJoinRoom = document.getElementById('lobbyJoinRoom');
+    const lobbyStartGame = document.getElementById('lobbyStartGame');
+    const lobbyLeave = document.getElementById('lobbyLeave');
+    const lobbyStatus = document.getElementById('lobbyStatus');
+    const lobbyRoomCode = document.getElementById('lobbyRoomCode');
+    const roomCodeValue = document.getElementById('roomCodeValue');
+
+    multiplayerBtn.addEventListener('click', showLobby);
+
+    function showLobby() {
+        startScreen.style.display = 'none';
+        lobbyOverlay.style.display = 'flex';
+        initColorPicker();
+        connectToServer();
+    }
+
+    function initColorPicker() {
+        lobbyColorGrid.innerHTML = '';
+        MP_PALETTE.forEach(color => {
+            const swatch = document.createElement('div');
+            swatch.className = 'lobby-color-swatch';
+            swatch.style.backgroundColor = color;
+            swatch.dataset.color = color;
+            swatch.addEventListener('click', () => selectColor(color));
+            lobbyColorGrid.appendChild(swatch);
+        });
+    }
+
+    function selectColor(color) {
+        myColor = color;
+        document.querySelectorAll('.lobby-color-swatch').forEach(s => {
+            s.classList.toggle('selected', s.dataset.color === color);
+        });
+    }
+
+    function connectToServer() {
+        lobbyStatus.textContent = 'Connecting to server...';
+        lobbyStatus.className = 'lobby-status';
+
+        MP.onConnected = function() {
+            lobbyStatus.textContent = 'Connected! Enter your name and create or join a room.';
+        };
+
+        MP.onDisconnected = function() {
+            lobbyStatus.textContent = 'Disconnected from server.';
+            lobbyStatus.className = 'lobby-status';
+        };
+
+        MP.onRejected = function(reason) {
+            lobbyStatus.textContent = 'Rejected: ' + reason;
+            lobbyStatus.className = 'lobby-status';
+        };
+
+        MP.onWelcome = function(data) {
+            myName = data.playerName;
+            myColor = data.chosenColor;
+            roomCode = data.room;
+            myPlayerId = data.playerName; // Use name as ID for simplicity
+            updateLobbyUI(data);
+        };
+
+        MP.onLobbyUpdate = function(data) {
+            updatePlayerList(data.players);
+            updateTakenColors(data.takenColors);
+            lobbyStartGame.style.display = data.canStart ? 'block' : 'none';
+        };
+
+        MP.onGameStarted = function(data) {
+            lobbyOverlay.style.display = 'none';
+            startMultiplayerGame(data);
+        };
+
+        MP.onChatMessage = function(from, text, color) {
+            addLobbyChatMessage(from, text, color);
+        };
+
+        MP.onSystemMessage = function(text) {
+            addLobbyChatMessage('System', text, '');
+        };
+
+        MP.onPlayerQuit = function(data) {
+            addLobbyChatMessage('System', data.playerName + ' left the game', '');
+        };
+
+        MP.onGameAction = function(action) {
+            handleMultiplayerAction(action);
+        };
+
+        MP.onGameState = function(state) {
+            syncMultiplayerState(state);
+        };
+
+        MP.connect();
+    }
+
+    function updateLobbyUI(data) {
+        lobbyRoomCode.style.display = 'block';
+        roomCodeValue.textContent = data.room;
+        lobbyStatus.textContent = `Welcome, ${data.playerName}! Room: ${data.room}`;
+
+        if (data.isHost) {
+            lobbyStartGame.style.display = 'block';
+            lobbyStatus.textContent += ' (You are the host)';
+        }
+    }
+
+    function updatePlayerList(players) {
+        lobbyPlayerList.innerHTML = '';
+        if (!players) return;
+
+        players.forEach(p => {
+            const div = document.createElement('div');
+            div.className = 'lobby-player';
+            div.innerHTML = `
+                <div class="lobby-player-color" style="background-color: ${p.color}"></div>
+                <div class="lobby-player-name">${p.name}</div>
+                ${p.isHost ? '<div class="lobby-player-host">HOST</div>' : ''}
+            `;
+            lobbyPlayerList.appendChild(div);
+        });
+    }
+
+    function updateTakenColors(takenColors) {
+        document.querySelectorAll('.lobby-color-swatch').forEach(swatch => {
+            const color = swatch.dataset.color;
+            const isTaken = takenColors && takenColors.includes(color);
+            const isMine = color === myColor;
+            swatch.classList.toggle('taken', isTaken && !isMine);
+        });
+    }
+
+    function addLobbyChatMessage(from, text, color) {
+        const div = document.createElement('div');
+        div.className = 'lobby-chat-msg';
+        div.innerHTML = `<span class="chat-name" style="color: ${color || '#4a6a7a'}">${from}:</span> ${text}`;
+        lobbyChatMessages.appendChild(div);
+        lobbyChatMessages.scrollTop = lobbyChatMessages.scrollHeight;
+    }
+
+    // Lobby button handlers
+    lobbyCreateRoom.addEventListener('click', () => {
+        const name = prompt('Enter your name:');
+        if (!name) return;
+        if (!myColor) myColor = MP_PALETTE[0];
+        MP.createRoom(name, myColor, null);
+    });
+
+    lobbyJoinRoom.addEventListener('click', () => {
+        const name = prompt('Enter your name:');
+        if (!name) return;
+        const code = prompt('Enter room code:');
+        if (!code) return;
+        if (!myColor) myColor = MP_PALETTE[0];
+        MP.joinRoom(name, myColor, code.toUpperCase());
+    });
+
+    lobbyStartGame.addEventListener('click', () => {
+        MP.startGame();
+    });
+
+    lobbyLeave.addEventListener('click', () => {
+        MP.quit();
+        lobbyOverlay.style.display = 'none';
+        startScreen.style.display = 'flex';
+    });
+
+    lobbyChatSend.addEventListener('click', sendLobbyChat);
+    lobbyChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendLobbyChat();
+    });
+
+    function sendLobbyChat() {
+        const text = lobbyChatInput.value.trim();
+        if (!text) return;
+        MP.sendChat(text);
+        addLobbyChatMessage(myName, text, myColor);
+        lobbyChatInput.value = '';
+    }
+
+    // ── Multiplayer Game Logic ─────────────────────────────────
+
+    function startMultiplayerGame(data) {
+        isMultiplayer = true;
+        startScreen.style.display = 'none';
+        gameScreen.style.display = 'block';
+
+        // Initialize game state from server
+        if (data.state) {
+            syncMultiplayerState(data.state);
+        }
+
+        // Initialize chip animation
+        ChipAnim.init('chipAnimDisplay', 'chipAnimLegend');
+
+        showMessage('Game started! Waiting for cards...');
+    }
+
+    function syncMultiplayerState(state) {
+        if (!state) return;
+
+        // Update stats
+        document.getElementById('potAmount').textContent = state.pot || 0;
+        document.getElementById('roundDisplay').textContent = state.round || 1;
+
+        // Update player's chips
+        const myPlayer = state.players ? state.players.find(p => p.id === myPlayerId) : null;
+        if (myPlayer) {
+            document.getElementById('playerChips').textContent = myPlayer.chips;
+            ChipAnim.setChips(myPlayer.chips);
+        }
+
+        // Update street label
+        const streetNames = LABELS[lang].streetNames;
+        document.getElementById('streetLabel').textContent = streetNames[state.round] || `Street ${state.round}`;
+
+        // Render players
+        if (state.players) {
+            renderMultiplayerPlayers(state.players);
+        }
+
+        // Show action buttons if it's my turn
+        if (state.phase === 'betting' && state.currentTurn === myPlayerId) {
+            const actions = game.getAvailableActions ? game.getAvailableActions(myPlayerId) : [];
+            showMultiplayerActionButtons(actions);
+        } else {
+            hideActionButtons();
+        }
+
+        // Check for game over
+        if (state.gameOver) {
+            showMultiplayerGameOver(state);
+        }
+    }
+
+    function renderMultiplayerPlayers(players) {
+        const aiAreas = document.getElementById('aiAreas');
+        const playerArea = document.getElementById('playerArea');
+
+        // Render other players
+        aiAreas.innerHTML = '';
+        players.filter(p => p.id !== myPlayerId).forEach(p => {
+            const area = document.createElement('div');
+            area.className = `ai-area ${p.folded ? 'folded' : ''}`;
+
+            const nameTag = document.createElement('div');
+            nameTag.className = 'ai-name';
+
+            const nameText = document.createElement('span');
+            nameText.className = 'ai-name-text';
+            nameText.textContent = p.name;
+
+            const chipsSpan = document.createElement('span');
+            chipsSpan.className = 'ai-chips';
+            chipsSpan.textContent = p.chips;
+
+            nameTag.appendChild(nameText);
+            nameTag.appendChild(chipsSpan);
+
+            const cardsDiv = document.createElement('div');
+            cardsDiv.className = 'ai-cards';
+
+            // Show cards face up during showdown, otherwise hide
+            const showCards = lastMultiplayerState && lastMultiplayerState.phase === 'showdown';
+            p.cards.forEach(card => {
+                const cardEl = createCardElement(card, showCards);
+                cardsDiv.appendChild(cardEl);
+            });
+
+            area.appendChild(nameTag);
+            area.appendChild(cardsDiv);
+
+            if (p.hand && !p.folded) {
+                const handLabel = document.createElement('div');
+                handLabel.className = 'ai-hand';
+                handLabel.textContent = p.hand.description;
+                area.appendChild(handLabel);
+            }
+
+            aiAreas.appendChild(area);
+        });
+
+        // Render human player
+        const myPlayer = players.find(p => p.id === myPlayerId);
+        if (myPlayer) {
+            playerArea.innerHTML = '';
+
+            const cardsDiv = document.createElement('div');
+            cardsDiv.className = 'player-cards';
+
+            myPlayer.cards.forEach(card => {
+                const cardEl = createCardElement(card, true);
+                cardEl.addEventListener('click', () => handleMultiplayerCardClick(card));
+                cardsDiv.appendChild(cardEl);
+            });
+
+            playerArea.appendChild(cardsDiv);
+
+            if (myPlayer.hand && !myPlayer.folded) {
+                const handLabel = document.createElement('div');
+                handLabel.className = 'player-hand';
+                handLabel.textContent = myPlayer.hand.description;
+                playerArea.appendChild(handLabel);
+            }
+        }
+    }
+
+    let lastMultiplayerState = null;
+
+    function handleMultiplayerCardClick(card) {
+        // Card clicks during multiplayer are handled by action buttons
+    }
+
+    function handleMultiplayerAction(action) {
+        if (!action) return;
+
+        lastMultiplayerState = action.state || lastMultiplayerState;
+
+        if (action.state) {
+            syncMultiplayerState(action.state);
+        }
+
+        // Show action log
+        if (action.state && action.state.actionLog) {
+            renderMultiplayerActionLog(action.state.actionLog);
+        }
+    }
+
+    function showMultiplayerActionButtons(actions) {
+        actionButtons.innerHTML = '';
+
+        actions.forEach(action => {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn';
+
+            switch (action) {
+                case 'check':
+                    btn.innerHTML = `${LABELS[lang].check} <span class="btn-sub">/ check</span>`;
+                    btn.classList.add('check');
+                    btn.addEventListener('click', () => {
+                        MP.sendAction({ type: 'player_action', action: 'check' });
+                    });
+                    break;
+                case 'call': {
+                    const callAmount = lastMultiplayerState ? lastMultiplayerState.currentBet - (myPlayerCurrentBet || 0) : 0;
+                    btn.innerHTML = `${LABELS[lang].call} <span class="btn-sub">/ call ${callAmount}</span>`;
+                    btn.classList.add('call');
+                    btn.addEventListener('click', () => {
+                        MP.sendAction({ type: 'player_action', action: 'call' });
+                    });
+                    break;
+                }
+                case 'raise':
+                    btn.innerHTML = `${LABELS[lang].raise} <span class="btn-sub">/ raise</span>`;
+                    btn.classList.add('raise');
+                    btn.addEventListener('click', () => {
+                        MP.sendAction({ type: 'player_action', action: 'raise' });
+                    });
+                    break;
+                case 'fold':
+                    btn.innerHTML = `${LABELS[lang].fold} <span class="btn-sub">/ fold</span>`;
+                    btn.classList.add('fold');
+                    btn.addEventListener('click', () => {
+                        MP.sendAction({ type: 'player_action', action: 'fold' });
+                    });
+                    break;
+            }
+
+            actionButtons.appendChild(btn);
+        });
+    }
+
+    let myPlayerCurrentBet = 0;
+
+    function renderMultiplayerActionLog(log) {
+        const actionLog = document.getElementById('actionLog');
+        if (!actionLog || !log) return;
+
+        actionLog.innerHTML = '';
+        log.slice(-5).forEach(entry => {
+            const div = document.createElement('div');
+            div.className = 'log-entry';
+            div.innerHTML = `<span class="log-player">${entry.player}</span> <span class="log-action">${entry.action}</span>${entry.amount ? ` <span class="log-amount">${entry.amount}</span>` : ''}`;
+            actionLog.appendChild(div);
+        });
+
+        actionLog.scrollTop = actionLog.scrollHeight;
+    }
+
+    function showMultiplayerGameOver(state) {
+        const winner = state.lastWinner;
+        const isPlayerWin = winner && winner.id === myPlayerId;
+
+        messageArea.innerHTML = `
+            <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
+                <h2>${isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose}</h2>
+                <p>${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})</p>
+                <button id="nextHandBtn" class="action-btn">Seuraava käsi / next hand</button>
+            </div>
+        `;
+
+        document.getElementById('nextHandBtn').addEventListener('click', () => {
+            MP.sendAction({ type: 'next_hand' });
+        });
+    }
+
+    function createCardElement(card, faceUp) {
+        const div = document.createElement('div');
+        div.className = `card ${faceUp ? 'face-up' : 'face-down'} ${card.suit}`;
+
+        if (faceUp) {
+            div.innerHTML = `
+                <div class="card-corner top-left">
+                    <span class="corner-rank">${card.rank}</span>
+                    <span class="corner-suit">${SUIT_SYMBOLS[card.suit]}</span>
+                </div>
+                <div class="card-center">${SUIT_SYMBOLS[card.suit]}</div>
+                <div class="card-corner bottom-right">
+                    <span class="corner-rank">${card.rank}</span>
+                    <span class="corner-suit">${SUIT_SYMBOLS[card.suit]}</span>
+                </div>
+            `;
+        } else {
+            div.innerHTML = `<div class="card-back">🂠</div>`;
+        }
+
+        return div;
+    }
 });
