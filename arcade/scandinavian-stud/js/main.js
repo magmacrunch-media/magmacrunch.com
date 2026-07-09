@@ -564,15 +564,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Lobby button handlers
     lobbyCreateRoom.addEventListener('click', () => {
-        const name = prompt('Enter your name:');
+        let name = localStorage.getItem('arcade_username');
+        if (!name) name = prompt('Enter your name:');
         if (!name) return;
+        localStorage.setItem('arcade_username', name);
         if (!myColor) myColor = MP_PALETTE[0];
         MP.createRoom(name, myColor, null);
     });
 
     lobbyJoinRoom.addEventListener('click', () => {
-        const name = prompt('Enter your name:');
+        let name = localStorage.getItem('arcade_username');
+        if (!name) name = prompt('Enter your name:');
         if (!name) return;
+        localStorage.setItem('arcade_username', name);
         const code = prompt('Enter room code:');
         if (!code) return;
         if (!myColor) myColor = MP_PALETTE[0];

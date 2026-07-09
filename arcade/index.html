@@ -328,6 +328,30 @@
             text-align: center;
         }
 
+        .chat-name-row {
+            padding: 8px 12px;
+            border-bottom: 1px solid #3a2d5c;
+        }
+
+        .chat-name-row input {
+            width: 100%;
+            background: #0a0612;
+            border: 1px solid #3a2d5c;
+            padding: 6px 10px;
+            color: #f0f8ff;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .chat-name-row input:focus {
+            border-color: #ff2e9c;
+        }
+
+        .chat-name-row input::placeholder {
+            color: #5a5a6a;
+        }
+
         .chat-messages {
             height: 120px;
             overflow-y: auto;
@@ -616,6 +640,9 @@
 
         <div class="arcade-chat">
             <div class="chat-header">// ARCADE CHAT //</div>
+            <div class="chat-name-row">
+                <input id="chatName" type="text" placeholder="Your name" maxlength="20">
+            </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
             </div>
@@ -1898,8 +1925,7 @@ animateCoin(document.getElementById('coinCanvas2'));
 (function() {
     const CHAT_SERVER = 'ws://localhost:8768';
     let chatSocket = null;
-    let userName = '';
-    let userColor = '#ff2e9c';
+    let userName = localStorage.getItem('arcade_username') || '';
 
     // ── Server Status ──────────────────────────────────────
     const statusDot = document.getElementById('mpServerStatus');
@@ -1974,19 +2000,42 @@ animateCoin(document.getElementById('coinCanvas2'));
         return div.innerHTML;
     }
 
-    // ── Chat Input ─────────────────────────────────────────
+    // ── Name Field ─────────────────────────────────────────
+    const chatName = document.getElementById('chatName');
     const chatInput = document.getElementById('chatInput');
     const chatSend = document.getElementById('chatSend');
 
+    // Restore saved name
+    if (userName) {
+        chatName.value = userName;
+    }
+
+    // Save name on change
+    chatName.addEventListener('change', () => {
+        const name = chatName.value.trim();
+        if (name) {
+            userName = name;
+            localStorage.setItem('arcade_username', name);
+        }
+    });
+
+    // ── Chat Input ─────────────────────────────────────────
     function sendChat() {
         const text = chatInput.value.trim();
         if (!text) return;
 
-        // Prompt for name on first message
-        if (!userName) {
-            userName = prompt('Enter your name for chat:', '') || 'Anonymous';
-            userName = userName.substring(0, 20);
+        // Get name from input field
+        const name = chatName.value.trim();
+        if (!name) {
+            chatName.focus();
+            chatName.style.borderColor = '#ff3d3d';
+            setTimeout(() => { chatName.style.borderColor = ''; }, 1000);
+            return;
         }
+
+        // Save name to localStorage
+        userName = name;
+        localStorage.setItem('arcade_username', name);
 
         if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
             chatSocket.send(JSON.stringify({

@@ -901,6 +901,11 @@ Network.onConnected = function() {
   }
 
   netStatusText.textContent = 'Connected — enter your name and join!';
+  // Pre-fill name from arcade chat if available
+  if (!nameInput.value) {
+    var savedName = localStorage.getItem('arcade_username');
+    if (savedName) nameInput.value = savedName;
+  }
   _updateJoinBtn();
   nameInput.focus();
 };
@@ -1312,6 +1317,8 @@ onStateChange(function(state) {
 function doJoin() {
   var name = nameInput.value.trim();
   if (!name || !Network.isConnected()) return;
+  // Save name to localStorage for sharing across games
+  localStorage.setItem('arcade_username', name);
   // Pass chosen color if one was picked; server auto-assigns if null/empty
   Network.joinGame(name, _selectedColor || '');
 }
