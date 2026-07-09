@@ -139,6 +139,8 @@ class HandEvaluator {
         else if (countVals[0] === 3 && countVals[1] === 2) name = 'Full House';
         else if (countVals[0] === 3) name = 'Three of a Kind';
         else if (countVals[0] === 2 && countVals[1] === 2) name = 'Two Pair';
+        else if (cards.length >= 4 && this._isFourCardFlush(cards)) name = 'Four-Card Flush';
+        else if (cards.length >= 4 && this._isFourCardStraight(sorted)) name = 'Four-Card Straight';
         else if (countVals[0] === 2) name = 'One Pair';
 
         return {
@@ -371,11 +373,12 @@ class HandEvaluator {
                 return `Three ${top.rank}s`;
             case 'Two Pair': {
                 const counts = this._getValueCounts(sortedCards);
+                const rankNames = { 'A': 'Aces', 'K': 'Kings', 'Q': 'Queens', 'J': 'Jacks', '10': 'Tens', '9': 'Nines', '8': 'Eights', '7': 'Sevens', '6': 'Sixes', '5': 'Fives', '4': 'Fours', '3': 'Threes', '2': 'Twos' };
                 const pairs = Object.entries(counts)
                     .filter(([,v]) => v === 2)
-                    .map(([k]) => sortedCards.find(c => c.value === parseInt(k)).rank)
-                    .join('s and ');
-                return `Two Pair — ${pairs}s`;
+                    .map(([k]) => rankNames[sortedCards.find(c => c.value === parseInt(k)).rank] || `${sortedCards.find(c => c.value === parseInt(k)).rank}s`)
+                    .join(' and ');
+                return `Two Pair — ${pairs}`;
             }
             case 'Four-Card Flush': {
                 const suitCounts = {};

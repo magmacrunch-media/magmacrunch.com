@@ -8,13 +8,15 @@
 //  Vaporwave card back  (64×88 viewBox)
 //  Deep purple · pink & cyan grid · gold pixel sunburst badge
 // ─────────────────────────────────────────────────────────────
+let _cardBackIdCounter = 0;
 function getCardBackSVG() {
+    const id = _cardBackIdCounter++;
     return `
     <svg class="card-back-svg" viewBox="0 0 64 88" xmlns="http://www.w3.org/2000/svg"
          style="shape-rendering:crispEdges; image-rendering:pixelated;">
       <defs>
         <!-- Diagonal crosshatch: thin pink + cyan lines -->
-        <pattern id="vwgrid" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+        <pattern id="vwgrid${id}" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
           <rect width="8" height="8" fill="#0d0028"/>
           <line x1="0" y1="0" x2="8" y2="8" stroke="#ff2d78" stroke-width="0.6" opacity="0.55"/>
           <line x1="8" y1="0" x2="0" y2="8" stroke="#00e5ff" stroke-width="0.6" opacity="0.45"/>
@@ -38,7 +40,7 @@ function getCardBackSVG() {
             stroke="#00e5ff" stroke-width="0.5" opacity="0.4"/>
 
       <!-- Grid fill -->
-      <rect x="6" y="6" width="52" height="76" fill="url(#vwgrid)"/>
+      <rect x="6" y="6" width="52" height="76" fill="url(#vwgrid${id})"/>
 
       <!-- Center badge: centered on card (viewBox 64x88, center=32,44) -->
       <!-- Badge: 34x30, top-left=(15,29), center=(32,44) -->

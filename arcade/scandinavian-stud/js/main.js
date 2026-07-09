@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const actionButtons = document.getElementById('actionButtons');
     const roundDisplay = document.getElementById('roundDisplay');
     const streetLabel = document.getElementById('streetLabel');
+    const actionLog = document.getElementById('actionLog');
 
     // ── Start Screen ────────────────────────────────────────
 
@@ -53,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ];
 
         game.dealerIndex = 0;
+        game.totalRounds = 0;
         game.newHand();
         game.startBettingRound();
         ChipAnim.setChips(game.players[0].chips);
@@ -78,6 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render human player
         renderHumanPlayer(state.players.find(p => p.isHuman));
+
+        // Render action log
+        renderActionLog(state.actionLog);
 
         // Show message if game over
         if (state.gameOver) {
@@ -133,10 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const nameTag = document.createElement('div');
             nameTag.className = 'ai-name';
-            nameTag.innerHTML = `
-                <span class="ai-name-text">${player.name}</span>
-                <span class="ai-chips">${player.chips}</span>
-            `;
+            
+            const nameText = document.createElement('span');
+            nameText.className = 'ai-name-text';
+            nameText.textContent = player.name;
+            
+            const chipsSpan = document.createElement('span');
+            chipsSpan.className = 'ai-chips';
+            chipsSpan.textContent = player.chips;
+            
+            nameTag.appendChild(nameText);
+            nameTag.appendChild(chipsSpan);
             
             const cardsDiv = document.createElement('div');
             cardsDiv.className = 'ai-cards';
@@ -183,6 +195,49 @@ document.addEventListener('DOMContentLoaded', () => {
             handLabel.textContent = player.hand.description;
             playerArea.appendChild(handLabel);
         }
+    }
+
+    // ── Render action log ──────────────────────────────────
+
+    function renderActionLog(log) {
+        if (!log || log.length === 0) {
+            actionLog.innerHTML = '';
+            return;
+        }
+
+        // Show last 5 entries
+        const recentLog = log.slice(-5);
+        actionLog.innerHTML = '';
+        
+        recentLog.forEach(entry => {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            
+            const playerSpan = document.createElement('span');
+            playerSpan.className = 'log-player';
+            playerSpan.textContent = entry.player;
+            
+            const actionSpan = document.createElement('span');
+            actionSpan.className = 'log-action';
+            actionSpan.textContent = entry.action;
+            
+            logEntry.appendChild(playerSpan);
+            logEntry.appendChild(document.createTextNode(' '));
+            logEntry.appendChild(actionSpan);
+            
+            if (entry.amount) {
+                const amountSpan = document.createElement('span');
+                amountSpan.className = 'log-amount';
+                amountSpan.textContent = entry.amount;
+                logEntry.appendChild(document.createTextNode(' '));
+                logEntry.appendChild(amountSpan);
+            }
+            
+            actionLog.appendChild(logEntry);
+        });
+
+        // Auto-scroll to bottom
+        actionLog.scrollTop = actionLog.scrollHeight;
     }
 
     // ── Show action buttons ────────────────────────────────
@@ -251,19 +306,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function showGameOver(state) {
         const winner = state.lastWinner;
         const isPlayerWin = winner && winner.isHuman;
+        const isTournamentWin = isPlayerWin && state.allOpponentsEliminated;
         
         messageArea.innerHTML = `
             <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
-                <h2>${isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose}</h2>
-                <p>${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})</p>
-                <button id="nextHandBtn" class="action-btn">${LABELS[lang].newGame} <span class="btn-sub">/ new game</span></button>
+                <h2>${isTournamentWin ? 'VOITIT PEILIN' : (isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose)}</h2>
+                <p>${isTournamentWin ? 'You conquered the table!' : `${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})`}</p>
+                <button id="nextHandBtn" class="action-btn">${isTournamentWin ? LABELS[lang].newGame : 'Seuraava käsi / next hand'} <span class="btn-sub">/ ${isTournamentWin ? 'new game' : 'next hand'}</span></button>
             </div>
         `;
         
         document.getElementById('nextHandBtn').addEventListener('click', () => {
             messageArea.innerHTML = '';
-            game.prepareNextHand();
-            renderGame();
+            if (isTournamentWin) {
+                // Reset entire game
+                startGame();
+            } else {
+                game.prepareNextHand();
+                renderGame();
+            }
         });
     }
 

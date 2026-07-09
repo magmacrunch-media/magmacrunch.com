@@ -230,6 +230,43 @@
     margin: 10px 0;
 }
 
+/* Action Log */
+.action-log {
+    max-height: 80px;
+    overflow-y: auto;
+    margin: 10px auto;
+    padding: 8px;
+    background: rgba(26, 42, 68, 0.3);
+    border: 1px solid var(--accent-dim);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--slate);
+    max-width: 500px;
+    width: 100%;
+}
+
+.action-log .log-entry {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(74, 106, 122, 0.2);
+}
+
+.action-log .log-entry:last-child {
+    border-bottom: none;
+}
+
+.action-log .log-player {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.action-log .log-action {
+    color: var(--white);
+}
+
+.action-log .log-amount {
+    color: var(--gold);
+}
+
 .game-over-message {
     background: rgba(26, 42, 68, 0.9);
     border: 2px solid var(--accent);

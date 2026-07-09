@@ -19,6 +19,7 @@ class SokoGame {
         this.handEvaluater = new HandEvaluator();
         this.language = 'fi';     // Finnish by default
         this.lastWinner = null;   // Winner of the last hand
+        this.actionLog = [];      // Betting action history
     }
 
     // ── Initialize a new hand ────────────────────────────────
@@ -35,6 +36,7 @@ class SokoGame {
         this.phase = 'dealing';
         this.betsThisRound = {};
         this.raisesThisRound = 0;
+        this.actionLog = [];
 
         // Reset players
         this.players.forEach(p => {
@@ -109,13 +111,19 @@ class SokoGame {
         this.currentBet = 0;
         this.bettingRound = this.round - 1; // 0-indexed: round 1→br0, round 2→br1, etc.
 
-        // Reset active players' per-round bet tracking
+        // Reset active players' per-round bet tracking (skip all-in players)
         this.players.forEach(p => {
-            if (!p.folded) p.currentBet = 0;
+            if (!p.folded && !p.allIn) p.currentBet = 0;
         });
 
         // Find first active player after dealer
-        this.currentPlayerIndex = this._nextActivePlayer(this.dealerIndex);
+        const nextPlayer = this._nextActivePlayer(this.dealerIndex);
+        if (nextPlayer === null) {
+            // No active player — skip betting
+            this.phase = 'waiting';
+            return;
+        }
+        this.currentPlayerIndex = nextPlayer;
         this._actionLog(`${LABELS[this.language].round} ${this.round}`);
     }
 
@@ -149,6 +157,7 @@ class SokoGame {
         const callAmount = this.currentBet - player.currentBet;
         if (callAmount <= 0) {
             // Already matched or ahead — check
+            this.actionLog.push({ player: player.name, action: 'check' });
         } else if (player.chips <= callAmount) {
             // All-in for less
             const allIn = player.chips;
@@ -156,10 +165,12 @@ class SokoGame {
             this.pot += allIn;
             player.chips = 0;
             player.allIn = true;
+            this.actionLog.push({ player: player.name, action: 'all-in', amount: allIn });
         } else {
             player.chips -= callAmount;
             player.currentBet += callAmount;
             this.pot += callAmount;
+            this.actionLog.push({ player: player.name, action: 'call', amount: callAmount });
         }
 
         this.betsThisRound[player.id] = true;
@@ -188,6 +199,7 @@ class SokoGame {
         player.currentBet = totalBet;
         this.currentBet = totalBet;
         this.raisesThisRound++;
+        this.actionLog.push({ player: player.name, action: 'raise', amount: additional });
 
         // Reset bets for this round since we raised
         this.betsThisRound = {};
@@ -199,6 +211,7 @@ class SokoGame {
     fold(player) {
         player.folded = true;
         this.betsThisRound[player.id] = true;
+        this.actionLog.push({ player: player.name, action: 'fold' });
 
         // Check if only one player left
         const active = this.players.filter(p => !p.folded);
@@ -212,6 +225,7 @@ class SokoGame {
 
     check(player) {
         this.betsThisRound[player.id] = true;
+        this.actionLog.push({ player: player.name, action: 'check' });
         this._nextPlayer();
     }
 
@@ -278,7 +292,7 @@ class SokoGame {
             }
         });
 
-        // Find winner
+        // Find winner (player closest to dealer's left wins ties)
         const activePlayers = this.players.filter(p => !p.folded);
         let winner = activePlayers[0];
         
@@ -286,6 +300,13 @@ class SokoGame {
             const comparison = this.handEvaluater._compareTo(activePlayers[i].hand, winner.hand);
             if (comparison > 0) {
                 winner = activePlayers[i];
+            } else if (comparison === 0) {
+                // Tie — player closer to dealer's left wins
+                const distCurrent = this._clockwiseDistance(this.dealerIndex, activePlayers[i].id);
+                const distWinner = this._clockwiseDistance(this.dealerIndex, winner.id);
+                if (distCurrent < distWinner) {
+                    winner = activePlayers[i];
+                }
             }
         }
 
@@ -312,15 +333,23 @@ class SokoGame {
 
     _nextActivePlayer(fromIndex) {
         let next = (fromIndex + 1) % this.players.length;
+        let iterations = 0;
         while (this.players[next].folded || this.players[next].allIn) {
             next = (next + 1) % this.players.length;
-            if (next === fromIndex) break; // Wrap around
+            iterations++;
+            if (iterations >= this.players.length) return null; // No active player found
         }
         return next;
     }
 
     _nextPlayer() {
-        this.currentPlayerIndex = this._nextActivePlayer(this.currentPlayerIndex);
+        const next = this._nextActivePlayer(this.currentPlayerIndex);
+        if (next === null) {
+            // No active player — betting is complete
+            this.phase = 'waiting';
+            return;
+        }
+        this.currentPlayerIndex = next;
         
         // Check if betting is complete
         if (this.isBettingComplete()) {
@@ -333,9 +362,17 @@ class SokoGame {
         console.log(message);
     }
 
+    _clockwiseDistance(from, to) {
+        return (to - from + this.players.length) % this.players.length;
+    }
+
     // ── Get game state for UI ───────────────────────────────
 
     getState() {
+        const humanPlayer = this.players.find(p => p.isHuman);
+        const aiPlayers = this.players.filter(p => !p.isHuman);
+        const allOpponentsEliminated = aiPlayers.every(p => p.chips <= 0);
+
         return {
             pot: this.pot,
             currentBet: this.currentBet,
@@ -357,6 +394,8 @@ class SokoGame {
             dealerIndex: this.dealerIndex,
             totalRounds: this.totalRounds,
             gameOver: this.gameOver,
+            allOpponentsEliminated,
+            actionLog: this.actionLog,
             lastWinner: this.lastWinner ? {
                 id: this.lastWinner.id,
                 name: this.lastWinner.name,
@@ -394,7 +433,6 @@ class SokoGame {
 
     prepareNextHand() {
         this.dealerIndex = (this.dealerIndex + 1) % this.players.length;
-        this.totalRounds++;
         this.newHand();
         this.startBettingRound();
     }
