@@ -103,3 +103,13 @@ See `archive/ARCHIVE_THEMING.md` for detailed theming patterns. Short version:
 3. Set `window.ARTIST_CONFIG`, `window.PLACE_CONFIG`, or `window.__CONTRIBUTOR_CONFIG` with MusicBrainz UUID
 4. Choose `accent` color per page type (green/cyan/rose/yellow/blue)
 5. For contributor pages, also load `entity-map.js` before `contributor.js`
+
+## Raspberry Pi deployment (TODO)
+
+When deploying multiplayer games to the Pi:
+
+1. **Sync file structure** — Copy `arcade/shared/multiplayer/` to Pi's `~/arcade/shared/multiplayer/`
+2. **Update start-all.sh** — Copy `arcade/start-all.sh` to Pi's `~/arcade/start-all.sh`
+3. **Install websockets** — `pip3 install websockets` on Pi
+4. **Add DNS** — Point `cribbage.magmacrunch.com` to Pi's IP
+5. **Run** — `cd ~/arcade && ./start-all.sh`
