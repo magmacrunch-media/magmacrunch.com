@@ -35,6 +35,10 @@ GAMES=(
     # "newgame:8768:New Game"
 )
 
+# ── Chat server (special case) ───────────────────────────────────────────────
+CHAT_SERVER="chat-server.py"
+CHAT_PORT=8768
+
 # ── Colors ───────────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -85,6 +89,17 @@ for game in "${GAMES[@]}"; do
         echo -e "${YELLOW}⚠ Directory not found: $dir — skipping ${name}${NC}"
     fi
 done
+
+# ── Start chat server ────────────────────────────────────────────────────────
+if [[ -f "$SCRIPT_DIR/$CHAT_SERVER" ]]; then
+    echo -e "${GREEN}Starting Chat server on port ${CHAT_PORT}...${NC}"
+    cd "$SCRIPT_DIR"
+    python3 "$CHAT_SERVER" &
+    PIDS+=($!)
+    echo -e "  → ws://${HOSTNAME}.local:${CHAT_PORT}"
+    [[ -n "$LOCAL_IP" ]] && echo -e "  → ws://${LOCAL_IP}:${CHAT_PORT}"
+    echo ""
+fi
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 echo -e "${CYAN}────────────────────────────────────────────────${NC}"

@@ -272,6 +272,130 @@
             .game-grid   { grid-template-columns: 1fr; }
         }
 
+        /* ── Server Status + Chat ── */
+        .arcade-community {
+            width: 100%;
+            max-width: 500px;
+            margin: 24px auto 36px;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+
+        .mp-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mp-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #555;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .mp-status-dot.online {
+            background: #39ff14;
+            box-shadow: 0 0 8px rgba(57,255,20,0.6);
+        }
+
+        .mp-status-dot.offline {
+            background: #ff3d3d;
+            box-shadow: 0 0 8px rgba(255,61,61,0.4);
+        }
+
+        .mp-status-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+        }
+
+        .arcade-chat {
+            border: 2px solid #3a2d5c;
+            background: #150b29;
+        }
+
+        .chat-header {
+            background: #ff2e9c;
+            color: #0a0612;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 8px 12px;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+
+        .chat-messages {
+            height: 120px;
+            overflow-y: auto;
+            padding: 10px 12px;
+            border-bottom: 1px solid #3a2d5c;
+        }
+
+        .chat-msg {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a7fa8;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .chat-msg.system {
+            color: #5a5a6a;
+            font-style: italic;
+        }
+
+        .chat-msg .chat-name {
+            font-weight: bold;
+        }
+
+        .chat-input {
+            display: flex;
+        }
+
+        .chat-input input {
+            flex: 1;
+            background: #0a0612;
+            border: none;
+            padding: 10px 12px;
+            color: #f0f8ff;
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .chat-input input::placeholder {
+            color: #5a5a6a;
+        }
+
+        .chat-input input:focus {
+            background: #0f0a1a;
+        }
+
+        .chat-input button {
+            background: #ff2e9c;
+            border: none;
+            padding: 10px 16px;
+            color: #0a0612;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .chat-input button:hover {
+            background: #ff5ab5;
+        }
+
+        @media (max-width: 640px) {
+            .arcade-community { max-width: 100%; }
+            .chat-messages { height: 100px; }
+        }
+
         .game-section {
             width: 100%;
             max-width: 1100px;
@@ -481,6 +605,25 @@
         <canvas id="coinCanvas" width="16" height="16" title="insert coin"></canvas>
         <div class="insert-coin">— INSERT COIN —</div>
         <canvas id="coinCanvas2" width="16" height="16" title="insert coin"></canvas>
+    </div>
+
+    <!-- Server Status + Chat -->
+    <div class="arcade-community">
+        <div class="mp-status">
+            <div class="mp-status-dot" id="mpServerStatus"></div>
+            <span class="mp-status-text" id="mpServerStatusText">CHECKING...</span>
+        </div>
+
+        <div class="arcade-chat">
+            <div class="chat-header">// ARCADE CHAT //</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
+            </div>
+            <div class="chat-input">
+                <input id="chatInput" type="text" placeholder="Type a message..." maxlength="200">
+                <button id="chatSend">SEND</button>
+            </div>
+        </div>
     </div>
 
     <!-- Classic Games Section -->
@@ -1745,6 +1888,123 @@ animateCoin(document.getElementById('coinCanvas2'));
 
     // Start loop
     drawServer();
+})();
+</script>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// SERVER STATUS + GLOBAL CHAT
+// ─────────────────────────────────────────────────────────
+(function() {
+    const CHAT_SERVER = 'ws://localhost:8768';
+    let chatSocket = null;
+    let userName = '';
+    let userColor = '#ff2e9c';
+
+    // ── Server Status ──────────────────────────────────────
+    const statusDot = document.getElementById('mpServerStatus');
+    const statusText = document.getElementById('mpServerStatusText');
+
+    function checkStatus() {
+        try {
+            const testSocket = new WebSocket(CHAT_SERVER);
+            testSocket.onopen = () => {
+                statusDot.className = 'mp-status-dot online';
+                statusText.textContent = 'MULTIPLAYER ONLINE';
+                testSocket.close();
+            };
+            testSocket.onerror = () => {
+                statusDot.className = 'mp-status-dot offline';
+                statusText.textContent = 'SERVERS OFFLINE';
+            };
+        } catch(e) {
+            statusDot.className = 'mp-status-dot offline';
+            statusText.textContent = 'SERVERS OFFLINE';
+        }
+    }
+
+    // Check status on load
+    checkStatus();
+    // Check status every 30 seconds
+    setInterval(checkStatus, 30000);
+
+    // ── Chat Connection ────────────────────────────────────
+    function connectChat() {
+        try {
+            chatSocket = new WebSocket(CHAT_SERVER);
+
+            chatSocket.onopen = () => {
+                console.log('[Chat] Connected');
+            };
+
+            chatSocket.onmessage = (e) => {
+                const msg = JSON.parse(e.data);
+                if (msg.type === 'history') {
+                    msg.messages.forEach(addChatMessage);
+                } else if (msg.type === 'chat') {
+                    addChatMessage(msg);
+                }
+            };
+
+            chatSocket.onclose = () => {
+                console.log('[Chat] Disconnected, reconnecting in 5s...');
+                setTimeout(connectChat, 5000);
+            };
+
+            chatSocket.onerror = () => {
+                chatSocket.close();
+            };
+        } catch(e) {
+            setTimeout(connectChat, 5000);
+        }
+    }
+
+    function addChatMessage(msg) {
+        const div = document.createElement('div');
+        div.className = 'chat-msg';
+        div.innerHTML = `<span class="chat-name" style="color: ${msg.color || '#ff2e9c'}">${escapeHtml(msg.from)}:</span> ${escapeHtml(msg.text)}`;
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // ── Chat Input ─────────────────────────────────────────
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+
+    function sendChat() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+
+        // Prompt for name on first message
+        if (!userName) {
+            userName = prompt('Enter your name for chat:', '') || 'Anonymous';
+            userName = userName.substring(0, 20);
+        }
+
+        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
+            chatSocket.send(JSON.stringify({
+                type: 'chat',
+                name: userName,
+                text: text
+            }));
+            chatInput.value = '';
+        }
+    }
+
+    chatSend.addEventListener('click', sendChat);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendChat();
+    });
+
+    // Connect to chat on load
+    connectChat();
 })();
 </script>
 
