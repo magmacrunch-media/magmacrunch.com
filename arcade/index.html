@@ -755,6 +755,17 @@
                 </div>
             </a>
 
+            <a href="chess/index.html" class="game-card" style="--card-color: #00f5ff">
+                <div class="card-inner">
+                    <div class="card-title">CHESS</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cChess" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">neon edition. classic chess. vs ai opponent. algebraic notation. configurable difficulty.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
         </div>
     </div>
 
@@ -1651,6 +1662,62 @@ animateCoin(document.getElementById('coinCanvas2'));
     }
 })();
 
+// cChess — Neon chess board with pieces
+(function() {
+    const c = document.getElementById('cChess');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark board background
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // board border (neon cyan)
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+
+    // 8x8 grid
+    const sq = 8;
+    const startX = 4;
+    const startY = 4;
+
+    for (let r = 0; r < 8; r++) {
+        for (let col = 0; col < 8; col++) {
+            const x = startX + col * sq;
+            const y = startY + r * sq;
+            const isDark = (r + col) % 2 === 1;
+
+            // Square color
+            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillRect(x, y, sq, sq);
+
+            // Chess pieces (simplified)
+            if (r === 0) {
+                // AI back row (magenta)
+                ctx.fillStyle = '#ff2d78';
+                ctx.fillRect(x + 2, y + 2, 4, 4);
+            } else if (r === 1) {
+                // AI pawns (magenta)
+                ctx.fillStyle = '#ff2d78';
+                ctx.beginPath();
+                ctx.arc(x + sq/2, y + sq/2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (r === 6) {
+                // Player pawns (cyan)
+                ctx.fillStyle = '#00f5ff';
+                ctx.beginPath();
+                ctx.arc(x + sq/2, y + sq/2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (r === 7) {
+                // Player back row (cyan)
+                ctx.fillStyle = '#00f5ff';
+                ctx.fillRect(x + 2, y + 2, 4, 4);
+            }
+        }
+    }
+})();
+
 // cSoko — Scandinavian Stud card fan preview
 (function() {
     const c = document.getElementById('cSoko');
@@ -2101,7 +2168,7 @@ animateCoin(document.getElementById('coinCanvas2'));
         } catch(e) {}
         var h = window.location.hostname;
         if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
-        return 'ws://localhost:8768';
+        return 'wss://98.49.52.35:8768';
     })();
     let chatSocket = null;
     let userName = localStorage.getItem('arcade_username') || '';
@@ -2113,12 +2180,19 @@ animateCoin(document.getElementById('coinCanvas2'));
     function checkStatus() {
         try {
             const testSocket = new WebSocket(CHAT_SERVER);
+            const timeout = setTimeout(() => {
+                testSocket.close();
+                statusDot.className = 'mp-status-dot offline';
+                statusText.textContent = 'SERVERS OFFLINE';
+            }, 5000);
             testSocket.onopen = () => {
+                clearTimeout(timeout);
                 statusDot.className = 'mp-status-dot online';
                 statusText.textContent = 'MULTIPLAYER ONLINE';
                 testSocket.close();
             };
             testSocket.onerror = () => {
+                clearTimeout(timeout);
                 statusDot.className = 'mp-status-dot offline';
                 statusText.textContent = 'SERVERS OFFLINE';
             };

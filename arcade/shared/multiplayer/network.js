@@ -92,7 +92,7 @@ var MP = {
     if (typeof MP_DEFAULT_SERVER !== 'undefined') return MP_DEFAULT_SERVER;
     var h = window.location.hostname;
     if (h === 'localhost' || h === '127.0.0.1') return '192.168.1.16:8765';
-    return 'localhost:8765';
+    return '98.49.52.35:8765';
   },
 
   // ── Senders ──────────────────────────────────────────────────────────────

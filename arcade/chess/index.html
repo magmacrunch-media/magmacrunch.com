@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chess — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <a href="../index.html" class="mc-back">magmacrunch arcade</a>
+
+    <div class="scanlines"></div>
+
+    <div class="container">
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+                <h1 class="game-title">
+                    CHESS
+                </h1>
+                <p class="game-subtitle">// NEON EDITION //</p>
+
+                <div class="start-divider"></div>
+
+                <div class="start-buttons">
+                    <button id="startGameBtn" class="start-btn primary">
+                        ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
+                    </button>
+                    <button id="startSettingsBtn" class="start-btn">SETTINGS</button>
+                    <button id="helpBtn" class="start-btn">HOW TO PLAY</button>
+                    <button id="creditsBtn" class="start-btn">CREDITS</button>
+                </div>
+
+                <div class="start-footer">
+                    <p>CLASSIC CHESS &nbsp;·&nbsp; VS AI OPPONENT</p>
+                    <p>ALGEBRAIC NOTATION &nbsp;·&nbsp; PIXEL ART PIECES</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" class="game-screen" style="display: none;">
+
+            <!-- Header -->
+            <div class="game-header">
+                <h1>
+                    <span style="color: #00f5ff;">◄</span>
+                    CHESS
+                    <span style="color: #ff2d78;">►</span>
+                </h1>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">TURN</span>
+                        <span class="stat-value" id="turnIndicator">YOUR TURN</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timers -->
+            <div class="timer-container" id="timerContainer" style="display: none;">
+                <div class="timer player" id="playerTime">5:00</div>
+                <div class="timer ai" id="aiTime">5:00</div>
+            </div>
+
+            <!-- Game Layout -->
+            <div class="game-layout">
+                <!-- Board Area -->
+                <div class="board-area">
+                    <div id="boardContainer" class="board-container"></div>
+                </div>
+
+                <!-- Side Panel -->
+                <div class="side-panel">
+                    <div class="move-history-panel">
+                        <div class="move-history-header">
+                            <span>MOVE HISTORY</span>
+                        </div>
+                        <div class="move-history-list" id="moveHistoryList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Area -->
+            <div class="message-area">
+                <div id="gameMessage" class="game-message">Select a piece to move</div>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <button id="newGameBtn" class="control-btn">NEW GAME</button>
+                <button id="settingsBtn" class="control-btn">SETTINGS</button>
+                <button id="menuBtn" class="control-btn">MENU</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ MODALS ═══════════════ -->
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>SETTINGS</span>
+                <button id="closeSettings" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="settingsForm">
+                    <div class="settings-group">
+                        <div class="settings-group-title">AI DIFFICULTY</div>
+                        <div class="settings-options">
+                            <div class="settings-option">
+                                <input type="radio" name="difficulty" id="diffEasy" value="easy">
+                                <label for="diffEasy">Easy (depth 2)</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="difficulty" id="diffMedium" value="medium" checked>
+                                <label for="diffMedium">Medium (depth 3)</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="difficulty" id="diffHard" value="hard">
+                                <label for="diffHard">Hard (depth 4)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <div class="settings-group-title">TIME CONTROL</div>
+                        <div class="settings-options">
+                            <div class="settings-option">
+                                <input type="radio" name="timeControl" id="tcNone" value="none" checked>
+                                <label for="tcNone">No Timer</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="timeControl" id="tcBlitz" value="blitz">
+                                <label for="tcBlitz">Blitz (5 min)</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="timeControl" id="tcRapid" value="rapid">
+                                <label for="tcRapid">Rapid (15 min)</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="timeControl" id="tcClassical" value="classical">
+                                <label for="tcClassical">Classical (30 min)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" id="closeSettingsBtn">START GAME</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div id="instructionsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>HOW TO PLAY</span>
+                <button id="closeInstructions" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>Chess Rules</h3>
+                <p>Chess is a classic two-player strategy board game. The goal is to checkmate your opponent's king.</p>
+
+                <h4>Setup</h4>
+                <ul>
+                    <li>You are <strong style="color: #00f5ff;">CYAN</strong> (white pieces)</li>
+                    <li>AI is <strong style="color: #ff2d78;">MAGENTA</strong> (black pieces)</li>
+                    <li>White always moves first</li>
+                </ul>
+
+                <h4>Piece Movement</h4>
+                <ul>
+                    <li><strong>King</strong>: One square in any direction</li>
+                    <li><strong>Queen</strong>: Any number of squares in any direction</li>
+                    <li><strong>Rook</strong>: Any number of squares horizontally/vertically</li>
+                    <li><strong>Bishop</strong>: Any number of squares diagonally</li>
+                    <li><strong>Knight</strong>: L-shape (2+1), can jump over pieces</li>
+                    <li><strong>Pawn</strong>: Forward 1 (or 2 from start), captures diagonally</li>
+                </ul>
+
+                <h4>Special Moves</h4>
+                <ul>
+                    <li><strong>Castling</strong>: King moves 2 squares toward rook, rook jumps over</li>
+                    <li><strong>En Passant</strong>: Pawn captures opponent's pawn that just moved 2 squares</li>
+                    <li><strong>Promotion</strong>: Pawn reaches opposite end, promotes to Queen/Rook/Bishop/Knight</li>
+                </ul>
+
+                <h4>Check & Checkmate</h4>
+                <ul>
+                    <li><strong>Check</strong>: King is under attack</li>
+                    <li><strong>Checkmate</strong>: King is in check and cannot escape</li>
+                    <li><strong>Stalemate</strong>: No legal moves but king is NOT in check (draw)</li>
+                </ul>
+
+                <div class="modal-footer">
+                    <button id="closeInstructionsBtn">GOT IT!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Promotion Modal -->
+    <div id="promotionModal" class="modal-overlay">
+        <div class="modal-content promotion-content">
+            <div class="modal-titlebar">
+                <span>PROMOTE PAWN</span>
+            </div>
+            <div class="modal-body">
+                <div class="promotion-title">Choose a piece:</div>
+                <div class="promotion-pieces" id="promotionPieces"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div id="creditsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>CREDITS</span>
+                <button id="closeCredits" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>Chess — Neon Edition</h3>
+                <h4>Game Design & Development</h4>
+                <p>Jake A. McCoy</p>
+                <h4>Publisher</h4>
+                <p><strong>magmacrunch media</strong></p>
+                <h4>Built With</h4>
+                <p>Vanilla HTML, CSS & JavaScript · Press Start 2P font · Neon retro aesthetic</p>
+                <h4>About</h4>
+                <p>Classic chess with a neon arcade twist. Play against the AI opponent with configurable difficulty and time controls!</p>
+                <div class="modal-footer">
+                    <button id="closeCreditsBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal-overlay">
+        <div class="modal-content game-over-content">
+            <div class="modal-titlebar">
+                <span>GAME OVER</span>
+            </div>
+            <div class="modal-body">
+                <div class="game-over-icon">🏆</div>
+                <div id="gameOverTitle" class="game-over-title win">YOU WIN!</div>
+                <div id="gameOverMessage" class="game-over-message">Checkmate!</div>
+                <div class="modal-footer">
+                    <button id="playAgainBtn">PLAY AGAIN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script src="js/config.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

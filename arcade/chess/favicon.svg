@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0a0612" rx="4"/>
+  <!-- Chess king piece -->
+  <rect x="10" y="24" width="12" height="3" fill="#00f5ff"/>
+  <rect x="12" y="16" width="8" height="8" fill="#00f5ff"/>
+  <rect x="8" y="12" width="16" height="4" fill="#00f5ff"/>
+  <!-- Crown points -->
+  <rect x="8" y="8" width="3" height="4" fill="#00f5ff"/>
+  <rect x="14" y="6" width="4" height="6" fill="#00f5ff"/>
+  <rect x="21" y="8" width="3" height="4" fill="#00f5ff"/>
+  <!-- Cross on top -->
+  <rect x="14" y="3" width="4" height="4" fill="#00f5ff"/>
+  <rect x="12" y="5" width="8" height="2" fill="#00f5ff"/>
+  <!-- Gem -->
+  <rect x="15" y="14" width="2" height="2" fill="#fff"/>
+</svg>
