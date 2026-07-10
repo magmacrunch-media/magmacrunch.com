@@ -131,11 +131,34 @@ var UI = (function() {
 
         container.appendChild(boardEl);
 
+        // Home labels
+        var homeLabels = document.createElement('div');
+        homeLabels.className = 'home-labels';
+        homeLabels.innerHTML = 
+            '<div class="home-label player-home">YOUR HOME (1-6)</div>' +
+            '<div class="home-label ai-home">AI HOME (19-24)</div>';
+        container.appendChild(homeLabels);
+
+        // Direction indicators
+        var directions = document.createElement('div');
+        directions.className = 'directions';
+        directions.innerHTML = 
+            '<div class="direction ai-direction">← AI moves this way</div>' +
+            '<div class="direction player-direction">You move this way →</div>';
+        container.appendChild(directions);
+
         // Off areas
         var offAreas = document.createElement('div');
         offAreas.className = 'off-areas';
-        offAreas.innerHTML = '<div class="off-area player-off"><div class="off-label">YOU</div><div class="off-count">' + Board.getOffCount(BG.PLAYER) + '/15</div></div>' +
-            '<div class="off-area ai-off"><div class="off-label">AI</div><div class="off-count">' + Board.getOffCount(BG.AI) + '/15</div></div>';
+        offAreas.innerHTML = 
+            '<div class="off-area player-off" style="border-color: var(--bg-checker-player);">' +
+                '<div class="off-label" style="color: var(--bg-checker-player);">YOU (cyan)</div>' +
+                '<div class="off-count">' + Board.getOffCount(BG.PLAYER) + '/15</div>' +
+            '</div>' +
+            '<div class="off-area ai-off" style="border-color: var(--bg-checker-ai);">' +
+                '<div class="off-label" style="color: var(--bg-checker-ai);">AI (magenta)</div>' +
+                '<div class="off-count">' + Board.getOffCount(BG.AI) + '/15</div>' +
+            '</div>';
         container.appendChild(offAreas);
     }
 

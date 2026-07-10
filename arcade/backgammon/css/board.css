@@ -14,6 +14,7 @@
     box-shadow: 
         0 0 20px var(--bg-checker-player-glow),
         inset 0 0 30px rgba(0,0,0,0.5);
+    overflow: visible;
 }
 
 /* ── Board Layout ───────────────────────────────────────────────────────────── */
@@ -208,11 +209,13 @@
     flex-direction: column;
     align-items: center;
     gap: 5px;
+    transition: border-color 0.2s;
 }
 
 .off-label {
     font-size: 7px;
-    color: var(--bg-text-dim);
+    font-weight: bold;
+    letter-spacing: 0.05em;
 }
 
 .off-count {
@@ -253,6 +256,66 @@
 
 .off-areas .off-area {
     flex: 1;
+}
+
+/* ── Home Labels ────────────────────────────────────────────────────────────── */
+.home-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.home-label {
+    position: absolute;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    padding: 3px 6px;
+    border-radius: 3px;
+    opacity: 0.8;
+}
+
+.home-label.player-home {
+    bottom: 15px;
+    right: 15px;
+    color: var(--bg-checker-player);
+    background: rgba(0, 245, 255, 0.15);
+    border: 1px solid rgba(0, 245, 255, 0.3);
+}
+
+.home-label.ai-home {
+    top: 15px;
+    right: 15px;
+    color: var(--bg-checker-ai);
+    background: rgba(255, 45, 120, 0.15);
+    border: 1px solid rgba(255, 45, 120, 0.3);
+}
+
+/* ── Direction Indicators ───────────────────────────────────────────────────── */
+.directions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    padding: 0 5px;
+}
+
+.direction {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+}
+
+.ai-direction {
+    color: var(--bg-checker-ai);
+}
+
+.player-direction {
+    color: var(--bg-checker-player);
 }
 
 /* ── Point Numbers ──────────────────────────────────────────────────────────── */
