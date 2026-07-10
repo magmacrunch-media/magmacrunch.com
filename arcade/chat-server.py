@@ -1,6 +1,6 @@
 """
 chat-server.py — Global arcade chat + server status
-Run with:  python chat-server.py
+Run with:  python chat-server.py [--port PORT]
 Requires:  pip install websockets
 
 Provides:
@@ -9,6 +9,7 @@ Provides:
   - In-memory message history (last 100 messages)
 """
 
+import argparse
 import asyncio
 import json
 import time
@@ -16,7 +17,6 @@ import websockets
 
 # ── Configuration ────────────────────────────────────────────────────────────
 
-CHAT_PORT = 8768
 MAX_MESSAGES = 100
 
 # Game servers to check status for
@@ -160,21 +160,24 @@ async def status_broadcaster():
 
 # ── Main ────────────────────────────────────────────────────────────────────
 
-async def main():
-    print(f"[Chat] Starting chat server on port {CHAT_PORT}")
+async def main(port):
+    print(f"[Chat] Starting chat server on port {port}")
     print(f"[Chat] Checking game servers: {', '.join(GAME_SERVERS.keys())}")
 
     # Start status broadcaster
     asyncio.create_task(status_broadcaster())
 
     # Start WebSocket server
-    async with websockets.serve(handler, '0.0.0.0', CHAT_PORT):
-        print(f"[Chat] Chat server ready on ws://localhost:{CHAT_PORT}")
+    async with websockets.serve(handler, '0.0.0.0', port):
+        print(f"[Chat] Chat server ready on ws://localhost:{port}")
         await asyncio.Future()  # Run forever
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Magmacrunch Arcade Chat Server')
+    parser.add_argument('--port', type=int, default=8768, help='Port to listen on')
+    args = parser.parse_args()
     try:
-        asyncio.run(main())
+        asyncio.run(main(args.port))
     except KeyboardInterrupt:
         print("\n[Chat] Server stopped.")

@@ -89,8 +89,10 @@ var MP = {
       var param = new URLSearchParams(window.location.search).get('server');
       if (param && param.trim()) return param.trim();
     } catch(e) {}
-    // Use MP_DEFAULT_SERVER if set by game, otherwise default to 8765
-    return (typeof MP_DEFAULT_SERVER !== 'undefined') ? MP_DEFAULT_SERVER : 'localhost:8765';
+    if (typeof MP_DEFAULT_SERVER !== 'undefined') return MP_DEFAULT_SERVER;
+    var h = window.location.hostname;
+    if (h === 'localhost' || h === '127.0.0.1') return '192.168.1.16:8765';
+    return 'localhost:8765';
   },
 
   // ── Senders ──────────────────────────────────────────────────────────────

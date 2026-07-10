@@ -1,9 +1,10 @@
 """
 WebSocket server — SORRY! multiplayer
-Run with:  python server.py
+Run with:  python server.py [--port PORT]
 Requires:  pip install websockets
 """
 
+import argparse
 import asyncio
 import json
 import random
@@ -773,9 +774,9 @@ async def broadcast_turn():
     await broadcast({"type": "turn_update", "currentTurnName": name})
 
 
-async def main():
+async def main(port):
     import signal
-    print(f"WebSocket server on ws://localhost:8765")
+    print(f"WebSocket server on ws://0.0.0.0:{port}")
     print(f"Waiting for {MIN_PLAYERS}–{MAX_PLAYERS} players (+ spectators)…")
     print("Ctrl+C to stop.\n")
 
@@ -784,11 +785,14 @@ async def main():
     for sig in (signal.SIGINT, signal.SIGTERM):
         loop.add_signal_handler(sig, lambda: (stop.set_result(None) if not stop.done() else None))
 
-    async with websockets.serve(handle_client, "localhost", 8765):
+    async with websockets.serve(handle_client, "0.0.0.0", port):
         await stop
 
     print("\nServer stopped cleanly.")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description='Multiplayer SORRY! Server')
+    parser.add_argument('--port', type=int, default=8765, help='Port to listen on')
+    args = parser.parse_args()
+    asyncio.run(main(args.port))

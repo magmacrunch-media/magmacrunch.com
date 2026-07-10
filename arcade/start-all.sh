@@ -113,7 +113,7 @@ done
 if [[ -f "$SCRIPT_DIR/$CHAT_SERVER" ]]; then
     echo -e "${GREEN}Starting Chat server on port ${CHAT_PORT}...${NC}"
     cd "$SCRIPT_DIR"
-    python3 "$CHAT_SERVER" &
+    python3 "$CHAT_SERVER" --port "$CHAT_PORT" &
     PIDS+=($!)
     echo -e "  → ws://${HOSTNAME}.local:${CHAT_PORT}"
     [[ -n "$LOCAL_IP" ]] && echo -e "  → ws://${LOCAL_IP}:${CHAT_PORT}"
