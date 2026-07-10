@@ -131,21 +131,13 @@ var UI = (function() {
 
         container.appendChild(boardEl);
 
-        // Home labels
+        // Home labels — positioned to the right of the board
         var homeLabels = document.createElement('div');
         homeLabels.className = 'home-labels';
         homeLabels.innerHTML = 
-            '<div class="home-label player-home">YOUR HOME (1-6)</div>' +
-            '<div class="home-label ai-home">AI HOME (19-24)</div>';
+            '<div class="home-label ai-home">AI HOME<br>(19-24)</div>' +
+            '<div class="home-label player-home">YOUR HOME<br>(1-6)</div>';
         container.appendChild(homeLabels);
-
-        // Direction indicators — left side of board
-        var directions = document.createElement('div');
-        directions.className = 'directions';
-        directions.innerHTML = 
-            '<div class="direction ai-direction">← AI HOME (19-24)</div>' +
-            '<div class="direction player-direction">YOUR HOME (1-6) →</div>';
-        container.appendChild(directions);
 
         // Off areas
         var offAreas = document.createElement('div');
@@ -164,7 +156,14 @@ var UI = (function() {
 
     function createPoint(num, position, value) {
         var point = document.createElement('div');
-        point.className = 'point ' + position + ' ' + (num % 2 === 0 ? 'light' : 'dark');
+        var isInPlayerHome = num >= 1 && num <= 6;
+        var isInAiHome = num >= 19 && num <= 24;
+        
+        var classes = 'point ' + position + ' ' + (num % 2 === 0 ? 'light' : 'dark');
+        if (isInPlayerHome) classes += ' in-player-home';
+        if (isInAiHome) classes += ' in-ai-home';
+        
+        point.className = classes;
         point.dataset.point = num;
 
         // Set grid column based on point number
