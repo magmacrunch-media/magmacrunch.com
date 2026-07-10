@@ -1,0 +1,480 @@
+/**
+ * main.js — DOM wiring, rendering, event handlers
+ */
+
+var UI = (function() {
+
+    // ── DOM References ───────────────────────────────────────────────────────
+    var elements = {};
+    var selectedChecker = null;
+    var highlightedMoves = [];
+    var diceAnimationInterval = null;
+
+    // ── Initialize ───────────────────────────────────────────────────────────
+    function init() {
+        cacheElements();
+        setupEventListeners();
+        Game.setOnStateChange(onStateChange);
+        Game.setOnGameEnd(onGameEnd);
+    }
+
+    function cacheElements() {
+        elements.startScreen = document.getElementById('startScreen');
+        elements.gameScreen = document.getElementById('gameScreen');
+        elements.startGameBtn = document.getElementById('startGameBtn');
+        elements.boardContainer = document.getElementById('boardContainer');
+        elements.diceArea = document.getElementById('diceArea');
+        elements.die1 = document.getElementById('die1');
+        elements.die2 = document.getElementById('die2');
+        elements.doublingCube = document.getElementById('doublingCube');
+        elements.rollBtn = document.getElementById('rollBtn');
+        elements.message = document.getElementById('gameMessage');
+        elements.scoreValue = document.getElementById('scoreValue');
+        elements.turnIndicator = document.getElementById('turnIndicator');
+        elements.instructionsModal = document.getElementById('instructionsModal');
+        elements.closeInstructions = document.getElementById('closeInstructions');
+        elements.closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
+        elements.creditsModal = document.getElementById('creditsModal');
+        elements.closeCredits = document.getElementById('closeCredits');
+        elements.closeCreditsBtn = document.getElementById('closeCreditsBtn');
+        elements.gameOverModal = document.getElementById('gameOverModal');
+        elements.gameOverTitle = document.getElementById('gameOverTitle');
+        elements.gameOverMessage = document.getElementById('gameOverMessage');
+        elements.gameOverScore = document.getElementById('gameOverScore');
+        elements.playAgainBtn = document.getElementById('playAgainBtn');
+        elements.newGameBtn = document.getElementById('newGameBtn');
+        elements.menuBtn = document.getElementById('menuBtn');
+        elements.helpBtn = document.getElementById('helpBtn');
+        elements.creditsBtn = document.getElementById('creditsBtn');
+    }
+
+    function setupEventListeners() {
+        elements.startGameBtn.addEventListener('click', startGame);
+        elements.rollBtn.addEventListener('click', rollDice);
+        elements.doublingCube.addEventListener('click', handleDouble);
+        elements.newGameBtn.addEventListener('click', startGame);
+        elements.menuBtn.addEventListener('click', showMenu);
+        elements.helpBtn.addEventListener('click', showInstructions);
+        elements.creditsBtn.addEventListener('click', showCredits);
+        elements.closeInstructions.addEventListener('click', hideInstructions);
+        elements.closeInstructionsBtn.addEventListener('click', hideInstructions);
+        elements.closeCredits.addEventListener('click', hideCredits);
+        elements.closeCreditsBtn.addEventListener('click', hideCredits);
+        elements.playAgainBtn.addEventListener('click', startGame);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (elements.startScreen.style.display !== 'none') {
+                    startGame();
+                }
+            }
+        });
+    }
+
+    // ── Game Flow ────────────────────────────────────────────────────────────
+    function startGame() {
+        elements.startScreen.style.display = 'none';
+        elements.gameScreen.style.display = 'flex';
+        hideGameOver();
+        Game.startGame();
+        renderBoard();
+        updateUI();
+    }
+
+    function showMenu() {
+        elements.startScreen.style.display = 'flex';
+        elements.gameScreen.style.display = 'none';
+    }
+
+    // ── State Change Handler ─────────────────────────────────────────────────
+    function onStateChange(data) {
+        renderBoard();
+        updateUI();
+        updateDice(data.dice);
+        updateDoublingCube(data.doublingOwner, data.score);
+
+        if (data.state === BG.STATE.MOVING && data.currentPlayer === BG.AI) {
+            setTimeout(executeAIMove, 1000);
+        }
+    }
+
+    function onGameEnd(winner) {
+        showGameOver(winner);
+    }
+
+    // ── Board Rendering ──────────────────────────────────────────────────────
+    function renderBoard() {
+        var board = Board.getState();
+        var container = elements.boardContainer;
+        container.innerHTML = '';
+
+        // Create board grid
+        var boardEl = document.createElement('div');
+        boardEl.className = 'board';
+
+        // Top row (points 13-24)
+        for (var i = 13; i <= 24; i++) {
+            var point = createPoint(i, 'top', board[i]);
+            boardEl.appendChild(point);
+        }
+
+        // Bar
+        var bar = createBar(board);
+        boardEl.appendChild(bar);
+
+        // Bottom row (points 12-1)
+        for (var i = 12; i >= 1; i--) {
+            var point = createPoint(i, 'bottom', board[i]);
+            boardEl.appendChild(point);
+        }
+
+        container.appendChild(boardEl);
+
+        // Off areas
+        var offAreas = document.createElement('div');
+        offAreas.className = 'off-areas';
+        offAreas.innerHTML = '<div class="off-area player-off"><div class="off-label">YOU</div><div class="off-count">' + Board.getOffCount(BG.PLAYER) + '/15</div></div>' +
+            '<div class="off-area ai-off"><div class="off-label">AI</div><div class="off-count">' + Board.getOffCount(BG.AI) + '/15</div></div>';
+        container.appendChild(offAreas);
+    }
+
+    function createPoint(num, position, value) {
+        var point = document.createElement('div');
+        point.className = 'point ' + position + ' ' + (num % 2 === 0 ? 'light' : 'dark');
+        point.dataset.point = num;
+
+        // Point number
+        var numEl = document.createElement('div');
+        numEl.className = 'point-number';
+        numEl.textContent = num;
+        point.appendChild(numEl);
+
+        // Checkers
+        var count = Math.abs(value);
+        var owner = value > 0 ? 'player' : (value < 0 ? 'ai' : null);
+
+        if (count > 0) {
+            var checkers = document.createElement('div');
+            checkers.className = 'checkers';
+
+            for (var i = 0; i < count; i++) {
+                var checker = document.createElement('div');
+                checker.className = 'checker ' + owner;
+                checker.dataset.point = num;
+                checker.addEventListener('click', handleCheckerClick);
+                checkers.appendChild(checker);
+            }
+
+            point.appendChild(checkers);
+        }
+
+        // Click handler for point
+        point.addEventListener('click', function() {
+            handlePointClick(num);
+        });
+
+        return point;
+    }
+
+    function createBar(board) {
+        var bar = document.createElement('div');
+        bar.className = 'bar';
+
+        var label = document.createElement('div');
+        label.className = 'bar-label';
+        label.textContent = 'BAR';
+        bar.appendChild(label);
+
+        // Player bar checkers
+        var playerBarCount = board[BG.BAR_PLAYER];
+        if (playerBarCount > 0) {
+            var playerCheckers = document.createElement('div');
+            playerCheckers.className = 'bar-checkers';
+            for (var i = 0; i < playerBarCount; i++) {
+                var checker = document.createElement('div');
+                checker.className = 'bar-checker player';
+                checker.addEventListener('click', function() {
+                    handleBarClick(BG.PLAYER);
+                });
+                playerCheckers.appendChild(checker);
+            }
+            bar.appendChild(playerCheckers);
+        }
+
+        // AI bar checkers
+        var aiBarCount = Math.abs(board[BG.BAR_AI]);
+        if (aiBarCount > 0) {
+            var aiCheckers = document.createElement('div');
+            aiCheckers.className = 'bar-checkers';
+            for (var i = 0; i < aiBarCount; i++) {
+                var checker = document.createElement('div');
+                checker.className = 'bar-checker ai';
+                aiCheckers.appendChild(checker);
+            }
+            bar.appendChild(aiCheckers);
+        }
+
+        return bar;
+    }
+
+    // ── Event Handlers ───────────────────────────────────────────────────────
+    function handleCheckerClick(e) {
+        e.stopPropagation();
+        var point = parseInt(e.target.dataset.point);
+        var currentPlayer = Game.getCurrentPlayer();
+
+        if (currentPlayer !== BG.PLAYER) return;
+        if (Game.getState() !== BG.STATE.MOVING) return;
+
+        var board = Board.getState();
+        if (board[point] <= 0) return; // Not player's checker
+
+        selectChecker(point);
+    }
+
+    function handlePointClick(point) {
+        var currentPlayer = Game.getCurrentPlayer();
+
+        if (currentPlayer !== BG.PLAYER) return;
+        if (Game.getState() !== BG.STATE.MOVING) return;
+        if (selectedChecker === null) return;
+
+        // Try to find a move to this point
+        var moves = Game.getMovesRemaining();
+        for (var i = 0; i < moves.length; i++) {
+            for (var j = 0; j < moves[i].length; j++) {
+                if (moves[i][j].from === selectedChecker && moves[i][j].to === point) {
+                    Game.executeMove(i);
+                    clearSelection();
+                    return;
+                }
+            }
+        }
+
+        // If no move found, try selecting a checker on this point
+        var board = Board.getState();
+        if (board[point] > 0) {
+            selectChecker(point);
+        }
+    }
+
+    function handleBarClick(player) {
+        if (player !== BG.PLAYER) return;
+        if (Game.getCurrentPlayer() !== BG.PLAYER) return;
+        if (Game.getState() !== BG.STATE.MOVING) return;
+
+        var barCount = Board.getBarCount(BG.PLAYER);
+        if (barCount > 0) {
+            selectChecker(BG.BAR_PLAYER);
+        }
+    }
+
+    function selectChecker(point) {
+        clearSelection();
+        selectedChecker = point;
+
+        // Highlight the selected checker
+        var checkers = document.querySelectorAll('.checker[data-point="' + point + '"]');
+        checkers.forEach(function(c) {
+            c.classList.add('selected');
+        });
+
+        // Show legal moves for this checker
+        showLegalMoves(point);
+    }
+
+    function showLegalMoves(fromPoint) {
+        var moves = Game.getMovesRemaining();
+        highlightedMoves = [];
+
+        for (var i = 0; i < moves.length; i++) {
+            for (var j = 0; j < moves[i].length; j++) {
+                if (moves[i][j].from === fromPoint) {
+                    highlightedMoves.push({
+                        moveIndex: i,
+                        to: moves[i][j].to,
+                        type: moves[i][j].type
+                    });
+                }
+            }
+        }
+
+        // Highlight destination points
+        highlightedMoves.forEach(function(move) {
+            var pointEl = document.querySelector('.point[data-point="' + move.to + '"]');
+            if (pointEl) {
+                pointEl.classList.add('highlighted');
+            }
+        });
+    }
+
+    function clearSelection() {
+        selectedChecker = null;
+        highlightedMoves = [];
+
+        document.querySelectorAll('.checker.selected').forEach(function(c) {
+            c.classList.remove('selected');
+        });
+
+        document.querySelectorAll('.point.highlighted').forEach(function(p) {
+            p.classList.remove('highlighted');
+        });
+    }
+
+    // ── Dice ─────────────────────────────────────────────────────────────────
+    function rollDice() {
+        if (Game.getCurrentPlayer() !== BG.PLAYER) return;
+        if (Game.getState() !== BG.STATE.MOVING) return;
+
+        elements.rollBtn.disabled = true;
+        Dice.setRolling(true);
+
+        // Animate dice
+        var frames = 0;
+        diceAnimationInterval = setInterval(function() {
+            var d1 = Dice.getRandomDie();
+            var d2 = Dice.getRandomDie();
+            updateDieDisplay(elements.die1, d1);
+            updateDieDisplay(elements.die2, d2);
+            frames++;
+
+            if (frames >= BG.DICE_ANIMATION_FRAMES) {
+                clearInterval(diceAnimationInterval);
+                Dice.setRolling(false);
+                var values = Dice.getValues();
+                updateDieDisplay(elements.die1, values[0]);
+                updateDieDisplay(elements.die2, values[1]);
+            }
+        }, BG.DICE_ANIMATION_SPEED);
+    }
+
+    function updateDice(dice) {
+        if (dice[0] > 0 && dice[1] > 0) {
+            updateDieDisplay(elements.die1, dice[0]);
+            updateDieDisplay(elements.die2, dice[1]);
+            elements.rollBtn.disabled = true;
+        } else {
+            elements.rollBtn.disabled = false;
+        }
+    }
+
+    function updateDieDisplay(dieEl, value) {
+        dieEl.setAttribute('data-value', value);
+        dieEl.innerHTML = '';
+
+        for (var i = 0; i < value; i++) {
+            var dot = document.createElement('div');
+            dot.className = 'die-dot';
+            dieEl.appendChild(dot);
+        }
+    }
+
+    // ── Doubling Cube ────────────────────────────────────────────────────────
+    function handleDouble() {
+        if (Game.getCurrentPlayer() !== BG.PLAYER) return;
+        if (!Dice.canDouble(BG.PLAYER)) return;
+
+        if (Game.requestDouble()) {
+            // AI decides whether to accept
+            setTimeout(function() {
+                // AI always accepts for now (can be made smarter)
+                Game.acceptDouble();
+            }, 500);
+        }
+    }
+
+    function updateDoublingCube(owner, value) {
+        elements.doublingCube.textContent = value;
+        elements.doublingCube.className = 'doubling-cube';
+
+        if (owner === BG.PLAYER) {
+            elements.doublingCube.classList.add('player-owned');
+        } else if (owner === BG.AI) {
+            elements.doublingCube.classList.add('ai-owned');
+        }
+
+        if (!Dice.canDouble(BG.PLAYER)) {
+            elements.doublingCube.classList.add('disabled');
+        }
+    }
+
+    // ── UI Updates ───────────────────────────────────────────────────────────
+    function updateUI() {
+        var state = Game.getState();
+        var currentPlayer = Game.getCurrentPlayer();
+        var score = Game.getScore();
+
+        elements.scoreValue.textContent = score;
+
+        if (currentPlayer === BG.PLAYER) {
+            elements.turnIndicator.textContent = 'YOUR TURN';
+            elements.turnIndicator.style.color = BG.COLORS.checkerPlayer;
+        } else {
+            elements.turnIndicator.textContent = 'AI THINKING...';
+            elements.turnIndicator.style.color = BG.COLORS.checkerAi;
+        }
+
+        if (state === BG.STATE.MOVING) {
+            if (currentPlayer === BG.PLAYER) {
+                setMessage('Select a checker to move');
+            } else {
+                setMessage('AI is thinking...');
+            }
+        }
+    }
+
+    function setMessage(text, type) {
+        elements.message.textContent = text;
+        elements.message.className = 'game-message' + (type ? ' ' + type : '');
+    }
+
+    // ── AI Move ──────────────────────────────────────────────────────────────
+    function executeAIMove() {
+        Game.executeAIMove();
+    }
+
+    // ── Modals ───────────────────────────────────────────────────────────────
+    function showInstructions() {
+        elements.instructionsModal.classList.add('active');
+    }
+
+    function hideInstructions() {
+        elements.instructionsModal.classList.remove('active');
+    }
+
+    function showCredits() {
+        elements.creditsModal.classList.add('active');
+    }
+
+    function hideCredits() {
+        elements.creditsModal.classList.remove('active');
+    }
+
+    function showGameOver(winner) {
+        if (winner === BG.PLAYER) {
+            elements.gameOverTitle.textContent = 'YOU WIN!';
+            elements.gameOverTitle.className = 'game-over-title win';
+            elements.gameOverMessage.textContent = 'Congratulations! You beat the AI!';
+        } else {
+            elements.gameOverTitle.textContent = 'AI WINS';
+            elements.gameOverTitle.className = 'game-over-title lose';
+            elements.gameOverMessage.textContent = 'Better luck next time!';
+        }
+
+        elements.gameOverScore.textContent = 'Score: ' + Game.getScore() + 'x';
+        elements.gameOverModal.classList.add('active');
+    }
+
+    function hideGameOver() {
+        elements.gameOverModal.classList.remove('active');
+    }
+
+    return {
+        init: init
+    };
+
+})();
+
+// ── Initialize on DOM load ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', UI.init);

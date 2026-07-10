@@ -1,0 +1,262 @@
+/**
+ * board.css — Board rendering, points, checkers
+ */
+
+/* ── Board Container ────────────────────────────────────────────────────────── */
+.board-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    background: var(--bg-board-bg);
+    border: 3px solid var(--bg-point-light);
+    border-radius: 8px;
+    box-shadow: 
+        0 0 20px var(--bg-checker-player-glow),
+        inset 0 0 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+/* ── Board Layout ───────────────────────────────────────────────────────────── */
+.board {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr) var(--bar-width, 50px) repeat(12, 1fr);
+    grid-template-rows: 1fr 1fr;
+    min-height: 400px;
+    padding: 10px;
+    gap: 2px;
+}
+
+/* ── Points (Triangles) ─────────────────────────────────────────────────────── */
+.point {
+    position: relative;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.point::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+}
+
+/* Top points (AI's home) */
+.point.top {
+    flex-direction: column;
+}
+
+.point.top::before {
+    top: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 140px solid var(--point-color);
+}
+
+/* Bottom points (Player's home) */
+.point.bottom {
+    flex-direction: column-reverse;
+}
+
+.point.bottom::before {
+    bottom: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 140px solid var(--point-color);
+}
+
+/* Point colors */
+.point.light {
+    --point-color: var(--bg-point-light-dim);
+}
+
+.point.dark {
+    --point-color: var(--bg-point-dark-dim);
+}
+
+.point.highlighted {
+    --point-color: var(--bg-highlight);
+    box-shadow: 0 0 15px var(--bg-highlight-glow);
+}
+
+/* ── Checkers ───────────────────────────────────────────────────────────────── */
+.checkers {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 5px;
+}
+
+.checker {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.checker.player {
+    background: var(--bg-checker-player);
+    box-shadow: 0 0 10px var(--bg-checker-player-glow);
+}
+
+.checker.ai {
+    background: var(--bg-checker-ai);
+    box-shadow: 0 0 10px var(--bg-checker-ai-glow);
+}
+
+.checker.selected {
+    transform: scale(1.15);
+    box-shadow: 0 0 20px var(--bg-highlight);
+    border-color: var(--bg-highlight);
+}
+
+.checker.highlighted {
+    animation: checkerPulse 0.8s ease-in-out infinite;
+}
+
+@keyframes checkerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ── Bar ────────────────────────────────────────────────────────────────────── */
+.bar {
+    background: var(--bg-bar-bg);
+    border-left: 2px solid var(--bg-point-light);
+    border-right: 2px solid var(--bg-point-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 10px;
+}
+
+.bar-label {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+.bar-checkers {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.bar-checker {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.bar-checker.player {
+    background: var(--bg-checker-player);
+    box-shadow: 0 0 8px var(--bg-checker-player-glow);
+}
+
+.bar-checker.ai {
+    background: var(--bg-checker-ai);
+    box-shadow: 0 0 8px var(--bg-checker-ai-glow);
+}
+
+/* ── Off Area (Borne Off) ───────────────────────────────────────────────────── */
+.off-area {
+    background: var(--bg-off-bg);
+    border: 2px solid var(--bg-text-dim);
+    border-radius: 4px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.off-label {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+}
+
+.off-count {
+    font-size: 16px;
+    color: var(--bg-dice);
+    text-shadow: 0 0 8px var(--bg-dice-glow);
+}
+
+.off-checkers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: center;
+}
+
+.off-checker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.off-checker.player {
+    background: var(--bg-checker-player);
+}
+
+.off-checker.ai {
+    background: var(--bg-checker-ai);
+}
+
+/* ── Off Areas Container ────────────────────────────────────────────────────── */
+.off-areas {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.off-areas .off-area {
+    flex: 1;
+}
+
+/* ── Point Numbers ──────────────────────────────────────────────────────────── */
+.point-number {
+    position: absolute;
+    font-size: 8px;
+    color: var(--bg-text-dim);
+    opacity: 0.6;
+}
+
+.point.top .point-number {
+    top: -18px;
+}
+
+.point.bottom .point-number {
+    bottom: -18px;
+}
+
+/* ── Move Highlights ────────────────────────────────────────────────────────── */
+.move-highlight {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-highlight);
+    opacity: 0.2;
+    border-radius: 4px;
+    pointer-events: none;
+    animation: highlightPulse 1s ease-in-out infinite;
+}
+
+@keyframes highlightPulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.4; }
+}

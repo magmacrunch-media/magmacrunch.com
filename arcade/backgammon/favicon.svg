@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#0a0612" rx="4"/>
+  <!-- Dice -->
+  <rect x="4" y="4" width="10" height="10" fill="#ffe03a" rx="2"/>
+  <rect x="18" y="4" width="10" height="10" fill="#ffe03a" rx="2"/>
+  <!-- Dice dots -->
+  <circle cx="9" cy="9" r="1.5" fill="#0a0612"/>
+  <circle cx="23" cy="9" r="1.5" fill="#0a0612"/>
+  <circle cx="23" cy="9" r="1.5" fill="#0a0612"/>
+  <!-- Checker -->
+  <circle cx="16" cy="24" r="6" fill="#00f5ff" stroke="#fff" stroke-width="1"/>
+</svg>

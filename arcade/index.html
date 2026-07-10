@@ -733,6 +733,17 @@
                 </div>
             </a>
 
+            <a href="backgammon/index.html" class="game-card" style="--card-color: #00f5ff">
+                <div class="card-inner">
+                    <div class="card-title">BACKGAMMON</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cBackgammon" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">neon edition. classic board game. vs ai opponent. doubling cube.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
         </div>
     </div>
 
@@ -1478,6 +1489,99 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.fillStyle = '#111';
     ctx.font = '10px serif';
     ctx.fillText('♠', 56, 58);
+})();
+
+// cBackgammon — Neon backgammon board with dice
+(function() {
+    const c = document.getElementById('cBackgammon');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark board background
+    ctx.fillStyle = '#0d0820';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // board border (neon cyan)
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+
+    // triangles (points) — alternating cyan and magenta
+    const triW = 5;
+    const triH = 25;
+    const startX = 6;
+    const gap = 1;
+
+    // Top triangles (points 13-24)
+    for (let i = 0; i < 12; i++) {
+        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,245,255,0.4)' : 'rgba(255,45,120,0.4)';
+        ctx.beginPath();
+        ctx.moveTo(startX + i * (triW + gap), 4);
+        ctx.lineTo(startX + i * (triW + gap) + triW, 4);
+        ctx.lineTo(startX + i * (triW + gap) + triW / 2, 4 + triH);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Bottom triangles (points 1-12)
+    for (let i = 0; i < 12; i++) {
+        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,245,255,0.4)' : 'rgba(255,45,120,0.4)';
+        ctx.beginPath();
+        ctx.moveTo(startX + i * (triW + gap), 68);
+        ctx.lineTo(startX + i * (triW + gap) + triW, 68);
+        ctx.lineTo(startX + i * (triW + gap) + triW / 2, 68 - triH);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Bar (center)
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(34, 4, 4, 64);
+
+    // Player checkers (cyan) — bottom left
+    const playerCheckers = [[8, 50], [13, 50], [18, 50], [8, 55], [13, 55]];
+    playerCheckers.forEach(([x, y]) => {
+        ctx.fillStyle = '#00f5ff';
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+    });
+
+    // AI checkers (magenta) — top right
+    const aiCheckers = [[54, 22], [59, 22], [64, 22], [54, 17], [59, 17]];
+    aiCheckers.forEach(([x, y]) => {
+        ctx.fillStyle = '#ff2d78';
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+    });
+
+    // Dice (yellow)
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(22, 30, 8, 8);
+    ctx.fillRect(42, 30, 8, 8);
+    // Dice dots
+    ctx.fillStyle = '#0a0612';
+    ctx.beginPath();
+    ctx.arc(26, 34, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(46, 34, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Doubling cube (orange)
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(33, 30, 6, 6);
+    ctx.fillStyle = '#0a0612';
+    ctx.font = '4px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('2', 36, 35);
 })();
 
 // cSoko — Scandinavian Stud card fan preview
