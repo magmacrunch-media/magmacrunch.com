@@ -14,27 +14,44 @@
     box-shadow: 
         0 0 20px var(--bg-checker-player-glow),
         inset 0 0 30px rgba(0,0,0,0.5);
-    overflow: hidden;
 }
 
 /* ── Board Layout ───────────────────────────────────────────────────────────── */
 .board {
     display: grid;
-    grid-template-columns: repeat(12, 1fr) var(--bar-width, 50px) repeat(12, 1fr);
+    grid-template-columns: repeat(6, 1fr) var(--bar-width, 50px) repeat(6, 1fr);
     grid-template-rows: 1fr 1fr;
-    min-height: 400px;
+    min-height: 420px;
     padding: 10px;
-    gap: 2px;
+    gap: 1px;
+    background: linear-gradient(180deg, rgba(0,245,255,0.03) 0%, transparent 50%, rgba(255,45,120,0.03) 100%);
+}
+
+/* Top row points */
+.point.top {
+    grid-row: 1;
+}
+
+/* Bottom row points */
+.point.bottom {
+    grid-row: 2;
+}
+
+/* Bar spans both rows — column 7 in 13-column grid */
+.bar {
+    grid-row: 1 / 3;
+    grid-column: 7;
 }
 
 /* ── Points (Triangles) ─────────────────────────────────────────────────────── */
 .point {
     position: relative;
-    min-height: 150px;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     cursor: pointer;
     transition: background 0.15s;
+    border: 1px solid rgba(255,255,255,0.03);
 }
 
 .point::before {
@@ -49,25 +66,32 @@
 /* Top points (AI's home) */
 .point.top {
     flex-direction: column;
+    padding-top: 8px;
 }
 
 .point.top::before {
     top: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
     border-top: 140px solid var(--point-color);
 }
 
 /* Bottom points (Player's home) */
 .point.bottom {
     flex-direction: column-reverse;
+    padding-bottom: 8px;
 }
 
 .point.bottom::before {
     bottom: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
     border-bottom: 140px solid var(--point-color);
+}
+
+/* Point hover effect */
+.point:hover {
+    background: rgba(255,255,255,0.05);
 }
 
 /* Point colors */
@@ -92,29 +116,31 @@
     flex-direction: column;
     align-items: center;
     gap: 2px;
-    padding: 5px;
+    padding: 3px 0;
 }
 
 .checker {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.3);
+    border: 2px solid rgba(255,255,255,0.4);
     transition: transform 0.15s, box-shadow 0.15s;
+    cursor: pointer;
+    flex-shrink: 0;
 }
 
 .checker.player {
-    background: var(--bg-checker-player);
-    box-shadow: 0 0 10px var(--bg-checker-player-glow);
+    background: radial-gradient(circle at 30% 30%, #00f5ff, #0088aa);
+    box-shadow: 0 0 8px var(--bg-checker-player-glow);
 }
 
 .checker.ai {
-    background: var(--bg-checker-ai);
-    box-shadow: 0 0 10px var(--bg-checker-ai-glow);
+    background: radial-gradient(circle at 30% 30%, #ff2d78, #aa1155);
+    box-shadow: 0 0 8px var(--bg-checker-ai-glow);
 }
 
 .checker.selected {
-    transform: scale(1.15);
+    transform: scale(1.2);
     box-shadow: 0 0 20px var(--bg-highlight);
     border-color: var(--bg-highlight);
 }
@@ -146,28 +172,29 @@
     color: var(--bg-text-dim);
     writing-mode: vertical-rl;
     text-orientation: mixed;
+    letter-spacing: 0.1em;
 }
 
 .bar-checkers {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 4px;
 }
 
 .bar-checker {
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
 }
 
 .bar-checker.player {
-    background: var(--bg-checker-player);
+    background: radial-gradient(circle at 30% 30%, #00f5ff, #0088aa);
     box-shadow: 0 0 8px var(--bg-checker-player-glow);
 }
 
 .bar-checker.ai {
-    background: var(--bg-checker-ai);
+    background: radial-gradient(circle at 30% 30%, #ff2d78, #aa1155);
     box-shadow: 0 0 8px var(--bg-checker-ai-glow);
 }
 

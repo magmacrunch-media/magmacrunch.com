@@ -144,6 +144,26 @@ var UI = (function() {
         point.className = 'point ' + position + ' ' + (num % 2 === 0 ? 'light' : 'dark');
         point.dataset.point = num;
 
+        // Set grid column based on point number
+        // Grid: cols 1-6 (left half), col 7 (bar), cols 8-13 (right half)
+        var col;
+        if (position === 'top') {
+            // Top row: 13 14 15 16 17 18 | BAR | 19 20 21 22 23 24
+            if (num <= 18) {
+                col = num - 12; // 13→1, 14→2, ..., 18→6
+            } else {
+                col = num - 11; // 19→8, 20→9, ..., 24→13
+            }
+        } else {
+            // Bottom row: 12 11 10 9 8 7 | BAR | 6 5 4 3 2 1
+            if (num >= 7) {
+                col = 13 - num; // 12→1, 11→2, ..., 7→6
+            } else {
+                col = 14 - num; // 6→8, 5→9, ..., 1→13
+            }
+        }
+        point.style.gridColumn = col;
+
         // Point number
         var numEl = document.createElement('div');
         numEl.className = 'point-number';

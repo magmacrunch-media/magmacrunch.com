@@ -29,9 +29,22 @@
         min-height: 120px;
     }
 
+    .point.top::before,
+    .point.bottom::before {
+        border-left-width: 12px;
+        border-right-width: 12px;
+        border-top-width: 100px;
+        border-bottom-width: 100px;
+    }
+
     .checker {
-        width: 26px;
-        height: 26px;
+        width: 22px;
+        height: 22px;
+    }
+
+    .bar-checker {
+        width: 20px;
+        height: 20px;
     }
 
     .die {
@@ -101,7 +114,7 @@
     }
 
     .board {
-        min-height: 250px;
+        min-height: 260px;
         padding: 5px;
         gap: 1px;
     }
@@ -110,9 +123,17 @@
         min-height: 100px;
     }
 
+    .point.top::before,
+    .point.bottom::before {
+        border-left-width: 8px;
+        border-right-width: 8px;
+        border-top-width: 80px;
+        border-bottom-width: 80px;
+    }
+
     .checker {
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
     }
 
     .bar {
@@ -120,8 +141,12 @@
     }
 
     .bar-checker {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .point-number {
+        font-size: 6px;
     }
 
     .dice-area {
