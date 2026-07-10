@@ -139,12 +139,12 @@ var UI = (function() {
             '<div class="home-label ai-home">AI HOME (19-24)</div>';
         container.appendChild(homeLabels);
 
-        // Direction indicators
+        // Direction indicators — left side of board
         var directions = document.createElement('div');
         directions.className = 'directions';
         directions.innerHTML = 
-            '<div class="direction ai-direction">← AI moves this way</div>' +
-            '<div class="direction player-direction">You move this way →</div>';
+            '<div class="direction ai-direction">← AI HOME (19-24)</div>' +
+            '<div class="direction player-direction">YOUR HOME (1-6) →</div>';
         container.appendChild(directions);
 
         // Off areas

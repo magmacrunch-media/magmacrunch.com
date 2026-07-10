@@ -297,17 +297,21 @@
 
 /* ── Direction Indicators ───────────────────────────────────────────────────── */
 .directions {
+    position: absolute;
+    left: -140px;
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
-    justify-content: space-between;
-    margin-top: 5px;
-    padding: 0 5px;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .direction {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     letter-spacing: 0.05em;
-    opacity: 0.6;
+    opacity: 0.7;
+    white-space: nowrap;
 }
 
 .ai-direction {
@@ -321,6 +325,8 @@
 /* ── Point Numbers ──────────────────────────────────────────────────────────── */
 .point-number {
     position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 8px;
     color: var(--bg-text-dim);
     opacity: 0.6;

@@ -244,3 +244,20 @@
     background: var(--bg-checker-ai);
     color: var(--bg-bg);
 }
+
+/* ── Board Diagram ─────────────────────────────────────────────────────────── */
+.board-diagram {
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    overflow-x: auto;
+}
+
+.board-diagram pre {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--bg-text);
+    line-height: 1.6;
+    margin: 0;
+}
