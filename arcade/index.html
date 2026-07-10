@@ -744,6 +744,17 @@
                 </div>
             </a>
 
+            <a href="checkers/index.html" class="game-card" style="--card-color: #00f5ff">
+                <div class="card-inner">
+                    <div class="card-title">CHECKERS</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cCheckers" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">neon edition. classic checkers. vs ai opponent. mandatory jumps. king promotion.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
         </div>
     </div>
 
@@ -1582,6 +1593,62 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.font = '4px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('2', 36, 35);
+})();
+
+// cCheckers — Neon checkers board with pieces
+(function() {
+    const c = document.getElementById('cCheckers');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark board background
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // board border (neon cyan)
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+
+    // 8x8 grid
+    const sq = 8;
+    const startX = 4;
+    const startY = 4;
+
+    for (let r = 0; r < 8; r++) {
+        for (let col = 0; col < 8; col++) {
+            const x = startX + col * sq;
+            const y = startY + r * sq;
+            const isDark = (r + col) % 2 === 1;
+
+            // Square color
+            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillRect(x, y, sq, sq);
+
+            // Pieces
+            if (isDark) {
+                if (r < 3) {
+                    // AI pieces (magenta)
+                    ctx.fillStyle = '#ff2d78';
+                    ctx.beginPath();
+                    ctx.arc(x + sq/2, y + sq/2, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                } else if (r > 4) {
+                    // Player pieces (cyan)
+                    ctx.fillStyle = '#00f5ff';
+                    ctx.beginPath();
+                    ctx.arc(x + sq/2, y + sq/2, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
 })();
 
 // cSoko — Scandinavian Stud card fan preview

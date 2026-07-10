@@ -1,0 +1,185 @@
+/**
+ * board.css — Board rendering, squares, pieces
+ */
+
+/* ── Board Container ────────────────────────────────────────────────────────── */
+.board-container {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--ck-board-dark);
+    border: 3px solid var(--ck-board-border);
+    border-radius: 4px;
+    box-shadow: 
+        0 0 20px var(--ck-player-glow),
+        inset 0 0 20px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+/* ── Board Grid ─────────────────────────────────────────────────────────────── */
+.board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+/* ── Squares ────────────────────────────────────────────────────────────────── */
+.square {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.square.light {
+    background: var(--ck-board-light);
+}
+
+.square.dark {
+    background: var(--ck-board-dark);
+}
+
+.square.highlighted {
+    background: rgba(57, 255, 110, 0.2);
+}
+
+.square.highlighted-jump {
+    background: rgba(255, 224, 58, 0.2);
+}
+
+.square.selected {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Pieces ─────────────────────────────────────────────────────────────────── */
+.piece {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    z-index: 2;
+    /* Pixel art styling */
+    image-rendering: pixelated;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.piece.player {
+    background: radial-gradient(circle at 30% 30%, var(--ck-player), #0088aa);
+    box-shadow: 0 0 8px var(--ck-player-glow);
+}
+
+.piece.ai {
+    background: radial-gradient(circle at 30% 30%, var(--ck-ai), #aa1155);
+    box-shadow: 0 0 8px var(--ck-ai-glow);
+}
+
+.piece.king {
+    border: 2px solid rgba(255,255,255,0.6);
+}
+
+.piece.king::after {
+    content: '♛';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: rgba(255,255,255,0.9);
+    text-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.piece.player.king::after {
+    color: #ffffff;
+}
+
+.piece.ai.king::after {
+    color: #ffffff;
+}
+
+.piece.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--ck-selected-glow);
+    border-color: var(--ck-selected);
+}
+
+.piece.movable {
+    animation: piecePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes piecePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ── Piece Counts ───────────────────────────────────────────────────────────── */
+.piece-counts {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 0 10px;
+}
+
+.piece-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.piece-count-label {
+    font-size: 8px;
+    color: var(--ck-text-dim);
+}
+
+.piece-count-value {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.piece-count.player .piece-count-value {
+    color: var(--ck-player);
+    text-shadow: 0 0 8px var(--ck-player-glow);
+}
+
+.piece-count.ai .piece-count-value {
+    color: var(--ck-ai);
+    text-shadow: 0 0 8px var(--ck-ai-glow);
+}
+
+/* ── Promotion Animation ────────────────────────────────────────────────────── */
+.piece.promoting {
+    animation: promote 0.5s ease-out;
+}
+
+@keyframes promote {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* ── Jump Animation ─────────────────────────────────────────────────────────── */
+.piece.jumping {
+    animation: jump 0.3s ease-out;
+}
+
+@keyframes jump {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.8); }
+    100% { transform: scale(1); }
+}
+
+/* ── Capture Animation ──────────────────────────────────────────────────────── */
+.piece.captured {
+    animation: capture 0.3s ease-out forwards;
+}
+
+@keyframes capture {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(0); opacity: 0; }
+}

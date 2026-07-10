@@ -1,0 +1,178 @@
+/**
+ * responsive.css — Mobile layout adjustments
+ */
+
+/* ── Tablet ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .container {
+        padding: 50px 15px 30px;
+    }
+
+    .game-title {
+        font-size: 24px;
+    }
+
+    .game-subtitle {
+        font-size: 8px;
+    }
+
+    .start-btn {
+        font-size: 9px;
+        padding: 10px 20px;
+    }
+
+    .board-container {
+        max-width: 400px;
+    }
+
+    .piece {
+        width: 75%;
+        height: 75%;
+    }
+
+    .piece.king::after {
+        font-size: 14px;
+    }
+
+    .game-stats {
+        gap: 20px;
+    }
+
+    .stat-value {
+        font-size: 12px;
+    }
+
+    .piece-count-value {
+        font-size: 12px;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+
+    .modal-body p,
+    .modal-body li {
+        font-size: 8px;
+    }
+
+    .game-over-title {
+        font-size: 16px;
+    }
+
+    .game-over-stats {
+        gap: 20px;
+    }
+}
+
+/* ── Mobile ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .container {
+        padding: 45px 10px 20px;
+    }
+
+    .game-title {
+        font-size: 20px;
+    }
+
+    .start-buttons {
+        gap: 10px;
+    }
+
+    .start-btn {
+        font-size: 8px;
+        padding: 8px 16px;
+    }
+
+    .board-container {
+        max-width: 320px;
+        border-width: 2px;
+    }
+
+    .piece {
+        width: 70%;
+        height: 70%;
+    }
+
+    .piece.king::after {
+        font-size: 12px;
+    }
+
+    .game-header h1 {
+        font-size: 12px;
+    }
+
+    .game-stats {
+        gap: 15px;
+    }
+
+    .stat-label {
+        font-size: 7px;
+    }
+
+    .stat-value {
+        font-size: 10px;
+    }
+
+    .piece-count {
+        gap: 5px;
+    }
+
+    .piece-count-label {
+        font-size: 7px;
+    }
+
+    .piece-count-value {
+        font-size: 10px;
+    }
+
+    .game-message {
+        font-size: 8px;
+    }
+
+    .control-btn {
+        font-size: 7px;
+        padding: 6px 12px;
+    }
+
+    .modal-body h3 {
+        font-size: 10px;
+    }
+
+    .modal-body h4 {
+        font-size: 9px;
+    }
+
+    .modal-body p,
+    .modal-body li {
+        font-size: 7px;
+        line-height: 1.6;
+    }
+
+    .modal-footer button {
+        font-size: 8px;
+        padding: 8px 20px;
+    }
+
+    .game-over-title {
+        font-size: 14px;
+    }
+
+    .game-over-message {
+        font-size: 8px;
+    }
+
+    .game-over-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-over-stat-value {
+        font-size: 12px;
+    }
+
+    .mc-back {
+        font-size: 7px;
+        top: 8px;
+        left: 10px;
+    }
+}
