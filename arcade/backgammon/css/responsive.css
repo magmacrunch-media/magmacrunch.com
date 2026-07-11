@@ -21,6 +21,10 @@
         padding: 10px 20px;
     }
 
+    .board-container {
+        max-width: 500px;
+    }
+
     .board {
         min-height: 300px;
     }
@@ -110,6 +114,7 @@
     }
 
     .board-container {
+        max-width: 400px;
         border-width: 2px;
     }
 

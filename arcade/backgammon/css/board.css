@@ -6,9 +6,8 @@
 .board-container {
     position: relative;
     width: 100%;
-    max-width: 850px;
+    max-width: 600px;
     margin: 0 auto;
-    padding-right: 140px;
     background: var(--bg-board-bg);
     border: 3px solid var(--bg-point-light);
     border-radius: 8px;

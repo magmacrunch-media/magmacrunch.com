@@ -27,12 +27,12 @@
     }
 
     .board-container {
-        max-width: 400px;
+        max-width: 500px;
     }
 
     .side-panel {
         width: 100%;
-        max-width: 400px;
+        max-width: 500px;
         min-width: 0;
     }
 
@@ -101,7 +101,7 @@
     }
 
     .board-container {
-        max-width: 100%;
+        max-width: 400px;
         border-width: 2px;
     }
 
