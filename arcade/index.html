@@ -326,30 +326,57 @@
             padding: 8px 12px;
             letter-spacing: 0.1em;
             text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-user-count {
+            font-size: 7px;
+            color: #0a0612;
         }
 
         .chat-name-row {
-            padding: 8px 12px;
+            padding: 6px 12px;
             border-bottom: 1px solid #3a2d5c;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .chat-name-row input {
-            width: 100%;
+        .chat-my-name {
+            font-size: 9px;
+            color: #39ff6e;
+            font-family: 'Courier Prime', monospace;
+        }
+
+        .chat-edit-name {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            padding: 2px;
+        }
+
+        .chat-edit-name:hover {
+            opacity: 0.7;
+        }
+
+        .chat-name-input {
             background: #0a0612;
-            border: 1px solid #3a2d5c;
-            padding: 6px 10px;
+            border: 1px solid #39ff6e;
             color: #f0f8ff;
             font-family: 'Courier Prime', monospace;
-            font-size: 11px;
+            font-size: 9px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            width: 100px;
+            max-width: 100px;
+        }
+
+        .chat-name-input:focus {
             outline: none;
-        }
-
-        .chat-name-row input:focus {
-            border-color: #ff2e9c;
-        }
-
-        .chat-name-row input::placeholder {
-            color: #5a5a6a;
+            border-color: #39ff6e;
         }
 
         .chat-messages {
@@ -413,6 +440,76 @@
 
         .chat-input button:hover {
             background: #ff5ab5;
+        }
+
+        /* Chat Tabs */
+        .chat-tabs {
+            display: flex;
+            border-bottom: 1px solid #3a2d5c;
+        }
+
+        .chat-tab {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #5a5a6a;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .chat-tab.active {
+            color: #39ff6e;
+            border-bottom-color: #39ff6e;
+        }
+
+        .chat-tab:hover {
+            color: #f0f8ff;
+        }
+
+        /* Chat Online Users Panel */
+        .chat-online {
+            height: 120px;
+            overflow-y: auto;
+            padding: 8px 12px;
+            border-bottom: 1px solid #3a2d5c;
+        }
+
+        .chat-online-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chat-online-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .chat-online-name {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #f0f8ff;
+        }
+
+        .chat-online-status {
+            font-size: 8px;
+            color: #5a5a6a;
+            margin-left: auto;
+        }
+
+        .chat-typing {
+            font-size: 8px;
+            color: #5a5a6a;
+            padding: 4px 12px;
+            font-style: italic;
         }
 
         @media (max-width: 640px) {
@@ -654,13 +751,26 @@
         </div>
 
         <div class="arcade-chat">
-            <div class="chat-header">// ARCADE CHAT //</div>
-            <div class="chat-name-row">
-                <input id="chatName" type="text" placeholder="Your name" maxlength="20">
+            <div class="chat-header">
+                <span id="chatHeaderTitle">// ARCADE CHAT //</span>
+                <span id="chatOnlineCount" class="chat-user-count">0</span>
             </div>
-            <div class="chat-messages" id="chatMessages">
+            <div class="chat-name-row">
+                <span id="chatMyName" class="chat-my-name"></span>
+                <button id="chatEditName" class="chat-edit-name">✏️</button>
+            </div>
+            <div class="chat-tabs">
+                <button class="chat-tab active" data-tab="global">GLOBAL</button>
+                <button class="chat-tab" data-tab="online">ONLINE</button>
+            </div>
+            <div class="chat-messages" id="chatMessagesGlobal">
                 <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
             </div>
+            <div class="chat-online" id="chatOnline" style="display:none;">
+                <div id="chatOnlineList"></div>
+            </div>
+            <div class="chat-messages" id="chatMessagesRoom" style="display:none;"></div>
+            <div class="chat-typing" id="chatTyping" style="display:none;"></div>
             <div class="chat-input">
                 <input id="chatInput" type="text" placeholder="Type a message..." maxlength="200">
                 <button id="chatSend">SEND</button>
@@ -1292,29 +1402,27 @@ animateCoin(document.getElementById('coinCanvas2'));
 })();
 </script>
 
+<script src="shared/chat.js"></script>
 <script>
 // ─────────────────────────────────────────────────────────
-// SERVER STATUS + GLOBAL CHAT
+// SERVER STATUS + GLOBAL CHAT (using shared/chat.js)
 // ─────────────────────────────────────────────────────────
 (function() {
-    const CHAT_SERVER = (() => {
-        try {
-            const param = new URLSearchParams(window.location.search).get('server');
-            if (param) return 'ws://' + param;
-        } catch(e) {}
-        var h = window.location.hostname;
-        if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
-        return 'ws://98.49.52.35:8768';
-    })();
-    let chatSocket = null;
-    let userName = localStorage.getItem('arcade_username') || '';
-
     // ── Server Status ──────────────────────────────────────
     const statusDot = document.getElementById('mpServerStatus');
     const statusText = document.getElementById('mpServerStatusText');
 
     function checkStatus() {
         try {
+            const CHAT_SERVER = (() => {
+                try {
+                    const param = new URLSearchParams(window.location.search).get('server');
+                    if (param) return 'ws://' + param;
+                } catch(e) {}
+                var h = window.location.hostname;
+                if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
+                return 'ws://98.49.52.35:8768';
+            })();
             const testSocket = new WebSocket(CHAT_SERVER);
             const timeout = setTimeout(() => {
                 testSocket.close();
@@ -1343,106 +1451,8 @@ animateCoin(document.getElementById('coinCanvas2'));
     // Check status every 30 seconds
     setInterval(checkStatus, 30000);
 
-    // ── Chat Connection ────────────────────────────────────
-    function connectChat() {
-        try {
-            chatSocket = new WebSocket(CHAT_SERVER);
-
-            chatSocket.onopen = () => {
-                console.log('[Chat] Connected');
-            };
-
-            chatSocket.onmessage = (e) => {
-                const msg = JSON.parse(e.data);
-                if (msg.type === 'history') {
-                    msg.messages.forEach(addChatMessage);
-                } else if (msg.type === 'chat') {
-                    addChatMessage(msg);
-                }
-            };
-
-            chatSocket.onclose = () => {
-                console.log('[Chat] Disconnected, reconnecting in 5s...');
-                setTimeout(connectChat, 5000);
-            };
-
-            chatSocket.onerror = () => {
-                chatSocket.close();
-            };
-        } catch(e) {
-            setTimeout(connectChat, 5000);
-        }
-    }
-
-    function addChatMessage(msg) {
-        const div = document.createElement('div');
-        div.className = 'chat-msg';
-        div.innerHTML = `<span class="chat-name" style="color: ${msg.color || '#ff2e9c'}">${escapeHtml(msg.from)}:</span> ${escapeHtml(msg.text)}`;
-        const chatMessages = document.getElementById('chatMessages');
-        chatMessages.appendChild(div);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // ── Name Field ─────────────────────────────────────────
-    const chatName = document.getElementById('chatName');
-    const chatInput = document.getElementById('chatInput');
-    const chatSend = document.getElementById('chatSend');
-
-    // Restore saved name
-    if (userName) {
-        chatName.value = userName;
-    }
-
-    // Save name on change
-    chatName.addEventListener('change', () => {
-        const name = chatName.value.trim();
-        if (name) {
-            userName = name;
-            localStorage.setItem('arcade_username', name);
-        }
-    });
-
-    // ── Chat Input ─────────────────────────────────────────
-    function sendChat() {
-        const text = chatInput.value.trim();
-        if (!text) return;
-
-        // Get name from input field
-        const name = chatName.value.trim();
-        if (!name) {
-            chatName.focus();
-            chatName.style.borderColor = '#ff3d3d';
-            setTimeout(() => { chatName.style.borderColor = ''; }, 1000);
-            return;
-        }
-
-        // Save name to localStorage
-        userName = name;
-        localStorage.setItem('arcade_username', name);
-
-        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
-            chatSocket.send(JSON.stringify({
-                type: 'chat',
-                name: userName,
-                text: text
-            }));
-            chatInput.value = '';
-        }
-    }
-
-    chatSend.addEventListener('click', sendChat);
-    chatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendChat();
-    });
-
-    // Connect to chat on load
-    connectChat();
+    // ── Connect chat using shared/chat.js ──────────────────
+    Chat.connect();
 })();
 </script>
 
