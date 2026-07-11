@@ -1,12 +1,15 @@
 """
-chat-server.py — Global arcade chat + server status
+chat-server.py — Global arcade chat + room sub-chats + server status
 Run with:  python chat-server.py [--port PORT]
 Requires:  pip install websockets
 
 Provides:
   - Global chat room for arcade visitors
+  - Room sub-chats for multiplayer games (open to anyone with room code)
+  - Per-room user lists
+  - Typing indicators (global and room)
   - Server status pings (checks if game servers are responding)
-  - In-memory message history (last 100 messages)
+  - In-memory message history (last 100 global, 50 per room)
 """
 
 import argparse
@@ -17,20 +20,26 @@ import websockets
 
 # ── Configuration ────────────────────────────────────────────────────────────
 
-MAX_MESSAGES = 100
+MAX_GLOBAL_MESSAGES = 100
+MAX_ROOM_MESSAGES = 50
 
 # Game servers to check status for
 GAME_SERVERS = {
-    'SORRY':            {'host': 'localhost', 'port': 8765},
-    'Cribbage':         {'host': 'localhost', 'port': 8766},
+    'SORRY':             {'host': 'localhost', 'port': 8765},
+    'Cribbage':          {'host': 'localhost', 'port': 8766},
     'Scandinavian Stud': {'host': 'localhost', 'port': 8767},
+    'Checkers':          {'host': 'localhost', 'port': 8770},
+    'Backgammon':        {'host': 'localhost', 'port': 8771},
 }
 
 # ── State ────────────────────────────────────────────────────────────────────
 
-connected_clients = set()
-messages = []  # Chat history (last MAX_MESSAGES)
-user_colors = {}  # websocket -> color
+connected_clients = set()       # all WebSocket connections
+messages = []                   # global chat history (last MAX_GLOBAL_MESSAGES)
+user_info = {}                  # websocket -> { name, color, rooms: set() }
+rooms = {}                      # room_code -> set(websocket)
+room_messages = {}              # room_code -> [messages] (last MAX_ROOM_MESSAGES)
+typing_debounce = {}            # websocket -> last typing send time
 
 # Color palette for chat users
 PALETTE = [
@@ -77,14 +86,50 @@ async def get_all_statuses():
 # ── Broadcast ────────────────────────────────────────────────────────────────
 
 async def broadcast(msg, exclude=None):
-    """Send JSON message to all connected clients."""
+    """Send JSON message to all connected clients (global)."""
     data = json.dumps(msg)
-    targets = [ws for ws in connected_clients if ws != exclude]
-    for ws in targets:
-        try:
-            await ws.send(data)
-        except websockets.ConnectionClosed:
-            pass
+    for ws in list(connected_clients):
+        if ws != exclude:
+            try:
+                await ws.send(data)
+            except websockets.ConnectionClosed:
+                pass
+
+
+async def broadcast_to_room(room_code, msg, exclude=None):
+    """Send to all clients in a specific room."""
+    data = json.dumps(msg)
+    for ws in list(rooms.get(room_code, set())):
+        if ws != exclude:
+            try:
+                await ws.send(data)
+            except websockets.ConnectionClosed:
+                pass
+
+
+async def broadcast_room_users(room_code):
+    """Send updated user list to all room members."""
+    users = []
+    for ws in rooms.get(room_code, set()):
+        info = user_info.get(ws, {})
+        users.append({
+            'name': info.get('name', '?'),
+            'color': info.get('color', '#fff')
+        })
+    await broadcast_to_room(room_code, {
+        'type': 'room_users',
+        'room': room_code,
+        'users': users,
+        'count': len(users)
+    })
+
+
+async def broadcast_global_users():
+    """Send total connected user count to all."""
+    await broadcast({
+        'type': 'global_users',
+        'count': len(connected_clients)
+    })
 
 
 # ── Handler ──────────────────────────────────────────────────────────────────
@@ -93,13 +138,17 @@ async def handler(websocket):
     """Handle a new chat connection."""
     connected_clients.add(websocket)
     user_color = get_next_color()
-    user_colors[websocket] = user_color
+    user_info[websocket] = {
+        'name': 'Anonymous',
+        'color': user_color,
+        'rooms': set()
+    }
 
     try:
-        # Send chat history
+        # Send global history
         await websocket.send(json.dumps({
             'type': 'history',
-            'messages': messages[-MAX_MESSAGES:]
+            'messages': messages[-MAX_GLOBAL_MESSAGES:]
         }))
 
         # Send current server statuses
@@ -108,6 +157,15 @@ async def handler(websocket):
             'type': 'status',
             'statuses': statuses
         }))
+
+        # Send global user count
+        await websocket.send(json.dumps({
+            'type': 'global_users',
+            'count': len(connected_clients)
+        }))
+
+        # Broadcast updated global user count to everyone
+        await broadcast_global_users()
 
         # Main message loop
         async for raw in websocket:
@@ -118,19 +176,91 @@ async def handler(websocket):
 
             msg_type = msg.get('type')
 
-            if msg_type == 'chat':
-                # Chat message
+            if msg_type == 'set_name':
+                # Set/update display name
+                user_info[websocket]['name'] = msg.get('name', 'Anonymous')[:20]
+
+            elif msg_type == 'join_room':
+                # Join a room sub-chat
+                room = msg.get('room', '').upper()
+                if not room:
+                    continue
+                if room not in rooms:
+                    rooms[room] = set()
+                rooms[room].add(websocket)
+                user_info[websocket]['rooms'].add(room)
+
+                # Send room history
+                await websocket.send(json.dumps({
+                    'type': 'room_history',
+                    'room': room,
+                    'messages': room_messages.get(room, [])[-MAX_ROOM_MESSAGES:]
+                }))
+
+                # Broadcast updated user list to room
+                await broadcast_room_users(room)
+
+            elif msg_type == 'leave_room':
+                # Leave a room sub-chat
+                room = msg.get('room', '').upper()
+                if room in rooms:
+                    rooms[room].discard(websocket)
+                    if not rooms[room]:
+                        del rooms[room]
+                if room in user_info.get(websocket, {}).get('rooms', set()):
+                    user_info[websocket]['rooms'].discard(room)
+                if room and room in rooms:
+                    await broadcast_room_users(room)
+
+            elif msg_type == 'chat':
+                # Chat message (global or room)
+                room = msg.get('room')
+                text = msg.get('text', '')[:200]
+                name = user_info[websocket]['name']
+                color = user_info[websocket]['color']
+
                 chat_msg = {
-                    'type': 'chat',
-                    'from': msg.get('name', 'Anonymous')[:20],
-                    'text': msg.get('text', '')[:200],
-                    'color': user_color,
+                    'type': 'room_chat' if room else 'chat',
+                    'from': name,
+                    'text': text,
+                    'color': color,
+                    'room': room,
                     'timestamp': time.time()
                 }
-                messages.append(chat_msg)
-                if len(messages) > MAX_MESSAGES:
-                    messages.pop(0)
-                await broadcast(chat_msg)
+
+                if room:
+                    # Room message
+                    if room not in room_messages:
+                        room_messages[room] = []
+                    room_messages[room].append(chat_msg)
+                    if len(room_messages[room]) > MAX_ROOM_MESSAGES:
+                        room_messages[room].pop(0)
+                    await broadcast_to_room(room, chat_msg)
+                else:
+                    # Global message
+                    messages.append(chat_msg)
+                    if len(messages) > MAX_GLOBAL_MESSAGES:
+                        messages.pop(0)
+                    await broadcast(chat_msg)
+
+            elif msg_type == 'typing':
+                # Typing indicator
+                room = msg.get('room')
+                now = time.time()
+                last = typing_debounce.get(websocket, 0)
+                if now - last < 2:  # Debounce: max once per 2 seconds
+                    continue
+                typing_debounce[websocket] = now
+
+                typing_msg = {
+                    'type': 'typing',
+                    'from': user_info[websocket]['name'],
+                    'room': room
+                }
+                if room:
+                    await broadcast_to_room(room, typing_msg, exclude=websocket)
+                else:
+                    await broadcast(typing_msg, exclude=websocket)
 
             elif msg_type == 'status':
                 # Status request
@@ -143,8 +273,17 @@ async def handler(websocket):
     except websockets.ConnectionClosed:
         pass
     finally:
+        # Cleanup: leave all rooms, remove from global
+        for room in list(user_info.get(websocket, {}).get('rooms', set())):
+            if room in rooms:
+                rooms[room].discard(websocket)
+                if not rooms[room]:
+                    del rooms[room]
+                await broadcast_room_users(room)
         connected_clients.discard(websocket)
-        user_colors.pop(websocket, None)
+        user_info.pop(websocket, None)
+        typing_debounce.pop(websocket, None)
+        await broadcast_global_users()
 
 
 # ── Status Broadcast Loop ───────────────────────────────────────────────────

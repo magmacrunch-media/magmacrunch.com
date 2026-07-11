@@ -290,6 +290,84 @@ body {
     background: #fff;
 }
 
+/* ── Chat Tabs ─────────────────────────────────────────────────────────────── */
+.chat-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+}
+
+.chat-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--bg-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.chat-tab.active {
+    color: var(--bg-highlight);
+    border-bottom-color: var(--bg-highlight);
+}
+
+.chat-tab:hover {
+    color: var(--bg-text);
+}
+
+/* ── Chat Header with User Count ───────────────────────────────────────────── */
+.game-chat .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-user-count {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+}
+
+/* ── Chat User List ────────────────────────────────────────────────────────── */
+.chat-users {
+    padding: 4px 8px;
+    border-top: 1px solid rgba(0,245,255,0.2);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.chat-users-header {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    margin-bottom: 4px;
+}
+
+.chat-user {
+    font-size: 8px;
+    color: var(--bg-text);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-user-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* ── Chat Typing Indicator ─────────────────────────────────────────────────── */
+.chat-typing {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    padding: 4px 8px;
+    font-style: italic;
+}
+
 /* ── Board Area ─────────────────────────────────────────────────────────────── */
 .board-area {
     position: relative;

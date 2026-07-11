@@ -1,0 +1,327 @@
+/**
+ * chat.js — Global + Room chat client
+ * Shared by multiplayer games (checkers, backgammon, etc.)
+ * Place in arcade/shared/chat.js and include via script tag.
+ *
+ * Requires DOM elements:
+ *   #chatMessagesGlobal, #chatMessagesRoom, #chatRoomTab, #chatRoomCode,
+ *   #chatHeaderTitle, #chatGlobalUsers, #chatUsers, #chatUserList,
+ *   #chatTyping, #chatInput, #chatSend
+ */
+
+var Chat = (function() {
+
+    // ── Server URL ──────────────────────────────────────────────────────────
+    var CHAT_SERVER = (() => {
+        try {
+            var param = new URLSearchParams(window.location.search).get('server');
+            if (param) return 'ws://' + param;
+        } catch(e) {}
+        var h = window.location.hostname;
+        if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
+        return 'ws://98.49.52.35:8768';
+    })();
+
+    // ── State ───────────────────────────────────────────────────────────────
+    var socket = null;
+    var currentRoom = null;
+    var typingTimeout = null;
+    var typingHideTimer = null;
+
+    // ── DOM Elements ────────────────────────────────────────────────────────
+    var el = {};
+
+    function cacheElements() {
+        el.globalMessages = document.getElementById('chatMessagesGlobal');
+        el.roomMessages   = document.getElementById('chatMessagesRoom');
+        el.roomTab        = document.getElementById('chatRoomTab');
+        el.roomCode       = document.getElementById('chatRoomCode');
+        el.headerTitle    = document.getElementById('chatHeaderTitle');
+        el.globalUsers    = document.getElementById('chatGlobalUsers');
+        el.usersContainer = document.getElementById('chatUsers');
+        el.userList       = document.getElementById('chatUserList');
+        el.typing         = document.getElementById('chatTyping');
+        el.input          = document.getElementById('chatInput');
+        el.sendBtn        = document.getElementById('chatSend');
+    }
+
+    // ── Connection ──────────────────────────────────────────────────────────
+    function connect() {
+        if (socket && socket.readyState === WebSocket.OPEN) return;
+        cacheElements();
+
+        socket = new WebSocket(CHAT_SERVER);
+
+        socket.onopen = function() {
+            console.log('[Chat] Connected');
+            addMessage('global', { from: 'system', text: 'Connected to arcade chat', color: '#8a7fa8' });
+            // Set name from localStorage
+            var name = localStorage.getItem('arcade_username');
+            if (name) {
+                socket.send(JSON.stringify({ type: 'set_name', name: name }));
+            }
+        };
+
+        socket.onmessage = function(e) {
+            try {
+                var msg = JSON.parse(e.data);
+                handleMessage(msg);
+            } catch(err) {}
+        };
+
+        socket.onclose = function() {
+            console.log('[Chat] Disconnected, reconnecting in 5s...');
+            setTimeout(connect, 5000);
+        };
+
+        socket.onerror = function() {
+            socket.close();
+        };
+
+        // Wire up send button and enter key
+        if (el.sendBtn) {
+            el.sendBtn.addEventListener('click', send);
+        }
+        if (el.input) {
+            el.input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') send();
+            });
+            // Typing indicator
+            el.input.addEventListener('input', handleTyping);
+        }
+
+        // Wire up tabs
+        initTabs();
+    }
+
+    function disconnect() {
+        if (currentRoom) {
+            leaveRoom(currentRoom);
+        }
+        if (socket) {
+            socket.close();
+            socket = null;
+        }
+    }
+
+    // ── Message Handler ─────────────────────────────────────────────────────
+    function handleMessage(msg) {
+        switch(msg.type) {
+            case 'history':
+                if (msg.messages) {
+                    msg.messages.forEach(function(m) { addMessage('global', m); });
+                }
+                break;
+
+            case 'chat':
+                addMessage('global', msg);
+                break;
+
+            case 'room_history':
+                if (msg.messages) {
+                    msg.messages.forEach(function(m) { addMessage('room', m); });
+                }
+                break;
+
+            case 'room_chat':
+                addMessage('room', msg);
+                break;
+
+            case 'room_users':
+                updateUserList(msg.users);
+                break;
+
+            case 'typing':
+                showTyping(msg.from, msg.room);
+                break;
+
+            case 'global_users':
+                updateGlobalUserCount(msg.count);
+                break;
+
+            case 'status':
+                // Server status — not handled here (handled by main page)
+                break;
+        }
+    }
+
+    // ── Room Management ─────────────────────────────────────────────────────
+    function joinRoom(roomCode) {
+        currentRoom = roomCode;
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'join_room', room: roomCode }));
+            // Set name if available
+            var name = localStorage.getItem('arcade_username');
+            if (name) {
+                socket.send(JSON.stringify({ type: 'set_name', name: name }));
+            }
+        }
+        showRoomTab(roomCode);
+    }
+
+    function leaveRoom(roomCode) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'leave_room', room: roomCode }));
+        }
+        if (currentRoom === roomCode) {
+            currentRoom = null;
+            hideRoomTab();
+        }
+    }
+
+    // ── Send ────────────────────────────────────────────────────────────────
+    function send() {
+        if (!el.input || !socket || socket.readyState !== WebSocket.OPEN) return;
+        var text = el.input.value.trim();
+        if (!text) return;
+
+        var name = localStorage.getItem('arcade_username') || 'Player';
+        socket.send(JSON.stringify({ type: 'set_name', name: name }));
+
+        var msg = { type: 'chat', text: text };
+        if (currentRoom) msg.room = currentRoom;
+        socket.send(JSON.stringify(msg));
+
+        // Show own message locally (server broadcasts to others, not sender)
+        addMessage(currentRoom ? 'room' : 'global', {
+            from: name,
+            text: text,
+            color: '#39ff6e'  // Highlight own messages
+        });
+
+        el.input.value = '';
+    }
+
+    // ── Typing Indicator ────────────────────────────────────────────────────
+    function handleTyping() {
+        if (typingTimeout) return;
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            var msg = { type: 'typing' };
+            if (currentRoom) msg.room = currentRoom;
+            socket.send(JSON.stringify(msg));
+        }
+        typingTimeout = setTimeout(function() {
+            typingTimeout = null;
+        }, 2000);
+    }
+
+    function showTyping(name, room) {
+        // Only show if relevant to current view
+        var isGlobal = !room && !currentRoom;
+        var isRoom = room && room === currentRoom;
+        if (!isGlobal && !isRoom) return;
+        if (!el.typing) return;
+
+        el.typing.textContent = name + ' is typing...';
+        el.typing.style.display = 'block';
+        if (typingHideTimer) clearTimeout(typingHideTimer);
+        typingHideTimer = setTimeout(function() {
+            el.typing.style.display = 'none';
+        }, 3000);
+    }
+
+    // ── UI Updates ──────────────────────────────────────────────────────────
+    function addMessage(target, msg) {
+        var containerId = (target === 'room') ? 'chatMessagesRoom' : 'chatMessagesGlobal';
+        var container = document.getElementById(containerId);
+        if (!container) return;
+
+        var div = document.createElement('div');
+        div.className = 'chat-msg';
+        if (msg.from === 'system') div.className += ' system';
+        div.innerHTML = '<span class="chat-name" style="color:' + escapeHtml(msg.color || '#ff2e9c') + '">' +
+            escapeHtml(msg.from) + ':</span> ' + escapeHtml(msg.text);
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function updateUserList(users) {
+        if (!el.userList) return;
+        el.userList.innerHTML = '';
+        if (users) {
+            users.forEach(function(u) {
+                var div = document.createElement('div');
+                div.className = 'chat-user';
+                div.innerHTML = '<span class="chat-user-dot" style="background:' + escapeHtml(u.color) + '"></span>' + escapeHtml(u.name);
+                el.userList.appendChild(div);
+            });
+        }
+    }
+
+    function updateGlobalUserCount(count) {
+        if (el.globalUsers) {
+            el.globalUsers.textContent = count + ' online';
+        }
+    }
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // ── Tab Management ──────────────────────────────────────────────────────
+    function initTabs() {
+        var tabs = document.querySelectorAll('.chat-tab');
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                switchTab(this.dataset.tab);
+            });
+        });
+    }
+
+    function switchTab(tab) {
+        if (!el.globalMessages || !el.roomMessages) return;
+
+        var tabs = document.querySelectorAll('.chat-tab');
+        tabs.forEach(function(t) { t.classList.remove('active'); });
+
+        if (tab === 'global') {
+            el.globalMessages.style.display = '';
+            el.roomMessages.style.display = 'none';
+            if (el.usersContainer) el.usersContainer.style.display = 'none';
+            var globalTab = document.querySelector('[data-tab="global"]');
+            if (globalTab) globalTab.classList.add('active');
+        } else {
+            el.globalMessages.style.display = 'none';
+            el.roomMessages.style.display = '';
+            if (el.usersContainer) el.usersContainer.style.display = '';
+            var roomTab = document.querySelector('[data-tab="room"]');
+            if (roomTab) roomTab.classList.add('active');
+        }
+    }
+
+    function showRoomTab(roomCode) {
+        if (el.roomTab) {
+            el.roomTab.style.display = '';
+        }
+        if (el.roomCode) {
+            el.roomCode.textContent = roomCode;
+        }
+        if (el.headerTitle) {
+            el.headerTitle.textContent = '// ROOM ' + roomCode + ' //';
+        }
+        switchTab('room');
+    }
+
+    function hideRoomTab() {
+        if (el.roomTab) {
+            el.roomTab.style.display = 'none';
+        }
+        if (el.headerTitle) {
+            el.headerTitle.textContent = '// ARCADE CHAT //';
+        }
+        switchTab('global');
+    }
+
+    // ── Public API ──────────────────────────────────────────────────────────
+    return {
+        connect: connect,
+        disconnect: disconnect,
+        joinRoom: joinRoom,
+        leaveRoom: leaveRoom,
+        send: send,
+        getCurrentRoom: function() { return currentRoom; }
+    };
+
+})();

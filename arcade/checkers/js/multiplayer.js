@@ -10,6 +10,7 @@ var Multiplayer = (function() {
     var onStateUpdate = null;
     var onGameStart = null;
     var onGameEnd = null;
+    var _roomCode = null;
 
     function connect() {
         MP.connect();
@@ -59,6 +60,7 @@ var Multiplayer = (function() {
 
     MP.onWelcome = function(data) {
         console.log('[MP] Welcome:', data.playerName, 'room:', data.room);
+        _roomCode = data.room;
         if (onStateUpdate) {
             onStateUpdate({ type: 'welcome', room: data.room, isHost: data.isHost });
         }
@@ -95,6 +97,11 @@ var Multiplayer = (function() {
         }
 
         console.log('[MP] Game started. My side:', mySide);
+
+        // Auto-join room chat
+        if (_roomCode && typeof Chat !== 'undefined') {
+            Chat.joinRoom(_roomCode);
+        }
 
         if (onGameStart) {
             onGameStart(state, mySide);
@@ -134,6 +141,10 @@ var Multiplayer = (function() {
     MP.onDisconnected = function() {
         if (isActive) {
             isActive = false;
+            // Leave room chat
+            if (_roomCode && typeof Chat !== 'undefined') {
+                Chat.leaveRoom(_roomCode);
+            }
             if (onStateUpdate) {
                 onStateUpdate({ type: 'disconnected' });
             }
@@ -143,6 +154,10 @@ var Multiplayer = (function() {
     MP.onPlayerQuit = function(msg) {
         if (isActive) {
             isActive = false;
+            // Leave room chat
+            if (_roomCode && typeof Chat !== 'undefined') {
+                Chat.leaveRoom(_roomCode);
+            }
             if (onGameEnd) {
                 onGameEnd(true, msg.name, null);
             }
