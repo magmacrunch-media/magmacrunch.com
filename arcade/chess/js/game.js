@@ -463,6 +463,7 @@ var Game = (function() {
 
     function notifyStateChange() {
         if (onStateChange) {
+            var checkOwner = isMultiplayer ? mySide : currentPlayer;
             onStateChange({
                 state: state,
                 currentPlayer: currentPlayer,
@@ -471,7 +472,7 @@ var Game = (function() {
                 moveNotations: moveNotations,
                 timeRemaining: timeRemaining,
                 settings: settings,
-                inCheck: Board.isInCheck(currentPlayer)
+                inCheck: checkOwner ? Board.isInCheck(checkOwner) : false
             });
         }
     }

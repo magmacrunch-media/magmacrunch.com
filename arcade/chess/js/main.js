@@ -896,9 +896,6 @@ var UI = (function() {
                 if (!moved) {
                     Game.selectPiece(row, col);
                 } else if (Game.getIsMultiplayer()) {
-                    // Send move to server
-                    var sel = Game.getSelectedPiece();
-                    // The move was already applied locally, send it
                     Multiplayer.sendMove(
                         { row: selectedPiece.row, col: selectedPiece.col },
                         { row: row, col: col }
@@ -1012,7 +1009,7 @@ var UI = (function() {
         var container = document.getElementById('promotionPieces');
         container.innerHTML = '';
 
-        var pieceColor = Game.getIsMultiplayer() ? '#00f5ff' : CH.PLAYER;
+        var pieceColor = Game.getIsMultiplayer() ? Game.getMySide() : CH.PLAYER;
 
         for (var i = 0; i < pieces.length; i++) {
             var pieceBtn = document.createElement('div');
