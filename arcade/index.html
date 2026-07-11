@@ -637,6 +637,28 @@
         <canvas id="coinCanvas2" width="16" height="16" title="insert coin"></canvas>
     </div>
 
+    <!-- Server Status + Chat -->
+    <div class="arcade-community">
+        <div class="mp-status">
+            <div class="mp-status-dot" id="mpServerStatus"></div>
+            <span class="mp-status-text" id="mpServerStatusText">CHECKING...</span>
+        </div>
+
+        <div class="arcade-chat">
+            <div class="chat-header">// ARCADE CHAT //</div>
+            <div class="chat-name-row">
+                <input id="chatName" type="text" placeholder="Your name" maxlength="20">
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
+            </div>
+            <div class="chat-input">
+                <input id="chatInput" type="text" placeholder="Type a message..." maxlength="200">
+                <button id="chatSend">SEND</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Collections -->
     <div class="game-section">
         <div class="section-header" style="border-color: #fff733; color: #fff733; text-shadow: 0 0 12px rgba(255,224,58,0.6);">// COLLECTIONS //</div>
@@ -686,28 +708,6 @@
                 </div>
             </a>
 
-        </div>
-    </div>
-
-    <!-- Server Status + Chat -->
-    <div class="arcade-community">
-        <div class="mp-status">
-            <div class="mp-status-dot" id="mpServerStatus"></div>
-            <span class="mp-status-text" id="mpServerStatusText">CHECKING...</span>
-        </div>
-
-        <div class="arcade-chat">
-            <div class="chat-header">// ARCADE CHAT //</div>
-            <div class="chat-name-row">
-                <input id="chatName" type="text" placeholder="Your name" maxlength="20">
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
-            </div>
-            <div class="chat-input">
-                <input id="chatInput" type="text" placeholder="Type a message..." maxlength="200">
-                <button id="chatSend">SEND</button>
-            </div>
         </div>
     </div>
 
