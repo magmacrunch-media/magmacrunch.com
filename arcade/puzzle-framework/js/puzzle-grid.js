@@ -1,25 +1,29 @@
 /**
  * puzzle-grid.js — Core grid engine for sliding tile puzzles
- * Provides: NxN grid, rotation-based movement, move detection
+ * Provides: NxM grid, rotation-based movement, move detection
+ * Supports both square (NxN) and rectangular (CxR) grids
  */
 
 var PuzzleGrid = (function() {
 
     /**
      * Create a new PuzzleGrid
-     * @param {number} size - Grid dimension (default: 4)
+     * @param {number} cols - Grid columns (or grid dimension for square grids)
+     * @param {number} rows - Grid rows (optional, defaults to cols for square grids)
      */
-    function create(size) {
-        size = size || 4;
+    function create(cols, rows) {
+        rows = rows || cols;
         var board = [];
-        for (var r = 0; r < size; r++) {
+        for (var r = 0; r < rows; r++) {
             board[r] = [];
-            for (var c = 0; c < size; c++) {
+            for (var c = 0; c < cols; c++) {
                 board[r][c] = 0;
             }
         }
         return {
-            size: size,
+            size: cols,
+            cols: cols,
+            rows: rows,
             board: board
         };
     }
@@ -29,11 +33,13 @@ var PuzzleGrid = (function() {
      */
     function clone(grid) {
         var copy = [];
-        for (var r = 0; r < grid.size; r++) {
+        for (var r = 0; r < grid.rows; r++) {
             copy[r] = grid.board[r].slice();
         }
         return {
             size: grid.size,
+            cols: grid.cols,
+            rows: grid.rows,
             board: copy
         };
     }
@@ -44,8 +50,8 @@ var PuzzleGrid = (function() {
      */
     function getEmptyCells(grid) {
         var cells = [];
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 if (grid.board[r][c] === 0) {
                     cells.push({ row: r, col: c });
                 }
@@ -63,10 +69,15 @@ var PuzzleGrid = (function() {
 
     /**
      * Rotate grid 90 degrees clockwise
+     * Only works for square grids
      * @param {object} grid - The grid to rotate
      * @param {number} times - Number of 90-degree rotations (default: 1)
      */
     function rotate(grid, times) {
+        if (grid.cols !== grid.rows) {
+            console.warn('PuzzleGrid.rotate: rotation not supported for non-square grids');
+            return;
+        }
         times = times || 1;
         for (var t = 0; t < times; t++) {
             var newBoard = [];
@@ -86,9 +97,9 @@ var PuzzleGrid = (function() {
      * Compare two grids for equality
      */
     function equals(grid1, grid2) {
-        if (grid1.size !== grid2.size) return false;
-        for (var r = 0; r < grid1.size; r++) {
-            for (var c = 0; c < grid1.size; c++) {
+        if (grid1.cols !== grid2.cols || grid1.rows !== grid2.rows) return false;
+        for (var r = 0; r < grid1.rows; r++) {
+            for (var c = 0; c < grid1.cols; c++) {
                 if (grid1.board[r][c] !== grid2.board[r][c]) return false;
             }
         }
@@ -100,14 +111,12 @@ var PuzzleGrid = (function() {
      * Used for game-over detection in 2048-style games
      */
     function hasAdjacentMatches(grid) {
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 var val = grid.board[r][c];
                 if (val === 0) continue;
-                // Check right neighbor
-                if (c < grid.size - 1 && grid.board[r][c + 1] === val) return true;
-                // Check bottom neighbor
-                if (r < grid.size - 1 && grid.board[r + 1][c] === val) return true;
+                if (c < grid.cols - 1 && grid.board[r][c + 1] === val) return true;
+                if (r < grid.rows - 1 && grid.board[r + 1][c] === val) return true;
             }
         }
         return false;
@@ -118,8 +127,8 @@ var PuzzleGrid = (function() {
      */
     function getValues(grid) {
         var values = [];
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 if (grid.board[r][c] !== 0) {
                     values.push(grid.board[r][c]);
                 }
@@ -133,8 +142,8 @@ var PuzzleGrid = (function() {
      */
     function getMaxValue(grid) {
         var max = 0;
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 if (grid.board[r][c] > max) {
                     max = grid.board[r][c];
                 }
@@ -148,8 +157,8 @@ var PuzzleGrid = (function() {
      */
     function countValue(grid, value) {
         var count = 0;
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 if (grid.board[r][c] === value) count++;
             }
         }
@@ -163,8 +172,8 @@ var PuzzleGrid = (function() {
      * @returns {object|null} {row, col} or null if not found
      */
     function findCell(grid, value) {
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 if (grid.board[r][c] === value) {
                     return { row: r, col: c };
                 }
@@ -194,8 +203,8 @@ var PuzzleGrid = (function() {
      * @returns {boolean}
      */
     function isSolved(grid, targetBoard) {
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 if (grid.board[r][c] !== targetBoard[r][c]) return false;
             }
         }
@@ -207,8 +216,8 @@ var PuzzleGrid = (function() {
      */
     function toString(grid) {
         var s = '';
-        for (var r = 0; r < grid.size; r++) {
-            for (var c = 0; c < grid.size; c++) {
+        for (var r = 0; r < grid.rows; r++) {
+            for (var c = 0; c < grid.cols; c++) {
                 s += (grid.board[r][c] === 0 ? '.' : grid.board[r][c]);
                 s += '\t';
             }

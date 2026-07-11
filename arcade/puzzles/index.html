@@ -345,6 +345,17 @@
             </div>
         </a>
 
+        <a href="../klotski/index.html" class="game-card" style="--card-color: #ff2d4a">
+            <div class="card-inner">
+                <div class="card-title">KLOTSKI<br><span style="font-size: 8px; color: #ffd700;">横刀立马</span></div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cKlotski" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">classic Chinese sliding block puzzle. slide the general to the exit.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
         <a href="../tetris/index.html" class="game-card" style="--card-color: #f0f8ff">
             <div class="card-inner">
                 <div class="card-title">TETRIS</div>
@@ -536,6 +547,56 @@
             }
         }
     }
+})();
+
+// ── Klotski preview ──
+(function() {
+    const c = document.getElementById('cKlotski');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // Dark indigo background
+    ctx.fillStyle = '#0a0618';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // Board border (neon red)
+    ctx.strokeStyle = '#ff2d4a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+
+    // Grid: 4 cols × 5 rows
+    const cellW = 16, cellH = 13, gap = 1, padX = 3, padY = 3;
+
+    // 2×2 block (gold) at center top
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(padX + cellW + gap, padY, cellW * 2 + gap, cellH * 2 + gap);
+    ctx.fillStyle = '#ff8c00';
+    ctx.fillRect(padX + cellW + gap + 2, padY + 2, cellW * 2 + gap - 4, cellH * 2 + gap - 4);
+    ctx.fillStyle = '#1a0a00';
+    ctx.font = 'bold 7px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('曹', padX + cellW + gap + cellW, padY + cellH + 3);
+
+    // 2×1 vertical blocks (jade green)
+    const jadeBlocks = [[0, 0], [3, 0], [0, 3], [3, 3], [1, 2], [2, 2]];
+    jadeBlocks.forEach(([col, row]) => {
+        ctx.fillStyle = '#00cc88';
+        ctx.fillRect(padX + col * (cellW + gap), padY + row * (cellH + gap), cellW, cellH * 2 + gap);
+        ctx.fillStyle = '#009966';
+        ctx.fillRect(padX + col * (cellW + gap) + 2, padY + row * (cellH + gap) + 2, cellW - 4, cellH * 2 + gap - 4);
+    });
+
+    // 1×1 blocks (cyan)
+    ctx.fillStyle = '#0088aa';
+    ctx.fillRect(padX, padY + 4 * (cellH + gap), cellW, cellH);
+    ctx.fillRect(padX + 3 * (cellW + gap), padY + 4 * (cellH + gap), cellW, cellH);
+
+    // Exit indicator (dashed red at bottom center)
+    ctx.strokeStyle = 'rgba(255, 45, 74, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.strokeRect(padX + cellW + gap, padY + 3 * (cellH + gap), cellW * 2 + gap, cellH * 2 + gap);
+    ctx.setLineDash([]);
 })();
 
 // ── Tetris preview ──
