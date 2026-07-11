@@ -80,7 +80,7 @@
                 <div id="gameChat" class="game-chat" style="display: none;">
                     <div class="chat-header">
                         <span id="chatHeaderTitle">// ARCADE CHAT //</span>
-                        <span id="chatGlobalUsers" class="chat-user-count"></span>
+                        <span id="chatOnlineCount" class="chat-user-count">0</span>
                     </div>
                     <div class="chat-name-row">
                         <span id="chatMyName" class="chat-my-name"></span>
@@ -88,16 +88,16 @@
                     </div>
                     <div class="chat-tabs">
                         <button class="chat-tab active" data-tab="global">GLOBAL</button>
+                        <button class="chat-tab" data-tab="online">ONLINE</button>
                         <button class="chat-tab" data-tab="room" id="chatRoomTab" style="display:none;">ROOM <span id="chatRoomCode"></span></button>
                     </div>
                     <div class="chat-messages" id="chatMessagesGlobal">
                         <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
                     </div>
-                    <div class="chat-messages" id="chatMessagesRoom" style="display:none;"></div>
-                    <div class="chat-users" id="chatUsers">
-                        <div class="chat-users-header">ONLINE (<span id="chatOnlineCount">0</span>)</div>
-                        <div id="chatUserList"></div>
+                    <div class="chat-online" id="chatOnline" style="display:none;">
+                        <div id="chatOnlineList"></div>
                     </div>
+                    <div class="chat-messages" id="chatMessagesRoom" style="display:none;"></div>
                     <div class="chat-typing" id="chatTyping" style="display:none;"></div>
                     <div class="chat-input">
                         <input id="chatInput" type="text" placeholder="Type a message..." maxlength="200">

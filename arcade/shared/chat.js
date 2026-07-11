@@ -4,9 +4,9 @@
  * Place in arcade/shared/chat.js and include via script tag.
  *
  * Requires DOM elements:
- *   #chatMessagesGlobal, #chatMessagesRoom, #chatRoomTab, #chatRoomCode,
- *   #chatHeaderTitle, #chatGlobalUsers, #chatMyName, #chatEditName,
- *   #chatUsers, #chatUserList, #chatTyping, #chatInput, #chatSend
+ *   #chatMessagesGlobal, #chatMessagesRoom, #chatOnline, #chatOnlineList,
+ *   #chatRoomTab, #chatRoomCode, #chatHeaderTitle, #chatOnlineCount,
+ *   #chatMyName, #chatEditName, #chatTyping, #chatInput, #chatSend
  */
 
 var Chat = (function() {
@@ -35,14 +35,14 @@ var Chat = (function() {
     function cacheElements() {
         el.globalMessages = document.getElementById('chatMessagesGlobal');
         el.roomMessages   = document.getElementById('chatMessagesRoom');
+        el.onlinePanel    = document.getElementById('chatOnline');
+        el.onlineList     = document.getElementById('chatOnlineList');
         el.roomTab        = document.getElementById('chatRoomTab');
         el.roomCode       = document.getElementById('chatRoomCode');
         el.headerTitle    = document.getElementById('chatHeaderTitle');
-        el.globalUsers    = document.getElementById('chatGlobalUsers');
+        el.onlineCount    = document.getElementById('chatOnlineCount');
         el.myName         = document.getElementById('chatMyName');
         el.editName       = document.getElementById('chatEditName');
-        el.usersContainer = document.getElementById('chatUsers');
-        el.userList       = document.getElementById('chatUserList');
         el.typing         = document.getElementById('chatTyping');
         el.input          = document.getElementById('chatInput');
         el.sendBtn        = document.getElementById('chatSend');
@@ -62,8 +62,6 @@ var Chat = (function() {
             var savedName = localStorage.getItem('arcade_username');
             if (savedName) {
                 socket.send(JSON.stringify({ type: 'set_name', name: savedName }));
-                myName = savedName;
-                updateNameDisplay();
             }
         };
 
@@ -92,7 +90,6 @@ var Chat = (function() {
             el.input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') send();
             });
-            // Typing indicator
             el.input.addEventListener('input', handleTyping);
         }
 
@@ -139,13 +136,16 @@ var Chat = (function() {
                 addMessage('room', msg);
                 break;
 
-            case 'room_users':
-                // Room-specific user list (not used in global panel)
+            case 'name_assigned':
+                // Server assigned us a name (auto-generated or after uniqueness check)
+                myName = msg.name;
+                localStorage.setItem('arcade_username', msg.name);
+                updateNameDisplay();
                 break;
 
             case 'user_list':
                 // Full online user list
-                updateUserList(msg.users);
+                updateOnlineList(msg.users);
                 updateOnlineCount(msg.count);
                 break;
 
@@ -204,7 +204,7 @@ var Chat = (function() {
         addMessage(currentRoom ? 'room' : 'global', {
             from: name,
             text: text,
-            color: '#39ff6e'  // Highlight own messages
+            color: '#39ff6e'
         });
 
         el.input.value = '';
@@ -223,7 +223,6 @@ var Chat = (function() {
         if (!el.myName) return;
         var currentName = myName || localStorage.getItem('arcade_username') || '';
 
-        // Create inline input
         var input = document.createElement('input');
         input.type = 'text';
         input.className = 'chat-name-input';
@@ -272,7 +271,6 @@ var Chat = (function() {
     }
 
     function showTyping(name, room) {
-        // Only show if relevant to current view
         var isGlobal = !room && !currentRoom;
         var isRoom = room && room === currentRoom;
         if (!isGlobal && !isRoom) return;
@@ -301,24 +299,39 @@ var Chat = (function() {
         container.scrollTop = container.scrollHeight;
     }
 
-    function updateUserList(users) {
-        if (!el.userList) return;
-        el.userList.innerHTML = '';
+    function updateOnlineList(users) {
+        if (!el.onlineList) return;
+        el.onlineList.innerHTML = '';
         if (users) {
             users.forEach(function(u) {
                 var div = document.createElement('div');
-                div.className = 'chat-user';
-                var status = u.rooms && u.rooms.length > 0 ? ' (in game)' : '';
-                div.innerHTML = '<span class="chat-user-dot" style="background:' + escapeHtml(u.color) + '"></span>' +
-                    escapeHtml(u.name) + '<span class="chat-user-status">' + status + '</span>';
-                el.userList.appendChild(div);
+                div.className = 'chat-online-user';
+                var dot = document.createElement('span');
+                dot.className = 'chat-online-dot';
+                dot.style.background = u.color;
+                var nameEl = document.createElement('span');
+                nameEl.className = 'chat-online-name';
+                nameEl.textContent = u.name;
+                var statusEl = document.createElement('span');
+                statusEl.className = 'chat-online-status';
+                if (u.game) {
+                    statusEl.textContent = u.game;
+                } else if (u.rooms && u.rooms.length > 0) {
+                    statusEl.textContent = 'In Room';
+                } else {
+                    statusEl.textContent = 'Online';
+                }
+                div.appendChild(dot);
+                div.appendChild(nameEl);
+                div.appendChild(statusEl);
+                el.onlineList.appendChild(div);
             });
         }
     }
 
     function updateOnlineCount(count) {
-        if (el.globalUsers) {
-            el.globalUsers.textContent = count + ' online';
+        if (el.onlineCount) {
+            el.onlineCount.textContent = count;
         }
     }
 
@@ -339,21 +352,27 @@ var Chat = (function() {
     }
 
     function switchTab(tab) {
-        if (!el.globalMessages || !el.roomMessages) return;
+        if (!el.globalMessages || !el.roomMessages || !el.onlinePanel) return;
 
         var tabs = document.querySelectorAll('.chat-tab');
         tabs.forEach(function(t) { t.classList.remove('active'); });
 
+        // Hide all panels
+        el.globalMessages.style.display = 'none';
+        el.roomMessages.style.display = 'none';
+        el.onlinePanel.style.display = 'none';
+
+        // Show selected panel
         if (tab === 'global') {
             el.globalMessages.style.display = '';
-            el.roomMessages.style.display = 'none';
-            if (el.usersContainer) el.usersContainer.style.display = '';
             var globalTab = document.querySelector('[data-tab="global"]');
             if (globalTab) globalTab.classList.add('active');
-        } else {
-            el.globalMessages.style.display = 'none';
+        } else if (tab === 'online') {
+            el.onlinePanel.style.display = '';
+            var onlineTab = document.querySelector('[data-tab="online"]');
+            if (onlineTab) onlineTab.classList.add('active');
+        } else if (tab === 'room') {
             el.roomMessages.style.display = '';
-            if (el.usersContainer) el.usersContainer.style.display = 'none';
             var roomTab = document.querySelector('[data-tab="room"]');
             if (roomTab) roomTab.classList.add('active');
         }

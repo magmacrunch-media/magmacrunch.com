@@ -152,10 +152,22 @@ async def broadcast_user_list():
     users = []
     for ws in connected_clients:
         info = user_info.get(ws, {})
+        user_rooms = list(info.get('rooms', set()))
+        # Try to determine game name from room code
+        game = None
+        if user_rooms:
+            # Map room codes to game names if available
+            for room_code in user_rooms:
+                if room_code in rooms:
+                    # Room exists, but we don't store game names yet
+                    # Just indicate they're in a game
+                    game = 'In Game'
+                    break
         users.append({
             'name': info.get('name', '?'),
             'color': info.get('color', '#fff'),
-            'rooms': list(info.get('rooms', set())),
+            'rooms': user_rooms,
+            'game': game,
         })
     await broadcast({
         'type': 'user_list',
@@ -198,6 +210,14 @@ async def handler(websocket):
             'statuses': statuses
         }))
 
+        # Auto-generate a name and send it back
+        auto_name = generate_name()
+        user_info[websocket]['name'] = auto_name
+        await websocket.send(json.dumps({
+            'type': 'name_assigned',
+            'name': auto_name
+        }))
+
         # Broadcast updated user list to everyone
         await broadcast_user_list()
 
@@ -223,6 +243,11 @@ async def handler(websocket):
                 if taken:
                     new_name = f"{new_name}{random.randint(1, 99)}"
                 user_info[websocket]['name'] = new_name
+                # Send confirmed name back to client
+                await websocket.send(json.dumps({
+                    'type': 'name_assigned',
+                    'name': new_name
+                }))
                 await broadcast_user_list()
 
             elif msg_type == 'join_room':

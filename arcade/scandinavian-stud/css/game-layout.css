@@ -534,6 +534,39 @@
     border-color: var(--accent);
 }
 
+/* Chat Online Users Panel */
+.chat-online {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.chat-online-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.chat-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.chat-online-name {
+    font-size: 9px;
+    color: #e0e0e0;
+}
+
+.chat-online-status {
+    font-size: 7px;
+    color: #888;
+    margin-left: auto;
+}
+
 @media (max-width: 600px) {
     .stats {
         gap: 15px;
