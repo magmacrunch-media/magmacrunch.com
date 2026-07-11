@@ -1,5 +1,6 @@
 /**
  * main.js — DOM rendering, pixel art, notation, UI
+ * Includes multiplayer lobby, board flipping, chat panel.
  */
 
 var UI = (function() {
@@ -8,6 +9,7 @@ var UI = (function() {
     var elements = {};
     var lastMoveFrom = null;
     var lastMoveTo = null;
+    var boardFlipped = false; // true when viewing from black's perspective
 
     // ── Initialize ───────────────────────────────────────────────────────────
     function init() {
@@ -15,12 +17,16 @@ var UI = (function() {
         setupEventListeners();
         Game.setOnStateChange(onStateChange);
         Game.setOnGameEnd(onGameEnd);
+        Multiplayer.setOnStateUpdate(onMultiplayerStateUpdate);
+        Multiplayer.setOnGameStart(onMultiplayerGameStart);
+        Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
     }
 
     function cacheElements() {
         elements.startScreen = document.getElementById('startScreen');
         elements.gameScreen = document.getElementById('gameScreen');
         elements.startGameBtn = document.getElementById('startGameBtn');
+        elements.multiplayerBtn = document.getElementById('multiplayerBtn');
         elements.boardContainer = document.getElementById('boardContainer');
         elements.moveHistoryList = document.getElementById('moveHistoryList');
         elements.message = document.getElementById('gameMessage');
@@ -42,6 +48,24 @@ var UI = (function() {
         elements.settingsBtn = document.getElementById('settingsBtn');
         elements.creditsBtn = document.getElementById('creditsBtn');
         elements.startSettingsBtn = document.getElementById('startSettingsBtn');
+
+        // Lobby elements
+        elements.lobbyOverlay = document.getElementById('lobbyOverlay');
+        elements.closeLobby = document.getElementById('closeLobby');
+        elements.lobbyStatus = document.getElementById('lobbyStatus');
+        elements.roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        elements.roomCodeValue = document.getElementById('roomCodeValue');
+        elements.lobbyPlayerList = document.getElementById('lobbyPlayerList');
+        elements.lobbyTimeControl = document.getElementById('lobbyTimeControl');
+        elements.startMultiplayerBtn = document.getElementById('startMultiplayerBtn');
+        elements.spectateBtn = document.getElementById('spectateBtn');
+        elements.leaveLobbyBtn = document.getElementById('leaveLobbyBtn');
+
+        // Chat elements
+        elements.chatPanel = document.getElementById('chatPanel');
+        elements.chatMessages = document.getElementById('chatMessages');
+        elements.chatInput = document.getElementById('chatInput');
+        elements.chatSendBtn = document.getElementById('chatSendBtn');
     }
 
     function setupEventListeners() {
@@ -76,6 +100,19 @@ var UI = (function() {
                 applySettingsAndStart();
             });
         }
+
+        // Multiplayer buttons
+        if (elements.multiplayerBtn) elements.multiplayerBtn.addEventListener('click', openLobby);
+        if (elements.closeLobby) elements.closeLobby.addEventListener('click', closeLobby);
+        if (elements.startMultiplayerBtn) elements.startMultiplayerBtn.addEventListener('click', startMultiplayerGame);
+        if (elements.spectateBtn) elements.spectateBtn.addEventListener('click', spectateGame);
+        if (elements.leaveLobbyBtn) elements.leaveLobbyBtn.addEventListener('click', leaveLobby);
+
+        // Chat
+        if (elements.chatSendBtn) elements.chatSendBtn.addEventListener('click', sendChat);
+        if (elements.chatInput) elements.chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendChat();
+        });
 
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
@@ -126,22 +163,278 @@ var UI = (function() {
     function startGame() {
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
+        elements.chatPanel.style.display = 'none';
         hideGameOver();
-        Game.startGame();
+        Game.startGame(false);
         lastMoveFrom = null;
         lastMoveTo = null;
+        boardFlipped = false;
         renderBoard();
         updateUI();
     }
 
     function showMenu() {
+        Multiplayer.quit();
         elements.startScreen.style.display = 'flex';
         elements.gameScreen.style.display = 'none';
+        elements.chatPanel.style.display = 'none';
+    }
+
+    // ── Lobby ────────────────────────────────────────────────────────────────
+    function openLobby() {
+        elements.lobbyOverlay.classList.add('active');
+        elements.lobbyStatus.textContent = 'Connecting...';
+        elements.roomCodeDisplay.style.display = 'none';
+        elements.lobbyPlayerList.innerHTML = '';
+        elements.lobbyTimeControl.style.display = 'none';
+        elements.startMultiplayerBtn.style.display = 'none';
+        Multiplayer.connect();
+    }
+
+    function closeLobby() {
+        elements.lobbyOverlay.classList.remove('active');
+        Multiplayer.quit();
+    }
+
+    function leaveLobby() {
+        Multiplayer.quit();
+        elements.roomCodeDisplay.style.display = 'none';
+        elements.lobbyPlayerList.innerHTML = '';
+        elements.lobbyTimeControl.style.display = 'none';
+        elements.startMultiplayerBtn.style.display = 'none';
+        elements.lobbyStatus.textContent = 'Left lobby. Click a room to rejoin.';
+    }
+
+    function startMultiplayerGame() {
+        var tc = document.querySelector('input[name="mpTimeControl"]:checked');
+        var timeControl = tc ? tc.value : 'none';
+        Multiplayer.startGame(timeControl);
+    }
+
+    function spectateGame() {
+        var name = localStorage.getItem('arcade_username') || 'Spectator';
+        Multiplayer.spectate(name);
+    }
+
+    function sendChat() {
+        if (!elements.chatInput) return;
+        var text = elements.chatInput.value.trim();
+        if (!text) return;
+        MP.sendChat(text);
+        // Show own message locally
+        addChatMessage(localStorage.getItem('arcade_username') || 'You', text, '#39ff6e');
+        elements.chatInput.value = '';
+    }
+
+    function addChatMessage(from, text, color) {
+        if (!elements.chatMessages) return;
+        var div = document.createElement('div');
+        div.className = 'chat-msg';
+        div.innerHTML = '<span class="chat-name" style="color:' + (color || '#ff2e9c') + '">' +
+            escapeHtml(from) + ':</span> ' + escapeHtml(text);
+        elements.chatMessages.appendChild(div);
+        elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+    }
+
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // ── Multiplayer State Handlers ───────────────────────────────────────────
+    function onMultiplayerStateUpdate(update) {
+        switch (update.type) {
+            case 'welcome':
+                elements.lobbyStatus.textContent = 'You joined room ' + update.room;
+                elements.roomCodeDisplay.style.display = 'flex';
+                elements.roomCodeValue.textContent = update.room;
+                if (update.isHost) {
+                    elements.lobbyTimeControl.style.display = 'block';
+                    elements.startMultiplayerBtn.style.display = 'block';
+                } else {
+                    elements.lobbyTimeControl.style.display = 'none';
+                    elements.startMultiplayerBtn.style.display = 'none';
+                }
+                break;
+
+            case 'spectator_welcome':
+                elements.lobbyStatus.textContent = 'Spectating room ' + update.room;
+                elements.roomCodeDisplay.style.display = 'flex';
+                elements.roomCodeValue.textContent = update.room;
+                elements.lobbyTimeControl.style.display = 'none';
+                elements.startMultiplayerBtn.style.display = 'none';
+                break;
+
+            case 'snapshot':
+                // Could show room list, for now just show status
+                if (update.rooms && update.rooms.length > 0) {
+                    var waiting = update.rooms.filter(function(r) { return !r.started && r.players < r.maxPlayers; });
+                    if (waiting.length > 0) {
+                        elements.lobbyStatus.textContent = 'Found ' + waiting.length + ' open room(s). Create or join one.';
+                    } else {
+                        elements.lobbyStatus.textContent = 'No open rooms. Create one!';
+                    }
+                } else {
+                    elements.lobbyStatus.textContent = 'No rooms yet. Create one!';
+                }
+                break;
+
+            case 'lobby':
+                renderLobbyPlayers(update.players);
+                if (MP.amIHost() && !MP.isSpectator()) {
+                    elements.startMultiplayerBtn.style.display = update.canStart ? 'block' : 'none';
+                }
+                break;
+
+            case 'rejected':
+                elements.lobbyStatus.textContent = 'Rejected: ' + update.reason;
+                break;
+
+            case 'disconnected':
+                elements.lobbyStatus.textContent = 'Disconnected from server.';
+                elements.roomCodeDisplay.style.display = 'none';
+                elements.lobbyPlayerList.innerHTML = '';
+                elements.lobbyTimeControl.style.display = 'none';
+                elements.startMultiplayerBtn.style.display = 'none';
+                break;
+
+            case 'move':
+                applyServerState(update.msg.state);
+                break;
+
+            case 'state':
+                applyServerState(update.state);
+                break;
+
+            case 'promotion_pending':
+                // Handled in main flow
+                break;
+        }
+    }
+
+    function renderLobbyPlayers(players) {
+        if (!elements.lobbyPlayerList) return;
+        elements.lobbyPlayerList.innerHTML = '';
+        if (!players) return;
+        for (var i = 0; i < players.length; i++) {
+            var p = players[i];
+            var div = document.createElement('div');
+            div.className = 'lobby-player';
+            var hostBadge = p.isHost ? ' <span class="host-badge">HOST</span>' : '';
+            div.innerHTML = '<span class="player-dot" style="background:' + escapeHtml(p.color) + '"></span>' +
+                '<span class="player-name">' + escapeHtml(p.name) + '</span>' + hostBadge;
+            elements.lobbyPlayerList.appendChild(div);
+        }
+    }
+
+    function onMultiplayerGameStart(state, mySide) {
+        elements.lobbyOverlay.classList.remove('active');
+        elements.startScreen.style.display = 'none';
+        elements.gameScreen.style.display = 'flex';
+        elements.chatPanel.style.display = 'flex';
+        hideGameOver();
+
+        // Board flipping: flip if black
+        boardFlipped = (mySide === 'black');
+
+        // Start the game in multiplayer mode
+        Game.startGame(true, mySide);
+        lastMoveFrom = null;
+        lastMoveTo = null;
+
+        // Apply initial state
+        applyServerState(state);
+    }
+
+    function onMultiplayerGameEnd(won, winnerName, winnerSide, result) {
+        var title, message;
+
+        if (result === 'opponent_quit') {
+            title = 'OPPONENT LEFT';
+            message = winnerName + ' disconnected. You win!';
+            elements.gameOverTitle.className = 'game-over-title win';
+        } else if (result === 'resignation') {
+            if (won) {
+                title = 'YOU WIN!';
+                message = winnerName + ' resigned.';
+                elements.gameOverTitle.className = 'game-over-title win';
+            } else {
+                title = 'YOU LOSE';
+                message = 'You resigned.';
+                elements.gameOverTitle.className = 'game-over-title lose';
+            }
+        } else if (result && result.indexOf('checkmate') >= 0) {
+            if (won) {
+                title = 'YOU WIN!';
+                message = 'Checkmate! You captured the king.';
+                elements.gameOverTitle.className = 'game-over-title win';
+            } else {
+                title = 'YOU LOSE';
+                message = 'Checkmate! Your king was captured.';
+                elements.gameOverTitle.className = 'game-over-title lose';
+            }
+        } else if (result === 'stalemate') {
+            title = 'DRAW';
+            message = 'Stalemate! No legal moves available.';
+            elements.gameOverTitle.className = 'game-over-title draw';
+        } else {
+            title = 'GAME OVER';
+            message = winnerName ? winnerName + ' wins.' : 'Game ended.';
+            elements.gameOverTitle.className = 'game-over-title draw';
+        }
+
+        elements.gameOverTitle.textContent = title;
+        elements.gameOverMessage.textContent = message;
+        elements.gameOverModal.classList.add('active');
+
+        Multiplayer.quit();
+    }
+
+    function applyServerState(state) {
+        if (!state) return;
+        Game.applyServerState(state, Multiplayer.getMySide());
+
+        // Update last move from state
+        if (state.moveCount > 0) {
+            // Server doesn't send last move coordinates, but we track via state
+        }
+
+        renderBoard();
+        updateMultiplayerUI();
+    }
+
+    function updateMultiplayerUI() {
+        var state = Game.getState();
+        var mySide = Multiplayer.getMySide();
+
+        if (state === CH.STATE.OPPONENT_TURN) {
+            elements.turnIndicator.textContent = 'OPPONENT\'S TURN';
+            elements.turnIndicator.style.color = '#ff2d78';
+            setMessage('Waiting for opponent...');
+        } else if (state === CH.STATE.SELECTING) {
+            elements.turnIndicator.textContent = 'YOUR TURN';
+            elements.turnIndicator.style.color = '#00f5ff';
+            setMessage('Select a piece to move');
+        } else if (state === CH.STATE.MOVING) {
+            elements.turnIndicator.textContent = 'YOUR TURN';
+            elements.turnIndicator.style.color = '#00f5ff';
+            setMessage('Select destination');
+        } else if (state === CH.STATE.PROMOTING) {
+            showPromotionModal();
+        }
+
+        updateMoveHistory();
     }
 
     // ── State Change Handler ─────────────────────────────────────────────────
     function onStateChange(data) {
-        // Track last move for highlighting
+        if (Game.getIsMultiplayer()) {
+            updateMultiplayerUI();
+            return;
+        }
+
+        // Single-player mode
         var lastMove = Board.getLastMove();
         if (lastMove) {
             lastMoveFrom = lastMove.from;
@@ -171,20 +464,30 @@ var UI = (function() {
         boardEl.className = 'board';
 
         var files = 'abcdefgh';
+        var startRow = boardFlipped ? 7 : 0;
+        var endRow = boardFlipped ? -1 : 8;
+        var rowStep = boardFlipped ? -1 : 1;
+        var startCol = boardFlipped ? 7 : 0;
+        var endCol = boardFlipped ? -1 : 8;
+        var colStep = boardFlipped ? -1 : 1;
 
-        for (var r = 0; r < CH.BOARD_SIZE; r++) {
-            for (var c = 0; c < CH.BOARD_SIZE; c++) {
-                var square = createSquare(r, c, board[r][c], files[c]);
+        var displayRow = 0;
+        for (var r = startRow; r !== endRow; r += rowStep) {
+            var displayCol = 0;
+            for (var c = startCol; c !== endCol; c += colStep) {
+                var square = createSquare(r, c, displayRow, displayCol, board[r][c], files[c]);
                 boardEl.appendChild(square);
+                displayCol++;
             }
+            displayRow++;
         }
 
         container.appendChild(boardEl);
     }
 
-    function createSquare(row, col, piece, file) {
+    function createSquare(row, col, displayRow, displayCol, piece, file) {
         var square = document.createElement('div');
-        var isDark = (row + col) % 2 === 1;
+        var isDark = (displayRow + displayCol) % 2 === 1;
         square.className = 'square ' + (isDark ? 'dark' : 'light');
         square.dataset.row = row;
         square.dataset.col = col;
@@ -198,7 +501,9 @@ var UI = (function() {
         }
 
         // Highlight check on king
-        if (piece && piece.type === CH.KING && piece.owner === Game.getCurrentPlayer()) {
+        var currentSide = Game.getMySide();
+        var checkOwner = currentSide || CH.PLAYER;
+        if (piece && piece.type === CH.KING && piece.owner === checkOwner) {
             if (Board.isInCheck(piece.owner)) {
                 square.classList.add('in-check');
             }
@@ -222,17 +527,17 @@ var UI = (function() {
             }
         }
 
-        // Add square labels (file and rank)
-        if (row === 7) {
+        // Add square labels (file and rank) - use display position
+        if (displayRow === 7) {
             var fileLabel = document.createElement('div');
             fileLabel.className = 'square-label file';
-            fileLabel.textContent = file;
+            fileLabel.textContent = boardFlipped ? files[7 - displayCol] : files[displayCol];
             square.appendChild(fileLabel);
         }
-        if (col === 0) {
+        if (displayCol === 0) {
             var rankLabel = document.createElement('div');
             rankLabel.className = 'square-label rank';
-            rankLabel.textContent = 8 - row;
+            rankLabel.textContent = boardFlipped ? (displayRow + 1) : (8 - displayRow);
             square.appendChild(rankLabel);
         }
 
@@ -264,7 +569,13 @@ var UI = (function() {
     // ── Pixel Art Drawing ────────────────────────────────────────────────────
     function drawPiece(canvas, pieceType, owner) {
         var ctx = canvas.getContext('2d');
-        var color = owner === CH.PLAYER ? CH.COLORS.player : CH.COLORS.ai;
+        var color;
+        if (Game.getIsMultiplayer()) {
+            var mySide = Game.getMySide();
+            color = (owner === mySide) ? '#00f5ff' : '#ff2d78';
+        } else {
+            color = owner === CH.PLAYER ? CH.COLORS.player : CH.COLORS.ai;
+        }
 
         ctx.clearRect(0, 0, 32, 32);
 
@@ -279,17 +590,14 @@ var UI = (function() {
     }
 
     function drawKing(ctx, color) {
-        // Shadow color
         var dark = shadeColor(color, -40);
         var light = shadeColor(color, 40);
 
-        // Base platform
         ctx.fillStyle = dark;
         ctx.fillRect(7, 28, 18, 3);
         ctx.fillStyle = color;
         ctx.fillRect(8, 27, 16, 3);
 
-        // Body - tapered column
         ctx.fillStyle = color;
         ctx.fillRect(11, 17, 10, 10);
         ctx.fillStyle = dark;
@@ -298,31 +606,26 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(14, 17, 3, 10);
 
-        // Waist/collar
         ctx.fillStyle = dark;
         ctx.fillRect(10, 16, 12, 2);
 
-        // Crown band
         ctx.fillStyle = color;
         ctx.fillRect(9, 12, 14, 4);
         ctx.fillStyle = dark;
         ctx.fillRect(9, 12, 14, 1);
 
-        // Crown points (5 prongs)
         ctx.fillStyle = color;
         ctx.fillRect(9, 8, 2, 4);
         ctx.fillRect(13, 6, 2, 6);
         ctx.fillRect(17, 6, 2, 6);
         ctx.fillRect(21, 8, 2, 4);
 
-        // Crown prong tips (gems)
         ctx.fillStyle = light;
         ctx.fillRect(9, 7, 2, 2);
         ctx.fillRect(13, 5, 2, 2);
         ctx.fillRect(17, 5, 2, 2);
         ctx.fillRect(21, 7, 2, 2);
 
-        // Cross on top
         ctx.fillStyle = color;
         ctx.fillRect(15, 1, 2, 6);
         ctx.fillRect(13, 3, 6, 2);
@@ -330,7 +633,6 @@ var UI = (function() {
         ctx.fillRect(15, 1, 2, 1);
         ctx.fillRect(13, 3, 1, 2);
 
-        // Gem in center
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(16, 13, 1, 1);
     }
@@ -339,13 +641,11 @@ var UI = (function() {
         var dark = shadeColor(color, -40);
         var light = shadeColor(color, 40);
 
-        // Base platform
         ctx.fillStyle = dark;
         ctx.fillRect(7, 28, 18, 3);
         ctx.fillStyle = color;
         ctx.fillRect(8, 27, 16, 3);
 
-        // Body - elegant taper
         ctx.fillStyle = color;
         ctx.fillRect(11, 18, 10, 9);
         ctx.fillStyle = dark;
@@ -354,17 +654,14 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(14, 18, 3, 9);
 
-        // Waist
         ctx.fillStyle = dark;
         ctx.fillRect(10, 17, 12, 2);
 
-        // Crown band
         ctx.fillStyle = color;
         ctx.fillRect(9, 13, 14, 4);
         ctx.fillStyle = dark;
         ctx.fillRect(9, 13, 14, 1);
 
-        // Crown points (7 prongs, alternating tall/short)
         ctx.fillStyle = color;
         ctx.fillRect(8, 8, 2, 5);
         ctx.fillRect(11, 5, 2, 8);
@@ -372,7 +669,6 @@ var UI = (function() {
         ctx.fillRect(17, 5, 2, 8);
         ctx.fillRect(20, 8, 2, 5);
 
-        // Crown tips with jewels
         ctx.fillStyle = light;
         ctx.fillRect(8, 7, 2, 2);
         ctx.fillRect(11, 4, 2, 2);
@@ -380,12 +676,10 @@ var UI = (function() {
         ctx.fillRect(17, 4, 2, 2);
         ctx.fillRect(20, 7, 2, 2);
 
-        // Central orb (globe + cross)
         ctx.fillStyle = color;
         ctx.fillRect(15, 0, 2, 4);
         ctx.fillRect(14, 2, 4, 2);
 
-        // Gems in crown band
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(12, 14, 1, 1);
         ctx.fillRect(16, 14, 1, 1);
@@ -396,13 +690,11 @@ var UI = (function() {
         var dark = shadeColor(color, -40);
         var light = shadeColor(color, 40);
 
-        // Base platform
         ctx.fillStyle = dark;
         ctx.fillRect(6, 28, 20, 3);
         ctx.fillStyle = color;
         ctx.fillRect(7, 27, 18, 3);
 
-        // Main body
         ctx.fillStyle = color;
         ctx.fillRect(9, 13, 14, 14);
         ctx.fillStyle = dark;
@@ -411,28 +703,23 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(13, 13, 3, 14);
 
-        // Arrow slit windows
         ctx.fillStyle = dark;
         ctx.fillRect(14, 16, 4, 1);
         ctx.fillRect(14, 20, 4, 1);
 
-        // Upper ledge
         ctx.fillStyle = dark;
         ctx.fillRect(7, 12, 18, 2);
 
-        // Battlements (crenellation)
         ctx.fillStyle = color;
         ctx.fillRect(6, 6, 20, 6);
         ctx.fillStyle = dark;
         ctx.fillRect(6, 6, 20, 1);
 
-        // Battlement gaps
         ctx.fillStyle = '#0d0820';
         ctx.fillRect(8, 8, 3, 4);
         ctx.fillRect(14, 8, 4, 4);
         ctx.fillRect(21, 8, 3, 4);
 
-        // Top edge highlights
         ctx.fillStyle = light;
         ctx.fillRect(6, 6, 20, 1);
     }
@@ -441,13 +728,11 @@ var UI = (function() {
         var dark = shadeColor(color, -40);
         var light = shadeColor(color, 40);
 
-        // Base platform
         ctx.fillStyle = dark;
         ctx.fillRect(7, 28, 18, 3);
         ctx.fillStyle = color;
         ctx.fillRect(8, 27, 16, 3);
 
-        // Body
         ctx.fillStyle = color;
         ctx.fillRect(11, 18, 10, 9);
         ctx.fillStyle = dark;
@@ -456,11 +741,9 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(14, 18, 3, 9);
 
-        // Collar
         ctx.fillStyle = dark;
         ctx.fillRect(10, 17, 12, 2);
 
-        // Mitre (pointed hat) - main
         ctx.fillStyle = color;
         ctx.fillRect(11, 10, 10, 7);
         ctx.fillStyle = dark;
@@ -469,24 +752,20 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(14, 10, 3, 7);
 
-        // Mitre - upper
         ctx.fillStyle = color;
         ctx.fillRect(12, 6, 8, 4);
         ctx.fillRect(13, 4, 6, 2);
         ctx.fillRect(14, 2, 4, 2);
         ctx.fillRect(15, 0, 2, 2);
 
-        // Mitre slit (distinguishing feature)
         ctx.fillStyle = dark;
         ctx.fillRect(15, 6, 2, 8);
         ctx.fillStyle = light;
         ctx.fillRect(15, 6, 1, 8);
 
-        // Gem at top
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(16, 1, 1, 1);
 
-        // Collar gems
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(12, 17, 1, 1);
         ctx.fillRect(19, 17, 1, 1);
@@ -496,13 +775,11 @@ var UI = (function() {
         var dark = shadeColor(color, -40);
         var light = shadeColor(color, 40);
 
-        // Base platform
         ctx.fillStyle = dark;
         ctx.fillRect(7, 28, 18, 3);
         ctx.fillStyle = color;
         ctx.fillRect(8, 27, 16, 3);
 
-        // Body/neck
         ctx.fillStyle = color;
         ctx.fillRect(10, 18, 12, 9);
         ctx.fillStyle = dark;
@@ -510,11 +787,9 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(14, 18, 3, 9);
 
-        // Neck (angled)
         ctx.fillStyle = color;
         ctx.fillRect(9, 15, 10, 3);
 
-        // Head main shape
         ctx.fillStyle = color;
         ctx.fillRect(7, 7, 16, 8);
         ctx.fillStyle = dark;
@@ -523,7 +798,6 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(10, 9, 4, 4);
 
-        // Ears (two pointed)
         ctx.fillStyle = color;
         ctx.fillRect(7, 3, 3, 5);
         ctx.fillRect(11, 2, 2, 6);
@@ -531,12 +805,10 @@ var UI = (function() {
         ctx.fillRect(7, 3, 1, 5);
         ctx.fillRect(11, 2, 1, 6);
 
-        // Mane (back of head)
         ctx.fillStyle = dark;
         ctx.fillRect(20, 8, 3, 6);
         ctx.fillRect(21, 6, 2, 2);
 
-        // Snout/muzzle
         ctx.fillStyle = color;
         ctx.fillRect(20, 10, 5, 4);
         ctx.fillStyle = dark;
@@ -544,11 +816,9 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(21, 12, 3, 2);
 
-        // Nostril
         ctx.fillStyle = dark;
         ctx.fillRect(23, 11, 1, 1);
 
-        // Eye
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(14, 9, 2, 2);
         ctx.fillStyle = '#000000';
@@ -559,24 +829,20 @@ var UI = (function() {
         var dark = shadeColor(color, -40);
         var light = shadeColor(color, 40);
 
-        // Base platform
         ctx.fillStyle = dark;
         ctx.fillRect(8, 28, 16, 3);
         ctx.fillStyle = color;
         ctx.fillRect(9, 27, 14, 3);
 
-        // Lower body
         ctx.fillStyle = color;
         ctx.fillRect(10, 22, 12, 5);
         ctx.fillStyle = dark;
         ctx.fillRect(10, 22, 2, 5);
         ctx.fillRect(20, 22, 2, 5);
 
-        // Waist/collar
         ctx.fillStyle = dark;
         ctx.fillRect(11, 20, 10, 2);
 
-        // Upper body (tapered)
         ctx.fillStyle = color;
         ctx.fillRect(12, 14, 8, 6);
         ctx.fillStyle = dark;
@@ -585,11 +851,9 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(15, 14, 2, 6);
 
-        // Neck
         ctx.fillStyle = color;
         ctx.fillRect(13, 12, 6, 2);
 
-        // Head
         ctx.fillStyle = color;
         ctx.fillRect(11, 6, 10, 6);
         ctx.fillStyle = dark;
@@ -598,18 +862,15 @@ var UI = (function() {
         ctx.fillStyle = light;
         ctx.fillRect(14, 7, 3, 4);
 
-        // Head top (rounded)
         ctx.fillStyle = color;
         ctx.fillRect(12, 4, 8, 2);
         ctx.fillRect(13, 3, 6, 1);
         ctx.fillRect(14, 2, 4, 1);
 
-        // Highlight on head
         ctx.fillStyle = light;
         ctx.fillRect(13, 4, 2, 1);
     }
 
-    // Helper: shade a hex color
     function shadeColor(hex, amount) {
         var num = parseInt(hex.replace('#', ''), 16);
         var r = Math.min(255, Math.max(0, (num >> 16) + amount));
@@ -634,6 +895,14 @@ var UI = (function() {
                 var moved = Game.executeMove(row, col);
                 if (!moved) {
                     Game.selectPiece(row, col);
+                } else if (Game.getIsMultiplayer()) {
+                    // Send move to server
+                    var sel = Game.getSelectedPiece();
+                    // The move was already applied locally, send it
+                    Multiplayer.sendMove(
+                        { row: selectedPiece.row, col: selectedPiece.col },
+                        { row: row, col: col }
+                    );
                 }
             }
         }
@@ -644,10 +913,18 @@ var UI = (function() {
         var col = parseInt(e.currentTarget.dataset.col);
 
         if (Game.getState() === CH.STATE.MOVING) {
+            var selectedPiece = Game.getSelectedPiece();
             Game.executeMove(row, col);
+            if (Game.getIsMultiplayer() && selectedPiece) {
+                Multiplayer.sendMove(
+                    { row: selectedPiece.row, col: selectedPiece.col },
+                    { row: row, col: col }
+                );
+            }
         } else if (Game.getState() === CH.STATE.SELECTING) {
             var piece = Board.getPiece(row, col);
-            if (piece && piece.owner === CH.PLAYER) {
+            var myOwner = Game.getIsMultiplayer() ? Game.getMySide() : CH.PLAYER;
+            if (piece && piece.owner === myOwner) {
                 Game.selectPiece(row, col);
             }
         }
@@ -735,6 +1012,8 @@ var UI = (function() {
         var container = document.getElementById('promotionPieces');
         container.innerHTML = '';
 
+        var pieceColor = Game.getIsMultiplayer() ? '#00f5ff' : CH.PLAYER;
+
         for (var i = 0; i < pieces.length; i++) {
             var pieceBtn = document.createElement('div');
             pieceBtn.className = 'promotion-piece';
@@ -743,12 +1022,17 @@ var UI = (function() {
             var canvas = document.createElement('canvas');
             canvas.width = 32;
             canvas.height = 32;
-            drawPiece(canvas, pieces[i], CH.PLAYER);
+            drawPiece(canvas, pieces[i], pieceColor);
             pieceBtn.appendChild(canvas);
 
             pieceBtn.addEventListener('click', function() {
                 var pieceType = this.dataset.piece;
-                Game.completePromotion(pieceType);
+                if (Game.getIsMultiplayer()) {
+                    Game.completePromotion(pieceType);
+                    Multiplayer.sendPromotion(pieceType);
+                } else {
+                    Game.completePromotion(pieceType);
+                }
                 elements.promotionModal.classList.remove('active');
             });
 

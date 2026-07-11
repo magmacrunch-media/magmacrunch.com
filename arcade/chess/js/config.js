@@ -7,6 +7,7 @@ var CH = {};
 // ── Players ──────────────────────────────────────────────────────────────────
 CH.PLAYER = 'player';
 CH.AI = 'ai';
+CH.ONLINE = 'online';
 
 // ── Piece Types ──────────────────────────────────────────────────────────────
 CH.PAWN = 'pawn';
@@ -42,10 +43,12 @@ CH.BOARD_SIZE = 8;
 // ── Game States ──────────────────────────────────────────────────────────────
 CH.STATE = {
     WAITING: 'waiting',
+    WAITING_FOR_OPPONENT: 'waiting_for_opponent',
     SELECTING: 'selecting',
     MOVING: 'moving',
     PROMOTING: 'promoting',
     AI_TURN: 'ai_turn',
+    OPPONENT_TURN: 'opponent_turn',
     GAME_OVER: 'game_over'
 };
 

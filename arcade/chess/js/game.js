@@ -17,6 +17,8 @@ var Game = (function() {
     var onGameEnd = null;
     var moveNotations = [];
     var pendingPromotion = null;
+    var isMultiplayer = false;
+    var mySide = null; // 'white' or 'black' in multiplayer
 
     // ── Settings ─────────────────────────────────────────────────────────────
     function loadSettings() {
@@ -64,11 +66,23 @@ var Game = (function() {
         pendingPromotion = null;
         stopTimer();
         timeRemaining = { player: 0, ai: 0 };
+        isMultiplayer = false;
+        mySide = null;
     }
 
-    function startGame() {
+    function startGame(multiplayer, side) {
         init();
         loadSettings();
+
+        isMultiplayer = !!multiplayer;
+        mySide = side || null;
+
+        if (isMultiplayer) {
+            // In multiplayer, the server controls turns
+            state = CH.STATE.WAITING_FOR_OPPONENT;
+            notifyStateChange();
+            return { player: currentPlayer, settings: settings, multiplayer: true, side: mySide };
+        }
 
         // Set up timers if time control is enabled
         var tc = CH.TIME_CONTROLS[settings.timeControl];
@@ -87,10 +101,12 @@ var Game = (function() {
     // ── Piece Selection ──────────────────────────────────────────────────────
     function selectPiece(row, col) {
         if (state !== CH.STATE.SELECTING) return false;
-        if (currentPlayer !== CH.PLAYER) return false;
+
+        var myOwner = isMultiplayer ? mySide : CH.PLAYER;
+        if (!isMultiplayer && currentPlayer !== myOwner) return false;
 
         var piece = Board.getPiece(row, col);
-        if (!piece || piece.owner !== CH.PLAYER) return false;
+        if (!piece || piece.owner !== myOwner) return false;
 
         var moves = Board.getLegalMoves(row, col);
         if (moves.length === 0) return false;
@@ -156,7 +172,15 @@ var Game = (function() {
         }
 
         // Switch turns
-        switchTurn();
+        if (isMultiplayer) {
+            // In multiplayer, wait for server to confirm next turn
+            selectedPiece = null;
+            legalMoves = [];
+            state = CH.STATE.OPPONENT_TURN;
+            notifyStateChange();
+        } else {
+            switchTurn();
+        }
         return true;
     }
 
@@ -188,7 +212,14 @@ var Game = (function() {
             return true;
         }
 
-        switchTurn();
+        if (isMultiplayer) {
+            selectedPiece = null;
+            legalMoves = [];
+            state = CH.STATE.OPPONENT_TURN;
+            notifyStateChange();
+        } else {
+            switchTurn();
+        }
         return true;
     }
 
@@ -198,7 +229,10 @@ var Game = (function() {
         selectedPiece = null;
         legalMoves = [];
 
-        if (currentPlayer === CH.PLAYER) {
+        if (isMultiplayer) {
+            // In multiplayer, wait for server to tell us whose turn it is
+            state = CH.STATE.OPPONENT_TURN;
+        } else if (currentPlayer === CH.PLAYER) {
             state = CH.STATE.SELECTING;
         } else {
             state = CH.STATE.AI_TURN;
@@ -305,10 +339,18 @@ var Game = (function() {
             notation += '=' + CH.NOTATION_SYMBOLS[move.promotionType];
         }
 
-        // Check/Checkmate
-        var opponent = currentPlayer === CH.PLAYER ? CH.AI : CH.PLAYER;
-        if (Board.isInCheck(opponent)) {
-            if (Board.hasCheckmate(opponent)) {
+        // Check/Checkmate — determine opponent from the piece that moved
+        var lastPiece = Board.getPiece(move.to.row, move.to.col);
+        var opponentOwner = null;
+        if (lastPiece) {
+            if (isMultiplayer) {
+                opponentOwner = lastPiece.owner === 'white' ? 'black' : 'white';
+            } else {
+                opponentOwner = lastPiece.owner === CH.PLAYER ? CH.AI : CH.PLAYER;
+            }
+        }
+        if (opponentOwner && Board.isInCheck(opponentOwner)) {
+            if (Board.hasCheckmate(opponentOwner)) {
                 notation += '#';
             } else {
                 notation += '+';
@@ -370,6 +412,50 @@ var Game = (function() {
     function getPendingPromotion() { return pendingPromotion; }
     function getTimeRemaining() { return timeRemaining; }
     function getFormattedTime(player) { return formatTime(timeRemaining[player]); }
+    function getIsMultiplayer() { return isMultiplayer; }
+    function getMySide() { return mySide; }
+
+    // ── Multiplayer State Sync ───────────────────────────────────────────────
+    function applyServerState(serverState, mySideParam) {
+        // Sync board
+        Board.setState(serverState.board);
+        if (serverState.castlingRights) Board.setCastlingRights(serverState.castlingRights);
+        if (serverState.enPassantTarget !== undefined) Board.setEnPassantTarget(serverState.enPassantTarget);
+
+        if (mySideParam) mySide = mySideParam;
+
+        // Determine whose turn it is from server perspective
+        var serverTurnSide = serverState.currentTurnSide; // 'white' or 'black'
+        if (serverTurnSide === mySide) {
+            currentPlayer = CH.PLAYER;
+            state = CH.STATE.SELECTING;
+        } else {
+            currentPlayer = CH.PLAYER; // still 'player' internally, but it's opponent's turn
+            state = CH.STATE.OPPONENT_TURN;
+        }
+
+        selectedPiece = null;
+        legalMoves = [];
+        notifyStateChange();
+    }
+
+    function _internalSetTurn(who) {
+        if (who === 'player') {
+            currentPlayer = CH.PLAYER;
+            state = CH.STATE.SELECTING;
+        } else {
+            currentPlayer = CH.PLAYER;
+            state = CH.STATE.OPPONENT_TURN;
+        }
+        selectedPiece = null;
+        legalMoves = [];
+        notifyStateChange();
+    }
+
+    function setMultiplayerState(newState) {
+        state = newState;
+        notifyStateChange();
+    }
 
     // ── State Change Notification ────────────────────────────────────────────
     function setOnStateChange(cb) { onStateChange = cb; }
@@ -411,6 +497,11 @@ var Game = (function() {
         getPendingPromotion: getPendingPromotion,
         getTimeRemaining: getTimeRemaining,
         getFormattedTime: getFormattedTime,
+        getIsMultiplayer: getIsMultiplayer,
+        getMySide: getMySide,
+        applyServerState: applyServerState,
+        _internalSetTurn: _internalSetTurn,
+        setMultiplayerState: setMultiplayerState,
         setOnStateChange: setOnStateChange,
         setOnGameEnd: setOnGameEnd
     };

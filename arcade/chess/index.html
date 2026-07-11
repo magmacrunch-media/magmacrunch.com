@@ -35,6 +35,7 @@
                     <button id="startGameBtn" class="start-btn primary">
                         ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
                     </button>
+                    <button id="multiplayerBtn" class="start-btn">MULTIPLAYER</button>
                     <button id="startSettingsBtn" class="start-btn">SETTINGS</button>
                     <button id="helpBtn" class="start-btn">HOW TO PLAY</button>
                     <button id="creditsBtn" class="start-btn">CREDITS</button>
@@ -43,6 +44,62 @@
                 <div class="start-footer">
                     <p>CLASSIC CHESS &nbsp;·&nbsp; VS AI OPPONENT</p>
                     <p>ALGEBRAIC NOTATION &nbsp;·&nbsp; PIXEL ART PIECES</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
+        <div id="lobbyOverlay" class="modal-overlay" style="display: none;">
+            <div class="modal-content lobby-content">
+                <div class="modal-titlebar">
+                    <span>ONLINE LOBBY</span>
+                    <button id="closeLobby" class="modal-close">✕</button>
+                </div>
+                <div class="modal-body">
+                    <!-- Connection Status -->
+                    <div id="lobbyStatus" class="lobby-status">Connecting...</div>
+
+                    <!-- Room Code Display -->
+                    <div id="roomCodeDisplay" class="room-code-display" style="display: none;">
+                        <span class="room-code-label">ROOM</span>
+                        <span id="roomCodeValue" class="room-code-value">----</span>
+                    </div>
+
+                    <!-- Player List -->
+                    <div class="lobby-players">
+                        <div class="lobby-players-header">PLAYERS</div>
+                        <div id="lobbyPlayerList" class="lobby-player-list"></div>
+                    </div>
+
+                    <!-- Time Control (host only) -->
+                    <div id="lobbyTimeControl" class="lobby-time-control" style="display: none;">
+                        <div class="settings-group-title">TIME CONTROL</div>
+                        <div class="settings-options">
+                            <div class="settings-option">
+                                <input type="radio" name="mpTimeControl" id="mpTcNone" value="none" checked>
+                                <label for="mpTcNone">No Timer</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="mpTimeControl" id="mpTcBlitz" value="blitz">
+                                <label for="mpTcBlitz">Blitz (5 min)</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="mpTimeControl" id="mpTcRapid" value="rapid">
+                                <label for="mpTcRapid">Rapid (15 min)</label>
+                            </div>
+                            <div class="settings-option">
+                                <input type="radio" name="mpTimeControl" id="mpTcClassical" value="classical">
+                                <label for="mpTcClassical">Classical (30 min)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lobby Actions -->
+                    <div class="lobby-actions">
+                        <button id="startMultiplayerBtn" class="start-btn primary" style="display: none;">START GAME</button>
+                        <button id="spectateBtn" class="start-btn">SPECTATE</button>
+                        <button id="leaveLobbyBtn" class="start-btn">LEAVE</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -85,6 +142,18 @@
                             <span>MOVE HISTORY</span>
                         </div>
                         <div class="move-history-list" id="moveHistoryList"></div>
+                    </div>
+
+                    <!-- Chat Panel (multiplayer only) -->
+                    <div id="chatPanel" class="chat-panel" style="display: none;">
+                        <div class="chat-header">
+                            <span>CHAT</span>
+                        </div>
+                        <div id="chatMessages" class="chat-messages"></div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." maxlength="200">
+                            <button id="chatSendBtn" class="chat-send-btn">▶</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -267,10 +336,14 @@
     </div>
 
     <!-- JavaScript — ORDER MATTERS -->
+    <script>var MP_DEFAULT_SERVER = 'ws://localhost:8769';</script>
+    <script src="../shared/multiplayer/protocol.js"></script>
+    <script src="../shared/multiplayer/network.js"></script>
     <script src="js/config.js"></script>
     <script src="js/board.js"></script>
     <script src="js/ai.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/multiplayer.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

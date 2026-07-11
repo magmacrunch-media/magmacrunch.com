@@ -50,6 +50,7 @@ GAMES=(
     "SORRY:8765:SORRY"
     "cribbage:8766:Cribbage"
     "scandinavian-stud:8767:Scandinavian Stud"
+    "chess:8769:Chess"
     "checkers:8770:Checkers"
     "backgammon:8771:Backgammon"
     "chinese-checkers:8772:Chinese Checkers"
