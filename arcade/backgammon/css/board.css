@@ -5,8 +5,8 @@
 /* ── Board Container ────────────────────────────────────────────────────────── */
 .board-container {
     position: relative;
-    width: 100%;
-    max-width: 600px;
+    width: 600px;
+    max-width: 100%;
     margin: 0 auto;
     background: var(--bg-board-bg);
     border: 3px solid var(--bg-point-light);
