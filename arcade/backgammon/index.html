@@ -36,6 +36,9 @@
                     <button id="startGameBtn" class="start-btn primary">
                         ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
                     </button>
+                    <button id="onlineBtn" class="start-btn online">
+                        🌐&nbsp;&nbsp;PLAY ONLINE
+                    </button>
                     <button id="helpBtn" class="start-btn">HOW TO PLAY</button>
                     <button id="creditsBtn" class="start-btn">CREDITS</button>
                 </div>
@@ -69,9 +72,19 @@
                 </div>
             </div>
 
-            <!-- Board Area -->
-            <div class="board-area">
-                <div id="boardContainer" class="board-container"></div>
+            <!-- Board + Chat Layout -->
+            <div class="game-layout">
+                <div class="board-area">
+                    <div id="boardContainer" class="board-container"></div>
+                </div>
+                <div id="gameChat" class="game-chat" style="display: none;">
+                    <div class="chat-header">// ARCADE CHAT //</div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input">
+                        <input id="chatInput" type="text" placeholder="Type a message..." maxlength="200">
+                        <button id="chatSend">SEND</button>
+                    </div>
+                </div>
             </div>
 
             <!-- Dice Area -->
@@ -104,6 +117,38 @@
                 <button id="menuBtn" class="control-btn">MENU</button>
             </div>
 
+        </div>
+    </div>
+
+    <!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
+    <div id="lobbyOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>ONLINE LOBBY</span>
+            </div>
+            <div class="modal-body">
+                <div id="lobbyContent">
+                    <div class="lobby-status" id="lobbyStatus">Connecting...</div>
+                    <div id="lobbyRoomCode" class="lobby-room-code" style="display: none;">
+                        Room: <span id="roomCodeDisplay"></span>
+                        <small>Share this code with your opponent</small>
+                    </div>
+                    <div class="lobby-room">
+                        <input type="text" id="roomCodeInput" placeholder="Enter room code (optional)" maxlength="4" style="text-transform: uppercase;">
+                    </div>
+                    <div class="lobby-actions">
+                        <button id="lobbyJoinBtn" class="start-btn primary">JOIN / CREATE ROOM</button>
+                        <button id="lobbyBackBtn" class="start-btn">BACK</button>
+                    </div>
+                    <div id="lobbyPlayers" class="lobby-players" style="display: none;">
+                        <div class="lobby-waiting">Waiting for opponent...</div>
+                        <div id="lobbyPlayerList"></div>
+                    </div>
+                    <div id="lobbyStartArea" class="lobby-actions" style="display: none;">
+                        <button id="lobbyStartBtn" class="start-btn primary">START GAME</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -224,11 +269,16 @@
     </div>
 
     <!-- JavaScript — ORDER MATTERS -->
+    <script>var MP_DEFAULT_SERVER = 'ws://98.49.52.35:8771';</script>
+    <script src="../shared/multiplayer/protocol.js"></script>
+    <script src="../shared/multiplayer/network.js"></script>
     <script src="js/config.js"></script>
     <script src="js/board.js"></script>
     <script src="js/dice.js"></script>
     <script src="js/ai.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/multiplayer.js"></script>
+    <script src="js/chat.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

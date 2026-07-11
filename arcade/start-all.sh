@@ -51,8 +51,9 @@ GAMES=(
     "cribbage:8766:Cribbage"
     "scandinavian-stud:8767:Scandinavian Stud"
     "checkers:8770:Checkers"
+    "backgammon:8771:Backgammon"
     # Add more games below:
-    # "newgame:8771:New Game"
+    # "newgame:8772:New Game"
 )
 
 # ── Chat server (special case) ───────────────────────────────────────────────

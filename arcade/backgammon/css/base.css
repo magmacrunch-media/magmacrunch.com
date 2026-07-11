@@ -191,6 +191,105 @@ body {
     text-shadow: 0 0 8px var(--bg-dice-glow);
 }
 
+/* ── Game Layout (Board + Chat) ────────────────────────────────────────────── */
+.game-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 950px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ── Game Chat ─────────────────────────────────────────────────────────────── */
+.game-chat {
+    width: 220px;
+    min-width: 180px;
+    background: var(--bg-board-bg);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Press Start 2P', monospace;
+    max-height: 500px;
+}
+
+.game-chat .chat-header {
+    font-size: 9px;
+    color: var(--bg-point-light);
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+    text-align: center;
+}
+
+.game-chat .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    font-size: 8px;
+    line-height: 1.6;
+    color: var(--bg-text);
+    max-height: 400px;
+}
+
+.game-chat .chat-msg {
+    margin-bottom: 4px;
+    word-wrap: break-word;
+}
+
+.game-chat .chat-msg .chat-name {
+    font-weight: bold;
+}
+
+.game-chat .chat-msg.system {
+    color: var(--bg-text-dim);
+    font-style: italic;
+}
+
+.game-chat .chat-input {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    border-top: 1px solid rgba(0,245,255,0.2);
+}
+
+.game-chat .chat-input input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--bg-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px;
+    border-radius: 2px;
+    min-width: 0;
+}
+
+.game-chat .chat-input input::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+
+.game-chat .chat-input input:focus {
+    outline: none;
+    border-color: var(--bg-highlight);
+}
+
+.game-chat .chat-input button {
+    background: var(--bg-highlight);
+    color: var(--bg-bg);
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.game-chat .chat-input button:hover {
+    background: #fff;
+}
+
 /* ── Board Area ─────────────────────────────────────────────────────────────── */
 .board-area {
     position: relative;

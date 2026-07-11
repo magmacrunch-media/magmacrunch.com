@@ -9,6 +9,7 @@ var UI = (function() {
     var selectedChecker = null;
     var highlightedMoves = [];
     var diceAnimationInterval = null;
+    var isMultiplayer = false;
 
     // ── Initialize ───────────────────────────────────────────────────────────
     function init() {
@@ -16,12 +17,16 @@ var UI = (function() {
         setupEventListeners();
         Game.setOnStateChange(onStateChange);
         Game.setOnGameEnd(onGameEnd);
+        Multiplayer.setOnStateUpdate(onMultiplayerStateUpdate);
+        Multiplayer.setOnGameStart(onMultiplayerGameStart);
+        Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
     }
 
     function cacheElements() {
         elements.startScreen = document.getElementById('startScreen');
         elements.gameScreen = document.getElementById('gameScreen');
         elements.startGameBtn = document.getElementById('startGameBtn');
+        elements.onlineBtn = document.getElementById('onlineBtn');
         elements.boardContainer = document.getElementById('boardContainer');
         elements.diceArea = document.getElementById('diceArea');
         elements.die1 = document.getElementById('die1');
@@ -46,13 +51,26 @@ var UI = (function() {
         elements.menuBtn = document.getElementById('menuBtn');
         elements.helpBtn = document.getElementById('helpBtn');
         elements.creditsBtn = document.getElementById('creditsBtn');
+        elements.lobbyOverlay = document.getElementById('lobbyOverlay');
+        elements.lobbyStatus = document.getElementById('lobbyStatus');
+        elements.lobbyRoomInput = document.getElementById('roomCodeInput');
+        elements.lobbyJoinBtn = document.getElementById('lobbyJoinBtn');
+        elements.lobbyBackBtn = document.getElementById('lobbyBackBtn');
+        elements.lobbyPlayers = document.getElementById('lobbyPlayers');
+        elements.lobbyPlayerList = document.getElementById('lobbyPlayerList');
+        elements.lobbyRoomCode = document.getElementById('lobbyRoomCode');
+        elements.roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        elements.lobbyStartArea = document.getElementById('lobbyStartArea');
+        elements.lobbyStartBtn = document.getElementById('lobbyStartBtn');
+        elements.gameChat = document.getElementById('gameChat');
     }
 
     function setupEventListeners() {
-        elements.startGameBtn.addEventListener('click', startGame);
+        elements.startGameBtn.addEventListener('click', startLocalGame);
+        elements.onlineBtn.addEventListener('click', openLobby);
         elements.rollBtn.addEventListener('click', rollDice);
         elements.doublingCube.addEventListener('click', handleDouble);
-        elements.newGameBtn.addEventListener('click', startGame);
+        elements.newGameBtn.addEventListener('click', startLocalGame);
         elements.menuBtn.addEventListener('click', showMenu);
         elements.helpBtn.addEventListener('click', showInstructions);
         elements.creditsBtn.addEventListener('click', showCredits);
@@ -60,22 +78,31 @@ var UI = (function() {
         elements.closeInstructionsBtn.addEventListener('click', hideInstructions);
         elements.closeCredits.addEventListener('click', hideCredits);
         elements.closeCreditsBtn.addEventListener('click', hideCredits);
-        elements.playAgainBtn.addEventListener('click', startGame);
+        elements.playAgainBtn.addEventListener('click', isMultiplayer ? openLobby : startLocalGame);
+        elements.lobbyJoinBtn.addEventListener('click', joinLobby);
+        elements.lobbyBackBtn.addEventListener('click', closeLobby);
+        elements.lobbyStartBtn.addEventListener('click', function() {
+            Multiplayer.startGame();
+        });
 
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (elements.startScreen.style.display !== 'none') {
-                    startGame();
+                    startLocalGame();
                 }
             }
         });
     }
 
-    // ── Game Flow ────────────────────────────────────────────────────────────
-    function startGame() {
+    // ── Local Game ───────────────────────────────────────────────────────────
+    function startLocalGame() {
+        isMultiplayer = false;
+        Multiplayer.quit();
+        Chat.disconnect();
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
+        elements.gameChat.style.display = 'none';
         hideGameOver();
         Game.startGame();
         renderBoard();
@@ -83,12 +110,149 @@ var UI = (function() {
     }
 
     function showMenu() {
+        isMultiplayer = false;
+        Multiplayer.quit();
+        Chat.disconnect();
         elements.startScreen.style.display = 'flex';
         elements.gameScreen.style.display = 'none';
+        elements.gameChat.style.display = 'none';
+    }
+
+    // ── Lobby ────────────────────────────────────────────────────────────────
+    function openLobby() {
+        elements.startScreen.style.display = 'none';
+        elements.lobbyOverlay.style.display = 'flex';
+        elements.lobbyOverlay.classList.add('active');
+        elements.lobbyStatus.textContent = 'Connecting...';
+        elements.lobbyPlayers.style.display = 'none';
+        elements.lobbyRoomCode.style.display = 'none';
+        elements.lobbyStartArea.style.display = 'none';
+        elements.lobbyRoomInput.value = '';
+        elements.lobbyRoomInput.style.display = '';
+        elements.lobbyJoinBtn.style.display = '';
+        Multiplayer.connect();
+    }
+
+    function closeLobby() {
+        Multiplayer.quit();
+        elements.lobbyOverlay.classList.remove('active');
+        elements.lobbyOverlay.style.display = 'none';
+        elements.startScreen.style.display = 'flex';
+    }
+
+    function joinLobby() {
+        var roomCode = elements.lobbyRoomInput.value.trim().toUpperCase() || null;
+        var playerName = localStorage.getItem('arcade_username') || 'Player' + Math.floor(Math.random() * 999);
+        elements.lobbyStatus.textContent = 'Joining room...';
+        Multiplayer.joinRoom(playerName, roomCode);
+    }
+
+    // ── Multiplayer Callbacks ────────────────────────────────────────────────
+    function onMultiplayerStateUpdate(update) {
+        if (update.type === 'snapshot') {
+            elements.lobbyStatus.textContent = 'Connected! Enter a room code or join an existing room.';
+        } else if (update.type === 'welcome') {
+            elements.lobbyRoomCode.style.display = 'block';
+            elements.roomCodeDisplay.textContent = update.room;
+            elements.lobbyRoomInput.style.display = 'none';
+            elements.lobbyJoinBtn.style.display = 'none';
+            elements.lobbyStatus.textContent = update.isHost ? 'You are the host. Share the room code above.' : 'Joined room! Waiting for host to start...';
+        } else if (update.type === 'lobby') {
+            elements.lobbyStatus.textContent = 'Players in room:';
+            elements.lobbyPlayers.style.display = 'block';
+            elements.lobbyPlayerList.innerHTML = '';
+            update.players.forEach(function(p) {
+                var div = document.createElement('div');
+                div.className = 'lobby-player';
+                div.innerHTML = '<span class="lobby-player-dot" style="background:' + p.color + '"></span>' + p.name + (p.isHost ? ' (host)' : '');
+                elements.lobbyPlayerList.appendChild(div);
+            });
+            var isHost = update.players.some(function(p) { return p.isHost; });
+            if (isHost && update.canStart) {
+                elements.lobbyStartArea.style.display = 'flex';
+                elements.lobbyStatus.textContent = 'Ready! Click START GAME when you want to begin.';
+            } else if (!isHost) {
+                elements.lobbyStartArea.style.display = 'none';
+                elements.lobbyStatus.textContent = 'Waiting for host to start the game...';
+            }
+        } else if (update.type === 'disconnected') {
+            elements.lobbyStatus.textContent = 'Disconnected. Try again.';
+            elements.lobbyPlayers.style.display = 'none';
+            elements.lobbyStartArea.style.display = 'none';
+        } else if (update.type === 'action') {
+            applyServerState(update.msg.state);
+        } else if (update.type === 'state') {
+            applyServerState(update.state);
+        }
+    }
+
+    function onMultiplayerGameStart(state, side) {
+        elements.lobbyOverlay.classList.remove('active');
+        elements.lobbyOverlay.style.display = 'none';
+        elements.startScreen.style.display = 'none';
+        elements.gameScreen.style.display = 'flex';
+        elements.gameChat.style.display = 'flex';
+        hideGameOver();
+        isMultiplayer = true;
+        applyServerState(state);
+        Chat.connect();
+    }
+
+    function onMultiplayerGameEnd(won, winnerName, winnerSide) {
+        showMultiplayerGameOver(won, winnerName);
+    }
+
+    function applyServerState(state) {
+        // Apply board from server
+        Board.setState(state.board);
+
+        // Update dice display
+        if (state.dice) {
+            updateDieDisplay(elements.die1, state.dice[0]);
+            updateDieDisplay(elements.die2, state.dice[1]);
+        }
+
+        // Update doubling cube
+        updateDoublingCube(state.doublingOwner, state.doublingCube);
+
+        // Update stakes display
+        elements.scoreValue.textContent = state.doublingCube || 1;
+
+        // Set whose turn it is
+        var mySide = Multiplayer.getMySide();
+        var currentSide = state.currentTurnSide;
+
+        if (currentSide === mySide) {
+            elements.turnIndicator.textContent = 'YOUR TURN';
+            elements.turnIndicator.style.color = BG.COLORS.checkerPlayer;
+            setMessage('Select a checker to move');
+            elements.rollBtn.disabled = false;
+        } else {
+            elements.turnIndicator.textContent = 'OPPONENT\'S TURN';
+            elements.turnIndicator.style.color = BG.COLORS.checkerAi;
+            setMessage('Waiting for opponent...');
+            elements.rollBtn.disabled = true;
+        }
+
+        // Update game phase
+        if (state.phase === 'doubling') {
+            if (currentSide === mySide) {
+                setMessage('Opponent wants to double! Accept or reject.');
+            } else {
+                setMessage('Waiting for opponent to accept double...');
+            }
+        }
+
+        // Update off counts
+        var playerOff = Board.getOffCount(BG.PLAYER);
+        var aiOff = Board.getOffCount(BG.AI);
+
+        renderBoard();
     }
 
     // ── State Change Handler ─────────────────────────────────────────────────
     function onStateChange(data) {
+        if (isMultiplayer) return; // Handled by multiplayer
         renderBoard();
         updateUI();
         updateDice(data.dice);
@@ -100,6 +264,7 @@ var UI = (function() {
     }
 
     function onGameEnd(winner) {
+        if (isMultiplayer) return;
         showGameOver(winner);
     }
 
@@ -278,6 +443,29 @@ var UI = (function() {
     function handlePointClick(point) {
         var currentPlayer = Game.getCurrentPlayer();
 
+        if (isMultiplayer) {
+            // In multiplayer, send the move to the server
+            if (selectedChecker === null) return;
+            var state = Multiplayer.getMySide ? Multiplayer.getMySide() : null;
+            // Find the move index
+            var moves = Game.getMovesRemaining();
+            for (var i = 0; i < moves.length; i++) {
+                for (var j = 0; j < moves[i].length; j++) {
+                    if (moves[i][j].from === selectedChecker && moves[i][j].to === point) {
+                        Multiplayer.sendMove(i);
+                        clearSelection();
+                        return;
+                    }
+                }
+            }
+            // If no move found, try selecting a checker on this point
+            var board = Board.getState();
+            if (board[point] > 0) {
+                selectChecker(point);
+            }
+            return;
+        }
+
         if (currentPlayer !== BG.PLAYER) return;
         if (Game.getState() !== BG.STATE.MOVING) return;
         if (selectedChecker === null) return;
@@ -414,6 +602,11 @@ var UI = (function() {
 
     // ── Doubling Cube ────────────────────────────────────────────────────────
     function handleDouble() {
+        if (isMultiplayer) {
+            Multiplayer.sendDouble();
+            return;
+        }
+
         if (Game.getCurrentPlayer() !== BG.PLAYER) return;
         if (!Dice.canDouble(BG.PLAYER)) return;
 
@@ -505,6 +698,20 @@ var UI = (function() {
         }
 
         elements.gameOverScore.textContent = 'Score: ' + Game.getScore() + 'x';
+        elements.gameOverModal.classList.add('active');
+    }
+
+    function showMultiplayerGameOver(won, winnerName) {
+        if (won) {
+            elements.gameOverTitle.textContent = 'YOU WIN!';
+            elements.gameOverTitle.className = 'game-over-title win';
+            elements.gameOverMessage.textContent = 'Congratulations! You defeated ' + winnerName + '!';
+        } else {
+            elements.gameOverTitle.textContent = 'DEFEAT';
+            elements.gameOverTitle.className = 'game-over-title lose';
+            elements.gameOverMessage.textContent = winnerName + ' wins!';
+        }
+        elements.gameOverScore.textContent = '';
         elements.gameOverModal.classList.add('active');
     }
 
