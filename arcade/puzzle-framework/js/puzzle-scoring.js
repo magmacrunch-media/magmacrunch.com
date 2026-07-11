@@ -8,9 +8,13 @@ var PuzzleScoring = (function() {
     /**
      * Create a new PuzzleScoring instance
      * @param {string} gameName - Unique name for the game (e.g., '2048', 'fifteen-puzzle')
+     * @param {object} config - Optional configuration
+     * @param {boolean} config.ascending - If true, lower scores rank higher (e.g., fewest moves)
      */
-    function create(gameName) {
+    function create(gameName, config) {
+        config = config || {};
         var storageKey = gameName + '_scores';
+        var ascending = config.ascending || false;
         var scores = loadScores();
 
         function loadScores() {
@@ -48,7 +52,9 @@ var PuzzleScoring = (function() {
                 highestTile: metadata.highestTile || 0
             };
             scores.push(entry);
-            scores.sort(function(a, b) { return b.score - a.score; });
+            scores.sort(function(a, b) {
+                return ascending ? a.score - b.score : b.score - a.score;
+            });
             scores = scores.slice(0, 100); // Keep top 100
             saveScores();
             return getRank(score, difficulty);
@@ -62,7 +68,7 @@ var PuzzleScoring = (function() {
                 ? scores.filter(function(s) { return s.difficulty === difficulty; })
                 : scores;
             for (var i = 0; i < filtered.length; i++) {
-                if (score >= filtered[i].score) return i + 1;
+                if (ascending ? score <= filtered[i].score : score >= filtered[i].score) return i + 1;
             }
             return filtered.length + 1;
         }
@@ -86,7 +92,8 @@ var PuzzleScoring = (function() {
          */
         function isNewHighScore(score, difficulty) {
             var topScores = getTopScores(difficulty, 10);
-            return topScores.length < 10 || score > topScores[topScores.length - 1].score;
+            if (topScores.length < 10) return true;
+            return ascending ? score < topScores[topScores.length - 1].score : score > topScores[topScores.length - 1].score;
         }
 
         /**

@@ -72,6 +72,8 @@ var PuzzleGrid = (function() {
             var newBoard = [];
             for (var r = 0; r < grid.size; r++) {
                 newBoard[r] = [];
+            }
+            for (var r = 0; r < grid.size; r++) {
                 for (var c = 0; c < grid.size; c++) {
                     newBoard[c][grid.size - 1 - r] = grid.board[r][c];
                 }
@@ -155,6 +157,52 @@ var PuzzleGrid = (function() {
     }
 
     /**
+     * Find the position of a value in the grid
+     * @param {object} grid - The grid to search
+     * @param {*} value - The value to find
+     * @returns {object|null} {row, col} or null if not found
+     */
+    function findCell(grid, value) {
+        for (var r = 0; r < grid.size; r++) {
+            for (var c = 0; c < grid.size; c++) {
+                if (grid.board[r][c] === value) {
+                    return { row: r, col: c };
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Swap two cells in the grid
+     * @param {object} grid - The grid
+     * @param {number} r1 - Row of first cell
+     * @param {number} c1 - Column of first cell
+     * @param {number} r2 - Row of second cell
+     * @param {number} c2 - Column of second cell
+     */
+    function swap(grid, r1, c1, r2, c2) {
+        var temp = grid.board[r1][c1];
+        grid.board[r1][c1] = grid.board[r2][c2];
+        grid.board[r2][c2] = temp;
+    }
+
+    /**
+     * Check if grid matches a solved target state
+     * @param {object} grid - The grid to check
+     * @param {Array<Array>} targetBoard - The solved board state
+     * @returns {boolean}
+     */
+    function isSolved(grid, targetBoard) {
+        for (var r = 0; r < grid.size; r++) {
+            for (var c = 0; c < grid.size; c++) {
+                if (grid.board[r][c] !== targetBoard[r][c]) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Debug: convert grid to string
      */
     function toString(grid) {
@@ -180,6 +228,9 @@ var PuzzleGrid = (function() {
         getValues: getValues,
         getMaxValue: getMaxValue,
         countValue: countValue,
+        findCell: findCell,
+        swap: swap,
+        isSolved: isSolved,
         toString: toString
     };
 
