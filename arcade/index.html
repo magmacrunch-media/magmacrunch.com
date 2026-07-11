@@ -503,6 +503,15 @@
         }
 
         /* ── SERVER STATUS ── */
+        .server-status-link {
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.15s;
+        }
+        .server-status-link:hover {
+            transform: translateY(-2px);
+        }
+
         .server-status {
             display: flex;
             flex-direction: column;
@@ -753,10 +762,12 @@
         also on &nbsp;<a href="https://magmacrunch.itch.io/" target="_blank">itch.io ↗</a>
     </div>
 
-    <div class="server-status">
-        <canvas id="serverCanvas" width="128" height="128" title="magmacrunch server"></canvas>
-        <div class="server-text">supported by the magmacrunch server since March 2026</div>
-    </div>
+    <a href="server.html" class="server-status-link">
+        <div class="server-status">
+            <canvas id="serverCanvas" width="128" height="128" title="magmacrunch server"></canvas>
+            <div class="server-text">supported by the magmacrunch server since March 2026</div>
+        </div>
+    </a>
 
     <!-- Fake high score board for flavor -->
     <!-- <div class="scoreboard"> -->

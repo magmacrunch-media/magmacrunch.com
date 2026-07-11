@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>the server — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ══ PAGE: server ══ */
+        :root {
+            --nav-accent: #ff2e9c;
+            --nav-brand: #ff2e9c;
+            --nav-glow: rgba(255,46,156,0.4);
+            --nav-brand-glow: rgba(255,46,156,0.7);
+        }
+        body {
+            background: #0a0612;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #8a7fa8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #ff2e9c; }
+        .breadcrumb .sep { margin: 0 8px; color: #ff2e9c; opacity: 0.7; }
+        .breadcrumb .current { color: #ff2e9c; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title-ascii-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .page-title-ascii {
+            display: inline-block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 7px;
+            line-height: 1.25;
+            color: #ff2e9c;
+            text-shadow: 0 0 8px rgba(255,46,156,0.5);
+            white-space: pre;
+            text-align: left;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1200px) { .page-title-ascii { font-size: 5.5px; } }
+        @media (max-width: 900px)  { .page-title-ascii { font-size: 4px; } }
+        @media (max-width: 600px)  { .page-title-ascii { font-size: 3px; } }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #ff2e9c;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 8px rgba(255,46,156,0.5);
+        }
+
+        .content {
+            width: 100%;
+            max-width: 740px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .content-section h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #ff2e9c;
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+            text-shadow: 0 0 8px rgba(255,46,156,0.4);
+        }
+
+        .content-section p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: #c8bdd0;
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+
+        .content-section p strong {
+            color: #f0f8ff;
+        }
+
+        .game-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px 0;
+        }
+
+        .game-list li {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: #8a7fa8;
+            padding: 6px 0;
+            border-bottom: 1px solid #1e1e2e;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .game-list li:last-child { border-bottom: none; }
+
+        .game-list .game-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ff2e9c;
+            flex-shrink: 0;
+        }
+
+        .game-list .game-name {
+            color: #f0f8ff;
+        }
+
+        .diagram {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #00f5ff;
+            background: #150b29;
+            border: 1px solid #3a2d5c;
+            padding: 16px;
+            margin: 16px 0;
+            overflow-x: auto;
+            line-height: 1.5;
+            white-space: pre;
+        }
+
+        .back-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #8a7fa8;
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.15s, text-shadow 0.15s;
+            margin-bottom: 24px;
+            align-self: flex-start;
+            animation: fadeUp 0.5s ease both;
+        }
+        .back-link:hover {
+            color: #ff2e9c;
+            text-shadow: 0 0 8px rgba(255,46,156,0.5);
+        }
+
+        footer { border-top-color: #3a2d5c; }
+        footer span { color: #ff2e9c; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">home</a></li>
+        <li><a href="../home/about.html">about</a></li>
+        <li>
+            <a href="../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../music/jukebox/index.html">jukebox</a>
+                <a href="../music/distributed-music.html">distributed music</a>
+                <a href="../music/physical-media/index.html">physical media</a>
+            </div>
+        </li>
+        <li>
+            <a href="../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../visual/music-videos.html">music videos</a>
+                <a href="../visual/collage.html">collage</a>
+                <a href="../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li>
+            <a href="../archive/index.html">archive</a>
+            <div class="dropdown">
+                <a href="../archive/by-artist/index.html">by artist</a>
+                <a href="../archive/by-place/index.html">by place</a>
+                <a href="../archive/by-label/index.html">by label</a>
+                <a href="../archive/by-contributor/index.html">by contributor</a>
+            </div>
+        </li>
+        <li>
+            <a href="../arcade/index.html">arcade</a>
+            <div class="dropdown">
+                <a href="../arcade/board-games/index.html">board games</a>
+                <a href="../arcade/card-games/index.html">card games</a>
+                <a href="../arcade/puzzles/index.html">puzzles</a>
+                <a href="../arcade/action/index.html">action</a>
+            </div>
+        </li>
+        <li><a href="../press/index.html">press</a></li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <a href="index.html">arcade</a>
+        <span class="sep">›</span>
+        <span class="current">server</span>
+    </div>
+
+    <a href="index.html" class="back-link">◀ BACK TO ARCADE</a>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title-ascii-wrap"><pre class="page-title-ascii">
+ _____                 _                      __  __
+/ ____|               | |                    |  \/  |
+| (___  _ __ ___   __| | ___ _ __  ___  ___ |      / ___  _ __   __ _  ___
+\___ \| '_ ` _ \ / _` |/ _ \ '_ \/ __|/ _ \| |\ \ / / _ \| '_ \ / _` |/ _ \
+____) | | | | | | (_| |  __/ | | \__ \  __/ |_) | (_) | | | | (_| |  __/
+|____/|_| |_| |_|\__,_|\___|_| |_|___/\___|____/ \___/|_| |_|\__, |\___|
+                                                              __/ |
+                                                             |___/
+</pre></div>
+        <div class="page-subtitle">// how it works //</div>
+    </div>
+
+    <div class="content">
+
+        <div class="content-section">
+            <h2>// THE SERVER //</h2>
+            <p>
+                The magmacrunch arcade runs on a <strong>Raspberry Pi</strong> sitting
+                in a closet. It hosts all the game servers and the chat, 24/7.
+                No cloud, no hosting provider — just a little computer with a
+                big job.
+            </p>
+            <p>
+                Everything talks over <strong>WebSockets</strong>, which means
+                your browser maintains a live connection to the server while you
+                play. No page refreshes, no polling — moves and messages show up
+                instantly.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// MULTIPLAYER //</h2>
+            <p>
+                The multiplayer games each run their own server process on the Pi.
+                When you create a room, you get a <strong>4-letter code</strong>
+                (like <span style="color: #00f5ff;">A3X7</span>). Share it with
+                a friend and they can join from anywhere in the world.
+            </p>
+            <p>
+                Up to <strong>4 players</strong> can play at once, and anyone else
+                with the code can watch as a spectator. The server handles all the
+                game logic — your browser just sends moves and receives updates.
+            </p>
+            <p>Multiplayer games:</p>
+            <ul class="game-list">
+                <li><span class="game-dot"></span><span class="game-name">SORRY!</span> — classic board game, 2–4 players</li>
+                <li><span class="game-dot"></span><span class="game-name">Cribbage</span> — the classic card game, 2 players</li>
+                <li><span class="game-dot"></span><span class="game-name">Backgammon</span> — neon edition, 2 players</li>
+                <li><span class="game-dot"></span><span class="game-name">Checkers</span> — neon edition, 2 players</li>
+                <li><span class="game-dot"></span><span class="game-name">Sökö</span> — scandinavian stud poker, 2–4 players</li>
+                <li><span class="game-dot"></span><span class="game-name">Chinese Checkers</span> — hex-grid classic</li>
+                <li><span class="game-dot"></span><span class="game-name">Parchisi</span> — indian cross and circle game</li>
+                <li><span class="game-dot"></span><span class="game-name">Aggravation</span> — race your marbles home</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>// THE CHAT //</h2>
+            <p>
+                The arcade has a <strong>global chat room</strong> that anyone
+                visiting the arcade page can use. Say hello, talk trash, whatever.
+            </p>
+            <p>
+                When you're in a multiplayer game, there's also a
+                <strong>room chat</strong> — a private channel just for the people
+                in that game. It's like having a table mic at the arcade.
+            </p>
+            <p>
+                The chat server also keeps an eye on all the game servers. That's
+                where the <strong>"MULTIPLAYER ONLINE"</strong> status light comes
+                from — the chat server pings each game server every few seconds
+                and tells your browser who's up and who's down.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// PLAYING //</h2>
+            <p>
+                <strong>1.</strong> Pick a game and open it.<br>
+                <strong>2.</strong> Click "Create Room" to start a new game, or
+                enter a friend's 4-letter code to join theirs.<br>
+                <strong>3.</strong> Wait for players to join (or start right away
+                if it's just you vs. AI).<br>
+                <strong>4.</strong> Play!
+            </p>
+            <p>
+                No accounts, no installs, no app store. Just open
+                <span style="color: #ff2e9c;">index.html</span> in your browser
+                and go. The arcade works on desktop and mobile.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// THE TECH //</h2>
+            <p>
+                The whole thing is <strong>vanilla HTML, CSS, and JavaScript</strong>.
+                No frameworks, no build tools, no npm. Each game is a self-contained
+                folder with its own HTML, JS, and CSS.
+            </p>
+            <p>
+                The servers are written in <strong>Python</strong> using the
+                <span style="color: #00f5ff;">websockets</span> library. Newer
+                games share a common server base that handles rooms, lobbies, and
+                player management — each game only needs to implement its own rules.
+            </p>
+            <div class="diagram">
+ ┌─────────────────────────────────────────────┐
+ │              RASPBERRY PI                   │
+ │                                             │
+ │  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+ │  │ SORRY!   │  │ Cribbage │  │ Backgam. │  │
+ │  │ :8765    │  │ :8766    │  │ :8771    │  │
+ │  └──────────┘  └──────────┘  └──────────┘  │
+ │  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
+ │  │ Sökö    │  │ Checkers │  │ Chat     │  │
+ │  │ :8767    │  │ :8770    │  │ :8768    │  │
+ │  └──────────┘  └──────────┘  └──────────┘  │
+ │                                             │
+ └──────────────────┬──────────────────────────┘
+                    │ WebSocket
+                    ▼
+            ┌──────────────┐
+            │  YOUR BROWSER │
+            └──────────────┘
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+</body>
+</html>
