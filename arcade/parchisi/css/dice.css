@@ -1,0 +1,77 @@
+/**
+ * dice.css — Dice display and roll button
+ */
+
+/* ── Dice area ──────────────────────────────────────────────────────────────── */
+.dice-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 10px 0;
+}
+
+/* ── Dice display ───────────────────────────────────────────────────────────── */
+#diceDisplay {
+    font-size: 24px;
+    color: var(--pc-text);
+    letter-spacing: 0.1em;
+    min-width: 120px;
+    text-align: center;
+    padding: 10px;
+    background: var(--pc-bg-light);
+    border: 2px solid var(--pc-border);
+    transition: all 0.2s;
+}
+
+#diceDisplay.rolled {
+    color: var(--pc-accent);
+    text-shadow: 0 0 20px var(--pc-accent-glow);
+    border-color: var(--pc-accent);
+    animation: dicePop 0.3s ease;
+}
+
+@keyframes dicePop {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+/* ── Roll button ────────────────────────────────────────────────────────────── */
+#rollBtn {
+    background: var(--pc-accent);
+    color: var(--pc-bg);
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 14px 28px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    box-shadow: 0 0 15px var(--pc-accent-glow);
+}
+
+#rollBtn:hover:not(:disabled) {
+    background: #fff;
+    box-shadow: 0 0 30px var(--pc-accent-glow);
+    transform: scale(1.05);
+}
+
+#rollBtn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+#rollBtn.active {
+    animation: pulse 1.5s ease infinite;
+    box-shadow: 0 0 20px rgba(241,191,0,0.6);
+}
+
+/* ── Dice label ─────────────────────────────────────────────────────────────── */
+.dice-label {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    letter-spacing: 0.1em;
+}

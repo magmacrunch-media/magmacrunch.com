@@ -27,6 +27,7 @@ var Network = (function() {
     var onRejected     = function() {};
     var onDisconnect   = function() {};
     var onSpectator    = function() {};
+    var onGameOver     = function() {};
 
     // ── Server address ────────────────────────────────────────────────────────
     function getServerUrl() {
@@ -136,6 +137,10 @@ var Network = (function() {
                 onSpectator(msg);
                 break;
 
+            case 'game_over':
+                onGameOver(msg);
+                break;
+
             default:
                 console.log('[Network] Unknown message type:', msg.type);
         }
@@ -205,7 +210,7 @@ var Network = (function() {
     }
 
     function quit() {
-        _send({ type: 'quit' });
+        _send({ type: 'quit_game' });
     }
 
     function changeColor(color) {
@@ -235,6 +240,7 @@ var Network = (function() {
         if (cbs.onRejected)     onRejected     = cbs.onRejected;
         if (cbs.onDisconnect)   onDisconnect   = cbs.onDisconnect;
         if (cbs.onSpectator)    onSpectator    = cbs.onSpectator;
+        if (cbs.onGameOver)     onGameOver     = cbs.onGameOver;
     }
 
     return {

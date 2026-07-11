@@ -253,6 +253,7 @@ async def handle_client(websocket):
         "slot": slot,
         "isHost": is_host,
         "chosenColor": chosen_color,
+        "room": "MAIN",
     })
     await broadcast_lobby()
     await broadcast({"type": "system", "text": f"{chosen_name} joined the lobby!"}, exclude=websocket)
@@ -372,6 +373,10 @@ async def handle_message(websocket, msg):
                 else:
                     consecutive_doubles = 0
 
+                # Store dice for move_pawn to check doubles
+                dice_values[0] = dice[0]
+                dice_values[1] = dice[1]
+
                 print(f"[dice] '{name}' rolled {dice[0]}+{dice[1]}{' (doubles!)' if is_doubles else ''}")
                 await broadcast({
                     "type": "dice_rolled",
@@ -434,9 +439,10 @@ async def handle_message(websocket, msg):
                     "capture": capture,
                 })
 
-                # Advance turn (unless doubles)
-                is_doubles = dice_values[0] == dice_values[1] if dice_values[0] != 0 else False
-                advance_turn()
+                # Advance turn (unless doubles — player goes again)
+                is_doubles = dice_values[0] == dice_values[1] and dice_values[0] != 0
+                if not is_doubles:
+                    advance_turn()
                 await broadcast_turn()
 
             elif action_type == "penalty_pawn":

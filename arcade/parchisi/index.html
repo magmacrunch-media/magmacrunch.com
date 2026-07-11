@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parchis — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/dice.css">
+    <link rel="stylesheet" href="css/lobby.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<a href="../index.html" class="mc-back">magmacrunch arcade</a>
+
+<!-- Settings gear -->
+<button id="settingsBtn" class="settings-gear" title="Settings">&#9881;</button>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     PANTALLA DE INICIO
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="startScreen">
+    <div class="game-title">PARCHIS</div>
+    <div class="game-subtitle" data-i18n="startSubtitle">// el clasico juego espanol //</div>
+
+    <input type="text" id="nameInput" class="pc-input" data-i18n-placeholder="namePlaceholder" placeholder="tu nombre" maxlength="20" autocomplete="off">
+    <input type="text" id="roomInput" class="pc-input" data-i18n-placeholder="roomPlaceholder" placeholder="codigo de sala (opcional)" maxlength="4" autocomplete="off">
+
+    <button id="joinBtn" class="pc-btn" data-i18n="join">UNIRSE</button>
+    <button id="createBtn" class="pc-btn pc-btn-secondary pc-btn-small" data-i18n="createRoom">CREAR SALA</button>
+    <button id="spectateBtn" class="pc-btn pc-btn-secondary pc-btn-small" data-i18n="spectate">ESPECTAR</button>
+
+    <div id="statusMsg" style="margin-top: 16px; font-size: 8px; color: var(--pc-text-dim);"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     SALA DE ESPERA
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="lobbyOverlay">
+    <div class="lobby-title" data-i18n="lobbyTitle">SALA DE ESPERA</div>
+    <div class="lobby-room-code"><span data-i18n="roomPrefix">SALA: </span><span id="roomCodeDisplay">----</span></div>
+
+    <div id="lobbyPlayers"></div>
+    <div id="lobbyStatus">0/4 <span data-i18n="playerCount">jugadores</span></div>
+
+    <div class="lobby-actions">
+        <button id="startGameBtn" class="pc-btn" style="display:none;" data-i18n="startGame">INICIAR PARTIDA</button>
+    </div>
+
+    <div class="chat-panel">
+        <div class="chat-header" data-i18n="chatHeader">// CHAT //</div>
+        <div id="chatMessages"></div>
+        <div class="chat-input-row">
+            <input type="text" id="chatInput" data-i18n-placeholder="chatPlaceholder" placeholder="escribe algo..." maxlength="200" autocomplete="off">
+            <button id="chatBtn" data-i18n="send">ENVIAR</button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     PANTALLA DE JUEGO
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="gameScreen">
+    <!-- Tablero -->
+    <div class="board-container">
+        <canvas id="boardCanvas" width="150" height="150"></canvas>
+    </div>
+
+    <!-- Panel lateral -->
+    <div class="game-sidebar">
+        <!-- Turno -->
+        <div id="turnInfo" style="font-size: 12px; text-align: center;" data-i18n="waiting">ESPERANDO...</div>
+
+        <!-- Dados -->
+        <div class="dice-area">
+            <div class="dice-label" data-i18n="diceLabel">DADOS</div>
+            <div id="diceDisplay">0 + 0</div>
+            <button id="rollBtn" class="pc-btn" disabled data-i18n="roll">TIRAR</button>
+        </div>
+
+        <!-- Estado -->
+        <div id="statusMsg" style="font-size: 8px; color: var(--pc-text-dim); text-align: center; min-height: 32px;"></div>
+
+        <!-- Puntuacion -->
+        <div class="scores-bar">
+            <div class="score-item">
+                <div class="score-dot" style="background: var(--slot-red)"></div>
+                <span class="score-value" id="scoreRed">0</span>
+            </div>
+            <div class="score-item">
+                <div class="score-dot" style="background: var(--slot-blue)"></div>
+                <span class="score-value" id="scoreBlue">0</span>
+            </div>
+            <div class="score-item">
+                <div class="score-dot" style="background: var(--slot-green)"></div>
+                <span class="score-value" id="scoreGreen">0</span>
+            </div>
+            <div class="score-item">
+                <div class="score-dot" style="background: var(--slot-yellow)"></div>
+                <span class="score-value" id="scoreYellow">0</span>
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-panel">
+            <div class="chat-header" data-i18n="chatHeader">// CHAT //</div>
+            <div id="chatMessages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" data-i18n-placeholder="chatPlaceholder" placeholder="escribe algo..." maxlength="200" autocomplete="off">
+                <button id="chatBtn" data-i18n="send">ENVIAR</button>
+            </div>
+        </div>
+
+        <!-- Salir -->
+        <button id="quitBtn" class="pc-btn pc-btn-secondary pc-btn-small" style="margin-top: 10px;" data-i18n="quit">SALIR</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     MODAL FIN DE PARTIDA
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="gameOverModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title" data-i18n="gameOver">FIN DE PARTIDA!</div>
+        <div id="winnerText" class="modal-text"></div>
+        <button id="playAgainBtn" class="pc-btn" data-i18n="playAgain">JUGAR DE NUEVO</button>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+     MODAL AJUSTES
+     ══════════════════════════════════════════════════════════════════════════ -->
+<div id="settingsModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title" data-i18n="settings">AJUSTES</div>
+        <div class="settings-row">
+            <span class="settings-label" data-i18n="language">IDIOMA</span>
+            <div class="lang-toggle">
+                <button id="langEs" class="lang-btn active">ES</button>
+                <button id="langEn" class="lang-btn">EN</button>
+            </div>
+        </div>
+        <button id="closeSettings" class="pc-btn pc-btn-small" data-i18n="close">CERRAR</button>
+    </div>
+</div>
+
+<!-- Debug log -->
+<div id="debugLog"></div>
+
+<!-- Scripts -->
+<script src="../../nav.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/board-config.js"></script>
+<script src="js/game-state.js"></script>
+<script src="js/dice.js"></script>
+<script src="js/board-renderer.js"></script>
+<script src="js/network.js"></script>
+<script src="js/ui.js"></script>
+
+</body>
+</html>
