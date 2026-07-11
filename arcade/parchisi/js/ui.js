@@ -333,6 +333,7 @@ var UI = (function() {
 
     function handleQuit() {
         if (confirm(I18n.t('confirmQuit'))) {
+            Chat.disconnect();
             Network.quit();
             showStartScreen();
         }
@@ -374,18 +375,26 @@ var UI = (function() {
         els.startScreen.style.display = 'flex';
         els.gameScreen.style.display = 'none';
         els.lobbyOverlay.style.display = 'none';
+        Chat.disconnect();
     }
 
     function showLobby() {
         els.startScreen.style.display = 'none';
         els.gameScreen.style.display = 'none';
         els.lobbyOverlay.style.display = 'flex';
+        if (document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'none';
+        }
     }
 
     function showGameScreen() {
         els.startScreen.style.display = 'none';
         els.lobbyOverlay.style.display = 'none';
         els.gameScreen.style.display = 'flex';
+        if (document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'flex';
+        }
+        Chat.connect();
     }
 
     function showDice(dice) {

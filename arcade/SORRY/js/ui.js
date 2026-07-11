@@ -739,6 +739,10 @@ function animateCard(card, isMyCard) {
 function showGameView() {
   lobbyOverlay.classList.add('hidden');
   gameView.style.display = 'block';
+  if (document.getElementById('gameChat')) {
+    document.getElementById('gameChat').style.display = 'flex';
+  }
+  Chat.connect();
 
   // Re-calculate board scale now that the game view is visible and has real
   // layout dimensions — offsetWidth was 0 while display:none.
