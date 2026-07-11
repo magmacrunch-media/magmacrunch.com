@@ -1,0 +1,6 @@
+{
+    "port": 8780,
+    "auth": false,
+    "password": "changeme",
+    "bind": "0.0.0.0"
+}

@@ -104,12 +104,59 @@ See `archive/ARCHIVE_THEMING.md` for detailed theming patterns. Short version:
 4. Choose `accent` color per page type (green/cyan/rose/yellow/blue)
 5. For contributor pages, also load `entity-map.js` before `contributor.js`
 
-## Raspberry Pi deployment (TODO)
+## Raspberry Pi deployment
 
-When deploying multiplayer games to the Pi:
+### One-shot setup
 
-1. **Sync file structure** — Copy `arcade/shared/multiplayer/` to Pi's `~/arcade/shared/multiplayer/`
-2. **Update start-all.sh** — Copy `arcade/start-all.sh` to Pi's `~/arcade/start-all.sh`
-3. **Install websockets** — `pip3 install websockets` on Pi
-4. **Add DNS** — Point `cribbage.magmacrunch.com` and `soko.magmacrunch.com` to Pi's IP
-5. **Run** — `cd ~/arcade && ./start-all.sh`
+```bash
+# From Mac — copy files to Pi and run setup
+rsync -avz arcade/ jake@192.168.1.16:~/arcade/
+ssh jake@192.168.1.16 "sudo bash ~/arcade/scripts/setup-pi.sh"
+```
+
+This installs systemd services for all servers + dashboard, enables auto-start on boot, and places a desktop shortcut.
+
+### Admin dashboard
+
+`arcade/admin/` — Web-based monitoring and management UI.
+
+- **Port**: 8780 (HTTP) + 8781 (WebSocket for live logs)
+- **Desktop shortcut**: "MagmaCrunch Ops" — opens dashboard in Chromium
+- **Config**: `arcade/admin/config.json` — set `auth: true` for password protection
+
+Commands:
+```bash
+ssh jake@192.168.1.16 "sudo systemctl restart arcade-admin"
+ssh jake@192.168.1.16 "journalctl -u arcade-admin -f"
+```
+
+### Systemd services
+
+All servers run as systemd services (auto-start on boot, auto-restart on crash):
+
+| Service | Port |
+|---|---|
+| `arcade-sorry` | 8765 |
+| `arcade-cribbage` | 8766 |
+| `arcade-stud` | 8767 |
+| `arcade-chat` | 8768 |
+| `arcade-chess` | 8769 |
+| `arcade-checkers` | 8770 |
+| `arcade-backgammon` | 8771 |
+| `arcade-chinese-checkers` | 8772 |
+| `arcade-parchisi` | 8773 |
+| `arcade-aggravation` | 8774 |
+| `arcade-admin` | 8780 |
+
+Quick commands:
+```bash
+# Status
+sudo systemctl status 'arcade-*'
+
+# Restart one
+sudo systemctl restart arcade-chat
+
+# Logs
+journalctl -u 'arcade-*' -f
+journalctl -u arcade-chat -n 50
+```

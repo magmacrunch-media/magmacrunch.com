@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGMA//OPS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login overlay (shown if auth is required) -->
+    <div id="login-overlay" class="overlay hidden">
+        <div class="login-box">
+            <h2>ENTER ACCESS CODE</h2>
+            <input type="password" id="password-input" placeholder="PASSWORD" autocomplete="off">
+            <button id="login-btn" class="btn btn-cyan">LOGIN</button>
+            <p id="login-error" class="error hidden">ACCESS DENIED</p>
+        </div>
+    </div>
+
+    <div id="app">
+        <header>
+            <div class="header-left">
+                <h1 class="glitch" data-text="MAGMA//OPS">MAGMA//OPS</h1>
+            </div>
+            <div class="header-right">
+                <span id="system-uptime" class="sys-stat"></span>
+                <span id="system-cpu" class="sys-stat"></span>
+                <span id="system-mem" class="sys-stat"></span>
+                <span id="system-temp" class="sys-stat"></span>
+            </div>
+        </header>
+
+        <main>
+            <!-- Status Grid -->
+            <section class="status-section">
+                <h2 class="section-title">SERVER STATUS</h2>
+                <div id="status-grid" class="status-grid"></div>
+                <div class="action-bar">
+                    <button id="btn-restart-all" class="btn btn-rose">RESTART ALL</button>
+                    <button id="btn-refresh" class="btn btn-cyan">REFRESH</button>
+                </div>
+            </section>
+
+            <!-- Log Viewer -->
+            <section class="log-section">
+                <div class="log-header">
+                    <h2 class="section-title">LIVE LOGS</h2>
+                    <div class="log-controls">
+                        <select id="log-filter" class="select-retro">
+                            <option value="all">ALL SERVERS</option>
+                        </select>
+                        <button id="btn-stream" class="btn btn-green btn-sm">STREAM</button>
+                        <button id="btn-stop-stream" class="btn btn-rose btn-sm hidden">STOP</button>
+                        <button id="btn-clear-log" class="btn btn-yellow btn-sm">CLEAR</button>
+                    </div>
+                </div>
+                <div id="log-viewer" class="log-viewer">
+                    <div class="log-welcome">Click STREAM to start live logs, or use the buttons below to load recent entries.</div>
+                </div>
+                <div class="log-actions">
+                    <button id="btn-load-errors" class="btn btn-orange btn-sm">LOAD ERRORS</button>
+                    <button id="btn-load-today" class="btn btn-purple btn-sm">TODAY'S LOGS</button>
+                    <button id="btn-load-50" class="btn btn-cyan btn-sm">LAST 50</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <span class="footer-text">MAGMA//OPS v1.0 — MAGMACRUNCH ARCADE</span>
+        </footer>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

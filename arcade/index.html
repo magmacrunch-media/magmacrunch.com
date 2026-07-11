@@ -379,6 +379,86 @@
             border-color: #39ff6e;
         }
 
+        .chat-pick-color {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 10px;
+            padding: 2px;
+        }
+
+        .chat-pick-color:hover {
+            opacity: 0.7;
+        }
+
+        .color-picker-popup {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: #150b29;
+            border: 1px solid #3a2d5c;
+            border-radius: 4px;
+            padding: 8px;
+            z-index: 100;
+            min-width: 180px;
+        }
+
+        .color-strip {
+            width: 100%;
+            height: 20px;
+            border-radius: 3px;
+            cursor: crosshair;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .color-indicator {
+            position: absolute;
+            top: -3px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: transparent;
+            pointer-events: none;
+            box-shadow: 0 0 4px rgba(0,0,0,0.5);
+        }
+
+        .color-preview-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-preview-label {
+            font-size: 7px;
+            color: #5a5a6a;
+        }
+
+        .color-preview {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .color-reset-btn {
+            background: none;
+            border: 1px solid #5a5a6a;
+            color: #5a5a6a;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            padding: 2px 6px;
+            cursor: pointer;
+            border-radius: 2px;
+            margin-left: auto;
+        }
+
+        .color-reset-btn:hover {
+            border-color: #39ff6e;
+            color: #39ff6e;
+        }
+
         .chat-messages {
             height: 120px;
             overflow-y: auto;
@@ -758,6 +838,15 @@
             <div class="chat-name-row">
                 <span id="chatMyName" class="chat-my-name"></span>
                 <button id="chatEditName" class="chat-edit-name">✏️</button>
+                <button id="chatPickColor" class="chat-pick-color">🎨</button>
+            </div>
+            <div id="colorPickerPopup" class="color-picker-popup" style="display:none;">
+                <div class="color-strip" id="colorStrip"></div>
+                <div class="color-preview-row">
+                    <span class="color-preview-label">Current:</span>
+                    <div id="colorPreview" class="color-preview"></div>
+                    <button id="colorResetBtn" class="color-reset-btn">Reset</button>
+                </div>
             </div>
             <div class="chat-tabs">
                 <button class="chat-tab active" data-tab="global">GLOBAL</button>

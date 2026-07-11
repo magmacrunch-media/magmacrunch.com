@@ -6,7 +6,8 @@
  * Requires DOM elements:
  *   #chatMessagesGlobal, #chatMessagesRoom, #chatOnline, #chatOnlineList,
  *   #chatRoomTab, #chatRoomCode, #chatHeaderTitle, #chatOnlineCount,
- *   #chatMyName, #chatEditName, #chatTyping, #chatInput, #chatSend
+ *   #chatMyName, #chatEditName, #chatPickColor, #colorPickerPopup,
+ *   #colorStrip, #colorPreview, #chatTyping, #chatInput, #chatSend
  */
 
 var Chat = (function() {
@@ -26,8 +27,10 @@ var Chat = (function() {
     var socket = null;
     var currentRoom = null;
     var myName = null;
+    var myColor = null;
     var typingTimeout = null;
     var typingHideTimer = null;
+    var colorPickerOpen = false;
 
     // ── DOM Elements ────────────────────────────────────────────────────────
     var el = {};
@@ -43,6 +46,10 @@ var Chat = (function() {
         el.onlineCount    = document.getElementById('chatOnlineCount');
         el.myName         = document.getElementById('chatMyName');
         el.editName       = document.getElementById('chatEditName');
+        el.pickColor      = document.getElementById('chatPickColor');
+        el.colorPopup     = document.getElementById('colorPickerPopup');
+        el.colorStrip     = document.getElementById('colorStrip');
+        el.colorPreview   = document.getElementById('colorPreview');
         el.typing         = document.getElementById('chatTyping');
         el.input          = document.getElementById('chatInput');
         el.sendBtn        = document.getElementById('chatSend');
@@ -62,6 +69,13 @@ var Chat = (function() {
             var savedName = localStorage.getItem('arcade_username');
             if (savedName) {
                 socket.send(JSON.stringify({ type: 'set_name', name: savedName }));
+            }
+            // Send color if we have one
+            var savedColor = localStorage.getItem('arcade_color');
+            if (savedColor) {
+                socket.send(JSON.stringify({ type: 'set_color', color: savedColor }));
+                myColor = savedColor;
+                updateColorDisplay();
             }
         };
 
@@ -98,8 +112,19 @@ var Chat = (function() {
             el.editName.addEventListener('click', startEditName);
         }
 
+        // Wire up color picker
+        if (el.pickColor) {
+            el.pickColor.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleColorPicker();
+            });
+        }
+
         // Wire up tabs
         initTabs();
+
+        // Initialize color picker
+        initColorPicker();
     }
 
     function disconnect() {
@@ -111,6 +136,7 @@ var Chat = (function() {
             socket = null;
         }
         myName = null;
+        myColor = null;
     }
 
     // ── Message Handler ─────────────────────────────────────────────────────
@@ -137,16 +163,24 @@ var Chat = (function() {
                 break;
 
             case 'name_assigned':
-                // Server assigned us a name (auto-generated or after uniqueness check)
                 myName = msg.name;
                 localStorage.setItem('arcade_username', msg.name);
                 updateNameDisplay();
                 break;
 
             case 'user_list':
-                // Full online user list
                 updateOnlineList(msg.users);
                 updateOnlineCount(msg.count);
+                // Find my color from the user list
+                if (myName) {
+                    for (var i = 0; i < msg.users.length; i++) {
+                        if (msg.users[i].name === myName) {
+                            myColor = msg.users[i].color;
+                            updateColorDisplay();
+                            break;
+                        }
+                    }
+                }
                 break;
 
             case 'typing':
@@ -158,7 +192,6 @@ var Chat = (function() {
                 break;
 
             case 'status':
-                // Server status — not handled here
                 break;
         }
     }
@@ -168,7 +201,6 @@ var Chat = (function() {
         currentRoom = roomCode;
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'join_room', room: roomCode }));
-            // Send name if we have one
             var savedName = localStorage.getItem('arcade_username');
             if (savedName) {
                 socket.send(JSON.stringify({ type: 'set_name', name: savedName }));
@@ -204,7 +236,7 @@ var Chat = (function() {
         addMessage(currentRoom ? 'room' : 'global', {
             from: name,
             text: text,
-            color: '#39ff6e'
+            color: myColor || '#39ff6e'
         });
 
         el.input.value = '';
@@ -255,6 +287,146 @@ var Chat = (function() {
         if (el.myName) {
             el.myName.textContent = myName || '...';
         }
+    }
+
+    // ── Color Management ────────────────────────────────────────────────────
+    function setColor(color) {
+        myColor = color;
+        localStorage.setItem('arcade_color', color);
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'set_color', color: color }));
+        }
+        updateColorDisplay();
+        updateColorIndicator();
+    }
+
+    function resetColor() {
+        myColor = null;
+        localStorage.removeItem('arcade_color');
+        // Server will reassign on next user_list
+        updateColorDisplay();
+        updateColorIndicator();
+    }
+
+    function updateColorDisplay() {
+        if (el.myName) {
+            el.myName.style.color = myColor || '#39ff6e';
+        }
+        if (el.colorPreview) {
+            el.colorPreview.style.background = myColor || '#39ff6e';
+        }
+    }
+
+    // ── Color Picker ────────────────────────────────────────────────────────
+    function initColorPicker() {
+        if (!el.colorStrip) return;
+
+        // Set up gradient strip
+        el.colorStrip.style.background = 'linear-gradient(to right, ' +
+            'hsl(0,100%,50%), hsl(30,100%,50%), hsl(60,100%,50%), ' +
+            'hsl(90,100%,50%), hsl(120,100%,50%), hsl(150,100%,50%), ' +
+            'hsl(180,100%,50%), hsl(210,100%,50%), hsl(240,100%,50%), ' +
+            'hsl(270,100%,50%), hsl(300,100%,50%), hsl(330,100%,50%), ' +
+            'hsl(360,100%,50%))';
+
+        // Click to pick color
+        el.colorStrip.addEventListener('click', function(e) {
+            var rect = el.colorStrip.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var hue = (x / rect.width) * 360;
+            var color = hslToHex(hue, 100, 50);
+            setColor(color);
+        });
+
+        // Reset button
+        var resetBtn = document.getElementById('colorResetBtn');
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function() {
+                resetColor();
+            });
+        }
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (colorPickerOpen && el.colorPopup &&
+                !el.colorPopup.contains(e.target) &&
+                e.target !== el.pickColor) {
+                toggleColorPicker(false);
+            }
+        });
+
+        // Load saved color
+        var savedColor = localStorage.getItem('arcade_color');
+        if (savedColor) {
+            myColor = savedColor;
+            updateColorDisplay();
+        }
+
+        updateColorIndicator();
+    }
+
+    function toggleColorPicker(show) {
+        if (!el.colorPopup) return;
+        if (show === undefined) {
+            colorPickerOpen = !colorPickerOpen;
+        } else {
+            colorPickerOpen = show;
+        }
+        el.colorPopup.style.display = colorPickerOpen ? 'block' : 'none';
+        if (colorPickerOpen) {
+            updateColorIndicator();
+        }
+    }
+
+    function updateColorIndicator() {
+        if (!el.colorStrip || !myColor) return;
+        var indicator = document.getElementById('colorIndicator');
+        if (!indicator) {
+            indicator = document.createElement('div');
+            indicator.id = 'colorIndicator';
+            indicator.className = 'color-indicator';
+            el.colorStrip.appendChild(indicator);
+        }
+        var hue = hexToHue(myColor);
+        var x = (hue / 360) * el.colorStrip.offsetWidth;
+        indicator.style.left = (x - 6) + 'px'; // Center the indicator
+        indicator.style.display = 'block';
+    }
+
+    // ── Color Conversion Helpers ────────────────────────────────────────────
+    function hslToHex(h, s, l) {
+        s /= 100;
+        l /= 100;
+        var c = (1 - Math.abs(2 * l - 1)) * s;
+        var x = c * (1 - Math.abs((h / 60) % 2 - 1));
+        var m = l - c / 2;
+        var r, g, b;
+        if (h < 60) { r = c; g = x; b = 0; }
+        else if (h < 120) { r = x; g = c; b = 0; }
+        else if (h < 180) { r = 0; g = c; b = x; }
+        else if (h < 240) { r = 0; g = x; b = c; }
+        else if (h < 300) { r = x; g = 0; b = c; }
+        else { r = c; g = 0; b = x; }
+        r = Math.round((r + m) * 255).toString(16).padStart(2, '0');
+        g = Math.round((g + m) * 255).toString(16).padStart(2, '0');
+        b = Math.round((b + m) * 255).toString(16).padStart(2, '0');
+        return '#' + r + g + b;
+    }
+
+    function hexToHue(hex) {
+        var r = parseInt(hex.slice(1, 3), 16) / 255;
+        var g = parseInt(hex.slice(3, 5), 16) / 255;
+        var b = parseInt(hex.slice(5, 7), 16) / 255;
+        var max = Math.max(r, g, b);
+        var min = Math.min(r, g, b);
+        var h = 0;
+        if (max !== min) {
+            var d = max - min;
+            if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+            else if (max === g) h = ((b - r) / d + 2) / 6;
+            else h = ((r - g) / d + 4) / 6;
+        }
+        return Math.round(h * 360);
     }
 
     // ── Typing Indicator ────────────────────────────────────────────────────
@@ -357,12 +529,10 @@ var Chat = (function() {
         var tabs = document.querySelectorAll('.chat-tab');
         tabs.forEach(function(t) { t.classList.remove('active'); });
 
-        // Hide all panels
         el.globalMessages.style.display = 'none';
         el.roomMessages.style.display = 'none';
         el.onlinePanel.style.display = 'none';
 
-        // Show selected panel
         if (tab === 'global') {
             el.globalMessages.style.display = '';
             var globalTab = document.querySelector('[data-tab="global"]');
@@ -409,8 +579,11 @@ var Chat = (function() {
         leaveRoom: leaveRoom,
         send: send,
         setName: setName,
+        setColor: setColor,
+        resetColor: resetColor,
         getCurrentRoom: function() { return currentRoom; },
-        getMyName: function() { return myName; }
+        getMyName: function() { return myName; },
+        getMyColor: function() { return myColor; }
     };
 
 })();

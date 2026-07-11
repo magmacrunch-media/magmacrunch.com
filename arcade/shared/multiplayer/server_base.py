@@ -23,9 +23,12 @@ Usage:
 
 import asyncio
 import json
+import logging
 import random
 import string
 import websockets
+
+logging.getLogger("websockets").setLevel(logging.WARNING)
 
 
 # ── Color palette ────────────────────────────────────────────────────────────
@@ -462,8 +465,17 @@ class GameServer:
     def run(self):
         """Start the server."""
         print(f"[{self.game_name}] Starting WebSocket server on port {self.port}")
+
+        async def _health_check(connection, request):
+            """Return 426 for plain HTTP requests (health checks) instead of failing handshake."""
+            from websockets.http11 import Response
+            return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
+
         async def _run():
-            async with websockets.serve(self.handler, "0.0.0.0", self.port):
+            async with websockets.serve(
+                self.handler, "0.0.0.0", self.port,
+                process_request=_health_check
+            ):
                 await asyncio.Future()  # run forever
         try:
             asyncio.run(_run())

@@ -17,9 +17,12 @@ Provides:
 import argparse
 import asyncio
 import json
+import logging
 import random
 import time
 import websockets
+
+logging.getLogger("websockets").setLevel(logging.WARNING)
 
 # ── Configuration ────────────────────────────────────────────────────────────
 
@@ -250,6 +253,13 @@ async def handler(websocket):
                 }))
                 await broadcast_user_list()
 
+            elif msg_type == 'set_color':
+                # Set/update display color
+                new_color = msg.get('color', '#fff')
+                if new_color.startswith('#') and len(new_color) == 7:
+                    user_info[websocket]['color'] = new_color
+                    await broadcast_user_list()
+
             elif msg_type == 'join_room':
                 # Join a room sub-chat
                 room = msg.get('room', '').upper()
@@ -309,13 +319,13 @@ async def handler(websocket):
                     room_messages[room].append(chat_msg)
                     if len(room_messages[room]) > MAX_ROOM_MESSAGES:
                         room_messages[room].pop(0)
-                    await broadcast_to_room(room, chat_msg)
+                    await broadcast_to_room(room, chat_msg, exclude=websocket)
                 else:
                     # Global message
                     messages.append(chat_msg)
                     if len(messages) > MAX_GLOBAL_MESSAGES:
                         messages.pop(0)
-                    await broadcast(chat_msg)
+                    await broadcast(chat_msg, exclude=websocket)
 
             elif msg_type == 'typing':
                 # Typing indicator
@@ -381,7 +391,11 @@ async def main(port):
     asyncio.create_task(status_broadcaster())
 
     # Start WebSocket server
-    async with websockets.serve(handler, '0.0.0.0', port):
+    async def _health_check(connection, request):
+        from websockets.http11 import Response
+        return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
+
+    async with websockets.serve(handler, '0.0.0.0', port, process_request=_health_check):
         print(f"[Chat] Chat server ready on ws://localhost:{port}")
         await asyncio.Future()  # Run forever
 

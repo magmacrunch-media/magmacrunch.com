@@ -7,8 +7,11 @@ Requires:  pip install websockets
 import argparse
 import asyncio
 import json
+import logging
 import random
 import websockets
+
+logging.getLogger("websockets").setLevel(logging.WARNING)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -659,12 +662,16 @@ async def main(port):
     print(f"Waiting for {MIN_PLAYERS}–{MAX_PLAYERS} players (+ spectators)…")
     print("Ctrl+C to stop.\n")
 
+    async def _health_check(connection, request):
+        from websockets.http11 import Response
+        return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
+
     loop = asyncio.get_running_loop()
     stop = loop.create_future()
     for sig in (signal.SIGINT, signal.SIGTERM):
         loop.add_signal_handler(sig, lambda: (stop.set_result(None) if not stop.done() else None))
 
-    async with websockets.serve(handle_client, "0.0.0.0", port):
+    async with websockets.serve(handle_client, "0.0.0.0", port, process_request=_health_check):
         await stop
 
     print("\nServer stopped cleanly.")

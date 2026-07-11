@@ -1,0 +1,14 @@
+[Unit]
+Description=MagmaCrunch Arcade - SORRY!
+After=network.target
+
+[Service]
+Type=simple
+User=jake
+WorkingDirectory=/home/jake/arcade/SORRY
+ExecStart=/home/jake/arcade/venv/bin/python3 server.py --port 8765
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

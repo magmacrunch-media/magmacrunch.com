@@ -98,6 +98,15 @@
                     <div class="chat-name-row">
                         <span id="chatMyName" class="chat-my-name"></span>
                         <button id="chatEditName" class="chat-edit-name">✏️</button>
+                        <button id="chatPickColor" class="chat-pick-color">🎨</button>
+                    </div>
+                    <div id="colorPickerPopup" class="color-picker-popup" style="display:none;">
+                        <div class="color-strip" id="colorStrip"></div>
+                        <div class="color-preview-row">
+                            <span class="color-preview-label">Current:</span>
+                            <div id="colorPreview" class="color-preview"></div>
+                            <button id="colorResetBtn" class="color-reset-btn">Reset</button>
+                        </div>
                     </div>
                     <div class="chat-tabs">
                         <button class="chat-tab active" data-tab="global">GLOBAL</button>
