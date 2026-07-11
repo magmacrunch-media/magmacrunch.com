@@ -99,13 +99,56 @@
     <div class="title-screen active" id="titleScreen">
         <div class="title-screen-content">
             <div class="title-main">
-                <h1 class="title-large">15</h1>
+                <h1 class="title-large" id="titleNumber">15</h1>
                 <h2 class="title-subtitle">SLIDING TILE PUZZLE</h2>
             </div>
 
             <button class="start-button" id="startButton">
                 <span class="start-text">press [space] or click to start</span>
             </button>
+        </div>
+    </div>
+
+    <!-- Difficulty Selector Modal -->
+    <div class="difficulty-modal" id="difficultyModal">
+        <div class="difficulty-content">
+            <h3>SELECT GRID SIZE</h3>
+            <p class="difficulty-subtitle">choose your puzzle</p>
+
+            <div class="difficulty-selector-container">
+                <div class="custom-dropdown-diff" id="difficultyDropdown">
+                    <div class="dropdown-selected-diff" id="difficultyDropdownSelected">
+                        <span id="selectedDifficulty">4×4 MODE &bull; 15 PUZZLE</span>
+                        <span class="dropdown-arrow-diff">▼</span>
+                    </div>
+                    <div class="dropdown-options-diff" id="difficultyDropdownOptions">
+                        <div class="dropdown-option-diff" data-size="3">
+                            <span class="option-label-diff">3×3 MODE</span>
+                            <span class="option-target-diff">8 PUZZLE</span>
+                        </div>
+                        <div class="dropdown-option-diff highlighted" data-size="4">
+                            <span class="option-label-diff">4×4 MODE</span>
+                            <span class="option-target-diff">15 PUZZLE</span>
+                        </div>
+                        <div class="dropdown-option-diff" data-size="5">
+                            <span class="option-label-diff">5×5 MODE</span>
+                            <span class="option-target-diff">24 PUZZLE</span>
+                        </div>
+                        <div class="dropdown-option-diff" data-size="6">
+                            <span class="option-label-diff">6×6 MODE</span>
+                            <span class="option-target-diff">35 PUZZLE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="startGameBtn" class="start-game-button">START GAME</button>
+
+            <div class="difficulty-menu-buttons">
+                <button id="difficultyHowToPlay" class="difficulty-menu-btn">how to play</button>
+                <button id="difficultyHighScores" class="difficulty-menu-btn">high scores</button>
+                <button id="difficultyCredits" class="difficulty-menu-btn">credits</button>
+            </div>
         </div>
     </div>
 
@@ -144,9 +187,9 @@
     <div class="instructions-modal" id="instructionsModal">
         <div class="instructions-content">
             <h3>how to play</h3>
-            <p>The <strong>15 Puzzle</strong> is a classic sliding tile puzzle invented in the 1870s. The board has 15 numbered tiles and one empty space.</p>
+            <p>The <strong>15 Puzzle</strong> (and its variants) is a classic sliding tile puzzle invented in the 1870s. Choose from 3×3, 4×4, 5×5, or 6×6 grid sizes.</p>
             <p><strong>Use arrow keys or swipe</strong> to slide tiles into the empty space. Only tiles adjacent to the empty space can move.</p>
-            <p>The goal is to arrange the tiles in order from <strong>1 to 15</strong>, reading left to right, top to bottom, with the empty space in the bottom-right corner.</p>
+            <p>The goal is to arrange the tiles in order from <strong>1 to N</strong>, reading left to right, top to bottom, with the empty space in the bottom-right corner.</p>
             <p>Your score is your <strong>move count</strong> &mdash; fewer moves is better!</p>
             <button id="closeInstructions">close</button>
         </div>

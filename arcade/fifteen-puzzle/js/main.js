@@ -1,6 +1,6 @@
 /**
  * main.js — 15 Puzzle UI wiring
- * DOM initialization, modals, scoring, input
+ * DOM initialization, difficulty selector, modals, scoring, input
  */
 
 (function() {
@@ -8,11 +8,12 @@
 
         // ── Framework instances ───────────────────────────────────────────────
         var ui = PuzzleUI.create();
-        var scoring = PuzzleScoring.create('fifteen-puzzle', { ascending: true });
         var renderer = null;
         var input = null;
         var game = null;
         var timerInterval = null;
+        var selectedSize = 4;
+        var scoring = null;
 
         // ── DOM elements ─────────────────────────────────────────────────────
         var $ = ui.$;
@@ -20,9 +21,19 @@
         var moveCountEl = $('#moveCount');
         var timerEl = $('#timer');
         var bestScoreEl = $('#bestScore');
+        var titleNumberEl = $('#titleNumber');
+
+        // ── Size labels ──────────────────────────────────────────────────────
+        var sizeLabels = {
+            3: { tiles: 8, name: '8 PUZZLE' },
+            4: { tiles: 15, name: '15 PUZZLE' },
+            5: { tiles: 24, name: '24 PUZZLE' },
+            6: { tiles: 35, name: '35 PUZZLE' }
+        };
 
         // ── Modals ───────────────────────────────────────────────────────────
         ui.registerModal('titleScreen', $('#titleScreen'));
+        ui.registerModal('difficultyModal', $('#difficultyModal'));
         ui.registerModal('victoryModal', $('#victoryModal'));
         ui.registerModal('initialsPrompt', $('#initialsPrompt'));
         ui.registerModal('scoreboardModal', $('#scoreboardModal'));
@@ -35,8 +46,14 @@
             if (loading) loading.style.display = 'none';
         }, 600);
 
+        // ── Scoring (per grid size) ──────────────────────────────────────────
+        function getScoring() {
+            return PuzzleScoring.create('fifteen-puzzle-' + selectedSize + 'x' + selectedSize, { ascending: true });
+        }
+
         // ── Best score display ───────────────────────────────────────────────
         function updateBestDisplay() {
+            scoring = getScoring();
             var top = scoring.getTopScores('normal', 1);
             if (top.length > 0) {
                 bestScoreEl.textContent = top[0].score;
@@ -44,7 +61,15 @@
                 bestScoreEl.textContent = '---';
             }
         }
-        updateBestDisplay();
+
+        // ── Dynamic text updates ─────────────────────────────────────────────
+        function updateLabels() {
+            var info = sizeLabels[selectedSize];
+            var puzzleNum = selectedSize * selectedSize - 1;
+            titleNumberEl.textContent = puzzleNum;
+            $('#gameTitle').textContent = info.name;
+            document.title = info.name;
+        }
 
         // ── Timer ────────────────────────────────────────────────────────────
         function startTimer() {
@@ -68,7 +93,12 @@
             if (input) input.destroy();
             stopTimer();
 
-            game = FifteenPuzzle.create();
+            scoring = getScoring();
+            game = FifteenPuzzle.create(selectedSize);
+
+            // Set dynamic grid size
+            boardEl.style.setProperty('--grid-size', selectedSize);
+            boardEl.dataset.size = selectedSize;
 
             renderer = PuzzleRender.create(boardEl, {
                 tileClass: 'tile',
@@ -150,7 +180,6 @@
             function onSubmit() {
                 var initials = inputEl.value.toUpperCase().replace(/[^A-Z]/g, '').substring(0, 3);
                 if (initials.length === 0) initials = 'AAA';
-                // Score already saved, just close
                 ui.hideModal('initialsPrompt');
                 submitBtn.removeEventListener('click', onSubmit);
                 inputEl.removeEventListener('keydown', onKey);
@@ -167,33 +196,92 @@
         // ── Title screen ─────────────────────────────────────────────────────
         var body = document.body;
         var titleScreen = $('#titleScreen');
+        var difficultyModal = $('#difficultyModal');
 
-        function startGame() {
+        function showDifficultyModal() {
             ui.hideModal('titleScreen');
             titleScreen.classList.remove('active');
-            body.classList.add('game-active');
-            createGame();
+            ui.showModal('difficultyModal');
         }
 
-        $('#startButton').addEventListener('click', startGame);
+        $('#startButton').addEventListener('click', showDifficultyModal);
 
         document.addEventListener('keydown', function onStart(e) {
             if (e.code === 'Space' && titleScreen.classList.contains('active')) {
                 e.preventDefault();
-                startGame();
+                showDifficultyModal();
             }
+        });
+
+        // ── Difficulty dropdown ───────────────────────────────────────────────
+        var dropdown = $('#difficultyDropdown');
+        var dropdownSelected = $('#difficultyDropdownSelected');
+        var dropdownOptions = $('#difficultyDropdownOptions');
+        var selectedDifficulty = $('#selectedDifficulty');
+
+        dropdownSelected.addEventListener('click', function(e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        var options = dropdownOptions.querySelectorAll('.dropdown-option-diff');
+        options.forEach(function(option) {
+            option.addEventListener('click', function() {
+                selectedSize = parseInt(option.dataset.size, 10);
+                var info = sizeLabels[selectedSize];
+                selectedDifficulty.textContent = selectedSize + '×' + selectedSize + ' MODE \u2022 ' + info.name;
+                dropdown.classList.remove('open');
+
+                // Highlight selected
+                options.forEach(function(o) { o.classList.remove('highlighted'); });
+                option.classList.add('highlighted');
+            });
+        });
+
+        // Close dropdown on outside click
+        document.addEventListener('click', function(e) {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // ── Start game from difficulty modal ─────────────────────────────────
+        $('#startGameBtn').addEventListener('click', function() {
+            ui.hideModal('difficultyModal');
+            body.classList.add('game-active');
+            updateLabels();
+            updateBestDisplay();
+            createGame();
+        });
+
+        // ── Difficulty modal menu buttons ────────────────────────────────────
+        $('#difficultyHowToPlay').addEventListener('click', function() {
+            ui.showModal('instructionsModal');
+        });
+
+        $('#difficultyHighScores').addEventListener('click', function() {
+            renderScoreboard();
+            ui.showModal('scoreboardModal');
+        });
+
+        $('#difficultyCredits').addEventListener('click', function() {
+            ui.showModal('creditsModal');
         });
 
         // ── Button handlers ──────────────────────────────────────────────────
         $('#newGame').addEventListener('click', function() {
             ui.hideAllModals();
             body.classList.add('game-active');
+            updateLabels();
+            updateBestDisplay();
             createGame();
         });
 
         $('#playAgain').addEventListener('click', function() {
             ui.hideAllModals();
             body.classList.add('game-active');
+            updateLabels();
+            updateBestDisplay();
             createGame();
         });
 
@@ -205,12 +293,14 @@
         ui.setupModalClose('scoreboardModal', [$('#closeScoreboard')]);
 
         function renderScoreboard() {
+            scoring = getScoring();
             var topScores = scoring.getTopScores('normal', 10);
+            var info = sizeLabels[selectedSize];
             var html = '<div class="score-list">';
             html += '<div class="score-header"><span class="rank-col">#</span><span class="name-col">NAME</span><span class="score-col">MOVES</span><span class="time-col">TIME</span></div>';
 
             if (topScores.length === 0) {
-                html += '<div class="no-scores">no scores yet</div>';
+                html += '<div class="no-scores">no scores yet for ' + info.name + '</div>';
             } else {
                 for (var i = 0; i < topScores.length; i++) {
                     var s = topScores[i];

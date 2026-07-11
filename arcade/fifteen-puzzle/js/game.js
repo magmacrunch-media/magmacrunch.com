@@ -1,32 +1,44 @@
 /**
  * game.js — 15 Puzzle game logic
  * Extends PuzzleGame for slide-only mechanics
+ * Supports grid sizes from 3x3 to 6x6
  */
 
 var FifteenPuzzle = (function() {
 
-    var SIZE = 4;
-    var SOLVED_BOARD = [
-        [1,  2,  3,  4],
-        [5,  6,  7,  8],
-        [9,  10, 11, 12],
-        [13, 14, 15, 0]
-    ];
-    var SHUFFLE_MOVES = 300;
+    function create(size) {
+        size = size || 4;
+        var totalTiles = size * size - 1;
+        var shuffleMoves = size * size * 20;
 
-    function create() {
         var game = PuzzleGame.create({
-            size: SIZE,
+            size: size,
             spawnTiles: false,
-            gameName: 'fifteen-puzzle'
+            gameName: 'fifteen-puzzle-' + size + 'x' + size
         });
 
-        var lastDirection = null;
+        function generateSolvedBoard() {
+            var board = [];
+            var val = 1;
+            for (var r = 0; r < size; r++) {
+                board[r] = [];
+                for (var c = 0; c < size; c++) {
+                    if (r === size - 1 && c === size - 1) {
+                        board[r][c] = 0;
+                    } else {
+                        board[r][c] = val++;
+                    }
+                }
+            }
+            return board;
+        }
+
+        var solvedBoard = generateSolvedBoard();
 
         game.addInitialTiles = function() {
-            for (var r = 0; r < SIZE; r++) {
-                for (var c = 0; c < SIZE; c++) {
-                    game.grid.board[r][c] = SOLVED_BOARD[r][c];
+            for (var r = 0; r < size; r++) {
+                for (var c = 0; c < size; c++) {
+                    game.grid.board[r][c] = solvedBoard[r][c];
                 }
             }
             shuffle();
@@ -34,13 +46,13 @@ var FifteenPuzzle = (function() {
 
         game.moveLeft = function() {
             var empty = PuzzleGrid.findCell(game.grid, 0);
-            if (empty && empty.col + 1 < SIZE) {
+            if (empty && empty.col + 1 < size) {
                 PuzzleGrid.swap(game.grid, empty.row, empty.col, empty.row, empty.col + 1);
             }
         };
 
         game.checkWin = function() {
-            return PuzzleGrid.isSolved(game.grid, SOLVED_BOARD);
+            return PuzzleGrid.isSolved(game.grid, solvedBoard);
         };
 
         game.checkGameState = function() {
@@ -56,7 +68,7 @@ var FifteenPuzzle = (function() {
             var directions = ['left', 'right', 'up', 'down'];
             var lastDir = null;
 
-            for (var i = 0; i < SHUFFLE_MOVES; i++) {
+            for (var i = 0; i < shuffleMoves; i++) {
                 var dir;
                 do {
                     dir = directions[Math.floor(Math.random() * 4)];
@@ -66,7 +78,7 @@ var FifteenPuzzle = (function() {
                 game.moveInDirection(dir);
             }
 
-            if (PuzzleGrid.isSolved(game.grid, SOLVED_BOARD)) {
+            if (PuzzleGrid.isSolved(game.grid, solvedBoard)) {
                 shuffle();
             }
         }

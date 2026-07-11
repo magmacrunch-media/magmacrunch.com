@@ -1,6 +1,7 @@
 /**
  * game.css — 15 Puzzle game-specific styles
  * Tile colors, layout, modals, responsive overrides
+ * Supports grid sizes 3x3 to 6x6
  */
 
 /* ── Container & Header ────────────────────────────────────────────────────── */
@@ -98,11 +99,12 @@
     color: #00f5ff;
 }
 
-/* ── Game Board ────────────────────────────────────────────────────────────── */
+/* ── Game Board (dynamic grid size) ────────────────────────────────────────── */
 .game-board {
+    --grid-size: 4;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--grid-size), 1fr);
+    grid-template-rows: repeat(var(--grid-size), 1fr);
     gap: 6px;
     background: #1a0a2a;
     border: 3px solid #00f5ff;
@@ -136,33 +138,67 @@
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-/* ── Tile Colors (1-15) ────────────────────────────────────────────────────── */
-/* Cool blues */
+/* ── Tile Font Sizes by Grid ───────────────────────────────────────────────── */
+.game-board[data-size="5"] .tile { font-size: 18px; }
+.game-board[data-size="6"] .tile { font-size: 15px; }
+
+/* ── Tile Colors (values 1-35) ─────────────────────────────────────────────── */
+/* Cool blues: 1-4 */
 .tile[data-value="1"]  { background: #0a2a5a; color: #5ba3f5; box-shadow: 0 0 6px rgba(91, 163, 245, 0.3); }
 .tile[data-value="2"]  { background: #0a3a6a; color: #6ec8ff; box-shadow: 0 0 6px rgba(110, 200, 255, 0.3); }
 .tile[data-value="3"]  { background: #0a4a7a; color: #8ed8ff; box-shadow: 0 0 8px rgba(142, 216, 255, 0.3); }
 .tile[data-value="4"]  { background: #006a8a; color: #a0f0ff; box-shadow: 0 0 8px rgba(160, 240, 255, 0.35); }
 
-/* Cyans/teals */
+/* Cyans/teals: 5-8 */
 .tile[data-value="5"]  { background: #007a6a; color: #40ffc8; box-shadow: 0 0 8px rgba(64, 255, 200, 0.35); }
 .tile[data-value="6"]  { background: #008a5a; color: #39ff6e; box-shadow: 0 0 10px rgba(57, 255, 110, 0.4); }
 .tile[data-value="7"]  { background: #1a7a1a; color: #5fff5f; box-shadow: 0 0 10px rgba(95, 255, 95, 0.4); }
 .tile[data-value="8"]  { background: #3a7a00; color: #a0ff40; box-shadow: 0 0 10px rgba(160, 255, 64, 0.4); }
 
-/* Yellows/ambers */
+/* Yellows/ambers: 9-12 */
 .tile[data-value="9"]  { background: #6a6a00; color: #ffe03a; box-shadow: 0 0 10px rgba(255, 224, 58, 0.4); }
 .tile[data-value="10"] { background: #8a5a00; color: #ffc832; box-shadow: 0 0 12px rgba(255, 200, 50, 0.45); }
 .tile[data-value="11"] { background: #aa4a00; color: #ffb03a; box-shadow: 0 0 12px rgba(255, 176, 58, 0.45); }
 .tile[data-value="12"] { background: #c43a00; color: #ff9040; box-shadow: 0 0 12px rgba(255, 144, 64, 0.5); }
 
-/* Reds/magentas */
+/* Reds/magentas: 13-15 */
 .tile[data-value="13"] { background: #aa1a3a; color: #ff5a7a; box-shadow: 0 0 14px rgba(255, 90, 122, 0.5); }
 .tile[data-value="14"] { background: #8a0a5a; color: #ff3d8e; box-shadow: 0 0 14px rgba(255, 61, 142, 0.55); }
-.tile[data-value="15"] { background: #6a0080; color: #e040ff; box-shadow: 0 0 16px rgba(224, 64, 255, 0.6); animation: glow 2s ease-in-out infinite; }
+.tile[data-value="15"] { background: #6a0080; color: #e040ff; box-shadow: 0 0 16px rgba(224, 64, 255, 0.6); }
+
+/* Deep purples: 16-19 */
+.tile[data-value="16"] { background: #4a008a; color: #c060ff; box-shadow: 0 0 16px rgba(192, 96, 255, 0.6); }
+.tile[data-value="17"] { background: #3a009a; color: #a070ff; box-shadow: 0 0 16px rgba(160, 112, 255, 0.6); }
+.tile[data-value="18"] { background: #2a00aa; color: #8080ff; box-shadow: 0 0 18px rgba(128, 128, 255, 0.6); }
+.tile[data-value="19"] { background: #1a00ba; color: #7090ff; box-shadow: 0 0 18px rgba(112, 144, 255, 0.6); }
+
+/* Electric blues: 20-24 */
+.tile[data-value="20"] { background: #0a10ca; color: #60a0ff; box-shadow: 0 0 18px rgba(96, 160, 255, 0.65); }
+.tile[data-value="21"] { background: #0020ba; color: #50b0ff; box-shadow: 0 0 18px rgba(80, 176, 255, 0.65); }
+.tile[data-value="22"] { background: #0030aa; color: #40c0ff; box-shadow: 0 0 20px rgba(64, 192, 255, 0.65); }
+.tile[data-value="23"] { background: #0040a0; color: #30d0ff; box-shadow: 0 0 20px rgba(48, 208, 255, 0.7); }
+.tile[data-value="24"] { background: #0050a0; color: #20e0ff; box-shadow: 0 0 20px rgba(32, 224, 255, 0.7); }
+
+/* Hot pinks: 25-29 */
+.tile[data-value="25"] { background: #8a0060; color: #ff40a0; box-shadow: 0 0 20px rgba(255, 64, 160, 0.7); }
+.tile[data-value="26"] { background: #9a0050; color: #ff3090; box-shadow: 0 0 20px rgba(255, 48, 144, 0.7); }
+.tile[data-value="27"] { background: #aa0040; color: #ff2080; box-shadow: 0 0 22px rgba(255, 32, 128, 0.7); }
+.tile[data-value="28"] { background: #ba0030; color: #ff1070; box-shadow: 0 0 22px rgba(255, 16, 112, 0.75); }
+.tile[data-value="29"] { background: #ca0020; color: #ff0060; box-shadow: 0 0 22px rgba(255, 0, 96, 0.75); }
+
+/* Neon greens: 30-34 */
+.tile[data-value="30"] { background: #006a20; color: #40ff80; box-shadow: 0 0 22px rgba(64, 255, 128, 0.75); }
+.tile[data-value="31"] { background: #007a10; color: #30ff70; box-shadow: 0 0 22px rgba(48, 255, 112, 0.75); }
+.tile[data-value="32"] { background: #008a00; color: #20ff60; box-shadow: 0 0 24px rgba(32, 255, 96, 0.8); }
+.tile[data-value="33"] { background: #009a00; color: #10ff50; box-shadow: 0 0 24px rgba(16, 255, 80, 0.8); }
+.tile[data-value="34"] { background: #00aa00; color: #00ff40; box-shadow: 0 0 24px rgba(0, 255, 64, 0.8); }
+
+/* Gold glow: 35 (highest for 6x6) */
+.tile[data-value="35"] { background: #5a3a00; color: #ffd700; box-shadow: 0 0 25px rgba(255, 215, 0, 0.85); animation: glow 2s ease-in-out infinite; }
 
 @keyframes glow {
-    0%, 100% { box-shadow: 0 0 12px rgba(224, 64, 255, 0.5); }
-    50% { box-shadow: 0 0 22px rgba(224, 64, 255, 0.8); }
+    0%, 100% { box-shadow: 0 0 16px rgba(255, 215, 0, 0.6); }
+    50% { box-shadow: 0 0 28px rgba(255, 215, 0, 0.95); }
 }
 
 /* ── Title Screen ──────────────────────────────────────────────────────────── */
@@ -233,6 +269,179 @@
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
+}
+
+/* ── Difficulty Modal ──────────────────────────────────────────────────────── */
+.difficulty-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0612;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.difficulty-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.difficulty-content {
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.difficulty-content h3 {
+    font-size: 16px;
+    color: #00f5ff;
+    text-shadow: 0 0 15px rgba(0, 245, 255, 0.5);
+    margin-bottom: 8px;
+}
+
+.difficulty-subtitle {
+    font-size: 9px;
+    color: #8a7fa8;
+    margin-bottom: 25px;
+}
+
+.difficulty-selector-container {
+    margin-bottom: 25px;
+}
+
+/* Custom dropdown for difficulty */
+.custom-dropdown-diff {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-selected-diff {
+    background: #1a0a2a;
+    border: 2px solid #00f5ff;
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #f0ead8;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.15s;
+}
+
+.dropdown-selected-diff:hover {
+    border-color: #33ffff;
+}
+
+.dropdown-arrow-diff {
+    font-size: 8px;
+    color: #8a7fa8;
+}
+
+.dropdown-options-diff {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #1a0a2a;
+    border: 2px solid #00f5ff;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+    z-index: 100;
+}
+
+.custom-dropdown-diff.open .dropdown-options-diff {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.dropdown-option-diff {
+    padding: 12px 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #f0ead8;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+}
+
+.dropdown-option-diff:hover {
+    background: rgba(0, 245, 255, 0.15);
+}
+
+.dropdown-option-diff.highlighted {
+    background: rgba(0, 245, 255, 0.2);
+    color: #00f5ff;
+}
+
+.option-label-diff {
+    color: inherit;
+}
+
+.option-target-diff {
+    color: #8a7fa8;
+    font-size: 8px;
+}
+
+.dropdown-option-diff.highlighted .option-target-diff {
+    color: #00f5ff;
+}
+
+.start-game-button {
+    background: linear-gradient(180deg, #00f5ff, #0088aa);
+    border: none;
+    color: #0a0612;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 14px 28px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+    box-shadow: 0 2px 10px rgba(0, 245, 255, 0.3);
+}
+
+.start-game-button:hover {
+    background: linear-gradient(180deg, #33ffff, #00bbdd);
+    box-shadow: 0 4px 14px rgba(0, 245, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.difficulty-menu-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.difficulty-menu-btn {
+    background: transparent;
+    border: 1px solid #8a7fa8;
+    color: #8a7fa8;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    padding: 7px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+}
+
+.difficulty-menu-btn:hover {
+    border-color: #00f5ff;
+    color: #00f5ff;
 }
 
 /* ── Victory Modal ─────────────────────────────────────────────────────────── */
@@ -588,9 +797,26 @@ body.game-active .controls {
         font-size: 18px;
     }
 
+    .game-board[data-size="5"] .tile { font-size: 14px; }
+    .game-board[data-size="6"] .tile { font-size: 12px; }
+
     .controls button {
         font-size: 7px;
         padding: 6px 10px;
+    }
+
+    .difficulty-content h3 {
+        font-size: 13px;
+    }
+
+    .dropdown-selected-diff {
+        font-size: 9px;
+        padding: 10px 12px;
+    }
+
+    .dropdown-option-diff {
+        font-size: 8px;
+        padding: 10px 12px;
     }
 }
 
@@ -615,4 +841,7 @@ body.game-active .controls {
     .tile {
         font-size: 15px;
     }
+
+    .game-board[data-size="5"] .tile { font-size: 12px; }
+    .game-board[data-size="6"] .tile { font-size: 10px; }
 }
