@@ -577,6 +577,10 @@
         </li>
         <li>
             <a href="../arcade/index.html">arcade</a>
+            <div class="dropdown">
+                <a href="../arcade/board-games/index.html">board games</a>
+                <a href="../arcade/card-games/index.html">card games</a>
+            </div>
         </li>
         <li><a href="../press/index.html">press</a></li>
         <li><a href="../home/guestbook.html">guestbook</a></li>
@@ -631,6 +635,36 @@
         <canvas id="coinCanvas2" width="16" height="16" title="insert coin"></canvas>
     </div>
 
+    <!-- Collections -->
+    <div class="game-section">
+        <div class="section-header" style="border-color: #fff733; color: #fff733; text-shadow: 0 0 12px rgba(255,224,58,0.6);">// COLLECTIONS //</div>
+        <div class="game-grid" style="grid-template-columns: repeat(2, 1fr);">
+
+            <a href="board-games/index.html" class="game-card" style="--card-color: #00f5ff">
+                <div class="card-inner">
+                    <div class="card-title">BOARD<br>GAMES</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cBoardGames" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">chess, checkers, backgammon, sorry. classic boards. neon edition.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="card-games/index.html" class="game-card" style="--card-color: #39ff6e">
+                <div class="card-inner">
+                    <div class="card-title">CARD<br>GAMES</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cCardGames" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">solitaire, cribbage, sökö, texas hold'em. deal 'em up.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
     <!-- Server Status + Chat -->
     <div class="arcade-community">
         <div class="mp-status">
@@ -669,17 +703,6 @@
                 </div>
             </a>
 
-            <a href="solitaire/index.html" class="game-card" style="--card-color: #00f0ff">
-                <div class="card-inner">
-                    <div class="card-title">KLONDIKE<br>SOLITAIRE</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cSolitaire" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">classic card game. draw 3. timed scoring. top 10 leaderboard.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
             <a href="tetris/index.html" class="game-card" style="--card-color: #f0f8ff">
                 <div class="card-inner">
                     <div class="card-title">TETRIS</div>
@@ -691,77 +714,13 @@
                 </div>
             </a>
 
-            <a href="SORRY/index.html" class="game-card" style="--card-color: #ff6f1a">
+            <a href="fifteen-puzzle/index.html" class="game-card" style="--card-color: #00f5ff">
                 <div class="card-inner">
-                    <div class="card-tags">
-                        <span class="card-tag" style="color: #ff1744">MULTIPLAYER</span>
-                    </div>
-                    <div class="card-title">SORRY!</div>
+                    <div class="card-title">15 PUZZLE</div>
                     <div class="card-canvas-wrap">
-                        <canvas id="cSorry" width="72" height="72"></canvas>
+                        <canvas id="cFifteen" width="72" height="72"></canvas>
                     </div>
-                    <div class="card-desc">classic board game. online multiplayer. up to 4 players. say sorry and mean it.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="scandinavian-stud/index.html" class="game-card" style="--card-color: #39ff84">
-                <div class="card-inner">
-                    <div class="card-tags">
-                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
-                    </div>
-                    <div class="card-title">SÖKÖ</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cSoko" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">scandinavian stud. five card poker with a finnish twist. four-card straights & flushes.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="cribbage/index.html" class="game-card" style="--card-color: #ffd700">
-                <div class="card-inner">
-                    <div class="card-tags">
-                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
-                    </div>
-                    <div class="card-title">CRIBBAGE</div>
-                    <div class="card-canvas-wrap">
-                        <div style="font-size: 48px; line-height: 1;">🂡</div>
-                    </div>
-                    <div class="card-desc">the classic card game. first to 121 points wins. pegging, hands, and the crib.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="backgammon/index.html" class="game-card" style="--card-color: #00f5ff">
-                <div class="card-inner">
-                    <div class="card-title">BACKGAMMON</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cBackgammon" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">neon edition. classic board game. vs ai opponent. doubling cube.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="checkers/index.html" class="game-card" style="--card-color: #00f5ff">
-                <div class="card-inner">
-                    <div class="card-title">CHECKERS</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cCheckers" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">neon edition. classic checkers. vs ai opponent. mandatory jumps. king promotion.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="chess/index.html" class="game-card" style="--card-color: #00f5ff">
-                <div class="card-inner">
-                    <div class="card-title">CHESS</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cChess" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">neon edition. classic chess. vs ai opponent. algebraic notation. configurable difficulty.</div>
+                    <div class="card-desc">the classic sliding tile puzzle. arrange 1-15. fewer moves is better.</div>
                     <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -850,17 +809,6 @@
                         <canvas id="cTron" width="72" height="72"></canvas>
                     </div>
                     <div class="card-desc">robot composer on 1810s rooftops. jump. shoot. destroy.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="solitaire_THLD/index.html" class="game-card" style="--card-color: #ff6f1a">
-                <div class="card-inner">
-                    <div class="card-title">TEXAS HOLD'EM<br>LAVA DOME</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cTHLD" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">poker solitaire. build hands. score big. don't get burned.</div>
                     <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -1030,70 +978,6 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.strokeStyle = '#F23C8F';
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 68, 68);
-})();
-
-// Crystal mirror maze preview — crystals + reflection symmetry
-(function() {
-    const c = document.getElementById('cMaze');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // dark mirror surface
-    ctx.fillStyle = '#080818';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // center mirror axis
-    ctx.strokeStyle = '#c45fff';
-    ctx.lineWidth = 0.5;
-    ctx.setLineDash([2, 2]);
-    ctx.beginPath();
-    ctx.moveTo(36, 0);
-    ctx.lineTo(36, 72);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // crystals on left side
-    const crystals = [
-        { x: 8,  y: 8,  s: 6, color: '#c45fff' },
-        { x: 22, y: 20, s: 5, color: '#ff3d6e' },
-        { x: 4,  y: 36, s: 4, color: '#00f5ff' },
-        { x: 18, y: 52, s: 6, color: '#39ff6e' },
-        { x: 6,  y: 60, s: 4, color: '#ffe03a' },
-    ];
-
-    crystals.forEach(({ x, y, s, color }) => {
-        // crystal shape (diamond)
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(x, y - s);
-        ctx.lineTo(x + s, y);
-        ctx.lineTo(x, y + s);
-        ctx.lineTo(x - s, y);
-        ctx.closePath();
-        ctx.fill();
-        // reflection hint
-        ctx.fillStyle = 'rgba(255,255,255,0.2)';
-        ctx.fillRect(x - 1, y - s + 1, 2, s - 1);
-    });
-
-    // reflected crystals on right side
-    crystals.forEach(({ x, y, s, color }) => {
-        const rx = 72 - x;
-        ctx.fillStyle = color;
-        ctx.globalAlpha = 0.4;
-        ctx.beginPath();
-        ctx.moveTo(rx, y - s);
-        ctx.lineTo(rx + s, y);
-        ctx.lineTo(rx, y + s);
-        ctx.lineTo(rx - s, y);
-        ctx.closePath();
-        ctx.fill();
-        ctx.globalAlpha = 1;
-    });
-
-    // player dot
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(35, 35, 2, 2);
 })();
 
 // George Boole preview — logic gate diagram
@@ -1383,421 +1267,6 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.fillRect(26, 22, 2, 2);
 })();
 
-// SORRY! preview — board with colored pawns
-(function() {
-    const c = document.getElementById('cSorry');
-    const ctx = c.getContext('2d');
-
-    // board background
-    ctx.fillStyle = '#0d0a00';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // board border
-    ctx.strokeStyle = '#ff7c1f';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(2, 2, 68, 68);
-
-    // inner track squares (simplified ring of squares)
-    const sq = 8;
-    const track = [
-        // top row
-        [4,4],[13,4],[22,4],[31,4],[40,4],[49,4],[58,4],
-        // right col
-        [58,13],[58,22],[58,31],[58,40],[58,49],[58,58],
-        // bottom row
-        [49,58],[40,58],[31,58],[22,58],[13,58],[4,58],
-        // left col
-        [4,49],[4,40],[4,31],[4,22],[4,13],
-    ];
-    track.forEach(([x, y]) => {
-        ctx.fillStyle = '#1a1000';
-        ctx.fillRect(x, y, sq, sq);
-        ctx.strokeStyle = '#3a2a00';
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(x, y, sq, sq);
-    });
-
-    // center "SORRY" text
-    ctx.fillStyle = '#ff7c1f';
-    ctx.font = 'bold 7px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('SORRY', 36, 33);
-    ctx.fillStyle = '#ffe03a';
-    ctx.font = '5px monospace';
-    ctx.fillText('!', 36, 42);
-
-    // colored pawns on corners of the track
-    const pawns = [
-        { x: 7,  y: 7,  color: '#ff3d6e' },   // red — top-left
-        { x: 61, y: 7,  color: '#00f5ff' },   // blue — top-right
-        { x: 7,  y: 61, color: '#39ff6e' },   // green — bottom-left
-        { x: 61, y: 61, color: '#ffe03a' },   // yellow — bottom-right
-    ];
-    pawns.forEach(p => {
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y + 1, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(p.x, p.y - 2, 2, 0, Math.PI * 2);
-        ctx.fill();
-    });
-})();
-
-// cSolitaire — Klondike Solitaire matching the game's Miami Vaporwave aesthetic
-(function() {
-    const canvas = document.getElementById('cSolitaire');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    // dark teal desktop background (like the game)
-    ctx.fillStyle = '#003838';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // neon accent strip at top
-    ctx.fillStyle = '#ff2d78';
-    ctx.fillRect(0, 0, 72, 3);
-    ctx.fillStyle = '#ffd700';
-    ctx.fillRect(0, 3, 24, 2);
-    ctx.fillStyle = '#00e5ff';
-    ctx.fillRect(48, 3, 24, 2);
-
-    // three card slots (face-down cards)
-    // Card 1 - face down (pixel art back pattern)
-    const cardY = 20;
-    const cardH = 24;
-    const cardW = 18;
-    ctx.fillStyle = '#1a4a4a';
-    ctx.fillRect(6, cardY, cardW, cardH);
-    // pixel pattern on back
-    ctx.fillStyle = '#2a6a6a';
-    for (let py = 0; py < cardH; py += 4) {
-        for (let px = 0; px < cardW; px += 4) {
-            ctx.fillRect(6 + px, cardY + py, 2, 2);
-        }
-    }
-    ctx.strokeStyle = '#00e5ff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(6, cardY, cardW, cardH);
-
-    // Card 2 - face up, red suit (hearts)
-    ctx.fillStyle = '#f8f9fa';
-    ctx.fillRect(27, cardY, cardW, cardH);
-    ctx.strokeStyle = '#ffd700';
-    ctx.strokeRect(27, cardY, cardW, cardH);
-    ctx.fillStyle = '#ff2d78';
-    ctx.font = 'bold 8px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('A', 36, cardY + 10);
-    ctx.fillText('♥', 36, cardY + 20);
-
-    // Card 3 - face down
-    ctx.fillStyle = '#1a4a4a';
-    ctx.fillRect(48, cardY, cardW, cardH);
-    ctx.fillStyle = '#2a6a6a';
-    for (let py = 0; py < cardH; py += 4) {
-        for (let px = 0; px < cardW; px += 4) {
-            ctx.fillRect(48 + px, cardY + py, 2, 2);
-        }
-    }
-    ctx.strokeStyle = '#00e5ff';
-    ctx.strokeRect(48, cardY, cardW, cardH);
-
-    // bottom area - suit icons
-    ctx.fillStyle = '#ff2d78';
-    ctx.font = '10px serif';
-    ctx.fillText('♥', 16, 58);
-    ctx.fillText('♦', 36, 58);
-    ctx.fillStyle = '#111';
-    ctx.font = '10px serif';
-    ctx.fillText('♠', 56, 58);
-})();
-
-// cBackgammon — Neon backgammon board with dice
-(function() {
-    const c = document.getElementById('cBackgammon');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // dark board background
-    ctx.fillStyle = '#0d0820';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // board border (neon cyan)
-    ctx.strokeStyle = '#00f5ff';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(2, 2, 68, 68);
-
-    // triangles (points) — alternating cyan and magenta
-    const triW = 5;
-    const triH = 25;
-    const startX = 6;
-    const gap = 1;
-
-    // Top triangles (points 13-24)
-    for (let i = 0; i < 12; i++) {
-        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,245,255,0.4)' : 'rgba(255,45,120,0.4)';
-        ctx.beginPath();
-        ctx.moveTo(startX + i * (triW + gap), 4);
-        ctx.lineTo(startX + i * (triW + gap) + triW, 4);
-        ctx.lineTo(startX + i * (triW + gap) + triW / 2, 4 + triH);
-        ctx.closePath();
-        ctx.fill();
-    }
-
-    // Bottom triangles (points 1-12)
-    for (let i = 0; i < 12; i++) {
-        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,245,255,0.4)' : 'rgba(255,45,120,0.4)';
-        ctx.beginPath();
-        ctx.moveTo(startX + i * (triW + gap), 68);
-        ctx.lineTo(startX + i * (triW + gap) + triW, 68);
-        ctx.lineTo(startX + i * (triW + gap) + triW / 2, 68 - triH);
-        ctx.closePath();
-        ctx.fill();
-    }
-
-    // Bar (center)
-    ctx.fillStyle = '#1a0a2a';
-    ctx.fillRect(34, 4, 4, 64);
-
-    // Player checkers (cyan) — bottom left
-    const playerCheckers = [[8, 50], [13, 50], [18, 50], [8, 55], [13, 55]];
-    playerCheckers.forEach(([x, y]) => {
-        ctx.fillStyle = '#00f5ff';
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-    });
-
-    // AI checkers (magenta) — top right
-    const aiCheckers = [[54, 22], [59, 22], [64, 22], [54, 17], [59, 17]];
-    aiCheckers.forEach(([x, y]) => {
-        ctx.fillStyle = '#ff2d78';
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-    });
-
-    // Dice (yellow)
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(22, 30, 8, 8);
-    ctx.fillRect(42, 30, 8, 8);
-    // Dice dots
-    ctx.fillStyle = '#0a0612';
-    ctx.beginPath();
-    ctx.arc(26, 34, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(46, 34, 1.5, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Doubling cube (orange)
-    ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(33, 30, 6, 6);
-    ctx.fillStyle = '#0a0612';
-    ctx.font = '4px sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('2', 36, 35);
-})();
-
-// cCheckers — Neon checkers board with pieces
-(function() {
-    const c = document.getElementById('cCheckers');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // dark board background
-    ctx.fillStyle = '#0a0612';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // board border (neon cyan)
-    ctx.strokeStyle = '#00f5ff';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(2, 2, 68, 68);
-
-    // 8x8 grid
-    const sq = 8;
-    const startX = 4;
-    const startY = 4;
-
-    for (let r = 0; r < 8; r++) {
-        for (let col = 0; col < 8; col++) {
-            const x = startX + col * sq;
-            const y = startY + r * sq;
-            const isDark = (r + col) % 2 === 1;
-
-            // Square color
-            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
-            ctx.fillRect(x, y, sq, sq);
-
-            // Pieces
-            if (isDark) {
-                if (r < 3) {
-                    // AI pieces (magenta)
-                    ctx.fillStyle = '#ff2d78';
-                    ctx.beginPath();
-                    ctx.arc(x + sq/2, y + sq/2, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                } else if (r > 4) {
-                    // Player pieces (cyan)
-                    ctx.fillStyle = '#00f5ff';
-                    ctx.beginPath();
-                    ctx.arc(x + sq/2, y + sq/2, 3, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-})();
-
-// cChess — Neon chess board with pieces
-(function() {
-    const c = document.getElementById('cChess');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // dark board background
-    ctx.fillStyle = '#0a0612';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // board border (neon cyan)
-    ctx.strokeStyle = '#00f5ff';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(2, 2, 68, 68);
-
-    // 8x8 grid
-    const sq = 8;
-    const startX = 4;
-    const startY = 4;
-
-    for (let r = 0; r < 8; r++) {
-        for (let col = 0; col < 8; col++) {
-            const x = startX + col * sq;
-            const y = startY + r * sq;
-            const isDark = (r + col) % 2 === 1;
-
-            // Square color
-            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
-            ctx.fillRect(x, y, sq, sq);
-
-            // Chess pieces (simplified)
-            if (r === 0) {
-                // AI back row (magenta)
-                ctx.fillStyle = '#ff2d78';
-                ctx.fillRect(x + 2, y + 2, 4, 4);
-            } else if (r === 1) {
-                // AI pawns (magenta)
-                ctx.fillStyle = '#ff2d78';
-                ctx.beginPath();
-                ctx.arc(x + sq/2, y + sq/2, 2, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (r === 6) {
-                // Player pawns (cyan)
-                ctx.fillStyle = '#00f5ff';
-                ctx.beginPath();
-                ctx.arc(x + sq/2, y + sq/2, 2, 0, Math.PI * 2);
-                ctx.fill();
-            } else if (r === 7) {
-                // Player back row (cyan)
-                ctx.fillStyle = '#00f5ff';
-                ctx.fillRect(x + 2, y + 2, 4, 4);
-            }
-        }
-    }
-})();
-
-// cSoko — Scandinavian Stud card fan preview
-(function() {
-    const c = document.getElementById('cSoko');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // dark blue table background
-    ctx.fillStyle = '#0a1628';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // felt texture gradient
-    const grad = ctx.createRadialGradient(36, 36, 0, 36, 36, 40);
-    grad.addColorStop(0, '#1a2a44');
-    grad.addColorStop(1, '#0a1628');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 72, 72);
-
-    // card dimensions
-    const cardW = 14;
-    const cardH = 20;
-    const startY = 12;
-
-    // fan of 5 cards spread from center
-    const cards = [
-        { x: 10, suit: 'spades',   rank: 'K', faceUp: false },
-        { x: 22, suit: 'hearts',   rank: 'A', faceUp: true },
-        { x: 32, suit: 'diamonds', rank: 'Q', faceUp: true },
-        { x: 42, suit: 'clubs',    rank: 'J', faceUp: true },
-        { x: 52, suit: 'spades',   rank: '10', faceUp: true }
-    ];
-
-    cards.forEach(card => {
-        if (!card.faceUp) {
-            // Face down card - dark with pattern
-            ctx.fillStyle = '#162040';
-            ctx.fillRect(card.x, startY, cardW, cardH);
-            ctx.strokeStyle = '#00f5ff';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(card.x, startY, cardW, cardH);
-            // pixel pattern
-            ctx.fillStyle = '#1e3050';
-            for (let py = 2; py < cardH - 2; py += 3) {
-                for (let px = 2; px < cardW - 2; px += 3) {
-                    ctx.fillRect(card.x + px, startY + py, 1, 1);
-                }
-            }
-        } else {
-            // Face up card - white with suit symbol
-            ctx.fillStyle = '#f0ead8';
-            ctx.fillRect(card.x, startY, cardW, cardH);
-            ctx.strokeStyle = '#00f5ff';
-            ctx.lineWidth = 0.5;
-            ctx.strokeRect(card.x, startY, cardW, cardH);
-
-            // rank
-            ctx.fillStyle = card.suit === 'hearts' || card.suit === 'diamonds' ? '#ff3d6e' : '#0a1628';
-            ctx.font = '5px "Press Start 2P", monospace';
-            ctx.textAlign = 'left';
-            ctx.fillText(card.rank, card.x + 2, startY + 7);
-
-            // suit symbol
-            const symbols = { hearts: '♥', diamonds: '♦', clubs: '♣', spades: '♠' };
-            ctx.fillStyle = card.suit === 'hearts' || card.suit === 'diamonds' ? '#ff3d6e' : '#0a1628';
-            ctx.font = '8px serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(symbols[card.suit], card.x + cardW / 2, startY + 16);
-        }
-    });
-
-    // pot icon at bottom
-    ctx.fillStyle = '#00f5ff';
-    ctx.font = '8px serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('♠♥♦♣', 36, 62);
-
-    // accent line
-    ctx.fillStyle = '#39ff6e';
-    ctx.fillRect(10, 68, 52, 2);
-})();
-
 // cTetris — falling T-piece on finnish flag
 (function() {
     const canvas = document.getElementById('cTetris');
@@ -1830,68 +1299,6 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.font = '6px Courier New, monospace';
     ctx.textAlign = 'right';
     ctx.fillText('888420', 68, 70);
-})();
-
-// Texas Hold'Em Lava Dome — poker card + lava chip
-(function() {
-    const c = document.getElementById('cTHLD');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // lava background
-    ctx.fillStyle = '#1c0000';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // lava glow gradient
-    const lava = ctx.createLinearGradient(0, 50, 0, 72);
-    lava.addColorStop(0, '#6b0000');
-    lava.addColorStop(0.5, '#9b0000');
-    lava.addColorStop(1, '#ff5500');
-    ctx.fillStyle = lava;
-    ctx.fillRect(0, 50, 72, 22);
-
-    // lava bubbles
-    ctx.fillStyle = '#ff7700';
-    ctx.beginPath();
-    ctx.arc(12, 62, 3, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(36, 66, 4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(60, 60, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // poker chip (gold/red)
-    ctx.fillStyle = '#cc2200';
-    ctx.beginPath();
-    ctx.arc(52, 18, 12, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#ffcc00';
-    ctx.beginPath();
-    ctx.arc(52, 18, 8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#cc2200';
-    ctx.beginPath();
-    ctx.arc(52, 18, 4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = '#ff5500';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(52, 18, 12, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // playing card (Ace of Spades)
-    ctx.fillStyle = '#fff8f0';
-    ctx.fillRect(14, 10, 18, 26);
-    ctx.strokeStyle = '#1c0000';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(14, 10, 18, 26);
-    ctx.fillStyle = '#1c0000';
-    ctx.font = 'bold 7px Courier New, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('A', 20, 20);
-    ctx.fillText('♠', 25, 32);
 })();
 
 // cPay2play — SVFP-inspired floppy disk + red telephone
@@ -2005,6 +1412,81 @@ animateCoin(document.getElementById('coinCanvas2'));
         ctx.lineTo(4, 42 + i * 5);
         ctx.stroke();
     }
+})();
+
+// ── Board Games collection preview — checkerboard + pieces ──
+(function() {
+    const c = document.getElementById('cBoardGames');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const sq = 8;
+    for (let r = 0; r < 8; r++) {
+        for (let col = 0; col < 8; col++) {
+            const x = 4 + col * sq;
+            const y = 4 + r * sq;
+            const isDark = (r + col) % 2 === 1;
+            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillRect(x, y, sq, sq);
+        }
+    }
+    // mixed pieces to suggest multiple games
+    // chess rook (top-left)
+    ctx.fillStyle = '#ff2d78';
+    ctx.fillRect(6, 6, 4, 4);
+    // checker (bottom-right)
+    ctx.fillStyle = '#00f5ff';
+    ctx.beginPath(); ctx.arc(60, 60, 3, 0, Math.PI * 2); ctx.fill();
+    // pawn (center)
+    ctx.fillStyle = '#ffe03a';
+    ctx.beginPath(); ctx.arc(36, 36, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(36, 33, 2, 0, Math.PI * 2); ctx.fill();
+    // dice dots
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(10, 54, 6, 6);
+    ctx.fillStyle = '#0a0612';
+    ctx.beginPath(); ctx.arc(13, 57, 1, 0, Math.PI * 2); ctx.fill();
+})();
+
+// ── Card Games collection preview — fan of cards ──
+(function() {
+    const c = document.getElementById('cCardGames');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a1628';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#39ff6e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const cardW = 16, cardH = 22, startY = 14;
+    const cards = [
+        { x: 8,  suit: '\u2660', color: '#0a1628' },
+        { x: 20, suit: '\u2665', color: '#ff3d6e' },
+        { x: 32, suit: '\u2666', color: '#ff3d6e' },
+        { x: 44, suit: '\u2663', color: '#0a1628' },
+    ];
+    cards.forEach(card => {
+        ctx.fillStyle = '#f0ead8';
+        ctx.fillRect(card.x, startY, cardW, cardH);
+        ctx.strokeStyle = '#39ff6e';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(card.x, startY, cardW, cardH);
+        ctx.fillStyle = card.color;
+        ctx.font = '8px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(card.suit, card.x + cardW / 2, startY + 16);
+    });
+    // gold coin
+    ctx.fillStyle = '#FFD700';
+    ctx.beginPath(); ctx.arc(58, 52, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#DAA520';
+    ctx.beginPath(); ctx.arc(58, 52, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#39ff6e';
+    ctx.fillRect(8, 62, 56, 2);
 })();
 
 // ─────────────────────────────────────────────────────────

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>board games — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* ══ PAGE: board games ══ */
+        :root {
+            --nav-accent: #00f5ff;
+            --nav-brand: #00f5ff;
+            --nav-glow: rgba(0,245,255,0.4);
+            --nav-brand-glow: rgba(0,245,255,0.7);
+        }
+        body {
+            background: #0a0612;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #8a7fa8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #00f5ff; }
+        .breadcrumb .sep { margin: 0 8px; color: #00f5ff; opacity: 0.7; }
+        .breadcrumb .current { color: #00f5ff; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title-ascii-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .page-title-ascii {
+            display: inline-block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 7px;
+            line-height: 1.25;
+            color: #00f5ff;
+            text-shadow: 0 0 8px rgba(0,245,255,0.5);
+            white-space: pre;
+            text-align: left;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1200px) { .page-title-ascii { font-size: 5.5px; } }
+        @media (max-width: 900px)  { .page-title-ascii { font-size: 4px; } }
+        @media (max-width: 600px)  { .page-title-ascii { font-size: 3px; } }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #00f5ff;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 8px rgba(0,245,255,0.5);
+        }
+
+        .section-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: #00f5ff;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border: 2px solid #00f5ff;
+            background: #150b29;
+            text-align: center;
+            text-shadow: 0 0 12px rgba(0,245,255,0.6);
+            width: 100%;
+            max-width: 1100px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        @media (min-width: 1100px) {
+            .game-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .game-card {
+            display: block;
+            text-decoration: none;
+            border: 2px solid #3a2d5c;
+            background: #150b29;
+            padding: 0;
+            position: relative;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            border-color: var(--card-color, #00f5ff);
+            box-shadow: 0 0 24px var(--card-color, #00f5ff),
+                        inset 0 0 40px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+        }
+
+        .game-card:hover .card-arrow { opacity: 1; }
+
+        .card-inner { padding: 20px 20px 18px; }
+
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 11px);
+            color: #f0f8ff;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            letter-spacing: 0.05em;
+        }
+
+        .card-canvas-wrap {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: transparent;
+        }
+
+        .card-canvas-wrap canvas {
+            image-rendering: pixelated;
+            width: 76px;
+            height: 76px;
+        }
+
+        .card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a7fa8;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-play {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--card-color, #00f5ff);
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-arrow {
+            opacity: 0;
+            transition: opacity 0.15s;
+            animation: blink 0.6s step-end infinite;
+        }
+
+        .card-tags {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            letter-spacing: 0.08em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .card-tag {
+            padding: 2px 5px;
+            border: 1px solid currentColor;
+            opacity: 0.7;
+        }
+
+        .back-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #8a7fa8;
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.15s, text-shadow 0.15s;
+            margin-bottom: 24px;
+            align-self: flex-start;
+            animation: fadeUp 0.5s ease both;
+        }
+        .back-link:hover {
+            color: #00f5ff;
+            text-shadow: 0 0 8px rgba(0,245,255,0.5);
+        }
+
+        footer { border-top-color: #3a2d5c; }
+        footer span { color: #00f5ff; }
+
+        @media (max-width: 640px) {
+            .game-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../index.html">home</a></li>
+        <li><a href="../../home/about.html">about</a></li>
+        <li>
+            <a href="../../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../../music/jukebox/index.html">jukebox</a>
+                <a href="../../music/distributed-music.html">distributed music</a>
+                <a href="../../music/physical-media/index.html">physical media</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../../visual/music-videos.html">music videos</a>
+                <a href="../../visual/collage.html">collage</a>
+                <a href="../../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../archive/index.html">archive</a>
+            <div class="dropdown">
+                <a href="../../archive/by-artist/index.html">by artist</a>
+                <a href="../../archive/by-place/index.html">by place</a>
+                <a href="../../archive/by-label/index.html">by label</a>
+                <a href="../../archive/by-contributor/index.html">by contributor</a>
+            </div>
+        </li>
+        <li>
+            <a href="../../arcade/index.html">arcade</a>
+            <div class="dropdown">
+                <a href="../../arcade/board-games/index.html">board games</a>
+                <a href="../../arcade/card-games/index.html">card games</a>
+            </div>
+        </li>
+        <li><a href="../../press/index.html">press</a></li>
+        <li><a href="../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../index.html">home</a>
+        <span class="sep">›</span>
+        <a href="../index.html">arcade</a>
+        <span class="sep">›</span>
+        <span class="current">board games</span>
+    </div>
+
+    <a href="../index.html" class="back-link">◀ BACK TO ARCADE</a>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title-ascii-wrap"><pre class="page-title-ascii">
+ ____  ____  ___ _   _  _____ ____    ____   _    ____
+| __ )|  _ \|_ _| \ | |/ ___/ ___|  / ___| / \  / ___|
+|  _ \| |_) || ||  \| | |  _\___ \  \___ \/ _ \| |  _
+| |_) |  _ < | || |\  | |_| |___) |  ___) / ___ \ |_| |
+|____/|_| \_\___|_| \_|\____|____/  |____/_/   \_\____|
+</pre></div>
+        <div class="page-subtitle">// classic board games //</div>
+    </div>
+
+    <!-- Board Games -->
+    <div class="section-header">// BOARD GAMES //</div>
+    <div class="game-grid">
+
+        <a href="../chess/index.html" class="game-card" style="--card-color: #00f5ff">
+            <div class="card-inner">
+                <div class="card-title">CHESS</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cChess" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">neon edition. classic chess. vs ai opponent. algebraic notation. configurable difficulty.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../checkers/index.html" class="game-card" style="--card-color: #00f5ff">
+            <div class="card-inner">
+                <div class="card-title">CHECKERS</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cCheckers" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">neon edition. classic checkers. vs ai opponent. mandatory jumps. king promotion.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../backgammon/index.html" class="game-card" style="--card-color: #00f5ff">
+            <div class="card-inner">
+                <div class="card-title">BACKGAMMON</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cBackgammon" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">neon edition. classic board game. vs ai opponent. doubling cube.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../SORRY/index.html" class="game-card" style="--card-color: #ff6f1a">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag" style="color: #ff1744">MULTIPLAYER</span>
+                </div>
+                <div class="card-title">SORRY!</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cSorry" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">classic board game. online multiplayer. up to 4 players. say sorry and mean it.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+<script>
+// ── Chess preview ──
+(function() {
+    const c = document.getElementById('cChess');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const sq = 8;
+    for (let r = 0; r < 8; r++) {
+        for (let col = 0; col < 8; col++) {
+            const x = 4 + col * sq;
+            const y = 4 + r * sq;
+            const isDark = (r + col) % 2 === 1;
+            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillRect(x, y, sq, sq);
+            if (r === 0) {
+                ctx.fillStyle = '#ff2d78';
+                ctx.fillRect(x + 2, y + 2, 4, 4);
+            } else if (r === 1) {
+                ctx.fillStyle = '#ff2d78';
+                ctx.beginPath();
+                ctx.arc(x + sq/2, y + sq/2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (r === 6) {
+                ctx.fillStyle = '#00f5ff';
+                ctx.beginPath();
+                ctx.arc(x + sq/2, y + sq/2, 2, 0, Math.PI * 2);
+                ctx.fill();
+            } else if (r === 7) {
+                ctx.fillStyle = '#00f5ff';
+                ctx.fillRect(x + 2, y + 2, 4, 4);
+            }
+        }
+    }
+})();
+
+// ── Checkers preview ──
+(function() {
+    const c = document.getElementById('cCheckers');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const sq = 8;
+    for (let r = 0; r < 8; r++) {
+        for (let col = 0; col < 8; col++) {
+            const x = 4 + col * sq;
+            const y = 4 + r * sq;
+            const isDark = (r + col) % 2 === 1;
+            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillRect(x, y, sq, sq);
+            if (isDark) {
+                if (r < 3) {
+                    ctx.fillStyle = '#ff2d78';
+                    ctx.beginPath();
+                    ctx.arc(x + sq/2, y + sq/2, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                } else if (r > 4) {
+                    ctx.fillStyle = '#00f5ff';
+                    ctx.beginPath();
+                    ctx.arc(x + sq/2, y + sq/2, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                    ctx.lineWidth = 0.5;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+})();
+
+// ── Backgammon preview ──
+(function() {
+    const c = document.getElementById('cBackgammon');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0d0820';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const triW = 5, triH = 25, startX = 6, gap = 1;
+    for (let i = 0; i < 12; i++) {
+        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,245,255,0.4)' : 'rgba(255,45,120,0.4)';
+        ctx.beginPath();
+        ctx.moveTo(startX + i * (triW + gap), 4);
+        ctx.lineTo(startX + i * (triW + gap) + triW, 4);
+        ctx.lineTo(startX + i * (triW + gap) + triW / 2, 4 + triH);
+        ctx.closePath();
+        ctx.fill();
+    }
+    for (let i = 0; i < 12; i++) {
+        ctx.fillStyle = i % 2 === 0 ? 'rgba(0,245,255,0.4)' : 'rgba(255,45,120,0.4)';
+        ctx.beginPath();
+        ctx.moveTo(startX + i * (triW + gap), 68);
+        ctx.lineTo(startX + i * (triW + gap) + triW, 68);
+        ctx.lineTo(startX + i * (triW + gap) + triW / 2, 68 - triH);
+        ctx.closePath();
+        ctx.fill();
+    }
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(34, 4, 4, 64);
+    [[8,50],[13,50],[18,50],[8,55],[13,55]].forEach(([x,y]) => {
+        ctx.fillStyle = '#00f5ff';
+        ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 0.5; ctx.stroke();
+    });
+    [[54,22],[59,22],[64,22],[54,17],[59,17]].forEach(([x,y]) => {
+        ctx.fillStyle = '#ff2d78';
+        ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 0.5; ctx.stroke();
+    });
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(22, 30, 8, 8);
+    ctx.fillRect(42, 30, 8, 8);
+    ctx.fillStyle = '#0a0612';
+    ctx.beginPath(); ctx.arc(26, 34, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(46, 34, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(33, 30, 6, 6);
+    ctx.fillStyle = '#0a0612';
+    ctx.font = '4px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('2', 36, 35);
+})();
+
+// ── SORRY! preview ──
+(function() {
+    const c = document.getElementById('cSorry');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0d0a00';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ff7c1f';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const sq = 8;
+    const track = [
+        [4,4],[13,4],[22,4],[31,4],[40,4],[49,4],[58,4],
+        [58,13],[58,22],[58,31],[58,40],[58,49],[58,58],
+        [49,58],[40,58],[31,58],[22,58],[13,58],[4,58],
+        [4,49],[4,40],[4,31],[4,22],[4,13],
+    ];
+    track.forEach(([x, y]) => {
+        ctx.fillStyle = '#1a1000';
+        ctx.fillRect(x, y, sq, sq);
+        ctx.strokeStyle = '#3a2a00';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(x, y, sq, sq);
+    });
+    ctx.fillStyle = '#ff7c1f';
+    ctx.font = 'bold 7px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('SORRY', 36, 33);
+    ctx.fillStyle = '#ffe03a';
+    ctx.font = '5px monospace';
+    ctx.fillText('!', 36, 42);
+    [
+        { x: 7,  y: 7,  color: '#ff3d6e' },
+        { x: 61, y: 7,  color: '#00f5ff' },
+        { x: 7,  y: 61, color: '#39ff6e' },
+        { x: 61, y: 61, color: '#ffe03a' },
+    ].forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y + 1, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(p.x, p.y - 2, 2, 0, Math.PI * 2); ctx.fill();
+    });
+})();
+
+// ── Keyboard nav ──
+(function() {
+    const cards = Array.from(document.querySelectorAll('.game-card'));
+    let selected = -1;
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            selected = (selected + 1) % cards.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            selected = (selected - 1 + cards.length) % cards.length;
+        } else if (e.key === 'Enter' && selected >= 0) {
+            window.location.href = cards[selected].href;
+            return;
+        } else { return; }
+        cards.forEach((c, i) => {
+            c.style.transform = i === selected ? 'translateY(-3px)' : '';
+            c.style.boxShadow = i === selected ? '0 0 28px var(--card-color, #00f5ff)' : '';
+        });
+    });
+})();
+</script>
+
+</body>
+</html>

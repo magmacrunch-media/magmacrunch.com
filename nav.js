@@ -28,7 +28,10 @@ window.NAV_CONFIG = {
             { href: 'archive/by-label/index.html', label: 'by label' },
             { href: 'archive/by-contributor/index.html', label: 'by contributor' }
         ]},
-        { label: 'arcade', href: 'arcade/index.html' },
+        { label: 'arcade', href: 'arcade/index.html', items: [
+            { href: 'arcade/board-games/index.html', label: 'board games' },
+            { href: 'arcade/card-games/index.html', label: 'card games' }
+        ]},
         { label: 'press', href: 'press/index.html', items: [
             { href: 'press/scientific/index.html', label: 'scientific' },
             { href: 'press/experimental/index.html', label: 'experimental' }
