@@ -638,7 +638,7 @@
     <!-- Collections -->
     <div class="game-section">
         <div class="section-header" style="border-color: #fff733; color: #fff733; text-shadow: 0 0 12px rgba(255,224,58,0.6);">// COLLECTIONS //</div>
-        <div class="game-grid" style="grid-template-columns: repeat(2, 1fr);">
+        <div class="game-grid" style="grid-template-columns: repeat(3, 1fr);">
 
             <a href="board-games/index.html" class="game-card" style="--card-color: #00f5ff">
                 <div class="card-inner">
@@ -658,6 +658,17 @@
                         <canvas id="cCardGames" width="72" height="72"></canvas>
                     </div>
                     <div class="card-desc">solitaire, cribbage, sökö, texas hold'em. deal 'em up.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="puzzles/index.html" class="game-card" style="--card-color: #ffe03a">
+                <div class="card-inner">
+                    <div class="card-title">PUZZLES</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cPuzzles" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">2048, george boole, 15 puzzle, tetris. brain busters.</div>
                     <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -687,47 +698,6 @@
         </div>
     </div>
 
-    <!-- Classic Games Section -->
-    <div class="game-section">
-        <div class="section-header">// CLASSIC GAMES //</div>
-        <div class="game-grid">
-
-            <a href="2^N/index.html" class="game-card" style="--card-color: #00f0ff">
-                <div class="card-inner">
-                    <div class="card-title">2048 (actually, 2^N)</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="c2048" width="72" height="72"></canvas>
-                    </div>                
-                    <div class="card-desc">slide & merge tiles. reach 2^N. how far can you go?</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="tetris/index.html" class="game-card" style="--card-color: #f0f8ff">
-                <div class="card-inner">
-                    <div class="card-title">TETRIS</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cTetris" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">helsinki 1989. stack blocks. clear lines. don't let them reach the top.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="fifteen-puzzle/index.html" class="game-card" style="--card-color: #00f5ff">
-                <div class="card-inner">
-                    <div class="card-title">15 PUZZLE</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cFifteen" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">the classic sliding tile puzzle. arrange 1-15. fewer moves is better.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-        </div>
-    </div>
-
     <!-- Music-Inspired Section -->
     <div class="game-section">
         <div class="section-header" style="--card-color: #39ff84; border-color: #39ff84; color: #39ff84; text-shadow: 0 0 12px rgba(57,255,132,0.6);">// MUSIC-INSPIRED //</div>
@@ -743,17 +713,6 @@
                         <canvas id="cMaze" width="72" height="72"></canvas>
                     </div>
                     <div class="card-desc">navigate a shifting labyrinth of reflections.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="george-boole/index.html" class="game-card" style="--card-color: #39ff84">
-                <div class="card-inner">
-                    <div class="card-title">GEORGE BOOLE<br>HAS ENTERED<br>THE CHAT</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cBoole" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">boolean logic puzzles. true or false? and, or, not.</div>
                     <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -925,115 +884,7 @@ animateCoin(document.getElementById('coinCanvas2'));
 // MINI PREVIEW SPRITES for each game card
 // ─────────────────────────────────────────────────────────
 
-// 2048 preview — 4x4 grid matching 2^N game tiles
-(function() {
-    const c = document.getElementById('c2048');
-    if (!c) return;
-    const ctx = c.getContext('2d');
 
-    // board background (dark berry like the game)
-    ctx.fillStyle = '#150005';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // 4x4 grid of tiles matching game color zones
-    const tiles = [
-        { color: '#0a2a4a', text: '2',  textColor: '#5aaedd' },   // blue
-        { color: '#0d4a7a', text: '4',  textColor: '#7ec8f0' },   // medium blue
-        { color: '#1e0810', text: '',   textColor: '' },          // empty
-        { color: '#0a7abf', text: '8',  textColor: '#fff' },       // bright blue
-        { color: '#6a0060', text: '16', textColor: '#f07ad0' },    // magenta-purple
-        { color: '#b0006a', text: '32', textColor: '#fff' },       // true magenta
-        { color: '#1e0810', text: '',   textColor: '' },          // empty
-        { color: '#F23C8F', text: '64', textColor: '#fff' },       // hot magenta
-        { color: '#1e0810', text: '',   textColor: '' },          // empty
-        { color: '#c47a00', text: '128',textColor: '#fff0a0' },    // gold
-        { color: '#FFD54A', text: '256',textColor: '#1a0a00' },    // yellow
-        { color: '#b02070', text: '512',textColor: '#fff' },       // magenta
-        { color: '#39ff6e', text: '2',  textColor: '#fff' },       // low tile
-        { color: '#ff7c1f', text: '4',  textColor: '#fff' },       // low tile
-        { color: '#ffe03a', text: '8',  textColor: '#000' },       // low tile
-        { color: '#1e0810', text: '?',  textColor: '#555' },       // mystery
-    ];
-    const cellSize = 17;
-    const gap = 2;
-    const boardPad = 4;
-    tiles.forEach((t, i) => {
-        const x = (i % 4) * cellSize + boardPad;
-        const y = Math.floor(i / 4) * cellSize + boardPad;
-        if (t.text === '' || t.text === '?') {
-            // empty/mystery cell
-            ctx.fillStyle = t.color;
-            ctx.fillRect(x, y, cellSize - gap, cellSize - gap);
-        } else {
-            ctx.fillStyle = t.color;
-            ctx.fillRect(x, y, cellSize - gap, cellSize - gap);
-            ctx.fillStyle = t.textColor;
-            ctx.font = `bold ${t.text.length > 2 ? '4' : '5'}px 'Press Start 2P', monospace`;
-            ctx.textAlign = 'center';
-            ctx.fillText(t.text, x + (cellSize - gap) / 2, y + (cellSize - gap) / 2 + 3);
-        }
-    });
-
-    // board border (pink like the game)
-    ctx.strokeStyle = '#F23C8F';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(2, 2, 68, 68);
-})();
-
-// George Boole preview — logic gate diagram
-(function() {
-    const c = document.getElementById('cBoole');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = '#080808';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // input nodes (T/F boxes)
-    ctx.fillStyle = '#39ff6e';
-    ctx.fillRect(4, 8, 14, 8);
-    ctx.fillRect(4, 24, 14, 8);
-    ctx.fillStyle = '#ff3d6e';
-    ctx.fillRect(4, 40, 14, 8);
-    ctx.fillRect(4, 56, 14, 8);
-
-    // AND gate box
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(22, 8, 24, 20);
-    ctx.strokeStyle = '#ffe03a';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(22, 8, 24, 20);
-    ctx.fillStyle = '#ffe03a';
-    ctx.font = '6px Courier New, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('AND', 34, 21);
-
-    // OR gate box
-    ctx.fillStyle = '#1a1a1a';
-    ctx.fillRect(22, 40, 24, 20);
-    ctx.strokeStyle = '#c45fff';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(22, 40, 24, 20);
-    ctx.fillStyle = '#c45fff';
-    ctx.fillText('OR', 34, 53);
-
-    // output lines
-    ctx.strokeStyle = '#00f5ff';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(46, 18);
-    ctx.lineTo(58, 18);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(46, 50);
-    ctx.lineTo(58, 50);
-    ctx.stroke();
-
-    // output nodes
-    ctx.fillStyle = '#39ff6e';
-    ctx.fillRect(58, 15, 8, 6);
-    ctx.fillStyle = '#ff3d6e';
-    ctx.fillRect(58, 47, 8, 6);
-})();
 
 // Moonlight drift preview — matching the game's deep space aesthetic
 (function() {
@@ -1267,39 +1118,6 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.fillRect(26, 22, 2, 2);
 })();
 
-// cTetris — falling T-piece on finnish flag
-(function() {
-    const canvas = document.getElementById('cTetris');
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-
-    ctx.fillStyle = '#0a192f';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // finnish flag stripes
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 28, 72, 8);
-    ctx.fillRect(26, 0, 8, 72);
-    ctx.fillStyle = '#003580';
-    ctx.fillRect(0, 30, 72, 4);
-    ctx.fillRect(28, 0, 4, 72);
-
-    // T-piece (cyan)
-    ctx.fillStyle = '#00ffff';
-    [[0,0],[1,0],[2,0],[1,1]].forEach(([bx,by]) => {
-        ctx.fillRect(30 + bx*9, 14 + by*9, 8, 8);
-    });
-    // bevel highlight
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.fillRect(30, 14, 27, 2);
-    ctx.fillRect(30, 14, 2, 18);
-
-    // score text
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '6px Courier New, monospace';
-    ctx.textAlign = 'right';
-    ctx.fillText('888420', 68, 70);
-})();
 
 // cPay2play — SVFP-inspired floppy disk + red telephone
 (function() {
@@ -1480,13 +1298,43 @@ animateCoin(document.getElementById('coinCanvas2'));
         ctx.textAlign = 'center';
         ctx.fillText(card.suit, card.x + cardW / 2, startY + 16);
     });
-    // gold coin
     ctx.fillStyle = '#FFD700';
     ctx.beginPath(); ctx.arc(58, 52, 8, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#DAA520';
     ctx.beginPath(); ctx.arc(58, 52, 4, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = '#39ff6e';
     ctx.fillRect(8, 62, 56, 2);
+})();
+
+// ── Puzzles collection preview — question mark grid ──
+(function() {
+    const c = document.getElementById('cPuzzles');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ffe03a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const tiles = [
+        { color: '#0a2a5a', text: '2' },
+        { color: '#b0006a', text: '?' },
+        { color: '#006a8a', text: '8' },
+        { color: '#1a0a2a', text: '' },
+    ];
+    const cellSize = 32, gap = 2, boardPad = 4;
+    tiles.forEach((t, i) => {
+        const x = (i % 2) * cellSize + boardPad;
+        const y = Math.floor(i / 2) * cellSize + boardPad;
+        ctx.fillStyle = t.color;
+        ctx.fillRect(x, y, cellSize - gap, cellSize - gap);
+        if (t.text) {
+            ctx.fillStyle = t.text === '?' ? '#ffe03a' : '#fff';
+            ctx.font = `bold 10px 'Press Start 2P', monospace`;
+            ctx.textAlign = 'center';
+            ctx.fillText(t.text, x + (cellSize - gap) / 2, y + (cellSize - gap) / 2 + 4);
+        }
+    });
 })();
 
 // ─────────────────────────────────────────────────────────
