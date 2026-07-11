@@ -354,6 +354,21 @@ async def handler(websocket):
                     'statuses': statuses
                 }))
 
+            elif msg_type == 'get_history':
+                # Request full chat history (for admin dashboard)
+                await websocket.send(json.dumps({
+                    'type': 'history',
+                    'messages': messages[-MAX_GLOBAL_MESSAGES:]
+                }))
+                # Also send room list with messages
+                room_hist = {}
+                for room_code, msgs in room_messages.items():
+                    room_hist[room_code] = msgs[-MAX_ROOM_MESSAGES:]
+                await websocket.send(json.dumps({
+                    'type': 'room_histories',
+                    'rooms': room_hist
+                }))
+
     except websockets.ConnectionClosed:
         pass
     finally:
@@ -393,6 +408,8 @@ async def main(port):
     # Start WebSocket server
     async def _health_check(connection, request):
         from websockets.http11 import Response
+        if request.headers.get("Upgrade", "").lower() == "websocket":
+            return None
         return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
 
     async with websockets.serve(handler, '0.0.0.0', port, process_request=_health_check):

@@ -1,6 +1,6 @@
 {
     "port": 8780,
-    "auth": false,
-    "password": "changeme",
+    "auth": true,
+    "password": "texastoast",
     "bind": "0.0.0.0"
 }

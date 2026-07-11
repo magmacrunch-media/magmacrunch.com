@@ -66,6 +66,22 @@
                     <button id="btn-load-50" class="btn btn-cyan btn-sm">LAST 50</button>
                 </div>
             </section>
+
+            <!-- Chat History -->
+            <section class="chat-section">
+                <div class="chat-header">
+                    <h2 class="section-title">CHAT HISTORY</h2>
+                    <div class="chat-controls">
+                        <select id="chat-room-filter" class="select-retro">
+                            <option value="global">GLOBAL CHAT</option>
+                        </select>
+                        <button id="btn-refresh-chat" class="btn btn-cyan btn-sm">REFRESH</button>
+                    </div>
+                </div>
+                <div id="chat-viewer" class="chat-viewer">
+                    <div class="log-welcome">Click REFRESH to load chat history.</div>
+                </div>
+            </section>
         </main>
 
         <footer>
@@ -73,6 +89,6 @@
         </footer>
     </div>
 
-    <script src="admin.js"></script>
+    <script src="admin.js?v=4"></script>
 </body>
 </html>

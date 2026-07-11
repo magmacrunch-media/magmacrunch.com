@@ -56,6 +56,10 @@ def generate_session_token():
 
 # ── System commands ──────────────────────────────────────────────────────────
 
+import concurrent.futures
+
+_executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
+
 def run_cmd(cmd, timeout=10):
     """Run a shell command and return stdout."""
     try:
@@ -68,16 +72,24 @@ def run_cmd(cmd, timeout=10):
     except Exception as e:
         return f"[error: {e}]"
 
+async def run_cmd_async(cmd, timeout=10):
+    """Run a shell command in a thread pool to avoid blocking the event loop."""
+    loop = asyncio.get_event_loop()
+    return await loop.run_in_executor(_executor, lambda: run_cmd(cmd, timeout))
+
 def get_service_status(unit):
     """Get status of a systemd service."""
     output = run_cmd(f"systemctl is-active {unit}")
     return output
 
 def get_all_statuses():
-    """Get status of all services."""
+    """Get status of all services in one command."""
+    units = " ".join(svc["unit"] for svc in SERVICES)
+    output = run_cmd(f"systemctl is-active {units}")
     statuses = {}
-    for svc in SERVICES:
-        statuses[svc["unit"]] = get_service_status(svc["unit"])
+    lines = output.split("\n")
+    for i, svc in enumerate(SERVICES):
+        statuses[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
     return statuses
 
 def get_logs(unit, lines=50):
@@ -101,14 +113,27 @@ def restart_all():
     return run_cmd("sudo systemctl restart 'arcade-*'", timeout=60)
 
 def get_system_info():
-    """Get Pi system information."""
+    """Get Pi system information in one command."""
+    output = run_cmd("""
+        echo "UPTIME:$(uptime -p)"
+        echo "HOSTNAME:$(hostname)"
+        echo "MEMORY:$(free -h | awk '/^Mem:/ {print $3"/"$2}')"
+        echo "TEMP:$(vcgencmd measure_temp 2>/dev/null | cut -d= -f2 | cut -d'\"' -f1 || echo N/A)"
+        echo "LOAD:$(uptime | awk -F'load average:' '{print $2}')"
+    """)
     info = {}
-    info["uptime"] = run_cmd("uptime -p")
-    info["hostname"] = run_cmd("hostname")
-    info["memory"] = run_cmd("free -h | awk '/^Mem:/ {print $3\"/\"$2}'")
-    info["cpu_temp"] = run_cmd("vcgencmd measure_temp 2>/dev/null | cut -d= -f2 | cut -d'\"' -f1 || echo 'N/A'")
-    info["cpu_load"] = run_cmd("uptime | awk -F'load average:' '{print $2}'")
-    return info
+    for line in output.split("\n"):
+        if ":" in line:
+            key, val = line.split(":", 1)
+            info[key.lower()] = val.strip()
+    # Map to expected keys
+    return {
+        "uptime": info.get("uptime", "N/A"),
+        "hostname": info.get("hostname", "N/A"),
+        "memory": info.get("memory", "N/A"),
+        "cpu_temp": info.get("temp", "N/A"),
+        "cpu_load": info.get("load", "N/A"),
+    }
 
 # ── Log streaming ────────────────────────────────────────────────────────────
 
@@ -178,17 +203,23 @@ async def ws_handler(websocket):
                         continue
 
             if action == "status":
-                statuses = get_all_statuses()
+                statuses = await run_cmd_async(
+                    f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                )
+                status_map = {}
+                lines = statuses.split("\n")
+                for i, svc in enumerate(SERVICES):
+                    status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
                 await websocket.send(json.dumps({
                     "type": "status",
                     "services": SERVICES,
-                    "statuses": statuses
+                    "statuses": status_map
                 }))
 
             elif action == "logs":
                 unit = msg.get("service", "arcade-chat")
                 lines = msg.get("lines", 50)
-                logs = get_logs(unit, lines)
+                logs = await run_cmd_async(f"journalctl -u {unit} -n {lines} --no-pager", timeout=15)
                 await websocket.send(json.dumps({
                     "type": "logs",
                     "service": unit,
@@ -196,7 +227,7 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "logs_errors":
-                logs = get_logs_errors()
+                logs = await run_cmd_async("journalctl -u 'arcade-*' -p err -n 100 --no-pager", timeout=15)
                 await websocket.send(json.dumps({
                     "type": "logs",
                     "service": "errors",
@@ -204,7 +235,7 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "logs_today":
-                logs = get_logs_today()
+                logs = await run_cmd_async("journalctl -u 'arcade-*' --since today --no-pager", timeout=15)
                 await websocket.send(json.dumps({
                     "type": "logs",
                     "service": "today",
@@ -214,22 +245,28 @@ async def ws_handler(websocket):
             elif action == "restart":
                 unit = msg.get("service")
                 if unit:
-                    result = restart_service(unit)
+                    result = await run_cmd_async(f"sudo systemctl restart {unit}", timeout=30)
                     await websocket.send(json.dumps({
                         "type": "restart_result",
                         "service": unit,
                         "result": result
                     }))
                     # Send updated status
-                    statuses = get_all_statuses()
+                    statuses = await run_cmd_async(
+                        f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                    )
+                    status_map = {}
+                    lines = statuses.split("\n")
+                    for i, svc in enumerate(SERVICES):
+                        status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
                     await websocket.send(json.dumps({
                         "type": "status",
                         "services": SERVICES,
-                        "statuses": statuses
+                        "statuses": status_map
                     }))
 
             elif action == "restart_all":
-                result = restart_all()
+                result = await run_cmd_async("sudo systemctl restart 'arcade-*'", timeout=60)
                 await websocket.send(json.dumps({
                     "type": "restart_result",
                     "service": "all",
@@ -237,11 +274,17 @@ async def ws_handler(websocket):
                 }))
                 # Send updated status
                 await asyncio.sleep(2)
-                statuses = get_all_statuses()
+                statuses = await run_cmd_async(
+                    f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                )
+                status_map = {}
+                lines = statuses.split("\n")
+                for i, svc in enumerate(SERVICES):
+                    status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
                 await websocket.send(json.dumps({
                     "type": "status",
                     "services": SERVICES,
-                    "statuses": statuses
+                    "statuses": status_map
                 }))
 
             elif action == "stream_start":
@@ -256,11 +299,49 @@ async def ws_handler(websocket):
                     stream_task = None
 
             elif action == "system_info":
-                info = get_system_info()
+                info_raw = await run_cmd_async("""
+                    echo "UPTIME:$(uptime -p)"
+                    echo "HOSTNAME:$(hostname)"
+                    echo "MEMORY:$(free -h | awk '/^Mem:/ {print $3"/"$2}')"
+                    echo "TEMP:$(vcgencmd measure_temp 2>/dev/null | cut -d= -f2 | cut -d'\"' -f1 || echo N/A)"
+                    echo "LOAD:$(uptime | awk -F'load average:' '{print $2}')"
+                """)
+                parsed = {}
+                for line in info_raw.split("\n"):
+                    if ":" in line:
+                        key, val = line.split(":", 1)
+                        parsed[key.lower()] = val.strip()
+                info = {
+                    "uptime": parsed.get("uptime", "N/A"),
+                    "hostname": parsed.get("hostname", "N/A"),
+                    "memory": parsed.get("memory", "N/A"),
+                    "cpu_temp": parsed.get("temp", "N/A"),
+                    "cpu_load": parsed.get("load", "N/A"),
+                }
                 await websocket.send(json.dumps({
                     "type": "system_info",
                     "info": info
                 }))
+
+            elif action == "chat_history":
+                # Connect to chat server and fetch history
+                try:
+                    async with websockets.connect(f"ws://localhost:8768") as chat_ws:
+                        await chat_ws.send(json.dumps({"type": "get_history"}))
+                        # Receive history responses
+                        for _ in range(2):  # history + room_histories
+                            resp = await asyncio.wait_for(chat_ws.recv(), timeout=5)
+                            data = json.loads(resp)
+                            await websocket.send(json.dumps({
+                                "type": data.get("type", "chat_history"),
+                                "messages": data.get("messages", []),
+                                "rooms": data.get("rooms", {})
+                            }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "chat_error",
+                        "error": str(e)
+                    }))
 
     except websockets.ConnectionClosed:
         pass

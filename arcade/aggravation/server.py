@@ -712,6 +712,8 @@ async def main(port):
 
     async def _health_check(connection, request):
         from websockets.http11 import Response
+        if request.headers.get("Upgrade", "").lower() == "websocket":
+            return None
         return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
 
     loop = asyncio.get_running_loop()

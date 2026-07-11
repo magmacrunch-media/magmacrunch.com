@@ -467,8 +467,10 @@ class GameServer:
         print(f"[{self.game_name}] Starting WebSocket server on port {self.port}")
 
         async def _health_check(connection, request):
-            """Return 426 for plain HTTP requests (health checks) instead of failing handshake."""
+            """Return 426 for plain HTTP requests, allow WebSocket upgrades."""
             from websockets.http11 import Response
+            if request.headers.get("Upgrade", "").lower() == "websocket":
+                return None
             return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
 
         async def _run():

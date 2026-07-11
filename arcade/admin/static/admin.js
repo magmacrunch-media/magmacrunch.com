@@ -43,8 +43,17 @@
     const sysCpu = $('#system-cpu');
     const sysMem = $('#system-mem');
     const sysTemp = $('#system-temp');
+    const chatViewer = $('#chat-viewer');
+    const chatRoomFilter = $('#chat-room-filter');
+    const btnRefreshChat = $('#btn-refresh-chat');
+
+    // ── Chat state ───────────────────────────────────────────────────────────
+    let chatHistory = [];
+    let chatRoomHistories = {};
 
     // ── WebSocket ───────────────────────────────────────────────────────────
+
+    let tConnected = 0;
 
     function connect() {
         if (ws && ws.readyState === WebSocket.OPEN) return;
@@ -52,13 +61,16 @@
         ws = new WebSocket(wsUrl);
 
         ws.onopen = () => {
+            tConnected = performance.now();
             console.log('[OPS] Connected');
             clearTimeout(reconnectTimer);
             requestStatus();
-            requestSystemInfo();
-            // Refresh status every 10 seconds
-            statusTimer = setInterval(requestStatus, 10000);
-            setInterval(requestSystemInfo, 30000);
+            statusTimer = setInterval(() => {
+                if (authToken) requestStatus();
+            }, 10000);
+            setInterval(() => {
+                if (authToken) requestSystemInfo();
+            }, 30000);
         };
 
         ws.onmessage = (event) => {
@@ -83,6 +95,8 @@
 
     function send(msg) {
         if (ws && ws.readyState === WebSocket.OPEN) {
+            const elapsed = Math.round(performance.now() - tConnected);
+            console.log(`[OPS] Sending ${msg.action || msg.type || '?'} at ${elapsed}ms`);
             ws.send(JSON.stringify(msg));
         }
     }
@@ -90,9 +104,11 @@
     // ── Message handler ─────────────────────────────────────────────────────
 
     function handleMessage(msg) {
+        const elapsed = performance.now() - tConnected;
+        console.log(`[OPS] Received ${msg.type} at ${Math.round(elapsed)}ms`);
         switch (msg.type) {
             case 'status':
-                renderStatusGrid(msg.services, msg.statuses);
+                if (msg.services) renderStatusGrid(msg.services, msg.statuses);
                 break;
 
             case 'logs':
@@ -118,11 +134,35 @@
             case 'login_ok':
                 authToken = msg.token;
                 hideLogin();
+                const tLogin = performance.now();
+                console.log('[OPS] Login OK, sending data requests');
+                requestStatus();
+                requestSystemInfo();
+                requestChatHistory();
                 break;
 
             case 'login_fail':
                 loginError.classList.remove('hidden');
                 loginInput.value = '';
+                break;
+
+            case 'history':
+                chatHistory = msg.messages || [];
+                renderChat();
+                break;
+
+            case 'room_histories':
+                chatRoomHistories = msg.rooms || {};
+                updateChatRoomFilter();
+                break;
+
+            case 'chat':
+            case 'room_chat':
+                // Live chat message from chat server subscription
+                chatHistory.push(msg);
+                if (chatRoomFilter.value === 'global' && !msg.room) {
+                    appendChatMessage(msg);
+                }
                 break;
         }
     }
@@ -174,6 +214,64 @@
         streaming = false;
         btnStopStream.classList.add('hidden');
         btnStream.classList.remove('hidden');
+    }
+
+    // ── Chat functions ───────────────────────────────────────────────────────
+
+    function requestChatHistory() {
+        send({ action: 'chat_history', token: authToken });
+    }
+
+    function renderChat() {
+        chatViewer.innerHTML = '';
+        const filter = chatRoomFilter.value;
+
+        if (filter === 'global') {
+            chatHistory.forEach(msg => appendChatMessage(msg));
+        } else {
+            const msgs = chatRoomHistories[filter] || [];
+            msgs.forEach(msg => appendChatMessage(msg));
+        }
+    }
+
+    function appendChatMessage(msg) {
+        const div = document.createElement('div');
+        div.className = 'chat-msg';
+
+        const time = msg.timestamp ? new Date(msg.timestamp * 1000).toLocaleTimeString() : '';
+        const name = msg.from || '???';
+        const color = msg.color || '#fff';
+        const text = msg.text || '';
+
+        div.innerHTML = `
+            <span class="chat-time">${time}</span>
+            <span class="chat-name" style="color:${color}">${name}:</span>
+            <span class="chat-text">${escapeHtml(text)}</span>
+        `;
+
+        chatViewer.appendChild(div);
+        chatViewer.scrollTop = chatViewer.scrollHeight;
+    }
+
+    function updateChatRoomFilter() {
+        const current = chatRoomFilter.value;
+        chatRoomFilter.innerHTML = '<option value="global">GLOBAL CHAT</option>';
+        Object.keys(chatRoomHistories).sort().forEach(room => {
+            const opt = document.createElement('option');
+            opt.value = room;
+            opt.textContent = `ROOM ${room}`;
+            chatRoomFilter.appendChild(opt);
+        });
+        // Restore selection if still exists
+        if (chatRoomFilter.querySelector(`option[value="${current}"]`)) {
+            chatRoomFilter.value = current;
+        }
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 
     // ── Render status grid ──────────────────────────────────────────────────
@@ -351,6 +449,9 @@
     passwordInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') loginBtn.click();
     });
+
+    btnRefreshChat.addEventListener('click', requestChatHistory);
+    chatRoomFilter.addEventListener('change', renderChat);
 
     // ── Init ────────────────────────────────────────────────────────────────
 
