@@ -53,6 +53,7 @@ GAMES=(
     "checkers:8770:Checkers"
     "backgammon:8771:Backgammon"
     "chinese-checkers:8772:Chinese Checkers"
+    "parchisi:8773:Parchisi"
     # Add more games below:
 )
 
