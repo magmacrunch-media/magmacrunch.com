@@ -673,6 +673,17 @@
                 </div>
             </a>
 
+            <a href="action/index.html" class="game-card" style="--card-color: #ff2e9c">
+                <div class="card-inner">
+                    <div class="card-title">ACTION</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cAction" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">moonlight drift, very long boards, roderick tron. run, dodge, survive.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
         </div>
     </div>
 
@@ -717,17 +728,6 @@
                 </div>
             </a>
 
-            <a href="moonlight-drift/index.html" class="game-card" style="--card-color: #ff2e9c">
-                <div class="card-inner">
-                    <div class="card-title">MOONLIGHT<br>DRIFT</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cDrift" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">coast through space. dodge obstacles. ride the moon.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
             <a href="pay2play/pay2play.html" class="game-card" style="--card-color: #ff2e9c">
                 <div class="card-inner">
                     <div class="card-tags">
@@ -739,35 +739,6 @@
                         <canvas id="cPay2play" width="72" height="72"></canvas>
                     </div>
                     <div class="card-desc">floppy disks, red telephones, coins. sex van floor plan universe.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="very-long-boards/index.html" class="game-card" style="--card-color: #b537f2">
-                <div class="card-inner">
-                    <div class="card-tags">
-                        <span class="card-tag" style="color: #ff2e9c">CARL SPATSKI</span>
-                    </div>
-                    <div class="card-title">VERY LONG<br>BOARDS</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cVLB" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">downhill longboarding. choose your carl. dodge everything.</div>
-                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-                </div>
-            </a>
-
-            <a href="roderick-tron/index.html" class="game-card" style="--card-color: #00f0ff">
-                <div class="card-inner">
-                    <div class="card-tags">
-                        <span class="card-tag card-tag-demo">NEW</span>
-                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
-                    </div>
-                    <div class="card-title">RODERICK<br>TRON</div>
-                    <div class="card-canvas-wrap">
-                        <canvas id="cTron" width="72" height="72"></canvas>
-                    </div>
-                    <div class="card-desc">robot composer on 1810s rooftops. jump. shoot. destroy.</div>
                     <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -886,163 +857,6 @@ animateCoin(document.getElementById('coinCanvas2'));
 
 
 
-// Moonlight drift preview — matching the game's deep space aesthetic
-(function() {
-    const c = document.getElementById('cDrift');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // deep blue-black space background
-    ctx.fillStyle = '#0a0e27';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // twinkling stars in layers
-    const stars = [
-        [4, 4], [14, 8], [28, 4], [44, 12], [8, 20], [36, 24], [22, 14],
-        [50, 6], [60, 18], [10, 30], [40, 32], [58, 8], [2, 16]
-    ];
-    ctx.fillStyle = '#ffffff';
-    stars.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
-
-    // aurora glow (cyan-green gradient at bottom)
-    const aurora = ctx.createLinearGradient(0, 40, 0, 72);
-    aurora.addColorStop(0, 'rgba(0, 212, 255, 0)');
-    aurora.addColorStop(0.5, 'rgba(0, 212, 255, 0.15)');
-    aurora.addColorStop(1, 'rgba(57, 255, 110, 0.1)');
-    ctx.fillStyle = aurora;
-    ctx.fillRect(0, 40, 72, 32);
-
-    // big moon (crescent)
-    ctx.fillStyle = '#f0e68c';
-    ctx.beginPath();
-    ctx.arc(54, 22, 14, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#0a0e27';
-    ctx.beginPath();
-    ctx.arc(50, 20, 12, 0, Math.PI * 2);
-    ctx.fill();
-
-    // jetman (center-left)
-    // body (cyan suit)
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillRect(18, 34, 8, 12);
-    // head
-    ctx.fillStyle = '#ff6b9d';
-    ctx.fillRect(20, 28, 4, 6);
-    // jetpack
-    ctx.fillStyle = '#4a4a6a';
-    ctx.fillRect(16, 34, 2, 8);
-    // jetpack flame (orange/yellow)
-    ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(16, 42, 2, 4);
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(16, 44, 2, 3);
-    // arms/thrust
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillRect(26, 36, 6, 2);
-})();
-
-// Roderick Tron preview — twilight rooftop with robot composer
-(function() {
-    const c = document.getElementById('cTron');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // twilight sky gradient
-    const sky = ctx.createLinearGradient(0, 0, 0, 72);
-    sky.addColorStop(0, '#1a1028');
-    sky.addColorStop(0.7, '#3a1830');
-    sky.addColorStop(1, '#0d2a4a');
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, 72, 72);
-
-    // distant spire
-    ctx.fillStyle = '#1a1428';
-    ctx.fillRect(56, 20, 4, 30);
-    ctx.fillRect(57, 14, 2, 6);
-
-    // canal house (dark brick)
-    ctx.fillStyle = '#2a1818';
-    ctx.fillRect(5, 42, 62, 30);
-
-    // stepped gable
-    ctx.fillStyle = '#3a2828';
-    for (let s = 0; s < 4; s++) {
-        const sw = 62 - s * 8;
-        ctx.fillRect(5 + s * 4, 42 - s * 4, sw, 4);
-    }
-
-    // windows
-    ctx.fillStyle = '#1a0a08';
-    for (let wy = 0; wy < 2; wy++) {
-        for (let wx = 0; wx < 3; wx++) {
-            ctx.fillRect(10 + wx * 18, 48 + wy * 12, 6, 8);
-        }
-    }
-
-    // roof tiles
-    ctx.fillStyle = '#8a4020';
-    ctx.fillRect(5, 40, 62, 4);
-    ctx.fillStyle = '#6a3018';
-    ctx.fillRect(5, 40, 62, 2);
-
-    // gargoyle on right side
-    ctx.fillStyle = '#4a4a5a';
-    ctx.fillRect(50, 30, 8, 8);
-    ctx.fillRect(52, 28, 4, 3);
-    // gargoyle eyes
-    ctx.fillStyle = '#ff3d6e';
-    ctx.fillRect(53, 29, 1, 1);
-    ctx.fillRect(55, 29, 1, 1);
-
-    // Roderick Tron (left side, on rooftop)
-    // frock coat
-    ctx.fillStyle = '#1a1828';
-    ctx.fillRect(18, 24, 8, 10);
-    ctx.fillRect(17, 28, 2, 5);
-    ctx.fillRect(26, 28, 2, 5);
-    // head (steel)
-    ctx.fillStyle = '#8899aa';
-    ctx.fillRect(19, 18, 6, 6);
-    // mutton chops (ginger)
-    ctx.fillStyle = '#cc6620';
-    ctx.fillRect(18, 21, 2, 3);
-    ctx.fillRect(25, 21, 2, 3);
-    // glowing cyan eyes
-    ctx.fillStyle = '#00f5ff';
-    ctx.fillRect(20, 19, 2, 2);
-    ctx.fillRect(23, 19, 2, 2);
-    // eye glow
-    ctx.fillStyle = 'rgba(0, 245, 255, 0.3)';
-    ctx.fillRect(19, 18, 4, 4);
-    ctx.fillRect(22, 18, 4, 4);
-    // cravat
-    ctx.fillStyle = '#e8dcc8';
-    ctx.fillRect(21, 23, 4, 2);
-    // legs
-    ctx.fillStyle = '#1a1828';
-    ctx.fillRect(19, 34, 3, 4);
-    ctx.fillRect(24, 35, 3, 3);
-
-    // musical note flying toward gargoyle
-    ctx.fillStyle = '#f0ead8';
-    ctx.fillRect(32, 22, 3, 3);
-    ctx.fillRect(35, 19, 1, 3);
-    ctx.fillRect(36, 19, 2, 1);
-    // note glow
-    ctx.fillStyle = 'rgba(0, 245, 255, 0.2)';
-    ctx.fillRect(31, 20, 6, 6);
-
-    // gas lamp
-    ctx.fillStyle = '#333';
-    ctx.fillRect(40, 34, 1, 6);
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(39, 32, 3, 3);
-    ctx.fillStyle = 'rgba(255, 224, 58, 0.15)';
-    ctx.beginPath();
-    ctx.arc(40, 33, 6, 0, Math.PI * 2);
-    ctx.fill();
-})();
 
 // Crystal mirror maze preview — 3D crystal gem with facets
 (function() {
@@ -1177,60 +991,6 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.fillRect(4, 68, 64, 2);
 })();
 
-// cVLB — Very Long Boards (downhill road + Carl Spatski silhouette)
-(function() {
-    const c = document.getElementById('cVLB');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-
-    // Dark sky
-    ctx.fillStyle = '#1a1a3e';
-    ctx.fillRect(0, 0, 72, 72);
-
-    // Mountains
-    ctx.fillStyle = '#2a3a2a';
-    ctx.beginPath();
-    ctx.moveTo(0, 30); ctx.lineTo(15, 15); ctx.lineTo(30, 28);
-    ctx.lineTo(45, 12); ctx.lineTo(60, 25); ctx.lineTo(72, 18); ctx.lineTo(72, 30);
-    ctx.fill();
-
-    // Road
-    ctx.fillStyle = '#444';
-    ctx.beginPath();
-    ctx.moveTo(20, 30); ctx.lineTo(52, 30);
-    ctx.lineTo(72, 72); ctx.lineTo(0, 72);
-    ctx.fill();
-
-    // Road markings
-    ctx.strokeStyle = '#fff';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([3, 4]);
-    ctx.beginPath();
-    ctx.moveTo(36, 30); ctx.lineTo(36, 72);
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // Carl Spatski silhouette on longboard
-    ctx.fillStyle = '#ff2e9c';
-    ctx.fillRect(30, 38, 12, 16);
-    ctx.fillStyle = '#f0d5a8';
-    ctx.beginPath();
-    ctx.arc(36, 35, 4, 0, Math.PI * 2);
-    ctx.fill();
-    // Longboard
-    ctx.fillStyle = '#8B4513';
-    ctx.fillRect(28, 54, 16, 3);
-
-    // Speed lines
-    ctx.strokeStyle = 'rgba(255, 46, 156, 0.4)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 3; i++) {
-        ctx.beginPath();
-        ctx.moveTo(10 + i * 8, 40 + i * 5);
-        ctx.lineTo(4, 42 + i * 5);
-        ctx.stroke();
-    }
-})();
 
 // ── Board Games collection preview — checkerboard + pieces ──
 (function() {
@@ -1335,6 +1095,39 @@ animateCoin(document.getElementById('coinCanvas2'));
             ctx.fillText(t.text, x + (cellSize - gap) / 2, y + (cellSize - gap) / 2 + 4);
         }
     });
+})();
+
+// ── Action collection preview — jetman silhouette ──
+(function() {
+    const c = document.getElementById('cAction');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0e27';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ff2e9c';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const stars = [[8,8],[20,4],[40,10],[56,6],[12,20],[50,18],[30,14]];
+    ctx.fillStyle = '#ffffff';
+    stars.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillRect(30, 28, 12, 18);
+    ctx.fillStyle = '#ff6b9d';
+    ctx.fillRect(33, 22, 6, 6);
+    ctx.fillStyle = '#4a4a6a';
+    ctx.fillRect(27, 28, 3, 12);
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(27, 40, 3, 6);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(27, 44, 3, 4);
+    ctx.fillStyle = '#ff2e9c';
+    ctx.fillRect(42, 32, 8, 3);
+    ctx.fillStyle = '#b537f2';
+    ctx.fillRect(4, 54, 64, 3);
+    ctx.fillStyle = '#ff2e9c';
+    ctx.font = 'bold 5px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('ACTION', 36, 64);
 })();
 
 // ─────────────────────────────────────────────────────────

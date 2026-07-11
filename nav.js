@@ -31,7 +31,8 @@ window.NAV_CONFIG = {
         { label: 'arcade', href: 'arcade/index.html', items: [
             { href: 'arcade/board-games/index.html', label: 'board games' },
             { href: 'arcade/card-games/index.html', label: 'card games' },
-            { href: 'arcade/puzzles/index.html', label: 'puzzles' }
+            { href: 'arcade/puzzles/index.html', label: 'puzzles' },
+            { href: 'arcade/action/index.html', label: 'action' }
         ]},
         { label: 'press', href: 'press/index.html', items: [
             { href: 'press/scientific/index.html', label: 'scientific' },
