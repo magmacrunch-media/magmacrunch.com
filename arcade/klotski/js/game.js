@@ -40,10 +40,24 @@ var KlotskiGame = (function() {
             gameName: 'klotski'
         });
 
-        // Override grid to be non-square
-        game.grid = PuzzleGrid.create(COLS, ROWS);
+        // Text mode for tile labels: 'chinese', 'english', 'both'
+        game.textMode = 'both';
 
         var tiles = [];
+
+        // ── Override init to create non-square grid ───────────────────────────
+        game.init = function() {
+            game.grid = PuzzleGrid.create(COLS, ROWS);
+            game.score = 0;
+            game.moves = 0;
+            game.gameOver = false;
+            game.won = false;
+            game.startTime = Date.now();
+            game.endTime = null;
+
+            game.addInitialTiles();
+            game.render();
+        };
 
         // ── Initialize tiles ─────────────────────────────────────────────────
         function initTiles() {

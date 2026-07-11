@@ -62,10 +62,33 @@
             }
         }
 
+        // ── Tile name translations ───────────────────────────────────────────
+        var tileNames = {
+            1: { chinese: '曹操', english: 'CAO CAO' },
+            2: { chinese: '关羽', english: 'GUAN YU' },
+            3: { chinese: '张飞', english: 'ZHANG FEI' },
+            4: { chinese: '赵云', english: 'ZHAO YUN' },
+            5: { chinese: '马超', english: 'MA CHAO' },
+            6: { chinese: '黄忠', english: 'HUANG ZHONG' },
+            7: { chinese: '卒', english: 'S' },
+            8: { chinese: '卒', english: 'S' }
+        };
+
+        // ── Text mode persistence ────────────────────────────────────────────
+        var savedTextMode = localStorage.getItem('klotski_textMode') || 'both';
+
+        function setTextMode(mode) {
+            savedTextMode = mode;
+            if (game) game.textMode = mode;
+            localStorage.setItem('klotski_textMode', mode);
+            if (game) renderBoard();
+        }
+
         // ── Custom tile renderer ─────────────────────────────────────────────
         function renderBoard() {
             boardEl.innerHTML = '';
             var tiles = game.getTiles();
+            var mode = game.textMode;
 
             for (var i = 0; i < tiles.length; i++) {
                 var t = tiles[i];
@@ -78,11 +101,24 @@
                 el.style.gridColumn = (t.col + 1) + ' / span ' + t.w;
                 el.style.gridRow = (t.row + 1) + ' / span ' + t.h;
 
-                // Tile content
+                // Tile content based on text mode
+                var names = tileNames[t.id];
                 if (t.type === '2x2') {
-                    el.innerHTML = '<span class="tile-char">' + t.name + '</span>';
+                    if (mode === 'chinese') {
+                        el.innerHTML = '<span class="tile-char">' + names.chinese + '</span>';
+                    } else if (mode === 'english') {
+                        el.innerHTML = '<span class="tile-char">' + names.english + '</span>';
+                    } else {
+                        el.innerHTML = '<span class="tile-char">' + names.chinese + '</span><span class="tile-sub">' + names.english + '</span>';
+                    }
                 } else if (t.type === '2x1') {
-                    el.innerHTML = '<span class="tile-char-small">' + t.name + '</span>';
+                    if (mode === 'chinese') {
+                        el.innerHTML = '<span class="tile-char-small">' + names.chinese + '</span>';
+                    } else if (mode === 'english') {
+                        el.innerHTML = '<span class="tile-char-small">' + names.english + '</span>';
+                    } else {
+                        el.innerHTML = '<span class="tile-char-small">' + names.chinese + '</span><span class="tile-sub-small">' + names.english + '</span>';
+                    }
                 }
 
                 boardEl.appendChild(el);
@@ -141,10 +177,51 @@
             }, boardEl);
 
             game.init();
+            game.textMode = savedTextMode;
             startTimer();
             moveCountEl.textContent = '0';
             timerEl.textContent = '0:00';
         }
+
+        // ── Language dropdown ────────────────────────────────────────────────
+        var langDropdown = $('#langDropdown');
+        var langDropdownSelected = $('#langDropdownSelected');
+        var langDropdownOptions = $('#langDropdownOptions');
+        var selectedLang = $('#selectedLang');
+        var langOptions = langDropdownOptions.querySelectorAll('.dropdown-option-lang');
+
+        // Set initial state
+        selectedLang.textContent = savedTextMode.toUpperCase();
+        langOptions.forEach(function(opt) {
+            if (opt.dataset.lang === savedTextMode) {
+                opt.classList.add('highlighted');
+            } else {
+                opt.classList.remove('highlighted');
+            }
+        });
+
+        langDropdownSelected.addEventListener('click', function(e) {
+            e.stopPropagation();
+            langDropdown.classList.toggle('open');
+        });
+
+        langOptions.forEach(function(option) {
+            option.addEventListener('click', function() {
+                var lang = option.dataset.lang;
+                setTextMode(lang);
+                selectedLang.textContent = lang.toUpperCase();
+                langDropdown.classList.remove('open');
+
+                langOptions.forEach(function(o) { o.classList.remove('highlighted'); });
+                option.classList.add('highlighted');
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!langDropdown.contains(e.target)) {
+                langDropdown.classList.remove('open');
+            }
+        });
 
         // ── Initials prompt ──────────────────────────────────────────────────
         function showInitialsPrompt(moves, elapsed) {

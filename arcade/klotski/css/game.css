@@ -99,6 +99,77 @@
     color: #ff2d4a;
 }
 
+/* ── Language Selector ─────────────────────────────────────────────────────── */
+.language-selector {
+    margin-left: 8px;
+}
+
+.custom-dropdown-lang {
+    position: relative;
+}
+
+.dropdown-selected-lang {
+    background: #1a0a1a;
+    border: 1px solid #8a7fa8;
+    border-radius: 4px;
+    padding: 8px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #f0ead8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.15s;
+    white-space: nowrap;
+}
+
+.dropdown-selected-lang:hover {
+    border-color: #ff2d4a;
+}
+
+.dropdown-arrow-lang {
+    font-size: 7px;
+    color: #8a7fa8;
+}
+
+.dropdown-options-lang {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: #1a0a1a;
+    border: 1px solid #ff2d4a;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+    z-index: 100;
+}
+
+.custom-dropdown-lang.open .dropdown-options-lang {
+    max-height: 120px;
+}
+
+.dropdown-option-lang {
+    padding: 8px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #f0ead8;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dropdown-option-lang:hover {
+    background: rgba(255, 45, 74, 0.15);
+}
+
+.dropdown-option-lang.highlighted {
+    background: rgba(255, 45, 74, 0.2);
+    color: #ff2d4a;
+}
+
 /* ── Game Board (4×5 non-square) ───────────────────────────────────────────── */
 .game-board {
     display: grid;
@@ -196,6 +267,30 @@
     text-shadow: 0 0 3px rgba(0, 204, 136, 0.6);
     writing-mode: vertical-rl;
     letter-spacing: 4px;
+}
+
+/* ── Tile subtitles (both mode) ────────────────────────────────────────────── */
+.tile-sub {
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    font-size: 7px;
+    color: rgba(26, 10, 0, 0.6);
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.tile-sub-small {
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    right: 0;
+    font-size: 5px;
+    color: rgba(0, 51, 34, 0.5);
+    text-align: center;
+    letter-spacing: 0.3px;
+    writing-mode: horizontal-tb;
 }
 
 /* ── 1×1 Tiles (pawns) — Neon cyan ─────────────────────────────────────────── */
