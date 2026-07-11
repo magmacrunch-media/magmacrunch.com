@@ -178,6 +178,20 @@ var Game = (function() {
     function getPlayerPieceCount() { return Board.getPlayerPieceCount(CK.PLAYER); }
     function getAIPieceCount() { return Board.getPlayerPieceCount(CK.AI); }
 
+    // ── Multiplayer Support ──────────────────────────────────────────────────
+    function _internalSetTurn(who) {
+        selectedPiece = null;
+        legalMoves = [];
+        if (who === 'player') {
+            currentPlayer = CK.PLAYER;
+            state = CK.STATE.SELECTING;
+        } else {
+            currentPlayer = CK.AI;
+            state = CK.STATE.AI_TURN;
+        }
+        notifyStateChange();
+    }
+
     // ── State Change Notification ────────────────────────────────────────────
     function setOnStateChange(cb) { onStateChange = cb; }
     function setOnGameEnd(cb) { onGameEnd = cb; }
@@ -210,7 +224,8 @@ var Game = (function() {
         getPlayerPieceCount: getPlayerPieceCount,
         getAIPieceCount: getAIPieceCount,
         setOnStateChange: setOnStateChange,
-        setOnGameEnd: setOnGameEnd
+        setOnGameEnd: setOnGameEnd,
+        _internalSetTurn: _internalSetTurn,
     };
 
 })();

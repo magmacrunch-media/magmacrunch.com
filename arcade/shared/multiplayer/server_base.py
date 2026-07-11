@@ -378,6 +378,10 @@ class GameServer:
 
         room.game_started = True
         if room.game:
+            # Build ordered player name list for the game
+            player_names = [room.player_names.get(p, "") for p in room.players]
+            if hasattr(room.game, 'set_player_names'):
+                room.game.set_player_names(player_names)
             room.game.reset()
 
         # Build color map

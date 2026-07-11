@@ -7,6 +7,7 @@ var UI = (function() {
     // ── DOM References ───────────────────────────────────────────────────────
     var elements = {};
     var highlightedSquares = [];
+    var isMultiplayer = false;
 
     // ── Initialize ───────────────────────────────────────────────────────────
     function init() {
@@ -14,12 +15,16 @@ var UI = (function() {
         setupEventListeners();
         Game.setOnStateChange(onStateChange);
         Game.setOnGameEnd(onGameEnd);
+        Multiplayer.setOnStateUpdate(onMultiplayerStateUpdate);
+        Multiplayer.setOnGameStart(onMultiplayerGameStart);
+        Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
     }
 
     function cacheElements() {
         elements.startScreen = document.getElementById('startScreen');
         elements.gameScreen = document.getElementById('gameScreen');
         elements.startGameBtn = document.getElementById('startGameBtn');
+        elements.onlineBtn = document.getElementById('onlineBtn');
         elements.boardContainer = document.getElementById('boardContainer');
         elements.message = document.getElementById('gameMessage');
         elements.turnIndicator = document.getElementById('turnIndicator');
@@ -39,11 +44,24 @@ var UI = (function() {
         elements.menuBtn = document.getElementById('menuBtn');
         elements.helpBtn = document.getElementById('helpBtn');
         elements.creditsBtn = document.getElementById('creditsBtn');
+        elements.lobbyOverlay = document.getElementById('lobbyOverlay');
+        elements.lobbyStatus = document.getElementById('lobbyStatus');
+        elements.lobbyRoomInput = document.getElementById('roomCodeInput');
+        elements.lobbyJoinBtn = document.getElementById('lobbyJoinBtn');
+        elements.lobbyBackBtn = document.getElementById('lobbyBackBtn');
+        elements.lobbyPlayers = document.getElementById('lobbyPlayers');
+        elements.lobbyPlayerList = document.getElementById('lobbyPlayerList');
+        elements.lobbyRoomCode = document.getElementById('lobbyRoomCode');
+        elements.roomCodeDisplay = document.getElementById('roomCodeDisplay');
+        elements.lobbyStartArea = document.getElementById('lobbyStartArea');
+        elements.lobbyStartBtn = document.getElementById('lobbyStartBtn');
+        elements.gameChat = document.getElementById('gameChat');
     }
 
     function setupEventListeners() {
-        elements.startGameBtn.addEventListener('click', startGame);
-        elements.newGameBtn.addEventListener('click', startGame);
+        elements.startGameBtn.addEventListener('click', startLocalGame);
+        elements.onlineBtn.addEventListener('click', openLobby);
+        elements.newGameBtn.addEventListener('click', startLocalGame);
         elements.menuBtn.addEventListener('click', showMenu);
         elements.helpBtn.addEventListener('click', showInstructions);
         elements.creditsBtn.addEventListener('click', showCredits);
@@ -51,22 +69,31 @@ var UI = (function() {
         elements.closeInstructionsBtn.addEventListener('click', hideInstructions);
         elements.closeCredits.addEventListener('click', hideCredits);
         elements.closeCreditsBtn.addEventListener('click', hideCredits);
-        elements.playAgainBtn.addEventListener('click', startGame);
+        elements.playAgainBtn.addEventListener('click', isMultiplayer ? openLobby : startLocalGame);
+        elements.lobbyJoinBtn.addEventListener('click', joinLobby);
+        elements.lobbyBackBtn.addEventListener('click', closeLobby);
+        elements.lobbyStartBtn.addEventListener('click', function() {
+            Multiplayer.startGame();
+        });
 
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
                 if (elements.startScreen.style.display !== 'none') {
-                    startGame();
+                    startLocalGame();
                 }
             }
         });
     }
 
-    // ── Game Flow ────────────────────────────────────────────────────────────
-    function startGame() {
+    // ── Local Game ───────────────────────────────────────────────────────────
+    function startLocalGame() {
+        isMultiplayer = false;
+        Multiplayer.quit();
+        Chat.disconnect();
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
+        elements.gameChat.style.display = 'none';
         hideGameOver();
         Game.startGame();
         renderBoard();
@@ -74,8 +101,119 @@ var UI = (function() {
     }
 
     function showMenu() {
+        isMultiplayer = false;
+        Multiplayer.quit();
+        Chat.disconnect();
         elements.startScreen.style.display = 'flex';
         elements.gameScreen.style.display = 'none';
+        elements.gameChat.style.display = 'none';
+    }
+
+    // ── Lobby ────────────────────────────────────────────────────────────────
+    function openLobby() {
+        elements.startScreen.style.display = 'none';
+        elements.lobbyOverlay.style.display = 'flex';
+        elements.lobbyOverlay.classList.add('active');
+        elements.lobbyStatus.textContent = 'Connecting...';
+        elements.lobbyPlayers.style.display = 'none';
+        elements.lobbyRoomCode.style.display = 'none';
+        elements.lobbyStartArea.style.display = 'none';
+        elements.lobbyRoomInput.value = '';
+        elements.lobbyRoomInput.disabled = false;
+        elements.lobbyJoinBtn.style.display = '';
+        Multiplayer.connect();
+    }
+
+    function closeLobby() {
+        Multiplayer.quit();
+        elements.lobbyOverlay.classList.remove('active');
+        elements.lobbyOverlay.style.display = 'none';
+        elements.startScreen.style.display = 'flex';
+    }
+
+    function joinLobby() {
+        var roomCode = elements.lobbyRoomInput.value.trim().toUpperCase() || null;
+        var playerName = localStorage.getItem('arcade_username') || 'Player' + Math.floor(Math.random() * 999);
+        elements.lobbyStatus.textContent = 'Joining room...';
+        Multiplayer.joinRoom(playerName, roomCode);
+    }
+
+    // ── Multiplayer Callbacks ────────────────────────────────────────────────
+    function onMultiplayerStateUpdate(update) {
+        if (update.type === 'snapshot') {
+            elements.lobbyStatus.textContent = 'Connected! Enter a room code or join an existing room.';
+        } else if (update.type === 'welcome') {
+            // Room joined — show room code
+            elements.lobbyRoomCode.style.display = 'block';
+            elements.roomCodeDisplay.textContent = update.room;
+            elements.lobbyRoomInput.style.display = 'none';
+            elements.lobbyJoinBtn.style.display = 'none';
+            elements.lobbyStatus.textContent = update.isHost ? 'You are the host. Share the room code above.' : 'Joined room! Waiting for host to start...';
+        } else if (update.type === 'lobby') {
+            elements.lobbyStatus.textContent = 'Players in room:';
+            elements.lobbyPlayers.style.display = 'block';
+            elements.lobbyPlayerList.innerHTML = '';
+            update.players.forEach(function(p) {
+                var div = document.createElement('div');
+                div.className = 'lobby-player';
+                div.innerHTML = '<span class="lobby-player-dot" style="background:' + p.color + '"></span>' + p.name + (p.isHost ? ' (host)' : '');
+                elements.lobbyPlayerList.appendChild(div);
+            });
+            // Show Start button only for host when 2 players
+            var isHost = update.players.some(function(p) { return p.isHost; });
+            if (isHost && update.canStart) {
+                elements.lobbyStartArea.style.display = 'flex';
+                elements.lobbyStatus.textContent = 'Ready! Click START GAME when you want to begin.';
+            } else if (!isHost) {
+                elements.lobbyStartArea.style.display = 'none';
+                elements.lobbyStatus.textContent = 'Waiting for host to start the game...';
+            }
+        } else if (update.type === 'disconnected') {
+            elements.lobbyStatus.textContent = 'Disconnected. Try again.';
+            elements.lobbyPlayers.style.display = 'none';
+            elements.lobbyStartArea.style.display = 'none';
+        } else if (update.type === 'move') {
+            var state = update.msg.state;
+            if (state) {
+                applyServerState(state);
+            }
+        } else if (update.type === 'state') {
+            applyServerState(update.state);
+        }
+    }
+
+    function onMultiplayerGameStart(state, side) {
+        elements.lobbyOverlay.classList.remove('active');
+        elements.lobbyOverlay.style.display = 'none';
+        elements.startScreen.style.display = 'none';
+        elements.gameScreen.style.display = 'flex';
+        elements.gameChat.style.display = 'flex';
+        hideGameOver();
+        isMultiplayer = true;
+        applyServerState(state);
+        Chat.connect();
+    }
+
+    function onMultiplayerGameEnd(won, winnerName, winnerSide) {
+        showMultiplayerGameOver(won, winnerName);
+    }
+
+    function applyServerState(state) {
+        // Apply board from server
+        Board.setState(state.board);
+
+        // Set whose turn it is
+        var mySide = Multiplayer.getMySide();
+        var currentSide = state.currentTurnSide;
+
+        if (currentSide === mySide) {
+            Game._internalSetTurn('player');
+        } else {
+            Game._internalSetTurn('opponent');
+        }
+
+        renderBoard();
+        updateMultiplayerUI(state);
     }
 
     // ── State Change Handler ─────────────────────────────────────────────────
@@ -113,14 +251,22 @@ var UI = (function() {
         // Piece counts
         var counts = document.createElement('div');
         counts.className = 'piece-counts';
-        counts.innerHTML = 
+        var redCount = 0, blackCount = 0;
+        for (var r = 0; r < CK.BOARD_SIZE; r++) {
+            for (var c = 0; c < CK.BOARD_SIZE; c++) {
+                var p = board[r][c];
+                if (p === CK.PLAYER_PIECE || p === CK.PLAYER_KING) redCount++;
+                if (p === CK.AI_PIECE || p === CK.AI_KING) blackCount++;
+            }
+        }
+        counts.innerHTML =
             '<div class="piece-count player">' +
-                '<span class="piece-count-label">YOU</span>' +
-                '<span class="piece-count-value" id="playerPiecesCount">' + Board.getPlayerPieceCount(CK.PLAYER) + '</span>' +
+                '<span class="piece-count-label">' + (isMultiplayer ? 'RED' : 'YOU') + '</span>' +
+                '<span class="piece-count-value" id="playerPiecesCount">' + redCount + '</span>' +
             '</div>' +
             '<div class="piece-count ai">' +
-                '<span class="piece-count-label">AI</span>' +
-                '<span class="piece-count-value" id="aiPiecesCount">' + Board.getPlayerPieceCount(CK.AI) + '</span>' +
+                '<span class="piece-count-label">' + (isMultiplayer ? 'BLACK' : 'AI') + '</span>' +
+                '<span class="piece-count-value" id="aiPiecesCount">' + blackCount + '</span>' +
             '</div>';
         container.appendChild(counts);
     }
@@ -195,10 +341,8 @@ var UI = (function() {
             if (selectedPiece && selectedPiece.row === row && selectedPiece.col === col) {
                 Game.deselectPiece();
             } else {
-                // Try to move to this square
                 var moved = Game.executeMove(row, col);
                 if (!moved) {
-                    // Try selecting a different piece
                     Game.selectPiece(row, col);
                 }
             }
@@ -210,7 +354,27 @@ var UI = (function() {
         var col = parseInt(e.currentTarget.dataset.col);
 
         if (Game.getState() === CK.STATE.MOVING) {
-            Game.executeMove(row, col);
+            var selectedPiece = Game.getSelectedPiece();
+            if (selectedPiece && isMultiplayer) {
+                // In multiplayer, send the move to the server
+                var legalMoves = Game.getLegalMoves();
+                var move = null;
+                for (var i = 0; i < legalMoves.length; i++) {
+                    if (legalMoves[i].to.row === row && legalMoves[i].to.col === col) {
+                        move = legalMoves[i];
+                        break;
+                    }
+                }
+                if (move) {
+                    Game.executeMove(row, col);
+                    Multiplayer.sendMove(
+                        { row: selectedPiece.row, col: selectedPiece.col },
+                        { row: row, col: col }
+                    );
+                }
+            } else {
+                Game.executeMove(row, col);
+            }
         }
     }
 
@@ -223,6 +387,8 @@ var UI = (function() {
     function updateUI() {
         var state = Game.getState();
         var currentPlayer = Game.getCurrentPlayer();
+
+        if (isMultiplayer) return; // Handled by updateMultiplayerUI
 
         if (currentPlayer === CK.PLAYER) {
             elements.turnIndicator.textContent = 'YOUR TURN';
@@ -238,6 +404,27 @@ var UI = (function() {
             setMessage('Select destination');
         } else if (state === CK.STATE.AI_TURN) {
             setMessage('AI is thinking...');
+        }
+    }
+
+    function updateMultiplayerUI(state) {
+        var mySide = Multiplayer.getMySide();
+        var isMyTurn = state.currentTurnSide === mySide;
+
+        if (isMyTurn) {
+            elements.turnIndicator.textContent = 'YOUR TURN';
+            elements.turnIndicator.style.color = CK.COLORS.player;
+        } else {
+            elements.turnIndicator.textContent = 'OPPONENT\'S TURN';
+            elements.turnIndicator.style.color = CK.COLORS.ai;
+        }
+
+        if (state.phase === 'playing') {
+            if (isMyTurn) {
+                setMessage('Select a piece to move');
+            } else {
+                setMessage('Waiting for opponent...');
+            }
         }
     }
 
@@ -274,6 +461,19 @@ var UI = (function() {
             elements.gameOverMessage.textContent = 'Better luck next time!';
         }
 
+        elements.gameOverModal.classList.add('active');
+    }
+
+    function showMultiplayerGameOver(won, winnerName) {
+        if (won) {
+            elements.gameOverTitle.textContent = 'YOU WIN!';
+            elements.gameOverTitle.className = 'game-over-title win';
+            elements.gameOverMessage.textContent = 'Congratulations! You defeated ' + winnerName + '!';
+        } else {
+            elements.gameOverTitle.textContent = 'DEFEAT';
+            elements.gameOverTitle.className = 'game-over-title lose';
+            elements.gameOverMessage.textContent = winnerName + ' wins!';
+        }
         elements.gameOverModal.classList.add('active');
     }
 

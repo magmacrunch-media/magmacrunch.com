@@ -50,8 +50,9 @@ GAMES=(
     "SORRY:8765:SORRY"
     "cribbage:8766:Cribbage"
     "scandinavian-stud:8767:Scandinavian Stud"
+    "checkers:8770:Checkers"
     # Add more games below:
-    # "newgame:8768:New Game"
+    # "newgame:8771:New Game"
 )
 
 # ── Chat server (special case) ───────────────────────────────────────────────
