@@ -342,26 +342,6 @@
                 games share a common server base that handles rooms, lobbies, and
                 player management — each game only needs to implement its own rules.
             </p>
-            <div class="diagram">
- ┌─────────────────────────────────────────────┐
- │              RASPBERRY PI                   │
- │                                             │
- │  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
- │  │ SORRY!   │  │ Cribbage │  │ Backgam. │  │
- │  │ :8765    │  │ :8766    │  │ :8771    │  │
- │  └──────────┘  └──────────┘  └──────────┘  │
- │  ┌──────────┐  ┌──────────┐  ┌──────────┐  │
- │  │ Sökö    │  │ Checkers │  │ Chat     │  │
- │  │ :8767    │  │ :8770    │  │ :8768    │  │
- │  └──────────┘  └──────────┘  └──────────┘  │
- │                                             │
- └──────────────────┬──────────────────────────┘
-                    │ WebSocket
-                    ▼
-            ┌──────────────┐
-            │  YOUR BROWSER │
-            └──────────────┘
-            </div>
         </div>
 
     </div>
