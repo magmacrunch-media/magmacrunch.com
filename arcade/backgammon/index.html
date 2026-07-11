@@ -82,6 +82,10 @@
                         <span id="chatHeaderTitle">// ARCADE CHAT //</span>
                         <span id="chatGlobalUsers" class="chat-user-count"></span>
                     </div>
+                    <div class="chat-name-row">
+                        <span id="chatMyName" class="chat-my-name"></span>
+                        <button id="chatEditName" class="chat-edit-name">✏️</button>
+                    </div>
                     <div class="chat-tabs">
                         <button class="chat-tab active" data-tab="global">GLOBAL</button>
                         <button class="chat-tab" data-tab="room" id="chatRoomTab" style="display:none;">ROOM <span id="chatRoomCode"></span></button>
@@ -90,8 +94,8 @@
                         <div class="chat-msg system">Welcome to the arcade! Say hello.</div>
                     </div>
                     <div class="chat-messages" id="chatMessagesRoom" style="display:none;"></div>
-                    <div class="chat-users" id="chatUsers" style="display:none;">
-                        <div class="chat-users-header">IN ROOM</div>
+                    <div class="chat-users" id="chatUsers">
+                        <div class="chat-users-header">ONLINE (<span id="chatOnlineCount">0</span>)</div>
                         <div id="chatUserList"></div>
                     </div>
                     <div class="chat-typing" id="chatTyping" style="display:none;"></div>

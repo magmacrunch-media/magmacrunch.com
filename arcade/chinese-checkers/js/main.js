@@ -186,6 +186,9 @@
         startScreen.style.display = 'none';
         gameScreen.style.display = 'none';
         lobbyOverlay.style.display = 'flex';
+        if (document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'none';
+        }
 
         lobbyStatus.textContent = 'Connecting...';
         lobbyRoomCode.style.display = 'none';
@@ -196,6 +199,7 @@
         roomCodeInput.value = '';
 
         Multiplayer.connect();
+        Chat.connect();
     }
 
     function hideLobby() {
@@ -485,6 +489,10 @@
         startScreen.style.display = 'flex';
         gameScreen.style.display = 'none';
         lobbyOverlay.style.display = 'none';
+        if (document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'none';
+        }
+        Chat.disconnect();
         isMultiplayerMode = false;
     }
 
@@ -492,6 +500,9 @@
         startScreen.style.display = 'none';
         gameScreen.style.display = 'flex';
         lobbyOverlay.style.display = 'none';
+        if (isMultiplayerMode && document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'flex';
+        }
     }
 
     // ── Start New Game ───────────────────────────────────────────────────────

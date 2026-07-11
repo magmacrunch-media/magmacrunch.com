@@ -6,8 +6,10 @@ Requires:  pip install websockets
 Provides:
   - Global chat room for arcade visitors
   - Room sub-chats for multiplayer games (open to anyone with room code)
-  - Per-room user lists
+  - Per-room user lists + global user list with online presence
   - Typing indicators (global and room)
+  - Auto-generated unique names for anonymous users
+  - Name persistence and uniqueness checking
   - Server status pings (checks if game servers are responding)
   - In-memory message history (last 100 global, 50 per room)
 """
@@ -15,6 +17,7 @@ Provides:
 import argparse
 import asyncio
 import json
+import random
 import time
 import websockets
 
@@ -30,6 +33,8 @@ GAME_SERVERS = {
     'Scandinavian Stud': {'host': 'localhost', 'port': 8767},
     'Checkers':          {'host': 'localhost', 'port': 8770},
     'Backgammon':        {'host': 'localhost', 'port': 8771},
+    'Chinese Checkers':  {'host': 'localhost', 'port': 8772},
+    'Parchisi':          {'host': 'localhost', 'port': 8773},
 }
 
 # ── State ────────────────────────────────────────────────────────────────────
@@ -56,6 +61,24 @@ def get_next_color():
     color = PALETTE[color_index % len(PALETTE)]
     color_index += 1
     return color
+
+
+def generate_name():
+    """Generate a unique auto-name like Player42."""
+    return f"Player{random.randint(10, 99)}"
+
+
+def get_unique_name(desired):
+    """Check if name is taken, append random number if so."""
+    if not desired:
+        return generate_name()
+    taken = any(
+        info['name'] == desired and ws != None
+        for ws, info in user_info.items()
+    )
+    if taken:
+        return f"{desired}{random.randint(1, 99)}"
+    return desired
 
 
 # ── Server Status Check ─────────────────────────────────────────────────────
@@ -124,6 +147,23 @@ async def broadcast_room_users(room_code):
     })
 
 
+async def broadcast_user_list():
+    """Send the full online user list to all connected clients."""
+    users = []
+    for ws in connected_clients:
+        info = user_info.get(ws, {})
+        users.append({
+            'name': info.get('name', '?'),
+            'color': info.get('color', '#fff'),
+            'rooms': list(info.get('rooms', set())),
+        })
+    await broadcast({
+        'type': 'user_list',
+        'users': users,
+        'count': len(users)
+    })
+
+
 async def broadcast_global_users():
     """Send total connected user count to all."""
     await broadcast({
@@ -158,14 +198,8 @@ async def handler(websocket):
             'statuses': statuses
         }))
 
-        # Send global user count
-        await websocket.send(json.dumps({
-            'type': 'global_users',
-            'count': len(connected_clients)
-        }))
-
-        # Broadcast updated global user count to everyone
-        await broadcast_global_users()
+        # Broadcast updated user list to everyone
+        await broadcast_user_list()
 
         # Main message loop
         async for raw in websocket:
@@ -177,8 +211,19 @@ async def handler(websocket):
             msg_type = msg.get('type')
 
             if msg_type == 'set_name':
-                # Set/update display name
-                user_info[websocket]['name'] = msg.get('name', 'Anonymous')[:20]
+                # Set/update display name with uniqueness check
+                new_name = msg.get('name', '')[:20]
+                if not new_name:
+                    new_name = generate_name()
+                # Check if name is taken by someone else
+                taken = any(
+                    info['name'] == new_name and ws != websocket
+                    for ws, info in user_info.items()
+                )
+                if taken:
+                    new_name = f"{new_name}{random.randint(1, 99)}"
+                user_info[websocket]['name'] = new_name
+                await broadcast_user_list()
 
             elif msg_type == 'join_room':
                 # Join a room sub-chat
@@ -199,6 +244,8 @@ async def handler(websocket):
 
                 # Broadcast updated user list to room
                 await broadcast_room_users(room)
+                # Broadcast updated user list to everyone (room status changed)
+                await broadcast_user_list()
 
             elif msg_type == 'leave_room':
                 # Leave a room sub-chat
@@ -211,6 +258,8 @@ async def handler(websocket):
                     user_info[websocket]['rooms'].discard(room)
                 if room and room in rooms:
                     await broadcast_room_users(room)
+                # Broadcast updated user list to everyone
+                await broadcast_user_list()
 
             elif msg_type == 'chat':
                 # Chat message (global or room)
@@ -283,7 +332,7 @@ async def handler(websocket):
         connected_clients.discard(websocket)
         user_info.pop(websocket, None)
         typing_debounce.pop(websocket, None)
-        await broadcast_global_users()
+        await broadcast_user_list()
 
 
 # ── Status Broadcast Loop ───────────────────────────────────────────────────

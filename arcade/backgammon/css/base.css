@@ -368,6 +368,55 @@ body {
     font-style: italic;
 }
 
+/* ── Chat Name Row ─────────────────────────────────────────────────────────── */
+.chat-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+}
+
+.chat-my-name {
+    font-size: 9px;
+    color: var(--bg-highlight);
+}
+
+.chat-edit-name {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-edit-name:hover {
+    opacity: 0.7;
+}
+
+.chat-name-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bg-highlight);
+    color: var(--bg-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    width: 100px;
+    max-width: 100px;
+}
+
+.chat-name-input:focus {
+    outline: none;
+    border-color: var(--bg-highlight);
+}
+
+.chat-user-status {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    margin-left: 4px;
+}
+
 /* ── Board Area ─────────────────────────────────────────────────────────────── */
 .board-area {
     position: relative;

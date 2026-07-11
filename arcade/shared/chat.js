@@ -5,8 +5,8 @@
  *
  * Requires DOM elements:
  *   #chatMessagesGlobal, #chatMessagesRoom, #chatRoomTab, #chatRoomCode,
- *   #chatHeaderTitle, #chatGlobalUsers, #chatUsers, #chatUserList,
- *   #chatTyping, #chatInput, #chatSend
+ *   #chatHeaderTitle, #chatGlobalUsers, #chatMyName, #chatEditName,
+ *   #chatUsers, #chatUserList, #chatTyping, #chatInput, #chatSend
  */
 
 var Chat = (function() {
@@ -25,6 +25,7 @@ var Chat = (function() {
     // ── State ───────────────────────────────────────────────────────────────
     var socket = null;
     var currentRoom = null;
+    var myName = null;
     var typingTimeout = null;
     var typingHideTimer = null;
 
@@ -38,6 +39,8 @@ var Chat = (function() {
         el.roomCode       = document.getElementById('chatRoomCode');
         el.headerTitle    = document.getElementById('chatHeaderTitle');
         el.globalUsers    = document.getElementById('chatGlobalUsers');
+        el.myName         = document.getElementById('chatMyName');
+        el.editName       = document.getElementById('chatEditName');
         el.usersContainer = document.getElementById('chatUsers');
         el.userList       = document.getElementById('chatUserList');
         el.typing         = document.getElementById('chatTyping');
@@ -55,10 +58,12 @@ var Chat = (function() {
         socket.onopen = function() {
             console.log('[Chat] Connected');
             addMessage('global', { from: 'system', text: 'Connected to arcade chat', color: '#8a7fa8' });
-            // Set name from localStorage
-            var name = localStorage.getItem('arcade_username');
-            if (name) {
-                socket.send(JSON.stringify({ type: 'set_name', name: name }));
+            // Send name if we have one
+            var savedName = localStorage.getItem('arcade_username');
+            if (savedName) {
+                socket.send(JSON.stringify({ type: 'set_name', name: savedName }));
+                myName = savedName;
+                updateNameDisplay();
             }
         };
 
@@ -71,6 +76,7 @@ var Chat = (function() {
 
         socket.onclose = function() {
             console.log('[Chat] Disconnected, reconnecting in 5s...');
+            myName = null;
             setTimeout(connect, 5000);
         };
 
@@ -90,6 +96,11 @@ var Chat = (function() {
             el.input.addEventListener('input', handleTyping);
         }
 
+        // Wire up name edit
+        if (el.editName) {
+            el.editName.addEventListener('click', startEditName);
+        }
+
         // Wire up tabs
         initTabs();
     }
@@ -102,6 +113,7 @@ var Chat = (function() {
             socket.close();
             socket = null;
         }
+        myName = null;
     }
 
     // ── Message Handler ─────────────────────────────────────────────────────
@@ -128,7 +140,13 @@ var Chat = (function() {
                 break;
 
             case 'room_users':
+                // Room-specific user list (not used in global panel)
+                break;
+
+            case 'user_list':
+                // Full online user list
                 updateUserList(msg.users);
+                updateOnlineCount(msg.count);
                 break;
 
             case 'typing':
@@ -136,11 +154,11 @@ var Chat = (function() {
                 break;
 
             case 'global_users':
-                updateGlobalUserCount(msg.count);
+                updateOnlineCount(msg.count);
                 break;
 
             case 'status':
-                // Server status — not handled here (handled by main page)
+                // Server status — not handled here
                 break;
         }
     }
@@ -150,10 +168,10 @@ var Chat = (function() {
         currentRoom = roomCode;
         if (socket && socket.readyState === WebSocket.OPEN) {
             socket.send(JSON.stringify({ type: 'join_room', room: roomCode }));
-            // Set name if available
-            var name = localStorage.getItem('arcade_username');
-            if (name) {
-                socket.send(JSON.stringify({ type: 'set_name', name: name }));
+            // Send name if we have one
+            var savedName = localStorage.getItem('arcade_username');
+            if (savedName) {
+                socket.send(JSON.stringify({ type: 'set_name', name: savedName }));
             }
         }
         showRoomTab(roomCode);
@@ -175,7 +193,7 @@ var Chat = (function() {
         var text = el.input.value.trim();
         if (!text) return;
 
-        var name = localStorage.getItem('arcade_username') || 'Player';
+        var name = myName || localStorage.getItem('arcade_username') || 'Player';
         socket.send(JSON.stringify({ type: 'set_name', name: name }));
 
         var msg = { type: 'chat', text: text };
@@ -190,6 +208,54 @@ var Chat = (function() {
         });
 
         el.input.value = '';
+    }
+
+    // ── Name Management ─────────────────────────────────────────────────────
+    function setName(name) {
+        if (!name || !socket || socket.readyState !== WebSocket.OPEN) return;
+        myName = name;
+        localStorage.setItem('arcade_username', name);
+        socket.send(JSON.stringify({ type: 'set_name', name: name }));
+        updateNameDisplay();
+    }
+
+    function startEditName() {
+        if (!el.myName) return;
+        var currentName = myName || localStorage.getItem('arcade_username') || '';
+
+        // Create inline input
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'chat-name-input';
+        input.value = currentName;
+        input.maxLength = 20;
+
+        el.myName.style.display = 'none';
+        el.editName.style.display = 'none';
+        el.myName.parentNode.insertBefore(input, el.myName.nextSibling);
+        input.focus();
+        input.select();
+
+        function finishEdit() {
+            var newName = input.value.trim();
+            if (newName) {
+                setName(newName);
+            }
+            input.remove();
+            el.myName.style.display = '';
+            el.editName.style.display = '';
+        }
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') finishEdit();
+        });
+        input.addEventListener('blur', finishEdit);
+    }
+
+    function updateNameDisplay() {
+        if (el.myName) {
+            el.myName.textContent = myName || '...';
+        }
     }
 
     // ── Typing Indicator ────────────────────────────────────────────────────
@@ -242,13 +308,15 @@ var Chat = (function() {
             users.forEach(function(u) {
                 var div = document.createElement('div');
                 div.className = 'chat-user';
-                div.innerHTML = '<span class="chat-user-dot" style="background:' + escapeHtml(u.color) + '"></span>' + escapeHtml(u.name);
+                var status = u.rooms && u.rooms.length > 0 ? ' (in game)' : '';
+                div.innerHTML = '<span class="chat-user-dot" style="background:' + escapeHtml(u.color) + '"></span>' +
+                    escapeHtml(u.name) + '<span class="chat-user-status">' + status + '</span>';
                 el.userList.appendChild(div);
             });
         }
     }
 
-    function updateGlobalUserCount(count) {
+    function updateOnlineCount(count) {
         if (el.globalUsers) {
             el.globalUsers.textContent = count + ' online';
         }
@@ -279,13 +347,13 @@ var Chat = (function() {
         if (tab === 'global') {
             el.globalMessages.style.display = '';
             el.roomMessages.style.display = 'none';
-            if (el.usersContainer) el.usersContainer.style.display = 'none';
+            if (el.usersContainer) el.usersContainer.style.display = '';
             var globalTab = document.querySelector('[data-tab="global"]');
             if (globalTab) globalTab.classList.add('active');
         } else {
             el.globalMessages.style.display = 'none';
             el.roomMessages.style.display = '';
-            if (el.usersContainer) el.usersContainer.style.display = '';
+            if (el.usersContainer) el.usersContainer.style.display = 'none';
             var roomTab = document.querySelector('[data-tab="room"]');
             if (roomTab) roomTab.classList.add('active');
         }
@@ -321,7 +389,9 @@ var Chat = (function() {
         joinRoom: joinRoom,
         leaveRoom: leaveRoom,
         send: send,
-        getCurrentRoom: function() { return currentRoom; }
+        setName: setName,
+        getCurrentRoom: function() { return currentRoom; },
+        getMyName: function() { return myName; }
     };
 
 })();

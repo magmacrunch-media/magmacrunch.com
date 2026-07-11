@@ -228,6 +228,232 @@ body {
     text-shadow: 0 0 8px var(--cc-highlight-glow);
 }
 
+/* ── Game Layout (Board + Chat) ────────────────────────────────────────────── */
+.game-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 850px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ── Game Chat ─────────────────────────────────────────────────────────────── */
+.game-chat {
+    width: 220px;
+    min-width: 180px;
+    background: var(--cc-board-bg);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Press Start 2P', monospace;
+    max-height: 500px;
+}
+
+.game-chat .chat-header {
+    font-size: 9px;
+    color: var(--cc-board-border);
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+    text-align: center;
+}
+
+.game-chat .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    font-size: 8px;
+    line-height: 1.6;
+    color: var(--cc-text);
+    max-height: 350px;
+}
+
+.game-chat .chat-msg {
+    margin-bottom: 4px;
+    word-wrap: break-word;
+}
+
+.game-chat .chat-msg .chat-name {
+    font-weight: bold;
+}
+
+.game-chat .chat-msg.system {
+    color: var(--cc-text-dim);
+    font-style: italic;
+}
+
+.game-chat .chat-input {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    border-top: 1px solid rgba(0,245,255,0.2);
+}
+
+.game-chat .chat-input input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--cc-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px;
+    border-radius: 2px;
+    min-width: 0;
+}
+
+.game-chat .chat-input input::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+
+.game-chat .chat-input input:focus {
+    outline: none;
+    border-color: var(--cc-highlight);
+}
+
+.game-chat .chat-input button {
+    background: var(--cc-highlight);
+    color: var(--cc-bg);
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.game-chat .chat-input button:hover {
+    background: #fff;
+}
+
+/* ── Chat Tabs ─────────────────────────────────────────────────────────────── */
+.chat-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+}
+
+.chat-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--cc-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.chat-tab.active {
+    color: var(--cc-highlight);
+    border-bottom-color: var(--cc-highlight);
+}
+
+.chat-tab:hover {
+    color: var(--cc-text);
+}
+
+/* ── Chat Header with User Count ───────────────────────────────────────────── */
+.game-chat .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-user-count {
+    font-size: 7px;
+    color: var(--cc-text-dim);
+}
+
+/* ── Chat User List ────────────────────────────────────────────────────────── */
+.chat-users {
+    padding: 4px 8px;
+    border-top: 1px solid rgba(0,245,255,0.2);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.chat-users-header {
+    font-size: 7px;
+    color: var(--cc-text-dim);
+    margin-bottom: 4px;
+}
+
+.chat-user {
+    font-size: 8px;
+    color: var(--cc-text);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-user-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.chat-user-status {
+    font-size: 7px;
+    color: var(--cc-text-dim);
+    margin-left: 4px;
+}
+
+/* ── Chat Typing Indicator ─────────────────────────────────────────────────── */
+.chat-typing {
+    font-size: 7px;
+    color: var(--cc-text-dim);
+    padding: 4px 8px;
+    font-style: italic;
+}
+
+/* ── Chat Name Row ─────────────────────────────────────────────────────────── */
+.chat-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+}
+
+.chat-my-name {
+    font-size: 9px;
+    color: var(--cc-highlight);
+}
+
+.chat-edit-name {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-edit-name:hover {
+    opacity: 0.7;
+}
+
+.chat-name-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--cc-highlight);
+    color: var(--cc-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    width: 100px;
+    max-width: 100px;
+}
+
+.chat-name-input:focus {
+    outline: none;
+    border-color: var(--cc-highlight);
+}
+
 /* ── Board Area ─────────────────────────────────────────────────────────────── */
 .board-area {
     position: relative;
