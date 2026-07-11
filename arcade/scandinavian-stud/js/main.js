@@ -357,6 +357,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showMenu() {
+        Chat.disconnect();
+        if (document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'none';
+        }
         const modal = createModal(LABELS[lang].menu, `
             <div class="menu-buttons">
                 <button class="start-btn primary" onclick="location.reload()">${LABELS[lang].newGame}</button>
@@ -612,6 +616,10 @@ document.addEventListener('DOMContentLoaded', () => {
         isMultiplayer = true;
         startScreen.style.display = 'none';
         gameScreen.style.display = 'block';
+        if (document.getElementById('gameChat')) {
+            document.getElementById('gameChat').style.display = 'flex';
+        }
+        Chat.connect();
 
         // Initialize game state from server
         if (data.state) {
