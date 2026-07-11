@@ -102,6 +102,48 @@ body {
     margin: 20px 0;
 }
 
+/* ── Player Count Selector ──────────────────────────────────────────────────── */
+.player-count-section {
+    margin-bottom: 24px;
+}
+
+.player-count-label {
+    font-size: 9px;
+    color: var(--cc-text-dim);
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+}
+
+.player-count-selector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.player-count-btn {
+    background: transparent;
+    border: 2px solid var(--cc-cell-border);
+    color: var(--cc-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.player-count-btn:hover {
+    border-color: var(--cc-player1);
+    color: var(--cc-player1);
+}
+
+.player-count-btn.active {
+    background: var(--cc-player1);
+    border-color: var(--cc-player1);
+    color: var(--cc-bg);
+    box-shadow: 0 0 15px var(--cc-player1-glow);
+}
+
 .start-buttons {
     display: flex;
     flex-direction: column;

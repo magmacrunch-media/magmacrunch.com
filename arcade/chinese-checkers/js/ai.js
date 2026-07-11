@@ -1,14 +1,14 @@
 /**
  * ai.js — AI opponent strategy
- * Greedy AI that moves pieces toward the goal
+ * Handles multi-player games with different strategies
  */
 
 var AI = (function() {
 
     // ── Choose Best Move ─────────────────────────────────────────────────────
-    function chooseMove(boardState) {
+    function chooseMove(boardState, playerIdx, playerCount) {
         Board.setState(boardState);
-        var moves = Board.getLegalMoves(CC.PLAYER2);
+        var moves = Board.getLegalMoves(playerIdx);
         if (moves.length === 0) return null;
         if (moves.length === 1) return moves[0];
 
@@ -16,7 +16,7 @@ var AI = (function() {
         var bestIndex = 0;
 
         for (var i = 0; i < moves.length; i++) {
-            var score = evaluateMove(boardState, moves[i]);
+            var score = evaluateMove(boardState, moves[i], playerIdx, playerCount);
             if (score > bestScore) {
                 bestScore = score;
                 bestIndex = i;
@@ -27,13 +27,11 @@ var AI = (function() {
     }
 
     // ── Evaluate Move ────────────────────────────────────────────────────────
-    function evaluateMove(boardState, move) {
+    function evaluateMove(boardState, move, playerIdx, playerCount) {
         var score = 0;
 
         // Distance to goal center before and after move
-        var goalCenter = getGoalCenter(CC.PLAYER2);
-        var startCenter = getGoalCenter(CC.PLAYER1);
-
+        var goalCenter = getGoalCenter(playerIdx);
         var fromDist = cubeDistance(move.from, goalCenter);
         var toDist = cubeDistance(move.to, goalCenter);
 
@@ -41,38 +39,57 @@ var AI = (function() {
         score += (fromDist - toDist) * 10;
 
         // Bonus for being in goal
-        if (isInGoal(CC.PLAYER2, move.to)) {
+        if (isInGoal(playerIdx, move.to)) {
             score += 50;
         }
 
         // Penalty for leaving goal
-        if (isInGoal(CC.PLAYER2, move.from) && !isInGoal(CC.PLAYER2, move.to)) {
+        if (isInGoal(playerIdx, move.from) && !isInGoal(playerIdx, move.to)) {
             score -= 40;
         }
 
         // Bonus for multi-hop (more efficient movement)
         if (move.type === CC.MOVE_TYPE.MULTI_HOP) {
             score += 15 * move.hops.length;
-        } else if (move.type === CC.MOVE_TYPE.HOP) {
-            score += 10;
         }
 
         // Slight bonus for moving pieces that are further from goal
-        // (helps spread out movement)
         score += fromDist * 0.5;
 
-        // Bonus for moving pieces that are blocking others
-        var neighbors = getNeighborCount(boardState, move.from);
-        if (neighbors > 2) {
-            score += 5;
+        // Multi-player considerations
+        if (playerCount > 2) {
+            // Consider blocking opponents
+            score += evaluateBlocking(move, playerIdx, playerCount);
+        }
+
+        return score;
+    }
+
+    // ── Evaluate blocking potential (multi-player) ───────────────────────────
+    function evaluateBlocking(move, playerIdx, playerCount) {
+        var score = 0;
+        var activePlayers = Board.getActivePlayers();
+
+        // Check if move blocks any opponent
+        for (var i = 0; i < activePlayers.length; i++) {
+            var opponent = activePlayers[i];
+            if (opponent === playerIdx) continue;
+
+            var opponentGoal = getGoalCenter(opponent);
+            var distToOpponentGoal = cubeDistance(move.to, opponentGoal);
+
+            // Small bonus for being near opponent's goal (potential blocking)
+            if (distToOpponentGoal <= 2) {
+                score += 3;
+            }
         }
 
         return score;
     }
 
     // ── Helper: Get goal center position ─────────────────────────────────────
-    function getGoalCenter(player) {
-        var goal = Board.getGoalPositions(player);
+    function getGoalCenter(playerIdx) {
+        var goal = CC.getGoalPositions(playerIdx);
         var sumQ = 0, sumR = 0, sumS = 0;
         for (var i = 0; i < goal.length; i++) {
             sumQ += goal[i][0];
@@ -87,8 +104,8 @@ var AI = (function() {
     }
 
     // ── Helper: Check if position is in goal ─────────────────────────────────
-    function isInGoal(player, pos) {
-        var goal = Board.getGoalPositions(player);
+    function isInGoal(playerIdx, pos) {
+        var goal = CC.getGoalPositions(playerIdx);
         for (var i = 0; i < goal.length; i++) {
             if (goal[i][0] === pos[0] && goal[i][1] === pos[1] && goal[i][2] === pos[2]) {
                 return true;
@@ -104,22 +121,6 @@ var AI = (function() {
             Math.abs(a[1] - b[1]),
             Math.abs(a[2] - b[2])
         );
-    }
-
-    // ── Helper: Count occupied neighbors ─────────────────────────────────────
-    function getNeighborCount(boardState, pos) {
-        var count = 0;
-        for (var i = 0; i < CC.DIRECTIONS.length; i++) {
-            var d = CC.DIRECTIONS[i];
-            var nq = pos[0] + d[0];
-            var nr = pos[1] + d[1];
-            var ns = pos[2] + d[2];
-            var key = CC.posKey(nq, nr, ns);
-            if (boardState[key] && boardState[key] !== CC.EMPTY) {
-                count++;
-            }
-        }
-        return count;
     }
 
     return {

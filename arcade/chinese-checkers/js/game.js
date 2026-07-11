@@ -1,35 +1,42 @@
 /**
  * game.js — Game state machine and turn flow
+ * Supports 2-6 players with AI and multiplayer modes
  */
 
 var Game = (function() {
 
     // ── State ────────────────────────────────────────────────────────────────
     var state = CC.STATE.WAITING;
-    var currentPlayer = CC.PLAYER1;
+    var currentPlayer = 0;
     var selectedPiece = null;
     var legalMoves = [];
     var moveHistory = [];
     var onStateChange = null;
     var onGameEnd = null;
     var vsAI = true;
+    var playerCount = 2;
+    var humanPlayer = 0;
 
     // ── Initialization ───────────────────────────────────────────────────────
     function init() {
         Board.init();
-        Board.reset();
         state = CC.STATE.WAITING;
-        currentPlayer = CC.PLAYER1;
+        currentPlayer = 0;
         selectedPiece = null;
         legalMoves = [];
         moveHistory = [];
     }
 
-    function startGame(againstAI) {
+    function startGame(numPlayers, againstAI, humanIdx) {
         init();
+        playerCount = numPlayers || 2;
         vsAI = againstAI !== false;
+        humanPlayer = humanIdx || 0;
+
+        Board.reset(playerCount);
         state = CC.STATE.SELECTING;
-        currentPlayer = CC.PLAYER1;
+        currentPlayer = Board.getActivePlayers()[0];
+
         notifyStateChange();
         return { player: currentPlayer };
     }
@@ -37,10 +44,10 @@ var Game = (function() {
     // ── Piece Selection ──────────────────────────────────────────────────────
     function selectPiece(q, r, s) {
         if (state !== CC.STATE.SELECTING) return false;
-        if (currentPlayer !== CC.PLAYER1 && vsAI) return false;
+        if (currentPlayer !== humanPlayer && vsAI) return false;
 
         var piece = Board.getPiece(q, r, s);
-        if (piece === CC.EMPTY || piece !== currentPlayer) return false;
+        if (piece === CC.EMPTY || piece === null || piece !== currentPlayer) return false;
 
         var moves = Board.getMovesForPiece(q, r, s);
         if (moves.length === 0) return false;
@@ -84,7 +91,7 @@ var Game = (function() {
 
         // Check for win
         var winner = Board.getWinner();
-        if (winner) {
+        if (winner !== null) {
             state = CC.STATE.GAME_OVER;
             if (onGameEnd) onGameEnd(winner);
             notifyStateChange();
@@ -98,11 +105,11 @@ var Game = (function() {
 
     // ── Turn Management ──────────────────────────────────────────────────────
     function switchTurn() {
-        currentPlayer = Board.getOpponent(currentPlayer);
+        currentPlayer = Board.getNextPlayer(currentPlayer);
         selectedPiece = null;
         legalMoves = [];
 
-        if (vsAI && currentPlayer === CC.PLAYER2) {
+        if (vsAI && currentPlayer !== humanPlayer) {
             state = CC.STATE.AI_TURN;
         } else {
             state = CC.STATE.SELECTING;
@@ -113,21 +120,21 @@ var Game = (function() {
 
     // ── AI Move ──────────────────────────────────────────────────────────────
     function executeAIMove() {
-        if (currentPlayer !== CC.PLAYER2) return false;
+        if (currentPlayer === humanPlayer) return false;
         if (!vsAI) return false;
 
-        var move = AI.chooseMove(Board.getState());
+        var move = AI.chooseMove(Board.getState(), currentPlayer, playerCount);
         if (move === null) return false;
 
         Board.applyMove(move);
         moveHistory.push({
-            player: CC.PLAYER2,
+            player: currentPlayer,
             move: move
         });
 
         // Check for win
         var winner = Board.getWinner();
-        if (winner) {
+        if (winner !== null) {
             state = CC.STATE.GAME_OVER;
             if (onGameEnd) onGameEnd(winner);
             notifyStateChange();
@@ -145,9 +152,17 @@ var Game = (function() {
     function getLegalMoves() { return legalMoves; }
     function getMoveHistory() { return moveHistory; }
     function isVsAI() { return vsAI; }
+    function getPlayerCount() { return playerCount; }
+    function getHumanPlayer() { return humanPlayer; }
 
-    function getPlayer1GoalCount() { return Board.countPiecesInGoal(CC.PLAYER1); }
-    function getPlayer2GoalCount() { return Board.countPiecesInGoal(CC.PLAYER2); }
+    function getGoalCounts() {
+        var counts = {};
+        var active = Board.getActivePlayers();
+        for (var i = 0; i < active.length; i++) {
+            counts[active[i]] = Board.countPiecesInGoal(active[i]);
+        }
+        return counts;
+    }
 
     // ── State Change Notification ────────────────────────────────────────────
     function setOnStateChange(cb) { onStateChange = cb; }
@@ -160,8 +175,9 @@ var Game = (function() {
                 currentPlayer: currentPlayer,
                 selectedPiece: selectedPiece,
                 legalMoves: legalMoves,
-                player1GoalCount: getPlayer1GoalCount(),
-                player2GoalCount: getPlayer2GoalCount()
+                goalCounts: getGoalCounts(),
+                playerCount: playerCount,
+                humanPlayer: humanPlayer
             });
         }
     }
@@ -179,8 +195,9 @@ var Game = (function() {
         getLegalMoves: getLegalMoves,
         getMoveHistory: getMoveHistory,
         isVsAI: isVsAI,
-        getPlayer1GoalCount: getPlayer1GoalCount,
-        getPlayer2GoalCount: getPlayer2GoalCount,
+        getPlayerCount: getPlayerCount,
+        getHumanPlayer: getHumanPlayer,
+        getGoalCounts: getGoalCounts,
         setOnStateChange: setOnStateChange,
         setOnGameEnd: setOnGameEnd
     };

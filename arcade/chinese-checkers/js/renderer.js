@@ -1,6 +1,7 @@
 /**
  * renderer.js — Canvas rendering of the hex board
  * Draws hex grid, pieces, highlights, and animations
+ * Supports 2-6 player configurations
  */
 
 var Renderer = (function() {
@@ -8,7 +9,6 @@ var Renderer = (function() {
     var canvas, ctx;
     var boardWidth, boardHeight;
     var offsetX, offsetY;
-    var hoveredCell = null;
 
     // ── Initialize ───────────────────────────────────────────────────────────
     function init(canvasEl) {
@@ -18,7 +18,6 @@ var Renderer = (function() {
     }
 
     function calculateDimensions() {
-        // Find bounds of all positions in pixel space
         var minX = Infinity, maxX = -Infinity;
         var minY = Infinity, maxY = -Infinity;
 
@@ -36,7 +35,6 @@ var Renderer = (function() {
         offsetX = -minX + CC.HEX_SIZE + CC.BOARD_PADDING;
         offsetY = -minY + CC.HEX_SIZE + CC.BOARD_PADDING;
 
-        // Set canvas size
         canvas.width = boardWidth + CC.BOARD_PADDING * 2;
         canvas.height = boardHeight + CC.BOARD_PADDING * 2;
     }
@@ -89,37 +87,42 @@ var Renderer = (function() {
         ctx.fillStyle = CC.COLORS.bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Draw each cell
         for (var i = 0; i < CC.POSITIONS.length; i++) {
             var pos = CC.POSITIONS[i];
             var pixel = getCellPixel(pos[0], pos[1]);
-            var piece = Board.getPiece(pos[0], pos[1], pos[2]);
 
-            // Draw hex cell
             drawHexPath(pixel.x, pixel.y, CC.HEX_SIZE - 2);
             ctx.fillStyle = CC.COLORS.cellEmpty;
             ctx.fill();
             ctx.strokeStyle = CC.COLORS.cellBorder;
             ctx.lineWidth = 1;
             ctx.stroke();
+        }
+    }
 
-            // Draw piece if present
-            if (piece !== CC.EMPTY) {
-                drawPiece(pixel.x, pixel.y, piece);
+    // ── Draw pieces for all active players ───────────────────────────────────
+    function drawPieces(activePlayers) {
+        for (var p = 0; p < activePlayers.length; p++) {
+            var playerIdx = activePlayers[p];
+            var color = CC.PLAYER_COLORS[playerIdx];
+            var glow = CC.PLAYER_GLOWS[playerIdx];
+
+            // Find all pieces for this player
+            for (var key in Board.getState()) {
+                if (Board.getState()[key] === playerIdx) {
+                    var pos = CC.parseKey(key);
+                    var pixel = getCellPixel(pos[0], pos[1]);
+                    drawPiece(pixel.x, pixel.y, color, glow);
+                }
             }
         }
     }
 
     // ── Draw a piece ─────────────────────────────────────────────────────────
-    function drawPiece(cx, cy, player) {
-        var color = player === CC.PLAYER1 ? CC.COLORS.player1 : CC.COLORS.player2;
-        var glow = player === CC.PLAYER1 ? CC.COLORS.player1Glow : CC.COLORS.player2Glow;
-
-        // Glow effect
+    function drawPiece(cx, cy, color, glow) {
         ctx.shadowColor = glow;
         ctx.shadowBlur = 12;
 
-        // Piece circle
         ctx.beginPath();
         ctx.arc(cx, cy, CC.HEX_SIZE * 0.55, 0, Math.PI * 2);
         ctx.fillStyle = color;
@@ -131,20 +134,20 @@ var Renderer = (function() {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
         ctx.fill();
 
-        // Reset shadow
         ctx.shadowColor = 'transparent';
         ctx.shadowBlur = 0;
     }
 
     // ── Draw selected piece highlight ────────────────────────────────────────
-    function drawSelected(q, r, s) {
+    function drawSelected(q, r, s, playerIdx) {
         var pixel = getCellPixel(q, r);
+        var color = CC.PLAYER_COLORS[playerIdx];
 
-        ctx.shadowColor = CC.COLORS.selectedGlow;
+        ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
         ctx.shadowBlur = 20;
 
         drawHexPath(pixel.x, pixel.y, CC.HEX_SIZE - 2);
-        ctx.strokeStyle = CC.COLORS.selected;
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 3;
         ctx.stroke();
 
@@ -157,7 +160,7 @@ var Renderer = (function() {
         for (var i = 0; i < moves.length; i++) {
             var move = moves[i];
             var pixel = getCellPixel(move.to[0], move.to[1]);
-            var isHop = move.type === CC.MOVE_TYPE.HOP || move.type === CC.MOVE_TYPE.MULTI_HOP;
+            var isHop = move.type === CC.MOVE_TYPE.MULTI_HOP;
             var color = isHop ? CC.COLORS.highlightHop : CC.COLORS.highlight;
             var glow = isHop ? CC.COLORS.highlightHopGlow : CC.COLORS.highlightGlow;
 
@@ -178,69 +181,45 @@ var Renderer = (function() {
         }
     }
 
-    // ── Draw hover highlight ─────────────────────────────────────────────────
-    function drawHover(q, r, s, player) {
-        if (q === null) return;
+    // ── Draw goal area indicators ────────────────────────────────────────────
+    function drawGoalAreas(activePlayers) {
+        for (var p = 0; p < activePlayers.length; p++) {
+            var playerIdx = activePlayers[p];
+            var color = CC.PLAYER_COLORS[playerIdx];
+            var goal = CC.getGoalPositions(playerIdx);
 
-        var piece = Board.getPiece(q, r, s);
-        var pixel = getCellPixel(q, r);
-
-        if (piece === player) {
-            // Hovering over own piece
-            drawHexPath(pixel.x, pixel.y, CC.HEX_SIZE);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-        }
-    }
-
-    // ── Draw goal areas ──────────────────────────────────────────────────────
-    function drawGoalAreas(player1Color, player2Color) {
-        // Player 1 goal (bottom triangle) - subtle highlight
-        var p1Goal = CC.PLAYER1_GOAL;
-        for (var i = 0; i < p1Goal.length; i++) {
-            var pixel = getCellPixel(p1Goal[i][0], p1Goal[i][1]);
-            drawHexPath(pixel.x, pixel.y, CC.HEX_SIZE - 1);
-            ctx.strokeStyle = 'rgba(0, 245, 255, 0.15)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        }
-
-        // Player 2 goal (top triangle) - subtle highlight
-        var p2Goal = CC.PLAYER2_GOAL;
-        for (var i = 0; i < p2Goal.length; i++) {
-            var pixel = getCellPixel(p2Goal[i][0], p2Goal[i][1]);
-            drawHexPath(pixel.x, pixel.y, CC.HEX_SIZE - 1);
-            ctx.strokeStyle = 'rgba(255, 45, 120, 0.15)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
+            for (var i = 0; i < goal.length; i++) {
+                var pixel = getCellPixel(goal[i][0], goal[i][1]);
+                drawHexPath(pixel.x, pixel.y, CC.HEX_SIZE - 1);
+                ctx.strokeStyle = color;
+                ctx.globalAlpha = 0.2;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.globalAlpha = 1;
+            }
         }
     }
 
     // ── Full render pass ─────────────────────────────────────────────────────
-    function render(selectedPiece, legalMoves, currentPlayer, hoverPos) {
+    function render(selectedPiece, legalMoves, currentPlayer, activePlayers) {
         drawBoard();
-        drawGoalAreas();
+        drawGoalAreas(activePlayers);
+        drawPieces(activePlayers);
 
         if (selectedPiece) {
-            drawSelected(selectedPiece[0], selectedPiece[1], selectedPiece[2]);
+            drawSelected(selectedPiece[0], selectedPiece[1], selectedPiece[2], currentPlayer);
             drawMoves(legalMoves);
-        }
-
-        if (hoverPos && !selectedPiece) {
-            drawHover(hoverPos[0], hoverPos[1], hoverPos[2], currentPlayer);
         }
     }
 
     // ── Getters ──────────────────────────────────────────────────────────────
     function getCanvas() { return canvas; }
-    function getCellAtPixelPublic(px, py) { return getCellAtPixel(px, py); }
 
     return {
         init: init,
         render: render,
         getCanvas: getCanvas,
-        getCellAtPixel: getCellAtPixelPublic,
+        getCellAtPixel: getCellAtPixel,
         getCellPixel: getCellPixel
     };
 

@@ -1,6 +1,6 @@
 /**
  * main.js — Entry point, UI bindings, event handlers
- * Supports both AI and multiplayer modes
+ * Supports 2-6 players with AI and multiplayer modes
  */
 
 (function() {
@@ -41,20 +41,37 @@
     // ── State ────────────────────────────────────────────────────────────────
     var hoverPos = null;
     var isMultiplayerMode = false;
+    var selectedPlayerCount = 2;
 
     // ── Initialize ───────────────────────────────────────────────────────────
     function init() {
         Renderer.init(boardCanvas);
         setupEventListeners();
         setupMultiplayer();
+        setupPlayerCountSelector();
         showStartScreen();
+    }
+
+    // ── Player Count Selector ────────────────────────────────────────────────
+    function setupPlayerCountSelector() {
+        var selector = document.getElementById('playerCountSelector');
+        if (!selector) return;
+
+        var buttons = selector.querySelectorAll('.player-count-btn');
+        buttons.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                buttons.forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                selectedPlayerCount = parseInt(btn.dataset.count);
+            });
+        });
     }
 
     // ── Event Listeners ──────────────────────────────────────────────────────
     function setupEventListeners() {
         // Start screen buttons
         startGameBtn.addEventListener('click', function() {
-            startNewGame(true);
+            startNewGame(selectedPlayerCount, true);
         });
 
         onlineBtn.addEventListener('click', function() {
@@ -75,7 +92,7 @@
                 Multiplayer.quit();
                 showLobby();
             } else {
-                startNewGame(Game.isVsAI());
+                startNewGame(selectedPlayerCount, Game.isVsAI());
             }
         });
 
@@ -91,7 +108,7 @@
             if (isMultiplayerMode) {
                 showLobby();
             } else {
-                startNewGame(Game.isVsAI());
+                startNewGame(selectedPlayerCount, Game.isVsAI());
             }
         });
 
@@ -142,7 +159,7 @@
             if (e.key === ' ' || e.key === 'Enter') {
                 if (startScreen.style.display !== 'none') {
                     e.preventDefault();
-                    startNewGame(true);
+                    startNewGame(selectedPlayerCount, true);
                 }
             }
             if (e.key === 'Escape') {
@@ -170,7 +187,6 @@
         gameScreen.style.display = 'none';
         lobbyOverlay.style.display = 'flex';
 
-        // Reset lobby state
         lobbyStatus.textContent = 'Connecting...';
         lobbyRoomCode.style.display = 'none';
         lobbyPlayers.style.display = 'none';
@@ -179,7 +195,6 @@
         lobbyJoinBtn.textContent = 'JOIN / CREATE ROOM';
         roomCodeInput.value = '';
 
-        // Connect to server
         Multiplayer.connect();
     }
 
@@ -231,7 +246,6 @@
                 break;
 
             case 'move':
-                // Handle opponent's move
                 if (update.msg && update.msg.state) {
                     applyMultiplayerState(update.msg.state);
                 }
@@ -244,10 +258,7 @@
         showGameScreen();
         isMultiplayerMode = true;
 
-        // Apply initial state
         applyMultiplayerState(state);
-
-        // Update UI
         updateMultiplayerUI(state, mySide);
     }
 
@@ -264,10 +275,8 @@
     }
 
     function applyMultiplayerState(state) {
-        // Clear board
         Board.init();
 
-        // Apply pieces from server state
         if (state.board) {
             for (var key in state.board) {
                 var playerIdx = state.board[key];
@@ -276,14 +285,11 @@
             }
         }
 
-        // Update turn indicator
         if (state.currentTurnIdx !== undefined) {
-            var playerNames = ['CYAN', 'MAGENTA', 'GREEN', 'YELLOW', 'ORANGE', 'PURPLE'];
-            turnIndicator.textContent = playerNames[state.currentTurnIdx] + "'S TURN";
-            turnIndicator.style.color = CC.COLORS['player' + (state.currentTurnIdx + 1)] || CC.COLORS.player1;
+            turnIndicator.textContent = CC.PLAYER_NAMES[state.currentTurnIdx] + "'S TURN";
+            turnIndicator.style.color = CC.PLAYER_COLORS[state.currentTurnIdx];
         }
 
-        // Update goal counts
         var mySide = Multiplayer.getMySide();
         if (mySide !== null) {
             goalCount.textContent = Board.countPiecesInGoal(mySide) + ' / 10';
@@ -293,8 +299,7 @@
     }
 
     function updateMultiplayerUI(state, mySide) {
-        var playerNames = ['CYAN', 'MAGENTA', 'GREEN', 'YELLOW', 'ORANGE', 'PURPLE'];
-        gameMessage.textContent = 'You are ' + playerNames[mySide];
+        gameMessage.textContent = 'You are ' + CC.PLAYER_NAMES[mySide];
         gameMessage.className = 'game-message';
     }
 
@@ -302,7 +307,6 @@
     function handleBoardClick(e) {
         var state = Game.getState();
 
-        // In multiplayer mode, check if it's my turn
         if (isMultiplayerMode) {
             if (!Multiplayer.isActive()) return;
             var currentTurn = parseInt(document.getElementById('turnIndicator').textContent.split("'")[0]);
@@ -354,23 +358,19 @@
     }
 
     function handleMultiplayerClick(q, r, s) {
-        // Simple selection/move for multiplayer
         var selected = Game.getSelectedPiece();
         var piece = Board.getPiece(q, r, s);
         var mySide = Multiplayer.getMySide();
 
         if (selected === null) {
-            // Try to select a piece
             if (piece === mySide) {
                 Game.selectPiece(q, r, s);
             }
         } else {
-            // Try to move or reselect
             if (piece === mySide) {
                 Game.deselectPiece();
                 Game.selectPiece(q, r, s);
             } else {
-                // Try to execute move
                 var legalMoves = Board.getMovesForPiece(selected[0], selected[1], selected[2]);
                 var validMove = null;
                 for (var i = 0; i < legalMoves.length; i++) {
@@ -381,14 +381,9 @@
                 }
 
                 if (validMove) {
-                    // Execute locally
                     Board.applyMove(validMove);
                     Game.deselectPiece();
-
-                    // Send to server
                     Multiplayer.sendMove(selected, [q, r, s]);
-
-                    // Update UI
                     goalCount.textContent = Board.countPiecesInGoal(mySide) + ' / 10';
                     gameMessage.textContent = 'Waiting for opponent...';
                 } else {
@@ -416,7 +411,6 @@
     function handleStateChange(info) {
         updateUI(info);
 
-        // If it's AI's turn, execute AI move after a short delay
         if (info.state === CC.STATE.AI_TURN) {
             setTimeout(function() {
                 Game.executeAIMove();
@@ -427,25 +421,28 @@
 
     // ── Game End Handler ─────────────────────────────────────────────────────
     function handleGameEnd(winner) {
-        var isWin = winner === CC.PLAYER1;
+        var humanPlayer = Game.getHumanPlayer();
+        var isWin = winner === humanPlayer;
 
-        gameOverTitle.textContent = isWin ? 'YOU WIN!' : 'AI WINS!';
+        gameOverTitle.textContent = isWin ? 'YOU WIN!' : CC.PLAYER_NAMES[winner] + ' WINS!';
         gameOverTitle.className = 'game-over-title ' + (isWin ? 'win' : 'lose');
         gameOverMessage.textContent = isWin
             ? 'Congratulations! You moved all your marbles to the goal!'
-            : 'Better luck next time! The AI reached its goal first.';
+            : 'Better luck next time!';
 
         showModal(gameOverModal);
     }
 
     // ── Update UI ────────────────────────────────────────────────────────────
     function updateUI(info) {
+        var playerName = CC.PLAYER_NAMES[info.currentPlayer];
+
         if (info.state === CC.STATE.AI_TURN) {
-            turnIndicator.textContent = 'AI THINKING...';
-            turnIndicator.style.color = CC.COLORS.player2;
+            turnIndicator.textContent = playerName + ' THINKING...';
+            turnIndicator.style.color = CC.PLAYER_COLORS[info.currentPlayer];
         } else if (info.state === CC.STATE.SELECTING) {
-            turnIndicator.textContent = 'YOUR TURN';
-            turnIndicator.style.color = CC.COLORS.player1;
+            turnIndicator.textContent = playerName + "'S TURN";
+            turnIndicator.style.color = CC.PLAYER_COLORS[info.currentPlayer];
         } else if (info.state === CC.STATE.MOVING) {
             turnIndicator.textContent = 'SELECT DESTINATION';
             turnIndicator.style.color = CC.COLORS.highlight;
@@ -454,7 +451,9 @@
             turnIndicator.style.color = CC.COLORS.highlight;
         }
 
-        goalCount.textContent = info.player1GoalCount + ' / 10';
+        // Update goal count for human player
+        var humanGoal = info.goalCounts[info.humanPlayer] || 0;
+        goalCount.textContent = humanGoal + ' / 10';
 
         if (info.state === CC.STATE.SELECTING) {
             gameMessage.textContent = 'Click a piece to move';
@@ -477,7 +476,7 @@
             Game.getSelectedPiece(),
             Game.getLegalMoves(),
             Game.getCurrentPlayer(),
-            hoverPos
+            Board.getActivePlayers()
         );
     }
 
@@ -496,11 +495,11 @@
     }
 
     // ── Start New Game ───────────────────────────────────────────────────────
-    function startNewGame(vsAI) {
+    function startNewGame(numPlayers, vsAI) {
         hideModal(gameOverModal);
         showGameScreen();
         isMultiplayerMode = false;
-        Game.startGame(vsAI);
+        Game.startGame(numPlayers, vsAI);
         renderBoard();
     }
 

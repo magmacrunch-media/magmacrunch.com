@@ -1,34 +1,37 @@
 /**
  * board.js — Board representation and move validation
  * Pure logic, no DOM dependencies
+ * Supports 2-6 players
  */
 
 var Board = (function() {
 
     // ── State ────────────────────────────────────────────────────────────────
-    // Map from position key to player (CC.PLAYER1, CC.PLAYER2, or CC.EMPTY)
     var cells = {};
+    var activePlayers = [];
+    var playerCount = 2;
 
     function init() {
         cells = {};
-        // Initialize all positions as empty
         for (var i = 0; i < CC.POSITIONS.length; i++) {
             var pos = CC.POSITIONS[i];
             cells[CC.posKey(pos[0], pos[1], pos[2])] = CC.EMPTY;
         }
     }
 
-    function reset() {
+    function reset(numPlayers) {
         init();
-        // Place player 1 pieces (top triangle)
-        for (var i = 0; i < CC.PLAYER1_START.length; i++) {
-            var pos = CC.PLAYER1_START[i];
-            cells[CC.posKey(pos[0], pos[1], pos[2])] = CC.PLAYER1;
-        }
-        // Place player 2 pieces (bottom triangle)
-        for (var i = 0; i < CC.PLAYER2_START.length; i++) {
-            var pos = CC.PLAYER2_START[i];
-            cells[CC.posKey(pos[0], pos[1], pos[2])] = CC.PLAYER2;
+        playerCount = numPlayers || 2;
+        activePlayers = CC.getActivePlayers(playerCount);
+
+        // Place pieces for each active player
+        for (var p = 0; p < activePlayers.length; p++) {
+            var playerIdx = activePlayers[p];
+            var starts = CC.getStartPositions(playerIdx);
+            for (var i = 0; i < starts.length; i++) {
+                var pos = starts[i];
+                cells[CC.posKey(pos[0], pos[1], pos[2])] = playerIdx;
+            }
         }
     }
 
@@ -45,6 +48,14 @@ var Board = (function() {
         for (var key in state) {
             cells[key] = state[key];
         }
+    }
+
+    function getPlayerCount() {
+        return playerCount;
+    }
+
+    function getActivePlayers() {
+        return activePlayers.slice();
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────
@@ -68,10 +79,8 @@ var Board = (function() {
         return cells[CC.posKey(q, r, s)] !== undefined;
     }
 
-    function getOwner(q, r, s) {
-        var piece = getPiece(q, r, s);
-        if (piece === CC.PLAYER1 || piece === CC.PLAYER2) return piece;
-        return null;
+    function isPlayerPiece(q, r, s, player) {
+        return getPiece(q, r, s) === player;
     }
 
     // ── Get neighbors of a position ──────────────────────────────────────────
@@ -107,35 +116,8 @@ var Board = (function() {
         return moves;
     }
 
-    // ── Get hop moves (jump over neighbor into empty space) ──────────────────
-    function getHopMoves(q, r, s) {
-        var moves = [];
-        for (var i = 0; i < CC.DIRECTIONS.length; i++) {
-            var d = CC.DIRECTIONS[i];
-            // Middle position (the piece we jump over)
-            var mq = q + d[0];
-            var mr = r + d[1];
-            var ms = s + d[2];
-            // Landing position
-            var lq = q + d[0] * 2;
-            var lr = r + d[1] * 2;
-            var ls = s + d[2] * 2;
-
-            if (isValidPosition(mq, mr, ms) && !isEmpty(mq, mr, ms) &&
-                isValidPosition(lq, lr, ls) && isEmpty(lq, lr, ls)) {
-                moves.push({
-                    from: [q, r, s],
-                    to: [lq, lr, ls],
-                    type: CC.MOVE_TYPE.HOP,
-                    hops: [[mq, mr, ms]]
-                });
-            }
-        }
-        return moves;
-    }
-
-    // ── Get multi-hop moves (chain of hops in same direction) ────────────────
-    function getMultiHopMoves(q, r, s) {
+    // ── Get multi-hop moves (chain of hops) ──────────────────────────────────
+    function getMultiHopMoves(q, r, s, player) {
         var allMoves = [];
         var visited = {};
         visited[CC.posKey(q, r, s)] = true;
@@ -151,23 +133,28 @@ var Board = (function() {
                 var ls = cs + d[2] * 2;
                 var lkey = CC.posKey(lq, lr, ls);
 
-                if (isValidPosition(mq, mr, ms) && !isEmpty(mq, mr, ms) &&
-                    isValidPosition(lq, lr, ls) && isEmpty(lq, lr, ls) &&
-                    !visited[lkey]) {
+                if (isValidPosition(mq, mr, ms) && isValidPosition(lq, lr, ls)) {
+                    var midKey = CC.posKey(mq, mr, ms);
+                    var midPiece = cells[midKey];
+                    var landPiece = cells[lkey];
 
-                    visited[lkey] = true;
-                    var newPath = path.slice();
-                    newPath.push([mq, mr, ms]);
+                    if (midPiece !== CC.EMPTY && midPiece !== player &&
+                        (landPiece === CC.EMPTY || landPiece === undefined) &&
+                        !visited[lkey]) {
 
-                    allMoves.push({
-                        from: [q, r, s],
-                        to: [lq, lr, ls],
-                        type: CC.MOVE_TYPE.MULTI_HOP,
-                        hops: newPath.slice()
-                    });
+                        visited[lkey] = true;
+                        var newPath = path.slice();
+                        newPath.push([mq, mr, ms]);
 
-                    // Continue hopping from new position
-                    findHops(lq, lr, ls, newPath);
+                        allMoves.push({
+                            from: [q, r, s],
+                            to: [lq, lr, ls],
+                            type: CC.MOVE_TYPE.MULTI_HOP,
+                            hops: newPath.slice()
+                        });
+
+                        findHops(lq, lr, ls, newPath);
+                    }
                 }
             }
         }
@@ -179,14 +166,11 @@ var Board = (function() {
     // ── Get all legal moves for a piece ──────────────────────────────────────
     function getMovesForPiece(q, r, s) {
         var piece = getPiece(q, r, s);
-        if (piece === CC.EMPTY) return [];
+        if (piece === CC.EMPTY || piece === null) return [];
 
         var adjacent = getAdjacentMoves(q, r, s);
-        var hops = getMultiHopMoves(q, r, s);
+        var hops = getMultiHopMoves(q, r, s, piece);
 
-        // If hops are available, only hops are allowed (you must maximize movement)
-        // Actually in Chinese checkers, you CAN choose to just move adjacent
-        // But multi-hop is optional - you can stop at any point
         return adjacent.concat(hops);
     }
 
@@ -221,31 +205,9 @@ var Board = (function() {
         return count;
     }
 
-    function getGoalPositions(player) {
-        if (player === CC.PLAYER1) return CC.PLAYER1_GOAL;
-        if (player === CC.PLAYER2) return CC.PLAYER2_GOAL;
-        return [];
-    }
-
-    function getStartPositions(player) {
-        if (player === CC.PLAYER1) return CC.PLAYER1_START;
-        if (player === CC.PLAYER2) return CC.PLAYER2_START;
-        return [];
-    }
-
-    function isInGoal(player, q, r, s) {
-        var goal = getGoalPositions(player);
-        for (var i = 0; i < goal.length; i++) {
-            if (goal[i][0] === q && goal[i][1] === r && goal[i][2] === s) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     function countPiecesInGoal(player) {
         var count = 0;
-        var goal = getGoalPositions(player);
+        var goal = CC.getGoalPositions(player);
         for (var i = 0; i < goal.length; i++) {
             if (getPiece(goal[i][0], goal[i][1], goal[i][2]) === player) {
                 count++;
@@ -259,14 +221,18 @@ var Board = (function() {
     }
 
     function getWinner() {
-        if (hasWon(CC.PLAYER1)) return CC.PLAYER1;
-        if (hasWon(CC.PLAYER2)) return CC.PLAYER2;
+        for (var i = 0; i < activePlayers.length; i++) {
+            if (hasWon(activePlayers[i])) {
+                return activePlayers[i];
+            }
+        }
         return null;
     }
 
-    // ── Get opponent ─────────────────────────────────────────────────────────
-    function getOpponent(player) {
-        return player === CC.PLAYER1 ? CC.PLAYER2 : CC.PLAYER1;
+    function getNextPlayer(currentPlayer) {
+        var idx = activePlayers.indexOf(currentPlayer);
+        if (idx === -1) return activePlayers[0];
+        return activePlayers[(idx + 1) % activePlayers.length];
     }
 
     // ── Debug ────────────────────────────────────────────────────────────────
@@ -280,9 +246,8 @@ var Board = (function() {
                 var cube_s = -q - r;
                 var key = CC.posKey(q, r, cube_s);
                 if (cells[key] !== undefined) {
-                    if (cells[key] === CC.PLAYER1) line += 'X ';
-                    else if (cells[key] === CC.PLAYER2) line += 'O ';
-                    else line += '. ';
+                    if (cells[key] === CC.EMPTY) line += '. ';
+                    else line += cells[key] + ' ';
                 }
             }
             if (line.trim()) s += line + '\n';
@@ -295,23 +260,22 @@ var Board = (function() {
         reset: reset,
         getState: getState,
         setState: setState,
+        getPlayerCount: getPlayerCount,
+        getActivePlayers: getActivePlayers,
         getPiece: getPiece,
         setPiece: setPiece,
         isEmpty: isEmpty,
         isValidPosition: isValidPosition,
-        getOwner: getOwner,
+        isPlayerPiece: isPlayerPiece,
         getNeighbors: getNeighbors,
         getMovesForPiece: getMovesForPiece,
         getLegalMoves: getLegalMoves,
         applyMove: applyMove,
         getPlayerPieceCount: getPlayerPieceCount,
-        getGoalPositions: getGoalPositions,
-        getStartPositions: getStartPositions,
-        isInGoal: isInGoal,
         countPiecesInGoal: countPiecesInGoal,
         hasWon: hasWon,
         getWinner: getWinner,
-        getOpponent: getOpponent,
+        getNextPlayer: getNextPlayer,
         toString: toString
     };
 
