@@ -52,8 +52,8 @@ GAMES=(
     "scandinavian-stud:8767:Scandinavian Stud"
     "checkers:8770:Checkers"
     "backgammon:8771:Backgammon"
+    "chinese-checkers:8772:Chinese Checkers"
     # Add more games below:
-    # "newgame:8772:New Game"
 )
 
 # ── Chat server (special case) ───────────────────────────────────────────────
