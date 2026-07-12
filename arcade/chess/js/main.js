@@ -531,7 +531,7 @@ var UI = (function() {
         if (displayRow === 7) {
             var fileLabel = document.createElement('div');
             fileLabel.className = 'square-label file';
-            fileLabel.textContent = boardFlipped ? files[7 - displayCol] : files[displayCol];
+            fileLabel.textContent = file;
             square.appendChild(fileLabel);
         }
         if (displayCol === 0) {
