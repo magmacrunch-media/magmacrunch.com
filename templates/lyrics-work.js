@@ -327,8 +327,14 @@
                 html += '<p><strong>tags</strong></p><div>' + tags.map(t => `<span class="mb-tag">${esc(t.name)}</span>`).join(' ') + '</div>';
             }
 
-            // link to MB
+            // link to MB + contributor page
             html += `<p style="margin-top: 12px;"><a href="https://musicbrainz.org/work/${esc(workId)}" target="_blank" rel="noopener">view on musicbrainz →</a></p>`;
+            if (C.artistId) {
+                const contribPath = ENTITY_MAP[C.artistId];
+                if (contribPath) {
+                    html += `<p><a href="${contribPath}">view contributor page →</a></p>`;
+                }
+            }
 
             container.innerHTML = html;
         } catch (err) {
