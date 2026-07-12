@@ -48,6 +48,7 @@
     }
 
     const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const LANGUAGES = { eng:'English', spa:'Spanish', fra:'French', deu:'German', ita:'Italian', jpn:'Japanese', por:'Portuguese', zho:'Chinese', kor:'Korean', und:'Unknown' };
 
     function fmtDate(d) {
         if (!d) return '';
@@ -132,21 +133,22 @@
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
             color: #555;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             line-height: 1.6;
+            display: block;
         }
         .mb-work-meta .rec-date {
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
             color: #999;
-            margin-left: 4px;
+            margin-left: 6px;
         }
         .mb-work-meta .rec-releases {
             display: block;
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
             color: #777;
-            margin-top: 2px;
+            margin-top: 4px;
             padding-left: 12px;
         }
         .mb-work-meta .mb-tag {
@@ -205,7 +207,7 @@
 
             // language
             if (workData.language) {
-                html += `<p><strong>language</strong> ${esc(workData.language)}</p>`;
+                html += `<p><strong>language</strong> ${esc(LANGUAGES[workData.language] || workData.language)}</p>`;
             }
 
             // ISWC

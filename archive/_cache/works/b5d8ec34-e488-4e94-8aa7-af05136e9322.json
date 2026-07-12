@@ -1,0 +1,264 @@
+{
+  "fetchedAt": "2026-07-12T23:45:09.745Z",
+  "entityType": "work",
+  "uuid": "b5d8ec34-e488-4e94-8aa7-af05136e9322",
+  "name": "pay2play",
+  "data": {
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "type": "Song",
+    "disambiguation": "",
+    "id": "b5d8ec34-e488-4e94-8aa7-af05136e9322",
+    "language": "eng",
+    "aliases": [],
+    "relations": [
+      {
+        "target-credit": "",
+        "attribute-ids": {},
+        "source-credit": "",
+        "direction": "backward",
+        "begin": "2024-11",
+        "target-type": "artist",
+        "attributes": [],
+        "attribute-values": {},
+        "ended": true,
+        "type": "composer",
+        "artist": {
+          "country": "US",
+          "name": "Ellis Grey",
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "sort-name": "Grey, Ellis",
+          "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+          "disambiguation": ""
+        },
+        "end": "2024-12",
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+      },
+      {
+        "begin": "2024-11",
+        "direction": "backward",
+        "source-credit": "",
+        "attribute-ids": {},
+        "target-credit": "",
+        "end": "2024-12",
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "artist": {
+          "disambiguation": "",
+          "id": "aa5ccc77-a82e-465e-a9d5-79cf4098a926",
+          "sort-name": "Grey, Ellis",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person",
+          "name": "Ellis Grey",
+          "country": "US"
+        },
+        "type": "lyricist",
+        "attribute-values": {},
+        "ended": true,
+        "attributes": [],
+        "target-type": "artist"
+      },
+      {
+        "direction": "backward",
+        "begin": null,
+        "target-credit": "",
+        "source-credit": "",
+        "attribute-ids": {},
+        "type": "publishing",
+        "attribute-values": {},
+        "ended": false,
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "end": null,
+        "artist": {
+          "country": "US",
+          "name": "Sex Van Floor Plan",
+          "sort-name": "Sex Van Floor Plan",
+          "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+          "type": "Group",
+          "id": "260e4953-a937-4355-8389-d1baaf24eca5",
+          "disambiguation": ""
+        },
+        "target-type": "artist",
+        "attributes": []
+      },
+      {
+        "target-credit": "",
+        "recording": {
+          "id": "7f496b0d-d52e-441d-afea-af07d8a90ff1",
+          "disambiguation": "",
+          "length": 92000,
+          "title": "pay2play",
+          "video": false
+        },
+        "target-type": "recording",
+        "type": "performance",
+        "ended": true,
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "attribute-ids": {
+          "demo": "47bfd345-2acc-444b-ae3b-82781c7c40ca"
+        },
+        "source-credit": "",
+        "direction": "backward",
+        "begin": "2025-07",
+        "attributes": [
+          "demo"
+        ],
+        "attribute-values": {},
+        "end": "2025-07"
+      },
+      {
+        "recording": {
+          "title": "pay2play",
+          "length": 88000,
+          "disambiguation": "",
+          "id": "f681bd3a-f123-4d19-a99c-02d4527af56e",
+          "video": false
+        },
+        "target-credit": "",
+        "target-type": "recording",
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "ended": true,
+        "type": "performance",
+        "source-credit": "",
+        "attribute-ids": {},
+        "begin": "2026",
+        "direction": "backward",
+        "attributes": [],
+        "end": "2026",
+        "attribute-values": {}
+      }
+    ],
+    "tags": [
+      {
+        "name": "riot grrrl",
+        "count": 1
+      }
+    ],
+    "attributes": [],
+    "languages": [
+      "eng"
+    ],
+    "iswcs": [],
+    "title": "pay2play"
+  },
+  "recordings": {
+    "7f496b0d-d52e-441d-afea-af07d8a90ff1": {
+      "video": false,
+      "disambiguation": "",
+      "length": 92000,
+      "id": "7f496b0d-d52e-441d-afea-af07d8a90ff1",
+      "releases": [
+        {
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "release-events": [
+            {
+              "area": {
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "type-id": null,
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+              },
+              "date": "2025-07-18"
+            }
+          ],
+          "id": "b2d580ea-a056-499a-ae5f-ae3d5e54fede",
+          "packaging": null,
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "date": "2025-07-18",
+          "country": "XW",
+          "packaging-id": null,
+          "disambiguation": "",
+          "barcode": "057829025783",
+          "status": "Official",
+          "title": "pay2play",
+          "quality": "normal"
+        },
+        {
+          "quality": "normal",
+          "status": "Official",
+          "title": "pay2play",
+          "packaging-id": null,
+          "disambiguation": "",
+          "barcode": "",
+          "packaging": null,
+          "date": "2025-07-19",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "country": "US",
+          "release-events": [
+            {
+              "area": {
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "type-id": null,
+                "name": "United States",
+                "disambiguation": "",
+                "type": null,
+                "sort-name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ]
+              },
+              "date": "2025-07-19"
+            }
+          ],
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "id": "c235b965-e1ff-448f-9487-2567e4eec9a9"
+        }
+      ],
+      "title": "pay2play",
+      "first-release-date": "2025-07-18"
+    },
+    "f681bd3a-f123-4d19-a99c-02d4527af56e": {
+      "disambiguation": "",
+      "video": false,
+      "title": "pay2play",
+      "releases": [
+        {
+          "quality": "normal",
+          "title": "Sex Van Floor Plan",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "id": "d5e8fd0c-34e3-44f1-8880-35e7c86dc2d4",
+          "country": "US",
+          "packaging-id": null,
+          "disambiguation": "",
+          "date": "2026-06-26",
+          "barcode": "",
+          "packaging": null,
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "release-events": [
+            {
+              "date": "2026-06-26",
+              "area": {
+                "sort-name": "United States",
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "name": "United States",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "disambiguation": "",
+                "type": null,
+                "type-id": null
+              }
+            }
+          ],
+          "status": "Official"
+        }
+      ],
+      "length": 88000,
+      "first-release-date": "2026-06-26",
+      "id": "f681bd3a-f123-4d19-a99c-02d4527af56e"
+    }
+  }
+}
