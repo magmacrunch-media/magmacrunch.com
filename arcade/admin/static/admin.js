@@ -46,6 +46,7 @@
     const chatViewer = $('#chat-viewer');
     const chatRoomFilter = $('#chat-room-filter');
     const btnRefreshChat = $('#btn-refresh-chat');
+    const btnClearChat = $('#btn-clear-chat');
 
     // ── Chat state ───────────────────────────────────────────────────────────
     let chatHistory = [];
@@ -451,6 +452,9 @@
     });
 
     btnRefreshChat.addEventListener('click', requestChatHistory);
+    btnClearChat.addEventListener('click', () => {
+        chatViewer.innerHTML = '<div class="log-welcome">Chat cleared.</div>';
+    });
     chatRoomFilter.addEventListener('change', renderChat);
 
     // ── Init ────────────────────────────────────────────────────────────────
