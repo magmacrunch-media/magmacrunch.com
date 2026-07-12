@@ -151,6 +151,13 @@
             margin-top: 4px;
             padding-left: 12px;
         }
+        .mb-work-meta .rec-line {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #777;
+            margin-top: 4px;
+            padding-left: 12px;
+        }
         .mb-work-meta .mb-tag {
             display: inline-block;
             background: #ddd4b8;
@@ -274,20 +281,20 @@
                         const releases = recData.releases
                             .sort((a, b) => (a.date || '').localeCompare(b.date || ''))
                             .map(rel => {
-                                const year = rel.date ? ` (${fmtDate(rel.date.substring(0, 10))})` : '';
-                                return esc(rel.title) + year;
+                                const date = rel.date ? ` — ${fmtDate(rel.date.substring(0, 10))}` : '';
+                                return esc(rel.title) + date;
                             });
-                        item += ` <span class="rec-releases">appears on: ${releases.join(', ')}</span>`;
+                        item += `<div class="rec-line">appears on: ${releases.join(', ')}</div>`;
                     }
 
                     // places (recorded at, mixed at, etc.)
                     const placeRels = recData?.relations?.filter(r => r['target-type'] === 'place') || [];
                     if (placeRels.length) {
                         const places = placeRels.map(r => {
-                            const role = r.type ? ` (${esc(r.type)})` : '';
-                            return esc(r.place?.name) + role;
+                            const role = r.type ? esc(r.type) + ' at ' : '';
+                            return role + esc(r.place?.name);
                         });
-                        item += `<span class="rec-releases">${places.join(', ')}</span>`;
+                        item += `<div class="rec-line">${places.join(', ')}</div>`;
                     }
 
                     html += `<div class="rec-item">${item}</div>`;
