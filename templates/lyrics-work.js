@@ -47,13 +47,22 @@
         return min + ':' + String(sec).padStart(2, '0');
     }
 
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+    function fmtDate(d) {
+        if (!d) return '';
+        const parts = d.split('-');
+        if (parts.length === 3) return `${MONTHS[parseInt(parts[1],10)-1]} ${parseInt(parts[2],10)}, ${parts[0]}`;
+        if (parts.length === 2) return `${MONTHS[parseInt(parts[1],10)-1]} ${parts[0]}`;
+        return d;
+    }
+
     const formatDate = (begin, end, ended) => {
         if (!begin && !end) return '';
-        if (begin && end && begin === end) return ` (${esc(begin)})`;
-        if (begin && !end) return ` (${esc(begin)}${ended ? '' : '–present'})`;
-        if (begin && end) return begin.includes('-') && end.includes('-')
-            ? ` (${esc(begin)} to ${esc(end)})`
-            : ` (${esc(begin)}–${esc(end)})`;
+        const b = fmtDate(begin), e = fmtDate(end);
+        if (begin && end && begin === end) return ` (${b})`;
+        if (begin && !end) return ` (${b}${ended ? '' : '–present'})`;
+        if (begin && end) return ` (${b}–${e})`;
         return '';
     };
 
@@ -236,9 +245,9 @@
                     // recording date from relationship
                     let dateStr = '';
                     if (r.begin || r.end) {
-                        if (r.begin && r.end && r.begin === r.end) dateStr = r.begin;
-                        else if (r.begin && r.end) dateStr = `${r.begin}–${r.end}`;
-                        else if (r.begin) dateStr = r.begin;
+                        if (r.begin && r.end && r.begin === r.end) dateStr = fmtDate(r.begin);
+                        else if (r.begin && r.end) dateStr = `${fmtDate(r.begin)}–${fmtDate(r.end)}`;
+                        else if (r.begin) dateStr = fmtDate(r.begin);
                     }
 
                     // labels
@@ -295,7 +304,7 @@
             // tags
             const tags = workData.tags?.sort((a, b) => b.count - a.count).slice(0, 8);
             if (tags?.length) {
-                html += '<p><strong>tags</strong></p><div>' + tags.map(t => `<span class="mb-tag">${esc(t.name)}</span>`).join('') + '</div>';
+                html += '<p><strong>tags</strong></p><div>' + tags.map(t => `<span class="mb-tag">${esc(t.name)}</span>`).join(' ') + '</div>';
             }
 
             // link to MB
