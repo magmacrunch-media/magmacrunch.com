@@ -458,12 +458,15 @@
 </div>
 
 <!-- ═══════════════════════════════════════════════════════
-     SCRIPTS — load order matters: config → state → renderer → network → ui
+     SCRIPTS — load order matters: protocol → mp → config → state → renderer → multiplayer → ui
 ════════════════════════════════════════════════════════ -->
+<script>var MP_DEFAULT_SERVER = 'ws://98.49.52.35:8765';</script>
+<script src="../shared/multiplayer/protocol.js"></script>
+<script src="../shared/multiplayer/network.js"></script>
 <script src="js/board-config.js"></script>
 <script src="js/game-state.js"></script>
 <script src="js/board-renderer.js"></script>
-<script src="js/network.js"></script>
+<script src="js/multiplayer.js"></script>
 <script src="../shared/chat.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
@@ -492,8 +495,8 @@ document.addEventListener('keydown', function(e) {
 function doQuitGame() {
   closeModal('quit-confirm-modal');
   Chat.disconnect();
-  if (typeof Network !== 'undefined' && Network.isConnected()) {
-    Network.quitGame();
+  if (typeof Multiplayer !== 'undefined' && Multiplayer.isConnected()) {
+    Multiplayer.quit();
   }
   setTimeout(function() { window.location.reload(); }, 350);
 }
@@ -502,21 +505,16 @@ function doQuitGame() {
 function doRejectedSpectate() {
   document.getElementById('rejected-overlay').classList.remove('show');
   var name = document.getElementById('name-input').value.trim() || 'Spectator';
-  Network.reconnectAndDo(function() {
-    Network.spectate(name);
+  Multiplayer.reconnectAndDo(function() {
+    Multiplayer.spectate(name);
   });
 }
 function doRejectedLateJoin() {
   document.getElementById('rejected-overlay').classList.remove('show');
   var name = document.getElementById('name-input').value.trim() || 'Player';
-  // Use the color saved by onRejected — by the time this button is clicked,
-  // the server has already closed the socket and onDisconnected has wiped
-  // _selectedColor (and therefore UI_selectedColor) to null.
-  var color = (typeof Network !== 'undefined' && Network._savedColorForRejoin)
-    ? Network._savedColorForRejoin
-    : (typeof UI_selectedColor !== 'undefined' && UI_selectedColor) ? UI_selectedColor : '';
-  Network.reconnectAndDo(function() {
-    Network.joinLate(name, color);
+  // Shared framework makes late joiners into spectators
+  Multiplayer.reconnectAndDo(function() {
+    Multiplayer.spectate(name);
   });
 }
 

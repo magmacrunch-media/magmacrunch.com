@@ -55,6 +55,8 @@ var rejectedReason    = document.getElementById('rejected-reason');
 
 // ── Color palette (must match server PALETTE list) ────────────────────────────
 
+var _COLOR_BY_ORDER = ['red', 'blue', 'yellow', 'green'];
+
 var PALETTE = [
   { hex: '#ff2d55', name: 'Cherry'     },
   { hex: '#ff7c1e', name: 'Orange'     },
@@ -191,8 +193,8 @@ function _buildSwatches() {
       _updateJoinBtn();
       _applyMyColor(p.hex);
       // If already joined, send a color-change request to the server
-      if (_hasJoined && Network.isConnected()) {
-        Network.changeColor(p.hex);
+      if (_hasJoined && Multiplayer.isConnected()) {
+        Multiplayer.changeColor(p.hex);
       }
     });
     colorSwatchesEl.appendChild(el);
@@ -212,7 +214,7 @@ function _refreshSwatches() {
 function _updateJoinBtn() {
   // Enabled if: connected, name typed, not yet joined (color is optional)
   var nameOk = nameInput.value.trim().length > 0;
-  var connected = Network.isConnected();
+  var connected = Multiplayer.isConnected();
   joinBtn.disabled     = !connected || !nameOk || _hasJoined;
   spectateBtn.disabled = !connected || !nameOk || _hasJoined;
 }
@@ -546,16 +548,6 @@ function _safeZoneTint(hex) {
     return v.toString(16).padStart(2, '0');
   }).join('');
 }
-  var q2 = l < 0.5 ? l * (1 + s) : l + s - l * s;
-  var p2 = 2 * l - q2;
-  var rr = Math.round(hue2rgb(p2, q2, h + 1/3) * 255);
-  var gg = Math.round(hue2rgb(p2, q2, h)       * 255);
-  var bb = Math.round(hue2rgb(p2, q2, h - 1/3) * 255);
-
-  return '#' + [rr, gg, bb].map(function(v) {
-    return v.toString(16).padStart(2, '0');
-  }).join('');
-}
 
 /**
  * Compute the complementary color (hue + 180°) of a hex color.
@@ -629,7 +621,7 @@ function _nameForSlot(slot) {
 }
 
 function _getMyColor() {
-  return Network.getMyColor();
+  return Multiplayer.getMyColor();
 }
 
 // ── Initial board render ──────────────────────────────────────────────────────
@@ -704,7 +696,7 @@ function renderPlayers(playersInfo, maxPlayers, playerCount) {
         var ht = document.createElement('span'); ht.className = 'host-tag'; ht.textContent = 'HOST';
         slot.appendChild(ht);
       }
-      if (info.name === Network.getMyName()) {
+      if (info.name === Multiplayer.getMyName()) {
         var yt = document.createElement('span'); yt.className = 'you-tag'; yt.textContent = 'YOU';
         slot.appendChild(yt);
       }
@@ -756,12 +748,12 @@ function showGameView() {
   document.body.classList.add('game-active');
 
   // Inject in-game color-change button next to the color badge (non-spectators only)
-  if (!Network.isSpectator()) {
+  if (!Multiplayer.isSpectator()) {
     _injectInGameColorPicker();
   }
 
   netStatusDotGame.className   = netStatusDot.className;
-  netStatusTextGame.textContent = Network.getMyName() + (_isSpectator ? ' — spectating' : ' — playing');
+  netStatusTextGame.textContent = Multiplayer.getMyName() + (_isSpectator ? ' — spectating' : ' — playing');
   netPlayerBadgeGame.textContent = netPlayerBadge.textContent;
   netPlayerBadgeGame.style.display = 'block';
 
@@ -891,15 +883,15 @@ function showGameOver(winnerSlot) {
 
 // ── Network callbacks ─────────────────────────────────────────────────────────
 
-Network.onConnected = function() {
+Multiplayer.onConnected = function() {
   netStatusDot.classList.add('connected');
   // Re-apply color so status dot and bar update now that connected class is set
   _applyMyColor(_selectedColor || '#39ff14'); // keep classic green if no color chosen yet
 
   // If we reconnected after a rejection, fire the queued action and stop.
-  if (Network._pendingAction) {
-    var fn = Network._pendingAction;
-    Network._pendingAction = null;
+  if (Multiplayer._pendingAction) {
+    var fn = Multiplayer._pendingAction;
+    Multiplayer._pendingAction = null;
     fn();
     return;
   }
@@ -914,7 +906,7 @@ Network.onConnected = function() {
   nameInput.focus();
 };
 
-Network.onDisconnected = function() {
+Multiplayer.onDisconnected = function() {
   // Reset join state so the form works correctly if the server restarts
   _hasJoined     = false;
   _isSpectator   = false;
@@ -936,12 +928,12 @@ Network.onDisconnected = function() {
   _refreshSwatches();
 };
 
-Network.onRejected = function(reason) {
+Multiplayer.onRejected = function(reason) {
   // Save the currently selected color NOW, before onDisconnected fires and
   // wipes _selectedColor. The server closes the socket right after sending
   // 'rejected', so by the time the user clicks JOIN LATE the socket close
   // event will have already reset _selectedColor to null.
-  Network._savedColorForRejoin = _selectedColor || '';
+  Multiplayer._savedColorForRejoin = _selectedColor || '';
 
   rejectedReason.textContent = reason;
   rejectedOverlay.classList.add('show');
@@ -953,7 +945,7 @@ Network.onRejected = function(reason) {
   }
 };
 
-Network.onWelcome = function(playerName, isHost, confirmedHex) {
+Multiplayer.onWelcome = function(playerName, isHost, confirmedHex) {
   _hasJoined = true;
   joinBtn.disabled   = true;
   nameInput.disabled = true;
@@ -988,7 +980,7 @@ Network.onWelcome = function(playerName, isHost, confirmedHex) {
   }
 };
 
-Network.onSpectatorJoined = function(spectatorName) {
+Multiplayer.onSpectatorJoined = function(spectatorName) {
   _hasJoined   = true;
   _isSpectator = true;
   joinBtn.disabled     = true;
@@ -1009,22 +1001,22 @@ Network.onSpectatorJoined = function(spectatorName) {
   }
 };
 
-Network.onPlayerQuit = function(playerName, color) {
+Multiplayer.onPlayerQuit = function(playerName, color) {
   addGameLog('🚪 ' + playerName + ' (' + (SLOT_NAMES[color] || color || 'unknown') + ') left the game.');
   addMsg('system', playerName + ' has left the game.');
 };
 
-Network.onPromotedToHost = function() {
+Multiplayer.onPromotedToHost = function() {
   var slotIdx = _COLOR_BY_ORDER.indexOf(_getMyColor());
   var playerNum = slotIdx >= 0 ? ' (Player ' + (slotIdx + 1) + ')' : '';
-  netPlayerBadge.textContent = Network.getMyName() + ' 👑' + playerNum;
+  netPlayerBadge.textContent = Multiplayer.getMyName() + ' 👑' + playerNum;
   waitingForHost.style.display = 'none';
   startBtn.style.display = 'block';
   startBtn.disabled = true;  // onLobbyUpdate will enable when canStart=true
   addMsg('system', 'You are now the host!');
 };
 
-Network.onLobbyUpdate = function(data) {
+Multiplayer.onLobbyUpdate = function(data) {
   var playersInfo = data.playersInfo || data.players.map(function(name) {
     return { name: name, color: '#aaa' };
   });
@@ -1033,7 +1025,7 @@ Network.onLobbyUpdate = function(data) {
   // doesn't match what the server assigned (e.g. auto-assign on join, or a successful
   // change_color), update it so our own swatch is never wrongly greyed out.
   if (_hasJoined && !_isSpectator) {
-    var myName = Network.getMyName();
+    var myName = Multiplayer.getMyName();
     var myInfo = playersInfo.find(function(p) { return p.name === myName; });
     if (myInfo && myInfo.color && myInfo.color !== _selectedColor) {
       _selectedColor = myInfo.color;
@@ -1080,7 +1072,7 @@ Network.onLobbyUpdate = function(data) {
     gameInProgressBanner.remove();
   }
 
-  var amHost = Network.amIHost();
+  var amHost = Multiplayer.amIHost();
   if (amHost) {
     startBtn.disabled = !data.canStart;
     lobbyStatusText.textContent = data.canStart
@@ -1095,7 +1087,7 @@ Network.onLobbyUpdate = function(data) {
   }
 };
 
-Network.onGameStarted = function(colorMap) {
+Multiplayer.onGameStarted = function(colorMap) {
   // Inject chosen colors as CSS variables BEFORE showGameView() fires,
   // so the board renders with correct colors immediately.
   injectColorMap(colorMap);
@@ -1105,7 +1097,7 @@ Network.onGameStarted = function(colorMap) {
   // This fallback is essential for late joiners who receive game_started
   // before any lobby_update has synced their slot→hex mapping.
   var mySlot = _getMyColor();
-  var myHex  = (mySlot && colorMap[mySlot]) ? colorMap[mySlot] : Network.getMyConfirmedHex();
+  var myHex  = (mySlot && colorMap[mySlot]) ? colorMap[mySlot] : Multiplayer.getMyConfirmedHex();
 
   if (myHex) {
     _applyMyColor(myHex);
@@ -1124,10 +1116,10 @@ Network.onGameStarted = function(colorMap) {
  * Re-injects the colorMap so board zone colors update immediately,
  * and if the changed player is us, re-applies our personal UI theming.
  */
-Network.onColorChanged = function(playerName, colorMap) {
+Multiplayer.onColorChanged = function(playerName, colorMap) {
   injectColorMap(colorMap);
 
-  if (playerName === Network.getMyName()) {
+  if (playerName === Multiplayer.getMyName()) {
     var mySlot = _getMyColor();
     if (mySlot) {
       var hex = _hexForSlot(mySlot);
@@ -1142,12 +1134,12 @@ Network.onColorChanged = function(playerName, colorMap) {
   }
 };
 
-Network.onSystemMessage = function(text) {
+Multiplayer.onSystemMessage = function(text) {
   var inGame = lobbyOverlay.classList.contains('hidden');
   if (inGame) { addGameLog('ℹ ' + text); } else { addMsg('system', text); }
 };
 
-Network.onError = function(text) {
+Multiplayer.onError = function(text) {
   addMsg('system', '⚠ ' + text);
   dbg('SERVER ERROR', text);
   // If a color-change attempt was rejected, reflect that in the hint
@@ -1157,10 +1149,10 @@ Network.onError = function(text) {
   }
 };
 
-Network.onChatMessage = function(from, text, color) { addMsg('theirs', text, from, color); };
+Multiplayer.onChatMessage = function(from, text, color) { addMsg('theirs', text, from, color); };
 
-Network.onCardDrawn = function(from, card, remaining) {
-  var isMyCard = (from === Network.getMyName());
+Multiplayer.onCardDrawn = function(from, card, remaining) {
+  var isMyCard = (from === Multiplayer.getMyName());
   SoundFX.playCard();
   animateCard(card, isMyCard);
   cardDrawnBy.textContent = isMyCard ? '▶ Your card' : from + '\'s card';
@@ -1187,7 +1179,7 @@ Network.onCardDrawn = function(from, card, remaining) {
     dbg('CARD DRAWN', { card: card.value, color: myColor });
 
     if (!myColor) {
-      dbg('ERROR: myColor is null', { myName: Network.getMyName() });
+      dbg('ERROR: myColor is null', { myName: Multiplayer.getMyName() });
       return;
     }
 
@@ -1227,8 +1219,11 @@ Network.onCardDrawn = function(from, card, remaining) {
       if (move.isSwap) {
         turnStatus.textContent = 'Swapping…';
         turnStatus.className = 'turn-status-waiting';
-        Network.swapPawn(move.swapWith.color, parseInt(move.swapWith.pawnId.split('-')[1]), move.swapTo);
-        Network.movePawn(myColor, pawnIndex, move.to, move.lapped);
+        var state = getState();
+        var oppPawn = state.pawns[move.swapWith.color] && state.pawns[move.swapWith.color][parseInt(move.swapWith.pawnId.split('-')[1])];
+        var oppLapped = oppPawn ? !!oppPawn.lapped : false;
+        Multiplayer.swapPawn(move.swapWith.color, parseInt(move.swapWith.pawnId.split('-')[1]), move.swapTo, oppLapped);
+        Multiplayer.movePawn(myColor, pawnIndex, move.to, move.lapped);
         return;
       }
 
@@ -1250,7 +1245,7 @@ Network.onCardDrawn = function(from, card, remaining) {
   }, 0);
 };
 
-Network.onPawnMoved = function(color, pawnId, newPosition, lapped) {
+Multiplayer.onPawnMoved = function(color, pawnId, newPosition, lapped) {
   if (!_sevenInProgress) {
     clearHighlights(boardEl);
   }
@@ -1281,7 +1276,7 @@ Network.onPawnMoved = function(color, pawnId, newPosition, lapped) {
   }
 };
 
-Network.onTurnUpdate = function(currentTurnName) {
+Multiplayer.onTurnUpdate = function(currentTurnName) {
   var turnSlot = (function() {
     var state = getState();
     return state && state.currentTurn ? state.currentTurn : null;
@@ -1293,7 +1288,7 @@ Network.onTurnUpdate = function(currentTurnName) {
   hudTurnName.style.color      = turnHex || '';
   hudTurnName.style.textShadow = turnHex ? ('0 0 12px ' + turnHex + '88') : '';
 
-  var isMe = (currentTurnName === Network.getMyName()) && !_isSpectator;
+  var isMe = (currentTurnName === Multiplayer.getMyName()) && !_isSpectator;
   hudDrawBtn.disabled = !isMe;
   hudDiscardBtn.style.display = 'none';
   yourTurnFlash.classList.toggle('visible', isMe);
@@ -1320,29 +1315,29 @@ onStateChange(function(state) {
 
 function doJoin() {
   var name = nameInput.value.trim();
-  if (!name || !Network.isConnected()) return;
+  if (!name || !Multiplayer.isConnected()) return;
   // Save name to localStorage for sharing across games
   localStorage.setItem('arcade_username', name);
   // Pass chosen color if one was picked; server auto-assigns if null/empty
-  Network.joinGame(name, _selectedColor || '');
+  Multiplayer.join(name, _selectedColor || '');
 }
 joinBtn.addEventListener('click', doJoin);
 nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doJoin(); });
 
 function doSpectate() {
   var name = nameInput.value.trim();
-  if (!name || !Network.isConnected()) return;
-  Network.spectate(name);
+  if (!name || !Multiplayer.isConnected()) return;
+  Multiplayer.spectate(name);
 }
 spectateBtn.addEventListener('click', doSpectate);
 
-startBtn.addEventListener('click', function() { Network.startGame(); });
+startBtn.addEventListener('click', function() { Multiplayer.startGame(); });
 
 hudDrawBtn.addEventListener('click', function() {
   if (hudDrawBtn.disabled) return;
   hudDrawBtn.disabled = true;
-  dbg('DRAW CARD clicked', { isMyTurn: Network.isMyTurn() });
-  Network.drawCard();
+  dbg('DRAW CARD clicked', { isMyTurn: Multiplayer.isMyTurn() });
+  Multiplayer.drawCard();
 });
 
 hudDiscardBtn.addEventListener('click', function() {
@@ -1351,23 +1346,23 @@ hudDiscardBtn.addEventListener('click', function() {
   turnStatus.className = 'turn-status-waiting';
   dbg('DISCARD clicked — skipping turn');
   addGameLog((SLOT_NAMES[_getMyColor()] || _getMyColor()) + ' drew but had no moves — discarding.');
-  Network.skipTurn();
+  Multiplayer.skipTurn();
 });
 
 function doChat(inputEl, nameGetter) {
   var text = inputEl.value.trim();
-  if (!text || !Network.isConnected()) return;
+  if (!text || !Multiplayer.isConnected()) return;
   addMsg('mine', text, nameGetter() + ' (you)');
-  Network.sendChat(text);
+  Multiplayer.sendChat(text);
   inputEl.value = '';
   inputEl.focus();
 }
 
-lobbySendBtn.addEventListener('click', function() { doChat(lobbyMsgInput, Network.getMyName); });
-lobbyMsgInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doChat(lobbyMsgInput, Network.getMyName); });
+lobbySendBtn.addEventListener('click', function() { doChat(lobbyMsgInput, Multiplayer.getMyName); });
+lobbyMsgInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doChat(lobbyMsgInput, Multiplayer.getMyName); });
 
-gameSendBtn.addEventListener('click', function() { doChat(gameMsgInput, Network.getMyName); });
-gameMsgInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doChat(gameMsgInput, Network.getMyName); });
+gameSendBtn.addEventListener('click', function() { doChat(gameMsgInput, Multiplayer.getMyName); });
+gameMsgInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doChat(gameMsgInput, Multiplayer.getMyName); });
 
 // ── Debug panel ───────────────────────────────────────────────────────────────
 
@@ -1523,7 +1518,7 @@ function _buildInGameSwatches(container, colorMap) {
       swatch.addEventListener('click', function(e) {
         e.stopPropagation();
         _selectedColor = p.hex;
-        Network.changeColor(p.hex);
+        Multiplayer.changeColor(p.hex);
         _inGamePickerOpen = false;
         document.getElementById('ingame-color-popover').style.display = 'none';
       });
@@ -1657,20 +1652,20 @@ function _sendMove(move, myColor) {
   turnStatus.className = 'turn-status-waiting';
   SoundFX.playMove();
   if (move.slideBumps && move.slideBumps.length > 0) {
-    move.slideBumps.forEach(function(sb) { Network.bumpPawn(sb.color, parseInt(sb.pawnId.split('-')[1])); });
+    move.slideBumps.forEach(function(sb) { Multiplayer.bumpPawn(sb.color, parseInt(sb.pawnId.split('-')[1])); });
   }
-  if (move.bump) Network.bumpPawn(move.bump.color, parseInt(move.bump.pawnId.split('-')[1]));
-  Network.movePawn(myColor, pawnIndex, move.to, move.lapped);
+  if (move.bump) Multiplayer.bumpPawn(move.bump.color, parseInt(move.bump.pawnId.split('-')[1]));
+  Multiplayer.movePawn(myColor, pawnIndex, move.to, move.lapped);
 }
 
 function _sendMovePartial(move, myColor) {
   var pawnIndex = parseInt(move.pawnId.split('-')[1]);
   if (move.slideBumps && move.slideBumps.length > 0) {
-    move.slideBumps.forEach(function(sb) { Network.bumpPawn(sb.color, parseInt(sb.pawnId.split('-')[1])); });
+    move.slideBumps.forEach(function(sb) { Multiplayer.bumpPawn(sb.color, parseInt(sb.pawnId.split('-')[1])); });
   }
-  if (move.bump) Network.bumpPawn(move.bump.color, parseInt(move.bump.pawnId.split('-')[1]));
-  Network.movePawnPartial(myColor, pawnIndex, move.to, move.lapped);
+  if (move.bump) Multiplayer.bumpPawn(move.bump.color, parseInt(move.bump.pawnId.split('-')[1]));
+  Multiplayer.movePawnPartial(myColor, pawnIndex, move.to, move.lapped);
 }
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
-Network.connect();
+Multiplayer.connect();

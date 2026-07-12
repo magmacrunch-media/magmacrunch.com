@@ -48,6 +48,9 @@ PALETTE = [
     "#7b68ee",  # Bluebell
 ]
 
+# Board slot colors (used by games with fixed board positions like SORRY)
+SLOT_COLORS = ['red', 'blue', 'yellow', 'green']
+
 
 # ── Room ─────────────────────────────────────────────────────────────────────
 
@@ -73,8 +76,13 @@ class Room:
     def get_player_info(self):
         """Return list of player info dicts for lobby updates."""
         return [
-            {"name": self.player_names.get(p, ""), "color": self.player_colors.get(p, ""), "isHost": p == self.host}
-            for p in self.players
+            {
+                "name": self.player_names.get(p, ""),
+                "color": self.player_colors.get(p, ""),
+                "isHost": p == self.host,
+                "slot": SLOT_COLORS[i] if i < len(SLOT_COLORS) else None,
+            }
+            for i, p in enumerate(self.players)
         ]
 
     def get_taken_colors(self):
@@ -430,8 +438,11 @@ class GameServer:
         action = msg.get("action", {})
         result = room.game.handle_action(name, action)
 
-        if result:
-            # Broadcast to all players
+        if isinstance(result, list):
+            for msg in result:
+                if msg:
+                    await room.broadcast(msg)
+        elif result:
             await room.broadcast(result)
 
     async def _handle_quit(self, websocket, room):
@@ -445,6 +456,7 @@ class GameServer:
                 "playerName": name,
                 "color": color,
             })
+            await self._broadcast_lobby(room)
             if not room.players and not room.spectators:
                 del self.rooms[room.code]
 
@@ -459,8 +471,24 @@ class GameServer:
                 "playerName": name,
                 "color": color,
             })
+            await self._broadcast_lobby(room)
             if not room.players and not room.spectators:
                 del self.rooms[room.code]
+
+    async def _broadcast_lobby(self, room):
+        """Send lobby_update to all players in the room."""
+        player_info = room.get_player_info()
+        await room.broadcast({
+            "type": "lobby_update",
+            "players": player_info,
+            "playersInfo": player_info,
+            "takenColors": room.get_taken_colors(),
+            "playerCount": room.player_count,
+            "maxPlayers": room.max_players,
+            "minPlayers": self.min_players,
+            "canStart": room.can_start(),
+            "gameStarted": room.game_started,
+        })
 
     def run(self):
         """Start the server."""
