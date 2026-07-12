@@ -183,36 +183,6 @@ const CribbageBoard = {
         pegEl.style.top = `${rect.top - boardRect.top + rect.height / 2 - 6}px`;
     },
 
-    // ── Animate peg movement ──────────────────────────────────
-    animatePegMove(player, fromScore, toScore, callback) {
-        const pegEl = player === 'player' ? this.playerPegEl : this.aiPegEl;
-        const backPegEl = player === 'player' ? this.playerBackPegEl : this.aiBackPegEl;
-
-        if (!pegEl) {
-            if (callback) callback();
-            return;
-        }
-
-        // Move back peg to current position first
-        const prevScore = this.scores[player];
-        this.positionPeg(backPegEl, prevScore, player);
-
-        // Animate front peg to new position
-        this.positionPeg(pegEl, toScore, player);
-
-        // Update scores
-        this.scores[player] = toScore;
-
-        // Update score display
-        const scoreEl = document.getElementById(`${player}ScoreDisplay`);
-        if (scoreEl) scoreEl.textContent = toScore;
-
-        // Simple animation delay
-        if (callback) {
-            setTimeout(callback, 300);
-        }
-    },
-
     // ── Check for winner ──────────────────────────────────────
     checkWinner() {
         if (this.scores.player >= WINNING_SCORE) return 'player';

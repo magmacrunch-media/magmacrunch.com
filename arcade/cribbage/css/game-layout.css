@@ -10,7 +10,7 @@
 /* Header */
 .game-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 10px 20px;
     background: var(--bg-mid);
@@ -21,30 +21,6 @@
 .game-header h1 {
     font-family: var(--font-pixel);
     font-size: 18px;
-    color: var(--accent);
-}
-
-.game-stats {
-    display: flex;
-    gap: 30px;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 14px;
-    color: var(--cream);
-    opacity: 0.7;
-    margin-bottom: 4px;
-}
-
-.stat-value {
-    font-family: var(--font-pixel);
-    font-size: 20px;
     color: var(--accent);
 }
 

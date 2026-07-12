@@ -680,13 +680,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function syncMultiplayerState(state) {
         if (!state) return;
 
-        // Update scores
-        if (state.scores) {
-            document.getElementById('playerScore').textContent = state.scores[myName] || 0;
-            const opponentName = state.players ? state.players.find(p => p !== myName) : 'Opponent';
-            document.getElementById('aiScore').textContent = state.scores[opponentName] || 0;
-        }
-
         // Update hands
         if (state.playerHands && state.playerHands[myName]) {
             renderMultiplayerHand(state.playerHands[myName], 'playerHand', true);
@@ -779,7 +772,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Show opponent's card in their hand area
                     // For now, just show it played
                 }
-                showMessage(`${action.player} played ${action.card.rank}${SUIT_SYMBOLS[action.card.card.suit]} - Count: ${action.count}`);
+                showMessage(`${action.player} played ${action.card.rank}${SUIT_SYMBOLS[action.card.suit]} - Count: ${action.count}`);
                 if (action.description) {
                     showMessage(action.description);
                 }

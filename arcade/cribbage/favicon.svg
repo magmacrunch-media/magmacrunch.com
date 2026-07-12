@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#1e4d2b"/>
+  <rect x="4" y="3" width="24" height="26" fill="#fffef5" rx="2"/>
+  <rect x="6" y="5" width="4" height="4" fill="#cc0000" rx="1"/>
+  <text x="6" y="8" font-family="sans-serif" font-size="3.5" fill="#cc0000">A♥</text>
+  <text x="16" y="24" font-family="sans-serif" font-size="7" fill="#cc0000">♥</text>
+</svg>

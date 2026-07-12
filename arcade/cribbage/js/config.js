@@ -44,7 +44,6 @@ const SCORE = {
     PAIR:        2,   // Two cards of same rank
     THREE_OF_KIND: 6, // Three cards of same rank
     FOUR_OF_KIND: 12, // Four cards of same rank
-    RUN:         0,   // Points = run length (3+)
     FLUSH_4:     4,   // Four cards same suit (hand only)
     FLUSH_5:     5,   // Five cards same suit (hand + starter)
     NIBS:        1,   // Jack in hand matching starter suit
