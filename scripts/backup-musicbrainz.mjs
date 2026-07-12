@@ -107,6 +107,10 @@ const LABELS = [
     { uuid: '39446d03-fe9c-47d0-81a9-2b42d34fb400', name: 'magmacrunch media' },
 ];
 
+const WORKS = [
+    { uuid: 'b5d8ec34-e488-4e94-8aa7-af05136e9322', name: 'pay2play' },
+];
+
 // Note: C.P. Rutledge and Jon McCoy appear in both ARTISTS and CONTRIBUTORS.
 // Contributor pages fetch artist-rels + 6 more inc params, so they need
 // their own cache files even though the UUID overlaps with artists.
@@ -490,6 +494,20 @@ async function backupLabel(entity) {
     await writeCache('labels', entity.uuid, cache);
 }
 
+// ─── backup: standalone work (for lyrics pages) ─────────────────
+
+async function backupWork(entity) {
+    logEntity('work', entity.name);
+    const cache = { fetchedAt: new Date().toISOString(), entityType: 'work', uuid: entity.uuid, name: entity.name, data: null };
+    indent++;
+
+    log('  work detail…');
+    cache.data = await fetchMB(`work/${entity.uuid}?inc=artist-rels+recording-rels+tags+aliases&fmt=json`);
+
+    indent--;
+    await writeCache('works', entity.uuid, cache);
+}
+
 // ─── main ──────────────────────────────────────────────────────────
 
 async function main() {
@@ -503,7 +521,7 @@ async function main() {
 
     const start = Date.now();
     let completed = 0, skipped = 0;
-    const total = ARTISTS.length + PLACES.length + CONTRIBUTORS.length + LABELS.length;
+    const total = ARTISTS.length + PLACES.length + CONTRIBUTORS.length + LABELS.length + WORKS.length;
 
     for (const entity of ARTISTS) {
         if (SKIP_EXISTING && cacheExists('artists', entity.uuid)) { log(`[${completed + 1}/${total}] [artist] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
@@ -530,6 +548,13 @@ async function main() {
         if (SKIP_EXISTING && cacheExists('labels', entity.uuid)) { log(`[${completed + 1}/${total}] [label] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupLabel(entity);
+        completed++;
+    }
+
+    for (const entity of WORKS) {
+        if (SKIP_EXISTING && cacheExists('works', entity.uuid)) { log(`[${completed + 1}/${total}] [work] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        log(`[${completed + 1}/${total}]`);
+        await backupWork(entity);
         completed++;
     }
 

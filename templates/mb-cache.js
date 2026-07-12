@@ -18,7 +18,7 @@
     /**
      * Attempt to load a cached MusicBrainz JSON file.
      * @param {string} uuid — MusicBrainz entity UUID
-     * @param {string} type — 'artist' | 'place' | 'contributor' | 'label'
+     * @param {string} type — 'artist' | 'place' | 'contributor' | 'label' | 'work'
      * @param {string} [depth='../../../'] — path prefix to site root
      * @returns {Promise<boolean>} true if cache was loaded successfully
      */
