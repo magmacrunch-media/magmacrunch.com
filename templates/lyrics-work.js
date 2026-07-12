@@ -253,15 +253,11 @@
                     }
 
                     // labels
-                    const labels = [];
-                    const isLive = r.attributes?.some(a => a.toLowerCase() === 'live');
-                    const isPartial = r.attributes?.some(a => a.toLowerCase() === 'partial');
-                    if (isLive) labels.push('live');
-                    if (isPartial) labels.push('partial');
+                    const labels = (r.attributes || []).map(a => esc(a.toLowerCase()));
 
                     let item = archiveLink(rec.id, rec.title, 'recording');
-                    if (dateStr) item += `<span class="rec-date">${esc(dateStr)}</span>`;
-                    if (labels.length) item += ' ' + labels.map(l => `<span class="mb-tag">${esc(l)}</span>`).join(' ');
+                    if (dateStr) item += ` <span class="rec-date">${esc(dateStr)}</span>`;
+                    if (labels.length) item += ' ' + labels.map(l => `<span class="mb-tag">${l}</span>`).join(' ');
 
                     // fetch recording details for releases (from cache or API)
                     const cachedRec = _cache?.recordings?.[rec.id];
@@ -278,7 +274,7 @@
                         const releases = recData.releases
                             .sort((a, b) => (a.date || '').localeCompare(b.date || ''))
                             .map(rel => {
-                                const year = rel.date ? ` (${esc(rel.date.substring(0, 4))})` : '';
+                                const year = rel.date ? ` (${fmtDate(rel.date.substring(0, 10))})` : '';
                                 return esc(rel.title) + year;
                             });
                         item += `<span class="rec-releases">appears on: ${releases.join(', ')}</span>`;
