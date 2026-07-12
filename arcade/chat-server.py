@@ -213,14 +213,6 @@ async def handler(websocket):
             'statuses': statuses
         }))
 
-        # Auto-generate a name and send it back
-        auto_name = generate_name()
-        user_info[websocket]['name'] = auto_name
-        await websocket.send(json.dumps({
-            'type': 'name_assigned',
-            'name': auto_name
-        }))
-
         # Broadcast updated user list to everyone
         await broadcast_user_list()
 

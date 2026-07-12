@@ -1,0 +1,457 @@
+/* ═══════════════════════════════════════════════
+   Arcade Chat Widget — Floating bottom-right chat
+   ═══════════════════════════════════════════════ */
+
+/* ── Widget Container ──────────────────────────────────────────────────── */
+
+.acw {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    font-family: 'Courier Prime', monospace;
+    color: #f0ead8;
+    width: 320px;
+}
+
+/* ── Minimized Bar ─────────────────────────────────────────────────────── */
+
+.acw-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1a1028;
+    border: 2px solid #ff2e9c;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 46, 156, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+    user-select: none;
+}
+
+.acw-bar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(255, 46, 156, 0.5);
+}
+
+.acw-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #ff2e9c;
+    letter-spacing: 0.1em;
+}
+
+.acw-badge {
+    background: #ff2e9c;
+    color: #0a0612;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin: 0 8px;
+    animation: acw-pulse 1s ease-in-out infinite;
+}
+
+@keyframes acw-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+.acw-online {
+    font-size: 12px;
+    color: #5a5a6a;
+    white-space: nowrap;
+}
+
+.acw-online .dot {
+    color: #39ff6e;
+    margin-right: 4px;
+}
+
+/* ── Expanded Window ───────────────────────────────────────────────────── */
+
+.acw-window {
+    background: #150b29;
+    border: 2px solid #3a2d5c;
+    border-radius: 8px;
+    margin-top: 4px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.acw.expanded .acw-window {
+    max-height: 450px;
+    opacity: 1;
+    margin-top: 4px;
+}
+
+.acw.minimized .acw-window {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+}
+
+.acw.minimized .acw-bar {
+    border-radius: 8px;
+}
+
+.acw.expanded .acw-bar {
+    border-radius: 8px 8px 0 0;
+}
+
+/* ── Header ────────────────────────────────────────────────────────────── */
+
+.acw-header {
+    background: #ff2e9c;
+    color: #0a0612;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px 12px;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.acw-header-buttons {
+    display: flex;
+    gap: 4px;
+}
+
+.acw-header-btn {
+    background: none;
+    border: none;
+    color: #0a0612;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.acw-header-btn:hover {
+    opacity: 0.7;
+}
+
+/* ── Name Row ──────────────────────────────────────────────────────────── */
+
+.acw-name-row {
+    padding: 6px 12px;
+    border-bottom: 1px solid #3a2d5c;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.acw-my-name {
+    font-size: 14px;
+    color: #39ff6e;
+    font-family: 'Courier Prime', monospace;
+}
+
+.acw-edit-name,
+.acw-pick-color {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px;
+    color: #8a7fa8;
+}
+
+.acw-edit-name:hover,
+.acw-pick-color:hover {
+    opacity: 0.7;
+}
+
+/* ── Name Input ────────────────────────────────────────────────────────── */
+
+.acw-name-input {
+    background: #0a0612;
+    border: 1px solid #39ff6e;
+    color: #f0f8ff;
+    font-family: 'Courier Prime', monospace;
+    font-size: 16px;
+    padding: 6px 8px;
+    border-radius: 2px;
+    width: 140px;
+    max-width: 140px;
+    outline: none;
+}
+
+/* ── Color Picker ──────────────────────────────────────────────────────── */
+
+.acw-color-popup {
+    position: absolute;
+    right: 12px;
+    background: #150b29;
+    border: 1px solid #3a2d5c;
+    border-radius: 4px;
+    padding: 8px;
+    z-index: 100;
+    min-width: 180px;
+}
+
+.acw-color-strip {
+    width: 100%;
+    height: 20px;
+    border-radius: 3px;
+    cursor: crosshair;
+    position: relative;
+    margin-bottom: 8px;
+    background: linear-gradient(to right,
+        hsl(0,100%,50%), hsl(30,100%,50%), hsl(60,100%,50%),
+        hsl(90,100%,50%), hsl(120,100%,50%), hsl(150,100%,50%),
+        hsl(180,100%,50%), hsl(210,100%,50%), hsl(240,100%,50%),
+        hsl(270,100%,50%), hsl(300,100%,50%), hsl(330,100%,50%),
+        hsl(360,100%,50%));
+}
+
+.acw-color-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #8a7fa8;
+}
+
+.acw-color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid #3a2d5c;
+}
+
+.acw-color-reset-btn {
+    background: none;
+    border: 1px solid #3a2d5c;
+    color: #8a7fa8;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: auto;
+}
+
+.acw-color-reset-btn:hover {
+    border-color: #ff2e9c;
+    color: #ff2e9c;
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────── */
+
+.acw-tabs {
+    display: flex;
+    border-bottom: 1px solid #3a2d5c;
+    flex-shrink: 0;
+}
+
+.acw-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #5a5a6a;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    padding: 8px;
+    cursor: pointer;
+    transition: color 0.15s, background 0.15s;
+    letter-spacing: 0.05em;
+}
+
+.acw-tab:hover {
+    color: #8a7fa8;
+}
+
+.acw-tab.active {
+    color: #ff2e9c;
+    background: rgba(255, 46, 156, 0.1);
+    border-bottom: 2px solid #ff2e9c;
+}
+
+/* ── Messages ──────────────────────────────────────────────────────────── */
+
+.acw-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    min-height: 120px;
+    max-height: 280px;
+    scrollbar-width: thin;
+    scrollbar-color: #3a2d5c transparent;
+}
+
+.acw-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.acw-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.acw-messages::-webkit-scrollbar-thumb {
+    background: #3a2d5c;
+    border-radius: 3px;
+}
+
+.acw-msg {
+    font-size: 16px;
+    color: #8a7fa8;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.acw-msg.system {
+    color: #5a5a6a;
+    font-style: italic;
+    font-size: 14px;
+}
+
+.acw-msg .chat-name {
+    font-weight: bold;
+}
+
+/* ── Online Panel ──────────────────────────────────────────────────────── */
+
+.acw-online-panel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+    max-height: 280px;
+    display: none;
+}
+
+.acw-online-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.acw-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.acw-online-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: #f0f8ff;
+}
+
+.acw-online-status {
+    font-size: 12px;
+    color: #5a5a6a;
+    margin-left: auto;
+}
+
+/* ── Typing Indicator ──────────────────────────────────────────────────── */
+
+.acw-typing {
+    font-size: 12px;
+    color: #5a5a6a;
+    padding: 4px 12px;
+    font-style: italic;
+    flex-shrink: 0;
+}
+
+/* ── Input ─────────────────────────────────────────────────────────────── */
+
+.acw-input {
+    display: flex;
+    border-top: 1px solid #3a2d5c;
+    flex-shrink: 0;
+}
+
+.acw-input input {
+    flex: 1;
+    background: #0a0612;
+    border: none;
+    padding: 10px 12px;
+    color: #f0f8ff;
+    font-family: 'Courier Prime', monospace;
+    font-size: 16px;
+    outline: none;
+}
+
+.acw-input input::placeholder {
+    color: #5a5a6a;
+}
+
+.acw-input input:focus {
+    background: #0f0a1a;
+}
+
+.acw-input button {
+    background: #ff2e9c;
+    border: none;
+    padding: 10px 16px;
+    color: #0a0612;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.acw-input button:hover {
+    background: #ff5ab5;
+}
+
+/* ── Disconnected State ────────────────────────────────────────────────── */
+
+.acw.disconnected .acw-bar {
+    border-color: #5a5a6a;
+    opacity: 0.7;
+}
+
+.acw.disconnected .acw-title {
+    color: #5a5a6a;
+}
+
+/* ── Mobile ────────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .acw {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .acw-bar {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .acw.expanded .acw-bar {
+        border-radius: 0;
+    }
+
+    .acw-window {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        max-height: 0;
+    }
+
+    .acw.expanded .acw-window {
+        max-height: 60vh;
+    }
+
+    .acw-messages {
+        max-height: 40vh;
+    }
+
+    .acw-online-panel {
+        max-height: 40vh;
+    }
+}
