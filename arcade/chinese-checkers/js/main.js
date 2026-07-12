@@ -199,7 +199,7 @@
         roomCodeInput.value = '';
 
         Multiplayer.connect();
-        Chat.connect();
+        ChatWidget.connect();
     }
 
     function hideLobby() {

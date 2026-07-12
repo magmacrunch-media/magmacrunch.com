@@ -98,7 +98,7 @@ var Multiplayer = (function() {
 
         // Auto-join room chat
         if (_roomCode && typeof Chat !== 'undefined') {
-            Chat.joinRoom(_roomCode);
+            ChatWidget.joinRoom(_roomCode);
         }
 
         if (onGameStart) {
@@ -140,7 +140,7 @@ var Multiplayer = (function() {
         if (isActive) {
             isActive = false;
             if (_roomCode && typeof Chat !== 'undefined') {
-                Chat.leaveRoom(_roomCode);
+                ChatWidget.leaveRoom(_roomCode);
             }
             if (onStateUpdate) {
                 onStateUpdate({ type: 'disconnected' });
@@ -152,7 +152,7 @@ var Multiplayer = (function() {
         if (isActive) {
             isActive = false;
             if (_roomCode && typeof Chat !== 'undefined') {
-                Chat.leaveRoom(_roomCode);
+                ChatWidget.leaveRoom(_roomCode);
             }
             if (onGameEnd) {
                 onGameEnd(true, msg.name, null);
