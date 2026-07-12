@@ -90,6 +90,29 @@
                     <div class="log-welcome">Click REFRESH to load chat history.</div>
                 </div>
             </section>
+
+            <!-- System Actions -->
+            <section class="system-section">
+                <h2 class="section-title">SYSTEM</h2>
+                <div class="action-bar">
+                    <button id="btn-restart-pi" class="btn btn-orange">RESTART PI</button>
+                    <button id="btn-poweroff-pi" class="btn btn-rose">POWER OFF</button>
+                </div>
+            </section>
+
+            <!-- High Scores -->
+            <section class="scores-section">
+                <div class="scores-header">
+                    <h2 class="section-title">HIGH SCORES</h2>
+                    <div class="scores-controls">
+                        <button id="btn-refresh-scores" class="btn btn-cyan btn-sm">REFRESH</button>
+                        <button id="btn-reset-scores" class="btn btn-rose btn-sm">RESET ALL</button>
+                    </div>
+                </div>
+                <div id="scores-grid" class="scores-grid">
+                    <div class="log-welcome">Click REFRESH to load high scores.</div>
+                </div>
+            </section>
         </main>
 
         <footer>
@@ -97,6 +120,18 @@
         </footer>
     </div>
 
-    <script src="admin.js?v=4"></script>
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="confirm-title" class="modal-title">ARE YOU SURE?</h3>
+            <p id="confirm-message" class="modal-message"></p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn btn-rose">YES, DO IT</button>
+                <button id="confirm-no" class="btn btn-cyan">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js?v=5"></script>
 </body>
 </html>

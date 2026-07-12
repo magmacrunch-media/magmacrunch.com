@@ -1,0 +1,40 @@
+{
+  "game": "Solitaire (Threshold)",
+  "gameId": "solitaire-thld",
+  "migratedFrom": "jsonbin:6995078143b1c97be9872947",
+  "migratedAt": "2026-07-12T17:36:06.180Z",
+  "scores": [
+    {
+      "initials": "JRM",
+      "totalScore": 1250,
+      "rounds": 6,
+      "escaped": true,
+      "isNew": true,
+      "date": "2026-06-12"
+    },
+    {
+      "initials": "JAM",
+      "totalScore": 709,
+      "rounds": 10,
+      "escaped": true,
+      "isNew": false,
+      "date": "2026-02-28"
+    },
+    {
+      "initials": "JAM",
+      "totalScore": 231,
+      "rounds": 11,
+      "escaped": false,
+      "isNew": false,
+      "date": "2026-04-29"
+    },
+    {
+      "initials": "JAM",
+      "totalScore": 200,
+      "rounds": 3,
+      "escaped": true,
+      "isNew": false,
+      "date": "2026-05-03"
+    }
+  ]
+}

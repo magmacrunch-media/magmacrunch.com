@@ -1,0 +1,14 @@
+{
+  "game": "2^N",
+  "gameId": "2n",
+  "migratedFrom": "jsonbin:6993768643b1c97be9842566",
+  "migratedAt": "2026-07-12T17:36:00.020Z",
+  "scores": [
+    {
+      "initials": "JAM",
+      "score": 4,
+      "difficulty": "2",
+      "isNew": true
+    }
+  ]
+}

@@ -47,10 +47,27 @@
     const chatRoomFilter = $('#chat-room-filter');
     const btnRefreshChat = $('#btn-refresh-chat');
     const btnClearChat = $('#btn-clear-chat');
+    const scoresGrid = $('#scores-grid');
+    const btnRefreshScores = $('#btn-refresh-scores');
+    const btnResetScores = $('#btn-reset-scores');
+    const btnRestartPi = $('#btn-restart-pi');
+    const btnPoweroffPi = $('#btn-poweroff-pi');
+    const confirmModal = $('#confirm-modal');
+    const confirmTitle = $('#confirm-title');
+    const confirmMessage = $('#confirm-message');
+    const confirmYes = $('#confirm-yes');
+    const confirmNo = $('#confirm-no');
 
     // ── Chat state ───────────────────────────────────────────────────────────
     let chatHistory = [];
     let chatRoomHistories = {};
+
+    // ── Temperature monitoring ───────────────────────────────────────────────
+    let highTempCount = 0;
+    const CRITICAL_TEMP = 80;
+    const AUTO_RESTART_DELAY = 30; // seconds
+    let autoRestartTimer = null;
+    let pendingAction = null;
 
     // ── WebSocket ───────────────────────────────────────────────────────────
 
@@ -126,6 +143,9 @@
 
             case 'system_info':
                 renderSystemInfo(msg.info);
+                if (msg.info.cpu_temp) {
+                    checkTemperature(msg.info.cpu_temp);
+                }
                 break;
 
             case 'auth_required':
@@ -163,6 +183,17 @@
                 chatHistory.push(msg);
                 if (chatRoomFilter.value === 'global' && !msg.room) {
                     appendChatMessage(msg);
+                }
+                break;
+
+            case 'scores_all':
+                renderScores(msg.games);
+                break;
+
+            case 'score_reset':
+                if (msg.ok) {
+                    showNotification(`Scores reset for ${msg.game}`);
+                    requestScores();
                 }
                 break;
         }
@@ -419,6 +450,126 @@
         console.log('[OPS]', text);
     }
 
+    // ── Scores ───────────────────────────────────────────────────────────────
+
+    function requestScores() {
+        send({ action: 'scores_all', token: authToken });
+    }
+
+    function renderScores(games) {
+        scoresGrid.innerHTML = '';
+        if (!games || Object.keys(games).length === 0) {
+            scoresGrid.innerHTML = '<div class="log-welcome">No score data found.</div>';
+            return;
+        }
+
+        // Game display names
+        const gameNames = {
+            '2n': '2^N',
+            'george-boole': 'George Boole',
+            'moonlight-drift': 'Moonlight Drift',
+            'solitaire': 'Solitaire',
+            'solitaire-thld': 'Solitaire THLD',
+            'tetris': 'Tetris',
+            'scandinavian-stud': 'Scandinavian Stud',
+            'roderick-tron': 'Roderick Tron',
+            'very-long-boards': 'Very Long Boards',
+            'klotski': 'Klotski',
+            'fifteen-puzzle': 'Fifteen Puzzle',
+            'threes': 'Threes',
+            'cribbage': 'Cribbage'
+        };
+
+        // Mode labels for games with difficulty-based leaderboards
+        const MODE_LABELS = {
+            '2n': { '2': '2-BIT', '3': '3-BIT', '4': '4-BIT', '5': '5-BIT', '6': '6-BIT', '7': '7-BIT', '8': '8-BIT', '9': '9-BIT', '10': '10-BIT', '11': '11-BIT', '12': '12-BIT', '13': '13-BIT', '14': '14-BIT', '15': '15-BIT', '16': '16-BIT', 'endless': 'ENDLESS' },
+            'george-boole': { '2': '2-BIT', '3': '3-BIT', '4': '4-BIT', '5': '5-BIT', '6': '6-BIT', '7': '7-BIT', '8': '8-BIT', 'endless': 'GAUNTLET', '11': 'CLASSIC' }
+        };
+
+        function renderScoreCard(name, scores, subtitle, resetId) {
+            const card = document.createElement('div');
+            card.className = 'score-card';
+
+            let scoresHtml = '';
+            if (scores.length === 0) {
+                scoresHtml = '<div class="score-empty">NO SCORES YET</div>';
+            } else {
+                scores.slice(0, 10).forEach((s, i) => {
+                    const scoreVal = s.score != null ? s.score.toLocaleString() :
+                                     s.totalScore != null ? s.totalScore.toLocaleString() : '0';
+                    const extra = s.level != null ? ` LV${s.level}` :
+                                  s.time != null ? ` ${s.time}` :
+                                  s.rounds != null ? ` R${s.rounds}` : '';
+                    scoresHtml += `
+                        <div class="score-row">
+                            <span class="score-rank">#${i + 1}</span>
+                            <span class="score-name">${s.initials || '???'}</span>
+                            <span class="score-val">${scoreVal}${extra}</span>
+                        </div>`;
+                });
+            }
+
+            card.innerHTML = `
+                <div class="score-card-header">
+                    <div>
+                        <span class="score-card-name">${name}</span>
+                        ${subtitle ? `<span class="score-card-sub">${subtitle}</span>` : ''}
+                    </div>
+                    <span class="score-card-count">${scores.length} entries</span>
+                </div>
+                <div class="score-card-scores">${scoresHtml}</div>
+                <div class="score-card-actions">
+                    <button class="btn btn-rose btn-xs" data-reset="${resetId}">RESET</button>
+                </div>
+            `;
+            scoresGrid.appendChild(card);
+        }
+
+        Object.keys(games).sort().forEach(gameId => {
+            const game = games[gameId];
+            const scores = game.scores || [];
+            const name = gameNames[gameId] || gameId;
+            const modeLabels = MODE_LABELS[gameId];
+
+            // Check if any score has a difficulty field
+            const hasDifficulty = modeLabels && scores.some(s => s.difficulty != null);
+
+            if (hasDifficulty) {
+                // Group by difficulty
+                const groups = {};
+                scores.forEach(s => {
+                    const d = s.difficulty || 'unknown';
+                    if (!groups[d]) groups[d] = [];
+                    groups[d].push(s);
+                });
+
+                // Sort difficulties: numeric first, then named
+                const sortedKeys = Object.keys(groups).sort((a, b) => {
+                    const na = parseInt(a), nb = parseInt(b);
+                    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+                    if (!isNaN(na)) return -1;
+                    if (!isNaN(nb)) return 1;
+                    return a.localeCompare(b);
+                });
+
+                sortedKeys.forEach(diff => {
+                    const label = modeLabels[diff] || diff.toUpperCase();
+                    renderScoreCard(name, groups[diff], label, `${gameId}`);
+                });
+            } else {
+                renderScoreCard(name, scores, null, gameId);
+            }
+        });
+
+        // Bind reset buttons
+        scoresGrid.querySelectorAll('[data-reset]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (!confirm(`Reset all scores for ${btn.dataset.reset}?`)) return;
+                send({ action: 'score_reset', game: btn.dataset.reset, token: authToken });
+            });
+        });
+    }
+
     // ── Event listeners ─────────────────────────────────────────────────────
 
     btnRefresh.addEventListener('click', requestStatus);
@@ -456,6 +607,106 @@
         chatViewer.innerHTML = '<div class="log-welcome">Chat cleared.</div>';
     });
     chatRoomFilter.addEventListener('change', renderChat);
+
+    btnRefreshScores.addEventListener('click', requestScores);
+    btnResetScores.addEventListener('click', () => {
+        if (!confirm('Reset ALL high scores across ALL games?')) return;
+        // Reset each game
+        const gameIds = ['2n', 'george-boole', 'moonlight-drift', 'solitaire', 'solitaire-thld', 'tetris', 'scandinavian-stud', 'roderick-tron', 'very-long-boards', 'klotski', 'fifteen-puzzle', 'threes', 'cribbage'];
+        gameIds.forEach(id => send({ action: 'score_reset', game: id, token: authToken }));
+        setTimeout(requestScores, 1000);
+    });
+
+    // ── System Actions (Restart/Poweroff) ───────────────────────────────────
+
+    function showModal(title, message, onConfirm) {
+        confirmTitle.textContent = title;
+        confirmMessage.textContent = message;
+        confirmModal.classList.remove('hidden');
+        pendingAction = onConfirm;
+    }
+
+    function hideModal() {
+        confirmModal.classList.add('hidden');
+        pendingAction = null;
+        if (autoRestartTimer) {
+            clearTimeout(autoRestartTimer);
+            autoRestartTimer = null;
+        }
+    }
+
+    confirmYes.addEventListener('click', () => {
+        if (pendingAction) {
+            pendingAction();
+            hideModal();
+        }
+    });
+
+    confirmNo.addEventListener('click', hideModal);
+
+    btnRestartPi.addEventListener('click', () => {
+        showModal(
+            'RESTART PI',
+            'This will reboot the Raspberry Pi. All servers will restart automatically.',
+            () => send({ action: 'restart_pi', token: authToken })
+        );
+    });
+
+    btnPoweroffPi.addEventListener('click', () => {
+        showModal(
+            '⚠ POWER OFF',
+            'This will shut down the Raspberry Pi completely. You will need physical access to turn it back on.',
+            () => send({ action: 'poweroff_pi', token: authToken })
+        );
+    });
+
+    // ── Temperature Monitoring ───────────────────────────────────────────────
+
+    function checkTemperature(tempStr) {
+        // Parse temperature from "42.8" or "42.8'C" format
+        const match = tempStr.match(/([\d.]+)/);
+        if (!match) return;
+        const temp = parseFloat(match[1]);
+
+        if (temp >= CRITICAL_TEMP) {
+            highTempCount++;
+            console.log(`[OPS] High temperature: ${temp}°C (${highTempCount} consecutive)`);
+            if (highTempCount >= 2) {
+                triggerAutoRestart(temp);
+            }
+        } else {
+            highTempCount = 0;
+        }
+    }
+
+    function triggerAutoRestart(temp) {
+        if (autoRestartTimer) return; // Already counting down
+
+        showModal(
+            '⚠ AUTO-RESTART',
+            `CPU temperature is ${temp}°C (critical: ${CRITICAL_TEMP}°C). Pi will auto-restart in ${AUTO_RESTART_DELAY} seconds unless cancelled.`,
+            () => send({ action: 'restart_pi', token: authToken })
+        );
+
+        // Auto-confirm after delay if not cancelled
+        autoRestartTimer = setTimeout(() => {
+            if (pendingAction) {
+                pendingAction();
+                hideModal();
+            }
+        }, AUTO_RESTART_DELAY * 1000);
+    }
+
+    // Hook into system_info to check temperature
+    const originalRenderSystemInfo = renderSystemInfo;
+    function renderSystemInfoWithTempCheck(info) {
+        originalRenderSystemInfo(info);
+        if (info.cpu_temp) {
+            checkTemperature(info.cpu_temp);
+        }
+    }
+    // Override the reference in handleMessage
+    // We'll patch it at the message handler level instead
 
     // ── Init ────────────────────────────────────────────────────────────────
 

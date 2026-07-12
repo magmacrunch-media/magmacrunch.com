@@ -543,6 +543,158 @@ main {
     color: var(--white);
 }
 
+/* ── Scores ─────────────────────────────────────────────────────────────── */
+
+.scores-section {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    margin-top: 20px;
+}
+
+.scores-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.scores-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.scores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.score-card {
+    background: #0a0a0f;
+    border: 2px solid #2a2a3a;
+    padding: 12px;
+}
+
+.score-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #2a2a3a;
+}
+
+.score-card-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--green);
+    text-shadow: 0 0 8px rgba(57,255,110,0.5);
+}
+
+.score-card-sub {
+    display: block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--cyan);
+    text-shadow: 0 0 6px rgba(0,245,255,0.5);
+    margin-top: 4px;
+}
+
+.score-card-count {
+    font-size: 9px;
+    color: var(--dim);
+}
+
+.score-card-scores {
+    min-height: 40px;
+}
+
+.score-empty {
+    font-size: 9px;
+    color: var(--dim);
+    text-align: center;
+    padding: 12px;
+}
+
+.score-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+    font-size: 10px;
+    border-bottom: 1px solid rgba(136,153,170,0.05);
+}
+
+.score-rank {
+    color: var(--dim);
+    width: 24px;
+}
+
+.score-name {
+    color: var(--cyan);
+    font-weight: bold;
+    width: 30px;
+}
+
+.score-val {
+    color: var(--yellow);
+    flex: 1;
+    text-align: right;
+}
+
+.score-card-actions {
+    margin-top: 8px;
+    text-align: right;
+}
+
+/* ── Modal ──────────────────────────────────────────────────────────────── */
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(8, 8, 8, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: var(--deep, #111118);
+    border: 2px solid var(--rose, #ff3d6e);
+    box-shadow: 0 0 40px rgba(255, 61, 110, 0.4);
+    padding: 32px;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--rose, #ff3d6e);
+    margin-bottom: 16px;
+    text-shadow: 0 0 10px rgba(255, 61, 110, 0.7);
+}
+
+.modal-message {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--white, #f0ead8);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
 /* ── Footer ──────────────────────────────────────────────────────────────── */
 
 footer {

@@ -1,0 +1,14 @@
+{
+  "game": "Scandinavian Stud",
+  "gameId": "scandinavian-stud",
+  "migratedFrom": "jsonbin:6a2c54f7f5f4af5e29e840a7",
+  "migratedAt": "2026-07-12T17:36:09.331Z",
+  "scores": [
+    {
+      "initials": "JAM",
+      "score": 2,
+      "round2": 2,
+      "date": "2026-06-12"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "game": "Moonlight Drift",
+  "gameId": "moonlight-drift",
+  "migratedFrom": "jsonbin:694f6062ae596e708fb34dbb",
+  "migratedAt": "2026-07-12T17:36:03.087Z",
+  "scores": [
+    {
+      "initials": "JAM",
+      "score": 179,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 177,
+      "isNew": true
+    },
+    {
+      "initials": "JAM",
+      "score": 160,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 82,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 77,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 69,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 58,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 57,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 55,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 55,
+      "isNew": false
+    }
+  ]
+}

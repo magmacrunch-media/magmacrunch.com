@@ -1,0 +1,44 @@
+{
+  "game": "Solitaire",
+  "gameId": "solitaire",
+  "migratedFrom": "jsonbin:6954997843b1c97be90f995a",
+  "migratedAt": "2026-07-12T17:36:04.618Z",
+  "scores": [
+    {
+      "initials": "JAM",
+      "score": 699813,
+      "time": "6:01",
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 699575,
+      "time": "7:45",
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 699221,
+      "time": "11:42",
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 61013,
+      "time": "6:44",
+      "isNew": true
+    },
+    {
+      "initials": "JAM",
+      "score": 49960,
+      "time": "8:16",
+      "isNew": false
+    },
+    {
+      "initials": "CPU",
+      "score": 1000,
+      "time": "5:23",
+      "isNew": false
+    }
+  ]
+}

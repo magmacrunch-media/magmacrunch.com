@@ -46,6 +46,42 @@ SERVICES = [
     {"name": "Aggravation", "unit": "arcade-aggravation", "port": 8774, "icon": "😤"},
 ]
 
+# ── Score storage ────────────────────────────────────────────────────────────
+
+SCORES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scores")
+
+def load_game_scores(game_id):
+    """Load scores for a specific game."""
+    path = os.path.join(SCORES_DIR, f"{game_id}.json")
+    if not os.path.exists(path):
+        return {"game": game_id, "scores": []}
+    with open(path) as f:
+        return json.load(f)
+
+def save_game_scores(game_id, data):
+    """Save scores for a specific game."""
+    os.makedirs(SCORES_DIR, exist_ok=True)
+    path = os.path.join(SCORES_DIR, f"{game_id}.json")
+    with open(path, "w") as f:
+        json.dump(data, f, indent=2)
+
+def add_score(game_id, name, score, extra=None):
+    """Add a score entry and return its rank (1-indexed)."""
+    data = load_game_scores(game_id)
+    scores = data.get("scores", [])
+    entry = {"initials": name, "score": score}
+    if extra:
+        entry.update(extra)
+    scores.append(entry)
+    scores.sort(key=lambda s: s.get("score", 0), reverse=True)
+    scores = scores[:100]  # keep top 100
+    data["scores"] = scores
+    save_game_scores(game_id, data)
+    for i, s in enumerate(scores):
+        if s is entry:
+            return i + 1
+    return len(scores)
+
 # ── Auth sessions ────────────────────────────────────────────────────────────
 
 authenticated_sessions = set()
@@ -323,6 +359,20 @@ async def ws_handler(websocket):
                     "info": info
                 }))
 
+            elif action == "restart_pi":
+                result = await run_cmd_async("sudo reboot", timeout=10)
+                await websocket.send(json.dumps({
+                    "type": "pi_restart",
+                    "result": result or "Rebooting..."
+                }))
+
+            elif action == "poweroff_pi":
+                result = await run_cmd_async("sudo poweroff", timeout=10)
+                await websocket.send(json.dumps({
+                    "type": "pi_poweroff",
+                    "result": result or "Shutting down..."
+                }))
+
             elif action == "chat_history":
                 # Connect to chat server and fetch history
                 try:
@@ -341,6 +391,63 @@ async def ws_handler(websocket):
                     await websocket.send(json.dumps({
                         "type": "chat_error",
                         "error": str(e)
+                    }))
+
+            elif action == "score_load":
+                game_id = msg.get("game")
+                if game_id:
+                    data = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: load_game_scores(game_id)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "scores",
+                        "game": game_id,
+                        "scores": data.get("scores", [])
+                    }))
+
+            elif action == "score_save":
+                game_id = msg.get("game")
+                name = msg.get("name", "").upper()[:3]
+                score_val = msg.get("score")
+                extra = msg.get("extra")
+                if game_id and name and score_val is not None:
+                    rank = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: add_score(game_id, name, score_val, extra)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "score_saved",
+                        "game": game_id,
+                        "rank": rank
+                    }))
+
+            elif action == "scores_all":
+                def _load_all():
+                    result = {}
+                    if os.path.isdir(SCORES_DIR):
+                        for fn in os.listdir(SCORES_DIR):
+                            if fn.endswith(".json"):
+                                gid = fn[:-5]
+                                result[gid] = load_game_scores(gid)
+                    return result
+                all_scores = await asyncio.get_event_loop().run_in_executor(
+                    _executor, _load_all
+                )
+                await websocket.send(json.dumps({
+                    "type": "scores_all",
+                    "games": all_scores
+                }))
+
+            elif action == "score_reset":
+                game_id = msg.get("game")
+                if game_id:
+                    await asyncio.get_event_loop().run_in_executor(
+                        _executor,
+                        lambda: save_game_scores(game_id, {"game": game_id, "scores": []})
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "score_reset",
+                        "game": game_id,
+                        "ok": True
                     }))
 
     except websockets.ConnectionClosed:

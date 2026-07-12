@@ -1,0 +1,58 @@
+{
+  "game": "Tetris",
+  "gameId": "tetris",
+  "migratedFrom": "jsonbin:69ba0cf1c3097a1dd5354835",
+  "migratedAt": "2026-07-12T17:36:07.793Z",
+  "scores": [
+    {
+      "initials": "KC",
+      "score": 65486,
+      "level": 10
+    },
+    {
+      "initials": "KC",
+      "score": 65486,
+      "level": 10
+    },
+    {
+      "initials": "JAM",
+      "score": 19901,
+      "level": 6
+    },
+    {
+      "initials": "JAM",
+      "score": 14053,
+      "level": 5
+    },
+    {
+      "initials": "JAM",
+      "score": 14053,
+      "level": 5
+    },
+    {
+      "initials": "JAM",
+      "score": 14053,
+      "level": 5
+    },
+    {
+      "initials": "JAM",
+      "score": 8575,
+      "level": 4
+    },
+    {
+      "initials": "JAM",
+      "score": 3860,
+      "level": 2
+    },
+    {
+      "initials": "JAM",
+      "score": 3860,
+      "level": 2
+    },
+    {
+      "initials": "JAM",
+      "score": 1758,
+      "level": 1
+    }
+  ]
+}

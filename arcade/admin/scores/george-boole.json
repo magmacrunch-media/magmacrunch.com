@@ -1,0 +1,798 @@
+{
+  "game": "George Boole",
+  "gameId": "george-boole",
+  "migratedFrom": "jsonbin:69500bfb43b1c97be9088543",
+  "migratedAt": "2026-07-12T17:36:01.533Z",
+  "scores": [
+    {
+      "initials": "JAM",
+      "score": 137,
+      "moves": 160,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771178028014,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 133,
+      "moves": 115,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771182704708,
+      "isNew": false
+    },
+    {
+      "initials": "OK_",
+      "score": 100,
+      "moves": 103,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771234796106,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 95,
+      "moves": 84,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771182170307,
+      "isNew": false
+    },
+    {
+      "initials": "THM",
+      "score": 63,
+      "moves": 59,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771292825422,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 58,
+      "moves": 66,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771265706011,
+      "isNew": false
+    },
+    {
+      "initials": "THM",
+      "score": 32,
+      "moves": 40,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771292316968,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 22,
+      "moves": 42,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771603419293,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 21,
+      "moves": 32,
+      "won": false,
+      "valueReached": 3,
+      "difficulty": "2",
+      "timestamp": 1771468124171,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 272,
+      "moves": 90,
+      "won": false,
+      "valueReached": 6,
+      "difficulty": "3",
+      "timestamp": 1771602995956,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 256,
+      "moves": 102,
+      "won": false,
+      "valueReached": 7,
+      "difficulty": "3",
+      "timestamp": 1771473947673,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 140,
+      "moves": 54,
+      "won": false,
+      "valueReached": 7,
+      "difficulty": "3",
+      "timestamp": 1771349018685,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 128,
+      "moves": 59,
+      "won": false,
+      "valueReached": 7,
+      "difficulty": "3",
+      "timestamp": 1771462596743,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 119,
+      "moves": 70,
+      "won": false,
+      "valueReached": 7,
+      "difficulty": "3",
+      "timestamp": 1771267471822,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 116,
+      "moves": 67,
+      "won": false,
+      "valueReached": 6,
+      "difficulty": "3",
+      "timestamp": 1771460874612,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 114,
+      "moves": 47,
+      "won": false,
+      "valueReached": 6,
+      "difficulty": "3",
+      "timestamp": 1771464234625,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 86,
+      "moves": 49,
+      "won": false,
+      "valueReached": 6,
+      "difficulty": "3",
+      "timestamp": 1771464276810,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 49,
+      "moves": 31,
+      "won": false,
+      "valueReached": 6,
+      "difficulty": "3",
+      "timestamp": 1780159949856,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 42,
+      "moves": 42,
+      "won": false,
+      "valueReached": 5,
+      "difficulty": "3",
+      "timestamp": 1771267734559,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 346,
+      "moves": 104,
+      "won": false,
+      "valueReached": 15,
+      "difficulty": "4",
+      "timestamp": 1771296862639,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 272,
+      "moves": 70,
+      "won": false,
+      "valueReached": 15,
+      "difficulty": "4",
+      "timestamp": 1771475812283,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 252,
+      "moves": 141,
+      "won": false,
+      "valueReached": 15,
+      "difficulty": "4",
+      "timestamp": 1771179400857,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 164,
+      "moves": 49,
+      "won": false,
+      "valueReached": 15,
+      "difficulty": "4",
+      "timestamp": 1771305786441,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 145,
+      "moves": 58,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "4",
+      "timestamp": 1771210433578,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 116,
+      "moves": 56,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "4",
+      "timestamp": 1771348943754,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 111,
+      "moves": 33,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "4",
+      "timestamp": 1771469618588,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 109,
+      "moves": 67,
+      "won": false,
+      "valueReached": 13,
+      "difficulty": "4",
+      "timestamp": 1771276497892,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 97,
+      "moves": 36,
+      "won": false,
+      "valueReached": 13,
+      "difficulty": "4",
+      "timestamp": 1771466041195,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 92,
+      "moves": 57,
+      "won": false,
+      "valueReached": 13,
+      "difficulty": "4",
+      "timestamp": 1771252508700,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 525,
+      "moves": 141,
+      "won": false,
+      "valueReached": 31,
+      "difficulty": "5",
+      "timestamp": 1771266061646,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 314,
+      "moves": 79,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1771474213238,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 307,
+      "moves": 44,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1771348875948,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 303,
+      "moves": 55,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1771554289961,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 276,
+      "moves": 52,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1781287991569,
+      "isNew": true
+    },
+    {
+      "initials": "JAM",
+      "score": 241,
+      "moves": 71,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1771209882721,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 232,
+      "moves": 40,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1772491348129,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 230,
+      "moves": 48,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1771469666040,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 202,
+      "moves": 26,
+      "won": false,
+      "valueReached": 31,
+      "difficulty": "5",
+      "timestamp": 1771560162863,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 181,
+      "moves": 37,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "5",
+      "timestamp": 1771553881056,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 544,
+      "moves": 63,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "6",
+      "timestamp": 1771437639954,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 471,
+      "moves": 60,
+      "won": false,
+      "valueReached": 63,
+      "difficulty": "6",
+      "timestamp": 1772491442868,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 453,
+      "moves": 39,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "6",
+      "timestamp": 1771469733422,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 410,
+      "moves": 33,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "6",
+      "timestamp": 1774535412566,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 396,
+      "moves": 92,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "6",
+      "timestamp": 1772210862576,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 385,
+      "moves": 46,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "6",
+      "timestamp": 1771268579890,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 378,
+      "moves": 22,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "6",
+      "timestamp": 1771437574961,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 360,
+      "moves": 66,
+      "won": false,
+      "valueReached": 61,
+      "difficulty": "6",
+      "timestamp": 1771270296240,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 344,
+      "moves": 51,
+      "won": false,
+      "valueReached": 61,
+      "difficulty": "6",
+      "timestamp": 1771459798711,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 314,
+      "moves": 51,
+      "won": false,
+      "valueReached": 60,
+      "difficulty": "6",
+      "timestamp": 1771474131039,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1354,
+      "moves": 57,
+      "won": false,
+      "valueReached": 126,
+      "difficulty": "7",
+      "timestamp": 1776790376439,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1339,
+      "moves": 59,
+      "won": false,
+      "valueReached": 126,
+      "difficulty": "7",
+      "timestamp": 1771603287012,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1181,
+      "moves": 92,
+      "won": false,
+      "valueReached": 125,
+      "difficulty": "7",
+      "timestamp": 1771265417952,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1110,
+      "moves": 51,
+      "won": false,
+      "valueReached": 126,
+      "difficulty": "7",
+      "timestamp": 1771628103383,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1028,
+      "moves": 42,
+      "won": false,
+      "valueReached": 127,
+      "difficulty": "7",
+      "timestamp": 1771473650750,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 874,
+      "moves": 57,
+      "won": false,
+      "valueReached": 127,
+      "difficulty": "7",
+      "timestamp": 1771458432598,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 845,
+      "moves": 56,
+      "won": false,
+      "valueReached": 126,
+      "difficulty": "7",
+      "timestamp": 1771437757904,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 740,
+      "moves": 93,
+      "won": false,
+      "valueReached": 126,
+      "difficulty": "7",
+      "timestamp": 1771475722711,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 653,
+      "moves": 68,
+      "won": false,
+      "valueReached": 126,
+      "difficulty": "7",
+      "timestamp": 1772210951287,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 597,
+      "moves": 29,
+      "won": false,
+      "valueReached": 125,
+      "difficulty": "7",
+      "timestamp": 1771602616551,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 3172,
+      "moves": 70,
+      "won": false,
+      "valueReached": 255,
+      "difficulty": "8",
+      "timestamp": 1771603186782,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 2051,
+      "moves": 34,
+      "won": false,
+      "valueReached": 255,
+      "difficulty": "8",
+      "timestamp": 1771348644021,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1327,
+      "moves": 33,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771474007164,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1319,
+      "moves": 45,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771266873800,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1311,
+      "moves": 30,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771628388604,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1300,
+      "moves": 42,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771348690701,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1296,
+      "moves": 36,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771603057724,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1171,
+      "moves": 89,
+      "won": false,
+      "valueReached": 253,
+      "difficulty": "8",
+      "timestamp": 1771627810458,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 1127,
+      "moves": 56,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771473816697,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 825,
+      "moves": 53,
+      "won": false,
+      "valueReached": 254,
+      "difficulty": "8",
+      "timestamp": 1771566006864,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 650,
+      "moves": 129,
+      "won": false,
+      "valueReached": 62,
+      "difficulty": "endless",
+      "timestamp": 1771447238743,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 540,
+      "moves": 124,
+      "won": false,
+      "valueReached": 29,
+      "difficulty": "endless",
+      "timestamp": 1771712490255,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 512,
+      "moves": 93,
+      "won": false,
+      "valueReached": 31,
+      "difficulty": "endless",
+      "timestamp": 1771466217743,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 345,
+      "moves": 71,
+      "won": false,
+      "valueReached": 29,
+      "difficulty": "endless",
+      "timestamp": 1771348599332,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 335,
+      "moves": 50,
+      "won": false,
+      "valueReached": 30,
+      "difficulty": "endless",
+      "timestamp": 1771628197496,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 289,
+      "moves": 98,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "endless",
+      "timestamp": 1771628328552,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 258,
+      "moves": 80,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "endless",
+      "timestamp": 1771343348364,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 225,
+      "moves": 84,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "endless",
+      "timestamp": 1771464088737,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 220,
+      "moves": 51,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "endless",
+      "timestamp": 1771627896737,
+      "isNew": false
+    },
+    {
+      "initials": "JAM",
+      "score": 219,
+      "moves": 91,
+      "won": false,
+      "valueReached": 14,
+      "difficulty": "endless",
+      "timestamp": 1771602801900,
+      "isNew": false
+    }
+  ]
+}
