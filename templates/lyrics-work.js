@@ -194,7 +194,7 @@
 
         try {
             const workData = await cached(
-                `work/${workId}?inc=artist-rels+recording-rels+tags+aliases&fmt=json`,
+                `work/${workId}?inc=artist-rels+recording-rels+place-rels+tags+aliases&fmt=json`,
                 _cache?.data
             );
 
@@ -265,7 +265,7 @@
                     if (cachedRec !== undefined) {
                         recData = cachedRec;
                     } else {
-                        recData = await cached(`recording/${rec.id}?inc=releases&fmt=json`);
+                        recData = await cached(`recording/${rec.id}?inc=releases+place-rels+event-rels&fmt=json`);
                         await delay(1100);  // respect MB rate limit
                     }
                     recDataCache[rec.id] = recData;
@@ -277,7 +277,17 @@
                                 const year = rel.date ? ` (${fmtDate(rel.date.substring(0, 10))})` : '';
                                 return esc(rel.title) + year;
                             });
-                        item += `<span class="rec-releases">appears on: ${releases.join(', ')}</span>`;
+                        item += ` <span class="rec-releases">appears on: ${releases.join(', ')}</span>`;
+                    }
+
+                    // places (recorded at, mixed at, etc.)
+                    const placeRels = recData?.relations?.filter(r => r['target-type'] === 'place') || [];
+                    if (placeRels.length) {
+                        const places = placeRels.map(r => {
+                            const role = r.type ? ` (${esc(r.type)})` : '';
+                            return esc(r.place?.name) + role;
+                        });
+                        item += `<span class="rec-releases">${places.join(', ')}</span>`;
                     }
 
                     html += `<div class="rec-item">${item}</div>`;

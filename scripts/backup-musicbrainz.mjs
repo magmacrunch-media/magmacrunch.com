@@ -502,16 +502,16 @@ async function backupWork(entity) {
     indent++;
 
     log('  work detail…');
-    cache.data = await fetchMB(`work/${entity.uuid}?inc=artist-rels+recording-rels+tags+aliases&fmt=json`);
+    cache.data = await fetchMB(`work/${entity.uuid}?inc=artist-rels+recording-rels+place-rels+tags+aliases&fmt=json`);
 
-    // fetch recording details for release info
+    // fetch recording details for release + place info
     const recRels = cache.data.relations?.filter(r => r['target-type'] === 'recording' && r.type === 'performance') || [];
     for (const r of recRels) {
         const recId = r.recording?.id;
         if (!recId || cache.recordings[recId]) continue;
         log(`  recording: ${r.recording?.title}`);
         try {
-            cache.recordings[recId] = await fetchMB(`recording/${recId}?inc=releases&fmt=json`);
+            cache.recordings[recId] = await fetchMB(`recording/${recId}?inc=releases+place-rels+event-rels&fmt=json`);
         } catch {
             cache.recordings[recId] = null;
         }
