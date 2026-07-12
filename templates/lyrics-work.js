@@ -264,10 +264,11 @@
                     // fetch recording details for releases (from cache or API)
                     const cachedRec = _cache?.recordings?.[rec.id];
                     let recData;
-                    try {
-                        recData = await cached(`recording/${rec.id}?inc=releases&fmt=json`, cachedRec);
-                    } catch {
-                        recData = cachedRec || null;
+                    if (cachedRec !== undefined) {
+                        recData = cachedRec;
+                    } else {
+                        recData = await cached(`recording/${rec.id}?inc=releases&fmt=json`);
+                        await delay(1100);  // respect MB rate limit
                     }
                     recDataCache[rec.id] = recData;
 
