@@ -504,7 +504,8 @@ class GameServer:
         async def _run():
             async with websockets.serve(
                 self.handler, "0.0.0.0", self.port,
-                process_request=_health_check
+                process_request=_health_check,
+                ping_interval=None,
             ):
                 await asyncio.Future()  # run forever
         try:
