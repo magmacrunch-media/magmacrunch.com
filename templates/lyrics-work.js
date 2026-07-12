@@ -47,6 +47,16 @@
         return min + ':' + String(sec).padStart(2, '0');
     }
 
+    const formatDate = (begin, end, ended) => {
+        if (!begin && !end) return '';
+        if (begin && end && begin === end) return ` (${esc(begin)})`;
+        if (begin && !end) return ` (${esc(begin)}${ended ? '' : '–present'})`;
+        if (begin && end) return begin.includes('-') && end.includes('-')
+            ? ` (${esc(begin)} to ${esc(end)})`
+            : ` (${esc(begin)}–${esc(end)})`;
+        return '';
+    };
+
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
     async function fetchWithRetry(url, retries = 4) {
@@ -106,14 +116,29 @@
         }
         .mb-work-meta a:hover { color: #8a1a1a; }
         .mb-work-meta .rec-list {
-            margin-top: 12px;
+            margin-top: 8px;
             padding-left: 16px;
         }
         .mb-work-meta .rec-item {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
             color: #555;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        .mb-work-meta .rec-date {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #999;
+            margin-left: 4px;
+        }
+        .mb-work-meta .rec-releases {
+            display: block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #777;
+            margin-top: 2px;
+            padding-left: 12px;
         }
         .mb-work-meta .mb-tag {
             display: inline-block;
@@ -185,10 +210,11 @@
                 html += `<p><strong>also known as</strong> ${aliases.map(esc).join(', ')}</p>`;
             }
 
-            // credits
+            // credits with dates
             const makeArtistRel = r =>
                 archiveLink(r.artist?.id, r.artist?.name, 'artist')
-                + (r.attributes?.length ? ` (${r.attributes.map(esc).join(', ')})` : '');
+                + (r.attributes?.length ? ` (${r.attributes.map(esc).join(', ')})` : '')
+                + formatDate(r.begin, r.end, r.ended);
 
             const composers = workData.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'composer').map(makeArtistRel);
             const lyricists = workData.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'lyricist').map(makeArtistRel);
@@ -198,18 +224,72 @@
             if (lyricists?.length) html += `<p><strong>lyricist</strong> ${lyricists.join(', ')}</p>`;
             if (writers?.length) html += `<p><strong>writer</strong> ${writers.join(', ')}</p>`;
 
-            // recordings
+            // recordings with dates and releases
             const recRels = workData.relations?.filter(r => r['target-type'] === 'recording' && r.type === 'performance') || [];
+            const recDataCache = {};  // collect recording data for first-release calc
             if (recRels.length > 0) {
                 html += '<p><strong>recordings</strong></p><div class="rec-list">';
                 for (const r of recRels) {
                     const rec = r.recording;
                     if (!rec) continue;
+
+                    // recording date from relationship
+                    let dateStr = '';
+                    if (r.begin || r.end) {
+                        if (r.begin && r.end && r.begin === r.end) dateStr = r.begin;
+                        else if (r.begin && r.end) dateStr = `${r.begin}–${r.end}`;
+                        else if (r.begin) dateStr = r.begin;
+                    }
+
+                    // labels
                     const labels = [];
-                    if (rec.video) labels.push('<span class="mb-tag">video</span>');
-                    html += `<div class="rec-item">` + archiveLink(rec.id, rec.title, 'recording') + (labels.length ? ' ' + labels.join('') : '') + `</div>`;
+                    const isLive = r.attributes?.some(a => a.toLowerCase() === 'live');
+                    const isPartial = r.attributes?.some(a => a.toLowerCase() === 'partial');
+                    if (isLive) labels.push('live');
+                    if (isPartial) labels.push('partial');
+
+                    let item = archiveLink(rec.id, rec.title, 'recording');
+                    if (dateStr) item += `<span class="rec-date">${esc(dateStr)}</span>`;
+                    if (labels.length) item += ' ' + labels.map(l => `<span class="mb-tag">${esc(l)}</span>`).join(' ');
+
+                    // fetch recording details for releases (from cache or API)
+                    const cachedRec = _cache?.recordings?.[rec.id];
+                    let recData;
+                    try {
+                        recData = await cached(`recording/${rec.id}?inc=releases&fmt=json`, cachedRec);
+                    } catch {
+                        recData = cachedRec || null;
+                    }
+                    recDataCache[rec.id] = recData;
+
+                    if (recData?.releases?.length) {
+                        const releases = recData.releases
+                            .sort((a, b) => (a.date || '').localeCompare(b.date || ''))
+                            .map(rel => {
+                                const year = rel.date ? ` (${esc(rel.date.substring(0, 4))})` : '';
+                                return esc(rel.title) + year;
+                            });
+                        item += `<span class="rec-releases">appears on: ${releases.join(', ')}</span>`;
+                    }
+
+                    html += `<div class="rec-item">${item}</div>`;
                 }
                 html += '</div>';
+
+                // derived first release date (from cached recording data)
+                const allDates = [];
+                for (const recId of Object.keys(recDataCache)) {
+                    const rd = recDataCache[recId];
+                    if (rd?.releases) {
+                        for (const rel of rd.releases) {
+                            if (rel.date) allDates.push(rel.date);
+                        }
+                    }
+                }
+                if (allDates.length) {
+                    const earliest = allDates.sort()[0];
+                    html += `<p><strong>first released</strong> ${esc(earliest.substring(0, 4))}</p>`;
+                }
             }
 
             // tags
