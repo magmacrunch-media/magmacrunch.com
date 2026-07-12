@@ -228,19 +228,23 @@
                 html += `<p><strong>also known as</strong> ${aliases.map(esc).join(', ')}</p>`;
             }
 
-            // credits with dates
-            const makeArtistRel = r =>
-                archiveLink(r.artist?.id, r.artist?.name, 'artist')
-                + (r.attributes?.length ? ` (${r.attributes.map(esc).join(', ')})` : '')
-                + formatDate(r.begin, r.end, r.ended);
-
-            const composers = workData.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'composer').map(makeArtistRel);
-            const lyricists = workData.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'lyricist').map(makeArtistRel);
-            const writers = workData.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'writer').map(makeArtistRel);
-
-            if (composers?.length) html += `<p><strong>composer</strong> ${composers.join(', ')}</p>`;
-            if (lyricists?.length) html += `<p><strong>lyricist</strong> ${lyricists.join(', ')}</p>`;
-            if (writers?.length) html += `<p><strong>writer</strong> ${writers.join(', ')}</p>`;
+            // credits with dates — combine roles for same artist
+            const artistRels = workData.relations?.filter(r => r['target-type'] === 'artist' && ['composer','lyricist','writer'].includes(r.type)) || [];
+            const artistMap = {};
+            for (const r of artistRels) {
+                const id = r.artist?.id;
+                if (!id) continue;
+                if (!artistMap[id]) artistMap[id] = { artist: r.artist, roles: [], begin: r.begin, end: r.end, ended: r.ended };
+                artistMap[id].roles.push(r.type);
+                if (r.begin && (!artistMap[id].begin || r.begin < artistMap[id].begin)) artistMap[id].begin = r.begin;
+                if (r.end && (!artistMap[id].end || r.end > artistMap[id].end)) artistMap[id].end = r.end;
+            }
+            for (const { artist, roles, begin, end, ended } of Object.values(artistMap)) {
+                const label = roles.length > 1 ? roles.join(', ') : roles[0];
+                const credit = archiveLink(artist?.id, artist?.name, 'artist')
+                    + (begin || end ? ` <span class="rec-date">${fmtDate(begin)}–${fmtDate(end)}</span>` : '');
+                html += `<p><strong>${esc(label)}</strong> ${credit}</p>`;
+            }
 
             // recordings with dates and releases
             const recRels = workData.relations?.filter(r => r['target-type'] === 'recording' && r.type === 'performance') || [];
