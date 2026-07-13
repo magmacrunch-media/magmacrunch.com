@@ -1184,6 +1184,7 @@ function playSong(index) {
     setPlayingState(true);
     syncToMiniPlayer();
     startMcSaveInterval();
+    updateMediaSession();
 }
 
 function togglePlay() {
@@ -1214,6 +1215,41 @@ function stopSong() {
     renderSongList();
 }
 
+function updateMediaSession() {
+    if (!('mediaSession' in navigator)) return;
+    const song = playingIdx >= 0 ? JUKEBOX_SONGS[playingIdx] : null;
+    if (song) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: song.title,
+            artist: song.artist,
+            album: 'magmacrunch media',
+            artwork: [
+                { src: '../../assets/logo.jpg', sizes: '180x180', type: 'image/jpeg' }
+            ]
+        });
+    }
+}
+
+function nextSong() {
+    if (songQueue.length > 0) {
+        const nextIdx = songQueue.shift();
+        renderQueue();
+        playSong(nextIdx);
+    } else if (playingIdx >= 0 && playingIdx < JUKEBOX_SONGS.length - 1) {
+        playSong(playingIdx + 1);
+    } else if (JUKEBOX_SONGS.length > 0) {
+        playSong(0);
+    }
+}
+
+function prevSong() {
+    if (playingIdx > 0) {
+        playSong(playingIdx - 1);
+    } else if (JUKEBOX_SONGS.length > 0) {
+        playSong(JUKEBOX_SONGS.length - 1);
+    }
+}
+
 player.addEventListener('timeupdate', () => {
     npElapsed.textContent = fmtTime(player.currentTime);
 });
@@ -1228,10 +1264,8 @@ renderSongList();
 renderQueue();
 
 player.addEventListener('ended', () => {
-    if (songQueue.length > 0) {
-        const nextIdx = songQueue.shift();
-        renderQueue();
-        playSong(nextIdx);
+    if (songQueue.length > 0 || (playingIdx >= 0 && playingIdx < JUKEBOX_SONGS.length - 1)) {
+        nextSong();
     } else {
         setPlayingState(false);
         stopMcSaveInterval();
@@ -1269,6 +1303,24 @@ nextPageBtn.addEventListener('click', () => {
 
 playBtn.addEventListener('click', togglePlay);
 stopBtn.addEventListener('click', stopSong);
+
+/* ── MEDIA SESSION API ── */
+if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', () => { if (!isPlaying) togglePlay(); });
+    navigator.mediaSession.setActionHandler('pause', () => { if (isPlaying) togglePlay(); });
+    navigator.mediaSession.setActionHandler('previoustrack', prevSong);
+    navigator.mediaSession.setActionHandler('nexttrack', nextSong);
+}
+
+/* ── KEYBOARD SHORTCUTS ── */
+window.addEventListener('keydown', (e) => {
+    const tag = document.activeElement && document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlay(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSong(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); nextSong(); }
+    else if (e.key === 'Escape') { stopSong(); }
+});
 
 window.__pageCleanup = function() {
     stopMcSaveInterval();

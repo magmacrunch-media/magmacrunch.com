@@ -121,6 +121,7 @@
             audio.play().catch(() => {});
         }
 
+        updateMediaSession();
         updateUI();
     }
 
@@ -181,6 +182,21 @@
     /* ── UI UPDATE ── */
     function onTrackEnd() {
         nextTrack();
+    }
+
+    function updateMediaSession() {
+        if (!('mediaSession' in navigator)) return;
+        const track = currentTrack >= 0 ? TRACKS[currentTrack] : null;
+        if (track) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: track.title,
+                artist: track.artist,
+                album: 'magmacrunch media',
+                artwork: [
+                    { src: new URL('assets/logo.jpg', location.origin).pathname, sizes: '180x180', type: 'image/jpeg' }
+                ]
+            });
+        }
     }
 
     function updateUI() {
@@ -281,6 +297,26 @@
 
         // Recalculate scroll on resize
         window.addEventListener('resize', () => requestAnimationFrame(updateScroll));
+
+        // Media Session API
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', () => { if (!isPlaying) togglePlay(); });
+            navigator.mediaSession.setActionHandler('pause', () => { if (isPlaying) togglePlay(); });
+            navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+            navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+        }
+
+        // Keyboard shortcuts (space = play/pause, arrows = prev/next/volume)
+        window.addEventListener('keydown', (e) => {
+            const tag = document.activeElement && document.activeElement.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevTrack(); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); nextTrack(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setVolume(volume + 0.05); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); setVolume(volume - 0.05); }
+            else if (e.key === 'm' || e.key === 'M') { toggleMute(); }
+        });
 
         // Load saved state
         const state = loadState();
