@@ -11,22 +11,22 @@
         workId:     '9143547e-3632-4835-b78c-0751cbb713d3',
         artistName: 'thld',
         artistId:   '4d945923-9deb-4cd0-a477-6e1474cb306c',
-        accent:     'red',
+        accent:     'orange',
+        dark:       true,
         artistPageLabel: 'THLD band page →',
     };
     </script>
     <style>
         :root {
-            --nav-accent: #c02828;
-            --nav-glow: rgba(192,40,40,0.4);
-            --nav-brand: #c02828;
-            --nav-brand-glow: rgba(192,40,40,0.6);
+            --nav-accent: #c94b1a;
+            --nav-glow: rgba(201,75,26,0.4);
+            --nav-brand: #f0c060;
+            --nav-brand-glow: rgba(240,192,96,0.7);
         }
 
         body {
-            background-color: #f0e4c8;
-            color: #1a1a1a;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            background-color: #0e0905;
+            color: #d4b896;
         }
 
         main {
@@ -40,16 +40,16 @@
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #999;
+            color: #4a2c10;
             letter-spacing: 0.1em;
             margin-top: -8px;
             margin-bottom: 24px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #666; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #c02828; }
-        .breadcrumb .sep { margin: 0 8px; color: #999; }
-        .breadcrumb .current { color: #c02828; }
+        .breadcrumb a { color: #8a6040; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c94b1a; }
+        .breadcrumb .sep { margin: 0 8px; color: #4a2c10; }
+        .breadcrumb .current { color: #c94b1a; }
 
         .article-header {
             width: min(700px, 90vw);
@@ -61,8 +61,8 @@
         .article-type {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #f0e4c8;
-            background: #c02828;
+            color: #0e0905;
+            background: #c94b1a;
             display: inline-block;
             padding: 3px 10px;
             letter-spacing: 0.1em;
@@ -72,7 +72,7 @@
         .article-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(11px, 2.2vw, 16px);
-            color: #1a1a1a;
+            color: #f8e4c0;
             letter-spacing: 0.06em;
             line-height: 1.8;
             margin-bottom: 8px;
@@ -81,7 +81,7 @@
         .article-subtitle {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #999;
+            color: #8a6040;
             font-style: italic;
             margin-bottom: 16px;
         }
@@ -89,11 +89,13 @@
         .article-meta {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #777;
+            color: #b07030;
             line-height: 1.6;
         }
 
-        .article-meta .author { color: #c02828; font-weight: 700; }
+        .article-meta .author { color: #c94b1a; font-weight: 700; }
+        .article-meta .author a { color: #c94b1a; text-decoration: none; }
+        .article-meta .author a:hover { opacity: 0.8; }
 
         .article-body {
             width: min(700px, 90vw);
@@ -104,7 +106,7 @@
             font-family: 'Courier Prime', monospace;
             font-size: 14px;
             line-height: 1.85;
-            color: #222;
+            color: #c8a878;
             margin-bottom: 16px;
         }
 
@@ -115,7 +117,7 @@
             line-height: 0.85;
             margin-right: 8px;
             margin-top: 4px;
-            color: #c02828;
+            color: #c94b1a;
         }
 
         .verse { margin-bottom: 28px; }
@@ -127,30 +129,30 @@
             margin-bottom: 40px;
         }
 
-        .article-end span { color: #c02828; font-size: 12px; }
+        .article-end span { color: #c94b1a; font-size: 12px; }
 
         .article-back {
             display: inline-block;
             margin-top: 24px;
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: #c02828;
+            color: #c94b1a;
             text-decoration: none;
-            border: 2px solid #c02828;
+            border: 2px solid #c94b1a;
             padding: 8px 16px;
             transition: all 0.15s;
         }
         .article-back:hover {
-            background: #c02828;
-            color: #f0e4c8;
+            background: #c94b1a;
+            color: #0e0905;
         }
 
         footer {
-            background: #e8dcc0 !important;
-            border-top-color: #c8c0a8 !important;
-            color: #999 !important;
+            background: #0e0905 !important;
+            border-top-color: #4a2c10 !important;
+            color: #8a6040 !important;
         }
-        footer span { color: #c02828 !important; }
+        footer span { color: #f0c060 !important; }
 
         @media (max-width: 640px) {
             .article-title { font-size: 11px; }
@@ -194,7 +196,7 @@
         <h1 class="article-title">contemplate the plate tectonic</h1>
         <div class="article-subtitle">lyrics from the "seeing stars" portion</div>
         <div class="article-meta">
-            <span class="author"><a href="../../../archive/by-artist/thld/index.html" style="color:#c02828;text-decoration:none;font-weight:700;">thld</a></span>
+            <span class="author"><a href="../../../archive/by-artist/thld/index.html">thld</a></span>
         </div>
     </div>
 
@@ -208,55 +210,55 @@
 
         <div class="verse">
             <p>Feel yourself a part<br>
-            from all the parts<br>
-            that make yourself<br>
-            into a me</p>
+            From all the parts<br>
+            That make yourself<br>
+            Into a me</p>
         </div>
 
         <div class="verse">
-            <p>hear the sonic<br>
-            sound waves<br>
-            of a voice the waves beyond<br>
-            you cannot hear</p>
+            <p>Hear the sonic<br>
+            Sound waves<br>
+            Of a voice the waves beyond<br>
+            You cannot hear</p>
         </div>
 
         <div class="verse">
-            <p>feel the rushing ocean<br>
-            of the vast atomic open<br>
-            rushing near….you</p>
+            <p>Feel the rushing ocean<br>
+            Of the vast atomic open<br>
+            Rushing near….you</p>
         </div>
 
         <div class="verse">
-            <p>can contemplate the plate<br>
-            tectonic tidal<br>
-            panic from the final<br>
-            instant brought you<br>
-            to this planet<br>
-            cowering in manufactured fear</p>
+            <p>Can contemplate the plate<br>
+            Tectonic tidal<br>
+            Panic from the final<br>
+            Instant brought you<br>
+            To this planet<br>
+            Cowering in manufactured fear</p>
         </div>
 
         <div class="verse">
-            <p>of course they fear you</p>
+            <p>Of course they fear you</p>
         </div>
 
         <div class="verse">
-            <p>but you<br>
-            are not an atom<br>
-            nor a sound wave strung apart<br>
-            from this eternal parsec full of<br>
-            shining forces but of course<br>
-            you must now see</p>
+            <p>But you<br>
+            Are not an atom<br>
+            Nor a sound wave strung apart<br>
+            From this eternal parsec full of<br>
+            Shining forces but of course<br>
+            You must now see</p>
         </div>
 
         <div class="verse">
-            <p>can you see</p>
+            <p>Can you see?</p>
         </div>
 
         <div class="verse">
-            <p>of course you can<br>
-            of course you can<br>
-            of course you can<br>
-            of course you can</p>
+            <p>Of course you can<br>
+            Of course you can<br>
+            Of course you can<br>
+            Of course you can</p>
         </div>
 
     </div>
@@ -276,7 +278,7 @@
 
 <script src="../../../templates/entity-map.js"></script>
 <script src="../../../templates/mb-cache.js"></script>
-<script src="../../../templates/lyrics-work.js?v=7"></script>
+<script src="../../../templates/lyrics-work.js?v=9"></script>
 <script src="../../../nav.js"></script>
 </body>
 </html>

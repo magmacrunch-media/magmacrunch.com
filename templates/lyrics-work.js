@@ -94,7 +94,7 @@
     // ── inject styles ──
     const isDark = C.dark;
     const accent = C.accent || 'red';
-    const ACCENT_HEX = { red: '#c02828', purple: '#d946ef', cyan: '#00f5ff', green: '#39ff6e', yellow: '#ffe03a', orange: '#ff7c1f', rose: '#ff3d6e' };
+    const ACCENT_HEX = { red: '#c02828', purple: '#d946ef', cyan: '#00f5ff', green: '#39ff6e', yellow: '#ffe03a', orange: '#ff7c1f', rose: '#ff3d6e', sage: '#7a9080' };
     const accentHex = ACCENT_HEX[accent] || '#c02828';
     const accentRgba = accentHex.replace('#', '').match(/.{2}/g).map(h => parseInt(h, 16)).join(',');
 
