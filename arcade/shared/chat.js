@@ -57,7 +57,8 @@ var Chat = (function() {
 
     // ── Connection ──────────────────────────────────────────────────────────
     function connect() {
-        if (socket && socket.readyState === WebSocket.OPEN) return;
+        if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
+        if (socket) { try { socket.close(); } catch(e) {} }
         cacheElements();
 
         socket = new WebSocket(CHAT_SERVER);

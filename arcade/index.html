@@ -1193,32 +1193,28 @@ animateCoin(document.getElementById('coinCanvas2'));
 
     function checkStatus() {
         try {
-            const CHAT_SERVER = (() => {
+            var chatHost = (function() {
                 try {
-                    const param = new URLSearchParams(window.location.search).get('server');
-                    if (param) return 'ws://' + param;
+                    var param = new URLSearchParams(window.location.search).get('server');
+                    if (param) return param;
                 } catch(e) {}
                 var h = window.location.hostname;
-                if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
-                return 'ws://98.49.52.35:8768';
+                if (h === 'localhost' || h === '127.0.0.1') return '192.168.1.16:8768';
+                return '98.49.52.35:8768';
             })();
-            const testSocket = new WebSocket(CHAT_SERVER);
-            const timeout = setTimeout(() => {
-                testSocket.close();
-                statusDot.className = 'mp-status-dot offline';
-                statusText.textContent = 'SERVERS OFFLINE';
-            }, 5000);
-            testSocket.onopen = () => {
-                clearTimeout(timeout);
-                statusDot.className = 'mp-status-dot online';
-                statusText.textContent = 'MULTIPLAYER ONLINE';
-                testSocket.close();
-            };
-            testSocket.onerror = () => {
-                clearTimeout(timeout);
-                statusDot.className = 'mp-status-dot offline';
-                statusText.textContent = 'SERVERS OFFLINE';
-            };
+            var controller = new AbortController();
+            var timeout = setTimeout(function() { controller.abort(); }, 5000);
+            fetch('http://' + chatHost, { mode: 'no-cors', signal: controller.signal })
+                .then(function() {
+                    clearTimeout(timeout);
+                    statusDot.className = 'mp-status-dot online';
+                    statusText.textContent = 'MULTIPLAYER ONLINE';
+                })
+                .catch(function() {
+                    clearTimeout(timeout);
+                    statusDot.className = 'mp-status-dot offline';
+                    statusText.textContent = 'SERVERS OFFLINE';
+                });
         } catch(e) {
             statusDot.className = 'mp-status-dot offline';
             statusText.textContent = 'SERVERS OFFLINE';
