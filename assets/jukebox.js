@@ -93,6 +93,13 @@
             audio.addEventListener('ended', onTrackEnd);
             audio.addEventListener('play', () => { isPlaying = true; updateUI(); saveState(); startSaveInterval(); });
             audio.addEventListener('pause', () => { isPlaying = false; updateUI(); saveState(); stopSaveInterval(); });
+            audio.addEventListener('error', () => {
+                if (audio.error && audio.error.code !== MediaError.MEDIA_ERR_ABORTED) {
+                    isPlaying = false;
+                    updateUI();
+                    stopSaveInterval();
+                }
+            });
         }
 
         // If seeking to a specific position, wait for metadata before seeking
@@ -204,13 +211,15 @@
             muteBtn.classList.toggle('muted', muted);
         }
 
-        // Volume slider
+        // Volume slider — show actual volume, not 0 when muted
         if (volSlider) {
-            volSlider.value = muted ? 0 : volume;
-            volSlider.style.setProperty('--vol-pct', ((muted ? 0 : volume) * 100) + '%');
+            volSlider.value = volume;
+            volSlider.style.setProperty('--vol-pct', (volume * 100) + '%');
+            volSlider.classList.toggle('muted', muted);
         }
         if (volLabel) {
-            volLabel.textContent = Math.round((muted ? 0 : volume) * 100);
+            volLabel.textContent = Math.round(volume * 100);
+            volLabel.classList.toggle('muted', muted);
         }
 
         // Playing indicator on nav
@@ -280,10 +289,6 @@
             muted = state.muted || false;
             if (state.track >= 0 && state.track < TRACKS.length) {
                 currentTrack = state.track;
-                const track = TRACKS[currentTrack];
-                trackText.textContent = track.title + ' \u2014 ' + track.artist;
-                trackLink.title = track.title + ' \u2014 ' + track.artist + ' \u2014 click for jukebox';
-                requestAnimationFrame(updateScroll);
                 // Auto-play from saved position if was playing
                 if (state.playing) {
                     playTrack(currentTrack, state.time || 0);

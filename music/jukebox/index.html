@@ -534,159 +534,6 @@
 
         .selector-inner {
             display: flex;
-            width: 300%;
-            height: 100%;
-            transition: transform 0.25s ease-out;
-        }
-
-        .selector-row {
-            width: 33.33%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 24px;
-            gap: 20px;
-            cursor: pointer;
-            background: #140e10;
-            border-right: 4px solid #2e1418;
-        }
-
-        .selector-row:last-child {
-            border-right: none;
-        }
-
-        .selector-row:hover {
-            background: #221818;
-        }
-
-        .selector-row.current {
-            background: #1e1416;
-        }
-
-        .selector-row.prev,
-        .selector-row.next {
-            opacity: 0.35;
-            cursor: default;
-        }
-
-        .sr-num {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 24px;
-            color: var(--j-purple);
-            background: #2e1418;
-            padding: 8px 12px;
-            border: 3px solid var(--j-purple);
-        }
-
-        .selector-row.current .sr-num {
-            background: var(--j-purple);
-            color: #fff;
-            animation: blinkNum 0.6s step-end infinite;
-        }
-
-        @keyframes blinkNum {
-            50% { opacity: 0.7; }
-        }
-
-        .sr-info {
-            flex: 1;
-            text-align: center;
-        }
-
-        .sr-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
-            color: var(--white);
-            letter-spacing: 0.08em;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 0 #000;
-        }
-
-        .sr-artist {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: var(--dim);
-        }
-
-        .selector-inner {
-            display: flex;
-            height: 100%;
-            transition: transform 0.25s ease-out;
-        }
-
-        .selector-row {
-            min-width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-            gap: 16px;
-            cursor: pointer;
-            background: #1a1418;
-            border: 3px solid #4a1820;
-            image-rendering: pixelated;
-        }
-
-        .selector-row:hover {
-            background: #221818;
-        }
-
-        .selector-row.current {
-            border: 3px solid var(--j-purple);
-            background: #1e1416;
-        }
-
-        .selector-row.prev,
-        .selector-row.next {
-            opacity: 0.3;
-            cursor: default;
-            border-color: #2e1418;
-        }
-
-        .sr-num {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
-            color: var(--j-purple);
-            background: #2e1418;
-            padding: 6px 8px;
-            border: 2px solid var(--j-purple);
-        }
-
-        .selector-row.current .sr-num {
-            background: var(--j-purple);
-            color: #fff;
-            animation: blinkNum 0.6s step-end infinite;
-        }
-
-        @keyframes blinkNum {
-            50% { opacity: 0.7; }
-        }
-
-        .sr-info {
-            flex: 1;
-            text-align: center;
-            min-width: 0;
-        }
-
-        .sr-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: var(--j-gold);
-            letter-spacing: 0.08em;
-            margin-bottom: 6px;
-            text-shadow: 0 0 6px rgba(248,216,120,0.4);
-        }
-
-        .sr-artist {
-            font-family: 'Courier Prime', monospace;
-            font-size: 10px;
-            color: var(--j-mint);
-        }
-
-        .selector-inner {
-            display: flex;
             flex-direction: column;
             transition: transform 0.25s ease-out;
         }
@@ -723,6 +570,15 @@
             flex-shrink: 0;
         }
 
+        .selector-row.current .sr-num {
+            color: var(--j-gold);
+            animation: blinkNum 0.6s step-end infinite;
+        }
+
+        @keyframes blinkNum {
+            50% { opacity: 0.7; }
+        }
+
         .sr-info {
             flex: 1;
             text-align: center;
@@ -734,6 +590,16 @@
             font-size: 8px;
             color: var(--j-gold);
             letter-spacing: 0.05em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sr-artist {
+            font-family: 'Courier Prime', monospace;
+            font-size: 9px;
+            color: var(--j-mint);
+            margin-top: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -827,16 +693,6 @@
             color: var(--j-pink);
             cursor: pointer;
             padding: 2px 4px;
-        }
-
-        .sr-artist {
-            font-family: 'Courier Prime', monospace;
-            font-size: 9px;
-            color: var(--j-mint);
-            margin-top: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         /* ── NAV ARROWS (side by side with selector) ── */
@@ -1198,12 +1054,18 @@ try {
 
 function syncToMiniPlayer() {
     try {
+        /* Preserve mute state from mini-player (full jukebox has no mute control) */
+        let prevMuted = false;
+        try {
+            const prev = JSON.parse(localStorage.getItem(MC_STORAGE_KEY));
+            if (prev && typeof prev.muted === 'boolean') prevMuted = prev.muted;
+        } catch (e) {}
         localStorage.setItem(MC_STORAGE_KEY, JSON.stringify({
             track: playingIdx,
             time: player ? player.currentTime : 0,
             playing: isPlaying,
             volume: player ? player.volume : 0.7,
-            muted: false
+            muted: prevMuted
         }));
     } catch (e) {}
 }
@@ -1260,13 +1122,14 @@ function renderNowPlaying() {
         const song = JUKEBOX_SONGS[playingIdx];
         npTitle.textContent = song.title;
         npArtist.textContent = song.artist;
-npDuration.textContent = song.duration || fmtTime(player.duration);
+        npDuration.textContent = song.duration || fmtTime(player.duration);
+        npElapsed.textContent = fmtTime(player.currentTime);
     } else {
         npTitle.textContent = '— select a song —';
         npArtist.textContent = '';
         npDuration.textContent = '0:00';
+        npElapsed.textContent = '0:00';
     }
-    npElapsed.textContent = '0:00';
 }
 
 function addToQueue(idx) {
@@ -1317,7 +1180,7 @@ function playSong(index) {
     renderSongList();
     
     player.src = 'songs/' + song.file;
-    player.play();
+    player.play().catch(() => {});
     setPlayingState(true);
     syncToMiniPlayer();
     startMcSaveInterval();
@@ -1329,7 +1192,7 @@ function togglePlay() {
         setPlayingState(false);
         stopMcSaveInterval();
     } else if (player.src) {
-        player.play();
+        player.play().catch(() => {});
         setPlayingState(true);
         startMcSaveInterval();
     } else if (JUKEBOX_SONGS.length > 0) {
@@ -1376,6 +1239,14 @@ player.addEventListener('ended', () => {
     }
 });
 
+player.addEventListener('error', () => {
+    if (player.error && player.error.code !== MediaError.MEDIA_ERR_ABORTED) {
+        npTitle.textContent = '— playback error —';
+        setPlayingState(false);
+        stopMcSaveInterval();
+    }
+});
+
 player.addEventListener('play', () => {
     setPlayingState(true);
     startMcSaveInterval();
@@ -1400,8 +1271,12 @@ playBtn.addEventListener('click', togglePlay);
 stopBtn.addEventListener('click', stopSong);
 
 window.__pageCleanup = function() {
-    if (player) { player.pause(); player.src = ''; }
     stopMcSaveInterval();
+    syncToMiniPlayer();
+    if (player) { player.pause(); player.src = ''; }
+    playingIdx = -1;
+    isPlaying = false;
+    songQueue = [];
 };
 </script>
 

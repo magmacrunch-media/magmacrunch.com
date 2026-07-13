@@ -112,6 +112,10 @@
     opacity: 1;
 }
 
+.np-vol.muted {
+    opacity: 0.4;
+}
+
 .np-vol::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -138,6 +142,12 @@
     opacity: 0.5;
     min-width: 16px;
     text-align: right;
+    transition: opacity 0.15s;
+}
+
+.np-vol-label.muted {
+    opacity: 0.3;
+    text-decoration: line-through;
 }
 
 /* ── NAV PLAYING STATE ── */
