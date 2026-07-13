@@ -300,7 +300,13 @@
                     if (placeRels.length) {
                         const places = placeRels.map(r => {
                             const role = r.type ? esc(r.type) + ' at ' : '';
-                            return role + esc(r.place?.name);
+                            const placeId = r.place?.id;
+                            const placeName = r.place?.name;
+                            const placePath = ENTITY_MAP[placeId];
+                            const placeLink = placePath
+                                ? `<a href="${placePath.replace(/^\.\.\/\.\.\//, '../../../archive/')}">${esc(placeName)}</a>`
+                                : esc(placeName);
+                            return role + placeLink;
                         });
                         item += `<div class="rec-line">${places.join(', ')}</div>`;
                     }
