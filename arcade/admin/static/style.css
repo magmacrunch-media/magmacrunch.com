@@ -556,6 +556,85 @@ main {
     margin-top: 20px;
 }
 
+/* ── Gear Button ─────────────────────────────────────────────────────── */
+
+.btn-system-menu {
+    background: none;
+    border: 2px solid var(--dim, #8a7a8a);
+    color: var(--dim, #8a7a8a);
+    font-size: 18px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.btn-system-menu:hover {
+    border-color: var(--cyan, #00f5ff);
+    color: var(--cyan, #00f5ff);
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.3);
+}
+
+/* ── System Modal ────────────────────────────────────────────────────── */
+
+.system-modal-content {
+    max-width: 480px;
+    width: 90%;
+}
+
+.system-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-close-modal {
+    background: none;
+    border: none;
+    color: var(--dim, #8a7a8a);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.btn-close-modal:hover {
+    color: var(--rose, #ff3d6e);
+}
+
+.system-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.system-info-item {
+    background: var(--black, #080808);
+    border: 1px solid #2a2a3a;
+    padding: 12px;
+}
+
+.system-info-label {
+    display: block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim, #8a7a8a);
+    margin-bottom: 6px;
+}
+
+.system-info-value {
+    display: block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 16px;
+    color: var(--white, #f0ead8);
+}
+
+.system-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
 .scores-header {
     display: flex;
     align-items: center;

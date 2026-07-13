@@ -57,6 +57,15 @@
     const confirmMessage = $('#confirm-message');
     const confirmYes = $('#confirm-yes');
     const confirmNo = $('#confirm-no');
+    const systemModal = $('#system-modal');
+    const btnSystemMenu = $('#btn-system-menu');
+    const closeSystemModal = $('#close-system-modal');
+    const modalUptime = $('#modal-uptime');
+    const modalTemp = $('#modal-temp');
+    const modalMemory = $('#modal-memory');
+    const modalLoad = $('#modal-load');
+    const modalRestartPi = $('#modal-restart-pi');
+    const modalPoweroffPi = $('#modal-poweroff-pi');
 
     // ── Chat state ───────────────────────────────────────────────────────────
     let chatHistory = [];
@@ -644,7 +653,32 @@
 
     confirmNo.addEventListener('click', hideModal);
 
-    btnRestartPi.addEventListener('click', () => {
+    // System modal
+    function openSystemModal() {
+        // Update modal with current system info
+        const temp = sysTemp.textContent || '—';
+        const uptime = sysUptime.textContent || '—';
+        const mem = sysMem.textContent || '—';
+        const cpu = sysCpu.textContent || '—';
+        modalTemp.textContent = temp;
+        modalUptime.textContent = uptime;
+        modalMemory.textContent = mem;
+        modalLoad.textContent = cpu;
+        systemModal.classList.remove('hidden');
+    }
+
+    function closeSystemModalFn() {
+        systemModal.classList.add('hidden');
+    }
+
+    btnSystemMenu.addEventListener('click', openSystemModal);
+    closeSystemModal.addEventListener('click', closeSystemModalFn);
+    systemModal.addEventListener('click', (e) => {
+        if (e.target === systemModal) closeSystemModalFn();
+    });
+
+    modalRestartPi.addEventListener('click', () => {
+        closeSystemModalFn();
         showModal(
             'RESTART PI',
             'This will reboot the Raspberry Pi. All servers will restart automatically.',
@@ -652,13 +686,35 @@
         );
     });
 
-    btnPoweroffPi.addEventListener('click', () => {
+    modalPoweroffPi.addEventListener('click', () => {
+        closeSystemModalFn();
         showModal(
             '⚠ POWER OFF',
             'This will shut down the Raspberry Pi completely. You will need physical access to turn it back on.',
             () => send({ action: 'poweroff_pi', token: authToken })
         );
     });
+
+    // Legacy button support (if old buttons still exist)
+    if (btnRestartPi) {
+        btnRestartPi.addEventListener('click', () => {
+            showModal(
+                'RESTART PI',
+                'This will reboot the Raspberry Pi. All servers will restart automatically.',
+                () => send({ action: 'restart_pi', token: authToken })
+            );
+        });
+    }
+
+    if (btnPoweroffPi) {
+        btnPoweroffPi.addEventListener('click', () => {
+            showModal(
+                '⚠ POWER OFF',
+                'This will shut down the Raspberry Pi completely. You will need physical access to turn it back on.',
+                () => send({ action: 'poweroff_pi', token: authToken })
+            );
+        });
+    }
 
     // ── Temperature Monitoring ───────────────────────────────────────────────
 
