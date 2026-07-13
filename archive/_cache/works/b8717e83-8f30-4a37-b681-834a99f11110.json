@@ -1,0 +1,159 @@
+{
+  "fetchedAt": "2026-07-13T00:15:04.898Z",
+  "entityType": "work",
+  "uuid": "b8717e83-8f30-4a37-b681-834a99f11110",
+  "name": "Gone By",
+  "data": {
+    "iswcs": [],
+    "languages": [
+      "eng"
+    ],
+    "type": "Song",
+    "aliases": [],
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "language": "eng",
+    "disambiguation": "",
+    "id": "b8717e83-8f30-4a37-b681-834a99f11110",
+    "title": "Gone By",
+    "attributes": [],
+    "relations": [
+      {
+        "begin": null,
+        "target-type": "artist",
+        "attribute-ids": {},
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "target-credit": "JHM",
+        "type": "composer",
+        "attribute-values": {},
+        "artist": {
+          "sort-name": "McCoy, Jon",
+          "country": "US",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "name": "Jon McCoy",
+          "disambiguation": "",
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+        },
+        "source-credit": "",
+        "end": null,
+        "ended": false,
+        "direction": "backward",
+        "attributes": []
+      },
+      {
+        "artist": {
+          "sort-name": "McCoy, Jon",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "country": "US",
+          "name": "Jon McCoy",
+          "disambiguation": "",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person"
+        },
+        "ended": false,
+        "end": null,
+        "source-credit": "",
+        "attributes": [],
+        "direction": "backward",
+        "begin": null,
+        "target-type": "artist",
+        "attribute-values": {},
+        "type": "lyricist",
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "attribute-ids": {},
+        "target-credit": "JHM"
+      },
+      {
+        "artist": {
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person",
+          "disambiguation": "",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "country": "US",
+          "name": "Jon McCoy",
+          "sort-name": "McCoy, Jon"
+        },
+        "source-credit": "",
+        "ended": true,
+        "end": "2025-05-01",
+        "direction": "backward",
+        "attributes": [],
+        "begin": "2025-05-01",
+        "target-type": "artist",
+        "attribute-ids": {},
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "target-credit": "",
+        "type": "publishing",
+        "attribute-values": {}
+      },
+      {
+        "begin": null,
+        "target-type": "recording",
+        "type": "performance",
+        "attribute-values": {},
+        "recording": {
+          "length": 271000,
+          "video": false,
+          "title": "Gone By",
+          "id": "3bba16ff-965d-4cbb-8529-69d0be48a65f",
+          "disambiguation": ""
+        },
+        "attribute-ids": {},
+        "target-credit": "",
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "end": null,
+        "ended": false,
+        "source-credit": "",
+        "attributes": [],
+        "direction": "backward"
+      }
+    ],
+    "tags": []
+  },
+  "recordings": {
+    "3bba16ff-965d-4cbb-8529-69d0be48a65f": {
+      "title": "Gone By",
+      "releases": [
+        {
+          "packaging": null,
+          "packaging-id": null,
+          "date": "2025-05-01",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "id": "f658a043-c8a1-4627-8eac-7970ae80c1d2",
+          "country": "XW",
+          "release-events": [
+            {
+              "area": {
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "name": "[Worldwide]",
+                "type": null,
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "disambiguation": "",
+                "iso-3166-1-codes": [
+                  "XW"
+                ]
+              },
+              "date": "2025-05-01"
+            }
+          ],
+          "title": "Long Way Home",
+          "disambiguation": "",
+          "status": "Official",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "barcode": "056870688022",
+          "quality": "normal"
+        }
+      ],
+      "length": 271000,
+      "disambiguation": "",
+      "first-release-date": "2025-05-01",
+      "id": "3bba16ff-965d-4cbb-8529-69d0be48a65f",
+      "relations": [],
+      "video": false
+    }
+  }
+}
