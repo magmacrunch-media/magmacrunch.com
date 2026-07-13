@@ -110,6 +110,7 @@ const LABELS = [
 const WORKS = [
     { uuid: 'b5d8ec34-e488-4e94-8aa7-af05136e9322', name: 'pay2play' },
     { uuid: 'e31f5986-649d-42f2-9f02-54989b12957c', name: 'try' },
+    { uuid: '4c19c4b8-e84d-4e7a-8be0-db3600a03aa6', name: 'starting again' },
 ];
 
 // Note: C.P. Rutledge and Jon McCoy appear in both ARTISTS and CONTRIBUTORS.
