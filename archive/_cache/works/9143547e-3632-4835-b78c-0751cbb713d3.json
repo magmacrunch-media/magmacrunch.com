@@ -1,0 +1,601 @@
+{
+  "fetchedAt": "2026-07-13T00:38:36.059Z",
+  "entityType": "work",
+  "uuid": "9143547e-3632-4835-b78c-0751cbb713d3",
+  "name": "Contemplate the Plate Tectonic",
+  "data": {
+    "type": "Song",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "disambiguation": "",
+    "id": "9143547e-3632-4835-b78c-0751cbb713d3",
+    "language": "eng",
+    "relations": [
+      {
+        "target-type": "artist",
+        "attributes": [],
+        "type": "composer",
+        "attribute-values": {},
+        "ended": true,
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "end": "2015",
+        "artist": {
+          "country": "US",
+          "name": "Jake A. McCoy",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "sort-name": "McCoy, Jake A.",
+          "type": "Person",
+          "disambiguation": "",
+          "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb"
+        },
+        "target-credit": "",
+        "source-credit": "",
+        "attribute-ids": {},
+        "direction": "backward",
+        "begin": "2015"
+      },
+      {
+        "target-type": "artist",
+        "attributes": [],
+        "ended": true,
+        "attribute-values": {},
+        "type": "composer",
+        "end": "2015",
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "artist": {
+          "country": "US",
+          "name": "Jon McCoy",
+          "sort-name": "McCoy, Jon",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person",
+          "disambiguation": "",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16"
+        },
+        "target-credit": "",
+        "source-credit": "",
+        "attribute-ids": {},
+        "direction": "backward",
+        "begin": "2015"
+      },
+      {
+        "target-credit": "",
+        "attribute-ids": {},
+        "source-credit": "",
+        "direction": "backward",
+        "begin": "2015",
+        "target-type": "artist",
+        "attributes": [],
+        "ended": true,
+        "attribute-values": {},
+        "type": "composer",
+        "artist": {
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "sort-name": "McMillan, Stephen",
+          "type": "Person",
+          "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+          "disambiguation": "",
+          "country": "ES",
+          "name": "Stephen McMillan"
+        },
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "end": "2015"
+      },
+      {
+        "target-credit": "",
+        "source-credit": "",
+        "attribute-ids": {},
+        "direction": "backward",
+        "begin": "2015",
+        "target-type": "artist",
+        "attributes": [],
+        "attribute-values": {},
+        "type": "composer",
+        "ended": true,
+        "end": "2015",
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "artist": {
+          "id": "054fd43c-d028-42d6-8857-20f7d2d0bd0a",
+          "disambiguation": "",
+          "type": "Person",
+          "sort-name": "Unmuth-Yockey, Judah",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "name": "Judah Unmuth-Yockey",
+          "country": "US"
+        }
+      },
+      {
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "end": "2015-11",
+        "artist": {
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "sort-name": "Yockey, Jim",
+          "id": "3cf29ce3-2234-4779-8be0-c5d4f47256f0",
+          "disambiguation": "",
+          "country": null,
+          "name": "Jim Yockey"
+        },
+        "ended": true,
+        "attribute-values": {},
+        "type": "lyricist",
+        "attributes": [],
+        "target-type": "artist",
+        "begin": "2015-11",
+        "direction": "backward",
+        "source-credit": "",
+        "attribute-ids": {},
+        "target-credit": ""
+      },
+      {
+        "begin": "2018-02-01",
+        "direction": "backward",
+        "source-credit": "",
+        "attribute-ids": {},
+        "target-credit": "",
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "end": "2018-02-01",
+        "artist": {
+          "sort-name": "Texas Hold'Em Lava Dome",
+          "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+          "type": "Group",
+          "disambiguation": "",
+          "id": "4d945923-9deb-4cd0-a477-6e1474cb306c",
+          "country": "US",
+          "name": "Texas Hold'Em Lava Dome"
+        },
+        "type": "publishing",
+        "attribute-values": {},
+        "ended": true,
+        "attributes": [],
+        "target-type": "artist"
+      },
+      {
+        "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+        "type": "composed at",
+        "ended": true,
+        "target-type": "place",
+        "target-credit": "",
+        "place": {
+          "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+          "disambiguation": "",
+          "address": "",
+          "type": "Studio",
+          "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+          "name": "The Tuna Can",
+          "coordinates": null,
+          "area": {
+            "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+            "sort-name": "Iowa City",
+            "type": "City",
+            "name": "Iowa City",
+            "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+            "disambiguation": ""
+          }
+        },
+        "end": "2016",
+        "attribute-values": {},
+        "attributes": [],
+        "begin": "2015",
+        "direction": "backward",
+        "source-credit": "",
+        "attribute-ids": {}
+      },
+      {
+        "attributes": [],
+        "attribute-values": {},
+        "end": null,
+        "source-credit": "",
+        "attribute-ids": {},
+        "direction": "backward",
+        "begin": null,
+        "target-type": "recording",
+        "type": "performance",
+        "ended": false,
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "target-credit": "",
+        "recording": {
+          "id": "7022586c-e032-4e2b-ad19-6c54bf67e90b",
+          "disambiguation": "",
+          "length": 589000,
+          "title": "Contemplate the Plate Tectonic",
+          "video": false
+        }
+      },
+      {
+        "recording": {
+          "title": "Contemplate the Plate Tectonic",
+          "length": 590000,
+          "id": "99a038e2-4985-4771-8428-9579908a3065",
+          "disambiguation": "",
+          "video": true
+        },
+        "target-credit": "",
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "ended": false,
+        "type": "performance",
+        "target-type": "recording",
+        "begin": null,
+        "direction": "backward",
+        "source-credit": "",
+        "attribute-ids": {},
+        "end": null,
+        "attribute-values": {},
+        "attributes": []
+      }
+    ],
+    "aliases": [],
+    "tags": [
+      {
+        "count": 1,
+        "name": "space rock"
+      }
+    ],
+    "attributes": [
+      {
+        "value": "933623780",
+        "type-id": "d833318c-6c6a-370e-8b16-9cb15873ba76",
+        "type": "ASCAP ID"
+      }
+    ],
+    "languages": [
+      "eng"
+    ],
+    "iswcs": [
+      "T-337.058.315-2"
+    ],
+    "title": "Contemplate the Plate Tectonic"
+  },
+  "recordings": {
+    "7022586c-e032-4e2b-ad19-6c54bf67e90b": {
+      "relations": [
+        {
+          "source-credit": "",
+          "end": null,
+          "attributes": [],
+          "type": "recorded at",
+          "event": {
+            "name": "Producers' Showcase: Chris Wiersema, A432, Texas Hold'Em Lava Dome",
+            "time": "21:00",
+            "life-span": {
+              "end": "2015-11-19",
+              "ended": true,
+              "begin": "2015-11-19"
+            },
+            "id": "6fcb4931-2523-4179-b2f3-908a758b83ac",
+            "type-id": "ef55e8d7-3d00-394a-8012-f5506a29ff0b",
+            "type": "Concert",
+            "setlist": "",
+            "cancelled": false,
+            "disambiguation": ""
+          },
+          "type-id": "b06e6732-2603-47d3-8a49-9f589b430483",
+          "direction": "backward",
+          "ended": false,
+          "attribute-values": {},
+          "target-credit": "",
+          "target-type": "event",
+          "attribute-ids": {},
+          "begin": null
+        },
+        {
+          "direction": "backward",
+          "place": {
+            "disambiguation": "",
+            "address": "",
+            "type": "Studio",
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "id": "d8a1b49b-3573-4117-ae93-794816c57d4d",
+            "coordinates": {
+              "latitude": 40.788686,
+              "longitude": -77.849453
+            },
+            "name": "Marvin Gardens G12",
+            "area": {
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "disambiguation": "",
+              "name": "State College",
+              "sort-name": "State College",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496"
+            }
+          },
+          "type-id": "069c1cf0-a9b2-448e-8486-1eced48b48f9",
+          "type": "edited at",
+          "attributes": [],
+          "end": "2017",
+          "source-credit": "",
+          "target-type": "place",
+          "target-credit": "",
+          "attribute-values": {},
+          "ended": true,
+          "attribute-ids": {},
+          "begin": "2017"
+        },
+        {
+          "attribute-ids": {},
+          "begin": "2017",
+          "place": {
+            "name": "Marvin Gardens G12",
+            "coordinates": {
+              "longitude": -77.849453,
+              "latitude": 40.788686
+            },
+            "area": {
+              "name": "State College",
+              "sort-name": "State College",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "disambiguation": ""
+            },
+            "id": "d8a1b49b-3573-4117-ae93-794816c57d4d",
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "type": "Studio",
+            "address": "",
+            "disambiguation": ""
+          },
+          "direction": "backward",
+          "attributes": [],
+          "type": "produced at",
+          "type-id": "6bc3827d-bc20-4621-ae14-9c3707ad140a",
+          "end": "2017",
+          "source-credit": "",
+          "target-type": "place",
+          "attribute-values": {},
+          "target-credit": "",
+          "ended": true
+        },
+        {
+          "attribute-ids": {},
+          "begin": "2015-10-28",
+          "type": "recorded at",
+          "attributes": [],
+          "type-id": "ad462279-14b0-4180-9b58-571d0eef7c51",
+          "place": {
+            "area": {
+              "name": "Iowa City",
+              "sort-name": "Iowa City",
+              "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "type": "City",
+              "disambiguation": ""
+            },
+            "coordinates": null,
+            "name": "The Tuna Can",
+            "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+            "type": "Studio",
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "disambiguation": "",
+            "address": ""
+          },
+          "direction": "backward",
+          "source-credit": "",
+          "end": "2016-02-14",
+          "target-type": "place",
+          "ended": true,
+          "attribute-values": {},
+          "target-credit": ""
+        },
+        {
+          "ended": true,
+          "attribute-values": {},
+          "target-credit": "",
+          "target-type": "place",
+          "source-credit": "",
+          "end": "2015-11-19",
+          "attributes": [],
+          "type": "recorded at",
+          "type-id": "ad462279-14b0-4180-9b58-571d0eef7c51",
+          "place": {
+            "coordinates": null,
+            "area": {
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "disambiguation": "",
+              "name": "Iowa City",
+              "sort-name": "Iowa City",
+              "id": "3fc3b364-665e-4875-a9ff-3699cd716152"
+            },
+            "name": "The Governor's Mansion",
+            "id": "adbb0132-4ea6-464e-9651-6f1ee3da494f",
+            "type-id": null,
+            "type": null,
+            "disambiguation": "",
+            "address": ""
+          },
+          "direction": "backward",
+          "begin": "2015-11-19",
+          "attribute-ids": {}
+        },
+        {
+          "target-credit": "",
+          "attribute-values": {},
+          "ended": true,
+          "target-type": "place",
+          "end": "2017",
+          "source-credit": "",
+          "direction": "backward",
+          "place": {
+            "coordinates": {
+              "latitude": 40.788686,
+              "longitude": -77.849453
+            },
+            "area": {
+              "name": "State College",
+              "id": "b1ea26d4-2993-4edb-8a66-a0f58fe39496",
+              "sort-name": "State College",
+              "type": "City",
+              "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+              "disambiguation": ""
+            },
+            "name": "Marvin Gardens G12",
+            "id": "d8a1b49b-3573-4117-ae93-794816c57d4d",
+            "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+            "type": "Studio",
+            "address": "",
+            "disambiguation": ""
+          },
+          "type-id": "ad462279-14b0-4180-9b58-571d0eef7c51",
+          "attributes": [
+            "additional"
+          ],
+          "type": "recorded at",
+          "begin": "2017",
+          "attribute-ids": {
+            "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+          }
+        }
+      ],
+      "id": "7022586c-e032-4e2b-ad19-6c54bf67e90b",
+      "video": false,
+      "disambiguation": "",
+      "length": 589000,
+      "title": "Contemplate the Plate Tectonic",
+      "releases": [
+        {
+          "id": "e495295c-1c8e-4c44-aeb7-1dc17b47177d",
+          "country": "XW",
+          "release-events": [
+            {
+              "date": "2018-02-01",
+              "area": {
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "type": null,
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "disambiguation": ""
+              }
+            }
+          ],
+          "date": "2018-02-01",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "packaging-id": null,
+          "packaging": null,
+          "quality": "normal",
+          "barcode": "",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "status": "Withdrawn",
+          "title": "Martial Law in Garrison Oaks",
+          "disambiguation": "original release"
+        },
+        {
+          "country": "XW",
+          "id": "bc039925-acb4-42db-a418-4b828bab3fc2",
+          "release-events": [
+            {
+              "date": "2023-10-10",
+              "area": {
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "disambiguation": "",
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "type-id": null,
+                "type": null
+              }
+            }
+          ],
+          "packaging-id": null,
+          "date": "2023-10-10",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "packaging": null,
+          "quality": "normal",
+          "barcode": "",
+          "title": "Martial Law in Garrison Oaks",
+          "disambiguation": "2023 reissue",
+          "status": "Withdrawn",
+          "text-representation": {
+            "script": null,
+            "language": null
+          }
+        },
+        {
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2024-10-18",
+          "packaging-id": null,
+          "packaging": null,
+          "release-events": [
+            {
+              "area": {
+                "type-id": null,
+                "type": null,
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]"
+              },
+              "date": "2024-10-18"
+            }
+          ],
+          "id": "83bd6752-f18c-4aad-a1ae-d8507d889fec",
+          "country": "XW",
+          "barcode": "055855920997",
+          "status": "Official",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "disambiguation": "2024 remaster",
+          "title": "Martial Law in Garrison Oaks",
+          "quality": "normal"
+        }
+      ],
+      "first-release-date": "2018-02-01"
+    },
+    "99a038e2-4985-4771-8428-9579908a3065": {
+      "video": true,
+      "id": "99a038e2-4985-4771-8428-9579908a3065",
+      "relations": [],
+      "first-release-date": "2024-04-28",
+      "releases": [
+        {
+          "id": "abac53f0-0160-49df-a6e8-8016a0dba3af",
+          "country": "XW",
+          "release-events": [
+            {
+              "area": {
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "type-id": null,
+                "type": null,
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "disambiguation": ""
+              },
+              "date": "2024-04-28"
+            }
+          ],
+          "date": "2024-04-28",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "packaging-id": null,
+          "packaging": null,
+          "quality": "normal",
+          "barcode": "",
+          "status": "Official",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "title": "Contemplate the Plate Tectonic",
+          "disambiguation": "music video"
+        }
+      ],
+      "title": "Contemplate the Plate Tectonic",
+      "disambiguation": "",
+      "length": 590000
+    }
+  }
+}
