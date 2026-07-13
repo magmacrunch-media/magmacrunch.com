@@ -1,0 +1,265 @@
+{
+  "fetchedAt": "2026-07-13T00:02:47.780Z",
+  "entityType": "work",
+  "uuid": "e31f5986-649d-42f2-9f02-54989b12957c",
+  "name": "Try",
+  "data": {
+    "id": "e31f5986-649d-42f2-9f02-54989b12957c",
+    "language": "eng",
+    "languages": [
+      "eng"
+    ],
+    "relations": [
+      {
+        "ended": true,
+        "attribute-values": {},
+        "target-credit": "JHM",
+        "target-type": "artist",
+        "source-credit": "",
+        "end": "2023-01",
+        "attributes": [],
+        "type": "composer",
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "direction": "backward",
+        "begin": "2022-12",
+        "artist": {
+          "disambiguation": "",
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "sort-name": "McCoy, Jon",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "country": "US",
+          "name": "Jon McCoy"
+        },
+        "attribute-ids": {}
+      },
+      {
+        "attribute-ids": {},
+        "artist": {
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "disambiguation": "",
+          "name": "Jon McCoy",
+          "country": "US",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "sort-name": "McCoy, Jon"
+        },
+        "begin": "2022-12",
+        "direction": "backward",
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "attributes": [],
+        "type": "lyricist",
+        "end": "2023-01",
+        "source-credit": "",
+        "target-type": "artist",
+        "target-credit": "JHM",
+        "attribute-values": {},
+        "ended": true
+      },
+      {
+        "target-type": "artist",
+        "ended": true,
+        "target-credit": "",
+        "attribute-values": {},
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "attributes": [],
+        "type": "publishing",
+        "direction": "backward",
+        "source-credit": "",
+        "end": "2023-06-28",
+        "begin": "2023-06-28",
+        "artist": {
+          "name": "Jon McCoy",
+          "country": "US",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "sort-name": "McCoy, Jon",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person",
+          "disambiguation": ""
+        },
+        "attribute-ids": {}
+      },
+      {
+        "target-type": "recording",
+        "ended": true,
+        "target-credit": "",
+        "attribute-values": {},
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "attributes": [],
+        "type": "performance",
+        "direction": "backward",
+        "source-credit": "",
+        "end": "2023-06-28",
+        "begin": "2023-06-28",
+        "attribute-ids": {},
+        "recording": {
+          "video": false,
+          "id": "e42bd508-3802-40d2-adcb-4878605239e2",
+          "length": 155000,
+          "disambiguation": "",
+          "title": "Try"
+        }
+      },
+      {
+        "begin": "2023-06-28",
+        "attribute-ids": {},
+        "recording": {
+          "video": true,
+          "id": "9c8c4211-8c81-4c54-9147-a3763dbde4f5",
+          "length": 161000,
+          "disambiguation": "",
+          "title": "Try"
+        },
+        "ended": true,
+        "target-credit": "",
+        "attribute-values": {},
+        "target-type": "recording",
+        "source-credit": "",
+        "end": "2023-06-28",
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "attributes": [],
+        "type": "performance",
+        "direction": "backward"
+      }
+    ],
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "type": "Song",
+    "attributes": [
+      {
+        "value": "933927862",
+        "type-id": "d833318c-6c6a-370e-8b16-9cb15873ba76",
+        "type": "ASCAP ID"
+      }
+    ],
+    "aliases": [],
+    "title": "Try",
+    "disambiguation": "",
+    "iswcs": [
+      "T-337.698.635-1"
+    ],
+    "tags": []
+  },
+  "recordings": {
+    "e42bd508-3802-40d2-adcb-4878605239e2": {
+      "id": "e42bd508-3802-40d2-adcb-4878605239e2",
+      "releases": [
+        {
+          "release-events": [
+            {
+              "area": {
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2023-07-08"
+            }
+          ],
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "status": "Official",
+          "packaging": null,
+          "barcode": "",
+          "disambiguation": "",
+          "date": "2023-07-08",
+          "packaging-id": null,
+          "id": "2f00c6a6-71de-46f6-a9d4-479ee375bd20",
+          "country": "XW",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "quality": "normal",
+          "title": "Try"
+        },
+        {
+          "packaging": null,
+          "status": "Official",
+          "release-events": [
+            {
+              "area": {
+                "sort-name": "[Worldwide]",
+                "name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2025-05-01"
+            }
+          ],
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "date": "2025-05-01",
+          "disambiguation": "",
+          "barcode": "056870688022",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "packaging-id": null,
+          "id": "f658a043-c8a1-4627-8eac-7970ae80c1d2",
+          "country": "XW",
+          "title": "Long Way Home",
+          "quality": "normal"
+        }
+      ],
+      "first-release-date": "2023-07-08",
+      "length": 155000,
+      "title": "Try",
+      "relations": [],
+      "video": false,
+      "disambiguation": ""
+    },
+    "9c8c4211-8c81-4c54-9147-a3763dbde4f5": {
+      "id": "9c8c4211-8c81-4c54-9147-a3763dbde4f5",
+      "disambiguation": "",
+      "relations": [],
+      "video": true,
+      "first-release-date": "2024-05-02",
+      "length": 161000,
+      "title": "Try",
+      "releases": [
+        {
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "status": "Official",
+          "disambiguation": "music video",
+          "id": "b0009f24-b204-4bbb-ad50-fef168b16f0c",
+          "title": "Try",
+          "date": "2024-05-02",
+          "country": "XW",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "release-events": [
+            {
+              "area": {
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "disambiguation": "",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "type": null
+              },
+              "date": "2024-05-02"
+            }
+          ],
+          "packaging": null,
+          "quality": "normal",
+          "barcode": "",
+          "packaging-id": null
+        }
+      ]
+    }
+  }
+}

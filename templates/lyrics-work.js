@@ -246,6 +246,15 @@
                 html += `<p><strong>${esc(label)}</strong> ${credit}</p>`;
             }
 
+            // publisher (from config, with archive link)
+            if (C.publisherLabel) {
+                const pubPath = ENTITY_MAP[C.publisherLabel.id];
+                const pubLink = pubPath
+                    ? `<a href="${pubPath}">${esc(C.publisherLabel.name)}</a>`
+                    : `<a href="https://musicbrainz.org/label/${esc(C.publisherLabel.id)}" target="_blank" rel="noopener">${esc(C.publisherLabel.name)}</a>`;
+                html += `<p><strong>publisher</strong> ${pubLink}</p>`;
+            }
+
             // recordings with dates and releases
             const recRels = workData.relations?.filter(r => r['target-type'] === 'recording' && r.type === 'performance') || [];
             const recDataCache = {};  // collect recording data for first-release calc
