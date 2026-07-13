@@ -331,13 +331,14 @@
                 html += '<p><strong>tags</strong></p><div>' + tags.map(t => `<span class="mb-tag">${esc(t.name)}</span>`).join(' ') + '</div>';
             }
 
-            // link to MB + contributor page
+            // link to MB + artist/contributor page
             html += `<p style="margin-top: 12px;"><a href="https://musicbrainz.org/work/${esc(workId)}" target="_blank" rel="noopener">view on musicbrainz →</a></p>`;
             if (C.artistId) {
                 const contribPath = ENTITY_MAP[C.artistId];
                 if (contribPath) {
                     const fixed = contribPath.replace(/^\.\.\/\.\.\//, '../../../archive/');
-                    html += `<p><a href="${fixed}">view contributor page →</a></p>`;
+                    const label = C.artistPageLabel || 'view artist page →';
+                    html += `<p><a href="${fixed}">${esc(label)}</a></p>`;
                 }
             }
 
