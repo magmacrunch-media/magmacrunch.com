@@ -209,17 +209,7 @@
                 _cache?.data
             );
 
-            let html = '<h2>// musicbrainz //</h2>';
-
-            // work type
-            if (workData.type) {
-                html += `<p><strong>type</strong> ${esc(workData.type)}</p>`;
-            }
-
-            // language
-            if (workData.language) {
-                html += `<p><strong>language</strong> ${esc(LANGUAGES[workData.language] || workData.language)}</p>`;
-            }
+            let html = '<h2>// info //</h2>';
 
             // ISWC
             if (workData.iswc) {
