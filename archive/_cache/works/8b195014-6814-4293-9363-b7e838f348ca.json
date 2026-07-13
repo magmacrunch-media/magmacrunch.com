@@ -1,0 +1,247 @@
+{
+  "fetchedAt": "2026-07-13T00:30:53.919Z",
+  "entityType": "work",
+  "uuid": "8b195014-6814-4293-9363-b7e838f348ca",
+  "name": "I only feel the rain",
+  "data": {
+    "relations": [
+      {
+        "artist": {
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person",
+          "disambiguation": "",
+          "id": "44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc",
+          "country": "US",
+          "name": "C.P. Rutledge",
+          "sort-name": "Rutledge, C.P."
+        },
+        "attributes": [],
+        "direction": "backward",
+        "source-credit": "",
+        "end": null,
+        "ended": false,
+        "target-type": "artist",
+        "begin": null,
+        "attribute-values": {},
+        "type": "composer",
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "target-credit": "",
+        "attribute-ids": {}
+      },
+      {
+        "target-credit": "",
+        "attribute-ids": {},
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "type": "lyricist",
+        "attribute-values": {},
+        "begin": null,
+        "target-type": "artist",
+        "source-credit": "",
+        "ended": false,
+        "end": null,
+        "direction": "backward",
+        "attributes": [],
+        "artist": {
+          "name": "C.P. Rutledge",
+          "country": "US",
+          "id": "44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc",
+          "sort-name": "Rutledge, C.P.",
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "disambiguation": ""
+        }
+      },
+      {
+        "begin": "2018-03-02",
+        "target-type": "artist",
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "attribute-ids": {},
+        "target-credit": "",
+        "type": "publishing",
+        "attribute-values": {},
+        "artist": {
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "disambiguation": "",
+          "id": "44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc",
+          "country": "US",
+          "name": "C.P. Rutledge",
+          "sort-name": "Rutledge, C.P."
+        },
+        "end": "2018-03-02",
+        "ended": true,
+        "source-credit": "",
+        "direction": "backward",
+        "attributes": []
+      },
+      {
+        "attributes": [],
+        "direction": "backward",
+        "source-credit": "",
+        "end": "2018",
+        "ended": true,
+        "target-type": "recording",
+        "begin": "2018",
+        "type": "performance",
+        "attribute-values": {},
+        "recording": {
+          "title": "I Only Feel the Rain",
+          "id": "8236f281-651c-439c-a735-5ac71df61c08",
+          "length": 218000,
+          "video": false,
+          "disambiguation": ""
+        },
+        "target-credit": "",
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "attribute-ids": {}
+      }
+    ],
+    "attributes": [],
+    "title": "I only feel the rain",
+    "tags": [],
+    "id": "8b195014-6814-4293-9363-b7e838f348ca",
+    "disambiguation": "",
+    "aliases": [],
+    "type": "Song",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "language": "eng",
+    "languages": [
+      "eng"
+    ],
+    "iswcs": []
+  },
+  "recordings": {
+    "8236f281-651c-439c-a735-5ac71df61c08": {
+      "id": "8236f281-651c-439c-a735-5ac71df61c08",
+      "disambiguation": "",
+      "first-release-date": "2018-03-02",
+      "releases": [
+        {
+          "title": "I Only Feel the Rain",
+          "status": "Withdrawn",
+          "quality": "normal",
+          "barcode": "",
+          "disambiguation": "original release",
+          "packaging-id": null,
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "country": null,
+          "date": "2018-03-02",
+          "packaging": null,
+          "id": "cc6f6936-deb0-43a0-8e04-1b6d70808bd1",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "release-events": [
+            {
+              "date": "2018-03-02",
+              "area": null
+            }
+          ]
+        },
+        {
+          "title": "Rainbow Universe",
+          "status": "Withdrawn",
+          "quality": "normal",
+          "packaging-id": null,
+          "barcode": "",
+          "disambiguation": "",
+          "packaging": null,
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "country": "XW",
+          "date": "2023-07-01",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "release-events": [
+            {
+              "date": "2023-07-01",
+              "area": {
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]",
+                "type": null,
+                "disambiguation": "",
+                "name": "[Worldwide]",
+                "type-id": null,
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+              }
+            }
+          ],
+          "id": "89b26b02-3517-43ff-b5f3-819b0ad8551b"
+        },
+        {
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "date": "2023-08-30",
+          "country": "XW",
+          "packaging": null,
+          "id": "115ddc26-4186-4492-99ce-0c2828621b51",
+          "release-events": [
+            {
+              "date": "2023-08-30",
+              "area": {
+                "type": null,
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "sort-name": "[Worldwide]",
+                "type-id": null,
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "name": "[Worldwide]"
+              }
+            }
+          ],
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "quality": "normal",
+          "status": "Withdrawn",
+          "title": "I Only Feel the Rain",
+          "disambiguation": "2023 reissue",
+          "barcode": "",
+          "packaging-id": null
+        }
+      ],
+      "video": false,
+      "length": 218000,
+      "relations": [
+        {
+          "attribute-ids": {},
+          "attribute-values": {},
+          "target-credit": "",
+          "target-type": "place",
+          "direction": "backward",
+          "type-id": "ad462279-14b0-4180-9b58-571d0eef7c51",
+          "ended": false,
+          "type": "recorded at",
+          "end": null,
+          "source-credit": "",
+          "place": {
+            "address": "",
+            "coordinates": null,
+            "type": null,
+            "area": {
+              "sort-name": "Rockingham County",
+              "type": "County",
+              "name": "Rockingham County",
+              "disambiguation": "",
+              "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+              "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa"
+            },
+            "disambiguation": "",
+            "name": "Spirit Castle",
+            "type-id": null,
+            "id": "7ffc6201-4209-4d98-bd1c-469661c97d7d"
+          },
+          "attributes": [],
+          "begin": null
+        }
+      ],
+      "title": "I Only Feel the Rain"
+    }
+  }
+}

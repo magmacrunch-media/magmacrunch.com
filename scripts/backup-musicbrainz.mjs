@@ -114,6 +114,7 @@ const WORKS = [
     { uuid: 'b8717e83-8f30-4a37-b681-834a99f11110', name: 'gone by' },
     { uuid: '4952512f-3d3f-48af-934f-222ebdfcdb4e', name: 'space' },
     { uuid: '27b2fa99-1404-4f12-b9c8-5fe7e90a1769', name: 'somewhere' },
+    { uuid: '8b195014-6814-4293-9363-b7e838f348ca', name: 'i only feel the rain' },
 ];
 
 // Note: C.P. Rutledge and Jon McCoy appear in both ARTISTS and CONTRIBUTORS.
