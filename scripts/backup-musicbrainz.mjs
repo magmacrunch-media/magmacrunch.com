@@ -113,6 +113,7 @@ const WORKS = [
     { uuid: '4c19c4b8-e84d-4e7a-8be0-db3600a03aa6', name: 'starting again' },
     { uuid: 'b8717e83-8f30-4a37-b681-834a99f11110', name: 'gone by' },
     { uuid: '4952512f-3d3f-48af-934f-222ebdfcdb4e', name: 'space' },
+    { uuid: '27b2fa99-1404-4f12-b9c8-5fe7e90a1769', name: 'somewhere' },
 ];
 
 // Note: C.P. Rutledge and Jon McCoy appear in both ARTISTS and CONTRIBUTORS.

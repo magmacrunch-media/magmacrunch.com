@@ -1,0 +1,309 @@
+{
+  "fetchedAt": "2026-07-13T00:28:20.437Z",
+  "entityType": "work",
+  "uuid": "27b2fa99-1404-4f12-b9c8-5fe7e90a1769",
+  "name": "Somewhere",
+  "data": {
+    "aliases": [],
+    "relations": [
+      {
+        "direction": "backward",
+        "begin": "2015",
+        "target-credit": "",
+        "source-credit": "",
+        "attribute-ids": {},
+        "attribute-values": {},
+        "ended": true,
+        "type": "composer",
+        "end": "2016",
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "artist": {
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "sort-name": "Rutledge, C.P.",
+          "disambiguation": "",
+          "id": "44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc",
+          "country": "US",
+          "name": "C.P. Rutledge"
+        },
+        "target-type": "artist",
+        "attributes": []
+      },
+      {
+        "attribute-ids": {},
+        "source-credit": "",
+        "target-credit": "",
+        "begin": "2015",
+        "direction": "backward",
+        "attributes": [],
+        "target-type": "artist",
+        "artist": {
+          "type": "Person",
+          "sort-name": "Rutledge, C.P.",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "id": "44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc",
+          "disambiguation": "",
+          "country": "US",
+          "name": "C.P. Rutledge"
+        },
+        "end": "2016",
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "attribute-values": {},
+        "ended": true,
+        "type": "lyricist"
+      },
+      {
+        "target-type": "artist",
+        "attributes": [],
+        "attribute-values": {},
+        "type": "publishing",
+        "ended": true,
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "end": "2017-11-01",
+        "artist": {
+          "type": "Person",
+          "sort-name": "Rutledge, C.P.",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "disambiguation": "",
+          "id": "44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc",
+          "country": "US",
+          "name": "C.P. Rutledge"
+        },
+        "target-credit": "",
+        "source-credit": "",
+        "attribute-ids": {},
+        "direction": "backward",
+        "begin": "2017-11-01"
+      },
+      {
+        "type": "composed at",
+        "ended": false,
+        "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+        "target-type": "place",
+        "place": {
+          "address": "",
+          "disambiguation": "",
+          "id": "7ffc6201-4209-4d98-bd1c-469661c97d7d",
+          "type-id": null,
+          "type": null,
+          "name": "Spirit Castle",
+          "coordinates": null,
+          "area": {
+            "name": "Rockingham County",
+            "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+            "disambiguation": "",
+            "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa",
+            "sort-name": "Rockingham County",
+            "type": "County"
+          }
+        },
+        "target-credit": "",
+        "attribute-values": {},
+        "end": null,
+        "attributes": [],
+        "direction": "backward",
+        "begin": null,
+        "attribute-ids": {},
+        "source-credit": ""
+      },
+      {
+        "attribute-ids": {},
+        "source-credit": "",
+        "begin": null,
+        "direction": "backward",
+        "attributes": [],
+        "end": null,
+        "attribute-values": {},
+        "place": {
+          "address": "",
+          "id": "7ffc6201-4209-4d98-bd1c-469661c97d7d",
+          "disambiguation": "",
+          "type-id": null,
+          "type": null,
+          "name": "Spirit Castle",
+          "coordinates": null,
+          "area": {
+            "name": "Rockingham County",
+            "disambiguation": "",
+            "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+            "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa",
+            "sort-name": "Rockingham County",
+            "type": "County"
+          }
+        },
+        "target-credit": "",
+        "target-type": "place",
+        "type-id": "dfd87666-da9b-43ac-b45e-7ad01b355746",
+        "ended": false,
+        "type": "lyrics written at"
+      },
+      {
+        "target-type": "recording",
+        "type": "performance",
+        "ended": true,
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "target-credit": "",
+        "recording": {
+          "video": false,
+          "length": 255000,
+          "title": "Somewhere",
+          "id": "a4034c80-d637-407d-b8b7-247666cad394",
+          "disambiguation": ""
+        },
+        "attributes": [],
+        "attribute-values": {},
+        "end": "2017",
+        "attribute-ids": {},
+        "source-credit": "",
+        "direction": "backward",
+        "begin": "2017"
+      }
+    ],
+    "tags": [],
+    "attributes": [],
+    "languages": [
+      "eng"
+    ],
+    "iswcs": [],
+    "title": "Somewhere",
+    "type": "Song",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "id": "27b2fa99-1404-4f12-b9c8-5fe7e90a1769",
+    "disambiguation": "",
+    "language": "eng"
+  },
+  "recordings": {
+    "a4034c80-d637-407d-b8b7-247666cad394": {
+      "id": "a4034c80-d637-407d-b8b7-247666cad394",
+      "length": 255000,
+      "first-release-date": "2017-11-01",
+      "releases": [
+        {
+          "packaging": null,
+          "status": "Withdrawn",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "release-events": [
+            {
+              "area": null,
+              "date": "2017-11-01"
+            }
+          ],
+          "date": "2017-11-01",
+          "disambiguation": "original release",
+          "barcode": "",
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "id": "7769910e-f52c-4400-a2f0-4564d5a8568c",
+          "country": null,
+          "packaging-id": null,
+          "title": "Somewhere",
+          "quality": "normal"
+        },
+        {
+          "text-representation": {
+            "language": "eng",
+            "script": null
+          },
+          "id": "411eb089-8e7b-48c4-8df3-045c9ca0cfc3",
+          "country": "XW",
+          "packaging-id": null,
+          "title": "Somewhere",
+          "quality": "normal",
+          "packaging": null,
+          "status": "Withdrawn",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "release-events": [
+            {
+              "area": {
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "type": null,
+                "type-id": null
+              },
+              "date": "2023-05-21"
+            }
+          ],
+          "date": "2023-05-21",
+          "disambiguation": "2023 reissue",
+          "barcode": ""
+        },
+        {
+          "quality": "normal",
+          "title": "Rainbow Universe",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "id": "89b26b02-3517-43ff-b5f3-819b0ad8551b",
+          "country": "XW",
+          "packaging-id": null,
+          "disambiguation": "",
+          "date": "2023-07-01",
+          "barcode": "",
+          "packaging": null,
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "release-events": [
+            {
+              "area": {
+                "disambiguation": "",
+                "type-id": null,
+                "type": null,
+                "sort-name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "name": "[Worldwide]",
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f"
+              },
+              "date": "2023-07-01"
+            }
+          ],
+          "status": "Withdrawn"
+        }
+      ],
+      "title": "Somewhere",
+      "relations": [
+        {
+          "target-type": "place",
+          "begin": null,
+          "type": "recorded at",
+          "attribute-values": {},
+          "attribute-ids": {},
+          "type-id": "ad462279-14b0-4180-9b58-571d0eef7c51",
+          "target-credit": "",
+          "place": {
+            "name": "Spirit Castle",
+            "id": "7ffc6201-4209-4d98-bd1c-469661c97d7d",
+            "address": "",
+            "coordinates": null,
+            "disambiguation": "",
+            "type": null,
+            "area": {
+              "sort-name": "Rockingham County",
+              "disambiguation": "",
+              "name": "Rockingham County",
+              "type": "County",
+              "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+              "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa"
+            },
+            "type-id": null
+          },
+          "attributes": [],
+          "direction": "backward",
+          "ended": false,
+          "end": null,
+          "source-credit": ""
+        }
+      ],
+      "video": false,
+      "disambiguation": ""
+    }
+  }
+}
