@@ -1,0 +1,286 @@
+{
+  "fetchedAt": "2026-07-13T00:25:44.005Z",
+  "entityType": "work",
+  "uuid": "4952512f-3d3f-48af-934f-222ebdfcdb4e",
+  "name": "Space",
+  "data": {
+    "id": "4952512f-3d3f-48af-934f-222ebdfcdb4e",
+    "tags": [],
+    "attributes": [],
+    "title": "Space",
+    "relations": [
+      {
+        "type": "composer",
+        "attribute-values": {},
+        "attribute-ids": {},
+        "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+        "target-credit": "",
+        "target-type": "artist",
+        "begin": "2020",
+        "attributes": [],
+        "direction": "backward",
+        "source-credit": "",
+        "end": "2020",
+        "ended": true,
+        "artist": {
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "disambiguation": "",
+          "country": "US",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "name": "Jon McCoy",
+          "sort-name": "McCoy, Jon"
+        }
+      },
+      {
+        "end": "2020",
+        "ended": true,
+        "source-credit": "",
+        "direction": "backward",
+        "attributes": [],
+        "artist": {
+          "disambiguation": "",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "type": "Person",
+          "sort-name": "McCoy, Jon",
+          "country": "US",
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "name": "Jon McCoy"
+        },
+        "target-credit": "",
+        "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+        "attribute-ids": {},
+        "attribute-values": {},
+        "type": "lyricist",
+        "begin": "2020",
+        "target-type": "artist"
+      },
+      {
+        "type": "publishing",
+        "attribute-values": {},
+        "target-credit": "",
+        "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+        "attribute-ids": {},
+        "begin": "2020-06-01",
+        "target-type": "artist",
+        "ended": true,
+        "end": "2020-06-01",
+        "source-credit": "",
+        "attributes": [],
+        "direction": "backward",
+        "artist": {
+          "id": "33c830f0-d5be-4baf-b8db-3dc754e74c16",
+          "country": "US",
+          "name": "Jon McCoy",
+          "sort-name": "McCoy, Jon",
+          "type": "Person",
+          "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+          "disambiguation": ""
+        }
+      },
+      {
+        "begin": "2020",
+        "target-type": "place",
+        "type": "composed at",
+        "attribute-values": {},
+        "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+        "attribute-ids": {},
+        "target-credit": "",
+        "place": {
+          "id": "362e9df6-ce39-4805-841e-c113e4e2a7c9",
+          "name": "Frogwood Manor",
+          "type-id": null,
+          "area": {
+            "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa",
+            "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+            "type": "County",
+            "name": "Rockingham County",
+            "disambiguation": "",
+            "sort-name": "Rockingham County"
+          },
+          "type": null,
+          "disambiguation": "",
+          "coordinates": null,
+          "address": ""
+        },
+        "source-credit": "",
+        "end": "2020",
+        "ended": true,
+        "attributes": [],
+        "direction": "backward"
+      },
+      {
+        "place": {
+          "name": "Frogwood Manor",
+          "id": "362e9df6-ce39-4805-841e-c113e4e2a7c9",
+          "coordinates": null,
+          "disambiguation": "",
+          "address": "",
+          "type-id": null,
+          "type": null,
+          "area": {
+            "sort-name": "Rockingham County",
+            "disambiguation": "",
+            "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+            "type": "County",
+            "name": "Rockingham County",
+            "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa"
+          }
+        },
+        "direction": "backward",
+        "attributes": [],
+        "source-credit": "",
+        "end": "2020",
+        "ended": true,
+        "target-type": "place",
+        "begin": "2020",
+        "type-id": "dfd87666-da9b-43ac-b45e-7ad01b355746",
+        "attribute-ids": {},
+        "target-credit": "",
+        "type": "lyrics written at",
+        "attribute-values": {}
+      },
+      {
+        "target-type": "recording",
+        "begin": "2020",
+        "attribute-values": {},
+        "type": "performance",
+        "recording": {
+          "disambiguation": "",
+          "length": 172000,
+          "video": false,
+          "title": "Space",
+          "id": "37d50ed9-0667-4f98-b0b0-d99949117879"
+        },
+        "target-credit": "",
+        "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+        "attribute-ids": {},
+        "attributes": [],
+        "direction": "backward",
+        "source-credit": "",
+        "ended": true,
+        "end": "2020"
+      }
+    ],
+    "languages": [
+      "eng"
+    ],
+    "iswcs": [],
+    "disambiguation": "",
+    "language": "eng",
+    "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+    "aliases": [],
+    "type": "Song"
+  },
+  "recordings": {
+    "37d50ed9-0667-4f98-b0b0-d99949117879": {
+      "length": 172000,
+      "title": "Space",
+      "first-release-date": "2020-06-01",
+      "releases": [
+        {
+          "title": "Space",
+          "date": "2020-06-01",
+          "release-events": [
+            {
+              "date": "2020-06-01",
+              "area": {
+                "id": "489ce91b-6658-3307-9877-795b68554c98",
+                "disambiguation": "",
+                "iso-3166-1-codes": [
+                  "US"
+                ],
+                "name": "United States",
+                "type": null,
+                "type-id": null,
+                "sort-name": "United States"
+              }
+            }
+          ],
+          "country": "US",
+          "status-id": "6a3772de-4605-4132-993d-aa315cd19b4b",
+          "packaging": null,
+          "quality": "normal",
+          "packaging-id": null,
+          "barcode": "",
+          "text-representation": {
+            "language": null,
+            "script": null
+          },
+          "status": "Withdrawn",
+          "id": "9304af09-6383-4905-8241-93b85af3cf79",
+          "disambiguation": "original release"
+        },
+        {
+          "release-events": [
+            {
+              "area": {
+                "name": "[Worldwide]",
+                "iso-3166-1-codes": [
+                  "XW"
+                ],
+                "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                "disambiguation": "",
+                "type-id": null,
+                "sort-name": "[Worldwide]",
+                "type": null
+              },
+              "date": "2023-07-05"
+            }
+          ],
+          "country": "XW",
+          "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+          "title": "Space",
+          "date": "2023-07-05",
+          "packaging-id": null,
+          "barcode": "",
+          "packaging": null,
+          "quality": "normal",
+          "status": "Official",
+          "text-representation": {
+            "script": null,
+            "language": "eng"
+          },
+          "disambiguation": "2023 reissue",
+          "id": "7fc2bd4e-3b19-41bc-ac76-728d5c457b51"
+        }
+      ],
+      "disambiguation": "",
+      "id": "37d50ed9-0667-4f98-b0b0-d99949117879",
+      "video": false,
+      "relations": [
+        {
+          "ended": true,
+          "type": "recorded at",
+          "type-id": "ad462279-14b0-4180-9b58-571d0eef7c51",
+          "target-type": "place",
+          "target-credit": "",
+          "place": {
+            "type": null,
+            "type-id": null,
+            "id": "362e9df6-ce39-4805-841e-c113e4e2a7c9",
+            "disambiguation": "",
+            "address": "",
+            "area": {
+              "sort-name": "Rockingham County",
+              "type-id": "bcecec27-8bdb-3e00-8254-d948dda502fa",
+              "type": "County",
+              "name": "Rockingham County",
+              "id": "99f0937c-69b7-455c-9b13-fe708da6943e",
+              "disambiguation": ""
+            },
+            "coordinates": null,
+            "name": "Frogwood Manor"
+          },
+          "attribute-values": {},
+          "end": "2020",
+          "attributes": [],
+          "direction": "backward",
+          "begin": "2020",
+          "source-credit": "",
+          "attribute-ids": {}
+        }
+      ]
+    }
+  }
+}
