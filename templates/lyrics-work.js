@@ -235,8 +235,14 @@
             }
             for (const { artist, roles, begin, end, ended } of Object.values(artistMap)) {
                 const label = roles.length > 1 ? roles.join(', ') : roles[0];
+                let dateStr = '';
+                if (begin || end) {
+                    if (begin && end && begin === end) dateStr = fmtDate(begin);
+                    else if (begin && end) dateStr = `${fmtDate(begin)}–${fmtDate(end)}`;
+                    else if (begin) dateStr = fmtDate(begin) + (ended ? '' : '–present');
+                }
                 const credit = archiveLink(artist?.id, artist?.name, 'artist')
-                    + (begin || end ? ` <span class="rec-date">${fmtDate(begin)}–${fmtDate(end)}</span>` : '');
+                    + (dateStr ? ` <span class="rec-date">${dateStr}</span>` : '');
                 html += `<p><strong>${esc(label)}</strong> ${credit}</p>`;
             }
 
