@@ -27,7 +27,11 @@
     function archiveLink(id, name, type) {
         if (!id || !name) return esc(name || '');
         const path = ENTITY_MAP[id];
-        if (path) return '<a href="' + path + '">' + esc(name) + '</a>';
+        if (path) {
+            // Entity map paths are relative to archive/ — adjust for lyrics section
+            const fixed = path.replace(/^\.\.\/\.\.\//, '../../../archive/');
+            return '<a href="' + fixed + '">' + esc(name) + '</a>';
+        }
         return '<a href="https://musicbrainz.org/' + (type || 'artist') + '/' + esc(id) + '" target="_blank" rel="noopener">' + esc(name) + '</a>';
     }
 
@@ -249,8 +253,9 @@
             // publisher (from config, with archive link)
             if (C.publisherLabel) {
                 const pubPath = ENTITY_MAP[C.publisherLabel.id];
-                const pubLink = pubPath
-                    ? `<a href="${pubPath}">${esc(C.publisherLabel.name)}</a>`
+                const fixed = pubPath ? pubPath.replace(/^\.\.\/\.\.\//, '../../../archive/') : null;
+                const pubLink = fixed
+                    ? `<a href="${fixed}">${esc(C.publisherLabel.name)}</a>`
                     : `<a href="https://musicbrainz.org/label/${esc(C.publisherLabel.id)}" target="_blank" rel="noopener">${esc(C.publisherLabel.name)}</a>`;
                 html += `<p><strong>publisher</strong> ${pubLink}</p>`;
             }
@@ -341,7 +346,8 @@
             if (C.artistId) {
                 const contribPath = ENTITY_MAP[C.artistId];
                 if (contribPath) {
-                    html += `<p><a href="${contribPath}">view contributor page →</a></p>`;
+                    const fixed = contribPath.replace(/^\.\.\/\.\.\//, '../../../archive/');
+                    html += `<p><a href="${fixed}">view contributor page →</a></p>`;
                 }
             }
 
