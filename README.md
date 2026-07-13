@@ -36,13 +36,19 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ├── music/                     jukebox, distributed music, floppy disk, catalog
 ├── press/                     journals
 │   ├── scientific/            science & technology essays
-│   └── experimental/          experimental writing
+│   ├── experimental/          experimental writing
+│   └── lyrics/                song lyrics with MusicBrainz metadata
+│       ├── jon-mccoy/         jon mccoy songs
+│       ├── sex-van-floor-plan/ svfp songs
+│       ├── c-p-rutledge/      c.p. rutledge songs
+│       └── thld/              thld songs
 ├── scripts/                   backup-musicbrainz.mjs
 ├── templates/                 JS template scripts for archive subpages
 │   ├── artist_*.js            events, releases, recordings, works templates
 │   ├── place_*.js             personnel, recordings, works, events templates
 │   ├── contributor.js         by-contributor credit page template
 │   ├── label.js               by-label page template
+│   ├── lyrics-work.js         lyrics page MusicBrainz metadata template
 │   └── entity-map.js          MB ID → internal path mapping for contributor links
 └── visual/                    gallery pages (collage, photography, music-videos)
 ```
@@ -64,6 +70,12 @@ All nav elements (border glow, brand text, dropdown hover, hamburger) use CSS va
 
 ### archive template system
 Each artist/place has a thin HTML stub that sets a config object (`window.ARTIST_CONFIG` or `window.PLACE_CONFIG`). A shared template script injects styles, populates the sub-nav, and fetches data from MusicBrainz. Templates check a local JSON cache first — run `node scripts/backup-musicbrainz.mjs` to snapshot all data.
+
+### lyrics section
+Song lyrics organized by artist under `press/lyrics/`. Each song page displays static lyrics alongside a MusicBrainz metadata card showing composer/lyricist credits, publisher, recording locations, and release info. The `lyrics-work.js` template fetches work data from MB, checks a local JSON cache first (`archive/_cache/works/`), and links artists/places to archive pages via `entity-map.js`. Place names in recording info link to their archive pages.
+
+### contributor pages
+`archive/by-contributor/` pages credit musicians across the archive. The `contributor.js` template fetches all MB relationships (bands, labels, events, recordings, works, etc.) and renders them with links to other archive pages via `entity-map.js`.
 
 ---
 
@@ -121,6 +133,16 @@ Same pattern but use `window.PLACE_CONFIG` and place templates. Place subpages u
 3. Set `window.__CONTRIBUTOR_CONFIG` with `MB_ID`, `NAME`, and `ARCHIVE_LINKS`
 4. Load `entity-map.js` then `contributor.js`
 5. Add a card in `archive/by-contributor/index.html` and any new MB ID mappings to `templates/entity-map.js`
+
+### adding a lyrics page
+
+1. Create folder: `press/lyrics/artist-name/`
+2. Create `index.html` (artist listing) and `song-name.html` (song page)
+3. Set `window.__LYRICS_CONFIG` with `workId`, `artistName`, `artistId`, and optional `publisherLabel`
+4. Load `entity-map.js`, `mb-cache.js`, then `lyrics-work.js`
+5. Add the work MBID to `WORKS` in `scripts/backup-musicbrainz.mjs`
+6. Run `node scripts/backup-musicbrainz.mjs` or fetch manually to populate `archive/_cache/works/`
+7. Add artist card in `press/lyrics/index.html` and update piece counts in `press/index.html`
 
 ---
 
