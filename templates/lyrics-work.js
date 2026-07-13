@@ -92,12 +92,24 @@
     }
 
     // ── inject styles ──
+    const isDark = C.dark;
+    const accent = C.accent || 'red';
+    const ACCENT_HEX = { red: '#c02828', purple: '#d946ef', cyan: '#00f5ff', green: '#39ff6e', yellow: '#ffe03a', orange: '#ff7c1f', rose: '#ff3d6e' };
+    const accentHex = ACCENT_HEX[accent] || '#c02828';
+    const accentRgba = accentHex.replace('#', '').match(/.{2}/g).map(h => parseInt(h, 16)).join(',');
+
+    const cardBg = isDark ? '#1e2235' : '#e8dcc0';
+    const cardBorder = isDark ? '#6020b0' : '#c8c0a8';
+    const cardText = isDark ? '#c8b8e8' : '#555';
+    const cardStrong = isDark ? '#f5d0ff' : '#999';
+    const cardMeta = isDark ? '#9858d8' : '#777';
+
     const style = document.createElement('style');
     style.textContent = `
         .mb-work-meta {
             width: min(700px, 90vw);
-            border: 2px solid #c8c0a8;
-            background: #e8dcc0;
+            border: 2px solid ${cardBorder};
+            background: ${cardBg};
             padding: 24px 28px;
             margin-top: 40px;
             animation: fadeUp 0.5s 0.2s ease both;
@@ -105,30 +117,30 @@
         .mb-work-meta h2 {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: #c02828;
+            color: ${accentHex};
             letter-spacing: 0.1em;
             margin-bottom: 16px;
         }
         .mb-work-meta p {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #555;
+            color: ${cardText};
             line-height: 1.7;
             margin-bottom: 6px;
         }
         .mb-work-meta p strong {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #999;
+            color: ${cardStrong};
             letter-spacing: 0.08em;
             margin-right: 6px;
         }
         .mb-work-meta a {
-            color: #c02828;
+            color: ${accentHex};
             text-decoration: underline;
-            text-decoration-color: rgba(192,40,40,0.3);
+            text-decoration-color: rgba(${accentRgba},0.3);
         }
-        .mb-work-meta a:hover { color: #8a1a1a; }
+        .mb-work-meta a:hover { opacity: 0.8; }
         .mb-work-meta .rec-list {
             margin-top: 8px;
             padding-left: 16px;
@@ -136,7 +148,7 @@
         .mb-work-meta .rec-item {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #555;
+            color: ${cardText};
             margin-bottom: 12px;
             line-height: 1.6;
             display: block;
@@ -144,38 +156,38 @@
         .mb-work-meta .rec-date {
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
-            color: #999;
+            color: ${cardStrong};
             margin-left: 6px;
         }
         .mb-work-meta .rec-releases {
             display: block;
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
-            color: #777;
+            color: ${cardMeta};
             margin-top: 4px;
             padding-left: 12px;
         }
         .mb-work-meta .rec-line {
             font-family: 'Courier Prime', monospace;
             font-size: 11px;
-            color: #777;
+            color: ${cardMeta};
             margin-top: 4px;
             padding-left: 12px;
         }
         .mb-work-meta .mb-tag {
             display: inline-block;
-            background: #ddd4b8;
-            border: 1px solid #c8c0a8;
+            background: ${isDark ? '#2e1a50' : '#ddd4b8'};
+            border: 1px solid ${cardBorder};
             padding: 1px 6px;
             margin: 2px;
             font-family: 'Courier Prime', monospace;
             font-size: 10px;
-            color: #777;
+            color: ${cardMeta};
         }
         .mb-loading {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #999;
+            color: ${cardStrong};
             letter-spacing: 0.1em;
         }
     `;

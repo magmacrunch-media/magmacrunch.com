@@ -11,22 +11,22 @@
         workId:     'b5d8ec34-e488-4e94-8aa7-af05136e9322',
         artistName: 'sex van floor plan',
         artistId:   '260e4953-a937-4355-8389-d1baaf24eca5',
-        accent:     'red',
+        accent:     'purple',
+        dark:       true,
         artistPageLabel: 'Sex Van Floor Plan band page →',
     };
     </script>
     <style>
         :root {
-            --nav-accent: #c02828;
-            --nav-glow: rgba(192,40,40,0.4);
-            --nav-brand: #c02828;
-            --nav-brand-glow: rgba(192,40,40,0.6);
+            --nav-accent: #d946ef;
+            --nav-glow: rgba(217,70,239,0.4);
+            --nav-brand: #f5d0ff;
+            --nav-brand-glow: rgba(245,208,255,0.7);
         }
 
         body {
-            background-color: #f0e4c8;
-            color: #1a1a1a;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            background-color: #0a0a14;
+            color: #f5d0ff;
         }
 
         main {
@@ -40,16 +40,16 @@
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #999;
+            color: #6020b0;
             letter-spacing: 0.1em;
             margin-top: -8px;
             margin-bottom: 24px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #666; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #c02828; }
-        .breadcrumb .sep { margin: 0 8px; color: #999; }
-        .breadcrumb .current { color: #c02828; }
+        .breadcrumb a { color: #9858d8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #d946ef; }
+        .breadcrumb .sep { margin: 0 8px; color: #6020b0; }
+        .breadcrumb .current { color: #d946ef; }
 
         .article-header {
             width: min(700px, 90vw);
@@ -61,8 +61,8 @@
         .article-type {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #f0e4c8;
-            background: #c02828;
+            color: #0a0a14;
+            background: #d946ef;
             display: inline-block;
             padding: 3px 10px;
             letter-spacing: 0.1em;
@@ -72,7 +72,7 @@
         .article-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(11px, 2.2vw, 16px);
-            color: #1a1a1a;
+            color: #f5d0ff;
             letter-spacing: 0.06em;
             line-height: 1.8;
             margin-bottom: 16px;
@@ -81,11 +81,13 @@
         .article-meta {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #777;
+            color: #9858d8;
             line-height: 1.6;
         }
 
-        .article-meta .author { color: #c02828; font-weight: 700; }
+        .article-meta .author { color: #d946ef; font-weight: 700; }
+        .article-meta .author a { color: #d946ef; text-decoration: none; }
+        .article-meta .author a:hover { opacity: 0.8; }
 
         .article-body {
             width: min(700px, 90vw);
@@ -96,7 +98,7 @@
             font-family: 'Courier Prime', monospace;
             font-size: 14px;
             line-height: 1.85;
-            color: #222;
+            color: #c8b8e8;
             margin-bottom: 16px;
         }
 
@@ -107,7 +109,7 @@
             line-height: 0.85;
             margin-right: 8px;
             margin-top: 4px;
-            color: #c02828;
+            color: #d946ef;
         }
 
         .verse { margin-bottom: 28px; }
@@ -120,30 +122,30 @@
             margin-bottom: 40px;
         }
 
-        .article-end span { color: #c02828; font-size: 12px; }
+        .article-end span { color: #d946ef; font-size: 12px; }
 
         .article-back {
             display: inline-block;
             margin-top: 24px;
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: #c02828;
+            color: #d946ef;
             text-decoration: none;
-            border: 2px solid #c02828;
+            border: 2px solid #d946ef;
             padding: 8px 16px;
             transition: all 0.15s;
         }
         .article-back:hover {
-            background: #c02828;
-            color: #f0e4c8;
+            background: #d946ef;
+            color: #0a0a14;
         }
 
         footer {
-            background: #e8dcc0 !important;
-            border-top-color: #999 !important;
-            color: #999 !important;
+            background: #0a0a14 !important;
+            border-top-color: #6020b0 !important;
+            color: #9858d8 !important;
         }
-        footer span { color: #c02828 !important; }
+        footer span { color: #d946ef !important; }
 
         @media (max-width: 640px) {
             .article-title { font-size: 11px; }
@@ -186,7 +188,7 @@
         <div class="article-type">lyrics</div>
         <h1 class="article-title">pay2play</h1>
         <div class="article-meta">
-            <span class="author"><a href="../../../archive/by-artist/svfp/index.html" style="color:#c02828;text-decoration:none;font-weight:700;">sex van floor plan</a></span>
+            <span class="author"><a href="../../../archive/by-artist/svfp/index.html">sex van floor plan</a></span>
         </div>
     </div>
 
@@ -291,7 +293,7 @@
 
 <script src="../../../templates/entity-map.js"></script>
 <script src="../../../templates/mb-cache.js"></script>
-<script src="../../../templates/lyrics-work.js?v=6"></script>
+<script src="../../../templates/lyrics-work.js?v=8"></script>
 <script src="../../../nav.js"></script>
 </body>
 </html>
