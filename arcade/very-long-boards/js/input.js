@@ -83,32 +83,52 @@ function consumeInput() {
 
 // Touch controls
 let touchStartX = null;
+let touchStartTime = 0;
 let touchActive = false;
 
 document.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchActive = true;
-    input.brake = true;
-    input.enter = true; // Trigger enter on touch start
-});
-
-document.addEventListener('touchmove', (e) => {
-    if (!touchActive) return;
     e.preventDefault();
-    const dx = e.touches[0].clientX - touchStartX;
-    if (dx < -20) {
+    touchStartX = e.touches[0].clientX;
+    touchStartTime = Date.now();
+    touchActive = true;
+
+    const screenW = window.innerWidth;
+    const x = e.touches[0].clientX;
+    if (x < screenW * 0.35) {
         input.left = true;
         input.right = false;
-    } else if (dx > 20) {
+    } else if (x > screenW * 0.65) {
         input.right = true;
         input.left = false;
     } else {
         input.left = false;
         input.right = false;
     }
-});
+}, { passive: false });
 
-document.addEventListener('touchend', () => {
+document.addEventListener('touchmove', (e) => {
+    if (!touchActive) return;
+    e.preventDefault();
+    const screenW = window.innerWidth;
+    const x = e.touches[0].clientX;
+    if (x < screenW * 0.35) {
+        input.left = true;
+        input.right = false;
+    } else if (x > screenW * 0.65) {
+        input.right = true;
+        input.left = false;
+    } else {
+        input.left = false;
+        input.right = false;
+    }
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+    const elapsed = Date.now() - touchStartTime;
+    if (touchActive && elapsed < 200 && !input.left && !input.right) {
+        input.trick = true;
+        input.enter = true;
+    }
     touchActive = false;
     input.left = false;
     input.right = false;

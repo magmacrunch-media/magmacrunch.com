@@ -13,6 +13,7 @@ let lastCountNum = 0;
 
 let sceneObj = null;
 let terrain = null;
+let titleDist = 0;
 
 const titleScreen = document.getElementById('titleScreen');
 const charSelect = document.getElementById('charSelect');
@@ -51,10 +52,14 @@ function gameLogic() {
 
     switch (gameState) {
         case 'title':
-            terrain.update(0.3);
-            window.updateObstaclePositions(terrain, 0.3);
-            window.updateSceneryPositions(terrain, 0.3);
-            sceneObj.updateCamera(playerMesh, 0, 0);
+            titleDist += 0.15;
+            terrain.update(titleDist);
+            playerMesh.position.y = terrain.hillAt(titleDist);
+            window.updateObstaclePositions(terrain, terrain.getScrollOffset());
+            window.updateSceneryPositions(terrain, terrain.getScrollOffset());
+            const tSlope = terrain.hillAt(titleDist + 5) - terrain.hillAt(titleDist);
+            const tCurve = terrain.curveAt(titleDist);
+            sceneObj.updateCamera(playerMesh, tSlope, tCurve);
             sceneObj.updateSky(playerMesh);
             if (inp.enter) {
                 gameState = 'select';
@@ -65,10 +70,14 @@ function gameLogic() {
             break;
 
         case 'select':
-            terrain.update(0.3);
-            window.updateObstaclePositions(terrain, 0.3);
-            window.updateSceneryPositions(terrain, 0.3);
-            sceneObj.updateCamera(playerMesh, 0, 0);
+            titleDist += 0.15;
+            terrain.update(titleDist);
+            playerMesh.position.y = terrain.hillAt(titleDist);
+            window.updateObstaclePositions(terrain, terrain.getScrollOffset());
+            window.updateSceneryPositions(terrain, terrain.getScrollOffset());
+            const sSlope = terrain.hillAt(titleDist + 5) - terrain.hillAt(titleDist);
+            const sCurve = terrain.curveAt(titleDist);
+            sceneObj.updateCamera(playerMesh, sSlope, sCurve);
             sceneObj.updateSky(playerMesh);
             if (inp.left) {
                 selectedCharIndex = (selectedCharIndex - 1 + charKeys.length) % charKeys.length;
@@ -86,6 +95,7 @@ function gameLogic() {
             break;
 
         case 'countdown': {
+            player.groundY = terrain ? terrain.hillAt(player.distance) : 0;
             terrain.update(player.speed);
             window.updateObstaclePositions(terrain, terrain.getScrollOffset());
             window.updateSceneryPositions(terrain, terrain.getScrollOffset());
@@ -130,6 +140,11 @@ function gameLogic() {
                 endGame('BAIL!');
                 break;
             }
+            if (result === 'trick') {
+                window.spawnTrickParticles();
+                playTrickSound();
+                showTrickText();
+            }
             if (window.checkObstacleCollisions(terrain)) {
                 window.spawnCrashParticles();
                 playCrashSound();
@@ -142,6 +157,7 @@ function gameLogic() {
             sceneObj.updateCamera(playerMesh, slope2, curve2);
             sceneObj.updateSky(playerMesh);
             updateHUD();
+            updateTrickText();
             break;
 
         case 'paused':
@@ -163,6 +179,8 @@ function gameLogic() {
 
 function startCountdown() {
     window.resetPlayer();
+    player.speed = 0.1;
+    titleDist = 0;
     window.initObstacles(sceneObj.scene);
     window.initScenery(sceneObj.scene);
     countdownStart = Date.now();
@@ -216,9 +234,25 @@ function renderCountdown(count) {
     }
 }
 
+let trickTextTimer = 0;
+function showTrickText() {
+    trickTextTimer = 40;
+}
+function updateTrickText() {
+    const el = document.getElementById('hudTrick');
+    if (!el) return;
+    if (trickTextTimer > 0) {
+        trickTextTimer--;
+        el.textContent = 'TRICK! +' + Math.floor(CONFIG.TRICK_POINTS * CHARACTERS[currentCharacter].trickMult * (1 + player.speed));
+        el.style.opacity = 1;
+    } else {
+        el.style.opacity = 0;
+    }
+}
+
 document.addEventListener('DOMContentLoaded', init);
 document.addEventListener('keydown', (e) => {
-    if (e.code === 'KeyD' && gameState === 'playing') {
+    if (e.code === 'Backquote' && gameState === 'playing') {
         terrain.debugMode = !terrain.debugMode;
     }
 });

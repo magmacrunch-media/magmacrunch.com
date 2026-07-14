@@ -7,6 +7,13 @@ let audioCtx = null;
 function initAudio() {
     try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const resume = () => {
+            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            document.removeEventListener('keydown', resume);
+            document.removeEventListener('touchstart', resume);
+        };
+        document.addEventListener('keydown', resume);
+        document.addEventListener('touchstart', resume);
     } catch (e) {
         console.log('Web Audio not available');
     }

@@ -9,13 +9,18 @@ window.player = {
     invincible: false, invincibleTimer: 0,
     stability: 100, wobbling: false, wobblePhase: 0,
     bailing: false, bailTimer: 0,
-    groundY: 0, kicked: false
+    groundY: 0, kicked: false,
+    tricking: false, trickTimer: 0, trickCooldown: 0
 };
 
 window.playerMesh = null;
 
 window.createPlayer = function(scene) {
     const root = new BABYLON.TransformNode('playerRoot', scene);
+
+    const charNode = new BABYLON.TransformNode('charNode', scene);
+    charNode.parent = root;
+    charNode.rotation.y = Math.PI / 2;
 
     const deckMat = new BABYLON.StandardMaterial('deckMat', scene);
     deckMat.diffuseColor = new BABYLON.Color3(0.5, 0.25, 0.06);
@@ -66,38 +71,38 @@ window.createPlayer = function(scene) {
 
     const body = BABYLON.MeshBuilder.CreateBox('body', { width: 0.5, height: 0.55, depth: 0.28 }, scene);
     body.material = shirtMat;
-    body.parent = root;
+    body.parent = charNode;
     body.position.y = 0.75;
 
     const legL = BABYLON.MeshBuilder.CreateBox('legL', { width: 0.16, height: 0.32, depth: 0.16 }, scene);
     legL.material = pantsMat;
-    legL.parent = root;
+    legL.parent = charNode;
     legL.position = new BABYLON.Vector3(-0.14, 0.35, 0);
 
     const legR = BABYLON.MeshBuilder.CreateBox('legR', { width: 0.16, height: 0.32, depth: 0.16 }, scene);
     legR.material = pantsMat;
-    legR.parent = root;
+    legR.parent = charNode;
     legR.position = new BABYLON.Vector3(0.14, 0.35, 0);
 
     const head = BABYLON.MeshBuilder.CreateBox('head', { size: 0.28 }, scene);
     head.material = skinMat;
-    head.parent = root;
+    head.parent = charNode;
     head.position.y = 1.2;
 
     const hair = BABYLON.MeshBuilder.CreateBox('hair', { width: 0.3, height: 0.09, depth: 0.3 }, scene);
     hair.material = hairMat;
-    hair.parent = root;
+    hair.parent = charNode;
     hair.position.y = 1.38;
 
     const armL = BABYLON.MeshBuilder.CreateBox('armL', { width: 0.1, height: 0.38, depth: 0.1 }, scene);
     armL.material = skinMat;
-    armL.parent = root;
+    armL.parent = charNode;
     armL.position = new BABYLON.Vector3(-0.34, 0.82, 0);
     armL.rotation.z = 0.2;
 
     const armR = BABYLON.MeshBuilder.CreateBox('armR', { width: 0.1, height: 0.38, depth: 0.1 }, scene);
     armR.material = skinMat;
-    armR.parent = root;
+    armR.parent = charNode;
     armR.position = new BABYLON.Vector3(0.34, 0.82, 0);
     armR.rotation.z = -0.2;
 
@@ -105,8 +110,6 @@ window.createPlayer = function(scene) {
     root._armR = armR;
 
     for (const m of root.getChildMeshes()) m.isPickable = false;
-
-    root.rotation.y = Math.PI / 2;
 
     playerMesh = root;
     return root;
@@ -129,6 +132,9 @@ window.resetPlayer = function() {
     player.bailTimer = 0;
     player.groundY = 0;
     player.kicked = false;
+    player.tricking = false;
+    player.trickTimer = 0;
+    player.trickCooldown = 0;
 };
 
 window.updatePlayer = function(input, terrain, dt) {
@@ -162,6 +168,23 @@ window.updatePlayer = function(input, terrain, dt) {
 
     if (input.brake) {
         player.speed *= Math.pow(0.97, dtScale);
+    }
+
+    if (player.tricking) {
+        player.trickTimer -= dtScale;
+        if (player.trickTimer <= 0) {
+            player.tricking = false;
+        }
+    }
+    if (player.trickCooldown > 0) player.trickCooldown -= dtScale;
+
+    if (input.trick && !player.tricking && player.trickCooldown <= 0 && player.speed > 0.2) {
+        player.tricking = true;
+        player.trickTimer = 18;
+        player.trickCooldown = 30;
+        const trickScore = Math.floor(CONFIG.TRICK_POINTS * char.trickMult * (1 + player.speed));
+        player.score += trickScore;
+        return 'trick';
     }
 
     if (input.left) {
@@ -231,7 +254,7 @@ window.updatePlayerMesh = function(terrain, frame) {
         playerMesh.rotation.z = player.lean * 0.18 + wobbleX * 0.08;
         playerMesh.rotation.y = player.lean * 0.12;
         playerMesh.rotation.x = 0;
-        playerMesh.scaling.y = 1;
+        playerMesh.scaling.y = player.tricking ? 0.85 : 1;
     }
 
     if (playerMesh._armL) {
@@ -247,7 +270,7 @@ window.updatePlayerMesh = function(terrain, frame) {
 };
 
 window.performTrick = function() {
-    return false;
+    return player.tricking;
 };
 
 window.getPlayerScreenY = function() { return 0.8; };

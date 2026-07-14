@@ -24,13 +24,6 @@ const CONFIG = {
     OBS_FIRST: 2000,
     OBS_MIN_GAP: 1000,
     OBS_MAX_GAP: 2000,
-    OBS_TYPES: [
-        { type: 'cone', w: 18, h: 28, color: '#ff6b35' },
-        { type: 'rock', w: 28, h: 22, color: '#888' },
-        { type: 'skater', w: 28, h: 40, color: '#ff2e9c', points: 150 },
-        { type: 'sign', w: 20, h: 34, color: '#ffe03a' },
-        { type: 'puddle', w: 40, h: 16, color: '#4a90d9', points: 50 },
-    ],
 
     TRICK_POINTS: 200,
     NEAR_MISS_POINTS: 75,
