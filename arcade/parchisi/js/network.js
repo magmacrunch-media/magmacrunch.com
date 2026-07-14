@@ -38,7 +38,7 @@ var Network = (function() {
             return proto + '://' + serverParam;
         }
         // Default to magmacrunch server
-        return 'ws://98.49.52.35:8773';
+        return 'ws://magmacrunch.duckdns.org:8773';
     }
 
     // ── Connect ───────────────────────────────────────────────────────────────

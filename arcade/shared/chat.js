@@ -20,7 +20,7 @@ var Chat = (function() {
         } catch(e) {}
         var h = window.location.hostname;
         if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
-        return 'ws://98.49.52.35:8768';
+        return 'ws://magmacrunch.duckdns.org:8768';
     })();
 
     // ── State ───────────────────────────────────────────────────────────────
