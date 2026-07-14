@@ -69,6 +69,7 @@ function gameLogic() {
             if (inp.enter) {
                 gameState = 'select';
                 hideOverlay(titleScreen);
+                showGarage();
                 showOverlay(charSelect);
                 playSelectSound();
             }
@@ -301,9 +302,9 @@ function renderBoardCards() {
 
         const stats = document.createElement('div');
         stats.className = 'bs-stats';
-        const spd = Math.round(board.speedMult * 10);
-        const hand = Math.round(board.handlingMult * 10);
-        const stab = Math.round(board.stabilityMult * 10);
+        const spd = Math.min(10, Math.round(board.speedMult * 10));
+        const hand = Math.min(10, Math.round(board.handlingMult * 10));
+        const stab = Math.min(10, Math.round(board.stabilityMult * 10));
         stats.textContent = `SPD ${'█'.repeat(spd)}${'░'.repeat(10-spd)} HAND ${'█'.repeat(hand)}${'░'.repeat(10-hand)} STAB ${'█'.repeat(stab)}${'░'.repeat(10-stab)}`;
 
         card.appendChild(preview);
