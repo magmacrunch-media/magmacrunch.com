@@ -148,6 +148,84 @@
             .article-title { font-size: 11px; }
             .article-body p { font-size: 13px; }
         }
+
+        .mb-work-meta {
+            width: min(700px, 90vw);
+            border: 2px solid #383e48;
+            background: #131720;
+            padding: 24px 28px;
+            margin-top: 40px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .mb-work-meta h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #7a9080;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+        }
+        .mb-work-meta p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a9aaa;
+            line-height: 1.7;
+            margin-bottom: 6px;
+        }
+        .mb-work-meta p strong {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #b8c4cc;
+            letter-spacing: 0.08em;
+            margin-right: 6px;
+        }
+        .mb-work-meta a {
+            color: #7a9080;
+            text-decoration: underline;
+            text-decoration-color: rgba(122,144,128,0.3);
+        }
+        .mb-work-meta a:hover { opacity: 0.8; }
+        .mb-work-meta .rec-list {
+            margin-top: 8px;
+            padding-left: 16px;
+        }
+        .mb-work-meta .rec-item {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a9aaa;
+            margin-bottom: 12px;
+            line-height: 1.6;
+            display: block;
+        }
+        .mb-work-meta .rec-date {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #b8c4cc;
+            margin-left: 6px;
+        }
+        .mb-work-meta .rec-line {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #6070a0;
+            margin-top: 4px;
+            padding-left: 12px;
+        }
+        .mb-work-meta .mb-tag {
+            display: inline-block;
+            background: #1e2430;
+            border: 1px solid #383e48;
+            padding: 1px 6px;
+            margin: 2px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: #6070a0;
+        }
+        .mb-loading {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #b8c4cc;
+            letter-spacing: 0.1em;
+        }
+        #mb-work-meta { display: none; }
     </style>
 </head>
 <body>
@@ -236,7 +314,7 @@
 
     <div class="article-end">
         <span>✦</span><br>
-        <a href="index.html" class="article-back">← back to jon mccoy</a>
+        <a href="../../../archive/by-artist/jon-mccoy/index.html" class="article-back">← jon mccoy archive</a>
     </div>
 
 </main>
@@ -247,7 +325,8 @@
 
 <script src="../../../templates/entity-map.js"></script>
 <script src="../../../templates/mb-cache.js"></script>
-<script src="../../../templates/lyrics-work.js?v=9"></script>
+<script src="../../../templates/lyrics-work.js?v=11"></script>
 <script src="../../../nav.js"></script>
+<script>window.addEventListener("pageshow",function(e){if(e.persisted)location.reload();});</script>
 </body>
 </html>
