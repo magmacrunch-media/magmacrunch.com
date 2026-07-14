@@ -1,11 +1,7 @@
 // =====================================================================
-// config.js — API keys (wire up JSONbin here)
+// config.js — Score backend via MAGMA//OPS (ScoreClient)
 // =====================================================================
-const CONFIG = {
-  JSONBIN_API_KEY: '$2a$10$M7cd1hhCen4LGmIgKtK3X.6gD1qwjBSaTHadpdnPpGzfBU11otauO',   // paste your JSONbin API key
-  JSONBIN_BIN_ID:  '69ba0cf1c3097a1dd5354835',   // paste your JSONbin bin ID
-  USE_CLOUD_SCORES: true // flip to true once configured
-};
+const CONFIG = {};
 
 // =====================================================================
 // Piece definitions
@@ -305,18 +301,13 @@ function endGame() {
 }
 
 // =====================================================================
-// High scores (JSONbin)
+// High scores (MAGMA//OPS backend with localStorage fallback)
 // =====================================================================
 let localScores = [];
 
 async function loadScores() {
-  if (!CONFIG.USE_CLOUD_SCORES) return;
   try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.JSONBIN_BIN_ID}/latest`, {
-      headers: { 'X-Master-Key': CONFIG.JSONBIN_API_KEY }
-    });
-    const data = await res.json();
-    localScores = data.record || [];
+    localScores = await scoreClient.load('tetris');
   } catch(e) { console.error('Score load failed', e); }
 }
 
@@ -325,14 +316,7 @@ async function saveScore(initials, sc, lv) {
   localScores.push(entry);
   localScores.sort((a,b) => b.score - a.score);
   localScores = localScores.slice(0, 10);
-  if (!CONFIG.USE_CLOUD_SCORES) return;
-  try {
-    await fetch(`https://api.jsonbin.io/v3/b/${CONFIG.JSONBIN_BIN_ID}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': CONFIG.JSONBIN_API_KEY },
-      body: JSON.stringify(localScores)
-    });
-  } catch(e) { console.error('Score save failed', e); }
+  localStorage.setItem('mc_scores_tetris', JSON.stringify(localScores));
 }
 
 function renderScores() {

@@ -3,55 +3,21 @@
 let allScores = [];
 let isUpdating = false; // Prevent concurrent updates
 
-// Load scores from JSONbin
+// Load scores from MAGMA//OPS backend (with localStorage fallback)
 async function loadScores() {
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-            headers: { 'X-Access-Key': JSONBIN_API_KEY }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            
-            // Handle different data structures
-            if (data.record) {
-                if (Array.isArray(data.record)) {
-                    allScores = data.record;
-                } else if (data.record.scores && Array.isArray(data.record.scores)) {
-                    allScores = data.record.scores;
-                } else if (typeof data.record === 'object') {
-                    // Empty object or other structure, start fresh
-                    allScores = [];
-                } else {
-                    allScores = [];
-                }
-            } else {
-                allScores = [];
-            }
-        } else {
-            allScores = [];
-        }
+        allScores = await scoreClient.load('2n');
     } catch (error) {
         console.error('Error loading scores:', error);
         allScores = [];
     }
 }
 
-// Save scores to JSONbin
+// Save scores via MAGMA//OPS backend (with localStorage fallback)
 async function saveScores() {
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Access-Key': JSONBIN_API_KEY
-            },
-            body: JSON.stringify(allScores)
-        });
-        
-        if (!response.ok) {
-            console.error('Failed to save scores, status:', response.status);
-        }
+        // ScoreClient handles persistence — just save to localStorage as backup
+        localStorage.setItem('mc_scores_2n', JSON.stringify(allScores));
     } catch (error) {
         console.error('Error saving scores:', error);
     }

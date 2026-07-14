@@ -1,8 +1,7 @@
 // config.js - Texas Hold'Em Lava Dome | MagmaCrunch Media © 2024
 
-// ── JSONBin (high scores) ────────────────────────────────────
-const JSONBIN_API_KEY = '$2a$10$JiB3vjivV/azBnUh7jKjbuiiU7T9UnaOKTC0C9WnTR5WfLhnGSS.W';
-const JSONBIN_BIN_ID  = '6995078143b1c97be9872947';
+// ── Score backend is now handled by ScoreClient (MAGMA//OPS dashboard) ──
+// No external API keys needed
 
 // ── Card configuration ───────────────────────────────────────
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];

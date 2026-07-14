@@ -1,5 +1,5 @@
 // scoring.js - Texas Hold'Em Lava Dome | MagmaCrunch Media © 2024
-// High score persistence via JSONBin.io
+// High score persistence via MAGMA//OPS backend (ScoreClient)
 
 class Scoring {
     constructor(state) {
@@ -15,14 +15,7 @@ class Scoring {
         this.isLoading = true;
 
         try {
-            const response = await fetch(
-                `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`,
-                { headers: { 'X-Access-Key': JSONBIN_API_KEY } }
-            );
-            if (response.ok) {
-                const data = await response.json();
-                this.state.highScores = Array.isArray(data.record) ? data.record : [];
-            }
+            this.state.highScores = await scoreClient.load('solitaire-thld');
         } catch (err) {
             console.warn('Could not load high scores:', err);
             this.state.highScores = [];
@@ -38,17 +31,7 @@ class Scoring {
         this.isSaving = true;
 
         try {
-            await fetch(
-                `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`,
-                {
-                    method:  'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Access-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify(this.state.highScores)
-                }
-            );
+            localStorage.setItem('mc_scores_solitaire-thld', JSON.stringify(this.state.highScores));
         } catch (err) {
             console.warn('Could not save high scores:', err);
         } finally {

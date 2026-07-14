@@ -5,6 +5,7 @@
     flex-direction: column;
     height: 100vh;
     padding: 10px;
+    align-items: center;
 }
 
 /* Header */
@@ -16,6 +17,8 @@
     background: var(--bg-mid);
     border-bottom: 2px solid var(--wood);
     margin-bottom: 10px;
+    width: 100%;
+    max-width: 1000px;
 }
 
 .game-header h1 {
@@ -24,37 +27,53 @@
     color: var(--accent);
 }
 
-/* Main game area */
-.game-main {
+/* ══ Two-column layout ══ */
+.game-layout {
     display: flex;
-    flex: 1;
     gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
     overflow: hidden;
 }
 
-/* Left panel - AI and crib */
-.left-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-/* Center - Board */
-.center-panel {
-    flex: 2;
+/* Left column: Board + Count */
+.board-column {
+    flex-shrink: 0;
+    width: 420px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 15px;
 }
 
-/* Right panel - Player */
-.right-panel {
+.board-toggle {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.board-toggle:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+/* Right column: Card play areas */
+.play-column {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    min-width: 0;
 }
 
 /* Section titles */
@@ -72,8 +91,8 @@
     background: var(--bg-mid);
     border: 2px solid var(--wood);
     border-radius: 8px;
-    padding: 15px;
-    min-height: 120px;
+    padding: 12px;
+    min-height: 100px;
 }
 
 .hand-cards {
@@ -88,8 +107,8 @@
     background: var(--bg-mid);
     border: 2px dashed var(--wood-light);
     border-radius: 8px;
-    padding: 15px;
-    min-height: 100px;
+    padding: 12px;
+    min-height: 80px;
 }
 
 .crib-area .section-title {
@@ -101,7 +120,7 @@
     background: var(--bg-mid);
     border: 2px solid var(--wood);
     border-radius: 8px;
-    padding: 15px;
+    padding: 12px;
     text-align: center;
 }
 
@@ -119,7 +138,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 15px auto;
 }
 
 .count-value {
@@ -141,8 +159,8 @@
     background: var(--bg-mid);
     border: 2px solid var(--accent);
     border-radius: 8px;
-    padding: 15px;
-    min-height: 140px;
+    padding: 12px;
+    min-height: 120px;
 }
 
 .player-hand-area .section-title {
@@ -234,9 +252,11 @@
     background: var(--bg-mid);
     border: 1px solid var(--wood);
     border-radius: 8px;
-    padding: 15px;
+    padding: 12px;
     margin-top: 10px;
     text-align: center;
+    width: 100%;
+    max-width: 1000px;
 }
 
 .game-message {
@@ -325,366 +345,6 @@
     margin-bottom: 20px;
 }
 
-/* Game + Chat Layout */
-.game-layout {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    max-width: 1100px;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-/* Game Chat */
-.game-chat {
-    width: 220px;
-    min-width: 180px;
-    background: #1a1a2e;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    font-family: var(--font-mono);
-    max-height: 500px;
-}
-
-.game-chat .chat-header {
-    font-size: 9px;
-    color: var(--accent);
-    padding: 10px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    text-align: center;
-}
-
-.game-chat .chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-    font-size: 8px;
-    line-height: 1.6;
-    color: #e0e0e0;
-    max-height: 350px;
-}
-
-.game-chat .chat-msg {
-    margin-bottom: 4px;
-    word-wrap: break-word;
-}
-
-.game-chat .chat-msg .chat-name {
-    font-weight: bold;
-}
-
-.game-chat .chat-msg.system {
-    color: #888;
-    font-style: italic;
-}
-
-.game-chat .chat-input {
-    display: flex;
-    gap: 4px;
-    padding: 8px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.game-chat .chat-input input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.15);
-    color: #e0e0e0;
-    font-family: var(--font-mono);
-    font-size: 8px;
-    padding: 6px;
-    border-radius: 2px;
-    min-width: 0;
-}
-
-.game-chat .chat-input input::placeholder {
-    color: rgba(255,255,255,0.2);
-}
-
-.game-chat .chat-input input:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-.game-chat .chat-input button {
-    background: var(--accent);
-    color: #1a1a2e;
-    border: none;
-    font-family: var(--font-mono);
-    font-size: 8px;
-    padding: 6px 10px;
-    cursor: pointer;
-    border-radius: 2px;
-    white-space: nowrap;
-}
-
-.game-chat .chat-input button:hover {
-    background: #fff;
-}
-
-/* Chat Tabs */
-.chat-tabs {
-    display: flex;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.chat-tab {
-    flex: 1;
-    background: none;
-    border: none;
-    color: #888;
-    font-family: var(--font-mono);
-    font-size: 8px;
-    padding: 8px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-}
-
-.chat-tab.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-}
-
-.chat-tab:hover {
-    color: #e0e0e0;
-}
-
-/* Chat Header with User Count */
-.game-chat .chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chat-user-count {
-    font-size: 7px;
-    color: #888;
-}
-
-/* Chat User List */
-.chat-users {
-    padding: 4px 8px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    max-height: 80px;
-    overflow-y: auto;
-}
-
-.chat-users-header {
-    font-size: 7px;
-    color: #888;
-    margin-bottom: 4px;
-}
-
-.chat-user {
-    font-size: 8px;
-    color: #e0e0e0;
-    padding: 2px 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.chat-user-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    display: inline-block;
-}
-
-.chat-user-status {
-    font-size: 7px;
-    color: #888;
-    margin-left: 4px;
-}
-
-/* Chat Typing Indicator */
-.chat-typing {
-    font-size: 7px;
-    color: #888;
-    padding: 4px 8px;
-    font-style: italic;
-}
-
-/* Chat Name Row */
-.chat-name-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 8px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.chat-my-name {
-    font-size: 9px;
-    color: var(--accent);
-}
-
-.chat-edit-name {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 10px;
-    padding: 2px;
-}
-
-.chat-edit-name:hover {
-    opacity: 0.7;
-}
-
-.chat-name-input {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--accent);
-    color: #e0e0e0;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    padding: 2px 4px;
-    border-radius: 2px;
-    width: 100px;
-    max-width: 100px;
-}
-
-.chat-name-input:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-/* Chat Color Picker */
-.chat-pick-color {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 10px;
-    padding: 2px;
-}
-
-.chat-pick-color:hover {
-    opacity: 0.7;
-}
-
-.color-picker-popup {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background: #1a1a2e;
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 4px;
-    padding: 8px;
-    z-index: 100;
-    min-width: 180px;
-}
-
-.color-strip {
-    width: 100%;
-    height: 20px;
-    border-radius: 3px;
-    cursor: crosshair;
-    position: relative;
-    margin-bottom: 8px;
-}
-
-.color-indicator {
-    position: absolute;
-    top: -3px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-    background: transparent;
-    pointer-events: none;
-    box-shadow: 0 0 4px rgba(0,0,0,0.5);
-}
-
-.color-preview-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.color-preview-label {
-    font-size: 7px;
-    color: #888;
-}
-
-.color-preview {
-    width: 16px;
-    height: 16px;
-    border-radius: 3px;
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.color-reset-btn {
-    background: none;
-    border: 1px solid #888;
-    color: #888;
-    font-family: var(--font-mono);
-    font-size: 6px;
-    padding: 2px 6px;
-    cursor: pointer;
-    border-radius: 2px;
-    margin-left: auto;
-}
-
-.color-reset-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-/* Chat Online Users Panel */
-.chat-online {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px;
-}
-
-.chat-online-user {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-
-.chat-online-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.chat-online-name {
-    font-size: 9px;
-    color: #e0e0e0;
-}
-
-.chat-online-status {
-    font-size: 7px;
-    color: #888;
-    margin-left: auto;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-    .game-main {
-        flex-direction: column;
-    }
-
-    .left-panel, .right-panel {
-        flex: none;
-    }
-
-    .card {
-        width: 60px;
-        height: 85px;
-    }
-
-    .card-center {
-        font-size: 22px;
-    }
-}
-
 /* Game Controls */
 .game-controls {
     display: flex;
@@ -707,4 +367,50 @@
 .control-btn:hover {
     background: var(--accent);
     color: var(--bg-dark);
+}
+
+/* ══ Responsive ══ */
+@media (max-width: 900px) {
+    .game-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .board-column {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .play-column {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .card {
+        width: 60px;
+        height: 85px;
+    }
+
+    .card-center {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .board-column {
+        max-width: 100%;
+    }
+
+    .card {
+        width: 55px;
+        height: 78px;
+    }
+
+    .card-center {
+        font-size: 20px;
+    }
+
+    .game-header h1 {
+        font-size: 14px;
+    }
 }

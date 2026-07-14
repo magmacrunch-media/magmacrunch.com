@@ -396,14 +396,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadHighScores() {
         try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                headers: { 'X-Access-Key': JSONBIN_API_KEY }
-            });
-            const data = await response.json();
-            highScores = data.record.scores || [];
+            highScores = await scoreClient.load('scandinavian-stud');
         } catch (e) {
             console.log('Could not load high scores');
             highScores = [];
+        }
+    }
+
+    async function saveHighScores() {
+        try {
+            localStorage.setItem('mc_scores_scandinavian-stud', JSON.stringify(highScores));
+        } catch (e) {
+            console.error('Error saving high scores:', e);
         }
     }
 

@@ -28,14 +28,8 @@ class Solitaire {
     
     async loadHighScores() {
         try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                headers: { 'X-Access-Key': JSONBIN_API_KEY }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                this.highScores = data.record || [];
-                this.displayHighScores();
-            }
+            this.highScores = await scoreClient.load('solitaire');
+            this.displayHighScores();
         } catch (error) {
             console.error('Error loading high scores:', error);
         }
@@ -43,14 +37,7 @@ class Solitaire {
     
     async saveHighScores() {
         try {
-            await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Access-Key': JSONBIN_API_KEY
-                },
-                body: JSON.stringify(this.highScores)
-            });
+            localStorage.setItem('mc_scores_solitaire', JSON.stringify(this.highScores));
         } catch (error) {
             console.error('Error saving high scores:', error);
         }

@@ -1,8 +1,7 @@
 // config.js
 
-// JSONBin API Configuration
-const JSONBIN_API_KEY = '$2a$10$JiB3vjivV/azBnUh7jKjbuiiU7T9UnaOKTC0C9WnTR5WfLhnGSS.W';
-const JSONBIN_BIN_ID = '6954997843b1c97be90f995a';
+// Score backend is now handled by ScoreClient (MAGMA//OPS dashboard)
+// No external API keys needed
 
 // Card configuration
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];

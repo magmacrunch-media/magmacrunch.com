@@ -80,17 +80,11 @@ function setLastScore(value) {
     lastScore = value;
 }
 
-// Leaderboard management
+// Leaderboard management — MAGMA//OPS backend with localStorage fallback
 async function loadScores() {
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-            headers: { 'X-Access-Key': JSONBIN_API_KEY }
-        });
-        if (response.ok) {
-            const data = await response.json();
-            sessionScores = data.record || [];
-            updateScoreboard();
-        }
+        sessionScores = await scoreClient.load('moonlight-drift');
+        updateScoreboard();
     } catch (error) {
         console.error('Error loading scores:', error);
     }
@@ -98,14 +92,7 @@ async function loadScores() {
 
 async function saveScores() {
     try {
-        await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Access-Key': JSONBIN_API_KEY
-            },
-            body: JSON.stringify(sessionScores)
-        });
+        localStorage.setItem('mc_scores_moonlight-drift', JSON.stringify(sessionScores));
     } catch (error) {
         console.error('Error saving scores:', error);
     }

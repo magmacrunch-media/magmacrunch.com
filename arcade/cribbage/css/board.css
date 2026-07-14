@@ -10,7 +10,12 @@
         0 8px 24px rgba(0,0,0,0.5);
     position: relative;
     width: 100%;
-    max-width: 600px;
+    max-width: 420px;
+    transition: padding 0.3s ease;
+}
+
+.cribbage-board.collapsed {
+    padding: 15px 20px;
 }
 
 /* Score displays */
@@ -50,6 +55,18 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    max-height: 300px;
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+
+.cribbage-board.collapsed .board-tracks {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    gap: 0;
 }
 
 .board-track {

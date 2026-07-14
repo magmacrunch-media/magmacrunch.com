@@ -22,57 +22,21 @@ function migrateOldScores() {
     }
 }
 
-// Load scores from JSONbin
+// Load scores from MAGMA//OPS backend (with localStorage fallback)
 async function loadScores() {
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-            headers: { 'X-Access-Key': JSONBIN_API_KEY }
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            
-            // Handle different data structures
-            if (data.record) {
-                if (Array.isArray(data.record)) {
-                    allScores = data.record;
-                } else if (data.record.scores && Array.isArray(data.record.scores)) {
-                    allScores = data.record.scores;
-                } else if (typeof data.record === 'object') {
-                    allScores = [];
-                } else {
-                    allScores = [];
-                }
-            } else {
-                allScores = [];
-            }
-            
-            // Migrate old scores if needed
-            migrateOldScores();
-        } else {
-            allScores = [];
-        }
+        allScores = await scoreClient.load('george-boole');
+        migrateOldScores();
     } catch (error) {
         console.error('Error loading scores:', error);
         allScores = [];
     }
 }
 
-// Save scores to JSONbin
+// Save scores via MAGMA//OPS backend (with localStorage fallback)
 async function saveScores() {
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Access-Key': JSONBIN_API_KEY
-            },
-            body: JSON.stringify(allScores)
-        });
-        
-        if (!response.ok) {
-            console.error('Failed to save scores, status:', response.status);
-        }
+        localStorage.setItem('mc_scores_george-boole', JSON.stringify(allScores));
     } catch (error) {
         console.error('Error saving scores:', error);
     }

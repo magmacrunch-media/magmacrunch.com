@@ -1,8 +1,7 @@
 // config.js — Cribbage | MagmaCrunch Media © 2026
 
-// ── JSONBin (high scores) ────────────────────────────────────
-const JSONBIN_API_KEY = '$2a$10$JiB3vjivV/azBnUh7jKjbuiiU7T9UnaOKTC0C9WnTR5WfLhnGSS.W';
-const JSONBIN_BIN_ID  = 'REPLACE_WITH_CRIBBAGE_BIN_ID';
+// ── Score backend is now handled by ScoreClient (MAGMA//OPS dashboard) ──
+// No external API keys needed
 
 // ── Card configuration ───────────────────────────────────────
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];

@@ -30,10 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
     newGameBtn.addEventListener('click', startGame);
     menuBtn.addEventListener('click', showMenu);
 
+    // Board toggle (collapse/expand)
+    const boardToggle = document.getElementById('boardToggle');
+    const cribbageBoard = document.getElementById('cribbageBoard');
+    if (boardToggle && cribbageBoard) {
+        boardToggle.addEventListener('click', () => {
+            cribbageBoard.classList.toggle('collapsed');
+            const collapsed = cribbageBoard.classList.contains('collapsed');
+            boardToggle.textContent = collapsed ? '▶ Scores' : '▼ Board';
+        });
+    }
+
     // ── Start new game ──────────────────────────────────────────
     function startGame() {
         startScreen.style.display = 'none';
-        gameScreen.style.display = 'block';
+        gameScreen.style.display = 'flex';
 
         game.reset();
         CribbageBoard.init('cribbageBoard');
@@ -428,10 +439,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Show menu ───────────────────────────────────────────────
     function showMenu() {
-        ChatWidget.disconnect();
-        if (document.getElementById('gameChat')) {
-            document.getElementById('gameChat').style.display = 'none';
-        }
         const modal = createModal('Menu', `
             <div class="menu-buttons">
                 <button class="start-btn primary" onclick="location.reload()">New Game</button>
@@ -662,11 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startMultiplayerGame(data) {
         isMultiplayer = true;
         startScreen.style.display = 'none';
-        gameScreen.style.display = 'block';
-        if (document.getElementById('gameChat')) {
-            document.getElementById('gameChat').style.display = 'flex';
-        }
-        ChatWidget.connect();
+        gameScreen.style.display = 'flex';
 
         // Initialize game state from server
         if (data.state) {

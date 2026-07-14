@@ -76,13 +76,23 @@
                 <h1>CRIBBAGE</h1>
             </div>
 
-            <!-- Game + Chat Layout -->
+            <!-- Two-column layout -->
             <div class="game-layout">
-                <!-- Main game area -->
-                <div class="game-main">
 
-                <!-- Left panel - AI and crib -->
-                <div class="left-panel">
+                <!-- Left column: Board + Count -->
+                <div class="board-column">
+                    <button id="boardToggle" class="board-toggle">▼ Board</button>
+                    <div id="cribbageBoard" class="cribbage-board"></div>
+                    <div class="count-display">
+                        <div>
+                            <div id="countDisplay" class="count-value">0</div>
+                            <div class="count-label">Count</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column: Card play areas -->
+                <div class="play-column">
                     <div class="ai-hand-area">
                         <div class="section-title">Opponent's Hand</div>
                         <div id="aiHand" class="hand-cards"></div>
@@ -97,28 +107,14 @@
                         <div class="section-title">Crib</div>
                         <div id="cribArea" class="hand-cards"></div>
                     </div>
-                </div>
 
-                <!-- Center - Board -->
-                <div class="center-panel">
-                    <div id="cribbageBoard" class="cribbage-board"></div>
-
-                    <div class="count-display">
-                        <div>
-                            <div id="countDisplay" class="count-value">0</div>
-                            <div class="count-label">Count</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right panel - Player -->
-                <div class="right-panel">
                     <div class="player-hand-area">
                         <div class="section-title">Your Hand</div>
                         <div id="playerHand" class="hand-cards"></div>
                     </div>
                 </div>
-            </div>
+
+            </div><!-- end game-layout -->
 
             <!-- Message area -->
             <div id="messageArea" class="message-area">
@@ -133,12 +129,6 @@
                 <button id="newGameBtn" class="control-btn">New Game</button>
                 <button id="menuBtn" class="control-btn">Menu</button>
             </div>
-
-            </div><!-- end game-main -->
-
-            <!-- Chat widget loaded via script -->
-
-            </div><!-- end game-layout -->
 
         </div>
     </div>
@@ -192,7 +182,8 @@
     <script>var MP_DEFAULT_SERVER = 'cribbage.magmacrunch.com';</script>
     <script src="../shared/multiplayer/protocol.js"></script>
     <script src="../shared/multiplayer/network.js"></script>
-    <script src="../shared/chat-widget.js"></script>
+    <script src="../shared/score-client.js"></script>
+    <script>const scoreClient = ScoreClient.auto();</script>
     <script src="js/config.js"></script>
     <script src="js/hand-eval.js"></script>
     <script src="js/cribbage-board.js"></script>
