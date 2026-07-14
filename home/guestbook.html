@@ -216,7 +216,11 @@
         .np-play { background: #e5b300; color: #000; border-color: #e5b300; }
         .np-play:hover { background: #000; color: #e5b300; border-color: #e5b300; }
         .np-text { color: var(--green); text-shadow: 0 0 8px rgba(57,255,110,0.5); }
-        body .np-vol { height: 6px; opacity: 1; }
+        body .np-vol {
+            height: 6px;
+            opacity: 1;
+            background: linear-gradient(to right, #e5b300 0%, #e5b300 var(--vol-pct, 70%), rgba(240,234,216,0.15) var(--vol-pct, 70%), rgba(240,234,216,0.15) 100%);
+        }
         body .np-vol::-webkit-slider-thumb { width: 10px; height: 14px; background: #e5b300; border: none; }
         body .np-vol::-moz-range-thumb { width: 10px; height: 14px; background: #e5b300; border: none; }
         body .np-vol-label { opacity: 0.8; }
