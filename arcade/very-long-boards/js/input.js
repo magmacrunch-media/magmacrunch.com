@@ -9,6 +9,7 @@ const input = {
     trick: false,
     enter: false,
     escape: false,
+    tab: false,
 };
 
 const keyState = {};
@@ -40,6 +41,10 @@ document.addEventListener('keydown', (e) => {
             break;
         case 'Escape':
             input.escape = true;
+            break;
+        case 'Tab':
+            input.tab = true;
+            e.preventDefault();
             break;
     }
     
@@ -78,6 +83,7 @@ function consumeInput() {
     input.enter = false;
     input.escape = false;
     input.trick = false;
+    input.tab = false;
     return consumed;
 }
 

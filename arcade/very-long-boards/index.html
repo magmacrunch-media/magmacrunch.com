@@ -15,6 +15,7 @@
 
     <div id="game-container">
         <canvas id="renderCanvas"></canvas>
+        <canvas id="garageCanvas" width="960" height="540" style="display:none; position:absolute; inset:0; z-index:1; pointer-events:none;"></canvas>
 
         <!-- TITLE SCREEN -->
         <div id="titleScreen" class="overlay active">
@@ -52,6 +53,13 @@
             <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO PLAY</div>
         </div>
 
+        <!-- BOARD SELECT -->
+        <div id="boardSelect" class="overlay">
+            <div class="bs-title">CHOOSE YOUR BOARD</div>
+            <div class="bs-cards" id="boardCards"></div>
+            <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO RIDE</div>
+        </div>
+
         <!-- COUNTDOWN -->
         <div id="countdownOverlay" class="overlay" style="background:rgba(10,6,18,0.6);">
             <div id="countdownText" style="font-size:72px; color:#ffe03a; text-shadow:0 0 30px rgba(255,224,58,0.8);">3</div>
@@ -73,7 +81,14 @@
             <div class="go-score">SCORE: <span id="goScore">0</span></div>
             <div class="go-dist">DISTANCE: <span id="goDist">0</span>m</div>
             <div class="go-best">BEST: <span id="goBest">0</span></div>
-            <div class="insert-coin">— PRESS ENTER TO RETRY —</div>
+            <div class="go-actions">
+                <div class="go-action" data-action="retry">
+                    <span class="go-key">ENTER</span> RIDE AGAIN
+                </div>
+                <div class="go-action" data-action="setup">
+                    <span class="go-key">TAB</span> NEW SETUP
+                </div>
+            </div>
         </div>
 
         <!-- PAUSE -->
@@ -95,6 +110,7 @@
     <script src="js/hud.js"></script>
     <script src="js/input.js"></script>
     <script src="js/audio.js"></script>
+    <script src="js/garage.js"></script>
     <script src="js/main.js"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css">

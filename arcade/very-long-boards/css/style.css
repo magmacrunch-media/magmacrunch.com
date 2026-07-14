@@ -163,6 +163,61 @@ body {
     animation: blink 1s step-end infinite;
 }
 
+/* ── BOARD SELECT ── */
+.bs-title {
+    font-size: 14px;
+    color: #ff2e9c;
+    margin-bottom: 30px;
+    text-shadow: 0 0 12px rgba(255, 46, 156, 0.5);
+}
+
+.bs-cards {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.bs-card {
+    width: 150px;
+    padding: 16px;
+    border: 2px solid #333;
+    background: #111;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.bs-card.selected {
+    border-color: #ff2e9c;
+    box-shadow: 0 0 16px rgba(255, 46, 156, 0.4);
+}
+
+.bs-preview {
+    width: 100px;
+    height: 40px;
+    image-rendering: pixelated;
+    margin-bottom: 12px;
+}
+
+.bs-name {
+    font-size: 8px;
+    color: #ffe03a;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+}
+
+.bs-desc {
+    font-size: 6px;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.bs-stats {
+    font-size: 5px;
+    color: #666;
+    letter-spacing: 0.05em;
+}
+
 /* ── HUD ── */
 #hud {
     position: absolute;
@@ -220,6 +275,38 @@ body {
     margin-top: 12px;
 }
 
+.go-actions {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.go-action {
+    font-size: 9px;
+    color: #888;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.go-action:hover {
+    color: #ffe03a;
+}
+
+.go-key {
+    display: inline-block;
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid #555;
+    background: #222;
+    color: #ffe03a;
+    font-size: 7px;
+    text-align: center;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 /* ── PAUSE ── */
 .pause-text {
     font-size: 20px;
@@ -244,6 +331,14 @@ body {
     }
     
     .cs-card {
+        width: 200px;
+    }
+
+    .bs-cards {
+        flex-direction: column;
+    }
+
+    .bs-card {
         width: 200px;
     }
 }

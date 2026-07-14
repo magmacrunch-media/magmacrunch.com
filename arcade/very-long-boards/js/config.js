@@ -79,3 +79,42 @@ const CHARACTERS = {
         },
     },
 };
+
+const BOARDS = {
+    'standard': {
+        name: 'STANDARD',
+        desc: 'the classic',
+        speedMult: 1.0,
+        handlingMult: 1.0,
+        stabilityMult: 1.0,
+        deckColor: [0.5, 0.25, 0.06],
+        gripColor: [0.22, 0.22, 0.22],
+    },
+    'cruiser': {
+        name: 'CRUISER',
+        desc: 'fast & loose',
+        speedMult: 1.15,
+        handlingMult: 0.85,
+        stabilityMult: 0.9,
+        deckColor: [0.8, 0.1, 0.1],
+        gripColor: [0.18, 0.18, 0.18],
+    },
+    'carver': {
+        name: 'CARVER',
+        desc: 'tight turns',
+        speedMult: 0.9,
+        handlingMult: 1.25,
+        stabilityMult: 1.0,
+        deckColor: [0.1, 0.5, 0.8],
+        gripColor: [0.2, 0.2, 0.2],
+    },
+    'old-school': {
+        name: 'OLD SCHOOL',
+        desc: 'steady & stable',
+        speedMult: 0.85,
+        handlingMult: 0.95,
+        stabilityMult: 1.25,
+        deckColor: [0.6, 0.5, 0.1],
+        gripColor: [0.25, 0.25, 0.2],
+    },
+};

@@ -14,6 +14,7 @@ window.player = {
 };
 
 window.playerMesh = null;
+window.currentBoard = 'standard';
 
 window.createPlayer = function(scene) {
     const root = new BABYLON.TransformNode('playerRoot', scene);
@@ -112,6 +113,8 @@ window.createPlayer = function(scene) {
     root._pantsMat = pantsMat;
     root._skinMat = skinMat;
     root._hairMat = hairMat;
+    root._deckMat = deckMat;
+    root._gripMat = gripMat;
 
     for (const m of root.getChildMeshes()) m.isPickable = false;
 
@@ -143,9 +146,10 @@ window.resetPlayer = function() {
 
 window.updatePlayer = function(input, terrain, dt) {
     const char = CHARACTERS[currentCharacter];
-    const maxSpd = CONFIG.MAX_SPEED * char.speedMult * 0.25;
-    const handling = CONFIG.TURN_SPEED * char.handlingMult * 0.15;
-    const stabMult = char.stabilityMult;
+    const board = BOARDS[currentBoard] || BOARDS['standard'];
+    const maxSpd = CONFIG.MAX_SPEED * char.speedMult * board.speedMult * 0.25;
+    const handling = CONFIG.TURN_SPEED * char.handlingMult * board.handlingMult * 0.15;
+    const stabMult = char.stabilityMult * board.stabilityMult;
     const dtScale = dt * 60;
 
     if (player.bailing) {
@@ -285,4 +289,12 @@ window.updatePlayerColors = function(charKey) {
     playerMesh._hairMat.diffuseColor = new BABYLON.Color3(colors.hair[0], colors.hair[1], colors.hair[2]);
     playerMesh._skinMat.diffuseColor = new BABYLON.Color3(colors.skin[0], colors.skin[1], colors.skin[2]);
     playerMesh._pantsMat.diffuseColor = new BABYLON.Color3(colors.pants[0], colors.pants[1], colors.pants[2]);
+};
+
+window.updatePlayerBoardColor = function(boardKey) {
+    if (!playerMesh) return;
+    const board = BOARDS[boardKey] && BOARDS[boardKey];
+    if (!board) return;
+    playerMesh._deckMat.diffuseColor = new BABYLON.Color3(board.deckColor[0], board.deckColor[1], board.deckColor[2]);
+    playerMesh._gripMat.diffuseColor = new BABYLON.Color3(board.gripColor[0], board.gripColor[1], board.gripColor[2]);
 };

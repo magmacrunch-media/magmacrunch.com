@@ -6,6 +6,8 @@ let gameState = 'title';
 let currentCharacter = 'office-carl';
 let selectedCharIndex = 0;
 const charKeys = Object.keys(CHARACTERS);
+let selectedBoardIndex = 0;
+const boardKeys = Object.keys(BOARDS);
 let frame = 0;
 let bestScore = parseInt(localStorage.getItem('vlb-best') || '0');
 let countdownStart = 0;
@@ -17,10 +19,12 @@ let titleDist = 0;
 
 const titleScreen = document.getElementById('titleScreen');
 const charSelect = document.getElementById('charSelect');
+const boardSelect = document.getElementById('boardSelect');
 const hud = document.getElementById('hud');
 const gameOver = document.getElementById('gameOver');
 const pauseScreen = document.getElementById('pauseScreen');
 const countdownOverlay = document.getElementById('countdownOverlay');
+const garageCanvas = document.getElementById('garageCanvas');
 
 function init() {
     const canvas = document.getElementById('renderCanvas');
@@ -93,7 +97,37 @@ function gameLogic() {
                 updatePlayerColors(currentCharacter);
                 playSelectSound();
             } else if (inp.enter) {
+                gameState = 'boardSelect';
+                hideOverlay(charSelect);
+                showGarage();
+                showOverlay(boardSelect);
+                renderBoardCards();
+                playSelectSound();
+            }
+            break;
+
+        case 'boardSelect':
+            if (inp.left) {
+                selectedBoardIndex = (selectedBoardIndex - 1 + boardKeys.length) % boardKeys.length;
+                currentBoard = boardKeys[selectedBoardIndex];
+                updateBoardSelection();
+                updatePlayerBoardColor(currentBoard);
+                playSelectSound();
+            } else if (inp.right) {
+                selectedBoardIndex = (selectedBoardIndex + 1) % boardKeys.length;
+                currentBoard = boardKeys[selectedBoardIndex];
+                updateBoardSelection();
+                updatePlayerBoardColor(currentBoard);
+                playSelectSound();
+            } else if (inp.enter) {
+                hideGarage();
+                hideOverlay(boardSelect);
                 startCountdown();
+            } else if (inp.escape) {
+                hideGarage();
+                hideOverlay(boardSelect);
+                showOverlay(charSelect);
+                gameState = 'select';
             }
             break;
 
@@ -175,7 +209,14 @@ function gameLogic() {
         case 'gameover':
             terrain.update(player.distance);
             window.updatePlayerMesh(terrain, frame);
-            if (inp.enter) startCountdown();
+            if (inp.enter) {
+                startCountdown();
+            } else if (inp.tab) {
+                hideOverlay(gameOver);
+                showOverlay(charSelect);
+                gameState = 'select';
+                showGarage();
+            }
             break;
     }
 }
@@ -187,10 +228,13 @@ function startCountdown() {
     window.initObstacles(sceneObj.scene);
     window.initScenery(sceneObj.scene);
     updatePlayerColors(currentCharacter);
+    updatePlayerBoardColor(currentBoard);
+    hideGarage();
     countdownStart = Date.now();
     lastCountNum = CONFIG.COUNTDOWN_SECS + 1;
     gameState = 'countdown';
     hideOverlay(charSelect);
+    hideOverlay(boardSelect);
     hideOverlay(gameOver);
     hideOverlay(pauseScreen);
     showOverlay(countdownOverlay);
@@ -218,6 +262,61 @@ function endGame(cause) {
 function updateCharSelection() {
     document.querySelectorAll('.cs-card').forEach((card, i) => {
         card.classList.toggle('selected', i === selectedCharIndex);
+    });
+}
+
+function showGarage() {
+    garageCanvas.style.display = 'block';
+    const ctx = garageCanvas.getContext('2d');
+    drawGarage(ctx, garageCanvas.width, garageCanvas.height);
+}
+
+function hideGarage() {
+    garageCanvas.style.display = 'none';
+}
+
+function renderBoardCards() {
+    const container = document.getElementById('boardCards');
+    if (!container) return;
+    container.innerHTML = '';
+    boardKeys.forEach((key, i) => {
+        const board = BOARDS[key];
+        const card = document.createElement('div');
+        card.className = 'bs-card' + (i === selectedBoardIndex ? ' selected' : '');
+
+        const preview = document.createElement('canvas');
+        preview.className = 'bs-preview';
+        preview.width = 100;
+        preview.height = 40;
+        const pctx = preview.getContext('2d');
+        drawBoardPreview(pctx, key, 0, 0, 100, 40);
+
+        const name = document.createElement('div');
+        name.className = 'bs-name';
+        name.textContent = board.name;
+
+        const desc = document.createElement('div');
+        desc.className = 'bs-desc';
+        desc.textContent = board.desc;
+
+        const stats = document.createElement('div');
+        stats.className = 'bs-stats';
+        const spd = Math.round(board.speedMult * 10);
+        const hand = Math.round(board.handlingMult * 10);
+        const stab = Math.round(board.stabilityMult * 10);
+        stats.textContent = `SPD ${'█'.repeat(spd)}${'░'.repeat(10-spd)} HAND ${'█'.repeat(hand)}${'░'.repeat(10-hand)} STAB ${'█'.repeat(stab)}${'░'.repeat(10-stab)}`;
+
+        card.appendChild(preview);
+        card.appendChild(name);
+        card.appendChild(desc);
+        card.appendChild(stats);
+        container.appendChild(card);
+    });
+}
+
+function updateBoardSelection() {
+    document.querySelectorAll('.bs-card').forEach((card, i) => {
+        card.classList.toggle('selected', i === selectedBoardIndex);
     });
 }
 
