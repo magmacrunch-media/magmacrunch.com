@@ -97,11 +97,20 @@
     const accentHex = ACCENT_HEX[accent] || '#c02828';
     const accentRgba = accentHex.replace('#', '').match(/.{2}/g).map(h => parseInt(h, 16)).join(',');
 
-    const cardBg = isDark ? '#1e2235' : '#e8dcc0';
-    const cardBorder = isDark ? '#6020b0' : '#c8c0a8';
-    const cardText = isDark ? '#c8b8e8' : '#555';
-    const cardStrong = isDark ? '#f5d0ff' : '#999';
-    const cardMeta = isDark ? '#9858d8' : '#777';
+    // Dark theme color presets per artist
+    const DARK_THEMES = {
+        purple: { bg: '#1e2235', border: '#6020b0', text: '#c8b8e8', strong: '#f5d0ff', meta: '#9858d8' },
+        red:    { bg: '#1a1840', border: '#a02020', text: '#c8b8a0', strong: '#f5e8c0', meta: '#f08080' },
+        sage:   { bg: '#1a1e28', border: '#383e48', text: '#8a9aaa', strong: '#b8c4cc', meta: '#6070a0' },
+        orange: { bg: '#1a1209', border: '#4a2c10', text: '#c8a878', strong: '#f8e4c0', meta: '#b07030' },
+    };
+    const darkTheme = DARK_THEMES[accent] || DARK_THEMES.purple;
+
+    const cardBg = isDark ? darkTheme.bg : '#e8dcc0';
+    const cardBorder = isDark ? darkTheme.border : '#c8c0a8';
+    const cardText = isDark ? darkTheme.text : '#555';
+    const cardStrong = isDark ? darkTheme.strong : '#999';
+    const cardMeta = isDark ? darkTheme.meta : '#777';
 
     const style = document.createElement('style');
     style.textContent = `
