@@ -95,6 +95,44 @@ body.theme .dropdown a:hover { background: #accent; }
 3. Follow the pixel art conventions - use canvas at low res, scale with CSS
 4. Add link to `arcade/index.html` nav
 
+## High scores
+
+All arcade game high scores are managed through the MAGMA//OPS admin dashboard on the Raspberry Pi.
+
+### Architecture
+
+```
+Game (browser) ──WebSocket──▶ admin/server.py ──file I/O──▶ arcade/admin/scores/{game}.json
+     │                                                         │
+     └── localStorage fallback (offline)                       └── JSON files (one per game)
+```
+
+- **ScoreClient** (`arcade/shared/score-client.js`) — shared library that games include
+- **Server** (`arcade/admin/server.py`) — WebSocket actions: `score_load`, `score_save`, `scores_all`, `score_reset`
+- **Storage** (`arcade/admin/scores/`) — one JSON file per game (e.g. `tetris.json`, `george-boole.json`)
+- **Dashboard** — HIGH SCORES section in MAGMA//OPS shows all leaderboards
+
+### Adding scores to a new game
+
+1. Add to `index.html`:
+   ```html
+   <script src="../shared/score-client.js"></script>
+   <script>const scoreClient = ScoreClient.auto();</script>
+   ```
+2. In your game's scoring code:
+   ```js
+   // Load
+   const scores = await scoreClient.load('your-game-id');
+   
+   // Save (auto-syncs to Pi, falls back to localStorage)
+   await scoreClient.save('your-game-id', 'JAM', 12400, { level: 5 });
+   ```
+3. Game ID should match the JSON filename (e.g. `your-game-id` → `scores/your-game-id.json`)
+
+### Migration from JSONBin
+
+Run `node scripts/migrate-jsonbin.mjs` to snapshot all JSONBin scores locally. This was a one-time migration — games now use ScoreClient exclusively. No API keys in client-side code.
+
 ## Adding archive pages
 
 See `archive/ARCHIVE_THEMING.md` for detailed theming patterns. Short version:
