@@ -125,7 +125,6 @@ function gameLogic() {
                 hideOverlay(boardSelect);
                 startCountdown();
             } else if (inp.escape) {
-                hideGarage();
                 hideOverlay(boardSelect);
                 showOverlay(charSelect);
                 gameState = 'select';
