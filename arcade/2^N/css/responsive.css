@@ -64,6 +64,14 @@
         font-size: 14px; 
     }
     
+    .tile[data-value="4096"],
+    .tile[data-value="8192"],
+    .tile[data-value="16384"],
+    .tile[data-value="32768"],
+    .tile[data-value="65536"] {
+        font-size: 12px;
+    }
+    
     .game-board {
         gap: 8px;
         padding: 8px;
@@ -184,5 +192,13 @@
     .tile[data-value="1024"],
     .tile[data-value="2048"] {
         font-size: 12px;
+    }
+    
+    .tile[data-value="4096"],
+    .tile[data-value="8192"],
+    .tile[data-value="16384"],
+    .tile[data-value="32768"],
+    .tile[data-value="65536"] {
+        font-size: 10px;
     }
 }

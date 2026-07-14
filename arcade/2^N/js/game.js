@@ -13,11 +13,11 @@ class Game2048 {
         this.target = target;
         
         this.init();
-        this.setupEventListeners();
     }
     
     init() {
         this.board = Array(this.size).fill().map(() => Array(this.size).fill(0));
+        this.tileStates = {};
         this.score = 0;
         this.gameOver = false;
         this.waitingForInitials = false;
@@ -28,92 +28,6 @@ class Game2048 {
         allScores.forEach(s => s.isNew = false);
         
         this.render();
-    }
-    
-    setupEventListeners() {
-        document.addEventListener('keydown', (e) => {
-            if (this.gameOver || this.waitingForInitials) return;
-            
-            let moved = false;
-            switch(e.key) {
-                case 'ArrowUp':
-                    e.preventDefault();
-                    moved = this.move('up');
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    moved = this.move('down');
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    moved = this.move('left');
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    moved = this.move('right');
-                    break;
-            }
-            
-            if (moved) {
-                this.addRandomTile();
-                this.render();
-                if (this.checkGameOver()) {
-                    this.handleGameOver();
-                }
-            }
-        });
-        
-        // Touch support
-        const gameBoard = document.getElementById('gameBoard');
-        gameBoard.addEventListener('touchstart', (e) => {
-            this.touchStartX = e.touches[0].clientX;
-            this.touchStartY = e.touches[0].clientY;
-        });
-        
-        gameBoard.addEventListener('touchend', (e) => {
-            if (this.gameOver || this.waitingForInitials) return;
-            
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-            
-            const dx = touchEndX - this.touchStartX;
-            const dy = touchEndY - this.touchStartY;
-            
-            const absDx = Math.abs(dx);
-            const absDy = Math.abs(dy);
-            
-            if (Math.max(absDx, absDy) > 30) {
-                let moved = false;
-                if (absDx > absDy) {
-                    moved = dx > 0 ? this.move('right') : this.move('left');
-                } else {
-                    moved = dy > 0 ? this.move('down') : this.move('up');
-                }
-                
-                if (moved) {
-                    this.addRandomTile();
-                    this.render();
-                    if (this.checkGameOver()) {
-                        this.handleGameOver();
-                    }
-                }
-            }
-        });
-        
-        document.getElementById('newGame').addEventListener('click', () => {
-            // Hide the game container and show difficulty selector
-            document.querySelector('.container').classList.remove('game-active');
-            document.getElementById('difficultyModal').classList.add('active');
-            window.isDifficultyModalOpen = true;
-        });
-        
-        document.getElementById('restartGame').addEventListener('click', () => {
-            document.getElementById('gameOver').classList.remove('active');
-            // Hide the game container and show difficulty selector
-            document.querySelector('.container').classList.remove('game-active');
-            document.getElementById('difficultyModal').classList.add('active');
-            window.isDifficultyModalOpen = true;
-        });
     }
     
     addRandomTile() {
@@ -129,6 +43,7 @@ class Game2048 {
         if (emptyCells.length > 0) {
             const {row, col} = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             this.board[row][col] = Math.random() < 0.9 ? 2 : 4;
+            this.tileStates[`${row},${col}`] = 'new';
         }
     }
     
@@ -187,13 +102,15 @@ class Game2048 {
     }
     
     checkGameOver() {
+        this.justWon = false;
+        
         // Check if player reached the target (win condition)
         if (this.difficulty !== 'endless') {
             for (let i = 0; i < this.size; i++) {
                 for (let j = 0; j < this.size; j++) {
                     if (this.board[i][j] >= this.target) {
                         this.gameOver = true;
-                        this.handleVictory();
+                        this.justWon = true;
                         return true;
                     }
                 }
@@ -220,13 +137,6 @@ class Game2048 {
         return true;
     }
     
-    handleVictory() {
-        // Small delay to show the winning tile
-        setTimeout(() => {
-            this.handleGameOver();
-        }, 500);
-    }
-    
     handleGameOver() {
         // Ensure allScores is an array
         if (!Array.isArray(allScores)) {
@@ -234,7 +144,9 @@ class Game2048 {
         }
         
         // Filter scores for current difficulty
-        const difficultyScores = allScores.filter(s => s.difficulty === this.difficulty);
+        const difficultyScores = allScores
+            .filter(s => s.difficulty === this.difficulty)
+            .sort((a, b) => b.score - a.score);
         const lowestTopScore = difficultyScores.length >= 10 ? difficultyScores[9].score : -1;
         
         if (difficultyScores.length < 10 || this.score > lowestTopScore) {
@@ -291,7 +203,7 @@ class Game2048 {
         // Sort all scores (we'll filter by difficulty when displaying)
         allScores.sort((a, b) => b.score - a.score);
         
-        saveScores();
+        scoreClient.save('2n', initials, this.score, { difficulty: this.difficulty });
         updateScoreboard(this.difficulty);
         
         // Hide prompt and clear input
@@ -319,7 +231,8 @@ class Game2048 {
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
                 const tile = document.createElement('div');
-                tile.className = 'tile';
+                const state = this.tileStates[`${i},${j}`];
+                tile.className = state ? `tile ${state}` : 'tile';
                 const value = this.board[i][j];
                 
                 if (value !== 0) {
@@ -332,28 +245,127 @@ class Game2048 {
         }
         
         document.getElementById('score').textContent = this.score;
+        this.tileStates = {};
     }
 }
 
-// Global initials input handlers - only set up once, not per game instance
-if (!window.initialsHandlersSetup) {
-    window.initialsHandlersSetup = true;
+// Global event handlers — set up once, not per game instance
+if (!window.gameHandlersSetup) {
+    window.gameHandlersSetup = true;
     
+    // ── Keyboard input ──
+    document.addEventListener('keydown', (e) => {
+        if (!currentGame || currentGame.gameOver || currentGame.waitingForInitials) return;
+        if (!document.querySelector('.container').classList.contains('game-active')) return;
+        if (document.querySelector('.scoreboard-modal.active') ||
+            document.querySelector('.instructions-modal.active') ||
+            document.querySelector('.credits-modal.active')) return;
+        
+        let moved = false;
+        switch(e.key) {
+            case 'ArrowUp':
+                e.preventDefault();
+                moved = currentGame.move('up');
+                break;
+            case 'ArrowDown':
+                e.preventDefault();
+                moved = currentGame.move('down');
+                break;
+            case 'ArrowLeft':
+                e.preventDefault();
+                moved = currentGame.move('left');
+                break;
+            case 'ArrowRight':
+                e.preventDefault();
+                moved = currentGame.move('right');
+                break;
+        }
+        
+        if (moved) {
+            currentGame.addRandomTile();
+            currentGame.render();
+            if (currentGame.checkGameOver()) {
+                if (currentGame.justWon) {
+                    const game = currentGame;
+                    setTimeout(() => game.handleGameOver(), 500);
+                } else {
+                    currentGame.handleGameOver();
+                }
+            }
+        }
+    });
+    
+    // ── Touch input ──
+    const gameBoard = document.getElementById('gameBoard');
+    gameBoard.addEventListener('touchstart', (e) => {
+        if (!currentGame) return;
+        currentGame.touchStartX = e.touches[0].clientX;
+        currentGame.touchStartY = e.touches[0].clientY;
+    });
+    
+    gameBoard.addEventListener('touchend', (e) => {
+        if (!currentGame || currentGame.gameOver || currentGame.waitingForInitials) return;
+        
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        
+        const dx = touchEndX - currentGame.touchStartX;
+        const dy = touchEndY - currentGame.touchStartY;
+        
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+        
+        if (Math.max(absDx, absDy) > 30) {
+            let moved = false;
+            if (absDx > absDy) {
+                moved = dx > 0 ? currentGame.move('right') : currentGame.move('left');
+            } else {
+                moved = dy > 0 ? currentGame.move('down') : currentGame.move('up');
+            }
+            
+            if (moved) {
+                currentGame.addRandomTile();
+                currentGame.render();
+                if (currentGame.checkGameOver()) {
+                    if (currentGame.justWon) {
+                        const game = currentGame;
+                        setTimeout(() => game.handleGameOver(), 500);
+                    } else {
+                        currentGame.handleGameOver();
+                    }
+                }
+            }
+        }
+    });
+    
+    // ── New Game button ──
+    document.getElementById('newGame').addEventListener('click', () => {
+        document.querySelector('.container').classList.remove('game-active');
+        document.getElementById('difficultyModal').classList.add('active');
+        window.isDifficultyModalOpen = true;
+    });
+    
+    // ── Restart (play again) button ──
+    document.getElementById('restartGame').addEventListener('click', () => {
+        document.getElementById('gameOver').classList.remove('active');
+        document.querySelector('.container').classList.remove('game-active');
+        document.getElementById('difficultyModal').classList.add('active');
+        window.isDifficultyModalOpen = true;
+    });
+    
+    // ── Initials input handlers ──
     const initialsInput = document.getElementById('initialsInput');
     
-    // Uppercase and letters only
     initialsInput.addEventListener('input', (e) => {
         e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
     });
     
-    // Handle Enter key
     initialsInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && currentGame && !currentGame.submittingInitials) {
             currentGame.submitInitials();
         }
     });
     
-    // Handle button click
     document.getElementById('submitInitials').addEventListener('click', () => {
         if (currentGame && !currentGame.submittingInitials) {
             currentGame.submitInitials();

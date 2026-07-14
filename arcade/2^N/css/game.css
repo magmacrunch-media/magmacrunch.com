@@ -159,7 +159,10 @@
 
 /* 4096+ - Beyond: all three colors cycling in plasma glow */
 .tile[data-value="4096"],
-.tile[data-value="8192"] { 
+.tile[data-value="8192"],
+.tile[data-value="16384"],
+.tile[data-value="32768"],
+.tile[data-value="65536"] { 
     background: linear-gradient(135deg, #ffffff 0%, #FFD54A 40%, #F23C8F 80%, #14B8FF 100%); 
     color: #0a0020; 
     font-size: 16px; 
