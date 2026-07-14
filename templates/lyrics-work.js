@@ -21,7 +21,6 @@
 
     const workId = C.workId;
     const d = '../../../';
-    const accent = C.accent || 'red';
 
     const ENTITY_MAP = window.__ENTITY_MAP || {};
     function archiveLink(id, name, type) {
