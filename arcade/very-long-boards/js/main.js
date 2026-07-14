@@ -34,6 +34,7 @@ function init() {
     window.createParticles(scene, whiteTex);
 
     initAudio();
+    window.initHUD();
     renderCharacterPreview('csOffice', 'office-carl');
     renderCharacterPreview('csParty', 'party-carl');
     renderCharacterPreview('csDark', 'dark-carl');
@@ -52,7 +53,7 @@ function gameLogic() {
 
     switch (gameState) {
         case 'title':
-            titleDist += 0.15;
+            titleDist += 9 * dt;
             terrain.update(titleDist);
             playerMesh.position.y = terrain.hillAt(titleDist);
             window.updateObstaclePositions(terrain, terrain.getScrollOffset());
@@ -70,7 +71,7 @@ function gameLogic() {
             break;
 
         case 'select':
-            titleDist += 0.15;
+            titleDist += 9 * dt;
             terrain.update(titleDist);
             playerMesh.position.y = terrain.hillAt(titleDist);
             window.updateObstaclePositions(terrain, terrain.getScrollOffset());
@@ -83,11 +84,13 @@ function gameLogic() {
                 selectedCharIndex = (selectedCharIndex - 1 + charKeys.length) % charKeys.length;
                 currentCharacter = charKeys[selectedCharIndex];
                 updateCharSelection();
+                updatePlayerColors(currentCharacter);
                 playSelectSound();
             } else if (inp.right) {
                 selectedCharIndex = (selectedCharIndex + 1) % charKeys.length;
                 currentCharacter = charKeys[selectedCharIndex];
                 updateCharSelection();
+                updatePlayerColors(currentCharacter);
                 playSelectSound();
             } else if (inp.enter) {
                 startCountdown();
@@ -183,6 +186,7 @@ function startCountdown() {
     titleDist = 0;
     window.initObstacles(sceneObj.scene);
     window.initScenery(sceneObj.scene);
+    updatePlayerColors(currentCharacter);
     countdownStart = Date.now();
     lastCountNum = CONFIG.COUNTDOWN_SECS + 1;
     gameState = 'countdown';
@@ -266,5 +270,7 @@ window.__pageCleanup = function() {
     if (sceneObj) {
         sceneObj.engine.stopRenderLoop();
         window.disposeParticles();
+        sceneObj.scene.dispose();
+        sceneObj.engine.dispose();
     }
 };

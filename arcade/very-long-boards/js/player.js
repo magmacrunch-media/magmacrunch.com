@@ -108,6 +108,10 @@ window.createPlayer = function(scene) {
 
     root._armL = armL;
     root._armR = armR;
+    root._shirtMat = shirtMat;
+    root._pantsMat = pantsMat;
+    root._skinMat = skinMat;
+    root._hairMat = hairMat;
 
     for (const m of root.getChildMeshes()) m.isPickable = false;
 
@@ -273,4 +277,12 @@ window.performTrick = function() {
     return player.tricking;
 };
 
-window.getPlayerScreenY = function() { return 0.8; };
+window.updatePlayerColors = function(charKey) {
+    if (!playerMesh) return;
+    const colors = CHARACTERS[charKey] && CHARACTERS[charKey].colors;
+    if (!colors) return;
+    playerMesh._shirtMat.diffuseColor = new BABYLON.Color3(colors.shirt[0], colors.shirt[1], colors.shirt[2]);
+    playerMesh._hairMat.diffuseColor = new BABYLON.Color3(colors.hair[0], colors.hair[1], colors.hair[2]);
+    playerMesh._skinMat.diffuseColor = new BABYLON.Color3(colors.skin[0], colors.skin[1], colors.skin[2]);
+    playerMesh._pantsMat.diffuseColor = new BABYLON.Color3(colors.pants[0], colors.pants[1], colors.pants[2]);
+};

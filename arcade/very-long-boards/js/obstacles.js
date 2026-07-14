@@ -18,11 +18,11 @@ window.createObstacles = function(scene) {
 };
 
 const OBS_TYPES = [
-    { type: 'rock', w: 0.5, h: 0.3, prob: 0.25 },
-    { type: 'branch', w: 1.0, h: 0.15, prob: 0.25 },
-    { type: 'puddle', w: 1.2, h: 0.05, prob: 0.2 },
-    { type: 'pinecone', w: 0.2, h: 0.15, prob: 0.2 },
-    { type: 'stick', w: 0.6, h: 0.1, prob: 0.1 }
+    { type: 'rock', w: 0.5, h: 0.3, prob: 0.25, hitR: 0.35, nearMissR: 0.6 },
+    { type: 'branch', w: 1.0, h: 0.15, prob: 0.25, hitR: 0.5, nearMissR: 0.8 },
+    { type: 'puddle', w: 1.2, h: 0.05, prob: 0.2, hitR: 0.6, nearMissR: 0.9 },
+    { type: 'pinecone', w: 0.2, h: 0.15, prob: 0.2, hitR: 0.15, nearMissR: 0.35 },
+    { type: 'stick', w: 0.6, h: 0.1, prob: 0.1, hitR: 0.3, nearMissR: 0.5 }
 ];
 
 function pickObsType() {
@@ -40,7 +40,7 @@ function spawnObstacle(z, scene) {
     const worldX = (Math.random() - 0.5) * 5;
 
     const obs = {
-        worldX, z, w: t.w, h: t.h,
+        worldX, z, w: t.w, h: t.h, hitR: t.hitR, nearMissR: t.nearMissR,
         type: t.type, active: true, nearMissed: false, mesh: null
     };
 
@@ -135,12 +135,12 @@ window.checkObstacleCollisions = function(terrain) {
         const cx = curve * dz;
         const ox = obs.worldX + cx;
 
-        if (Math.abs(player.x - ox) < 0.5 && Math.abs(dz) < 0.8) {
+        if (Math.abs(player.x - ox) < obs.hitR && Math.abs(dz) < obs.hitR * 1.5) {
             obs.active = false;
             return true;
         }
 
-        if (!obs.nearMissed && Math.abs(player.x - ox) < 0.8 && Math.abs(dz) < 1.2) {
+        if (!obs.nearMissed && Math.abs(player.x - ox) < obs.nearMissR && Math.abs(dz) < obs.nearMissR * 1.5) {
             obs.nearMissed = true;
             player.score += CONFIG.NEAR_MISS_POINTS;
             playNearMissSound();

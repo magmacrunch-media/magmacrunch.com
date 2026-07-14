@@ -39,6 +39,12 @@ const CHARACTERS = {
         stabilityMult: 1.0,
         hitbox: { w: 40, h: 60 },
         trail: 'dust',
+        colors: {
+            shirt: [0.6, 0.2, 0.2],
+            hair: [0.35, 0.22, 0.12],
+            skin: [0.92, 0.82, 0.64],
+            pants: [0.2, 0.22, 0.28],
+        },
     },
     'party-carl': {
         name: 'PARTY CARL',
@@ -49,6 +55,12 @@ const CHARACTERS = {
         stabilityMult: 0.85,
         hitbox: { w: 36, h: 54 },
         trail: 'sparkle',
+        colors: {
+            shirt: [0.9, 0.2, 0.8],
+            hair: [0.9, 0.85, 0.3],
+            skin: [0.92, 0.82, 0.64],
+            pants: [0.3, 0.1, 0.4],
+        },
     },
     'dark-carl': {
         name: 'DARK CARL',
@@ -59,5 +71,11 @@ const CHARACTERS = {
         stabilityMult: 0.9,
         hitbox: { w: 38, h: 56 },
         trail: 'shadow',
+        colors: {
+            shirt: [0.15, 0.1, 0.25],
+            hair: [0.1, 0.1, 0.15],
+            skin: [0.85, 0.75, 0.6],
+            pants: [0.1, 0.1, 0.12],
+        },
     },
 };

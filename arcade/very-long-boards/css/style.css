@@ -235,7 +235,7 @@ body {
         height: calc(100vw * 0.5625);
     }
     
-    #gameCanvas {
+    #renderCanvas {
         border: none;
     }
     

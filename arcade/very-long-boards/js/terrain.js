@@ -111,12 +111,8 @@ window.createTerrain = function(scene) {
         }
     }
 
-    function getRoadCenterX(dist) {
-        return curveAt(dist) * (dist - scrollOffset);
-    }
-
     return {
-        update, curveAt, hillAt, ROAD_W, getRoadCenterX,
+        update, curveAt, hillAt, ROAD_W,
         getScrollOffset: () => scrollOffset
     };
 };
