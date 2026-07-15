@@ -285,7 +285,7 @@ def apply_moves(board, moves):
 def get_winner(board):
     if board[OFF_PLAYER] >= 15:
         return PLAYER
-    if board[OFF_AI] >= 15:
+    if board[OFF_AI] <= -15:
         return AI
     return None
 

@@ -281,16 +281,10 @@ class TestWinDetection:
         board[OFF_PLAYER] = 15
         assert get_winner(board) == PLAYER
 
-    # KNOWN BUG: get_winner checks board[OFF_AI] >= 15, but AI off count
-    # is stored as negative (decrements on bear off). Should check <= -15.
     def test_ai_wins(self, game):
         board = [0] * ARRAY_SIZE
         board[OFF_AI] = -15
-        result = get_winner(board)
-        assert result is None, (
-            "KNOWN BUG: get_winner doesn't detect AI win because "
-            "board[OFF_AI] is -15, not >= 15"
-        )
+        assert get_winner(board) == AI
 
 
 # ── Doubling Cube ─────────────────────────────────────────────────────────────
