@@ -471,7 +471,7 @@ function doRejectedSpectate() {
   document.getElementById('rejected-overlay').classList.remove('show');
   var name = document.getElementById('name-input').value.trim() || 'Spectator';
   Multiplayer.reconnectAndDo(function() {
-    Multiplayer.spectate(name);
+    Multiplayer.spectate(name, 'SORRY');
   });
 }
 function doRejectedLateJoin() {
@@ -479,7 +479,7 @@ function doRejectedLateJoin() {
   var name = document.getElementById('name-input').value.trim() || 'Player';
   // Shared framework makes late joiners into spectators
   Multiplayer.reconnectAndDo(function() {
-    Multiplayer.spectate(name);
+    Multiplayer.spectate(name, 'SORRY');
   });
 }
 

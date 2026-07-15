@@ -1318,8 +1318,8 @@ function doJoin() {
   if (!name || !Multiplayer.isConnected()) return;
   // Save name to localStorage for sharing across games
   localStorage.setItem('arcade_username', name);
-  // Pass chosen color if one was picked; server auto-assigns if null/empty
-  Multiplayer.join(name, _selectedColor || '');
+  // Use fixed room code so all players join the same room
+  Multiplayer.join(name, _selectedColor || '', 'SORRY');
 }
 joinBtn.addEventListener('click', doJoin);
 nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doJoin(); });
@@ -1327,7 +1327,7 @@ nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doJoi
 function doSpectate() {
   var name = nameInput.value.trim();
   if (!name || !Multiplayer.isConnected()) return;
-  Multiplayer.spectate(name);
+  Multiplayer.spectate(name, 'SORRY');
 }
 spectateBtn.addEventListener('click', doSpectate);
 
