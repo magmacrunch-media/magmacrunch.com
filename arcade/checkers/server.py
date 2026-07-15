@@ -112,7 +112,7 @@ def get_moves_for_piece(board, row, col):
 
     for jump in list(jumps):
         more = get_multi_jumps(board, jump['to']['row'], jump['to']['col'],
-                               [jump['from']], jump['jumped'])
+                               [jump['from']], jump['jumped'], piece)
         jumps.extend(more)
 
     if jumps:
@@ -120,8 +120,7 @@ def get_moves_for_piece(board, row, col):
     return moves
 
 
-def get_multi_jumps(board, row, col, visited, jumped_pieces):
-    piece = board[row][col]
+def get_multi_jumps(board, row, col, visited, jumped_pieces, piece):
     if piece == EMPTY:
         return []
 
@@ -151,7 +150,7 @@ def get_multi_jumps(board, row, col, visited, jumped_pieces):
                     }
                     result.append(new_jump)
                     more = get_multi_jumps(board, jr, jc, visited + [{'row': jr, 'col': jc}],
-                                           jumped_pieces + [{'row': mid_r, 'col': mid_c}])
+                                           jumped_pieces + [{'row': mid_r, 'col': mid_c}], piece)
                     result.extend(more)
 
     return result
@@ -278,9 +277,20 @@ class CheckersGame:
         to_row = action['to']['row']
         to_col = action['to']['col']
 
+        # Bug fix: verify piece belongs to current player
+        piece = self.board[from_row][from_col]
+        if piece == EMPTY or get_owner(piece) != side:
+            return None
+
         move = find_move(self.board, from_row, from_col, to_row, to_col)
         if move is None:
             return None
+
+        # Bug fix: enforce global mandatory jumps
+        all_legal = get_legal_moves(self.board, side)
+        if all_legal and all_legal[0]['type'] in ('jump', 'multi_jump'):
+            if move['type'] not in ('jump', 'multi_jump'):
+                return None
 
         promoted = apply_move(self.board, move)
         self.move_history.append({
