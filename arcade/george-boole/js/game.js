@@ -77,22 +77,37 @@ class Game2048 {
         // Store event listeners for cleanup (prevent memory leaks)
         this.eventListeners = [];
         
+        // Track pending timeouts for cleanup (prevent stale callbacks)
+        this._pendingTimeouts = [];
+        
         this.init();
         this.setupEventListeners();
     }
     
-    // Clean up event listeners to prevent memory leaks
+    // Clean up event listeners and timeouts to prevent memory leaks
     destroy() {
         this.eventListeners.forEach(({ element, event, handler }) => {
             element.removeEventListener(event, handler);
         });
         this.eventListeners = [];
+        this._pendingTimeouts.forEach(id => clearTimeout(id));
+        this._pendingTimeouts = [];
     }
     
     // Helper to register event listeners for later cleanup
     addListener(element, event, handler, options) {
         element.addEventListener(event, handler, options);
         this.eventListeners.push({ element, event, handler });
+    }
+    
+    // Helper to register timeouts that auto-cancel on destroy
+    _setTimeout(fn, delay) {
+        const id = setTimeout(() => {
+            this._pendingTimeouts = this._pendingTimeouts.filter(t => t !== id);
+            fn();
+        }, delay);
+        this._pendingTimeouts.push(id);
+        return id;
     }
     
     init() {
@@ -592,7 +607,8 @@ class Game2048 {
                             earnedRow[j] = true;
                             
                             if (this.bitMode < 8) {
-                                setTimeout(() => {
+                                this._setTimeout(() => {
+                                    if (currentGame !== this) return;
                                     this.bitMode++;
                                     this.maxValue = Math.pow(2, this.bitMode) - 1;
                                     this.hasReachedMaxInCurrentMode = false;
@@ -792,7 +808,8 @@ class Game2048 {
                 this._triggerGauntletEarned();
                 if (this.bitMode < 8) {
                     // Small delay before upgrade so player sees the achievement
-                    setTimeout(() => {
+                    this._setTimeout(() => {
+                        if (currentGame !== this) return;
                         this.bitMode++; // Upgrade! 2→3→4→5→6→7→8
                         this.maxValue = Math.pow(2, this.bitMode) - 1;
                         this.hasReachedMaxInCurrentMode = false; // Reset for next mode
@@ -848,7 +865,8 @@ class Game2048 {
                 // Upgrade to next bit mode (if not at max)
                 if (this.bitMode < 8) {
                     // Small delay before upgrade so player sees the achievement
-                    setTimeout(() => {
+                    this._setTimeout(() => {
+                        if (currentGame !== this) return;
                         this.bitMode++; // Upgrade! 2→3→4→5→6→7→8
                         this.maxValue = Math.pow(2, this.bitMode) - 1;
                         this.hasReachedMaxInCurrentMode = false; // Reset for next mode
@@ -945,6 +963,9 @@ class Game2048 {
         const savedPBBoard = this.personalBestBoard.map(r => r.slice());
         const savedPendingPB = this._pendingPersonalBest;
         const savedPendingEarned = this._pendingEarnedUpgrade;
+        const savedScore = this.score;
+        const savedMoves = this.moves;
+        const savedHasReached = this.hasReachedMaxInCurrentMode;
 
         // Try each direction
         for (const direction of ['left', 'right', 'up', 'down']) {
@@ -972,11 +993,14 @@ class Game2048 {
             // If this direction moved something, game is not over
             if (moved) {
                 this.board = testBoard; // Restore original board
-                // Restore all personal-best state that simulation may have mutated
+                // Restore all state that simulation may have mutated
                 this.highestValueEver = savedHighest;
                 this.personalBestBoard = savedPBBoard;
                 this._pendingPersonalBest = savedPendingPB;
                 this._pendingEarnedUpgrade = savedPendingEarned;
+                this.score = savedScore;
+                this.moves = savedMoves;
+                this.hasReachedMaxInCurrentMode = savedHasReached;
                 return false;
             }
         }
@@ -987,25 +1011,13 @@ class Game2048 {
         this.personalBestBoard = savedPBBoard;
         this._pendingPersonalBest = savedPendingPB;
         this._pendingEarnedUpgrade = savedPendingEarned;
+        this.score = savedScore;
+        this.moves = savedMoves;
+        this.hasReachedMaxInCurrentMode = savedHasReached;
         
         // No moves possible in any direction
         this.gameOver = true;
         return true;
-    }
-    
-    handleVictory() {
-        // Play victory sound
-        if (typeof SoundEffects !== 'undefined') {
-            SoundEffects.play('victory');
-        }
-        
-        // Mark that this was a victory
-        this.wasVictory = true;
-        this.won = true; // Set won flag for leaderboard
-        
-        setTimeout(() => {
-            this.handleGameOver();
-        }, 500);
     }
     
     // Helper to get highest value on board (for non-winners)
@@ -1106,20 +1118,6 @@ class Game2048 {
         }
     }
     
-    // Helper to check if target was reached
-    hasReachedTarget() {
-        if (this.difficulty === 'endless') return false;
-        
-        for (let i = 0; i < this.size; i++) {
-            for (let j = 0; j < this.size; j++) {
-                if (this.board[i][j] >= this.target) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
     submitInitials() {
         const input = document.getElementById('initialsInput');
         let initials = input.value.trim();
@@ -1171,7 +1169,11 @@ class Game2048 {
         
         allScores = cleanedScores;
         
-        saveScores();
+        scoreClient.save('george-boole', initials, this.score, {
+            difficulty: this.difficulty,
+            moves: this.moves,
+            valueReached: this.highestValueEver
+        });
         updateScoreboard(this.difficulty);
         
         document.getElementById('initialsPrompt').classList.remove('active');
