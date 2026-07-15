@@ -16,6 +16,7 @@ let lastCountNum = 0;
 let sceneObj = null;
 let terrain = null;
 let titleDist = 0;
+let menuNavCooldown = 0;
 
 const titleScreen = document.getElementById('titleScreen');
 const charSelect = document.getElementById('charSelect');
@@ -54,6 +55,7 @@ function gameLogic() {
     frame++;
     const dt = sceneObj.engine.getDeltaTime() / 1000;
     const inp = consumeInput();
+    if (menuNavCooldown > 0) menuNavCooldown -= dt;
 
     switch (gameState) {
         case 'title':
@@ -85,18 +87,20 @@ function gameLogic() {
             const sCurve = terrain.curveAt(titleDist);
             sceneObj.updateCamera(playerMesh, sSlope, sCurve);
             sceneObj.updateSky(playerMesh);
-            if (inp.left) {
+            if (inp.left && menuNavCooldown <= 0) {
                 selectedCharIndex = (selectedCharIndex - 1 + charKeys.length) % charKeys.length;
                 currentCharacter = charKeys[selectedCharIndex];
                 updateCharSelection();
                 updatePlayerColors(currentCharacter);
                 playSelectSound();
-            } else if (inp.right) {
+                menuNavCooldown = 0.15;
+            } else if (inp.right && menuNavCooldown <= 0) {
                 selectedCharIndex = (selectedCharIndex + 1) % charKeys.length;
                 currentCharacter = charKeys[selectedCharIndex];
                 updateCharSelection();
                 updatePlayerColors(currentCharacter);
                 playSelectSound();
+                menuNavCooldown = 0.15;
             } else if (inp.enter) {
                 gameState = 'boardSelect';
                 hideOverlay(charSelect);
@@ -108,18 +112,20 @@ function gameLogic() {
             break;
 
         case 'boardSelect':
-            if (inp.left) {
+            if (inp.left && menuNavCooldown <= 0) {
                 selectedBoardIndex = (selectedBoardIndex - 1 + boardKeys.length) % boardKeys.length;
                 currentBoard = boardKeys[selectedBoardIndex];
                 updateBoardSelection();
                 updatePlayerBoardColor(currentBoard);
                 playSelectSound();
-            } else if (inp.right) {
+                menuNavCooldown = 0.15;
+            } else if (inp.right && menuNavCooldown <= 0) {
                 selectedBoardIndex = (selectedBoardIndex + 1) % boardKeys.length;
                 currentBoard = boardKeys[selectedBoardIndex];
                 updateBoardSelection();
                 updatePlayerBoardColor(currentBoard);
                 playSelectSound();
+                menuNavCooldown = 0.15;
             } else if (inp.enter) {
                 hideGarage();
                 hideOverlay(boardSelect);

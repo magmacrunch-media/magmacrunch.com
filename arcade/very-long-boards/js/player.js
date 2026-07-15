@@ -259,8 +259,10 @@ window.updatePlayerMesh = function(terrain, frame) {
         playerMesh.rotation.x = progress * 1.0;
         playerMesh.scaling.y = 1 - progress * 0.2;
     } else {
+        const curve = terrain ? terrain.curveAt(player.distance) : 0;
+        const curveAngle = Math.atan(curve) * 0.3;
         playerMesh.rotation.z = player.lean * 0.18 + wobbleX * 0.08;
-        playerMesh.rotation.y = player.lean * 0.12;
+        playerMesh.rotation.y = player.lean * 0.12 + curveAngle;
         playerMesh.rotation.x = 0;
         playerMesh.scaling.y = player.tricking ? 0.85 : 1;
     }
