@@ -203,7 +203,7 @@ window.updatePlayer = function(input, terrain, dt) {
         player.targetLean = 0;
     }
     player.lean += (player.targetLean - player.lean) * 0.12 * dtScale;
-    player.x += player.lean * handling * Math.min(1, player.speed * 1.5) * dtScale;
+    player.x += player.lean * handling * 0.1 * Math.min(1, player.speed * 1.5) * dtScale;
 
     player.speed = Math.max(0.02, Math.min(maxSpd, player.speed));
     player.x = Math.max(-3.5, Math.min(3.5, player.x));
@@ -259,7 +259,7 @@ window.updatePlayerMesh = function(terrain, frame) {
         playerMesh.scaling.y = 1 - progress * 0.2;
     } else {
         const curve = terrain ? terrain.curveAt(player.distance) : 0;
-        const curveAngle = -Math.atan(curve) * 0.3;
+        const curveAngle = -Math.atan(curve);
         playerMesh.rotation.z = player.lean * 0.18 + wobbleX * 0.08;
         playerMesh.rotation.y = player.lean * 0.12 + curveAngle;
         playerMesh.rotation.x = 0;
