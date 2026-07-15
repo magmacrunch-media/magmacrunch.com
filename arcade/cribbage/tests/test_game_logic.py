@@ -41,14 +41,10 @@ class TestFifteens:
         cards = hand(card('10'), card('5'))
         assert game._count_fifteens(cards) == SCORE['FIFTEEN']
 
-    # KNOWN BUG: _count_fifteens uses RANK_VALUES (J=11, Q=12, K=13)
-    # instead of pegging values (J/Q/K=10). Face cards should count as 10.
     def test_face_card_fifteen(self, game):
-        """K(13) + 5 = 18, not 15. Bug: face cards should count as 10."""
+        # King (10 in pegging) + 5 = 15
         cards = hand(card('K'), card('5'))
-        result = game._count_fifteens(cards)
-        # Should be SCORE['FIFTEEN'] but bug uses K=13
-        assert result == 0, "KNOWN BUG: K(13)+5=18, server doesn't use pegging values for fifteens"
+        assert game._count_fifteens(cards) == SCORE['FIFTEEN']
 
     def test_ace_through_ten_fifteen(self, game):
         # A(1) + 2 + 3 + 4 + 5 = 15
@@ -123,20 +119,13 @@ class TestRuns:
         cards = hand(card('4'), card('5'), card('6'))
         assert game._count_runs(cards) == 3
 
-    # KNOWN BUG: _count_runs counts sub-runs. Run of 4 should score 4,
-    # but function scores 3+4+3=10 (all sub-runs of length 3+).
     def test_run_of_four(self, game):
-        """Run of 4 should score 4, but server counts sub-runs scoring 10."""
         cards = hand(card('3'), card('4'), card('5'), card('6'))
-        result = game._count_runs(cards)
-        assert result == 10, "KNOWN BUG: counts sub-runs (3+4+3=10) instead of 4"
+        assert game._count_runs(cards) == 4
 
     def test_run_of_five(self, game):
-        """Run of 5 should score 5, but server counts sub-runs."""
         cards = hand(card('A'), card('2'), card('3'), card('4'), card('5'))
-        result = game._count_runs(cards)
-        # Sub-runs: 3+4+5+3+4+3 = 22
-        assert result == 22, "KNOWN BUG: counts sub-runs instead of 5"
+        assert game._count_runs(cards) == 5
 
     def test_no_run(self, game):
         cards = hand(card('2'), card('5'), card('8'), card('K'))
@@ -152,9 +141,9 @@ class TestRuns:
         assert game._count_runs(cards) == 6
 
     def test_two_runs(self, game):
-        # 3, 4, 5, 6 — run of 4 = 4 points (but bug counts sub-runs = 10)
+        # 3, 4, 5, 6 — run of 4 = 4 points
         cards = hand(card('3'), card('4'), card('5'), card('6'))
-        assert game._count_runs(cards) == 10  # Bug: counts sub-runs
+        assert game._count_runs(cards) == 4
 
     def test_disjoint_runs_not_counted(self, game):
         # A, 2, 3, 5, 6, 7 — two separate runs of 3
@@ -323,10 +312,10 @@ class TestPegging:
         assert points == SCORE['FOUR_OF_KIND']
 
     def test_pegging_run(self, game):
-        # Bug: pegging run also counts sub-runs
+        # 4+6+5 = 15 (2pts) + run of 3 (3pts) = 5 total
         played = [card('4'), card('6')]
         points, desc = game._score_pegging(card('5'), played)
-        assert points == 5  # Bug: counts sub-runs (3+2=5) instead of 3
+        assert points == 5
 
     def test_pegging_no_points(self, game):
         played = [card('10')]

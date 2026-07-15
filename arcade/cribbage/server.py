@@ -23,6 +23,9 @@ RANK_VALUES = {
     'J': 11, 'Q': 12, 'K': 13
 }
 
+# Pegging/fifteen values: face cards count as 10
+PEGGING_VALUES = {rank: min(val, 10) for rank, val in RANK_VALUES.items()}
+
 WINNING_SCORE = 121
 CARDS_PER_HAND = 6
 MAX_PEG_COUNT = 31
@@ -142,7 +145,7 @@ class CribbageGame:
             total = 0
             for i in range(n):
                 if mask & (1 << i):
-                    total += RANK_VALUES[cards[i]['rank']]
+                    total += PEGGING_VALUES[cards[i]['rank']]
             if total == 15:
                 count += 1
         return count * SCORE['FIFTEEN']
@@ -186,14 +189,11 @@ class CribbageGame:
 
             seq_length = j - i + 1
             if seq_length >= 3:
-                # Score all sub-runs
-                for start in range(i, j - 1):
-                    for end in range(start + 2, j + 1):
-                        run_length = end - start + 1
-                        multiplier = 1
-                        for k in range(start, end + 1):
-                            multiplier *= value_counts[unique_values[k]]
-                        total_points += run_length * multiplier
+                # Score the longest run, multiplied by duplicate counts
+                multiplier = 1
+                for k in range(i, j + 1):
+                    multiplier *= value_counts[unique_values[k]]
+                total_points += seq_length * multiplier
 
             i = j + 1
 
