@@ -199,9 +199,9 @@ def is_square_attacked(board, row, col, by_owner):
                     for dr, dc in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
                         nr, nc = r + dr, c + dc
                         while in_bounds(nr, nc):
+                            if nr == row and nc == col:
+                                return True
                             if board[nr][nc] is not None:
-                                if nr == row and nc == col:
-                                    return True
                                 break
                             nr += dr
                             nc += dc
@@ -209,9 +209,9 @@ def is_square_attacked(board, row, col, by_owner):
                     for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                         nr, nc = r + dr, c + dc
                         while in_bounds(nr, nc):
+                            if nr == row and nc == col:
+                                return True
                             if board[nr][nc] is not None:
-                                if nr == row and nc == col:
-                                    return True
                                 break
                             nr += dr
                             nc += dc
@@ -219,9 +219,9 @@ def is_square_attacked(board, row, col, by_owner):
                     for dr, dc in [(-1, -1), (-1, 1), (1, -1), (1, 1), (-1, 0), (1, 0), (0, -1), (0, 1)]:
                         nr, nc = r + dr, c + dc
                         while in_bounds(nr, nc):
+                            if nr == row and nc == col:
+                                return True
                             if board[nr][nc] is not None:
-                                if nr == row and nc == col:
-                                    return True
                                 break
                             nr += dr
                             nc += dc

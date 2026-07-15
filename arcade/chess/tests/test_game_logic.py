@@ -365,11 +365,8 @@ class TestCastling:
         assert game.castling[WHITE]['kingside'] is False
         assert game.castling[WHITE]['queenside'] is True
 
-    # KNOWN BUG: is_square_attacked doesn't detect attacks on empty squares.
-    # The castling check uses is_square_attacked on transit/destination squares
-    # which may be empty, allowing castling through check.
     def test_castling_through_check_blocked(self, game):
-        """Castling through check should be blocked, but isn't due to a server bug."""
+        # Black queen attacks f1 — castling through check must be blocked
         game.board = empty_board()
         game.board[7][4] = (KING, WHITE)
         game.board[7][7] = (ROOK, WHITE)
@@ -378,13 +375,10 @@ class TestCastling:
 
         moves = get_king_moves(game.board, 7, 4, WHITE, game.castling)
         castle_moves = [m for m in moves if m.get('isKingsideCastle')]
-        # Should be 0 (blocked), but bug allows it
-        assert len(castle_moves) == 1, (
-            "KNOWN BUG: is_square_attacked should detect queen attack on empty f1 square"
-        )
+        assert len(castle_moves) == 0
 
     def test_castling_into_check_blocked(self, game):
-        """Castling into check should be blocked, but isn't due to same bug."""
+        # Black queen attacks g1 — castling into check must be blocked
         game.board = empty_board()
         game.board[7][4] = (KING, WHITE)
         game.board[7][7] = (ROOK, WHITE)
@@ -393,9 +387,7 @@ class TestCastling:
 
         moves = get_king_moves(game.board, 7, 4, WHITE, game.castling)
         castle_moves = [m for m in moves if m.get('isKingsideCastle')]
-        assert len(castle_moves) == 1, (
-            "KNOWN BUG: is_square_attacked should detect queen attack on empty g1 square"
-        )
+        assert len(castle_moves) == 0
 
     def test_castling_king_must_not_be_in_check(self, game):
         game.board = empty_board()
