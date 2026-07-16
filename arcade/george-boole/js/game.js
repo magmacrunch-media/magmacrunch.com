@@ -52,19 +52,7 @@ class Game2048 {
         this.gatesEnabled = true;
         
         // Set gate spawn chance based on bit mode
-        // Lower bits need MORE gates to prevent endless games
-        // No caps means gates accumulate - these rates tuned for that!
-        if (this.bitMode === 2) {
-            this.gateSpawnChance = 0.45; // 45% in 2-bit (need high rate since only 4 values)
-        } else if (this.bitMode === 3) {
-            this.gateSpawnChance = 0.32; // 32% in 3-bit
-        } else if (this.bitMode === 4) {
-            this.gateSpawnChance = 0.24; // 24% in 4-bit
-        } else if (this.bitMode <= 6) {
-            this.gateSpawnChance = 0.20; // 20% in 5-6 bit
-        } else {
-            this.gateSpawnChance = 0.18; // 18% in 7+ bit and endless
-        }
+        this.updateGateSpawnRate();
         
         // Cache DOM elements for better performance
         this.gameBoardElement = document.getElementById('gameBoard');
@@ -612,18 +600,7 @@ class Game2048 {
                                     this.bitMode++;
                                     this.maxValue = Math.pow(2, this.bitMode) - 1;
                                     this.hasReachedMaxInCurrentMode = false;
-                                    
-                                    if (this.bitMode === 2) {
-                                        this.gateSpawnChance = 0.45;
-                                    } else if (this.bitMode === 3) {
-                                        this.gateSpawnChance = 0.32;
-                                    } else if (this.bitMode === 4) {
-                                        this.gateSpawnChance = 0.24;
-                                    } else if (this.bitMode <= 6) {
-                                        this.gateSpawnChance = 0.20;
-                                    } else {
-                                        this.gateSpawnChance = 0.18;
-                                    }
+                                    this.updateGateSpawnRate();
                                     
                                     this.updateModeDisplay();
                                     this.showUpgradeNotification(this.bitMode);
@@ -787,7 +764,27 @@ class Game2048 {
                     const overflowBonus = this.maxValue * 3;
                     this.score += overflowBonus;
                     this.showOverflowNotification(overflowBonus);
-                    return 0; // Tile disappears (treated as empty)
+                    
+                    // Check for Gauntlet upgrade (NOT maxValue counts as reaching max)
+                    if (this.difficulty === 'endless' && !this.hasReachedMaxInCurrentMode) {
+                        this.hasReachedMaxInCurrentMode = true;
+                        this._triggerGauntletEarned();
+                        if (this.bitMode < 8) {
+                            this._setTimeout(() => {
+                                if (currentGame !== this) return;
+                                this.bitMode++;
+                                this.maxValue = Math.pow(2, this.bitMode) - 1;
+                                this.hasReachedMaxInCurrentMode = false;
+                                this.updateGateSpawnRate();
+                                this.updateModeDisplay();
+                                this.showUpgradeNotification(this.bitMode);
+                                this.render();
+                            }, 800);
+                        }
+                        this.updateModeDisplay();
+                    }
+                    
+                    return 0;
                 }
                 break;
             default:
@@ -807,33 +804,14 @@ class Game2048 {
                 // Signal to moveLeft to mark the result cell as earned
                 this._triggerGauntletEarned();
                 if (this.bitMode < 8) {
-                    // Small delay before upgrade so player sees the achievement
                     this._setTimeout(() => {
                         if (currentGame !== this) return;
-                        this.bitMode++; // Upgrade! 2→3→4→5→6→7→8
+                        this.bitMode++;
                         this.maxValue = Math.pow(2, this.bitMode) - 1;
-                        this.hasReachedMaxInCurrentMode = false; // Reset for next mode
-                        
-                        // Update gate spawn rate for new bit mode
-                        if (this.bitMode === 2) {
-                            this.gateSpawnChance = 0.45;
-                        } else if (this.bitMode === 3) {
-                            this.gateSpawnChance = 0.32;
-                        } else if (this.bitMode === 4) {
-                            this.gateSpawnChance = 0.24;
-                        } else if (this.bitMode <= 6) {
-                            this.gateSpawnChance = 0.20;
-                        } else {
-                            this.gateSpawnChance = 0.18;
-                        }
-                        
-                        // Update mode display
+                        this.hasReachedMaxInCurrentMode = false;
+                        this.updateGateSpawnRate();
                         this.updateModeDisplay();
-                        
-                        // Show upgrade notification!
                         this.showUpgradeNotification(this.bitMode);
-                        
-                        // Re-render to update any tiles that might be affected
                         this.render();
                     }, 800);
                 }
@@ -864,36 +842,25 @@ class Game2048 {
                 
                 // Upgrade to next bit mode (if not at max)
                 if (this.bitMode < 8) {
-                    // Small delay before upgrade so player sees the achievement
                     this._setTimeout(() => {
                         if (currentGame !== this) return;
-                        this.bitMode++; // Upgrade! 2→3→4→5→6→7→8
+                        this.bitMode++;
                         this.maxValue = Math.pow(2, this.bitMode) - 1;
-                        this.hasReachedMaxInCurrentMode = false; // Reset for next mode
-                        
-                        // Update gate spawn rate for new bit mode
-                        if (this.bitMode === 2) {
-                            this.gateSpawnChance = 0.45;
-                        } else if (this.bitMode === 3) {
-                            this.gateSpawnChance = 0.32;
-                        } else if (this.bitMode === 4) {
-                            this.gateSpawnChance = 0.24;
-                        } else if (this.bitMode <= 6) {
-                            this.gateSpawnChance = 0.20;
-                        } else {
-                            this.gateSpawnChance = 0.18;
-                        }
-                        
-                        // Update mode display
+                        this.hasReachedMaxInCurrentMode = false;
+                        this.updateGateSpawnRate();
                         this.updateModeDisplay();
-                        
-                        // Show upgrade notification!
                         this.showUpgradeNotification(this.bitMode);
-                        
-                        // Re-render to update any tiles that might be affected
                         this.render();
                     }, 800);
                 }
+                
+                // Play special overflow sound
+                if (typeof SoundEffects !== 'undefined') {
+                    SoundEffects.play('highScore');
+                }
+                
+                // Re-render to update any tiles that might be affected
+                this.render();
                 
                 // Update display immediately to show checkmark
                 this.updateModeDisplay();
@@ -942,6 +909,20 @@ class Game2048 {
         }
     }
     
+    updateGateSpawnRate() {
+        if (this.bitMode === 2) {
+            this.gateSpawnChance = 0.45;
+        } else if (this.bitMode === 3) {
+            this.gateSpawnChance = 0.32;
+        } else if (this.bitMode === 4) {
+            this.gateSpawnChance = 0.24;
+        } else if (this.bitMode <= 6) {
+            this.gateSpawnChance = 0.20;
+        } else {
+            this.gateSpawnChance = 0.18;
+        }
+    }
+    
     checkGameOver() {
         // NO MORE WIN CONDITION - All modes are survival!
         // Game only ends when board is full and no moves possible
@@ -961,11 +942,13 @@ class Game2048 {
         // cannot corrupt real personal-best tracking or highestValueEver.
         const savedHighest = this.highestValueEver;
         const savedPBBoard = this.personalBestBoard.map(r => r.slice());
+        const savedEarnedBoard = (this.difficulty === 'endless') ? this.earnedBoard.map(r => r.slice()) : null;
         const savedPendingPB = this._pendingPersonalBest;
         const savedPendingEarned = this._pendingEarnedUpgrade;
         const savedScore = this.score;
         const savedMoves = this.moves;
         const savedHasReached = this.hasReachedMaxInCurrentMode;
+        const savedTimeouts = this._pendingTimeouts.slice();
 
         // Try each direction
         for (const direction of ['left', 'right', 'up', 'down']) {
@@ -992,15 +975,18 @@ class Game2048 {
             
             // If this direction moved something, game is not over
             if (moved) {
-                this.board = testBoard; // Restore original board
-                // Restore all state that simulation may have mutated
+                this.board = testBoard;
                 this.highestValueEver = savedHighest;
                 this.personalBestBoard = savedPBBoard;
+                if (this.difficulty === 'endless') this.earnedBoard = savedEarnedBoard;
                 this._pendingPersonalBest = savedPendingPB;
                 this._pendingEarnedUpgrade = savedPendingEarned;
                 this.score = savedScore;
                 this.moves = savedMoves;
                 this.hasReachedMaxInCurrentMode = savedHasReached;
+                // Clear any timeouts queued during simulation
+                this._pendingTimeouts.forEach(id => clearTimeout(id));
+                this._pendingTimeouts = savedTimeouts;
                 return false;
             }
         }
@@ -1009,11 +995,14 @@ class Game2048 {
         this.board = testBoard;
         this.highestValueEver = savedHighest;
         this.personalBestBoard = savedPBBoard;
+        if (this.difficulty === 'endless') this.earnedBoard = savedEarnedBoard;
         this._pendingPersonalBest = savedPendingPB;
         this._pendingEarnedUpgrade = savedPendingEarned;
         this.score = savedScore;
         this.moves = savedMoves;
         this.hasReachedMaxInCurrentMode = savedHasReached;
+        this._pendingTimeouts.forEach(id => clearTimeout(id));
+        this._pendingTimeouts = savedTimeouts;
         
         // No moves possible in any direction
         this.gameOver = true;
