@@ -313,9 +313,9 @@
     <div class="releases-wrap">
         <div class="releases-label">// releases //</div>
 
-<a href="pay2play-2025/pay2play-2025.html" class="floppy-card">
+<a href="pay2play-2025/" class="floppy-card">
             <div class="floppy-card-icon">
-                <img src="pay2play-2025/pay2play2025-thumb.jpg" alt="pay2play" width="40" height="40">
+                <canvas id="floppyIcon1" width="32" height="32" style="width:40px;height:40px;image-rendering:pixelated;"></canvas>
             </div>
             <div class="floppy-card-info">
                 <div class="floppy-card-text">
@@ -338,7 +338,7 @@
                     <div class="floppy-card-title">iou a pack of american spirits (2026)</div>
                     <div class="floppy-card-meta">
                         <span class="artist">sex van floor plan</span>
-                        &nbsp;·&nbsp; 3.5″ floppy &nbsp;·&nbsp; 2026
+                        &nbsp;·&nbsp; 3.5″ floppy &nbsp;·&nbsp; jun 2026
                     </div>
                 </div>
                 <span class="floppy-card-arrow">▶</span>
@@ -349,10 +349,6 @@
 
     </div>
 
-    <!-- COMING SOON -->
-    <div class="coming-soon">
-        <p>COMING SOON<br><span>✦</span><br>pay2play (2026)<br><span>✦</span><br>check back for more</p>
-    </div>
 
 </main>
 
@@ -476,21 +472,81 @@
 })();
 </script>
 <script>
-// static floppy icon for iou card
+// Color-cycling floppy disk icons for release cards
 (function() {
-    var c = document.getElementById('floppyIcon2');
-    if (!c) return;
-    var x = c.getContext('2d');
-    x.imageSmoothingEnabled = false;
-    x.fillStyle='#1a1a1c'; x.fillRect(3,2,23,28); x.fillRect(26,6,3,24);
-    x.fillRect(26,5,1,1); x.fillRect(27,4,1,1); x.fillRect(28,3,1,1);
-    x.fillStyle='#101012'; x.fillRect(6,27,2,3); x.fillRect(24,27,2,3);
-    x.fillStyle='#9098a0'; x.fillRect(7,2,11,11);
-    x.fillStyle='#70787e'; x.fillRect(15,2,1,11);
-    x.fillStyle='#0e1010'; x.fillRect(9,3,4,8);
-    x.fillStyle='#f0ece0'; x.fillRect(6,16,20,13);
-    x.fillStyle='#c8202a'; x.fillRect(6,16,20,3);
-    x.fillStyle='#8a8878'; x.fillRect(8,21,10,1); x.fillRect(8,23,15,1); x.fillRect(8,25,12,1);
+    const CYCLE_MS = 2000; // 2 seconds per color
+
+    const releases = [
+        {
+            id: 'floppyIcon1',
+            colors: ['#2d8c3c', '#d4c83a', '#c8202a']  // pay2play: green, yellow, red
+        },
+        {
+            id: 'floppyIcon2',
+            colors: ['#3a7cc8', '#d47c3a', '#d4c83a']  // iou: blue, orange, yellow
+        }
+    ];
+
+    function drawFloppy(ctx, bodyColor) {
+        const W = 32, H = 32;
+        ctx.clearRect(0, 0, W, H);
+        ctx.imageSmoothingEnabled = false;
+
+        // 1. Main Plastic Body
+        ctx.fillStyle = bodyColor;
+        ctx.fillRect(3, 2, 23, 28);
+        ctx.fillRect(26, 6, 3, 24);
+        ctx.fillRect(26, 5, 1, 1);
+        ctx.fillRect(27, 4, 1, 1);
+        ctx.fillRect(28, 3, 1, 1);
+
+        // Bottom cutouts
+        ctx.fillStyle = '#101012';
+        ctx.fillRect(6, 27, 2, 3);
+        ctx.fillRect(24, 27, 2, 3);
+
+        // 2. Metal Shutter
+        ctx.fillStyle = '#9098a0';
+        ctx.fillRect(7, 2, 11, 11);
+        ctx.fillStyle = '#70787e';
+        ctx.fillRect(15, 2, 1, 11);
+        ctx.fillStyle = '#0e1010';
+        ctx.fillRect(9, 3, 4, 8);
+
+        // 3. Paper Label
+        ctx.fillStyle = '#f0ece0';
+        ctx.fillRect(6, 16, 20, 13);
+        ctx.fillStyle = '#c8202a';
+        ctx.fillRect(6, 16, 20, 3);
+
+        // Faux text lines
+        ctx.fillStyle = '#8a8878';
+        ctx.fillRect(8, 21, 10, 1);
+        ctx.fillRect(8, 23, 15, 1);
+        ctx.fillRect(8, 25, 12, 1);
+    }
+
+    function getColor(colors, timestamp) {
+        const idx = Math.floor(timestamp / CYCLE_MS) % colors.length;
+        return colors[idx];
+    }
+
+    let lastTime = 0;
+    function animate(ts) {
+        requestAnimationFrame(animate);
+        if (ts - lastTime < 50) return; // ~20fps
+        lastTime = ts;
+
+        releases.forEach(function(r) {
+            var canvas = document.getElementById(r.id);
+            if (!canvas) return;
+            var ctx = canvas.getContext('2d');
+            var color = getColor(r.colors, ts);
+            drawFloppy(ctx, color);
+        });
+    }
+
+    requestAnimationFrame(animate);
 })();
 </script>
 

@@ -6,8 +6,19 @@
     <title>pay2play (2025) — floppy disk — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../../../../assets/logo.jpg">
     <link rel="stylesheet" href="../../../../style.css">
+    <link rel="stylesheet" href="../../../../archive/by-artist/svfp/svfp-shared.css">
     <style>
-        :root { --bubblegum: #FF8584; }
+        :root {
+            --svfp-brand: #a020c8;
+            --svfp-accent: #d946ef;
+            --svfp-cta: #d946ef;
+            --svfp-heading: #c8b8e8;
+            --svfp-body: #f5d0ff;
+            --svfp-mid: #6020b0;
+            --svfp-bright: #9858d8;
+            --svfp-bg: #0a0a14;
+            --svfp-raised: #2e1a50;
+        }
         
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
 
@@ -18,63 +29,65 @@
             margin-bottom:32px; align-self:flex-start;
         }
         .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
-        .breadcrumb a:hover { color:var(--rose); }
-        .breadcrumb .sep { margin:0 8px; color:var(--rose); opacity:.7; }
-        .breadcrumb .current { color:var(--rose); }
+        .breadcrumb a:hover { color:var(--svfp-accent); }
+        .breadcrumb .sep { margin:0 8px; color:var(--svfp-accent); opacity:.7; }
+        .breadcrumb .current { color:var(--svfp-accent); }
 
         /* header */
         .release-header { text-align:center; margin-bottom:40px; animation:fadeUp .5s ease both; }
-        .release-eyebrow { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--purple); letter-spacing:.25em; margin-bottom:12px; opacity:.85; }
+        .release-eyebrow { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--svfp-accent); letter-spacing:.25em; margin-bottom:12px; opacity:.85; }
         .release-title {
             font-family:'Press Start 2P',monospace; font-size:clamp(16px,3.5vw,28px);
             color:var(--white); line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
         }
-        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--purple); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--svfp-cta); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+        .release-artist a { color:var(--svfp-cta); text-decoration:none; transition:color .15s; }
+        .release-artist a:hover { color:var(--svfp-accent); }
         .sub-nav { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
 
         /* divider */
         .section-divider {
             width:100%; max-width:900px; height:1px;
-            background:linear-gradient(90deg,transparent,var(--rose),var(--purple),var(--rose),transparent);
+            background:linear-gradient(90deg,transparent,var(--svfp-cta),var(--svfp-accent),var(--svfp-cta),transparent);
             margin:0 0 40px; opacity:.35; animation:fadeUp .5s .05s ease both;
         }
 
         /* content */
         .content-wrap { width:100%; max-width:900px; }
-        .section-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--bubblegum); letter-spacing:.15em; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--bubblegum); opacity:.9; }
+        .section-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--svfp-cta); letter-spacing:.15em; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--svfp-cta); opacity:.9; }
 
         /* release block */
         .release-block { display:flex; gap:28px; align-items:flex-start; margin-bottom:44px; animation:fadeUp .5s .1s ease both; }
         @media (max-width:560px) { .release-block { flex-direction:column; align-items:center; } }
         .cover-wrap { flex-shrink:0; width:200px; display:none; }
-        .cover-img { width:200px; height:200px; object-fit:cover; display:block; border:2px solid var(--rose); box-shadow:0 0 0 2px #080808,0 0 0 4px var(--purple),0 0 28px rgba(255,61,110,.2); }
-        .cover-placeholder { width:200px; height:200px; border:2px solid var(--rose); background:var(--deep); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px #080808,0 0 0 4px var(--purple); }
+        .cover-img { width:200px; height:200px; object-fit:cover; display:block; border:2px solid var(--svfp-cta); box-shadow:0 0 0 2px #080808,0 0 0 4px var(--svfp-brand),0 0 28px rgba(224,48,112,.2); }
+        .cover-placeholder { width:200px; height:200px; border:2px solid var(--svfp-cta); background:var(--svfp-bg); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px #080808,0 0 0 4px var(--svfp-brand); }
         .cover-placeholder canvas { display:block; image-rendering:pixelated; width:80px; height:80px; }
         .release-meta { flex:1; }
         .meta-row { font-family:'Courier Prime',monospace; font-size:15px; color:var(--white); opacity:.8; margin-bottom:8px; line-height:1.5; display:flex; gap:8px; }
         .meta-row strong { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--dim); letter-spacing:.1em; flex-shrink:0; padding-top:2px; }
-        .meta-badge { display:inline-block; font-family:'Press Start 2P',monospace; font-size:10px; color:#000; background:var(--rose); padding:3px 8px; letter-spacing:.08em; margin-top:6px; }
-        .meta-badge.purple { background:var(--purple); color:var(--white); }
+        .meta-badge { display:inline-block; font-family:'Press Start 2P',monospace; font-size:10px; color:#000; background:var(--svfp-cta); padding:3px 8px; letter-spacing:.08em; margin-top:6px; }
+        .meta-badge.purple { background:var(--svfp-brand); color:var(--white); }
         .meta-badge.yellow { background:var(--yellow); }
         .stream-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
         .stream-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--green); border:1px solid var(--green); padding:5px 12px; text-decoration:none; letter-spacing:.08em; transition:background .15s,color .15s; display:inline-block; }
         .stream-link:hover { background:var(--green); color:var(--black); }
         .stream-link.yellow { color:var(--yellow); border-color:var(--yellow); }
         .stream-link.yellow:hover { background:var(--yellow); color:var(--black); }
-        .stream-link.purple { color:var(--purple); border-color:var(--purple); }
-        .stream-link.purple:hover { background:var(--purple); color:var(--white); }
+        .stream-link.purple { color:var(--svfp-brand); border-color:var(--svfp-brand); }
+        .stream-link.purple:hover { background:var(--svfp-brand); color:var(--white); }
 
         /* about */
         .about-section { margin-bottom:44px; animation:fadeUp .5s .15s ease both; }
         .about-text { font-family:'Courier Prime',monospace; font-size:14px; color:var(--white); line-height:1.8; opacity:.85; }
-        .about-text a { color:var(--purple); text-decoration:underline; text-decoration-color:rgba(196,95,255,.4); transition:color .15s; }
-        .about-text a:hover { color:var(--rose); }
+        .about-text a { color:var(--svfp-brand); text-decoration:underline; text-decoration-color:rgba(160,32,200,.4); transition:color .15s; }
+        .about-text a:hover { color:var(--svfp-accent); }
 
         /* tracklist */
         .tracklist-section { margin-bottom:44px; animation:fadeUp .5s .2s ease both; }
         .track { display:flex; align-items:baseline; gap:10px; padding:8px 0; border-bottom:1px solid #1a1a2a; transition:background .12s; }
         .track:first-child { border-top:1px solid #1a1a2a; }
-        .track:hover { background:rgba(255,61,110,.03); }
+        .track:hover { background:rgba(224,48,112,.03); }
         .track-num { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dim); letter-spacing:.06em; min-width:22px; flex-shrink:0; }
         .track-title { font-family:'Courier Prime',monospace; font-size:14px; color:var(--white); flex:1; }
         .track-len { font-family:'Courier Prime',monospace; font-size:12px; color:var(--dim); flex-shrink:0; }
@@ -118,15 +131,13 @@
         }
         .floppy-link:hover { 
             transform: translateY(-4px); 
-            /* Desaturated brick glow on hover */
-            box-shadow: 0 8px 24px rgba(140, 90, 90, 0.25); 
+            box-shadow: 0 8px 24px rgba(160, 32, 200, 0.25); 
         }
         .floppy-img { 
             width: 100%; 
             height: auto; 
             display: block; 
-            /* Cool gray border to tie into the theme */
-            border: 2px solid #DADDE0; 
+            border: 2px solid #2a1a3a; 
             background: #111;
         }
 
@@ -134,14 +145,14 @@
         .ascii-footer-container {
             position: relative;
             width: 100%;
-            min-height: 250px; /* Slightly shorter than a hero section */
+            min-height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background-color: #DADDE0;
+            background-color: #1a1028;
             margin-bottom: 24px;
-            border: 1px solid #1e1e2e;
+            border: 1px solid #2a1a3a;
             animation: fadeUp .5s .35s ease both;
         }
         .ascii-bg-img {
@@ -161,13 +172,13 @@
         }
         .ascii-logo-link {
             text-decoration: none;
-            color: #C9B27C; /* Soft gold */
+            color: var(--svfp-cta);
             transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
             display: inline-block;
         }
         .ascii-logo-link:hover {
-            color: #8C5A5A; /* Desaturated brick */
-            text-shadow: 0 0 12px rgba(140, 90, 90, 0.6);
+            color: var(--svfp-accent);
+            text-shadow: 0 0 12px rgba(217, 70, 239, 0.6);
             transform: scale(1.02);
         }
         .ascii-logo {
@@ -180,7 +191,7 @@
         }
     </style>
 </head>
-<body>
+<body class="svfp-page">
 
 <nav>
     <a href="../../../../index.html" class="nav-brand">magmacrunch.com</a>
@@ -209,7 +220,7 @@
     <div class="release-header">
         <div class="release-eyebrow">// floppy disk series #1 · MCS043 //</div>
         <h1 class="release-title">pay2play (2025)</h1>
-        <div class="release-artist">[ sex van floor plan ]</div>
+        <div class="release-artist">[ <a href="../../../../archive/by-artist/svfp/index.html">sex van floor plan</a> ]</div>
         <div class="sub-nav">
             <a href="https://artists.landr.com/svfp_pay2play" class="nav-card c-green" target="_blank" rel="noopener">▶ stream / download</a>
             <a href="https://www.discogs.com/master/3913738-Sex-Van-Floor-Plan-pay2play" class="nav-card c-yellow" target="_blank" rel="noopener">discogs</a>
@@ -281,7 +292,7 @@
             <div class="section-label">// specs</div>
             <div class="spec-row"><span class="spec-key">format</span><span class="spec-val">3.5 inch floppy disk (MF2HD)</span></div>
             <div class="spec-row"><span class="spec-key">capacity</span><span class="spec-val">1.44 MB</span></div>
-            <div class="spec-row"><span class="spec-key">audio format</span><span class="spec-val">MP3 (stored on disk)</span></div>
+            <div class="spec-row"><span class="spec-key">audio format</span><span class="spec-val">64 kbps AAC (stored on disk)</span></div>
             <div class="spec-row"><span class="spec-key">label design</span><span class="spec-val">custom printed label</span></div>
             <div class="spec-row"><span class="spec-key">bonus</span><span class="spec-val">3x .txt files</span></div>
             <div class="spec-row"><span class="spec-key">catalog #</span><span class="spec-val">MCS043 · floppy series #1</span></div>
@@ -325,7 +336,7 @@
         </div>
 
         <div class="back-nav" style="margin-top:32px;">
-            <a href="../index.html" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--rose);text-decoration:none;opacity:0.7;transition:opacity .15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">← back</a>
+            <a href="../index.html" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--svfp-cta);text-decoration:none;opacity:0.7;transition:opacity .15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">← back</a>
         </div>
 
     </div>
@@ -341,16 +352,16 @@
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle='#1a1a2e'; ctx.fillRect(1,0,22,24);
-    ctx.strokeStyle='#ff3d6e'; ctx.lineWidth=0.5; ctx.strokeRect(1,0,22,24);
+    ctx.fillStyle='#1a1028'; ctx.fillRect(1,0,22,24);
+    ctx.strokeStyle='#a020c8'; ctx.lineWidth=0.5; ctx.strokeRect(1,0,22,24);
     ctx.fillStyle='#080808'; ctx.fillRect(14,0,8,4);
-    ctx.strokeStyle='#ff3d6e'; ctx.strokeRect(14,0,8,4);
-    ctx.fillStyle='#2a2a4a'; ctx.fillRect(3,2,10,7);
-    ctx.fillStyle='#ff3d6e'; ctx.fillRect(4,3,6,1); ctx.fillRect(4,5,5,1); ctx.fillRect(4,7,4,1);
+    ctx.strokeStyle='#a020c8'; ctx.strokeRect(14,0,8,4);
+    ctx.fillStyle='#2e1a50'; ctx.fillRect(3,2,10,7);
+    ctx.fillStyle='#d946ef'; ctx.fillRect(4,3,6,1); ctx.fillRect(4,5,5,1); ctx.fillRect(4,7,4,1);
     ctx.fillStyle='#0d0d18'; ctx.fillRect(5,13,14,9);
-    ctx.fillStyle='#8899aa'; ctx.fillRect(5,13,14,1); ctx.fillRect(5,21,14,1); ctx.fillRect(5,13,1,9); ctx.fillRect(18,13,1,9);
+    ctx.fillStyle='#c8b8e8'; ctx.fillRect(5,13,14,1); ctx.fillRect(5,21,14,1); ctx.fillRect(5,13,1,9); ctx.fillRect(18,13,1,9);
     ctx.fillStyle='#080808'; ctx.beginPath(); ctx.arc(12,17,2,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#8899aa'; ctx.fillRect(12,16,1,1);
+    ctx.fillStyle='#c8b8e8'; ctx.fillRect(12,16,1,1);
 })();
 </script>
 
