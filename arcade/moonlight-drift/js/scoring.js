@@ -294,10 +294,6 @@ function showGameOverAchievement(finalScore) {
     }
 }
 
-function hideInitialsPrompt() {
-    initialsPromptDiv.style.display = 'none';
-}
-
 function isWaitingForInitials() {
     return waitingForInitials;
 }
