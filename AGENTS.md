@@ -95,6 +95,54 @@ body.theme .dropdown a:hover { background: #accent; }
 3. Follow the pixel art conventions - use canvas at low res, scale with CSS
 4. Add link to `arcade/index.html` nav
 
+## Arcade chat system
+
+The chat widget (`shared/chat-widget.js`) provides a floating real-time chat on all arcade pages. It uses a SharedWorker (`shared/chat-worker.js`) to hold a single WebSocket connection across page navigations — preventing duplicate users when navigating between games.
+
+### Architecture
+
+```
+Page (browser) ──postMessage──▶ SharedWorker ──WebSocket──▶ chat-server.py (port 8768)
+     │                              │
+     └── sendToServer() ────────────┘
+```
+
+- **SharedWorker** holds one WebSocket. Pages connect via `postMessage`. Caches history/user_list/status for new pages.
+- **Session tokens** stored in `sessionStorage` (one per tab). Server tracks disconnected users for 30s and restores name/color on reconnect.
+- **Server** delays `user_info` creation until `set_name` arrives (no anonymous flicker).
+
+### Adding chat to a game page
+
+```html
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+```
+
+### Public API
+
+```js
+ChatWidget.connect()
+ChatWidget.disconnect()
+ChatWidget.joinRoom(code)
+ChatWidget.leaveRoom(code)
+ChatWidget.setName(name)
+ChatWidget.setColor(color)
+ChatWidget.getMyName()
+ChatWidget.getMyColor()
+```
+
+### Deploying chat-server.py
+
+```bash
+rsync -avz arcade/chat-server.py jake@192.168.1.16:~/arcade/chat-server.py
+ssh jake@192.168.1.16 "sudo systemctl restart arcade-chat"
+```
+
+### Note on websockets library
+
+`chat-server.py` uses `websockets.datastructures.Headers` for the health check response (not a plain dict). This is required by `websockets` >= 14.x. If you see `AttributeError: 'dict' object has no attribute 'serialize`, the import is missing.
+
 ## High scores
 
 All arcade game high scores are managed through the MAGMA//OPS admin dashboard on the Raspberry Pi.

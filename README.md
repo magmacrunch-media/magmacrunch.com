@@ -77,6 +77,9 @@ Song lyrics organized by artist under `press/lyrics/`. Each song page displays s
 ### contributor pages
 `archive/by-contributor/` pages credit musicians across the archive. The `contributor.js` template fetches all MB relationships (bands, labels, events, recordings, works, etc.) and renders them with links to other archive pages via `entity-map.js`.
 
+### arcade chat system
+A real-time chat widget (`shared/chat-widget.js`) present on all arcade pages. Uses a SharedWorker (`shared/chat-worker.js`) to hold a single WebSocket connection across page navigations — no duplicate users on page changes. Falls back to direct WebSocket if SharedWorker is unavailable. The server (`chat-server.py`) tracks session tokens in `sessionStorage` to recognize reconnecting users within a 30-second window, preserving name and color across navigations. Includes a floating widget with global/room tabs, typing indicators, color picker, and inline name editing.
+
 ---
 
 ## color palette

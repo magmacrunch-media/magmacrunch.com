@@ -59,6 +59,37 @@ Each game defines CSS variables (`--black`, `--font-pixel`, etc.) for theming. T
 
 Used by: solitaire_THLD, scandinavian-stud, cribbage
 
+### arcade chat system
+
+```
+arcade/shared/
+├── chat-widget.js      # Floating chat widget (DOM creation, connection, UI)
+├── chat-widget.css     # Widget styling
+├── chat-worker.js      # SharedWorker — holds one WebSocket across page navigations
+└── multiplayer/
+    ├── server_base.py   # Game-specific WebSocket server base
+    └── network.js       # Game multiplayer client (MP module)
+```
+
+**Architecture:**
+```
+Page A ──postMessage──┐
+                      ├──▶ SharedWorker ──WebSocket──▶ chat-server.py (port 8768)
+Page B ──postMessage──┘
+```
+
+- **SharedWorker** (`chat-worker.js`) — holds a single WebSocket connection. Pages communicate via `postMessage`. Caches history, user_list, and status for newly connecting pages. Auto-reconnects with backoff if the WebSocket drops.
+- **Widget** (`chat-widget.js`) — creates floating chat UI, sends messages through the SharedWorker. Falls back to direct WebSocket if SharedWorker is unavailable. Public API: `ChatWidget.connect()`, `.disconnect()`, `.joinRoom()`, `.leaveRoom()`, `.setName()`, `.setColor()`.
+- **Session tokens** — client generates a token stored in `sessionStorage`, sends with every `set_name`. Server tracks recently disconnected users (30s window) and restores name/color on reconnect.
+- **Server** (`chat-server.py`) — global chat, room sub-chats, typing indicators, server status pings. Delays `user_info` creation until `set_name` arrives (no anonymous flicker). Health check returns 426 for non-WebSocket HTTP requests.
+
+**Usage (in any game page):**
+```html
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+```
+
 ---
 
 ## sample pack roadmap (desktop app via Tauri v2)
