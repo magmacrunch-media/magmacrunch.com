@@ -31,7 +31,13 @@ class Scoring {
         this.isSaving = true;
 
         try {
-            localStorage.setItem('mc_scores_solitaire-thld', JSON.stringify(this.state.highScores));
+            for (const entry of this.state.highScores) {
+                await scoreClient.save('solitaire-thld', entry.initials, entry.totalScore, {
+                    rounds:   entry.rounds,
+                    escaped:  entry.escaped,
+                    date:     entry.date
+                });
+            }
         } catch (err) {
             console.warn('Could not save high scores:', err);
         } finally {

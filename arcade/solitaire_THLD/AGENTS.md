@@ -50,8 +50,6 @@ UI (ui.js)                 — DOM rendering and phase state machine
 ## Known issues
 
 - **Resolve panel calls `dome.resolveHand()` on render** — this double-resolves. The call inside `_renderPhasePanel` for the resolve phase should be removed or guarded so it only fires once.
-- **High score save/load not wired to session end flow** — `scoring.js` has `loadHighScores()` but the session-over flow hasn't connected to it.
-- **Stale poker solitaire UI elements** — `pokerGrid`, `rowScores`, `colScores` IDs in `index.html` are from the old Klondike layout, not used by the Hold'Em game.
 
 ## Visual conventions
 

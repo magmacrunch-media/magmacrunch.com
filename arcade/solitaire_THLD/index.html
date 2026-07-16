@@ -11,45 +11,20 @@
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/start-screen.css">
     <link rel="stylesheet" href="css/game-layout.css">
-    <!-- Using Klondike's card styles -->
     <link rel="stylesheet" href="../shared/cards/cards.css">
     <link rel="stylesheet" href="../shared/chips/chip-animation.css">
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
-<style>
-
-    
-    .mc-back {
-        position: fixed;
-        top: 12px;
-        left: 14px;
-        z-index: 10000;
-        font-family: 'Press Start 2P', monospace;
-        font-size: 9px;
-        color: #00f5ff;
-        text-decoration: none;
-        letter-spacing: 0.08em;
-    }
-    .mc-back::before {
-        content: '← ';
-    }
-    .mc-back:hover {
-        color: #00ffff;
-    }
-    body.game-active .mc-back {
-        display: none;
-    }
-</style>
 <body>
-<a href="../index.html" class="mc-back" style="position:fixed;top:12px;left:14px;z-index:99999;font-family:'Press Start 2P',monospace;font-size:9px;color:#ff7c1f;text-decoration:none;">magmacrunch arcade</a>
+<a href="../index.html" class="mc-back">magmacrunch arcade</a>
 
 <div class="container">
         <!-- Start Screen -->
         <div id="startScreen" class="start-screen">
             <div class="start-content">
                 <h1 class="game-title">TEXAS HOLD'EM<br>LAVA DOME</h1>
-                <p class="game-subtitle">poker solitaire</p>
+                <p class="game-subtitle">solo poker</p>
 
                 <div class="start-divider"></div>
 
@@ -60,8 +35,6 @@
                     <button id="viewCreditsBtn" class="start-btn">Credits</button>
                 </div>
 
-                <p class="start-press-prompt">— press start —</p>
-
                 <div class="start-footer">
                     <p>Build poker hands &bull; Score big &bull; Master the lava grid</p>
                 </div>
@@ -69,65 +42,8 @@
             </div>
         </div>
 
-        <!-- Game Screen -->
-        <div id="gameScreen" style="display: none;">
-            <div class="header">
-                <h1>TEXAS HOLD'EM LAVA DOME</h1>
-                <div class="stats">
-                    <div class="score-container">
-                        <div class="score-label">Score</div>
-                        <div class="score" id="score">0</div>
-                    </div>
-                    <div class="score-container">
-                        <div class="score-label">Cards</div>
-                        <div class="score" id="cardsPlaced">0</div>
-                    </div>
-                    <div class="score-container">
-                        <div class="score-label">Time</div>
-                        <div class="score" id="timer">0:00</div>
-                    </div>
-                    <div class="score-container">
-                        <div class="score-label">Chips</div>
-                        <div class="score" id="chipCount">500</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="controls">
-                <button id="newGame">New Game</button>
-                <button id="toggleInstructions">How to Play</button>
-                <button id="toggleHighScores">High Scores</button>
-            </div>
-
-            <div class="game-area">
-                <!-- Current Card Display -->
-                <div class="top-section">
-                    <div class="deck-area">
-                        <div class="current-card-label">Current Card:</div>
-                        <div class="card-spot" id="currentCard"></div>
-                    </div>
-                    <div class="score-display">
-                        <h3>Total Score</h3>
-                        <div class="total-score" id="totalScore">0</div>
-                    </div>
-                </div>
-
-                <!-- 5x5 Grid -->
-                <div class="poker-grid" id="pokerGrid"></div>
-
-                <!-- Hand Scores Display -->
-                <div class="hand-scores">
-                    <div class="hand-scores-column">
-                        <h4>Row Scores</h4>
-                        <div id="rowScores"></div>
-                    </div>
-                    <div class="hand-scores-column">
-                        <h4>Column Scores</h4>
-                        <div id="colScores"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- Game Screen (populated by ui.js at runtime) -->
+        <div id="gameScreen" style="display: none;"></div>
     </div>
 
     <!-- Instructions Modal -->
@@ -216,7 +132,7 @@
             <p>
             • Press Start 2P font by CodeMan38 (Google Fonts)<br>
             • HTML5 Canvas API<br>
-            • JSONBin.io (high score persistence)<br>
+            • MAGMA//OPS backend (high score persistence)<br>
             • pure vanilla JavaScript
             </p>
 
@@ -226,7 +142,7 @@
             <h4>Cheapness Impact Factor</h4>
             <p>3.3</p>
 
-            <h4>Last Udpated</h4>
+            <h4>Last Updated</h4>
             <p>May 3, 2026</p>
 
             <p class="credits-footer">&copy; 2026 MAGMACRUNCH MEDIA &mdash; ALL RIGHTS RESERVED</p>
