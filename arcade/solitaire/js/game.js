@@ -16,6 +16,9 @@ class Solitaire {
         this.elapsedSeconds = 0;
         this.highScores = [];
         this.gameStarted = false;
+        this.timerPaused = false;
+        this.pauseStart = null;
+        this._lastClickInfo = null;
         
         // Preload card back image
         this.cardBackImg = new Image();
@@ -35,11 +38,11 @@ class Solitaire {
         }
     }
     
-    async saveHighScores() {
+    async saveHighScoreToServer(initials, score, time) {
         try {
-            localStorage.setItem('mc_scores_solitaire', JSON.stringify(this.highScores));
+            await scoreClient.save('solitaire', initials, score, { time });
         } catch (error) {
-            console.error('Error saving high scores:', error);
+            console.error('Error saving high score:', error);
         }
     }
     
@@ -86,7 +89,7 @@ class Solitaire {
         input.value = '';
         input.focus();
         
-        const submitScore = () => {
+        const submitScore = async () => {
             const initials = input.value.trim().toUpperCase() || 'AAA';
             
             // Clear any previous "new" flags
@@ -104,9 +107,9 @@ class Solitaire {
             this.highScores.sort((a, b) => b.score - a.score);
             this.highScores = this.highScores.slice(0, 10);
             
-            // Save and display
-            this.saveHighScores();
-            this.displayHighScores();
+            // Save to server and refresh from server
+            this.saveHighScoreToServer(initials, finalScore, finalTime);
+            await this.loadHighScores();
             
             modal.classList.remove('active');
             document.getElementById('highScoresModal').classList.add('active');
@@ -166,7 +169,7 @@ class Solitaire {
         document.getElementById('menuGame').addEventListener('click', () => {
             if (document.getElementById('gameScreen').style.display === 'none') {
                 this.showGameScreen();
-            } else {
+            } else if (confirm('Start a new game? Current progress will be lost.')) {
                 this.init();
             }
         });
@@ -174,14 +177,17 @@ class Solitaire {
         document.getElementById('menuOptions').addEventListener('click', async () => {
             await this._scoresLoaded;
             this.displayHighScores();
+            this.pauseTimer();
             document.getElementById('highScoresModal').classList.add('active');
         });
 
         document.getElementById('menuHelp').addEventListener('click', () => {
+            this.pauseTimer();
             document.getElementById('instructionsModal').classList.add('active');
         });
 
         document.getElementById('menuCredits').addEventListener('click', () => {
+            this.pauseTimer();
             document.getElementById('creditsModal').classList.add('active');
         });
 
@@ -201,28 +207,34 @@ class Solitaire {
         // ── Modal close buttons ───────────────────────────────────
         document.getElementById('closeInstructions').addEventListener('click', () => {
             document.getElementById('instructionsModal').classList.remove('active');
+            this.resumeTimer();
         });
         document.getElementById('instructionsModal').addEventListener('click', (e) => {
             if (e.target.id === 'instructionsModal') {
                 document.getElementById('instructionsModal').classList.remove('active');
+                this.resumeTimer();
             }
         });
 
         document.getElementById('closeHighScores').addEventListener('click', () => {
             document.getElementById('highScoresModal').classList.remove('active');
+            this.resumeTimer();
         });
         document.getElementById('highScoresModal').addEventListener('click', (e) => {
             if (e.target.id === 'highScoresModal') {
                 document.getElementById('highScoresModal').classList.remove('active');
+                this.resumeTimer();
             }
         });
 
         document.getElementById('closeCredits').addEventListener('click', () => {
             document.getElementById('creditsModal').classList.remove('active');
+            this.resumeTimer();
         });
         document.getElementById('creditsModal').addEventListener('click', (e) => {
             if (e.target.id === 'creditsModal') {
                 document.getElementById('creditsModal').classList.remove('active');
+                this.resumeTimer();
             }
         });
 
@@ -230,6 +242,16 @@ class Solitaire {
         const initialsInput = document.getElementById('initialsInput');
         initialsInput.addEventListener('input', (e) => {
             e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+        });
+
+        // ── Deselect card on empty game area click ──────────────
+        document.querySelector('.game-area').addEventListener('click', (e) => {
+            if (e.target.closest('.card-spot, .tableau-column')) return;
+            if (this.selectedCard) {
+                this.selectedCard = null;
+                this.selectedPile = null;
+                this.render();
+            }
         });
     }
     
@@ -250,6 +272,25 @@ class Solitaire {
         const seconds = this.elapsedSeconds % 60;
         document.getElementById('timer').textContent = 
             `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    pauseTimer() {
+        if (this.timerPaused || !this.timerInterval) return;
+        this.timerPaused = true;
+        this.pauseStart = Date.now();
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+    }
+
+    resumeTimer() {
+        if (!this.timerPaused) return;
+        this.timerPaused = false;
+        const pauseDuration = Date.now() - this.pauseStart;
+        this.timeStarted += pauseDuration;
+        this.timerInterval = setInterval(() => {
+            this.elapsedSeconds = Math.floor((Date.now() - this.timeStarted) / 1000);
+            this.updateTimer();
+        }, 1000);
     }
         
     drawFromStock() {
@@ -302,18 +343,67 @@ class Solitaire {
     }
     
     handleCardClick(card, pileType, pileIndex, cardIndex) {
+        if (!card.faceUp) return;
+
+        const now = Date.now();
+        const last = this._lastClickInfo;
+        const isDoubleClick = last &&
+            last.card === card &&
+            last.pileType === pileType &&
+            last.pileIndex === pileIndex &&
+            (now - last.time) < 300;
+
+        this._lastClickInfo = { card, pileType, pileIndex, cardIndex, time: now };
+
+        if (isDoubleClick) {
+            this._lastClickInfo = null;
+            if (this.autoMoveToFoundation(card, pileType, pileIndex)) return;
+        }
+
         // If no card selected, select this card
-        if (!this.selectedCard && card.faceUp) {
+        if (!this.selectedCard) {
             this.selectedCard = card;
             this.selectedPile = { type: pileType, index: pileIndex, cardIndex: cardIndex };
             this.render();
             return;
         }
-        
+
+        // If same card clicked again, deselect
+        if (this.selectedCard === card) {
+            this.selectedCard = null;
+            this.selectedPile = null;
+            this.render();
+            return;
+        }
+
         // If card already selected, try to move it
         if (this.selectedCard) {
             this.tryMove(pileType, pileIndex);
         }
+    }
+
+    autoMoveToFoundation(card, pileType, pileIndex) {
+        // Find the best foundation for this card
+        for (let fi = 0; fi < 4; fi++) {
+            if (this.canPlaceOnFoundation(card, fi)) {
+                // Set up the selection and perform the move
+                if (pileType === 'tableau') {
+                    const sourcePile = this.tableau[pileIndex];
+                    const cardIdx = sourcePile.indexOf(card);
+                    if (cardIdx === -1) return false;
+                    this.selectedCard = card;
+                    this.selectedPile = { type: 'tableau', index: pileIndex, cardIndex: cardIdx };
+                } else if (pileType === 'waste') {
+                    this.selectedCard = card;
+                    this.selectedPile = { type: 'waste', index: 0, cardIndex: this.waste.length - 1 };
+                } else {
+                    return false; // foundation-to-foundation not allowed
+                }
+                this.tryMove('foundation', fi);
+                return true;
+            }
+        }
+        return false;
     }
     
     tryMove(targetType, targetIndex) {
@@ -445,7 +535,6 @@ class Solitaire {
         requestAnimationFrame(countUp);
 
         // Bonus line
-        const timeBonus = finalScore - (finalScore - Math.floor((700000 / Math.max(this.elapsedSeconds, 1)) * 35));
         bonusEl.textContent = `+${Math.floor((700000 / Math.max(this.elapsedSeconds, 1)) * 35).toLocaleString()} TIME BONUS`;
 
         // Spawn particles

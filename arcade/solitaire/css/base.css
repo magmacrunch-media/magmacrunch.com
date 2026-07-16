@@ -85,7 +85,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 18px 12px 18px 60px;
+    padding: 30px 12px 18px 60px;
     color: var(--chrome-bg);
 }
 
@@ -112,7 +112,6 @@ a.mc-back:hover {
 
 body.game-active a.mc-back {
     display: none;
-}
 }
 
 /* Kill old CRT overlays */
