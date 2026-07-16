@@ -3,241 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pay2play.txt — sex van floor plan — magmacrunch media</title>
+    <title>floorplan.txt — sex van floor plan — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../../../../assets/logo.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../../style.css">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { min-height:100%; background:#0c0c0c; color:#e2e2e2; overflow-x:hidden; }
-        body { display:flex; flex-direction:column; align-items:center; padding:48px 16px 64px; }
+        body { background:#0c0c0c; }
+        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
 
-        .top-bar {
-            width:100%; max-width:1400px;
-            display:flex; align-items:center; justify-content:space-between;
-            margin-bottom:36px; flex-wrap:wrap; gap:10px;
+        .breadcrumb {
+            font-family:'Press Start 2P',monospace;
+            font-size:7px; color:var(--dim); letter-spacing:.1em;
+            margin-bottom:32px; align-self:flex-start;
         }
+        .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
+        .breadcrumb a:hover { color:var(--rose); }
+        .breadcrumb .sep { margin:0 8px; color:var(--rose); opacity:.7; }
+        .breadcrumb .current { color:var(--rose); }
+
+        .page-header { text-align:center; margin-bottom:40px; animation:fadeUp .5s ease both; }
+        .page-title {
+            font-family:'Press Start 2P',monospace; font-size:clamp(16px,3.5vw,28px);
+            color:var(--white); line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
+        }
+        .page-subtitle { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--purple); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+
         .back-link {
-            font-family:'Courier Prime',monospace; font-size:11px; color:#777;
-            text-decoration:none; letter-spacing:.12em; border:1px solid #2a2a2a;
-            padding:5px 12px; transition:color .15s,border-color .15s;
+            display:inline-block; margin-bottom:40px;
+            font-family:'Press Start 2P',monospace; font-size:7px;
+            color:var(--dim); text-decoration:none; letter-spacing:.1em;
+            transition:color .15s;
         }
-        .back-link:hover { color:#e2e2e2; border-color:#555; }
-        .file-label { font-family:'Courier Prime',monospace; font-size:11px; color:#444; letter-spacing:.18em; }
+        .back-link:hover { color:var(--rose); }
 
-        .ascii-container { width:100%; max-width:1400px; overflow-x:auto; }
+        .ascii-container { width:100%; max-width:1400px; overflow-x:auto; text-align:center; animation:fadeUp .5s .1s ease both; }
         pre {
             font-family:'Courier Prime',monospace;
             font-size:clamp(3px,0.85vw,7px);
             line-height:1.22; white-space:pre; color:#e2e2e2;
-            display:inline-block; min-width:100%; padding:8px 0;
+            display:inline-block; padding:8px 0;
+            tab-size: 4;
         }
 
-        .txt-footer {
-            width:100%; max-width:1400px; margin-top:48px; padding-top:16px;
-            border-top:1px solid #1e1e1e; display:flex;
-            align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
-        }
-        .txt-footer span { font-family:'Courier Prime',monospace; font-size:10px; color:#444; letter-spacing:.1em; }
-        .txt-footer a { font-family:'Courier Prime',monospace; font-size:10px; color:#666; text-decoration:none; letter-spacing:.1em; transition:color .15s; }
-        .txt-footer a:hover { color:#e2e2e2; }
-
-        @media (max-width:600px) { body { padding:28px 8px 48px; } }
+        @media (min-width:1400px) { pre { font-size:7px; } }
+        @media (min-width:1800px) { pre { font-size:8px; } }
+        @media (max-width:768px) { pre { font-size:3.5px; } main { padding:60px 12px 40px; } }
+        @media (max-width:480px) { pre { font-size:2.8px; } }
+        @media (max-width:400px) { pre { font-size:2.3px; } }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <a href="pay2play-2025.html" class="back-link">← pay2play-2025.html</a>
-        <span class="file-label">pay2play.txt &nbsp;·&nbsp; MCS043 &nbsp;·&nbsp; floppy series #1</span>
+
+<nav>
+    <a href="../../../../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../../../../index.html">home</a></li>
+        <li><a href="../../../../home/about.html">about</a></li>
+        <li><a href="../../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../../visual/music-videos.html">music videos</a><a href="../../../../visual/collage.html">collage</a><a href="../../../../visual/photography.html">photography</a></div></li>
+        <li><a href="../../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../../archive/full-catalog/all-releases.html">all releases</a><a href="../../../../archive/full-catalog/all-recordings.html">all recordings</a><a href="../../../../archive/full-catalog/all-works.html">all works</a><a href="../../../../archive/index.html">browse by artist / place →</a></div></li>
+        <li><a href="../../../../arcade/index.html">arcade</a></li>
+        <li><a href="../../../../press/index.html">press</a></li>
+        <li><a href="../../../../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../../index.html">home</a><span class="sep">›</span>
+        <a href="../../../../music/index.html">music</a><span class="sep">›</span>
+        <a href="../../physical-media/index.html">physical media</a><span class="sep">›</span>
+        <a href="../index.html">floppy disk</a><span class="sep">›</span>
+        <a href="pay2play-2025.html">pay2play (2025)</a><span class="sep">›</span>
+        <span class="current">floorplan.txt</span>
     </div>
+
+    <div class="page-header">
+        <h1 class="page-title">floorplan.txt</h1>
+        <div class="page-subtitle">[ sex van floor plan ]</div>
+    </div>
+
+    <a href="pay2play-2025.html" class="back-link">← back to pay2play</a>
 
     <div class="ascii-container">
         <pre>
-     .   ....................................................................................................................................................................................................................................................................................................   
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..   
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
-      @@@@@.  .                                                                                                                                    @@@@%. ..                                                                                                                                       .  %@@@@     
-      @@@@@....                                                                                                                                  ..@@@@%....                                                                                                                                        ..%@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                      . ...                                                                          @@@@% .                      ... .....                                                                                                             %@@@@     
-      @@@@@ ..                                                       . ..                                                                          @@@@% .                      . ..  ...                                                                                                             %@@@@     
-      @@@@@ ..                                                      .. ..                                                                          @@@@% .                      .@@@.....                                                                                                             %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                                                                                 %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    .....                                                        %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    =@@#.                                                        %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      =@@#                                                                           @@@@% .                      .@@@.                                                    -@@#                                                         %@@@@     
-      @@@@@ ..                                                      ... .                                                                          @@@@% .                    ...@@@... .                                                -@@#                                                         %@@@@     
-      @@@@@ ..                                                      . ...                                                                          @@@@% .                      . .. ...                                                 -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               -@@#                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                               ...                                                          %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                . .                                                         %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@  ..                                                                                                                                  ..@@@@%  ..                                                                                                                                        ..%@@@@     
-      @@@@@.. .                                                                                                                                   .@@@@%....                                                                                                                                       . .%@@@@     
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%@@@@     
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                         ...   . ..                                   ..                                                             @@@@% .                     ...@@@ ...                                                                                                             %@@@@     
-      @@@@@ ..                         . ..... .                                  . ...                                                            @@@@% .                    ... @@@.. .                                                                                                             %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..                                                                                                              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..          .#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..              %@@@@     
-      @@@@@ ..                          .%@@:                                      @@@                                                             @@@@% .                        @@@ ..           .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@:.  .            %@@@@     
-      @@@@@ ..                          ..@%                                       @@@ .                                                           @@@@% .                    ..  *@.....                                                                                                             %@@@@     
-      @@@@@ ..                         .. .                                        ... .                                                           @@@@% .                     .....  . .                                                                                                             %@@@@     
-      @@@@@ ..                         ... .                                      ... .                                                            @@@@% .                       .......                                                                                                              %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@ ..                                                                                                                                     @@@@% .                                                                                                                                            %@@@@     
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
-      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
-     .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ .   
-     ... .                                                                                                                                                                                                                                                                                                .     
+floorplan.txt coming soon
         </pre>
     </div>
 
-    <div class="txt-footer">
-        <span>© 2025 magmacrunch media, Sex Van Floor Plan</span>
-        <a href="pay2play-2025.html">← back to pay2play</a>
-    </div>
+</main>
+
+<footer>&copy; 2025 <span>magmacrunch media</span></footer>
+
+<script src="../../../../nav.js"></script>
 </body>
 </html>

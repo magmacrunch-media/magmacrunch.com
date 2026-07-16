@@ -46,7 +46,7 @@
         /* release block */
         .release-block { display:flex; gap:28px; align-items:flex-start; margin-bottom:44px; animation:fadeUp .5s .1s ease both; }
         @media (max-width:560px) { .release-block { flex-direction:column; align-items:center; } }
-        .cover-wrap { flex-shrink:0; width:200px; }
+        .cover-wrap { flex-shrink:0; width:200px; display:none; }
         .cover-img { width:200px; height:200px; object-fit:cover; display:block; border:2px solid var(--rose); box-shadow:0 0 0 2px #080808,0 0 0 4px var(--purple),0 0 28px rgba(255,61,110,.2); }
         .cover-placeholder { width:200px; height:200px; border:2px solid var(--rose); background:var(--deep); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px #080808,0 0 0 4px var(--purple); }
         .cover-placeholder canvas { display:block; image-rendering:pixelated; width:80px; height:80px; }
@@ -271,7 +271,7 @@
                 <span class="track-title">pay2play</span>
                 <span class="track-len">1:32</span>
             </div>
-            <iframe style="border:0;width:100%;height:120px;margin-top:16px;" src="https://bandcamp.com/EmbeddedPlayer/track=3528991416/size=large/bgcol=ffffff/linkcol=f171a2/tracklist=false/artwork=small/transparent=true/" seamless>
+            <iframe style="border:0;width:100%;height:120px;margin-top:16px;display:none;" src="https://bandcamp.com/EmbeddedPlayer/track=3528991416/size=large/bgcol=ffffff/linkcol=f171a2/tracklist=false/artwork=small/transparent=true/" seamless>
                 <a href="https://sexvanfloorplan.bandcamp.com/track/pay2play">pay2play by Sex Van Floor Plan</a>
             </iframe>
         </div>

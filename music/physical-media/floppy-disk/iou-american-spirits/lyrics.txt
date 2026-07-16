@@ -1,0 +1,813 @@
+      ,a8a,    d8'                                                                                                                                                                              
+     ,8" "8,  d8'                                                                                           ,dPYb,                                                                              
+     d8   8b ""                                                                                             IP'`Yb                                                                              
+     88   88                                                                                                I8  8I                                                                              
+     88   88                                                                                                I8  8'                                                                              
+     Y8   8P     ,ggg,,ggg,,ggg,         ,gggg,gg    ,ggggg,     ,ggg,,ggg,    ,ggg,,ggg,     ,gggg,gg      I8 dPgg,    ,ggg,      ,gg,   ,gg     gg     gg    ,ggggg,    gg      gg   ,gggggg, 
+     `8, ,8'    ,8" "8P" "8P" "8,       dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,  ,8" "8P" "8,   dP"  "Y8I      I8dP" "8I  i8" "8i    d8""8b,dP"      I8     8I   dP"  "Y8ggg I8      8I   dP""""8I 
+8888  "8,8"     I8   8I   8I   8I      i8'    ,8I  i8'    ,8I   I8   8I   8I  I8   8I   8I  i8'    ,8I      I8P    I8  I8, ,8I   dP   ,88"        I8,   ,8I  i8'    ,8I   I8,    ,8I  ,8'    8I 
+`8b,  ,d8b,    ,dP   8I   8I   Yb,    ,d8,   ,d8I ,d8,   ,d8'  ,dP   8I   Yb,,dP   8I   Yb,,d8,   ,d8b,    ,d8     I8, `YbadP' ,dP  ,dP"Y8,      ,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,,dP     Y8,
+  "Y88P" "Y8   8P'   8I   8I   `Y8    P"Y8888P"888P"Y8888P"    8P'   8I   `Y88P'   8I   `Y8P"Y8888P"`Y8    88P     `Y8888P"Y8888"  dP"   "Y88    P""Y88P"888P"Y8888P"    8P'"Y88P"`Y88P      `Y8
+                                             ,d8I'                                                                                                     ,d8I'                                    
+                                           ,dP'8I                                                                                                    ,dP'8I                                     
+                                          ,8"  8I                                                                                                   ,8"  8I                                     
+                                          I8   8I                                                                                                   I8   8I                                     
+                                          `8, ,8I                                                                                                   `8, ,8I                                     
+                                           `Y8P"                                                                                                     `Y8P"                                      
+                                                                                                                                                                                                
+                            ,dPYb,                              ,dPYb,                                                  8I                                                                      
+                            IP'`Yb                              IP'`Yb                                                  8I                                                                      
+                            I8  8I                              I8  8I              gg                                  8I                                                                      
+                            I8  8'                              I8  8'              ""                                  8I                                                                      
+  ,ggg,      ,gg,   ,gg     I8 dP         ,ggggg,    gg     gg  I8 dP    ,gggggg,   gg    ,ggg,    ,ggg,,ggg,     ,gggg,8I                                                                      
+ i8" "8i    d8""8b,dP"      I8dP   88gg  dP"  "Y8ggg I8     8I  I8dP     dP""""8I   88   i8" "8i  ,8" "8P" "8,   dP"  "Y8I                                                                      
+ I8, ,8I   dP   ,88"        I8P    8I   i8'    ,8I   I8,   ,8I  I8P     ,8'    8I   88   I8, ,8I  I8   8I   8I  i8'    ,8I                                                                      
+ `YbadP' ,dP  ,dP"Y8,      ,d8b,  ,8I  ,d8,   ,d8'  ,d8b, ,d8I ,d8b,_  ,dP     Y8,_,88,_ `YbadP' ,dP   8I   Yb,,d8,   ,d8b,                                                                     
+888P"Y8888"  dP"   "Y88    8P'"Y88P"'  P"Y8888P"    P""Y88P"888PI8"88888P      `Y88P""Y8888P"Y8888P'   8I   `Y8P"Y8888P"`Y8                                                                     
+                                                          ,d8I' I8 `8,                                                                                                                          
+                                                        ,dP'8I  I8  `8,                                                                                                                         
+                                                       ,8"  8I  I8   8I                                                                                                                         
+                                                       I8   8I  I8   8I                                                                                                                         
+                                                       `8, ,8I  I8, ,8'                                                                                                                         
+                                                        `Y8P"    "Y8P'                                                                                                                          
+                                                                                                                                                                                                
+ ,dPYb,                                                       ,dPYb,                                                                                                                            
+ IP'`Yb                                                       IP'`Yb                                                                                                                            
+ I8  8I      gg                                          gg   I8  8I                                       gg                                                                                   
+ I8  8'      ""                                          ""   I8  8'                                       ""                                                                                   
+ I8 dPgg,    gg     ,g,          ,ggg,      ggg    gg    gg   I8 dP       ,ggg,   gg     gg   ,ggg,        gg     ,g,           ,gggg,gg    ,ggggg,     ,ggg,,ggg,    ,ggg,,ggg,     ,gggg,gg   
+ I8dP" "8I   88    ,8'8,        i8" "8i    d8"Yb   88bg  88   I8dP       i8" "8i  I8     8I  i8" "8i       88    ,8'8,         dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,  ,8" "8P" "8,   dP"  "Y8I   
+ I8P    I8   88   ,8'  Yb       I8, ,8I   dP  I8   8I    88   I8P        I8, ,8I  I8,   ,8I  I8, ,8I       88   ,8'  Yb       i8'    ,8I  i8'    ,8I   I8   8I   8I  I8   8I   8I  i8'    ,8I   
+,d8     I8,_,88,_,8'_   8)      `YbadP' ,dP   I8, ,8I  _,88,_,d8b,_      `YbadP' ,d8b, ,d8I  `YbadP'     _,88,_,8'_   8)     ,d8,   ,d8I ,d8,   ,d8'  ,dP   8I   Yb,,dP   8I   Yb,,d8,   ,d8b,  
+88P     `Y88P""Y8P' "YY8P8P    888P"Y8888"     "Y8P"   8P""Y88P'"Y88    888P"Y888P""Y88P"888888P"Y888    8P""Y8P' "YY8P8P    P"Y8888P"888P"Y8888P"    8P'   8I   `Y88P'   8I   `Y8P"Y8888P"`Y8  
+                                                                                       ,d8I'                                        ,d8I'                                                       
+                                                                                     ,dP'8I                                       ,dP'8I                                                        
+                                                                                    ,8"  8I                                      ,8"  8I                                                        
+                                                                                    I8   8I                                      I8   8I                                                        
+                                                                                    `8, ,8I                                      `8, ,8I                                                        
+                                                                                     `Y8P"                                        `Y8P"                                                         
+                                                                                                                                                                                                
+                                            ,dPYb,                                                                                                                                              
+                                            IP'`Yb                                                                                                                                              
+                                            I8  8I                                                                                                                                              
+                                            I8  8bgg,                                                                                                                                           
+   ,gggg,   ,gggggg,    ,gggg,gg    ,gggg,  I8 dP" "8                                                                                                                                           
+  dP"  "Yb  dP""""8I   dP"  "Y8I   dP"  "Yb I8d8bggP"                                                                                                                                           
+ i8'       ,8'    8I  i8'    ,8I  i8'       I8P' "Yb,                                                                                                                                           
+,d8,_    _,dP     Y8,,d8,   ,d8b,,d8,_    _,d8    `Yb,                                                                                                                                          
+P""Y8888PP8P      `Y8P"Y8888P"`Y8P""Y8888PP88P      Y8                                                                                                                                          
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                     d8'                                                                                                                                                                        
+ ,dPYb,             d8'  ,dPYb, ,dPYb,     ,dPYb,                    ,dPYb,                                                          I8    ,dPYb,                                               
+ IP'`Yb            ""    IP'`Yb IP'`Yb     IP'`Yb                    IP'`Yb                                                          I8    IP'`Yb                                               
+ I8  8I                  I8  8I I8  8I     I8  8I                    I8  8I                                                       88888888 I8  8I      gg                                       
+ I8  8'                  I8  8' I8  8'     I8  8'                    I8  8'                                                          I8    I8  8'      ""                                       
+ I8 dPgg,    ,ggg,       I8 dP  I8 dP      I8 dP    ,ggg,    ,ggg,   I8 dP        ,g,       ,ggggg,     ,ggg,,ggg,,ggg,    ,ggg,     I8    I8 dPgg,    gg    ,ggg,,ggg,     ,gggg,gg            
+ I8dP" "8I  i8" "8i      I8dP   I8dP       I8dP    i8" "8i  i8" "8i  I8dP        ,8'8,     dP"  "Y8ggg ,8" "8P" "8P" "8,  i8" "8i    I8    I8dP" "8I   88   ,8" "8P" "8,   dP"  "Y8I            
+ I8P    I8  I8, ,8I      I8P    I8P        I8P     I8, ,8I  I8, ,8I  I8P        ,8'  Yb   i8'    ,8I   I8   8I   8I   8I  I8, ,8I   ,I8,   I8P    I8   88   I8   8I   8I  i8'    ,8I            
+,d8     I8, `YbadP'     ,d8b,_ ,d8b,_     ,d8b,_   `YbadP'  `YbadP' ,d8b,_     ,8'_   8) ,d8,   ,d8'  ,dP   8I   8I   Yb, `YbadP'  ,d88b, ,d8     I8,_,88,_,dP   8I   Yb,,d8,   ,d8I            
+88P     `Y8888P"Y888    8P'"Y888P'"Y88    PI8"8888888P"Y888888P"Y8888P'"Y88    P' "YY8P8PP"Y8888P"    8P'   8I   8I   `Y8888P"Y88888P""Y8888P     `Y88P""Y88P'   8I   `Y8P"Y8888P"888           
+                                           I8 `8,                                                                                                                               ,d8I'           
+                                           I8  `8,                                                                                                                            ,dP'8I            
+                                           I8   8I                                                                                                                           ,8"  8I            
+                                           I8   8I                                                                                                                           I8   8I            
+                                           I8, ,8'                                                                                                                           `8, ,8I            
+                                            "Y8P'                                                                                                                             `Y8P"             
+                                                                                                                                                                                                
+                                I8              ,dPYb,                                         ,dPYb,                                                                                           
+                                I8              IP'`Yb                                         IP'`Yb                                                                                           
+                             88888888           I8  8I      gg                                 I8  8I      gg                                                                                   
+                                I8              I8  8'      ""                                 I8  8'      ""                                                                                   
+ gg    gg    gg     ,gggg,gg    I8      ,gggg,  I8 dPgg,    gg    ,ggg,,ggg,     ,gggg,gg      I8 dPgg,    gg    ,ggg,,ggg,,ggg,                                                                
+ I8    I8    88bg  dP"  "Y8I    I8     dP"  "Yb I8dP" "8I   88   ,8" "8P" "8,   dP"  "Y8I      I8dP" "8I   88   ,8" "8P" "8P" "8,                                                               
+ I8    I8    8I   i8'    ,8I   ,I8,   i8'       I8P    I8   88   I8   8I   8I  i8'    ,8I      I8P    I8   88   I8   8I   8I   8I                                                               
+,d8,  ,d8,  ,8I  ,d8,   ,d8b, ,d88b, ,d8,_    _,d8     I8,_,88,_,dP   8I   Yb,,d8,   ,d8I     ,d8     I8,_,88,_,dP   8I   8I   Yb,                                                              
+P""Y88P""Y88P"   P"Y8888P"`Y888P""Y88P""Y8888PP88P     `Y88P""Y88P'   8I   `Y8P"Y8888P"888    88P     `Y88P""Y88P'   8I   8I   `Y8                                                              
+                                                                                     ,d8I'                                                                                                      
+                                                                                   ,dP'8I                                                                                                       
+                                                                                  ,8"  8I                                                                                                       
+                                                                                  I8   8I                                                                                                       
+                                                                                  `8, ,8I                                                                                                       
+                                                                                   `Y8P"                                                                                                        
+                                                                                                                                                                                                
+   I8    ,dPYb,                                        8I                                                  8I                                                                                   
+   I8    IP'`Yb                                        8I                                                  8I                                                                                   
+88888888 I8  8I                                        8I                                                  8I                                                                                   
+   I8    I8  8'                                        8I                                                  8I                                                                                   
+   I8    I8 dPgg,    ,ggg,    ,ggg,,ggg,         ,gggg,8I   ,gggggg,    ,ggggg,    gg,gggg,          ,gggg,8I    ,ggggg,    gg    gg    gg    ,ggg,,ggg,                                        
+   I8    I8dP" "8I  i8" "8i  ,8" "8P" "8,       dP"  "Y8I   dP""""8I   dP"  "Y8ggg I8P"  "Yb        dP"  "Y8I   dP"  "Y8ggg I8    I8    88bg ,8" "8P" "8,                                       
+  ,I8,   I8P    I8  I8, ,8I  I8   8I   8I      i8'    ,8I  ,8'    8I  i8'    ,8I   I8'    ,8i      i8'    ,8I  i8'    ,8I   I8    I8    8I   I8   8I   8I                                       
+ ,d88b, ,d8     I8, `YbadP' ,dP   8I   Yb,    ,d8,   ,d8b,,dP     Y8,,d8,   ,d8'  ,I8 _  ,d8'     ,d8,   ,d8b,,d8,   ,d8'  ,d8,  ,d8,  ,8I  ,dP   8I   Yb,                                      
+88P""Y8888P     `Y8888P"Y8888P'   8I   `Y8    P"Y8888P"`Y88P      `Y8P"Y8888P"    PI8 YY88888P    P"Y8888P"`Y8P"Y8888P"    P""Y88P""Y88P"   8P'   8I   `Y8                                      
+                                                                                   I8                                                                                                           
+                                                                                   I8                                                                                                           
+                                                                                   I8                                                                                                           
+                                                                                   I8                                                                                                           
+                                                                                   I8                                                                                                           
+                                                                                   I8                                                                                                           
+                                                                                                                                                                                                
+ ,dPYb,                                                                 ,dPYb,                                       I8                      I8      I8                          ,dPYb,         
+ IP'`Yb                                                                 IP'`Yb                                       I8                      I8      I8                          IP'`Yb         
+ I8  8I                                                                 I8  8I                                    88888888                8888888888888888                       I8  8I         
+ I8  8'                                                                 I8  8'                                       I8                      I8      I8                          I8  8bgg,      
+ I8 dP    ,gggggg,    ,ggggg,     ,ggg,,ggg,,ggg,         ,gggg,gg      I8 dPgg,    ,ggg,     ,gggg,gg   ,gggggg,    I8          ,gggg,gg    I8      I8      ,gggg,gg    ,gggg,  I8 dP" "8      
+ I8dP     dP""""8I   dP"  "Y8ggg ,8" "8P" "8P" "8,       dP"  "Y8I      I8dP" "8I  i8" "8i   dP"  "Y8I   dP""""8I    I8         dP"  "Y8I    I8      I8     dP"  "Y8I   dP"  "Yb I8d8bggP"      
+ I8P     ,8'    8I  i8'    ,8I   I8   8I   8I   8I      i8'    ,8I      I8P    I8  I8, ,8I  i8'    ,8I  ,8'    8I   ,I8,       i8'    ,8I   ,I8,    ,I8,   i8'    ,8I  i8'       I8P' "Yb,      
+,d8b,_  ,dP     Y8,,d8,   ,d8'  ,dP   8I   8I   Yb,    ,d8,   ,d8b,    ,d8     I8, `YbadP' ,d8,   ,d8b,,dP     Y8, ,d88b,     ,d8,   ,d8b, ,d88b,  ,d88b, ,d8,   ,d8b,,d8,_    _,d8    `Yb,     
+PI8"88888P      `Y8P"Y8888P"    8P'   8I   8I   `Y8    P"Y8888P"`Y8    88P     `Y8888P"Y888P"Y8888P"`Y88P      `Y888P""Y88    P"Y8888P"`Y888P""Y8888P""Y88P"Y8888P"`Y8P""Y8888PP88P      Y8     
+ I8 `8,                                                                                                                                                                                         
+ I8  `8,                                                                                                                                                                                        
+ I8   8I                                                                                                                                                                                        
+ I8   8I                                                                                                                                                                                        
+ I8, ,8'                                                                                                                                                                                        
+  "Y8P'                                                                                                                                                                                         
+           ,ggg,                                                 d8'                                                                                                                            
+          dP""8I                         8I              I8     d8'  ,dPYb, ,dPYb,                                    ,dPYb,                                                                    
+         dP   88                         8I              I8    ""    IP'`Yb IP'`Yb                                    IP'`Yb                                                                    
+        dP    88                         8I       gg  88888888       I8  8I I8  8I                                    I8  8I                                                                    
+       ,8'    88                         8I       ""     I8          I8  8' I8  8'                                    I8  8bgg,                                                                 
+       d88888888    ,ggg,,ggg,     ,gggg,8I       gg     I8          I8 dP  I8 dP       ,ggg,,ggg,,ggg,     ,gggg,gg  I8 dP" "8   ,ggg,       gg     gg    ,ggggg,    gg      gg                
+ __   ,8"     88   ,8" "8P" "8,   dP"  "Y8I       88     I8          I8dP   I8dP       ,8" "8P" "8P" "8,   dP"  "Y8I  I8d8bggP"  i8" "8i      I8     8I   dP"  "Y8ggg I8      8I                
+dP"  ,8P      Y8   I8   8I   8I  i8'    ,8I       88    ,I8,         I8P    I8P        I8   8I   8I   8I  i8'    ,8I  I8P' "Yb,  I8, ,8I      I8,   ,8I  i8'    ,8I   I8,    ,8I                
+Yb,_,dP       `8b,,dP   8I   Yb,,d8,   ,d8b,    _,88,_ ,d88b,       ,d8b,_ ,d8b,_     ,dP   8I   8I   Yb,,d8,   ,d8b,,d8    `Yb, `YbadP'     ,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,               
+ "Y8P"         `Y88P'   8I   `Y8P"Y8888P"`Y8    8P""Y888P""Y88      8P'"Y888P'"Y88    8P'   8I   8I   `Y8P"Y8888P"`Y888P      Y8888P"Y888    P""Y88P"888P"Y8888P"    8P'"Y88P"`Y8               
+                                                                                                                                                   ,d8I'                                        
+                                                                                                                                                 ,dP'8I                                         
+                                                                                                                                                ,8"  8I                                         
+                                                                                                                                                I8   8I                                         
+                                                                                                                                                `8, ,8I                                         
+                                                                                                                                                 `Y8P"                                          
+                                                                                                                                                                                                
+ ,dPYb,                                                                                                                                                                                         
+ IP'`Yb                                                                                                                                                                                         
+ I8  8I                                                                                                                                                                                         
+ I8  8'                                                                                                                                                                                         
+ I8 dPgg,     ,gggg,gg  gg,gggg,    gg,gggg,    gg     gg                                                                                                                                       
+ I8dP" "8I   dP"  "Y8I  I8P"  "Yb   I8P"  "Yb   I8     8I                                                                                                                                       
+ I8P    I8  i8'    ,8I  I8'    ,8i  I8'    ,8i  I8,   ,8I                                                                                                                                       
+,d8     I8,,d8,   ,d8b,,I8 _  ,d8' ,I8 _  ,d8' ,d8b, ,d8I                                                                                                                                       
+88P     `Y8P"Y8888P"`Y8PI8 YY88888PPI8 YY88888PP""Y88P"888                                                                                                                                      
+                        I8          I8               ,d8I'                                                                                                                                      
+                        I8          I8             ,dP'8I                                                                                                                                       
+                        I8          I8            ,8"  8I                                                                                                                                       
+                        I8          I8            I8   8I                                                                                                                                       
+                        I8          I8            `8, ,8I                                                                                                                                       
+                        I8          I8             `Y8P"                                                                                                                                        
+      ,a8a,                                                                                 d8'                                                                                                 
+     ,8" "8,     ,dPYb,                                                             I8     d8'  ,dPYb, ,dPYb,                                    ,dPYb,                                         
+     d8   8b     IP'`Yb                                                             I8    ""    IP'`Yb IP'`Yb                                    IP'`Yb                                         
+     88   88     I8  8I                                                      gg  88888888       I8  8I I8  8I                                    I8  8I                                         
+     88   88     I8  8bgg,                                                   ""     I8          I8  8' I8  8'                                    I8  8bgg,                                      
+     Y8   8P     I8 dP" "8   ,ggg,,ggg,     ,ggggg,    gg    gg    gg        gg     I8          I8 dP  I8 dP       ,ggg,,ggg,,ggg,     ,gggg,gg  I8 dP" "8   ,ggg,                              
+     `8, ,8'     I8d8bggP"  ,8" "8P" "8,   dP"  "Y8ggg I8    I8    88bg      88     I8          I8dP   I8dP       ,8" "8P" "8P" "8,   dP"  "Y8I  I8d8bggP"  i8" "8i                             
+8888  "8,8"      I8P' "Yb,  I8   8I   8I  i8'    ,8I   I8    I8    8I        88    ,I8,         I8P    I8P        I8   8I   8I   8I  i8'    ,8I  I8P' "Yb,  I8, ,8I                             
+`8b,  ,d8b,     ,d8    `Yb,,dP   8I   Yb,,d8,   ,d8'  ,d8,  ,d8,  ,8I      _,88,_ ,d88b,       ,d8b,_ ,d8b,_     ,dP   8I   8I   Yb,,d8,   ,d8b,,d8    `Yb, `YbadP'                             
+  "Y88P" "Y8    88P      Y88P'   8I   `Y8P"Y8888P"    P""Y88P""Y88P"       8P""Y888P""Y88      8P'"Y888P'"Y88    8P'   8I   8I   `Y8P"Y8888P"`Y888P      Y8888P"Y888                            
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                            ,dPYb,                                                                                                              
+                                                                            IP'`Yb                                                                                                              
+                                                                       gg   I8  8I                                                                                                              
+                                                                       ""   I8  8'                                                                                                              
+ gg     gg    ,ggggg,    gg      gg        ,g,      ,ggg,,ggg,,ggg,    gg   I8 dP   ,ggg,                                                                                                       
+ I8     8I   dP"  "Y8ggg I8      8I       ,8'8,    ,8" "8P" "8P" "8,   88   I8dP   i8" "8i                                                                                                      
+ I8,   ,8I  i8'    ,8I   I8,    ,8I      ,8'  Yb   I8   8I   8I   8I   88   I8P    I8, ,8I                                                                                                      
+,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,    ,8'_   8) ,dP   8I   8I   Yb,_,88,_,d8b,_  `YbadP'                                                                                                      
+P""Y88P"888P"Y8888P"    8P'"Y88P"`Y8    P' "YY8P8P8P'   8I   8I   `Y88P""Y88P'"Y88888P"Y888                                                                                                     
+      ,d8I'                                                                                                                                                                                     
+    ,dP'8I                                                                                                                                                                                      
+   ,8"  8I                                                                                                                                                                                      
+   I8   8I                                                                                                                                                                                      
+   `8, ,8I                                                                                                                                                                                      
+    `Y8P"                                                                                                                                                                                       
+                                                                                                                                                                                                
+                                         ,dPYb,                                                  8I                                       ,dPYb, ,dPYb,                                         
+                                         IP'`Yb                                                  8I                                       IP'`Yb IP'`Yb                                         
+                                         I8  8I              gg                                  8I                                  gg   I8  8I I8  8I                                         
+                                         I8  8'              ""                                  8I                                  ""   I8  8' I8  8'                                         
+   ,ggggg,    gg      gg   ,gggggg,      I8 dP    ,gggggg,   gg    ,ggg,    ,ggg,,ggg,     ,gggg,8I    ,g,         gg    gg    gg    gg   I8 dP  I8 dP                                          
+  dP"  "Y8ggg I8      8I   dP""""8I      I8dP     dP""""8I   88   i8" "8i  ,8" "8P" "8,   dP"  "Y8I   ,8'8,        I8    I8    88bg  88   I8dP   I8dP                                           
+ i8'    ,8I   I8,    ,8I  ,8'    8I      I8P     ,8'    8I   88   I8, ,8I  I8   8I   8I  i8'    ,8I  ,8'  Yb       I8    I8    8I    88   I8P    I8P                                            
+,d8,   ,d8'  ,d8b,  ,d8b,,dP     Y8,    ,d8b,_  ,dP     Y8,_,88,_ `YbadP' ,dP   8I   Yb,,d8,   ,d8b,,8'_   8)     ,d8,  ,d8,  ,8I  _,88,_,d8b,_ ,d8b,_                                          
+P"Y8888P"    8P'"Y88P"`Y88P      `Y8    PI8"88888P      `Y88P""Y8888P"Y8888P'   8I   `Y8P"Y8888P"`Y8P' "YY8P8P    P""Y88P""Y88P"   8P""Y88P'"Y888P'"Y88                                         
+                                         I8 `8,                                                                                                                                                 
+                                         I8  `8,                                                                                                                                                
+                                         I8   8I                                                                                                                                                
+                                         I8   8I                                                                                                                                                
+                                         I8, ,8'                                                                                                                                                
+                                          "Y8P'                                                                                                                                                 
+                                                                                                                                                                                                
+ ,dPYb,                                     ,dPYb,                                  I8    ,dPYb,                                                                                                
+ IP'`Yb                                     IP'`Yb                                  I8    IP'`Yb                                                                                                
+ I8  8I                                     I8  8I                           gg  88888888 I8  8I                                                                                                
+ I8  8'                                     I8  8'                           ""     I8    I8  8'                                                                                                
+ I8 dP    ,gggg,gg  gg      gg    ,gggg,gg  I8 dPgg,       gg    gg    gg    gg     I8    I8 dPgg,       gg      gg    ,g,                                                                      
+ I8dP    dP"  "Y8I  I8      8I   dP"  "Y8I  I8dP" "8I      I8    I8    88bg  88     I8    I8dP" "8I      I8      8I   ,8'8,                                                                     
+ I8P    i8'    ,8I  I8,    ,8I  i8'    ,8I  I8P    I8      I8    I8    8I    88    ,I8,   I8P    I8      I8,    ,8I  ,8'  Yb                                                                    
+,d8b,_ ,d8,   ,d8b,,d8b,  ,d8b,,d8,   ,d8I ,d8     I8,    ,d8,  ,d8,  ,8I  _,88,_ ,d88b, ,d8     I8,    ,d8b,  ,d8b,,8'_   8)                                                                   
+8P'"Y88P"Y8888P"`Y88P'"Y88P"`Y8P"Y8888P"88888P     `Y8    P""Y88P""Y88P"   8P""Y888P""Y8888P     `Y8    8P'"Y88P"`Y8P' "YY8P8P                                                                  
+                                      ,d8I'                                                                                                                                                     
+                                    ,dP'8I                                                                                                                                                      
+                                   ,8"  8I                                                                                                                                                      
+                                   I8   8I                                                                                                                                                      
+                                   `8, ,8I                                                                                                                                                      
+                                    `Y8P"                                                                                                                                                       
+                                                                     d8'                                                                                                                        
+                                   8I                               d8'  ,dPYb, ,dPYb,             8I                                                     I8          ,dPYb, ,dPYb,             
+                                   8I                              ""    IP'`Yb IP'`Yb             8I                                                     I8          IP'`Yb IP'`Yb             
+                                   8I                                    I8  8I I8  8I             8I                                                  88888888  gg   I8  8I I8  8I             
+                                   8I                                    I8  8' I8  8'             8I                                                     I8     ""   I8  8' I8  8'             
+   ,gggg,gg   ,ggg,,ggg,     ,gggg,8I      gg    gg    gg    ,ggg,       I8 dP  I8 dP        ,gggg,8I    ,gggg,gg   ,ggg,,ggg,     ,gggg,   ,ggg,         I8     gg   I8 dP  I8 dP              
+  dP"  "Y8I  ,8" "8P" "8,   dP"  "Y8I      I8    I8    88bg i8" "8i      I8dP   I8dP        dP"  "Y8I   dP"  "Y8I  ,8" "8P" "8,   dP"  "Yb i8" "8i        I8     88   I8dP   I8dP               
+ i8'    ,8I  I8   8I   8I  i8'    ,8I      I8    I8    8I   I8, ,8I      I8P    I8P        i8'    ,8I  i8'    ,8I  I8   8I   8I  i8'       I8, ,8I       ,I8,    88   I8P    I8P                
+,d8,   ,d8b,,dP   8I   Yb,,d8,   ,d8b,    ,d8,  ,d8,  ,8I   `YbadP'     ,d8b,_ ,d8b,_     ,d8,   ,d8b,,d8,   ,d8b,,dP   8I   Yb,,d8,_    _ `YbadP'      ,d88b, _,88,_,d8b,_ ,d8b,_              
+P"Y8888P"`Y88P'   8I   `Y8P"Y8888P"`Y8    P""Y88P""Y88P"   888P"Y888    8P'"Y888P'"Y88    P"Y8888P"`Y8P"Y8888P"`Y88P'   8I   `Y8P""Y8888PP888P"Y888    88P""Y888P""Y88P'"Y888P'"Y88             
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                               ,dPYb,              ,dPYb, ,dPYb,                                                                                                                                
+                               IP'`Yb              IP'`Yb IP'`Yb                                                                                                                                
+                               I8  8I              I8  8I I8  8I                                                                                                                                
+                               I8  8'              I8  8' I8  8'                                                                                                                                
+ gg    gg    gg    ,ggg,       I8 dP     ,gggg,gg  I8 dP  I8 dP                                                                                                                                 
+ I8    I8    88bg i8" "8i      I8dP     dP"  "Y8I  I8dP   I8dP                                                                                                                                  
+ I8    I8    8I   I8, ,8I      I8P     i8'    ,8I  I8P    I8P                                                                                                                                   
+,d8,  ,d8,  ,8I   `YbadP'     ,d8b,_  ,d8,   ,d8b,,d8b,_ ,d8b,_                                                                                                                                 
+P""Y88P""Y88P"   888P"Y888    PI8"8888P"Y8888P"`Y88P'"Y888P'"Y88                                                                                                                                
+                               I8 `8,                                                                                                                                                           
+                               I8  `8,                                                                                                                                                          
+                               I8   8I                                                                                                                                                          
+                               I8   8I                                                                                                                                                          
+                               I8, ,8'                                                                                                                                                          
+                                "Y8P'                                                                                                                                                           
+      ,a8a,                                                                                                                                                                                     
+     ,8" "8,                                                                                                                                                                                    
+     d8   8b                                                                                                                                                                                    
+     88   88                                                                                                                                                                                    
+     88   88                                                                                                                                                                                    
+     Y8   8P  ,ggg,,ggg,                                                                                                                                                                        
+     `8, ,8' ,8" "8P" "8,                                                                                                                                                                       
+8888  "8,8"  I8   8I   8I                                                                                                                                                                       
+`8b,  ,d8b, ,dP   8I   Yb,                                                                                                                                                                      
+  "Y88P" "Y88P'   8I   `Y8                                                                                                                                                                      
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+      ,a8a,    d8'                                                                                                                                                                              
+     ,8" "8,  d8'                                                                                                                                                                               
+     d8   8b ""                                                                                                                                                                                 
+     88   88                                                                                                                                                                                    
+     88   88                                                                                                                                                                                    
+     Y8   8P     ,ggg,,ggg,,ggg,         ,gggg,gg    ,ggggg,     ,ggg,,ggg,    ,ggg,,ggg,     ,gggg,gg       ,gggggg,  gg      gg   ,ggg,,ggg,                                                  
+     `8, ,8'    ,8" "8P" "8P" "8,       dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,  ,8" "8P" "8,   dP"  "Y8I       dP""""8I  I8      8I  ,8" "8P" "8,                                                 
+8888  "8,8"     I8   8I   8I   8I      i8'    ,8I  i8'    ,8I   I8   8I   8I  I8   8I   8I  i8'    ,8I      ,8'    8I  I8,    ,8I  I8   8I   8I                                                 
+`8b,  ,d8b,    ,dP   8I   8I   Yb,    ,d8,   ,d8I ,d8,   ,d8'  ,dP   8I   Yb,,dP   8I   Yb,,d8,   ,d8b,    ,dP     Y8,,d8b,  ,d8b,,dP   8I   Yb,                                                
+  "Y88P" "Y8   8P'   8I   8I   `Y8    P"Y8888P"888P"Y8888P"    8P'   8I   `Y88P'   8I   `Y8P"Y8888P"`Y8    8P      `Y88P'"Y88P"`Y88P'   8I   `Y8                                                
+                                             ,d8I'                                                                                                                                              
+                                           ,dP'8I                                                                                                                                               
+                                          ,8"  8I                                                                                                                                               
+                                          I8   8I                                                                                                                                               
+                                          `8, ,8I                                                                                                                                               
+                                           `Y8P"                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+   ,ggggg,       ggg    gg    ,ggg,    ,gggggg,      gg     gg    ,ggggg,    gg      gg   ,gggggg,       ,ggg,      ,gg,   ,gg                                                                  
+  dP"  "Y8ggg   d8"Yb   88bg i8" "8i   dP""""8I      I8     8I   dP"  "Y8ggg I8      8I   dP""""8I      i8" "8i    d8""8b,dP"                                                                   
+ i8'    ,8I    dP  I8   8I   I8, ,8I  ,8'    8I      I8,   ,8I  i8'    ,8I   I8,    ,8I  ,8'    8I      I8, ,8I   dP   ,88"                                                                     
+,d8,   ,d8'  ,dP   I8, ,8I   `YbadP' ,dP     Y8,    ,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,,dP     Y8,     `YbadP' ,dP  ,dP"Y8,                                                                    
+P"Y8888P"    8"     "Y8P"   888P"Y8888P      `Y8    P""Y88P"888P"Y8888P"    8P'"Y88P"`Y88P      `Y8    888P"Y8888"  dP"   "Y88                                                                  
+                                                          ,d8I'                                                                                                                                 
+                                                        ,dP'8I                                                                                                                                  
+                                                       ,8"  8I                                                                                                                                  
+                                                       I8   8I                                                                                                                                  
+                                                       `8, ,8I                                                                                                                                  
+                                                        `Y8P"                                                                                                                                   
+                                                                                                                                                                                                
+ ,dPYb,                              ,dPYb,                                                  8I                                                                                                 
+ IP'`Yb                              IP'`Yb                                                  8I                                                                                                 
+ I8  8I                              I8  8I              gg                                  8I                                                                                                 
+ I8  8'                              I8  8'              ""                                  8I                                                                                                 
+ I8 dP         ,ggggg,    gg     gg  I8 dP    ,gggggg,   gg    ,ggg,    ,ggg,,ggg,     ,gggg,8I                                                                                                 
+ I8dP   88gg  dP"  "Y8ggg I8     8I  I8dP     dP""""8I   88   i8" "8i  ,8" "8P" "8,   dP"  "Y8I                                                                                                 
+ I8P    8I   i8'    ,8I   I8,   ,8I  I8P     ,8'    8I   88   I8, ,8I  I8   8I   8I  i8'    ,8I                                                                                                 
+,d8b,  ,8I  ,d8,   ,d8'  ,d8b, ,d8I ,d8b,_  ,dP     Y8,_,88,_ `YbadP' ,dP   8I   Yb,,d8,   ,d8b,                                                                                                
+8P'"Y88P"'  P"Y8888P"    P""Y88P"888PI8"88888P      `Y88P""Y8888P"Y8888P'   8I   `Y8P"Y8888P"`Y8                                                                                                
+                               ,d8I' I8 `8,                                                                                                                                                     
+                             ,dP'8I  I8  `8,                                                                                                                                                    
+                            ,8"  8I  I8   8I                                                                                                                                                    
+                            I8   8I  I8   8I                                                                                                                                                    
+                            `8, ,8I  I8, ,8'                                                                                                                                                    
+                             `Y8P"    "Y8P'                                                                                                                                                     
+                                        ,a8a,    d8'                                                                                                                                            
+                                       ,8" "8,  d8'                                                                                           ,dPYb,             I8                             
+                                       d8   8b ""                                                                                             IP'`Yb             I8                             
+                                       88   88                                                                                                I8  8I      gg  88888888                          
+                                       88   88                                                                                                I8  8'      ""     I8                             
+ gg     gg   ,ggg,     ,g,             Y8   8P     ,ggg,,ggg,,ggg,         ,gggg,gg    ,ggggg,     ,ggg,,ggg,    ,ggg,,ggg,     ,gggg,gg      I8 dPgg,    gg     I8                             
+ I8     8I  i8" "8i   ,8'8,            `8, ,8'    ,8" "8P" "8P" "8,       dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,  ,8" "8P" "8,   dP"  "Y8I      I8dP" "8I   88     I8                             
+ I8,   ,8I  I8, ,8I  ,8'  Yb      8888  "8,8"     I8   8I   8I   8I      i8'    ,8I  i8'    ,8I   I8   8I   8I  I8   8I   8I  i8'    ,8I      I8P    I8   88    ,I8,                            
+,d8b, ,d8I  `YbadP' ,8'_   8)     `8b,  ,d8b,    ,dP   8I   8I   Yb,    ,d8,   ,d8I ,d8,   ,d8'  ,dP   8I   Yb,,dP   8I   Yb,,d8,   ,d8b,    ,d8     I8,_,88,_ ,d88b,                           
+P""Y88P"888888P"Y888P' "YY8P8P      "Y88P" "Y8   8P'   8I   8I   `Y8    P"Y8888P"888P"Y8888P"    8P'   8I   `Y88P'   8I   `Y8P"Y8888P"`Y8    88P     `Y88P""Y888P""Y88                          
+      ,d8I'                                                                    ,d8I'                                                                                                            
+    ,dP'8I                                                                   ,dP'8I                                                                                                             
+   ,8"  8I                                                                  ,8"  8I                                                                                                             
+   I8   8I                                                                  I8   8I                                                                                                             
+   `8, ,8I                                                                  `8, ,8I                                                                                                             
+    `Y8P"                                                                    `Y8P"                                                                                                              
+                                                                                                                                                                                                
+ ,dPYb,                                                           I8    ,dPYb,                                                                                                                  
+ IP'`Yb                                                           I8    IP'`Yb                                                                                                                  
+ I8  8I      gg                                            gg  88888888 I8  8I                                                                                                                  
+ I8  8'      ""                                            ""     I8    I8  8'                                                                                                                  
+ I8 dPgg,    gg    ,ggg,,ggg,,ggg,       gg    gg    gg    gg     I8    I8 dPgg,        ,ggg,,ggg,,ggg,   gg     gg        ,gggg,    ,gggg,gg   ,gggggg,                                        
+ I8dP" "8I   88   ,8" "8P" "8P" "8,      I8    I8    88bg  88     I8    I8dP" "8I      ,8" "8P" "8P" "8,  I8     8I       dP"  "Yb  dP"  "Y8I   dP""""8I                                        
+ I8P    I8   88   I8   8I   8I   8I      I8    I8    8I    88    ,I8,   I8P    I8      I8   8I   8I   8I  I8,   ,8I      i8'       i8'    ,8I  ,8'    8I                                        
+,d8     I8,_,88,_,dP   8I   8I   Yb,    ,d8,  ,d8,  ,8I  _,88,_ ,d88b, ,d8     I8,    ,dP   8I   8I   Yb,,d8b, ,d8I     ,d8,_    _,d8,   ,d8b,,dP     Y8,                                       
+88P     `Y88P""Y88P'   8I   8I   `Y8    P""Y88P""Y88P"   8P""Y888P""Y8888P     `Y8    8P'   8I   8I   `Y8P""Y88P"888    P""Y8888PPP"Y8888P"`Y88P      `Y8                                       
+                                                                                                               ,d8I'                                                                            
+                                                                                                             ,dP'8I                                                                             
+                                                                                                            ,8"  8I                                                                             
+                                                                                                            I8   8I                                                                             
+                                                                                                            `8, ,8I                                                                             
+                                                                                                             `Y8P"                                                                              
+                                     ,a8a,                                             d8'                                                                                                      
+                                    ,8" "8,             8I                            d8'   I8        ,dPYb,                                                                                    
+                                    d8   8b             8I                           ""     I8        IP'`Yb                                                                                    
+                                    88   88             8I                               88888888     I8  8I                                                                                    
+                                    88   88             8I                                  I8        I8  8'                                                                                    
+  ,ggg,,ggg,     ,ggggg,            Y8   8P       ,gggg,8I    ,ggggg,     ,ggg,,ggg,        I8        I8 dPgg,     ,gggg,gg     ggg    gg    ,ggg,         ,gggg,gg                             
+ ,8" "8P" "8,   dP"  "Y8ggg         `8, ,8'      dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,       I8        I8dP" "8I   dP"  "Y8I    d8"Yb   88bg i8" "8i       dP"  "Y8I                             
+ I8   8I   8I  i8'    ,8I      8888  "8,8"      i8'    ,8I  i8'    ,8I   I8   8I   8I      ,I8,       I8P    I8  i8'    ,8I   dP  I8   8I   I8, ,8I      i8'    ,8I                             
+,dP   8I   Yb,,d8,   ,d8'      `8b,  ,d8b,     ,d8,   ,d8b,,d8,   ,d8'  ,dP   8I   Yb,    ,d88b,     ,d8     I8,,d8,   ,d8b,,dP   I8, ,8I   `YbadP'     ,d8,   ,d8b,                            
+8P'   8I   `Y8P"Y8888P"          "Y88P" "Y8    P"Y8888P"`Y8P"Y8888P"    8P'   8I   `Y8   88P""Y88    88P     `Y8P"Y8888P"`Y88"     "Y8P"   888P"Y888    P"Y8888P"`Y8                            
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+ ,dPYb,                                                                                                                                                                                         
+ IP'`Yb                                                                                                                                                                                         
+ I8  8I  gg                                                                                                                                                                                     
+ I8  8'  ""                                                                                                                                                                                     
+ I8 dP   gg     ,gggg,   ,ggg,    ,ggg,,ggg,     ,g,      ,ggg,                                                                                                                                 
+ I8dP    88    dP"  "Yb i8" "8i  ,8" "8P" "8,   ,8'8,    i8" "8i                                                                                                                                
+ I8P     88   i8'       I8, ,8I  I8   8I   8I  ,8'  Yb   I8, ,8I                                                                                                                                
+,d8b,_ _,88,_,d8,_    _ `YbadP' ,dP   8I   Yb,,8'_   8)  `YbadP'                                                                                                                                
+8P'"Y888P""Y8P""Y8888PP888P"Y8888P'   8I   `Y8P' "YY8P8P888P"Y888                                                                                                                               
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                          ,a8a,                                                                                                                                                 
+ ,dPYb,                    I8            ,8" "8,                                                                                         ,dPYb,                                                 
+ IP'`Yb                    I8            d8   8b                                                                                         IP'`Yb                                                 
+ I8  8I                 88888888         88   88                                                             gg                          I8  8I                                                 
+ I8  8'                    I8            88   88                                                             ""                          I8  8'                                                 
+ I8 dP       gg      gg    I8            Y8   8P     gg,gggg,     ,gggggg,    ,ggggg,     ,ggg,,ggg,,ggg,    gg     ,g,      ,ggg,       I8 dPgg,    ,ggg,                                      
+ I8dP   88gg I8      8I    I8            `8, ,8'     I8P"  "Yb    dP""""8I   dP"  "Y8ggg ,8" "8P" "8P" "8,   88    ,8'8,    i8" "8i      I8dP" "8I  i8" "8i                                     
+ I8P    8I   I8,    ,8I   ,I8,      8888  "8,8"      I8'    ,8i  ,8'    8I  i8'    ,8I   I8   8I   8I   8I   88   ,8'  Yb   I8, ,8I      I8P    I8  I8, ,8I                                     
+,d8b,  ,8I  ,d8b,  ,d8b, ,d88b,     `8b,  ,d8b,     ,I8 _  ,d8' ,dP     Y8,,d8,   ,d8'  ,dP   8I   8I   Yb,_,88,_,8'_   8)  `YbadP'     ,d8     I8, `YbadP'                                     
+8P'"Y88P"'  8P'"Y88P"`Y888P""Y88      "Y88P" "Y8    PI8 YY88888P8P      `Y8P"Y8888P"    8P'   8I   8I   `Y88P""Y8P' "YY8P8P888P"Y888    88P     `Y8888P"Y888                                    
+                                                     I8                                                                                                                                         
+                                                     I8                                                                                                                                         
+                                                     I8                                                                                                                                         
+                                                     I8                                                                                                                                         
+                                                     I8                                                                                                                                         
+                                                     I8                                                                                                                                         
+                                                                                                                                                                                                
+                                               I8                               I8        ,dPYb,                                                                                                
+                                               I8                               I8        IP'`Yb                                                                                                
+                                            88888888                         88888888     I8  8I                                                                                                
+                                               I8                               I8        I8  8'                                                                                                
+ gg    gg    gg     ,ggggg,     ,ggg,,ggg,     I8          ,gggg,gg   ,ggg,     I8        I8 dP     ,gggg,gg   ,gggggg,                                                                         
+ I8    I8    88bg  dP"  "Y8ggg ,8" "8P" "8,    I8         dP"  "Y8I  i8" "8i    I8        I8dP     dP"  "Y8I   dP""""8I                                                                         
+ I8    I8    8I   i8'    ,8I   I8   8I   8I   ,I8,       i8'    ,8I  I8, ,8I   ,I8,       I8P     i8'    ,8I  ,8'    8I                                                                         
+,d8,  ,d8,  ,8I  ,d8,   ,d8'  ,dP   8I   Yb, ,d88b,     ,d8,   ,d8I  `YbadP'  ,d88b,     ,d8b,_  ,d8,   ,d8b,,dP     Y8,                                                                        
+P""Y88P""Y88P"   P"Y8888P"    8P'   8I   `Y888P""Y88    P"Y8888P"888888P"Y88888P""Y88    PI8"8888P"Y8888P"`Y88P      `Y8                                                                        
+                                                               ,d8I'                      I8 `8,                                                                                                
+                                                             ,dP'8I                       I8  `8,                                                                                               
+                                                            ,8"  8I                       I8   8I                                                                                               
+                                                            I8   8I                       I8   8I                                                                                               
+                                                            `8, ,8I                       I8, ,8'                                                                                               
+                                                             `Y8P"                         "Y8P'                                                                                                
+           ,ggg,                                                 d8'                                                                                                                            
+          dP""8I                         8I              I8     d8'  ,dPYb, ,dPYb,                                    ,dPYb,                                                                    
+         dP   88                         8I              I8    ""    IP'`Yb IP'`Yb                                    IP'`Yb                                                                    
+        dP    88                         8I       gg  88888888       I8  8I I8  8I                                    I8  8I                                                                    
+       ,8'    88                         8I       ""     I8          I8  8' I8  8'                                    I8  8bgg,                                                                 
+       d88888888    ,ggg,,ggg,     ,gggg,8I       gg     I8          I8 dP  I8 dP       ,ggg,,ggg,,ggg,     ,gggg,gg  I8 dP" "8   ,ggg,       gg     gg    ,ggggg,    gg      gg                
+ __   ,8"     88   ,8" "8P" "8,   dP"  "Y8I       88     I8          I8dP   I8dP       ,8" "8P" "8P" "8,   dP"  "Y8I  I8d8bggP"  i8" "8i      I8     8I   dP"  "Y8ggg I8      8I                
+dP"  ,8P      Y8   I8   8I   8I  i8'    ,8I       88    ,I8,         I8P    I8P        I8   8I   8I   8I  i8'    ,8I  I8P' "Yb,  I8, ,8I      I8,   ,8I  i8'    ,8I   I8,    ,8I                
+Yb,_,dP       `8b,,dP   8I   Yb,,d8,   ,d8b,    _,88,_ ,d88b,       ,d8b,_ ,d8b,_     ,dP   8I   8I   Yb,,d8,   ,d8b,,d8    `Yb, `YbadP'     ,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,               
+ "Y8P"         `Y88P'   8I   `Y8P"Y8888P"`Y8    8P""Y888P""Y88      8P'"Y888P'"Y88    8P'   8I   8I   `Y8P"Y8888P"`Y888P      Y8888P"Y888    P""Y88P"888P"Y8888P"    8P'"Y88P"`Y8               
+                                                                                                                                                   ,d8I'                                        
+                                                                                                                                                 ,dP'8I                                         
+                                                                                                                                                ,8"  8I                                         
+                                                                                                                                                I8   8I                                         
+                                                                                                                                                `8, ,8I                                         
+                                                                                                                                                 `Y8P"                                          
+                                                                                                                                                                                                
+ ,dPYb,                                                                                                                                                                                         
+ IP'`Yb                                                                                                                                                                                         
+ I8  8I                                                                                                                                                                                         
+ I8  8'                                                                                                                                                                                         
+ I8 dPgg,     ,gggg,gg  gg,gggg,    gg,gggg,    gg     gg                                                                                                                                       
+ I8dP" "8I   dP"  "Y8I  I8P"  "Yb   I8P"  "Yb   I8     8I                                                                                                                                       
+ I8P    I8  i8'    ,8I  I8'    ,8i  I8'    ,8i  I8,   ,8I                                                                                                                                       
+,d8     I8,,d8,   ,d8b,,I8 _  ,d8' ,I8 _  ,d8' ,d8b, ,d8I                                                                                                                                       
+88P     `Y8P"Y8888P"`Y8PI8 YY88888PPI8 YY88888PP""Y88P"888                                                                                                                                      
+                        I8          I8               ,d8I'                                                                                                                                      
+                        I8          I8             ,dP'8I                                                                                                                                       
+                        I8          I8            ,8"  8I                                                                                                                                       
+                        I8          I8            I8   8I                                                                                                                                       
+                        I8          I8            `8, ,8I                                                                                                                                       
+                        I8          I8             `Y8P"                                                                                                                                        
+      ,a8a,                                                                                 d8'                                                                                                 
+     ,8" "8,     ,dPYb,                                                             I8     d8'  ,dPYb, ,dPYb,                                    ,dPYb,                                         
+     d8   8b     IP'`Yb                                                             I8    ""    IP'`Yb IP'`Yb                                    IP'`Yb                                         
+     88   88     I8  8I                                                      gg  88888888       I8  8I I8  8I                                    I8  8I                                         
+     88   88     I8  8bgg,                                                   ""     I8          I8  8' I8  8'                                    I8  8bgg,                                      
+     Y8   8P     I8 dP" "8   ,ggg,,ggg,     ,ggggg,    gg    gg    gg        gg     I8          I8 dP  I8 dP       ,ggg,,ggg,,ggg,     ,gggg,gg  I8 dP" "8   ,ggg,                              
+     `8, ,8'     I8d8bggP"  ,8" "8P" "8,   dP"  "Y8ggg I8    I8    88bg      88     I8          I8dP   I8dP       ,8" "8P" "8P" "8,   dP"  "Y8I  I8d8bggP"  i8" "8i                             
+8888  "8,8"      I8P' "Yb,  I8   8I   8I  i8'    ,8I   I8    I8    8I        88    ,I8,         I8P    I8P        I8   8I   8I   8I  i8'    ,8I  I8P' "Yb,  I8, ,8I                             
+`8b,  ,d8b,     ,d8    `Yb,,dP   8I   Yb,,d8,   ,d8'  ,d8,  ,d8,  ,8I      _,88,_ ,d88b,       ,d8b,_ ,d8b,_     ,dP   8I   8I   Yb,,d8,   ,d8b,,d8    `Yb, `YbadP'                             
+  "Y88P" "Y8    88P      Y88P'   8I   `Y8P"Y8888P"    P""Y88P""Y88P"       8P""Y888P""Y88      8P'"Y888P'"Y88    8P'   8I   8I   `Y8P"Y8888P"`Y888P      Y8888P"Y888                            
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                         ,dPYb,                                     ,dPYb,                                                                                                      
+                                         IP'`Yb                                     IP'`Yb                                                                                                      
+                                         I8  8I                                     I8  8I                                                                                                      
+                                         I8  8'                                     I8  8'                                                                                                      
+ gg     gg    ,ggggg,    gg      gg      I8 dP    ,gggg,gg  gg      gg    ,gggg,gg  I8 dPgg,                                                                                                    
+ I8     8I   dP"  "Y8ggg I8      8I      I8dP    dP"  "Y8I  I8      8I   dP"  "Y8I  I8dP" "8I                                                                                                   
+ I8,   ,8I  i8'    ,8I   I8,    ,8I      I8P    i8'    ,8I  I8,    ,8I  i8'    ,8I  I8P    I8                                                                                                   
+,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,    ,d8b,_ ,d8,   ,d8b,,d8b,  ,d8b,,d8,   ,d8I ,d8     I8,                                                                                                  
+P""Y88P"888P"Y8888P"    8P'"Y88P"`Y8    8P'"Y88P"Y8888P"`Y88P'"Y88P"`Y8P"Y8888P"88888P     `Y8                                                                                                  
+      ,d8I'                                                                   ,d8I'                                                                                                             
+    ,dP'8I                                                                  ,dP'8I                                                                                                              
+   ,8"  8I                                                                 ,8"  8I                                                                                                              
+   I8   8I                                                                 I8   8I                                                                                                              
+   `8, ,8I                                                                 `8, ,8I                                                                                                              
+    `Y8P"                                                                   `Y8P"                                                                                                               
+                                                                                                                                                                                                
+                                         ,dPYb,                                                  8I                                       ,dPYb, ,dPYb,                                         
+                                         IP'`Yb                                                  8I                                       IP'`Yb IP'`Yb                                         
+                                         I8  8I              gg                                  8I                                  gg   I8  8I I8  8I                                         
+                                         I8  8'              ""                                  8I                                  ""   I8  8' I8  8'                                         
+   ,ggggg,    gg      gg   ,gggggg,      I8 dP    ,gggggg,   gg    ,ggg,    ,ggg,,ggg,     ,gggg,8I    ,g,         gg    gg    gg    gg   I8 dP  I8 dP                                          
+  dP"  "Y8ggg I8      8I   dP""""8I      I8dP     dP""""8I   88   i8" "8i  ,8" "8P" "8,   dP"  "Y8I   ,8'8,        I8    I8    88bg  88   I8dP   I8dP                                           
+ i8'    ,8I   I8,    ,8I  ,8'    8I      I8P     ,8'    8I   88   I8, ,8I  I8   8I   8I  i8'    ,8I  ,8'  Yb       I8    I8    8I    88   I8P    I8P                                            
+,d8,   ,d8'  ,d8b,  ,d8b,,dP     Y8,    ,d8b,_  ,dP     Y8,_,88,_ `YbadP' ,dP   8I   Yb,,d8,   ,d8b,,8'_   8)     ,d8,  ,d8,  ,8I  _,88,_,d8b,_ ,d8b,_                                          
+P"Y8888P"    8P'"Y88P"`Y88P      `Y8    PI8"88888P      `Y88P""Y8888P"Y8888P'   8I   `Y8P"Y8888P"`Y8P' "YY8P8P    P""Y88P""Y88P"   8P""Y88P'"Y888P'"Y88                                         
+                                         I8 `8,                                                                                                                                                 
+                                         I8  `8,                                                                                                                                                
+                                         I8   8I                                                                                                                                                
+                                         I8   8I                                                                                                                                                
+                                         I8, ,8'                                                                                                                                                
+                                          "Y8P'                                                                                                                                                 
+                                                                                                                                                                                                
+         8I                                                                            I8    ,dPYb,                                                                                             
+         8I                                                                            I8    IP'`Yb                                                                                             
+         8I                                                                     gg  88888888 I8  8I                                                                                             
+         8I                                                                     ""     I8    I8  8'                                                                                             
+   ,gggg,8I    ,gggg,gg   ,ggg,,ggg,     ,gggg,   ,ggg,       gg    gg    gg    gg     I8    I8 dPgg,       gg      gg    ,g,                                                                   
+  dP"  "Y8I   dP"  "Y8I  ,8" "8P" "8,   dP"  "Yb i8" "8i      I8    I8    88bg  88     I8    I8dP" "8I      I8      8I   ,8'8,                                                                  
+ i8'    ,8I  i8'    ,8I  I8   8I   8I  i8'       I8, ,8I      I8    I8    8I    88    ,I8,   I8P    I8      I8,    ,8I  ,8'  Yb                                                                 
+,d8,   ,d8b,,d8,   ,d8b,,dP   8I   Yb,,d8,_    _ `YbadP'     ,d8,  ,d8,  ,8I  _,88,_ ,d88b, ,d8     I8,    ,d8b,  ,d8b,,8'_   8)                                                                
+P"Y8888P"`Y8P"Y8888P"`Y88P'   8I   `Y8P""Y8888PP888P"Y888    P""Y88P""Y88P"   8P""Y888P""Y8888P     `Y8    8P'"Y88P"`Y8P' "YY8P8P                                                               
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                d8'                                                                                                             
+                                                 8I                            d8'   I8                                                        ,dPYb,                                           
+                                                 8I                           ""     I8                                                        IP'`Yb                                           
+                                                 8I                               88888888                                                     I8  8I                                           
+                                                 8I                                  I8                                                        I8  8'                                           
+ gg     gg    ,ggggg,    gg      gg        ,gggg,8I    ,ggggg,     ,ggg,,ggg,        I8         ,ggg,      ggg    gg    ,ggg,    ,gggggg,      I8 dPgg,     ,gggg,gg     ggg    gg    ,ggg,     
+ I8     8I   dP"  "Y8ggg I8      8I       dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,       I8        i8" "8i    d8"Yb   88bg i8" "8i   dP""""8I      I8dP" "8I   dP"  "Y8I    d8"Yb   88bg i8" "8i    
+ I8,   ,8I  i8'    ,8I   I8,    ,8I      i8'    ,8I  i8'    ,8I   I8   8I   8I      ,I8,       I8, ,8I   dP  I8   8I   I8, ,8I  ,8'    8I      I8P    I8  i8'    ,8I   dP  I8   8I   I8, ,8I    
+,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,    ,d8,   ,d8b,,d8,   ,d8'  ,dP   8I   Yb,    ,d88b,      `YbadP' ,dP   I8, ,8I   `YbadP' ,dP     Y8,    ,d8     I8,,d8,   ,d8b,,dP   I8, ,8I   `YbadP'    
+P""Y88P"888P"Y8888P"    8P'"Y88P"`Y8    P"Y8888P"`Y8P"Y8888P"    8P'   8I   `Y8   88P""Y88    888P"Y8888"     "Y8P"   888P"Y8888P      `Y8    88P     `Y8P"Y8888P"`Y88"     "Y8P"   888P"Y888   
+      ,d8I'                                                                                                                                                                                     
+    ,dP'8I                                                                                                                                                                                      
+   ,8"  8I                                                                                                                                                                                      
+   I8   8I                                                                                                                                                                                      
+   `8, ,8I                                                                                                                                                                                      
+    `Y8P"                                                                                                                                                                                       
+                                                                                                                                                                                                
+   I8                       I8                ,dPYb,                  ,dPYb,                                  ,dPYb,                            ,dPYb,                                          
+   I8                       I8                IP'`Yb                  IP'`Yb                                  IP'`Yb                            IP'`Yb                                          
+88888888                 88888888             I8  8I                  I8  8I      gg                          I8  8I                            I8  8I                                          
+   I8                       I8                I8  8bgg,               I8  8'      ""                          I8  8'                            I8  8bgg,                                       
+   I8      ,ggggg,          I8      ,gggg,gg  I8 dP" "8   ,ggg,       I8 dPgg,    gg    ,ggg,,ggg,,ggg,       I8 dP         ,gggg,gg    ,gggg,  I8 dP" "8                                       
+   I8     dP"  "Y8ggg       I8     dP"  "Y8I  I8d8bggP"  i8" "8i      I8dP" "8I   88   ,8" "8P" "8P" "8,      I8dP   88gg  dP"  "Y8I   dP"  "Yb I8d8bggP"                                       
+  ,I8,   i8'    ,8I        ,I8,   i8'    ,8I  I8P' "Yb,  I8, ,8I      I8P    I8   88   I8   8I   8I   8I      I8P    8I   i8'    ,8I  i8'       I8P' "Yb,                                       
+ ,d88b, ,d8,   ,d8'       ,d88b, ,d8,   ,d8b,,d8    `Yb, `YbadP'     ,d8     I8,_,88,_,dP   8I   8I   Yb,    ,d8b,  ,8I  ,d8,   ,d8b,,d8,_    _,d8    `Yb,                                      
+88P""Y88P"Y8888P"        88P""Y88P"Y8888P"`Y888P      Y8888P"Y888    88P     `Y88P""Y88P'   8I   8I   `Y8    8P'"Y88P"'  P"Y8888P"`Y8P""Y8888PP88P      Y8                                      
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+      ,a8a,    d8'                                                                                                                                                                              
+     ,8" "8,  d8'                                                                                     I8                     ,dPYb,           ,dPYb, ,dPYb,                                     
+     d8   8b ""                                                                                       I8                     IP'`Yb           IP'`Yb IP'`Yb                                     
+     88   88                                                     gg                                88888888                  I8  8I      gg   I8  8I I8  8I                                     
+     88   88                                                     ""                                   I8                     I8  8bgg,   ""   I8  8' I8  8'                                     
+     Y8   8P     ,ggg,,ggg,,ggg,         ,gggg,gg    ,ggggg,     gg    ,ggg,,ggg,     ,gggg,gg        I8      ,ggggg,        I8 dP" "8   gg   I8 dP  I8 dP                                      
+     `8, ,8'    ,8" "8P" "8P" "8,       dP"  "Y8I   dP"  "Y8ggg  88   ,8" "8P" "8,   dP"  "Y8I        I8     dP"  "Y8ggg     I8d8bggP"   88   I8dP   I8dP                                       
+8888  "8,8"     I8   8I   8I   8I      i8'    ,8I  i8'    ,8I    88   I8   8I   8I  i8'    ,8I       ,I8,   i8'    ,8I       I8P' "Yb,   88   I8P    I8P                                        
+`8b,  ,d8b,    ,dP   8I   8I   Yb,    ,d8,   ,d8I ,d8,   ,d8'  _,88,_,dP   8I   Yb,,d8,   ,d8I      ,d88b, ,d8,   ,d8'      ,d8    `Yb,_,88,_,d8b,_ ,d8b,_                                      
+  "Y88P" "Y8   8P'   8I   8I   `Y8    P"Y8888P"888P"Y8888P"    8P""Y88P'   8I   `Y8P"Y8888P"888    88P""Y88P"Y8888P"        88P      Y88P""Y88P'"Y888P'"Y88                                     
+                                             ,d8I'                                        ,d8I'                                                                                                 
+                                           ,dP'8I                                       ,dP'8I                                                                                                  
+                                          ,8"  8I                                      ,8"  8I                                                                                                  
+                                          I8   8I                                      I8   8I                                                                                                  
+                                          `8, ,8I                                      `8, ,8I                                                                                                  
+                                           `Y8P"                                        `Y8P"                                                                                                   
+                                                                                                                                                                                                
+                                                                               ,dPYb,                              ,dPYb,                                                  8I                   
+                                                                               IP'`Yb                              IP'`Yb                                                  8I                   
+                                                                               I8  8I                              I8  8I              gg                                  8I                   
+                                                                               I8  8'                              I8  8'              ""                                  8I                   
+ gg     gg    ,ggggg,    gg      gg   ,gggggg,       ,ggg,      ,gg,   ,gg     I8 dP         ,ggggg,    gg     gg  I8 dP    ,gggggg,   gg    ,ggg,    ,ggg,,ggg,     ,gggg,8I                   
+ I8     8I   dP"  "Y8ggg I8      8I   dP""""8I      i8" "8i    d8""8b,dP"      I8dP   88gg  dP"  "Y8ggg I8     8I  I8dP     dP""""8I   88   i8" "8i  ,8" "8P" "8,   dP"  "Y8I                   
+ I8,   ,8I  i8'    ,8I   I8,    ,8I  ,8'    8I      I8, ,8I   dP   ,88"        I8P    8I   i8'    ,8I   I8,   ,8I  I8P     ,8'    8I   88   I8, ,8I  I8   8I   8I  i8'    ,8I                   
+,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,,dP     Y8,     `YbadP' ,dP  ,dP"Y8,      ,d8b,  ,8I  ,d8,   ,d8'  ,d8b, ,d8I ,d8b,_  ,dP     Y8,_,88,_ `YbadP' ,dP   8I   Yb,,d8,   ,d8b,                  
+P""Y88P"888P"Y8888P"    8P'"Y88P"`Y88P      `Y8    888P"Y8888"  dP"   "Y88    8P'"Y88P"'  P"Y8888P"    P""Y88P"888PI8"88888P      `Y88P""Y8888P"Y8888P'   8I   `Y8P"Y8888P"`Y8                  
+      ,d8I'                                                                                                  ,d8I' I8 `8,                                                                       
+    ,dP'8I                                                                                                 ,dP'8I  I8  `8,                                                                      
+   ,8"  8I                                                                                                ,8"  8I  I8   8I                                                                      
+   I8   8I                                                                                                I8   8I  I8   8I                                                                      
+   `8, ,8I                                                                                                `8, ,8I  I8, ,8'                                                                      
+    `Y8P"                                                                                                  `Y8P"    "Y8P'                                                                       
+                                                                                                                  d8'                                                                           
+                                ,dPYb,                          8I                                               d8'   I8                    I8                                      8I         
+                                IP'`Yb                          8I                                              ""     I8                    I8                                      8I         
+                                I8  8I                          8I                                                  88888888              88888888                                   8I         
+                                I8  8'                          8I                                                     I8                    I8                                      8I         
+  ,ggg,,ggg,     ,ggggg,        I8 dPgg,    ,ggg,         ,gggg,8I    ,ggggg,     ,ggg,     ,g,      ,ggg,,ggg,        I8          ,g,       I8      ,gggg,gg   ,ggg,,ggg,     ,gggg,8I         
+ ,8" "8P" "8,   dP"  "Y8ggg     I8dP" "8I  i8" "8i       dP"  "Y8I   dP"  "Y8ggg i8" "8i   ,8'8,    ,8" "8P" "8,       I8         ,8'8,      I8     dP"  "Y8I  ,8" "8P" "8,   dP"  "Y8I         
+ I8   8I   8I  i8'    ,8I       I8P    I8  I8, ,8I      i8'    ,8I  i8'    ,8I   I8, ,8I  ,8'  Yb   I8   8I   8I      ,I8,       ,8'  Yb    ,I8,   i8'    ,8I  I8   8I   8I  i8'    ,8I         
+,dP   8I   Yb,,d8,   ,d8'      ,d8     I8, `YbadP'     ,d8,   ,d8b,,d8,   ,d8'   `YbadP' ,8'_   8) ,dP   8I   Yb,    ,d88b,     ,8'_   8)  ,d88b, ,d8,   ,d8b,,dP   8I   Yb,,d8,   ,d8b,        
+8P'   8I   `Y8P"Y8888P"        88P     `Y8888P"Y888    P"Y8888P"`Y8P"Y8888P"    888P"Y888P' "YY8P8P8P'   8I   `Y8   88P""Y88    P' "YY8P8P88P""Y88P"Y8888P"`Y88P'   8I   `Y8P"Y8888P"`Y8        
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                           ,dPYb,                                                                                                                                                               
+                           IP'`Yb                                                                                                                                                               
+                           I8  8I                                                                                                                                                               
+                           I8  8'                                                                                                                                                               
+   ,gggg,gg        ,gggg,  I8 dPgg,     ,gggg,gg   ,ggg,,ggg,     ,gggg,   ,ggg,                                                                                                                
+  dP"  "Y8I       dP"  "Yb I8dP" "8I   dP"  "Y8I  ,8" "8P" "8,   dP"  "Yb i8" "8i                                                                                                               
+ i8'    ,8I      i8'       I8P    I8  i8'    ,8I  I8   8I   8I  i8'       I8, ,8I                                                                                                               
+,d8,   ,d8b,    ,d8,_    _,d8     I8,,d8,   ,d8b,,dP   8I   Yb,,d8,_    _ `YbadP'                                                                                                               
+P"Y8888P"`Y8    P""Y8888PP88P     `Y8P"Y8888P"`Y88P'   8I   `Y8P""Y8888PP888P"Y888                                                                                                              
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                     d8'                                                                                                                                                                        
+ ,dPYb,             d8'  ,dPYb, ,dPYb,     ,dPYb,                   ,dPYb,                                                    8I                                                                
+ IP'`Yb            ""    IP'`Yb IP'`Yb     IP'`Yb                   IP'`Yb                                                    8I                                                                
+ I8  8I                  I8  8I I8  8I     I8  8I                   I8  8I                              gg                    8I       gg                                                       
+ I8  8'                  I8  8' I8  8'     I8  8'                   I8  8'                              ""                    8I       ""                                                       
+ I8 dPgg,    ,ggg,       I8 dP  I8 dP      I8 dP        ,ggg,       I8 dP       gg      gg   ,gggggg,   gg    ,ggg,     ,gggg,8I       gg    ,ggg,,ggg,        ,ggg,,ggg,,ggg,   gg     gg      
+ I8dP" "8I  i8" "8i      I8dP   I8dP       I8dP   88gg i8" "8i      I8dP   88gg I8      8I   dP""""8I   88   i8" "8i   dP"  "Y8I       88   ,8" "8P" "8,      ,8" "8P" "8P" "8,  I8     8I      
+ I8P    I8  I8, ,8I      I8P    I8P        I8P    8I   I8, ,8I      I8P    8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  i8'    ,8I       88   I8   8I   8I      I8   8I   8I   8I  I8,   ,8I      
+,d8     I8, `YbadP'     ,d8b,_ ,d8b,_     ,d8b,  ,8I   `YbadP'     ,d8b,  ,8I  ,d8b,  ,d8b,,dP     Y8,_,88,_ `YbadP' ,d8,   ,d8b,    _,88,_,dP   8I   Yb,    ,dP   8I   8I   Yb,,d8b, ,d8I      
+88P     `Y8888P"Y888    8P'"Y888P'"Y88    8P'"Y88P"'  888P"Y888    8P'"Y88P"'  8P'"Y88P"`Y88P      `Y88P""Y8888P"Y888P"Y8888P"`Y8    8P""Y88P'   8I   `Y8    8P'   8I   8I   `Y8P""Y88P"888     
+                                                                                                                                                                                      ,d8I'     
+                                                                                                                                                                                    ,dP'8I      
+                                                                                                                                                                                   ,8"  8I      
+                                                                                                                                                                                   I8   8I      
+                                                                                                                                                                                   `8, ,8I      
+                                                                                                                                                                                    `Y8P"       
+                                                                                                                                                                                                
+ ,dPYb,                            ,dPYb,                                               8I                                                                                                      
+ IP'`Yb                            IP'`Yb                                               8I                                                                                                      
+ I8  8I                            I8  8I                                               8I                                                                                                      
+ I8  8'                            I8  8bgg,                                            8I                                                                                                      
+ I8 dP         ,gggg,gg    ,gggg,  I8 dP" "8  gg     gg    ,gggg,gg   ,gggggg,    ,gggg,8I        ,g,       ,ggggg,      ,ggggg,     ,ggg,,ggg,                                                 
+ I8dP   88gg  dP"  "Y8I   dP"  "Yb I8d8bggP"  I8     8I   dP"  "Y8I   dP""""8I   dP"  "Y8I       ,8'8,     dP"  "Y8ggg  dP"  "Y8ggg ,8" "8P" "8,                                                
+ I8P    8I   i8'    ,8I  i8'       I8P' "Yb,  I8,   ,8I  i8'    ,8I  ,8'    8I  i8'    ,8I      ,8'  Yb   i8'    ,8I   i8'    ,8I   I8   8I   8I                                                
+,d8b,  ,8I  ,d8,   ,d8b,,d8,_    _,d8    `Yb,,d8b, ,d8I ,d8,   ,d8b,,dP     Y8,,d8,   ,d8b,    ,8'_   8) ,d8,   ,d8'  ,d8,   ,d8'  ,dP   8I   Yb,                                               
+8P'"Y88P"'  P"Y8888P"`Y8P""Y8888PP88P      Y8P""Y88P"888P"Y8888P"`Y88P      `Y8P"Y8888P"`Y8    P' "YY8P8PP"Y8888P"    P"Y8888P"    8P'   8I   `Y8                                               
+                                                   ,d8I'                                                                                                                                        
+                                                 ,dP'8I                                                                                                                                         
+                                                ,8"  8I                                                                                                                                         
+                                                I8   8I                                                                                                                                         
+                                                `8, ,8I                                                                                                                                         
+                                                 `Y8P"                                                                                                                                          
+                                                                                                                                                                                                
+                                                                              ,dPYb,                                               I8    ,dPYb,                                                 
+                                                                              IP'`Yb                                               I8    IP'`Yb                                                 
+                                                                     gg       I8  8I                                            88888888 I8  8I      gg                                         
+                                                                     ""       I8  8'                                               I8    I8  8'      ""                                         
+   ,g,       ,ggggg,          ,gggg,    ,gggg,gg   ,ggg,,ggg,        gg       I8 dPgg,     ,gggg,gg     ggg    gg    ,ggg,         I8    I8 dPgg,    gg     ,g,                                 
+  ,8'8,     dP"  "Y8ggg      dP"  "Yb  dP"  "Y8I  ,8" "8P" "8,       88       I8dP" "8I   dP"  "Y8I    d8"Yb   88bg i8" "8i        I8    I8dP" "8I   88    ,8'8,                                
+ ,8'  Yb   i8'    ,8I       i8'       i8'    ,8I  I8   8I   8I       88       I8P    I8  i8'    ,8I   dP  I8   8I   I8, ,8I       ,I8,   I8P    I8   88   ,8'  Yb                               
+,8'_   8) ,d8,   ,d8'      ,d8,_    _,d8,   ,d8b,,dP   8I   Yb,    _,88,_    ,d8     I8,,d8,   ,d8b,,dP   I8, ,8I   `YbadP'      ,d88b, ,d8     I8,_,88,_,8'_   8)                              
+P' "YY8P8PP"Y8888P"        P""Y8888PPP"Y8888P"`Y88P'   8I   `Y8    8P""Y8    88P     `Y8P"Y8888P"`Y88"     "Y8P"   888P"Y888    88P""Y8888P     `Y88P""Y8P' "YY8P8P                             
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                ad88888ba                                                                                       
+ ,dPYb,                         I8                8I                                           d8"     "8b                                                                                      
+ IP'`Yb                         I8                8I                                           ""      a8P                                                                                      
+ I8  8I                      88888888             8I                                                ,a8P"                                                                                       
+ I8  8'                         I8                8I                                               d8"                                                                                          
+ I8 dP    ,gggg,gg    ,g,       I8          ,gggg,8I    ,gggg,gg   ,ggg,,ggg,     ,gggg,   ,ggg,   88                                                                                           
+ I8dP    dP"  "Y8I   ,8'8,      I8         dP"  "Y8I   dP"  "Y8I  ,8" "8P" "8,   dP"  "Yb i8" "8i  88                                                                                           
+ I8P    i8'    ,8I  ,8'  Yb    ,I8,       i8'    ,8I  i8'    ,8I  I8   8I   8I  i8'       I8, ,8I                                                                                               
+,d8b,_ ,d8,   ,d8b,,8'_   8)  ,d88b,     ,d8,   ,d8b,,d8,   ,d8b,,dP   8I   Yb,,d8,_    _ `YbadP'  aa                                                                                           
+8P'"Y88P"Y8888P"`Y8P' "YY8P8P88P""Y88    P"Y8888P"`Y8P"Y8888P"`Y88P'   8I   `Y8P""Y8888PP888P"Y888 88                                                                                           
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+      ,a8a,    d8'                                                                                                                                                                              
+     ,8" "8,  d8'                                                                                           ,dPYb,           ,dPYb, ,dPYb,                                                      
+     d8   8b ""                                                                                             IP'`Yb           IP'`Yb IP'`Yb                                                      
+     88   88                                                                                                I8  8I      gg   I8  8I I8  8I                                                      
+     88   88                                                                                                I8  8bgg,   ""   I8  8' I8  8'                                                      
+     Y8   8P     ,ggg,,ggg,,ggg,         ,gggg,gg    ,ggggg,     ,ggg,,ggg,    ,ggg,,ggg,     ,gggg,gg      I8 dP" "8   gg   I8 dP  I8 dP      gg     gg    ,ggggg,    gg      gg   ,gggggg,    
+     `8, ,8'    ,8" "8P" "8P" "8,       dP"  "Y8I   dP"  "Y8ggg ,8" "8P" "8,  ,8" "8P" "8,   dP"  "Y8I      I8d8bggP"   88   I8dP   I8dP       I8     8I   dP"  "Y8ggg I8      8I   dP""""8I    
+8888  "8,8"     I8   8I   8I   8I      i8'    ,8I  i8'    ,8I   I8   8I   8I  I8   8I   8I  i8'    ,8I      I8P' "Yb,   88   I8P    I8P        I8,   ,8I  i8'    ,8I   I8,    ,8I  ,8'    8I    
+`8b,  ,d8b,    ,dP   8I   8I   Yb,    ,d8,   ,d8I ,d8,   ,d8'  ,dP   8I   Yb,,dP   8I   Yb,,d8,   ,d8b,    ,d8    `Yb,_,88,_,d8b,_ ,d8b,_     ,d8b, ,d8I ,d8,   ,d8'  ,d8b,  ,d8b,,dP     Y8,   
+  "Y88P" "Y8   8P'   8I   8I   `Y8    P"Y8888P"888P"Y8888P"    8P'   8I   `Y88P'   8I   `Y8P"Y8888P"`Y8    88P      Y88P""Y88P'"Y888P'"Y88    P""Y88P"888P"Y8888P"    8P'"Y88P"`Y88P      `Y8   
+                                             ,d8I'                                                                                                  ,d8I'                                       
+                                           ,dP'8I                                                                                                 ,dP'8I                                        
+                                          ,8"  8I                                                                                                ,8"  8I                                        
+                                          I8   8I                                                                                                I8   8I                                        
+                                          `8, ,8I                                                                                                `8, ,8I                                        
+                                           `Y8P"                                                                                                  `Y8P"                                         
+                                                                                                                                                                                                
+                            ,dPYb,                              ,dPYb,                                                  8I                                                                      
+                            IP'`Yb                              IP'`Yb                                                  8I                                                                      
+                            I8  8I                              I8  8I              gg                                  8I                                                                      
+                            I8  8'                              I8  8'              ""                                  8I                                                                      
+  ,ggg,      ,gg,   ,gg     I8 dP         ,ggggg,    gg     gg  I8 dP    ,gggggg,   gg    ,ggg,    ,ggg,,ggg,     ,gggg,8I                                                                      
+ i8" "8i    d8""8b,dP"      I8dP   88gg  dP"  "Y8ggg I8     8I  I8dP     dP""""8I   88   i8" "8i  ,8" "8P" "8,   dP"  "Y8I                                                                      
+ I8, ,8I   dP   ,88"        I8P    8I   i8'    ,8I   I8,   ,8I  I8P     ,8'    8I   88   I8, ,8I  I8   8I   8I  i8'    ,8I                                                                      
+ `YbadP' ,dP  ,dP"Y8,      ,d8b,  ,8I  ,d8,   ,d8'  ,d8b, ,d8I ,d8b,_  ,dP     Y8,_,88,_ `YbadP' ,dP   8I   Yb,,d8,   ,d8b,                                                                     
+888P"Y8888"  dP"   "Y88    8P'"Y88P"'  P"Y8888P"    P""Y88P"888PI8"88888P      `Y88P""Y8888P"Y8888P'   8I   `Y8P"Y8888P"`Y8                                                                     
+                                                          ,d8I' I8 `8,                                                                                                                          
+                                                        ,dP'8I  I8  `8,                                                                                                                         
+                                                       ,8"  8I  I8   8I                                                                                                                         
+                                                       I8   8I  I8   8I                                                                                                                         
+                                                       `8, ,8I  I8, ,8'                                                                                                                         
+                                                        `Y8P"    "Y8P'                                                                                                                          
+                                                                                                                  d8'                                                                           
+                                ,dPYb,                          8I                                               d8'   I8                    I8                                      8I         
+                                IP'`Yb                          8I                                              ""     I8                    I8                                      8I         
+                                I8  8I                          8I                                                  88888888              88888888                                   8I         
+                                I8  8'                          8I                                                     I8                    I8                                      8I         
+  ,ggg,,ggg,     ,ggggg,        I8 dPgg,    ,ggg,         ,gggg,8I    ,ggggg,     ,ggg,     ,g,      ,ggg,,ggg,        I8          ,g,       I8      ,gggg,gg   ,ggg,,ggg,     ,gggg,8I         
+ ,8" "8P" "8,   dP"  "Y8ggg     I8dP" "8I  i8" "8i       dP"  "Y8I   dP"  "Y8ggg i8" "8i   ,8'8,    ,8" "8P" "8,       I8         ,8'8,      I8     dP"  "Y8I  ,8" "8P" "8,   dP"  "Y8I         
+ I8   8I   8I  i8'    ,8I       I8P    I8  I8, ,8I      i8'    ,8I  i8'    ,8I   I8, ,8I  ,8'  Yb   I8   8I   8I      ,I8,       ,8'  Yb    ,I8,   i8'    ,8I  I8   8I   8I  i8'    ,8I         
+,dP   8I   Yb,,d8,   ,d8'      ,d8     I8, `YbadP'     ,d8,   ,d8b,,d8,   ,d8'   `YbadP' ,8'_   8) ,dP   8I   Yb,    ,d88b,     ,8'_   8)  ,d88b, ,d8,   ,d8b,,dP   8I   Yb,,d8,   ,d8b,        
+8P'   8I   `Y8P"Y8888P"        88P     `Y8888P"Y888    P"Y8888P"`Y8P"Y8888P"    888P"Y888P' "YY8P8P8P'   8I   `Y8   88P""Y88    P' "YY8P8P88P""Y88P"Y8888P"`Y88P'   8I   `Y8P"Y8888P"`Y8        
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                           ,dPYb,                                                                                                                                                               
+                           IP'`Yb                                                                                                                                                               
+                           I8  8I                                                                                                                                                               
+                           I8  8'                                                                                                                                                               
+   ,gggg,gg        ,gggg,  I8 dPgg,     ,gggg,gg   ,ggg,,ggg,     ,gggg,   ,ggg,                                                                                                                
+  dP"  "Y8I       dP"  "Yb I8dP" "8I   dP"  "Y8I  ,8" "8P" "8,   dP"  "Yb i8" "8i                                                                                                               
+ i8'    ,8I      i8'       I8P    I8  i8'    ,8I  I8   8I   8I  i8'       I8, ,8I                                                                                                               
+,d8,   ,d8b,    ,d8,_    _,d8     I8,,d8,   ,d8b,,dP   8I   Yb,,d8,_    _ `YbadP'                                                                                                               
+P"Y8888P"`Y8    P""Y8888PP88P     `Y8P"Y8888P"`Y88P'   8I   `Y8P""Y8888PP888P"Y888                                                                                                              
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+ ,dPYb,              ,dPYb, ,dPYb,     ,dPYb,                   ,dPYb,                                                    8I                                                                    
+ IP'`Yb              IP'`Yb IP'`Yb     IP'`Yb                   IP'`Yb                                                    8I                                                                    
+ I8  8I              I8  8I I8  8I     I8  8I                   I8  8I                              gg                    8I       gg                                                           
+ I8  8'              I8  8' I8  8'     I8  8'                   I8  8'                              ""                    8I       ""                                                           
+ I8 dPgg,    ,ggg,   I8 dP  I8 dP      I8 dP        ,ggg,       I8 dP       gg      gg   ,gggggg,   gg    ,ggg,     ,gggg,8I       gg    ,ggg,,ggg,        ,ggg,,ggg,,ggg,   gg     gg          
+ I8dP" "8I  i8" "8i  I8dP   I8dP       I8dP   88gg i8" "8i      I8dP   88gg I8      8I   dP""""8I   88   i8" "8i   dP"  "Y8I       88   ,8" "8P" "8,      ,8" "8P" "8P" "8,  I8     8I          
+ I8P    I8  I8, ,8I  I8P    I8P        I8P    8I   I8, ,8I      I8P    8I   I8,    ,8I  ,8'    8I   88   I8, ,8I  i8'    ,8I       88   I8   8I   8I      I8   8I   8I   8I  I8,   ,8I          
+,d8     I8, `YbadP' ,d8b,_ ,d8b,_     ,d8b,  ,8I   `YbadP'     ,d8b,  ,8I  ,d8b,  ,d8b,,dP     Y8,_,88,_ `YbadP' ,d8,   ,d8b,    _,88,_,dP   8I   Yb,    ,dP   8I   8I   Yb,,d8b, ,d8I          
+88P     `Y8888P"Y8888P'"Y888P'"Y88    8P'"Y88P"'  888P"Y888    8P'"Y88P"'  8P'"Y88P"`Y88P      `Y88P""Y8888P"Y888P"Y8888P"`Y8    8P""Y88P'   8I   `Y8    8P'   8I   8I   `Y8P""Y88P"888         
+                                                                                                                                                                                  ,d8I'         
+                                                                                                                                                                                ,dP'8I          
+                                                                                                                                                                               ,8"  8I          
+                                                                                                                                                                               I8   8I          
+                                                                                                                                                                               `8, ,8I          
+                                                                                                                                                                                `Y8P"           
+                                                                                                                                                                                                
+ ,dPYb,                            ,dPYb,                                               8I                                                                                                      
+ IP'`Yb                            IP'`Yb                                               8I                                                                                                      
+ I8  8I                            I8  8I                                               8I                                                                                                      
+ I8  8'                            I8  8bgg,                                            8I                                                                                                      
+ I8 dP         ,gggg,gg    ,gggg,  I8 dP" "8  gg     gg    ,gggg,gg   ,gggggg,    ,gggg,8I        ,g,       ,ggggg,      ,ggggg,     ,ggg,,ggg,                                                 
+ I8dP   88gg  dP"  "Y8I   dP"  "Yb I8d8bggP"  I8     8I   dP"  "Y8I   dP""""8I   dP"  "Y8I       ,8'8,     dP"  "Y8ggg  dP"  "Y8ggg ,8" "8P" "8,                                                
+ I8P    8I   i8'    ,8I  i8'       I8P' "Yb,  I8,   ,8I  i8'    ,8I  ,8'    8I  i8'    ,8I      ,8'  Yb   i8'    ,8I   i8'    ,8I   I8   8I   8I                                                
+,d8b,  ,8I  ,d8,   ,d8b,,d8,_    _,d8    `Yb,,d8b, ,d8I ,d8,   ,d8b,,dP     Y8,,d8,   ,d8b,    ,8'_   8) ,d8,   ,d8'  ,d8,   ,d8'  ,dP   8I   Yb,                                               
+8P'"Y88P"'  P"Y8888P"`Y8P""Y8888PP88P      Y8P""Y88P"888P"Y8888P"`Y88P      `Y8P"Y8888P"`Y8    P' "YY8P8PP"Y8888P"    P"Y8888P"    8P'   8I   `Y8                                               
+                                                   ,d8I'                                                                                                                                        
+                                                 ,dP'8I                                                                                                                                         
+                                                ,8"  8I                                                                                                                                         
+                                                I8   8I                                                                                                                                         
+                                                `8, ,8I                                                                                                                                         
+                                                 `Y8P"                                                                                                                                          
+                                                                         ,a8a,                                                                                                                  
+                                                                        ,8" "8,     ,dPYb,                                               I8    ,dPYb,                                           
+                                                                        d8   8b     IP'`Yb                                               I8    IP'`Yb                                           
+                                                                        88   88     I8  8I                                            88888888 I8  8I      gg                                   
+                                                                        88   88     I8  8'                                               I8    I8  8'      ""                                   
+   ,g,       ,ggggg,          ,gggg,    ,gggg,gg   ,ggg,,ggg,           Y8   8P     I8 dPgg,     ,gggg,gg     ggg    gg    ,ggg,         I8    I8 dPgg,    gg     ,g,                           
+  ,8'8,     dP"  "Y8ggg      dP"  "Yb  dP"  "Y8I  ,8" "8P" "8,          `8, ,8'     I8dP" "8I   dP"  "Y8I    d8"Yb   88bg i8" "8i        I8    I8dP" "8I   88    ,8'8,                          
+ ,8'  Yb   i8'    ,8I       i8'       i8'    ,8I  I8   8I   8I     8888  "8,8"      I8P    I8  i8'    ,8I   dP  I8   8I   I8, ,8I       ,I8,   I8P    I8   88   ,8'  Yb                         
+,8'_   8) ,d8,   ,d8'      ,d8,_    _,d8,   ,d8b,,dP   8I   Yb,    `8b,  ,d8b,     ,d8     I8,,d8,   ,d8b,,dP   I8, ,8I   `YbadP'      ,d88b, ,d8     I8,_,88,_,8'_   8)                        
+P' "YY8P8PP"Y8888P"        P""Y8888PPP"Y8888P"`Y88P'   8I   `Y8      "Y88P" "Y8    88P     `Y8P"Y8888P"`Y88"     "Y8P"   888P"Y888    88P""Y8888P     `Y88P""Y8P' "YY8P8P                       
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                ad88888ba                                                                                       
+ ,dPYb,                         I8                8I                                           d8"     "8b                                                                                      
+ IP'`Yb                         I8                8I                                           ""      a8P                                                                                      
+ I8  8I                      88888888             8I                                                ,a8P"                                                                                       
+ I8  8'                         I8                8I                                               d8"                                                                                          
+ I8 dP    ,gggg,gg    ,g,       I8          ,gggg,8I    ,gggg,gg   ,ggg,,ggg,     ,gggg,   ,ggg,   88                                                                                           
+ I8dP    dP"  "Y8I   ,8'8,      I8         dP"  "Y8I   dP"  "Y8I  ,8" "8P" "8,   dP"  "Yb i8" "8i  88                                                                                           
+ I8P    i8'    ,8I  ,8'  Yb    ,I8,       i8'    ,8I  i8'    ,8I  I8   8I   8I  i8'       I8, ,8I                                                                                               
+,d8b,_ ,d8,   ,d8b,,8'_   8)  ,d88b,     ,d8,   ,d8b,,d8,   ,d8b,,dP   8I   Yb,,d8,_    _ `YbadP'  aa                                                                                           
+8P'"Y88P"Y8888P"`Y8P' "YY8P8P88P""Y88    P"Y8888P"`Y8P"Y8888P"`Y88P'   8I   `Y8P""Y8888PP888P"Y888 88                                                                                           
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                
+                                                                                                                                                                                                                        
+                                                                                                                                             
+                                                                                                                                             
+                                
+
+
+                                          ___    A
+                                          | |   {*}
+                                          | |  __V__
+                                          |_|o_|%%%|0_
+                                             |       |
+                                             |       |
+                                             |_______|                     
+                                                                                                                 
