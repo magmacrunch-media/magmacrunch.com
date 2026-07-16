@@ -189,6 +189,21 @@
             margin: 0;
             font-weight: bold;
         }
+        /* ── SVFP-style nav cards (solid fill → transparent hover) ── */
+        body.svfp-page .nav-card-row .nav-card,
+        body.svfp-page .sub-nav .nav-card {
+            border-width: 2px;
+            border-style: solid;
+        }
+        body.svfp-page .nav-card.c-cyan   { background: var(--svfp-brand); color: var(--svfp-offwhite); border-color: var(--svfp-brand); }
+        body.svfp-page .nav-card.c-green  { background: var(--svfp-bright); color: var(--svfp-offwhite); border-color: var(--svfp-bright); }
+        body.svfp-page .nav-card.c-yellow { background: var(--svfp-cta); color: var(--svfp-offwhite); border-color: var(--svfp-cta); }
+        body.svfp-page .nav-card.c-purple { background: var(--svfp-mid); color: var(--svfp-offwhite); border-color: var(--svfp-mid); }
+
+        body.svfp-page .nav-card.c-cyan:hover   { background: transparent !important; color: var(--svfp-brand) !important; }
+        body.svfp-page .nav-card.c-green:hover  { background: transparent !important; color: var(--svfp-bright) !important; }
+        body.svfp-page .nav-card.c-yellow:hover { background: transparent !important; color: var(--svfp-cta) !important; }
+        body.svfp-page .nav-card.c-purple:hover { background: transparent !important; color: var(--svfp-mid) !important; }
     </style>
 </head>
 <body class="svfp-page">
@@ -213,12 +228,11 @@
         <a href="../../../../index.html">home</a><span class="sep">›</span>
         <a href="../../../../music/index.html">music</a><span class="sep">›</span>
         <a href="../../physical-media/index.html">physical media</a><span class="sep">›</span>
-        <a href="../index.html">floppy disk</a><span class="sep">›</span>
-        <span class="current">iou a pack of american spirits (2026)</span>
+        <a href="../index.html">floppy disk</a>
     </div>
 
     <div class="release-header">
-        <div class="release-eyebrow">// floppy disk series #2 //</div>
+        <div class="release-eyebrow">// floppy series #2 //</div>
         <h1 class="release-title">iou a pack of american spirits</h1>
         <div class="release-artist">[ <a href="../../../../archive/by-artist/svfp/index.html">sex van floor plan</a> ]</div>
         <div class="sub-nav">
@@ -241,7 +255,7 @@
                 </div>
             <div class="about-section">
             <p class="about-text" style="margin-top:12px;">
-                <!-- add description here -->
+                The second single by <a href="../../../../archive/by-artist/svfp/index.html">Sex Van Floor Plan</a>...
             </p>
             <div class="nav-card-row">
                 <a href="./iou-txt.html" class="nav-card c-cyan insert-open">iou.txt</a>
