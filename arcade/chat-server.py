@@ -21,6 +21,7 @@ import logging
 import random
 import time
 import websockets
+from websockets.datastructures import Headers
 
 logging.getLogger("websockets").setLevel(logging.WARNING)
 
@@ -28,6 +29,7 @@ logging.getLogger("websockets").setLevel(logging.WARNING)
 
 MAX_GLOBAL_MESSAGES = 100
 MAX_ROOM_MESSAGES = 50
+SESSION_TIMEOUT = 30  # seconds to remember a disconnected user's session
 
 # Game servers to check status for
 GAME_SERVERS = {
@@ -48,6 +50,7 @@ user_info = {}                  # websocket -> { name, color, rooms: set() }
 rooms = {}                      # room_code -> set(websocket)
 room_messages = {}              # room_code -> [messages] (last MAX_ROOM_MESSAGES)
 typing_debounce = {}            # websocket -> last typing send time
+recently_disconnected = {}      # session_token -> { name, color, rooms, timestamp }
 
 # Color palette for chat users
 PALETTE = [
@@ -154,16 +157,14 @@ async def broadcast_user_list():
     """Send the full online user list to all connected clients."""
     users = []
     for ws in connected_clients:
-        info = user_info.get(ws, {})
+        if ws not in user_info:
+            continue  # Skip clients that haven't set their name yet
+        info = user_info[ws]
         user_rooms = list(info.get('rooms', set()))
-        # Try to determine game name from room code
         game = None
         if user_rooms:
-            # Map room codes to game names if available
             for room_code in user_rooms:
                 if room_code in rooms:
-                    # Room exists, but we don't store game names yet
-                    # Just indicate they're in a game
                     game = 'In Game'
                     break
         users.append({
@@ -192,12 +193,6 @@ async def broadcast_global_users():
 async def handler(websocket):
     """Handle a new chat connection."""
     connected_clients.add(websocket)
-    user_color = get_next_color()
-    user_info[websocket] = {
-        'name': 'Anonymous',
-        'color': user_color,
-        'rooms': set()
-    }
 
     try:
         # Send global history
@@ -213,9 +208,6 @@ async def handler(websocket):
             'statuses': statuses
         }))
 
-        # Broadcast updated user list to everyone
-        await broadcast_user_list()
-
         # Main message loop
         async for raw in websocket:
             try:
@@ -226,34 +218,82 @@ async def handler(websocket):
             msg_type = msg.get('type')
 
             if msg_type == 'set_name':
-                # Set/update display name with uniqueness check
                 new_name = msg.get('name', '')[:20]
                 if not new_name:
                     new_name = generate_name()
-                # Check if name is taken by someone else
-                taken = any(
-                    info['name'] == new_name and ws != websocket
-                    for ws, info in user_info.items()
-                )
-                if taken:
-                    new_name = f"{new_name}{random.randint(1, 99)}"
-                user_info[websocket]['name'] = new_name
-                # Send confirmed name back to client
-                await websocket.send(json.dumps({
-                    'type': 'name_assigned',
-                    'name': new_name
-                }))
-                await broadcast_user_list()
+                session_token = msg.get('session_token')
+
+                # Check if this session was recently disconnected — restore state
+                if session_token and session_token in recently_disconnected:
+                    restored = recently_disconnected.pop(session_token)
+                    restored_name = restored['name']
+                    restored_color = restored['color']
+                    # Check if the restored name is taken by someone else
+                    taken = any(
+                        info['name'] == restored_name and ws != websocket
+                        for ws, info in user_info.items()
+                    )
+                    if taken:
+                        restored_name = f"{restored_name}{random.randint(1, 99)}"
+                    user_info[websocket] = {
+                        'name': restored_name,
+                        'color': restored_color,
+                        'rooms': set(),
+                        'session_token': session_token
+                    }
+                    await websocket.send(json.dumps({
+                        'type': 'name_assigned',
+                        'name': restored_name
+                    }))
+                    await broadcast_user_list()
+                elif websocket not in user_info:
+                    # First time user — create entry now
+                    # Check if name is taken by someone else
+                    taken = any(
+                        info['name'] == new_name and ws != websocket
+                        for ws, info in user_info.items()
+                    )
+                    if taken:
+                        new_name = f"{new_name}{random.randint(1, 99)}"
+                    user_info[websocket] = {
+                        'name': new_name,
+                        'color': get_next_color(),
+                        'rooms': set(),
+                        'session_token': session_token or None
+                    }
+                    await websocket.send(json.dumps({
+                        'type': 'name_assigned',
+                        'name': new_name
+                    }))
+                    await broadcast_user_list()
+                else:
+                    # Existing user updating name
+                    taken = any(
+                        info['name'] == new_name and ws != websocket
+                        for ws, info in user_info.items()
+                    )
+                    if taken:
+                        new_name = f"{new_name}{random.randint(1, 99)}"
+                    user_info[websocket]['name'] = new_name
+                    if session_token:
+                        user_info[websocket]['session_token'] = session_token
+                    await websocket.send(json.dumps({
+                        'type': 'name_assigned',
+                        'name': new_name
+                    }))
+                    await broadcast_user_list()
 
             elif msg_type == 'set_color':
-                # Set/update display color
+                if websocket not in user_info:
+                    continue
                 new_color = msg.get('color', '#fff')
                 if new_color.startswith('#') and len(new_color) == 7:
                     user_info[websocket]['color'] = new_color
                     await broadcast_user_list()
 
             elif msg_type == 'join_room':
-                # Join a room sub-chat
+                if websocket not in user_info:
+                    continue
                 room = msg.get('room', '').upper()
                 if not room:
                     continue
@@ -262,20 +302,18 @@ async def handler(websocket):
                 rooms[room].add(websocket)
                 user_info[websocket]['rooms'].add(room)
 
-                # Send room history
                 await websocket.send(json.dumps({
                     'type': 'room_history',
                     'room': room,
                     'messages': room_messages.get(room, [])[-MAX_ROOM_MESSAGES:]
                 }))
 
-                # Broadcast updated user list to room
                 await broadcast_room_users(room)
-                # Broadcast updated user list to everyone (room status changed)
                 await broadcast_user_list()
 
             elif msg_type == 'leave_room':
-                # Leave a room sub-chat
+                if websocket not in user_info:
+                    continue
                 room = msg.get('room', '').upper()
                 if room in rooms:
                     rooms[room].discard(websocket)
@@ -285,11 +323,11 @@ async def handler(websocket):
                     user_info[websocket]['rooms'].discard(room)
                 if room and room in rooms:
                     await broadcast_room_users(room)
-                # Broadcast updated user list to everyone
                 await broadcast_user_list()
 
             elif msg_type == 'chat':
-                # Chat message (global or room)
+                if websocket not in user_info:
+                    continue
                 room = msg.get('room')
                 text = msg.get('text', '')[:200]
                 name = user_info[websocket]['name']
@@ -305,7 +343,6 @@ async def handler(websocket):
                 }
 
                 if room:
-                    # Room message
                     if room not in room_messages:
                         room_messages[room] = []
                     room_messages[room].append(chat_msg)
@@ -313,18 +350,18 @@ async def handler(websocket):
                         room_messages[room].pop(0)
                     await broadcast_to_room(room, chat_msg, exclude=websocket)
                 else:
-                    # Global message
                     messages.append(chat_msg)
                     if len(messages) > MAX_GLOBAL_MESSAGES:
                         messages.pop(0)
                     await broadcast(chat_msg, exclude=websocket)
 
             elif msg_type == 'typing':
-                # Typing indicator
+                if websocket not in user_info:
+                    continue
                 room = msg.get('room')
                 now = time.time()
                 last = typing_debounce.get(websocket, 0)
-                if now - last < 2:  # Debounce: max once per 2 seconds
+                if now - last < 2:
                     continue
                 typing_debounce[websocket] = now
 
@@ -364,8 +401,18 @@ async def handler(websocket):
     except websockets.ConnectionClosed:
         pass
     finally:
+        # Store session for potential reconnection
+        info = user_info.get(websocket, {})
+        session_token = info.get('session_token')
+        if session_token:
+            recently_disconnected[session_token] = {
+                'name': info.get('name', ''),
+                'color': info.get('color', '#fff'),
+                'rooms': list(info.get('rooms', set())),
+                'timestamp': time.time()
+            }
         # Cleanup: leave all rooms, remove from global
-        for room in list(user_info.get(websocket, {}).get('rooms', set())):
+        for room in list(info.get('rooms', set())):
             if room in rooms:
                 rooms[room].discard(websocket)
                 if not rooms[room]:
@@ -388,21 +435,37 @@ async def status_broadcaster():
             await broadcast({'type': 'status', 'statuses': statuses})
 
 
+# ── Session Cleanup ─────────────────────────────────────────────────────────
+
+async def session_cleanup():
+    """Periodically purge expired session tokens."""
+    while True:
+        await asyncio.sleep(10)
+        now = time.time()
+        expired = [
+            token for token, info in recently_disconnected.items()
+            if now - info['timestamp'] > SESSION_TIMEOUT
+        ]
+        for token in expired:
+            del recently_disconnected[token]
+
+
 # ── Main ────────────────────────────────────────────────────────────────────
 
 async def main(port):
     print(f"[Chat] Starting chat server on port {port}")
     print(f"[Chat] Checking game servers: {', '.join(GAME_SERVERS.keys())}")
 
-    # Start status broadcaster
+    # Start background tasks
     asyncio.create_task(status_broadcaster())
+    asyncio.create_task(session_cleanup())
 
     # Start WebSocket server
     async def _health_check(connection, request):
         from websockets.http11 import Response
         if request.headers.get("Upgrade", "").lower() == "websocket":
             return None
-        return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
+        return Response(426, "Upgrade Required", Headers([("Upgrade", "websocket")]), b"")
 
     async with websockets.serve(handler, '0.0.0.0', port, process_request=_health_check):
         print(f"[Chat] Chat server ready on ws://localhost:{port}")
