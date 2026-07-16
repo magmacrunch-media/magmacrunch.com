@@ -7,7 +7,7 @@
  *   <script src="shared/chat-widget.js"></script>
  *   <script>ChatWidget.connect();</script>
  *
- * Public API (matches Chat module):
+ * Public API:
  *   ChatWidget.connect()
  *   ChatWidget.disconnect()
  *   ChatWidget.joinRoom(code)
@@ -33,9 +33,22 @@ var ChatWidget = (function() {
         return 'ws://magmacrunch.duckdns.org:8768';
     })();
 
+    var CHAT_WORKER_URL = (function() {
+        var scripts = document.getElementsByTagName('script');
+        for (var i = scripts.length - 1; i >= 0; i--) {
+            if (scripts[i].src && scripts[i].src.indexOf('chat-widget.js') !== -1) {
+                return scripts[i].src.replace(/chat-widget\.js$/, 'chat-worker.js');
+            }
+        }
+        var base = window.location.href.replace(/[^/]*$/, '');
+        return base + 'chat-worker.js';
+    })();
+
     // ── State ───────────────────────────────────────────────────────────
 
-    var socket = null;
+    var sock = null;
+    var worker = null;
+    var usingWorker = false;
     var currentRoom = null;
     var myName = null;
     var myColor = null;
@@ -45,6 +58,19 @@ var ChatWidget = (function() {
     var isExpanded = false;
     var activeTab = 'global';
     var widgetEl = null;
+
+    function getSessionToken() {
+        try {
+            var token = localStorage.getItem('arcade_chat_session');
+            if (!token) {
+                token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+                localStorage.setItem('arcade_chat_session', token);
+            }
+            return token;
+        } catch(e) {
+            return null;
+        }
+    }
 
     // ── DOM Creation ────────────────────────────────────────────────────
 
@@ -101,7 +127,6 @@ var ChatWidget = (function() {
         document.body.appendChild(w);
         widgetEl = w;
 
-        // Load saved state
         var savedState = localStorage.getItem('acw_expanded');
         if (savedState === 'true') {
             expand();
@@ -109,13 +134,11 @@ var ChatWidget = (function() {
             minimize();
         }
 
-        // Load saved name
         var savedName = localStorage.getItem('arcade_username');
         if (savedName) {
             myName = savedName;
         }
 
-        // Load saved color
         var savedColor = localStorage.getItem('arcade_color');
         if (savedColor) {
             myColor = savedColor;
@@ -127,7 +150,6 @@ var ChatWidget = (function() {
     // ── Event Wiring ────────────────────────────────────────────────────
 
     function wireEvents() {
-        // Bar click → toggle
         var bar = document.getElementById('acwBar');
         if (bar) {
             bar.addEventListener('click', function(e) {
@@ -136,7 +158,6 @@ var ChatWidget = (function() {
             });
         }
 
-        // Minimize button
         var minBtn = document.getElementById('acwMinimize');
         if (minBtn) {
             minBtn.addEventListener('click', function(e) {
@@ -145,13 +166,11 @@ var ChatWidget = (function() {
             });
         }
 
-        // Send button
         var sendBtn = document.getElementById('chatSend');
         if (sendBtn) {
             sendBtn.addEventListener('click', send);
         }
 
-        // Input enter key
         var input = document.getElementById('chatInput');
         if (input) {
             input.addEventListener('keypress', function(e) {
@@ -160,13 +179,11 @@ var ChatWidget = (function() {
             input.addEventListener('input', handleTyping);
         }
 
-        // Edit name
         var editName = document.getElementById('chatEditName');
         if (editName) {
             editName.addEventListener('click', startEditName);
         }
 
-        // Color picker
         var pickColor = document.getElementById('chatPickColor');
         if (pickColor) {
             pickColor.addEventListener('click', function(e) {
@@ -175,7 +192,6 @@ var ChatWidget = (function() {
             });
         }
 
-        // Color strip
         var colorStrip = document.getElementById('colorStrip');
         if (colorStrip) {
             colorStrip.addEventListener('click', function(e) {
@@ -187,20 +203,16 @@ var ChatWidget = (function() {
             });
         }
 
-        // Reset color
         var resetBtn = document.getElementById('colorResetBtn');
         if (resetBtn) {
             resetBtn.addEventListener('click', function() {
                 myColor = null;
                 localStorage.removeItem('arcade_color');
                 updateColorDisplay();
-                if (socket && socket.readyState === WebSocket.OPEN) {
-                    socket.send(JSON.stringify({ type: 'set_color', color: null }));
-                }
+                sendToServer({ type: 'set_color', color: null });
             });
         }
 
-        // Tabs
         var tabs = widgetEl.querySelectorAll('.acw-tab');
         tabs.forEach(function(tab) {
             tab.addEventListener('click', function() {
@@ -208,7 +220,6 @@ var ChatWidget = (function() {
             });
         });
 
-        // Close color picker on outside click
         document.addEventListener('click', function(e) {
             var popup = document.getElementById('colorPickerPopup');
             if (popup && popup.style.display !== 'none') {
@@ -222,11 +233,7 @@ var ChatWidget = (function() {
     // ── Toggle / Expand / Minimize ──────────────────────────────────────
 
     function toggle() {
-        if (isExpanded) {
-            minimize();
-        } else {
-            expand();
-        }
+        if (isExpanded) { minimize(); } else { expand(); }
     }
 
     function expand() {
@@ -237,7 +244,6 @@ var ChatWidget = (function() {
         localStorage.setItem('acw_expanded', 'true');
         unreadCount = 0;
         updateBadge();
-        // Focus input
         var input = document.getElementById('chatInput');
         if (input) setTimeout(function() { input.focus(); }, 100);
     }
@@ -272,47 +278,97 @@ var ChatWidget = (function() {
     // ── Connection ──────────────────────────────────────────────────────
 
     function connect() {
-        if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
-        if (socket) { try { socket.close(); } catch(e) {} }
         createWidget();
 
-        socket = new WebSocket(CHAT_SERVER);
-
-        socket.onopen = function() {
-            widgetEl.classList.remove('disconnected');
-            // Send saved name
-            if (myName) {
-                socket.send(JSON.stringify({ type: 'set_name', name: myName }));
-            }
-            // Send saved color
-            if (myColor) {
-                socket.send(JSON.stringify({ type: 'set_color', color: myColor }));
-            }
-        };
-
-        socket.onmessage = function(e) {
+        if (typeof SharedWorker !== 'undefined' && !worker) {
             try {
-                var msg = JSON.parse(e.data);
-                handleMessage(msg);
-            } catch(err) {}
+                worker = new SharedWorker(CHAT_WORKER_URL);
+                usingWorker = true;
+
+                worker.port.onmessage = function(e) {
+                    handleWorkerMessage(e.data);
+                };
+                worker.port.start();
+
+                worker.port.postMessage(JSON.stringify({ _worker: 'connect', url: CHAT_SERVER }));
+
+                window.addEventListener('pagehide', function() {
+                    try { worker.port.postMessage(JSON.stringify({ _worker: 'disconnect' })); } catch(e) {}
+                });
+
+                return;
+            } catch(e) {
+                worker = null;
+                usingWorker = false;
+            }
+        }
+
+        connectDirect();
+    }
+
+    function connectDirect() {
+        if (sock) return;
+        sock = new WebSocket(CHAT_SERVER);
+
+        sock.onopen = function() {
+            widgetEl.classList.remove('disconnected');
+            sendSavedCredentials();
         };
 
-        socket.onclose = function() {
+        sock.onmessage = function(e) {
+            try { handleMessage(JSON.parse(e.data)); } catch(err) {}
+        };
+
+        sock.onclose = function() {
             widgetEl.classList.add('disconnected');
-            setTimeout(connect, 5000);
+            sock = null;
+            setTimeout(connectDirect, 5000);
         };
 
-        socket.onerror = function() {
-            socket.close();
-        };
+        sock.onerror = function() { sock.close(); };
+    }
+
+    function sendSavedCredentials() {
+        var token = getSessionToken();
+        var nameMsg = { type: 'set_name', name: myName || 'Player' };
+        if (token) nameMsg.session_token = token;
+        sendToServer(nameMsg);
+        if (myColor) sendToServer({ type: 'set_color', color: myColor });
+    }
+
+    function handleWorkerMessage(data) {
+        var msg;
+        try { msg = JSON.parse(data); } catch(e) { return; }
+        if (msg._worker === 'connect') {
+            widgetEl.classList.remove('disconnected');
+            sendSavedCredentials();
+            return;
+        }
+        if (msg._worker === 'disconnect') {
+            widgetEl.classList.add('disconnected');
+            return;
+        }
+        handleMessage(msg);
+    }
+
+    function sendToServer(obj) {
+        if (usingWorker && worker) {
+            worker.port.postMessage(JSON.stringify({ _worker: 'send', data: obj }));
+        } else if (sock && sock.readyState === WebSocket.OPEN) {
+            sock.send(JSON.stringify(obj));
+        }
     }
 
     function disconnect() {
         if (currentRoom) leaveRoom(currentRoom);
-        if (socket) {
-            socket.close();
-            socket = null;
+        if (usingWorker && worker) {
+            try { worker.port.postMessage(JSON.stringify({ _worker: 'disconnect' })); } catch(e) {}
+            try { worker.port.close(); } catch(e) {}
+            worker = null;
+            usingWorker = false;
         }
+        if (sock) { try { sock.close(); } catch(e) {} }
+        sock = null;
         myName = null;
         myColor = null;
     }
@@ -351,7 +407,6 @@ var ChatWidget = (function() {
             case 'user_list':
                 updateOnlineList(msg.users);
                 updateOnlineCount(msg.count);
-                // Find my color from the user list
                 if (myName) {
                     for (var i = 0; i < msg.users.length; i++) {
                         if (msg.users[i].name === myName) {
@@ -380,24 +435,22 @@ var ChatWidget = (function() {
 
     function joinRoom(roomCode) {
         currentRoom = roomCode;
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: 'join_room', room: roomCode }));
-            if (myName) {
-                socket.send(JSON.stringify({ type: 'set_name', name: myName }));
-            }
+        sendToServer({ type: 'join_room', room: roomCode });
+        if (myName) {
+            var token = getSessionToken();
+            var nameMsg = { type: 'set_name', name: myName };
+            if (token) nameMsg.session_token = token;
+            sendToServer(nameMsg);
         }
         var headerTitle = document.getElementById('chatHeaderTitle');
         if (headerTitle) headerTitle.textContent = '// ROOM ' + roomCode + ' //';
-        // Show room tab if it exists
         var roomTab = widgetEl.querySelector('[data-tab="room"]');
         if (roomTab) roomTab.style.display = '';
         switchTab('global');
     }
 
     function leaveRoom(roomCode) {
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: 'leave_room', room: roomCode }));
-        }
+        sendToServer({ type: 'leave_room', room: roomCode });
         if (currentRoom === roomCode) {
             currentRoom = null;
             var headerTitle = document.getElementById('chatHeaderTitle');
@@ -409,18 +462,22 @@ var ChatWidget = (function() {
 
     function send() {
         var input = document.getElementById('chatInput');
-        if (!input || !socket || socket.readyState !== WebSocket.OPEN) return;
+        if (!input) return;
+        var connected = (usingWorker && worker) || (sock && sock.readyState === WebSocket.OPEN);
+        if (!connected) return;
         var text = input.value.trim();
         if (!text) return;
 
         var name = myName || 'Player';
-        socket.send(JSON.stringify({ type: 'set_name', name: name }));
+        var token = getSessionToken();
+        var nameMsg = { type: 'set_name', name: name };
+        if (token) nameMsg.session_token = token;
+        sendToServer(nameMsg);
 
         var msg = { type: 'chat', text: text };
         if (currentRoom) msg.room = currentRoom;
-        socket.send(JSON.stringify(msg));
+        sendToServer(msg);
 
-        // Show own message locally
         addMessage(currentRoom ? 'room' : 'global', {
             from: name,
             text: text,
@@ -433,10 +490,15 @@ var ChatWidget = (function() {
     // ── Name Management ─────────────────────────────────────────────────
 
     function setName(name) {
-        if (!name || !socket || socket.readyState !== WebSocket.OPEN) return;
+        if (!name) return;
+        var connected = (usingWorker && worker) || (sock && sock.readyState === WebSocket.OPEN);
+        if (!connected) return;
         myName = name;
         localStorage.setItem('arcade_username', name);
-        socket.send(JSON.stringify({ type: 'set_name', name: name }));
+        var token = getSessionToken();
+        var nameMsg = { type: 'set_name', name: name };
+        if (token) nameMsg.session_token = token;
+        sendToServer(nameMsg);
         updateNameDisplay();
     }
 
@@ -487,9 +549,7 @@ var ChatWidget = (function() {
     function setColor(color) {
         myColor = color;
         localStorage.setItem('arcade_color', color);
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: 'set_color', color: color }));
-        }
+        sendToServer({ type: 'set_color', color: color });
         updateColorDisplay();
         var popup = document.getElementById('colorPickerPopup');
         if (popup) popup.style.display = 'none';
@@ -585,11 +645,9 @@ var ChatWidget = (function() {
 
     function handleTyping() {
         if (typingTimeout) return;
-        if (socket && socket.readyState === WebSocket.OPEN) {
-            var msg = { type: 'typing' };
-            if (currentRoom) msg.room = currentRoom;
-            socket.send(JSON.stringify(msg));
-        }
+        var msg = { type: 'typing' };
+        if (currentRoom) msg.room = currentRoom;
+        sendToServer(msg);
         typingTimeout = setTimeout(function() {
             typingTimeout = null;
         }, 2000);

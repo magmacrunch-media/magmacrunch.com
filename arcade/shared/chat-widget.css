@@ -324,7 +324,7 @@
     overflow-y: auto;
     padding: 8px 12px;
     max-height: 280px;
-    display: none;
+    min-height: 120px;
 }
 
 .acw-online-user {
