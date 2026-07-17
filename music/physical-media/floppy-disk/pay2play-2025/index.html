@@ -6,20 +6,40 @@
     <title>pay2play (2025) — floppy disk — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../../../../assets/logo.jpg">
     <link rel="stylesheet" href="../../../../style.css">
-    <link rel="stylesheet" href="../../../../archive/by-artist/svfp/svfp-shared.css">
     <style>
         :root {
-            --svfp-brand: #a020c8;
-            --svfp-accent: #d946ef;
-            --svfp-cta: #d946ef;
-            --svfp-heading: #c8b8e8;
-            --svfp-body: #f5d0ff;
-            --svfp-mid: #6020b0;
-            --svfp-bright: #9858d8;
-            --svfp-bg: #0a0a14;
-            --svfp-raised: #2e1a50;
+            /* PAY2PLAY */
+            --p2p-uv:           #2A0A4A;
+            --p2p-deep-plum:    #1A0530;
+            --p2p-violet:       #4A1A7A;
+            --p2p-mid-purple:   #6A3AAA;
+            --p2p-light-purple: #9A6ACC;
+            --p2p-lavender:     #C0A0E8;
+            --p2p-magenta-dark: #6A0A4A;
+            --p2p-magenta:      #AA1A6A;
+            --p2p-hot:          #CC2A88;
+            --p2p-pink-glow:    #E870C0;
+            --p2p-maroon:       #3A0A18;
+            --p2p-plum-red:     #5A1A28;
+            --p2p-dusty-rose:   #8A4A5A;
+            --p2p-coin-dark:    #2A2038;
+            --p2p-coin-mid:     #4A3A5A;
+            --p2p-coin-shine:   #8A7A9A;
+            --p2p-white-glow:   #EEE0FF;
+            --p2p-ghost-white:  #F5F0FF;
+            --p2p-uv-white:     #FFFFFF;
+            --p2p-black:        #080510;
+            --p2p-near-black:   #100820;
+
+            /* nav overrides */
+            --nav-accent: var(--p2p-hot);
+            --nav-glow: rgba(204,42,136,0.4);
+            --nav-brand: var(--p2p-ghost-white);
+            --nav-brand-glow: rgba(245,240,255,0.7);
         }
-        
+
+        body { background: var(--p2p-black); }
+
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
 
         /* breadcrumb */
@@ -29,80 +49,80 @@
             margin-bottom:32px; align-self:flex-start;
         }
         .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
-        .breadcrumb a:hover { color:var(--svfp-accent); }
-        .breadcrumb .sep { margin:0 8px; color:var(--svfp-accent); opacity:.7; }
-        .breadcrumb .current { color:var(--svfp-accent); }
+        .breadcrumb a:hover { color:var(--p2p-hot); }
+        .breadcrumb .sep { margin:0 8px; color:var(--p2p-hot); opacity:.7; }
+        .breadcrumb .current { color:var(--p2p-hot); }
 
         /* header */
         .release-header { text-align:center; margin-bottom:40px; animation:fadeUp .5s ease both; }
-        .release-eyebrow { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--svfp-accent); letter-spacing:.25em; margin-bottom:12px; opacity:.85; }
+        .release-eyebrow { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--p2p-magenta); letter-spacing:.25em; margin-bottom:12px; opacity:.85; }
         .release-title {
             font-family:'Press Start 2P',monospace; font-size:clamp(16px,3.5vw,28px);
             color:var(--white); line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
         }
-        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--svfp-cta); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
-        .release-artist a { color:var(--svfp-cta); text-decoration:none; transition:color .15s; }
-        .release-artist a:hover { color:var(--svfp-accent); }
+        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--p2p-hot); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+        .release-artist a { color:var(--p2p-hot); text-decoration:none; transition:color .15s; }
+        .release-artist a:hover { color:var(--p2p-pink-glow); }
         .sub-nav { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
 
         /* divider */
         .section-divider {
             width:100%; max-width:900px; height:1px;
-            background:linear-gradient(90deg,transparent,var(--svfp-cta),var(--svfp-accent),var(--svfp-cta),transparent);
+            background:linear-gradient(90deg,transparent,var(--p2p-magenta),var(--p2p-hot),var(--p2p-magenta),transparent);
             margin:0 0 40px; opacity:.35; animation:fadeUp .5s .05s ease both;
         }
 
         /* content */
         .content-wrap { width:100%; max-width:900px; }
-        .section-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--svfp-cta); letter-spacing:.15em; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--svfp-cta); opacity:.9; }
+        .section-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--p2p-magenta); letter-spacing:.15em; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--p2p-magenta); opacity:.9; }
 
         /* release block */
         .release-block { display:flex; gap:28px; align-items:flex-start; margin-bottom:44px; animation:fadeUp .5s .1s ease both; }
         @media (max-width:560px) { .release-block { flex-direction:column; align-items:center; } }
         .cover-wrap { flex-shrink:0; width:200px; display:none; }
-        .cover-img { width:200px; height:200px; object-fit:cover; display:block; border:2px solid var(--svfp-cta); box-shadow:0 0 0 2px #080808,0 0 0 4px var(--svfp-brand),0 0 28px rgba(224,48,112,.2); }
-        .cover-placeholder { width:200px; height:200px; border:2px solid var(--svfp-cta); background:var(--svfp-bg); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px #080808,0 0 0 4px var(--svfp-brand); }
+        .cover-img { width:200px; height:200px; object-fit:cover; display:block; border:2px solid var(--p2p-magenta); box-shadow:0 0 0 2px #080808,0 0 0 4px var(--p2p-violet),0 0 28px rgba(170,26,106,.2); }
+        .cover-placeholder { width:200px; height:200px; border:2px solid var(--p2p-magenta); background:var(--p2p-black); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px #080808,0 0 0 4px var(--p2p-violet); }
         .cover-placeholder canvas { display:block; image-rendering:pixelated; width:80px; height:80px; }
         .release-meta { flex:1; }
         .meta-row { font-family:'Courier Prime',monospace; font-size:15px; color:var(--white); opacity:.8; margin-bottom:8px; line-height:1.5; display:flex; gap:8px; }
         .meta-row strong { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--dim); letter-spacing:.1em; flex-shrink:0; padding-top:2px; }
-        .meta-badge { display:inline-block; font-family:'Press Start 2P',monospace; font-size:10px; color:#000; background:var(--svfp-cta); padding:3px 8px; letter-spacing:.08em; margin-top:6px; }
-        .meta-badge.purple { background:var(--svfp-brand); color:var(--white); }
+        .meta-badge { display:inline-block; font-family:'Press Start 2P',monospace; font-size:10px; color:var(--p2p-ghost-white); background:var(--p2p-hot); padding:3px 8px; letter-spacing:.08em; margin-top:6px; }
+        .meta-badge.purple { background:var(--p2p-violet); color:var(--p2p-ghost-white); }
         .meta-badge.yellow { background:var(--yellow); }
         .stream-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
         .stream-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--green); border:1px solid var(--green); padding:5px 12px; text-decoration:none; letter-spacing:.08em; transition:background .15s,color .15s; display:inline-block; }
         .stream-link:hover { background:var(--green); color:var(--black); }
         .stream-link.yellow { color:var(--yellow); border-color:var(--yellow); }
         .stream-link.yellow:hover { background:var(--yellow); color:var(--black); }
-        .stream-link.purple { color:var(--svfp-brand); border-color:var(--svfp-brand); }
-        .stream-link.purple:hover { background:var(--svfp-brand); color:var(--white); }
+        .stream-link.purple { color:var(--p2p-light-purple); border-color:var(--p2p-light-purple); }
+        .stream-link.purple:hover { background:var(--p2p-light-purple); color:var(--p2p-ghost-white); }
 
         /* about */
         .about-section { margin-bottom:44px; animation:fadeUp .5s .15s ease both; }
         .about-text { font-family:'Courier Prime',monospace; font-size:14px; color:var(--white); line-height:1.8; opacity:.85; }
-        .about-text a { color:var(--svfp-brand); text-decoration:underline; text-decoration-color:rgba(160,32,200,.4); transition:color .15s; }
-        .about-text a:hover { color:var(--svfp-accent); }
+        .about-text a { color:var(--p2p-light-purple); text-decoration:underline; text-decoration-color:rgba(154,106,204,.4); transition:color .15s; }
+        .about-text a:hover { color:var(--p2p-pink-glow); }
 
         /* tracklist */
         .tracklist-section { margin-bottom:44px; animation:fadeUp .5s .2s ease both; }
-        .track { display:flex; align-items:baseline; gap:10px; padding:8px 0; border-bottom:1px solid #1a1a2a; transition:background .12s; }
-        .track:first-child { border-top:1px solid #1a1a2a; }
-        .track:hover { background:rgba(224,48,112,.03); }
+        .track { display:flex; align-items:baseline; gap:10px; padding:8px 0; border-bottom:1px solid var(--p2p-near-black); transition:background .12s; }
+        .track:first-child { border-top:1px solid var(--p2p-near-black); }
+        .track:hover { background:rgba(170,26,106,.03); }
         .track-num { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dim); letter-spacing:.06em; min-width:22px; flex-shrink:0; }
         .track-title { font-family:'Courier Prime',monospace; font-size:14px; color:var(--white); flex:1; }
         .track-len { font-family:'Courier Prime',monospace; font-size:12px; color:var(--dim); flex-shrink:0; }
 
         /* specs */
         .specs-section { margin-bottom:44px; animation:fadeUp .5s .25s ease both; }
-        .spec-row { display:flex; gap:12px; padding:7px 0; border-bottom:1px solid #1a1a2a; font-family:'Courier Prime',monospace; font-size:13px; }
+        .spec-row { display:flex; gap:12px; padding:7px 0; border-bottom:1px solid var(--p2p-near-black); font-family:'Courier Prime',monospace; font-size:13px; }
         .spec-row:last-child { border-bottom:none; }
         .spec-key { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dim); letter-spacing:.08em; min-width:120px; flex-shrink:0; padding-top:2px; }
         .spec-val { color:var(--white); opacity:.8; }
 
         /* insert preview card */
         .insert-card { margin-bottom:44px; animation:fadeUp .5s .22s ease both; }
-        .insert-preview { border:1px solid #1e1e2e; background:#0a0a0a; padding:20px; margin-top:16px; overflow:hidden; position:relative; }
-        .insert-preview::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top,#0a0a0a 0%,transparent 100%); }
+        .insert-preview { border:1px solid var(--p2p-near-black); background:#0a0a0c; padding:20px; margin-top:16px; overflow:hidden; position:relative; }
+        .insert-preview::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top,#0a0a0c 0%,transparent 100%); }
         .insert-preview pre { font-family:'Courier Prime',monospace; font-size:clamp(3px,.5vw,5px); line-height:1.2; white-space:pre; color:#c8c8c8; display:block; max-height:180px; overflow:hidden; }
         .insert-open { display:inline-block; margin-top:14px; }
 
@@ -131,13 +151,13 @@
         }
         .floppy-link:hover { 
             transform: translateY(-4px); 
-            box-shadow: 0 8px 24px rgba(160, 32, 200, 0.25); 
+            box-shadow: 0 8px 24px rgba(170, 26, 106, 0.25); 
         }
         .floppy-img { 
             width: 100%; 
             height: auto; 
             display: block; 
-            border: 2px solid #2a1a3a; 
+            border: 2px solid var(--p2p-coin-dark); 
             background: #111;
         }
 
@@ -150,9 +170,9 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background-color: #1a1028;
+            background-color: var(--p2p-deep-plum);
             margin-bottom: 24px;
-            border: 1px solid #2a1a3a;
+            border: 1px solid var(--p2p-coin-dark);
             animation: fadeUp .5s .35s ease both;
         }
         .ascii-bg-img {
@@ -172,13 +192,13 @@
         }
         .ascii-logo-link {
             text-decoration: none;
-            color: var(--svfp-cta);
+            color: var(--p2p-magenta);
             transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
             display: inline-block;
         }
         .ascii-logo-link:hover {
-            color: var(--svfp-accent);
-            text-shadow: 0 0 12px rgba(217, 70, 239, 0.6);
+            color: var(--p2p-pink-glow);
+            text-shadow: 0 0 12px rgba(232, 112, 192, 0.6);
             transform: scale(1.02);
         }
         .ascii-logo {
@@ -189,24 +209,28 @@
             margin: 0;
             font-weight: bold;
         }
-        /* ── SVFP-style nav cards (solid fill → transparent hover) ── */
-        body.svfp-page .nav-card-row .nav-card,
-        body.svfp-page .sub-nav .nav-card {
+        /* ── Nav cards (solid fill → transparent hover) ── */
+        .nav-card-row .nav-card,
+        .sub-nav .nav-card {
             border-width: 2px;
             border-style: solid;
         }
-        body.svfp-page .nav-card.c-cyan   { background: var(--svfp-brand); color: var(--svfp-offwhite); border-color: var(--svfp-brand); }
-        body.svfp-page .nav-card.c-green  { background: var(--svfp-bright); color: var(--svfp-offwhite); border-color: var(--svfp-bright); }
-        body.svfp-page .nav-card.c-yellow { background: var(--svfp-cta); color: var(--svfp-offwhite); border-color: var(--svfp-cta); }
-        body.svfp-page .nav-card.c-purple { background: var(--svfp-mid); color: var(--svfp-offwhite); border-color: var(--svfp-mid); }
+        .nav-card.c-cyan   { background: var(--p2p-magenta); color: var(--p2p-ghost-white); border-color: var(--p2p-magenta); }
+        .nav-card.c-green  { background: var(--p2p-light-purple); color: var(--p2p-ghost-white); border-color: var(--p2p-light-purple); }
+        .nav-card.c-yellow { background: var(--p2p-violet); color: var(--p2p-ghost-white); border-color: var(--p2p-violet); }
+        .nav-card.c-purple { background: var(--p2p-mid-purple); color: var(--p2p-ghost-white); border-color: var(--p2p-mid-purple); }
 
-        body.svfp-page .nav-card.c-cyan:hover   { background: transparent !important; color: var(--svfp-brand) !important; }
-        body.svfp-page .nav-card.c-green:hover  { background: transparent !important; color: var(--svfp-bright) !important; }
-        body.svfp-page .nav-card.c-yellow:hover { background: transparent !important; color: var(--svfp-cta) !important; }
-        body.svfp-page .nav-card.c-purple:hover { background: transparent !important; color: var(--svfp-mid) !important; }
+        .nav-card.c-cyan:hover   { background: transparent !important; color: var(--p2p-magenta) !important; }
+        .nav-card.c-green:hover  { background: transparent !important; color: var(--p2p-light-purple) !important; }
+        .nav-card.c-yellow:hover { background: transparent !important; color: var(--p2p-violet) !important; }
+        .nav-card.c-purple:hover { background: transparent !important; color: var(--p2p-mid-purple) !important; }
+
+        /* footer */
+        footer { color: var(--p2p-coin-mid); }
+        footer span { color: var(--p2p-hot); }
     </style>
 </head>
-<body class="svfp-page">
+<body>
 
 <nav>
     <a href="../../../../index.html" class="nav-brand">magmacrunch.com</a>
@@ -324,11 +348,11 @@
             <div class="spec-row"><span class="spec-key">released on floppy</span><span class="spec-val">July 19, 2025 · The Mansion</span></div>
             <div class="spec-row"><span class="spec-key">funded by</span><span class="spec-val">magmacrunch media</span></div>
         </div>   
-
+<!--
         <div class="ascii-footer-container">
             <img class="ascii-bg-img" src="../../../../assets/photos/svfp/telephone-bg.jpg" alt="Background Texture">
             
-            <!--
+            
             <div class="ascii-overlay">
                 <a href="https://www.instagram.com/sexvanfloorplan/" target="_blank" class="ascii-logo-link" aria-label="Sex Van Floor Plan Instagram">
                     <pre class="ascii-logo">
@@ -343,11 +367,11 @@
                     </pre>
                 </a>
             </div>
-            -->
+            
         </div>
-
+-->
         <div class="back-nav" style="margin-top:32px;">
-            <a href="../index.html" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--svfp-cta);text-decoration:none;opacity:0.7;transition:opacity .15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">← back</a>
+            <a href="../index.html" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--p2p-hot);text-decoration:none;opacity:0.7;transition:opacity .15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">← back</a>
         </div>
 
     </div>
