@@ -152,6 +152,7 @@ const COLOR_MAP = {
 
     // ── CACHE ──
     let _cache = null;
+    let apiCallsMade = false;
     async function loadCache() {
         if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
         try {
@@ -161,6 +162,7 @@ const COLOR_MAP = {
     }
     async function cached(path, cacheData) {
         if (cacheData !== undefined) return cacheData;
+        apiCallsMade = true;
         return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
 
@@ -356,7 +358,7 @@ const COLOR_MAP = {
                     completed++;
                 }
                 statusEl.textContent = `loading details… ${completed} of ${totalCount}${failed ? ` (${failed} failed)` : ''}`;
-                if (i < allEvents.length - 1) await delay(1000);
+                if (apiCallsMade && i < allEvents.length - 1) await delay(1000);
             }
 
             statusEl.textContent = `all ${totalCount} events loaded!${failed ? ` (${failed} failed — try refreshing)` : ''}`;

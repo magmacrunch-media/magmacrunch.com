@@ -4,12 +4,15 @@
  * Snapshots TMDB person data for contributors with film credits
  * into local JSON files. Run manually or via GitHub Action.
  *
+ * Existing cache files are archived (renamed with timestamp) before
+ * overwriting, so previous versions are never lost.
+ *
  * Usage:  node scripts/backup-tmdb.mjs [--dry-run] [--skip-existing]
  *
  * Requires TMDB_API_KEY env var (get one at https://www.themoviedb.org/settings/api)
  */
 
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, rename } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -76,6 +79,22 @@ const TMDB_PERSONS = [
     { id: 6309134, name: 'Ellis Hester',     mbContributor: 'elias-grey' },
 ];
 
+// ─── archive existing cache before overwriting ─────────────────────
+
+async function archiveCache(type, id) {
+    const dir = resolve(CACHE_DIR, type);
+    const file = resolve(dir, `${id}.json`);
+    if (!existsSync(file)) return;
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const archived = resolve(dir, `${id}.${stamp}.json`);
+    if (DRY_RUN) {
+        log(`  [dry-run] would archive ${file} → ${archived}`);
+        return;
+    }
+    await rename(file, archived);
+    log(`  archived previous → ${type}/${id}.${stamp}.json`);
+}
+
 // ─── write cache file ──────────────────────────────────────────────
 
 async function writeCache(type, id, data) {
@@ -138,6 +157,7 @@ async function backupPerson(entity) {
     };
 
     indent--;
+    await archiveCache('tmdb/person', entity.id);
     await writeCache('tmdb/person', entity.id, cache);
 }
 

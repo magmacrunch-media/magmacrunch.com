@@ -169,6 +169,7 @@ subNavEl.innerHTML = [
 
     // ── CACHE ──
     let _cache = null;
+    let apiCallsMade = false;
     async function loadCache() {
         if (window.__MB_CACHE) { _cache = window.__MB_CACHE; return; }
         try {
@@ -178,6 +179,7 @@ subNavEl.innerHTML = [
     }
     async function cached(path, cacheData) {
         if (cacheData !== undefined) return cacheData;
+        apiCallsMade = true;
         return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
 
@@ -356,7 +358,7 @@ subNavEl.innerHTML = [
                     completed++;
                 }
                 statusEl.textContent = `loading details… ${completed} of ${total}${failed ? ` (${failed} failed)` : ''}`;
-                if (i < all.length - 1) await delay(1000);
+                if (apiCallsMade && i < all.length - 1) await delay(1000);
             }
 
             statusEl.textContent = `all ${total} recordings loaded!${failed ? ` (${failed} failed — try refreshing)` : ''}`;

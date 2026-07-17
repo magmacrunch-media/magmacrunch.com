@@ -10,46 +10,36 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-        /* ── NEON NOIR PALETTE ── */
+        /* ── NAV OVERRIDES (about page uses mc palette) ── */
         :root {
-            --nn-black: #0A0A0F;
-            --nn-cream: #F5F0E0;
-            --nn-white: #F0F0F0;
-            --nn-magenta: #FF2D9B;
-            --nn-cyan: #00D4FF;
-            --nn-purple: #1A1028;
-            --nn-gray: #888890;
-            --nn-dim: #666670;
-            --nn-dark-border: #222230;
-
-            --nav-accent: #FF2D9B;
-            --nav-glow: rgba(255,45,155,0.3);
-            --nav-brand: #00D4FF;
-            --nav-brand-glow: rgba(0,212,255,0.6);
+            --nav-accent: var(--mc-crater);
+            --nav-glow: rgba(255,61,110,0.3);
+            --nav-brand: var(--mc-cereal-cyan);
+            --nav-brand-glow: rgba(0,245,255,0.6);
         }
 
         body {
-            background-color: #0A0A0F;
+            background-color: var(--mc-sky-deep);
             background-image: repeating-linear-gradient(
                 0deg, transparent, transparent 2px,
                 rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
             );
-            color: #F5F0E0;
+            color: var(--mc-text-primary);
         }
 
         /* ── BREADCRUMB ── */
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #888890;
+            color: var(--mc-smoke);
             letter-spacing: 0.1em;
             margin-bottom: 20px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #888890; text-decoration: none; }
-        .breadcrumb a:hover { color: #FF2D9B; }
-        .breadcrumb .sep { margin: 0 8px; color: #444450; }
-        .breadcrumb .current { color: #F5F0E0; font-weight: 700; }
+        .breadcrumb a { color: var(--mc-smoke); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--mc-crater); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--mc-ash); }
+        .breadcrumb .current { color: var(--mc-text-primary); font-weight: 700; }
 
         main {
             flex: 1;
@@ -70,24 +60,24 @@
             gap: 16px;
             flex-wrap: wrap;
             padding: 10px 0;
-            border-top: 2px solid #FF2D9B;
-            border-bottom: 1px solid #222230;
+            border-top: 2px solid var(--mc-crater);
+            border-bottom: 1px solid var(--mc-border);
             margin-bottom: 24px;
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: #888890;
-            box-shadow: 0 2px 12px rgba(255,45,155,0.15);
+            color: var(--mc-smoke);
+            box-shadow: 0 2px 12px rgba(255,61,110,0.15);
         }
-        .dateline-sep { color: #FF2D9B; }
+        .dateline-sep { color: var(--mc-crater); }
 
         /* ── PAGE TITLE ── */
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 18px;
             font-weight: 400;
-            color: #888890;
+            color: var(--mc-smoke);
             letter-spacing: 0.08em;
             margin-bottom: 8px;
             text-transform: lowercase;
@@ -106,7 +96,7 @@
             font-family: 'Courier Prime', monospace;
             font-size: clamp(3px, 0.7vw, 7px);
             line-height: 1.2;
-            color: #F5F0E0;
+            color: var(--mc-text-primary);
             text-shadow: 0 0 10px rgba(255,45,155,0.3);
             white-space: pre;
             display: inline-block;
@@ -134,18 +124,18 @@
 
         /* ── ASCII BLOCK COLORS ── */
         .ascii-block.ascii-masthead pre {
-            color: #FF2D9B;
-            text-shadow: 0 0 10px rgba(255,45,155,0.4);
+            color: var(--mc-crater);
+            text-shadow: 0 0 10px rgba(255,61,110,0.4);
         }
         .ascii-block.ascii-since pre {
-            color: #666670;
+            color: var(--mc-smoke);
         }
         .ascii-block.ascii-founded pre {
-            color: #00D4FF;
-            text-shadow: 0 0 10px rgba(0,212,255,0.4);
+            color: var(--mc-cereal-cyan);
+            text-shadow: 0 0 10px rgba(0,245,255,0.4);
         }
         .ascii-block.ascii-producers pre {
-            color: #ffe03a;
+            color: var(--mc-lava-bright);
             text-shadow: 0 0 10px rgba(255,224,58,0.3);
         }
 
@@ -164,8 +154,8 @@
             width: 100%;
             max-width: 960px;
             height: 1px;
-            background: #FF2D9B;
-            box-shadow: 0 0 8px rgba(255,45,155,0.4);
+            background: var(--mc-crater);
+            box-shadow: 0 0 8px rgba(255,61,110,0.4);
             margin: 16px 0;
         }
 
@@ -187,12 +177,12 @@
             font-family: 'Playfair Display', serif;
             font-size: 18px;
             font-weight: 700;
-            color: #FF2D9B;
-            border-left: 4px solid #FF2D9B;
+            color: var(--mc-crater);
+            border-left: 4px solid var(--mc-crater);
             padding: 16px 20px;
             margin: 24px 0;
-            text-shadow: 0 0 8px rgba(255,45,155,0.3);
-            background: rgba(255,45,155,0.05);
+            text-shadow: 0 0 8px rgba(255,61,110,0.3);
+            background: rgba(255,61,110,0.05);
         }
 
         .zine-bg-magenta {
@@ -206,8 +196,8 @@
             margin: 16px 0;
         }
 
-        .zine-border-magenta { border: 2px solid #FF2D9B; padding: 8px; }
-        .zine-border-cyan { border: 2px solid #00D4FF; padding: 8px; }
+        .zine-border-magenta { border: 2px solid var(--mc-crater); padding: 8px; }
+        .zine-border-cyan { border: 2px solid var(--mc-cereal-cyan); padding: 8px; }
 
         .zine-overlap { margin-top: -24px; }
         .zine-mt-sm { margin-top: 8px; }
@@ -228,34 +218,34 @@
             height: auto;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
-            border: 2px solid #FF2D9B;
-            box-shadow: 0 0 16px rgba(255,45,155,0.3);
+            border: 2px solid var(--mc-crater);
+            box-shadow: 0 0 16px rgba(255,61,110,0.3);
         }
 
         /* Zine links */
         .zine-links {
             margin-top: 48px;
             padding: 24px 0;
-            border-top: 2px solid #FF2D9B;
+            border-top: 2px solid var(--mc-crater);
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
             justify-content: center;
-            box-shadow: 0 -2px 12px rgba(255,45,155,0.15);
+            box-shadow: 0 -2px 12px rgba(255,61,110,0.15);
         }
         .zine-links a {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #00D4FF;
+            color: var(--mc-cereal-cyan);
             text-decoration: none;
             padding: 6px 12px;
-            border: 1px solid #00D4FF;
+            border: 1px solid var(--mc-cereal-cyan);
             transition: all 0.15s;
         }
         .zine-links a:hover {
-            color: #0A0A0F;
-            background: #00D4FF;
-            box-shadow: 0 0 8px rgba(0,212,255,0.4);
+            color: var(--mc-sky-deep);
+            background: var(--mc-cereal-cyan);
+            box-shadow: 0 0 8px rgba(0,245,255,0.4);
         }
 
         /* ── BODY TEXT ── */
@@ -269,20 +259,20 @@
             font-family: 'Courier Prime', monospace;
             font-size: 14px;
             line-height: 1.8;
-            color: #F5F0E0;
+            color: var(--mc-text-primary);
             margin-bottom: 18px;
             text-align: justify;
         }
         .about-text p:last-child { margin-bottom: 0; }
         .about-text a {
-            color: #00D4FF;
+            color: var(--mc-cereal-cyan);
             text-decoration: none;
-            border-bottom: 1px solid rgba(0,212,255,0.3);
+            border-bottom: 1px solid rgba(0,245,255,0.3);
             transition: color 0.15s, border-color 0.15s;
         }
         .about-text a:hover {
-            color: #FF2D9B;
-            border-bottom-color: #FF2D9B;
+            color: var(--mc-crater);
+            border-bottom-color: var(--mc-crater);
         }
 
         /* Drop cap */
@@ -293,9 +283,9 @@
             line-height: 0.8;
             margin-right: 8px;
             margin-top: 4px;
-            color: #FF2D9B;
+            color: var(--mc-crater);
             font-weight: 900;
-            text-shadow: 0 0 12px rgba(255,45,155,0.5);
+            text-shadow: 0 0 12px rgba(255,61,110,0.5);
         }
 
         /* Float ASCII art for text wrapping */
@@ -310,15 +300,15 @@
             height: auto;
             display: block;
             margin: 0 auto;
-            border: 1px solid #FF2D9B;
-            box-shadow: 0 0 12px rgba(255,45,155,0.2);
+            border: 1px solid var(--mc-crater);
+            box-shadow: 0 0 12px rgba(255,61,110,0.2);
         }
         .logo-wrap::before, .logo-wrap::after { display: none; }
         .photo-caption {
             font-family: 'Playfair Display', serif;
             font-size: 9px;
             font-style: italic;
-            color: #666670;
+            color: var(--mc-smoke);
             text-align: center;
             margin-top: 8px;
         }
@@ -330,11 +320,11 @@
 
         /* ── FOOTER ── */
         footer {
-            background: #0A0A0F !important;
-            border-top-color: #222230 !important;
-            color: #666670 !important;
+            background: var(--mc-sky-deep) !important;
+            border-top-color: var(--mc-border) !important;
+            color: var(--mc-smoke) !important;
         }
-        footer span { color: #FF2D9B !important; }
+        footer span { color: var(--mc-crater) !important; }
 
         /* ── MOBILE ── */
         @media (max-width: 640px) {
@@ -352,14 +342,14 @@
             max-width: 960px;
             height: 140px;
             overflow: hidden;
-            border: 1px solid #222230;
+            border: 1px solid var(--mc-border);
             margin-bottom: 12px;
             cursor: pointer;
             transition: border-color 0.2s, box-shadow 0.2s;
         }
         .link-strip:hover {
-            border-color: #FF2D9B;
-            box-shadow: 0 0 20px rgba(255,45,155,0.25);
+            border-color: var(--mc-crater);
+            box-shadow: 0 0 20px rgba(255,61,110,0.25);
         }
         .link-strip-bg {
             position: absolute;
@@ -381,7 +371,7 @@
             width: 100%;
             height: 100%;
             text-decoration: none;
-            color: #F5F0E0;
+            color: var(--mc-text-primary);
             padding: 12px 20px;
             box-sizing: border-box;
         }
@@ -399,30 +389,30 @@
             right: 14px;
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: #FF2D9B;
+            color: var(--mc-crater);
             letter-spacing: 0.06em;
             opacity: 0;
             transition: opacity 0.2s;
             pointer-events: none;
-            text-shadow: 0 0 8px rgba(255,45,155,0.5);
+            text-shadow: 0 0 8px rgba(255,61,110,0.5);
         }
         .link-strip:hover .strip-hover-tag { opacity: 1; }
         .strips-divider {
             width: 100%;
             max-width: 960px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, #FF2D9B, #00D4FF, #FF2D9B, transparent);
+            background: linear-gradient(90deg, transparent, var(--mc-crater), var(--mc-cereal-cyan), var(--mc-crater), transparent);
             margin-bottom: 24px;
             opacity: 0.4;
         }
         .section-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #FF2D9B;
+            color: var(--mc-crater);
             letter-spacing: 0.18em;
             margin-bottom: 20px;
             opacity: 0.8;
-            text-shadow: 0 0 10px rgba(255,45,155,0.3);
+            text-shadow: 0 0 10px rgba(255,61,110,0.3);
         }
 
         @media (max-width: 640px) {
@@ -443,7 +433,7 @@
         .logo-grid-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: var(--yellow);
+            color: var(--mc-lava-bright);
             letter-spacing: 0.18em;
             text-align: center;
             margin-bottom: 40px;
@@ -487,7 +477,7 @@
             transform: translateX(-50%);
             font-family: 'Press Start 2P', monospace;
             font-size: 4.5px;
-            color: var(--yellow);
+            color: var(--mc-lava-bright);
             white-space: nowrap;
             letter-spacing: 0.06em;
             opacity: 0;
@@ -954,9 +944,7 @@ __/\\\______________________________________________/\\\________________________
                     <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener" class="logo-link" data-label="musicbrainz">
                         <canvas class="pixel-logo" data-src="../assets/logos/musicbrainz-logo.png" width="48" height="48"></canvas>
                     </a>
-                    <a href="https://letterboxd.com/studio/magmacrunch-media/" target="_blank" rel="noopener" class="logo-link" data-label="letterboxd">
-                        <canvas class="pixel-logo" data-src="../assets/logos/letterboxd-logo.png" width="48" height="48"></canvas>
-                    </a>
+
                 </div>
             </div>
             <div class="logo-group">
@@ -1064,13 +1052,13 @@ __/\\\______________________________________________/\\\________________________
   const SPOUT_Y = 85;
 
   const C = {
-    pink:     '#FF2D9B',
+    pink:     '#FF2D9B', /* --mc-crater */
     darkPink: '#b8166b',
-    slate:    '#666670',
-    cyan:     '#00D4FF',
-    yellow:   '#ffe03a',
+    slate:    '#666670', /* --mc-smoke */
+    cyan:     '#00D4FF', /* --mc-cereal-cyan */
+    yellow:   '#ffe03a', /* --mc-lava-bright */
     dark:     '#111116',
-    milk:     '#ffe03a'
+    milk:     '#ffe03a'  /* --mc-lava-bright */
   };
 
   let cerealBits = [];
@@ -1229,7 +1217,7 @@ __/\\\______________________________________________/\\\________________________
     ctx.fillText('MAGMA', 0, 40);
     ctx.fillText('CRUNCH', 0, 56);
 
-    ctx.strokeStyle = '#FF2D9B';
+    ctx.strokeStyle = C.pink;
     ctx.lineWidth = 0.75;
     ctx.beginPath();
     ctx.moveTo(fx - 18, fy - 15);

@@ -75,9 +75,9 @@
 <script src="../../../nav.js"></script>
 <script>
 const VIDEOS = [
-    { title: "Leaves",                                        year: "2024", ytId: "wv_6z79fQjQ", archiveId: "jtt-leaves_vid", mbid: "b5036e5b-cb78-49e6-a7e6-6cd59a46d0b4", dmId: "x9hg2au", lbSlug: null },
-    { title: "I'm gonna need more of a commitment than that", year: "2025", ytId: "KiFWHj1cmOY", archiveId: "jt-morercommitvid", mbid: "68217226-cfe1-4b35-a37f-d36e3c469ba8", dmId: "x9hg4hi", lbSlug: null },
-    { title: "Sitting on a Dock in New Shoreham",            year: "2025", ytId: "BirxEyAj0u0", archiveId: "juanitothompson-newshoreham", mbid: "065a01c8-3ebd-477f-ac9f-23fa737a4420", dmId: null, lbSlug: null },
+    { title: "Leaves",                                        year: "2024", ytId: "wv_6z79fQjQ", archiveId: "jtt-leaves_vid", mbid: "b5036e5b-cb78-49e6-a7e6-6cd59a46d0b4", dmId: "x9hg2au" },
+    { title: "I'm gonna need more of a commitment than that", year: "2025", ytId: "KiFWHj1cmOY", archiveId: "jt-morercommitvid", mbid: "68217226-cfe1-4b35-a37f-d36e3c469ba8", dmId: "x9hg4hi" },
+    { title: "Sitting on a Dock in New Shoreham",            year: "2025", ytId: "BirxEyAj0u0", archiveId: "juanitothompson-newshoreham", mbid: "065a01c8-3ebd-477f-ac9f-23fa737a4420", dmId: null },
 ];
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
@@ -404,15 +404,6 @@ VIDEOS.forEach(v => {
         dm.target = '_blank'; dm.rel = 'noopener';
         dm.textContent = '▶ dailymotion';
         extLinks.appendChild(dm);
-    }
-
-    if (v.lbSlug) {
-        const lb = document.createElement('a');
-        lb.className = 'ext-link ext-lb';
-        lb.href = `https://letterboxd.com/film/${v.lbSlug}/`;
-        lb.target = '_blank'; lb.rel = 'noopener';
-        lb.textContent = '◈ letterboxd';
-        extLinks.appendChild(lb);
     }
 
     const mbPanel = document.createElement('div');

@@ -19,7 +19,7 @@ jobs:
           node-version: 22
 
       - name: Run backup script
-        run: node scripts/backup-tmdb.mjs --skip-existing
+        run: node scripts/backup-tmdb.mjs
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
 

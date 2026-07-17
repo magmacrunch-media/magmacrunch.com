@@ -75,9 +75,9 @@
 <script>
 const VIDEOS = [
     { title: "Figure the Shoreline",                         year: "2024", ytId: "Gm9XVmj0iVM", archiveId: "thld-figuretheshoreline", mbid: "ff5a70e3-f8a2-4409-be55-98304b3079ef" },
-    { title: "Contemplate the Plate Tectonic",               year: "2024", ytId: "YnzQh-h5zq0", archiveId: "thld-contemplate",        mbid: "99a038e2-4985-4771-8428-9579908a3065", dmId: "x9hg4hk",  lbSlug: "contemplate-the-plate-tectonic" },
-    { title: "Film School",                                  year: "2023", ytId: "MtAtKhfXLB8", archiveId: "thld-filmschool",         mbid: "02701169-81b5-4c70-99b3-3d1282ea2ac9", dmId: "x9hg26i",  lbSlug: "film-school-2023" },
-    { title: "Bus full of time-traveling twenty-somethings", year: "2023", ytId: "OebpP5m3jms", archiveId: "busfulloftimetraveling",   mbid: "b2705c1c-2f67-4eeb-9605-9aa345b72a2b", dmId: "x9hg172", lbSlug: "bus-full-of-time-traveling-twenty-somethings" },
+    { title: "Contemplate the Plate Tectonic",               year: "2024", ytId: "YnzQh-h5zq0", archiveId: "thld-contemplate",        mbid: "99a038e2-4985-4771-8428-9579908a3065", dmId: "x9hg4hk" },
+    { title: "Film School",                                  year: "2023", ytId: "MtAtKhfXLB8", archiveId: "thld-filmschool",         mbid: "02701169-81b5-4c70-99b3-3d1282ea2ac9", dmId: "x9hg26i" },
+    { title: "Bus full of time-traveling twenty-somethings", year: "2023", ytId: "OebpP5m3jms", archiveId: "busfulloftimetraveling",   mbid: "b2705c1c-2f67-4eeb-9605-9aa345b72a2b", dmId: "x9hg172" },
 ];
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
@@ -429,15 +429,6 @@ VIDEOS.forEach(v => {
         extLinks.appendChild(dm);
     }
 
-    if (v.lbSlug) {
-        const lb = document.createElement('a');
-        lb.className = 'ext-link ext-lb';
-        lb.href = `https://letterboxd.com/film/${v.lbSlug}/`;
-        lb.target = '_blank'; lb.rel = 'noopener';
-        lb.textContent = '◈ letterboxd';
-        extLinks.appendChild(lb);
-    }
-
     // ── MusicBrainz panel ──
     const mbPanel = document.createElement('div');
     mbPanel.className = 'video-mb';
@@ -542,11 +533,6 @@ async function fetchMB(mbid, elId) {
     color: #e07a2f;
 }
 .ext-dm:hover { background: #e07a2f; color: var(--thld-deep); }
-.ext-lb {
-    border-color: #6a5878;
-    color: #6a5878;
-}
-.ext-lb:hover { background: #6a5878; color: var(--thld-text); }
 
 /* ── MusicBrainz panel ── */
 .video-mb {

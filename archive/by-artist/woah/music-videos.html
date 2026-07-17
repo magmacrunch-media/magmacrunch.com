@@ -72,9 +72,9 @@
 <script src="../../../nav.js"></script>
 <script>
 const VIDEOS = [
-    { title: "Summer Day",                  year: "2024", ytId: "QgJfLXhV15Y", archiveId: "woah-summerday", mbid: "43ddc7fb-5200-4e52-820a-e7a4f8485e12", dmId: "x9hg4hm", lbSlug: "summer-day-2024" },
-    { title: "Eternity spent in an arcade", year: "2024", ytId: "lTmHfMZAimQ", archiveId: "woah-eternity_spent_in_arcade", mbid: "552e5a25-8d45-4bd5-89a2-906be7fb36bb", dmId: "x9hg4kq", lbSlug: "eternity-spent-in-an-arcade" },
-    { title: "Driving",                     year: "2024", ytId: "vmUJ2O3xwJw", archiveId: "woah-driving", mbid: "5ec3fe38-6fcb-413c-bf4a-eaca08aa5009", lbSlug: "driving-2024" },
+    { title: "Summer Day",                  year: "2024", ytId: "QgJfLXhV15Y", archiveId: "woah-summerday", mbid: "43ddc7fb-5200-4e52-820a-e7a4f8485e12", dmId: "x9hg4hm" },
+    { title: "Eternity spent in an arcade", year: "2024", ytId: "lTmHfMZAimQ", archiveId: "woah-eternity_spent_in_arcade", mbid: "552e5a25-8d45-4bd5-89a2-906be7fb36bb", dmId: "x9hg4kq" },
+    { title: "Driving",                     year: "2024", ytId: "vmUJ2O3xwJw", archiveId: "woah-driving", mbid: "5ec3fe38-6fcb-413c-bf4a-eaca08aa5009" },
 ];
 
 const delay = ms => new Promise(r => setTimeout(r, ms));
@@ -341,15 +341,6 @@ VIDEOS.forEach(v => {
         extLinks.appendChild(dm);
     }
 
-    if (v.lbSlug) {
-        const lb = document.createElement('a');
-        lb.className = 'ext-link ext-lb';
-        lb.href = `https://letterboxd.com/film/${v.lbSlug}/`;
-        lb.target = '_blank'; lb.rel = 'noopener';
-        lb.textContent = '◈ letterboxd';
-        extLinks.appendChild(lb);
-    }
-
     const mbPanel = document.createElement('div');
     mbPanel.className = 'video-mb';
     if (v.mbid) {
@@ -447,11 +438,6 @@ async function fetchMB(mbid, elId) {
     color: var(--woah-sage-mid);
 }
 .ext-dm:hover { background: var(--woah-sage-mid); color: var(--woah-pink-sky); }
-.ext-lb {
-    border-color: var(--woah-mauve);
-    color: var(--woah-mauve);
-}
-.ext-lb:hover { background: var(--woah-mauve); color: var(--woah-pink-sky); }
 
 .video-embed {
     position: relative;

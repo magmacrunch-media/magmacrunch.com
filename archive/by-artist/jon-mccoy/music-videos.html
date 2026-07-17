@@ -72,7 +72,7 @@
 <script src="../../../nav.js"></script>
 <script>
 const VIDEOS = [
-    { title: "Try", year: "2024", ytId: "To6AJJ7-iCY", archiveId: "jhm-try", mbid: "9c8c4211-8c81-4c54-9147-a3763dbde4f5", dmId: "x9hg4eg", lbSlug: "try-2024" },
+    { title: "Try", year: "2024", ytId: "To6AJJ7-iCY", archiveId: "jhm-try", mbid: "9c8c4211-8c81-4c54-9147-a3763dbde4f5", dmId: "x9hg4eg" },
 ];
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
@@ -347,15 +347,6 @@ VIDEOS.forEach(v => {
         dm.target = '_blank'; dm.rel = 'noopener';
         dm.textContent = '▶ dailymotion';
         extLinks.appendChild(dm);
-    }
-
-    if (v.lbSlug) {
-        const lb = document.createElement('a');
-        lb.className = 'ext-link ext-lb';
-        lb.href = `https://letterboxd.com/film/${v.lbSlug}/`;
-        lb.target = '_blank'; lb.rel = 'noopener';
-        lb.textContent = '◈ letterboxd';
-        extLinks.appendChild(lb);
     }
 
     const mbPanel = document.createElement('div');

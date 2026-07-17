@@ -1,0 +1,89 @@
+{
+  "note": "Music video entries deleted from TMDB by moderators (TMDB does not allow music videos). Preserved locally from the July 5, 2026 backup of Jake A. McCoy's TMDB credits (person 5285267). These entries no longer exist on TMDB.",
+  "deletedAt": "2026-07-16",
+  "source": "archive/_cache/tmdb/person/5285267.json",
+  "entries": [
+    {
+      "tmdb_id": 1444137,
+      "title": "Film School",
+      "year": 2023,
+      "release_date": "2023-03-19",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography", "Music", "Cast (Guitar Player)"],
+      "youtube_id": "VN_5u6tBPts"
+    },
+    {
+      "tmdb_id": 1444151,
+      "title": "Driving",
+      "year": 2024,
+      "release_date": "2024-03-06",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography", "Cast (Driver)"],
+      "youtube_id": "vmUJ2O3xwJw"
+    },
+    {
+      "tmdb_id": 1443682,
+      "title": "Summer Day",
+      "year": 2024,
+      "release_date": "2024-10-12",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography"],
+      "youtube_id": "QgJfLXhV15Y"
+    },
+    {
+      "tmdb_id": 1443761,
+      "title": "Contemplate the Plate Tectonic",
+      "year": 2024,
+      "release_date": "2024-04-28",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Music"],
+      "youtube_id": "YnzQh-h5zq0"
+    },
+    {
+      "tmdb_id": 1443769,
+      "title": "Bus Full of Time-Traveling Twenty-Somethings",
+      "year": 2023,
+      "release_date": "2023-01-19",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography", "Music"],
+      "youtube_id": "OebpP5m3jms"
+    },
+    {
+      "tmdb_id": 1444159,
+      "title": "Eternity Spent in an Arcade",
+      "year": 2024,
+      "release_date": "2024-06-20",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography"],
+      "youtube_id": "lTmHfMZAimQ"
+    },
+    {
+      "tmdb_id": 1444200,
+      "title": "Millstone Woods May 2018",
+      "year": 2023,
+      "release_date": "2023-02-23",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography", "Music"],
+      "youtube_id": "3_jo3WEOPEI"
+    },
+    {
+      "tmdb_id": 1445450,
+      "title": "Leaves",
+      "year": 2024,
+      "release_date": "2024-12-12",
+      "media_type": "movie",
+      "your_roles": ["Director", "Producer", "Cinematography"],
+      "youtube_id": "wv_6z79fQjQ"
+    },
+    {
+      "tmdb_id": 1721141,
+      "title": "Sex Van Floor Plan: The Documentary",
+      "year": 2026,
+      "release_date": "2026-06-26",
+      "media_type": "movie",
+      "your_roles": ["Cast (Self)"],
+      "note": "This is the documentary, not a music video. Verify whether this was also deleted.",
+      "local_page": "../../by-artist/svfp/documentary.html"
+    }
+  ]
+}
