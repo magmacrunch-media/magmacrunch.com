@@ -70,18 +70,23 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
                 return part[len(name) + 1:]
         return None
 
-    def _send_response(self, code, content_type, body):
+    def _send_response(self, code, content_type, body, no_cache=False):
         if isinstance(body, str):
             body = body.encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", content_type)
         self.send_header("Content-Length", str(len(body)))
+        if no_cache:
+            self.send_header("Cache-Control", "no-store, must-revalidate")
+            self.send_header("Pragma", "no-cache")
         self.end_headers()
         self.wfile.write(body)
 
     def _send_redirect(self, location):
         self.send_response(302)
         self.send_header("Location", location)
+        self.send_header("Cache-Control", "no-store, must-revalidate")
+        self.send_header("Pragma", "no-cache")
         self.end_headers()
 
     def _set_session_cookie(self, token):
@@ -166,6 +171,8 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
                 self.send_response(302)
                 self._set_session_cookie(token)
                 self.send_header("Location", "/")
+                self.send_header("Cache-Control", "no-store, must-revalidate")
+                self.send_header("Pragma", "no-cache")
                 self.end_headers()
             else:
                 # Wrong password -> serve login page with error
@@ -181,7 +188,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
                 html = f.read()
             if error:
                 html = html.replace("<!--ERROR_PLACEHOLDER-->", f'<div class="error">{error}</div>')
-            self._send_response(200, "text/html", html)
+            self._send_response(200, "text/html", html, no_cache=True)
         except FileNotFoundError:
             self._send_response(500, "text/plain", "Login page not found")
 
@@ -216,7 +223,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
   </div>
 </body>
 </html>"""
-        self._send_response(200, "text/html", html)
+        self._send_response(200, "text/html", html, no_cache=True)
 
     def _serve_file(self, file_path):
         """Serve a static file with proper MIME types."""
@@ -249,6 +256,8 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(content)))
+            self.send_header("Cache-Control", "no-store, must-revalidate")
+            self.send_header("Pragma", "no-cache")
             self.end_headers()
             self.wfile.write(content)
         except Exception as e:
