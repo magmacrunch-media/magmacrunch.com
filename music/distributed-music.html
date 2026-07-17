@@ -8,20 +8,28 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="../assets/archive.css">
     <style>
+        /* ── NAV OVERRIDES ── */
+        :root {
+            --nav-accent: var(--mc-cereal-green);
+            --nav-glow: rgba(57,255,20,0.4);
+            --nav-brand: var(--mc-cereal-cyan);
+            --nav-brand-glow: rgba(0,245,255,0.6);
+        }
+
         /* ── page layout ── */
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
 
         /* ── title color ── */
-        .green-title { color:var(--green); text-shadow:0 0 20px rgba(57,255,110,0.5); }
-        .page-eyebrow { color:var(--green); }
+        .green-title { color:var(--mc-cereal-green); text-shadow:0 0 20px rgba(57,255,110,0.5); }
+        .page-eyebrow { color:var(--mc-cereal-green); }
 
         /* ── divider gradient ── */
-        .section-divider { background: linear-gradient(90deg, transparent, var(--green), var(--purple), var(--green), transparent); }
+        .section-divider { background: linear-gradient(90deg, transparent, var(--mc-cereal-green), var(--mc-cereal-cyan), var(--mc-cereal-green), transparent); }
 
         /* ── breadcrumb hover ── */
-        .breadcrumb a:hover { color:var(--green); }
-        .breadcrumb .sep { color:var(--green); }
-        .breadcrumb .current { color:var(--green); }
+        .breadcrumb a:hover { color:var(--mc-cereal-green); }
+        .breadcrumb .sep { color:var(--mc-cereal-green); }
+        .breadcrumb .current { color:var(--mc-cereal-green); }
 
         /* ── intro list ── */
         .quick-list-wrap {
@@ -31,16 +39,16 @@
         }
         .quick-list-label {
             font-family:'Press Start 2P',monospace;
-            font-size:7px; color:var(--green);
+            font-size:7px; color:var(--mc-cereal-green);
             letter-spacing:0.12em; margin-bottom:14px; opacity:0.8;
             padding:8px 10px;
-            background:var(--green);
+            background:var(--mc-cereal-green);
             color:#080808;
             display:inline-block;
         }
         .quick-list {
             list-style:none; padding:0; margin:0;
-            border:2px solid var(--green);
+            border:2px solid var(--mc-cereal-green);
             max-height: 220px;
             overflow-y: auto;
             background: #080808;
@@ -48,15 +56,15 @@
             
             /* Pixelated box shadow effect */
             box-shadow: 
-                4px 0 0 0 var(--green),
-                -4px 0 0 0 var(--green),
-                0 4px 0 0 var(--green),
-                0 -4px 0 0 var(--green),
+                4px 0 0 0 var(--mc-cereal-green),
+                -4px 0 0 0 var(--mc-cereal-green),
+                0 4px 0 0 var(--mc-cereal-green),
+                0 -4px 0 0 var(--mc-cereal-green),
                 0 0 20px rgba(57,255,110,0.2);
             
             /* Firefox scrollbar styling */
             scrollbar-width: thin;
-            scrollbar-color: var(--green) #080808;
+            scrollbar-color: var(--mc-cereal-green) #080808;
         }
         .quick-list li { 
             border-bottom:2px solid #1a1a1a;
@@ -78,7 +86,7 @@
             margin:-4px -6px;
         }
         .quick-list li a:hover { 
-            color:var(--green); 
+            color:var(--mc-cereal-green); 
             opacity:1; 
             background:#080808;
             padding-left:10px;
@@ -88,7 +96,7 @@
         .quick-list::-webkit-scrollbar { width: 12px; }
         .quick-list::-webkit-scrollbar-track { background: #080808; }
         .quick-list::-webkit-scrollbar-thumb {
-            background: var(--green);
+            background: var(--mc-cereal-green);
             border: 2px solid #080808;
         }
         .quick-list::-webkit-scrollbar-thumb:hover {
@@ -99,8 +107,8 @@
         .quick-list-filter {
             width: 100%;
             background: #080808;
-            border: 2px solid var(--green);
-            color: var(--green);
+            border: 2px solid var(--mc-cereal-green);
+            color: var(--mc-cereal-green);
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
             padding: 10px 12px;
@@ -112,7 +120,7 @@
             box-shadow: 0 0 20px rgba(57,255,110,0.35);
         }
         .quick-list-filter::placeholder {
-            color: var(--green);
+            color: var(--mc-cereal-green);
             opacity: 0.5;
         }
 
@@ -130,7 +138,7 @@
             align-items: center;
         }
         .dist-top-link:hover { 
-            color: var(--green); 
+            color: var(--mc-cereal-green); 
         }
 
         /* ── release cards ── */
@@ -140,7 +148,7 @@
         }
         .releases-label {
             font-family:'Press Start 2P',monospace;
-            font-size:7px; color:var(--green);
+            font-size:7px; color:var(--mc-cereal-green);
             letter-spacing:0.12em; margin-bottom:20px; opacity:0.8;
         }
         .dist-card {
@@ -151,7 +159,7 @@
             transition:border-color 0.15s;
             overflow:hidden;
         }
-        .dist-card:hover { border-color:var(--rose); }
+        .dist-card:hover { border-color:var(--mc-cereal-cyan); }
         .dist-art {
             width:140px; min-width:140px; height:140px;
             background:#0d0d18;
@@ -183,7 +191,7 @@
             font-size:13px; color:var(--dim);
         }
         .dist-artist a {
-            color:var(--green); text-decoration:none;
+            color:var(--mc-cereal-green); text-decoration:none;
             transition:color 0.15s;
         }
         .dist-artist a:hover { color:var(--white); }
@@ -199,7 +207,7 @@
             transition:color 0.15s, border-color 0.15s;
             display:inline-block;
         }
-        .dist-link:hover { color:var(--rose); border-color:var(--rose); }
+        .dist-link:hover { color:var(--mc-cereal-cyan); border-color:var(--mc-cereal-cyan); }
         .dist-link.placeholder {
             opacity:0.3; cursor:default; pointer-events:none;
         }
@@ -227,7 +235,7 @@
         .distro-block {
             width: min(720px, 95vw);
             border: 1px solid #2a2a3a;
-            border-left: 3px solid var(--green);
+            border-left: 3px solid var(--mc-cereal-green);
             background: var(--deep);
             padding: 18px 22px;
             margin-bottom: 36px;
@@ -237,7 +245,7 @@
         .distro-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--green);
+            color: var(--mc-cereal-green);
             letter-spacing: 0.12em;
             margin-bottom: 12px;
             opacity: 0.7;

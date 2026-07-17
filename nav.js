@@ -579,6 +579,12 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 mainEl.innerHTML = newMain.innerHTML;
             }
 
+            // Hide chat widget on non-arcade pages
+            const chatWidget = document.getElementById('arcadeChatWidget');
+            if (chatWidget) {
+                chatWidget.style.display = url.includes('/arcade/') ? '' : 'none';
+            }
+
             document.title = doc.title;
 
             await runScripts(doc, url);

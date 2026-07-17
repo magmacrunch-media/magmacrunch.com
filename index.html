@@ -30,12 +30,12 @@
             font-size: clamp(20px, 3.5vw, 48px);
             text-align: center;
             text-transform: lowercase;
-            color: var(--rose);
+            color: var(--mc-crater);
             text-shadow:
-                4px 4px 0px #110000,
-                8px 8px 0px var(--orange),
-                12px 12px 0px #110000,
-                16px 16px 0px var(--yellow),
+                4px 4px 0px var(--mc-mount-mid),
+                8px 8px 0px var(--mc-lava-deep),
+                12px 12px 0px var(--mc-mount-dark),
+                16px 16px 0px var(--mc-lava-amber),
                 20px 20px 0px #000000;
             letter-spacing: 0.05em;
             margin-bottom: 1.5rem;
@@ -64,21 +64,21 @@
         .volcano-est {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
-            color: var(--rose);
+            color: var(--mc-lava-amber);
             text-shadow: 2px 2px 0 #000;
             letter-spacing: 0.12em;
         }
         .volcano-quote {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(6px, 1vw, 9px);
-            color: var(--yellow);
+            color: var(--mc-text-dim);
             text-align: center;
             line-height: 2.2;
             text-shadow: 2px 2px 0 #000;
             letter-spacing: 0.06em;
         }
         .volcano-quote .blink-cyan {
-            color: var(--cyan);
+            color: var(--mc-cereal-cyan);
             animation: blink 1.2s step-end infinite;
         }
 
@@ -86,7 +86,7 @@
         .insert-coin {
             font-family: 'Press Start 2P', monospace;
             font-size: 11px;
-            color: var(--yellow);
+            color: var(--mc-lava-bright);
             letter-spacing: 0.15em;
             margin-bottom: 32px;
             text-shadow: 0 0 12px rgba(255,224,58,0.8);
@@ -190,13 +190,14 @@
   const W = 64, H = 64, CENTER = 32;
 
   const C = {
-    mount:    '#1a0505',
-    mountDark:'#110206',
-    mountOut: '#ff3d6e',
-    lava0:    '#ffe03a',
-    lava1:    '#ffad1f',
-    bolt:     '#ffe03a',
+    mount:    '#1a0505',  /* --mc-mount */
+    mountDark:'#110206',  /* --mc-mount-dark */
+    mountOut: '#ff3d6e',  /* --mc-crater */
+    lava0:    '#ffe03a',  /* --mc-lava-bright */
+    lava1:    '#ffad1f',  /* --mc-lava-amber */
+    bolt:     '#ffe03a',  /* --mc-lava-bright */
     cereal:   ['#ff3d6e','#00f5ff','#c45fff','#39ff14','#ffffff']
+                          /* mc-cereal-rose, mc-cereal-cyan, mc-cereal-purple, mc-cereal-green, mc-cereal-white */
   };
   const CRATER_TOP = 28;
   let cerealBits = [], bolts = [], frame = 0;

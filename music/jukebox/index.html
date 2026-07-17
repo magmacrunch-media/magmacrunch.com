@@ -7,12 +7,12 @@
     <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
     <link rel="stylesheet" href="../../style.css">
     <style>
-        /* ── NAV DINER OVERRIDES ── */
+        /* ── NAV OVERRIDES ── */
         :root {
-            --nav-accent: #c8202a;
-            --nav-glow: rgba(200,32,42,0.4);
-            --nav-brand: #30c8c0;
-            --nav-brand-glow: rgba(48,200,192,0.6);
+            --nav-accent: var(--mc-crater);
+            --nav-glow: rgba(255,61,110,0.4);
+            --nav-brand: var(--mc-cereal-cyan);
+            --nav-brand-glow: rgba(0,245,255,0.6);
         }
 
         main {
@@ -32,16 +32,16 @@
             margin-bottom: 24px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #7ec8b8; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #f0b840; }
-        .breadcrumb .sep { margin: 0 8px; color: #d49830; opacity: 0.7; }
-        .breadcrumb .current { color: #f0b840; }
+        .breadcrumb a { color: var(--mc-cereal-cyan); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--mc-lava-bright); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--mc-lava-amber); opacity: 0.7; }
+        .breadcrumb .current { color: var(--mc-lava-bright); }
 
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 14px;
-            color: #30c8c0;
-            text-shadow: 0 0 16px rgba(48,200,192,0.6);
+            color: var(--mc-cereal-cyan);
+            text-shadow: 0 0 16px rgba(0,245,255,0.6);
             margin-bottom: 8px;
             letter-spacing: 0.15em;
             animation: fadeUp 0.5s ease both;
@@ -58,16 +58,16 @@
 
         /* ── JUKEBOX SCOPED PALETTE ── */
         .jukebox {
-            --j-purple:  #c8202a;
-            --j-pink:    #e8303a;
-            --j-gold:    #f0b840;
-            --j-mint:    #7ec8b8;
-            --j-orange:  #d49830;
-            --j-blue:    #7ab8d8;
-            --j-bg:      #1a1418;
-            --j-panel:   #2e1418;
-            --j-border:  #4a1820;
-            --j-screen:  #1a1418;
+            --j-purple:  var(--mc-crater);
+            --j-pink:    var(--mc-ember);
+            --j-gold:    var(--mc-lava-bright);
+            --j-mint:    var(--mc-cereal-cyan);
+            --j-orange:  var(--mc-lava-amber);
+            --j-blue:    var(--mc-cereal-purple);
+            --j-bg:      var(--mc-surface);
+            --j-panel:   var(--mc-mount);
+            --j-border:  var(--mc-border);
+            --j-screen:  var(--mc-surface);
         }
 
         /* ── JUKEBOX CABINET ── */
@@ -78,17 +78,17 @@
                     0deg,
                     transparent,
                     transparent 3px,
-                    rgba(200,32,42,0.03) 3px,
-                    rgba(200,32,42,0.03) 4px
+                    rgba(255,61,110,0.03) 3px,
+                    rgba(255,61,110,0.03) 4px
                 ),
-                linear-gradient(180deg, #2e1418 0%, #1a1418 60%, #140e10 100%);
+                linear-gradient(180deg, var(--mc-mount) 0%, var(--mc-surface) 60%, var(--mc-mount-dark) 100%);
             border: 6px solid var(--j-purple);
             border-top: 10px solid var(--j-purple);
             border-radius: 8px 8px 0 0;
             padding: 0;
             box-shadow:
-                0 0 48px rgba(200,32,42,0.25),
-                0 0 12px rgba(200,32,42,0.4),
+                0 0 48px rgba(255,61,110,0.25),
+                0 0 12px rgba(255,61,110,0.4),
                 inset 0 0 40px rgba(0,0,0,0.6);
             animation: fadeUp 0.5s 0.1s ease both;
             overflow: hidden;
@@ -100,12 +100,12 @@
             display: block;
             height: 8px;
             background: linear-gradient(90deg,
-                #4a1820 0%,
+                var(--mc-border) 0%,
                 #5a5a60 20%,
                 #c0c4c8 40%,
                 #5a5a60 60%,
                 #c0c4c8 80%,
-                #4a1820 100%
+                var(--mc-border) 100%
             );
             animation: shimmer 3s linear infinite;
             background-size: 200% 100%;
@@ -127,7 +127,7 @@
             gap: 16px;
             margin-bottom: 12px;
             padding: 10px;
-            background: linear-gradient(180deg, #2e1418 0%, #1a1418 100%);
+            background: linear-gradient(180deg, var(--mc-mount) 0%, var(--mc-surface) 100%);
             border: 3px solid var(--j-border);
         }
 
@@ -140,8 +140,8 @@
         .pj-speaker {
             width: 32px;
             height: 24px;
-            background: #140e10;
-            border: 2px solid #4a1820;
+            background: var(--mc-mount-dark);
+            border: 2px solid var(--mc-border);
         }
 
         .pj-speaker.active {
@@ -159,8 +159,8 @@
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            background: #140e10;
-            border: 4px solid #4a1820;
+            background: var(--mc-mount-dark);
+            border: 4px solid var(--mc-border);
             position: relative;
             transition: transform 0.3s ease-out;
         }
@@ -178,8 +178,8 @@
             position: absolute;
             inset: 6px;
             border-radius: 50%;
-            background: #2e1418;
-            border: 2px solid #4a1820;
+            background: var(--mc-mount);
+            border: 2px solid var(--mc-border);
         }
 
         .pj-disc-label {
@@ -204,7 +204,7 @@
         .pj-vent-line {
             width: 24px;
             height: 3px;
-            background: #4a1820;
+            background: var(--mc-border);
         }
 
         .pj-coins {
@@ -235,8 +235,8 @@
 
         .neon-light {
             height: 10px;
-            background: #2e1418;
-            border: 2px solid #4a1820;
+            background: var(--mc-mount);
+            border: 2px solid var(--mc-border);
         }
 
         .neon-lights.active .neon-light:nth-child(1) { background: var(--j-purple);   border-color: var(--j-purple);   box-shadow: 0 0 6px var(--j-purple); }
@@ -248,7 +248,7 @@
 
         /* ── TITLE STRIP WITH LIGHTS ── */
         .title-strip {
-            background: linear-gradient(90deg, #2e1418 0%, #3a1c24 50%, #2e1418 100%);
+            background: linear-gradient(90deg, var(--mc-mount) 0%, var(--mc-mount-mid) 50%, var(--mc-mount) 100%);
             border: 2px solid var(--j-purple);
             border-left: 6px solid var(--j-purple);
             border-right: 6px solid var(--j-purple);
@@ -258,7 +258,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            box-shadow: 0 0 16px rgba(200,32,42,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+            box-shadow: 0 0 16px rgba(255,61,110,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
         }
 
         .title-strip-text {
@@ -287,18 +287,18 @@
             background:
                 repeating-linear-gradient(
                     0deg,
-                    rgba(200,32,42,0.03) 0px,
-                    rgba(200,32,42,0.03) 1px,
+                    rgba(255,61,110,0.03) 0px,
+                    rgba(255,61,110,0.03) 1px,
                     transparent 1px,
                     transparent 3px
                 ),
-                #140e10;
+                var(--mc-mount-dark);
             border: 4px solid var(--j-purple);
             border-radius: 4px;
             padding: 14px;
             margin-bottom: 14px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(200,32,42,0.15), inset 0 0 30px rgba(0,0,0,0.5);
+            box-shadow: 0 0 20px rgba(255,61,110,0.15), inset 0 0 30px rgba(0,0,0,0.5);
         }
 
         .np-label {
@@ -317,7 +317,7 @@
             color: var(--j-gold);
             letter-spacing: 0.1em;
             margin-bottom: 8px;
-            text-shadow: 0 0 10px rgba(248,216,120,0.6), 2px 2px 0 #000;
+            text-shadow: 0 0 10px rgba(255,224,58,0.6), 2px 2px 0 #000;
         }
 
         .np-artist {
@@ -325,7 +325,7 @@
             font-size: 14px;
             color: var(--j-mint);
             margin-bottom: 16px;
-            text-shadow: 0 0 6px rgba(126,200,184,0.4);
+            text-shadow: 0 0 6px rgba(0,245,255,0.4);
         }
 
         .np-time {
@@ -373,7 +373,7 @@
 
         /* ── SONG LIST (main browser) ── */
         .song-list {
-            background: #140e10;
+            background: var(--mc-mount-dark);
             border: 4px solid var(--j-border);
             margin-bottom: 12px;
         }
@@ -383,7 +383,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 12px 16px;
-            background: #2e1418;
+            background: var(--mc-mount);
             border-bottom: 3px solid var(--j-border);
         }
 
@@ -403,7 +403,7 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
             color: var(--j-purple);
-            background: #1a1418;
+            background: var(--mc-surface);
             border: 2px solid var(--j-purple);
             padding: 4px 8px;
             cursor: pointer;
@@ -417,7 +417,7 @@
         .sl-page {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
-            color: #8a5050;
+            color: var(--mc-smoke);
             padding: 4px 8px;
         }
 
@@ -431,7 +431,7 @@
             display: flex;
             align-items: center;
             padding: 12px;
-            border: 3px solid #2e1418;
+            border: 3px solid var(--mc-mount);
             margin-bottom: 6px;
             cursor: pointer;
             transition: all 0.15s;
@@ -439,17 +439,17 @@
 
         .song-item:hover {
             border-color: var(--j-purple);
-            background: rgba(200,32,42,0.07);
+            background: rgba(255,61,110,0.07);
         }
 
         .song-item.playing {
             border-color: var(--j-pink);
-            background: rgba(232,48,58,0.1);
+            background: rgba(255,61,0,0.1);
         }
 
         .song-item.selected {
             border-color: var(--j-gold);
-            background: rgba(240,184,64,0.08);
+            background: rgba(255,173,31,0.08);
         }
 
         .song-num {
@@ -526,7 +526,7 @@
         .selector-wrap {
             position: relative;
             height: 80px;
-            background: #140e10;
+            background: var(--mc-mount-dark);
             border: 4px solid var(--j-purple);
             margin-bottom: 12px;
             overflow: hidden;
@@ -549,11 +549,11 @@
         }
 
         .selector-row:hover {
-            background: rgba(200,32,42,0.06);
+            background: rgba(255,61,110,0.06);
         }
 
         .selector-row.current {
-            background: rgba(200,32,42,0.12);
+            background: rgba(255,61,110,0.12);
         }
 
         .selector-row.prev,
@@ -645,7 +645,7 @@
 
         /* ── QUEUE ── */
         .queue-display {
-            background: #140e10;
+            background: var(--mc-mount-dark);
             border: 2px solid var(--j-gold);
             border-left: 4px solid var(--j-gold);
             padding: 8px;
@@ -660,7 +660,7 @@
             letter-spacing: 0.2em;
             margin-bottom: 8px;
             opacity: 0.9;
-            text-shadow: 0 0 6px rgba(240,184,64,0.5);
+            text-shadow: 0 0 6px rgba(255,173,31,0.5);
         }
 
         .queue-list {
@@ -674,7 +674,7 @@
             font-size: 9px;
             color: var(--white);
             padding: 4px 6px;
-            background: rgba(240,184,64,0.07);
+            background: rgba(255,173,31,0.07);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -683,7 +683,7 @@
         .queue-empty {
             font-family: 'Courier Prime', monospace;
             font-size: 9px;
-            color: #8a5050;
+            color: var(--mc-smoke);
             opacity: 0.7;
         }
 
@@ -720,18 +720,18 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
             color: var(--j-purple);
-            background: #1a1418;
+            background: var(--mc-surface);
             border: 4px solid var(--j-purple);
             padding: 16px 12px;
             cursor: pointer;
             transition: all 0.15s;
-            box-shadow: 0 0 8px rgba(200,32,42,0.3);
+            box-shadow: 0 0 8px rgba(255,61,110,0.3);
         }
 
         .juke-arrow:hover {
             background: var(--j-purple);
             color: #fff;
-            box-shadow: 0 0 16px rgba(200,32,42,0.6);
+            box-shadow: 0 0 16px rgba(255,61,110,0.6);
         }
 
         .juke-arrow:disabled {
@@ -741,7 +741,7 @@
         }
 
         .juke-arrow:disabled:hover {
-            background: #1a1418;
+            background: var(--mc-surface);
             color: var(--j-purple);
         }
 
@@ -761,24 +761,24 @@
             padding: 10px 20px;
             cursor: pointer;
             transition: all 0.15s;
-            box-shadow: 0 0 12px rgba(200,32,42,0.4);
+            box-shadow: 0 0 12px rgba(255,61,110,0.4);
             letter-spacing: 0.1em;
         }
 
         .ctrl-btn:hover {
             background: var(--j-pink);
             border-color: var(--j-pink);
-            box-shadow: 0 0 18px rgba(232,48,58,0.5);
+            box-shadow: 0 0 18px rgba(255,61,0,0.5);
         }
 
         .ctrl-btn.playing {
             background: var(--j-pink);
             border-color: var(--j-pink);
-            box-shadow: 0 0 14px rgba(232,48,58,0.5);
+            box-shadow: 0 0 14px rgba(255,61,0,0.5);
         }
 
         .ctrl-btn.stop {
-            background: #1a1418;
+            background: var(--mc-surface);
             color: var(--j-pink);
             border-color: var(--j-pink);
             box-shadow: none;
@@ -787,14 +787,14 @@
         .ctrl-btn.stop:hover {
             background: var(--j-pink);
             color: #fff;
-            box-shadow: 0 0 14px rgba(232,48,58,0.4);
+            box-shadow: 0 0 14px rgba(255,61,0,0.4);
         }
 
         /* ── FOOTER ── */
         .juke-footer {
             font-family: 'Press Start 2P', monospace;
             font-size: 5px;
-            color: #8a5050;
+            color: var(--mc-smoke);
             text-align: center;
             margin-top: 10px;
             letter-spacing: 0.2em;
@@ -826,8 +826,8 @@
             gap: 10px;
             margin-bottom: 14px;
             padding: 6px 10px;
-            background: #1a1418;
-            border: 2px solid #4a1820;
+            background: var(--mc-surface);
+            border: 2px solid var(--mc-border);
         }
 
         .coin-slot-label {
@@ -835,7 +835,7 @@
             font-size: 6px;
             color: var(--j-gold);
             letter-spacing: 0.2em;
-            text-shadow: 0 0 6px rgba(248,216,120,0.4);
+            text-shadow: 0 0 6px rgba(255,224,58,0.4);
         }
 
         .coin-slot {
@@ -844,7 +844,7 @@
             background: #000;
             border: 2px solid var(--j-gold);
             border-radius: 2px;
-            box-shadow: 0 0 6px rgba(248,216,120,0.3), inset 0 1px 3px rgba(0,0,0,0.8);
+            box-shadow: 0 0 6px rgba(255,224,58,0.3), inset 0 1px 3px rgba(0,0,0,0.8);
         }
 
         .cabinet-stripes {
