@@ -1,0 +1,9 @@
+{
+  "port": 8782,
+  "password": "texastoast",
+  "bind": "0.0.0.0",
+  "session_ttl_hours": 24,
+  "routes": {
+    "/sorry": "/home/jake/arcade/SORRY"
+  }
+}

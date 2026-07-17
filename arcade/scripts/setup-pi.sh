@@ -86,6 +86,17 @@ if [[ -f "$ADMIN_DIR/systemd/arcade-admin.service" ]]; then
     ok "Installed arcade-admin.service"
 fi
 
+# ── Install private server service ───────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing private server...${NC}"
+
+PRIVATE_DIR="$ARCADE_DIR/private"
+if [[ -f "$PRIVATE_DIR/systemd/arcade-private.service" ]]; then
+    cp "$PRIVATE_DIR/systemd/arcade-private.service" /etc/systemd/system/
+    ok "Installed arcade-private.service"
+fi
+
 # ── Reload systemd ──────────────────────────────────────────────────────────
 
 echo ""
@@ -110,6 +121,7 @@ SERVICES=(
     "arcade-parchisi"
     "arcade-aggravation"
     "arcade-admin"
+    "arcade-private"
 )
 
 for svc in "${SERVICES[@]}"; do

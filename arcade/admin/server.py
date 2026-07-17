@@ -44,6 +44,7 @@ SERVICES = [
     {"name": "Chinese Checkers", "unit": "arcade-chinese-checkers", "port": 8772, "icon": "✳"},
     {"name": "Parchisi", "unit": "arcade-parchisi", "port": 8773, "icon": "🎲"},
     {"name": "Aggravation", "unit": "arcade-aggravation", "port": 8774, "icon": "😤"},
+    {"name": "Private Auth", "unit": "arcade-private", "port": 8782, "icon": "🔒"},
 ]
 
 # ── Score storage ────────────────────────────────────────────────────────────
