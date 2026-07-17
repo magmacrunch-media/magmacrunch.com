@@ -7,7 +7,15 @@
     <link rel="icon" type="image/jpeg" href="../../../../assets/logo.jpg">
     <link rel="stylesheet" href="../../../../style.css">
     <style>
-        body { background:#0c0c0c; }
+        :root {
+            --as-cerulean: #5B9DB8;
+            --as-sky: #7BBDD4;
+            --as-deep: #2E6A88;
+            --as-midnight: #1A3D52;
+            --as-white: #F8F4EE;
+            --as-black: #1A1A18;
+        }
+        body { background: var(--as-black); }
         main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
 
         .breadcrumb {
@@ -16,16 +24,16 @@
             margin-bottom:32px; align-self:flex-start;
         }
         .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
-        .breadcrumb a:hover { color:var(--svfp-accent); }
-        .breadcrumb .sep { margin:0 8px; color:var(--svfp-accent); opacity:.7; }
-        .breadcrumb .current { color:var(--svfp-accent); }
+        .breadcrumb a:hover { color:var(--as-cerulean); }
+        .breadcrumb .sep { margin:0 8px; color:var(--as-cerulean); opacity:.7; }
+        .breadcrumb .current { color:var(--as-cerulean); }
 
         .page-header { text-align:center; margin-bottom:40px; animation:fadeUp .5s ease both; }
         .page-title {
             font-family:'Press Start 2P',monospace; font-size:clamp(16px,3.5vw,28px);
             color:var(--white); line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
         }
-        .page-subtitle { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--svfp-cta); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+        .page-subtitle { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--as-deep); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
 
         .back-link {
             display:inline-block; margin-bottom:40px; align-self:flex-start;
@@ -33,7 +41,7 @@
             color:var(--dim); text-decoration:none; letter-spacing:.1em;
             transition:color .15s;
         }
-        .back-link:hover { color:var(--svfp-accent); }
+        .back-link:hover { color:var(--as-cerulean); }
 
         .ascii-container { width:100%; max-width:1400px; overflow-x:auto; text-align:center; animation:fadeUp .5s .1s ease both; }
         pre {
