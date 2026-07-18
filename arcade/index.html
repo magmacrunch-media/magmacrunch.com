@@ -567,7 +567,7 @@
                     <div class="card-canvas-wrap">
                         <canvas id="cBoardGames" width="72" height="72"></canvas>
                     </div>
-                    <div class="card-desc">chess, checkers, backgammon, sorry. classic boards. neon edition.</div>
+                    <div class="card-desc">chess, checkers, backgammon, parchisi. classic boards. neon edition.</div>
                     <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -601,6 +601,17 @@
                         <canvas id="cAction" width="72" height="72"></canvas>
                     </div>
                     <div class="card-desc">moonlight drift, very long boards, roderick tron. run, dodge, survive.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="http://magmacrunch.duckdns.org:8782/" class="game-card" style="--card-color: #ff3d6e">
+                <div class="card-inner">
+                    <div class="card-title">PRIVATE</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cPrivate" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">password-protected. ask jake for access.</div>
                     <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
                 </div>
             </a>
@@ -1034,6 +1045,41 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.font = 'bold 5px monospace';
     ctx.textAlign = 'center';
     ctx.fillText('ACTION', 36, 64);
+})();
+
+// ── Private collection preview — lock icon ──
+(function() {
+    const c = document.getElementById('cPrivate');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ff3d6e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    // Lock body
+    ctx.fillStyle = '#1a0a1a';
+    ctx.fillRect(22, 36, 28, 22);
+    ctx.strokeStyle = '#ff3d6e';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(22, 36, 28, 22);
+    // Lock shackle
+    ctx.beginPath();
+    ctx.arc(36, 36, 10, Math.PI, 0);
+    ctx.strokeStyle = '#ff3d6e';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Keyhole
+    ctx.fillStyle = '#ff3d6e';
+    ctx.beginPath();
+    ctx.arc(36, 44, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillRect(35, 44, 2, 8);
+    // Label
+    ctx.fillStyle = '#ff3d6e';
+    ctx.font = 'bold 5px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('PRIVATE', 36, 66);
 })();
 
 // ─────────────────────────────────────────────────────────
