@@ -64,14 +64,17 @@
         body.broadcast footer span { color: var(--tv-amber); }
 
         /* ══════════════════════════════════════════
-           BREADCRUMB
+           BREADCRUMB (matches archive.css)
            ══════════════════════════════════════════ */
         .breadcrumb {
+            position: absolute;
+            top: 72px;
+            left: 20px;
             font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
+            font-size: 7px;
             color: var(--dim);
-            margin-bottom: 24px;
-            padding-top: 64px;
+            letter-spacing: 0.1em;
+            margin: 0;
         }
         .breadcrumb a {
             color: var(--dim);
@@ -79,7 +82,7 @@
             transition: color 0.15s;
         }
         .breadcrumb a:hover { color: var(--tv-amber); }
-        .breadcrumb .sep { margin: 0 6px; }
+        .breadcrumb .sep { margin: 0 8px; color: var(--tv-amber); opacity: 0.7; }
 
         /* ══════════════════════════════════════════
            PAGE HEADER
