@@ -248,8 +248,10 @@
         if (action === 'select') {
             selectedElement = element;
             updatePropsFromElement(element);
+            updatePropsVisibility();
         } else if (action === 'deselect') {
             selectedElement = null;
+            updatePropsVisibility();
         } else if (action === 'move') {
             History.push(elements);
             updateStats();
@@ -279,6 +281,10 @@
                 document.getElementById('fontSizeVal').textContent = el.fontSize;
             }
         }
+        // rotation
+        const rot = Math.round(el.rotation || 0);
+        document.getElementById('rotation').value = ((rot % 360) + 360) % 360;
+        document.getElementById('rotationVal').textContent = ((rot % 360) + 360) % 360 + '°';
     }
 
     // ── COLOR CONTROLS ──
@@ -342,6 +348,16 @@
         document.getElementById('strokeWidthVal').textContent = e.target.value;
         if (selectedElement) {
             selectedElement.strokeWidth = parseInt(e.target.value);
+            History.push(elements);
+            CanvasRenderer.render(elements);
+        }
+    });
+
+    document.getElementById('rotation').addEventListener('input', (e) => {
+        const deg = parseInt(e.target.value);
+        document.getElementById('rotationVal').textContent = deg + '°';
+        if (selectedElement) {
+            selectedElement.rotation = deg;
             History.push(elements);
             CanvasRenderer.render(elements);
         }
@@ -487,18 +503,19 @@
     });
 
     // ── SHOW/HIDE TEXT PROPS ──
-    function updateTextPropsVisibility() {
+    function updatePropsVisibility() {
         const isTextTool = Tools.getTool() === 'text';
         const isTextElement = selectedElement && selectedElement.type === 'text';
         document.getElementById('textProps').hidden = !(isTextTool || isTextElement);
         document.getElementById('fontSizeGroup').hidden = !(isTextTool || isTextElement);
+        document.getElementById('rotationGroup').hidden = !selectedElement;
     }
 
     // observe tool changes
     const origSetTool = Tools.setTool;
     Tools.setTool = function (tool) {
         origSetTool(tool);
-        updateTextPropsVisibility();
+        updatePropsVisibility();
     };
 
 })();
