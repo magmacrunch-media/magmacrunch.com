@@ -53,6 +53,8 @@ SCORES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scores")
 API_KEYS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api-keys.json")
 JUKEBOX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jukebox-songs.json")
 THEMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.json")
+TV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tv-channels.json")
+TV_JS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "visual", "tv-channels.js")
 
 def load_game_scores(game_id):
     """Load scores for a specific game."""
@@ -104,6 +106,31 @@ def save_themes(themes):
     """Save themes to disk."""
     with open(THEMES_PATH, "w") as f:
         json.dump(themes, f, indent=2)
+
+def load_tv():
+    """Load TV channels from disk."""
+    if os.path.exists(TV_PATH):
+        with open(TV_PATH) as f:
+            return json.load(f)
+    return []
+
+def save_tv(channels):
+    """Save TV channels to disk and generate tv-channels.js for the teevee page."""
+    with open(TV_PATH, "w") as f:
+        json.dump(channels, f, indent=2)
+    # Generate the JS file that visual/tv.html includes
+    lines = []
+    for ch in channels:
+        lines.append(
+            '    { title: ' + json.dumps(ch.get("title", "")) +
+            ', artist: ' + json.dumps(ch.get("artist", "")) +
+            ', id: ' + json.dumps(ch.get("id", "")) +
+            ', year: ' + json.dumps(ch.get("year", "")) + ' }'
+        )
+    js = 'window.TV_CHANNELS = [\n' + ',\n'.join(lines) + '\n];\n'
+    os.makedirs(os.path.dirname(TV_JS_PATH), exist_ok=True)
+    with open(TV_JS_PATH, "w") as f:
+        f.write(js)
 
 def add_score(game_id, name, score, extra=None):
     """Add a score entry and return its rank (1-indexed)."""
@@ -509,6 +536,85 @@ async def ws_handler(websocket):
                     "ok": True
                 }))
 
+            elif action == "change_password":
+                current = msg.get("current", "")
+                new_pw = msg.get("new_password", "")
+                if current == CONFIG.get("password"):
+                    if new_pw and len(new_pw) >= 4:
+                        CONFIG["password"] = new_pw
+                        # Save to config file
+                        config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+                        with open(config_path, "w") as f:
+                            json.dump(CONFIG, f, indent=2)
+                        await websocket.send(json.dumps({
+                            "type": "password_changed",
+                            "ok": True
+                        }))
+                    else:
+                        await websocket.send(json.dumps({
+                            "type": "password_changed",
+                            "ok": False,
+                            "error": "New password must be at least 4 characters"
+                        }))
+                else:
+                    await websocket.send(json.dumps({
+                        "type": "password_changed",
+                        "ok": False,
+                        "error": "Current password is incorrect"
+                    }))
+
+            elif action == "change_private_password":
+                current = msg.get("current", "")
+                new_pw = msg.get("new_password", "")
+                private_config_path = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), "..", "private", "config.json"
+                )
+                try:
+                    with open(private_config_path) as f:
+                        private_config = json.load(f)
+                except Exception:
+                    await websocket.send(json.dumps({
+                        "type": "private_password_changed",
+                        "ok": False,
+                        "error": "Could not read private server config"
+                    }))
+                    continue
+
+                if current != private_config.get("password"):
+                    await websocket.send(json.dumps({
+                        "type": "private_password_changed",
+                        "ok": False,
+                        "error": "Current password is incorrect"
+                    }))
+                    continue
+
+                if not new_pw or len(new_pw) < 4:
+                    await websocket.send(json.dumps({
+                        "type": "private_password_changed",
+                        "ok": False,
+                        "error": "New password must be at least 4 characters"
+                    }))
+                    continue
+
+                private_config["password"] = new_pw
+                try:
+                    with open(private_config_path, "w") as f:
+                        json.dump(private_config, f, indent=2)
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "private_password_changed",
+                        "ok": False,
+                        "error": f"Could not write config: {e}"
+                    }))
+                    continue
+
+                # Restart the private auth service
+                await run_cmd_async("sudo systemctl restart arcade-private", timeout=15)
+                await websocket.send(json.dumps({
+                    "type": "private_password_changed",
+                    "ok": True
+                }))
+
             elif action == "jukebox_load":
                 songs = await asyncio.get_event_loop().run_in_executor(
                     _executor, load_jukebox
@@ -544,6 +650,25 @@ async def ws_handler(websocket):
                 )
                 await websocket.send(json.dumps({
                     "type": "themes_saved",
+                    "ok": True
+                }))
+
+            elif action == "tv_load":
+                channels = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_tv
+                )
+                await websocket.send(json.dumps({
+                    "type": "tv_channels",
+                    "channels": channels
+                }))
+
+            elif action == "tv_save":
+                channels = msg.get("channels", [])
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_tv(channels)
+                )
+                await websocket.send(json.dumps({
+                    "type": "tv_saved",
                     "ok": True
                 }))
 

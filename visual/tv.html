@@ -708,12 +708,13 @@
 </footer>
 
 <script src="../nav.js"></script>
+<script src="tv-channels.js"></script>
 
 <script>
 /* ══════════════════════════════════════════════════
-   CHANNEL DATA
+   CHANNEL DATA — server-managed via tv-channels.js, hardcoded fallback
    ══════════════════════════════════════════════════ */
-const CHANNELS = [
+const CHANNELS = window.TV_CHANNELS || [
     { title: "Hologram of a Dream",                          artist: "magma//crunch", id: "mby4C5PZzlQ", year: "2025" },
     { title: "Sitting on a Dock in New Shoreham",            artist: "magma//crunch", id: "BirxEyAj0u0", year: "2025" },
     { title: "Very Long Boards",                             artist: "magma//crunch", id: "8xjZgv3us1Q", year: "2025" },

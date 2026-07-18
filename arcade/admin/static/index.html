@@ -7,10 +7,16 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MAGMA//OPS">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#080808">
     <meta property="og:title" content="MAGMA//OPS">
     <meta property="og:description" content="MagmaCrunch Operations Dashboard">
     <meta property="og:image" content="og-image.png">
     <meta property="og:type" content="website">
+    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
@@ -21,7 +27,8 @@
     <div id="login-overlay" class="overlay hidden">
         <div class="login-box">
             <h2>ENTER ACCESS CODE</h2>
-            <input type="password" id="password-input" placeholder="PASSWORD" autocomplete="off">
+            <input type="text" id="username-input" placeholder="USERNAME" value="admin" autocomplete="username">
+            <input type="password" id="password-input" placeholder="PASSWORD" autocomplete="current-password">
             <button id="login-btn" class="btn btn-cyan">LOGIN</button>
             <p id="login-error" class="login-error hidden">ACCESS DENIED</p>
         </div>
@@ -45,7 +52,9 @@
             <button class="ops-tab" data-tab="arcade">ARCADE</button>
             <button class="ops-tab" data-tab="jukebox">JUKEBOX</button>
             <button class="ops-tab" data-tab="themes">THEMES</button>
-            <button class="ops-tab" data-tab="api">API</button>
+            <button class="ops-tab" data-tab="accounts">ACCOUNTS</button>
+            <button class="ops-tab" data-tab="security">SECURITY</button>
+            <button class="ops-tab" data-tab="tv">TV</button>
         </nav>
 
         <main>
@@ -108,6 +117,66 @@
                     </div>
                     <div id="scores-grid" class="scores-grid">
                         <div class="log-welcome">Click REFRESH to load high scores.</div>
+                    </div>
+                </section>
+
+                <!-- Server Reference -->
+                <section class="server-ref-section">
+                    <h2 class="section-title">SERVER REFERENCE</h2>
+                    <div class="server-ref-grid">
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">PORT MAP</h3>
+                            <table class="server-ref-table">
+                                <tr><td>8765</td><td>SORRY!</td><td>🎲 Multiplayer (2-4p)</td></tr>
+                                <tr><td>8766</td><td>Cribbage</td><td>🃏 Multiplayer (2p)</td></tr>
+                                <tr><td>8767</td><td>Scand. Stud</td><td>🂡 Multiplayer (2-4p)</td></tr>
+                                <tr><td>8768</td><td>Chat</td><td>💬 Global + room chat</td></tr>
+                                <tr><td>8769</td><td>Chess</td><td>♟ Local</td></tr>
+                                <tr><td>8770</td><td>Checkers</td><td>⬛ Multiplayer (2p)</td></tr>
+                                <tr><td>8771</td><td>Backgammon</td><td>🎯 Multiplayer (2p)</td></tr>
+                                <tr><td>8772</td><td>Chinese Checkers</td><td>✳ Multiplayer (2-6p)</td></tr>
+                                <tr><td>8773</td><td>Parchisi</td><td>🎲 Multiplayer (2-4p)</td></tr>
+                                <tr><td>8774</td><td>Aggravation</td><td>😤 Multiplayer (2-6p)</td></tr>
+                                <tr><td>8780</td><td>MAGMA//OPS</td><td>📊 Admin dashboard</td></tr>
+                                <tr><td>8781</td><td>OPS WebSocket</td><td>🔌 Live logs, status</td></tr>
+                                <tr><td>8782</td><td>Private Auth</td><td>🔒 Password gate</td></tr>
+                            </table>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">ARCHITECTURE</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line"><span class="ref-label">HOST</span> Raspberry Pi — 192.168.1.16</div>
+                                <div class="ref-line"><span class="ref-label">TAILSCALE</span> 100.74.172.4 (VPN access)</div>
+                                <div class="ref-line"><span class="ref-label">PUBLIC</span> magmacrunch.duckdns.org</div>
+                                <div class="ref-line"><span class="ref-label">OS</span> Debian 13 (trixie)</div>
+                                <div class="ref-line"><span class="ref-label">RUNTIME</span> Python 3 + websockets lib</div>
+                                <div class="ref-line"><span class="ref-label">SERVICES</span> systemd — auto-start on boot</div>
+                                <div class="ref-line"><span class="ref-label">AUTH</span> Password gate per service</div>
+                                <div class="ref-line"><span class="ref-label">DATA</span> JSON files on disk</div>
+                            </div>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">MULTIPLAYER FLOW</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line">1. Player opens game page</div>
+                                <div class="ref-line">2. Client connects via WebSocket to game port</div>
+                                <div class="ref-line">3. Server assigns 4-char room code (e.g. A3X7)</div>
+                                <div class="ref-line">4. Up to 6 players join same room</div>
+                                <div class="ref-line">5. Server validates all moves (authoritative)</div>
+                                <div class="ref-line">6. State broadcast to all players in room</div>
+                                <div class="ref-line">7. Spectators can watch without joining</div>
+                            </div>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">QUICK COMMANDS</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line"><code>sudo systemctl status 'arcade-*'</code></div>
+                                <div class="ref-line"><code>sudo systemctl restart arcade-chat</code></div>
+                                <div class="ref-line"><code>journalctl -u arcade-* -f</code></div>
+                                <div class="ref-line"><code>ssh jake@192.168.1.16</code></div>
+                                <div class="ref-line"><code>rsync -avz arcade/ jake@192.168.1.16:~/arcade/</code></div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -177,24 +246,110 @@
                 <span id="tm-theme-count" class="theme-count">0 THEMES</span>
             </div>
 
-            <!-- ═══ API TAB ═══════════════════════════════════════════════════ -->
-            <div id="tab-api" class="tab-panel hidden">
-                <section class="api-keys-section">
+            <!-- ═══ ACCOUNTS TAB ══════════════════════════════════════════════ -->
+            <div id="tab-accounts" class="tab-panel hidden">
+                <div class="accounts-toolbar">
+                    <input type="text" class="search-input" id="ac-search-input" placeholder="SEARCH ACCOUNTS...">
+                </div>
+                <div id="ac-content" class="accounts-content"></div>
+            </div>
+
+            <!-- ═══ SECURITY TAB ══════════════════════════════════════════════ -->
+            <div id="tab-security" class="tab-panel hidden">
+                <section class="security-section">
+                    <h2 class="section-title">ADMIN PASSWORD</h2>
+                    <p class="api-keys-note">Change the password used to access MAGMA//OPS.</p>
+                    <div class="security-form">
+                        <div class="security-row">
+                            <label class="security-label">CURRENT PASSWORD</label>
+                            <input type="password" id="sec-current-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">NEW PASSWORD</label>
+                            <input type="password" id="sec-new-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">CONFIRM NEW</label>
+                            <input type="password" id="sec-confirm-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <button id="btn-change-pw" class="btn btn-yellow btn-sm">CHANGE PASSWORD</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">PRIVATE ARCADE PASSWORD</h2>
+                    <p class="api-keys-note">Change the password for private arcade pages (SORRY!, Aggravation).</p>
+                    <div class="security-form">
+                        <div class="security-row">
+                            <label class="security-label">CURRENT PASSWORD</label>
+                            <input type="password" id="sec-private-current-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">NEW PASSWORD</label>
+                            <input type="password" id="sec-private-new-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">CONFIRM NEW</label>
+                            <input type="password" id="sec-private-confirm-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <button id="btn-change-private-pw" class="btn btn-orange btn-sm">CHANGE PASSWORD</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">API KEYS</h2>
+                    <p class="api-keys-note">API keys for MEDIA//SEARCH and archive templates. Green dot = key set, gray = empty.</p>
                     <div class="api-keys-header">
-                        <h2 class="section-title">API KEYS</h2>
                         <div class="api-keys-controls">
                             <button id="btn-load-keys" class="btn btn-cyan btn-sm">LOAD</button>
                             <button id="btn-save-keys" class="btn btn-green btn-sm">SAVE</button>
                         </div>
+                        <span id="api-save-status" class="api-save-status"></span>
                     </div>
-                    <p class="api-keys-note">API keys for the MEDIA//SEARCH tool. Free keys from Pexels/Pixabay go here. Other sources work without keys.</p>
                     <div id="api-keys-grid" class="api-keys-grid"></div>
                 </section>
+            </div>
+
+            <!-- ═══ TV TAB ══════════════════════════════════════════════════════ -->
+            <div id="tab-tv" class="tab-panel hidden">
+                <div class="jukebox-toolbar">
+                    <div class="toolbar-group">
+                        <button id="tv-btn-import" class="btn btn-cyan btn-sm">IMPORT JSON</button>
+                        <input type="file" id="tv-file-input" accept=".json" style="display:none">
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="tv-btn-export-json" class="btn btn-green btn-sm">EXPORT JSON</button>
+                        <button id="tv-btn-copy-js" class="btn btn-orange btn-sm">COPY TV_CHANNELS JS</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="tv-btn-save" class="btn btn-green btn-sm">SAVE TO SERVER</button>
+                        <button id="tv-btn-reset" class="btn btn-rose btn-sm">RESET</button>
+                    </div>
+                    <div class="toolbar-spacer"></div>
+                    <span id="tv-channel-count" class="track-count">0 CHANNELS</span>
+                </div>
+
+                <div class="song-list-header">
+                    <span>#</span>
+                    <span></span>
+                    <span>THUMB</span>
+                    <span>TITLE</span>
+                    <span>ARTIST</span>
+                    <span>YEAR</span>
+                    <span>YT ID</span>
+                    <span></span>
+                </div>
+
+                <div id="tv-channel-list" class="song-list"></div>
+
+                <button id="tv-btn-add" class="add-song-btn">+ ADD CHANNEL</button>
             </div>
         </main>
 
         <footer>
-            <span class="footer-text">MAGMA//OPS v2.0 — MAGMACRUNCH OPERATIONS</span>
+            <span class="footer-text">MAGMA//OPS v2.1 — MAGMACRUNCH OPERATIONS</span>
         </footer>
     </div>
 
@@ -259,6 +414,8 @@
     <script src="arcade.js"></script>
     <script src="jukebox.js"></script>
     <script src="theme.js"></script>
+    <script src="accounts.js"></script>
     <script src="api.js"></script>
+    <script src="tv.js"></script>
 </body>
 </html>
