@@ -804,7 +804,7 @@
                     </div>
                     <div class="tv-knob" id="btn-playpause" role="button" tabindex="0" aria-label="play pause">
                         <div class="knob-face no-tick" style="width: 38px; height: 38px;">
-                            <div id="pp-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--tv-amber);line-height:1;">&#9646;&#9646;</div>
+                            <div id="pp-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--tv-amber);line-height:1;">&#9654;</div>
                         </div>
                         <div class="knob-label">PLAY</div>
                     </div>
@@ -826,9 +826,8 @@
 
     <!-- KEYBOARD HINTS -->
     <div class="tv-legend">
-        <kbd>↑</kbd> <kbd>↓</kbd> change channel &nbsp;&middot;&nbsp;
-        <kbd>←</kbd> <kbd>→</kbd> prev / next &nbsp;&middot;&nbsp;
-        <kbd>0</kbd>–<kbd>9</kbd> jump to channel &nbsp;&middot;&nbsp;
+        <kbd>↑</kbd> <kbd>↓</kbd> random channel &nbsp;&middot;&nbsp;
+        <kbd>←</kbd> <kbd>→</kbd> random channel &nbsp;&middot;&nbsp;
         <kbd>G</kbd> guide &nbsp;&middot;&nbsp;
         <kbd>space</kbd> play / pause
     </div>
@@ -984,8 +983,14 @@ function changeChannel(dir) {
     if (isSwitching || !isPoweredOn) return;
     isSwitching = true;
 
-    const prev = currentChannel;
-    currentChannel = (currentChannel + dir + CHANNELS.length) % CHANNELS.length;
+    // Pick a random channel (avoid repeating the current one)
+    let next;
+    if (CHANNELS.length <= 1) {
+        next = 0;
+    } else {
+        do { next = Math.floor(Math.random() * CHANNELS.length); } while (next === currentChannel);
+    }
+    currentChannel = next;
 
     const ch = CHANNELS[currentChannel];
 
@@ -1158,8 +1163,6 @@ document.getElementById('guide-close-btn').addEventListener('click', toggleGuide
 /* ══════════════════════════════════════════════════
    KEYBOARD CONTROLS
    ══════════════════════════════════════════════════ */
-let numBuffer = '';
-let numTimeout = null;
 
 document.addEventListener('keydown', function(e) {
     // Ignore if focused on an input
@@ -1208,42 +1211,6 @@ document.addEventListener('keydown', function(e) {
             break;
         case 'm':
         case 'M':
-            break;
-        default:
-            // Number keys 0-9
-            if (/^[0-9]$/.test(e.key) && isPoweredOn) {
-                if (guideOpen) {
-                    guideOpen = false;
-                    document.getElementById('tv-guide').classList.add('hidden');
-                    screen.classList.remove('guide-open');
-                }
-                numBuffer += e.key;
-                clearTimeout(numTimeout);
-                numTimeout = setTimeout(() => { numBuffer = ''; }, 800);
-                const num = parseInt(numBuffer, 10);
-                if (num >= 1 && num <= CHANNELS.length) {
-                    if (!isSwitching) {
-                        currentChannel = num - 1;
-                        const ch = CHANNELS[currentChannel];
-                        isSwitching = true;
-                        startStatic();
-                        stopVuMeter();
-                        titleBar.classList.remove('visible');
-                        setTimeout(() => {
-                            stopStatic();
-                            channelNum.textContent = String(num).padStart(2, '0');
-                            loadVideo(ch.id);
-                            screen.classList.remove('off');
-                            screen.classList.add('on-air');
-                            titleBar.textContent = ch.artist + ' — ' + ch.title;
-                            titleBar.classList.add('visible');
-                            startVuMeter();
-                            isSwitching = false;
-                        }, 300);
-                        numBuffer = '';
-                    }
-                }
-            }
             break;
     }
 });
