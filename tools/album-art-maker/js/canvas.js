@@ -166,6 +166,21 @@ window.CanvasRenderer = (function () {
             ctx.fillRect(cx - hs / 2, cy - hs / 2, hs, hs);
         }
 
+        // dimensions label
+        ctx.setLineDash([]);
+        ctx.font = '14px "Courier Prime"';
+        ctx.fillStyle = '#a0a0b0';
+        ctx.textAlign = 'center';
+        let label;
+        if (el.type === 'line') {
+            const len = Math.round(Math.sqrt(bounds.w ** 2 + bounds.h ** 2));
+            label = `${len} px`;
+        } else {
+            label = `${Math.round(bounds.w)} × ${Math.round(bounds.h)}`;
+        }
+        const labelY = bounds.y + bounds.h + pad + 16;
+        ctx.fillText(label, bounds.x + bounds.w / 2, labelY);
+
         ctx.restore();
     }
 
