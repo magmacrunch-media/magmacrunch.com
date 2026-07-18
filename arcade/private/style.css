@@ -263,6 +263,25 @@ body {
   margin-top: 4px;
 }
 
+/* ── Back Link ───────────────────────────────────────────────────────────── */
+
+.mc-back {
+  position: fixed;
+  top: 12px;
+  left: 14px;
+  z-index: 9999;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: rgba(255, 61, 110, 0.6);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+  pointer-events: auto;
+}
+
+.mc-back::before { content: '← '; }
+.mc-back:hover { color: rgba(255, 61, 110, 0.95); }
+
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 
 @media (max-width: 480px) {

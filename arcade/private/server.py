@@ -210,6 +210,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+  <a href="http://magmacrunch.duckdns.org/arcade/index.html" class="mc-back">magmacrunch arcade</a>
   <div class="scanlines"></div>
   <div class="container">
     <h1 class="title">PRIVATE ARCADE</h1>
