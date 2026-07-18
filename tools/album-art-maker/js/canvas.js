@@ -77,6 +77,45 @@ window.CanvasRenderer = (function () {
             case 'image':
                 drawImageEl(ctx, el);
                 break;
+            case 'triangle':
+                drawTriangle(el);
+                break;
+            case 'pentagon':
+                drawPentagon(el);
+                break;
+            case 'hexagon':
+                drawHexagon(el);
+                break;
+            case 'diamond':
+                drawDiamond(el);
+                break;
+            case 'star':
+                drawStar(el);
+                break;
+            case 'arrow':
+                drawArrow(el);
+                break;
+            case 'roundrect':
+                drawRoundRect(el);
+                break;
+            case 'sine':
+                drawSine(el);
+                break;
+            case 'squarewave':
+                drawSquareWave(el);
+                break;
+            case 'sawtooth':
+                drawSawtooth(el);
+                break;
+            case 'trianglewave':
+                drawTriangleWave(el);
+                break;
+            case 'step':
+                drawStep(el);
+                break;
+            case 'pulse':
+                drawPulse(el);
+                break;
         }
 
         ctx.restore();
@@ -163,6 +202,173 @@ window.CanvasRenderer = (function () {
                 ctx.lineJoin = 'round';
                 ctx.strokeText(lines[i], el.x, ly);
             }
+        }
+    }
+
+    // ── BASIC SHAPES ──
+
+    function drawTriangle(el) {
+        const cx = el.x + el.w / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, el.y);
+        ctx.lineTo(el.x, el.y + el.h);
+        ctx.lineTo(el.x + el.w, el.y + el.h);
+        ctx.closePath();
+        fillOrStroke(el);
+    }
+
+    function drawPentagon(el) {
+        drawPolygon(el, 5, -Math.PI / 2);
+    }
+
+    function drawHexagon(el) {
+        drawPolygon(el, 6, -Math.PI / 2);
+    }
+
+    function drawPolygon(el, sides, startAngle) {
+        const cx = el.x + el.w / 2;
+        const cy = el.y + el.h / 2;
+        const rx = el.w / 2;
+        const ry = el.h / 2;
+        ctx.beginPath();
+        for (let i = 0; i < sides; i++) {
+            const angle = startAngle + (i * 2 * Math.PI) / sides;
+            const px = cx + rx * Math.cos(angle);
+            const py = cy + ry * Math.sin(angle);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        fillOrStroke(el);
+    }
+
+    function drawDiamond(el) {
+        const cx = el.x + el.w / 2;
+        const cy = el.y + el.h / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, el.y);
+        ctx.lineTo(el.x + el.w, cy);
+        ctx.lineTo(cx, el.y + el.h);
+        ctx.lineTo(el.x, cy);
+        ctx.closePath();
+        fillOrStroke(el);
+    }
+
+    function drawStar(el) {
+        const cx = el.x + el.w / 2;
+        const cy = el.y + el.h / 2;
+        const rx = el.w / 2;
+        const ry = el.h / 2;
+        const inner = 0.4;
+        ctx.beginPath();
+        for (let i = 0; i < 10; i++) {
+            const angle = -Math.PI / 2 + (i * Math.PI) / 5;
+            const r = i % 2 === 0 ? 1 : inner;
+            const px = cx + rx * r * Math.cos(angle);
+            const py = cy + ry * r * Math.sin(angle);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        fillOrStroke(el);
+    }
+
+    function drawArrow(el) {
+        const x1 = el.x, y1 = el.y + el.h / 2;
+        const x2 = el.x + el.w, y2 = el.y + el.h / 2;
+        const headLen = Math.min(el.w * 0.25, el.h * 0.4);
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.strokeStyle = el.stroke || el.fill || '#000';
+        ctx.lineWidth = el.strokeWidth || 4;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
+    }
+
+    function drawRoundRect(el) {
+        const r = Math.min(el.w, el.h) * 0.15;
+        ctx.beginPath();
+        ctx.moveTo(el.x + r, el.y);
+        ctx.lineTo(el.x + el.w - r, el.y);
+        ctx.arcTo(el.x + el.w, el.y, el.x + el.w, el.y + r, r);
+        ctx.lineTo(el.x + el.w, el.y + el.h - r);
+        ctx.arcTo(el.x + el.w, el.y + el.h, el.x + el.w - r, el.y + el.h, r);
+        ctx.lineTo(el.x + r, el.y + el.h);
+        ctx.arcTo(el.x, el.y + el.h, el.x, el.y + el.h - r, r);
+        ctx.lineTo(el.x, el.y + r);
+        ctx.arcTo(el.x, el.y, el.x + r, el.y, r);
+        ctx.closePath();
+        fillOrStroke(el);
+    }
+
+    // ── WAVE SHAPES ──
+
+    function drawSine(el) {
+        drawWave(el, (t) => Math.sin(t * Math.PI * 2));
+    }
+
+    function drawSquareWave(el) {
+        drawWave(el, (t) => Math.sin(t * Math.PI * 2) >= 0 ? 1 : -1);
+    }
+
+    function drawSawtooth(el) {
+        drawWave(el, (t) => 2 * (t - Math.floor(t + 0.5)));
+    }
+
+    function drawTriangleWave(el) {
+        drawWave(el, (t) => 2 * Math.abs(2 * (t - Math.floor(t + 0.5))) - 1);
+    }
+
+    function drawStep(el) {
+        const steps = 5;
+        drawWave(el, (t) => {
+            const v = Math.floor(t * steps) / (steps - 1);
+            return v * 2 - 1;
+        });
+    }
+
+    function drawPulse(el) {
+        drawWave(el, (t) => {
+            const mod = t % 1;
+            return mod < 0.2 ? 1 : -1;
+        });
+    }
+
+    function drawWave(el, fn) {
+        const { x, y, w, h } = el;
+        const midY = y + h / 2;
+        const amp = h / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(x, y + h);
+        const steps = Math.max(64, Math.round(w));
+        for (let i = 0; i <= steps; i++) {
+            const t = i / steps;
+            const sx = x + t * w;
+            const sy = midY - amp * fn(t);
+            ctx.lineTo(sx, sy);
+        }
+        ctx.lineTo(x + w, y + h);
+        ctx.closePath();
+        fillOrStroke(el);
+    }
+
+    function fillOrStroke(el) {
+        if (el.fill && el.fill !== 'none') {
+            ctx.fillStyle = el.fill;
+            ctx.fill();
+        }
+        if (el.stroke && el.stroke !== 'none' && el.strokeWidth > 0) {
+            ctx.strokeStyle = el.stroke;
+            ctx.lineWidth = el.strokeWidth;
+            ctx.stroke();
         }
     }
 
@@ -373,6 +579,15 @@ window.CanvasRenderer = (function () {
                 if (img.complete) {
                     targetCtx.drawImage(img, el.x, el.y, el.w, el.h);
                 }
+                break;
+            }
+
+            default: {
+                // new shapes: swap ctx temporarily and use same draw functions
+                const savedCtx = ctx;
+                ctx = targetCtx;
+                drawElement(el);
+                ctx = savedCtx;
                 break;
             }
         }

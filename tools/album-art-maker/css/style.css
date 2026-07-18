@@ -228,12 +228,27 @@ h1.glitch::after {
     border-radius: 6px;
     padding: 8px;
     z-index: 50;
-    min-width: 140px;
+    min-width: 220px;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 .shapes-popup.open {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 6px;
+}
+
+.popup-section-label {
+    grid-column: 1 / -1;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    padding: 4px 0 2px;
+    border-top: 1px solid var(--border);
+}
+.popup-section-label:first-child {
+    border-top: none;
 }
 
 .shape-btn {

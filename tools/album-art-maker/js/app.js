@@ -111,10 +111,11 @@
         Tools.setTool(tool);
 
         // update shapes button label
-        const shapeTools = ['rect', 'circle', 'line'];
+        const shapeTools = ['rect', 'circle', 'line', 'triangle', 'pentagon', 'hexagon', 'diamond', 'star', 'arrow', 'roundrect', 'sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse'];
         const shapesBtnLabel = document.getElementById('shapesBtnLabel');
         if (shapeTools.includes(tool) && shapesBtnLabel) {
-            shapesBtnLabel.textContent = tool.toUpperCase();
+            const labels = { squarewave: 'SQUARE', trianglewave: 'TRI WAVE', roundrect: 'R. RECT', sawtooth: 'SAWTOOTH' };
+            shapesBtnLabel.textContent = labels[tool] || tool.toUpperCase();
         }
     }
 
