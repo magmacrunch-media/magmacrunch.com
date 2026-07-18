@@ -254,24 +254,78 @@ header {
     display: block;
 }
 
-/* ── TEXT INPUT OVERLAY ── */
-.text-input-overlay {
-    position: absolute;
-    background: rgba(0, 245, 255, 0.08);
-    border: 2px dashed var(--cyan);
-    color: var(--cyan);
-    font-family: 'Press Start 2P', monospace;
-    font-size: 48px;
-    padding: 4px 8px;
-    outline: none;
-    resize: none;
-    overflow: hidden;
-    min-width: 60px;
-    min-height: 1.2em;
-    line-height: 1.2;
-    z-index: 20;
-    pointer-events: auto;
+/* ── TEXT MODAL ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-box {
+    background: var(--panel);
+    border: 2px solid var(--cyan);
+    border-radius: 8px;
+    padding: 24px;
+    min-width: 340px;
+    max-width: 90vw;
+    box-shadow: 0 0 40px rgba(0,245,255,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
     box-sizing: border-box;
+}
+
+.modal-header {
+    font-size: 10px;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    text-shadow: 0 0 10px rgba(0,245,255,0.4);
+}
+
+.modal-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 10px;
+    outline: none;
+    resize: vertical;
+}
+.modal-textarea:focus {
+    border-color: var(--cyan);
+}
+
+.modal-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+.modal-btns .action-btn {
+    flex: none;
+    padding: 10px 20px;
+}
+.modal-btns .export-btn {
+    flex: none;
+    padding: 10px 20px;
 }
 
 /* ── PROPERTY CONTROLS ── */

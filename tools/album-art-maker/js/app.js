@@ -2,10 +2,81 @@
 (function () {
     let elements = [];
     let selectedElement = null;
-    let textInputActive = false;
 
     const canvas = document.getElementById('mainCanvas');
-    const textInput = document.getElementById('textInput');
+
+    // ── TEXT MODAL ──
+    const textModal = document.getElementById('textModal');
+    const modalTextInput = document.getElementById('modalTextInput');
+    const modalFontSelect = document.getElementById('modalFontSelect');
+    const modalFontSize = document.getElementById('modalFontSize');
+    const modalFontSizeVal = document.getElementById('modalFontSizeVal');
+    let modalTarget = null; // { x, y } or { editId } for editing existing
+
+    function openTextModal(x, y, existingElement) {
+        modalTarget = existingElement
+            ? { editId: existingElement.id }
+            : { x, y };
+
+        modalTextInput.value = existingElement ? existingElement.text : '';
+        modalFontSelect.value = existingElement
+            ? existingElement.font
+            : (document.getElementById('fontSelect').value || 'Press Start 2P');
+        modalFontSize.value = existingElement
+            ? existingElement.fontSize
+            : (parseInt(document.getElementById('fontSize').value) || 48);
+        modalFontSizeVal.textContent = modalFontSize.value;
+
+        textModal.hidden = false;
+        modalTextInput.focus();
+    }
+
+    function closeTextModal() {
+        textModal.hidden = true;
+        modalTextInput.value = '';
+        modalTarget = null;
+    }
+
+    function commitTextModal() {
+        const text = modalTextInput.value.trim();
+        if (!text) { closeTextModal(); return; }
+
+        if (modalTarget && modalTarget.editId !== undefined) {
+            const el = elements.find(e => e.id === modalTarget.editId);
+            if (el) {
+                el.text = text;
+                el.font = modalFontSelect.value;
+                el.fontSize = parseInt(modalFontSize.value) || 48;
+            }
+        } else if (modalTarget) {
+            const el = Tools.createTextElement(
+                modalTarget.x, modalTarget.y, text,
+                modalFontSelect.value,
+                parseInt(modalFontSize.value) || 48
+            );
+            elements.push(el);
+        }
+
+        History.push(elements);
+        CanvasRenderer.render(elements);
+        closeTextModal();
+    }
+
+    document.getElementById('modalAdd').addEventListener('click', commitTextModal);
+    document.getElementById('modalCancel').addEventListener('click', closeTextModal);
+    modalTextInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            commitTextModal();
+        }
+        if (e.key === 'Escape') closeTextModal();
+    });
+    textModal.addEventListener('click', (e) => {
+        if (e.target === textModal) closeTextModal();
+    });
+    modalFontSize.addEventListener('input', () => {
+        modalFontSizeVal.textContent = modalFontSize.value;
+    });
 
     // ── INIT ──
     CanvasRenderer.init(canvas);
@@ -32,7 +103,7 @@
 
     // ── CANVAS MOUSE EVENTS ──
     canvas.addEventListener('mousedown', (e) => {
-        if (textInputActive) return;
+        if (!textModal.hidden) return;
         Tools.onMouseDown(e, elements);
     });
 
@@ -55,93 +126,13 @@
         const pos = Tools.getCanvasCoords(e);
         const hit = Tools.hitTest(pos.x, pos.y, elements);
         if (hit && hit.type === 'text') {
-            openTextInput(hit.x, hit.y, hit);
+            openTextModal(hit.x, hit.y, hit);
         }
     });
 
-    // ── TEXT INPUT OVERLAY ──
+    // ── TEXT TOOL CLICK ──
     function handleTextEdit(x, y) {
-        openTextInput(x, y, null);
-    }
-
-    function openTextInput(x, y, existingElement) {
-        textInputActive = true;
-        textInput.hidden = false;
-
-        // position the textarea over the canvas at the click point
-        const canvasRect = canvas.getBoundingClientRect();
-        const wrapRect = canvas.parentElement.getBoundingClientRect();
-        const scaleX = canvasRect.width / canvas.width;
-        const scaleY = canvasRect.height / canvas.height;
-
-        textInput.style.left = (canvasRect.left - wrapRect.left + x * scaleX) + 'px';
-        textInput.style.top = (canvasRect.top - wrapRect.top + y * scaleY) + 'px';
-
-        const fontSize = parseInt(document.getElementById('fontSize').value) || 48;
-        const font = document.getElementById('fontSelect').value || 'Press Start 2P';
-        textInput.style.fontFamily = `"${font}", monospace`;
-        textInput.style.fontSize = (fontSize * scaleY) + 'px';
-        textInput.style.color = document.getElementById('fillColor').value;
-        textInput.value = existingElement ? existingElement.text : '';
-
-        textInput.focus();
-
-        // store context for when we commit
-        textInput.dataset.canvasX = x;
-        textInput.dataset.canvasY = y;
-        textInput.dataset.existingId = existingElement ? existingElement.id : '';
-    }
-
-    textInput.addEventListener('blur', commitText);
-    textInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            textInput.hidden = true;
-            textInputActive = false;
-            textInput.value = '';
-        }
-        // Enter commits (Shift+Enter for newline)
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            commitText();
-        }
-    });
-
-    function commitText() {
-        if (!textInputActive) return;
-        const text = textInput.value.trim();
-        const x = parseFloat(textInput.dataset.canvasX);
-        const y = parseFloat(textInput.dataset.canvasY);
-        const existingId = textInput.dataset.existingId;
-
-        textInput.hidden = true;
-        textInputActive = false;
-
-        if (!text) {
-            textInput.value = '';
-            return;
-        }
-
-        if (existingId) {
-            // update existing text element
-            const el = elements.find(e => e.id === parseInt(existingId));
-            if (el) {
-                el.text = text;
-                el.font = document.getElementById('fontSelect').value;
-                el.fontSize = parseInt(document.getElementById('fontSize').value) || 48;
-            }
-        } else {
-            // create new text element
-            const el = Tools.createTextElement(
-                x, y, text,
-                document.getElementById('fontSelect').value,
-                parseInt(document.getElementById('fontSize').value) || 48
-            );
-            elements.push(el);
-        }
-
-        History.push(elements);
-        CanvasRenderer.render(elements);
-        textInput.value = '';
+        openTextModal(x, y, null);
     }
 
     // ── ELEMENT CALLBACKS ──
