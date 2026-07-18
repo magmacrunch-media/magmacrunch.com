@@ -8,6 +8,63 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=1">
+    <style>
+        .tool-nav {
+            padding: 8px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+        .tool-nav .back-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--purple);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.15s, text-shadow 0.15s;
+        }
+        .tool-nav .back-link:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px var(--purple);
+        }
+
+        /* Chrome glitch effect */
+        .chrome {
+            position: relative;
+            display: inline-block;
+        }
+        .chrome::before,
+        .chrome::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .chrome::before {
+            animation: chrome-glitch-1 3s infinite linear alternate-reverse;
+            clip-path: inset(0 0 50% 0);
+            color: rgba(196,95,255,0.45);
+        }
+        .chrome::after {
+            animation: chrome-glitch-2 3s infinite linear alternate-reverse;
+            clip-path: inset(50% 0 0 0);
+            color: rgba(0,245,255,0.45);
+        }
+        @keyframes chrome-glitch-1 {
+            0%, 92% { transform: translate(0); }
+            93% { transform: translate(-1px, 0); }
+            94% { transform: translate(1px, 0); }
+            95% { transform: translate(0); }
+        }
+        @keyframes chrome-glitch-2 {
+            0%, 94% { transform: translate(0); }
+            95% { transform: translate(1px, 0); }
+            96% { transform: translate(-1px, 0); }
+            97% { transform: translate(0); }
+        }
+    </style>
 </head>
 <body>
 
@@ -20,6 +77,10 @@
             <button class="btn-settings" id="btnSettings" title="Settings">&#9881;</button>
         </div>
     </header>
+
+    <nav class="tool-nav">
+        <a href="../" class="back-link"><span class="chrome" data-text="← TOOLS">← TOOLS</span></a>
+    </nav>
 
     <div class="workspace">
         <!-- LEFT PANEL: Filters -->

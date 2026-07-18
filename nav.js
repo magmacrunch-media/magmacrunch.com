@@ -38,6 +38,10 @@ window.NAV_CONFIG = {
             { href: 'press/scientific/index.html', label: 'scientific' },
             { href: 'press/experimental/index.html', label: 'experimental' }
         ]},
+        { label: 'tools', href: 'tools/index.html', items: [
+            { href: 'tools/album-art-maker/index.html', label: 'album art' },
+            { href: 'tools/media-search/index.html', label: 'media search' }
+        ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]
 };
@@ -366,7 +370,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
     ];
 
     /* ── EXCLUDED PATHS: full page load ── */
-    const EXCLUDE_PATHS = ['/arcade/', '/by-contributor/', '/by-label/'];
+    const EXCLUDE_PATHS = ['/arcade/', '/by-contributor/', '/by-label/', '/tools/'];
 
     /* ── HELPERS ── */
     function abs(href, base) {

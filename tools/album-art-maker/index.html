@@ -9,6 +9,78 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=3">
+    <style>
+        .tool-nav {
+            padding: 8px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+        .tool-nav .back-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            background: var(--surface);
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.15s, border-color 0.15s, text-shadow 0.15s;
+        }
+        .tool-nav .back-link:hover {
+            color: var(--text);
+            border-color: var(--dim);
+            text-shadow: 0 0 6px rgba(240,234,216,0.3);
+        }
+
+        /* Chrome glitch effect */
+        .chrome {
+            position: relative;
+            display: inline-block;
+        }
+        .chrome::before,
+        .chrome::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .chrome::before {
+            animation: chrome-glitch-1 3s infinite linear alternate-reverse;
+            clip-path: inset(0 0 50% 0);
+            color: rgba(160,160,176,0.35);
+        }
+        .chrome::after {
+            animation: chrome-glitch-2 3s infinite linear alternate-reverse;
+            clip-path: inset(50% 0 0 0);
+            color: rgba(160,160,176,0.35);
+        }
+        @keyframes chrome-glitch-1 {
+            0%, 92% { transform: translate(0); }
+            93% { transform: translate(-1px, 0); }
+            94% { transform: translate(1px, 0); }
+            95% { transform: translate(0); }
+        }
+        @keyframes chrome-glitch-2 {
+            0%, 94% { transform: translate(0); }
+            95% { transform: translate(1px, 0); }
+            96% { transform: translate(-1px, 0); }
+            97% { transform: translate(0); }
+        }
+
+        /* Diamond icon chrome */
+        .shape-btn .chrome {
+            font-size: 16px;
+            line-height: 1;
+        }
+        .shape-btn .chrome::before,
+        .shape-btn .chrome::after {
+            font-size: 16px;
+            line-height: 1;
+        }
+    </style>
 </head>
 <body>
 
@@ -21,6 +93,10 @@
             <span class="sys-stat" id="elementCountStat">0 ELEMENTS</span>
         </div>
     </header>
+
+    <nav class="tool-nav">
+        <a href="../" class="back-link"><span class="chrome" data-text="← TOOLS">← TOOLS</span></a>
+    </nav>
 
     <div class="workspace">
         <!-- LEFT PANEL: Tools -->
@@ -103,7 +179,7 @@
                     <span class="tool-name">HEXA</span>
                 </button>
                 <button class="shape-btn" data-tool="diamond" title="Diamond">
-                    <span class="tool-icon">&#9671;</span>
+                    <span class="chrome" data-text="◇"><span class="tool-icon">&#9671;</span></span>
                     <span class="tool-name">DIAMOND</span>
                 </button>
                 <button class="shape-btn" data-tool="star" title="Star">
@@ -190,8 +266,18 @@
             <div class="prop-group" id="rotationGroup" hidden>
                 <label class="prop-label">ROTATION</label>
                 <div class="range-row">
+                    <button class="rot-btn" id="rotMinus" title="Rotate −5°">&#8722;</button>
                     <input type="range" id="rotation" min="0" max="360" value="0" class="range-input">
+                    <button class="rot-btn" id="rotPlus" title="Rotate +5°">+</button>
                     <span class="range-val" id="rotationVal">0°</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="waveProps" hidden>
+                <label class="prop-label">WAVELENGTH</label>
+                <div class="range-row">
+                    <input type="range" id="wavelength" min="1" max="20" value="5" class="range-input">
+                    <span class="range-val" id="wavelengthVal">5</span>
                 </div>
             </div>
 
@@ -280,7 +366,7 @@
     </div>
 
     <footer>
-        <span class="footer-text">ALBUM//ART v1.2 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+        <span class="footer-text">ALBUM//ART v1.3 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
     </footer>
 
     <script src="js/history.js"></script>
