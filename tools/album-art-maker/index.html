@@ -25,12 +25,28 @@
     <div class="workspace">
         <!-- LEFT PANEL: Tools -->
         <aside class="panel tools-panel">
+            <div class="panel-label">ACTIONS</div>
+            <div class="action-btns">
+                <button class="action-btn" id="undoBtn" title="Undo (Ctrl+Z)">UNDO</button>
+                <button class="action-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">REDO</button>
+            </div>
+            <div class="action-btns">
+                <button class="action-btn danger" id="deleteBtn" title="Delete selected (Del)">DELETE</button>
+                <button class="action-btn" id="clearBtn">CLEAR ALL</button>
+            </div>
+
+            <div class="panel-divider"></div>
+
             <div class="panel-label">TOOLS</div>
+            <button class="tool-btn full-width active" data-tool="select" title="Select / Move (V)">
+                <span class="tool-icon">&#9658;</span>
+                <span class="tool-name">SELECT</span>
+            </button>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">SHAPES</div>
             <div class="tool-grid">
-                <button class="tool-btn active" data-tool="select" title="Select / Move (V)">
-                    <span class="tool-icon">&#9658;</span>
-                    <span class="tool-name">SELECT</span>
-                </button>
                 <button class="tool-btn" data-tool="rect" title="Rectangle (R)">
                     <span class="tool-icon">&#9645;</span>
                     <span class="tool-name">RECT</span>
@@ -43,11 +59,15 @@
                     <span class="tool-icon">&#9585;</span>
                     <span class="tool-name">LINE</span>
                 </button>
-                <button class="tool-btn" data-tool="text" title="Text (T)">
-                    <span class="tool-icon">T</span>
-                    <span class="tool-name">TEXT</span>
-                </button>
             </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">TEXT</div>
+            <button class="tool-btn full-width" data-tool="text" title="Text (T)">
+                <span class="tool-icon">T</span>
+                <span class="tool-name">TEXT</span>
+            </button>
 
             <div class="panel-divider"></div>
 
@@ -145,14 +165,6 @@
 
             <div class="panel-divider"></div>
 
-            <div class="action-btns">
-                <button class="action-btn" id="undoBtn" title="Undo (Ctrl+Z)">UNDO</button>
-                <button class="action-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">REDO</button>
-            </div>
-            <div class="action-btns">
-                <button class="action-btn danger" id="deleteBtn" title="Delete selected (Del)">DELETE</button>
-                <button class="action-btn" id="clearBtn">CLEAR ALL</button>
-            </div>
             <div class="prop-group">
                 <label class="prop-label">FILE NAME</label>
                 <input type="text" id="fileName" class="file-input" value="album-art">

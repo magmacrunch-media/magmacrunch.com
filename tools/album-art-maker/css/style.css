@@ -185,6 +185,13 @@ h1.glitch::after {
     box-shadow: 0 0 12px rgba(160,160,176,0.1), inset 0 0 12px rgba(160,160,176,0.03);
 }
 
+.tool-btn.full-width {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+}
+
 .tool-icon {
     font-size: 16px;
     line-height: 1;
