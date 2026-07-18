@@ -351,17 +351,6 @@
             </div>
         </a>
 
-        <a href="../aggravation/index.html" class="game-card" style="--card-color: #ffe03a">
-            <div class="card-inner">
-                <div class="card-title">AGGRAVATION</div>
-                <div class="card-canvas-wrap">
-                    <canvas id="cAggravation" width="72" height="72"></canvas>
-                </div>
-                <div class="card-desc">classic marble race. 2-6 players. vs ai opponents. capture rivals. reach the center.</div>
-                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
-            </div>
-        </a>
-
     </div>
 
 </main>
@@ -663,79 +652,6 @@
         ctx.lineWidth = 0.5;
         ctx.stroke();
     });
-})();
-
-// ── Aggravation preview ──
-(function() {
-    const c = document.getElementById('cAggravation');
-    if (!c) return;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = '#0a0612';
-    ctx.fillRect(0, 0, 72, 72);
-    ctx.strokeStyle = '#ffe03a';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(2, 2, 68, 68);
-
-    // Draw rectangular track ring
-    const track = [
-        [12,56],[20,56],[28,56],[36,56],[44,56],[52,56],[60,56],
-        [60,48],[60,40],[60,32],[60,24],[60,16],
-        [52,16],[44,16],[36,16],[28,16],[20,16],[12,16],
-        [12,24],[12,32],[12,40],[12,48],
-    ];
-    track.forEach(([x, y]) => {
-        ctx.fillStyle = '#1a1028';
-        ctx.fillRect(x - 3, y - 3, 6, 6);
-        ctx.strokeStyle = '#2a1a40';
-        ctx.lineWidth = 0.5;
-        ctx.strokeRect(x - 3, y - 3, 6, 6);
-    });
-
-    // Entry point markers
-    const entries = [
-        { x: 12, y: 56, color: '#ff3d6e' },
-        { x: 44, y: 56, color: '#00f5ff' },
-        { x: 60, y: 40, color: '#39ff6e' },
-        { x: 52, y: 16, color: '#ffe03a' },
-        { x: 20, y: 16, color: '#c45fff' },
-        { x: 12, y: 32, color: '#ff7c1f' },
-    ];
-    entries.forEach(p => {
-        ctx.fillStyle = p.color + '60';
-        ctx.fillRect(p.x - 3, p.y - 3, 6, 6);
-    });
-
-    // Marbles
-    const marbles = [
-        { x: 14, y: 58, color: '#ff3d6e' },
-        { x: 50, y: 54, color: '#00f5ff' },
-        { x: 58, y: 38, color: '#39ff6e' },
-        { x: 48, y: 18, color: '#ffe03a' },
-    ];
-    marbles.forEach(p => {
-        ctx.fillStyle = p.color;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
-    });
-
-    // Center star
-    ctx.fillStyle = '#ffe03a20';
-    ctx.fillRect(30, 30, 12, 12);
-    ctx.strokeStyle = '#ffe03a40';
-    ctx.lineWidth = 0.5;
-    ctx.strokeRect(30, 30, 12, 12);
-
-    // Die
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(33, 33, 6, 6);
-    ctx.fillStyle = '#0a0612';
-    ctx.beginPath();
-    ctx.arc(36, 36, 1.5, 0, Math.PI * 2);
-    ctx.fill();
 })();
 
 // ── Keyboard nav ──
