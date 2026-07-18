@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teevee — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ══════════════════════════════════════════
+           NAV OVERRIDES
+           ══════════════════════════════════════════ */
+        :root {
+            --nav-accent: #FFB800;
+            --nav-glow: rgba(255,184,0,0.4);
+            --nav-brand: #F0EAD8;
+            --nav-brand-glow: rgba(240,234,216,0.5);
+        }
+
+        /* ══════════════════════════════════════════
+           PAGE PALETTE
+           ══════════════════════════════════════════ */
+        :root {
+            --tv-amber: #FFB800;
+            --tv-amber-dim: #B38200;
+            --tv-cabinet: #2A2218;
+            --tv-cabinet-light: #3D3225;
+            --tv-bezel: #1A1610;
+            --tv-screen-off: #0A0A08;
+            --tv-screen-glow: rgba(180,220,160,0.15);
+            --tv-phosphor: #B4DCA0;
+            --tv-static: #C8C8C8;
+            --tv-knob: #4A3F30;
+            --tv-knob-face: #5C4E3A;
+            --tv-grille: #1E1A12;
+            --tv-badge-bg: #1C1810;
+            --tv-badge-text: #8A7A5A;
+        }
+
+        /* ══════════════════════════════════════════
+           BODY THEME
+           ══════════════════════════════════════════ */
+        body.broadcast {
+            --black: #0A0A12;
+            --deep: #111118;
+            --white: #F0EAD8;
+            --dim: #8A7A6A;
+            --rose: #FF6B6B;
+            --yellow: #FFB800;
+            --cyan: #00F5FF;
+            background: #0A0A12;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body.broadcast .dropdown a { border-left: 3px solid transparent; }
+        body.broadcast .dropdown a:nth-child(1) { border-left-color: #FF6B6B; }
+        body.broadcast .dropdown a:nth-child(2) { border-left-color: #FFB800; }
+        body.broadcast .dropdown a:nth-child(3) { border-left-color: #00F5FF; }
+        body.broadcast .dropdown a:nth-child(4) { border-left-color: #39FF6E; }
+
+        body.broadcast .breadcrumb .sep { color: var(--tv-amber); }
+        body.broadcast .breadcrumb .current { color: var(--tv-amber); }
+        body.broadcast footer span { color: var(--tv-amber); }
+
+        /* ══════════════════════════════════════════
+           BREADCRUMB
+           ══════════════════════════════════════════ */
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--dim);
+            margin-bottom: 24px;
+            padding-top: 64px;
+        }
+        .breadcrumb a {
+            color: var(--dim);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .breadcrumb a:hover { color: var(--tv-amber); }
+        .breadcrumb .sep { margin: 0 6px; }
+
+        /* ══════════════════════════════════════════
+           PAGE HEADER
+           ══════════════════════════════════════════ */
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(13px, 2.8vw, 22px);
+            color: var(--tv-amber);
+            text-shadow: 0 0 20px rgba(255,184,0,0.6), 0 0 40px rgba(255,184,0,0.3);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .page-subtitle {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--dim);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* ══════════════════════════════════════════
+           TV CONTAINER
+           ══════════════════════════════════════════ */
+        .tv-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 20px 16px 60px;
+            animation: fadeUp 0.6s ease-out;
+        }
+        .tv {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        /* ─── ANTENNA ─── */
+        .tv-antenna {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: -4px;
+            position: relative;
+            z-index: 1;
+        }
+        .antenna-prong {
+            width: 4px;
+            height: 60px;
+            background: linear-gradient(to top, var(--tv-cabinet-light), #6A5A40);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            position: relative;
+        }
+        .antenna-prong.left { transform: rotate(-25deg); }
+        .antenna-prong.right { transform: rotate(25deg); }
+        .antenna-prong::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--tv-amber);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--tv-amber), 0 0 16px rgba(255,184,0,0.4);
+        }
+
+        /* ─── TV BODY ─── */
+        .tv-body {
+            background: var(--tv-cabinet);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid var(--tv-cabinet-light);
+            box-shadow:
+                0 4px 24px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+        }
+        .tv-body::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+            pointer-events: none;
+        }
+
+        /* ─── SCREEN AREA ─── */
+        .tv-screen-area {
+            background: var(--tv-bezel);
+            border-radius: 10px;
+            padding: 10px;
+            border: 2px solid #0D0B08;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+        }
+        .tv-screen {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: var(--tv-screen-off);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow:
+                inset 0 0 40px rgba(0,0,0,0.8),
+                inset 0 0 80px rgba(0,0,0,0.4);
+        }
+
+        /* ─── YOUTUBE PLAYER ─── */
+        #yt-player {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ─── SCANLINE OVERLAY ─── */
+        .tv-screen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.15) 2px,
+                rgba(0,0,0,0.15) 4px
+            );
+            pointer-events: none;
+            z-index: 3;
+            border-radius: 6px;
+        }
+
+        /* ─── PHOSPHOR GLOW ─── */
+        .tv-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                ellipse at center,
+                var(--tv-screen-glow) 0%,
+                transparent 70%
+            );
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            border-radius: 6px;
+        }
+        .tv-screen.on-air::before {
+            opacity: 1;
+        }
+
+        /* ─── STATIC CANVAS ─── */
+        #static-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+            border-radius: 6px;
+        }
+        #static-canvas.active {
+            opacity: 1;
+        }
+
+        /* ─── COLOR BARS ─── */
+        .color-bars {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+        .color-bars.active {
+            opacity: 1;
+        }
+        .color-bars div {
+            flex: 1;
+        }
+        .color-bars .bar-1 { background: #C0C0C0; }
+        .color-bars .bar-2 { background: #C0C000; }
+        .color-bars .bar-3 { background: #00C0C0; }
+        .color-bars .bar-4 { background: #00C000; }
+        .color-bars .bar-5 { background: #C000C0; }
+        .color-bars .bar-6 { background: #C00000; }
+        .color-bars .bar-7 { background: #0000C0; }
+
+        /* ─── SCREEN OFF ─── */
+        .tv-screen.off {
+            background: var(--tv-screen-off);
+        }
+        .tv-screen.off::before {
+            opacity: 0 !important;
+        }
+
+        /* ─── FLICKER ANIMATION ─── */
+        .tv-screen.flicker {
+            animation: screenFlicker 0.15s ease-out;
+        }
+        @keyframes screenFlicker {
+            0%   { opacity: 1; }
+            10%  { opacity: 0.2; }
+            20%  { opacity: 0.8; }
+            30%  { opacity: 0.1; }
+            40%  { opacity: 0.9; }
+            50%  { opacity: 0.3; }
+            60%  { opacity: 1; }
+            70%  { opacity: 0.5; }
+            80%  { opacity: 1; }
+            90%  { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* ─── SCREEN TURN ON ─── */
+        .tv-screen.turn-on {
+            animation: screenTurnOn 0.6s ease-out;
+        }
+        @keyframes screenTurnOn {
+            0%   { transform: scaleY(0.005) scaleX(0.3); filter: brightness(10); }
+            30%  { transform: scaleY(0.005) scaleX(1); filter: brightness(6); }
+            50%  { transform: scaleY(1) scaleX(1); filter: brightness(2); }
+            100% { transform: scaleY(1) scaleX(1); filter: brightness(1); }
+        }
+
+        /* ─── SCREEN TURN OFF ─── */
+        .tv-screen.turn-off {
+            animation: screenTurnOff 0.4s ease-in forwards;
+        }
+        @keyframes screenTurnOff {
+            0%   { transform: scaleY(1) scaleX(1); filter: brightness(1); }
+            40%  { transform: scaleY(0.005) scaleX(1); filter: brightness(6); }
+            70%  { transform: scaleY(0.005) scaleX(0.1); filter: brightness(10); }
+            100% { transform: scaleY(0) scaleX(0); filter: brightness(0); }
+        }
+
+        /* ─── CHANNEL DISPLAY ─── */
+        .tv-channel-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+        .channel-number {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: var(--tv-amber);
+            text-shadow: 0 0 10px rgba(255,184,0,0.6);
+            letter-spacing: 2px;
+        }
+        .channel-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--tv-amber-dim);
+            letter-spacing: 1px;
+        }
+        .vu-meter {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 14px;
+        }
+        .vu-bar {
+            width: 3px;
+            background: var(--tv-amber);
+            border-radius: 1px;
+            opacity: 0.3;
+            transition: height 0.1s, opacity 0.1s;
+        }
+        .vu-bar.active {
+            opacity: 1;
+        }
+
+        /* ─── VIDEO TITLE ─── */
+        .tv-title-bar {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--tv-phosphor);
+            text-shadow: 0 0 6px rgba(180,220,160,0.4);
+            text-align: center;
+            padding: 4px 12px 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 18px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tv-title-bar.visible {
+            opacity: 1;
+        }
+
+        /* ─── SPEAKER GRILLE ─── */
+        .tv-grille {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 0 20px;
+        }
+        .grille-slot {
+            width: 40px;
+            height: 3px;
+            background: var(--tv-grille);
+            border-radius: 1px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+        }
+
+        /* ─── CONTROLS PANEL ─── */
+        .tv-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 14px;
+            padding: 0 10px;
+        }
+        .tv-knob {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .tv-knob:active .knob-face {
+            transform: scale(0.92);
+        }
+        .knob-face {
+            width: 44px;
+            height: 44px;
+            background: radial-gradient(circle at 35% 35%, var(--tv-knob-face), var(--tv-knob));
+            border-radius: 50%;
+            border: 2px solid #3A3020;
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.5),
+                inset 0 1px 2px rgba(255,255,255,0.08);
+            transition: transform 0.1s;
+            position: relative;
+        }
+        .knob-face::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 10px;
+            background: var(--tv-amber-dim);
+            border-radius: 1px;
+        }
+        .knob-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--tv-badge-text);
+            letter-spacing: 1px;
+        }
+        .knob-arrow {
+            font-size: 18px;
+            color: var(--tv-amber-dim);
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .tv-knob:hover .knob-arrow {
+            color: var(--tv-amber);
+            text-shadow: 0 0 8px rgba(255,184,0,0.5);
+        }
+
+        /* ─── BRAND BADGE ─── */
+        .tv-brand {
+            text-align: center;
+            margin-top: 12px;
+        }
+        .tv-brand-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--tv-badge-text);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ─── LEGEND / KEYBOARD HINTS ─── */
+        .tv-legend {
+            text-align: center;
+            margin-top: 24px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--dim);
+            line-height: 1.8;
+        }
+        .tv-legend kbd {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            background: var(--tv-cabinet);
+            color: var(--tv-amber);
+            padding: 2px 6px;
+            border: 1px solid var(--tv-cabinet-light);
+            border-radius: 3px;
+            margin: 0 2px;
+        }
+
+        /* ══════════════════════════════════════════
+           RESPONSIVE
+           ══════════════════════════════════════════ */
+        @media (max-width: 640px) {
+            .tv-body { padding: 12px; border-radius: 12px; }
+            .tv-screen-area { padding: 6px; }
+            .antenna-prong { height: 40px; }
+            .tv-antenna { gap: 28px; }
+            .channel-number { font-size: 11px; }
+            .knob-face { width: 36px; height: 36px; }
+            .tv-legend { display: none; }
+            .tv-title-bar { font-size: 7px; }
+            .tv-brand-text { font-size: 6px; }
+        }
+
+        /* ══════════════════════════════════════════
+           AMBIENT GLOW
+           ══════════════════════════════════════════ */
+        .tv-ambient {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255,184,0,0.06) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .tv-ambient.on {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="broadcast">
+
+<nav>
+    <a href="../index.html" class="nav-brand">magmacrunch.com</a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="../index.html">home</a></li>
+        <li><a href="../home/about.html">about</a></li>
+        <li>
+            <a href="../music/index.html">music</a>
+            <div class="dropdown">
+                <a href="../music/jukebox/index.html">jukebox</a>
+                <a href="../music/distributed-music.html">distributed music</a>
+                <a href="../music/physical-media/index.html">physical media</a>
+            </div>
+        </li>
+        <li>
+            <a href="../visual/index.html">visual</a>
+            <div class="dropdown">
+                <a href="../visual/music-videos.html">music videos</a>
+                <a href="../visual/tv.html">teevee</a>
+                <a href="../visual/collage.html">collage</a>
+                <a href="../visual/photography.html">photography</a>
+            </div>
+        </li>
+        <li>
+            <a href="../archive/index.html">archive</a>
+            <div class="dropdown">
+                <a href="../archive/by-artist/index.html">by artist</a>
+                <a href="../archive/by-place/index.html">by place</a>
+                <a href="../archive/by-label/index.html">by label</a>
+                <a href="../archive/by-contributor/index.html">by contributor</a>
+            </div>
+        </li>
+        <li><a href="../arcade/index.html">arcade</a></li>
+        <li><a href="../press/index.html">press</a></li>
+        <li>
+            <a href="../tools/index.html">tools</a>
+            <div class="dropdown">
+                <a href="../tools/album-art-maker/index.html">album art</a>
+                <a href="../tools/media-search/index.html">media search</a>
+            </div>
+        </li>
+        <li><a href="../home/guestbook.html">guestbook</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../index.html">home</a>
+        <span class="sep">›</span>
+        <a href="index.html">visual</a>
+        <span class="sep">›</span>
+        <span class="current">teevee</span>
+    </div>
+
+    <h1 class="page-title">// teevee //</h1>
+    <p class="page-subtitle">channel flip through music videos &amp; film</p>
+
+    <!-- ═══ AMBIENT GLOW ═══ -->
+    <div class="tv-ambient" id="tv-ambient"></div>
+
+    <!-- ═══ TV SET ═══ -->
+    <div class="tv-wrap">
+        <div class="tv" id="tv">
+
+            <!-- ANTENNA -->
+            <div class="tv-antenna">
+                <div class="antenna-prong left"></div>
+                <div class="antenna-prong right"></div>
+            </div>
+
+            <!-- TV BODY -->
+            <div class="tv-body">
+
+                <!-- SCREEN AREA -->
+                <div class="tv-screen-area">
+                    <div class="tv-screen off" id="tv-screen">
+                        <!-- COLOR BARS -->
+                        <div class="color-bars" id="color-bars">
+                            <div class="bar-1"></div>
+                            <div class="bar-2"></div>
+                            <div class="bar-3"></div>
+                            <div class="bar-4"></div>
+                            <div class="bar-5"></div>
+                            <div class="bar-6"></div>
+                            <div class="bar-7"></div>
+                        </div>
+                        <!-- STATIC CANVAS -->
+                        <canvas id="static-canvas"></canvas>
+                        <!-- YOUTUBE PLAYER (static iframe — required for file:// compat) -->
+                        <iframe id="yt-player"
+                            src="about:blank"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                            loading="lazy"></iframe>
+                    </div>
+                </div>
+
+                <!-- CHANNEL DISPLAY -->
+                <div class="tv-channel-display">
+                    <span class="channel-label">CH</span>
+                    <span class="channel-number" id="channel-number">--</span>
+                    <div class="vu-meter" id="vu-meter">
+                        <div class="vu-bar" style="height:4px"></div>
+                        <div class="vu-bar" style="height:7px"></div>
+                        <div class="vu-bar" style="height:10px"></div>
+                        <div class="vu-bar" style="height:6px"></div>
+                        <div class="vu-bar" style="height:12px"></div>
+                        <div class="vu-bar" style="height:8px"></div>
+                        <div class="vu-bar" style="height:5px"></div>
+                        <div class="vu-bar" style="height:11px"></div>
+                        <div class="vu-bar" style="height:7px"></div>
+                        <div class="vu-bar" style="height:9px"></div>
+                    </div>
+                </div>
+
+                <!-- VIDEO TITLE -->
+                <div class="tv-title-bar" id="tv-title-bar"></div>
+
+                <!-- SPEAKER GRILLE -->
+                <div class="tv-grille">
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                    <div class="grille-slot"></div>
+                </div>
+
+                <!-- CONTROLS -->
+                <div class="tv-controls">
+                    <div class="tv-knob" id="btn-ch-down" role="button" tabindex="0" aria-label="channel down">
+                        <div class="knob-arrow">▼</div>
+                        <div class="knob-face"></div>
+                        <div class="knob-label">CH−</div>
+                    </div>
+                    <div class="tv-knob" id="btn-power" role="button" tabindex="0" aria-label="power">
+                        <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #5a2020, #3a1515); border-color: #4a2020;">
+                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#ff3333;border-radius:50%;box-shadow:0 0 6px #ff3333;opacity:0.4;" id="power-led"></div>
+                        </div>
+                        <div class="knob-label">POWER</div>
+                    </div>
+                    <div class="tv-knob" id="btn-ch-up" role="button" tabindex="0" aria-label="channel up">
+                        <div class="knob-arrow">▲</div>
+                        <div class="knob-face"></div>
+                        <div class="knob-label">CH+</div>
+                    </div>
+                </div>
+
+                <!-- BRAND BADGE -->
+                <div class="tv-brand">
+                    <span class="tv-brand-text">MagmaCrunch TV</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEYBOARD HINTS -->
+    <div class="tv-legend">
+        <kbd>↑</kbd> <kbd>↓</kbd> change channel &nbsp;&middot;&nbsp;
+        <kbd>←</kbd> <kbd>→</kbd> prev / next &nbsp;&middot;&nbsp;
+        <kbd>0</kbd>–<kbd>9</kbd> jump to channel &nbsp;&middot;&nbsp;
+        <kbd>space</kbd> play / pause
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════
+   CHANNEL DATA
+   ══════════════════════════════════════════════════ */
+const CHANNELS = [
+    { title: "Hologram of a Dream",                          artist: "magma//crunch", id: "mby4C5PZzlQ", year: "2025" },
+    { title: "Sitting on a Dock in New Shoreham",            artist: "magma//crunch", id: "BirxEyAj0u0", year: "2025" },
+    { title: "Very Long Boards",                             artist: "magma//crunch", id: "8xjZgv3us1Q", year: "2025" },
+    { title: "I'm gonna need more of a commitment than that",artist: "magma//crunch", id: "KiFWHj1cmOY", year: "2025" },
+    { title: "Leaves",                                       artist: "magma//crunch", id: "wv_6z79fQjQ", year: "2024" },
+    { title: "Summer Day",                                   artist: "magma//crunch", id: "QgJfLXhV15Y", year: "2024" },
+    { title: "Gravitational Voltage",                        artist: "magma//crunch", id: "gtclSfU8oDM", year: "2024" },
+    { title: "Beach Ave.",                                   artist: "magma//crunch", id: "tkpoCxpsUAk", year: "2024" },
+    { title: "Who is Richard Parker?",                       artist: "magma//crunch", id: "xGzuJO_5364", year: "2024" },
+    { title: "Parade Float Electronics",                     artist: "magma//crunch", id: "gjo9FdBJGRk", year: "2024" },
+    { title: "Figure the Shoreline",                         artist: "magma//crunch", id: "Gm9XVmj0iVM", year: "2024" },
+    { title: "Point Judith",                                 artist: "magma//crunch", id: "cCUC-a6v74E", year: "2024" },
+    { title: "Eternity spent in an arcade",                  artist: "magma//crunch", id: "lTmHfMZAimQ", year: "2024" },
+    { title: "Try",                                          artist: "magma//crunch", id: "To6AJJ7-iCY", year: "2024" },
+    { title: "Contemplate the Plate Tectonic",               artist: "magma//crunch", id: "YnzQh-h5zq0", year: "2024" },
+    { title: "Area Does Not Exist",                          artist: "magma//crunch", id: "T6lCJBrjFQ0", year: "2024" },
+    { title: "Daffodil & Sweet Pea",                         artist: "magma//crunch", id: "0QwOELVzeSo", year: "2024" },
+    { title: "Driving",                                      artist: "magma//crunch", id: "vmUJ2O3xwJw", year: "2024" },
+    { title: "Ancient Weeds",                                artist: "magma//crunch", id: "pX3G_dtyMPI", year: "2023" },
+    { title: "Film School",                                  artist: "magma//crunch", id: "VN_5u6tBPts", year: "2023" },
+    { title: "Little Piece No. 1",                           artist: "magma//crunch", id: "hlOYgcDvyaE", year: "2023" },
+    { title: "Millstone Woods May 2018",                     artist: "magma//crunch", id: "3_jo3WEOPEI", year: "2023" },
+    { title: "Bus full of time-traveling twenty-somethings", artist: "magma//crunch", id: "OebpP5m3jms", year: "2023" },
+    { title: "Sex Van Floor Plan: The Documentary",          artist: "SVFP",          id: "VSGReUKVRjk", year: "2026" },
+];
+
+/* ══════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════ */
+let currentChannel = -1;
+let isPaused = false;
+let isPoweredOn = false;
+let isSwitching = false;
+let vuInterval = null;
+
+const screen   = document.getElementById('tv-screen');
+const staticCanvas = document.getElementById('static-canvas');
+const staticCtx    = staticCanvas.getContext('2d');
+const colorBars    = document.getElementById('color-bars');
+const channelNum   = document.getElementById('channel-number');
+const titleBar     = document.getElementById('tv-title-bar');
+const ambient      = document.getElementById('tv-ambient');
+const powerLed     = document.getElementById('power-led');
+const vuMeter      = document.getElementById('vu-meter');
+
+/* ══════════════════════════════════════════════════
+   STATIC NOISE
+   ══════════════════════════════════════════════════ */
+function resizeStaticCanvas() {
+    const rect = screen.getBoundingClientRect();
+    staticCanvas.width  = Math.floor(rect.width / 3);
+    staticCanvas.height = Math.floor(rect.height / 3);
+}
+resizeStaticCanvas();
+window.addEventListener('resize', resizeStaticCanvas);
+
+let staticAnimFrame = null;
+function drawStatic() {
+    const w = staticCanvas.width, h = staticCanvas.height;
+    const imgData = staticCtx.createImageData(w, h);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+        const v = Math.random() * 255;
+        data[i] = v;
+        data[i+1] = v;
+        data[i+2] = v;
+        data[i+3] = 255;
+    }
+    staticCtx.putImageData(imgData, 0, 0);
+    staticAnimFrame = requestAnimationFrame(drawStatic);
+}
+
+function startStatic() {
+    staticCanvas.classList.add('active');
+    drawStatic();
+}
+function stopStatic() {
+    staticCanvas.classList.remove('active');
+    if (staticAnimFrame) {
+        cancelAnimationFrame(staticAnimFrame);
+        staticAnimFrame = null;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   VU METER
+   ══════════════════════════════════════════════════ */
+function startVuMeter() {
+    const bars = vuMeter.querySelectorAll('.vu-bar');
+    vuInterval = setInterval(() => {
+        bars.forEach(bar => {
+            const h = 3 + Math.random() * 11;
+            bar.style.height = h + 'px';
+            bar.classList.toggle('active', h > 7);
+        });
+    }, 120);
+}
+function stopVuMeter() {
+    clearInterval(vuInterval);
+    vuMeter.querySelectorAll('.vu-bar').forEach(bar => {
+        bar.style.height = '4px';
+        bar.classList.remove('active');
+    });
+}
+
+/* ══════════════════════════════════════════════════
+   YOUTUBE VIDEO — static iframe, src swap
+   ══════════════════════════════════════════════════ */
+const playerFrame = document.getElementById('yt-player');
+
+function loadVideo(videoId) {
+    playerFrame.style.opacity = '0';
+    playerFrame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&iv_load_policy=3&modestbranding=1';
+    isPaused = false;
+    setTimeout(() => { playerFrame.style.opacity = '1'; }, 300);
+}
+
+function unloadVideo() {
+    playerFrame.style.opacity = '0';
+    playerFrame.src = 'about:blank';
+}
+
+/* ══════════════════════════════════════════════════
+   CHANNEL SWITCHING
+   ══════════════════════════════════════════════════ */
+function changeChannel(dir) {
+    if (isSwitching || !isPoweredOn) return;
+    isSwitching = true;
+
+    const prev = currentChannel;
+    currentChannel = (currentChannel + dir + CHANNELS.length) % CHANNELS.length;
+
+    const ch = CHANNELS[currentChannel];
+
+    // Phase 1: flicker + static
+    screen.classList.add('flicker');
+    startStatic();
+    stopVuMeter();
+    titleBar.classList.remove('visible');
+
+    setTimeout(() => {
+        // Phase 2: color bars flash
+        stopStatic();
+        colorBars.classList.add('active');
+
+        // Update channel number
+        channelNum.textContent = String(currentChannel + 1).padStart(2, '0');
+
+        setTimeout(() => {
+            // Phase 3: load new video
+            colorBars.classList.remove('active');
+            loadVideo(ch.id);
+
+            // Phase 4: settle
+            screen.classList.remove('off', 'flicker');
+            screen.classList.add('on-air');
+            titleBar.textContent = ch.artist + ' — ' + ch.title;
+            titleBar.classList.add('visible');
+            startVuMeter();
+
+            isSwitching = false;
+        }, 200);
+    }, 350);
+}
+
+function togglePower() {
+    if (isSwitching) return;
+
+    if (isPoweredOn) {
+        // Turn off
+        isSwitching = true;
+        screen.classList.add('turn-off');
+        stopStatic();
+        stopVuMeter();
+        titleBar.classList.remove('visible');
+        powerLed.style.opacity = '0.2';
+
+        setTimeout(() => {
+            screen.classList.remove('on-air', 'turn-off');
+            screen.classList.add('off');
+            channelNum.textContent = '--';
+            currentChannel = -1;
+            isPoweredOn = false;
+            isSwitching = false;
+            ambient.classList.remove('on');
+            unloadVideo();
+        }, 400);
+    } else {
+        // Turn on
+        isPoweredOn = true;
+        isSwitching = true;
+        screen.classList.remove('off');
+        screen.classList.add('turn-on', 'on-air');
+        powerLed.style.opacity = '1';
+        ambient.classList.add('on');
+
+        // Show static briefly
+        startStatic();
+
+        setTimeout(() => {
+            stopStatic();
+            currentChannel = 0;
+            const ch = CHANNELS[0];
+            channelNum.textContent = '01';
+
+            loadVideo(ch.id);
+
+            screen.classList.remove('turn-on');
+            titleBar.textContent = ch.artist + ' — ' + ch.title;
+            titleBar.classList.add('visible');
+            startVuMeter();
+            isSwitching = false;
+        }, 700);
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   CONTROLS
+   ══════════════════════════════════════════════════ */
+document.getElementById('btn-ch-up').addEventListener('click', () => changeChannel(1));
+document.getElementById('btn-ch-down').addEventListener('click', () => changeChannel(-1));
+document.getElementById('btn-power').addEventListener('click', togglePower);
+
+/* ══════════════════════════════════════════════════
+   KEYBOARD CONTROLS
+   ══════════════════════════════════════════════════ */
+let numBuffer = '';
+let numTimeout = null;
+
+document.addEventListener('keydown', function(e) {
+    // Ignore if focused on an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    switch (e.key) {
+        case 'ArrowUp':
+        case 'ArrowRight':
+            e.preventDefault();
+            changeChannel(1);
+            break;
+        case 'ArrowDown':
+        case 'ArrowLeft':
+            e.preventDefault();
+            changeChannel(-1);
+            break;
+        case ' ':
+            e.preventDefault();
+            if (isPoweredOn && currentChannel >= 0) {
+                if (isPaused) {
+                    loadVideo(CHANNELS[currentChannel].id);
+                } else {
+                    unloadVideo();
+                    isPaused = true;
+                }
+            }
+            break;
+        case 'm':
+        case 'M':
+            break;
+        default:
+            // Number keys 0-9
+            if (/^[0-9]$/.test(e.key) && isPoweredOn) {
+                numBuffer += e.key;
+                clearTimeout(numTimeout);
+                numTimeout = setTimeout(() => { numBuffer = ''; }, 800);
+                const num = parseInt(numBuffer, 10);
+                if (num >= 1 && num <= CHANNELS.length) {
+                    if (!isSwitching) {
+                        currentChannel = num - 1;
+                        const ch = CHANNELS[currentChannel];
+                        isSwitching = true;
+                        startStatic();
+                        stopVuMeter();
+                        titleBar.classList.remove('visible');
+                        setTimeout(() => {
+                            stopStatic();
+                            channelNum.textContent = String(num).padStart(2, '0');
+                            loadVideo(ch.id);
+                            screen.classList.remove('off');
+                            screen.classList.add('on-air');
+                            titleBar.textContent = ch.artist + ' — ' + ch.title;
+                            titleBar.classList.add('visible');
+                            startVuMeter();
+                            isSwitching = false;
+                        }, 300);
+                        numBuffer = '';
+                    }
+                }
+            }
+            break;
+    }
+});
+
+/* ══════════════════════════════════════════════════
+   TOUCH SUPPORT — swipe to change channel
+   ══════════════════════════════════════════════════ */
+let touchStartY = 0;
+screen.addEventListener('touchstart', function(e) {
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+screen.addEventListener('touchend', function(e) {
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dy) > 40) {
+        changeChannel(dy < 0 ? 1 : -1);
+    }
+}, { passive: true });
+
+</script>
+
+</body>
+</html>
