@@ -142,6 +142,29 @@ window.Tools = (function () {
                     el.w = ob.w + dx;
                     el.h = ob.h + dy;
                 }
+            } else if (el.type === 'image' && el.aspectRatio) {
+                // aspect-ratio-locked resize
+                const ar = el.aspectRatio;
+                let newW, newH;
+                if (h === 'br') {
+                    newW = Math.max(2, ob.w + dx);
+                    newH = newW / ar;
+                } else if (h === 'tl') {
+                    newW = Math.max(2, ob.w - dx);
+                    newH = newW / ar;
+                    el.x = ob.x + ob.w - newW;
+                    el.y = ob.y + ob.h - newH;
+                } else if (h === 'tr') {
+                    newW = Math.max(2, ob.w + dx);
+                    newH = newW / ar;
+                    el.y = ob.y + ob.h - newH;
+                } else if (h === 'bl') {
+                    newW = Math.max(2, ob.w - dx);
+                    newH = newW / ar;
+                    el.x = ob.x + ob.w - newW;
+                }
+                el.w = newW;
+                el.h = newH;
             } else {
                 switch (h) {
                     case 'br':

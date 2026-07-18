@@ -4,6 +4,7 @@ window.CanvasRenderer = (function () {
     let canvasSize = 1024;
     let bgColor = '#ffffff';
     let selectedId = null;
+    const imageCache = {}; // id → Image
 
     function init(canvasEl) {
         canvas = canvasEl;
@@ -62,9 +63,26 @@ window.CanvasRenderer = (function () {
             case 'text':
                 drawText(el);
                 break;
+            case 'image':
+                drawImageEl(ctx, el);
+                break;
         }
 
         ctx.restore();
+    }
+
+    function loadImage(el) {
+        if (imageCache[el.id]) return imageCache[el.id];
+        const img = new Image();
+        img.src = el.src;
+        imageCache[el.id] = img;
+        return img;
+    }
+
+    function drawImageEl(targetCtx, el) {
+        const img = loadImage(el);
+        if (!img.complete) return;
+        targetCtx.drawImage(img, el.x, el.y, el.w, el.h);
     }
 
     function drawRect(el) {
@@ -318,6 +336,14 @@ window.CanvasRenderer = (function () {
                         targetCtx.lineJoin = 'round';
                         targetCtx.strokeText(lines[i], el.x, ly);
                     }
+                }
+                break;
+            }
+
+            case 'image': {
+                const img = loadImage(el);
+                if (img.complete) {
+                    targetCtx.drawImage(img, el.x, el.y, el.w, el.h);
                 }
                 break;
             }

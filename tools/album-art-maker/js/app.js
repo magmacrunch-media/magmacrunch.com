@@ -119,7 +119,9 @@
     }
 
     document.querySelectorAll('.tool-btn').forEach(btn => {
-        btn.addEventListener('click', () => setActiveTool(btn.dataset.tool));
+        btn.addEventListener('click', () => {
+            if (btn.dataset.tool) setActiveTool(btn.dataset.tool);
+        });
     });
 
     // ── SHAPES POPUP ──
@@ -128,7 +130,12 @@
 
     shapesBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        shapesPopup.classList.toggle('open');
+        const isOpen = shapesPopup.classList.toggle('open');
+        if (isOpen) {
+            const rect = shapesBtn.getBoundingClientRect();
+            shapesPopup.style.top = rect.top + 'px';
+            shapesPopup.style.left = (rect.right + 6) + 'px';
+        }
     });
 
     document.querySelectorAll('.shape-btn').forEach(btn => {
@@ -142,6 +149,55 @@
         if (!shapesPopup.contains(e.target) && e.target !== shapesBtn) {
             shapesPopup.classList.remove('open');
         }
+    });
+
+    // ── IMAGE UPLOAD ──
+    const imageBtn = document.getElementById('imageBtn');
+    const imageFileInput = document.getElementById('imageFileInput');
+
+    imageBtn.addEventListener('click', () => imageFileInput.click());
+
+    imageFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const src = ev.target.result;
+            const img = new Image();
+            img.onload = () => {
+                // scale to ~40% of canvas, maintaining aspect ratio
+                const size = CanvasRenderer.getCanvasSize();
+                const maxDim = size * 0.4;
+                let w = img.naturalWidth;
+                let h = img.naturalHeight;
+                if (w > h) {
+                    h = (h / w) * maxDim;
+                    w = maxDim;
+                } else {
+                    w = (w / h) * maxDim;
+                    h = maxDim;
+                }
+
+                const el = {
+                    id: Tools.nextId(),
+                    type: 'image',
+                    x: (size - w) / 2,
+                    y: (size - h) / 2,
+                    w: w,
+                    h: h,
+                    src: src,
+                    aspectRatio: w / h,
+                };
+                elements.push(el);
+                History.push(elements);
+                CanvasRenderer.render(elements);
+                updateStats();
+            };
+            img.src = src;
+        };
+        reader.readAsDataURL(file);
+        imageFileInput.value = '';
     });
 
     // ── CANVAS MOUSE EVENTS ──
@@ -422,6 +478,9 @@
         const shortcuts = { v: 'select', r: 'rect', c: 'circle', l: 'line', t: 'text' };
         if (shortcuts[e.key]) {
             setActiveTool(shortcuts[e.key]);
+        }
+        if (e.key === 'i') {
+            imageFileInput.click();
         }
     });
 
