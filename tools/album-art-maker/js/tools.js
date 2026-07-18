@@ -2,6 +2,7 @@
 window.Tools = (function () {
     let activeTool = 'select';
     let isDragging = false;
+    let dragPending = false;
     let isDrawing = false;
     let isResizing = false;
     let dragStart = null;
@@ -69,6 +70,7 @@ window.Tools = (function () {
                 }
 
                 isDragging = true;
+                dragPending = true;
                 dragStart = { x: pos.x, y: pos.y, element: hit, origX: hit.x, origY: hit.y };
                 document.body.classList.add('dragging');
                 CanvasRenderer.setSelectedId(hit.id);
@@ -117,6 +119,12 @@ window.Tools = (function () {
         const pos = getCanvasCoords(e);
 
         if (isDragging && dragStart) {
+            if (dragPending) {
+                const dx = pos.x - dragStart.x;
+                const dy = pos.y - dragStart.y;
+                if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+                dragPending = false;
+            }
             const dx = pos.x - dragStart.x;
             const dy = pos.y - dragStart.y;
             dragStart.element.x = dragStart.origX + dx;
@@ -268,7 +276,7 @@ window.Tools = (function () {
             const bounds = CanvasRenderer.getElementBounds(el);
 
             // add some padding for easier selection
-            const pad = 4;
+            const pad = 2;
             if (
                 x >= bounds.x - pad &&
                 x <= bounds.x + bounds.w + pad &&
