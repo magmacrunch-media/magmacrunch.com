@@ -92,6 +92,17 @@
     // save initial state
     History.push(elements);
 
+    // ── LIVE STATS ──
+    const canvasSizeStat = document.getElementById('canvasSizeStat');
+    const elementCountStat = document.getElementById('elementCountStat');
+
+    function updateStats() {
+        const size = CanvasRenderer.getCanvasSize();
+        canvasSizeStat.textContent = size + '×' + size;
+        elementCountStat.textContent = elements.length + ' ELEMENT' + (elements.length !== 1 ? 'S' : '');
+    }
+    updateStats();
+
     // ── TOOL BUTTONS ──
     document.querySelectorAll('.tool-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -140,6 +151,7 @@
         elements.push(el);
         History.push(elements);
         CanvasRenderer.render(elements);
+        updateStats();
     }
 
     function handleElementMoved(action, element) {
@@ -150,6 +162,7 @@
             selectedElement = null;
         } else if (action === 'move') {
             History.push(elements);
+            updateStats();
         }
     }
 
@@ -267,6 +280,7 @@
         const size = parseInt(e.target.value);
         CanvasRenderer.setCanvasSize(size);
         CanvasRenderer.render(elements);
+        updateStats();
     });
 
     // ── BG COLOR ──
@@ -284,6 +298,7 @@
             selectedElement = null;
             CanvasRenderer.setSelectedId(null);
             CanvasRenderer.render(elements);
+            updateStats();
         }
     });
 
@@ -294,6 +309,7 @@
             selectedElement = null;
             CanvasRenderer.setSelectedId(null);
             CanvasRenderer.render(elements);
+            updateStats();
         }
     });
 
@@ -304,6 +320,7 @@
             CanvasRenderer.setSelectedId(null);
             History.push(elements);
             CanvasRenderer.render(elements);
+            updateStats();
         }
     });
 
@@ -315,6 +332,7 @@
         CanvasRenderer.setSelectedId(null);
         History.push(elements);
         CanvasRenderer.render(elements);
+        updateStats();
     });
 
     document.getElementById('exportBtn').addEventListener('click', () => {
@@ -336,6 +354,7 @@
                     selectedElement = null;
                     CanvasRenderer.setSelectedId(null);
                     CanvasRenderer.render(elements);
+                    updateStats();
                 }
                 return;
             }
@@ -347,6 +366,7 @@
                     selectedElement = null;
                     CanvasRenderer.setSelectedId(null);
                     CanvasRenderer.render(elements);
+                    updateStats();
                 }
                 return;
             }
@@ -360,6 +380,7 @@
                 CanvasRenderer.setSelectedId(null);
                 History.push(elements);
                 CanvasRenderer.render(elements);
+                updateStats();
             }
             return;
         }
