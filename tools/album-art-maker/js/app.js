@@ -336,7 +336,8 @@
     });
 
     document.getElementById('exportBtn').addEventListener('click', () => {
-        CanvasRenderer.exportPNG(elements);
+        const filename = document.getElementById('fileName').value.trim() || 'album-art';
+        CanvasRenderer.exportPNG(elements, filename);
     });
 
     // ── KEYBOARD SHORTCUTS ──

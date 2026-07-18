@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 
@@ -103,15 +103,15 @@
             <div class="prop-group" id="textProps" hidden>
                 <label class="prop-label">FONT</label>
                 <select id="fontSelect" class="prop-select">
-                    <option value="Press Start 2P">Press Start 2P</option>
-                    <option value="VT323">VT323</option>
-                    <option value="Silkscreen">Silkscreen</option>
-                    <option value="DotGothic16">DotGothic16</option>
-                    <option value="Pixelify Sans">Pixelify Sans</option>
-                    <option value="Courier Prime">Courier Prime</option>
-                    <option value="Futura">Futura</option>
-                    <option value="Helvetica Neue">Helvetica Neue</option>
-                    <option value="Arial">Arial</option>
+                    <option value="Press Start 2P" style="font-family: 'Press Start 2P'">Press Start 2P</option>
+                    <option value="VT323" style="font-family: 'VT323'">VT323</option>
+                    <option value="Silkscreen" style="font-family: 'Silkscreen'">Silkscreen</option>
+                    <option value="DotGothic16" style="font-family: 'DotGothic16'">DotGothic16</option>
+                    <option value="Pixelify Sans" style="font-family: 'Pixelify Sans'">Pixelify Sans</option>
+                    <option value="Courier Prime" style="font-family: 'Courier Prime'">Courier Prime</option>
+                    <option value="Futura" style="font-family: 'Futura'">Futura</option>
+                    <option value="Helvetica Neue" style="font-family: 'Helvetica Neue'">Helvetica Neue</option>
+                    <option value="Arial" style="font-family: 'Arial'">Arial</option>
                 </select>
             </div>
 
@@ -153,6 +153,10 @@
                 <button class="action-btn danger" id="deleteBtn" title="Delete selected (Del)">DELETE</button>
                 <button class="action-btn" id="clearBtn">CLEAR ALL</button>
             </div>
+            <div class="prop-group">
+                <label class="prop-label">FILE NAME</label>
+                <input type="text" id="fileName" class="file-input" value="album-art">
+            </div>
             <button class="export-btn" id="exportBtn">EXPORT PNG</button>
         </aside>
     </div>
@@ -165,15 +169,15 @@
             <div class="modal-row">
                 <label class="prop-label">FONT</label>
                 <select id="modalFontSelect" class="prop-select">
-                    <option value="Press Start 2P">Press Start 2P</option>
-                    <option value="VT323">VT323</option>
-                    <option value="Silkscreen">Silkscreen</option>
-                    <option value="DotGothic16">DotGothic16</option>
-                    <option value="Pixelify Sans">Pixelify Sans</option>
-                    <option value="Courier Prime">Courier Prime</option>
-                    <option value="Futura">Futura</option>
-                    <option value="Helvetica Neue">Helvetica Neue</option>
-                    <option value="Arial">Arial</option>
+                    <option value="Press Start 2P" style="font-family: 'Press Start 2P'">Press Start 2P</option>
+                    <option value="VT323" style="font-family: 'VT323'">VT323</option>
+                    <option value="Silkscreen" style="font-family: 'Silkscreen'">Silkscreen</option>
+                    <option value="DotGothic16" style="font-family: 'DotGothic16'">DotGothic16</option>
+                    <option value="Pixelify Sans" style="font-family: 'Pixelify Sans'">Pixelify Sans</option>
+                    <option value="Courier Prime" style="font-family: 'Courier Prime'">Courier Prime</option>
+                    <option value="Futura" style="font-family: 'Futura'">Futura</option>
+                    <option value="Helvetica Neue" style="font-family: 'Helvetica Neue'">Helvetica Neue</option>
+                    <option value="Arial" style="font-family: 'Arial'">Arial</option>
                 </select>
             </div>
             <div class="modal-row">

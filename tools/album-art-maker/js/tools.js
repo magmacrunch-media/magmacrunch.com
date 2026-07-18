@@ -1,15 +1,19 @@
-/* ── tools.js — shape tools, text tool, hit testing, drag/move ── */
+/* ── tools.js — shape tools, text tool, hit testing, drag/move/resize ── */
 window.Tools = (function () {
     let activeTool = 'select';
     let isDragging = false;
     let isDrawing = false;
+    let isResizing = false;
     let dragStart = null;
     let drawStart = null;
+    let resizeStart = null;
     let tempElement = null;
     let idCounter = 0;
     let onElementCreated = null;
     let onElementMoved = null;
     let onTextEdit = null;
+
+    const HANDLE_SIZE = 8;
 
     function init(callbacks) {
         onElementCreated = callbacks.onElementCreated;
@@ -44,6 +48,26 @@ window.Tools = (function () {
             // hit test — check from top (last drawn) to bottom
             const hit = hitTest(pos.x, pos.y, elements);
             if (hit) {
+                // check if clicking a resize handle on the already-selected element
+                const currentSel = CanvasRenderer.getSelectedId
+                    ? elements.find(e => e.id === CanvasRenderer.getSelectedId())
+                    : null;
+                if (currentSel && currentSel.id === hit.id) {
+                    const handle = hitTestHandle(pos.x, pos.y, hit);
+                    if (handle) {
+                        isResizing = true;
+                        const bounds = CanvasRenderer.getElementBounds(hit);
+                        resizeStart = {
+                            x: pos.x, y: pos.y,
+                            element: hit,
+                            origBounds: { x: bounds.x, y: bounds.y, w: bounds.w, h: bounds.h },
+                            handle: handle.id,
+                        };
+                        document.body.classList.add('dragging');
+                        return;
+                    }
+                }
+
                 isDragging = true;
                 dragStart = { x: pos.x, y: pos.y, element: hit, origX: hit.x, origY: hit.y };
                 document.body.classList.add('dragging');
@@ -101,6 +125,68 @@ window.Tools = (function () {
             return;
         }
 
+        if (isResizing && resizeStart) {
+            const dx = pos.x - resizeStart.x;
+            const dy = pos.y - resizeStart.y;
+            const el = resizeStart.element;
+            const ob = resizeStart.origBounds;
+            const h = resizeStart.handle;
+
+            if (el.type === 'line') {
+                if (h === 'tl') {
+                    el.x = ob.x + dx;
+                    el.y = ob.y + dy;
+                    el.w = (ob.x + ob.w) - el.x;
+                    el.h = (ob.y + ob.h) - el.y;
+                } else {
+                    el.w = ob.w + dx;
+                    el.h = ob.h + dy;
+                }
+            } else {
+                switch (h) {
+                    case 'br':
+                        el.w = Math.max(2, ob.w + dx);
+                        el.h = Math.max(2, ob.h + dy);
+                        break;
+                    case 'bl':
+                        el.x = ob.x + dx;
+                        el.w = Math.max(2, ob.w - dx);
+                        el.h = Math.max(2, ob.h + dy);
+                        break;
+                    case 'tr':
+                        el.y = ob.y + dy;
+                        el.w = Math.max(2, ob.w + dx);
+                        el.h = Math.max(2, ob.h - dy);
+                        break;
+                    case 'tl':
+                        el.x = ob.x + dx;
+                        el.y = ob.y + dy;
+                        el.w = Math.max(2, ob.w - dx);
+                        el.h = Math.max(2, ob.h - dy);
+                        break;
+                }
+            }
+
+            CanvasRenderer.render(elements);
+            return;
+        }
+
+        // hover cursor for handles (select tool, not dragging)
+        if (activeTool === 'select' && !isDragging && !isResizing) {
+            const canvas = CanvasRenderer.getCanvas();
+            const selId = CanvasRenderer.getSelectedId();
+            const selected = selId !== null ? elements.find(e => e.id === selId) : null;
+            if (selected) {
+                const handle = hitTestHandle(pos.x, pos.y, selected);
+                if (handle) {
+                    canvas.style.cursor = handle.cursor;
+                    return;
+                }
+            }
+            const hit = hitTest(pos.x, pos.y, elements);
+            canvas.style.cursor = hit ? 'move' : 'default';
+        }
+
         if (isDrawing && tempElement) {
             tempElement.w = pos.x - drawStart.x;
             tempElement.h = pos.y - drawStart.y;
@@ -115,6 +201,14 @@ window.Tools = (function () {
         if (isDragging) {
             isDragging = false;
             dragStart = null;
+            document.body.classList.remove('dragging');
+            if (onElementMoved) onElementMoved('move', null);
+            return;
+        }
+
+        if (isResizing) {
+            isResizing = false;
+            resizeStart = null;
             document.body.classList.remove('dragging');
             if (onElementMoved) onElementMoved('move', null);
             return;
@@ -159,6 +253,34 @@ window.Tools = (function () {
                 y <= bounds.y + bounds.h + pad
             ) {
                 return el;
+            }
+        }
+        return null;
+    }
+
+    function getHandlePositions(el) {
+        const bounds = CanvasRenderer.getElementBounds(el);
+        const { x, y, w, h } = bounds;
+        return [
+            { id: 'tl', x: x,       y: y,       cursor: 'nw-resize' },
+            { id: 'tr', x: x + w,   y: y,       cursor: 'ne-resize' },
+            { id: 'bl', x: x,       y: y + h,   cursor: 'sw-resize' },
+            { id: 'br', x: x + w,   y: y + h,   cursor: 'se-resize' },
+        ];
+    }
+
+    function hitTestHandle(x, y, el) {
+        if (!el) return null;
+        const handles = getHandlePositions(el);
+        const hs = HANDLE_SIZE / 2;
+        for (const handle of handles) {
+            if (
+                x >= handle.x - hs &&
+                x <= handle.x + hs &&
+                y >= handle.y - hs &&
+                y <= handle.y + hs
+            ) {
+                return handle;
             }
         }
         return null;

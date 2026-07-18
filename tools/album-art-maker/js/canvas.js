@@ -23,6 +23,7 @@ window.CanvasRenderer = (function () {
     function getBgColor() { return bgColor; }
 
     function setSelectedId(id) { selectedId = id; }
+    function getSelectedId() { return selectedId; }
 
     function render(elements) {
         ctx.save();
@@ -138,7 +139,7 @@ window.CanvasRenderer = (function () {
 
     function drawSelection(el) {
         ctx.save();
-        ctx.strokeStyle = '#00f5ff';
+        ctx.strokeStyle = '#a0a0b0';
         ctx.lineWidth = 2;
         ctx.setLineDash([6, 4]);
 
@@ -153,8 +154,8 @@ window.CanvasRenderer = (function () {
 
         // corner handles
         ctx.setLineDash([]);
-        ctx.fillStyle = '#00f5ff';
-        const hs = 6;
+        ctx.fillStyle = '#a0a0b0';
+        const hs = 8;
         const corners = [
             [bounds.x - pad, bounds.y - pad],
             [bounds.x + bounds.w + pad, bounds.y - pad],
@@ -205,7 +206,7 @@ window.CanvasRenderer = (function () {
         }
     }
 
-    function exportPNG(elements) {
+    function exportPNG(elements, filename) {
         // render at full resolution without selection
         const prevSelected = selectedId;
         selectedId = null;
@@ -229,7 +230,7 @@ window.CanvasRenderer = (function () {
 
         // download
         const link = document.createElement('a');
-        link.download = `album-art-${canvasSize}.png`;
+        link.download = `${filename || 'album-art'}.png`;
         link.href = tmpCanvas.toDataURL('image/png');
         link.click();
 
@@ -315,7 +316,7 @@ window.CanvasRenderer = (function () {
 
     return {
         init, setCanvasSize, getCanvasSize, setBgColor, getBgColor,
-        setSelectedId, render, getElementBounds, exportPNG,
+        setSelectedId, getSelectedId, render, getElementBounds, exportPNG,
         getCanvas, getCtx
     };
 })();
