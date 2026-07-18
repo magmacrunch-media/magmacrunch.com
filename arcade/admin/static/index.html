@@ -8,22 +8,22 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <meta property="og:title" content="MAGMA//OPS">
-    <meta property="og:description" content="MagmaCrunch Arcade Operations Dashboard">
+    <meta property="og:description" content="MagmaCrunch Operations Dashboard">
     <meta property="og:image" content="og-image.png">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Login overlay (shown if auth is required) -->
+    <!-- Login overlay -->
     <div id="login-overlay" class="overlay hidden">
         <div class="login-box">
             <h2>ENTER ACCESS CODE</h2>
             <input type="password" id="password-input" placeholder="PASSWORD" autocomplete="off">
             <button id="login-btn" class="btn btn-cyan">LOGIN</button>
-            <p id="login-error" class="error hidden">ACCESS DENIED</p>
+            <p id="login-error" class="login-error hidden">ACCESS DENIED</p>
         </div>
     </div>
 
@@ -37,78 +37,164 @@
                 <span id="system-cpu" class="sys-stat"></span>
                 <span id="system-mem" class="sys-stat"></span>
                 <span id="system-temp" class="sys-stat"></span>
-                <button id="btn-system-menu" class="btn-system-menu" title="System Actions">⚙</button>
+                <button id="btn-system-menu" class="btn-system-menu" title="System Actions">&#9881;</button>
             </div>
         </header>
 
+        <nav class="tab-bar">
+            <button class="ops-tab" data-tab="arcade">ARCADE</button>
+            <button class="ops-tab" data-tab="jukebox">JUKEBOX</button>
+            <button class="ops-tab" data-tab="themes">THEMES</button>
+            <button class="ops-tab" data-tab="api">API</button>
+        </nav>
+
         <main>
-            <!-- Status Grid -->
-            <section class="status-section">
-                <h2 class="section-title">SERVER STATUS</h2>
-                <div id="status-grid" class="status-grid"></div>
-                <div class="action-bar">
-                    <button id="btn-restart-all" class="btn btn-rose">RESTART ALL</button>
-                    <button id="btn-refresh" class="btn btn-cyan">REFRESH</button>
-                </div>
-            </section>
+            <!-- ═══ ARCADE TAB ═══════════════════════════════════════════════ -->
+            <div id="tab-arcade" class="tab-panel">
+                <section class="status-section">
+                    <h2 class="section-title">SERVER STATUS</h2>
+                    <div id="status-grid" class="status-grid"></div>
+                    <div class="action-bar">
+                        <button id="btn-restart-all" class="btn btn-rose">RESTART ALL</button>
+                        <button id="btn-refresh" class="btn btn-cyan">REFRESH</button>
+                    </div>
+                </section>
 
-            <!-- Log Viewer -->
-            <section class="log-section">
-                <div class="log-header">
-                    <h2 class="section-title">LIVE LOGS</h2>
-                    <div class="log-controls">
-                        <select id="log-filter" class="select-retro">
-                            <option value="all">ALL SERVERS</option>
-                        </select>
-                        <button id="btn-stream" class="btn btn-green btn-sm">STREAM</button>
-                        <button id="btn-stop-stream" class="btn btn-rose btn-sm hidden">STOP</button>
-                        <button id="btn-clear-log" class="btn btn-yellow btn-sm">CLEAR</button>
+                <section class="log-section">
+                    <div class="log-header">
+                        <h2 class="section-title">LIVE LOGS</h2>
+                        <div class="log-controls">
+                            <select id="log-filter" class="select-retro">
+                                <option value="all">ALL SERVERS</option>
+                            </select>
+                            <button id="btn-stream" class="btn btn-green btn-sm">STREAM</button>
+                            <button id="btn-stop-stream" class="btn btn-rose btn-sm hidden">STOP</button>
+                            <button id="btn-clear-log" class="btn btn-yellow btn-sm">CLEAR</button>
+                        </div>
+                    </div>
+                    <div id="log-viewer" class="log-viewer">
+                        <div class="log-welcome">Click STREAM to start live logs, or use the buttons below to load recent entries.</div>
+                    </div>
+                    <div class="log-actions">
+                        <button id="btn-load-errors" class="btn btn-orange btn-sm">LOAD ERRORS</button>
+                        <button id="btn-load-today" class="btn btn-purple btn-sm">TODAY'S LOGS</button>
+                        <button id="btn-load-50" class="btn btn-cyan btn-sm">LAST 50</button>
+                    </div>
+                </section>
+
+                <section class="chat-section">
+                    <div class="chat-header">
+                        <h2 class="section-title">CHAT HISTORY</h2>
+                        <div class="chat-controls">
+                            <select id="chat-room-filter" class="select-retro">
+                                <option value="global">GLOBAL CHAT</option>
+                            </select>
+                            <button id="btn-refresh-chat" class="btn btn-cyan btn-sm">REFRESH</button>
+                            <button id="btn-clear-chat" class="btn btn-yellow btn-sm">CLEAR</button>
+                        </div>
+                    </div>
+                    <div id="chat-viewer" class="chat-viewer">
+                        <div class="log-welcome">Click REFRESH to load chat history.</div>
+                    </div>
+                </section>
+
+                <section class="scores-section">
+                    <div class="scores-header">
+                        <h2 class="section-title">HIGH SCORES</h2>
+                        <div class="scores-controls">
+                            <button id="btn-refresh-scores" class="btn btn-cyan btn-sm">REFRESH</button>
+                            <button id="btn-reset-scores" class="btn btn-rose btn-sm">RESET ALL</button>
+                        </div>
+                    </div>
+                    <div id="scores-grid" class="scores-grid">
+                        <div class="log-welcome">Click REFRESH to load high scores.</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ═══ JUKEBOX TAB ═══════════════════════════════════════════════ -->
+            <div id="tab-jukebox" class="tab-panel hidden">
+                <div class="jukebox-toolbar">
+                    <div class="toolbar-group">
+                        <button id="jb-btn-import" class="btn btn-cyan btn-sm">IMPORT JSON</button>
+                        <input type="file" id="jb-file-input" accept=".json" style="display:none">
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="jb-btn-export-json" class="btn btn-green btn-sm">EXPORT JSON</button>
+                        <button id="jb-btn-copy-tracks" class="btn btn-purple btn-sm">COPY TRACKS JS</button>
+                        <button id="jb-btn-copy-jukebox" class="btn btn-orange btn-sm">COPY JUKEBOX_SONGS JS</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="jb-btn-save" class="btn btn-green btn-sm">SAVE TO SERVER</button>
+                        <button id="jb-btn-reset" class="btn btn-rose btn-sm">RESET</button>
+                    </div>
+                    <div class="toolbar-spacer"></div>
+                    <span id="jb-track-count" class="track-count">0 TRACKS</span>
+                </div>
+
+                <div class="song-list-header">
+                    <span>#</span>
+                    <span></span>
+                    <span>TITLE</span>
+                    <span>ARTIST</span>
+                    <span>DURATION</span>
+                    <span>STATUS</span>
+                    <span></span>
+                </div>
+
+                <div id="jb-song-list" class="song-list"></div>
+
+                <button id="jb-btn-add" class="add-song-btn">+ ADD SONG</button>
+            </div>
+
+            <!-- ═══ THEMES TAB ════════════════════════════════════════════════ -->
+            <div id="tab-themes" class="tab-panel hidden">
+                <div class="theme-toolbar">
+                    <div class="toolbar-group">
+                        <input type="file" id="tm-file-input" accept=".json" style="display:none">
+                        <button class="btn btn-cyan btn-sm" id="tm-btn-import">IMPORT JSON</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button class="btn btn-green btn-sm" id="tm-btn-copy-all-css">COPY ALL CSS</button>
+                        <button class="btn btn-yellow btn-sm" id="tm-btn-copy-all-json">COPY ALL JSON</button>
+                        <button class="btn btn-rose btn-sm" id="tm-btn-download-json">DOWNLOAD JSON</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button class="btn btn-green btn-sm" id="tm-btn-save">SAVE TO SERVER</button>
+                        <button class="btn btn-slate btn-sm" id="tm-btn-reset">RESET</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <input type="text" class="search-input" id="tm-search-input" placeholder="SEARCH THEMES...">
                     </div>
                 </div>
-                <div id="log-viewer" class="log-viewer">
-                    <div class="log-welcome">Click STREAM to start live logs, or use the buttons below to load recent entries.</div>
-                </div>
-                <div class="log-actions">
-                    <button id="btn-load-errors" class="btn btn-orange btn-sm">LOAD ERRORS</button>
-                    <button id="btn-load-today" class="btn btn-purple btn-sm">TODAY'S LOGS</button>
-                    <button id="btn-load-50" class="btn btn-cyan btn-sm">LAST 50</button>
-                </div>
-            </section>
+                <div class="filter-bar" id="tm-filter-bar"><span class="filter-label">FILTER:</span></div>
+                <div class="theme-main" id="tm-main-content"></div>
+                <span id="tm-theme-count" class="theme-count">0 THEMES</span>
+            </div>
 
-            <!-- Chat History -->
-            <section class="chat-section">
-                <div class="chat-header">
-                    <h2 class="section-title">CHAT HISTORY</h2>
-                    <div class="chat-controls">
-                        <select id="chat-room-filter" class="select-retro">
-                            <option value="global">GLOBAL CHAT</option>
-                        </select>
-                        <button id="btn-refresh-chat" class="btn btn-cyan btn-sm">REFRESH</button>
-                        <button id="btn-clear-chat" class="btn btn-yellow btn-sm">CLEAR</button>
+            <!-- ═══ API TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-api" class="tab-panel hidden">
+                <section class="api-keys-section">
+                    <div class="api-keys-header">
+                        <h2 class="section-title">API KEYS</h2>
+                        <div class="api-keys-controls">
+                            <button id="btn-load-keys" class="btn btn-cyan btn-sm">LOAD</button>
+                            <button id="btn-save-keys" class="btn btn-green btn-sm">SAVE</button>
+                        </div>
                     </div>
-                </div>
-                <div id="chat-viewer" class="chat-viewer">
-                    <div class="log-welcome">Click REFRESH to load chat history.</div>
-                </div>
-            </section>
-
-            <!-- High Scores -->
-            <section class="scores-section">
-                <div class="scores-header">
-                    <h2 class="section-title">HIGH SCORES</h2>
-                    <div class="scores-controls">
-                        <button id="btn-refresh-scores" class="btn btn-cyan btn-sm">REFRESH</button>
-                        <button id="btn-reset-scores" class="btn btn-rose btn-sm">RESET ALL</button>
-                    </div>
-                </div>
-                <div id="scores-grid" class="scores-grid">
-                    <div class="log-welcome">Click REFRESH to load high scores.</div>
-                </div>
-            </section>
+                    <p class="api-keys-note">API keys for the MEDIA//SEARCH tool. Free keys from Pexels/Pixabay go here. Other sources work without keys.</p>
+                    <div id="api-keys-grid" class="api-keys-grid"></div>
+                </section>
+            </div>
         </main>
 
         <footer>
-            <span class="footer-text">MAGMA//OPS v1.5 — MAGMACRUNCH ARCADE</span>
+            <span class="footer-text">MAGMA//OPS v2.0 — MAGMACRUNCH OPERATIONS</span>
         </footer>
     </div>
 
@@ -117,25 +203,25 @@
         <div class="modal-content system-modal-content">
             <div class="system-modal-header">
                 <h3 class="modal-title">SYSTEM CONTROLS</h3>
-                <button id="close-system-modal" class="btn-close-modal">×</button>
+                <button id="close-system-modal" class="btn-close-modal">&times;</button>
             </div>
             <div class="system-modal-body">
                 <div class="system-info-grid">
                     <div class="system-info-item">
                         <span class="system-info-label">UPTIME</span>
-                        <span id="modal-uptime" class="system-info-value">—</span>
+                        <span id="modal-uptime" class="system-info-value">&mdash;</span>
                     </div>
                     <div class="system-info-item">
                         <span class="system-info-label">CPU TEMP</span>
-                        <span id="modal-temp" class="system-info-value">—</span>
+                        <span id="modal-temp" class="system-info-value">&mdash;</span>
                     </div>
                     <div class="system-info-item">
                         <span class="system-info-label">MEMORY</span>
-                        <span id="modal-memory" class="system-info-value">—</span>
+                        <span id="modal-memory" class="system-info-value">&mdash;</span>
                     </div>
                     <div class="system-info-item">
                         <span class="system-info-label">LOAD</span>
-                        <span id="modal-load" class="system-info-value">—</span>
+                        <span id="modal-load" class="system-info-value">&mdash;</span>
                     </div>
                 </div>
                 <div class="system-actions">
@@ -158,6 +244,21 @@
         </div>
     </div>
 
-    <script src="admin.js?v=5"></script>
+    <!-- Theme edit panel -->
+    <div id="tm-edit-overlay" class="edit-overlay"></div>
+    <div id="tm-edit-panel" class="edit-panel">
+        <div class="edit-header">
+            <span class="edit-title" id="tm-edit-title">EDITING</span>
+            <button class="edit-close" id="tm-edit-close">X</button>
+        </div>
+        <div class="edit-body" id="tm-edit-body"></div>
+        <div class="edit-footer" id="tm-edit-footer"></div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="arcade.js"></script>
+    <script src="jukebox.js"></script>
+    <script src="theme.js"></script>
+    <script src="api.js"></script>
 </body>
 </html>

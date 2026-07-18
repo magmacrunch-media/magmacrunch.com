@@ -50,6 +50,9 @@ SERVICES = [
 # ── Score storage ────────────────────────────────────────────────────────────
 
 SCORES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scores")
+API_KEYS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api-keys.json")
+JUKEBOX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jukebox-songs.json")
+THEMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.json")
 
 def load_game_scores(game_id):
     """Load scores for a specific game."""
@@ -65,6 +68,42 @@ def save_game_scores(game_id, data):
     path = os.path.join(SCORES_DIR, f"{game_id}.json")
     with open(path, "w") as f:
         json.dump(data, f, indent=2)
+
+def load_api_keys():
+    """Load API keys from disk."""
+    if os.path.exists(API_KEYS_PATH):
+        with open(API_KEYS_PATH) as f:
+            return json.load(f)
+    return {}
+
+def save_api_keys(keys):
+    """Save API keys to disk."""
+    with open(API_KEYS_PATH, "w") as f:
+        json.dump(keys, f, indent=2)
+
+def load_jukebox():
+    """Load jukebox songs from disk."""
+    if os.path.exists(JUKEBOX_PATH):
+        with open(JUKEBOX_PATH) as f:
+            return json.load(f)
+    return []
+
+def save_jukebox(songs):
+    """Save jukebox songs to disk."""
+    with open(JUKEBOX_PATH, "w") as f:
+        json.dump(songs, f, indent=2)
+
+def load_themes():
+    """Load themes from disk."""
+    if os.path.exists(THEMES_PATH):
+        with open(THEMES_PATH) as f:
+            return json.load(f)
+    return []
+
+def save_themes(themes):
+    """Save themes to disk."""
+    with open(THEMES_PATH, "w") as f:
+        json.dump(themes, f, indent=2)
 
 def add_score(game_id, name, score, extra=None):
     """Add a score entry and return its rank (1-indexed)."""
@@ -451,6 +490,63 @@ async def ws_handler(websocket):
                         "ok": True
                     }))
 
+            elif action == "api_keys_load":
+                keys = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_api_keys
+                )
+                await websocket.send(json.dumps({
+                    "type": "api_keys",
+                    "keys": keys
+                }))
+
+            elif action == "api_keys_save":
+                keys = msg.get("keys", {})
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_api_keys(keys)
+                )
+                await websocket.send(json.dumps({
+                    "type": "api_keys_saved",
+                    "ok": True
+                }))
+
+            elif action == "jukebox_load":
+                songs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_jukebox
+                )
+                await websocket.send(json.dumps({
+                    "type": "jukebox_songs",
+                    "songs": songs
+                }))
+
+            elif action == "jukebox_save":
+                songs = msg.get("songs", [])
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_jukebox(songs)
+                )
+                await websocket.send(json.dumps({
+                    "type": "jukebox_saved",
+                    "ok": True
+                }))
+
+            elif action == "themes_load":
+                themes = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_themes
+                )
+                await websocket.send(json.dumps({
+                    "type": "themes_data",
+                    "themes": themes
+                }))
+
+            elif action == "themes_save":
+                themes = msg.get("themes", [])
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_themes(themes)
+                )
+                await websocket.send(json.dumps({
+                    "type": "themes_saved",
+                    "ok": True
+                }))
+
     except websockets.ConnectionClosed:
         pass
     finally:
@@ -460,11 +556,34 @@ async def ws_handler(websocket):
 # ── HTTP server ──────────────────────────────────────────────────────────────
 
 class AdminHTTPHandler(SimpleHTTPRequestHandler):
-    """Serve static files from the admin/static directory."""
+    """Serve static files from the admin/static directory.
+    Also serves api-keys.json from the admin directory (public, no auth)."""
 
     def __init__(self, *args, **kwargs):
-        static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+        self._admin_dir = os.path.dirname(os.path.abspath(__file__))
+        static_dir = os.path.join(self._admin_dir, "static")
         super().__init__(*args, directory=static_dir, **kwargs)
+
+    def do_GET(self):
+        # Serve api-keys.json from admin dir (not static dir)
+        if self.path == "/api-keys.json" or self.path.startswith("/api-keys.json?"):
+            keys_path = os.path.join(self._admin_dir, "api-keys.json")
+            if os.path.exists(keys_path):
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.send_header("Cache-Control", "no-cache")
+                self.end_headers()
+                with open(keys_path, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Access-Control-Allow-Origin", "*")
+                self.end_headers()
+                self.wfile.write(b"{}")
+        else:
+            super().do_GET()
 
     def log_message(self, format, *args):
         pass  # Suppress HTTP request logs
