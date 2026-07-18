@@ -222,9 +222,7 @@ h1.glitch::after {
 
 .shapes-popup {
     display: none;
-    position: absolute;
-    top: 0;
-    left: var(--panel-w);
+    position: fixed;
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 6px;
