@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>album art maker — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <a href="../../index.html" class="back-link">&lt; magmacrunch</a>
+        <h1 class="app-title">ALBUM ART MAKER</h1>
+    </header>
+
+    <div class="workspace">
+        <!-- LEFT PANEL: Tools -->
+        <aside class="panel tools-panel">
+            <div class="panel-label">TOOLS</div>
+            <div class="tool-grid">
+                <button class="tool-btn active" data-tool="select" title="Select / Move (V)">
+                    <span class="tool-icon">&#9658;</span>
+                    <span class="tool-name">SELECT</span>
+                </button>
+                <button class="tool-btn" data-tool="rect" title="Rectangle (R)">
+                    <span class="tool-icon">&#9645;</span>
+                    <span class="tool-name">RECT</span>
+                </button>
+                <button class="tool-btn" data-tool="circle" title="Circle (C)">
+                    <span class="tool-icon">&#9675;</span>
+                    <span class="tool-name">CIRCLE</span>
+                </button>
+                <button class="tool-btn" data-tool="line" title="Line (L)">
+                    <span class="tool-icon">&#9585;</span>
+                    <span class="tool-name">LINE</span>
+                </button>
+                <button class="tool-btn" data-tool="text" title="Text (T)">
+                    <span class="tool-icon">T</span>
+                    <span class="tool-name">TEXT</span>
+                </button>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">REFERENCE</div>
+            <button class="ref-upload-btn" id="refUploadBtn">UPLOAD IMAGE</button>
+            <input type="file" id="refFileInput" accept="image/*" hidden>
+            <div class="ref-preview-wrap" id="refPreviewWrap">
+                <canvas id="refCanvas" class="ref-canvas"></canvas>
+                <button class="ref-clear-btn" id="refClearBtn" title="Remove reference">&times;</button>
+            </div>
+            <p class="ref-hint">Click reference to<br>sample color</p>
+        </aside>
+
+        <!-- CENTER: Canvas + Reference -->
+        <div class="center-area">
+            <div class="canvas-wrap" id="canvasWrap">
+                <canvas id="mainCanvas" width="1024" height="1024"></canvas>
+                <textarea id="textInput" class="text-input-overlay" hidden></textarea>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Properties -->
+        <aside class="panel props-panel">
+            <div class="panel-label">PROPERTIES</div>
+
+            <div class="prop-group">
+                <label class="prop-label">FILL</label>
+                <div class="color-row">
+                    <input type="color" id="fillColor" value="#ffffff" class="color-input">
+                    <span class="color-hex" id="fillHex">#ffffff</span>
+                    <button class="no-fill-btn" id="noFillBtn" title="No fill">&#8210;</button>
+                </div>
+            </div>
+
+            <div class="prop-group">
+                <label class="prop-label">STROKE</label>
+                <div class="color-row">
+                    <input type="color" id="strokeColor" value="#000000" class="color-input">
+                    <span class="color-hex" id="strokeHex">#000000</span>
+                    <button class="no-fill-btn" id="noStrokeBtn" title="No stroke">&#8210;</button>
+                </div>
+            </div>
+
+            <div class="prop-group">
+                <label class="prop-label">STROKE WIDTH</label>
+                <div class="range-row">
+                    <input type="range" id="strokeWidth" min="1" max="40" value="4" class="range-input">
+                    <span class="range-val" id="strokeWidthVal">4</span>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="prop-group" id="textProps" hidden>
+                <label class="prop-label">FONT</label>
+                <select id="fontSelect" class="prop-select">
+                    <option value="Press Start 2P">Press Start 2P</option>
+                    <option value="VT323">VT323</option>
+                    <option value="Silkscreen">Silkscreen</option>
+                    <option value="DotGothic16">DotGothic16</option>
+                    <option value="Pixelify Sans">Pixelify Sans</option>
+                    <option value="Courier Prime">Courier Prime</option>
+                </select>
+            </div>
+
+            <div class="prop-group" id="fontSizeGroup" hidden>
+                <label class="prop-label">FONT SIZE</label>
+                <div class="range-row">
+                    <input type="range" id="fontSize" min="8" max="200" value="48" class="range-input">
+                    <span class="range-val" id="fontSizeVal">48</span>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="prop-group">
+                <label class="prop-label">CANVAS SIZE</label>
+                <select id="canvasSize" class="prop-select">
+                    <option value="512">512 &times; 512</option>
+                    <option value="1024" selected>1024 &times; 1024</option>
+                    <option value="2048">2048 &times; 2048</option>
+                    <option value="4096">4096 &times; 4096</option>
+                </select>
+            </div>
+
+            <div class="prop-group">
+                <label class="prop-label">BG COLOR</label>
+                <div class="color-row">
+                    <input type="color" id="bgColor" value="#ffffff" class="color-input">
+                    <span class="color-hex" id="bgHex">#ffffff</span>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="action-btns">
+                <button class="action-btn" id="undoBtn" title="Undo (Ctrl+Z)">UNDO</button>
+                <button class="action-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">REDO</button>
+            </div>
+            <div class="action-btns">
+                <button class="action-btn danger" id="deleteBtn" title="Delete selected (Del)">DELETE</button>
+                <button class="action-btn" id="clearBtn">CLEAR ALL</button>
+            </div>
+            <button class="export-btn" id="exportBtn">EXPORT PNG</button>
+        </aside>
+    </div>
+
+    <script src="js/history.js"></script>
+    <script src="js/color.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/tools.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
