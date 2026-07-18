@@ -801,6 +801,12 @@
                         <div class="knob-face"></div>
                         <div class="knob-label">CH+</div>
                     </div>
+                    <div class="tv-knob" id="btn-playpause" role="button" tabindex="0" aria-label="play pause">
+                        <div class="knob-face" style="width: 38px; height: 38px;">
+                            <div id="pp-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--tv-amber);line-height:1;">&#9646;&#9646;</div>
+                        </div>
+                        <div class="knob-label">PLAY</div>
+                    </div>
                     <div class="tv-knob" id="btn-guide" role="button" tabindex="0" aria-label="tv guide">
                         <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #2a4a2a, #1a3a1a); border-color: #2a4a2a; width: 38px; height: 38px;">
                             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P';font-size:5px;color:#B4DCA0;white-space:nowrap;">GUIDE</div>
@@ -953,8 +959,12 @@ const playerFrame = document.getElementById('yt-player');
 
 function loadVideo(videoId) {
     playerFrame.style.opacity = '0';
-    playerFrame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&iv_load_policy=3&modestbranding=1';
+    playerFrame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&iv_load_policy=3&modestbranding=1&controls=0&showinfo=0';
     isPaused = false;
+    const icon = document.getElementById('pp-icon');
+    const label = document.querySelector('#btn-playpause .knob-label');
+    if (icon) icon.innerHTML = '&#9646;&#9646;';
+    if (label) label.textContent = 'PLAY';
     setTimeout(() => { playerFrame.style.opacity = '1'; }, 300);
 }
 
@@ -1118,9 +1128,26 @@ function renderGuide() {
 /* ══════════════════════════════════════════════════
    CONTROLS
    ══════════════════════════════════════════════════ */
+function togglePlayPause() {
+    if (!isPoweredOn || currentChannel < 0) return;
+    const icon = document.getElementById('pp-icon');
+    const label = document.querySelector('#btn-playpause .knob-label');
+    if (isPaused) {
+        loadVideo(CHANNELS[currentChannel].id);
+        icon.innerHTML = '&#9646;&#9646;';
+        label.textContent = 'PLAY';
+    } else {
+        unloadVideo();
+        isPaused = true;
+        icon.innerHTML = '&#9654;';
+        label.textContent = 'PAUSE';
+    }
+}
+
 document.getElementById('btn-ch-up').addEventListener('click', () => changeChannel(1));
 document.getElementById('btn-ch-down').addEventListener('click', () => changeChannel(-1));
 document.getElementById('btn-power').addEventListener('click', togglePower);
+document.getElementById('btn-playpause').addEventListener('click', togglePlayPause);
 document.getElementById('btn-guide').addEventListener('click', toggleGuide);
 document.getElementById('guide-close-btn').addEventListener('click', toggleGuide);
 
@@ -1161,11 +1188,17 @@ document.addEventListener('keydown', function(e) {
         case ' ':
             e.preventDefault();
             if (isPoweredOn && currentChannel >= 0) {
+                const icon = document.getElementById('pp-icon');
+                const label = document.querySelector('#btn-playpause .knob-label');
                 if (isPaused) {
                     loadVideo(CHANNELS[currentChannel].id);
+                    icon.innerHTML = '&#9646;&#9646;';
+                    label.textContent = 'PLAY';
                 } else {
                     unloadVideo();
                     isPaused = true;
+                    icon.innerHTML = '&#9654;';
+                    label.textContent = 'PAUSE';
                 }
             }
             break;
