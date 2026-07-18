@@ -469,6 +469,81 @@
             text-transform: uppercase;
         }
 
+        /* ─── TV GUIDE OVERLAY ─── */
+        .tv-guide {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: rgba(0,8,0,0.94);
+            overflow: hidden;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tv-guide.hidden { display: none; }
+        .tv-guide-header {
+            text-align: center;
+            padding: 10px 12px 6px;
+            border-bottom: 1px solid rgba(180,220,160,0.3);
+            flex-shrink: 0;
+        }
+        .guide-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--tv-phosphor);
+            text-shadow: 0 0 8px rgba(180,220,160,0.5);
+            display: block;
+            letter-spacing: 2px;
+        }
+        .guide-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: rgba(180,220,160,0.5);
+            display: block;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+        .tv-guide-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+            scrollbar-width: none;
+        }
+        .tv-guide-scroll::-webkit-scrollbar { display: none; }
+        .guide-channel {
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            gap: 8px;
+            padding: 5px 12px;
+            border-bottom: 1px solid rgba(180,220,160,0.08);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .guide-channel:hover { background: rgba(180,220,160,0.1); }
+        .guide-channel.active { background: rgba(180,220,160,0.15); }
+        .guide-ch-num {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--tv-amber);
+            text-shadow: 0 0 6px rgba(255,184,0,0.4);
+            text-align: right;
+        }
+        .guide-ch-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--tv-phosphor);
+            text-shadow: 0 0 4px rgba(180,220,160,0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .guide-ch-artist {
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: rgba(180,220,160,0.45);
+            margin-top: 2px;
+        }
+
         /* ─── LEGEND / KEYBOARD HINTS ─── */
         .tv-legend {
             text-align: center;
@@ -628,6 +703,14 @@
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowfullscreen
                             loading="lazy"></iframe>
+                        <!-- TV GUIDE OVERLAY -->
+                        <div id="tv-guide" class="tv-guide hidden">
+                            <div class="tv-guide-header">
+                                <span class="guide-title">MAGMACRUNCH CABLE</span>
+                                <span class="guide-subtitle">CHANNEL GUIDE</span>
+                            </div>
+                            <div class="tv-guide-scroll" id="tv-guide-scroll"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -683,6 +766,12 @@
                         <div class="knob-face"></div>
                         <div class="knob-label">CH+</div>
                     </div>
+                    <div class="tv-knob" id="btn-guide" role="button" tabindex="0" aria-label="tv guide">
+                        <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #2a4a2a, #1a3a1a); border-color: #2a4a2a; width: 38px; height: 38px;">
+                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P';font-size:5px;color:#B4DCA0;white-space:nowrap;">GUIDE</div>
+                        </div>
+                        <div class="knob-label">GUIDE</div>
+                    </div>
                 </div>
 
                 <!-- BRAND BADGE -->
@@ -698,6 +787,7 @@
         <kbd>↑</kbd> <kbd>↓</kbd> change channel &nbsp;&middot;&nbsp;
         <kbd>←</kbd> <kbd>→</kbd> prev / next &nbsp;&middot;&nbsp;
         <kbd>0</kbd>–<kbd>9</kbd> jump to channel &nbsp;&middot;&nbsp;
+        <kbd>G</kbd> guide &nbsp;&middot;&nbsp;
         <kbd>space</kbd> play / pause
     </div>
 
@@ -748,6 +838,7 @@ let currentChannel = -1;
 let isPaused = false;
 let isPoweredOn = false;
 let isSwitching = false;
+let guideOpen = false;
 let vuInterval = null;
 
 const screen   = document.getElementById('tv-screen');
@@ -932,11 +1023,71 @@ function togglePower() {
 }
 
 /* ══════════════════════════════════════════════════
+   TV GUIDE
+   ══════════════════════════════════════════════════ */
+function escGuide(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleGuide() {
+    if (!isPoweredOn) return;
+    const guide = document.getElementById('tv-guide');
+    guideOpen = !guideOpen;
+    guide.classList.toggle('hidden', !guideOpen);
+    if (guideOpen) {
+        renderGuide();
+        unloadVideo();
+        stopVuMeter();
+    } else {
+        if (currentChannel >= 0) {
+            loadVideo(CHANNELS[currentChannel].id);
+            startVuMeter();
+        }
+    }
+}
+
+function renderGuide() {
+    const list = document.getElementById('tv-guide-scroll');
+    list.innerHTML = '';
+    CHANNELS.forEach((ch, i) => {
+        const row = document.createElement('div');
+        row.className = 'guide-channel' + (i === currentChannel ? ' active' : '');
+        row.innerHTML =
+            '<div class="guide-ch-num">' + String(i + 1).padStart(2, '0') + '</div>' +
+            '<div class="guide-ch-info">' +
+                '<div class="guide-ch-title">' + escGuide(ch.title) + '</div>' +
+                '<div class="guide-ch-artist">' + escGuide(ch.artist) + ' · ' + escGuide(ch.year) + '</div>' +
+            '</div>';
+        row.addEventListener('click', function() {
+            currentChannel = i;
+            guideOpen = false;
+            document.getElementById('tv-guide').classList.add('hidden');
+            screen.classList.add('flicker');
+            startStatic();
+            setTimeout(() => {
+                stopStatic();
+                loadVideo(ch.id);
+                channelNum.textContent = String(i + 1).padStart(2, '0');
+                titleBar.textContent = ch.artist + ' — ' + ch.title;
+                titleBar.classList.add('visible');
+                screen.classList.remove('flicker');
+                screen.classList.add('on-air');
+                startVuMeter();
+            }, 300);
+        });
+        list.appendChild(row);
+    });
+    const active = list.querySelector('.active');
+    if (active) active.scrollIntoView({ block: 'center' });
+}
+
+/* ══════════════════════════════════════════════════
    CONTROLS
    ══════════════════════════════════════════════════ */
 document.getElementById('btn-ch-up').addEventListener('click', () => changeChannel(1));
 document.getElementById('btn-ch-down').addEventListener('click', () => changeChannel(-1));
 document.getElementById('btn-power').addEventListener('click', togglePower);
+document.getElementById('btn-guide').addEventListener('click', toggleGuide);
 
 /* ══════════════════════════════════════════════════
    KEYBOARD CONTROLS
@@ -952,12 +1103,25 @@ document.addEventListener('keydown', function(e) {
         case 'ArrowUp':
         case 'ArrowRight':
             e.preventDefault();
-            changeChannel(1);
+            if (guideOpen) {
+                document.getElementById('tv-guide-scroll').scrollBy(0, -40);
+            } else {
+                changeChannel(1);
+            }
             break;
         case 'ArrowDown':
         case 'ArrowLeft':
             e.preventDefault();
-            changeChannel(-1);
+            if (guideOpen) {
+                document.getElementById('tv-guide-scroll').scrollBy(0, 40);
+            } else {
+                changeChannel(-1);
+            }
+            break;
+        case 'g':
+        case 'G':
+            e.preventDefault();
+            toggleGuide();
             break;
         case ' ':
             e.preventDefault();
@@ -976,6 +1140,10 @@ document.addEventListener('keydown', function(e) {
         default:
             // Number keys 0-9
             if (/^[0-9]$/.test(e.key) && isPoweredOn) {
+                if (guideOpen) {
+                    guideOpen = false;
+                    document.getElementById('tv-guide').classList.add('hidden');
+                }
                 numBuffer += e.key;
                 clearTimeout(numTimeout);
                 numTimeout = setTimeout(() => { numBuffer = ''; }, 800);
