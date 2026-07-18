@@ -75,13 +75,13 @@ h1.glitch::after {
 h1.glitch::before {
     animation: glitch-1 2s infinite linear alternate-reverse;
     clip-path: inset(0 0 65% 0);
-    color: rgba(0,245,255,0.4);
+    color: rgba(178,255,89,0.5);
 }
 
 h1.glitch::after {
     animation: glitch-2 2s infinite linear alternate-reverse;
     clip-path: inset(65% 0 0 0);
-    color: var(--yellow);
+    color: rgba(255,224,58,0.5);
 }
 
 @keyframes glitch-1 {
