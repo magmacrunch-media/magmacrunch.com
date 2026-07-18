@@ -115,7 +115,7 @@
         .tv {
             position: relative;
             width: 100%;
-            max-width: 640px;
+            max-width: 860px;
         }
 
         /* ─── ANTENNA ─── */
@@ -152,6 +152,9 @@
 
         /* ─── TV BODY ─── */
         .tv-body {
+            display: grid;
+            grid-template-columns: 1fr 160px;
+            gap: 12px;
             background: var(--tv-cabinet);
             border-radius: 16px;
             padding: 20px;
@@ -168,6 +171,19 @@
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.03);
             pointer-events: none;
+        }
+        .tv-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tv-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-left: 1px solid rgba(255,255,255,0.05);
         }
 
         /* ─── SCREEN AREA ─── */
@@ -328,6 +344,12 @@
         /* ─── CHANNEL DISPLAY ─── */
         .tv-channel-display {
             display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .tv-channel-display {
+            display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 8px 12px;
@@ -363,23 +385,40 @@
             opacity: 1;
         }
 
-        /* ─── VIDEO TITLE ─── */
-        .tv-title-bar {
+        /* ─── ON-SCREEN TITLE OVERLAY ─── */
+        .tv-screen-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .tv-screen-overlay.visible { opacity: 1; }
+        .tv-on-screen-ch {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--tv-amber);
+            text-shadow: 0 0 12px rgba(255,184,0,0.6);
+        }
+        .tv-on-screen-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 8px;
             color: var(--tv-phosphor);
             text-shadow: 0 0 6px rgba(180,220,160,0.4);
-            text-align: center;
-            padding: 4px 12px 2px;
-            white-space: nowrap;
+            max-width: 300px;
             overflow: hidden;
             text-overflow: ellipsis;
-            min-height: 18px;
-            opacity: 0;
-            transition: opacity 0.3s;
+            white-space: nowrap;
         }
-        .tv-title-bar.visible {
-            opacity: 1;
+        .tv-on-screen-artist {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: rgba(180,220,160,0.6);
         }
 
         /* ─── SPEAKER GRILLE ─── */
@@ -387,7 +426,6 @@
             display: flex;
             justify-content: center;
             gap: 6px;
-            margin-top: 12px;
             padding: 0 20px;
         }
         .grille-slot {
@@ -401,11 +439,9 @@
         /* ─── CONTROLS PANEL ─── */
         .tv-controls {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 14px;
-            padding: 0 10px;
+            gap: 10px;
         }
         .tv-knob {
             display: flex;
@@ -606,15 +642,17 @@
            RESPONSIVE
            ══════════════════════════════════════════ */
         @media (max-width: 640px) {
-            .tv-body { padding: 12px; border-radius: 12px; }
+            .tv-body { padding: 12px; border-radius: 12px; grid-template-columns: 1fr; }
+            .tv-right { flex-direction: row; flex-wrap: wrap; justify-content: center; border-left: none; border-top: 1px solid rgba(255,255,255,0.05); padding: 8px 0 0; gap: 12px; }
             .tv-screen-area { padding: 6px; }
             .antenna-prong { height: 40px; }
             .tv-antenna { gap: 28px; }
             .channel-number { font-size: 11px; }
             .knob-face { width: 36px; height: 36px; }
             .tv-legend { display: none; }
-            .tv-title-bar { font-size: 7px; }
             .tv-brand-text { font-size: 6px; }
+            .tv-on-screen-ch { font-size: 14px; }
+            .tv-on-screen-title { font-size: 7px; max-width: 180px; }
         }
 
         /* ══════════════════════════════════════════
@@ -720,108 +758,108 @@
             <!-- TV BODY -->
             <div class="tv-body">
 
-                <!-- SCREEN AREA -->
-                <div class="tv-screen-area">
-                    <div class="tv-screen off" id="tv-screen">
-                        <!-- COLOR BARS -->
-                        <div class="color-bars" id="color-bars">
-                            <div class="bar-1"></div>
-                            <div class="bar-2"></div>
-                            <div class="bar-3"></div>
-                            <div class="bar-4"></div>
-                            <div class="bar-5"></div>
-                            <div class="bar-6"></div>
-                            <div class="bar-7"></div>
-                        </div>
-                        <!-- STATIC CANVAS -->
-                        <canvas id="static-canvas"></canvas>
-                        <!-- YOUTUBE PLAYER (static iframe — required for file:// compat) -->
-                        <iframe id="yt-player"
-                            src="about:blank"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowfullscreen
-                            loading="lazy"></iframe>
-                        <!-- TV GUIDE OVERLAY -->
-                        <div id="tv-guide" class="tv-guide hidden">
-                            <div class="tv-guide-header">
-                                <button class="guide-close" id="guide-close-btn" aria-label="close guide">&#10005;</button>
-                                <span class="guide-title">MAGMACRUNCH CABLE</span>
-                                <span class="guide-subtitle">CHANNEL GUIDE</span>
+                <!-- LEFT: Screen + Grille -->
+                <div class="tv-left">
+                    <div class="tv-screen-area">
+                        <div class="tv-screen off" id="tv-screen">
+                            <div class="color-bars" id="color-bars">
+                                <div class="bar-1"></div>
+                                <div class="bar-2"></div>
+                                <div class="bar-3"></div>
+                                <div class="bar-4"></div>
+                                <div class="bar-5"></div>
+                                <div class="bar-6"></div>
+                                <div class="bar-7"></div>
                             </div>
-                            <div class="tv-guide-scroll" id="tv-guide-scroll"></div>
+                            <canvas id="static-canvas"></canvas>
+                            <iframe id="yt-player"
+                                src="about:blank"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                                loading="lazy"></iframe>
+                            <!-- ON-SCREEN TITLE OVERLAY -->
+                            <div class="tv-screen-overlay" id="tv-screen-overlay">
+                                <span class="tv-on-screen-ch" id="tv-on-screen-ch"></span>
+                                <span class="tv-on-screen-title" id="tv-on-screen-title"></span>
+                                <span class="tv-on-screen-artist" id="tv-on-screen-artist"></span>
+                            </div>
+                            <!-- TV GUIDE OVERLAY -->
+                            <div id="tv-guide" class="tv-guide hidden">
+                                <div class="tv-guide-header">
+                                    <button class="guide-close" id="guide-close-btn" aria-label="close guide">&#10005;</button>
+                                    <span class="guide-title">MAGMACRUNCH CABLE</span>
+                                    <span class="guide-subtitle">CHANNEL GUIDE</span>
+                                </div>
+                                <div class="tv-guide-scroll" id="tv-guide-scroll"></div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="tv-grille">
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
                     </div>
                 </div>
 
-                <!-- CHANNEL DISPLAY -->
-                <div class="tv-channel-display">
-                    <span class="channel-label">CH</span>
-                    <span class="channel-number" id="channel-number">--</span>
-                    <div class="vu-meter" id="vu-meter">
-                        <div class="vu-bar" style="height:4px"></div>
-                        <div class="vu-bar" style="height:7px"></div>
-                        <div class="vu-bar" style="height:10px"></div>
-                        <div class="vu-bar" style="height:6px"></div>
-                        <div class="vu-bar" style="height:12px"></div>
-                        <div class="vu-bar" style="height:8px"></div>
-                        <div class="vu-bar" style="height:5px"></div>
-                        <div class="vu-bar" style="height:11px"></div>
-                        <div class="vu-bar" style="height:7px"></div>
-                        <div class="vu-bar" style="height:9px"></div>
-                    </div>
-                </div>
-
-                <!-- VIDEO TITLE -->
-                <div class="tv-title-bar" id="tv-title-bar"></div>
-
-                <!-- SPEAKER GRILLE -->
-                <div class="tv-grille">
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                    <div class="grille-slot"></div>
-                </div>
-
-                <!-- CONTROLS -->
-                <div class="tv-controls">
-                    <div class="tv-knob" id="btn-ch-down" role="button" tabindex="0" aria-label="channel down">
-                        <div class="knob-arrow">▼</div>
-                        <div class="knob-face"></div>
-                        <div class="knob-label">CH−</div>
-                    </div>
-                    <div class="tv-knob" id="btn-power" role="button" tabindex="0" aria-label="power">
-                        <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #5a2020, #3a1515); border-color: #4a2020;">
-                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#ff3333;border-radius:50%;box-shadow:0 0 6px #ff3333;opacity:0.4;" id="power-led"></div>
+                <!-- RIGHT: Channel info + Controls + Brand -->
+                <div class="tv-right">
+                    <div class="tv-channel-display">
+                        <span class="channel-label">CH</span>
+                        <span class="channel-number" id="channel-number">--</span>
+                        <div class="vu-meter" id="vu-meter">
+                            <div class="vu-bar" style="height:4px"></div>
+                            <div class="vu-bar" style="height:7px"></div>
+                            <div class="vu-bar" style="height:10px"></div>
+                            <div class="vu-bar" style="height:6px"></div>
+                            <div class="vu-bar" style="height:12px"></div>
+                            <div class="vu-bar" style="height:8px"></div>
+                            <div class="vu-bar" style="height:5px"></div>
+                            <div class="vu-bar" style="height:11px"></div>
+                            <div class="vu-bar" style="height:7px"></div>
+                            <div class="vu-bar" style="height:9px"></div>
                         </div>
-                        <div class="knob-label">POWER</div>
                     </div>
-                    <div class="tv-knob" id="btn-ch-up" role="button" tabindex="0" aria-label="channel up">
-                        <div class="knob-arrow">▲</div>
-                        <div class="knob-face"></div>
-                        <div class="knob-label">CH+</div>
-                    </div>
-                    <div class="tv-knob" id="btn-playpause" role="button" tabindex="0" aria-label="play pause">
-                        <div class="knob-face no-tick" style="width: 38px; height: 38px;">
-                            <div id="pp-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--tv-amber);line-height:1;">&#9654;</div>
+                    <div class="tv-controls">
+                        <div class="tv-knob" id="btn-ch-down" role="button" tabindex="0" aria-label="channel down">
+                            <div class="knob-arrow">▼</div>
+                            <div class="knob-face"></div>
+                            <div class="knob-label">CH−</div>
                         </div>
-                        <div class="knob-label">PLAY</div>
-                    </div>
-                    <div class="tv-knob" id="btn-guide" role="button" tabindex="0" aria-label="tv guide">
-                        <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #2a4a2a, #1a3a1a); border-color: #2a4a2a; width: 38px; height: 38px;">
-                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P';font-size:5px;color:#B4DCA0;white-space:nowrap;">GUIDE</div>
+                        <div class="tv-knob" id="btn-power" role="button" tabindex="0" aria-label="power">
+                            <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #5a2020, #3a1515); border-color: #4a2020;">
+                                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#ff3333;border-radius:50%;box-shadow:0 0 6px #ff3333;opacity:0.4;" id="power-led"></div>
+                            </div>
+                            <div class="knob-label">POWER</div>
                         </div>
-                        <div class="knob-label">GUIDE</div>
+                        <div class="tv-knob" id="btn-ch-up" role="button" tabindex="0" aria-label="channel up">
+                            <div class="knob-arrow">▲</div>
+                            <div class="knob-face"></div>
+                            <div class="knob-label">CH+</div>
+                        </div>
                     </div>
-                </div>
-
-                <!-- BRAND BADGE -->
-                <div class="tv-brand">
-                    <span class="tv-brand-text">MagmaCrunch TV</span>
+                    <div class="tv-controls">
+                        <div class="tv-knob" id="btn-playpause" role="button" tabindex="0" aria-label="play pause">
+                            <div class="knob-face no-tick" style="width: 38px; height: 38px;">
+                                <div id="pp-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--tv-amber);line-height:1;">&#9654;</div>
+                            </div>
+                            <div class="knob-label">PLAY</div>
+                        </div>
+                        <div class="tv-knob" id="btn-guide" role="button" tabindex="0" aria-label="tv guide">
+                            <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #2a4a2a, #1a3a1a); border-color: #2a4a2a; width: 38px; height: 38px;">
+                                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P';font-size:5px;color:#B4DCA0;white-space:nowrap;">GUIDE</div>
+                            </div>
+                            <div class="knob-label">GUIDE</div>
+                        </div>
+                    </div>
+                    <div class="tv-brand">
+                        <span class="tv-brand-text">MagmaCrunch TV</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -893,7 +931,6 @@ const staticCanvas = document.getElementById('static-canvas');
 const staticCtx    = staticCanvas.getContext('2d');
 const colorBars    = document.getElementById('color-bars');
 const channelNum   = document.getElementById('channel-number');
-const titleBar     = document.getElementById('tv-title-bar');
 const ambient      = document.getElementById('tv-ambient');
 const powerLed     = document.getElementById('power-led');
 const vuMeter      = document.getElementById('vu-meter');
@@ -958,6 +995,22 @@ function stopVuMeter() {
     });
 }
 
+/* ─── ON-SCREEN TITLE OVERLAY ─── */
+let onScreenTimeout = null;
+function showOnScreenInfo(chNum, title, artist) {
+    const overlay = document.getElementById('tv-screen-overlay');
+    document.getElementById('tv-on-screen-ch').textContent = String(chNum).padStart(2, '0');
+    document.getElementById('tv-on-screen-title').textContent = title;
+    document.getElementById('tv-on-screen-artist').textContent = artist;
+    overlay.classList.add('visible');
+    clearTimeout(onScreenTimeout);
+    onScreenTimeout = setTimeout(() => overlay.classList.remove('visible'), 3000);
+}
+function hideOnScreenInfo() {
+    clearTimeout(onScreenTimeout);
+    document.getElementById('tv-screen-overlay').classList.remove('visible');
+}
+
 /* ══════════════════════════════════════════════════
    YOUTUBE VIDEO — static iframe, src swap
    ══════════════════════════════════════════════════ */
@@ -1001,7 +1054,7 @@ function changeChannel(dir) {
     screen.classList.add('flicker');
     startStatic();
     stopVuMeter();
-    titleBar.classList.remove('visible');
+    hideOnScreenInfo();
 
     setTimeout(() => {
         // Phase 2: color bars flash
@@ -1019,8 +1072,7 @@ function changeChannel(dir) {
             // Phase 4: settle
             screen.classList.remove('off', 'flicker');
             screen.classList.add('on-air');
-            titleBar.textContent = ch.artist + ' — ' + ch.title;
-            titleBar.classList.add('visible');
+            showOnScreenInfo(currentChannel + 1, ch.title, ch.artist);
             startVuMeter();
 
             isSwitching = false;
@@ -1037,7 +1089,7 @@ function togglePower() {
         screen.classList.add('turn-off');
         stopStatic();
         stopVuMeter();
-        titleBar.classList.remove('visible');
+        hideOnScreenInfo();
         powerLed.style.opacity = '0.2';
 
         setTimeout(() => {
@@ -1071,8 +1123,7 @@ function togglePower() {
             loadVideo(ch.id);
 
             screen.classList.remove('turn-on');
-            titleBar.textContent = ch.artist + ' — ' + ch.title;
-            titleBar.classList.add('visible');
+            showOnScreenInfo(1, ch.title, ch.artist);
             startVuMeter();
             isSwitching = false;
         }, 700);
@@ -1124,8 +1175,7 @@ function renderGuide() {
                 stopStatic();
                 loadVideo(ch.id);
                 channelNum.textContent = String(i + 1).padStart(2, '0');
-                titleBar.textContent = ch.artist + ' — ' + ch.title;
-                titleBar.classList.add('visible');
+                showOnScreenInfo(i + 1, ch.title, ch.artist);
                 screen.classList.remove('flicker');
                 screen.classList.add('on-air');
                 startVuMeter();
