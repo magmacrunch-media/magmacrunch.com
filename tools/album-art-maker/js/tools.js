@@ -349,7 +349,7 @@ window.Tools = (function () {
         // check rotation handle first
         const rot = getRotationHandlePos(el);
         const rotDist = Math.sqrt((x - rot.x) ** 2 + (y - rot.y) ** 2);
-        if (rotDist <= 7) {
+        if (rotDist <= 9) {
             return { id: 'rotate', x: rot.x, y: rot.y, cursor: 'grab' };
         }
 

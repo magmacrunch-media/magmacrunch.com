@@ -229,10 +229,16 @@ h1.glitch::after {
     padding: 8px;
     z-index: 50;
     min-width: 220px;
-    max-height: 80vh;
+    max-height: 70vh;
     overflow-y: auto;
 }
 .shapes-popup.open {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.shapes-popup-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 6px;

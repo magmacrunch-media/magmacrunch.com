@@ -345,13 +345,14 @@ window.CanvasRenderer = (function () {
         const { x, y, w, h } = el;
         const midY = y + h / 2;
         const amp = h / 2;
+        const freq = Math.max(1, Math.round(w / 100)); // ~1 cycle per 100px
 
         ctx.beginPath();
         ctx.moveTo(x, y + h);
         const steps = Math.max(64, Math.round(w));
         for (let i = 0; i <= steps; i++) {
-            const t = i / steps;
-            const sx = x + t * w;
+            const t = (i / steps) * freq;
+            const sx = x + (i / steps) * w;
             const sy = midY - amp * fn(t);
             ctx.lineTo(sx, sy);
         }
@@ -404,7 +405,7 @@ window.CanvasRenderer = (function () {
         // rotation handle
         const rotX = bounds.x + bounds.w / 2;
         const rotLineY = bounds.y - pad;
-        const rotCircleY = rotLineY - 20;
+        const rotCircleY = rotLineY - 24;
         ctx.setLineDash([]);
         ctx.strokeStyle = '#a0a0b0';
         ctx.lineWidth = 1;
@@ -414,7 +415,7 @@ window.CanvasRenderer = (function () {
         ctx.stroke();
         ctx.fillStyle = '#a0a0b0';
         ctx.beginPath();
-        ctx.arc(rotX, rotCircleY, 5, 0, Math.PI * 2);
+        ctx.arc(rotX, rotCircleY, 7, 0, Math.PI * 2);
         ctx.fill();
 
         // dimensions label
