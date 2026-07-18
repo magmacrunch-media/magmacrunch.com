@@ -486,6 +486,25 @@
             padding: 10px 12px 6px;
             border-bottom: 1px solid rgba(180,220,160,0.3);
             flex-shrink: 0;
+            position: relative;
+        }
+        .guide-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: 1px solid rgba(180,220,160,0.3);
+            color: var(--tv-phosphor);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .guide-close:hover {
+            background: rgba(180,220,160,0.15);
+            border-color: var(--tv-phosphor);
         }
         .guide-title {
             font-family: 'Press Start 2P', monospace;
@@ -542,6 +561,21 @@
             font-size: 10px;
             color: rgba(180,220,160,0.45);
             margin-top: 2px;
+        }
+
+        /* PiP: shrink video to corner when guide is open */
+        .tv-screen.guide-open #yt-player {
+            width: 30%;
+            height: 30%;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            top: auto;
+            left: auto;
+            z-index: 6;
+            border: 2px solid rgba(180,220,160,0.3);
+            border-radius: 4px;
+            opacity: 1 !important;
         }
 
         /* ─── LEGEND / KEYBOARD HINTS ─── */
@@ -706,6 +740,7 @@
                         <!-- TV GUIDE OVERLAY -->
                         <div id="tv-guide" class="tv-guide hidden">
                             <div class="tv-guide-header">
+                                <button class="guide-close" id="guide-close-btn" aria-label="close guide">&#10005;</button>
                                 <span class="guide-title">MAGMACRUNCH CABLE</span>
                                 <span class="guide-subtitle">CHANNEL GUIDE</span>
                             </div>
@@ -1036,13 +1071,11 @@ function toggleGuide() {
     guide.classList.toggle('hidden', !guideOpen);
     if (guideOpen) {
         renderGuide();
-        unloadVideo();
+        screen.classList.add('guide-open');
         stopVuMeter();
     } else {
-        if (currentChannel >= 0) {
-            loadVideo(CHANNELS[currentChannel].id);
-            startVuMeter();
-        }
+        screen.classList.remove('guide-open');
+        if (currentChannel >= 0) startVuMeter();
     }
 }
 
@@ -1062,6 +1095,7 @@ function renderGuide() {
             currentChannel = i;
             guideOpen = false;
             document.getElementById('tv-guide').classList.add('hidden');
+            screen.classList.remove('guide-open');
             screen.classList.add('flicker');
             startStatic();
             setTimeout(() => {
@@ -1088,6 +1122,7 @@ document.getElementById('btn-ch-up').addEventListener('click', () => changeChann
 document.getElementById('btn-ch-down').addEventListener('click', () => changeChannel(-1));
 document.getElementById('btn-power').addEventListener('click', togglePower);
 document.getElementById('btn-guide').addEventListener('click', toggleGuide);
+document.getElementById('guide-close-btn').addEventListener('click', toggleGuide);
 
 /* ══════════════════════════════════════════════════
    KEYBOARD CONTROLS
@@ -1143,6 +1178,7 @@ document.addEventListener('keydown', function(e) {
                 if (guideOpen) {
                     guideOpen = false;
                     document.getElementById('tv-guide').classList.add('hidden');
+                    screen.classList.remove('guide-open');
                 }
                 numBuffer += e.key;
                 clearTimeout(numTimeout);
