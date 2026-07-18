@@ -75,7 +75,7 @@ h1.glitch::after {
 h1.glitch::before {
     animation: glitch-1 2s infinite linear alternate-reverse;
     clip-path: inset(0 0 65% 0);
-    color: var(--cyan);
+    color: rgba(0,245,255,0.4);
 }
 
 h1.glitch::after {
@@ -522,6 +522,22 @@ h1.glitch::after {
     background: var(--green);
     box-shadow: 0 0 30px rgba(57,255,110,0.4);
 }
+
+/* ── FOOTER ── */
+footer {
+    padding: 12px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.footer-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+}
+
+.footer-text span { color: var(--green); }
 
 /* ── SCROLLBAR ── */
 .panel::-webkit-scrollbar { width: 6px; }
