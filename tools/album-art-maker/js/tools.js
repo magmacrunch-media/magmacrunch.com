@@ -5,9 +5,11 @@ window.Tools = (function () {
     let dragPending = false;
     let isDrawing = false;
     let isResizing = false;
+    let isRotating = false;
     let dragStart = null;
     let drawStart = null;
     let resizeStart = null;
+    let rotateStart = null;
     let tempElement = null;
     let idCounter = 0;
     let onElementCreated = null;
@@ -56,6 +58,19 @@ window.Tools = (function () {
                 if (currentSel && currentSel.id === hit.id) {
                     const handle = hitTestHandle(pos.x, pos.y, hit);
                     if (handle) {
+                        if (handle.id === 'rotate') {
+                            isRotating = true;
+                            const bounds = CanvasRenderer.getElementBounds(hit);
+                            rotateStart = {
+                                x: pos.x, y: pos.y,
+                                element: hit,
+                                origRotation: hit.rotation || 0,
+                                centerX: bounds.x + bounds.w / 2,
+                                centerY: bounds.y + bounds.h / 2,
+                            };
+                            document.body.classList.add('dragging');
+                            return;
+                        }
                         isResizing = true;
                         const bounds = CanvasRenderer.getElementBounds(hit);
                         resizeStart = {
@@ -112,6 +127,7 @@ window.Tools = (function () {
             fill: noFill ? 'none' : fill,
             stroke: noStroke ? 'none' : stroke,
             strokeWidth: strokeWidth,
+            rotation: 0,
         };
     }
 
@@ -202,8 +218,18 @@ window.Tools = (function () {
             return;
         }
 
+        if (isRotating && rotateStart) {
+            const angle = Math.atan2(
+                pos.y - rotateStart.centerY,
+                pos.x - rotateStart.centerX
+            ) * 180 / Math.PI + 90;
+            rotateStart.element.rotation = rotateStart.origRotation + angle;
+            CanvasRenderer.render(elements);
+            return;
+        }
+
         // hover cursor for handles (select tool, not dragging)
-        if (activeTool === 'select' && !isDragging && !isResizing) {
+        if (activeTool === 'select' && !isDragging && !isResizing && !isRotating) {
             const canvas = CanvasRenderer.getCanvas();
             const selId = CanvasRenderer.getSelectedId();
             const selected = selId !== null ? elements.find(e => e.id === selId) : null;
@@ -240,6 +266,14 @@ window.Tools = (function () {
         if (isResizing) {
             isResizing = false;
             resizeStart = null;
+            document.body.classList.remove('dragging');
+            if (onElementMoved) onElementMoved('move', null);
+            return;
+        }
+
+        if (isRotating) {
+            isRotating = false;
+            rotateStart = null;
             document.body.classList.remove('dragging');
             if (onElementMoved) onElementMoved('move', null);
             return;
@@ -300,8 +334,25 @@ window.Tools = (function () {
         ];
     }
 
+    function getRotationHandlePos(el) {
+        const bounds = CanvasRenderer.getElementBounds(el);
+        const pad = 6;
+        return {
+            x: bounds.x + bounds.w / 2,
+            y: bounds.y - pad - 20,
+        };
+    }
+
     function hitTestHandle(x, y, el) {
         if (!el) return null;
+
+        // check rotation handle first
+        const rot = getRotationHandlePos(el);
+        const rotDist = Math.sqrt((x - rot.x) ** 2 + (y - rot.y) ** 2);
+        if (rotDist <= 7) {
+            return { id: 'rotate', x: rot.x, y: rot.y, cursor: 'grab' };
+        }
+
         const handles = getHandlePositions(el);
         const hs = HANDLE_SIZE / 2;
         for (const handle of handles) {
@@ -337,6 +388,7 @@ window.Tools = (function () {
             text: text,
             font: font || 'Press Start 2P',
             fontSize: fontSize || 48,
+            rotation: 0,
         };
         return el;
     }

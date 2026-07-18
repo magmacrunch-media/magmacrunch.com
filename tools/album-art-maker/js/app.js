@@ -188,6 +188,7 @@
                     h: h,
                     src: src,
                     aspectRatio: w / h,
+                    rotation: 0,
                 };
                 elements.push(el);
                 History.push(elements);

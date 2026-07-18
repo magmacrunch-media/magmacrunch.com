@@ -47,8 +47,19 @@ window.CanvasRenderer = (function () {
         ctx.restore();
     }
 
+    function applyRotation(targetCtx, el) {
+        if (!el.rotation) return;
+        const bounds = getElementBounds(el);
+        const cx = bounds.x + bounds.w / 2;
+        const cy = bounds.y + bounds.h / 2;
+        targetCtx.translate(cx, cy);
+        targetCtx.rotate(el.rotation * Math.PI / 180);
+        targetCtx.translate(-cx, -cy);
+    }
+
     function drawElement(el) {
         ctx.save();
+        applyRotation(ctx, el);
 
         switch (el.type) {
             case 'rect':
@@ -184,6 +195,22 @@ window.CanvasRenderer = (function () {
             ctx.fillRect(cx - hs / 2, cy - hs / 2, hs, hs);
         }
 
+        // rotation handle
+        const rotX = bounds.x + bounds.w / 2;
+        const rotLineY = bounds.y - pad;
+        const rotCircleY = rotLineY - 20;
+        ctx.setLineDash([]);
+        ctx.strokeStyle = '#a0a0b0';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(rotX, rotLineY);
+        ctx.lineTo(rotX, rotCircleY);
+        ctx.stroke();
+        ctx.fillStyle = '#a0a0b0';
+        ctx.beginPath();
+        ctx.arc(rotX, rotCircleY, 5, 0, Math.PI * 2);
+        ctx.fill();
+
         // dimensions label
         ctx.setLineDash([]);
         ctx.font = '14px "Courier Prime"';
@@ -273,6 +300,7 @@ window.CanvasRenderer = (function () {
 
     function drawElementTo(targetCtx, el, size) {
         targetCtx.save();
+        applyRotation(targetCtx, el);
 
         switch (el.type) {
             case 'rect':
