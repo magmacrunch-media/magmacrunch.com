@@ -38,35 +38,23 @@
             <div class="panel-divider"></div>
 
             <div class="panel-label">TOOLS</div>
-            <button class="tool-btn full-width active" data-tool="select" title="Select / Move (V)">
-                <span class="tool-icon">&#9658;</span>
-                <span class="tool-name">SELECT</span>
-            </button>
-
-            <div class="panel-divider"></div>
-
-            <div class="panel-label">SHAPES</div>
             <div class="tool-grid">
-                <button class="tool-btn" data-tool="rect" title="Rectangle (R)">
-                    <span class="tool-icon">&#9645;</span>
-                    <span class="tool-name">RECT</span>
+                <button class="tool-btn active" data-tool="select" title="Select / Move (V)">
+                    <span class="tool-icon">&#9658;</span>
+                    <span class="tool-name">SELECT</span>
                 </button>
-                <button class="tool-btn" data-tool="circle" title="Circle (C)">
-                    <span class="tool-icon">&#9675;</span>
-                    <span class="tool-name">CIRCLE</span>
-                </button>
-                <button class="tool-btn" data-tool="line" title="Line (L)">
-                    <span class="tool-icon">&#9585;</span>
-                    <span class="tool-name">LINE</span>
+                <button class="tool-btn" data-tool="text" title="Text (T)">
+                    <span class="tool-icon">T</span>
+                    <span class="tool-name">TEXT</span>
                 </button>
             </div>
 
             <div class="panel-divider"></div>
 
-            <div class="panel-label">TEXT</div>
-            <button class="tool-btn full-width" data-tool="text" title="Text (T)">
-                <span class="tool-icon">T</span>
-                <span class="tool-name">TEXT</span>
+            <div class="panel-label">SHAPES</div>
+            <button class="shapes-btn" id="shapesBtn" title="Choose a shape">
+                <span class="shapes-btn-label" id="shapesBtnLabel">RECT</span>
+                <span class="shapes-btn-arrow">&#9662;</span>
             </button>
 
             <div class="panel-divider"></div>
@@ -80,6 +68,22 @@
             </div>
             <p class="ref-hint">Click reference to<br>sample color</p>
         </aside>
+
+        <!-- SHAPES POPUP -->
+        <div class="shapes-popup" id="shapesPopup">
+            <button class="shape-btn" data-tool="rect" title="Rectangle (R)">
+                <span class="tool-icon">&#9645;</span>
+                <span class="tool-name">RECT</span>
+            </button>
+            <button class="shape-btn" data-tool="circle" title="Circle (C)">
+                <span class="tool-icon">&#9675;</span>
+                <span class="tool-name">CIRCLE</span>
+            </button>
+            <button class="shape-btn" data-tool="line" title="Line (L)">
+                <span class="tool-icon">&#9585;</span>
+                <span class="tool-name">LINE</span>
+            </button>
+        </div>
 
         <!-- CENTER: Canvas + Reference -->
         <div class="center-area">

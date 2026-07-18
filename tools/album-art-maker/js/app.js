@@ -104,12 +104,44 @@
     updateStats();
 
     // ── TOOL BUTTONS ──
+    function setActiveTool(tool) {
+        document.querySelectorAll('.tool-btn, .shape-btn').forEach(b => b.classList.remove('active'));
+        const btn = document.querySelector(`[data-tool="${tool}"]`);
+        if (btn) btn.classList.add('active');
+        Tools.setTool(tool);
+
+        // update shapes button label
+        const shapeTools = ['rect', 'circle', 'line'];
+        const shapesBtnLabel = document.getElementById('shapesBtnLabel');
+        if (shapeTools.includes(tool) && shapesBtnLabel) {
+            shapesBtnLabel.textContent = tool.toUpperCase();
+        }
+    }
+
     document.querySelectorAll('.tool-btn').forEach(btn => {
+        btn.addEventListener('click', () => setActiveTool(btn.dataset.tool));
+    });
+
+    // ── SHAPES POPUP ──
+    const shapesBtn = document.getElementById('shapesBtn');
+    const shapesPopup = document.getElementById('shapesPopup');
+
+    shapesBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        shapesPopup.classList.toggle('open');
+    });
+
+    document.querySelectorAll('.shape-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            Tools.setTool(btn.dataset.tool);
+            setActiveTool(btn.dataset.tool);
+            shapesPopup.classList.remove('open');
         });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!shapesPopup.contains(e.target) && e.target !== shapesBtn) {
+            shapesPopup.classList.remove('open');
+        }
     });
 
     // ── CANVAS MOUSE EVENTS ──
@@ -389,10 +421,7 @@
         // Tool shortcuts
         const shortcuts = { v: 'select', r: 'rect', c: 'circle', l: 'line', t: 'text' };
         if (shortcuts[e.key]) {
-            const tool = shortcuts[e.key];
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
-            Tools.setTool(tool);
+            setActiveTool(shortcuts[e.key]);
         }
     });
 

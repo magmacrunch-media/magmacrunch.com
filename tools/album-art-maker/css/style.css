@@ -185,13 +185,6 @@ h1.glitch::after {
     box-shadow: 0 0 12px rgba(160,160,176,0.1), inset 0 0 12px rgba(160,160,176,0.03);
 }
 
-.tool-btn.full-width {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    justify-content: center;
-    gap: 8px;
-}
-
 .tool-icon {
     font-size: 16px;
     line-height: 1;
@@ -200,6 +193,74 @@ h1.glitch::after {
 .tool-name {
     font-size: 6px;
     letter-spacing: 0.1em;
+}
+
+/* ── SHAPES POPUP ── */
+.shapes-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.shapes-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+.shapes-btn-arrow {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+.shapes-popup {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: var(--panel-w);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    z-index: 50;
+    min-width: 140px;
+}
+.shapes-popup.open {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+.shape-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.shape-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+.shape-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(160,160,176,0.08);
 }
 
 /* ── REFERENCE IMAGE ── */
