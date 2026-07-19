@@ -520,7 +520,7 @@ VIDEOS.forEach((v, i) => {
                     </div>
                 </div>
                 <div class="video-iframe-wrap">
-                    <!-- iframe injected on click -->
+                    <iframe src="about:blank" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
                 </div>
             </div>
             <div class="video-meta">
@@ -540,14 +540,16 @@ VIDEOS.forEach((v, i) => {
         // Deactivate previous
         if (activeEntry && activeEntry !== this) {
             activeEntry.classList.remove('active');
-            activeEntry.querySelector('.video-iframe-wrap').innerHTML = '';
+            const oldIframe = activeEntry.querySelector('.video-iframe-wrap iframe');
+            if (oldIframe) oldIframe.src = 'about:blank';
         }
 
         this.classList.add('active');
         activeEntry = this;
 
         const iframeWrap = this.querySelector('.video-iframe-wrap');
-        iframeWrap.innerHTML = `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        const iframe = iframeWrap.querySelector('iframe');
+        iframe.src = embedUrl;
     });
 
     list.appendChild(entry);
