@@ -32,10 +32,5 @@ window.History = (function () {
     function canUndo() { return index > 0; }
     function canRedo() { return index < stack.length - 1; }
 
-    function clear() {
-        stack = [];
-        index = -1;
-    }
-
-    return { push, undo, redo, canUndo, canRedo, clear };
+    return { push, undo, redo, canUndo, canRedo };
 })();

@@ -222,6 +222,10 @@
                     <span class="tool-name">PULSE</span>
                 </button>
             </div>
+            <div class="popup-section-label">CLIP ART</div>
+            <div class="shapes-popup-grid" id="clipartGrid">
+                <!-- populated by JS -->
+            </div>
         </div>
 
         <!-- CENTER: Canvas + Reference -->
@@ -274,10 +278,50 @@
             </div>
 
             <div class="prop-group" id="waveProps" hidden>
-                <label class="prop-label">WAVELENGTH</label>
+                <label class="prop-label">FREQUENCY</label>
                 <div class="range-row">
                     <input type="range" id="wavelength" min="1" max="20" value="5" class="range-input">
                     <span class="range-val" id="wavelengthVal">5</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="waveModeGroup" hidden>
+                <label class="prop-label">WAVE MODE</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="waveFilledBtn">FILLED</button>
+                    <button class="action-btn" id="waveOpenBtn">OPEN</button>
+                </div>
+            </div>
+
+            <div class="prop-group" id="stepCountGroup" hidden>
+                <label class="prop-label">STEPS</label>
+                <div class="range-row">
+                    <input type="range" id="stepCount" min="2" max="20" value="5" class="range-input">
+                    <span class="range-val" id="stepCountVal">5</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="dutyGroup" hidden>
+                <label class="prop-label">DUTY CYCLE</label>
+                <div class="range-row">
+                    <input type="range" id="dutyCycle" min="5" max="95" value="20" class="range-input">
+                    <span class="range-val" id="dutyCycleVal">20%</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="opacityGroup" hidden>
+                <label class="prop-label">OPACITY</label>
+                <div class="range-row">
+                    <input type="range" id="opacity" min="0" max="100" value="100" class="range-input">
+                    <span class="range-val" id="opacityVal">100%</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="zorderGroup" hidden>
+                <label class="prop-label">LAYER ORDER</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="bringForwardBtn" title="Bring Forward">&#9650; FWD</button>
+                    <button class="action-btn" id="sendBackBtn" title="Send Backward">&#9660; BACK</button>
                 </div>
             </div>
 
@@ -366,13 +410,14 @@
     </div>
 
     <footer>
-        <span class="footer-text">ALBUM//ART v1.3 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+        <span class="footer-text">ALBUM//ART v1.4 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
     </footer>
 
     <script src="js/history.js"></script>
     <script src="js/color.js"></script>
     <script src="js/canvas.js"></script>
     <script src="js/tools.js"></script>
+    <script src="js/clipart.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

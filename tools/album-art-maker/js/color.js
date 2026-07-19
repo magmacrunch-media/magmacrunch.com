@@ -1,10 +1,10 @@
 /* ── color.js — color picker + eyedropper from reference image ── */
 window.ColorManager = (function () {
-    let refImage = null;       // the loaded Image object
-    let refCanvas = null;      // hidden canvas holding full-res reference
+    let refImage = null;
+    let refCanvas = null;
     let refCtx = null;
-    let eyedropperActive = false;
-    let onColorSample = null;  // callback(color)
+    let refBlobUrl = null;
+    let onColorSample = null;
 
     function init(callback) {
         onColorSample = callback;
@@ -27,6 +27,7 @@ window.ColorManager = (function () {
         if (!file) return;
 
         const img = new Image();
+        img.onerror = () => alert('Failed to load reference image.');
         img.onload = function () {
             refImage = img;
             refCanvas.width = img.width;
@@ -37,12 +38,18 @@ window.ColorManager = (function () {
             document.querySelector('.ref-hint').classList.add('visible');
             document.getElementById('refUploadBtn').textContent = 'REPLACE IMAGE';
         };
-        img.src = URL.createObjectURL(file);
+        const url = URL.createObjectURL(file);
+        refBlobUrl = url;
+        img.src = url;
         e.target.value = '';
     }
 
     function clearReference() {
         refImage = null;
+        if (refBlobUrl) {
+            URL.revokeObjectURL(refBlobUrl);
+            refBlobUrl = null;
+        }
         refCtx.clearRect(0, 0, refCanvas.width, refCanvas.height);
         document.getElementById('refPreviewWrap').classList.remove('visible');
         document.querySelector('.ref-hint').classList.remove('visible');
@@ -57,7 +64,6 @@ window.ColorManager = (function () {
 
     function handleRefHover(e) {
         if (!refImage) return;
-        if (!eyedropperActive) return;
         const color = sampleColor(e);
         if (color && onColorSample) onColorSample(color);
     }
@@ -79,14 +85,9 @@ window.ColorManager = (function () {
         return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
     }
 
-    function setEyedropperActive(active) {
-        eyedropperActive = active;
-        document.body.classList.toggle('eyedropper-active', active);
-    }
-
     function hasReference() {
         return refImage !== null;
     }
 
-    return { init, setEyedropperActive, hasReference, clearReference };
+    return { init, hasReference, clearReference };
 })();

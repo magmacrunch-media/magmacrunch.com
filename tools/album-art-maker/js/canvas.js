@@ -4,6 +4,7 @@ window.CanvasRenderer = (function () {
     let canvasSize = 1024;
     let bgColor = '#ffffff';
     let selectedId = null;
+    let currentElements = [];
     const imageCache = {}; // id → Image
 
     function init(canvasEl) {
@@ -27,6 +28,7 @@ window.CanvasRenderer = (function () {
     function getSelectedId() { return selectedId; }
 
     function render(elements) {
+        currentElements = elements;
         ctx.save();
 
         // background
@@ -59,6 +61,9 @@ window.CanvasRenderer = (function () {
 
     function drawElement(el) {
         ctx.save();
+        if (el.opacity != null && el.opacity < 100) {
+            ctx.globalAlpha = el.opacity / 100;
+        }
         applyRotation(ctx, el);
 
         switch (el.type) {
@@ -116,6 +121,9 @@ window.CanvasRenderer = (function () {
             case 'pulse':
                 drawPulse(el);
                 break;
+            case 'clipart':
+                drawClipartEl(el);
+                break;
         }
 
         ctx.restore();
@@ -124,6 +132,10 @@ window.CanvasRenderer = (function () {
     function loadImage(el) {
         if (imageCache[el.id]) return imageCache[el.id];
         const img = new Image();
+        img.onload = function () {
+            // re-render the canvas now that the image is loaded
+            render(currentElements);
+        };
         img.src = el.src;
         imageCache[el.id] = img;
         return img;
@@ -285,7 +297,7 @@ window.CanvasRenderer = (function () {
         ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
         ctx.moveTo(x2, y2);
         ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
-        ctx.strokeStyle = el.stroke || el.fill || '#000';
+        ctx.strokeStyle = el.stroke && el.stroke !== 'none' ? el.stroke : '#ffffff';
         ctx.lineWidth = el.strokeWidth || 4;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -327,7 +339,7 @@ window.CanvasRenderer = (function () {
     }
 
     function drawStep(el) {
-        const steps = 5;
+        const steps = el.steps || 5;
         drawWave(el, (t) => {
             const v = Math.floor(t * steps) / (steps - 1);
             return v * 2 - 1;
@@ -335,9 +347,10 @@ window.CanvasRenderer = (function () {
     }
 
     function drawPulse(el) {
+        const duty = el.duty || 0.2;
         drawWave(el, (t) => {
             const mod = t % 1;
-            return mod < 0.2 ? 1 : -1;
+            return mod < duty ? 1 : -1;
         });
     }
 
@@ -345,10 +358,18 @@ window.CanvasRenderer = (function () {
         const { x, y, w, h } = el;
         const midY = y + h / 2;
         const amp = h / 2;
-        const freq = Math.max(1, Math.round(w / 100)); // ~1 cycle per 100px
+        const freq = el.wavelength || Math.max(1, Math.round(w / 100));
+        const isOpen = el.waveMode === 'open';
 
         ctx.beginPath();
-        ctx.moveTo(x, y + h);
+        if (isOpen) {
+            // open path: start at the left edge of the wave
+            const firstY = midY - amp * fn(0);
+            ctx.moveTo(x, firstY);
+        } else {
+            // filled shape: start at bottom-left
+            ctx.moveTo(x, y + h);
+        }
         const steps = Math.max(64, Math.round(w));
         for (let i = 0; i <= steps; i++) {
             const t = (i / steps) * freq;
@@ -356,9 +377,21 @@ window.CanvasRenderer = (function () {
             const sy = midY - amp * fn(t);
             ctx.lineTo(sx, sy);
         }
-        ctx.lineTo(x + w, y + h);
-        ctx.closePath();
+        if (!isOpen) {
+            ctx.lineTo(x + w, y + h);
+            ctx.closePath();
+        }
         fillOrStroke(el);
+    }
+
+    function drawClipartEl(el) {
+        const color = el.stroke && el.stroke !== 'none' ? el.stroke : (el.fill || '#ffffff');
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = el.strokeWidth || 2;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ClipartLibrary.drawClipart(ctx, el.clipartId, el.x, el.y, el.w, el.h);
     }
 
     function fillOrStroke(el) {
@@ -507,7 +540,15 @@ window.CanvasRenderer = (function () {
 
     function drawElementTo(targetCtx, el, size) {
         targetCtx.save();
-        applyRotation(targetCtx, el);
+        if (el.opacity != null && el.opacity < 100) {
+            targetCtx.globalAlpha = el.opacity / 100;
+        }
+        // For shapes handled by drawElement (default case), rotation is applied inside drawElement.
+        // Only apply rotation here for the basic types drawn directly with targetCtx.
+        const delegatedTypes = ['triangle', 'pentagon', 'hexagon', 'diamond', 'star', 'arrow', 'roundrect', 'sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse', 'clipart'];
+        if (!delegatedTypes.includes(el.type)) {
+            applyRotation(targetCtx, el);
+        }
 
         switch (el.type) {
             case 'rect':
@@ -587,8 +628,11 @@ window.CanvasRenderer = (function () {
                 // new shapes: swap ctx temporarily and use same draw functions
                 const savedCtx = ctx;
                 ctx = targetCtx;
-                drawElement(el);
-                ctx = savedCtx;
+                try {
+                    drawElement(el);
+                } finally {
+                    ctx = savedCtx;
+                }
                 break;
             }
         }

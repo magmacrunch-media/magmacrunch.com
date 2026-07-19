@@ -3,6 +3,7 @@ window.Tools = (function () {
     let activeTool = 'select';
     let isDragging = false;
     let dragPending = false;
+    let didMove = false;
     let isDrawing = false;
     let isResizing = false;
     let isRotating = false;
@@ -17,6 +18,11 @@ window.Tools = (function () {
     let onTextEdit = null;
 
     const HANDLE_SIZE = 8;
+    const WAVE_TYPES = ['sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse'];
+    let clipartId = null;
+
+    function setClipartId(id) { clipartId = id; }
+    function getClipartId() { return clipartId; }
 
     function init(callbacks) {
         onElementCreated = callbacks.onElementCreated;
@@ -24,9 +30,13 @@ window.Tools = (function () {
         onTextEdit = callbacks.onTextEdit;
     }
 
+    let currentToolClass = '';
+
     function setTool(tool) {
+        if (currentToolClass) document.body.classList.remove(currentToolClass);
         activeTool = tool;
-        document.body.className = 'tool-' + tool;
+        currentToolClass = 'tool-' + tool;
+        document.body.classList.add(currentToolClass);
     }
 
     function getTool() { return activeTool; }
@@ -86,6 +96,7 @@ window.Tools = (function () {
 
                 isDragging = true;
                 dragPending = true;
+                didMove = false;
                 dragStart = { x: pos.x, y: pos.y, element: hit, origX: hit.x, origY: hit.y };
                 document.body.classList.add('dragging');
                 CanvasRenderer.setSelectedId(hit.id);
@@ -117,6 +128,7 @@ window.Tools = (function () {
         const noFill = document.getElementById('noFillBtn').classList.contains('active');
         const noStroke = document.getElementById('noStrokeBtn').classList.contains('active');
 
+        const isWaveType = WAVE_TYPES.includes(activeTool);
         tempElement = {
             id: nextId(),
             type: activeTool,
@@ -128,6 +140,12 @@ window.Tools = (function () {
             stroke: noStroke ? 'none' : stroke,
             strokeWidth: strokeWidth,
             rotation: 0,
+            opacity: 100,
+            wavelength: 5,
+            waveMode: noFill ? 'open' : 'filled',
+            steps: 5,
+            duty: 0.2,
+            clipartId: activeTool === 'clipart' ? clipartId : undefined,
         };
     }
 
@@ -140,6 +158,7 @@ window.Tools = (function () {
                 const dy = pos.y - dragStart.y;
                 if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
                 dragPending = false;
+                didMove = true;
             }
             const dx = pos.x - dragStart.x;
             const dy = pos.y - dragStart.y;
@@ -150,6 +169,7 @@ window.Tools = (function () {
         }
 
         if (isResizing && resizeStart) {
+            didMove = true;
             const dx = pos.x - resizeStart.x;
             const dy = pos.y - resizeStart.y;
             const el = resizeStart.element;
@@ -219,6 +239,7 @@ window.Tools = (function () {
         }
 
         if (isRotating && rotateStart) {
+            didMove = true;
             const angle = Math.atan2(
                 pos.y - rotateStart.centerY,
                 pos.x - rotateStart.centerX
@@ -259,7 +280,8 @@ window.Tools = (function () {
             isDragging = false;
             dragStart = null;
             document.body.classList.remove('dragging');
-            if (onElementMoved) onElementMoved('move', null);
+            if (didMove && onElementMoved) onElementMoved('move', null);
+            didMove = false;
             return;
         }
 
@@ -267,7 +289,8 @@ window.Tools = (function () {
             isResizing = false;
             resizeStart = null;
             document.body.classList.remove('dragging');
-            if (onElementMoved) onElementMoved('move', null);
+            if (didMove && onElementMoved) onElementMoved('move', null);
+            didMove = false;
             return;
         }
 
@@ -275,7 +298,8 @@ window.Tools = (function () {
             isRotating = false;
             rotateStart = null;
             document.body.classList.remove('dragging');
-            if (onElementMoved) onElementMoved('move', null);
+            if (didMove && onElementMoved) onElementMoved('move', null);
+            didMove = false;
             return;
         }
 
@@ -389,12 +413,9 @@ window.Tools = (function () {
             font: font || 'Press Start 2P',
             fontSize: fontSize || 48,
             rotation: 0,
+            opacity: 100,
         };
         return el;
-    }
-
-    function updateTextElement(el, text) {
-        el.text = text;
     }
 
     function getActiveTool() { return activeTool; }
@@ -402,6 +423,7 @@ window.Tools = (function () {
     return {
         init, setTool, getTool, getCanvasCoords,
         onMouseDown, onMouseMove, onMouseUp,
-        hitTest, createTextElement, updateTextElement, getActiveTool, nextId
+        hitTest, createTextElement, getActiveTool, nextId,
+        setClipartId, getClipartId,
     };
 })();

@@ -111,10 +111,10 @@
         Tools.setTool(tool);
 
         // update shapes button label
-        const shapeTools = ['rect', 'circle', 'line', 'triangle', 'pentagon', 'hexagon', 'diamond', 'star', 'arrow', 'roundrect', 'sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse'];
+        const shapeTools = ['rect', 'circle', 'line', 'triangle', 'pentagon', 'hexagon', 'diamond', 'star', 'arrow', 'roundrect', 'sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse', 'clipart'];
         const shapesBtnLabel = document.getElementById('shapesBtnLabel');
         if (shapeTools.includes(tool) && shapesBtnLabel) {
-            const labels = { squarewave: 'SQUARE', trianglewave: 'TRI WAVE', roundrect: 'R. RECT', sawtooth: 'SAWTOOTH' };
+            const labels = { squarewave: 'SQUARE', trianglewave: 'TRI WAVE', roundrect: 'R. RECT', sawtooth: 'SAWTOOTH', clipart: 'CLIP ART' };
             shapesBtnLabel.textContent = labels[tool] || tool.toUpperCase();
         }
     }
@@ -134,8 +134,24 @@
         const isOpen = shapesPopup.classList.toggle('open');
         if (isOpen) {
             const rect = shapesBtn.getBoundingClientRect();
-            shapesPopup.style.top = rect.top + 'px';
-            shapesPopup.style.left = (rect.right + 6) + 'px';
+            let top = rect.top;
+            let left = rect.right + 6;
+            shapesPopup.style.top = top + 'px';
+            shapesPopup.style.left = left + 'px';
+            // reposition after layout so popup dimensions are known
+            requestAnimationFrame(() => {
+                const popH = shapesPopup.scrollHeight;
+                const popW = shapesPopup.offsetWidth;
+                if (top + popH > window.innerHeight - 10) {
+                    top = Math.max(10, window.innerHeight - popH - 10);
+                }
+                if (left + popW > window.innerWidth - 10) {
+                    left = rect.left - popW - 6;
+                    if (left < 10) left = 10;
+                }
+                shapesPopup.style.top = top + 'px';
+                shapesPopup.style.left = left + 'px';
+            });
         }
     });
 
@@ -152,6 +168,27 @@
         }
     });
 
+    // ── CLIP ART GRID ──
+    (function populateClipartGrid() {
+        const grid = document.getElementById('clipartGrid');
+        if (!grid || !window.ClipartLibrary) return;
+        const ids = ClipartLibrary.getIconIds();
+        for (const id of ids) {
+            const btn = document.createElement('button');
+            btn.className = 'shape-btn';
+            btn.dataset.tool = 'clipart';
+            btn.dataset.clipartId = id;
+            btn.title = ClipartLibrary.getIconLabel(id);
+            btn.innerHTML = '<span class="tool-icon">&#9733;</span><span class="tool-name">' + ClipartLibrary.getIconLabel(id) + '</span>';
+            btn.addEventListener('click', () => {
+                Tools.setClipartId(id);
+                setActiveTool('clipart');
+                shapesPopup.classList.remove('open');
+            });
+            grid.appendChild(btn);
+        }
+    })();
+
     // ── IMAGE UPLOAD ──
     const imageBtn = document.getElementById('imageBtn');
     const imageFileInput = document.getElementById('imageFileInput');
@@ -163,9 +200,11 @@
         if (!file) return;
 
         const reader = new FileReader();
+        reader.onerror = () => alert('Failed to read file.');
         reader.onload = (ev) => {
             const src = ev.target.result;
             const img = new Image();
+            img.onerror = () => alert('Failed to load image.');
             img.onload = () => {
                 // scale to ~40% of canvas, maintaining aspect ratio
                 const size = CanvasRenderer.getCanvasSize();
@@ -190,6 +229,7 @@
                     src: src,
                     aspectRatio: w / h,
                     rotation: 0,
+                    opacity: 100,
                 };
                 elements.push(el);
                 History.push(elements);
@@ -239,9 +279,13 @@
     // ── ELEMENT CALLBACKS ──
     function handleElementCreated(el) {
         elements.push(el);
+        selectedElement = el;
+        CanvasRenderer.setSelectedId(el.id);
         History.push(elements);
         CanvasRenderer.render(elements);
         updateStats();
+        updatePropsFromElement(el);
+        setActiveTool('select');
     }
 
     function handleElementMoved(action, element) {
@@ -251,6 +295,8 @@
             updatePropsVisibility();
         } else if (action === 'deselect') {
             selectedElement = null;
+            document.getElementById('noFillBtn').classList.remove('active');
+            document.getElementById('noStrokeBtn').classList.remove('active');
             updatePropsVisibility();
         } else if (action === 'move') {
             History.push(elements);
@@ -264,11 +310,15 @@
             document.getElementById('fillColor').value = el.fill;
             document.getElementById('fillHex').textContent = el.fill;
             document.getElementById('noFillBtn').classList.remove('active');
+        } else if (el.fill === 'none') {
+            document.getElementById('noFillBtn').classList.add('active');
         }
         if (el.stroke && el.stroke !== 'none') {
             document.getElementById('strokeColor').value = el.stroke;
             document.getElementById('strokeHex').textContent = el.stroke;
             document.getElementById('noStrokeBtn').classList.remove('active');
+        } else if (el.stroke === 'none') {
+            document.getElementById('noStrokeBtn').classList.add('active');
         }
         if (el.strokeWidth) {
             document.getElementById('strokeWidth').value = el.strokeWidth;
@@ -285,6 +335,31 @@
         const rot = Math.round(el.rotation || 0);
         document.getElementById('rotation').value = ((rot % 360) + 360) % 360;
         document.getElementById('rotationVal').textContent = ((rot % 360) + 360) % 360 + '°';
+
+        // wavelength
+        const wl = el.wavelength || 5;
+        document.getElementById('wavelength').value = wl;
+        document.getElementById('wavelengthVal').textContent = wl;
+
+        // wave mode
+        const mode = el.waveMode || 'filled';
+        document.getElementById('waveFilledBtn').classList.toggle('active', mode === 'filled');
+        document.getElementById('waveOpenBtn').classList.toggle('active', mode === 'open');
+
+        // step count
+        const steps = el.steps || 5;
+        document.getElementById('stepCount').value = steps;
+        document.getElementById('stepCountVal').textContent = steps;
+
+        // duty cycle
+        const duty = (el.duty || 0.2) * 100;
+        document.getElementById('dutyCycle').value = duty;
+        document.getElementById('dutyCycleVal').textContent = Math.round(duty) + '%';
+
+        // opacity
+        const op = el.opacity != null ? el.opacity : 100;
+        document.getElementById('opacity').value = op;
+        document.getElementById('opacityVal').textContent = op + '%';
     }
 
     // ── COLOR CONTROLS ──
@@ -309,9 +384,11 @@
         document.getElementById('noFillBtn').classList.remove('active');
         if (selectedElement) {
             selectedElement.fill = e.target.value;
-            History.push(elements);
             CanvasRenderer.render(elements);
         }
+    });
+    document.getElementById('fillColor').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
     });
 
     document.getElementById('strokeColor').addEventListener('input', (e) => {
@@ -319,9 +396,11 @@
         document.getElementById('noStrokeBtn').classList.remove('active');
         if (selectedElement) {
             selectedElement.stroke = e.target.value;
-            History.push(elements);
             CanvasRenderer.render(elements);
         }
+    });
+    document.getElementById('strokeColor').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
     });
 
     document.getElementById('noFillBtn').addEventListener('click', () => {
@@ -348,16 +427,123 @@
         document.getElementById('strokeWidthVal').textContent = e.target.value;
         if (selectedElement) {
             selectedElement.strokeWidth = parseInt(e.target.value);
+            CanvasRenderer.render(elements);
+        }
+    });
+    document.getElementById('strokeWidth').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
+    });
+
+    function applyRotation(deg) {
+        deg = ((deg % 360) + 360) % 360;
+        document.getElementById('rotation').value = deg;
+        document.getElementById('rotationVal').textContent = deg + '°';
+        if (selectedElement) {
+            selectedElement.rotation = deg;
+            CanvasRenderer.render(elements);
+        }
+    }
+
+    document.getElementById('rotation').addEventListener('input', (e) => {
+        applyRotation(parseInt(e.target.value));
+    });
+    document.getElementById('rotation').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
+    });
+
+    document.getElementById('rotMinus').addEventListener('click', () => {
+        if (!selectedElement) return;
+        applyRotation((selectedElement.rotation || 0) - 5);
+        History.push(elements);
+    });
+
+    document.getElementById('rotPlus').addEventListener('click', () => {
+        if (!selectedElement) return;
+        applyRotation((selectedElement.rotation || 0) + 5);
+        History.push(elements);
+    });
+
+    // ── WAVELENGTH CONTROL ──
+    document.getElementById('wavelength').addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.getElementById('wavelengthVal').textContent = val;
+        if (selectedElement) {
+            selectedElement.wavelength = val;
+            CanvasRenderer.render(elements);
+        }
+    });
+    document.getElementById('wavelength').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
+    });
+
+    // ── WAVE MODE CONTROL ──
+    function setWaveMode(mode) {
+        if (!selectedElement) return;
+        selectedElement.waveMode = mode;
+        document.getElementById('waveFilledBtn').classList.toggle('active', mode === 'filled');
+        document.getElementById('waveOpenBtn').classList.toggle('active', mode === 'open');
+        CanvasRenderer.render(elements);
+        History.push(elements);
+    }
+    document.getElementById('waveFilledBtn').addEventListener('click', () => setWaveMode('filled'));
+    document.getElementById('waveOpenBtn').addEventListener('click', () => setWaveMode('open'));
+
+    // ── STEP COUNT CONTROL ──
+    document.getElementById('stepCount').addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.getElementById('stepCountVal').textContent = val;
+        if (selectedElement) {
+            selectedElement.steps = val;
+            CanvasRenderer.render(elements);
+        }
+    });
+    document.getElementById('stepCount').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
+    });
+
+    // ── DUTY CYCLE CONTROL ──
+    document.getElementById('dutyCycle').addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.getElementById('dutyCycleVal').textContent = val + '%';
+        if (selectedElement) {
+            selectedElement.duty = val / 100;
+            CanvasRenderer.render(elements);
+        }
+    });
+    document.getElementById('dutyCycle').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
+    });
+
+    // ── OPACITY CONTROL ──
+    document.getElementById('opacity').addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.getElementById('opacityVal').textContent = val + '%';
+        if (selectedElement) {
+            selectedElement.opacity = val;
+            CanvasRenderer.render(elements);
+        }
+    });
+    document.getElementById('opacity').addEventListener('change', () => {
+        if (selectedElement) History.push(elements);
+    });
+
+    // ── Z-ORDER CONTROL ──
+    document.getElementById('bringForwardBtn').addEventListener('click', () => {
+        if (!selectedElement) return;
+        const idx = elements.indexOf(selectedElement);
+        if (idx < elements.length - 1) {
+            elements.splice(idx, 1);
+            elements.splice(idx + 1, 0, selectedElement);
             History.push(elements);
             CanvasRenderer.render(elements);
         }
     });
-
-    document.getElementById('rotation').addEventListener('input', (e) => {
-        const deg = parseInt(e.target.value);
-        document.getElementById('rotationVal').textContent = deg + '°';
-        if (selectedElement) {
-            selectedElement.rotation = deg;
+    document.getElementById('sendBackBtn').addEventListener('click', () => {
+        if (!selectedElement) return;
+        const idx = elements.indexOf(selectedElement);
+        if (idx > 0) {
+            elements.splice(idx, 1);
+            elements.splice(idx - 1, 0, selectedElement);
             History.push(elements);
             CanvasRenderer.render(elements);
         }
@@ -368,9 +554,11 @@
         document.getElementById('fontSizeVal').textContent = e.target.value;
         if (selectedElement && selectedElement.type === 'text') {
             selectedElement.fontSize = parseInt(e.target.value);
-            History.push(elements);
             CanvasRenderer.render(elements);
         }
+    });
+    document.getElementById('fontSize').addEventListener('change', () => {
+        if (selectedElement && selectedElement.type === 'text') History.push(elements);
     });
 
     document.getElementById('fontSelect').addEventListener('change', (e) => {
@@ -447,6 +635,7 @@
     });
 
     // ── KEYBOARD SHORTCUTS ──
+    let clipboard = null;
     document.addEventListener('keydown', (e) => {
         // skip if typing in an input
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
@@ -477,11 +666,33 @@
                 }
                 return;
             }
+            // Copy
+            if (e.key === 'c' && selectedElement) {
+                clipboard = JSON.parse(JSON.stringify(selectedElement));
+                return;
+            }
+            // Paste
+            if (e.key === 'v' && clipboard) {
+                e.preventDefault();
+                const clone = JSON.parse(JSON.stringify(clipboard));
+                clone.id = Tools.nextId();
+                clone.x = (clone.x || 0) + 20;
+                clone.y = (clone.y || 0) + 20;
+                elements.push(clone);
+                selectedElement = clone;
+                CanvasRenderer.setSelectedId(clone.id);
+                History.push(elements);
+                CanvasRenderer.render(elements);
+                updatePropsFromElement(clone);
+                updateStats();
+                return;
+            }
         }
 
         // Delete / Backspace
         if (e.key === 'Delete' || e.key === 'Backspace') {
             if (selectedElement) {
+                e.preventDefault();
                 elements = elements.filter(el => el.id !== selectedElement.id);
                 selectedElement = null;
                 CanvasRenderer.setSelectedId(null);
@@ -489,6 +700,20 @@
                 CanvasRenderer.render(elements);
                 updateStats();
             }
+            return;
+        }
+
+        // Arrow key nudging
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key) && selectedElement) {
+            e.preventDefault();
+            const step = e.shiftKey ? 10 : 1;
+            switch (e.key) {
+                case 'ArrowUp':    selectedElement.y -= step; break;
+                case 'ArrowDown':  selectedElement.y += step; break;
+                case 'ArrowLeft':  selectedElement.x -= step; break;
+                case 'ArrowRight': selectedElement.x += step; break;
+            }
+            CanvasRenderer.render(elements);
             return;
         }
 
@@ -503,12 +728,26 @@
     });
 
     // ── SHOW/HIDE TEXT PROPS ──
+    const WAVE_TYPES = ['sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse'];
+
     function updatePropsVisibility() {
-        const isTextTool = Tools.getTool() === 'text';
+        const tool = Tools.getTool();
+        const isTextTool = tool === 'text';
         const isTextElement = selectedElement && selectedElement.type === 'text';
+        const isWaveTool = WAVE_TYPES.includes(tool);
+        const isWaveElement = selectedElement && WAVE_TYPES.includes(selectedElement.type);
+        const isStepTool = tool === 'step' || (selectedElement && selectedElement.type === 'step');
+        const isPulseTool = tool === 'pulse' || (selectedElement && selectedElement.type === 'pulse');
+        const showWave = isWaveTool || isWaveElement;
         document.getElementById('textProps').hidden = !(isTextTool || isTextElement);
         document.getElementById('fontSizeGroup').hidden = !(isTextTool || isTextElement);
         document.getElementById('rotationGroup').hidden = !selectedElement;
+        document.getElementById('waveProps').hidden = !showWave;
+        document.getElementById('waveModeGroup').hidden = !isWaveElement;
+        document.getElementById('stepCountGroup').hidden = !isStepTool;
+        document.getElementById('dutyGroup').hidden = !isPulseTool;
+        document.getElementById('opacityGroup').hidden = !selectedElement;
+        document.getElementById('zorderGroup').hidden = !selectedElement;
     }
 
     // observe tool changes
