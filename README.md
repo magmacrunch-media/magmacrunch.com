@@ -31,7 +31,11 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 │   ├── solitaire/             klondike solitaire with timed scoring
 │   ├── solitaire_THLD/        poker solitaire — build hands, score big
 │   ├── SORRY/                 classic board game, online multiplayer (up to 4)
-│   └── tetris/                helsinki 1989 — stack blocks, clear lines
+│   ├── tetris/                helsinki 1989 — stack blocks, clear lines
+│   ├── tarot/                 78-card french tarot — trick-taking, bidding
+│   ├── card-games/            card games index (cribbage, stud, tarot)
+│   ├── board-games/           board games index (chess, checkers, backgammon, etc.)
+│   └── admin/                 MAGMA//OPS admin dashboard (port 8780)
 ├── home/                      about.html, guestbook.html, links/
 ├── music/                     jukebox, distributed music, floppy disk, catalog
 ├── press/                     journals
@@ -50,7 +54,10 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 │   ├── label.js               by-label page template
 │   ├── lyrics-work.js         lyrics page MusicBrainz metadata template
 │   └── entity-map.js          MB ID → internal path mapping for contributor links
-└── visual/                    gallery pages (collage, photography, music-videos)
+├── tools/                     creator tools
+│   ├── album-art-maker/       visual album art generator (shapes, clipart, layers)
+│   └── media-search/          multi-provider image search (Pixabay, Pexels, etc.)
+└── visual/                    gallery pages (collage, photography, music-videos, teevee)
 ```
 
 ---
@@ -79,6 +86,16 @@ Song lyrics organized by artist under `press/lyrics/`. Each song page displays s
 
 ### arcade chat system
 A real-time chat widget (`shared/chat-widget.js`) present on all arcade pages. Uses a SharedWorker (`shared/chat-worker.js`) to hold a single WebSocket connection across page navigations — no duplicate users on page changes. Falls back to direct WebSocket if SharedWorker is unavailable. The server (`chat-server.py`) tracks session tokens in `sessionStorage` to recognize reconnecting users within a 30-second window, preserving name and color across navigations. Includes a floating widget with global/room tabs, typing indicators, color picker, and inline name editing.
+
+### MAGMA//OPS admin dashboard
+Web-based monitoring and management UI for all arcade servers. Port 8780 (HTTP) + 8781 (WebSocket for live logs). Manages high scores, jukebox channels, theme settings, and user accounts. Runs as `arcade-admin` systemd service on the Raspberry Pi.
+
+### creator tools
+- **ALBUM//ART** (`tools/album-art-maker/`) — visual album art generator with layers, shapes, clipart, color picker, and export
+- **MEDIA//SEARCH** (`tools/media-search/`) — multi-provider image search (Internet Archive, Met Museum, Openverse, Pexels, Pixabay, Smithsonian) with lightbox preview
+
+### teevee
+Retro TV channel flipper (`visual/tv.html`) — YouTube-powered channel surfing with a CRT TV aesthetic. Includes a TV Guide overlay (green phosphor channel list) and a MAGMA//OPS TV Manager for managing channel lineups.
 
 ---
 
@@ -146,6 +163,19 @@ Same pattern but use `window.PLACE_CONFIG` and place templates. Place subpages u
 5. Add the work MBID to `WORKS` in `scripts/backup-musicbrainz.mjs`
 6. Run `node scripts/backup-musicbrainz.mjs` or fetch manually to populate `archive/_cache/works/`
 7. Add artist card in `press/lyrics/index.html` and update piece counts in `press/index.html`
+
+### adding a new arcade game
+
+1. Create folder under `arcade/` (e.g., `arcade/my-game/`)
+2. Include `index.html`, `js/` (game logic), `css/` (styles)
+3. Follow pixel art conventions — canvas at low res, scale with CSS, `image-rendering: pixelated`
+4. Add link in the appropriate index (`arcade/index.html`, `arcade/card-games/index.html`, or `arcade/board-games/index.html`)
+
+### adding a new tool
+
+1. Create folder under `tools/` (e.g., `tools/my-tool/`)
+2. Include `index.html`, `js/`, `css/`
+3. Add link in `tools/index.html`
 
 ---
 
