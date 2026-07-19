@@ -188,6 +188,7 @@
 
         /* ─── SCREEN AREA ─── */
         .tv-screen-area {
+            position: relative;
             background: var(--tv-bezel);
             border-radius: 10px;
             padding: 10px;
@@ -388,8 +389,8 @@
         /* ─── ON-SCREEN TITLE OVERLAY ─── */
         .tv-screen-overlay {
             position: absolute;
-            bottom: 12px;
-            left: 12px;
+            bottom: 22px;
+            left: 22px;
             z-index: 6;
             display: flex;
             flex-direction: column;
@@ -777,12 +778,6 @@
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                 allowfullscreen
                                 loading="lazy"></iframe>
-                            <!-- ON-SCREEN TITLE OVERLAY -->
-                            <div class="tv-screen-overlay" id="tv-screen-overlay">
-                                <span class="tv-on-screen-ch" id="tv-on-screen-ch"></span>
-                                <span class="tv-on-screen-title" id="tv-on-screen-title"></span>
-                                <span class="tv-on-screen-artist" id="tv-on-screen-artist"></span>
-                            </div>
                             <!-- TV GUIDE OVERLAY -->
                             <div id="tv-guide" class="tv-guide hidden">
                                 <div class="tv-guide-header">
@@ -792,6 +787,12 @@
                                 </div>
                                 <div class="tv-guide-scroll" id="tv-guide-scroll"></div>
                             </div>
+                        </div>
+                        <!-- ON-SCREEN TITLE OVERLAY (outside .tv-screen to avoid Error 153) -->
+                        <div class="tv-screen-overlay" id="tv-screen-overlay">
+                            <span class="tv-on-screen-ch" id="tv-on-screen-ch"></span>
+                            <span class="tv-on-screen-title" id="tv-on-screen-title"></span>
+                            <span class="tv-on-screen-artist" id="tv-on-screen-artist"></span>
                         </div>
                     </div>
                     <div class="tv-grille">
