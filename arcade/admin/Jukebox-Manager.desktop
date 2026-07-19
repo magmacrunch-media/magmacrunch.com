@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Jukebox Manager
 Comment=Edit jukebox songs and track order
-Exec=chromium --new-window file:///home/jake/arcade/admin/jukebox-manager.html
+Exec=chromium --new-window http://localhost:8780/#jukebox
 Icon=/home/jake/arcade/admin/icons/jukebox-manager.png
 Terminal=false
 Type=Application
