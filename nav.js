@@ -305,7 +305,7 @@ window.NAV_CONFIG = {
 
 (function () {
     const nav = document.querySelector('nav');
-    if (!nav) return;
+    if (!nav || document.body.classList.contains('no-jukebox')) return;
 
     // Compute base path to site root from current page
     const depth = window.location.pathname.split('/').length - 2;
