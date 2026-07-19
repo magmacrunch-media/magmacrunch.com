@@ -1019,7 +1019,7 @@ const playerFrame = document.getElementById('yt-player');
 
 function loadVideo(videoId) {
     playerFrame.style.opacity = '0';
-    playerFrame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&iv_load_policy=3&modestbranding=1';
+    playerFrame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&controls=0&showinfo=0';
     isPaused = false;
     const icon = document.getElementById('pp-icon');
     const label = document.querySelector('#btn-playpause .knob-label');
@@ -1031,6 +1031,12 @@ function loadVideo(videoId) {
 function unloadVideo() {
     playerFrame.style.opacity = '0';
     playerFrame.src = 'about:blank';
+}
+
+function postYTCommand(func) {
+    if (playerFrame && playerFrame.contentWindow) {
+        playerFrame.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: '' }), '*');
+    }
 }
 
 /* ══════════════════════════════════════════════════
@@ -1196,11 +1202,12 @@ function togglePlayPause() {
     const icon = document.getElementById('pp-icon');
     const label = document.querySelector('#btn-playpause .knob-label');
     if (isPaused) {
-        loadVideo(CHANNELS[currentChannel].id);
+        postYTCommand('playVideo');
+        isPaused = false;
         icon.innerHTML = '&#9646;&#9646;';
         label.textContent = 'PAUSE';
     } else {
-        unloadVideo();
+        postYTCommand('pauseVideo');
         isPaused = true;
         icon.innerHTML = '&#9654;';
         label.textContent = 'PLAY';
@@ -1249,18 +1256,7 @@ document.addEventListener('keydown', function(e) {
         case ' ':
             e.preventDefault();
             if (isPoweredOn && currentChannel >= 0) {
-                const icon = document.getElementById('pp-icon');
-                const label = document.querySelector('#btn-playpause .knob-label');
-                if (isPaused) {
-                    loadVideo(CHANNELS[currentChannel].id);
-                    icon.innerHTML = '&#9646;&#9646;';
-                    label.textContent = 'PAUSE';
-                } else {
-                    unloadVideo();
-                    isPaused = true;
-                    icon.innerHTML = '&#9654;';
-                    label.textContent = 'PLAY';
-                }
+                togglePlayPause();
             }
             break;
         case 'm':
