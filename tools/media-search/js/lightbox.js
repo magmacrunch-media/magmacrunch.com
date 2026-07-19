@@ -50,7 +50,6 @@
         const item = items[currentIndex];
         if (!item) return;
 
-        // Clear body
         lightboxBody.innerHTML = '';
 
         if (item.type === 'video') {
@@ -59,8 +58,9 @@
             video.controls = true;
             video.autoplay = true;
             video.playsInline = true;
-            video.maxWidth = '100%';
-            video.maxHeight = '100%';
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'contain';
             lightboxBody.appendChild(video);
         } else if (item.type === 'audio') {
             const audio = document.createElement('audio');
@@ -69,7 +69,6 @@
             audio.autoplay = true;
             lightboxBody.appendChild(audio);
 
-            // Show thumbnail as fallback visual
             if (item.thumbnail) {
                 const img = document.createElement('img');
                 img.src = item.thumbnail;
@@ -80,16 +79,23 @@
         } else {
             const img = document.createElement('img');
             img.src = item.fullUrl || item.thumbnail;
-            img.alt = item.title;
-            img.onerror = function() { this.src = item.thumbnail; };
+            img.alt = item.title || '';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'contain';
+            img.onerror = function() {
+                if (this.src !== item.thumbnail) this.src = item.thumbnail;
+                else this.style.display = 'none';
+            };
             lightboxBody.appendChild(img);
         }
 
-        lbTitle.textContent = item.title;
+        const esc = window.UI.escapeHtml;
+        lbTitle.textContent = item.title || '';
         lbMeta.innerHTML = `
-            ${item.author ? `By ${escapeHtml(item.author)} &middot; ` : ''}
-            ${item.source.replace('_', ' ')}
-            <span class="license-badge">${escapeHtml(item.license)}</span>
+            ${item.author ? `By ${esc(item.author)} &middot; ` : ''}
+            ${item.source.replace(/_/g, ' ')}
+            <span class="license-badge">${esc(item.license || '')}</span>
         `;
 
         lbCounter.textContent = `${currentIndex + 1} / ${items.length}`;
@@ -100,12 +106,6 @@
 
         lbPrev.style.visibility = currentIndex > 0 ? 'visible' : 'hidden';
         lbNext.style.visibility = currentIndex < items.length - 1 ? 'visible' : 'hidden';
-    }
-
-    function escapeHtml(text) {
-        const d = document.createElement('div');
-        d.textContent = text;
-        return d.innerHTML;
     }
 
     // Event bindings
@@ -128,19 +128,30 @@
         const item = items[currentIndex];
         if (!item) return;
         const url = item.fullUrl || item.sourceUrl;
-        navigator.clipboard.writeText(url).then(() => {
-            showToast('URL COPIED');
-        }).catch(() => {
-            // Fallback
-            const ta = document.createElement('textarea');
-            ta.value = url;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            document.body.removeChild(ta);
-            showToast('URL COPIED');
-        });
+        copyToClipboard(url);
     });
+
+    function copyToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('URL COPIED');
+            }).catch(() => fallbackCopy(text));
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast(ok ? 'URL COPIED' : 'COPY FAILED');
+    }
 
     function showToast(msg) {
         const toast = document.createElement('div');

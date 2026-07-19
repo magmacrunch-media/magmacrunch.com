@@ -51,7 +51,7 @@
         results.forEach((item, i) => {
             const card = document.createElement('div');
             const globalIdx = currentResults.length + i;
-            card.className = `result-card src-${item.source}`;
+            card.className = `result-card src-${item.source.replace(/_/g, '-')}`;
 
             const isVideo = item.type === 'video';
 
@@ -94,9 +94,22 @@
         btnLoadMore.classList.add('hidden');
     }
 
+    function resetToEmpty() {
+        resultsGrid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">&#9670;</div>
+                <div class="empty-text">SEARCH ACROSS FREE MEDIA SOURCES</div>
+                <div class="empty-sub">Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive</div>
+            </div>
+        `;
+        currentResults = [];
+        resultCount.textContent = '0 RESULTS';
+        btnLoadMore.classList.add('hidden');
+    }
+
     function escapeHtml(text) {
         const d = document.createElement('div');
-        d.textContent = text;
+        d.textContent = text || '';
         return d.innerHTML;
     }
 
@@ -111,6 +124,9 @@
         showLoadMore,
         getResults,
         clearResults,
-        setOnCardClick
+        resetToEmpty,
+        setOnCardClick,
+        escapeHtml,
+        escapeAttr
     };
 })();

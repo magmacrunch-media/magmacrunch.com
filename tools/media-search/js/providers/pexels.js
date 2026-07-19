@@ -12,7 +12,7 @@
     window.Providers.pexels = {
         name: 'pexels',
         label: 'Pexels',
-        color: '#39ff6e',
+        color: '#2ee8a5',
         needsKey: true,
 
         async search(query, page, perPage, filters, apiKey) {
@@ -30,23 +30,18 @@
                 params.set('orientation', filters.orientation);
             }
 
-            const res = await fetch(endpoint, {
+            const res = await fetch(`${endpoint}?${params}`, {
                 headers: { 'Authorization': apiKey }
             });
-            // Pexels doesn't support query params in Authorization header approach,
-            // so we append params to URL
-            const res2 = await fetch(`${endpoint}?${params}`, {
-                headers: { 'Authorization': apiKey }
-            });
-            if (!res2.ok) throw new Error(`Pexels ${res2.status}`);
-            const data = await res2.json();
+            if (!res.ok) throw new Error(`Pexels ${res.status}`);
+            const data = await res.json();
 
             if (isVideo) {
                 return {
                     results: (data.videos || []).map(v => ({
                         id: v.id,
                         title: v.user?.name || 'Video',
-                        thumbnail: v.video_pics?.small || v.video_pics?.medium || '',
+                        thumbnail: v.video_pictures?.[0]?.image || '',
                         fullUrl: v.video_files?.[0]?.link || '',
                         source: 'pexels',
                         license: 'free-commercial',

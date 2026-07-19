@@ -4,7 +4,7 @@
 (function() {
     'use strict';
 
-    const CACHE_KEY = 'collage-finder-cache';
+    const CACHE_KEY = 'media-search-cache';
     const CACHE_MAX = 20;
     const CACHE_TTL = 24 * 60 * 60 * 1000; // 24 hours
 

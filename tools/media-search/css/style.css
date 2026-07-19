@@ -1,9 +1,11 @@
-/* ── RESET ── */
+/* ── Reset ── */
 *, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
+.hidden { display: none !important; }
 
 /* ── PALETTE ── */
 :root {
@@ -23,13 +25,13 @@
     --panel-w:   220px;
 }
 
-/* Source badge colors */
-.src-pexels   { --src-color: #39ff6e; }
-.src-pixabay  { --src-color: #00f5ff; }
-.src-openverse{ --src-color: #c45fff; }
-.src-met      { --src-color: #ffe03a; }
-.src-smithsonian { --src-color: #ff7c1f; }
-.src-archive  { --src-color: #ff3d6e; }
+/* Source badge colors — shifted from main palette for visual distinction */
+.src-pexels   { --src-color: #2ee8a5; }
+.src-pixabay  { --src-color: #4dc9f6; }
+.src-openverse{ --src-color: #a78bfa; }
+.src-met-museum { --src-color: #f5c542; }
+.src-smithsonian { --src-color: #f4845f; }
+.src-archive  { --src-color: #e8637a; }
 
 /* ── BASE ── */
 html, body {
@@ -123,22 +125,6 @@ h1.glitch::after {
     background: var(--surface);
     padding: 6px 10px;
     border: 1px solid var(--border);
-}
-
-.btn-settings {
-    background: none;
-    border: 1px solid var(--dim);
-    color: var(--dim);
-    font-size: 16px;
-    padding: 4px 10px;
-    cursor: pointer;
-    transition: all 0.15s;
-}
-
-.btn-settings:hover {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    box-shadow: 0 0 10px rgba(0,245,255,0.3);
 }
 
 /* ── WORKSPACE ── */
@@ -514,13 +500,13 @@ h1.glitch::after {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 20px;
+    padding: 12px;
 }
 
 .lightbox-body img,
 .lightbox-body video {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
 }
 
@@ -562,76 +548,6 @@ h1.glitch::after {
     display: flex;
     gap: 8px;
     flex-shrink: 0;
-}
-
-/* ── Modal ── */
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(8,8,8,0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-}
-
-.modal-overlay.hidden { display: none; }
-
-.modal-box {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px;
-    min-width: 320px;
-    max-width: 420px;
-}
-
-.modal-header {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    color: var(--cyan);
-    margin-bottom: 20px;
-    text-shadow: 0 0 8px rgba(0,245,255,0.5);
-}
-
-.setting-group {
-    margin-bottom: 16px;
-}
-
-.setting-label {
-    display: block;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--dim);
-    margin-bottom: 6px;
-}
-
-.setting-input {
-    width: 100%;
-    font-family: 'Courier Prime', monospace;
-    font-size: 12px;
-    padding: 8px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-}
-
-.setting-input:focus {
-    outline: none;
-    border-color: var(--cyan);
-}
-
-.setting-hint {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px;
-    color: var(--dim);
-    margin-top: 4px;
-}
-
-.modal-btns {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    margin-top: 20px;
 }
 
 /* ── Toast ── */

@@ -12,7 +12,7 @@
     window.Providers.smithsonian = {
         name: 'smithsonian',
         label: 'Smithsonian',
-        color: '#ff7c1f',
+        color: '#f4845f',
         needsKey: false,
 
         async search(query, page, perPage) {

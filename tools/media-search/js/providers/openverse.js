@@ -12,7 +12,7 @@
     window.Providers.openverse = {
         name: 'openverse',
         label: 'Openverse',
-        color: '#c45fff',
+        color: '#a78bfa',
         needsKey: false,
 
         async search(query, page, perPage, filters) {

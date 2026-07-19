@@ -12,7 +12,7 @@
     window.Providers.archive = {
         name: 'archive',
         label: 'Archive.org',
-        color: '#ff3d6e',
+        color: '#e8637a',
         needsKey: false,
 
         async search(query, page, perPage, filters) {
@@ -20,8 +20,12 @@
                               filters.type === 'audio' ? 'audio' :
                               filters.type === 'image' ? 'image' : null;
 
+            const typeFilter = mediatype
+                ? `mediatype:${mediatype}`
+                : 'mediatype:(image OR movies OR audio)';
+
             const params = new URLSearchParams({
-                q: `${query}${mediatype ? ` mediatype:${mediatype}` : ''} mediatype:(image OR movies OR audio)`,
+                q: `${query} ${typeFilter}`,
                 fl: 'identifier,title,mediatype,item_size,description',
                 rows: perPage || 24,
                 page: page || 1,

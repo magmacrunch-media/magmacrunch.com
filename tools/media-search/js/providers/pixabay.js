@@ -12,7 +12,7 @@
     window.Providers.pixabay = {
         name: 'pixabay',
         label: 'Pixabay',
-        color: '#00f5ff',
+        color: '#4dc9f6',
         needsKey: true,
 
         async search(query, page, perPage, filters, apiKey) {
