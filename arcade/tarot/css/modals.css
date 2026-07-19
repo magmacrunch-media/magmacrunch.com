@@ -1,0 +1,190 @@
+/* ══════════════════════════════════════════════════════════
+   modals.css — French Tarot | MagmaCrunch Media © 2026
+   Modal overlays for bidding, scoring, rules
+   ══════════════════════════════════════════════════════════ */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9000;
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal {
+    background: var(--bg-mid);
+    border: 2px solid var(--accent);
+    border-radius: 4px;
+    padding: 24px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 40px var(--accent-glow),
+                inset 0 0 40px rgba(0,0,0,0.3);
+    animation: modalSlide 0.2s ease;
+}
+
+@keyframes modalSlide {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-title {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+
+.modal-content {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--white);
+    line-height: 1.6;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+/* ── Bidding modal ───────────────────────────────────────── */
+.bid-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bid-btn {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    padding: 14px 20px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    text-align: left;
+    transition: all 0.15s;
+}
+
+.bid-btn:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+.bid-btn.pass {
+    border-color: #4a4060;
+    color: #8a7fa8;
+}
+.bid-btn.pass:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+.bid-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ── Scoring modal ───────────────────────────────────────── */
+.scoring-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+
+.scoring-table th,
+.scoring-table td {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    padding: 8px 12px;
+    text-align: center;
+    border: 1px solid #2a1a3a;
+}
+
+.scoring-table th {
+    background: var(--bg-dark);
+    color: var(--accent);
+}
+
+.scoring-table td {
+    color: var(--white);
+}
+
+.scoring-table .positive {
+    color: var(--green);
+}
+
+.scoring-table .negative {
+    color: var(--rose);
+}
+
+.scoring-table .winner {
+    color: var(--gold);
+    text-shadow: 0 0 6px var(--gold-glow);
+}
+
+/* ── Rules modal ─────────────────────────────────────────── */
+.rules-content {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #c0b8d0;
+    line-height: 1.7;
+}
+
+.rules-content h3 {
+    font-family: var(--font-pixel);
+    font-size: 11px;
+    color: var(--gold);
+    margin: 20px 0 10px;
+}
+
+.rules-content p {
+    margin-bottom: 12px;
+}
+
+.rules-content ul {
+    margin-left: 20px;
+    margin-bottom: 12px;
+}
+
+.rules-content li {
+    margin-bottom: 6px;
+}
+
+.rules-content .highlight {
+    color: var(--accent);
+}
+
+/* ── Dog reveal modal ────────────────────────────────────── */
+.dog-cards {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.dog-instructions {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    color: #8a7fa8;
+    text-align: center;
+    margin-top: 16px;
+}

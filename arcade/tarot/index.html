@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>French Tarot — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css?v=3">
+    <link rel="stylesheet" href="css/start-screen.css?v=3">
+    <link rel="stylesheet" href="css/game-layout.css?v=3">
+    <link rel="stylesheet" href="css/cards.css?v=3">
+    <link rel="stylesheet" href="css/modals.css?v=3">
+</head>
+<body>
+
+    <a href="../card-games/index.html" class="mc-back">card games</a>
+
+    <div class="container">
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+                <h1 class="game-title">FRENCH<br>TAROT</h1>
+                <p class="game-subtitle">The classic trick-taking game</p>
+
+                <div class="start-divider"></div>
+
+                <div class="start-buttons">
+                    <button id="startGameBtn" class="start-btn primary">START</button>
+                    <button id="viewRulesBtn" class="start-btn">How to Play</button>
+                </div>
+
+                <p class="start-press-prompt">— press start —</p>
+
+                <div class="start-footer">
+                    <p>78-card Tarot Nouveau deck</p>
+                    <p>4 players • Trick-taking • Bidding</p>
+                </div>
+                <p class="start-copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" class="game-screen" style="display: none;">
+
+            <!-- Header -->
+            <div class="game-header">
+                <h1>FRENCH TAROT</h1>
+            </div>
+
+            <!-- Score display -->
+            <div id="scoreDisplay" class="score-display"></div>
+
+            <!-- Main game layout -->
+            <div class="game-layout">
+
+                <!-- North player (AI) -->
+                <div class="player-area player-top">
+                    <div class="player-label">NORTH</div>
+                    <div id="northHand" class="ai-hand"></div>
+                </div>
+
+                <!-- West player (AI) -->
+                <div class="player-area player-left">
+                    <div class="player-label">WEST</div>
+                    <div id="westHand" class="ai-hand"></div>
+                </div>
+
+                <!-- Center trick area -->
+                <div class="trick-area" id="trickArea">
+                    <div class="trick-cards">
+                        <div class="trick-slot north" id="trickNorth"></div>
+                        <div class="trick-slot west" id="trickWest"></div>
+                        <div class="trick-slot east" id="trickEast"></div>
+                        <div class="trick-slot south" id="trickSouth"></div>
+                    </div>
+                    <div id="dogArea" class="dog-area"></div>
+                    <div class="trick-info">Trick 0 of 18</div>
+                </div>
+
+                <!-- East player (AI) -->
+                <div class="player-area player-right">
+                    <div class="player-label">EAST</div>
+                    <div id="eastHand" class="ai-hand"></div>
+                </div>
+
+                <!-- Player hand (south) -->
+                <div class="player-area player-bottom">
+                    <div class="player-label">YOUR HAND</div>
+                    <div id="playerHand" class="player-hand"></div>
+                </div>
+
+            </div>
+
+            <!-- Message area -->
+            <div id="messageArea" class="message-area">
+                <div class="game-message">Welcome to French Tarot!</div>
+            </div>
+
+            <!-- Action buttons -->
+            <div id="actionButtons" class="action-buttons"></div>
+
+            <!-- Game controls -->
+            <div class="game-controls">
+                <button id="bidBtn" class="control-btn" style="display: none;">Bid</button>
+                <button id="newGameBtn" class="control-btn">New Game</button>
+                <button id="menuBtn" class="control-btn">Menu</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script src="js/config.js?v=3"></script>
+    <script src="js/tarot-deck.js?v=3"></script>
+    <script src="js/tarot-cards.js?v=3"></script>
+    <script src="js/trick-logic.js?v=3"></script>
+    <script src="js/scoring.js?v=3"></script>
+    <script src="js/ai.js?v=3"></script>
+    <script src="js/game.js?v=3"></script>
+    <script src="js/main.js?v=3"></script>
+</body>
+</html>

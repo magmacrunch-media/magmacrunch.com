@@ -1,0 +1,191 @@
+/* ══════════════════════════════════════════════════════════
+   cards.css — French Tarot | MagmaCrunch Media © 2026
+   Tarot card styling (100×140px cards)
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Base tarot card ─────────────────────────────────────── */
+.tarot-card {
+    width: 100px;
+    height: 140px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 2px 2px 0 #000, 1px 1px 0 #000;
+    image-rendering: pixelated;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+/* ── Face-up card ────────────────────────────────────────── */
+.tarot-card.face-up {
+    background: var(--card-face-bg);
+    z-index: 2;
+}
+.tarot-card.face-up:hover {
+    transform: translateY(-6px);
+    box-shadow: 2px 8px 0 #000;
+    z-index: 50;
+}
+
+/* ── Suit colors on face-up cards ────────────────────────── */
+.tarot-card.face-up.red { color: var(--fc-red); }
+.tarot-card.face-up.black { color: var(--fc-black); }
+
+/* ── Trump cards ─────────────────────────────────────────── */
+.tarot-card.face-up.trump {
+    background: linear-gradient(135deg, #0d0028 0%, #1a0a2a 100%);
+}
+.tarot-card.face-up.trump.oudler {
+    background: linear-gradient(135deg, #1a0a2a 0%, #2a1a3a 100%);
+    box-shadow: 2px 2px 0 #000, 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+/* ── Excuse card ─────────────────────────────────────────── */
+.tarot-card.face-up.excuse {
+    background: linear-gradient(135deg, #1a0028 0%, #2a0a3a 100%);
+    box-shadow: 2px 2px 0 #000, 0 0 8px rgba(255, 45, 120, 0.3);
+}
+
+/* ── Face-down card ──────────────────────────────────────── */
+.tarot-card.face-down {
+    background: var(--card-back-bg);
+    cursor: default;
+    overflow: hidden;
+}
+.tarot-card.face-down:hover {
+    transform: none;
+}
+
+/* ── Card back SVG ───────────────────────────────────────── */
+.card-back-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    shape-rendering: crispEdges;
+    image-rendering: pixelated;
+}
+
+/* ── Corner labels ───────────────────────────────────────── */
+.tarot-card .card-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: var(--font-pixel);
+    font-weight: normal;
+    line-height: 1;
+    z-index: 2;
+}
+.tarot-card .card-corner.top-left {
+    top: 4px;
+    left: 4px;
+}
+.tarot-card .card-corner.bottom-right {
+    bottom: 4px;
+    right: 4px;
+    transform: rotate(180deg);
+}
+.tarot-card .corner-rank {
+    font-family: Arial, 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 1;
+    margin-bottom: 1px;
+}
+.tarot-card .corner-suit {
+    font-family: Arial, 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    line-height: 1;
+    display: block;
+}
+
+/* ── Selected card highlight ─────────────────────────────── */
+.tarot-card.selected {
+    outline: 3px solid var(--gold);
+    outline-offset: -1px;
+    box-shadow: 0 0 0 1px #000,
+                0 0 12px rgba(255, 215, 0, 0.7),
+                2px 2px 0 #000;
+    z-index: 60;
+}
+
+/* ── Playable card highlight ─────────────────────────────── */
+.tarot-card.playable {
+    outline: 2px solid var(--green);
+    outline-offset: -1px;
+}
+.tarot-card.playable:hover {
+    box-shadow: 0 0 12px var(--green-glow),
+                2px 8px 0 #000;
+}
+
+/* ── Trump number display ────────────────────────────────── */
+.trump-center {
+    text-align: center;
+}
+
+/* ── Pip layout for number cards ─────────────────────────── */
+.card-pips {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* ── Court card center ───────────────────────────────────── */
+.court-card-center {
+    text-align: center;
+}
+
+/* ── Cavalier SVG ────────────────────────────────────────── */
+.cavalier-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.cavalier-svg svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    shape-rendering: crispEdges;
+    image-rendering: pixelated;
+}
+
+/* ── Excuse center ───────────────────────────────────────── */
+.excuse-center {
+    text-align: center;
+}
+
+/* ── Card in trick area (smaller) ────────────────────────── */
+.trick-card {
+    width: 70px;
+    height: 98px;
+    font-size: 0.8em;
+}
+
+/* ── AI hand (compact) ───────────────────────────────────── */
+.ai-hand-cards {
+    display: flex;
+    justify-content: center;
+    gap: -30px;
+}
+.ai-hand-cards .tarot-card {
+    width: 50px;
+    height: 70px;
+    margin-left: -20px;
+}
+.ai-hand-cards .tarot-card:first-child {
+    margin-left: 0;
+}

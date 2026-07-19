@@ -1,0 +1,314 @@
+/* ══════════════════════════════════════════════════════════
+   game-layout.css — French Tarot | MagmaCrunch Media © 2026
+   4-player game layout: top/left/right/bottom + center
+   ══════════════════════════════════════════════════════════ */
+
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding-top: 40px;
+}
+
+/* ── Game header ─────────────────────────────────────────── */
+.game-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #2a1a3a;
+}
+.game-header h1 {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ── Main game layout ────────────────────────────────────── */
+.game-layout {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr minmax(180px, auto);
+    grid-template-columns: 120px 1fr 120px;
+    grid-template-areas:
+        "top top top"
+        "left center right"
+        "bottom bottom bottom";
+    gap: 8px;
+    min-height: 0;
+    padding: 8px 0;
+}
+
+/* ── Player areas ────────────────────────────────────────── */
+.player-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.player-top {
+    grid-area: top;
+}
+
+.player-left {
+    grid-area: left;
+}
+
+.player-right {
+    grid-area: right;
+}
+
+.player-bottom {
+    grid-area: bottom;
+}
+
+/* ── Center trick area ───────────────────────────────────── */
+.trick-area {
+    grid-area: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(26, 10, 42, 0.5);
+    border: 1px solid #2a1a3a;
+    border-radius: 8px;
+    position: relative;
+}
+
+.trick-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 4px;
+    width: 260px;
+    height: 200px;
+}
+
+.trick-slot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Compass layout: N=top-center, S=bottom-center, W=left, E=right */
+.trick-slot.north { grid-column: 2; grid-row: 1; }
+.trick-slot.west  { grid-column: 1; grid-row: 2; }
+.trick-slot.east  { grid-column: 3; grid-row: 2; }
+.trick-slot.south { grid-column: 2; grid-row: 3; }
+
+.trick-info {
+    position: absolute;
+    bottom: 8px;
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    color: #8a7fa8;
+}
+
+/* ── Player label ────────────────────────────────────────── */
+.player-label {
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-shadow: 0 0 6px var(--accent-glow);
+}
+
+.player-label.is-taker {
+    color: var(--gold);
+    text-shadow: 0 0 6px var(--gold-glow);
+}
+
+/* ── Hand areas ──────────────────────────────────────────── */
+.hand-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ── AI hands (face-down, compact) ───────────────────────── */
+.ai-hand {
+    display: flex;
+    justify-content: center;
+}
+.ai-hand .tarot-card {
+    width: 44px;
+    height: 62px;
+    margin-left: -16px;
+}
+.ai-hand .tarot-card:first-child {
+    margin-left: 0;
+}
+
+/* ── Player hand (face-up, overlapping fan) ───────────────── */
+.player-hand {
+    display: flex;
+    justify-content: center;
+    padding: 8px 40px;
+}
+.player-hand .tarot-card {
+    margin-left: -56px;
+    flex-shrink: 0;
+}
+.player-hand .tarot-card:first-child {
+    margin-left: 0;
+}
+
+/* ── Dog area ────────────────────────────────────────────── */
+.dog-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 4px;
+    z-index: 10;
+}
+
+.dog-label {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-pixel);
+    font-size: 7px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+}
+
+/* ── Score display ───────────────────────────────────────── */
+.score-display {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    padding: 8px;
+    font-family: var(--font-pixel);
+    font-size: 10px;
+}
+
+.score-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.score-name {
+    color: #8a7fa8;
+    font-size: 8px;
+}
+
+.score-value {
+    color: var(--accent);
+}
+
+.score-item.taker .score-name {
+    color: var(--gold);
+}
+
+.score-item.leading .score-value {
+    color: var(--green);
+    text-shadow: 0 0 6px var(--green-glow);
+}
+
+/* ── Message area ────────────────────────────────────────── */
+.message-area {
+    padding: 12px;
+    text-align: center;
+    min-height: 48px;
+}
+
+.game-message {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--white);
+    line-height: 1.6;
+}
+
+/* ── Action buttons ──────────────────────────────────────── */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    padding: 10px 20px;
+}
+
+/* ── Game controls ───────────────────────────────────────── */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 8px;
+    border-top: 1px solid #2a1a3a;
+}
+
+.control-btn {
+    font-family: var(--font-pixel);
+    font-size: 9px;
+    padding: 8px 16px;
+    border-color: #4a4060;
+    color: #8a7fa8;
+}
+.control-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ── Bid button (glowing during bidding phase) ───────────── */
+.bid-active {
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
+    animation: bidPulse 1.2s ease-in-out infinite;
+}
+@keyframes bidPulse {
+    0%, 100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.3); }
+}
+
+/* ── Responsive adjustments ──────────────────────────────── */
+@media (max-width: 900px) {
+    .game-layout {
+        grid-template-columns: 80px 1fr 80px;
+    }
+    .ai-hand .tarot-card {
+        width: 36px;
+        height: 50px;
+        margin-left: -12px;
+    }
+    .trick-cards {
+        width: 160px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 600px) {
+    .game-layout {
+        grid-template-columns: 60px 1fr 60px;
+    }
+    .ai-hand .tarot-card {
+        width: 30px;
+        height: 42px;
+        margin-left: -10px;
+    }
+    .player-hand .tarot-card {
+        width: 70px;
+        height: 98px;
+    }
+    .trick-cards {
+        width: 120px;
+        height: 120px;
+    }
+}
