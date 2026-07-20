@@ -326,26 +326,16 @@ function getTarotCardBackHTML() {
 }
 
 // ── Create card DOM element ───────────────────────────────
+// Uses the new deck factory (TarotDeck) for rendering
 function createTarotCardElement(card, faceUp) {
-    const div = document.createElement('div');
-    div.className = 'tarot-card';
-    div.dataset.cardId = card.id;
+    // Ensure faceUp state matches what we want
+    const savedFaceUp = card.faceUp;
+    card.faceUp = faceUp;
 
-    if (faceUp) {
-        div.classList.add('face-up');
-        if (card.type === 'suited') {
-            div.classList.add(card.color);
-        } else if (card.type === 'trump') {
-            div.classList.add('trump');
-            if (card.isOudler) div.classList.add('oudler');
-        } else {
-            div.classList.add('excuse');
-        }
-        div.innerHTML = getTarotCardHTML(card, true);
-    } else {
-        div.classList.add('face-down');
-        div.innerHTML = getTarotCardBackHTML();
-    }
+    const el = TarotDeck.createCard(card);
 
-    return div;
+    // Restore original faceUp state
+    card.faceUp = savedFaceUp;
+
+    return el;
 }

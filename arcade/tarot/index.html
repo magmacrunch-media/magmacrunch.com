@@ -8,11 +8,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/base.css?v=3">
-    <link rel="stylesheet" href="css/start-screen.css?v=3">
-    <link rel="stylesheet" href="css/game-layout.css?v=3">
-    <link rel="stylesheet" href="css/cards.css?v=3">
-    <link rel="stylesheet" href="css/modals.css?v=3">
+    <link rel="stylesheet" href="css/base.css?v=4">
+    <link rel="stylesheet" href="css/start-screen.css?v=4">
+    <link rel="stylesheet" href="css/game-layout.css?v=4">
+    <link rel="stylesheet" href="css/cards.css?v=4">
+    <link rel="stylesheet" href="css/modals.css?v=4">
+    <link rel="stylesheet" href="deck/css/tarot-cards.css?v=1">
 </head>
 <body>
 
@@ -114,13 +115,19 @@
     </div>
 
     <!-- JavaScript — ORDER MATTERS -->
-    <script src="js/config.js?v=3"></script>
-    <script src="js/tarot-deck.js?v=3"></script>
-    <script src="js/tarot-cards.js?v=3"></script>
-    <script src="js/trick-logic.js?v=3"></script>
-    <script src="js/scoring.js?v=3"></script>
-    <script src="js/ai.js?v=3"></script>
-    <script src="js/game.js?v=3"></script>
-    <script src="js/main.js?v=3"></script>
+    <script src="js/config.js?v=4"></script>
+    <script src="js/tarot-deck.js?v=4"></script>
+    <!-- New deck rendering -->
+    <script src="deck/js/suited-cards.js?v=1"></script>
+    <script src="deck/js/trump-cards.js?v=1"></script>
+    <script src="deck/js/excuse-card.js?v=1"></script>
+    <script src="deck/js/tarot-card-factory.js?v=1"></script>
+    <!-- Game logic -->
+    <script src="js/tarot-cards.js?v=4"></script>
+    <script src="js/trick-logic.js?v=4"></script>
+    <script src="js/scoring.js?v=4"></script>
+    <script src="js/ai.js?v=4"></script>
+    <script src="js/game.js?v=4"></script>
+    <script src="js/main.js?v=4"></script>
 </body>
 </html>

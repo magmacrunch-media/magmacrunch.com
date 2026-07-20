@@ -136,12 +136,12 @@
     display: flex;
     justify-content: center;
 }
-.ai-hand .tarot-card {
+.ai-hand .t-card {
     width: 44px;
     height: 62px;
     margin-left: -16px;
 }
-.ai-hand .tarot-card:first-child {
+.ai-hand .t-card:first-child {
     margin-left: 0;
 }
 
@@ -151,11 +151,11 @@
     justify-content: center;
     padding: 8px 40px;
 }
-.player-hand .tarot-card {
+.player-hand .t-card {
     margin-left: -56px;
     flex-shrink: 0;
 }
-.player-hand .tarot-card:first-child {
+.player-hand .t-card:first-child {
     margin-left: 0;
 }
 
@@ -283,7 +283,7 @@
     .game-layout {
         grid-template-columns: 80px 1fr 80px;
     }
-    .ai-hand .tarot-card {
+    .ai-hand .t-card {
         width: 36px;
         height: 50px;
         margin-left: -12px;
@@ -298,12 +298,12 @@
     .game-layout {
         grid-template-columns: 60px 1fr 60px;
     }
-    .ai-hand .tarot-card {
+    .ai-hand .t-card {
         width: 30px;
         height: 42px;
         margin-left: -10px;
     }
-    .player-hand .tarot-card {
+    .player-hand .t-card {
         width: 70px;
         height: 98px;
     }

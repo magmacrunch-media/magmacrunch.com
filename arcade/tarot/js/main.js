@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selected.push(cardId);
             }
 
-            playerHandEl.querySelectorAll('.tarot-card').forEach(el => {
+            playerHandEl.querySelectorAll('.t-card').forEach(el => {
                 el.classList.toggle('selected', selected.includes(el.dataset.cardId));
             });
 
@@ -477,9 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAIHand(container, hand) {
         container.innerHTML = '';
         hand.forEach(() => {
-            const cardEl = document.createElement('div');
-            cardEl.className = 'tarot-card face-down';
-            cardEl.innerHTML = getTarotCardBackHTML();
+            const cardEl = TarotDeck.createCardBack();
             container.appendChild(cardEl);
         });
     }
