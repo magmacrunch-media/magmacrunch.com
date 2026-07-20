@@ -507,6 +507,17 @@ window.CanvasRenderer = (function () {
     }
 
     function exportPNG(elements, filename) {
+        // check for unloaded images
+        const hasUnloadedImages = elements.some(el => {
+            if (el.type !== 'image') return false;
+            const img = imageCache[el.id];
+            return img && !img.complete;
+        });
+        if (hasUnloadedImages) {
+            alert('Some images are still loading. Please wait a moment and try again.');
+            return;
+        }
+
         // render at full resolution without selection
         const prevSelected = selectedId;
         selectedId = null;

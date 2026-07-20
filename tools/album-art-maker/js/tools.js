@@ -16,6 +16,7 @@ window.Tools = (function () {
     let onElementCreated = null;
     let onElementMoved = null;
     let onTextEdit = null;
+    let onToolChange = null;
 
     const HANDLE_SIZE = 8;
     const WAVE_TYPES = ['sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse'];
@@ -28,6 +29,7 @@ window.Tools = (function () {
         onElementCreated = callbacks.onElementCreated;
         onElementMoved = callbacks.onElementMoved;
         onTextEdit = callbacks.onTextEdit;
+        onToolChange = callbacks.onToolChange || null;
     }
 
     let currentToolClass = '';
@@ -117,7 +119,7 @@ window.Tools = (function () {
             // check if clicking on an existing element first
             const hit = hitTest(pos.x, pos.y, elements);
             if (hit) {
-                activeTool = 'select';
+                if (onToolChange) onToolChange('select');
                 isDragging = true;
                 dragPending = true;
                 didMove = false;

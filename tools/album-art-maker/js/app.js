@@ -154,14 +154,22 @@
         onElementCreated: handleElementCreated,
         onElementMoved: handleElementMoved,
         onTextEdit: handleTextEdit,
+        onToolChange: (tool) => setActiveTool(tool),
     });
 
-    ColorManager.init(handleColorSample);
+    function handleColorPreview(color) {
+        // update the fill picker/hex UI as a preview — don't apply to element
+        document.getElementById('fillColor').value = color;
+        document.getElementById('fillHex').value = color;
+    }
+
+    ColorManager.init(handleColorSample, handleColorPreview);
 
     // save initial state
     History.push(elements);
 
     // ── LIVE STATS ──
+    let nudgeTimer = null; // debounce for arrow key history
     const canvasSizeStat = document.getElementById('canvasSizeStat');
     const elementCountStat = document.getElementById('elementCountStat');
 
@@ -824,16 +832,21 @@
                 case 'ArrowRight': selectedElement.x += step; break;
             }
             CanvasRenderer.render(elements);
+            // debounce history push so rapid nudges become one undo step
+            clearTimeout(nudgeTimer);
+            nudgeTimer = setTimeout(() => { History.push(elements); }, 300);
             return;
         }
 
-        // Tool shortcuts
-        const shortcuts = { v: 'select', r: 'rect', c: 'circle', l: 'line', t: 'text' };
-        if (shortcuts[e.key]) {
-            setActiveTool(shortcuts[e.key]);
-        }
-        if (e.key === 'i') {
-            imageFileInput.click();
+        // Tool shortcuts (only when Ctrl/Meta not held)
+        if (!e.ctrlKey && !e.metaKey) {
+            const shortcuts = { v: 'select', r: 'rect', c: 'circle', l: 'line', t: 'text' };
+            if (shortcuts[e.key]) {
+                setActiveTool(shortcuts[e.key]);
+            }
+            if (e.key === 'i') {
+                imageFileInput.click();
+            }
         }
     });
 

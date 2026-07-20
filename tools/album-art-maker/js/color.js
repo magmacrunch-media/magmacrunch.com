@@ -5,9 +5,11 @@ window.ColorManager = (function () {
     let refCtx = null;
     let refBlobUrl = null;
     let onColorSample = null;
+    let onColorPreview = null;
 
-    function init(callback) {
-        onColorSample = callback;
+    function init(onSample, onPreview) {
+        onColorSample = onSample;
+        onColorPreview = onPreview || null;
         refCanvas = document.getElementById('refCanvas');
         refCtx = refCanvas.getContext('2d', { willReadFrequently: true });
 
@@ -65,7 +67,7 @@ window.ColorManager = (function () {
     function handleRefHover(e) {
         if (!refImage) return;
         const color = sampleColor(e);
-        if (color && onColorSample) onColorSample(color);
+        if (color && onColorPreview) onColorPreview(color);
     }
 
     function sampleColor(e) {
