@@ -364,14 +364,14 @@
         if (!el) return;
         if (el.fill && el.fill !== 'none') {
             document.getElementById('fillColor').value = el.fill;
-            document.getElementById('fillHex').textContent = el.fill;
+            document.getElementById('fillHex').value = el.fill;
             document.getElementById('noFillBtn').classList.remove('active');
         } else if (el.fill === 'none') {
             document.getElementById('noFillBtn').classList.add('active');
         }
         if (el.stroke && el.stroke !== 'none') {
             document.getElementById('strokeColor').value = el.stroke;
-            document.getElementById('strokeHex').textContent = el.stroke;
+            document.getElementById('strokeHex').value = el.stroke;
             document.getElementById('noStrokeBtn').classList.remove('active');
         } else if (el.stroke === 'none') {
             document.getElementById('noStrokeBtn').classList.add('active');
@@ -419,45 +419,81 @@
     }
 
     // ── COLOR CONTROLS ──
+    function isValidHex(hex) {
+        return /^#[0-9a-f]{6}$/i.test(hex);
+    }
+
+    function syncColorPair(pickerId, hexId, prop) {
+        const picker = document.getElementById(pickerId);
+        const hexInput = document.getElementById(hexId);
+
+        // color picker → hex input
+        picker.addEventListener('input', (e) => {
+            hexInput.value = e.target.value;
+            if (prop === 'bg') {
+                CanvasRenderer.setBgColor(e.target.value);
+                CanvasRenderer.render(elements);
+            } else if (prop === 'fill') {
+                document.getElementById('noFillBtn').classList.remove('active');
+            } else if (prop === 'stroke') {
+                document.getElementById('noStrokeBtn').classList.remove('active');
+            }
+            if (selectedElement && prop !== 'bg') {
+                selectedElement[prop] = e.target.value;
+                CanvasRenderer.render(elements);
+            }
+        });
+        picker.addEventListener('change', () => {
+            if (selectedElement && prop !== 'bg') History.push(elements);
+        });
+
+        // hex input → color picker
+        hexInput.addEventListener('input', () => {
+            let val = hexInput.value;
+            // auto-prefix # if missing
+            if (/^[0-9a-f]{6}$/i.test(val)) val = '#' + val;
+            if (!isValidHex(val)) return;
+            picker.value = val;
+            if (prop === 'bg') {
+                CanvasRenderer.setBgColor(val);
+                CanvasRenderer.render(elements);
+            } else if (prop === 'fill') {
+                document.getElementById('noFillBtn').classList.remove('active');
+            } else if (prop === 'stroke') {
+                document.getElementById('noStrokeBtn').classList.remove('active');
+            }
+            if (selectedElement && prop !== 'bg') {
+                selectedElement[prop] = val;
+                CanvasRenderer.render(elements);
+            }
+        });
+        hexInput.addEventListener('change', () => {
+            // normalize on blur
+            let val = hexInput.value;
+            if (/^[0-9a-f]{6}$/i.test(val)) val = '#' + val;
+            if (isValidHex(val)) {
+                hexInput.value = val;
+                picker.value = val;
+            }
+            if (selectedElement && prop !== 'bg') History.push(elements);
+        });
+    }
+
+    syncColorPair('fillColor', 'fillHex', 'fill');
+    syncColorPair('strokeColor', 'strokeHex', 'stroke');
+    syncColorPair('bgColor', 'bgHex', 'bg');
+
     function handleColorSample(color) {
-        // apply sampled color to the active color input
-        // if eyedropper was triggered from reference image click,
-        // apply to fill by default
         document.getElementById('fillColor').value = color;
-        document.getElementById('fillHex').textContent = color;
+        document.getElementById('fillHex').value = color;
         document.getElementById('noFillBtn').classList.remove('active');
 
-        // update selected element if any
         if (selectedElement) {
             selectedElement.fill = color;
             History.push(elements);
             CanvasRenderer.render(elements);
         }
     }
-
-    document.getElementById('fillColor').addEventListener('input', (e) => {
-        document.getElementById('fillHex').textContent = e.target.value;
-        document.getElementById('noFillBtn').classList.remove('active');
-        if (selectedElement) {
-            selectedElement.fill = e.target.value;
-            CanvasRenderer.render(elements);
-        }
-    });
-    document.getElementById('fillColor').addEventListener('change', () => {
-        if (selectedElement) History.push(elements);
-    });
-
-    document.getElementById('strokeColor').addEventListener('input', (e) => {
-        document.getElementById('strokeHex').textContent = e.target.value;
-        document.getElementById('noStrokeBtn').classList.remove('active');
-        if (selectedElement) {
-            selectedElement.stroke = e.target.value;
-            CanvasRenderer.render(elements);
-        }
-    });
-    document.getElementById('strokeColor').addEventListener('change', () => {
-        if (selectedElement) History.push(elements);
-    });
 
     document.getElementById('noFillBtn').addEventListener('click', () => {
         const btn = document.getElementById('noFillBtn');
@@ -641,12 +677,6 @@
     });
 
     setupRetroDropdown('modalFontSelectDropdown', null);
-
-    // ── BG COLOR ──
-    document.getElementById('bgColor').addEventListener('input', (e) => {
-        CanvasRenderer.setBgColor(e.target.value);
-        CanvasRenderer.render(elements);
-    });
 
     // ── ACTION BUTTONS ──
     document.getElementById('undoBtn').addEventListener('click', () => {

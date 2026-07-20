@@ -513,10 +513,20 @@ h1.glitch::after {
 .color-input::-webkit-color-swatch-wrapper { padding: 2px; }
 .color-input::-webkit-color-swatch { border: none; border-radius: 2px; }
 
-.color-hex {
+.color-hex-input {
     font-family: 'Courier Prime', monospace;
     font-size: 11px;
     color: var(--dim);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 2px 4px;
+    width: 70px;
+    outline: none;
+}
+.color-hex-input:focus {
+    border-color: var(--accent);
+    color: var(--text);
 }
 
 .no-fill-btn {
