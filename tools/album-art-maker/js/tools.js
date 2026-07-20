@@ -413,12 +413,12 @@ window.Tools = (function () {
         // check rotation handle first
         const rot = getRotationHandlePos(el);
         const rotDist = Math.sqrt((x - rot.x) ** 2 + (y - rot.y) ** 2);
-        if (rotDist <= 9) {
+        if (rotDist <= 10) {
             return { id: 'rotate', x: rot.x, y: rot.y, cursor: 'grab' };
         }
 
         const handles = getHandlePositions(el);
-        const hs = HANDLE_SIZE / 2;
+        const hs = 8; // larger hit area than visual size for easier grabbing
         for (const handle of handles) {
             if (
                 x >= handle.x - hs &&

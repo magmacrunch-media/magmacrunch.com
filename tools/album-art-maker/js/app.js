@@ -55,6 +55,20 @@
         });
     }
 
+    // ── SELECTED ELEMENT SYNC ──
+    // After undo/redo, selectedElement may point to a detached object.
+    // Re-sync by finding the element with matching id in the live array.
+    function syncSelectedElement() {
+        if (!selectedElement) return;
+        const found = elements.find(el => el.id === selectedElement.id);
+        if (found) {
+            selectedElement = found;
+        } else {
+            selectedElement = null;
+            CanvasRenderer.setSelectedId(null);
+        }
+    }
+
     // ── TEXT MODAL ──
     const textModal = document.getElementById('textModal');
     const modalTextInput = document.getElementById('modalTextInput');
@@ -429,6 +443,7 @@
 
         // color picker → hex input
         picker.addEventListener('input', (e) => {
+            syncSelectedElement();
             hexInput.value = e.target.value;
             if (prop === 'bg') {
                 CanvasRenderer.setBgColor(e.target.value);
@@ -449,6 +464,7 @@
 
         // hex input → color picker
         hexInput.addEventListener('input', () => {
+            syncSelectedElement();
             let val = hexInput.value;
             // auto-prefix # if missing
             if (/^[0-9a-f]{6}$/i.test(val)) val = '#' + val;
