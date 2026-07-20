@@ -246,7 +246,7 @@
     /* ── INJECT INTO NAV ── */
     function inject() {
         const nav = document.querySelector('nav');
-        if (!nav || document.querySelector('.nav-player')) return;
+        if (!nav || document.querySelector('.nav-player') || document.body.classList.contains('no-jukebox')) return;
 
         // Skip on the full jukebox page — it has its own player
         if (window.location.pathname.includes('music/jukebox/')) return;

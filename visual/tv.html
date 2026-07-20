@@ -1126,9 +1126,9 @@ function togglePower() {
 
         setTimeout(() => {
             stopStatic();
-            currentChannel = 0;
-            const ch = CHANNELS[0];
-            channelNum.textContent = '01';
+            currentChannel = Math.floor(Math.random() * CHANNELS.length);
+            const ch = CHANNELS[currentChannel];
+            channelNum.textContent = String(currentChannel + 1).padStart(2, '0');
 
             loadVideo(ch.id);
 
