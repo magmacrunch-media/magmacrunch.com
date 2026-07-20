@@ -95,13 +95,12 @@
     </header>
 
     <nav class="tool-nav">
-        <a href="../" class="back-link"><span class="chrome" data-text="← TOOLS">← TOOLS</span></a>
+        <a href="../" class="back-link"><span class="chrome" data-text="← TOOLS">← magmacrunch tools</span></a>
     </nav>
 
     <div class="workspace">
         <!-- LEFT PANEL: Tools -->
         <aside class="panel tools-panel">
-            <div class="panel-label">ACTIONS</div>
             <div class="action-btns">
                 <button class="action-btn" id="undoBtn" title="Undo (Ctrl+Z)">UNDO</button>
                 <button class="action-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">REDO</button>
@@ -113,30 +112,69 @@
 
             <div class="panel-divider"></div>
 
-            <div class="panel-label">TOOLS</div>
+            <div class="prop-group">
+                <div class="canvas-bg-row">
+                    <div class="canvas-bg-item">
+                        <label class="prop-label">CANVAS</label>
+                        <div class="custom-dropdown" id="canvasSizeDropdown">
+                            <div class="dropdown-selected">
+                                <span>1024</span>
+                                <span class="dropdown-arrow">&#9662;</span>
+                            </div>
+                            <div class="dropdown-options">
+                                <div class="dropdown-option" data-value="512">512</div>
+                                <div class="dropdown-option active" data-value="1024">1024</div>
+                                <div class="dropdown-option" data-value="2048">2048</div>
+                                <div class="dropdown-option" data-value="4096">4096</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="canvas-bg-item">
+                        <label class="prop-label">BG</label>
+                        <div class="color-row">
+                            <input type="color" id="bgColor" value="#ffffff" class="color-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
             <div class="tool-grid">
                 <button class="tool-btn active" data-tool="select" title="Select / Move (V)">
                     <span class="tool-icon">&#9658;</span>
-                    <span class="tool-name">SELECT</span>
                 </button>
                 <button class="tool-btn" data-tool="text" title="Text (T)">
                     <span class="tool-icon">T</span>
-                    <span class="tool-name">TEXT</span>
                 </button>
                 <button class="tool-btn" id="imageBtn" title="Upload Image (I)">
                     <span class="tool-icon">&#9634;</span>
-                    <span class="tool-name">IMAGE</span>
                 </button>
             </div>
             <input type="file" id="imageFileInput" accept="image/*" hidden>
 
             <div class="panel-divider"></div>
 
-            <div class="panel-label">SHAPES</div>
             <button class="shapes-btn" id="shapesBtn" title="Choose a shape">
                 <span class="shapes-btn-label" id="shapesBtnLabel">RECT</span>
                 <span class="shapes-btn-arrow">&#9662;</span>
             </button>
+
+            <div class="prop-group" id="waveProps" hidden>
+                <label class="prop-label">FREQUENCY</label>
+                <div class="range-row">
+                    <input type="range" id="wavelength" min="1" max="20" value="5" class="range-input">
+                    <span class="range-val" id="wavelengthVal">5</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="waveModeGroup" hidden>
+                <label class="prop-label">WAVE MODE</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="waveFilledBtn">FILLED</button>
+                    <button class="action-btn" id="waveOpenBtn">OPEN</button>
+                </div>
+            </div>
 
             <div class="panel-divider"></div>
 
@@ -147,7 +185,7 @@
                 <canvas id="refCanvas" class="ref-canvas"></canvas>
                 <button class="ref-clear-btn" id="refClearBtn" title="Remove reference">&times;</button>
             </div>
-            <p class="ref-hint">Click reference to<br>sample color</p>
+            <p class="ref-hint">click to sample color</p>
         </aside>
 
         <!-- SHAPES POPUP -->
@@ -277,22 +315,6 @@
                 </div>
             </div>
 
-            <div class="prop-group" id="waveProps" hidden>
-                <label class="prop-label">FREQUENCY</label>
-                <div class="range-row">
-                    <input type="range" id="wavelength" min="1" max="20" value="5" class="range-input">
-                    <span class="range-val" id="wavelengthVal">5</span>
-                </div>
-            </div>
-
-            <div class="prop-group" id="waveModeGroup" hidden>
-                <label class="prop-label">WAVE MODE</label>
-                <div class="action-btns">
-                    <button class="action-btn" id="waveFilledBtn">FILLED</button>
-                    <button class="action-btn" id="waveOpenBtn">OPEN</button>
-                </div>
-            </div>
-
             <div class="prop-group" id="stepCountGroup" hidden>
                 <label class="prop-label">STEPS</label>
                 <div class="range-row">
@@ -327,17 +349,23 @@
 
             <div class="prop-group" id="textProps" hidden>
                 <label class="prop-label">FONT</label>
-                <select id="fontSelect" class="prop-select">
-                    <option value="Press Start 2P" style="font-family: 'Press Start 2P'">Press Start 2P</option>
-                    <option value="VT323" style="font-family: 'VT323'">VT323</option>
-                    <option value="Silkscreen" style="font-family: 'Silkscreen'">Silkscreen</option>
-                    <option value="DotGothic16" style="font-family: 'DotGothic16'">DotGothic16</option>
-                    <option value="Pixelify Sans" style="font-family: 'Pixelify Sans'">Pixelify Sans</option>
-                    <option value="Courier Prime" style="font-family: 'Courier Prime'">Courier Prime</option>
-                    <option value="Futura" style="font-family: 'Futura'">Futura</option>
-                    <option value="Helvetica Neue" style="font-family: 'Helvetica Neue'">Helvetica Neue</option>
-                    <option value="Arial" style="font-family: 'Arial'">Arial</option>
-                </select>
+                <div class="custom-dropdown" id="fontSelectDropdown">
+                    <div class="dropdown-selected">
+                        <span>Press Start 2P</span>
+                        <span class="dropdown-arrow">&#9662;</span>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option active" data-value="Press Start 2P">Press Start 2P</div>
+                        <div class="dropdown-option" data-value="VT323">VT323</div>
+                        <div class="dropdown-option" data-value="Silkscreen">Silkscreen</div>
+                        <div class="dropdown-option" data-value="DotGothic16">DotGothic16</div>
+                        <div class="dropdown-option" data-value="Pixelify Sans">Pixelify Sans</div>
+                        <div class="dropdown-option" data-value="Courier Prime">Courier Prime</div>
+                        <div class="dropdown-option" data-value="Futura">Futura</div>
+                        <div class="dropdown-option" data-value="Helvetica Neue">Helvetica Neue</div>
+                        <div class="dropdown-option" data-value="Arial">Arial</div>
+                    </div>
+                </div>
             </div>
 
             <div class="prop-group" id="fontSizeGroup" hidden>
@@ -348,25 +376,7 @@
                 </div>
             </div>
 
-            <div class="panel-divider"></div>
-
-            <div class="prop-group">
-                <label class="prop-label">CANVAS SIZE</label>
-                <select id="canvasSize" class="prop-select">
-                    <option value="512">512 &times; 512</option>
-                    <option value="1024" selected>1024 &times; 1024</option>
-                    <option value="2048">2048 &times; 2048</option>
-                    <option value="4096">4096 &times; 4096</option>
-                </select>
-            </div>
-
-            <div class="prop-group">
-                <label class="prop-label">BG COLOR</label>
-                <div class="color-row">
-                    <input type="color" id="bgColor" value="#ffffff" class="color-input">
-                    <span class="color-hex" id="bgHex">#ffffff</span>
-                </div>
-            </div>
+            <button class="export-btn" id="editTextBtn" hidden>EDIT TEXT</button>
 
             <div class="panel-divider"></div>
 
@@ -385,17 +395,23 @@
             <textarea id="modalTextInput" class="modal-textarea" placeholder="Type here..." rows="3"></textarea>
             <div class="modal-row">
                 <label class="prop-label">FONT</label>
-                <select id="modalFontSelect" class="prop-select">
-                    <option value="Press Start 2P" style="font-family: 'Press Start 2P'">Press Start 2P</option>
-                    <option value="VT323" style="font-family: 'VT323'">VT323</option>
-                    <option value="Silkscreen" style="font-family: 'Silkscreen'">Silkscreen</option>
-                    <option value="DotGothic16" style="font-family: 'DotGothic16'">DotGothic16</option>
-                    <option value="Pixelify Sans" style="font-family: 'Pixelify Sans'">Pixelify Sans</option>
-                    <option value="Courier Prime" style="font-family: 'Courier Prime'">Courier Prime</option>
-                    <option value="Futura" style="font-family: 'Futura'">Futura</option>
-                    <option value="Helvetica Neue" style="font-family: 'Helvetica Neue'">Helvetica Neue</option>
-                    <option value="Arial" style="font-family: 'Arial'">Arial</option>
-                </select>
+                <div class="custom-dropdown" id="modalFontSelectDropdown">
+                    <div class="dropdown-selected">
+                        <span>Press Start 2P</span>
+                        <span class="dropdown-arrow">&#9662;</span>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option active" data-value="Press Start 2P">Press Start 2P</div>
+                        <div class="dropdown-option" data-value="VT323">VT323</div>
+                        <div class="dropdown-option" data-value="Silkscreen">Silkscreen</div>
+                        <div class="dropdown-option" data-value="DotGothic16">DotGothic16</div>
+                        <div class="dropdown-option" data-value="Pixelify Sans">Pixelify Sans</div>
+                        <div class="dropdown-option" data-value="Courier Prime">Courier Prime</div>
+                        <div class="dropdown-option" data-value="Futura">Futura</div>
+                        <div class="dropdown-option" data-value="Helvetica Neue">Helvetica Neue</div>
+                        <div class="dropdown-option" data-value="Arial">Arial</div>
+                    </div>
+                </div>
             </div>
             <div class="modal-row">
                 <label class="prop-label">SIZE</label>

@@ -88,6 +88,7 @@ window.Tools = (function () {
                             element: hit,
                             origBounds: { x: bounds.x, y: bounds.y, w: bounds.w, h: bounds.h },
                             handle: handle.id,
+                            origFontSize: hit.fontSize || 48,
                         };
                         document.body.classList.add('dragging');
                         return;
@@ -113,7 +114,21 @@ window.Tools = (function () {
         }
 
         if (activeTool === 'text') {
-            // place text at click position
+            // check if clicking on an existing element first
+            const hit = hitTest(pos.x, pos.y, elements);
+            if (hit) {
+                activeTool = 'select';
+                isDragging = true;
+                dragPending = true;
+                didMove = false;
+                dragStart = { x: pos.x, y: pos.y, element: hit, origX: hit.x, origY: hit.y };
+                document.body.classList.add('dragging');
+                CanvasRenderer.setSelectedId(hit.id);
+                CanvasRenderer.render(elements);
+                if (onElementMoved) onElementMoved('select', hit);
+                return;
+            }
+            // no existing element — place new text
             if (onTextEdit) onTextEdit(pos.x, pos.y);
             return;
         }
@@ -185,6 +200,31 @@ window.Tools = (function () {
                 } else {
                     el.w = ob.w + dx;
                     el.h = ob.h + dy;
+                }
+            } else if (el.type === 'text') {
+                // scale fontSize proportionally based on diagonal drag
+                const origDiag = Math.sqrt(ob.w * ob.w + ob.h * ob.h);
+                if (origDiag > 0) {
+                    let newW, newH;
+                    if (h === 'br') {
+                        newW = ob.w + dx;
+                        newH = ob.h + dy;
+                    } else if (h === 'tl') {
+                        newW = ob.w - dx;
+                        newH = ob.h - dy;
+                    } else if (h === 'tr') {
+                        newW = ob.w + dx;
+                        newH = ob.h - dy;
+                    } else {
+                        newW = ob.w - dx;
+                        newH = ob.h + dy;
+                    }
+                    const newDiag = Math.sqrt(newW * newW + newH * newH);
+                    const scale = newDiag / origDiag;
+                    el.fontSize = Math.max(8, Math.round(resizeStart.origFontSize * scale));
+                    // sync font size slider
+                    document.getElementById('fontSize').value = el.fontSize;
+                    document.getElementById('fontSizeVal').textContent = el.fontSize;
                 }
             } else if (el.type === 'image' && el.aspectRatio) {
                 // aspect-ratio-locked resize

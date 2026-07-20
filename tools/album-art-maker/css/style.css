@@ -127,13 +127,13 @@ h1.glitch::after {
     width: var(--panel-w);
     background: var(--panel);
     border-right: 2px solid var(--border);
-    padding: 14px 12px;
+    padding: 12px 10px;
     overflow-y: auto;
     flex-shrink: 0;
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
 .props-panel {
@@ -152,13 +152,13 @@ h1.glitch::after {
 .panel-divider {
     height: 1px;
     background: var(--border);
-    margin: 4px 0;
+    margin: 2px 0;
 }
 
 /* ── TOOL BUTTONS ── */
 .tool-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 6px;
 }
 
@@ -166,8 +166,8 @@ h1.glitch::after {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 10px 6px;
+    gap: 3px;
+    padding: 6px 4px;
     background: var(--surface);
     border: 2px solid var(--border);
     border-radius: 4px;
@@ -191,7 +191,7 @@ h1.glitch::after {
 }
 
 .tool-icon {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1;
 }
 
@@ -206,7 +206,7 @@ h1.glitch::after {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 12px;
+    padding: 8px 10px;
     background: var(--surface);
     border: 2px solid var(--border);
     border-radius: 4px;
@@ -290,7 +290,7 @@ h1.glitch::after {
 /* ── REFERENCE IMAGE ── */
 .ref-upload-btn {
     width: 100%;
-    padding: 10px;
+    padding: 8px;
     background: var(--surface);
     border: 2px dashed var(--border);
     border-radius: 4px;
@@ -350,11 +350,8 @@ h1.glitch::after {
     font-size: 6px;
     color: var(--dim);
     text-align: center;
-    line-height: 1.6;
-    display: none;
-}
-.ref-hint.visible {
-    display: block;
+    line-height: 1.4;
+    margin: 0;
 }
 
 /* ── CENTER AREA ── */
@@ -463,6 +460,18 @@ h1.glitch::after {
     display: flex;
     flex-direction: column;
     gap: 6px;
+}
+
+.canvas-bg-row {
+    display: flex;
+    gap: 8px;
+}
+
+.canvas-bg-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .prop-label {
@@ -605,6 +614,100 @@ h1.glitch::after {
 .prop-select:focus { border-color: var(--accent); }
 .prop-select option { background: var(--surface); color: var(--text); font-family: inherit; }
 
+/* ── CUSTOM RETRO DROPDOWN ── */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.dropdown-selected {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 8px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.15s;
+}
+
+.dropdown-selected:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(160,160,176,0.2);
+}
+
+.custom-dropdown.open .dropdown-selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(160,160,176,0.3);
+}
+
+.dropdown-arrow {
+    color: var(--accent);
+    font-size: 8px;
+    transition: transform 0.2s;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-top: none;
+    margin-top: -2px;
+    max-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: max-height 0.25s ease-out;
+    z-index: 50;
+}
+
+.custom-dropdown.open .dropdown-options {
+    max-height: 240px;
+}
+
+.dropdown-option {
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: all 0.1s;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    white-space: nowrap;
+}
+
+.dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.dropdown-option:hover {
+    background: rgba(160,160,176,0.1);
+    border-left: 3px solid var(--accent);
+    color: var(--text);
+    padding-left: 7px;
+}
+
+.dropdown-option.active {
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 7px;
+    background: rgba(160,160,176,0.06);
+}
+
+.dropdown-options::-webkit-scrollbar { width: 4px; }
+.dropdown-options::-webkit-scrollbar-track { background: transparent; }
+.dropdown-options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
 /* ── ACTION BUTTONS ── */
 .action-btns {
     display: flex;
@@ -613,7 +716,7 @@ h1.glitch::after {
 
 .action-btn {
     flex: 1;
-    padding: 8px 6px;
+    padding: 6px 6px;
     background: var(--surface);
     border: 2px solid var(--border);
     border-radius: 4px;

@@ -5,10 +5,59 @@
 
     const canvas = document.getElementById('mainCanvas');
 
+    // ── RETRO DROPDOWN HELPER ──
+    function getDropdownValue(containerId) {
+        const el = document.querySelector('#' + containerId + ' .dropdown-option.active');
+        return el ? el.dataset.value : null;
+    }
+
+    function setDropdownValue(containerId, value) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const options = container.querySelectorAll('.dropdown-option');
+        options.forEach(o => {
+            o.classList.toggle('active', o.dataset.value === value);
+        });
+        const selected = container.querySelector('.dropdown-selected span:first-child');
+        if (selected) {
+            const active = container.querySelector('.dropdown-option.active');
+            if (active) selected.textContent = active.textContent;
+        }
+    }
+
+    function setupRetroDropdown(containerId, onSelect) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const selected = container.querySelector('.dropdown-selected');
+        const options = container.querySelectorAll('.dropdown-option');
+
+        selected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            // close all other dropdowns
+            document.querySelectorAll('.custom-dropdown.open').forEach(d => {
+                if (d !== container) d.classList.remove('open');
+            });
+            container.classList.toggle('open');
+        });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                selected.querySelector('span:first-child').textContent = opt.textContent;
+                options.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                container.classList.remove('open');
+                if (onSelect) onSelect(opt.dataset.value);
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) container.classList.remove('open');
+        });
+    }
+
     // ── TEXT MODAL ──
     const textModal = document.getElementById('textModal');
     const modalTextInput = document.getElementById('modalTextInput');
-    const modalFontSelect = document.getElementById('modalFontSelect');
     const modalFontSize = document.getElementById('modalFontSize');
     const modalFontSizeVal = document.getElementById('modalFontSizeVal');
     let modalTarget = null; // { x, y } or { editId } for editing existing
@@ -19,9 +68,9 @@
             : { x, y };
 
         modalTextInput.value = existingElement ? existingElement.text : '';
-        modalFontSelect.value = existingElement
+        setDropdownValue('modalFontSelectDropdown', existingElement
             ? existingElement.font
-            : (document.getElementById('fontSelect').value || 'Press Start 2P');
+            : (getDropdownValue('fontSelectDropdown') || 'Press Start 2P'));
         modalFontSize.value = existingElement
             ? existingElement.fontSize
             : (parseInt(document.getElementById('fontSize').value) || 48);
@@ -45,21 +94,27 @@
             const el = elements.find(e => e.id === modalTarget.editId);
             if (el) {
                 el.text = text;
-                el.font = modalFontSelect.value;
+                el.font = getDropdownValue('modalFontSelectDropdown');
                 el.fontSize = parseInt(modalFontSize.value) || 48;
             }
         } else if (modalTarget) {
             const el = Tools.createTextElement(
                 modalTarget.x, modalTarget.y, text,
-                modalFontSelect.value,
+                getDropdownValue('modalFontSelectDropdown'),
                 parseInt(modalFontSize.value) || 48
             );
             elements.push(el);
+            selectedElement = el;
+            CanvasRenderer.setSelectedId(el.id);
+            updatePropsFromElement(el);
         }
 
         History.push(elements);
         CanvasRenderer.render(elements);
         closeTextModal();
+        if (modalTarget && modalTarget.editId === undefined) {
+            setActiveTool('select');
+        }
     }
 
     document.getElementById('modalAdd').addEventListener('click', commitTextModal);
@@ -262,8 +317,9 @@
         }
     });
 
-    // ── DOUBLE CLICK TO EDIT TEXT ──
+    // ── DOUBLE CLICK TO EDIT TEXT (select mode only) ──
     canvas.addEventListener('dblclick', (e) => {
+        if (Tools.getTool() !== 'select') return;
         const pos = Tools.getCanvasCoords(e);
         const hit = Tools.hitTest(pos.x, pos.y, elements);
         if (hit && hit.type === 'text') {
@@ -325,7 +381,7 @@
             document.getElementById('strokeWidthVal').textContent = el.strokeWidth;
         }
         if (el.type === 'text') {
-            if (el.font) document.getElementById('fontSelect').value = el.font;
+            if (el.font) setDropdownValue('fontSelectDropdown', el.font);
             if (el.fontSize) {
                 document.getElementById('fontSize').value = el.fontSize;
                 document.getElementById('fontSizeVal').textContent = el.fontSize;
@@ -561,25 +617,33 @@
         if (selectedElement && selectedElement.type === 'text') History.push(elements);
     });
 
-    document.getElementById('fontSelect').addEventListener('change', (e) => {
+    // ── EDIT TEXT BUTTON ──
+    document.getElementById('editTextBtn').addEventListener('click', () => {
         if (selectedElement && selectedElement.type === 'text') {
-            selectedElement.font = e.target.value;
+            openTextModal(selectedElement.x, selectedElement.y, selectedElement);
+        }
+    });
+
+    // ── RETRO DROPDOWNS ──
+    setupRetroDropdown('fontSelectDropdown', (val) => {
+        if (selectedElement && selectedElement.type === 'text') {
+            selectedElement.font = val;
             History.push(elements);
             CanvasRenderer.render(elements);
         }
     });
 
-    // ── CANVAS SIZE ──
-    document.getElementById('canvasSize').addEventListener('change', (e) => {
-        const size = parseInt(e.target.value);
+    setupRetroDropdown('canvasSizeDropdown', (val) => {
+        const size = parseInt(val);
         CanvasRenderer.setCanvasSize(size);
         CanvasRenderer.render(elements);
         updateStats();
     });
 
+    setupRetroDropdown('modalFontSelectDropdown', null);
+
     // ── BG COLOR ──
     document.getElementById('bgColor').addEventListener('input', (e) => {
-        document.getElementById('bgHex').textContent = e.target.value;
         CanvasRenderer.setBgColor(e.target.value);
         CanvasRenderer.render(elements);
     });
@@ -741,6 +805,7 @@
         const showWave = isWaveTool || isWaveElement;
         document.getElementById('textProps').hidden = !(isTextTool || isTextElement);
         document.getElementById('fontSizeGroup').hidden = !(isTextTool || isTextElement);
+        document.getElementById('editTextBtn').hidden = !isTextElement;
         document.getElementById('rotationGroup').hidden = !selectedElement;
         document.getElementById('waveProps').hidden = !showWave;
         document.getElementById('waveModeGroup').hidden = !isWaveElement;
