@@ -219,6 +219,100 @@ h1.glitch::after {
     border-color: var(--cyan);
 }
 
+/* ── Custom Dropdown ── */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.dropdown-selected {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.15s;
+}
+
+.dropdown-selected:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 10px rgba(0,245,255,0.15);
+}
+
+.custom-dropdown.open .dropdown-selected {
+    border-color: var(--cyan);
+    box-shadow: 0 0 12px rgba(0,245,255,0.2);
+}
+
+.dropdown-arrow {
+    color: var(--dim);
+    font-size: 8px;
+    transition: transform 0.2s;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--cyan);
+    border-top: none;
+    margin-top: -1px;
+    max-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: max-height 0.25s ease-out;
+    z-index: 50;
+}
+
+.custom-dropdown.open .dropdown-options {
+    max-height: 240px;
+}
+
+.dropdown-option {
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: all 0.1s;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    white-space: nowrap;
+}
+
+.dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.dropdown-option:hover {
+    background: rgba(0,245,255,0.08);
+    border-left: 3px solid var(--cyan);
+    color: var(--text);
+    padding-left: 7px;
+}
+
+.dropdown-option.active {
+    color: var(--cyan);
+    border-left: 3px solid var(--cyan);
+    padding-left: 7px;
+    background: rgba(0,245,255,0.05);
+}
+
+.dropdown-options::-webkit-scrollbar { width: 4px; }
+.dropdown-options::-webkit-scrollbar-track { background: transparent; }
+.dropdown-options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
 /* ── CENTER ── */
 .center-area {
     flex: 1;
@@ -505,6 +599,14 @@ h1.glitch::after {
     justify-content: center;
     overflow: hidden;
     padding: 12px;
+    background-color: #1a1a1a;
+    background-image:
+        linear-gradient(45deg, #222 25%, transparent 25%),
+        linear-gradient(-45deg, #222 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #222 75%),
+        linear-gradient(-45deg, transparent 75%, #222 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
 }
 
 .lightbox-body img,

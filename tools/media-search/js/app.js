@@ -15,9 +15,6 @@
     const btnSearch = document.getElementById('btnSearch');
     const btnClear = document.getElementById('btnClear');
     const sourceToggles = document.getElementById('sourceToggles');
-    const filterType = document.getElementById('filterType');
-    const filterLicense = document.getElementById('filterLicense');
-    const filterOrientation = document.getElementById('filterOrientation');
     const btnLoadMore = document.getElementById('btnLoadMore');
 
     // ── State ─────────────────────────────────────────────────────────────
@@ -25,6 +22,44 @@
     let currentQuery = '';
     let currentPage = 1;
     let isLoading = false;
+
+    // ── Custom dropdowns ──────────────────────────────────────────────────
+
+    function setupRetroDropdown(containerId, onSelect) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const selected = container.querySelector('.dropdown-selected');
+        const options = container.querySelectorAll('.dropdown-option');
+
+        selected.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.custom-dropdown.open').forEach(d => {
+                if (d !== container) d.classList.remove('open');
+            });
+            container.classList.toggle('open');
+        });
+
+        options.forEach(opt => {
+            opt.addEventListener('click', () => {
+                selected.querySelector('span:first-child').textContent = opt.textContent;
+                options.forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+                container.classList.remove('open');
+                if (onSelect) onSelect(opt.dataset.value);
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!container.contains(e.target)) container.classList.remove('open');
+        });
+    }
+
+    function getDropdownValue(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return 'all';
+        const active = container.querySelector('.dropdown-option.active');
+        return active ? active.dataset.value : 'all';
+    }
 
     // ── Source toggles ────────────────────────────────────────────────────
 
@@ -72,6 +107,14 @@
 
     // ── Search ────────────────────────────────────────────────────────────
 
+    function getFilters() {
+        return {
+            type: getDropdownValue('filterTypeDropdown'),
+            license: getDropdownValue('filterLicenseDropdown'),
+            orientation: getDropdownValue('filterOrientationDropdown')
+        };
+    }
+
     async function doSearch(query, page, append) {
         if (isLoading) return;
         if (!query.trim()) return;
@@ -80,19 +123,13 @@
         currentPage = page || 1;
         isLoading = true;
 
-        const filters = {
-            type: filterType.value,
-            license: filterLicense.value,
-            orientation: filterOrientation.value
-        };
-
+        const filters = getFilters();
         const sources = getEnabledSources();
         Search.setEnabledProviders(sources);
 
         const keys = await loadApiKeys();
         Search.setApiKeys(keys);
 
-        // Check cache
         const cached = Cache.get(currentQuery, sources, filters);
         if (cached && !append) {
             UI.renderResults(cached, false);
@@ -146,11 +183,13 @@
         doSearch(currentQuery, currentPage + 1, true);
     });
 
-    [filterType, filterLicense, filterOrientation].forEach(el => {
-        el.addEventListener('change', () => {
-            if (currentQuery) doSearch(currentQuery, 1);
-        });
-    });
+    function onFilterChange() {
+        if (currentQuery) doSearch(currentQuery, 1);
+    }
+
+    setupRetroDropdown('filterTypeDropdown', onFilterChange);
+    setupRetroDropdown('filterLicenseDropdown', onFilterChange);
+    setupRetroDropdown('filterOrientationDropdown', onFilterChange);
 
     sourceToggles.addEventListener('change', () => {
         if (currentQuery) doSearch(currentQuery, 1);

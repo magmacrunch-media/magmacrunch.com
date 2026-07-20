@@ -91,33 +91,51 @@
             <div class="panel-divider"></div>
 
             <div class="panel-label">TYPE</div>
-            <select id="filterType" class="select-retro">
-                <option value="all">ALL</option>
-                <option value="image">PHOTOS</option>
-                <option value="illustration">ILLUSTRATIONS</option>
-                <option value="video">VIDEO</option>
-                <option value="audio">AUDIO</option>
-            </select>
+            <div class="custom-dropdown" id="filterTypeDropdown">
+                <div class="dropdown-selected">
+                    <span>ALL</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="all">ALL</div>
+                    <div class="dropdown-option" data-value="image">PHOTOS</div>
+                    <div class="dropdown-option" data-value="illustration">ILLUSTRATIONS</div>
+                    <div class="dropdown-option" data-value="video">VIDEO</div>
+                    <div class="dropdown-option" data-value="audio">AUDIO</div>
+                </div>
+            </div>
 
             <div class="panel-divider"></div>
 
             <div class="panel-label">LICENSE</div>
-            <select id="filterLicense" class="select-retro">
-                <option value="all">ALL</option>
-                <option value="pd">PUBLIC DOMAIN</option>
-                <option value="cc0">CC0</option>
-                <option value="free">NO ATTRIBUTION</option>
-            </select>
+            <div class="custom-dropdown" id="filterLicenseDropdown">
+                <div class="dropdown-selected">
+                    <span>ALL</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="all">ALL</div>
+                    <div class="dropdown-option" data-value="pd">PUBLIC DOMAIN</div>
+                    <div class="dropdown-option" data-value="cc0">CC0</div>
+                    <div class="dropdown-option" data-value="free">NO ATTRIBUTION</div>
+                </div>
+            </div>
 
             <div class="panel-divider"></div>
 
             <div class="panel-label">ORIENTATION</div>
-            <select id="filterOrientation" class="select-retro">
-                <option value="all">ALL</option>
-                <option value="horizontal">HORIZONTAL</option>
-                <option value="vertical">VERTICAL</option>
-                <option value="square">SQUARE</option>
-            </select>
+            <div class="custom-dropdown" id="filterOrientationDropdown">
+                <div class="dropdown-selected">
+                    <span>ALL</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="all">ALL</div>
+                    <div class="dropdown-option" data-value="horizontal">HORIZONTAL</div>
+                    <div class="dropdown-option" data-value="vertical">VERTICAL</div>
+                    <div class="dropdown-option" data-value="square">SQUARE</div>
+                </div>
+            </div>
         </aside>
 
         <!-- CENTER: Search + Results -->
