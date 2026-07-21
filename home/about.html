@@ -207,10 +207,10 @@
 
         /* Cereal animation canvas */
         .cereal-canvas-wrap {
-            text-align: center;
-            margin: 32px auto;
-            width: 100%;
-            max-width: 500px;
+            float: right;
+            margin: 8px 0 20px 24px;
+            width: 50%;
+            max-width: 300px;
         }
         .cereal-canvas-wrap canvas {
             display: block;
@@ -333,6 +333,7 @@
             .dateline { font-size: 7px; gap: 10px; }
             .ascii-main pre { font-size: clamp(2px, 1.5vw, 5px); }
             .zine-links { flex-direction: column; align-items: center; }
+            .cereal-canvas-wrap { float: none; width: 80%; max-width: 260px; margin: 16px auto; }
         }
 
         /* ── ARTIST LINK STRIPS ── */
@@ -678,13 +679,13 @@ ___          ___  __       ___ .  __           __     __   ___ ..
 
     <div class="divider"></div>
 
-    <!-- Cereal animation -->
-    <div class="cereal-canvas-wrap">
-        <canvas id="cereal-scene" width="300" height="256"></canvas>
-    </div>
-
     <!-- Body text -->
     <div class="about-text">
+        <!-- Cereal animation (floated right) -->
+        <div class="cereal-canvas-wrap">
+            <canvas id="cereal-scene" width="300" height="256"></canvas>
+        </div>
+
         <!-- Pull quote: first paragraph -->
           <p> 
             Magmacrunch media is a creative collective that produces music, film, video games, web tools, writing, and more. 
