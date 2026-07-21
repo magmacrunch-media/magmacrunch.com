@@ -142,7 +142,7 @@
         /* ── FLOAT ASCII FOR TEXT WRAPPING ── */
         .ascii-float-right {
             float: right;
-            margin: 0 0 20px 24px;
+            margin: 20px 20px 20px 24px;
             max-width: 50%;
         }
         .ascii-float-right pre {
@@ -420,6 +420,68 @@
             .link-strip-inner pre { font-size: clamp(1.5px, 1.2vw, 4px); }
         }
 
+        /* ── EMAIL CALLOUT ── */
+        .email-callout {
+            width: 100%;
+            max-width: 960px;
+            text-align: center;
+            padding: 40px 24px;
+            margin: 40px 0;
+            border: 2px solid var(--mc-cereal-cyan);
+            background: rgba(0,212,255,0.04);
+            box-shadow: 0 0 24px rgba(0,245,255,0.15), inset 0 0 30px rgba(0,245,255,0.03);
+            position: relative;
+        }
+        .email-callout::before,
+        .email-callout::after {
+            content: '//';
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--mc-cereal-cyan);
+            opacity: 0.5;
+            position: absolute;
+            top: 12px;
+        }
+        .email-callout::before { left: 16px; }
+        .email-callout::after { right: 16px; }
+        .email-callout-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: var(--mc-cereal-cyan);
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            margin-bottom: 16px;
+            text-shadow: 0 0 12px rgba(0,245,255,0.5);
+        }
+        .email-callout a {
+            font-family: 'Courier Prime', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--mc-cereal-cyan);
+            text-decoration: none;
+            border-bottom: 2px solid rgba(0,245,255,0.4);
+            padding-bottom: 2px;
+            transition: color 0.15s, border-color 0.15s, text-shadow 0.15s;
+        }
+        .email-callout a:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+            text-shadow: 0 0 16px rgba(0,245,255,0.7);
+        }
+        .email-callout-sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--mc-smoke);
+            margin-top: 12px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 640px) {
+            .email-callout { padding: 28px 16px; margin: 28px 0; }
+            .email-callout-label { font-size: 9px; }
+            .email-callout a { font-size: 15px; }
+        }
+
         /* ── PIXELATED LOGO GRID ── */
         .logo-grid-section {
             width: 100%;
@@ -535,6 +597,7 @@
             <div class="dropdown">
                 <a href="../tools/album-art-maker/index.html">album art</a>
                 <a href="../tools/media-search/index.html">media search</a>
+                <a href="../tools/pixel-process/index.html">pixel process</a>
             </div>
         </li>
         <li><a href="../home/guestbook.html">guestbook</a></li>
@@ -553,10 +616,6 @@
     </div>
 
     <div class="dateline">
-        <span>Est. 2023</span>
-        <span class="dateline-sep">✦</span>
-        <span>magmacrunch media</span>
-        <span class="dateline-sep">✦</span>
         <span>DIY music collective &amp; independent record label</span>
         <span class="dateline-sep">✦</span>
         <span>no-budget music videos</span>
@@ -565,7 +624,11 @@
         <span class="dateline-sep">✦</span>
         <span>music publishing</span>
         <span class="dateline-sep">✦</span>
-        <span>html video games</span>
+        <span>video games</span>
+        <span class="dateline-sep">✦</span>
+        <span>press</span>
+        <span class="dateline-sep">✦</span>
+        <span>tools</span>
         <span class="dateline-sep">✦</span>
         <span>photography</span>
         <span class="dateline-sep">✦</span>
@@ -623,20 +686,27 @@ ___          ___  __       ___ .  __           __     __   ___ ..
     <!-- Body text -->
     <div class="about-text">
         <!-- Pull quote: first paragraph -->
-          <p>Magmacrunch media started as an independent record label and music collective in 2023 by Jake, Jon and Cole. 
-             Named with the intention of branching out into different types of media, magmacrunch started by releasing music videos and visuals on YouTube while sharing music for download on Bandcamp. 
-             
-           
-            There was no business plan, no investors, no five-year roadmap. 
-            Just the idea that if you make something honest and put it out yourself, the right people will eventually find it. 
-            That ethos has guided every decision since.</p>
+          <p> 
+            Magmacrunch media is a creative collective that produces music, film, video games, web tools, writing, and more. 
+            Based across the United States in Pennsylvania, California, and New Hampshire, magmacrunch was founded in 2023 as an independent <a href="../archive/by-label/magmacrunch-media/index.html">record label</a> for releasing a back catalog of home-recorded music. 
+            The label began <a href="../music/distributed-music.html">distributing music</a> new and old to streaming platforms and online stores in 2024, ranging from post-rock to inde folk to riot-grrrl punk. 
+            After <a href="../archive/by-label/magmacrunch-music/index.html">magmacrunch music</a> was established as a publishing entity in 2025, early development of this website led to the creation of the <a href="../arcade/index.html">magmacrunch arcade</a> as well as a historical  <a href="../archive/index.html">archive</a>. 
+            The collective continues to branch out into other areas of art and technology, with future plans for constructing hardware, making documentaries, and more. 
+            </p>
+
         <div class="pull-quote">
             Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
             That's why we decided to take a do-it-yourself approach by releasing our own music. 
-            This is the music we actually want to make, not just what we think people might want to hear.
+            This is the music we actually want to make, not just what we think people excpect to hear.
         </div>
 
-        <p>It started with three people in a basement — JAM, CPR, and JHM — armed with nothing but a handful of cracked DAWs and a shared conviction that the music industry's gatekeeping model was fundamentally broken. There was no business plan, no investors, no five-year roadmap. Just the idea that if you make something honest and put it out yourself, the right people will eventually find it. That ethos has guided every decision since.</p>
+        <p>What makes magmacrunch media different from a traditional label is the relationship between the people involved.
+            Rather than having signed contracts giving advances that need to be repaid, the collective works with a rotating cast of producers and musicians on home recording, audio production, and more. 
+            Collaborators and contributors are friends or family, and always retain ownership of their recordings and songwriting. 
+            More broadly, magmacrunch media aims to support artists and creators who value authenticity but might not have the means to buy time in a recording studio at high costs. 
+            An affinity for retro technology also inspires releases on physical or otherwise obscure media formats, as well as the development of video games reminiscent of decades past. 
+
+        </p>
 
         <!-- ASCII: "founded by JAM, CPR, JHM" — floated right -->
         <div class="ascii-block ascii-founded ascii-float-right">
@@ -666,20 +736,23 @@ ___          ___  __       ___ .  __           __     __   ___ ..
         </div>
 
         <div class="zine-bg-magenta">
-            <p>Since 2023, <a href="../archive/full-catalog/all-releases.html">magmacrunch media</a> has operated as a DIY music collective and independent record label with an associated music publishing entity 
-                called <a href="../archive/full-catalog/all-works.html">magmacrunch music</a>, established in October 2025. Based in the United States, we have been making music in some form or another since the mid-00s. 
-                In addition to releasing a variety of genres ranging from post-rock to indie folk to riot grrrl, we also film and produce no-budget <a href="../visual/music-videos.html">music videos</a>, 
-                many of which draw inspiration from avant-garde short films. We are primarily digital, but hold a special appreciation for physical or otherwise obscure media formats. 
-                In July 2025, we officially started our <a href="../music/physical-media/floppy-disk/index.html">floppy series</a>, and tape production is in the works.</p>
+            <p>
+                McCoy brothers Jake, James, and Jon grew up playing music at Frogwood Manor in a forested neighborhood of New Hampshire. 
+                C.P. Rutledge grew up playing music at Spirit Castle, across the street. 
+                With other musicians living on the same block, this micro-scene was home to host of bands and music projects over the years; 
+                these include <a href="../archive/by-artist/vinny-bobarino/index.html">Vinny Bobarino</a>, <a href="../archive/by-artist/juanito-thompson/index.html">Juanito Thompson</a>,
+                <a href="../archive/by-artist/four-bs/index.html">The Four B's</a>, and <a href="../archive/by-artist/bottle-boys-collective/index.html">Bottle Boys</a>,
+                in addition to solo material by <a href="../archive/by-artist/c-p-rutledge/index.html">C.P.</a>, and <a href="../archive/by-artist/jon-mccoy/index.html">Jon</a>/<a href="../archive/by-artist/woah/index.html">Woah</a>. 
+                Moving around for school and work briefly brought Jake and Jon to Iowa City, where they played in <a href="../archive/by-artist/thld/index.html">Texas Hold'Em Lava Dome</a>, 
+                and recorded music at <a href="../archive/by-place/the-tuna-can/index.html">The Tuna Can</a>. 
+                This slowly-growing musical output was in need of a home and there were plans to continue making even more. 
+                For this reason, magmacrunch media was founded in 2023 by Jake in Pennsylvania, C.P. in New Hampshire, and Jon in California. 
+                The label catalog has since seen new releases by long-time members of the collective, in addition to newer acts such as 
+                <a href="../archive/by-artist/dag-henderson/index.html">Dag Henderson</a> and most recently, <a href="../archive/by-artist/svfp/index.html">Sex Van Floor Plan</a> of Pennsylvania. 
+
+
+            </p>
         </div>
-
-        <p> Well, it started off as an old YouTube channel - old enough to have a very short video posted in June 2006.  
-             Before the name came about, the channel was a mostly-inactive personal account that would occasionally post uploads of some obscure music. 
-             Some of these included home recordings of music made by the McCoy brothers and friends over the years, including...
-             By 2023, the channel was refocused into sharing only original music together with visuals and videos. 
-             With a collection of artists featured on the channel, the idea of a collective or an unofficial record label was formed by Jake, Jon and Cole. </p>
-
-        <p>What makes magmacrunch different from a traditional label is the relationship between the people involved. There are no signed contracts, no royalty splits negotiated in conference rooms. The collective works with a rotating cast of producers and musicians who share the same DIY values — people who would rather spend a weekend recording in a living room than wait for a studio to validate their work.</p>
 
         <!-- ASCII: "with producers & musicians" — floated right
         <div class="ascii-block ascii-producers ascii-float-right">
@@ -718,12 +791,13 @@ ___          ___  __       ___ .  __           __     __   ___ ..
  `---'        `---'   `--'  `--' `--' `----'`--'   `----'                                                                                          </pre>
         </div>
         -->
+    </div>
 
-        <p>Additionally, the <a href="../arcade/index.html">magmacrunch arcade</a> was established in December 2025 and is currently in development.</p>
-
-        <div class="zine-bg-cyan">
-            <p>magmacrunch media has used <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener">LANDR</a> as a music distributor since 2024, with our catalog also on <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener">Discogs</a> and <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener">MusicBrainz</a>. magmacrunch music is registering works through <a href="https://www.ascap.com/" target="_blank" rel="noopener">ASCAP</a>. See our <a href="../music/distributed-music.html">distributed music</a> page for more details.</p>
-        </div>
+    <!-- EMAIL CALLOUT -->
+    <div class="email-callout">
+        <div class="email-callout-label">get in touch</div>
+        <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4">email us</a>
+        <div class="email-callout-sub">we'd love to hear from you</div>
     </div>
 
     <div class="strips-divider"></div>
@@ -989,14 +1063,7 @@ __/\\\______________________________________________/\\\________________________
         </div>
     </div>
 
-    <!-- Links — zine-style footer -->
-    <div class="zine-links">
-        <a href="../archive/by-label/magmacrunch-media/">magmacrunch media</a>
-        <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a>
-        <a href="../home/guestbook.html">sign the guestbook</a>
-        <a href="../archive/more/contributors.html">contributors</a>
-        <a href="/cdn-cgi/l/email-protection#99f4f8fef4f8faebecf7faf1f4fcfdf0f8d9fef4f8f0f5b7faf6f4">email us</a>
-    </div>
+
 
 <script>
 (function () {
@@ -1038,9 +1105,6 @@ __/\\\______________________________________________/\\\________________________
     });
 })();
 </script>
-</body>
-    &copy; 2026 <span>magmacrunch media</span>
-</footer>
 
 <script src="../nav.js"></script>
 <script>
@@ -1116,56 +1180,53 @@ __/\\\______________________________________________/\\\________________________
     ctx.fillStyle = C.dark;
     ctx.beginPath(); ctx.arc(0, 0, 26, 0, Math.PI * 2); ctx.fill();
 
+    /* ── volcano body — flat rim between peaks ── */
     ctx.fillStyle = C.slate;
     ctx.beginPath();
     ctx.moveTo(-22, 16);
-    ctx.quadraticCurveTo(-10, 0, -8, -10);
-    ctx.lineTo(-4, -4);
-    ctx.lineTo(0, -1);
-    ctx.lineTo(4, -4);
+    ctx.quadraticCurveTo(-12, 2, -8, -10);
     ctx.lineTo(8, -10);
-    ctx.quadraticCurveTo(10, 0, 22, 16);
+    ctx.quadraticCurveTo(12, 2, 22, 16);
     ctx.fill();
 
+    /* ── lava flow down the front ── */
     ctx.fillStyle = C.pink;
     ctx.beginPath();
-    ctx.moveTo(-8, -10);
-    ctx.lineTo(-4, -4);
-    ctx.lineTo(0, -1);
-    ctx.lineTo(4, -4);
-    ctx.lineTo(8, -10);
-    ctx.quadraticCurveTo(12, -5, 8, 4);
-    ctx.quadraticCurveTo(6, -2, 4, 0);
-    ctx.quadraticCurveTo(2, 6, 0, 8);
-    ctx.quadraticCurveTo(-2, 6, -4, 0);
-    ctx.quadraticCurveTo(-6, -2, -8, 4);
-    ctx.quadraticCurveTo(-12, -5, -8, -10);
+    ctx.moveTo(-4, -9);
+    ctx.lineTo(4, -9);
+    ctx.quadraticCurveTo(7, 0, 5, 7);
+    ctx.quadraticCurveTo(0, 10, -5, 7);
+    ctx.quadraticCurveTo(-7, 0, -4, -9);
     ctx.fill();
 
+    /* ── crater rim edge ── */
+    ctx.fillStyle = C.pink;
+    ctx.beginPath();
+    ctx.ellipse(0, -10, 7, 2.8, 0, 0, Math.PI * 2);
+    ctx.fill();
     ctx.fillStyle = C.yellow;
     ctx.beginPath();
-    ctx.moveTo(-4, -4);
-    ctx.lineTo(0, -1);
-    ctx.lineTo(4, -4);
-    ctx.quadraticCurveTo(6, -3, 5, 1);
-    ctx.quadraticCurveTo(3, -1, 2, 0);
-    ctx.quadraticCurveTo(0, 4, -1, 5);
-    ctx.quadraticCurveTo(-3, -1, -4, 0);
-    ctx.quadraticCurveTo(-6, -3, -5, 1);
+    ctx.ellipse(0, -10, 5.5, 2, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    const toggle = (frame % 16 < 8);
-    const t2 = (frame % 12 < 6);
+    /* ── eruption particles (pixel-art debris) ── */
+    var t1 = (frame % 14 < 7);
+    var t2 = (frame % 11 < 5);
 
-    ctx.fillStyle = toggle ? C.yellow : C.pink;
-    ctx.beginPath(); ctx.arc(0, -14, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(0, -22, toggle ? 4 : 2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = t1 ? C.yellow : C.pink;
+    ctx.fillRect(-1, -14, 2, 2);
+    ctx.fillRect(0, -20, 2, 2);
 
     ctx.fillStyle = t2 ? C.pink : C.cyan;
-    ctx.beginPath(); ctx.arc(-7, -18, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(7, -16, 2.5, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(12, -10, 1.5, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(-11, -8, 1.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(-5, -17, 2, 1);
+    ctx.fillRect(4, -15, 1, 2);
+    ctx.fillRect(-3, -21, 1, 1);
+    ctx.fillRect(6, -12, 1, 1);
+    ctx.fillRect(-8, -13, 1, 1);
+
+    ctx.fillStyle = C.yellow;
+    ctx.fillRect(2, -18, 1, 1);
+    ctx.fillRect(-6, -11, 1, 1);
 
     ctx.restore();
   }
@@ -1411,5 +1472,10 @@ __/\\\______________________________________________/\\\________________________
   });
 })();
 </script>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
 </body>
 </html>
