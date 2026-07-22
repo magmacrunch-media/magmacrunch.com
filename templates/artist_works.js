@@ -26,8 +26,10 @@
     const C = window.ARTIST_CONFIG;
     if (!C) { console.error('artist_works.js: window.ARTIST_CONFIG is not defined'); return; }
 
-    const d      = C.depth  || '../../../';
-    const accent = C.accent || 'yellow';
+    const d          = C.depth      || '../../../';
+    const accent     = C.accent     || 'yellow';
+    const lyricsPath = C.lyricsPath || '';
+    const lyricsMap  = C.lyricsMap  || {};
 
     const ENTITY_MAP = window.__ENTITY_MAP || {};
     function archiveLink(id, name, type) {
@@ -128,6 +130,8 @@ const COLOR_MAP = {
         .rec-label.video   { background: ${accentVar};   color: var(--black); }
 
         .tag { display: inline-block; background: #1a1a2e; border: 1px solid #2a2a4a; padding: 2px 7px; margin: 2px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--dim); }
+        .lyrics-link { font-family: 'Press Start 2P', monospace; font-size: 7px; background: var(--white); color: var(--black); padding: 2px 7px; margin-left: 8px; text-decoration: none; vertical-align: middle; letter-spacing: 0.05em; }
+        .lyrics-link:hover { opacity: 0.7; }
         .error-msg { color: var(--rose); opacity: 0.7; }
     `;
     document.head.appendChild(style);
@@ -261,6 +265,11 @@ const COLOR_MAP = {
                     const workType  = w.type && w.type.toLowerCase() !== 'song' ? esc(w.type.toLowerCase()) : '';
                     const aliases   = w.aliases?.map(a => a.name).filter(n => n !== w.title).map(esc).join(', ') || '';
 
+                    const lyricsFile = lyricsMap[(w.title || '').toLowerCase()];
+                    const lyricsHtml = lyricsFile
+                        ? `<a href="${lyricsPath}${lyricsFile}" class="lyrics-link">lyrics</a>`
+                        : '';
+
                     const makeArtistRel = r =>
                         archiveLink(r.artist?.id, r.artist?.name, 'artist') + formatAttrs(r.attributes) + formatDate(r.begin, r.end, r.ended);
 
@@ -357,6 +366,7 @@ const COLOR_MAP = {
                         <div class="work-card">
                             <h3>
                                 <a href="https://musicbrainz.org/work/${esc(workId)}" target="_blank" rel="noopener">${esc(w.title) || 'untitled'}</a>
+                                ${lyricsHtml}
                                 ${workType ? `<span class="work-type">[${workType}]</span>` : ''}
                             </h3>
                             ${aliases     ? `<p class="alternate-names"><strong>alternate names</strong>${aliases}</p>`  : ''}
