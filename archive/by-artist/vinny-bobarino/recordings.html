@@ -12,6 +12,7 @@
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:     ['f701c2bc-6eb6-4e7b-b950-f0c2426cb91c', '856f7f94-8c21-49cb-9364-e1f7b429f9ef', '246bff13-d203-4879-a22b-9ad6b5ddae7c', 'd9179190-dcf2-469e-b4c8-3624b97dc11a'],
+        slug:    'vinny-bobarino',
         name:    'Vinny Bobarino, et al.',
         abbr:    'vinny b',
         accent:  'cyan',
@@ -125,6 +126,14 @@
             return res.json();
         }
     }
+
+    let _cache = null;
+    async function loadCache() {
+        try {
+            const r = await fetch(d + 'archive/_cache/collectives/' + C.slug + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
     async function fetchAllForArtist(artistId, statusEl) {
         let all = [], offset = 0, hasMore = true;
         while (hasMore) {
@@ -143,13 +152,22 @@
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('recordings-list');
         try {
+            statusEl.textContent = 'loading cache…';
+            await loadCache();
+
             statusEl.textContent = 'fetching recordings for all members…';
-            const perArtist = await Promise.all(C.ids.map(id => fetchAllForArtist(id, statusEl)));
-            const seen = new Set();
-            const all  = [];
-            for (const batch of perArtist) {
-                for (const rec of batch) {
-                    if (!seen.has(rec.id)) { seen.add(rec.id); all.push(rec); }
+
+            let all;
+            if (_cache?.recordings?.list) {
+                all = _cache.recordings.list;
+            } else {
+                const perArtist = await Promise.all(C.ids.map(id => fetchAllForArtist(id, statusEl)));
+                const seen = new Set();
+                all  = [];
+                for (const batch of perArtist) {
+                    for (const rec of batch) {
+                        if (!seen.has(rec.id)) { seen.add(rec.id); all.push(rec); }
+                    }
                 }
             }
             const total = all.length;
@@ -160,7 +178,7 @@
             for (let i = 0; i < all.length; i++) {
                 const rec = all[i];
                 try {
-                    const det = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
+                    const det = _cache?.recordings?.details?.[rec.id] || await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
                     const artists = det['artist-credit']?.map(ac =>
                         `<a href="https://musicbrainz.org/artist/${esc(ac.artist?.id)}" target="_blank" rel="noopener">${esc(ac.name)}</a>`
                     ).join(', ') || 'various artists';

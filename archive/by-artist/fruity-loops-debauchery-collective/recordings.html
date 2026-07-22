@@ -16,6 +16,7 @@
             'ce22522c-1193-4298-badf-0df5cdfa0415',
             '3c3bc6e8-9d72-457f-a192-b6ef263fe4ae',
         ],
+        slug:      'fruity-loops-debauchery-collective',
         name:      'Fruity Loops Debauchery Bros.',
         abbr:      'FLDB',
         accent:    'cyan',
@@ -136,6 +137,14 @@
             return res.json();
         }
     }
+
+    let _cache = null;
+    async function loadCache() {
+        try {
+            const r = await fetch(d + 'archive/_cache/collectives/' + C.slug + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
     async function fetchAllForArtist(artistId, statusEl) {
         let all = [], offset = 0, hasMore = true;
         while (hasMore) {
@@ -154,13 +163,22 @@
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('recordings-list');
         try {
+            statusEl.textContent = 'loading cache…';
+            await loadCache();
+
             statusEl.textContent = 'fetching recordings for all members…';
-            const perArtist = await Promise.all(C.ids.map(id => fetchAllForArtist(id, statusEl)));
-            const seen = new Set();
-            const all  = [];
-            for (const batch of perArtist) {
-                for (const rec of batch) {
-                    if (!seen.has(rec.id)) { seen.add(rec.id); all.push(rec); }
+
+            let all;
+            if (_cache?.recordings?.list) {
+                all = _cache.recordings.list;
+            } else {
+                const perArtist = await Promise.all(C.ids.map(id => fetchAllForArtist(id, statusEl)));
+                const seen = new Set();
+                all  = [];
+                for (const batch of perArtist) {
+                    for (const rec of batch) {
+                        if (!seen.has(rec.id)) { seen.add(rec.id); all.push(rec); }
+                    }
                 }
             }
             const total = all.length;
@@ -171,7 +189,7 @@
             for (let i = 0; i < all.length; i++) {
                 const rec = all[i];
                 try {
-                    const det = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
+                    const det = _cache?.recordings?.details?.[rec.id] || await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
                     const artists = det['artist-credit']?.map(ac =>
                         `<a href="https://musicbrainz.org/artist/${esc(ac.artist?.id)}" target="_blank" rel="noopener">${esc(ac.name)}</a>`
                     ).join(', ') || 'various artists';

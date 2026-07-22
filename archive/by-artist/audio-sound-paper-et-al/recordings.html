@@ -17,6 +17,7 @@
             '5c860d63-acfa-4584-82db-4a76339b2f1e',
             '8b11928f-4013-4ac9-a39b-826bbc01b25c',
         ],
+        slug:      'audio-sound-paper-et-al',
         name:      'Audio Sound Paper, et al.',
         abbr:      'ASP',
         accent:    'amber',
@@ -156,6 +157,14 @@
         }
     }
 
+    let _cache = null;
+    async function loadCache() {
+        try {
+            const r = await fetch(d + 'archive/_cache/collectives/' + C.slug + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+
     async function fetchAllForArtist(artistId, statusEl) {
         let all = [], offset = 0, hasMore = true;
         while (hasMore) {
@@ -176,13 +185,22 @@
         const list     = document.getElementById('recordings-list');
 
         try {
+            statusEl.textContent = 'loading cache…';
+            await loadCache();
+
             statusEl.textContent = 'fetching recordings for all members…';
-            const perArtist = await Promise.all(C.ids.map(id => fetchAllForArtist(id, statusEl)));
-            const seen = new Set();
-            const all  = [];
-            for (const batch of perArtist) {
-                for (const rec of batch) {
-                    if (!seen.has(rec.id)) { seen.add(rec.id); all.push(rec); }
+
+            let all;
+            if (_cache?.recordings?.list) {
+                all = _cache.recordings.list;
+            } else {
+                const perArtist = await Promise.all(C.ids.map(id => fetchAllForArtist(id, statusEl)));
+                const seen = new Set();
+                all  = [];
+                for (const batch of perArtist) {
+                    for (const rec of batch) {
+                        if (!seen.has(rec.id)) { seen.add(rec.id); all.push(rec); }
+                    }
                 }
             }
 
@@ -197,7 +215,7 @@
             for (let i = 0; i < all.length; i++) {
                 const rec = all[i];
                 try {
-                    const det = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
+                    const det = _cache?.recordings?.details?.[rec.id] || await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`);
 
                     const artists = det['artist-credit']?.map(ac =>
                         `<a href="https://musicbrainz.org/artist/${esc(ac.artist?.id)}" target="_blank" rel="noopener">${esc(ac.name)}</a>`

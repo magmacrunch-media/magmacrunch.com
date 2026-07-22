@@ -39,6 +39,9 @@ body.thld-page.thld-works-page .tag { display: inline-block; background: var(--t
 
 body.thld-page.thld-works-page .error-msg { color: var(--thld-accent); opacity: 0.7; }
 
+body.thld-page.thld-works-page .work-card .lyrics-link { font-family: 'Press Start 2P', monospace; font-size: 7px; background: var(--thld-highlight); color: var(--thld-bg); padding: 2px 7px; margin-left: 8px; text-decoration: none; vertical-align: middle; letter-spacing: 0.05em; }
+body.thld-page.thld-works-page .work-card .lyrics-link:hover { opacity: 0.7; }
+
 /* Back button: transparent + highlight yellow */
 body.thld-page.thld-works-page .nav-card.c-back { background: transparent; color: var(--thld-highlight); border-color: var(--thld-highlight); }
 body.thld-page.thld-works-page .nav-card.c-back:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

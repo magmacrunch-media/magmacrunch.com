@@ -18,6 +18,11 @@
         backColor: 'c-accent',
         siblings: ['about', 'events', 'games', 'music-videos', 'photography', 'recordings', 'releases'],
         depth:   '../../../',
+        lyricsPath: '../../../press/lyrics/thld/',
+        lyricsMap: {
+            'contemplate the plate tectonic': 'index.html',
+            'seeing stars': 'index.html',
+        },
     };
     </script>
 </head>
@@ -61,8 +66,10 @@
     const C = window.COLLECTIVE_CONFIG;
     if (!C || !C.ids?.length) { console.error('COLLECTIVE_CONFIG missing or has no ids'); return; }
 
-    const d      = C.depth  || '../../../';
-    const accent = C.accent || 'yellow';
+    const d          = C.depth      || '../../../';
+    const accent     = C.accent     || 'yellow';
+    const lyricsPath = C.lyricsPath || '';
+    const lyricsMap  = C.lyricsMap  || {};
 
     const COLOR_MAP = {
         about: 'c-about', events: 'c-events', games: 'c-games', 'music-videos': 'c-music-videos', photography: 'c-photography', recordings: 'c-recordings', releases: 'c-releases', works: 'c-works',
@@ -157,8 +164,13 @@
                 statusEl.textContent = `loading works… ${displayed.size} of ${workRels.length}`;
                 try {
                     const w = await fetchWithRetry(`https://musicbrainz.org/ws/2/work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`);
-                    const workType = w.type && w.type.toLowerCase() !== 'song' ? esc(w.type.toLowerCase()) : '';
-                    const aliases  = w.aliases?.map(a => a.name).filter(n => n !== w.title).map(esc).join(', ') || '';
+                    const workType  = w.type && w.type.toLowerCase() !== 'song' ? esc(w.type.toLowerCase()) : '';
+                    const aliases   = w.aliases?.map(a => a.name).filter(n => n !== w.title).map(esc).join(', ') || '';
+
+                    const lyricsFile = lyricsMap[(w.title || '').toLowerCase()];
+                    const lyricsHtml = lyricsFile
+                        ? `<a href="${lyricsPath}${lyricsFile}" class="lyrics-link">lyrics</a>`
+                        : '';
                     const makeArtistRel = r =>
                         `<a href="https://musicbrainz.org/artist/${esc(r.artist?.id)}" target="_blank" rel="noopener">${esc(r.artist?.name)}</a>${formatAttrs(r.attributes)}${formatDate(r.begin, r.end, r.ended)}`;
                     const composers = w.relations?.filter(r => r['target-type'] === 'artist' && r.type === 'composer').map(makeArtistRel).join(', ') || '';
@@ -237,6 +249,7 @@
                         <div class="work-card">
                             <h3>
                                 <a href="https://musicbrainz.org/work/${esc(workId)}" target="_blank" rel="noopener">${esc(w.title) || 'untitled'}</a>
+                                ${lyricsHtml}
                                 ${workType ? `<span class="work-type">[${workType}]</span>` : ''}
                             </h3>
                             ${aliases     ? `<p class="alternate-names"><strong>alternate names</strong>${aliases}</p>` : ''}

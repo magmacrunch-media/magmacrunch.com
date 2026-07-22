@@ -12,6 +12,7 @@
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:     ['f701c2bc-6eb6-4e7b-b950-f0c2426cb91c', '856f7f94-8c21-49cb-9364-e1f7b429f9ef', '246bff13-d203-4879-a22b-9ad6b5ddae7c', 'd9179190-dcf2-469e-b4c8-3624b97dc11a'],
+        slug:    'vinny-bobarino',
         name:    'Vinny Bobarino, et al.',
         abbr:    'vinny b',
         accent:  'orange',
@@ -122,6 +123,14 @@
         }
         throw new Error(`fetchWithRetry failed: ${url}`);
     }
+
+    let _cache = null;
+    async function loadCache() {
+        try {
+            const r = await fetch(d + 'archive/_cache/collectives/' + C.slug + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
     async function fetchAllReleasesForArtist(artistId) {
         let all = [], offset = 0, total = 0;
         do {
@@ -138,13 +147,22 @@
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('releases-list');
         try {
+            statusEl.textContent = 'loading cache…';
+            await loadCache();
+
             statusEl.textContent = 'fetching releases for all members…';
-            const perArtist = await Promise.all(C.ids.map(id => fetchAllReleasesForArtist(id)));
-            const seen = new Set();
-            const all  = [];
-            for (const batch of perArtist) {
-                for (const rel of batch) {
-                    if (!seen.has(rel.id)) { seen.add(rel.id); all.push(rel); }
+
+            let all;
+            if (_cache?.releases?.list) {
+                all = _cache.releases.list;
+            } else {
+                const perArtist = await Promise.all(C.ids.map(id => fetchAllReleasesForArtist(id)));
+                const seen = new Set();
+                all  = [];
+                for (const batch of perArtist) {
+                    for (const rel of batch) {
+                        if (!seen.has(rel.id)) { seen.add(rel.id); all.push(rel); }
+                    }
                 }
             }
             if (all.length === 0) { statusEl.textContent = 'no releases found.'; return; }
@@ -155,7 +173,7 @@
             for (let i = 0; i < all.length; i++) {
                 const rel = all[i];
                 try {
-                    const det = await fetchWithRetry(`https://musicbrainz.org/ws/2/release/${rel.id}?inc=artists+labels+recordings+release-groups&fmt=json`);
+                    const det = _cache?.releases?.details?.[rel.id] || await fetchWithRetry(`https://musicbrainz.org/ws/2/release/${rel.id}?inc=artists+labels+recordings+release-groups&fmt=json`);
                     const artists    = det['artist-credit']?.map(ac => esc(ac.name)).join(', ') || 'various artists';
                     const format     = esc(det.media?.[0]?.format?.toLowerCase() || 'n/a');
                     const trackCount = det.media?.[0]?.['track-count'] ?? 'n/a';
@@ -171,11 +189,17 @@
                     }).join(', ') || 'n/a';
                     let tags = '';
                     if (det['release-group']?.id) {
-                        try {
-                            const rg = await fetchWithRetry(`https://musicbrainz.org/ws/2/release-group/${det['release-group'].id}?inc=tags&fmt=json`);
-                            tags = rg.tags?.map(t => `<span class="tag">${esc(t.name)}</span>`).join('') || '';
-                            await delay(500);
-                        } catch {}
+                        const rgId = det['release-group'].id;
+                        const cachedRg = _cache?.releases?.releaseGroups?.[rgId];
+                        if (cachedRg) {
+                            tags = cachedRg.tags?.map(t => `<span class="tag">${esc(t.name)}</span>`).join('') || '';
+                        } else {
+                            try {
+                                const rg = await fetchWithRetry(`https://musicbrainz.org/ws/2/release-group/${rgId}?inc=tags&fmt=json`);
+                                tags = rg.tags?.map(t => `<span class="tag">${esc(t.name)}</span>`).join('') || '';
+                                await delay(500);
+                            } catch {}
+                        }
                     }
                     list.insertAdjacentHTML('beforeend', `
                         <div class="release-card">

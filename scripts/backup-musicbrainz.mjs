@@ -118,6 +118,26 @@ const WORKS = [
     { uuid: '9143547e-3632-4835-b78c-0751cbb713d3', name: 'contemplate the plate tectonic' },
 ];
 
+const COLLECTIVES = [
+    { slug: 'audio-sound-paper-et-al', name: 'Audio Sound Paper, et al.', ids: [
+        '76708e20-5d88-4699-adf6-a1f2118ef661',
+        '0296c377-7f97-4099-9c83-e2edb5552eda',
+        '5c860d63-acfa-4584-82db-4a76339b2f1e',
+        '8b11928f-4013-4ac9-a39b-826bbc01b25c',
+    ]},
+    { slug: 'vinny-bobarino', name: 'Vinny Bobarino, et al.', ids: [
+        'f701c2bc-6eb6-4e7b-b950-f0c2426cb91c',
+        '856f7f94-8c21-49cb-9364-e1f7b429f9ef',
+        '246bff13-d203-4879-a22b-9ad6b5ddae7c',
+        'd9179190-dcf2-469e-b4c8-3624b97dc11a',
+    ]},
+    { slug: 'fruity-loops-debauchery-collective', name: 'Fruity Loops Debauchery Bros.', ids: [
+        'b7846e25-306e-4ca9-8db1-0391ab159a36',
+        'ce22522c-1193-4298-badf-0df5cdfa0415',
+        '3c3bc6e8-9d72-457f-a192-b6ef263fe4ae',
+    ]},
+];
+
 // Note: C.P. Rutledge and Jon McCoy appear in both ARTISTS and CONTRIBUTORS.
 // Contributor pages fetch artist-rels + 6 more inc params, so they need
 // their own cache files even though the UUID overlaps with artists.
@@ -528,6 +548,117 @@ async function backupWork(entity) {
     await writeCache('works', entity.uuid, cache);
 }
 
+// ─── backup: full collective entity (works + recordings + releases) ──
+
+async function backupCollective(entity) {
+    logEntity('collective', entity.name);
+    const cache = { fetchedAt: new Date().toISOString(), entityType: 'collective', slug: entity.slug, name: entity.name, ids: entity.ids, works: {}, recordings: {}, releases: {} };
+    indent++;
+
+    // ── works ──
+    log('works…');
+    const allWorkRels = [];
+    const workSeen = new Set();
+    for (const id of entity.ids) {
+        log(`  work-rels for ${id.slice(0,8)}…`);
+        const artistData = await fetchMB(`artist/${id}?inc=work-rels&fmt=json`);
+        const rels = artistData.relations?.filter(r => r['target-type'] === 'work') || [];
+        for (const rel of rels) {
+            const wid = rel.work?.id;
+            if (wid && !workSeen.has(wid)) { workSeen.add(wid); allWorkRels.push(rel); }
+        }
+    }
+    cache.works.artistWorkRels = { relations: allWorkRels };
+
+    for (const rel of allWorkRels) {
+        const workId = rel.work?.id;
+        if (!workId) continue;
+        log(`  work detail ${workId.slice(0,8)}: ${rel.work?.title}`);
+        const w = await fetchMB(`work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`);
+        cache.works.details[workId] = w;
+
+        const recRels = w.relations?.filter(r => r['target-type'] === 'recording' && r.type === 'performance') || [];
+        for (const r of recRels) {
+            const recId = r.recording?.id;
+            if (!recId || cache.works.recordingFlags[recId]) continue;
+            try {
+                const rd = await fetchMB(`recording/${recId}?fmt=json`);
+                cache.works.recordingFlags[recId] = { video: rd.video, disambiguation: rd.disambiguation || '' };
+            } catch {
+                cache.works.recordingFlags[recId] = { video: false, disambiguation: '' };
+            }
+        }
+    }
+
+    // ── recordings ──
+    log('recordings…');
+    const allRecordings = [];
+    const recSeen = new Set();
+    for (const id of entity.ids) {
+        let offset = 0, hasMore = true;
+        while (hasMore) {
+            log(`  recording list ${id.slice(0,8)} offset=${offset}…`);
+            const data = await fetchMB(`recording?artist=${id}&limit=100&offset=${offset}&fmt=json`);
+            const recs = data.recordings || [];
+            for (const rec of recs) {
+                if (!recSeen.has(rec.id)) { recSeen.add(rec.id); allRecordings.push(rec); }
+            }
+            if (recs.length === 100) { offset += 100; await delay(1000); }
+            else hasMore = false;
+        }
+    }
+    cache.recordings.list = allRecordings;
+
+    for (let i = 0; i < allRecordings.length; i++) {
+        const rec = allRecordings[i];
+        log(`  recording detail ${i+1}/${allRecordings.length}: ${rec.title}`);
+        cache.recordings.details[rec.id] = await fetchMB(
+            `recording/${rec.id}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`
+        );
+    }
+
+    // ── releases ──
+    log('releases…');
+    const allReleases = [];
+    const relSeen = new Set();
+    for (const id of entity.ids) {
+        let offset = 0, total = 0;
+        do {
+            log(`  release list ${id.slice(0,8)} offset=${offset}…`);
+            const data = await fetchMB(`release?artist=${id}&limit=100&offset=${offset}&fmt=json`);
+            total = data['release-count'] || 0;
+            const rels = data.releases || [];
+            for (const rel of rels) {
+                if (!relSeen.has(rel.id)) { relSeen.add(rel.id); allReleases.push(rel); }
+            }
+            offset += 100;
+            if (offset < total) await delay(1000);
+        } while (offset < total);
+    }
+    cache.releases.list = allReleases;
+
+    for (let i = 0; i < allReleases.length; i++) {
+        const rel = allReleases[i];
+        log(`  release detail ${i+1}/${allReleases.length}: ${rel.title}`);
+        cache.releases.details[rel.id] = await fetchMB(
+            `release/${rel.id}?inc=artists+labels+recordings+release-groups&fmt=json`
+        );
+
+        if (cache.releases.details[rel.id]['release-group']?.id) {
+            const rgId = cache.releases.details[rel.id]['release-group'].id;
+            if (!cache.releases.releaseGroups[rgId]) {
+                try {
+                    const rg = await fetchMB(`release-group/${rgId}?inc=tags&fmt=json`);
+                    cache.releases.releaseGroups[rgId] = rg;
+                } catch {}
+            }
+        }
+    }
+
+    indent--;
+    await writeCache('collectives', entity.slug, cache);
+}
+
 // ─── main ──────────────────────────────────────────────────────────
 
 async function main() {
@@ -541,7 +672,7 @@ async function main() {
 
     const start = Date.now();
     let completed = 0, skipped = 0;
-    const total = ARTISTS.length + PLACES.length + CONTRIBUTORS.length + LABELS.length + WORKS.length;
+    const total = ARTISTS.length + PLACES.length + CONTRIBUTORS.length + LABELS.length + WORKS.length + COLLECTIVES.length;
 
     for (const entity of ARTISTS) {
         if (SKIP_EXISTING && cacheExists('artists', entity.uuid)) { log(`[${completed + 1}/${total}] [artist] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
@@ -575,6 +706,13 @@ async function main() {
         if (SKIP_EXISTING && cacheExists('works', entity.uuid)) { log(`[${completed + 1}/${total}] [work] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupWork(entity);
+        completed++;
+    }
+
+    for (const entity of COLLECTIVES) {
+        if (SKIP_EXISTING && cacheExists('collectives', entity.slug)) { log(`[${completed + 1}/${total}] [collective] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        log(`[${completed + 1}/${total}]`);
+        await backupCollective(entity);
         completed++;
     }
 

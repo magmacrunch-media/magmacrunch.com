@@ -17,6 +17,7 @@
             '5c860d63-acfa-4584-82db-4a76339b2f1e',
             '8b11928f-4013-4ac9-a39b-826bbc01b25c',
         ],
+        slug:      'audio-sound-paper-et-al',
         name:      'Audio Sound Paper, et al.',
         abbr:      'ASP',
         accent:    'amber-glow',
@@ -172,21 +173,37 @@
         return (data.relations || []).filter(r => r['target-type'] === 'work');
     }
 
+    let _cache = null;
+    async function loadCache() {
+        try {
+            const r = await fetch(d + 'archive/_cache/collectives/' + C.slug + '.json');
+            if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
+        } catch {}
+    }
+
     (async () => {
         const statusEl = document.getElementById('status-bar');
         const countBar = document.getElementById('count-bar');
         const list     = document.getElementById('works-list');
 
         try {
+            statusEl.textContent = 'loading cache…';
+            await loadCache();
+
             statusEl.textContent = 'fetching works for all members…';
 
-            const perArtist = await Promise.all(C.ids.map(id => fetchWorkRelsForArtist(id)));
-            const seen = new Set();
-            const workRels = [];
-            for (const batch of perArtist) {
-                for (const rel of batch) {
-                    const wid = rel.work?.id;
-                    if (wid && !seen.has(wid)) { seen.add(wid); workRels.push(rel); }
+            let workRels;
+            if (_cache?.works?.artistWorkRels?.relations) {
+                workRels = _cache.works.artistWorkRels.relations;
+            } else {
+                const perArtist = await Promise.all(C.ids.map(id => fetchWorkRelsForArtist(id)));
+                const seen = new Set();
+                workRels = [];
+                for (const batch of perArtist) {
+                    for (const rel of batch) {
+                        const wid = rel.work?.id;
+                        if (wid && !seen.has(wid)) { seen.add(wid); workRels.push(rel); }
+                    }
                 }
             }
 
@@ -207,7 +224,7 @@
                 statusEl.textContent = `loading works… ${displayed.size} of ${workRels.length}`;
 
                 try {
-                    const w = await fetchWithRetry(`https://musicbrainz.org/ws/2/work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`);
+                    const w = _cache?.works?.details?.[workId] || await fetchWithRetry(`https://musicbrainz.org/ws/2/work/${workId}?inc=artist-rels+label-rels+url-rels+place-rels+tags+work-rels+aliases+recording-rels&fmt=json`);
 
                     const workType = w.type && w.type.toLowerCase() !== 'song' ? esc(w.type.toLowerCase()) : '';
                     const aliases  = w.aliases?.map(a => a.name).filter(n => n !== w.title).map(esc).join(', ') || '';
@@ -242,9 +259,14 @@
                         const recId = r.recording?.id;
                         if (!recId) continue;
                         try {
-                            const rd = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${recId}?fmt=json`);
-                            recsWithDetails.push({ rel: r, isVideo: rd.video === true, disambiguation: rd.disambiguation || '' });
-                            await delay(100);
+                            const cachedFlags = _cache?.works?.recordingFlags?.[recId];
+                            if (cachedFlags) {
+                                recsWithDetails.push({ rel: r, isVideo: cachedFlags.video === true, disambiguation: cachedFlags.disambiguation || '' });
+                            } else {
+                                const rd = await fetchWithRetry(`https://musicbrainz.org/ws/2/recording/${recId}?fmt=json`);
+                                recsWithDetails.push({ rel: r, isVideo: rd.video === true, disambiguation: rd.disambiguation || '' });
+                                await delay(100);
+                            }
                         } catch {
                             recsWithDetails.push({ rel: r, isVideo: false, disambiguation: '' });
                         }

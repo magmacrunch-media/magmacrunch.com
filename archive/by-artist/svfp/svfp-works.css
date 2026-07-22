@@ -39,5 +39,8 @@ body.svfp-works-page .tag { display: inline-block; background: var(--deep); bord
 
 body.svfp-works-page .error-msg { color: #be185d; opacity: 0.7; }
 
+body.svfp-works-page .work-card .lyrics-link { font-family: 'Press Start 2P', monospace; font-size: 7px; background: #be185d; color: var(--svfp-bg); padding: 2px 7px; margin-left: 8px; text-decoration: none; vertical-align: middle; letter-spacing: 0.05em; }
+body.svfp-works-page .work-card .lyrics-link:hover { opacity: 0.7; }
+
 body.svfp-works-page .nav-card.c-back { background: transparent; color: #e03070; border-color: #e03070; }
 body.svfp-works-page .nav-card.c-back:hover { background: #e03070; color: #080810; }
