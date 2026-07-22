@@ -19,6 +19,7 @@ window.NAV_CONFIG = {
         ]},
         { label: 'visual', href: 'visual/index.html', items: [
             { href: 'visual/music-videos.html', label: 'music videos' },
+            { href: 'visual/tv.html', label: 'teevee' },
             { href: 'visual/collage.html', label: 'collage' },
             { href: 'visual/photography.html', label: 'photography' }
         ]},
@@ -36,7 +37,8 @@ window.NAV_CONFIG = {
         ]},
         { label: 'press', href: 'press/index.html', items: [
             { href: 'press/scientific/index.html', label: 'scientific' },
-            { href: 'press/experimental/index.html', label: 'experimental' }
+            { href: 'press/experimental/index.html', label: 'experimental' },
+            { href: 'press/lyrics/index.html', label: 'lyrics' }
         ]},
         { label: 'tools', href: 'tools/index.html', items: [
             { href: 'tools/album-art-maker/index.html', label: 'album art' },
@@ -56,7 +58,7 @@ window.NAV_CONFIG = {
     if (!autoNav || !window.NAV_CONFIG) return;
 
     const cfg = window.NAV_CONFIG;
-    const depth = (autoNav.dataset.depth || '../../../').replace(/([^/])\//, '$1');
+    const depth = autoNav.dataset.depth || '';
 
     // Build nav HTML
     let navHTML = `<a href="${depth}${cfg.brand.href}" class="nav-brand">${cfg.brand.text}</a>\n<ul class="nav-links" id="navLinks">`;
