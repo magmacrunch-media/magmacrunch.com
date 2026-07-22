@@ -42,9 +42,8 @@
         }
 
         body {
-            background-color: #f0e4c8;
-            color: #1a1a1a;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            background-color: #1a1a1a;
+            color: #f0e4c8;
         }
 
         main {
@@ -58,15 +57,15 @@
         .breadcrumb {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #999;
+            color: #666;
             letter-spacing: 0.1em;
             margin-top: -8px;
             margin-bottom: 24px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #999; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a { color: #888; text-decoration: none; transition: color 0.15s; }
         .breadcrumb a:hover { color: #c02828; }
-        .breadcrumb .sep { margin: 0 8px; color: #c8c0a8; }
+        .breadcrumb .sep { margin: 0 8px; color: #333; }
         .breadcrumb .current { color: #c02828; }
 
         .article-header {
@@ -90,7 +89,7 @@
         .article-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(10px, 2vw, 15px);
-            color: #1a1a1a;
+            color: #f0e4c8;
             letter-spacing: 0.06em;
             line-height: 1.8;
             margin-bottom: 16px;
@@ -99,7 +98,7 @@
         .article-meta {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #777;
+            color: #666;
             line-height: 1.6;
         }
 
@@ -124,7 +123,7 @@
             font-family: 'Courier Prime', monospace;
             font-size: 14px;
             line-height: 1.85;
-            color: #222;
+            color: #c8c0a8;
             margin-bottom: 16px;
             text-align: justify;
         }
@@ -144,10 +143,10 @@
             text-decoration: underline;
             text-decoration-color: rgba(192,40,40,0.3);
         }
-        .article-body a:hover { color: #8a1a1a; }
+        .article-body a:hover { color: #e88080; }
 
-        .article-body strong { color: #1a1a1a; }
-        .article-body em { color: #444; }
+        .article-body strong { color: #f0e4c8; }
+        .article-body em { color: #888; }
 
         /* ── EQUATIONS ── */
         .equation {
@@ -173,14 +172,14 @@
             margin: 0 auto;
             max-width: 100%;
             height: auto;
-            border: 1px solid #c8c0a8;
+            border: 1px solid #333;
             image-rendering: auto;
         }
 
         figcaption {
             font-family: 'Courier Prime', monospace;
             font-size: 12px;
-            color: #777;
+            color: #666;
             margin-top: 8px;
             line-height: 1.5;
             font-style: italic;
@@ -208,13 +207,13 @@
         }
         .article-back:hover {
             background: #c02828;
-            color: #f0e4c8;
+            color: #1a1a1a;
         }
 
         footer {
-            background: #e8dcc0 !important;
-            border-top-color: #c8c0a8 !important;
-            color: #999 !important;
+            background: #111 !important;
+            border-top-color: #333 !important;
+            color: #666 !important;
         }
         footer span { color: #c02828 !important; }
 
@@ -228,20 +227,7 @@
 </head>
 <body>
 
-<nav>
-    <a href="../../../index.html" class="nav-brand">magmacrunch.com</a>
-    <ul class="nav-links" id="navLinks">
-        <li><a href="../../../index.html">home</a></li>
-        <li><a href="../../../home/about.html">about</a></li>
-        <li><a href="../../../music/index.html">music</a><div class="dropdown"><a href="../../../music/jukebox/index.html">jukebox</a><a href="../../../music/distributed-music.html">distributed music</a><a href="../../../music/physical-media/index.html">physical media</a></div></li>
-        <li><a href="../../../visual/index.html">visual</a><div class="dropdown"><a href="../../../visual/music-videos.html">music videos</a><a href="../../../visual/collage.html">collage</a><a href="../../../visual/photography.html">photography</a></div></li>
-        <li><a href="../../../archive/index.html">archive</a><div class="dropdown"><a href="../../../archive/by-artist/index.html">by artist</a><a href="../../../archive/by-place/index.html">by place</a><a href="../../../archive/by-label/index.html">by label</a><a href="../../../archive/by-contributor/index.html">by contributor</a></div></li>
-        <li><a href="../../../arcade/index.html">arcade</a></li>
-        <li><a href="../../../press/index.html">press</a><div class="dropdown"><a href="../../../press/scientific/index.html">scientific</a><a href="../../../press/experimental/index.html">experimental</a><a href="../../../press/lyrics/index.html">lyrics</a></div></li>
-        <li><a href="../../../home/guestbook.html">guestbook</a></li>
-    </ul>
-    <button class="hamburger" id="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
-</nav>
+<nav id="auto-nav" data-depth="../../../"></nav>
 
 <main>
 
