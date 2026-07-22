@@ -27,7 +27,15 @@
         document.body.style.overflow = 'hidden';
     }
 
+    function stopMedia() {
+        lightboxBody.querySelectorAll('video, audio').forEach(el => {
+            el.pause();
+            el.src = '';
+        });
+    }
+
     function close() {
+        stopMedia();
         lightbox.classList.add('hidden');
         document.body.style.overflow = '';
     }
@@ -50,6 +58,7 @@
         const item = items[currentIndex];
         if (!item) return;
 
+        stopMedia();
         lightboxBody.innerHTML = '';
 
         if (item.type === 'video') {

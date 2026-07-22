@@ -94,13 +94,29 @@
 
     // ── API key loading ───────────────────────────────────────────────────
 
+    let _apiKeys = null;
+    let _apiKeysLoaded = false;
+
     async function loadApiKeys() {
+        if (_apiKeysLoaded) return _apiKeys || {};
         if (!PI_HOST) return {};
+        // Mixed content guard: can't fetch HTTP from HTTPS page
+        if (location.protocol === 'https:' && PI_HOST.startsWith('http:')) {
+            console.warn('[MediaSearch] Mixed content: cannot fetch API keys from HTTP host on HTTPS page');
+            _apiKeysLoaded = true;
+            return {};
+        }
         try {
-            const res = await fetch(`${PI_HOST}/api-keys.json`);
+            const ctrl = new AbortController();
+            const timer = setTimeout(() => ctrl.abort(), 4000);
+            const res = await fetch(`${PI_HOST}/api-keys.json`, { signal: ctrl.signal });
+            clearTimeout(timer);
             if (!res.ok) return {};
-            return await res.json();
+            _apiKeys = await res.json();
+            _apiKeysLoaded = true;
+            return _apiKeys;
         } catch {
+            _apiKeysLoaded = true;
             return {};
         }
     }
@@ -129,6 +145,10 @@
 
         const keys = await loadApiKeys();
         Search.setApiKeys(keys);
+
+        // Warn if enabled providers are missing keys
+        if (!keys.pexels && sources.includes('pexels')) showToast('PEXELS: NO API KEY');
+        if (!keys.pixabay && sources.includes('pixabay')) showToast('PIXABAY: NO API KEY');
 
         const cached = Cache.get(currentQuery, sources, filters);
         if (cached && !append) {

@@ -16,7 +16,9 @@
         needsKey: false,
 
         async search(query, page, perPage, filters) {
-            const type = filters.type === 'video' ? 'video' : 'images';
+            const type = filters.type === 'video' ? 'video'
+                       : filters.type === 'audio' ? 'audio'
+                       : 'images';
             const params = new URLSearchParams({
                 q: query,
                 page: page || 1,

@@ -403,9 +403,9 @@ h1.glitch::after {
     align-content: start;
 }
 
-.results-grid::-webkit-scrollbar { width: 6px; }
-.results-grid::-webkit-scrollbar-track { background: var(--bg); }
-.results-grid::-webkit-scrollbar-thumb { background: var(--dim); }
+.results-scroll::-webkit-scrollbar { width: 6px; }
+.results-scroll::-webkit-scrollbar-track { background: var(--bg); }
+.results-scroll::-webkit-scrollbar-thumb { background: var(--dim); }
 
 .empty-state {
     grid-column: 1 / -1;

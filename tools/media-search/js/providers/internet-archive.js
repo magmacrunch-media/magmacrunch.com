@@ -45,13 +45,12 @@
                                  doc.mediatype === 'audio' ? 'audio' : 'image';
                     const thumbUrl = `https://archive.org/services/img/${id}`;
                     const detailsUrl = `https://archive.org/details/${id}`;
-                    const downloadUrl = `https://archive.org/download/${id}`;
 
                     return {
                         id,
                         title: doc.title || id,
                         thumbnail: thumbUrl,
-                        fullUrl: downloadUrl,
+                        fullUrl: thumbUrl,
                         source: 'archive',
                         license: 'various',
                         licenseUrl: 'https://archive.org/about/terms.php',
