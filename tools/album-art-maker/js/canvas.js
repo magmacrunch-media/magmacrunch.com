@@ -286,6 +286,7 @@ window.CanvasRenderer = (function () {
     }
 
     function drawArrow(el) {
+        if (!el.stroke || el.stroke === 'none') return;
         const x1 = el.x, y1 = el.y + el.h / 2;
         const x2 = el.x + el.w, y2 = el.y + el.h / 2;
         const headLen = Math.min(el.w * 0.25, el.h * 0.4);
@@ -297,7 +298,7 @@ window.CanvasRenderer = (function () {
         ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
         ctx.moveTo(x2, y2);
         ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
-        ctx.strokeStyle = el.stroke && el.stroke !== 'none' ? el.stroke : '#ffffff';
+        ctx.strokeStyle = el.stroke;
         ctx.lineWidth = el.strokeWidth || 4;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -341,7 +342,8 @@ window.CanvasRenderer = (function () {
     function drawStep(el) {
         const steps = el.steps || 5;
         drawWave(el, (t) => {
-            const v = Math.floor(t * steps) / (steps - 1);
+            const mod = t % 1;
+            const v = Math.floor(mod * steps) / (steps - 1);
             return v * 2 - 1;
         });
     }
@@ -518,13 +520,10 @@ window.CanvasRenderer = (function () {
             return;
         }
 
-        // render at full resolution without selection
+        // render to offscreen canvas without selection
         const prevSelected = selectedId;
         selectedId = null;
-        render(elements);
-        selectedId = prevSelected;
 
-        // re-render without selection
         const tmpCanvas = document.createElement('canvas');
         tmpCanvas.width = canvasSize;
         tmpCanvas.height = canvasSize;
@@ -546,6 +545,7 @@ window.CanvasRenderer = (function () {
         link.click();
 
         // restore display
+        selectedId = prevSelected;
         render(elements);
     }
 

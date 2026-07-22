@@ -786,6 +786,7 @@
             }
             // Copy
             if (e.key === 'c' && selectedElement) {
+                e.preventDefault();
                 clipboard = JSON.parse(JSON.stringify(selectedElement));
                 return;
             }

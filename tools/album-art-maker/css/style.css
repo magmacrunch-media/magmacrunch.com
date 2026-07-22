@@ -352,6 +352,10 @@ h1.glitch::after {
     text-align: center;
     line-height: 1.4;
     margin: 0;
+    display: none;
+}
+.ref-hint.visible {
+    display: block;
 }
 
 /* ── CENTER AREA ── */
