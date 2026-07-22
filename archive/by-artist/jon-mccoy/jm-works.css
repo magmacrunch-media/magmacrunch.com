@@ -22,4 +22,7 @@ body.jm-page.jm-works-page .nav-card.c-back:hover { background: var(--jm-sage); 
 
 body.jm-page.jm-works-page .nav-card::after { display: none; }
 
+body.jm-page.jm-works-page .work-card .lyrics-link { font-family: 'Press Start 2P', monospace; font-size: 7px; background: var(--jm-deep-sage); color: var(--jm-cream); padding: 2px 7px; margin-left: 8px; text-decoration: none; vertical-align: middle; letter-spacing: 0.05em; }
+body.jm-page.jm-works-page .work-card .lyrics-link:hover { opacity: 0.7; }
+
 @media (max-width: 500px) { body.jm-page.jm-works-page .work-card { border-color: var(--jm-body); } }

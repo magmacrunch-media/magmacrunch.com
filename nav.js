@@ -40,7 +40,8 @@ window.NAV_CONFIG = {
         ]},
         { label: 'tools', href: 'tools/index.html', items: [
             { href: 'tools/album-art-maker/index.html', label: 'album art' },
-            { href: 'tools/media-search/index.html', label: 'media search' }
+            { href: 'tools/media-search/index.html', label: 'media search' },
+            { href: 'tools/pixel-process/index.html', label: 'pixel process' }
         ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]

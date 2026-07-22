@@ -277,14 +277,13 @@
 
         /* Drop cap */
         .about-text p:first-of-type::first-letter {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.8em;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
             float: left;
-            line-height: 0.8;
+            line-height: 0.85;
             margin-right: 8px;
             margin-top: 4px;
             color: var(--mc-crater);
-            font-weight: 900;
             text-shadow: 0 0 12px rgba(255,61,110,0.5);
         }
 
@@ -629,7 +628,7 @@
         <span class="dateline-sep">✦</span>
         <span>press</span>
         <span class="dateline-sep">✦</span>
-        <span>tools</span>
+        <span>web tools</span>
         <span class="dateline-sep">✦</span>
         <span>photography</span>
         <span class="dateline-sep">✦</span>
@@ -683,7 +682,7 @@ ___          ___  __       ___ .  __           __     __   ___ ..
     <div class="about-text">
         <!-- Cereal animation (floated right) -->
         <div class="cereal-canvas-wrap">
-            <canvas id="cereal-scene" width="300" height="256"></canvas>
+            <canvas id="cereal-scene" width="600" height="512"></canvas>
         </div>
 
         <!-- Pull quote: first paragraph -->
@@ -1115,6 +1114,7 @@ __/\\\______________________________________________/\\\________________________
   const ctx    = canvas.getContext('2d');
 
   ctx.imageSmoothingEnabled = false;
+  ctx.scale(2, 2);
 
   const W = 300, H = 256;
 
@@ -1184,10 +1184,10 @@ __/\\\______________________________________________/\\\________________________
     /* ── volcano body — flat rim between peaks ── */
     ctx.fillStyle = C.slate;
     ctx.beginPath();
-    ctx.moveTo(-22, 16);
+    ctx.moveTo(-20, 16);
     ctx.quadraticCurveTo(-12, 2, -8, -10);
     ctx.lineTo(8, -10);
-    ctx.quadraticCurveTo(12, 2, 22, 16);
+    ctx.quadraticCurveTo(12, 2, 20, 16);
     ctx.fill();
 
     /* ── lava flow down the front ── */
@@ -1271,20 +1271,20 @@ __/\\\______________________________________________/\\\________________________
 
     drawVolcanoBoxArt(0, -2);
 
-    ctx.font = '10px "Press Start 2P"';
+    ctx.font = '8px "Press Start 2P"';
     ctx.textAlign = 'center';
 
     ctx.fillStyle = '#110006';
-    ctx.fillText('MAGMA', 2, 42);
-    ctx.fillText('CRUNCH', 2, 58);
+    ctx.fillText('MAGMA', 2, 40);
+    ctx.fillText('CRUNCH', 2, 54);
 
     ctx.fillStyle = C.cyan;
-    ctx.fillText('MAGMA', 1, 41);
-    ctx.fillText('CRUNCH', 1, 57);
+    ctx.fillText('MAGMA', 1, 39);
+    ctx.fillText('CRUNCH', 1, 53);
 
     ctx.fillStyle = C.yellow;
-    ctx.fillText('MAGMA', 0, 40);
-    ctx.fillText('CRUNCH', 0, 56);
+    ctx.fillText('MAGMA', 0, 38);
+    ctx.fillText('CRUNCH', 0, 52);
 
     ctx.strokeStyle = C.pink;
     ctx.lineWidth = 0.75;
