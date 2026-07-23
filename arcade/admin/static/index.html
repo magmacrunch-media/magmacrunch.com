@@ -55,6 +55,7 @@
             <button class="ops-tab" data-tab="accounts">ACCOUNTS</button>
             <button class="ops-tab" data-tab="security">SECURITY</button>
             <button class="ops-tab" data-tab="tv">TV</button>
+           <button class="ops-tab" data-tab="github">GITHUB</button>
         </nav>
 
         <main>
@@ -196,7 +197,8 @@
                     </div>
                     <div class="toolbar-divider"></div>
                     <div class="toolbar-group">
-                        <button id="jb-btn-save" class="btn btn-green btn-sm">SAVE TO SERVER</button>
+                        <button id="jb-btn-save" class="btn btn-green btn-sm">SAVE LOCAL</button>
+                        <button id="jb-btn-deploy" class="btn btn-cyan btn-sm">SAVE & DEPLOY</button>
                         <button id="jb-btn-reset" class="btn btn-rose btn-sm">RESET</button>
                     </div>
                     <div class="toolbar-spacer"></div>
@@ -233,7 +235,8 @@
                     </div>
                     <div class="toolbar-divider"></div>
                     <div class="toolbar-group">
-                        <button class="btn btn-green btn-sm" id="tm-btn-save">SAVE TO SERVER</button>
+                        <button class="btn btn-green btn-sm" id="tm-btn-save">SAVE LOCAL</button>
+                        <button class="btn btn-cyan btn-sm" id="tm-btn-deploy">SAVE & DEPLOY</button>
                         <button class="btn btn-slate btn-sm" id="tm-btn-reset">RESET</button>
                     </div>
                     <div class="toolbar-divider"></div>
@@ -324,7 +327,8 @@
                     </div>
                     <div class="toolbar-divider"></div>
                     <div class="toolbar-group">
-                        <button id="tv-btn-save" class="btn btn-green btn-sm">SAVE TO SERVER</button>
+                        <button id="tv-btn-save" class="btn btn-green btn-sm">SAVE LOCAL</button>
+                        <button id="tv-btn-deploy" class="btn btn-cyan btn-sm">SAVE & DEPLOY</button>
                         <button id="tv-btn-reset" class="btn btn-rose btn-sm">RESET</button>
                     </div>
                     <div class="toolbar-spacer"></div>
@@ -345,6 +349,56 @@
                 <div id="tv-channel-list" class="song-list"></div>
 
                 <button id="tv-btn-add" class="add-song-btn">+ ADD CHANNEL</button>
+            </div>
+
+            <!-- ═══ GITHUB TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-github" class="tab-panel hidden">
+                <section class="security-section">
+                    <h2 class="section-title">GITHUB CONNECTION</h2>
+                    <p class="api-keys-note">Personal access token with <code>repo</code> scope. Stored in config.json (gitignored).</p>
+                    <div class="security-form">
+                        <div class="github-status-row">
+                            <span id="gh-status-dot" class="gh-status-dot"></span>
+                            <span id="gh-status-text">NOT CONNECTED</span>
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">TOKEN</label>
+                            <div class="token-row">
+                                <input type="password" id="gh-token-input" class="security-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+                                <button id="gh-btn-show-token" class="btn btn-cyan btn-sm">SHOW</button>
+                            </div>
+                        </div>
+                        <div class="token-actions">
+                            <button id="gh-btn-test" class="btn btn-green btn-sm">TEST CONNECTION</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">DEPLOY</h2>
+                    <p class="api-keys-note">Changes are saved locally then pushed to GitHub. Site auto-deploys in ~1 minute.</p>
+                    <div class="security-form">
+                        <div class="security-row">
+                            <label class="security-label">COMMIT MESSAGE</label>
+                            <input type="text" id="gh-commit-msg" class="security-input" placeholder="Update via MAGMA//OPS" autocomplete="off">
+                        </div>
+                        <button id="gh-btn-sync-all" class="btn btn-green btn-sm">SYNC ALL TO GITHUB</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">BACKUP</h2>
+                    <p class="api-keys-note">Run MusicBrainz/TMDB backup scripts, then commit changed cache files.</p>
+                    <div class="backup-actions">
+                        <button id="gh-btn-backup-mb" class="btn btn-cyan btn-sm">MUSICBRAINZ BACKUP</button>
+                        <button id="gh-btn-backup-tmdb" class="btn btn-orange btn-sm">TMDB BACKUP</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">ACTIVITY LOG</h2>
+                    <div id="gh-sync-log" class="gh-sync-log"></div>
+                </section>
             </div>
         </main>
 
@@ -417,5 +471,6 @@
     <script src="accounts.js"></script>
     <script src="api.js"></script>
     <script src="tv.js"></script>
+    <script src="github.js"></script>
 </body>
 </html>

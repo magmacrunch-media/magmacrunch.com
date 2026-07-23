@@ -763,6 +763,19 @@
         window.OPS.toast('Saved to server');
     }
 
+    function deployToGitHub() {
+        var btnDeploy = document.getElementById('tm-btn-deploy');
+        btnDeploy.disabled = true;
+        btnDeploy.textContent = 'DEPLOYING...';
+        window.OPS.send({
+            action: 'github_deploy_themes',
+            themes: themes,
+            message: document.getElementById('gh-commit-msg') ? document.getElementById('gh-commit-msg').value || 'Update themes via MAGMA//OPS' : 'Update themes via MAGMA//OPS',
+            token: window.OPS.authToken,
+        });
+        window.OPS.toast('Deploying to GitHub...');
+    }
+
     function loadFromServer() {
         window.OPS.send({ action: 'themes_load', token: window.OPS.authToken });
     }
@@ -779,6 +792,12 @@
             window.OPS.toast('Loaded ' + themes.length + ' themes from server');
         } else if (msg.type === 'themes_saved') {
             // toast already shown
+        } else if (msg.type === 'github_themes_result') {
+            var btnDeploy = document.getElementById('tm-btn-deploy');
+            if (btnDeploy) {
+                btnDeploy.disabled = false;
+                btnDeploy.textContent = 'SAVE & DEPLOY';
+            }
         }
     };
 
@@ -820,6 +839,7 @@
         URL.revokeObjectURL(url); window.OPS.toast('Downloaded themes.json');
     });
     document.getElementById('tm-btn-save').addEventListener('click', saveToServer);
+    document.getElementById('tm-btn-deploy').addEventListener('click', deployToGitHub);
     document.getElementById('tm-btn-reset').addEventListener('click', function() {
         window.OPS.confirm('Reset all themes to defaults?', '', function() {
             themes = JSON.parse(JSON.stringify(DEFAULT_THEMES)); render(); window.OPS.toast('Reset to defaults');

@@ -10,10 +10,13 @@ Requires: websockets (already installed for game servers)
 
 import argparse
 import asyncio
+import base64
 import json
 import os
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from threading import Thread
@@ -26,7 +29,8 @@ DEFAULT_CONFIG = {
     "port": 8780,
     "auth": False,
     "password": "changeme",
-    "bind": "0.0.0.0"
+    "bind": "0.0.0.0",
+    "github_token": ""
 }
 
 CONFIG = {}
@@ -55,6 +59,119 @@ JUKEBOX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jukebox
 THEMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.json")
 TV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tv-channels.json")
 TV_JS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "visual", "tv-channels.js")
+
+# ── GitHub API ──────────────────────────────────────────────────────────────
+
+GITHUB_OWNER = "magmacrunchmedia"
+GITHUB_REPO = "magmacrunch.com"
+GITHUB_API = "https://api.github.com"
+
+GITHUB_PATHS = {
+    "jukebox": "arcade/admin/jukebox-songs.json",
+    "tv_json": "arcade/admin/tv-channels.json",
+    "tv_js":   "visual/tv-channels.js",
+    "themes":  "arcade/admin/themes.json",
+}
+
+def _repo_root():
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
+
+def github_request(method, path, token, data=None):
+    """Make a GitHub API request. Returns (status_code, parsed_body)."""
+    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{path}" if path else f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunch-Ops/2.1",
+    }
+    body = None
+    if data is not None:
+        body = json.dumps(data).encode("utf-8")
+        headers["Content-Type"] = "application/json"
+    req = urllib.request.Request(url, data=body, headers=headers, method=method)
+    try:
+        with urllib.request.urlopen(req) as resp:
+            return resp.status, json.loads(resp.read())
+    except urllib.error.HTTPError as e:
+        error_body = {}
+        try:
+            error_body = json.loads(e.read())
+        except Exception:
+            pass
+        return e.code, error_body
+    except Exception as e:
+        return 0, {"error": str(e)}
+
+def github_get_file(path, token):
+    """Fetch file content + SHA from GitHub. Returns (content_str, sha) or (None, None)."""
+    status, body = github_request("GET", path, token)
+    if status == 200 and "content" in body:
+        content = base64.b64decode(body["content"]).decode("utf-8")
+        return content, body.get("sha")
+    return None, None
+
+def github_put_file(path, content, sha, message, token):
+    """Create or update a file on GitHub. Returns (ok, result)."""
+    data = {
+        "message": message,
+        "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
+    }
+    if sha:
+        data["sha"] = sha
+    status, body = github_request("PUT", path, token, data)
+    if status in (200, 201):
+        return True, body
+    return False, body
+
+def github_commit_multiple(files, message, token):
+    """Commit multiple files in a single GitHub API call using the Git Data API.
+    files: list of dicts: { "path": str, "content": str }
+    Returns (ok, result)."""
+    # Get current branch ref
+    status, repo_info = github_request("GET", "", token)
+    if status != 200:
+        return False, {"error": "Failed to get repo info"}
+    base_branch = repo_info.get("default_branch", "main")
+
+    status, branch_ref = github_request("GET", f"git/refs/heads/{base_branch}", token)
+    if status != 200:
+        return False, {"error": f"Failed to get branch ref: {base_branch}"}
+    commit_sha = branch_ref["object"]["sha"]
+
+    status, commit_data = github_request("GET", f"git/commits/{commit_sha}", token)
+    if status != 200:
+        return False, {"error": "Failed to get commit data"}
+    base_tree_sha = commit_data["tree"]["sha"]
+
+    # Create blobs
+    blob_items = []
+    for f in files:
+        blob_data = {
+            "content": base64.b64encode(f["content"].encode("utf-8")).decode("utf-8"),
+            "encoding": "base64",
+        }
+        status, blob = github_request("POST", "git/blobs", token, blob_data)
+        if status != 201:
+            return False, {"error": f"Failed to create blob for {f['path']}"}
+        blob_items.append({"path": f["path"], "mode": "100644", "type": "blob", "sha": blob["sha"]})
+
+    # Create tree
+    status, tree = github_request("POST", "git/trees", token, {"base_tree": base_tree_sha, "tree": blob_items})
+    if status != 201:
+        return False, {"error": "Failed to create tree"}
+
+    # Create commit
+    status, new_commit = github_request("POST", "git/commits", token, {
+        "message": message, "tree": tree["sha"], "parents": [commit_sha]
+    })
+    if status != 201:
+        return False, {"error": "Failed to create commit"}
+
+    # Update ref
+    status, _ = github_request("PATCH", f"git/refs/heads/{base_branch}", token, {"sha": new_commit["sha"]})
+    if status == 200:
+        return True, {"commit_sha": new_commit["sha"], "html_url": new_commit.get("html_url", "")}
+    return False, {"error": "Failed to update ref"}
 
 def load_game_scores(game_id):
     """Load scores for a specific game."""
@@ -671,6 +788,274 @@ async def ws_handler(websocket):
                     "type": "tv_saved",
                     "ok": True
                 }))
+
+            # ── GitHub deploy actions ──────────────────────────────────────
+
+            elif action == "github_test":
+                token = msg.get("github_token") or CONFIG.get("github_token", "")
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "github_test_result", "ok": False, "error": "No token configured"
+                    }))
+                    continue
+                status, body = github_request("GET", "", token)
+                if status == 200:
+                    await websocket.send(json.dumps({
+                        "type": "github_test_result", "ok": True,
+                        "repo": body.get("full_name", ""),
+                        "private": body.get("private", False),
+                        "default_branch": body.get("default_branch", ""),
+                    }))
+                else:
+                    await websocket.send(json.dumps({
+                        "type": "github_test_result", "ok": False,
+                        "error": body.get("message", f"HTTP {status}")
+                    }))
+
+            elif action == "github_deploy_jukebox":
+                songs = msg.get("songs", [])
+                token = CONFIG.get("github_token", "")
+                commit_msg = msg.get("message", "Update jukebox songs via MAGMA//OPS")
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_jukebox(songs)
+                )
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "github_jukebox_result", "ok": False, "error": "No GitHub token configured"
+                    }))
+                    continue
+                content = json.dumps(songs, indent=2) + "\n"
+                remote_content, remote_sha = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: github_get_file(GITHUB_PATHS["jukebox"], token)
+                )
+                ok, result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: github_put_file(GITHUB_PATHS["jukebox"], content, remote_sha, commit_msg, token)
+                )
+                await websocket.send(json.dumps({
+                    "type": "github_jukebox_result", "ok": ok,
+                    "error": result.get("error") if not ok else None,
+                    "commit_url": result.get("html_url") if ok else None,
+                    "songs_count": len(songs),
+                }))
+
+            elif action == "github_deploy_tv":
+                channels = msg.get("channels", [])
+                token = CONFIG.get("github_token", "")
+                commit_msg = msg.get("message", "Update TV channels via MAGMA//OPS")
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_tv(channels)
+                )
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "github_tv_result", "ok": False, "error": "No GitHub token configured"
+                    }))
+                    continue
+                # Generate JS
+                lines = []
+                for ch in channels:
+                    lines.append(
+                        '    { title: ' + json.dumps(ch.get("title", "")) +
+                        ', artist: ' + json.dumps(ch.get("artist", "")) +
+                        ', id: ' + json.dumps(ch.get("id", "")) +
+                        ', year: ' + json.dumps(ch.get("year", "")) + ' }'
+                    )
+                js_content = 'window.TV_CHANNELS = [\n' + ',\n'.join(lines) + '\n];\n'
+                json_content = json.dumps(channels, indent=2) + "\n"
+
+                files_to_commit = []
+                for key, path in [("tv_json", GITHUB_PATHS["tv_json"]), ("tv_js", GITHUB_PATHS["tv_js"])]:
+                    c = json_content if key == "tv_json" else js_content
+                    _, sha = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda p=path: github_get_file(p, token)
+                    )
+                    files_to_commit.append({"path": path, "content": c, "sha": sha})
+
+                ok, result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: github_commit_multiple(files_to_commit, commit_msg, token)
+                )
+                await websocket.send(json.dumps({
+                    "type": "github_tv_result", "ok": ok,
+                    "error": result.get("error") if not ok else None,
+                    "commit_url": result.get("html_url") if ok else None,
+                    "channels_count": len(channels),
+                }))
+
+            elif action == "github_deploy_themes":
+                themes = msg.get("themes", [])
+                token = CONFIG.get("github_token", "")
+                commit_msg = msg.get("message", "Update themes via MAGMA//OPS")
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_themes(themes)
+                )
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "github_themes_result", "ok": False, "error": "No GitHub token configured"
+                    }))
+                    continue
+                content = json.dumps(themes, indent=2) + "\n"
+                _, remote_sha = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: github_get_file(GITHUB_PATHS["themes"], token)
+                )
+                ok, result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: github_put_file(GITHUB_PATHS["themes"], content, remote_sha, commit_msg, token)
+                )
+                await websocket.send(json.dumps({
+                    "type": "github_themes_result", "ok": ok,
+                    "error": result.get("error") if not ok else None,
+                    "commit_url": result.get("html_url") if ok else None,
+                    "themes_count": len(themes),
+                }))
+
+            elif action == "github_sync_all":
+                token = CONFIG.get("github_token", "")
+                commit_msg = msg.get("message", "Bulk sync from MAGMA//OPS dashboard")
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "github_sync_result", "ok": False, "error": "No GitHub token configured"
+                    }))
+                    continue
+
+                files_to_commit = []
+                files_changed = []
+
+                # Check jukebox
+                if os.path.exists(JUKEBOX_PATH):
+                    with open(JUKEBOX_PATH) as f:
+                        local = f.read()
+                    remote, sha = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: github_get_file(GITHUB_PATHS["jukebox"], token)
+                    )
+                    if remote is None or local.strip() != remote.strip():
+                        files_to_commit.append({"path": GITHUB_PATHS["jukebox"], "content": local, "sha": sha})
+                        files_changed.append("jukebox-songs.json")
+
+                # Check TV
+                if os.path.exists(TV_PATH):
+                    with open(TV_PATH) as f:
+                        local = f.read()
+                    remote, sha = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: github_get_file(GITHUB_PATHS["tv_json"], token)
+                    )
+                    if remote is None or local.strip() != remote.strip():
+                        files_to_commit.append({"path": GITHUB_PATHS["tv_json"], "content": local, "sha": sha})
+                        files_changed.append("tv-channels.json")
+                        if os.path.exists(TV_JS_PATH):
+                            with open(TV_JS_PATH) as f:
+                                tv_js = f.read()
+                            _, js_sha = await asyncio.get_event_loop().run_in_executor(
+                                _executor, lambda: github_get_file(GITHUB_PATHS["tv_js"], token)
+                            )
+                            files_to_commit.append({"path": GITHUB_PATHS["tv_js"], "content": tv_js, "sha": js_sha})
+                            files_changed.append("tv-channels.js")
+
+                # Check themes
+                if os.path.exists(THEMES_PATH):
+                    with open(THEMES_PATH) as f:
+                        local = f.read()
+                    remote, sha = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: github_get_file(GITHUB_PATHS["themes"], token)
+                    )
+                    if remote is None or local.strip() != remote.strip():
+                        files_to_commit.append({"path": GITHUB_PATHS["themes"], "content": local, "sha": sha})
+                        files_changed.append("themes.json")
+
+                # Check scores
+                if os.path.isdir(SCORES_DIR):
+                    for fn in sorted(os.listdir(SCORES_DIR)):
+                        if fn.endswith(".json"):
+                            local_path = os.path.join(SCORES_DIR, fn)
+                            gh_path = f"arcade/admin/scores/{fn}"
+                            with open(local_path) as f:
+                                local = f.read()
+                            remote, sha = await asyncio.get_event_loop().run_in_executor(
+                                _executor, lambda p=gh_path: github_get_file(p, token)
+                            )
+                            if remote is None or local.strip() != remote.strip():
+                                files_to_commit.append({"path": gh_path, "content": local, "sha": sha})
+                                files_changed.append(fn)
+
+                if not files_to_commit:
+                    await websocket.send(json.dumps({
+                        "type": "github_sync_result", "ok": True,
+                        "message": "Everything is already in sync", "files_changed": [],
+                    }))
+                    continue
+
+                ok, result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: github_commit_multiple(files_to_commit, commit_msg, token)
+                )
+                await websocket.send(json.dumps({
+                    "type": "github_sync_result", "ok": ok,
+                    "error": result.get("error") if not ok else None,
+                    "commit_url": result.get("html_url") if ok else None,
+                    "files_changed": files_changed,
+                }))
+
+            elif action == "github_backup":
+                token = CONFIG.get("github_token", "")
+                commit_msg = msg.get("message", "Update cache via MAGMA//OPS")
+                backup_type = msg.get("backup_type", "musicbrainz")
+
+                await websocket.send(json.dumps({
+                    "type": "github_backup_progress", "status": f"Running {backup_type} backup..."
+                }))
+
+                script_name = "backup-musicbrainz.mjs" if backup_type == "musicbrainz" else "backup-tmdb.mjs"
+                script_path = os.path.join(_repo_root(), "scripts", script_name)
+                backup_output = await run_cmd_async(f"node {script_path} --skip-existing", timeout=600)
+
+                await websocket.send(json.dumps({
+                    "type": "github_backup_progress", "status": "Backup complete. Committing to GitHub..."
+                }))
+
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "github_backup_result", "ok": False,
+                        "error": "Backup ran but no GitHub token — changes saved locally only",
+                        "backup_output": backup_output,
+                    }))
+                    continue
+
+                # Scan cache dir
+                cache_dir = os.path.join(_repo_root(), "archive", "_cache")
+                files_to_commit = []
+                files_changed = []
+                if os.path.isdir(cache_dir):
+                    for root, dirs, fnames in os.walk(cache_dir):
+                        for fn in fnames:
+                            if fn.endswith(".json"):
+                                local_path = os.path.join(root, fn)
+                                rel_path = os.path.relpath(local_path, _repo_root())
+                                with open(local_path) as f:
+                                    local = f.read()
+                                remote, sha = await asyncio.get_event_loop().run_in_executor(
+                                    _executor, lambda p=rel_path: github_get_file(p, token)
+                                )
+                                if remote is None or local.strip() != remote.strip():
+                                    files_to_commit.append({"path": rel_path, "content": local, "sha": sha})
+                                    files_changed.append(rel_path)
+
+                if files_to_commit:
+                    ok, result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: github_commit_multiple(files_to_commit, commit_msg, token)
+                    )
+                else:
+                    ok, result = True, {"message": "No cache files changed"}
+
+                await websocket.send(json.dumps({
+                    "type": "github_backup_result", "ok": ok,
+                    "error": result.get("error") if not ok else None,
+                    "commit_url": result.get("html_url") if ok else None,
+                    "files_changed": files_changed,
+                }))
+
+            elif action == "github_config_save":
+                github_token = msg.get("github_token", "")
+                CONFIG["github_token"] = github_token
+                config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
+                with open(config_path, "w") as f:
+                    json.dump(CONFIG, f, indent=2)
+                await websocket.send(json.dumps({"type": "github_config_saved", "ok": True}))
 
     except websockets.ConnectionClosed:
         pass

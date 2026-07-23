@@ -35,6 +35,7 @@
     const btnCopyTracks = document.getElementById('jb-btn-copy-tracks');
     const btnCopyJukebox = document.getElementById('jb-btn-copy-jukebox');
     const btnSave = document.getElementById('jb-btn-save');
+    const btnDeploy = document.getElementById('jb-btn-deploy');
     const btnReset = document.getElementById('jb-btn-reset');
     const btnAdd = document.getElementById('jb-btn-add');
 
@@ -220,6 +221,18 @@
         window.OPS.toast('Saved to server');
     }
 
+    function deployToGitHub() {
+        btnDeploy.disabled = true;
+        btnDeploy.textContent = 'DEPLOYING...';
+        window.OPS.send({
+            action: 'github_deploy_jukebox',
+            songs: songs,
+            message: document.getElementById('gh-commit-msg') ? document.getElementById('gh-commit-msg').value || 'Update jukebox songs via MAGMA//OPS' : 'Update jukebox songs via MAGMA//OPS',
+            token: window.OPS.authToken,
+        });
+        window.OPS.toast('Deploying to GitHub...');
+    }
+
     function loadFromServer() {
         window.OPS.send({ action: 'jukebox_load', token: window.OPS.authToken });
     }
@@ -235,7 +248,11 @@
             render();
             window.OPS.toast('Loaded ' + songs.length + ' songs from server');
         } else if (msg.type === 'jukebox_saved') {
-            // toast already shown in saveToServer
+            // handled by toast in saveToServer
+        } else if (msg.type === 'github_jukebox_result') {
+            btnDeploy.disabled = false;
+            btnDeploy.textContent = 'SAVE & DEPLOY';
+        }
         }
     };
 
@@ -252,6 +269,7 @@
     btnCopyTracks.addEventListener('click', () => copyToClipboard(generateTracksJs(), 'TRACKS JS'));
     btnCopyJukebox.addEventListener('click', () => copyToClipboard(generateJukeboxSongsJs(), 'JUKEBOX_SONGS JS'));
     btnSave.addEventListener('click', saveToServer);
+    btnDeploy.addEventListener('click', deployToGitHub);
 
     btnAdd.addEventListener('click', function() {
         songs.push({ title: 'New Song', artist: 'Artist', file: 'filename.ogg', duration: '0:00', hidden: false });

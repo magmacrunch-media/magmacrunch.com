@@ -1735,6 +1735,76 @@ footer {
     .edit-panel { width: 100%; max-width: 100%; }
 }
 
+/* ── GitHub Tab ──────────────────────────────────────────────────────────── */
+
+.github-status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+}
+
+.gh-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--dim);
+    flex-shrink: 0;
+}
+
+.gh-status-dot.connected {
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(57,255,110,0.6);
+}
+
+.gh-status-dot.error {
+    background: var(--rose);
+    box-shadow: 0 0 8px rgba(255,61,110,0.6);
+}
+
+.token-row {
+    display: flex;
+    gap: 8px;
+}
+
+.token-row .security-input {
+    flex: 1;
+}
+
+.token-actions {
+    margin-top: 10px;
+}
+
+.backup-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gh-sync-log {
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 8px;
+}
+
+.gh-log-line {
+    margin-bottom: 2px;
+    line-height: 1.4;
+}
+
+.gh-log-line:last-child {
+    color: var(--cyan);
+}
+
 /* ── Scrollbar ───────────────────────────────────────────────────────────── */
 
 ::-webkit-scrollbar { width: 6px; }

@@ -48,6 +48,7 @@
     const btnExportJson = document.getElementById('tv-btn-export-json');
     const btnCopyJs = document.getElementById('tv-btn-copy-js');
     const btnSave = document.getElementById('tv-btn-save');
+    const btnDeploy = document.getElementById('tv-btn-deploy');
     const btnReset = document.getElementById('tv-btn-reset');
     const btnAdd = document.getElementById('tv-btn-add');
 
@@ -226,6 +227,18 @@
         window.OPS.toast('Saving...');
     }
 
+    function deployToGitHub() {
+        btnDeploy.disabled = true;
+        btnDeploy.textContent = 'DEPLOYING...';
+        window.OPS.send({
+            action: 'github_deploy_tv',
+            channels: channels,
+            message: document.getElementById('gh-commit-msg') ? document.getElementById('gh-commit-msg').value || 'Update TV channels via MAGMA//OPS' : 'Update TV channels via MAGMA//OPS',
+            token: window.OPS.authToken,
+        });
+        window.OPS.toast('Deploying to GitHub...');
+    }
+
     function loadFromServer() {
         window.OPS.send({ action: 'tv_load', token: window.OPS.authToken });
     }
@@ -242,6 +255,9 @@
             window.OPS.toast('Loaded ' + channels.length + ' channels from server');
         } else if (msg.type === 'tv_saved') {
             window.OPS.toast('Saved ' + channels.length + ' channels');
+        } else if (msg.type === 'github_tv_result') {
+            btnDeploy.disabled = false;
+            btnDeploy.textContent = 'SAVE & DEPLOY';
         }
     };
 
@@ -263,6 +279,7 @@
     btnExportJson.addEventListener('click', downloadJson);
     btnCopyJs.addEventListener('click', function() { copyToClipboard(generateChannelsJs(), 'TV_CHANNELS JS'); });
     btnSave.addEventListener('click', saveToServer);
+    btnDeploy.addEventListener('click', deployToGitHub);
 
     btnAdd.addEventListener('click', function() {
         var input = prompt('Paste a YouTube URL or video ID:');
