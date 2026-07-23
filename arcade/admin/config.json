@@ -1,7 +1,0 @@
-{
-    "port": 8780,
-    "auth": true,
-    "password": "texastoast",
-    "private_password": "texastoast",
-    "bind": "0.0.0.0"
-}
