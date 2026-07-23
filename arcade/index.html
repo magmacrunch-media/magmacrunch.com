@@ -1206,11 +1206,11 @@ animateCoin(document.getElementById('coinCanvas2'));
                 } catch(e) {}
                 var h = window.location.hostname;
                 if (h === 'localhost' || h === '127.0.0.1') return '192.168.1.16:8768';
-                return 'magmacrunch.duckdns.org:8768';
+                return 'magmacrunch.duckdns.org';
             })();
             var controller = new AbortController();
             var timeout = setTimeout(function() { controller.abort(); }, 5000);
-            fetch('http://' + chatHost, { mode: 'no-cors', signal: controller.signal })
+            fetch('https://' + chatHost, { mode: 'no-cors', signal: controller.signal })
                 .then(function() {
                     clearTimeout(timeout);
                     statusDot.className = 'mp-status-dot online';
