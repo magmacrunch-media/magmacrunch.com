@@ -643,7 +643,79 @@
         }
 
         /* ══════════════════════════════════════════
-           RESPONSIVE
+           ROTATE PROMPT (mobile portrait)
+           ══════════════════════════════════════════ */
+        .rotate-prompt {
+            display: none;
+        }
+
+        @media (max-width: 640px) and (orientation: portrait) {
+            .rotate-prompt {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 50vh;
+                gap: 16px;
+                animation: fadeUp 0.6s ease-out;
+            }
+            .tv-wrap,
+            .tv-legend,
+            .page-subtitle {
+                display: none;
+            }
+            .page-title {
+                margin-top: 24px;
+            }
+            .rotate-icon {
+                color: var(--tv-amber);
+                filter: drop-shadow(0 0 12px rgba(255,184,0,0.6));
+                animation: rotateHint 2s ease-in-out infinite;
+            }
+            @keyframes rotateHint {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(-15deg); }
+                75% { transform: rotate(15deg); }
+            }
+            .rotate-text {
+                font-family: 'Press Start 2P', monospace;
+                font-size: 14px;
+                color: var(--tv-amber);
+                text-shadow: 0 0 20px rgba(255,184,0,0.6);
+                text-align: center;
+            }
+            .rotate-sub {
+                font-family: 'Courier Prime', monospace;
+                font-size: 12px;
+                color: var(--dim);
+                text-align: center;
+            }
+            .rotate-dismiss {
+                margin-top: 16px;
+                font-family: 'Press Start 2P', monospace;
+                font-size: 8px;
+                color: var(--tv-amber-dim);
+                background: transparent;
+                border: 1px solid var(--tv-cabinet-light);
+                padding: 8px 16px;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: color 0.15s, border-color 0.15s;
+            }
+            .rotate-dismiss:hover {
+                color: var(--tv-amber);
+                border-color: var(--tv-amber);
+            }
+        }
+
+        @media (max-width: 640px) and (orientation: landscape) {
+            .rotate-prompt {
+                display: none;
+            }
+        }
+
+        /* ══════════════════════════════════════════
+           RESPONSIVE — TV LAYOUT
            ══════════════════════════════════════════ */
         @media (max-width: 640px) {
             .tv-body { padding: 12px; border-radius: 12px; grid-template-columns: 1fr; }
@@ -696,6 +768,20 @@
         <a href="index.html">visual</a>
         <span class="sep">›</span>
         <span class="current">teevee</span>
+    </div>
+
+    <!-- ROTATE PROMPT (mobile portrait only) -->
+    <div class="rotate-prompt" id="rotate-prompt">
+        <div class="rotate-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/>
+                <path d="M4 12h16"/>
+                <path d="M18 8l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="rotate-text">ROTATE YOUR DEVICE</div>
+        <div class="rotate-sub">landscape mode recommended</div>
+        <button class="rotate-dismiss" id="rotate-dismiss">VIEW ANYWAY</button>
     </div>
 
     <h1 class="page-title">// teevee //</h1>
@@ -1222,6 +1308,38 @@ document.addEventListener('keydown', function(e) {
             break;
     }
 });
+
+/* ══════════════════════════════════════════════════
+   ROTATE PROMPT — orientation detection
+   ══════════════════════════════════════════════════ */
+const rotatePrompt = document.getElementById('rotate-prompt');
+const rotateDismiss = document.getElementById('rotate-dismiss');
+let rotateDismissed = false;
+
+if (rotateDismiss) {
+    rotateDismiss.addEventListener('click', function() {
+        rotateDismissed = true;
+        rotatePrompt.style.display = 'none';
+        document.querySelector('.tv-wrap').style.display = '';
+        document.querySelector('.page-subtitle').style.display = '';
+    });
+}
+
+const portraitMQL = window.matchMedia('(max-width: 640px) and (orientation: portrait)');
+function handleOrientation(e) {
+    if (rotateDismissed) return;
+    if (e.matches) {
+        rotatePrompt.style.display = '';
+        document.querySelector('.tv-wrap').style.display = 'none';
+        document.querySelector('.page-subtitle').style.display = 'none';
+    } else {
+        rotatePrompt.style.display = 'none';
+        document.querySelector('.tv-wrap').style.display = '';
+        document.querySelector('.page-subtitle').style.display = '';
+    }
+}
+portraitMQL.addEventListener('change', handleOrientation);
+handleOrientation(portraitMQL);
 
 /* ══════════════════════════════════════════════════
    TOUCH SUPPORT — swipe to change channel
