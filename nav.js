@@ -161,10 +161,20 @@ window.NAV_CONFIG = {
         .filter(Boolean);
     if (!siblings.length) return;
 
+    // color map for sibling nav cards
+    const COLOR_MAP = {
+        events: 'c-rose',
+        recordings: 'c-cyan',
+        releases: 'c-cyan',
+        works: 'c-purple',
+        personnel: 'c-green',
+        about: 'c-yellow',
+        members: 'c-green',
+        photography: 'c-orange',
+    };
+
     // derive current page slug from filename (e.g. "recordings")
     const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
-
-
 
     // back button color: use data-back-color attribute if set, else default to c-orange
     const backColor = main.dataset.backColor || 'c-orange';
