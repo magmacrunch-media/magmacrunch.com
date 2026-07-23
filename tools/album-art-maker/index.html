@@ -80,9 +80,30 @@
             font-size: 16px;
             line-height: 1;
         }
+
+        @media (min-width: 769px) {
+            .mobile-notice { display: none; }
+        }
+        .mobile-notice {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            text-align: center;
+            padding: 16px 20px;
+            margin: 12px auto;
+            max-width: 500px;
+            border: 2px solid var(--cyan);
+            border-radius: 4px;
+            background: rgba(0,245,255,0.05);
+            color: var(--cyan);
+            line-height: 2;
+        }
     </style>
 </head>
 <body>
+    <div class="mobile-notice">
+        This tool is best experienced on a desktop or laptop.<br>
+        Please visit on a wider screen for the full workspace.
+    </div>
 
     <header>
         <div class="header-left">
