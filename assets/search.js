@@ -9,7 +9,7 @@
     /* ── CONFIG ── */
     const FUSE_CDN = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0';
     const MAX_RESULTS = 12;
-    const INDEX_VERSION = 2;
+    const INDEX_VERSION = 3;
 
     /* Compute root path for search-index.json */
     function getRoot() {
