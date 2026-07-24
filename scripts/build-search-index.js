@@ -270,6 +270,79 @@ function parseTools() {
   }
 }
 
+// ── MusicBrainz Cache (recordings, releases, works) ────────
+// Enriches existing archive entries by appending recording/release/work
+// titles to the body text, making them searchable.
+function parseMusicBrainzCache() {
+  const cacheDir = path.join(ROOT, 'archive', '_cache');
+  const entityMapPath = path.join(ROOT, 'templates', 'entity-map.js');
+
+  /* Parse entity-map.js to get UUID → relative path mapping */
+  const entityMapSrc = fs.readFileSync(entityMapPath, 'utf8');
+  const uuidMap = {};
+  const uuidRegex = /['"]([0-9a-f-]{36})['"]\s*:\s*['"]([^'"]+)['"]/g;
+  let m;
+  while ((m = uuidRegex.exec(entityMapSrc)) !== null) {
+    let relPath = m[2];
+    relPath = relPath.replace(/^\.\.\/\.\.\//, 'archive/');
+    uuidMap[m[1]] = relPath;
+  }
+
+  /* Build a URL → index entry lookup for enrichment */
+  const urlIndex = {};
+  index.forEach((item, i) => { urlIndex[item.u] = i; });
+
+  /* Parse artist cache files */
+  const artistDir = path.join(cacheDir, 'artists');
+  if (fs.existsSync(artistDir)) {
+    const files = fs.readdirSync(artistDir).filter(f => f.endsWith('.json'));
+    for (const file of files) {
+      try {
+        const data = JSON.parse(fs.readFileSync(path.join(artistDir, file), 'utf8'));
+        if (!data.name || !data.uuid) continue;
+
+        const basePath = uuidMap[data.uuid];
+        if (!basePath) continue;
+
+        const prefix = basePath.replace(/index\.html$/, '');
+
+        /* Enrich recordings page */
+        const recs = data.subpages?.recordings?.list?.recordings || [];
+        if (recs.length > 0) {
+          const recUrl = '/' + prefix + 'recordings.html';
+          const idx = urlIndex[recUrl];
+          if (idx !== undefined) {
+            const titles = recs.map(r => r.title).filter(Boolean).join(', ');
+            index[idx].b = (index[idx].b ? index[idx].b + ' ' : '') + titles;
+          }
+        }
+
+        /* Enrich releases page */
+        const rels = data.subpages?.releases?.list?.releases || [];
+        if (rels.length > 0) {
+          const relUrl = '/' + prefix + 'releases.html';
+          const idx = urlIndex[relUrl];
+          if (idx !== undefined) {
+            const titles = rels.map(r => r.title).filter(Boolean).join(', ');
+            index[idx].b = (index[idx].b ? index[idx].b + ' ' : '') + titles;
+          }
+        }
+
+        /* Enrich works page */
+        const works = data.subpages?.works?.list?.works || [];
+        if (works.length > 0) {
+          const workUrl = '/' + prefix + 'works.html';
+          const idx = urlIndex[workUrl];
+          if (idx !== undefined) {
+            const titles = works.map(w => w.title).filter(Boolean).join(', ');
+            index[idx].b = (index[idx].b ? index[idx].b + ' ' : '') + titles;
+          }
+        }
+      } catch (e) { /* skip malformed files */ }
+    }
+  }
+}
+
 // ══════════════════════════════════════════════════════════
 // BUILD
 // ══════════════════════════════════════════════════════════
@@ -284,6 +357,7 @@ parseArchiveSection('by-contributor');
 parseArcadeGames();
 parsePress();
 parseTools();
+parseMusicBrainzCache();
 
 // Deduplicate by URL (keep first occurrence)
 const seen = new Set();
