@@ -346,6 +346,36 @@ window.NAV_CONFIG = {
     }
 })();
 
+/* ═══════════════════════════════════════════════
+   SEARCH LOADER
+   ───────────────────────────────────────────────
+   Loads assets/search.css and assets/search.js
+   on every page that has a <nav> element.
+   ═══════════════════════════════════════════════ */
+
+(function () {
+    const nav = document.querySelector('nav');
+    if (!nav || document.body.classList.contains('no-search')) return;
+
+    const depth = window.location.pathname.split('/').length - 2;
+    const root = depth > 0 ? '../'.repeat(depth) : '';
+
+    /* Load CSS */
+    if (!document.querySelector('link[href*="search.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = root + 'assets/search.css';
+        document.head.appendChild(link);
+    }
+
+    /* Load JS */
+    if (!document.querySelector('script[src*="search.js"]')) {
+        const script = document.createElement('script');
+        script.src = root + 'assets/search.js';
+        document.body.appendChild(script);
+    }
+})();
+
 /* ── ABSOLUTIZE NAV HREFS ──
    Convert all <nav> links to absolute paths so
    they survive pushState URL changes from the SPA
@@ -379,6 +409,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         'assets/archive.css',
         'assets/jukebox.css',
         'assets/jukebox.min',
+        'assets/search.css',
         'fonts/'
     ];
 
