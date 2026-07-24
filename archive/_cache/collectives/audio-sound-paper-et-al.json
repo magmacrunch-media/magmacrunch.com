@@ -1,0 +1,1319 @@
+{
+  "fetchedAt": "2026-07-24T01:36:50.909Z",
+  "entityType": "collective",
+  "slug": "audio-sound-paper-et-al",
+  "name": "Audio Sound Paper, et al.",
+  "ids": [
+    "76708e20-5d88-4699-adf6-a1f2118ef661",
+    "0296c377-7f97-4099-9c83-e2edb5552eda",
+    "5c860d63-acfa-4584-82db-4a76339b2f1e",
+    "8b11928f-4013-4ac9-a39b-826bbc01b25c"
+  ],
+  "works": {
+    "artistWorkRels": {
+      "relations": [
+        {
+          "ended": false,
+          "type": "publishing",
+          "end": null,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "work": {
+            "type": "Song",
+            "languages": [
+              "eng"
+            ],
+            "disambiguation": "",
+            "language": "eng",
+            "title": "7/8",
+            "attributes": [],
+            "id": "c77001e7-c9ee-4c78-91d9-f0ca9af6beb2",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "source-credit": "",
+          "begin": null,
+          "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+          "direction": "forward",
+          "attributes": [],
+          "target-credit": "",
+          "target-type": "work"
+        },
+        {
+          "work": {
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "id": "d6bd97ae-547b-4424-822f-522c697b177a",
+            "attributes": [],
+            "title": "Dead Girl",
+            "language": "eng",
+            "type": "Song",
+            "languages": [
+              "eng"
+            ],
+            "disambiguation": ""
+          },
+          "source-credit": "",
+          "begin": null,
+          "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+          "ended": false,
+          "type": "publishing",
+          "end": null,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "attributes": [],
+          "target-credit": "",
+          "target-type": "work",
+          "direction": "forward"
+        },
+        {
+          "ended": false,
+          "type": "publishing",
+          "end": null,
+          "attribute-values": {},
+          "attribute-ids": {},
+          "work": {
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": [],
+            "attributes": [],
+            "id": "2817055d-1175-43a5-8589-601a773726a8",
+            "language": "eng",
+            "title": "ex-D",
+            "type": "Song",
+            "disambiguation": "",
+            "languages": [
+              "eng"
+            ]
+          },
+          "source-credit": "",
+          "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+          "begin": null,
+          "direction": "forward",
+          "target-credit": "",
+          "attributes": [],
+          "target-type": "work"
+        },
+        {
+          "begin": null,
+          "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+          "source-credit": "",
+          "work": {
+            "type": "Song",
+            "languages": [
+              "eng"
+            ],
+            "disambiguation": "",
+            "language": "eng",
+            "title": "Gay Bar Soldier",
+            "attributes": [],
+            "id": "eb052660-fb71-404a-a04e-74a7f1cc055e",
+            "iswcs": [],
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6"
+          },
+          "attribute-ids": {},
+          "attribute-values": {},
+          "end": null,
+          "type": "publishing",
+          "ended": false,
+          "target-type": "work",
+          "attributes": [],
+          "target-credit": "",
+          "direction": "forward"
+        },
+        {
+          "type": "publishing",
+          "end": null,
+          "ended": false,
+          "attribute-ids": {},
+          "attribute-values": {},
+          "source-credit": "",
+          "work": {
+            "languages": [],
+            "type": "Song",
+            "disambiguation": "",
+            "language": null,
+            "title": "Sorry, Honey",
+            "attributes": [],
+            "id": "9ca35986-6fa5-4024-84f9-b90e64ada987",
+            "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+            "iswcs": []
+          },
+          "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+          "begin": null,
+          "direction": "forward",
+          "target-type": "work",
+          "target-credit": "",
+          "attributes": []
+        }
+      ]
+    },
+    "details": {
+      "c77001e7-c9ee-4c78-91d9-f0ca9af6beb2": {
+        "tags": [],
+        "relations": [
+          {
+            "source-credit": "",
+            "end": "2016",
+            "ended": true,
+            "attributes": [],
+            "direction": "backward",
+            "artist": {
+              "sort-name": "McCoy, Jake A.",
+              "country": "US",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+              "name": "Jake A. McCoy",
+              "disambiguation": "",
+              "type": "Person",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+            },
+            "type": "composer",
+            "attribute-values": {},
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "target-credit": "",
+            "attribute-ids": {},
+            "begin": "2015",
+            "target-type": "artist"
+          },
+          {
+            "begin": "2015",
+            "target-type": "artist",
+            "attribute-values": {},
+            "type": "composer",
+            "attribute-ids": {},
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "target-credit": "",
+            "artist": {
+              "type": "Person",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "disambiguation": "",
+              "name": "Stephen McMillan",
+              "country": "ES",
+              "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+              "sort-name": "McMillan, Stephen"
+            },
+            "source-credit": "",
+            "ended": true,
+            "end": "2016",
+            "attributes": [],
+            "direction": "backward"
+          },
+          {
+            "source-credit": "",
+            "ended": true,
+            "end": "2016",
+            "direction": "backward",
+            "attributes": [],
+            "artist": {
+              "disambiguation": "Audio Sound Paper",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "type": "Person",
+              "sort-name": "S., Alex",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df",
+              "country": "US",
+              "name": "Alex S."
+            },
+            "attribute-ids": {},
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "target-credit": "",
+            "type": "composer",
+            "attribute-values": {},
+            "begin": "2015",
+            "target-type": "artist"
+          },
+          {
+            "artist": {
+              "sort-name": "S., Alex",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df",
+              "country": "US",
+              "name": "Alex S.",
+              "disambiguation": "Audio Sound Paper",
+              "type": "Person",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df"
+            },
+            "end": null,
+            "ended": false,
+            "source-credit": "",
+            "attributes": [],
+            "direction": "backward",
+            "begin": null,
+            "target-type": "artist",
+            "attribute-values": {},
+            "type": "lyricist",
+            "target-credit": "",
+            "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+            "attribute-ids": {}
+          },
+          {
+            "artist": {
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "type": "Group",
+              "disambiguation": "",
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+              "country": "US",
+              "name": "Audio Sound Paper",
+              "sort-name": "Audio Sound Paper"
+            },
+            "attributes": [],
+            "direction": "backward",
+            "end": null,
+            "ended": false,
+            "source-credit": "",
+            "target-type": "artist",
+            "begin": null,
+            "type": "publishing",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+            "target-credit": ""
+          },
+          {
+            "place": {
+              "name": "The Tuna Can",
+              "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+              "coordinates": null,
+              "disambiguation": "",
+              "address": "",
+              "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+              "type": "Studio",
+              "area": {
+                "name": "Iowa City",
+                "type": "City",
+                "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                "sort-name": "Iowa City",
+                "disambiguation": ""
+              }
+            },
+            "source-credit": "",
+            "end": "2016",
+            "ended": true,
+            "attributes": [],
+            "direction": "backward",
+            "begin": "2015",
+            "target-type": "place",
+            "type": "composed at",
+            "attribute-values": {},
+            "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+            "target-credit": "",
+            "attribute-ids": {}
+          }
+        ],
+        "attributes": [],
+        "title": "7/8",
+        "id": "c77001e7-c9ee-4c78-91d9-f0ca9af6beb2",
+        "language": "eng",
+        "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+        "aliases": [],
+        "type": "Song",
+        "disambiguation": "",
+        "iswcs": [],
+        "languages": [
+          "eng"
+        ]
+      },
+      "d6bd97ae-547b-4424-822f-522c697b177a": {
+        "iswcs": [],
+        "languages": [
+          "eng"
+        ],
+        "aliases": [],
+        "type": "Song",
+        "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+        "language": "eng",
+        "disambiguation": "",
+        "id": "d6bd97ae-547b-4424-822f-522c697b177a",
+        "title": "Dead Girl",
+        "attributes": [],
+        "relations": [
+          {
+            "begin": "2015",
+            "target-type": "artist",
+            "type": "composer",
+            "attribute-values": {},
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "attribute-ids": {
+              "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+            },
+            "target-credit": "",
+            "artist": {
+              "disambiguation": "",
+              "type": "Person",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "McCoy, Jake A.",
+              "name": "Jake A. McCoy",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+              "country": "US"
+            },
+            "source-credit": "",
+            "ended": true,
+            "end": "2016",
+            "attributes": [
+              "additional"
+            ],
+            "direction": "backward"
+          },
+          {
+            "source-credit": "",
+            "end": "2016",
+            "ended": true,
+            "attributes": [
+              "additional"
+            ],
+            "direction": "backward",
+            "artist": {
+              "disambiguation": "",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "type": "Person",
+              "sort-name": "McMillan, Stephen",
+              "country": "ES",
+              "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+              "name": "Stephen McMillan"
+            },
+            "attribute-values": {},
+            "type": "composer",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "attribute-ids": {
+              "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+            },
+            "target-credit": "",
+            "begin": "2015",
+            "target-type": "artist"
+          },
+          {
+            "attribute-ids": {},
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "target-credit": "",
+            "type": "composer",
+            "attribute-values": {},
+            "target-type": "artist",
+            "begin": null,
+            "direction": "backward",
+            "attributes": [],
+            "ended": false,
+            "end": null,
+            "source-credit": "",
+            "artist": {
+              "disambiguation": "Audio Sound Paper",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "type": "Person",
+              "sort-name": "S., Alex",
+              "name": "Alex S.",
+              "country": "US",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df"
+            }
+          },
+          {
+            "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+            "target-credit": "",
+            "attribute-ids": {},
+            "attribute-values": {},
+            "type": "lyricist",
+            "target-type": "artist",
+            "begin": null,
+            "direction": "backward",
+            "attributes": [],
+            "end": null,
+            "ended": false,
+            "source-credit": "",
+            "artist": {
+              "disambiguation": "Audio Sound Paper",
+              "type": "Person",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "sort-name": "S., Alex",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df",
+              "country": "US",
+              "name": "Alex S."
+            }
+          },
+          {
+            "artist": {
+              "sort-name": "Audio Sound Paper",
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+              "country": "US",
+              "name": "Audio Sound Paper",
+              "disambiguation": "",
+              "type": "Group",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+            },
+            "source-credit": "",
+            "end": null,
+            "ended": false,
+            "attributes": [],
+            "direction": "backward",
+            "begin": null,
+            "target-type": "artist",
+            "attribute-values": {},
+            "type": "publishing",
+            "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+            "attribute-ids": {},
+            "target-credit": ""
+          },
+          {
+            "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+            "target-credit": "",
+            "attribute-ids": {
+              "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+            },
+            "attribute-values": {},
+            "type": "composed at",
+            "begin": "2015",
+            "target-type": "place",
+            "end": "2016",
+            "ended": true,
+            "source-credit": "",
+            "direction": "backward",
+            "attributes": [
+              "additional"
+            ],
+            "place": {
+              "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+              "name": "The Tuna Can",
+              "address": "",
+              "disambiguation": "",
+              "coordinates": null,
+              "area": {
+                "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                "type": "City",
+                "name": "Iowa City",
+                "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                "disambiguation": "",
+                "sort-name": "Iowa City"
+              },
+              "type": "Studio",
+              "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38"
+            }
+          }
+        ],
+        "tags": []
+      },
+      "2817055d-1175-43a5-8589-601a773726a8": {
+        "language": "eng",
+        "tags": [],
+        "relations": [
+          {
+            "direction": "backward",
+            "end": "2016",
+            "type": "composer",
+            "ended": true,
+            "artist": {
+              "name": "Jake A. McCoy",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+              "country": "US",
+              "disambiguation": "",
+              "type": "Person",
+              "sort-name": "McCoy, Jake A."
+            },
+            "attribute-ids": {
+              "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+            },
+            "attribute-values": {},
+            "target-type": "artist",
+            "source-credit": "",
+            "target-credit": "",
+            "attributes": [
+              "additional"
+            ],
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "begin": "2015"
+          },
+          {
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "begin": "2015",
+            "target-credit": "",
+            "attributes": [
+              "additional"
+            ],
+            "target-type": "artist",
+            "source-credit": "",
+            "attribute-values": {},
+            "attribute-ids": {
+              "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+            },
+            "ended": true,
+            "artist": {
+              "sort-name": "McMillan, Stephen",
+              "type": "Person",
+              "disambiguation": "",
+              "country": "ES",
+              "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Stephen McMillan"
+            },
+            "direction": "backward",
+            "type": "composer",
+            "end": "2016"
+          },
+          {
+            "ended": false,
+            "artist": {
+              "name": "Alex S.",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df",
+              "country": "US",
+              "disambiguation": "Audio Sound Paper",
+              "type": "Person",
+              "sort-name": "S., Alex"
+            },
+            "direction": "backward",
+            "type": "composer",
+            "end": null,
+            "attribute-values": {},
+            "attribute-ids": {},
+            "target-credit": "",
+            "attributes": [],
+            "target-type": "artist",
+            "source-credit": "",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "begin": null
+          },
+          {
+            "attribute-values": {},
+            "attribute-ids": {},
+            "artist": {
+              "id": "0bfa85f1-5138-4790-8439-e709399944df",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Alex S.",
+              "sort-name": "S., Alex",
+              "type": "Person",
+              "disambiguation": "Audio Sound Paper",
+              "country": "US"
+            },
+            "ended": false,
+            "type": "lyricist",
+            "end": null,
+            "direction": "backward",
+            "begin": null,
+            "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c",
+            "attributes": [],
+            "target-credit": "",
+            "source-credit": "",
+            "target-type": "artist"
+          },
+          {
+            "end": null,
+            "type": "publishing",
+            "direction": "backward",
+            "artist": {
+              "country": "US",
+              "type": "Group",
+              "disambiguation": "",
+              "sort-name": "Audio Sound Paper",
+              "name": "Audio Sound Paper",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661"
+            },
+            "ended": false,
+            "attribute-ids": {},
+            "attribute-values": {},
+            "source-credit": "",
+            "target-type": "artist",
+            "attributes": [],
+            "target-credit": "",
+            "begin": null,
+            "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa"
+          },
+          {
+            "begin": "2015",
+            "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+            "source-credit": "",
+            "attribute-values": {},
+            "attribute-ids": {
+              "additional": "0a5341f8-3b1d-4f99-a0c6-26b7f4e42c7f"
+            },
+            "ended": true,
+            "type": "composed at",
+            "end": "2016",
+            "attributes": [
+              "additional"
+            ],
+            "target-credit": "",
+            "place": {
+              "disambiguation": "",
+              "type": "Studio",
+              "area": {
+                "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                "name": "Iowa City",
+                "sort-name": "Iowa City",
+                "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                "type": "City",
+                "disambiguation": ""
+              },
+              "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+              "name": "The Tuna Can",
+              "address": "",
+              "coordinates": null,
+              "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38"
+            },
+            "target-type": "place",
+            "direction": "backward"
+          }
+        ],
+        "aliases": [],
+        "disambiguation": "",
+        "attributes": [],
+        "id": "2817055d-1175-43a5-8589-601a773726a8",
+        "title": "ex-D",
+        "languages": [
+          "eng"
+        ],
+        "type": "Song",
+        "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+        "iswcs": []
+      },
+      "eb052660-fb71-404a-a04e-74a7f1cc055e": {
+        "languages": [
+          "eng"
+        ],
+        "type": "Song",
+        "disambiguation": "",
+        "aliases": [],
+        "tags": [],
+        "id": "eb052660-fb71-404a-a04e-74a7f1cc055e",
+        "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+        "relations": [
+          {
+            "target-credit": "",
+            "target-type": "artist",
+            "attributes": [],
+            "attribute-values": {},
+            "attribute-ids": {},
+            "artist": {
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb",
+              "country": "US",
+              "disambiguation": "",
+              "name": "Jake A. McCoy",
+              "type": "Person",
+              "sort-name": "McCoy, Jake A."
+            },
+            "direction": "backward",
+            "begin": "2015",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "ended": true,
+            "source-credit": "",
+            "type": "composer",
+            "end": "2016"
+          },
+          {
+            "direction": "backward",
+            "begin": "2015",
+            "target-credit": "",
+            "attributes": [],
+            "target-type": "artist",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "artist": {
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e",
+              "name": "Stephen McMillan",
+              "country": "ES",
+              "disambiguation": "",
+              "type": "Person",
+              "sort-name": "McMillan, Stephen"
+            },
+            "source-credit": "",
+            "type": "composer",
+            "end": "2016",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "ended": true
+          },
+          {
+            "target-credit": "",
+            "attributes": [],
+            "target-type": "artist",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "artist": {
+              "sort-name": "S., Alex",
+              "type": "Person",
+              "country": "US",
+              "disambiguation": "Audio Sound Paper",
+              "name": "Alex S.",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df"
+            },
+            "direction": "backward",
+            "begin": "2015",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "ended": true,
+            "source-credit": "",
+            "type": "composer",
+            "end": "2016"
+          },
+          {
+            "begin": "2015",
+            "direction": "backward",
+            "artist": {
+              "type": "Person",
+              "sort-name": "S., Alex",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df",
+              "country": "US",
+              "disambiguation": "Audio Sound Paper",
+              "name": "Alex S."
+            },
+            "attribute-ids": {},
+            "attribute-values": {},
+            "attributes": [],
+            "target-type": "artist",
+            "target-credit": "",
+            "end": "2016",
+            "type": "lyricist",
+            "source-credit": "",
+            "ended": true,
+            "type-id": "3e48faba-ec01-47fd-8e89-30e81161661c"
+          },
+          {
+            "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa",
+            "ended": false,
+            "type": "publishing",
+            "end": null,
+            "source-credit": "",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "artist": {
+              "sort-name": "Audio Sound Paper",
+              "type": "Group",
+              "disambiguation": "",
+              "country": "US",
+              "name": "Audio Sound Paper",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661"
+            },
+            "target-credit": "",
+            "attributes": [],
+            "target-type": "artist",
+            "begin": null,
+            "direction": "backward"
+          },
+          {
+            "ended": true,
+            "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+            "end": "2016",
+            "type": "composed at",
+            "source-credit": "",
+            "attributes": [],
+            "place": {
+              "type": "Studio",
+              "coordinates": null,
+              "address": "",
+              "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+              "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38",
+              "disambiguation": "",
+              "name": "The Tuna Can",
+              "area": {
+                "name": "Iowa City",
+                "disambiguation": "",
+                "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                "sort-name": "Iowa City",
+                "type": "City"
+              }
+            },
+            "begin": "2015",
+            "attribute-ids": {},
+            "attribute-values": {},
+            "target-type": "place",
+            "target-credit": "",
+            "direction": "backward"
+          },
+          {
+            "recording": {
+              "video": false,
+              "disambiguation": "",
+              "length": 336000,
+              "id": "f26932bc-4b4f-4ede-8659-46f0c6285f78",
+              "title": "Gay Bar Soldier"
+            },
+            "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+            "ended": true,
+            "source-credit": "",
+            "type": "performance",
+            "end": "2016",
+            "target-credit": "",
+            "attributes": [],
+            "target-type": "recording",
+            "attribute-ids": {},
+            "attribute-values": {},
+            "direction": "backward",
+            "begin": "2016"
+          }
+        ],
+        "title": "Gay Bar Soldier",
+        "language": "eng",
+        "attributes": [],
+        "iswcs": []
+      },
+      "9ca35986-6fa5-4024-84f9-b90e64ada987": {
+        "iswcs": [],
+        "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+        "type": "Song",
+        "languages": [],
+        "title": "Sorry, Honey",
+        "attributes": [],
+        "id": "9ca35986-6fa5-4024-84f9-b90e64ada987",
+        "aliases": [],
+        "disambiguation": "",
+        "relations": [
+          {
+            "artist": {
+              "country": "US",
+              "type": "Person",
+              "disambiguation": "",
+              "sort-name": "McCoy, Jake A.",
+              "name": "Jake A. McCoy",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "id": "32bc1ac7-efd0-44f2-8645-8fecf6a40edb"
+            },
+            "ended": true,
+            "end": "2016",
+            "type": "composer",
+            "direction": "backward",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "attributes": [],
+            "target-credit": "",
+            "source-credit": "",
+            "target-type": "artist",
+            "begin": "2015",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+          },
+          {
+            "direction": "backward",
+            "type": "composer",
+            "end": "2016",
+            "ended": true,
+            "artist": {
+              "country": "ES",
+              "sort-name": "McMillan, Stephen",
+              "type": "Person",
+              "disambiguation": "",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Stephen McMillan",
+              "id": "205acdc4-99a4-4f91-bf6d-43a7f1f8028e"
+            },
+            "attribute-ids": {},
+            "attribute-values": {},
+            "target-type": "artist",
+            "source-credit": "",
+            "target-credit": "",
+            "attributes": [],
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f",
+            "begin": "2015"
+          },
+          {
+            "artist": {
+              "country": "US",
+              "sort-name": "S., Alex",
+              "disambiguation": "Audio Sound Paper",
+              "type": "Person",
+              "type-id": "b6e035f4-3ce9-331c-97df-83397230b0df",
+              "name": "Alex S.",
+              "id": "0bfa85f1-5138-4790-8439-e709399944df"
+            },
+            "ended": true,
+            "end": "2016",
+            "type": "composer",
+            "direction": "backward",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "attributes": [],
+            "target-credit": "",
+            "source-credit": "",
+            "target-type": "artist",
+            "begin": "2015",
+            "type-id": "d59d99ea-23d4-4a80-b066-edca32ee158f"
+          },
+          {
+            "type": "publishing",
+            "end": null,
+            "direction": "backward",
+            "artist": {
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "name": "Audio Sound Paper",
+              "sort-name": "Audio Sound Paper",
+              "type": "Group",
+              "disambiguation": "",
+              "country": "US"
+            },
+            "ended": false,
+            "attribute-ids": {},
+            "attribute-values": {},
+            "source-credit": "",
+            "target-type": "artist",
+            "attributes": [],
+            "target-credit": "",
+            "begin": null,
+            "type-id": "a442b140-830b-30b0-a4aa-2e36f098b6aa"
+          },
+          {
+            "direction": "backward",
+            "attributes": [],
+            "target-credit": "",
+            "place": {
+              "disambiguation": "",
+              "type": "Studio",
+              "area": {
+                "sort-name": "Iowa City",
+                "type": "City",
+                "id": "3fc3b364-665e-4875-a9ff-3699cd716152",
+                "disambiguation": "",
+                "type-id": "6fd8f29a-3d0a-32fc-980d-ea697b69da78",
+                "name": "Iowa City"
+              },
+              "id": "3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2",
+              "name": "The Tuna Can",
+              "address": "",
+              "coordinates": null,
+              "type-id": "05fa6a09-ff92-3d34-bdbb-5141d3c24f38"
+            },
+            "target-type": "place",
+            "attribute-values": {},
+            "attribute-ids": {},
+            "ended": true,
+            "end": "2016",
+            "type": "composed at",
+            "begin": "2015",
+            "type-id": "beaff7ea-771d-4f0d-aeb7-633bdddfa196",
+            "source-credit": ""
+          }
+        ],
+        "tags": [],
+        "language": null
+      }
+    },
+    "recordingFlags": {
+      "f26932bc-4b4f-4ede-8659-46f0c6285f78": {
+        "video": false,
+        "disambiguation": ""
+      }
+    }
+  },
+  "recordings": {
+    "list": [
+      {
+        "id": "f26932bc-4b4f-4ede-8659-46f0c6285f78",
+        "video": false,
+        "first-release-date": "2020-04-15",
+        "disambiguation": "",
+        "length": 336000,
+        "title": "Gay Bar Soldier"
+      }
+    ],
+    "details": {
+      "f26932bc-4b4f-4ede-8659-46f0c6285f78": {
+        "releases": [
+          {
+            "disambiguation": "",
+            "id": "a6fe08b6-20d5-42eb-beaa-ce9977793747",
+            "text-representation": {
+              "language": "eng",
+              "script": null
+            },
+            "status": "Official",
+            "tags": [],
+            "artist-credit": [
+              {
+                "joinphrase": "",
+                "name": "Audio Sound Paper",
+                "artist": {
+                  "country": "US",
+                  "name": "Audio Sound Paper",
+                  "type": "Group",
+                  "aliases": [],
+                  "sort-name": "Audio Sound Paper",
+                  "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                  "disambiguation": "",
+                  "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+                  "tags": []
+                }
+              }
+            ],
+            "packaging": null,
+            "quality": "normal",
+            "barcode": null,
+            "packaging-id": null,
+            "aliases": [],
+            "title": "Gay Bar Soldier",
+            "date": "2020-04-15",
+            "country": "XW",
+            "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+            "release-events": [
+              {
+                "area": {
+                  "disambiguation": "",
+                  "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+                  "iso-3166-1-codes": [
+                    "XW"
+                  ],
+                  "name": "[Worldwide]",
+                  "type": null,
+                  "sort-name": "[Worldwide]",
+                  "type-id": null
+                },
+                "date": "2020-04-15"
+              }
+            ]
+          }
+        ],
+        "isrcs": [],
+        "length": 336000,
+        "title": "Gay Bar Soldier",
+        "first-release-date": "2020-04-15",
+        "aliases": [],
+        "video": false,
+        "relations": [
+          {
+            "target-credit": "",
+            "target-type": "work",
+            "type-id": "a3005666-a872-32c3-ad06-98af558e99b0",
+            "type": "performance",
+            "ended": true,
+            "source-credit": "",
+            "attribute-ids": {},
+            "begin": "2016",
+            "direction": "forward",
+            "work": {
+              "iswcs": [],
+              "languages": [
+                "eng"
+              ],
+              "language": "eng",
+              "title": "Gay Bar Soldier",
+              "type-id": "f061270a-2fd6-32f1-a641-f0f8676d14e6",
+              "type": "Song",
+              "attributes": [],
+              "id": "eb052660-fb71-404a-a04e-74a7f1cc055e",
+              "disambiguation": ""
+            },
+            "attributes": [],
+            "end": "2016",
+            "attribute-values": {}
+          }
+        ],
+        "tags": [],
+        "artist-credit": [
+          {
+            "artist": {
+              "country": "US",
+              "name": "Audio Sound Paper",
+              "sort-name": "Audio Sound Paper",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "type": "Group",
+              "aliases": [],
+              "tags": [],
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+              "disambiguation": ""
+            },
+            "joinphrase": "",
+            "name": "Audio Sound Paper"
+          }
+        ],
+        "id": "f26932bc-4b4f-4ede-8659-46f0c6285f78",
+        "disambiguation": ""
+      }
+    }
+  },
+  "releases": {
+    "list": [
+      {
+        "quality": "normal",
+        "title": "Gay Bar Soldier",
+        "country": "XW",
+        "id": "a6fe08b6-20d5-42eb-beaa-ce9977793747",
+        "packaging-id": null,
+        "text-representation": {
+          "language": "eng",
+          "script": null
+        },
+        "asin": null,
+        "cover-art-archive": {
+          "back": false,
+          "count": 0,
+          "darkened": false,
+          "front": false,
+          "artwork": false
+        },
+        "barcode": null,
+        "disambiguation": "",
+        "date": "2020-04-15",
+        "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+        "release-events": [
+          {
+            "date": "2020-04-15",
+            "area": {
+              "type": null,
+              "type-id": null,
+              "disambiguation": "",
+              "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+              "iso-3166-1-codes": [
+                "XW"
+              ],
+              "name": "[Worldwide]",
+              "sort-name": "[Worldwide]"
+            }
+          }
+        ],
+        "status": "Official",
+        "packaging": null
+      }
+    ],
+    "details": {
+      "a6fe08b6-20d5-42eb-beaa-ce9977793747": {
+        "packaging": null,
+        "quality": "normal",
+        "artist-credit": [
+          {
+            "artist": {
+              "disambiguation": "",
+              "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+              "type": "Group",
+              "sort-name": "Audio Sound Paper",
+              "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+              "name": "Audio Sound Paper",
+              "country": "US"
+            },
+            "joinphrase": "",
+            "name": "Audio Sound Paper"
+          }
+        ],
+        "packaging-id": null,
+        "label-info": [],
+        "barcode": null,
+        "date": "2020-04-15",
+        "title": "Gay Bar Soldier",
+        "cover-art-archive": {
+          "front": false,
+          "darkened": false,
+          "artwork": false,
+          "count": 0,
+          "back": false
+        },
+        "asin": null,
+        "release-events": [
+          {
+            "area": {
+              "type": null,
+              "sort-name": "[Worldwide]",
+              "type-id": null,
+              "id": "525d4e18-3d00-31b9-a58b-a146a916de8f",
+              "disambiguation": "",
+              "name": "[Worldwide]",
+              "iso-3166-1-codes": [
+                "XW"
+              ]
+            },
+            "date": "2020-04-15"
+          }
+        ],
+        "status-id": "4e304316-386d-3409-af2e-78857eec5cfe",
+        "country": "XW",
+        "disambiguation": "",
+        "id": "a6fe08b6-20d5-42eb-beaa-ce9977793747",
+        "release-group": {
+          "id": "8d8b53c5-4426-448a-be02-1c07bd071d12",
+          "disambiguation": "",
+          "artist-credit": [
+            {
+              "artist": {
+                "name": "Audio Sound Paper",
+                "country": "US",
+                "disambiguation": "",
+                "id": "76708e20-5d88-4699-adf6-a1f2118ef661",
+                "type": "Group",
+                "sort-name": "Audio Sound Paper",
+                "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b"
+              },
+              "joinphrase": "",
+              "name": "Audio Sound Paper"
+            }
+          ],
+          "primary-type": "Single",
+          "secondary-types": [],
+          "first-release-date": "2020-04-15",
+          "primary-type-id": "d6038452-8ee0-3f68-affc-2de9a1ede0b9",
+          "title": "Gay Bar Soldier",
+          "secondary-type-ids": []
+        },
+        "media": [
+          {
+            "position": 1,
+            "id": "fc753d37-1700-4ed5-b60e-142f4535d32a",
+            "tracks": [
+              {
+                "id": "4a5cbad1-b685-4ddd-a0a8-6b795f021eeb",
+                "position": 1,
+                "artist-credit": [
+                  {
+                    "artist": {
+                      "country": "US",
+                      "name": "Audio Sound Paper",
+                      "type": "Group",
+                      "sort-name": "Audio Sound Paper",
+                      "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                      "disambiguation": "",
+                      "id": "76708e20-5d88-4699-adf6-a1f2118ef661"
+                    },
+                    "name": "Audio Sound Paper",
+                    "joinphrase": ""
+                  }
+                ],
+                "number": "1",
+                "recording": {
+                  "artist-credit": [
+                    {
+                      "artist": {
+                        "country": "US",
+                        "name": "Audio Sound Paper",
+                        "type": "Group",
+                        "type-id": "e431f5f6-b5d2-343d-8b36-72607fffb74b",
+                        "sort-name": "Audio Sound Paper",
+                        "disambiguation": "",
+                        "id": "76708e20-5d88-4699-adf6-a1f2118ef661"
+                      },
+                      "name": "Audio Sound Paper",
+                      "joinphrase": ""
+                    }
+                  ],
+                  "disambiguation": "",
+                  "id": "f26932bc-4b4f-4ede-8659-46f0c6285f78",
+                  "video": false,
+                  "length": 336000,
+                  "title": "Gay Bar Soldier",
+                  "first-release-date": "2020-04-15"
+                },
+                "title": "Gay Bar Soldier",
+                "length": 336000
+              }
+            ],
+            "track-offset": 0,
+            "title": "",
+            "format-id": "907a28d9-b3b2-3ef6-89a8-7b18d91d4794",
+            "track-count": 1,
+            "format": "Digital Media"
+          }
+        ],
+        "text-representation": {
+          "language": "eng",
+          "script": null
+        },
+        "status": "Official"
+      }
+    },
+    "releaseGroups": {
+      "8d8b53c5-4426-448a-be02-1c07bd071d12": {
+        "secondary-type-ids": [],
+        "first-release-date": "2020-04-15",
+        "id": "8d8b53c5-4426-448a-be02-1c07bd071d12",
+        "disambiguation": "",
+        "primary-type-id": "d6038452-8ee0-3f68-affc-2de9a1ede0b9",
+        "primary-type": "Single",
+        "tags": [],
+        "title": "Gay Bar Soldier",
+        "secondary-types": []
+      }
+    }
+  }
+}

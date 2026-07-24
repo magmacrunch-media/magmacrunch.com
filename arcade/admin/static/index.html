@@ -178,6 +178,19 @@
                                 <div class="ref-line"><code>rsync -avz arcade/ jake@192.168.1.16:~/arcade/</code></div>
                             </div>
                         </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">SECURITY</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line"><span class="ref-label">FIREWALL</span> UFW — deny incoming, allow SSH/HTTP/HTTPS/games/admin</div>
+                                <div class="ref-line"><span class="ref-label">SSH</span> Key-only auth, fail2ban active</div>
+                                <div class="ref-line"><span class="ref-label">SSL</span> Let's Encrypt (magmacrunch.duckdns.org), auto-renew 2x daily</div>
+                                <div class="ref-line"><span class="ref-label">HEADERS</span> HSTS, X-Frame-Options, X-Content-Type-Options</div>
+                                <div class="ref-line"><span class="ref-label">AUTH</span> Admin dashboard (8780) + private arcade (8782) password-protected</div>
+                                <div class="ref-line"><span class="ref-label">PERMS</span> Config files mode 600 (owner-only)</div>
+                                <div class="ref-line"><span class="ref-label">SERVICES</span> systemd — auto-start, restart on crash</div>
+                                <div class="ref-line"><span class="ref-label">UPDATED</span> Jul 23 2026</div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>

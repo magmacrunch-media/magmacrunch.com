@@ -105,6 +105,7 @@ const LABELS = [
     { uuid: 'c78b5612-2300-4ee1-8663-299ddcf9ce25', name: 'magmacrunch music' },
     { uuid: 'ad82d124-e41e-49e8-9bf9-53e836b44336', name: 'The Slop Collective' },
     { uuid: '39446d03-fe9c-47d0-81a9-2b42d34fb400', name: 'magmacrunch media' },
+    { uuid: '1d3190cc-b700-4409-bdb4-2ee8b93f3d8c', name: 'magmacrunch arcade' },
 ];
 
 const WORKS = [
@@ -552,7 +553,7 @@ async function backupWork(entity) {
 
 async function backupCollective(entity) {
     logEntity('collective', entity.name);
-    const cache = { fetchedAt: new Date().toISOString(), entityType: 'collective', slug: entity.slug, name: entity.name, ids: entity.ids, works: {}, recordings: {}, releases: {} };
+    const cache = { fetchedAt: new Date().toISOString(), entityType: 'collective', slug: entity.slug, name: entity.name, ids: entity.ids, works: { artistWorkRels: null, details: {}, recordingFlags: {} }, recordings: { list: [], details: {} }, releases: { list: [], details: {}, releaseGroups: {} } };
     indent++;
 
     // ── works ──
