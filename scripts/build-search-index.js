@@ -14,14 +14,38 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const index = [];
 
-function addItem(title, category, url, description) {
-  index.push({ t: title, c: category, u: '/' + url, d: description || '' });
+function addItem(title, category, url, description, body) {
+  index.push({ t: title, c: category, u: '/' + url, d: description || '', b: body || '' });
 }
 
 function slugify(name) {
   return name.toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
+}
+
+// ── Body Text Extraction ───────────────────────────────────
+// Strips HTML tags, scripts, styles, and nav elements.
+// Truncates to maxLength chars.
+function extractBodyText(html, maxLength = 600) {
+  let text = html;
+  // Remove script and style tags and their content
+  text = text.replace(/<script[\s\S]*?<\/script>/gi, '');
+  text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
+  // Remove nav elements
+  text = text.replace(/<nav[\s\S]*?<\/nav>/gi, '');
+  // Remove footer
+  text = text.replace(/<footer[\s\S]*?<\/footer>/gi, '');
+  // Remove HTML tags
+  text = text.replace(/<[^>]+>/g, ' ');
+  // Decode common HTML entities
+  text = text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ');
+  // Collapse whitespace
+  text = text.replace(/\s+/g, ' ').trim();
+  // Truncate
+  if (text.length > maxLength) text = text.slice(0, maxLength) + '...';
+  return text;
 }
 
 // ── Distributed Music ──────────────────────────────────────
@@ -171,7 +195,8 @@ function parsePress() {
       const titleMatch = html.match(/<title>([^<]+)<\/title>/);
       if (titleMatch) {
         const title = titleMatch[1].split('—')[0].split('–')[0].trim();
-        addItem(title, 'press', `press/scientific/${file}`, 'Scientific journal');
+        const body = extractBodyText(html);
+        addItem(title, 'press', `press/scientific/${file}`, 'Scientific journal', body);
       }
     }
     // Check for cone/ subdirectory
@@ -183,7 +208,8 @@ function parsePress() {
         const titleMatch = html.match(/<title>([^<]+)<\/title>/);
         if (titleMatch) {
           const title = titleMatch[1].split('—')[0].split('–')[0].trim();
-          addItem(title, 'press', `press/scientific/cone/${file}`, 'Scientific journal');
+          const body = extractBodyText(html);
+          addItem(title, 'press', `press/scientific/cone/${file}`, 'Scientific journal', body);
         }
       }
     }
@@ -198,7 +224,8 @@ function parsePress() {
       const titleMatch = html.match(/<title>([^<]+)<\/title>/);
       if (titleMatch) {
         const title = titleMatch[1].split('—')[0].split('–')[0].trim();
-        addItem(title, 'press', `press/experimental/${file}`, 'Experimental journal');
+        const body = extractBodyText(html);
+        addItem(title, 'press', `press/experimental/${file}`, 'Experimental journal', body);
       }
     }
   }
@@ -217,7 +244,8 @@ function parsePress() {
         if (titleMatch) {
           const title = titleMatch[1].split('—')[0].split('–')[0].trim();
           const artistName = artistDir.name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-          addItem(title, 'press', `press/lyrics/${artistDir.name}/${file}`, `Lyrics — ${artistName}`);
+          const body = extractBodyText(html);
+          addItem(title, 'press', `press/lyrics/${artistDir.name}/${file}`, `Lyrics — ${artistName}`, body);
         }
       }
     }
@@ -241,9 +269,8 @@ function parseTools() {
 
 // ── Main Pages ─────────────────────────────────────────────
 function parseMainPages() {
-  const pages = [
+  const simplePages = [
     { file: 'index.html', title: 'Home', desc: 'magmacrunch media homepage' },
-    { file: 'home/about.html', title: 'About', desc: 'About magmacrunch media' },
     { file: 'home/guestbook.html', title: 'Guestbook', desc: 'Sign the guestbook' },
     { file: 'music/index.html', title: 'Music Hub', desc: 'Music landing page' },
     { file: 'music/distributed-music.html', title: 'Distributed Music', desc: 'Stream and download releases' },
@@ -258,8 +285,16 @@ function parseMainPages() {
     { file: 'press/submissions.html', title: 'Submissions', desc: 'Submission guidelines' },
     { file: 'tools/index.html', title: 'Tools Hub', desc: 'Creative tools' },
   ];
-  for (const p of pages) {
+  for (const p of simplePages) {
     addItem(p.title, 'page', p.file, p.desc);
+  }
+
+  // About page — extract body text
+  const aboutFile = path.join(ROOT, 'home/about.html');
+  if (fs.existsSync(aboutFile)) {
+    const html = fs.readFileSync(aboutFile, 'utf8');
+    const body = extractBodyText(html);
+    addItem('About', 'page', 'home/about.html', 'About magmacrunch media', body);
   }
 }
 

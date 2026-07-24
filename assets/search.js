@@ -132,6 +132,7 @@
                 keys: [
                     { name: 't', weight: 2 },
                     { name: 'a', weight: 1.5 },
+                    { name: 'b', weight: 1 },
                     { name: 'd', weight: 1 },
                     { name: 'c', weight: 0.5 }
                 ],

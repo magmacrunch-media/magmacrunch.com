@@ -3,864 +3,1008 @@
     "t": "Home",
     "c": "page",
     "u": "/index.html",
-    "d": "magmacrunch media homepage"
-  },
-  {
-    "t": "About",
-    "c": "page",
-    "u": "/home/about.html",
-    "d": "About magmacrunch media"
+    "d": "magmacrunch media homepage",
+    "b": ""
   },
   {
     "t": "Guestbook",
     "c": "page",
     "u": "/home/guestbook.html",
-    "d": "Sign the guestbook"
+    "d": "Sign the guestbook",
+    "b": ""
   },
   {
     "t": "Music Hub",
     "c": "page",
     "u": "/music/index.html",
-    "d": "Music landing page"
+    "d": "Music landing page",
+    "b": ""
   },
   {
     "t": "Distributed Music",
     "c": "page",
     "u": "/music/distributed-music.html",
-    "d": "Stream and download releases"
+    "d": "Stream and download releases",
+    "b": ""
   },
   {
     "t": "Visual Hub",
     "c": "page",
     "u": "/visual/index.html",
-    "d": "Visual art landing page"
+    "d": "Visual art landing page",
+    "b": ""
   },
   {
     "t": "Music Videos",
     "c": "page",
     "u": "/visual/music-videos.html",
-    "d": "MTV-style music videos"
+    "d": "MTV-style music videos",
+    "b": ""
   },
   {
     "t": "Collage",
     "c": "page",
     "u": "/visual/collage.html",
-    "d": "Editorial magazine collage art"
+    "d": "Editorial magazine collage art",
+    "b": ""
   },
   {
     "t": "Photography",
     "c": "page",
     "u": "/visual/photography.html",
-    "d": "Photography gallery"
+    "d": "Photography gallery",
+    "b": ""
   },
   {
     "t": "Teevee",
     "c": "page",
     "u": "/visual/tv.html",
-    "d": "Television-style content"
+    "d": "Television-style content",
+    "b": ""
   },
   {
     "t": "Archive Hub",
     "c": "page",
     "u": "/archive/index.html",
-    "d": "MusicBrainz archive"
+    "d": "MusicBrainz archive",
+    "b": ""
   },
   {
     "t": "Arcade Hub",
     "c": "page",
     "u": "/arcade/index.html",
-    "d": "Pixel games and multiplayer"
+    "d": "Pixel games and multiplayer",
+    "b": ""
   },
   {
     "t": "Press Hub",
     "c": "page",
     "u": "/press/index.html",
-    "d": "Journals and writing"
+    "d": "Journals and writing",
+    "b": ""
   },
   {
     "t": "Submissions",
     "c": "page",
     "u": "/press/submissions.html",
-    "d": "Submission guidelines"
+    "d": "Submission guidelines",
+    "b": ""
   },
   {
     "t": "Tools Hub",
     "c": "page",
     "u": "/tools/index.html",
-    "d": "Creative tools"
+    "d": "Creative tools",
+    "b": ""
+  },
+  {
+    "t": "About",
+    "c": "page",
+    "u": "/home/about.html",
+    "d": "About magmacrunch media",
+    "b": "about — magmacrunch media home › about DIY music collective & independent record label ✦ no-budget music videos ✦ archive ✦ music publishing ✦ video games ✦ press ✦ web tools ✦ photography ✦ collage ✦ currently supporting Sex Van Floor Plan // about // __ __ /\\ \\ /\\ \\ __ ___ ___ __ __ ___ ___ __ ___ _ __ __ __ ___ ___\\ \\ \\___ ___ ___ __ \\_\\ \\/\\_\\ __ /' __` __`\\ /'__`\\ /'_ `\\ /' __` __`\\ /'__`\\ /'___\\/\\`'__\\/\\ \\/\\ \\ /' _ `\\ /'___\\ \\ _ `\\ /' __` __`\\ /'__`\\ /'_` \\/\\ \\ /'__`\\ /\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\L\\ \\/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\__/\\ \\ \\/ \\ \\ \\_\\ \\/\\ \\/\\ \\/\\ \\__/\\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\/\\ __//\\ \\L\\..."
   },
   {
     "t": "Sex Van Floor Plan (2026)",
     "c": "music",
     "u": "/music/distributed-music.html#sex-van-floor-plan",
-    "d": "Sex Van Floor Plan — First released on CD on June 26, 2026. Distributed on July 17, 2026."
+    "d": "Sex Van Floor Plan — First released on CD on June 26, 2026. Distributed on July 17, 2026.",
+    "b": ""
   },
   {
     "t": "Lights (2016)",
     "c": "music",
     "u": "/music/distributed-music.html#lights",
-    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 19. 2026."
+    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 19. 2026.",
+    "b": ""
   },
   {
     "t": "Pine (2016)",
     "c": "music",
     "u": "/music/distributed-music.html#pine",
-    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 18. 2026."
+    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 18. 2026.",
+    "b": ""
   },
   {
     "t": "Birds (2016)",
     "c": "music",
     "u": "/music/distributed-music.html#birds",
-    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 18. 2026."
+    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 18. 2026.",
+    "b": ""
   },
   {
     "t": "You'll Understand When You're Older (2014)",
     "c": "music",
     "u": "/music/distributed-music.html#youll-understand-when-youre-older",
-    "d": "Juanito Thompson — 2026 remastered & edited version of an EP recorded in November 2013 and released in March 2014. For copyright reaspons, the spoken-word Carl Sagan sample in the last track had to be removed using an online stem splitter (original mix files are currently lost). Distributed on April 4, 2026."
+    "d": "Juanito Thompson — 2026 remastered & edited version of an EP recorded in November 2013 and released in March 2014. For copyright reaspons, the spoken-word Carl Sagan sample in the last track had to be removed using an online stem splitter (original mix files are currently lost). Distributed on April 4, 2026.",
+    "b": ""
   },
   {
     "t": "George Boole has entered the chat (2026)",
     "c": "music",
     "u": "/music/distributed-music.html#george-boole",
-    "d": "Juanito Thompson — Distributed on March 22, 2026."
+    "d": "Juanito Thompson — Distributed on March 22, 2026.",
+    "b": ""
   },
   {
     "t": "HELLO, WORLD / LOVE, SPACE (2015)",
     "c": "music",
     "u": "/music/distributed-music.html#hello-world",
-    "d": "Texas Hold'Em Lava Dome — Distributed on November 9, 2025."
+    "d": "Texas Hold'Em Lava Dome — Distributed on November 9, 2025.",
+    "b": ""
   },
   {
     "t": "Spooked (2025)",
     "c": "music",
     "u": "/music/distributed-music.html#spooked",
-    "d": "Juanito Thompson — Distributed and first released on October 30, 2025."
+    "d": "Juanito Thompson — Distributed and first released on October 30, 2025.",
+    "b": ""
   },
   {
     "t": "pay2play (2025)",
     "c": "music",
     "u": "/music/distributed-music.html#pay2play",
-    "d": "Sex Van Floor Plan — Distributed and first released on July 18, 2025."
+    "d": "Sex Van Floor Plan — Distributed and first released on July 18, 2025.",
+    "b": ""
   },
   {
     "t": "Reverse Telescope Reversed (2025)",
     "c": "music",
     "u": "/music/distributed-music.html#reverse-telescope-reversed",
-    "d": "Juanito Thompson — Distributed and first released on June 28, 2025."
+    "d": "Juanito Thompson — Distributed and first released on June 28, 2025.",
+    "b": ""
   },
   {
     "t": "Panic. (Don't Panic). Panic. (2023)",
     "c": "music",
     "u": "/music/distributed-music.html#panic",
-    "d": "The Four B's — Distributed on June 11, 2025."
+    "d": "The Four B's — Distributed on June 11, 2025.",
+    "b": ""
   },
   {
     "t": "Long Way Home (2025)",
     "c": "music",
     "u": "/music/distributed-music.html#long-way-home",
-    "d": "Jon McCoy — Distributed and first released on May 1, 2025."
+    "d": "Jon McCoy — Distributed and first released on May 1, 2025.",
+    "b": ""
   },
   {
     "t": "Pompous Fanfare for All Occasions (2019)",
     "c": "music",
     "u": "/music/distributed-music.html#pompous-fanfare",
-    "d": "Texas Hold'Em Lava Dome — Distributed on November 20, 2024 (previous version distributed from August 8 until November 19, 2024)."
+    "d": "Texas Hold'Em Lava Dome — Distributed on November 20, 2024 (previous version distributed from August 8 until November 19, 2024).",
+    "b": ""
   },
   {
     "t": "Millstone Woods May 2018 (2023)",
     "c": "music",
     "u": "/music/distributed-music.html#millstone-woods",
-    "d": "Dag Henderson — Distributed on November 17, 2024 (previous version distributed from September 30, 2024)."
+    "d": "Dag Henderson — Distributed on November 17, 2024 (previous version distributed from September 30, 2024).",
+    "b": ""
   },
   {
     "t": "World Can Wait (2021)",
     "c": "music",
     "u": "/music/distributed-music.html#world-can-wait",
-    "d": "Jon McCoy — Distributed on November 11, 2024."
+    "d": "Jon McCoy — Distributed on November 11, 2024.",
+    "b": ""
   },
   {
     "t": "TEXAS TOAST MAGMA CRUNCH (2016)",
     "c": "music",
     "u": "/music/distributed-music.html#texas-toast-magma-crunch",
-    "d": "Texas Hold'Em Lava Dome — Distributed on November 5, 2024."
+    "d": "Texas Hold'Em Lava Dome — Distributed on November 5, 2024.",
+    "b": ""
   },
   {
     "t": "songs (2019)",
     "c": "music",
     "u": "/music/distributed-music.html#songs-2019",
-    "d": "Jon McCoy — Distributed on November 4, 2024 (previous version distributed from September 16, 2024)."
+    "d": "Jon McCoy — Distributed on November 4, 2024 (previous version distributed from September 16, 2024).",
+    "b": ""
   },
   {
     "t": "Much Better Than Carl Spatski (2013)",
     "c": "music",
     "u": "/music/distributed-music.html#much-better-than",
-    "d": "Juanito Thompson — Distributed on October 22, 2024 (previous version distributed from August 29, 2024)."
+    "d": "Juanito Thompson — Distributed on October 22, 2024 (previous version distributed from August 29, 2024).",
+    "b": ""
   },
   {
     "t": "It's Twenty-Fourteen (2014)",
     "c": "music",
     "u": "/music/distributed-music.html#its-2014",
-    "d": "Juanito Thompson — Distributed on October 22, 2024 (previous version distributed from August 13 until October 15, 2024)."
+    "d": "Juanito Thompson — Distributed on October 22, 2024 (previous version distributed from August 13 until October 15, 2024).",
+    "b": ""
   },
   {
     "t": "Adenosine (2016)",
     "c": "music",
     "u": "/music/distributed-music.html#adenosine",
-    "d": "Texas Hold'Em Lava Dome — Distributed on October 21, 2024 (previous version distributed from August 21 until October 18, 2024)."
+    "d": "Texas Hold'Em Lava Dome — Distributed on October 21, 2024 (previous version distributed from August 21 until October 18, 2024).",
+    "b": ""
   },
   {
     "t": "Martial Law in Garrison Oaks (2018)",
     "c": "music",
     "u": "/music/distributed-music.html#martial-law-in-garrison-oaks",
-    "d": "Texas Hold'Em Lava Dome — Distributed on October 19, 2024."
+    "d": "Texas Hold'Em Lava Dome — Distributed on October 19, 2024.",
+    "b": ""
   },
   {
     "t": "Ancient Weeds (2023)",
     "c": "music",
     "u": "/music/distributed-music.html#ancient-weeds",
-    "d": "Juanito Thompson — Distributed on October 19, 2024."
+    "d": "Juanito Thompson — Distributed on October 19, 2024.",
+    "b": ""
   },
   {
     "t": "That Definitely Did Destroy Me (2013)",
     "c": "music",
     "u": "/music/distributed-music.html#that-definitely-did-destroy-me",
-    "d": "Juanito Thompson — Distributed on September 29, 2024."
+    "d": "Juanito Thompson — Distributed on September 29, 2024.",
+    "b": ""
   },
   {
     "t": "Everything is falling all together, all at once, even the universe (2013)",
     "c": "music",
     "u": "/music/distributed-music.html#everything-is-falling-all-together",
-    "d": "The Four B's — Distributed on September 29, 2024."
+    "d": "The Four B's — Distributed on September 29, 2024.",
+    "b": ""
   },
   {
     "t": "Enter Stage Left Bowser (2013)",
     "c": "music",
     "u": "/music/distributed-music.html#enter-stage-left-bowser",
-    "d": "The Four B's — Distributed on September 28, 2024."
+    "d": "The Four B's — Distributed on September 28, 2024.",
+    "b": ""
   },
   {
     "t": "Juanito Thompson's Transatlantic Colleague (2023)",
     "c": "music",
     "u": "/music/distributed-music.html#transatlantic-colleague",
-    "d": "Dag Henderson — Distributed on September 28, 2024."
+    "d": "Dag Henderson — Distributed on September 28, 2024.",
+    "b": ""
   },
   {
     "t": "The Four B's (2012)",
     "c": "music",
     "u": "/music/distributed-music.html#the-four-bs",
-    "d": "The Four B's — Distributed on September 25, 2024."
+    "d": "The Four B's — Distributed on September 25, 2024.",
+    "b": ""
   },
   {
     "t": "Heavy Water (2014)",
     "c": "music",
     "u": "/music/distributed-music.html#heavy-water",
-    "d": "The Four B's — Distributed on September 24, 2024."
+    "d": "The Four B's — Distributed on September 24, 2024.",
+    "b": ""
   },
   {
     "t": "A Close Relative to Vinny Bobarino (2010)",
     "c": "music",
     "u": "/music/distributed-music.html#close-relative-to-vinny-bobarino",
-    "d": "Juanito Thompson — Distributed on September 24, 2024."
+    "d": "Juanito Thompson — Distributed on September 24, 2024.",
+    "b": ""
   },
   {
     "t": "Hazardous Metals in Ambient Air (2018)",
     "c": "music",
     "u": "/music/distributed-music.html#hazardous-metals-in-ambient-air",
-    "d": "Texas Hold'Em Lava Dome — Distributed on August 10, 2024."
+    "d": "Texas Hold'Em Lava Dome — Distributed on August 10, 2024.",
+    "b": ""
   },
   {
     "t": "Sitting on a Dock in New Shoreham (2023)",
     "c": "music",
     "u": "/music/distributed-music.html#sitting-on-a-dock",
-    "d": "Juanito Thompson — Distributed on August 7, 2024."
+    "d": "Juanito Thompson — Distributed on August 7, 2024.",
+    "b": ""
   },
   {
     "t": "The Empty West (2024)",
     "c": "music",
     "u": "/music/distributed-music.html#the-empty-west",
-    "d": "Woah. — Our first release on streaming services. Originally released on February 3, 2024 and distributed on August 5, 2024."
+    "d": "Woah. — Our first release on streaming services. Originally released on February 3, 2024 and distributed on August 5, 2024.",
+    "b": ""
   },
   {
     "t": "Reverse Osmosis Reversed",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Juanito Thompson — 4:51"
+    "d": "Juanito Thompson — 4:51",
+    "b": ""
   },
   {
     "t": "Heavy Water",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "The Four B's — 5:03"
+    "d": "The Four B's — 5:03",
+    "b": ""
   },
   {
     "t": "Somewhere",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "C.P. Rutledge — 4:15"
+    "d": "C.P. Rutledge — 4:15",
+    "b": ""
   },
   {
     "t": "Birds",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Texas Hold'Em Lava Dome — 4:47"
+    "d": "Texas Hold'Em Lava Dome — 4:47",
+    "b": ""
   },
   {
     "t": "A January Gathering",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Bears Crossing — 2:34"
+    "d": "Bears Crossing — 2:34",
+    "b": ""
   },
   {
     "t": "Neopolitan Mood",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "James R. McCoy — 3:16"
+    "d": "James R. McCoy — 3:16",
+    "b": ""
   },
   {
     "t": "makemecookies! x4.",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Jimmi — 0:51"
+    "d": "Jimmi — 0:51",
+    "b": ""
   },
   {
     "t": "Millstone Woods May 2018",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Dag Henderson — 3:38"
+    "d": "Dag Henderson — 3:38",
+    "b": ""
   },
   {
     "t": "The End",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Jon McCoy — 3:26"
+    "d": "Jon McCoy — 3:26",
+    "b": ""
   },
   {
     "t": "Qikiqtarjuaq",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "Juanito Thompson — 6:20"
+    "d": "Juanito Thompson — 6:20",
+    "b": ""
   },
   {
     "t": "Everything is falling all together, all at once, even the universe",
     "c": "song",
     "u": "/music/jukebox/",
-    "d": "The Four B's — 4:28"
+    "d": "The Four B's — 4:28",
+    "b": ""
   },
   {
     "t": "Audio Sound Paper, et al.",
     "c": "artist",
     "u": "/archive/by-artist/audio-sound-paper-et-al/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "Bottle Boys Collective",
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "C.P. Rutledge",
     "c": "artist",
     "u": "/archive/by-artist/c-p-rutledge/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "dag henderson",
     "c": "artist",
     "u": "/archive/by-artist/dag-henderson/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "DDT LLC",
     "c": "artist",
     "u": "/archive/by-artist/ddt-llc/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "dino spumoni",
     "c": "artist",
     "u": "/archive/by-artist/dino-spumoni/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "The Four B's",
     "c": "artist",
     "u": "/archive/by-artist/four-bs/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "Fruity Loops Debauchery Bros.",
     "c": "artist",
     "u": "/archive/by-artist/fruity-loops-debauchery-collective/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "Juanito Thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "THLD",
     "c": "artist",
     "u": "/archive/by-artist/thld/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "Vinny Bobarino",
     "c": "artist",
     "u": "/archive/by-artist/vinny-bobarino/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/",
-    "d": "Artist archive — recordings, works, events, releases"
+    "d": "Artist archive — recordings, works, events, releases",
+    "b": ""
   },
   {
     "t": "College Green Apt.",
     "c": "place",
     "u": "/archive/by-place/college-green-apt/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "Frogwood Manor",
     "c": "place",
     "u": "/archive/by-place/frogwood-manor/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "Green Street Apt.",
     "c": "place",
     "u": "/archive/by-place/green-street-apt/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "Irvin House",
     "c": "place",
     "u": "/archive/by-place/irvin-house/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "Marvin Gardens G12",
     "c": "place",
     "u": "/archive/by-place/marvin-gardens-g12/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "Melrose House",
     "c": "place",
     "u": "/archive/by-place/melrose-house/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "The Tuna Can",
     "c": "place",
     "u": "/archive/by-place/the-tuna-can/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "Twin Maples",
     "c": "place",
     "u": "/archive/by-place/twin-maples/",
-    "d": "Place archive — recordings, works, events"
+    "d": "Place archive — recordings, works, events",
+    "b": ""
   },
   {
     "t": "magmacrunch arcade",
     "c": "label",
     "u": "/archive/by-label/magmacrunch-arcade/",
-    "d": "Label archive"
+    "d": "Label archive",
+    "b": ""
   },
   {
     "t": "magmacrunch media",
     "c": "label",
     "u": "/archive/by-label/magmacrunch-media/",
-    "d": "Label archive"
+    "d": "Label archive",
+    "b": ""
   },
   {
     "t": "magmacrunch music",
     "c": "label",
     "u": "/archive/by-label/magmacrunch-music/",
-    "d": "Label archive"
+    "d": "Label archive",
+    "b": ""
   },
   {
     "t": "The Slop Collective",
     "c": "label",
     "u": "/archive/by-label/the-slop-collective/",
-    "d": "Label archive"
+    "d": "Label archive",
+    "b": ""
   },
   {
     "t": "Alex S.",
     "c": "contributor",
     "u": "/archive/by-contributor/alex-s/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Ben Nikitas",
     "c": "contributor",
     "u": "/archive/by-contributor/ben-nikitas/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Chuck J'OB",
     "c": "contributor",
     "u": "/archive/by-contributor/chuck-job/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "C.P. Rutledge",
     "c": "contributor",
     "u": "/archive/by-contributor/cp-rutledge/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "D-Rob Robinson",
     "c": "contributor",
     "u": "/archive/by-contributor/d-rob-robinson/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "David Hayes",
     "c": "contributor",
     "u": "/archive/by-contributor/david-hayes/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Ellis Grey",
     "c": "contributor",
     "u": "/archive/by-contributor/ellis-grey/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Jake A. McCoy",
     "c": "contributor",
     "u": "/archive/by-contributor/jake-mccoy/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Jake Thomas",
     "c": "contributor",
     "u": "/archive/by-contributor/jake-thomas/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "James R. McCoy",
     "c": "contributor",
     "u": "/archive/by-contributor/james-mccoy/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Jon McCoy",
     "c": "contributor",
     "u": "/archive/by-contributor/jon-mccoy/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Judah Unmuth-Yockey",
     "c": "contributor",
     "u": "/archive/by-contributor/judah-unmuth-yockey/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Rho K.",
     "c": "contributor",
     "u": "/archive/by-contributor/rho-k/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Rob Tomer",
     "c": "contributor",
     "u": "/archive/by-contributor/rob-tomer/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Stephen McMillan",
     "c": "contributor",
     "u": "/archive/by-contributor/stephen-mcmillan/",
-    "d": "Contributor archive"
+    "d": "Contributor archive",
+    "b": ""
   },
   {
     "t": "Chess",
     "c": "arcade",
     "u": "/arcade/chess/",
-    "d": "Board Game"
+    "d": "Board Game",
+    "b": ""
   },
   {
     "t": "Checkers",
     "c": "arcade",
     "u": "/arcade/checkers/",
-    "d": "Board Game"
+    "d": "Board Game",
+    "b": ""
   },
   {
     "t": "Backgammon",
     "c": "arcade",
     "u": "/arcade/backgammon/",
-    "d": "Board Game"
+    "d": "Board Game",
+    "b": ""
   },
   {
     "t": "Parchis",
     "c": "arcade",
     "u": "/arcade/parchisi/",
-    "d": "Board Game"
+    "d": "Board Game",
+    "b": ""
   },
   {
     "t": "Chinese Checkers",
     "c": "arcade",
     "u": "/arcade/chinese-checkers/",
-    "d": "Board Game"
+    "d": "Board Game",
+    "b": ""
   },
   {
     "t": "Solitaire",
     "c": "arcade",
     "u": "/arcade/solitaire/",
-    "d": "Card Game"
+    "d": "Card Game",
+    "b": ""
   },
   {
     "t": "Cribbage",
     "c": "arcade",
     "u": "/arcade/cribbage/",
-    "d": "Card Game"
+    "d": "Card Game",
+    "b": ""
   },
   {
     "t": "SÖKÖ",
     "c": "arcade",
     "u": "/arcade/scandinavian-stud/",
-    "d": "Card Game"
+    "d": "Card Game",
+    "b": ""
   },
   {
     "t": "Texas Hold'Em Lava Dome",
     "c": "arcade",
     "u": "/arcade/solitaire_THLD/",
-    "d": "Card Game"
+    "d": "Card Game",
+    "b": ""
   },
   {
     "t": "French Tarot",
     "c": "arcade",
     "u": "/arcade/tarot/",
-    "d": "Card Game"
+    "d": "Card Game",
+    "b": ""
   },
   {
     "t": "2^N",
     "c": "arcade",
     "u": "/arcade/2^N/",
-    "d": "Puzzle Game"
+    "d": "Puzzle Game",
+    "b": ""
   },
   {
     "t": "George Boole has entered the chat",
     "c": "arcade",
     "u": "/arcade/george-boole/",
-    "d": "Puzzle Game"
+    "d": "Puzzle Game",
+    "b": ""
   },
   {
     "t": "15 PUZZLE",
     "c": "arcade",
     "u": "/arcade/fifteen-puzzle/",
-    "d": "Puzzle Game"
+    "d": "Puzzle Game",
+    "b": ""
   },
   {
     "t": "THREES",
     "c": "arcade",
     "u": "/arcade/threes/",
-    "d": "Puzzle Game"
+    "d": "Puzzle Game",
+    "b": ""
   },
   {
     "t": "KLOTSKI",
     "c": "arcade",
     "u": "/arcade/klotski/",
-    "d": "Puzzle Game"
+    "d": "Puzzle Game",
+    "b": ""
   },
   {
     "t": "TETRIS",
     "c": "arcade",
     "u": "/arcade/tetris/",
-    "d": "Puzzle Game"
+    "d": "Puzzle Game",
+    "b": ""
   },
   {
     "t": "MOONLIGHT DRIFT",
     "c": "arcade",
     "u": "/arcade/moonlight-drift/",
-    "d": "Action Game"
+    "d": "Action Game",
+    "b": ""
   },
   {
     "t": "Very Long Boards",
     "c": "arcade",
     "u": "/arcade/very-long-boards/",
-    "d": "Action Game"
+    "d": "Action Game",
+    "b": ""
   },
   {
     "t": "RODERICK TRON",
     "c": "arcade",
     "u": "/arcade/roderick-tron/",
-    "d": "Action Game"
+    "d": "Action Game",
+    "b": ""
   },
   {
     "t": "SORRY!",
     "c": "arcade",
     "u": "/arcade/SORRY/",
-    "d": "Game"
+    "d": "Game",
+    "b": ""
   },
   {
     "t": "Aggravation",
     "c": "arcade",
     "u": "/arcade/aggravation/",
-    "d": "Board Game"
+    "d": "Board Game",
+    "b": ""
   },
   {
     "t": "scientific",
     "c": "press",
     "u": "/press/scientific/index.html",
-    "d": "Scientific journal"
+    "d": "Scientific journal",
+    "b": "scientific — press — magmacrunch media home › press › scientific // scientific // a journal of science & technology essays on physics, mathematics, and the machinery of the universe. // pieces // On the Quantum Nature of Photons essay jake mccoy · sep 2024 ▶ Why is off-plane diffraction conical? essay jake mccoy · 2022 ▶"
   },
   {
     "t": "On the Quantum Nature of Photons",
     "c": "press",
     "u": "/press/scientific/photon-quantum.html",
-    "d": "Scientific journal"
+    "d": "Scientific journal",
+    "b": "On the Quantum Nature of Photons — press — magmacrunch media home › press › scientific › On the Quantum Nature of Photons essay On the Quantum Nature of Photons jake mccoy september 2024 Classical Harmonic Oscillator The Hamiltonian for a 1D harmonic oscillator with mass $m$ and angular frequency $\\omega$ can be written in terms of position, $x$, and momentum, $p_x$, in phase space as $$ H = \\frac{p_x^2}{2 m} + \\frac{1}{2} m \\omega^2 x^2 . $$ Hamilton's equations give $$ \\dot{x} = \\frac{\\partial H}{\\partial p_x} = \\frac{p_x}{m} \\quad \\text{and} \\quad \\dot{p_x} = -\\frac{\\partial H}{\\partial x} ..."
   },
   {
     "t": "Why is off-plane diffraction conical?",
     "c": "press",
     "u": "/press/scientific/cone/index.html",
-    "d": "Scientific journal"
+    "d": "Scientific journal",
+    "b": "Why is off-plane diffraction conical? — press — magmacrunch media home › press › scientific › Why is off-plane diffraction conical? essay Why is off-plane diffraction conical? jake mccoy 2022 The equation for a cone oriented along the $z$-axis with an opening angle $2\\gamma$ is given by $$ x^2 + y^2 = z^2 \\tan^2\\!\\left(\\gamma\\right) , $$ where $r = |z| \\tan(\\gamma)$ is the radius of a circular slice of the cone at an axial position $z$, as shown in Figure 1 . Figure 1. Projection of a cone given by Equation 1. To see how off-plane-diffracted orders are confined to the surface of a cone, the tr..."
   },
   {
     "t": "Basement Creature",
     "c": "press",
     "u": "/press/experimental/basement-creature.html",
-    "d": "Experimental journal"
+    "d": "Experimental journal",
+    "b": "Basement Creature — press — magmacrunch media home › press › experimental › basement creature essay Basement Creature april 2023 I'm not saying that I don't want you to think that you shouldn't do that. And I'm not saying I don't disagree with you. But you didn't say you wouldn't concede to their terms. I've never known you to be someone who couldn't say no. I'm not saying nothing is not fair game. And I can't say I haven't been there before. Is is is? Is is is. What do you mean by is? What do you mean by mean? Mean means mean. But what is what? What is what what is. And is is it. And is is it..."
   },
   {
     "t": "experimental",
     "c": "press",
     "u": "/press/experimental/index.html",
-    "d": "Experimental journal"
+    "d": "Experimental journal",
+    "b": "experimental — press — magmacrunch media home › press › experimental // experimental // a journal of experimental writing prose, poetry, and things that don't fit anywhere else. // pieces // Basement Creature essay anonymous · apr 2023 ▶"
   },
   {
     "t": "i only feel the rain",
     "c": "press",
     "u": "/press/lyrics/c-p-rutledge/i-only-feel-the-rain.html",
-    "d": "Lyrics — C P Rutledge"
+    "d": "Lyrics — C P Rutledge",
+    "b": "i only feel the rain — lyrics — press — magmacrunch media home › press › lyrics › c.p. rutledge › i only feel the rain lyrics i only feel the rain c.p. rutledge Embedded into the system, I pray my sister's okay They take my life away, burned my nerves, I know no pain I only feel the rain I only feel the rain All alone, broken-hearted, broken bones on the range Holy departed, surely you're lost within Isn't it a little funny, ain't it a little strange? The love we long for, our freedom in a cage These times will drag you all around The mind is victim to this merry-go-round I used to know a swee..."
   },
   {
     "t": "c.p. rutledge",
     "c": "press",
     "u": "/press/lyrics/c-p-rutledge/index.html",
-    "d": "Lyrics — C P Rutledge"
+    "d": "Lyrics — C P Rutledge",
+    "b": "c.p. rutledge — lyrics — press — magmacrunch media home › press › lyrics › c.p. rutledge // lyrics // c.p. rutledge // pieces // i only feel the rain ▶ somewhere ▶"
   },
   {
     "t": "somewhere",
     "c": "press",
     "u": "/press/lyrics/c-p-rutledge/somewhere.html",
-    "d": "Lyrics — C P Rutledge"
+    "d": "Lyrics — C P Rutledge",
+    "b": "somewhere — lyrics — press — magmacrunch media home › press › lyrics › c.p. rutledge › somewhere lyrics somewhere c.p. rutledge Somewhere, there she is All by herself in the midst Of all the suffering taking place in our world All is black and grey, we're losing our girl Marceline, can you hear me? All will be okay, all will be alright Marceline, where did you go? Away she is, far from here Stranded in the land, full of fear Marceline, can you hear me? All will be okay, all will be alright Marceline, where did you go? It's been three years to the day since you went away Off you went, all in th..."
   },
   {
     "t": "gone by",
     "c": "press",
     "u": "/press/lyrics/jon-mccoy/gone-by.html",
-    "d": "Lyrics — Jon Mccoy"
+    "d": "Lyrics — Jon Mccoy",
+    "b": "gone by — lyrics — press — magmacrunch media home › press › lyrics › jon mccoy › gone by lyrics gone by jon mccoy Well everything's ending for a while And all I have to show is gone But I'm back in the state I want to be in Good things fly by Now you know And everything we hoped for was denied But I guess that we know the ?? It's the same old display we're used to seeing Part of me dies inside 'Cause it felt like The end of an era We lost it The chance of a lifetime Gone by The people I'm close to keep me sane You know that time is a pain But I'm going through pictures of the past years Your l..."
   },
   {
     "t": "jon mccoy",
     "c": "press",
     "u": "/press/lyrics/jon-mccoy/index.html",
-    "d": "Lyrics — Jon Mccoy"
+    "d": "Lyrics — Jon Mccoy",
+    "b": "jon mccoy — lyrics — press — magmacrunch media home › press › lyrics › jon mccoy // lyrics // jon mccoy // pieces // gone by ▶ space ▶ starting again ▶ try ▶"
   },
   {
     "t": "space",
     "c": "press",
     "u": "/press/lyrics/jon-mccoy/space.html",
-    "d": "Lyrics — Jon Mccoy"
+    "d": "Lyrics — Jon Mccoy",
+    "b": "space — lyrics — press — magmacrunch media home › press › lyrics › jon mccoy › space lyrics space jon mccoy Hold me a space in line You're in my head today Hope that the path is right As I welcome you tonight All different roads to take When our bones break And we have all the time we like And all of our friends are here I'll leave it behind Step into the light Hope it gets better someday Floating in space and time Getting my mind in line We all have a lot to face Don't know how it got this way And we have so much time before All of the people you knew Have gone away, nothing left to say I hop..."
   },
   {
     "t": "starting again",
     "c": "press",
     "u": "/press/lyrics/jon-mccoy/starting-again.html",
-    "d": "Lyrics — Jon Mccoy"
+    "d": "Lyrics — Jon Mccoy",
+    "b": "starting again — lyrics — press — magmacrunch media home › press › lyrics › jon mccoy › starting again lyrics starting again jon mccoy Happy with where I am And I'm on the mend Saw it pass so easily and I won't Find it again We could find our own way Through the day And I know I abandoned my mind and I won't Start it again Lately it's been easy And I found a friend Saw it change so easily and you won't Find me again And I know there are good times Up ahead And I'm beginning to feel a little better about Starting again ✦ ← jon mccoy archive"
   },
   {
     "t": "try",
     "c": "press",
     "u": "/press/lyrics/jon-mccoy/try.html",
-    "d": "Lyrics — Jon Mccoy"
+    "d": "Lyrics — Jon Mccoy",
+    "b": "try — lyrics — press — magmacrunch media home › press › lyrics › jon mccoy › try lyrics try jon mccoy You have arrived Dearest of mine You take your time Leave it behind It's hard to see What you mean to me And I pass it by I don't know why I can't slow down The time Although I try Another time Driving to The desert with you At sixty-five I feel I'm alive You brought it back The joy in our lives But I said goodbye I don't know why I can't go back In time Although I try Another time ✦ ← jon mccoy archive"
   },
   {
     "t": "afab",
     "c": "press",
     "u": "/press/lyrics/sex-van-floor-plan/afab.html",
-    "d": "Lyrics — Sex Van Floor Plan"
+    "d": "Lyrics — Sex Van Floor Plan",
+    "b": "afab — lyrics — press — magmacrunch media home › press › lyrics › svfp lyrics afab sex van floor plan Don't you know what that'll do to you? Your tongue will fall right out of your skull Your skin will crack and peel right off Your teeth will turn black and disintegrate Your eyes will roll straight back in your head! Try some lamictal instead Your hair will turn green And you won't even feel But at least you won't destroy your divine Femininity Why would you do that to yourself? Cause I fucking wanted to But I liked you better before? Cause I fucking wanted to I kinda wanna fuck you though? Ye..."
   },
   {
     "t": "i changed my availability 4 u",
     "c": "press",
     "u": "/press/lyrics/sex-van-floor-plan/availability.html",
-    "d": "Lyrics — Sex Van Floor Plan"
+    "d": "Lyrics — Sex Van Floor Plan",
+    "b": "i changed my availability 4 u — lyrics — press — magmacrunch media home › press › lyrics › svfp lyrics i changed my availability 4 u sex van floor plan I changed my availability for you And you never even did the same for me So once a week I'd sit alone, wishing you were there \"This was my fault\", it was your idea though And I don't think you appreciate how much I really like you Wrote pages and pages so I didn't do the wrong thing You were the first to teach me many things and most important of them is: To sacrifice that long term development For your short term fucking high Cuddles feel so g..."
   },
   {
     "t": "i iou a pack of american spirits",
     "c": "press",
     "u": "/press/lyrics/sex-van-floor-plan/i-iou-a-pack-of-american-spirits.html",
-    "d": "Lyrics — Sex Van Floor Plan"
+    "d": "Lyrics — Sex Van Floor Plan",
+    "b": "i iou a pack of american spirits — lyrics — press — magmacrunch media home › press › lyrics › svfp lyrics i iou a pack of american spirits sex van floor plan I'm gonna hex your ex-boyfriend His evil eye is gonna crack He'll feel something watching him Then drop down from a heart attack And it'll make you happy I know it'll make you smile Our friends will laugh at us And we'll dance till we fall I'm gonna run over your ex-boyfriend Yes I'm gonna hit him with my car No I don't have a license But I promise he won't get far And it'll make you happy I know it'll make you laugh Our friends will danc..."
   },
   {
     "t": "sex van floor plan",
     "c": "press",
     "u": "/press/lyrics/sex-van-floor-plan/index.html",
-    "d": "Lyrics — Sex Van Floor Plan"
+    "d": "Lyrics — Sex Van Floor Plan",
+    "b": "sex van floor plan — lyrics — press — magmacrunch media home › press › lyrics › svfp // lyrics // sex van floor plan // works // pay2play ▶ i iou a pack of american spirits ▶ u.d.s. ▶ i changed my availability 4 u ▶ afab ▶"
   },
   {
     "t": "pay2play",
     "c": "press",
     "u": "/press/lyrics/sex-van-floor-plan/pay2play.html",
-    "d": "Lyrics — Sex Van Floor Plan"
+    "d": "Lyrics — Sex Van Floor Plan",
+    "b": "pay2play — lyrics — press — magmacrunch media home › press › lyrics › svfp lyrics pay2play sex van floor plan Make more money Go out for the weekend I should stop But I like the attention It's so easy to perform femininity Tell me all the things You wanna do to me Call me your girl Cause it gets you off Bend myself over Cause it gets you off Blow my brains out Cause it gets you off Whatever you want Cause it gets you off You don't own me But I can make you think you do It's hot for me Cause it's hot for you Your body is the product even when you're not on screen The world's oldest industry I'm..."
   },
   {
     "t": "u.d.s.",
     "c": "press",
     "u": "/press/lyrics/sex-van-floor-plan/uds.html",
-    "d": "Lyrics — Sex Van Floor Plan"
+    "d": "Lyrics — Sex Van Floor Plan",
+    "b": "u.d.s. — lyrics — press — magmacrunch media home › press › lyrics › svfp lyrics u.d.s. sex van floor plan I hate the way you look, in a plain white T-shirt And I hate the way it clings to me Like a used up dryer sheet On the bottom of your Size 11 shoe You're too big, you're too clumsy You trip over your own feet And you laugh with an open mouth And something in your teeth 'Cause I want to be like you And I want to be a good person too I just wanna be a good person who's a man I just wanna be a good person who's a man Is that so hard to fucking understand? I wonder what it feels like To not ha..."
   },
   {
     "t": "contemplate the plate tectonic",
     "c": "press",
     "u": "/press/lyrics/thld/contemplate-the-plate-tectonic.html",
-    "d": "Lyrics — Thld"
+    "d": "Lyrics — Thld",
+    "b": "contemplate the plate tectonic — lyrics — press — magmacrunch media home › press › lyrics › thld › contemplate the plate tectonic lyrics contemplate the plate tectonic lyrics from the \"seeing stars\" portion thld See the shining forces Of the stars a force of course You cannot see Feel yourself a part From all the parts That make yourself Into a me Hear the sonic Sound waves Of a voice the waves beyond You cannot hear Feel the rushing ocean Of the vast atomic open Rushing near….you Can contemplate the plate Tectonic tidal Panic from the final Instant brought you To this planet Cowering in manuf..."
   },
   {
     "t": "texas hold'em lava dome",
     "c": "press",
     "u": "/press/lyrics/thld/index.html",
-    "d": "Lyrics — Thld"
+    "d": "Lyrics — Thld",
+    "b": "texas hold'em lava dome — lyrics — press — magmacrunch media home › press › lyrics › thld // lyrics // texas hold'em lava dome // pieces // contemplate the plate tectonic ▶"
   },
   {
     "t": "album art maker",
     "c": "tool",
     "u": "/tools/album-art-maker/",
-    "d": "Tool"
+    "d": "Tool",
+    "b": ""
   },
   {
     "t": "media//search",
     "c": "tool",
     "u": "/tools/media-search/",
-    "d": "Tool"
+    "d": "Tool",
+    "b": ""
   },
   {
     "t": "pixel process",
     "c": "tool",
     "u": "/tools/pixel-process/",
-    "d": "Tool"
+    "d": "Tool",
+    "b": ""
   }
 ]
