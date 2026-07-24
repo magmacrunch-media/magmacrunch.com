@@ -150,6 +150,20 @@
         renderResults(results, q);
     }
 
+    /* ── BODY TEXT SNIPPET ── */
+    function getBodySnippet(item, matches) {
+        if (!item.b || !matches) return '';
+        const bodyMatch = matches.find(m => m.key === 'b');
+        if (!bodyMatch || !bodyMatch.indices.length) return '';
+        const [start] = bodyMatch.indices[0];
+        const snippetStart = Math.max(0, start - 40);
+        const snippetEnd = Math.min(item.b.length, start + 60);
+        let snippet = item.b.slice(snippetStart, snippetEnd);
+        if (snippetStart > 0) snippet = '...' + snippet;
+        if (snippetEnd < item.b.length) snippet = snippet + '...';
+        return snippet;
+    }
+
     /* ── RENDER ── */
     function renderResults(results, query) {
         if (results.length === 0) {
@@ -179,11 +193,16 @@
             for (const r of items) {
                 const title = highlightMatches(r.item.t, r.matches, 't');
                 const desc = r.item.d ? escHtml(r.item.d) : '';
+                const snippet = getBodySnippet(r.item, r.matches);
+                const snippetHtml = snippet
+                    ? `<div class="search-result-snippet">${escHtml(snippet)}</div>`
+                    : '';
                 const isActive = globalIdx === activeIdx ? ' active' : '';
                 html += `<a class="search-result-item${isActive}" data-idx="${globalIdx}"
                             href="${r.item.u}">
                     <div class="search-result-title">${title}</div>
                     <div class="search-result-desc">${desc}</div>
+                    ${snippetHtml}
                 </a>`;
                 globalIdx++;
             }
