@@ -183,6 +183,31 @@
         return snippet;
     }
 
+    /* ── MATCHED PHRASE ── */
+    /* Extract the matched text around the first word hit in body text.
+       Shown when title doesn't match but body text does. */
+    function getMatchedPhrase(item, matches, query) {
+        if (!item.b || !matches) return '';
+        const titleMatch = matches.find(m => m.key === 't');
+        if (titleMatch) return ''; /* title already matches, no need */
+        const bodyMatch = matches.find(m => m.key === 'b');
+        if (!bodyMatch || !bodyMatch.indices.length) return '';
+        /* Find the first word from the query that appears in body */
+        const words = query.toLowerCase().split(/\s+/);
+        const bodyLower = item.b.toLowerCase();
+        for (const word of words) {
+            const idx = bodyLower.indexOf(word);
+            if (idx === -1) continue;
+            const start = Math.max(0, idx - 20);
+            const end = Math.min(item.b.length, idx + word.length + 30);
+            let phrase = item.b.slice(start, end);
+            if (start > 0) phrase = '...' + phrase;
+            if (end < item.b.length) phrase = phrase + '...';
+            return phrase;
+        }
+        return '';
+    }
+
     /* ── RENDER ── */
     function renderResults(results, query) {
         if (results.length === 0) {
@@ -213,15 +238,19 @@
                 const title = highlightMatches(r.item.t, r.matches, 't');
                 const desc = r.item.d ? escHtml(r.item.d) : '';
                 const snippet = getBodySnippet(r.item, r.matches);
+                const phrase = getMatchedPhrase(r.item, r.matches, query);
                 const snippetHtml = snippet
                     ? `<div class="search-result-snippet">${escHtml(snippet)}</div>`
+                    : '';
+                const phraseHtml = phrase
+                    ? `<div class="search-result-phrase">matched: "${escHtml(phrase)}"</div>`
                     : '';
                 const isActive = globalIdx === activeIdx ? ' active' : '';
                 html += `<a class="search-result-item${isActive}" data-idx="${globalIdx}"
                             href="${r.item.u}">
                     <div class="search-result-title">${title}</div>
                     <div class="search-result-desc">${desc}</div>
-                    ${snippetHtml}
+                    ${phraseHtml}${snippetHtml}
                 </a>`;
                 globalIdx++;
             }

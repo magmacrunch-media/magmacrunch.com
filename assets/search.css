@@ -172,6 +172,14 @@
     line-height: 1.4;
     font-style: italic;
 }
+.search-result-phrase {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--mc-cereal-green, #39ff6e);
+    margin-top: 3px;
+    line-height: 1.4;
+    opacity: 0.7;
+}
 
 /* ── Highlighted match ── */
 .search-highlight {
