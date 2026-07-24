@@ -36,8 +36,6 @@
     /* ── DOM REFS ── */
     let widgetEl = null;
     let barPlayBtn = null;
-    let barText = null;
-    let barTextWrap = null;
     let expandedPlayBtn = null;
     let expandedMuteBtn = null;
     let expandedTitle = null;
@@ -74,20 +72,6 @@
             const raw = localStorage.getItem(STORAGE_KEY);
             return raw ? JSON.parse(raw) : null;
         } catch (e) { return null; }
-    }
-
-    /* ── SCROLL CALCULATION ── */
-    function updateScroll() {
-        if (!barText || !barTextWrap) return;
-        const textW = barText.scrollWidth;
-        const containerW = barTextWrap.clientWidth;
-        if (textW > containerW) {
-            const dist = containerW - textW;
-            barText.style.setProperty('--scroll-dist', dist + 'px');
-            barText.classList.add('scroll');
-        } else {
-            barText.classList.remove('scroll');
-        }
     }
 
     /* ── PLAYBACK ── */
@@ -211,7 +195,6 @@
         widgetEl.classList.toggle('minimized', !expanding);
         widgetEl.classList.toggle('expanded', expanding);
         try { localStorage.setItem(EXPANDED_KEY, expanding ? 'true' : 'false'); } catch (e) {}
-        if (expanding) requestAnimationFrame(updateScroll);
     }
 
     /* ── UI UPDATE ── */
@@ -245,16 +228,6 @@
         if (barPlayBtn) {
             barPlayBtn.textContent = isPlaying ? '\u275A\u275A' : '\u25B6';
             barPlayBtn.setAttribute('aria-label', isPlaying ? 'pause' : 'play');
-        }
-
-        // Bar track text
-        if (barText) {
-            if (track) {
-                barText.textContent = track.title + ' \u2014 ' + track.artist;
-            } else {
-                barText.textContent = 'select a song on the jukebox \u2192';
-            }
-            requestAnimationFrame(updateScroll);
         }
 
         // Expanded play button
@@ -309,10 +282,9 @@
         widgetEl.className = 'mcj minimized';
         widgetEl.innerHTML =
             /* ── COLLAPSED BAR ── */
-            '<div class="mcj-bar">' +
+                '<div class="mcj-bar">' +
                 '<div class="mcj-mini-vinyl"></div>' +
                 '<span class="mcj-bar-label">JUKEBOX</span>' +
-                '<div class="mcj-bar-info"><span class="mcj-bar-text">select a song on the jukebox \u2192</span></div>' +
                 '<button class="mcj-bar-play" aria-label="play">\u25B6</button>' +
                 '<span class="mcj-bar-chevron">\u25BC</span>' +
             '</div>' +
@@ -346,8 +318,6 @@
 
         /* ── CACHE REFS ── */
         barPlayBtn = widgetEl.querySelector('.mcj-bar-play');
-        barText = widgetEl.querySelector('.mcj-bar-text');
-        barTextWrap = widgetEl.querySelector('.mcj-bar-info');
         expandedPlayBtn = widgetEl.querySelector('.mcj-btn-play');
         expandedMuteBtn = widgetEl.querySelector('.mcj-mute');
         expandedTitle = widgetEl.querySelector('.mcj-title');
@@ -397,9 +367,6 @@
             else if (e.key === 'ArrowDown') { e.preventDefault(); setVolume(volume - 0.05); }
             else if (e.key === 'm' || e.key === 'M') { toggleMute(); }
         });
-
-        // Resize → recalculate scroll
-        window.addEventListener('resize', () => requestAnimationFrame(updateScroll));
 
         // Media Session API
         if ('mediaSession' in navigator) {
