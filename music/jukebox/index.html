@@ -1034,10 +1034,48 @@ let totalPages = Math.ceil(JUKEBOX_SONGS.length / SONGS_PER_PAGE);
 const MC_STORAGE_KEY = 'mc-jukebox';
 let mcSaveInterval = null;
 
-/* ── RESTORE VOLUME FROM MINI-PLAYER ── */
+/* ── RESTORE STATE FROM MINI-PLAYER ── */
 try {
     const saved = JSON.parse(localStorage.getItem(MC_STORAGE_KEY));
-    if (saved && saved.volume != null && player) player.volume = saved.volume;
+    if (saved) {
+        if (saved.volume != null && player) player.volume = saved.volume;
+        if (saved.track >= 0 && saved.track < JUKEBOX_SONGS.length) {
+            currentIdx = saved.track;
+            playingIdx = saved.track;
+            renderNowPlaying();
+            renderSongList();
+            if (saved.muted) player.volume = 0;
+            if (saved.playing) {
+                if (saved.time > 0) {
+                    player.addEventListener('loadedmetadata', function onMeta() {
+                        player.removeEventListener('loadedmetadata', onMeta);
+                        if (saved.time > 0 && saved.time < player.duration) {
+                            player.currentTime = saved.time;
+                        }
+                        npElapsed.textContent = fmtTime(player.currentTime);
+                        const song = JUKEBOX_SONGS[saved.track];
+                        npDuration.textContent = song.duration || fmtTime(player.duration);
+                        player.play().catch(() => {});
+                        setPlayingState(true);
+                        syncToMiniPlayer();
+                        startMcSaveInterval();
+                        updateMediaSession();
+                    }, { once: true });
+                    player.src = new URL('music/jukebox/songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
+                    player.load();
+                } else {
+                    player.src = new URL('music/jukebox/songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
+                    player.play().catch(() => {});
+                    setPlayingState(true);
+                    syncToMiniPlayer();
+                    startMcSaveInterval();
+                    updateMediaSession();
+                }
+            } else {
+                player.src = new URL('music/jukebox/songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
+            }
+        }
+    }
 } catch (e) {}
 
 function syncToMiniPlayer() {
@@ -1167,7 +1205,7 @@ function playSong(index) {
     renderNowPlaying();
     renderSongList();
     
-    player.src = 'songs/' + song.file;
+    player.src = new URL('music/jukebox/songs/' + song.file, location.origin).pathname;
     player.play().catch(() => {});
     setPlayingState(true);
     syncToMiniPlayer();

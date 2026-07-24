@@ -1,13 +1,12 @@
 /* ═══════════════════════════════════════════════
-   magmacrunch media — persistent jukebox player
+   magmacrunch media — retro jukebox mini-player
    assets/jukebox.js
    ═══════════════════════════════════════════════ */
 
 (function () {
     'use strict';
 
-    /* ── TRACK LIST ──
-       Add new tracks here. Paths are relative to site root. */
+    /* ── TRACK LIST ── */
     const TRACKS = [
         { title: "Reverse Osmosis Reversed", artist: "Juanito Thompson", file: "music/jukebox/songs/Juanito Thompson - That Definitely Did Destroy Me - 01 Reverse Osmosis Reversed.ogg", duration: "4:51" },
         { title: "Heavy Water", artist: "The Four B's", file: "music/jukebox/songs/The Four B's - Greatest Hits '12-'14 - 08 Heavy Water.ogg", duration: "5:03" },
@@ -23,6 +22,7 @@
     ];
 
     const STORAGE_KEY = 'mc-jukebox';
+    const EXPANDED_KEY = 'mcj_expanded';
 
     /* ── STATE ── */
     let audio = null;
@@ -34,12 +34,18 @@
     let pendingSeek = -1;
 
     /* ── DOM REFS ── */
-    let playBtn = null;
-    let muteBtn = null;
-    let trackText = null;
-    let trackLink = null;
+    let widgetEl = null;
+    let barPlayBtn = null;
+    let expandedPlayBtn = null;
+    let expandedMuteBtn = null;
+    let expandedTitle = null;
+    let expandedArtist = null;
+    let expandedTime = null;
+    let progressWrap = null;
+    let progressFill = null;
     let volSlider = null;
     let volLabel = null;
+    let jukeboxLink = null;
 
     /* ── HELPERS ── */
     function fmtTime(s) {
@@ -68,20 +74,6 @@
         } catch (e) { return null; }
     }
 
-    /* ── SCROLL CALCULATION ── */
-    function updateScroll() {
-        if (!trackText || !trackLink) return;
-        const textW = trackText.scrollWidth;
-        const containerW = trackLink.clientWidth;
-        if (textW > containerW) {
-            const dist = containerW - textW;
-            trackText.style.setProperty('--scroll-dist', dist + 'px');
-            trackText.classList.add('scroll');
-        } else {
-            trackText.classList.remove('scroll');
-        }
-    }
-
     /* ── PLAYBACK ── */
     function playTrack(index, seekTo) {
         if (index < 0 || index >= TRACKS.length) return;
@@ -90,6 +82,7 @@
 
         if (!audio) {
             audio = new Audio();
+            audio.preload = 'auto';
             audio.addEventListener('ended', onTrackEnd);
             audio.addEventListener('play', () => { isPlaying = true; updateUI(); saveState(); startSaveInterval(); });
             audio.addEventListener('pause', () => { isPlaying = false; updateUI(); saveState(); stopSaveInterval(); });
@@ -100,9 +93,9 @@
                     stopSaveInterval();
                 }
             });
+            audio.addEventListener('timeupdate', updateProgress);
         }
 
-        // If seeking to a specific position, wait for metadata before seeking
         pendingSeek = (typeof seekTo === 'number' && seekTo > 0) ? seekTo : -1;
 
         audio.src = new URL(track.file, location.origin).pathname;
@@ -153,6 +146,24 @@
         }
     }
 
+    /* ── PROGRESS BAR ── */
+    function updateProgress() {
+        if (!progressFill || !audio || !audio.duration) return;
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progressFill.style.setProperty('--progress', pct + '%');
+        if (expandedTime) {
+            expandedTime.textContent = fmtTime(audio.currentTime) + ' / ' + fmtTime(audio.duration);
+        }
+    }
+
+    function seekTo(e) {
+        if (!audio || !audio.duration || !progressWrap) return;
+        const rect = progressWrap.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        audio.currentTime = pct * audio.duration;
+        updateProgress();
+    }
+
     /* ── PERIODIC STATE SAVE ── */
     function startSaveInterval() {
         stopSaveInterval();
@@ -167,7 +178,6 @@
         volume = Math.max(0, Math.min(1, v));
         muted = false;
         if (audio) audio.volume = volume;
-        if (volSlider) volSlider.style.setProperty('--vol-pct', (volume * 100) + '%');
         updateUI();
         saveState();
     }
@@ -177,6 +187,15 @@
         if (audio) audio.volume = muted ? 0 : volume;
         updateUI();
         saveState();
+    }
+
+    /* ── EXPAND / COLLAPSE ── */
+    function toggleExpand() {
+        if (!widgetEl) return;
+        const expanding = widgetEl.classList.contains('minimized');
+        widgetEl.classList.toggle('minimized', !expanding);
+        widgetEl.classList.toggle('expanded', expanding);
+        try { localStorage.setItem(EXPANDED_KEY, expanding ? 'true' : 'false'); } catch (e) {}
     }
 
     /* ── UI UPDATE ── */
@@ -200,36 +219,42 @@
     }
 
     function updateUI() {
-        if (!playBtn) return;
+        if (!widgetEl) return;
         const track = currentTrack >= 0 ? TRACKS[currentTrack] : null;
 
-        // Play/pause button
-        playBtn.textContent = isPlaying ? '\u275A\u275A' : '\u25B6';
-        playBtn.setAttribute('aria-label', isPlaying ? 'pause' : 'play');
+        // Playing state on root element (drives vinyl spin)
+        widgetEl.classList.toggle('playing', isPlaying);
 
-        // Track text
-        if (trackText && trackLink) {
-            if (track) {
-                trackText.textContent = track.title + ' \u2014 ' + track.artist;
-                trackLink.title = track.title + ' \u2014 ' + track.artist + ' \u2014 click for jukebox';
-            } else {
-                trackText.textContent = 'select a song on the jukebox \u2192';
-                trackLink.title = 'open jukebox';
-            }
-            // Recalculate scroll after text changes
-            requestAnimationFrame(updateScroll);
+        // Bar play button
+        if (barPlayBtn) {
+            barPlayBtn.textContent = isPlaying ? '\u275A\u275A' : '\u25B6';
+            barPlayBtn.setAttribute('aria-label', isPlaying ? 'pause' : 'play');
+        }
+
+        // Expanded play button
+        if (expandedPlayBtn) {
+            expandedPlayBtn.textContent = isPlaying ? '\u275A\u275A' : '\u25B6';
+            expandedPlayBtn.setAttribute('aria-label', isPlaying ? 'pause' : 'play');
+        }
+
+        // Expanded title / artist
+        if (expandedTitle) {
+            expandedTitle.textContent = track ? track.title : '—';
+        }
+        if (expandedArtist) {
+            expandedArtist.textContent = track ? track.artist : '—';
         }
 
         // Mute button
-        if (muteBtn) {
-            muteBtn.textContent = muted ? '\u2716' : '\u266A';
-            muteBtn.setAttribute('aria-label', muted ? 'unmute' : 'mute');
-            muteBtn.classList.toggle('muted', muted);
+        if (expandedMuteBtn) {
+            expandedMuteBtn.textContent = muted ? '\u2716' : '\u266A';
+            expandedMuteBtn.setAttribute('aria-label', muted ? 'unmute' : 'mute');
+            expandedMuteBtn.classList.toggle('muted', muted);
         }
 
-        // Volume slider — show actual volume, not 0 when muted
+        // Volume slider
         if (volSlider) {
-            volSlider.value = volume;
+            volSlider.value = volume * 100;
             volSlider.style.setProperty('--vol-pct', (volume * 100) + '%');
             volSlider.classList.toggle('muted', muted);
         }
@@ -238,75 +263,102 @@
             volLabel.classList.toggle('muted', muted);
         }
 
-        // Playing indicator on nav
-        const nav = document.querySelector('nav');
-        if (nav) nav.classList.toggle('nav-playing', isPlaying);
+        // Progress reset if no track
+        if (!track && progressFill) {
+            progressFill.style.setProperty('--progress', '0%');
+        }
+        if (!track && expandedTime) {
+            expandedTime.textContent = '0:00 / 0:00';
+        }
     }
 
-    /* ── INJECT INTO NAV ── */
-    function inject() {
-        const nav = document.querySelector('nav');
-        if (!nav || document.querySelector('.nav-player') || document.body.classList.contains('no-jukebox')) return;
+    /* ── BUILD WIDGET ── */
+    function createWidget() {
+        if (widgetEl && widgetEl.isConnected) return;
+        if (widgetEl && !widgetEl.isConnected) widgetEl = null;
+        if (document.body.classList.contains('no-jukebox')) return;
 
-        // Skip on the full jukebox page — it has its own player
-        if (window.location.pathname.includes('music/jukebox/')) return;
+        const jukeboxHref = new URL('music/jukebox/index.html', location.origin).pathname;
 
-        // Build player HTML
-        const player = document.createElement('div');
-        player.className = 'nav-player';
-        const jukeboxHref = new URL('music/jukebox/', location.origin).pathname;
-        player.innerHTML =
-            '<button class="np-btn np-prev" aria-label="previous track">\u25C0\u25C0</button>' +
-            '<button class="np-btn np-play" aria-label="play">\u25B6</button>' +
-            '<button class="np-btn np-next" aria-label="next track">\u25B6\u25B6</button>' +
-            '<a href="' + jukeboxHref + '" class="np-track-link">' +
-                '<span class="np-text">select a song on the jukebox \u2192</span>' +
-            '</a>' +
-            '<div class="np-vol-wrap">' +
-                '<input type="range" class="np-vol" min="0" max="100" value="70" aria-label="volume">' +
-                '<span class="np-vol-label">70</span>' +
+        widgetEl = document.createElement('div');
+        widgetEl.className = 'mcj minimized';
+        widgetEl.innerHTML =
+            /* ── COLLAPSED BAR ── */
+                '<div class="mcj-bar">' +
+                '<div class="mcj-mini-vinyl"></div>' +
+                '<span class="mcj-bar-label">JUKEBOX</span>' +
+                '<button class="mcj-bar-play" aria-label="play">\u25B6</button>' +
+                '<span class="mcj-bar-chevron">\u25BC</span>' +
             '</div>' +
-            '<button class="np-btn np-mute" aria-label="mute">\u266A</button>';
+            /* ── EXPANDED WINDOW ── */
+            '<div class="mcj-window">' +
+                '<div class="mcj-expanded-inner">' +
+                    '<div class="mcj-vinyl"></div>' +
+                    '<div class="mcj-info">' +
+                        '<div class="mcj-title">\u2014</div>' +
+                        '<div class="mcj-artist">\u2014</div>' +
+                        '<div class="mcj-time">0:00 / 0:00</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="mcj-progress-wrap">' +
+                    '<div class="mcj-progress"><div class="mcj-progress-fill"></div></div>' +
+                '</div>' +
+                '<div class="mcj-controls">' +
+                    '<button class="mcj-btn mcj-btn-skip" aria-label="previous track">\u25C0\u25C0</button>' +
+                    '<button class="mcj-btn mcj-btn-play" aria-label="play">\u25B6</button>' +
+                    '<button class="mcj-btn mcj-btn-skip" aria-label="next track">\u25B6\u25B6</button>' +
+                    '<div class="mcj-vol-wrap">' +
+                        '<button class="mcj-btn mcj-mute" aria-label="mute">\u266A</button>' +
+                        '<input type="range" class="mcj-vol" min="0" max="100" value="70" aria-label="volume">' +
+                        '<span class="mcj-vol-label">70</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="mcj-link"><a href="' + jukeboxHref + '">OPEN JUKEBOX \u2192</a></div>' +
+            '</div>';
 
-        // Insert after .nav-brand (first child), before .nav-links
-        const brand = nav.querySelector('.nav-brand');
-        if (brand && brand.nextSibling) {
-            nav.insertBefore(player, brand.nextSibling);
-        } else {
-            nav.prepend(player);
-        }
+        document.body.appendChild(widgetEl);
 
-        // Cache refs
-        playBtn = player.querySelector('.np-play');
-        muteBtn = player.querySelector('.np-mute');
-        trackText = player.querySelector('.np-text');
-        trackLink = player.querySelector('.np-track-link');
-        volSlider = player.querySelector('.np-vol');
-        volLabel = player.querySelector('.np-vol-label');
+        /* ── CACHE REFS ── */
+        barPlayBtn = widgetEl.querySelector('.mcj-bar-play');
+        expandedPlayBtn = widgetEl.querySelector('.mcj-btn-play');
+        expandedMuteBtn = widgetEl.querySelector('.mcj-mute');
+        expandedTitle = widgetEl.querySelector('.mcj-title');
+        expandedArtist = widgetEl.querySelector('.mcj-artist');
+        expandedTime = widgetEl.querySelector('.mcj-time');
+        progressWrap = widgetEl.querySelector('.mcj-progress');
+        progressFill = widgetEl.querySelector('.mcj-progress-fill');
+        volSlider = widgetEl.querySelector('.mcj-vol');
+        volLabel = widgetEl.querySelector('.mcj-vol-label');
 
-        // Event listeners
-        playBtn.addEventListener('click', togglePlay);
-        muteBtn.addEventListener('click', toggleMute);
-        player.querySelector('.np-prev').addEventListener('click', prevTrack);
-        player.querySelector('.np-next').addEventListener('click', nextTrack);
+        /* ── EVENT LISTENERS ── */
 
-        // Volume slider
+        // Bar click → expand/collapse (not on play button)
+        widgetEl.querySelector('.mcj-bar').addEventListener('click', (e) => {
+            if (e.target.closest('.mcj-bar-play')) return;
+            toggleExpand();
+        });
+
+        // Bar play button → toggle playback (no expand)
+        barPlayBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePlay();
+        });
+
+        // Expanded transport
+        expandedPlayBtn.addEventListener('click', togglePlay);
+        widgetEl.querySelector('.mcj-btn-skip[aria-label="previous track"]').addEventListener('click', prevTrack);
+        widgetEl.querySelector('.mcj-btn-skip[aria-label="next track"]').addEventListener('click', nextTrack);
+        expandedMuteBtn.addEventListener('click', toggleMute);
+
+        // Volume
         volSlider.addEventListener('input', (e) => {
             setVolume(parseInt(e.target.value) / 100);
         });
 
-        // Recalculate scroll on resize
-        window.addEventListener('resize', () => requestAnimationFrame(updateScroll));
+        // Progress seek
+        progressWrap.addEventListener('click', seekTo);
 
-        // Media Session API
-        if ('mediaSession' in navigator) {
-            navigator.mediaSession.setActionHandler('play', () => { if (!isPlaying) togglePlay(); });
-            navigator.mediaSession.setActionHandler('pause', () => { if (isPlaying) togglePlay(); });
-            navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
-            navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
-        }
-
-        // Keyboard shortcuts (space = play/pause, arrows = prev/next/volume)
+        // Keyboard shortcuts
         window.addEventListener('keydown', (e) => {
             const tag = document.activeElement && document.activeElement.tagName;
             if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
@@ -318,14 +370,39 @@
             else if (e.key === 'm' || e.key === 'M') { toggleMute(); }
         });
 
-        // Load saved state
+        // Media Session API
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', () => { if (!isPlaying) togglePlay(); });
+            navigator.mediaSession.setActionHandler('pause', () => { if (isPlaying) togglePlay(); });
+            navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+            navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+        }
+
+        // SPA cleanup — save state and pause audio before page navigation
+        window.__pageCleanup = function() {
+            stopSaveInterval();
+            if (audio && isPlaying) {
+                saveState();
+                audio.pause();
+            }
+        };
+
+        /* ── RESTORE STATE ── */
+        // Expand/collapse preference
+        try {
+            if (localStorage.getItem(EXPANDED_KEY) === 'true') {
+                widgetEl.classList.remove('minimized');
+                widgetEl.classList.add('expanded');
+            }
+        } catch (e) {}
+
+        // Playback state
         const state = loadState();
         if (state) {
             volume = state.volume != null ? state.volume : 0.7;
             muted = state.muted || false;
             if (state.track >= 0 && state.track < TRACKS.length) {
                 currentTrack = state.track;
-                // Auto-play from saved position if was playing
                 if (state.playing) {
                     playTrack(currentTrack, state.time || 0);
                 }
@@ -345,11 +422,11 @@
 
     /* ── INIT ── */
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', inject);
+        document.addEventListener('DOMContentLoaded', createWidget);
     } else {
-        inject();
+        createWidget();
     }
 
     /* ── EXPOSE FOR SPA ROUTER ── */
-    window.__initJukeboxPlayer = inject;
+    window.__initJukeboxPlayer = createWidget;
 })();

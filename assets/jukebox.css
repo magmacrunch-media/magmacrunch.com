@@ -1,186 +1,441 @@
 /* ═══════════════════════════════════════════════
-   magmacrunch media — nav mini-player styles
+   magmacrunch media — retro jukebox mini-player
    assets/jukebox.css
    ═══════════════════════════════════════════════ */
 
-/* ── MINI-PLAYER IN NAV ── */
-.nav-player {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex: 1;
-    max-width: 320px;
-    margin: 0 12px;
-    min-width: 0;
+/* ── ROOT CONTAINER ── */
+.mcj {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 9998;
+    width: 300px;
+    font-family: 'Press Start 2P', monospace;
+    color: var(--white, #f0ead8);
+    user-select: none;
 }
 
-.np-btn {
+/* ── COLLAPSED BAR ── */
+.mcj-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(255,255,255,0.015) 3px,
+            rgba(255,255,255,0.015) 4px
+        ),
+        var(--black, #080808);
+    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.mcj.minimized .mcj-bar {
+    border-radius: 6px;
+}
+
+.mcj.expanded .mcj-bar {
+    border-radius: 6px 6px 0 0;
+    border-bottom-color: transparent;
+}
+
+.mcj-bar:hover {
+    border-color: var(--yellow, #ffe03a);
+    box-shadow: 0 0 12px var(--nav-glow, rgba(255, 61, 110, 0.3));
+}
+
+/* ── MINI VINYL IN BAR ── */
+.mcj-mini-vinyl {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid #444;
+    background:
+        radial-gradient(circle,
+            var(--black, #080808) 0%,
+            var(--black, #080808) 15%,
+            transparent 16%
+        ),
+        radial-gradient(circle,
+            transparent 0%,
+            transparent 15%,
+            #2a1a1e 16%,
+            #2a1a1e 30%,
+            transparent 31%
+        ),
+        repeating-radial-gradient(circle,
+            #333 0, #333 1px,
+            #222 1px, #222 2px
+        );
+    flex-shrink: 0;
+    animation: mcj-spin 3s linear infinite;
+    animation-play-state: paused;
+}
+
+.mcj.playing .mcj-mini-vinyl {
+    animation-play-state: running;
+}
+
+/* ── BAR LABEL ── */
+.mcj-bar-label {
+    font-size: 8px;
+    color: var(--nav-accent, var(--rose, #ff3d6e));
+    text-shadow: 0 0 6px var(--nav-glow, rgba(255, 61, 110, 0.5));
+    flex-shrink: 0;
+    letter-spacing: 0.1em;
+}
+
+/* ── BAR BUTTONS ── */
+.mcj-bar-play {
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
-    color: var(--nav-brand, var(--yellow));
+    color: var(--yellow, #ffe03a);
     background: none;
-    border: 1px solid var(--nav-accent, var(--rose));
+    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
     padding: 4px 6px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
     line-height: 1;
-    white-space: nowrap;
     flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
 }
 
-.np-btn:hover {
-    background: var(--nav-accent, var(--rose));
-    color: var(--black);
+.mcj-bar-play:hover {
+    background: var(--nav-accent, var(--rose, #ff3d6e));
+    color: var(--black, #080808);
 }
 
-.np-play {
-    min-width: 28px;
-    text-align: center;
+.mcj.expanded .mcj-bar-play {
+    display: none;
 }
 
-.np-prev, .np-next {
+.mcj-bar-chevron {
     font-size: 6px;
-    padding: 4px 5px;
+    color: var(--nav-accent, var(--rose, #ff3d6e));
+    flex-shrink: 0;
+    transition: transform 0.2s;
 }
 
-/* ── TRACK TITLE ── */
-.np-track-link {
-    flex: 1;
-    min-width: 0;
-    text-decoration: none;
+.mcj.expanded .mcj-bar-chevron {
+    transform: rotate(180deg);
+}
+
+/* ── EXPANDED WINDOW ── */
+.mcj-window {
+    max-height: 0;
+    opacity: 0;
     overflow: hidden;
-    display: block;
-}
-
-.np-text {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 6px;
-    color: var(--nav-brand, var(--yellow));
-    white-space: nowrap;
-    display: inline-block;
-    text-shadow: 0 0 8px var(--nav-brand-glow, rgba(255,224,58,0.5));
-}
-
-.np-text.scroll {
-    animation: npScroll 10s linear infinite;
-    animation-delay: 1s;
-}
-
-@keyframes npScroll {
-    0%, 8%    { transform: translateX(0); }
-    92%, 100% { transform: translateX(var(--scroll-dist, -50%)); }
-}
-
-/* ── MUTE BUTTON ── */
-.np-mute {
-    font-size: 10px;
-    padding: 3px 6px;
-}
-
-.np-mute.muted {
-    opacity: 0.4;
-}
-
-/* ── VOLUME SLIDER ── */
-.np-vol-wrap {
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(255,255,255,0.015) 3px,
+            rgba(255,255,255,0.015) 4px
+        ),
+        var(--black, #080808);
+    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border-top: none;
+    border-radius: 0 0 6px 6px;
     display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
+    flex-direction: column;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
 }
 
-.np-vol {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 50px;
-    height: 6px;
-    background: linear-gradient(
-        to right,
-        var(--nav-accent, var(--rose)) 0%,
-        var(--nav-accent, var(--rose)) var(--vol-pct, 70%),
-        rgba(240,234,216,0.15) var(--vol-pct, 70%),
-        rgba(240,234,216,0.15) 100%
-    );
-    opacity: 0.8;
-    outline: none;
-    border-radius: 0;
-    cursor: pointer;
-    transition: opacity 0.15s;
-}
-
-.np-vol:hover {
+.mcj.expanded .mcj-window {
+    max-height: 400px;
     opacity: 1;
 }
 
-.np-vol.muted {
-    opacity: 0.4;
+/* ── EXPANDED INNER LAYOUT ── */
+.mcj-expanded-inner {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
 }
 
-.np-vol::-webkit-slider-thumb {
+/* ── VINYL (expanded) ── */
+.mcj-vinyl {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    background:
+        radial-gradient(circle,
+            var(--black, #080808) 0%,
+            var(--black, #080808) 10.75%,
+            transparent 11%
+        ),
+        radial-gradient(circle,
+            transparent 0%,
+            transparent 10.75%,
+            var(--nav-accent, var(--rose, #ff3d6e)) 11%,
+            var(--nav-accent, var(--rose, #ff3d6e)) 25.5%,
+            transparent 26%
+        ),
+        repeating-radial-gradient(circle,
+            #1a1a1a 0, #1a1a1a 1px,
+            #111 1px, #111 3px
+        ),
+        radial-gradient(circle, #1a1a1a 0%, #0d0d0d 100%);
+    box-shadow: 0 0 0 2px var(--nav-accent, var(--rose, #ff3d6e)),
+                0 0 16px var(--nav-glow, rgba(255, 61, 110, 0.4));
+    animation: mcj-spin 3s linear infinite;
+    animation-play-state: paused;
+}
+
+.mcj-vinyl::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.08) 0%,
+        transparent 40%,
+        transparent 60%,
+        rgba(255,255,255,0.04) 100%
+    );
+    pointer-events: none;
+}
+
+.mcj.playing .mcj-vinyl {
+    animation-play-state: running;
+}
+
+@keyframes mcj-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── TRACK INFO (expanded) ── */
+.mcj-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+.mcj-title {
+    font-size: 7px;
+    color: var(--yellow, #ffe03a);
+    text-shadow: 0 0 8px rgba(255, 224, 58, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mcj-artist {
+    font-size: 6px;
+    color: var(--cyan, #00f5ff);
+    text-shadow: 0 0 6px rgba(0, 245, 255, 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mcj-time {
+    font-size: 6px;
+    color: var(--white, #f0ead8);
+    opacity: 0.5;
+}
+
+/* ── PROGRESS BAR ── */
+.mcj-progress-wrap {
+    padding: 0 12px 8px;
+}
+
+.mcj-progress {
+    width: 100%;
+    height: 6px;
+    background: rgba(240, 234, 216, 0.12);
+    cursor: pointer;
+    position: relative;
+}
+
+.mcj-progress-fill {
+    height: 100%;
+    width: var(--progress, 0%);
+    background: linear-gradient(to right, var(--rose, #ff3d6e), var(--orange, #ff7c1f));
+    pointer-events: none;
+    transition: width 0.2s linear;
+}
+
+.mcj-progress:hover .mcj-progress-fill {
+    background: linear-gradient(to right, var(--yellow, #ffe03a), var(--orange, #ff7c1f));
+}
+
+/* ── TRANSPORT CONTROLS (expanded) ── */
+.mcj-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 12px 10px;
+}
+
+.mcj-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--yellow, #ffe03a);
+    background: none;
+    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
+    padding: 5px 8px;
+    cursor: pointer;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+
+.mcj-btn:hover {
+    background: var(--nav-accent, var(--rose, #ff3d6e));
+    color: var(--black, #080808);
+}
+
+.mcj-btn-play {
+    min-width: 32px;
+    text-align: center;
+}
+
+.mcj-btn-skip {
+    font-size: 6px;
+    padding: 5px 6px;
+}
+
+/* ── VOLUME ── */
+.mcj-vol-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.mcj-vol {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 44px;
+    height: 4px;
+    background: linear-gradient(
+        to right,
+        var(--rose, #ff3d6e) 0%,
+        var(--rose, #ff3d6e) var(--vol-pct, 70%),
+        rgba(240, 234, 216, 0.15) var(--vol-pct, 70%),
+        rgba(240, 234, 216, 0.15) 100%
+    );
+    outline: none;
+    border-radius: 0;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.15s;
+}
+
+.mcj-vol:hover { opacity: 1; }
+.mcj-vol.muted { opacity: 0.4; }
+
+.mcj-vol::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 8px;
     height: 8px;
-    background: var(--nav-brand, var(--yellow));
+    background: var(--yellow, #ffe03a);
     border: none;
     cursor: pointer;
 }
 
-.np-vol::-moz-range-thumb {
+.mcj-vol::-moz-range-thumb {
     width: 8px;
     height: 8px;
-    background: var(--nav-brand, var(--yellow));
+    background: var(--yellow, #ffe03a);
     border: none;
     cursor: pointer;
     border-radius: 0;
 }
 
-.np-vol-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 6px;
-    color: var(--nav-brand, var(--yellow));
-    opacity: 0.5;
-    min-width: 16px;
-    text-align: right;
-    transition: opacity 0.15s;
+.mcj-mute {
+    font-size: 10px;
+    padding: 3px 5px;
 }
 
-.np-vol-label.muted {
+.mcj-vol-label {
+    font-size: 6px;
+    color: var(--yellow, #ffe03a);
+    opacity: 0.5;
+    min-width: 14px;
+    text-align: right;
+}
+
+.mcj-vol-label.muted {
     opacity: 0.3;
     text-decoration: line-through;
 }
 
-/* ── NAV PLAYING STATE ── */
-nav.nav-playing {
-    border-bottom-color: var(--nav-accent, var(--rose));
+.mcj-mute.muted {
+    opacity: 0.4;
+}
+
+/* ── JUKEBOX LINK ── */
+.mcj-link {
+    display: block;
+    text-align: center;
+    padding: 8px 12px 10px;
+    border-top: 1px solid var(--nav-accent, rgba(255, 61, 110, 0.2));
+}
+
+.mcj-link a {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--cyan, #00f5ff);
+    text-decoration: none;
+    text-shadow: 0 0 6px rgba(0, 245, 255, 0.4);
+    transition: color 0.15s;
+}
+
+.mcj-link a:hover {
+    color: var(--yellow, #ffe03a);
+}
+
+/* ── HIDE ON FULL JUKEBOX PAGE ── */
+body:has(main .jukebox) .mcj {
+    display: none !important;
 }
 
 /* ── MOBILE ── */
-@media (max-width: 640px) {
-    .nav-player {
-        max-width: 180px;
-        margin: 0 8px;
+@media (max-width: 600px) {
+    .mcj {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 9998;
     }
 
-    .np-prev, .np-next {
-        display: none;
+    .mcj.minimized .mcj-bar {
+        border-radius: 0;
     }
 
-    .np-text {
-        font-size: 5px;
+    .mcj.expanded .mcj-bar {
+        border-radius: 0;
+        border-bottom-color: transparent;
     }
 
-    .np-vol-wrap {
-        display: none;
-    }
-}
-
-@media (max-width: 400px) {
-    .nav-player {
-        max-width: 120px;
+    .mcj-window {
+        border-radius: 0;
+        max-height: 0;
     }
 
-    .np-mute {
-        display: none;
+    .mcj.expanded .mcj-window {
+        max-height: 60vh;
+    }
+
+    .mcj-vinyl {
+        width: 72px;
+        height: 72px;
     }
 }
