@@ -657,6 +657,14 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
             if (push) history.pushState({ spa: true }, '', url);
 
+            // Re-inject jukebox widget if missing after SPA navigation
+            if (!document.querySelector('.mcj') && window.__jukeboxReady) {
+                await window.__jukeboxReady;
+                if (typeof window.__initJukeboxPlayer === 'function' && !document.querySelector('.mcj')) {
+                    window.__initJukeboxPlayer();
+                }
+            }
+
             window.scrollTo(0, 0);
 
         } catch (e) {

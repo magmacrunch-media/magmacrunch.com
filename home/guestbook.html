@@ -96,7 +96,7 @@
             position: relative;
         }
 
-        input, textarea {
+        .form-container input, .form-container textarea {
             width: 100%;
             padding: 10px 14px;
             margin-bottom: 12px;
@@ -111,18 +111,18 @@
             box-sizing: border-box;
         }
 
-        input:focus, textarea:focus {
+        .form-container input:focus, .form-container textarea:focus {
             border-color: var(--green);
             box-shadow: 0 0 10px rgba(57,255,110,0.5), 0 0 20px rgba(240,240,240,0.1);
             background: rgba(57,255,110,0.05);
         }
 
-        input::placeholder, textarea::placeholder {
+        .form-container input::placeholder, .form-container textarea::placeholder {
             color: var(--nearwhite);
             opacity: 0.5;
         }
 
-        textarea {
+        .form-container textarea {
             min-height: 110px;
             resize: vertical;
             margin-bottom: 16px;
@@ -211,19 +211,16 @@
         footer span { color: var(--green); }
 
         /* ── JUKEBOX OVERRIDES ── */
-        .np-btn { border-color: var(--green); color: var(--green); }
-        .np-btn:hover { background: var(--green); color: #000; }
-        .np-play { background: #e5b300; color: #000; border-color: #e5b300; }
-        .np-play:hover { background: #000; color: #e5b300; border-color: #e5b300; }
-        .np-text { color: var(--green); text-shadow: 0 0 8px rgba(57,255,110,0.5); }
-        body .np-vol {
-            height: 8px;
-            opacity: 1;
-            background: linear-gradient(to right, #e5b300 0%, #e5b300 var(--vol-pct, 70%), rgba(240,234,216,0.15) var(--vol-pct, 70%), rgba(240,234,216,0.15) 100%);
-        }
-        body .np-vol::-webkit-slider-thumb { width: 10px; height: 10px; background: #e5b300; border: none; }
-        body .np-vol::-moz-range-thumb { width: 10px; height: 10px; background: #e5b300; border: none; }
-        body .np-vol-label { opacity: 0.8; }
+        .mcj-bar { border-color: var(--green); }
+        .mcj-bar:hover { border-color: #e5b300; box-shadow: 0 0 12px rgba(229,179,0,0.3); }
+        .mcj-bar-label { color: var(--green); text-shadow: 0 0 6px rgba(57,255,110,0.5); }
+        .mcj-bar-play { border-color: var(--green); color: var(--green); }
+        .mcj-bar-play:hover { background: var(--green); color: #000; }
+        .mcj-btn { border-color: var(--green); color: var(--green); }
+        .mcj-btn:hover { background: var(--green); color: #000; }
+        .mcj-btn-play { background: #e5b300; color: #000; border-color: #e5b300; }
+        .mcj-btn-play:hover { background: #000; color: #e5b300; border-color: #e5b300; }
+        .mcj-vinyl { box-shadow: 0 0 0 2px var(--green), 0 0 16px rgba(57,255,110,0.4); }
 
         .loading-msg {
             font-family: 'Press Start 2P', monospace;

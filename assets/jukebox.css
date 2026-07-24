@@ -401,6 +401,11 @@
     color: var(--yellow, #ffe03a);
 }
 
+/* ── HIDE ON FULL JUKEBOX PAGE ── */
+body:has(main .jukebox) .mcj {
+    display: none !important;
+}
+
 /* ── MOBILE ── */
 @media (max-width: 600px) {
     .mcj {

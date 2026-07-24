@@ -82,6 +82,7 @@
 
         if (!audio) {
             audio = new Audio();
+            audio.preload = 'auto';
             audio.addEventListener('ended', onTrackEnd);
             audio.addEventListener('play', () => { isPlaying = true; updateUI(); saveState(); startSaveInterval(); });
             audio.addEventListener('pause', () => { isPlaying = false; updateUI(); saveState(); stopSaveInterval(); });
@@ -273,8 +274,9 @@
 
     /* ── BUILD WIDGET ── */
     function createWidget() {
-        if (widgetEl || document.body.classList.contains('no-jukebox')) return;
-        if (window.location.pathname.includes('music/jukebox/')) return;
+        if (widgetEl && widgetEl.isConnected) return;
+        if (widgetEl && !widgetEl.isConnected) widgetEl = null;
+        if (document.body.classList.contains('no-jukebox')) return;
 
         const jukeboxHref = new URL('music/jukebox/index.html', location.origin).pathname;
 
@@ -375,6 +377,15 @@
             navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
             navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
         }
+
+        // SPA cleanup — save state and pause audio before page navigation
+        window.__pageCleanup = function() {
+            stopSaveInterval();
+            if (audio && isPlaying) {
+                saveState();
+                audio.pause();
+            }
+        };
 
         /* ── RESTORE STATE ── */
         // Expand/collapse preference
