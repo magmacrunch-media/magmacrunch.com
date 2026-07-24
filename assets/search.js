@@ -1,0 +1,336 @@
+/* ═══════════════════════════════════════════════
+   magmacrunch media — site search
+   assets/search.js
+   ═══════════════════════════════════════════════ */
+
+(function () {
+    'use strict';
+
+    /* ── CONFIG ── */
+    const FUSE_CDN = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0';
+    const MAX_RESULTS = 12;
+
+    /* Compute root path for search-index.json */
+    function getRoot() {
+        const depth = window.location.pathname.split('/').length - 2;
+        return depth > 0 ? '../'.repeat(depth) : '';
+    }
+    const INDEX_URL = getRoot() + 'search-index.json';
+
+    /* ── CATEGORY LABELS ── */
+    const CAT_LABELS = {
+        music: 'MUSIC', song: 'SONG', artist: 'ARTIST', place: 'PLACE',
+        label: 'LABEL', contributor: 'CONTRIBUTOR', arcade: 'ARCADE',
+        press: 'PRESS', tool: 'TOOL', page: 'PAGE'
+    };
+
+    /* ── SVG ICONS ── */
+    const SEARCH_SVG = `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="8" height="8" rx="0" stroke="currentColor" stroke-width="2"/>
+        <rect x="9" y="9" width="2" height="2" fill="currentColor"/>
+        <rect x="11" y="11" width="2" height="2" fill="currentColor"/>
+        <rect x="13" y="13" width="1" height="1" fill="currentColor"/>
+    </svg>`;
+
+    /* ── STATE ── */
+    let fuse = null;
+    let index = [];
+    let overlay = null;
+    let input = null;
+    let resultsEl = null;
+    let activeIdx = -1;
+    let currentResults = [];
+
+    /* ── LOAD FUSE.JS ── */
+    function loadFuse() {
+        return new Promise((resolve) => {
+            if (window.Fuse) { resolve(); return; }
+            const s = document.createElement('script');
+            s.src = FUSE_CDN;
+            s.onload = resolve;
+            s.onerror = resolve;
+            document.head.appendChild(s);
+        });
+    }
+
+    /* ── LOAD SEARCH INDEX ── */
+    function loadIndex() {
+        return fetch(INDEX_URL)
+            .then(r => r.json())
+            .then(data => { index = data; })
+            .catch(() => { index = []; });
+    }
+
+    /* ── BUILD MODAL DOM ── */
+    function createModal() {
+        if (overlay) return;
+
+        overlay = document.createElement('div');
+        overlay.className = 'search-overlay';
+        overlay.innerHTML = `
+            <div class="search-modal">
+                <div class="search-input-wrap">
+                    <span class="search-icon-svg">${SEARCH_SVG}</span>
+                    <input type="text" class="search-input" id="searchInput"
+                           placeholder="search magmacrunch..." autocomplete="off" spellcheck="false">
+                    <button class="search-close-btn" id="searchClose">ESC</button>
+                </div>
+                <div class="search-results" id="searchResults"></div>
+                <div class="search-footer">
+                    <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+                    <span><kbd>↵</kbd> select</span>
+                    <span><kbd>esc</kbd> close</span>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        input = overlay.querySelector('#searchInput');
+        resultsEl = overlay.querySelector('#searchResults');
+        const closeBtn = overlay.querySelector('#searchClose');
+
+        /* ── Event listeners ── */
+        input.addEventListener('input', onInput);
+        input.addEventListener('keydown', onKeyDown);
+        closeBtn.addEventListener('click', close);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) close();
+        });
+    }
+
+    /* ── OPEN / CLOSE ── */
+    function open() {
+        createModal();
+        activeIdx = -1;
+        currentResults = [];
+        input.value = '';
+        resultsEl.innerHTML = '';
+        overlay.classList.add('open');
+        setTimeout(() => input.focus(), 50);
+    }
+
+    function close() {
+        if (overlay) overlay.classList.remove('open');
+    }
+
+    function isOpen() {
+        return overlay && overlay.classList.contains('open');
+    }
+
+    /* ── SEARCH ── */
+    function onInput() {
+        const q = input.value.trim();
+        if (!q) {
+            resultsEl.innerHTML = '';
+            currentResults = [];
+            activeIdx = -1;
+            return;
+        }
+
+        if (!fuse && window.Fuse) {
+            fuse = new window.Fuse(index, {
+                keys: [
+                    { name: 't', weight: 2 },
+                    { name: 'a', weight: 1.5 },
+                    { name: 'd', weight: 1 },
+                    { name: 'c', weight: 0.5 }
+                ],
+                threshold: 0.35,
+                includeMatches: true,
+                minMatchCharLength: 2
+            });
+        }
+
+        if (!fuse) return;
+
+        const results = fuse.search(q).slice(0, MAX_RESULTS);
+        currentResults = results;
+        activeIdx = results.length > 0 ? 0 : -1;
+        renderResults(results, q);
+    }
+
+    /* ── RENDER ── */
+    function renderResults(results, query) {
+        if (results.length === 0) {
+            resultsEl.innerHTML = `<div class="search-empty">no results for "${escHtml(query)}"</div>`;
+            return;
+        }
+
+        /* Group by category */
+        const groups = {};
+        for (const r of results) {
+            const cat = r.item.c;
+            if (!groups[cat]) groups[cat] = [];
+            groups[cat].push(r);
+        }
+
+        let html = '';
+        let globalIdx = 0;
+        const catOrder = ['music', 'song', 'artist', 'place', 'label', 'contributor', 'arcade', 'press', 'tool', 'page'];
+
+        for (const cat of catOrder) {
+            const items = groups[cat];
+            if (!items) continue;
+
+            html += `<div class="search-category" data-cat="${cat}">
+                <div class="search-category-label">${CAT_LABELS[cat] || cat.toUpperCase()}</div>`;
+
+            for (const r of items) {
+                const title = highlightMatches(r.item.t, r.matches, 't');
+                const desc = r.item.d ? escHtml(r.item.d) : '';
+                const isActive = globalIdx === activeIdx ? ' active' : '';
+                html += `<a class="search-result-item${isActive}" data-idx="${globalIdx}"
+                            href="${r.item.u}">
+                    <div class="search-result-title">${title}</div>
+                    <div class="search-result-desc">${desc}</div>
+                </a>`;
+                globalIdx++;
+            }
+            html += `</div>`;
+        }
+
+        resultsEl.innerHTML = html;
+
+        /* Attach click handlers */
+        resultsEl.querySelectorAll('.search-result-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = el.getAttribute('href');
+                navigateTo(href);
+            });
+        });
+    }
+
+    /* ── HIGHLIGHT MATCHES ── */
+    function highlightMatches(text, matches, key) {
+        if (!matches) return escHtml(text);
+
+        const match = matches.find(m => m.key === key);
+        if (!match) return escHtml(text);
+
+        let result = text;
+        const indices = match.indices.slice().sort((a, b) => b[0] - a[0]);
+
+        for (const [start, end] of indices) {
+            const before = result.slice(0, start);
+            const matched = result.slice(start, end + 1);
+            const after = result.slice(end + 1);
+            result = before + '<span class="search-highlight">' + escHtml(matched) + '</span>' + after;
+        }
+
+        return result;
+    }
+
+    /* ── KEYBOARD NAVIGATION ── */
+    function onKeyDown(e) {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            close();
+            return;
+        }
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (currentResults.length > 0) {
+                activeIdx = (activeIdx + 1) % currentResults.length;
+                updateActive();
+            }
+            return;
+        }
+
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (currentResults.length > 0) {
+                activeIdx = (activeIdx - 1 + currentResults.length) % currentResults.length;
+                updateActive();
+            }
+            return;
+        }
+
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeIdx >= 0 && activeIdx < currentResults.length) {
+                navigateTo(currentResults[activeIdx].item.u);
+            }
+            return;
+        }
+    }
+
+    function updateActive() {
+        const items = resultsEl.querySelectorAll('.search-result-item');
+        items.forEach((el, i) => {
+            el.classList.toggle('active', i === activeIdx);
+        });
+        /* Scroll active into view */
+        const active = resultsEl.querySelector('.search-result-item.active');
+        if (active) active.scrollIntoView({ block: 'nearest' });
+    }
+
+    /* ── NAVIGATE ── */
+    function navigateTo(href) {
+        close();
+        window.location.href = href;
+    }
+
+    /* ── HELPERS ── */
+    function escHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    /* ── GLOBAL KEYBOARD SHORTCUTS ── */
+    document.addEventListener('keydown', (e) => {
+        /* Don't trigger if typing in an input/textarea */
+        const tag = document.activeElement?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+        /* / or Ctrl+K or Cmd+K */
+        if (e.key === '/' || (e.key === 'k' && (e.ctrlKey || e.metaKey))) {
+            e.preventDefault();
+            if (isOpen()) {
+                close();
+            } else {
+                open();
+            }
+        }
+    });
+
+    /* ── NAV ICON INJECTION ── */
+    function injectSearchIcon() {
+        const nav = document.querySelector('nav');
+        if (!nav) return;
+
+        /* Check if icon already exists */
+        if (nav.querySelector('.nav-search-btn')) return;
+
+        const btn = document.createElement('button');
+        btn.className = 'nav-search-btn';
+        btn.innerHTML = SEARCH_SVG;
+        btn.title = 'Search (/)';
+        btn.setAttribute('aria-label', 'search');
+        btn.addEventListener('click', () => {
+            if (isOpen()) close(); else open();
+        });
+
+        /* Insert before hamburger if present, otherwise append */
+        const hamburger = nav.querySelector('.hamburger');
+        if (hamburger) {
+            nav.insertBefore(btn, hamburger);
+        } else {
+            nav.appendChild(btn);
+        }
+    }
+
+    /* ── INIT ── */
+    function init() {
+        injectSearchIcon();
+        loadFuse().then(loadIndex);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
