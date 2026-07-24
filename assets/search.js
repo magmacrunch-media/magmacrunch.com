@@ -137,6 +137,8 @@
                     { name: 'd', weight: 1 },
                     { name: 'c', weight: 0.5 }
                 ],
+                useTokenSearch: true,
+                tokenMatch: 'all',
                 threshold: 0.45,
                 includeMatches: true,
                 minMatchCharLength: 2
