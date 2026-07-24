@@ -9,13 +9,14 @@
     /* ── CONFIG ── */
     const FUSE_CDN = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0';
     const MAX_RESULTS = 12;
+    const INDEX_VERSION = 2;
 
     /* Compute root path for search-index.json */
     function getRoot() {
         const depth = window.location.pathname.split('/').length - 2;
         return depth > 0 ? '../'.repeat(depth) : '';
     }
-    const INDEX_URL = getRoot() + 'search-index.json';
+    const INDEX_URL = getRoot() + 'search-index.json?v=' + INDEX_VERSION;
 
     /* ── CATEGORY LABELS ── */
     const CAT_LABELS = {
@@ -136,7 +137,7 @@
                     { name: 'd', weight: 1 },
                     { name: 'c', weight: 0.5 }
                 ],
-                threshold: 0.35,
+                threshold: 0.45,
                 includeMatches: true,
                 minMatchCharLength: 2
             });
