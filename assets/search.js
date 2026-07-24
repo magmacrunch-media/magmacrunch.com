@@ -7,9 +7,8 @@
     'use strict';
 
     /* ── CONFIG ── */
-    const FUSE_CDN = 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0';
     const MAX_RESULTS = 12;
-    const INDEX_VERSION = 3;
+    const INDEX_VERSION = 4;
 
     /* Compute root path for search-index.json */
     function getRoot() {
@@ -25,6 +24,9 @@
         press: 'PRESS', tool: 'TOOL', page: 'PAGE'
     };
 
+    /* Field weights for scoring */
+    const FIELD_WEIGHTS = { t: 3, a: 2.5, d: 1.5, b: 1, c: 0.5 };
+
     /* ── SVG ICONS ── */
     const SEARCH_SVG = `<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="3" y="3" width="8" height="8" rx="0" stroke="currentColor" stroke-width="2"/>
@@ -34,7 +36,6 @@
     </svg>`;
 
     /* ── STATE ── */
-    let fuse = null;
     let index = [];
     let overlay = null;
     let input = null;
@@ -42,24 +43,58 @@
     let activeIdx = -1;
     let currentResults = [];
 
-    /* ── LOAD FUSE.JS ── */
-    function loadFuse() {
-        return new Promise((resolve) => {
-            if (window.Fuse) { resolve(); return; }
-            const s = document.createElement('script');
-            s.src = FUSE_CDN;
-            s.onload = resolve;
-            s.onerror = resolve;
-            document.head.appendChild(s);
-        });
-    }
-
     /* ── LOAD SEARCH INDEX ── */
     function loadIndex() {
         return fetch(INDEX_URL)
             .then(r => r.json())
             .then(data => { index = data; })
             .catch(() => { index = []; });
+    }
+
+    /* ── TOKEN SEARCH ── */
+    function search(query) {
+        const words = query.toLowerCase().split(/\s+/).filter(w => w.length >= 2);
+        if (!words.length || !index.length) return [];
+
+        const results = [];
+
+        for (const item of index) {
+            /* Check if ALL words appear in at least one field */
+            let totalScore = 0;
+            let allFieldsMatch = true;
+            const matches = [];
+
+            for (const [key, weight] of Object.entries(FIELD_WEIGHTS)) {
+                const text = (item[key] || '').toLowerCase();
+                if (!text) continue;
+
+                const fieldMatches = [];
+                let fieldAllMatch = true;
+
+                for (const word of words) {
+                    const idx = text.indexOf(word);
+                    if (idx === -1) {
+                        fieldAllMatch = false;
+                        break;
+                    }
+                    fieldMatches.push([idx, idx + word.length - 1]);
+                }
+
+                if (fieldAllMatch) {
+                    totalScore += weight;
+                    matches.push({ key, indices: fieldMatches, value: item[key] });
+                }
+            }
+
+            /* All words must appear in at least one field */
+            if (totalScore > 0) {
+                results.push({ item, score: totalScore, matches });
+            }
+        }
+
+        /* Sort by score descending */
+        results.sort((a, b) => b.score - a.score);
+        return results.slice(0, MAX_RESULTS);
     }
 
     /* ── BUILD MODAL DOM ── */
@@ -128,26 +163,7 @@
             return;
         }
 
-        if (!fuse && window.Fuse) {
-            fuse = new window.Fuse(index, {
-                keys: [
-                    { name: 't', weight: 2 },
-                    { name: 'a', weight: 1.5 },
-                    { name: 'b', weight: 1 },
-                    { name: 'd', weight: 1 },
-                    { name: 'c', weight: 0.5 }
-                ],
-                useTokenSearch: true,
-                tokenMatch: 'all',
-                threshold: 0.45,
-                includeMatches: true,
-                minMatchCharLength: 2
-            });
-        }
-
-        if (!fuse) return;
-
-        const results = fuse.search(q).slice(0, MAX_RESULTS);
+        const results = search(q);
         currentResults = results;
         activeIdx = results.length > 0 ? 0 : -1;
         renderResults(results, q);
@@ -348,7 +364,7 @@
     /* ── INIT ── */
     function init() {
         injectSearchIcon();
-        loadFuse().then(loadIndex);
+        loadIndex();
     }
 
     if (document.readyState === 'loading') {
