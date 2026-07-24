@@ -242,10 +242,10 @@
                 in that game. It's like having a table mic at the arcade.
             </p>
             <p>
-                The chat server also keeps an eye on all the game servers. That's
+                The chat server also keeps an eye on the network. That's
                 where the <strong>"MULTIPLAYER ONLINE"</strong> status light comes
-                from — the chat server pings each game server every few seconds
-                and tells your browser who's up and who's down.
+                from — the arcade page checks if the chat server is reachable
+                over HTTPS every 30 seconds.
             </p>
         </div>
 
@@ -262,7 +262,8 @@
             <p>
                 No accounts, no installs, no app store. Just open
                 <span style="color: #ff2e9c;">index.html</span> in your browser
-                and go. The arcade works on desktop and mobile.
+                and go. The arcade is designed for desktop — most games use
+                keyboard and mouse controls.
             </p>
         </div>
 
@@ -278,6 +279,52 @@
                 <span style="color: #00f5ff;">websockets</span> library. Newer
                 games share a common server base that handles rooms, lobbies, and
                 player management — each game only needs to implement its own rules.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// SECURITY //</h2>
+            <p>
+                All traffic is encrypted via <strong>HTTPS</strong> (Let's Encrypt
+                certificates, auto-renewed). The server runs a
+                <strong>firewall</strong> that only allows the ports it needs —
+                everything else is blocked.
+            </p>
+            <p>
+                SSH access uses <strong>key-only authentication</strong> with
+                <strong>fail2ban</strong> protecting against brute-force attempts.
+                Admin interfaces are password-protected, and config files are
+                restricted to owner-only permissions.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// PRIVATE ARCADE //</h2>
+            <p>
+                Some games — <strong>SORRY!</strong> and <strong>Aggravation</strong> —
+                live in the <span style="color: #ff2e9c;">private arcade</span>.
+                These are password-protected so not everyone can access them.
+            </p>
+            <p>
+                If you have the password, you can enter it on the
+                <a href="SORRY/" style="color: #00f5ff;">SORRY!</a> or
+                <a href="aggravation/" style="color: #00f5ff;">Aggravation</a> pages
+                to unlock them. Ask a friend who's in on the secret.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// MAGMA//OPS //</h2>
+            <p>
+                The arcade is managed through <strong>MAGMA//OPS</strong>, a
+                web-based operations dashboard running on the Pi. It handles
+                server monitoring, high scores, chat history, the jukebox,
+                TV channels, themes, and more.
+            </p>
+            <p>
+                It also has <strong>GitHub integration</strong> — content changes
+                (jukebox songs, TV channels, themes) can be deployed directly to
+                the live site with one click.
             </p>
         </div>
 
