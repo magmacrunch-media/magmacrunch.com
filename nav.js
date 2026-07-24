@@ -8,42 +8,42 @@
    Used by the auto-nav generator below. */
 
 window.NAV_CONFIG = {
-    brand: { href: 'index.html', text: 'magmacrunch.com' },
+    brand: { href: './', text: 'magmacrunch.com' },
     sections: [
-        { label: 'home', href: 'index.html' },
+        { label: 'home', href: './' },
         { label: 'about', href: 'home/about.html' },
-        { label: 'music', href: 'music/index.html', items: [
-            { href: 'music/jukebox/index.html', label: 'jukebox' },
+        { label: 'music', href: 'music/', items: [
+            { href: 'music/jukebox/', label: 'jukebox' },
             { href: 'music/distributed-music.html', label: 'distributed music' },
-            { href: 'music/physical-media/index.html', label: 'physical media' }
+            { href: 'music/physical-media/', label: 'physical media' }
         ]},
-        { label: 'visual', href: 'visual/index.html', items: [
+        { label: 'visual', href: 'visual/', items: [
             { href: 'visual/music-videos.html', label: 'music videos' },
             { href: 'visual/tv.html', label: 'teevee' },
             { href: 'visual/collage.html', label: 'collage' },
             { href: 'visual/photography.html', label: 'photography' }
         ]},
-        { label: 'archive', href: 'archive/index.html', items: [
-            { href: 'archive/by-artist/index.html', label: 'by artist' },
-            { href: 'archive/by-place/index.html', label: 'by place' },
-            { href: 'archive/by-label/index.html', label: 'by label' },
-            { href: 'archive/by-contributor/index.html', label: 'by contributor' }
+        { label: 'archive', href: 'archive/', items: [
+            { href: 'archive/by-artist/', label: 'by artist' },
+            { href: 'archive/by-place/', label: 'by place' },
+            { href: 'archive/by-label/', label: 'by label' },
+            { href: 'archive/by-contributor/', label: 'by contributor' }
         ]},
-        { label: 'arcade', href: 'arcade/index.html', items: [
-            { href: 'arcade/board-games/index.html', label: 'board games' },
-            { href: 'arcade/card-games/index.html', label: 'card games' },
-            { href: 'arcade/puzzles/index.html', label: 'puzzles' },
-            { href: 'arcade/action/index.html', label: 'action' }
+        { label: 'arcade', href: 'arcade/', items: [
+            { href: 'arcade/board-games/', label: 'board games' },
+            { href: 'arcade/card-games/', label: 'card games' },
+            { href: 'arcade/puzzles/', label: 'puzzles' },
+            { href: 'arcade/action/', label: 'action' }
         ]},
-        { label: 'press', href: 'press/index.html', items: [
-            { href: 'press/scientific/index.html', label: 'scientific' },
-            { href: 'press/experimental/index.html', label: 'experimental' },
-            { href: 'press/lyrics/index.html', label: 'lyrics' }
+        { label: 'press', href: 'press/', items: [
+            { href: 'press/scientific/', label: 'scientific' },
+            { href: 'press/experimental/', label: 'experimental' },
+            { href: 'press/lyrics/', label: 'lyrics' }
         ]},
-        { label: 'tools', href: 'tools/index.html', items: [
-            { href: 'tools/album-art-maker/index.html', label: 'album art' },
-            { href: 'tools/media-search/index.html', label: 'media search' },
-            { href: 'tools/pixel-process/index.html', label: 'pixel process' }
+        { label: 'tools', href: 'tools/', items: [
+            { href: 'tools/album-art-maker/', label: 'album art' },
+            { href: 'tools/media-search/', label: 'media search' },
+            { href: 'tools/pixel-process/', label: 'pixel process' }
         ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]
@@ -180,7 +180,7 @@ window.NAV_CONFIG = {
     const backColor = main.dataset.backColor || 'c-orange';
 
     // always include ← back to parent index
-    const cards = [`<a href="index.html" class="nav-card ${backColor}">← back</a>`];
+    const cards = [`<a href="./" class="nav-card ${backColor}">← back</a>`];
     for (const s of siblings) {
         if (s === currentPage) continue;
         cards.push(`<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-cyan'}">${s}</a>`);
@@ -233,7 +233,7 @@ window.NAV_CONFIG = {
     // Only run on archive subpages (individual artist/place folders)
     if (!path.includes('/archive/by-artist/') && !path.includes('/archive/by-place/')) return;
     // Skip the by-artist/index.html and by-place/index.html pages themselves
-    if (path === '/archive/by-artist/index.html' || path === '/archive/by-place/index.html') return;
+    if (path === '/archive/by-artist/' || path === '/archive/by-place/') return;
     // Skip folder index pages (they already have hardcoded breadcrumbs in page-header)
     if (path.match(/\/archive\/by-(artist|place)\/([^/]*)\/index\.html$/)) return;
 
@@ -250,20 +250,20 @@ window.NAV_CONFIG = {
 
     const section = parts[sectionIdx]; // "by-artist" or "by-place"
     const folder   = parts[folderIdx]; // e.g. "bottle-boys-collective"
-    const file    = parts[parts.length - 1]; // e.g. "index.html" or "recordings.html"
+    const file    = parts[parts.length - 1]; // e.g. "./" or "recordings.html"
 
     if (!folder) return;
 
     // Build breadcrumb segments
     const crumbs = [
-        { label: 'home',   href: '../../../index.html' },
-        { label: 'archive', href: '../../../archive/index.html' },
+        { label: 'home',   href: '../../../' },
+        { label: 'archive', href: '../../../archive/' },
         { label: section.replace('by-', ''), href: `../../../archive/${section}/index.html` },
-        { label: folder.replace(/-/g, ' '), href: `../index.html`, isCurrent: file === 'index.html' || file.includes(folder) }
+        { label: folder.replace(/-/g, ' '), href: `../index.html`, isCurrent: file === './' || file.includes(folder) }
     ];
 
     // For subpages (recordings.html, works.html, etc), add the page name
-    if (file !== 'index.html' && file.endsWith('.html')) {
+    if (file !== './' && file.endsWith('.html')) {
         const pageName = file.replace('.html', '').replace(/-/g, ' ');
         crumbs.push({ label: pageName, isCurrent: true });
     }

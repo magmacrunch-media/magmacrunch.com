@@ -70,18 +70,18 @@
 
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) breadcrumbEl.innerHTML = `
-        <a href="${d}archive/index.html">archive</a>
+        <a href="${d}archive/">archive</a>
         <span class="sep">›</span>
-        <a href="${d}archive/by-artist/index.html">by artist</a>
+        <a href="${d}archive/by-artist/">by artist</a>
         <span class="sep">›</span>
-        <a href="index.html">${C.abbr.toLowerCase()}</a>`;
+        <a href="./">${C.abbr.toLowerCase()}</a>`;
 
     const artistLabelEl = document.getElementById('artist-label');
     if (artistLabelEl) artistLabelEl.textContent = `// ${C.name} //`;
 
     const subNavEl = document.getElementById('sub-nav');
     if (subNavEl) subNavEl.innerHTML = [
-        `<a href="index.html" class="nav-card c-back c-accent">← back</a>`,
+        `<a href="./" class="nav-card c-back c-accent">← back</a>`,
         ...(C.siblings || []).map(s =>
             `<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-cyan'}">${s}</a>`)
     ].join('\n');

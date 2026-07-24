@@ -33,7 +33,7 @@
         <div class="artist-label" id="artist-label"></div>
         <div class="page-title">GAMES</div>
         <div class="sub-nav">
-            <a href="index.html"        class="nav-card c-back">← back</a>
+            <a href="./"        class="nav-card c-back">← back</a>
             <a href="about.html"        class="nav-card c-about">about</a>
             <a href="photography.html"  class="nav-card c-photography">photography</a>
             <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
@@ -49,7 +49,7 @@
     </div>
 
     <div class="games-grid">
-        <a href="../../../arcade/moonlight-drift/index.html" class="game-card-link">
+        <a href="../../../arcade/moonlight-drift/" class="game-card-link">
             <div class="game-card">
                 <div class="game-card-header">
                     <div class="game-card-title">MOONLIGHT<br>DRIFT</div>
@@ -79,11 +79,11 @@
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) {
         breadcrumbEl.innerHTML = `
-            <a href="${d}archive/index.html">archive</a>
+            <a href="${d}archive/">archive</a>
             <span class="sep">›</span>
-            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <a href="${d}archive/by-artist/">by artist</a>
             <span class="sep">›</span>
-            <a href="index.html">${C.abbr.toLowerCase()}</a>
+            <a href="./">${C.abbr.toLowerCase()}</a>
         `;
     }
 

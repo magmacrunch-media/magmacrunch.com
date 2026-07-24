@@ -33,7 +33,7 @@
         <div class="artist-label" id="artist-label"></div>
         <div class="page-title">ABOUT</div>
         <div class="sub-nav">
-            <a href="index.html"         class="nav-card c-back">← back</a>
+            <a href="./"         class="nav-card c-back">← back</a>
             <a href="games.html"         class="nav-card c-games">games</a>
             <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
             <a href="network.html"       class="nav-card c-network">network</a>
@@ -56,7 +56,7 @@
     </div>
 
     <div class="place-body">
-        <p>A close relative to <a href="../vinny-bobarino/index.html">Vinny Bobarino</a>, Juanito Thompson started as a home recording project during summer &amp; winter breaks from college in 2009.</p>
+        <p>A close relative to <a href="../vinny-bobarino/">Vinny Bobarino</a>, Juanito Thompson started as a home recording project during summer &amp; winter breaks from college in 2009.</p>
 
         <p>What began as improvised recordings in a spare bedroom evolved into a years-long collaboration with a rotating cast of musicians, all captured on cheap equipment in borrowed spaces.</p>
 
@@ -80,11 +80,11 @@
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) {
         breadcrumbEl.innerHTML = `
-            <a href="${d}archive/index.html">archive</a>
+            <a href="${d}archive/">archive</a>
             <span class="sep">›</span>
-            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <a href="${d}archive/by-artist/">by artist</a>
             <span class="sep">›</span>
-            <a href="index.html">${C.abbr.toLowerCase()}</a>
+            <a href="./">${C.abbr.toLowerCase()}</a>
         `;
     }
 

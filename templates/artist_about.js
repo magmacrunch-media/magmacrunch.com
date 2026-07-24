@@ -96,11 +96,11 @@
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) {
         breadcrumbEl.innerHTML = `
-            <a href="${d}archive/index.html">archive</a>
+            <a href="${d}archive/">archive</a>
             <span class="sep">›</span>
-            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <a href="${d}archive/by-artist/">by artist</a>
             <span class="sep">›</span>
-            <a href="index.html">${C.abbr.toLowerCase()}</a>
+            <a href="./">${C.abbr.toLowerCase()}</a>
         `;
     }
 
@@ -112,7 +112,7 @@
     const subNavEl = document.getElementById('sub-nav');
     if (subNavEl) {
         subNavEl.innerHTML = [
-            `<a href="index.html" class="nav-card c-back">← back</a>`,
+            `<a href="./" class="nav-card c-back">← back</a>`,
             ...(C.siblings || []).filter(s => s !== 'about').map(s => {
                 const label = s.replace(/-/g, ' ');
                 return `<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-cyan'}">${label}</a>`;

@@ -33,7 +33,7 @@
         <div class="artist-label" id="artist-label"></div>
         <div class="page-title">GAMES</div>
         <div class="sub-nav">
-            <a href="index.html"         class="nav-card c-back">← back</a>
+            <a href="./"         class="nav-card c-back">← back</a>
             <a href="about.html"         class="nav-card c-about">about</a>
             <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
             <a href="network.html"       class="nav-card c-network">network</a>
@@ -51,7 +51,7 @@
     </div>
 
     <div class="games-grid">
-        <a href="../../../arcade/george-boole/index.html" class="game-card-link">
+        <a href="../../../arcade/george-boole/" class="game-card-link">
             <div class="game-card">
                 <div class="game-card-header">
                     <div class="game-card-title">GEORGE BOOLE<br>HAS ENTERED<br>THE CHAT</div>
@@ -81,11 +81,11 @@
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) {
         breadcrumbEl.innerHTML = `
-            <a href="${d}archive/index.html">archive</a>
+            <a href="${d}archive/">archive</a>
             <span class="sep">›</span>
-            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <a href="${d}archive/by-artist/">by artist</a>
             <span class="sep">›</span>
-            <a href="index.html">${C.abbr.toLowerCase()}</a>
+            <a href="./">${C.abbr.toLowerCase()}</a>
         `;
     }
 

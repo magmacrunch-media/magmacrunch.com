@@ -34,7 +34,7 @@
         <div class="artist-label" id="artist-label"></div>
         <div class="page-title">RELEASES</div>
         <div class="sub-nav" id="sub-nav">
-            <a href="index.html"        class="nav-card c-back">← back</a>
+            <a href="./"        class="nav-card c-back">← back</a>
             <a href="about.html"        class="nav-card c-apricot">about</a>
             <a href="photography.html"  class="nav-card c-photography">photography</a>
             <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
@@ -117,18 +117,18 @@
 
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) breadcrumbEl.innerHTML = `
-        <a href="${d}archive/index.html">archive</a>
+        <a href="${d}archive/">archive</a>
         <span class="sep">›</span>
-        <a href="${d}archive/index.html">by artist</a>
+        <a href="${d}archive/">by artist</a>
         <span class="sep">›</span>
-        <a href="index.html">bbc</a>`;
+        <a href="./">bbc</a>`;
 
     const artistLabelEl = document.getElementById('artist-label');
     if (artistLabelEl) artistLabelEl.textContent = `// bottle boys collective //`;
 
     const subNavEl = document.getElementById('sub-nav');
     if (subNavEl) subNavEl.innerHTML = [
-        `<a href="index.html" class="nav-card ${C.backColor || 'c-back'}">← back</a>`,
+        `<a href="./" class="nav-card ${C.backColor || 'c-back'}">← back</a>`,
         ...(C.siblings || []).map(s =>
             `<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-cyan'}">${s}</a>`)
     ].join('\n');

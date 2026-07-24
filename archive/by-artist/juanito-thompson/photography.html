@@ -33,7 +33,7 @@
         <div class="artist-label" id="artist-label"></div>
         <div class="page-title">PHOTOGRAPHY</div>
         <div class="sub-nav">
-            <a href="index.html"         class="nav-card c-back">← back</a>
+            <a href="./"         class="nav-card c-back">← back</a>
             <a href="about.html"         class="nav-card c-about">about</a>
             <a href="games.html"         class="nav-card c-games">games</a>
             <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
@@ -123,11 +123,11 @@
     const breadcrumbEl = document.querySelector('.breadcrumb');
     if (breadcrumbEl) {
         breadcrumbEl.innerHTML = `
-            <a href="${d}archive/index.html">archive</a>
+            <a href="${d}archive/">archive</a>
             <span class="sep">›</span>
-            <a href="${d}archive/by-artist/index.html">by artist</a>
+            <a href="${d}archive/by-artist/">by artist</a>
             <span class="sep">›</span>
-            <a href="index.html">${C.abbr.toLowerCase()}</a>
+            <a href="./">${C.abbr.toLowerCase()}</a>
         `;
     }
 

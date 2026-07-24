@@ -254,7 +254,7 @@
         // Build player HTML
         const player = document.createElement('div');
         player.className = 'nav-player';
-        const jukeboxHref = new URL('music/jukebox/index.html', location.origin).pathname;
+        const jukeboxHref = new URL('music/jukebox/', location.origin).pathname;
         player.innerHTML =
             '<button class="np-btn np-prev" aria-label="previous track">\u25C0\u25C0</button>' +
             '<button class="np-btn np-play" aria-label="play">\u25B6</button>' +
