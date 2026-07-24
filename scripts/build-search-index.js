@@ -88,8 +88,6 @@ function parseMainPages() {
     { file: 'archive/by-place/index.html', title: 'Places', desc: 'Browse by place' },
     { file: 'archive/by-label/index.html', title: 'Labels', desc: 'Browse by label' },
     { file: 'archive/by-contributor/index.html', title: 'Contributors', desc: 'Browse by contributor' },
-    { file: 'archive/more/contributors.html', title: 'More Contributors', desc: 'Additional contributor data' },
-    { file: 'archive/more/video.html', title: 'Video Archive', desc: 'MusicBrainz video data' },
     { file: 'arcade/index.html', title: 'Arcade Hub', desc: 'Pixel games and multiplayer' },
     { file: 'arcade/server.html', title: 'Arcade Server', desc: 'Server status and info' },
     { file: 'arcade/board-games/index.html', title: 'Board Games', desc: 'Chess, checkers, backgammon, and more' },

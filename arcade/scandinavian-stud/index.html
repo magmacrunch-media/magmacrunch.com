@@ -15,29 +15,29 @@
     <link rel="stylesheet" href="../shared/chips/chip-animation.css">
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="../shared/multiplayer/lobby.css">
+    <style>
+        .mc-back {
+            position: fixed;
+            top: 12px;
+            left: 14px;
+            z-index: 10000;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #00f5ff;
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+        .mc-back::before {
+            content: '← ';
+        }
+        .mc-back:hover {
+            color: #00ffff;
+        }
+        body.game-active .mc-back {
+            display: block;
+        }
+    </style>
 </head>
-<style>
-    .mc-back {
-        position: fixed;
-        top: 12px;
-        left: 14px;
-        z-index: 10000;
-        font-family: 'Press Start 2P', monospace;
-        font-size: 9px;
-        color: #00f5ff;
-        text-decoration: none;
-        letter-spacing: 0.08em;
-    }
-    .mc-back::before {
-        content: '← ';
-    }
-    .mc-back:hover {
-        color: #00ffff;
-    }
-    body.game-active .mc-back {
-        display: block;
-    }
-</style>
 <body>
 <a href="../" class="mc-back">magmacrunch arcade</a>
 
