@@ -1,0 +1,133 @@
+/* ═══════════════════════════════════════════════
+   archive — about page template
+   templates/artist-about.css
+   ═══════════════════════════════════════════════
+   Set --section-accent in the page's <style> block:
+     :root { --section-accent: var(--jm-sage); }
+   ═══════════════════════════════════════════════ */
+
+/* Main layout */
+main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+
+/* Breadcrumb */
+.breadcrumb { color: var(--dim); }
+.breadcrumb a { color: var(--section-accent); }
+.breadcrumb a:hover { color: var(--cream, #f0ead8); }
+.breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+.breadcrumb .current { color: var(--section-accent); }
+
+/* Page header */
+.page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+.artist-label, .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--section-accent); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+.page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--section-accent); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,0,0,0.3); }
+
+/* Back nav-card */
+.nav-card.c-back { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+.nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+.nav-card::after { display: none; }
+
+/* Place/artist body content */
+.place-body {
+    max-width: 960px;
+    width: 100%;
+    padding: 0 20px;
+    color: var(--cream, #f0ead8);
+    font-size: 15px;
+    line-height: 1.8;
+}
+.place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+.place-body a {
+    color: var(--section-accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+.place-body a:hover { color: var(--cream, #f0ead8); border-bottom-color: var(--cream, #f0ead8); }
+.place-body a[target="_blank"] { border-bottom-color: transparent; }
+.place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+/* Drop cap */
+.place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--section-accent);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+/* Section labels */
+.section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--section-accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--section-accent);
+    opacity: 0.9;
+}
+
+/* Photo rows */
+.place-photo-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 40px 0;
+}
+.place-photo-row img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Figures */
+.place-figure { margin: 40px auto; max-width: 960px; }
+.place-figure img { width: 95%; border-radius: 8px; }
+.place-figure figcaption {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: var(--dim, #8a7a8a);
+    text-align: center;
+}
+.place-figure figcaption::before { content: '— '; }
+.place-figure figcaption::after { content: ' —'; }
+
+/* Divider */
+.divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--section-accent), transparent);
+    margin: 8px 0 40px;
+    opacity: 0.4;
+}
+
+/* MusicBrainz link */
+.mb-link-wrap { width: 100%; max-width: 700px; padding: 0 20px; margin-top: 40px; animation: fadeUp 0.5s 0.15s ease both; }
+.mb-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim, #8a7a8a);
+    text-decoration: none;
+    border: 1px solid var(--surface, #1a0d08);
+    padding: 6px 12px;
+    letter-spacing: 0.08em;
+    transition: color 0.15s, border-color 0.15s;
+    display: inline-block;
+}
+.mb-link:hover { color: var(--section-accent); border-color: var(--section-accent); }
+
+@media (max-width: 700px) {
+    .place-photo-row { grid-template-columns: 1fr; }
+}
