@@ -678,6 +678,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
     /* ── CLICK INTERCEPTION ── */
     document.addEventListener('click', function (e) {
+        if (e.defaultPrevented) return;
         const a = e.target.closest('a');
         if (!isSPAEligible(a)) return;
         e.preventDefault();
