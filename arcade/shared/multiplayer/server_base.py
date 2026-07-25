@@ -26,6 +26,7 @@ import json
 import logging
 import random
 import string
+import time
 import websockets
 
 logging.getLogger("websockets").setLevel(logging.WARNING)
@@ -126,6 +127,27 @@ class Room:
                 pass
 
 
+# ── Rate Limiter ──────────────────────────────────────────────────────────────
+
+class RateLimiter:
+    """Per-connection sliding window rate limiter."""
+
+    def __init__(self):
+        self._windows = {}  # key -> (window_start, count)
+
+    def check(self, key, max_count, window_sec):
+        """Return True if allowed, False if rate limited."""
+        now = time.monotonic()
+        window_start, count = self._windows.get(key, (now, 0))
+        if now - window_start > window_sec:
+            self._windows[key] = (now, 1)
+            return True
+        if count >= max_count:
+            return False
+        self._windows[key] = (window_start, count + 1)
+        return True
+
+
 # ── Game Server ──────────────────────────────────────────────────────────────
 
 class GameServer:
@@ -168,12 +190,17 @@ class GameServer:
         """Main connection handler."""
         room = None
         player_name = None
+        limiter = RateLimiter()
 
         try:
             # Send lobby snapshot immediately
             await self._send_lobby_snapshot(websocket)
 
             async for raw in websocket:
+                # Global flood protection: 20 msgs/sec per connection
+                if not limiter.check("global", 20, 1):
+                    continue
+
                 try:
                     msg = json.loads(raw)
                 except json.JSONDecodeError:
@@ -197,10 +224,12 @@ class GameServer:
                     await self._handle_start_game(websocket, room)
 
                 elif msg_type == "chat":
-                    await self._handle_chat(websocket, room, msg)
+                    if limiter.check("chat", 5, 10):
+                        await self._handle_chat(websocket, room, msg)
 
                 elif msg_type == "game_action":
-                    await self._handle_game_action(websocket, room, msg)
+                    if limiter.check("game_action", 2, 3):
+                        await self._handle_game_action(websocket, room, msg)
 
                 elif msg_type == "quit":
                     await self._handle_quit(websocket, room)

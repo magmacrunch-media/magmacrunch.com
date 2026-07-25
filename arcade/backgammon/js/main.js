@@ -99,7 +99,7 @@ var UI = (function() {
     function startLocalGame() {
         isMultiplayer = false;
         Multiplayer.quit();
-        Chat.disconnect();
+        ChatWidget.disconnect();
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
         elements.gameChat.style.display = 'none';
@@ -112,7 +112,7 @@ var UI = (function() {
     function showMenu() {
         isMultiplayer = false;
         Multiplayer.quit();
-        Chat.disconnect();
+        ChatWidget.disconnect();
         elements.startScreen.style.display = 'flex';
         elements.gameScreen.style.display = 'none';
         elements.gameChat.style.display = 'none';
