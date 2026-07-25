@@ -9,7 +9,7 @@ import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from server import (
-    TRACK_SIZE, HOME_SIZE, NUM_PAWNS, MIN_PLAYERS, MAX_PLAYERS,
+    TRACK_SIZE, HOME_SIZE, NUM_PAWNS,
     COLORS, COLOR_CONFIG, SAFE_SQUARES,
     advance_position, get_pawns_at_track, is_safe_square,
     check_capture, is_blockade, get_legal_moves, ai_choose_move,

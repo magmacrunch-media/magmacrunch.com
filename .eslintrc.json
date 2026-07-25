@@ -48,6 +48,12 @@
         "__LABEL_CONFIG": "writable",
         "__ENTITY_MAP": "writable",
         "MathJax": "writable",
-        "module": "readonly"
+        "module": "readonly",
+        "SUITS": "readonly",
+        "RANKS": "readonly",
+        "SUIT_SYMBOLS": "readonly",
+        "SUIT_COLORS": "readonly",
+        "RANK_VALUES": "readonly",
+        "MagmaCards": "readonly"
     }
 }
