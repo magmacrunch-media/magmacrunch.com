@@ -514,7 +514,7 @@
     <!-- Collections -->
     <div class="game-section">
         <div class="section-header" style="border-color: #fff733; color: #fff733; text-shadow: 0 0 12px rgba(255,224,58,0.6);">// WEB COLLECTIONS //</div>
-        <div class="game-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="game-grid">
 
             <a href="board-games/" class="game-card" style="--card-color: #00f5ff">
                 <div class="card-inner">
@@ -864,7 +864,7 @@ animateCoin(document.getElementById('coinCanvas2'));
 */
 
 
-// ── Board Games collection preview — checkerboard + pieces ──
+// ── Board Games collection preview — checkerboard + detailed pieces ──
 (function() {
     const c = document.getElementById('cBoardGames');
     if (!c) return;
@@ -882,27 +882,73 @@ animateCoin(document.getElementById('coinCanvas2'));
             const isDark = (r + col) % 2 === 1;
             ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
             ctx.fillRect(x, y, sq, sq);
+            // highlight on light squares
+            if (!isDark) {
+                ctx.fillStyle = 'rgba(255,255,255,0.06)';
+                ctx.fillRect(x, y, sq, 1);
+                ctx.fillRect(x, y, 1, sq);
+            }
         }
     }
-    // mixed pieces to suggest multiple games
-    // chess rook (top-left)
+    // chess king (top-left area) — crown shape
     ctx.fillStyle = '#ff2d78';
-    ctx.fillRect(6, 6, 4, 4);
-    // checker (bottom-right)
+    ctx.fillRect(10, 8, 6, 2);   // crown base
+    ctx.fillRect(10, 6, 2, 2);   // left tine
+    ctx.fillRect(13, 6, 2, 2);   // center tine (taller)
+    ctx.fillRect(11, 4, 4, 2);   // cross top
+    ctx.fillRect(12, 3, 2, 1);   // cross vertical
+    ctx.fillStyle = '#ff5a9e';
+    ctx.fillRect(10, 10, 6, 4);  // body highlight
+    ctx.fillStyle = '#ff2d78';
+    ctx.fillRect(11, 14, 4, 2);  // base
+    // shadow under king
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(9, 16, 8, 2);
+    // chess knight (center-right) — horse head profile
     ctx.fillStyle = '#00f5ff';
-    ctx.beginPath(); ctx.arc(60, 60, 3, 0, Math.PI * 2); ctx.fill();
-    // pawn (center)
+    ctx.fillRect(46, 18, 4, 2);  // ear
+    ctx.fillRect(44, 20, 6, 4);  // head
+    ctx.fillRect(44, 24, 4, 2);  // jaw
+    ctx.fillRect(42, 26, 6, 2);  // neck
+    ctx.fillRect(42, 28, 4, 4);  // base
+    ctx.fillStyle = '#00c8cc';
+    ctx.fillRect(45, 21, 2, 1);  // eye
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(41, 32, 6, 2);
+    // checkers piece (bottom-right) — ridged disc
     ctx.fillStyle = '#ffe03a';
-    ctx.beginPath(); ctx.arc(36, 36, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(36, 33, 2, 0, Math.PI * 2); ctx.fill();
-    // dice dots
+    ctx.beginPath(); ctx.arc(58, 52, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ccaa00';
+    ctx.beginPath(); ctx.arc(58, 52, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffe03a';
+    ctx.beginPath(); ctx.arc(58, 52, 1.5, 0, Math.PI * 2); ctx.fill();
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.arc(58, 54, 5, 0, Math.PI); ctx.fill();
+    // backgammon piece (bottom-left) — flat elongated disc
+    ctx.fillStyle = '#c45fff';
+    ctx.fillRect(10, 56, 8, 3);
+    ctx.fillStyle = '#9a30cc';
+    ctx.fillRect(10, 59, 8, 1);
+    // die (bottom-center) — 3D isometric look with 5 dots
     ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(10, 54, 6, 6);
-    ctx.fillStyle = '#0a0612';
-    ctx.beginPath(); ctx.arc(13, 57, 1, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(32, 52, 10, 10);
+    ctx.fillStyle = '#ffaa55';
+    ctx.fillRect(32, 52, 10, 2);  // top edge highlight
+    ctx.fillRect(32, 52, 2, 10);  // left edge highlight
+    ctx.fillStyle = '#cc5500';
+    ctx.fillRect(40, 52, 2, 10);  // right shadow
+    ctx.fillRect(32, 60, 10, 2);  // bottom shadow
+    // dots (5-face pattern)
+    ctx.fillStyle = '#1a0a1a';
+    ctx.fillRect(34, 54, 2, 2);
+    ctx.fillRect(39, 54, 2, 2);
+    ctx.fillRect(36, 56, 2, 2);
+    ctx.fillRect(34, 59, 2, 2);
+    ctx.fillRect(39, 59, 2, 2);
 })();
 
-// ── Card Games collection preview — fan of cards ──
+// ── Card Games collection preview — fanned hand + poker chips ──
 (function() {
     const c = document.getElementById('cCardGames');
     if (!c) return;
@@ -912,28 +958,58 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.strokeStyle = '#39ff6e';
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 68, 68);
-    const cardW = 16, cardH = 22, startY = 14;
+    // subtle table felt texture
+    ctx.fillStyle = 'rgba(57,255,110,0.03)';
+    for (let i = 0; i < 72; i += 4) ctx.fillRect(0, i, 72, 2);
+    const cardW = 18, cardH = 26;
     const cards = [
-        { x: 8,  suit: '\u2660', color: '#0a1628' },
-        { x: 20, suit: '\u2665', color: '#ff3d6e' },
-        { x: 32, suit: '\u2666', color: '#ff3d6e' },
-        { x: 44, suit: '\u2663', color: '#0a1628' },
+        { x: 6,  suit: '\u2660', rank: 'A', color: '#0a1628' },
+        { x: 18, suit: '\u2665', rank: 'K', color: '#ff3d6e' },
+        { x: 30, suit: '\u2666', rank: 'Q', color: '#ff3d6e' },
+        { x: 42, suit: '\u2663', rank: 'J', color: '#0a1628' },
     ];
-    cards.forEach(card => {
+    const startY = 10;
+    // card drop shadows
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    cards.forEach(card => ctx.fillRect(card.x + 2, startY + 2, cardW, cardH));
+    cards.forEach((card, i) => {
+        // card body
         ctx.fillStyle = '#f0ead8';
-        ctx.fillRect(card.x, startY, cardW, cardH);
+        ctx.fillRect(card.x, startY - i, cardW, cardH);
+        // inner border
         ctx.strokeStyle = '#39ff6e';
         ctx.lineWidth = 0.5;
-        ctx.strokeRect(card.x, startY, cardW, cardH);
+        ctx.strokeRect(card.x + 1, startY - i + 1, cardW - 2, cardH - 2);
+        // rank top-left
         ctx.fillStyle = card.color;
-        ctx.font = '8px serif';
+        ctx.font = "bold 5px 'Press Start 2P', monospace";
+        ctx.textAlign = 'left';
+        ctx.fillText(card.rank, card.x + 2, startY - i + 7);
+        // suit below rank
+        ctx.font = '6px serif';
+        ctx.fillText(card.suit, card.x + 3, startY - i + 13);
+        // centered large suit
+        ctx.font = '10px serif';
         ctx.textAlign = 'center';
-        ctx.fillText(card.suit, card.x + cardW / 2, startY + 16);
+        ctx.fillText(card.suit, card.x + cardW / 2, startY - i + 22);
     });
-    ctx.fillStyle = '#FFD700';
-    ctx.beginPath(); ctx.arc(58, 52, 8, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#DAA520';
-    ctx.beginPath(); ctx.arc(58, 52, 4, 0, Math.PI * 2); ctx.fill();
+    // poker chips stacked (bottom-right)
+    const chipColors = ['#00f5ff', '#ff2e9c', '#ffe03a', '#39ff6e'];
+    chipColors.forEach((col, i) => {
+        const cx = 56, cy = 48 - i * 2;
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fillRect(cx - 7, cy + 1, 14, 5);
+        ctx.fillStyle = col;
+        ctx.fillRect(cx - 7, cy, 14, 5);
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fillRect(cx - 5, cy + 1, 10, 3);
+    });
+    // chip detail lines
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    chipColors.forEach((_, i) => {
+        ctx.fillRect(50, 47 - i * 2, 12, 1);
+    });
+    // accent line
     ctx.fillStyle = '#39ff6e';
     ctx.fillRect(8, 62, 56, 2);
 })();
@@ -969,7 +1045,7 @@ animateCoin(document.getElementById('coinCanvas2'));
     });
 })();
 
-// ── Action collection preview — jetman silhouette ──
+// ── Action collection preview — spaceship with exhaust, enemies, lasers ──
 (function() {
     const c = document.getElementById('cAction');
     if (!c) return;
@@ -979,27 +1055,79 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.strokeStyle = '#ff2e9c';
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 68, 68);
-    const stars = [[8,8],[20,4],[40,10],[56,6],[12,20],[50,18],[30,14]];
+    // parallax starfield — big bright + small dim
+    const bigStars = [[8,8],[40,10],[56,6],[12,28],[50,18]];
+    const smallStars = [[4,14],[22,6],[34,4],[60,20],[16,36],[44,30],[28,22],[52,36],[8,44],[36,48],[62,44]];
     ctx.fillStyle = '#ffffff';
-    stars.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillRect(30, 28, 12, 18);
-    ctx.fillStyle = '#ff6b9d';
-    ctx.fillRect(33, 22, 6, 6);
-    ctx.fillStyle = '#4a4a6a';
-    ctx.fillRect(27, 28, 3, 12);
-    ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(27, 40, 3, 6);
+    bigStars.forEach(([x, y]) => ctx.fillRect(x, y, 2, 2));
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    smallStars.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
+    // enemy drone (top-right) — pixel alien
+    ctx.fillStyle = '#ff3d6e';
+    ctx.fillRect(52, 12, 6, 2);   // body
+    ctx.fillRect(50, 14, 10, 2);  // wide body
+    ctx.fillRect(52, 16, 2, 2);   // left leg
+    ctx.fillRect(56, 16, 2, 2);   // right leg
     ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(27, 44, 3, 4);
-    ctx.fillStyle = '#ff2e9c';
-    ctx.fillRect(42, 32, 8, 3);
-    ctx.fillStyle = '#b537f2';
-    ctx.fillRect(4, 54, 64, 3);
-    ctx.fillStyle = '#ff2e9c';
-    ctx.font = 'bold 5px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('ACTION', 36, 64);
+    ctx.fillRect(53, 13, 1, 1);   // left eye
+    ctx.fillRect(57, 13, 1, 1);   // right eye
+    // laser beam from enemy
+    ctx.fillStyle = '#ff3d6e';
+    ctx.fillRect(55, 18, 1, 12);
+    ctx.fillStyle = 'rgba(255,61,110,0.4)';
+    ctx.fillRect(54, 18, 3, 12);
+    // spaceship — detailed with cockpit, wings, panels
+    const sx = 28, sy = 30;
+    // main hull
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillRect(sx + 4, sy, 8, 20);
+    // cockpit window
+    ctx.fillStyle = '#004466';
+    ctx.fillRect(sx + 5, sy + 2, 6, 4);
+    ctx.fillStyle = '#00aacc';
+    ctx.fillRect(sx + 6, sy + 3, 4, 2);
+    // nose
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillRect(sx + 6, sy - 2, 4, 2);
+    ctx.fillRect(sx + 7, sy - 4, 2, 2);
+    // left wing
+    ctx.fillStyle = '#ff6b9d';
+    ctx.fillRect(sx - 2, sy + 8, 6, 3);
+    ctx.fillRect(sx - 4, sy + 10, 4, 2);
+    ctx.fillRect(sx - 4, sy + 12, 2, 4);
+    // right wing
+    ctx.fillRect(sx + 10, sy + 8, 6, 3);
+    ctx.fillRect(sx + 12, sy + 10, 4, 2);
+    ctx.fillRect(sx + 14, sy + 12, 2, 4);
+    // panel lines
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(sx + 7, sy + 6, 2, 14);
+    // thruster glow
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(sx + 5, sy + 20, 6, 4);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(sx + 6, sy + 20, 4, 2);
+    // exhaust flame — layered for depth
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(sx + 5, sy + 24, 6, 6);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(sx + 6, sy + 24, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(sx + 7, sy + 24, 2, 2);
+    // laser from ship
+    ctx.fillStyle = '#00f5ff';
+    ctx.fillRect(sx + 7, sy - 8, 1, 8);
+    ctx.fillStyle = 'rgba(0,245,255,0.4)';
+    ctx.fillRect(sx + 6, sy - 8, 3, 8);
+    // second enemy (small, bottom-left)
+    ctx.fillStyle = '#c45fff';
+    ctx.fillRect(10, 52, 4, 2);
+    ctx.fillRect(8, 54, 8, 2);
+    ctx.fillRect(10, 56, 2, 2);
+    ctx.fillRect(14, 56, 2, 2);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(9, 53, 1, 1);
+    ctx.fillRect(15, 53, 1, 1);
 })();
 
 // ── Private collection preview — lock icon ──
@@ -1014,27 +1142,22 @@ animateCoin(document.getElementById('coinCanvas2'));
     ctx.strokeRect(2, 2, 68, 68);
     // Lock body
     ctx.fillStyle = '#1a0a1a';
-    ctx.fillRect(22, 36, 28, 22);
+    ctx.fillRect(22, 30, 28, 22);
     ctx.strokeStyle = '#ff3d6e';
     ctx.lineWidth = 1.5;
-    ctx.strokeRect(22, 36, 28, 22);
+    ctx.strokeRect(22, 30, 28, 22);
     // Lock shackle
     ctx.beginPath();
-    ctx.arc(36, 36, 10, Math.PI, 0);
+    ctx.arc(36, 30, 10, Math.PI, 0);
     ctx.strokeStyle = '#ff3d6e';
     ctx.lineWidth = 2;
     ctx.stroke();
     // Keyhole
     ctx.fillStyle = '#ff3d6e';
     ctx.beginPath();
-    ctx.arc(36, 44, 3, 0, Math.PI * 2);
+    ctx.arc(36, 38, 3, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillRect(35, 44, 2, 8);
-    // Label
-    ctx.fillStyle = '#ff3d6e';
-    ctx.font = 'bold 5px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('PRIVATE', 36, 66);
+    ctx.fillRect(35, 38, 2, 8);
 })();
 
 // ─────────────────────────────────────────────────────────
