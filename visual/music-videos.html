@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>music videos — magmacrunch media</title>
+    <meta name="referrer" content="no-referrer">
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../assets/archive.css">
+    <style>
+        /* ── MTV PALETTE ── */
+        :root {
+            --mtv-black:       #0A0A0F;
+            --mtv-deep-purple: #1A0533;
+            --mtv-midnight:    #0D1F3C;
+            --mtv-oxide-red:   #3D0000;
+            --mtv-static:      #4A4A4A;
+            --mtv-beige:       #C8C0B8;
+            --mtv-magenta:     #FF00CC;
+            --mtv-teal:        #00FFEE;
+            --mtv-phosphor:    #AAFF00;
+            --mtv-pink:        #FF6EC7;
+            --mtv-violet:      #7B68EE;
+            --mtv-gold:        #FFD700;
+            --mtv-white:           #F0EEFF;
+            --mtv-signal-red:      #FF1A1A;
+            --mtv-crt-blue:        #1A1AFF;
+            --mtv-broadcast-orange: #FF6600;
+            --mtv-laser-yellow:    #FFFF00;
+            --mtv-ice-blue:        #AACCFF;
+            --mtv-vhs-purple:      #CC00FF;
+            --mtv-scanline:        #1A1A2E;
+            --mtv-warm-gray:       #888890;
+            --mtv-chrome:          #E0E0F0;
+        }
+
+        /* ── NAV OVERRIDES (must use :root) ── */
+        :root {
+            --nav-accent: #FF00CC;
+            --nav-glow: rgba(255,0,204,0.4);
+            --nav-brand: #FFD700;
+            --nav-brand-glow: transparent;
+        }
+
+        /* ── PAGE OVERRIDES ── */
+        body.mtv {
+            --black: #1A1A2E;
+            --deep: #E0E0F0;
+            --white: #1A0533;
+            --rose: #FF00CC;
+            --yellow: #FFD700;
+            --cyan: #00FFEE;
+            --dim: #888890;
+            background: #AACCFF;
+        }
+
+        /* ── TICKER OVERRIDES ── */
+        body.mtv .ticker-wrap {
+            border-top-color: var(--mtv-warm-gray);
+            border-bottom-color: var(--mtv-warm-gray);
+            background: transparent;
+            box-shadow: none;
+        }
+        body.mtv .ticker {
+            color: var(--mtv-vhs-purple);
+        }
+        body.mtv .ticker .sep {
+            color: var(--mtv-magenta);
+        }
+
+        /* ── FOOTER OVERRIDES ── */
+        body.mtv footer {
+            border-top-color: var(--mtv-warm-gray);
+        }
+        body.mtv footer span {
+            color: var(--mtv-magenta);
+        }
+
+        /* ── DROPDOWN OVERRIDES ── */
+        body.mtv .dropdown {
+            border-color: var(--mtv-magenta);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15), 0 0 12px rgba(255,0,204,0.2);
+            background: var(--mtv-white);
+        }
+        body.mtv .dropdown a {
+            color: var(--mtv-deep-purple);
+            border-bottom-color: var(--mtv-chrome);
+        }
+        body.mtv .dropdown a:hover {
+            color: var(--mtv-white);
+            background: var(--mtv-magenta);
+        }
+
+        /* ── LINK OVERRIDES ── */
+        body.mtv a {
+            color: var(--mtv-magenta);
+        }
+
+        /* ── DROPDOWN OVERRIDES ── */
+        body.mtv .dropdown {
+            border-color: var(--mtv-magenta);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7), 0 0 12px rgba(255,0,204,0.3);
+        }
+        body.mtv .dropdown a {
+            border-left: 3px solid transparent;
+            border-bottom-color: #1A0533;
+        }
+        body.mtv .dropdown a:nth-child(1) { border-left-color: var(--mtv-teal); }
+        body.mtv .dropdown a:nth-child(2) { border-left-color: var(--mtv-violet); }
+        body.mtv .dropdown a:nth-child(3) { border-left-color: var(--mtv-phosphor); }
+        body.mtv .dropdown a:nth-child(4) { border-left-color: var(--mtv-pink); }
+        body.mtv .dropdown a:nth-child(5) { border-left-color: var(--mtv-gold); }
+        body.mtv .dropdown a:hover {
+            color: var(--mtv-black);
+            background: var(--mtv-teal);
+        }
+
+        /* breadcrumb override for magenta theme */
+        .breadcrumb a:hover { color: var(--mtv-magenta); }
+        .breadcrumb .sep { color: var(--mtv-magenta); opacity: 0.7; }
+        .breadcrumb .current { color: var(--mtv-magenta); }
+        /* ── PAGE-SPECIFIC: music videos ── */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 0 20px 40px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--mtv-vhs-purple);
+            text-shadow: 0 0 16px rgba(204,0,255,0.5);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--mtv-pink);
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        .ascii-tv {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--mtv-vhs-purple);
+            line-height: 1.3;
+            margin: 16px 0;
+            text-shadow: 0 0 8px rgba(204,0,255,0.4);
+            animation: fadeUp 0.5s 0.03s ease both;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        /* ── VIDEO LIST ── */
+        .video-list {
+            width: 100%;
+        }
+
+        /* Each entry: full-width row with bg thumbnail */
+        .video-entry {
+            position: relative;
+            width: 100%;
+            min-height: 340px;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-top: 1px solid var(--mtv-chrome);
+            cursor: pointer;
+        }
+        .video-entry:last-child { border-bottom: 1px solid var(--mtv-chrome); }
+
+        /* Background thumbnail */
+        .video-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(1.15);
+            transition: filter 0.4s ease;
+            z-index: 0;
+        }
+        .video-entry:hover .video-bg,
+        .video-entry.active .video-bg {
+            filter: brightness(1.25);
+        }
+
+        /* Subtle overlay for text readability */
+        .video-entry::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to right,
+                rgba(0,0,0,0.35) 0%,
+                rgba(0,0,0,0.1) 60%,
+                transparent 100%
+            );
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Content layer */
+        .video-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            padding: 32px 48px;
+            width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            .video-content {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 24px 20px;
+                gap: 20px;
+            }
+            .video-meta { order: -1; }
+            .video-entry { min-height: auto; }
+        }
+
+        /* ── EMBED AREA ── */
+        .video-embed-wrap {
+            flex-shrink: 0;
+            width: min(360px, 90vw);
+        }
+
+        /* Thumbnail placeholder (before click) */
+        .video-thumb {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: var(--mtv-chrome);
+            border: 2px solid var(--mtv-chrome);
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .video-entry:hover .video-thumb { border-color: var(--mtv-teal); }
+        .video-entry.active .video-thumb { border-color: var(--mtv-magenta); }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.2s;
+        }
+
+        /* Play button overlay */
+        .play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+        .video-entry:hover .play-btn { background: rgba(0,0,0,0.45); }
+
+        .play-icon {
+            width: 52px;
+            height: 52px;
+            border: 2px solid var(--mtv-deep-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .play-icon::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 18px solid var(--mtv-deep-purple);
+            margin-left: 4px;
+            transition: border-left-color 0.2s;
+        }
+        .video-entry:hover .play-icon {
+            border-color: var(--mtv-teal);
+            background: rgba(0,255,238,0.15);
+            transform: scale(1.08);
+        }
+        .video-entry:hover .play-icon::after { border-left-color: var(--mtv-teal); }
+        .video-entry.active .play-icon {
+            border-color: var(--mtv-magenta);
+            background: rgba(255,0,204,0.15);
+        }
+
+        /* Actual iframe (hidden until click) */
+        .video-iframe-wrap {
+            display: none;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border: 2px solid var(--mtv-magenta);
+        }
+        .video-iframe-wrap iframe {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border: none;
+        }
+        .video-entry.active .video-thumb    { display: none; }
+        .video-entry.active .video-iframe-wrap { display: block; }
+
+        /* ── TEXT SIDE ── */
+        .video-meta {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .video-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--mtv-crt-blue);
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+
+        .video-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(9px, 1.6vw, 14px);
+            color: var(--mtv-white);
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .video-yt-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--mtv-deep-purple);
+            text-decoration: none;
+            border: 1px solid var(--mtv-deep-purple);
+            padding: 4px 10px;
+            letter-spacing: 0.08em;
+            transition: color 0.15s, border-color 0.15s;
+            display: inline-block;
+        }
+        .video-yt-link:hover {
+            color: var(--mtv-magenta);
+            border-color: var(--mtv-magenta);
+        }
+
+        /* duplicate warning */
+        .dupe-warn {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--mtv-signal-red);
+            margin-top: 10px;
+            border: 1px solid var(--mtv-signal-red);
+            padding: 4px 10px;
+            display: inline-block;
+        }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+            .video-content { padding: 20px 16px; gap: 16px; }
+            .video-embed-wrap { width: 100%; max-width: 320px; }
+        }
+    </style>
+</head>
+<body class="mtv">
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="../">home</a><span class="sep">›</span>
+        <a href="./">visual</a><span class="sep">›</span>
+        <span class="current">music videos</span>
+    </div>
+
+    <div class="page-header">
+        <h1 class="page-title">// music videos //</h1>
+        <pre class="ascii-tv">
+ _______________     
+|,----------.  |\    
+||           |=| |   
+||          || | |   
+||       . _o| | | __
+|`-----------' |/ / /
+ ~~~~~~~~~~~~~~~ / / 
+                 ~~  
+        </pre>
+        <p class="page-subtitle">click to play ✦ newest first</p>
+    </div>
+
+    <div class="ticker-wrap">
+        <span class="ticker">
+            no-budget productions <span class="sep">✦</span>
+            since 2023 <span class="sep">✦</span>
+            YouTube <span class="sep">✦</span>
+            Internet Archive <span class="sep">✦</span>
+            DailyMotion <span class="sep">✦</span>
+            Facebook video <span class="sep">✦</span>
+            Instagram <span class="sep">✦</span>
+        </span>
+    </div>
+
+    <div class="video-list" id="videoList"></div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+// ─────────────────────────────────────────────
+// VIDEO DATA
+// NOTE: "Film School" and "Ancient Weeds" share
+// the same ID (VN_5u6tBPts) — paste slip during
+// data entry. Replace the correct one below.
+// ─────────────────────────────────────────────
+const VIDEOS = [
+    { title: "Hologram of a Dream",                              year: "2025", id: "mby4C5PZzlQ", bg: "../assets/video-thumbs/hologram-of-a-dream.jpg" },
+    { title: "Sitting on a Dock in New Shoreham",               year: "2025", id: "BirxEyAj0u0", bg: "../assets/video-thumbs/sitting-on-a-dock.jpg"  },
+    { title: "Very Long Boards",                                 year: "2025", id: "8xjZgv3us1Q", bg: "../assets/video-thumbs/very-long-boards.jpg"  },
+    { title: "I'm gonna need more of a commitment than that",   year: "2025", id: "KiFWHj1cmOY", bg: "../assets/video-thumbs/more-of-a-commitment.jpg"  },
+    { title: "Leaves",                                          year: "2024", id: "wv_6z79fQjQ", bg: "../assets/video-thumbs/leaves.jpg" },
+    { title: "Summer Day",                                      
+        year: "2024", id: "QgJfLXhV15Y", bg: "../assets/video-thumbs/summer-day.jpg", bgPosition: "center 50%"  },
+    { title: "Gravitational Voltage",                           year: "2024", id: "gtclSfU8oDM", bg: "../assets/video-thumbs/gravitational-voltage.jpg" },
+    { title: "Beach Ave.",                                      year: "2024", id: "tkpoCxpsUAk", bg: "../assets/video-thumbs/beach-ave.jpg" },
+    { title: "Who is Richard Parker?",                          year: "2024", id: "xGzuJO_5364", bg: "../assets/video-thumbs/richard-parker.jpg" },
+    { title: "Parade Float Electronics",                        year: "2024", id: "gjo9FdBJGRk", bg: "../assets/video-thumbs/parade-float-electronics.jpg" },
+    { title: "Figure the Shoreline",                            year: "2024", id: "Gm9XVmj0iVM", bg: "../assets/video-thumbs/figure-the-shoreline.jpg" },
+    { title: "Point Judith",                                    year: "2024", id: "cCUC-a6v74E", bg: "../assets/video-thumbs/point-judith.jpg" },
+    { title: "Eternity spent in an arcade",                     year: "2024", id: "lTmHfMZAimQ", bg: "../assets/video-thumbs/eternity-spent-in-an-arcade.jpg" },
+    { title: "Try",                                             
+        year: "2024", id: "To6AJJ7-iCY" , bg: "../assets/video-thumbs/try.jpg", bgPosition: "center 75%" },
+    { title: "Contemplate the Plate Tectonic",                  year: "2024", id: "YnzQh-h5zq0", bg: "../assets/video-thumbs/contemplate-the-plate-tectonic.jpg" },
+    { title: "Area Does Not Exist",                             year: "2024", id: "T6lCJBrjFQ0", bg: "../assets/video-thumbs/area-does-not-exist.jpg" },
+    { title: "Daffodil & Sweet Pea",                            year: "2024", id: "0QwOELVzeSo", bg: "../assets/video-thumbs/daffodil_sweat_pea.jpg" },
+    { title: "Driving",                                         year: "2024", id: "vmUJ2O3xwJw", bg: "../assets/video-thumbs/driving.jpg" },
+    { title: "Ancient Weeds",                                   
+        year: "2023", id: "pX3G_dtyMPI", bg: "../assets/video-thumbs/ancient-weeds.jpg", bgPosition: "center 75%",
+        thumb: "../assets/video-thumbs/ancient-weeds.jpg" },
+    { title: "Film School",                                     year: "2023", id: "VN_5u6tBPts", bg: "../assets/video-thumbs/film-school.jpg" },
+    { title: "Little Piece No. 1",                              year: "2023", id: "hlOYgcDvyaE", bg: "../assets/video-thumbs/little-piece-no1.jpg" },
+    { title: "Millstone Woods May 2018",                        year: "2023", id: "3_jo3WEOPEI", bg: "../assets/video-thumbs/millstone-woods-may-2018.jpg" },
+    { title: "Bus full of time-traveling twenty-somethings",    year: "2023", id: "OebpP5m3jms", bg: "../assets/video-thumbs/bus-full-of-time-traveling.jpg" },
+];
+
+
+
+const list = document.getElementById('videoList');
+let activeEntry = null;
+
+VIDEOS.forEach((v, i) => {
+    const thumbUrl  = `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+    const embedUrl  = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+    const watchUrl  = `https://www.youtube.com/watch?v=${v.id}`;
+
+    const entry = document.createElement('div');
+    entry.className = 'video-entry';
+    entry.style.animationDelay = `${i * 0.03}s`;
+
+    entry.innerHTML = `
+        <div class="video-bg" style="background-image: url('${v.bg || thumbUrl}');"></div>
+        <div class="video-content">
+            <div class="video-embed-wrap">
+                <div class="video-thumb">
+                    <img src="${v.thumb || thumbUrl}" alt="${v.title}" loading="lazy" referrerpolicy="no-referrer"
+                         onerror="if(!this.dataset.tried){this.dataset.tried='hq';this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg';}else if(this.dataset.tried==='hq'){this.dataset.tried='mq';this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg';}">
+                    <div class="play-btn">
+                        <div class="play-icon"></div>
+                    </div>
+                </div>
+                <div class="video-iframe-wrap">
+                    <iframe src="about:blank" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+                </div>
+            </div>
+            <div class="video-meta">
+                <div class="video-year">${v.year}</div>
+                <div class="video-title">${v.title}</div>
+                <a class="video-yt-link" href="${watchUrl}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()">▶ open on youtube</a>
+                ${v.dupeFix ? `<div class="dupe-warn">⚠ duplicate ID — needs correct URL</div>` : ''}
+            </div>
+        </div>
+    `;
+
+    // Click to play: inject iframe, pause any other active
+    entry.addEventListener('click', function () {
+        if (this.classList.contains('active')) return;
+
+        // Deactivate previous
+        if (activeEntry && activeEntry !== this) {
+            activeEntry.classList.remove('active');
+            const oldIframe = activeEntry.querySelector('.video-iframe-wrap iframe');
+            if (oldIframe) oldIframe.src = 'about:blank';
+        }
+
+        this.classList.add('active');
+        activeEntry = this;
+
+        const iframeWrap = this.querySelector('.video-iframe-wrap');
+        const iframe = iframeWrap.querySelector('iframe');
+        iframe.src = embedUrl;
+    });
+
+    list.appendChild(entry);
+});
+</script>
+
+</body>
+</html>

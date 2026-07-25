@@ -1,0 +1,128 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    /* MAGMA CRUNCH: Dark reddish-purple — lava meets midnight */
+    background: linear-gradient(180deg, #1a0018 0%, #2a0a08 40%, #1a0510 70%, #0f0020 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* CRT Scanline Effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.12) 0px,
+        rgba(0, 0, 0, 0.12) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* MAGMA CRUNCH GLOW: Magenta + blue berries sitting over lava */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 25%, rgba(242, 60, 143, 0.16) 0%, transparent 40%),
+        radial-gradient(circle at 78% 60%, rgba(20, 184, 255, 0.13) 0%, transparent 40%),
+        radial-gradient(circle at 50% 90%, rgba(200, 60, 0, 0.22) 0%, transparent 45%);
+    pointer-events: none;
+    animation: magmacrunchglow 9s ease-in-out infinite;
+}
+
+@keyframes magmacrunchglow {
+    0%   { opacity: 0.6; }
+    35%  { opacity: 1.0; }
+    65%  { opacity: 0.75; }
+    100% { opacity: 0.6; }
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, #1a0018 0%, #2a0a08 40%, #1a0510 70%, #0f0020 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-content h1 {
+    /* Hot magenta with a lava-orange shadow underneath */
+    color: #F23C8F;
+    font-size: 32px;
+    font-weight: normal;
+    text-shadow: 
+        4px 4px 0px #8b2200,
+        0 0 20px rgba(242, 60, 143, 0.9);
+    margin-bottom: 30px;
+    letter-spacing: 3px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    /* Blue spinning, but glowing warm underneath */
+    border: 6px solid rgba(20, 184, 255, 0.2);
+    border-top-color: #14B8FF;
+    border-radius: 0;
+    animation: pixelspin 1s steps(8) infinite;
+    margin: 0 auto 20px;
+    box-shadow: 0 0 20px rgba(20, 184, 255, 0.7), 0 4px 15px rgba(200, 60, 0, 0.4);
+}
+
+.loading-content p {
+    color: #FFD54A;
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0px #7a2200;
+}
+
+@keyframes pixelspin {
+    to { transform: rotate(360deg); }
+}

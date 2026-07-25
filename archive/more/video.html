@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>video — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../assets/archive.css">
+</head>
+<body>
+<nav id="auto-nav" data-depth="../../"></nav>
+<main>
+    <div class="ticker-wrap"><span class="ticker">video <span class="sep">✦</span> archive <span class="sep">✦</span> magmacrunch media <span class="sep">✦</span> video <span class="sep">✦</span> archive <span class="sep">✦</span> magmacrunch media <span class="sep">✦</span></span></div>
+    <div class="breadcrumb">
+        <a href="../../archive/">archive</a><span class="sep">›</span>
+        <a href="./">more</a><span class="sep">›</span>
+        <span class="current">video</span>
+    </div>
+    <div class="page-header">
+        <div class="place-label">// archive //</div>
+        <div class="page-title">VIDEO</div>
+        <div class="sub-nav">
+            <a href="./" class="nav-card c-cyan">← back</a>
+        </div>
+    </div>
+    <div class="divider"></div>
+    <div class="catalog-wrap">
+        <div id="status-bar">loading videos…</div>
+        <div id="count-bar"></div>
+        <div id="recordings-list"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../nav.js"></script>
+<script>
+const seriesId = 'c4e28319-04b6-466e-8e01-9163f7d9705b';
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+const formatDate = (begin, end, ended) => {
+    if (!begin && !end) return '';
+    if (begin && end && begin === end) return ` (${begin})`;
+    if (begin && !end) return ` (${begin}${ended ? '' : '–present'})`;
+    if (begin && end) return (begin.includes('-') && end.includes('-')) ? ` (${begin} to ${end})` : ` (${begin}–${end})`;
+    return '';
+};
+
+const cleanAttribute = (attr) => attr.includes(':') ? attr : attr.replace(/\s*\([^)]+\)/, '');
+
+async function fetchWithRetry(url, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                if (response.status === 503 || response.status === 429) { await delay(2000 * (i + 1)); continue; }
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return await response.json();
+        } catch (error) {
+            if (i === maxRetries - 1) throw error;
+            await delay(1000 * (i + 1));
+        }
+    }
+}
+
+(async () => {
+    try {
+        const seriesData = await fetchWithRetry(
+            `https://musicbrainz.org/ws/2/series/${seriesId}?inc=recording-rels&fmt=json`
+        );
+
+        const recordingRels = (seriesData.relations || []).filter(r => r['target-type'] === 'recording');
+
+        // Sort by ordering-key if present
+        recordingRels.sort((a, b) => (a['ordering-key'] || 999999) - (b['ordering-key'] || 999999));
+
+        document.getElementById('status-bar').textContent = `loading videos…`;
+        document.getElementById('count-bar').textContent = `found ${recordingRels.length} recordings`;
+
+        const list = document.getElementById('recordings-list');
+        const displayed = new Set();
+
+        for (let i = 0; i < recordingRels.length; i++) {
+            const rel = recordingRels[i];
+            const recordingId = rel.recording?.id;
+            if (!recordingId || displayed.has(recordingId)) continue;
+            displayed.add(recordingId);
+
+            document.getElementById('status-bar').textContent =
+                `loading ${displayed.size} of ${recordingRels.length}…`;
+
+            try {
+                const details = await fetchWithRetry(
+                    `https://musicbrainz.org/ws/2/recording/${recordingId}?inc=artists+isrcs+tags+artist-rels+place-rels+releases+work-rels+aliases+recording-rels&fmt=json`
+                );
+
+                const artists = (details['artist-credit'] || [])
+                    .map(ac => `<a href="https://musicbrainz.org/artist/${ac.artist?.id}" target="_blank">${ac.name}</a>`)
+                    .join('') || 'various artists';
+
+                let length = 'n/a';
+                if (details.length) {
+                    const m = Math.floor(details.length / 60000);
+                    const s = Math.floor((details.length % 60000) / 1000);
+                    length = `${m}:${s.toString().padStart(2, '0')}`;
+                }
+
+                const isrcs = details.isrcs?.join(', ') || 'n/a';
+                const firstReleaseDate = details['first-release-date'] || 'unknown';
+                const disambiguation = details.disambiguation || '';
+
+                const orderNum = rel['ordering-key']
+                    ? `<span class="badge badge-other">#${rel['ordering-key']}</span> `
+                    : '';
+
+                const releases = (details.releases || [])
+                    .map(r => {
+                        const title = `<a href="https://musicbrainz.org/release/${r.id}" target="_blank">${r.title}</a>`;
+                        const year = r.date ? ` (${r.date.substring(0, 4)})` : '';
+                        return `${title}${year}`;
+                    }).join(', ');
+
+                const works = (details.relations || [])
+                    .filter(r => r['target-type'] === 'work' && r.type === 'performance')
+                    .map(r => `<a href="https://musicbrainz.org/work/${r.work?.id}" target="_blank">${r.work?.title}</a>`)
+                    .join(', ');
+
+                const performers = (() => {
+                    const performerTypes = ['vocal', 'instrument', 'performer'];
+                    const map = new Map();
+                    (details.relations || [])
+                        .filter(r => r['target-type'] === 'artist' && performerTypes.includes(r.type))
+                        .forEach(r => {
+                            const id = r.artist?.id;
+                            if (!map.has(id)) map.set(id, { name: r.artist?.name, id, roles: [] });
+                            const p = map.get(id);
+                            if (r.type === 'vocal') {
+                                const attrs = (r.attributes || []).map(a => a.replace(/\s*\([^)]*\)/, ''));
+                                attrs.length ? attrs.forEach(a => p.roles.push(a.toLowerCase().includes('vocal') ? a : a + ' vocals')) : p.roles.push('vocals');
+                            } else if (r.type === 'instrument') {
+                                (r.attributes || []).forEach(a => p.roles.push(a.replace(/\s*\([^)]*\)/, '')));
+                            } else {
+                                p.roles.push(r.type);
+                            }
+                        });
+                    return Array.from(map.values())
+                        .map(p => `<a href="https://musicbrainz.org/artist/${p.id}" target="_blank">${p.name}</a>${p.roles.length ? ` (${p.roles.join(', ')})` : ''}`)
+                        .join(', ');
+                })();
+
+                const production = (details.relations || [])
+                    .filter(r => r['target-type'] === 'artist' && ['engineer','mix','producer','recording','mastering','editor'].includes(r.type))
+                    .map(r => `<a href="https://musicbrainz.org/artist/${r.artist?.id}" target="_blank">${r.artist?.name}</a> (${r.type})`)
+                    .join(', ');
+
+                const tags = (details.tags || []).map(t => `<span class="tag">${t.name}</span>`).join('');
+
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="recording-card">
+                        <h3>
+                            ${orderNum}<a href="https://musicbrainz.org/recording/${details.id}" target="_blank">${details.title}</a>
+                            <span class="video-label">[music video]</span>
+                            ${disambiguation ? `<span class="disambiguation"> (${disambiguation})</span>` : ''}
+                        </h3>
+                        <p class="artist"><strong>artist(s):</strong> ${artists}</p>
+                        ${works ? `<p><strong>work(s):</strong> ${works}</p>` : ''}
+                        ${performers ? `<p><strong>performers:</strong> ${performers}</p>` : ''}
+                        ${production ? `<p><strong>production:</strong> ${production}</p>` : ''}
+                        <p><strong>first release date:</strong> ${firstReleaseDate}</p>
+                        <p><strong>length:</strong> ${length}</p>
+                        <p><strong>ISRC:</strong> ${isrcs}</p>
+                        ${releases ? `<p><strong>appears on:</strong> ${releases}</p>` : ''}
+                        ${tags ? `<div class="tags"><strong>tags:</strong> ${tags}</div>` : ''}
+                    </div>
+                `);
+
+                await delay(800);
+            } catch (err) {
+                console.error(`Error fetching recording ${recordingId}:`, err);
+            }
+        }
+
+        document.getElementById('status-bar').textContent = `loaded all ${displayed.size} videos`;
+    } catch (err) {
+        document.getElementById('status-bar').textContent = 'error loading videos';
+        console.error(err);
+    }
+})();
+</script>
+</body>
+</html>

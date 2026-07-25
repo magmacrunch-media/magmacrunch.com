@@ -1,0 +1,30 @@
+/* The Four B's — releases */
+body.fb-page.fb-releases-page main > * { background: var(--4b-bg); }
+
+body.fb-page.fb-releases-page .breadcrumb { color: var(--dim); }
+body.fb-page.fb-releases-page .breadcrumb a { color: var(--4b-rust); }
+body.fb-page.fb-releases-page .breadcrumb a:hover { color: var(--4b-amber); }
+body.fb-page.fb-releases-page .breadcrumb .sep { color: var(--4b-rust); opacity: 0.6; }
+body.fb-page.fb-releases-page .breadcrumb .current { color: var(--4b-rust); }
+
+body.fb-page.fb-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fb-page.fb-releases-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--4b-rust); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fb-page.fb-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--4b-rust); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(200, 72, 16, 0.5); }
+
+body.fb-page.fb-releases-page .release-card {
+    background: var(--4b-bg);
+    border-color: var(--4b-deep);
+}
+body.fb-page.fb-releases-page .release-card:hover { border-color: var(--4b-rust); }
+body.fb-page.fb-releases-page .release-info h3 a { color: var(--4b-rust); }
+body.fb-page.fb-releases-page .release-info h3 a:hover { color: var(--4b-amber); }
+body.fb-page.fb-releases-page .release-info a { color: var(--4b-rust); }
+
+body.fb-page.fb-releases-page .nav-card::after { display: none; }
+
+body.fb-page.fb-releases-page .nav-card.c-back { background: transparent; color: var(--4b-rust); border-color: var(--4b-rust); }
+body.fb-page.fb-releases-page .nav-card.c-back:hover { background: var(--4b-rust); color: var(--4b-heading); }
+
+@media (max-width: 500px) {
+    body.fb-page.fb-releases-page .release-card { border-color: var(--4b-mid); }
+}

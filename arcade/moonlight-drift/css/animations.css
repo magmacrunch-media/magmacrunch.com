@@ -1,0 +1,25 @@
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@keyframes gameOverPulse {
+    0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: translate(-50%, -50%) scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+@keyframes highlight {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes rotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(90deg); }
+}

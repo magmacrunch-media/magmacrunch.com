@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Green Apt. — recordings — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="cg-shared.css">
+    <link rel="stylesheet" href="cg-about.css">
+    <link rel="stylesheet" href="cg-recordings.css">
+    <script>
+    window.PLACE_CONFIG = {
+        id:        'c6c69d44-8408-4a0a-9dbf-8b3ee903bc5f',
+        name:      'College Green Apt.',
+        abbr:      'college green',
+        backColor: 'c-recordings',
+        siblings:  ['personnel', 'recordings', 'works'],
+        depth:     '../../../',
+    };
+        window.PLACE_CONFIG.accent = 'cyan';
+    </script>
+</head>
+<body class="cg-page cg-recordings-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="place-label" id="place-label"></div>
+        <div class="page-title">RECORDINGS</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+    <div class="catalog-wrap">
+        <div id="status-bar">loading recordings…</div>
+        <div id="count-bar"></div>
+        <div id="recordings-list"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/entity-map.js"></script>
+<script src="../../../templates/place_recordings.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var nav = document.getElementById('sub-nav');
+    if (nav && !nav.querySelector('a[href="about.html"]')) {
+        var aboutLink = document.createElement('a');
+        aboutLink.href = 'about.html';
+        aboutLink.className = 'nav-card c-sage';
+        aboutLink.textContent = 'about';
+        nav.insertBefore(aboutLink, nav.children[1]);
+    }
+});
+</script>
+</body>
+</html>

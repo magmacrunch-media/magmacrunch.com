@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by contributor — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../templates/contributor-theme.css">
+    <style>
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--ctb-light); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--ctb-cyan); opacity: 0.7; }
+        .breadcrumb .current { color: var(--ctb-cyan); }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--ctb-cyan);
+            text-shadow: 0 0 16px rgba(127,216,232,0.5);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            margin-bottom: 32px;
+            letter-spacing: 0.12em;
+        }
+
+        .intro {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.7;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .grid-wrap {
+            width: min(900px, 95vw);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 2px solid var(--ctb-dark);
+            background: var(--ctb-darkest);
+            padding: 16px;
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: var(--ctb-cyan);
+            box-shadow: 0 0 16px rgba(127,216,232,0.3);
+        }
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--ctb-pale);
+            letter-spacing: 0.08em;
+        }
+        .card-sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--ctb-muted);
+            margin-top: 6px;
+        }
+        .card-soon {
+            border: 2px dashed #1e1e2e;
+            background: var(--deep);
+            padding: 16px;
+            opacity: 0.5;
+        }
+        .card-soon .card-sub {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .note {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--ctb-muted);
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="ctb-page">
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../">home</a>
+        <span class="sep">›</span>
+        <a href="../">archive</a>
+        <span class="sep">›</span>
+        <span class="current">by contributor</span>
+    </div>
+
+    <h1 class="page-title">// by contributor //</h1>
+    <p class="page-subtitle">musicians and their credits</p>
+
+    <p class="intro">
+        credits and contributions pulled from MusicBrainz — who played what, where, and when.
+    </p>
+
+    <div class="grid-wrap">
+
+        <a href="ellis-grey/" class="card">
+            <div class="card-title">ELIAS GREY</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="david-hayes/" class="card">
+            <div class="card-title">DAVID HAYES</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="chuck-job/" class="card">
+            <div class="card-title">CHUCK J'OB</div>
+            <div class="card-sub">lead vocals</div>
+        </a>
+
+        <a href="rho-k/" class="card">
+            <div class="card-title">RHO K.</div>
+            <div class="card-sub">guitar · vocals</div>
+        </a>
+
+        <a href="jake-mccoy/" class="card">
+            <div class="card-title">JAKE A. MCCOY</div>
+            <div class="card-sub">drums · bass · guitar · keys · vocals</div>
+        </a>
+
+        <a href="james-mccoy/" class="card">
+            <div class="card-title">JAMES R. MCCOY</div>
+            <div class="card-sub">bass · piano · violin · melodica · cello</div>
+        </a>
+
+        <a href="jon-mccoy/" class="card">
+            <div class="card-title">JON MCCOY</div>
+            <div class="card-sub">guitar · bass · keys · vocals</div>
+        </a>
+
+        <a href="stephen-mcmillan/" class="card">
+            <div class="card-title">STEPHEN MCMILLAN</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="ben-nikitas/" class="card">
+            <div class="card-title">BEN NIKITAS</div>
+            <div class="card-sub">bass · vocals</div>
+        </a>
+
+        <a href="d-rob-robinson/" class="card">
+            <div class="card-title">D-ROB ROBINSON</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="cp-rutledge/" class="card">
+            <div class="card-title">C.P. RUTLEDGE</div>
+            <div class="card-sub">guitar · violin · vocals</div>
+        </a>
+
+        <a href="alex-s/" class="card">
+            <div class="card-title">ALEX S.</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="jake-thomas/" class="card">
+            <div class="card-title">JAKE THOMAS</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="rob-tomer/" class="card">
+            <div class="card-title">ROB TOMER</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+        <a href="judah-unmuth-yockey/" class="card">
+            <div class="card-title">JUDAH UNMUTH-YOCKEY</div>
+            <div class="card-sub">MusicBrainz</div>
+        </a>
+
+    </div>
+
+    <p class="note">
+        data sourced from MusicBrainz. contributions may be incomplete.
+    </p>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+
+</body>
+</html>

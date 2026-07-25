@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        :root {
+            --nav-accent: #03738a;
+            --nav-brand: #7fd8e8;
+            --nav-glow: rgba(3,115,138,0.4);
+            --nav-brand-glow: rgba(127,216,232,0.7);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--mintteal); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--mintteal); opacity: 0.7; }
+        .breadcrumb .current { color: var(--mintteal); }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--mintteal);
+            text-shadow: 0 0 16px rgba(0,229,179,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--dim);
+            letter-spacing: 0.12em;
+            margin-bottom: 40px;
+        }
+
+        .intro {
+            width: min(700px, 95vw);
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.75;
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .intro a {
+            color: var(--mintteal);
+            text-decoration: underline;
+            text-decoration-color: rgba(0,229,179,0.35);
+        }
+        .intro a:hover {
+            color: #e5b300;
+            text-decoration-color: #e5b300;
+        }
+
+        .browse-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .browse-card {
+            width: 200px;
+            padding: 24px 20px;
+            border: 2px solid var(--dim);
+            background: var(--deep);
+            text-decoration: none;
+            text-align: center;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+
+        .browse-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .browse-card.by-artist:hover {
+            border-color: #dd6f4e;
+            box-shadow: 0 0 20px rgba(221,111,78,0.3);
+        }
+
+        .browse-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .by-artist .browse-card-title { color: #dd6f4e; }
+        .by-place .browse-card-title { color: #dd4ec0; }
+
+        .browse-card.by-place:hover {
+            border-color: #dd4ec0;
+            box-shadow: 0 0 20px rgba(221,78,192,0.3);
+        }
+
+        .browse-card.by-contributor:hover {
+            border-color: #7fd8e8;
+            box-shadow: 0 0 20px rgba(127,216,232,0.3);
+        }
+
+        .by-contributor .browse-card-title { color: #7fd8e8; }
+
+        .browse-card.by-label:hover {
+            border-color: #9D4EDD;
+            box-shadow: 0 0 20px rgba(157,78,221,0.3);
+        }
+
+        .by-label .browse-card-title { color: #9D4EDD; }
+
+        .ticker { color: #e5b300; }
+
+        footer span { color: var(--mintteal); }
+
+        .browse-card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.4;
+        }
+
+        .note {
+            width: min(700px, 95vw);
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.6;
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #1e1e2e;
+        }
+
+        .note a {
+            color: var(--cyan);
+            text-decoration: underline;
+        }
+
+        /* EMERAC STYLES */
+        #mini-emerac {
+            width: min(600px, 95vw); /* Matches your .intro and .note widths */
+            margin-bottom: 40px;
+            border: 2px solid var(--dim);
+            background: var(--deep);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-sizing: border-box;
+        }
+
+        .emerac-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed var(--dim);
+            padding-bottom: 12px;
+        }
+
+        .mini-tape {
+            width: 32px; 
+            height: 32px;
+            border: 2px solid var(--dim);
+            border-radius: 50%;
+            background: #111;
+            position: relative;
+            animation: tape-spin 3s linear infinite;
+        }
+        
+        .mini-tape.reverse-spin {
+            animation-direction: reverse;
+            animation-duration: 4s;
+        }
+
+        .mini-tape-spokes {
+            position: absolute;
+            top: 10%; left: 10%;
+            width: 80%; height: 80%;
+            background-image: 
+                linear-gradient(0deg, transparent 40%, var(--dim) 40%, var(--dim) 60%, transparent 60%),
+                linear-gradient(90deg, transparent 40%, var(--dim) 40%, var(--dim) 60%, transparent 60%);
+            border-radius: 50%;
+        }
+
+        @keyframes tape-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .emerac-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--mintteal); /* Teal accent */
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+
+        .emerac-bottom {
+            display: flex;
+            gap: 16px;
+            height: 90px;
+        }
+
+        #emerac-crt {
+            flex: 1;
+            background: #0a0a10;
+            border: 2px solid #e5b300; /* Ticker gold */
+            padding: 8px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px; /* Perfectly chunky */
+            color: var(--mintteal); /* Glowing text */
+            text-shadow: 0 0 5px rgba(0,229,179,0.4);
+            overflow: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        #emerac-status {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+        }
+
+        #emerac-leds {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 4px;
+            background: #0a0a10;
+            border: 2px solid var(--dim);
+            padding: 6px;
+        }
+
+        .mini-led {
+            background: #222;
+            border-radius: 2px; /* Slightly squared for pixel aesthetic */
+            transition: background-color 0.05s ease;
+        }
+
+        /* Using your custom hex colors for the lights */
+        .mini-led.on-red { 
+            background: #e54100; 
+            box-shadow: 0 0 6px rgba(229,65,0,0.5); 
+        }
+        .mini-led.on-gold { 
+            background: #e5b300; 
+            box-shadow: 0 0 6px rgba(229,179,0,0.5); 
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <span class="current">archive</span>
+    </div>
+
+    <h1 class="page-title">// archive //</h1>
+    <p class="page-subtitle">the magmacrunch archive</p>
+
+    <!-- EMERAC COMPONENT START -->
+    <div id="mini-emerac">
+        <div class="emerac-top">
+            <div class="mini-tape"><div class="mini-tape-spokes"></div></div>
+            <div class="emerac-title">EMERAC // DB_ACCESS</div>
+            <div class="mini-tape reverse-spin"><div class="mini-tape-spokes"></div></div>
+        </div>
+        <div class="emerac-bottom">
+            <div id="emerac-crt">
+                <div id="emerac-status"></div>
+            </div>
+            <div id="emerac-leds"></div>
+        </div>
+    </div>
+    <!-- EMERAC COMPONENT END -->
+
+<div class="ticker-wrap"><span class="ticker">:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \/\/ [- |_ ( () |\/| [- ~|~ () ~|~ |-| [- /\ /? ( |-| | \/ [- _\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.</span></div>    
+
+    <p class="intro">
+    </p>
+
+    <div class="browse-links">
+        <a href="by-artist/" class="browse-card by-artist">
+            <div class="browse-card-title">by artist</div>
+            <div class="browse-card-desc">musicians and projects from the scene</div>
+        </a>
+        <a href="by-place/" class="browse-card by-place">
+            <div class="browse-card-title">by place</div>
+            <div class="browse-card-desc">rehearsal spaces and recording locations</div>
+        </a>
+        <a href="by-contributor/" class="browse-card by-contributor">
+            <div class="browse-card-title">by contributor</div>
+            <div class="browse-card-desc">credits and contributions</div>
+        </a>
+        <a href="by-label/" class="browse-card by-label">
+            <div class="browse-card-title">by label</div>
+            <div class="browse-card-desc">labels, publishers, and creative agencies</div>
+        </a>
+    </div>
+
+    <p class="note">
+        some artists listed may have no releases — or released elsewhere.
+    </p>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script>
+    // ── EMERAC LED Grid ──
+    const emeracGrid = document.getElementById('emerac-leds');
+    const totalLeds = 60; // 12x5 grid
+    const ledArray = [];
+
+    for (let i = 0; i < totalLeds; i++) {
+        const led = document.createElement('div');
+        led.className = 'mini-led';
+        emeracGrid.appendChild(led);
+        ledArray.push(led);
+    }
+
+    function processData() {
+        ledArray.forEach(led => led.classList.remove('on-red', 'on-gold'));
+        const activeCount = Math.floor(totalLeds * 0.25);
+        for (let i = 0; i < activeCount; i++) {
+            const randomIdx = Math.floor(Math.random() * totalLeds);
+            const colorClass = Math.random() > 0.5 ? 'on-red' : 'on-gold';
+            ledArray[randomIdx].classList.add(colorClass);
+        }
+    }
+    const processDataInterval = setInterval(processData, 150);
+
+    // ── MusicBrainz Fetch ──
+    const ARCHIVE_IDS = [
+        { id: 'ddcbeb01-edb5-4e74-b5cd-23d1b64d3086', type: 'artist' },
+        { id: 'e33d1006-01a5-4266-aade-b7f6c1dff8e3', type: 'artist' },
+        { id: '44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc', type: 'artist' },
+        { id: '605cc914-2aff-4e2b-9657-524c7009cb18', type: 'artist' },
+        { id: '0335c576-94a4-4adb-a323-6effff5914e0', type: 'artist' },
+        { id: '5b954c0a-1375-40de-ae5f-a245e4f942c6', type: 'artist' },
+        { id: 'bdf6e0d0-6886-4801-b7ce-c9ced5d377a8', type: 'artist' },
+        { id: '33c830f0-d5be-4baf-b8db-3dc754e74c16', type: 'artist' },
+        { id: '260e4953-a937-4355-8389-d1baaf24eca5', type: 'artist' },
+        { id: '4d945923-9deb-4cd0-a477-6e1474cb306c', type: 'artist' },
+        { id: 'f701c2bc-6eb6-4e7b-b950-f0c2426cb91c', type: 'artist' },
+        { id: '0cb54a5f-3c60-4635-abb3-e6bc60fa7d9f', type: 'artist' },
+        { id: '76708e20-5d88-4699-adf6-a1f2118ef661', type: 'artist' },
+        { id: 'b7846e25-306e-4ca9-8db1-0391ab159a36', type: 'artist' },
+        { id: 'c6c69d44-8408-4a0a-9dbf-8b3ee903bc5f', type: 'place' },
+        { id: '3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2', type: 'place' },
+        { id: '26cbb244-48c7-49e5-863c-5dde5388dde1', type: 'place' },
+        { id: 'f30be60e-94b4-465a-8e75-8cbdefaffbc8', type: 'place' },
+        { id: '362e9df6-ce39-4805-841e-c113e4e2a7c9', type: 'place' },
+        { id: 'e697fa03-e300-421a-8fd3-3b026d8d4f13', type: 'place' },
+        { id: '1fc551c6-d3d5-43d0-a3bb-9e5606bdbebe', type: 'place' },
+        { id: '39446d03-fe9c-47d0-81a9-2b42d34fb400', type: 'label' },
+        { id: 'c78b5612-2300-4ee1-8663-299ddcf9ce25', type: 'label' },
+        { id: 'ad82d124-e41e-49e8-9bf9-53e836b44336', type: 'label' },
+    ];
+
+    const delay = ms => new Promise(r => setTimeout(r, ms));
+
+    async function fetchWithRetry(url, retries = 4) {
+        for (let i = 0; i < retries; i++) {
+            try {
+                const res = await fetch(url);
+                if (res.status === 429 || res.status === 503) {
+                    await delay(2500 * (i + 1));
+                    continue;
+                }
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return await res.json();
+            } catch (e) {
+                if (i === retries - 1) throw e;
+                await delay(1500 * (i + 1));
+            }
+        }
+    }
+
+    const fetchedNames = [];
+
+    async function fetchArchiveEntities() {
+        const shuffled = ARCHIVE_IDS.slice().sort(function() { return Math.random() - 0.5; });
+        const picked = shuffled.slice(0, 6);
+        for (var j = 0; j < picked.length; j++) {
+            var entity = picked[j];
+            try {
+                var data = await fetchWithRetry(
+                    'https://musicbrainz.org/ws/2/' + entity.type + '/' + entity.id + '?fmt=json'
+                );
+                if (data && data.name) {
+                    fetchedNames.push(data.name.toUpperCase());
+                }
+            } catch (e) {
+                // Silently fail — hardcoded messages still show
+            }
+            await delay(1200);
+        }
+    }
+
+    fetchArchiveEntities();
+
+    // ── CRT Display ──
+    const statusDisplay = document.getElementById('emerac-status');
+
+    const systemPhrases = [
+        '> INDEXING TAPE...',
+        '> QUERYING ARTISTS',
+        '> LOCATING PLACES',
+        '> CONNECTING TO MUSICBRAINZ',
+        '> SIGNAL FOUND',
+        '> CHECKING CATALOG...',
+        '> SCANNING ARCHIVE',
+        '> READING SECTORS',
+        '> DECODING RECORDS',
+        '> LOADING INDEX',
+        '> VERIFYING DATA',
+        '> SYNC COMPLETE'
+    ];
+
+    function getRandomPhrase() {
+        if (fetchedNames.length > 0 && Math.random() > 0.5) {
+            var name = fetchedNames[Math.floor(Math.random() * fetchedNames.length)];
+            var prefixes = ['INDEXING:', 'QUERYING:', 'LOCATING:', 'SCANNING:', 'LOADING:'];
+            var prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+            return '> ' + prefix + ' ' + name;
+        }
+        return systemPhrases[Math.floor(Math.random() * systemPhrases.length)];
+    }
+
+    var crtLines = ['> SYS_INIT...', '> EMERAC ONLINE'];
+    statusDisplay.innerHTML = crtLines.join('<br>');
+
+    function updateCrt() {
+        if (Math.random() > 0.6) {
+            crtLines.push(getRandomPhrase());
+            if (crtLines.length > 4) crtLines.shift();
+            statusDisplay.innerHTML = crtLines.join('<br>');
+        }
+    }
+
+    const crtInterval = setInterval(updateCrt, 1800);
+    window.__pageCleanup = function() { clearInterval(processDataInterval); clearInterval(crtInterval); };
+</script>
+
+<script src="../nav.js"></script>
+
+</body>
+</html>

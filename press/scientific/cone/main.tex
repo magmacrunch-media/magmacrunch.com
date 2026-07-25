@@ -1,0 +1,176 @@
+\documentclass{article}
+
+% Language setting
+% Replace `english' with e.g. `spanish' to change the document language
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{siunitx}
+\usepackage{physics}
+\usepackage{cleveref}
+\usepackage{mhchem}
+\usepackage{booktabs}
+\input{defines.tex}
+\protected\def\numpi{\text{\ensuremath{\pi}}}
+\sisetup{input-symbols = \numpi}%\DeclareMathAlphabet\mathbfcal{OMS}{cmsy}{b}{n}
+
+\title{Why is off-plane diffraction conical?}
+\author{Jake McCoy}
+
+\begin{document}
+\maketitle
+
+%\begin{abstract}
+%Your abstract.
+%\end{abstract}
+
+The equation for a cone oriented along the $z$-axis with an opening angle $2 \gamma$ is given by
+\begin{equation}\label{eq:spatial_cone}
+    x^2 + y^2 = z^2 \tan^2 \left( \gamma \right) ,
+\end{equation}
+where $r = \abs{z} \tan \left( \gamma \right)$ is the radius of a circular slice of the cone at an axial position $z$, as shown in \cref{fig:spatial_cone}. 
+\begin{figure}
+ \centering
+ \includegraphics[scale=1.0]{cone1.mps}
+ \caption{Projection of a cone given by \cref{eq:spatial_cone}.}\label{fig:spatial_cone}
+ \end{figure}
+To see how off-plane-diffracted orders are confined to the surface of a cone, the trick is to replace $x$, $y$ and $z$ with analogous $\vb{k}$-space components for a diffracted wave vector, and to consider why it is justified to do so. 
+This boils down to thinking of a reflection grating as something that \emph{functions like a grating in one direction but a mirror in the other}.  %(with one-dimensional periodicity)
+The punchline is that the components of the $n^{\text{th}}$-order vector, $\vb{k_n}'$, satisfy
+\begin{equation}
+    k^{'2}_{x,n} + k^{'2}_{y,n} = k_z^2 \tan^2 \left( \gamma \right) ,
+\end{equation}
+which is made possible by the $z$-component, $k_z$, being preserved from the incident wave vector, $\vb{k}$; this is a result of $z$ being the groove direction. 
+The components $k'_{x,n}$ and $k'_{y,n}$ then describe the location of the $n^{\text{th}}$ order on the arc of diffraction. 
+The reasons for all of this are outlined as follows. 
+
+\section{Wave Vectors and the Grating Equation}
+Let's consider a generic wave vector that represents the incident ray on a diffraction grating, illustrated in \cref{fig:wave_vectors}:
+\begin{subequations}
+\begin{equation}
+    \vb{k} = k_x \vu{x} + k_y \vu{y} + k_z \vu{z} ,
+\end{equation}
+which can be written in terms of the angles $\alpha$ and $\gamma$ as
+\begin{equation}\label{eq:inc_vec_angles}
+    \vb{k} = - k \left[ \sin \left( \alpha \right) \sin \left( \gamma \right) \vu{x} + \cos \left( \alpha \right) \sin \left( \gamma \right) \vu{y} - \cos \left( \gamma \right) \vu{z} \right] ,
+\end{equation}
+\end{subequations}
+where the length of the vector, $\abs{\vb{k}} = k \equiv 2 \pi / \lambda$, is the wavenumber of radiation and $\lambda$ is the wavelength. 
+\begin{figure}
+ \centering
+ \includegraphics[scale=0.79]{diffraction_arc37.mps}
+ \caption{Basic geometry for a grating of uniform period $d$, where $\vu{x}$ is the \textit{dispersion direction} and $z$ is the \textit{groove direction}: the principal incident wave vector $\vb{k}$ strikes the grating at a point $I$ and diffracts into the $n^{\text{th}}$ order, where the wave vector is denoted $\vb{k}_n'$.}\label{fig:wave_vectors}
+ \end{figure}
+Here, $\gamma$ can be thought of as the angle between $\vb{k}$ and the groove direction, $\vu{z}$, while $\alpha$ can be thought of the angle between $\vb{k} - k_z \vu{z}$ (\emph{i.e.}, $\vb{k}$ projected into the $\vu{x}$-$\vu{y}$ plane) and the grating normal, $\vu{y}$. 
+Note that nothing has been spoken of a cone yet; rather, the components of $\vb{k}$ have simply been defined using an established coordinate system. 
+
+Let's also consider another generic wave vector that represents the $n^{\text{th}}$ diffracted order that reflects from the grating (also illustrated in \cref{fig:wave_vectors}):
+\begin{equation}
+    \vb{k}'_n = k'_{x,n} \vu{x} + k'_{y,n} \vu{y} + k'_{z,n} \vu{z} ,
+\end{equation}
+where the components are, for the moment, undefined but it is assumed that $\abs{\vb{k}'_n} = k = 2 \pi / \lambda$.
+To ensure phase continuity between the incident wave and the diffracted orders, boundary conditions involving $k_x$, $k_z$, $k'_{x,n}$ and $k'_{z,n}$ can be applied while $k'_{y,n}$ (for reflected orders) is determined from:
+\begin{equation}\label{eq:wave_mag}
+    \abs{\vb{k}'_n}^2 = k^2 = k^{'2}_{x,n} + k^{'2}_{y,n} + k^{'2}_{z,n} \implies k'_{y,n} = \sqrt{k^2 - k^{'2}_{x,n} - k^{'2}_{z,n}} ,
+\end{equation}
+where values of $n$ consistent with $k'_{y,n}$ being real describe propagating orders. 
+%This relation is similar to those that come from enforcing boundary conditions for an electromagnetic wave as the surface of the mirror, which state that the components of the incident and reflected rays parallel to the surface are equal to ensure wave continuity. 
+For a mirror with the $y$-axis as its surface normal, the boundary conditions are $k_x = k_x'$ and $k_z = k_z'$, which together state that the components of the incident and reflected rays parallel to the surface are equal; this leads to the law of reflection. 
+
+A reflection grating can be thought of as a mirror with the added feature that grooves define spatial periodicity in $\vu{x}$ (\emph{i.e.}, the cross-groove direction in \cref{fig:wave_vectors}). 
+This is described by the grating wave vector:
+\begin{equation}\label{eq:grating_vector}
+    \vb{K} = K \vu{x} = \frac{2 \pi}{d} \vu{x} ,
+\end{equation}
+with $K = 2 \pi / d$ as the grating wavenumber. 
+The surface-relief grating boundary can be defined by
+\begin{subequations}%http://mathworld.wolfram.com/FourierSeries.html
+\begin{equation} \label{eq:groove_fourier_series}
+ g(x) = \sum_{n=-\infty}^{\infty} g_n \mathrm{e}^{i n K x} \equiv \sum_{n=-\infty}^{\infty} g_n (x), 
+ \end{equation} 
+where the complex Fourier coefficients are given by
+\begin{equation} \label{eq:groove_fourier_coeff}
+ g_n = \frac{1}{d} \int_{0}^{d} g \left( x \right) \mathrm{e}^{- i n K x} \dd{x} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 \dotsc 
+ \end{equation} 
+\end{subequations}
+Owing to the periodicity of the groove border with $g(x) = g(x+d)$, spatial harmonics can be picked up along $\vu{x}$ such that the relation $k_x = k_x'$ for a mirror is replaced by $k'_{x,n} = k_x + n K$ in the case of a grating. 
+With the direction of grating periodicity being purely confined to $\vu{x}$ by \cref{eq:grating_vector}, however, $k_z = k_z'$ for the case of a mirror is still valid such that $k'_{z,n} = k_z$. 
+This is because the grating \emph{behaves like a mirror along the groove direction}; it only \emph{behaves like a grating along the dispersion direction}. 
+
+\section{Conical Diffraction}
+It has just been argued that the $n^{\text{th}}$ diffracted order has a wave vector of the form 
+\begin{subequations}
+\begin{equation}
+    \vb{k}'_n = k'_{x,n} \vu{x} + k'_{y,n} \vu{y} + k_z \vu{z} 
+\end{equation}
+due to $k_z$ being preserved from the incident wave vector, $\vb{k}$. 
+\begin{figure}
+ \centering
+ \includegraphics[scale=0.9]{diffraction_arc38.mps}
+ \caption{Off-plane, conical diffraction, where the incident wave vector, $\vb{k}$ is given by \cref{eq:inc_vec_angles} and the $n^{\text{th}}$-order diffracted wave vector, $\vb{k}'_n$, is given by \cref{eq:diff_vec_angles}.}\label{fig:conical_diff}
+ \end{figure}
+Knowing that $k_z = k \cos \left( \gamma \right)$ from \cref{eq:inc_vec_angles}, $\vb{k}'_n$ can now be written as 
+\begin{equation}\label{eq:diff_vec_angles}
+    \vb{k}'_n = k \left[ \sin \left( \beta_n \right) \sin \left( \gamma \right) \vu{x} + \cos \left( \beta_n \right) \sin \left( \gamma \right) \vu{y} + \cos \left( \gamma \right) \vu{z} \right] ,
+\end{equation}
+\end{subequations}
+where $\beta_n$ is introduced as the $n^{\text{th}}$-order diffraction angle and the boundary condition $k'_{x,n} = k_x + n K$ now yields
+\begin{equation}
+    \sin \left( \alpha \right) + \sin \left( \beta_n \right) = \frac{n \lambda}{d \sin \left( \gamma \right)} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 \dotsc  ,
+\end{equation}
+which is recognized as the generalized grating equation. 
+To see how the propagating orders define the surface of a cone with an opening angle $2 \gamma$ as in \cref{fig:spatial_cone}, the norm squared of $\vb{k}'_n$ as in \cref{eq:wave_mag} can now be written as
+\begin{equation}\label{eq:wave_mag2}
+    \abs{\vb{k}'_n}^2 = k^2 = k^{'2}_{x,n} + k^{'2}_{y,n} + k_z^2 .  
+\end{equation}
+This can be rearranged as 
+\begin{equation}\label{eq:wave_mag3}
+    k^{'2}_{x,n} + k^{'2}_{y,n} = k^2 - k_z^2 = k_z^2 \left[ \sec^2 \left( \gamma \right) - 1 \right]
+\end{equation}
+using $k = k_z \sec \left( \gamma \right)$ from $k_z = k \cos \left( \gamma \right)$. 
+From $\tan^2 \left( \gamma \right) = \sec^2 \left( \gamma \right) - 1$, it is seen that 
+\begin{equation}\label{eq:wave_mag3}
+    k^{'2}_{x,n} + k^{'2}_{y,n} = k_z^2 \tan^2 \left( \gamma \right) ,
+\end{equation}
+which is equivalent to \cref{eq:spatial_cone}: the equation for a cone.
+This is why the usual off-plane grating figure, shown in \cref{fig:conical_diff} is drawn in the way that it is, where the $0^{\text{th}}$ and $n^{\text{th}}$ orders define the surface of a cone.
+%The scenario that most people are familiar with is the \emph{in-plane} or \emph{classical} mounting, where the incident ray is confined to the plane orthogonal to the groove direction (in this case, the $z$-direction); in other words,$k_z = 0$. 
+
+\section{Effective Wavelength for Diffraction}
+With \cref{eq:wave_mag3} defining a cone in $\vb{k}$-space, its circular base has radius $k_r = k_z \tan \left( \gamma \right)$ in analogy with $r = \abs{z} \tan \left( \gamma \right)$ from \cref{eq:spatial_cone}. 
+The relations $k_r = k_z \tan \left( \gamma \right)$ and $k_z = k \cos \left( \gamma \right)$ can be combined to show that $k_r' = k \sin \left( \gamma \right)$. 
+By defining $k_r = 2 \pi / \bar{\lambda}$ with $\bar{\lambda}$ as an effective wavelength: 
+\begin{equation}
+    k_r = k \sin \left( \gamma \right) \implies \bar{\lambda} = \lambda \csc \left( \gamma \right) , 
+\end{equation}
+it is gleaned that conical, off-plane diffraction can be understood as being equivalent to the scenario of classical, in-plane diffraction (where $k_z = 0$; see \cref{fig:classical_diff}) but with an increased effective wavelength $\bar{\lambda}$. 
+\begin{figure}
+ \centering
+ \includegraphics[scale=0.9]{diffraction_arc36.mps}
+ \caption{In-plane, classical diffraction with $k_z=0$. By the theorem of invariance, this can be thought of being equivalent the off-plane scenario in \cref{fig:conical_diff} projected onto the $\vu{x}$-$\vu{y}$ plane with an effective wavelength $\bar{\lambda} = \lambda \csc \left( \gamma \right)$.}\label{fig:classical_diff}
+ \end{figure}
+This is known as the \emph{theorem of invariance}, which can be shown to be true using Green's theorem for a perfectly conducting grating boundary. 
+\begin{figure}
+ \centering
+ \includegraphics[scale=1.0]{cone2.mps}
+ \caption{Projection of a cone in $\vb{k}'_n$-space given by \cref{eq:wave_mag3}, where $k_r = k_z \tan \left( \gamma \right)$ is the radius of the cone base. The origin corresponds to point $I$ in \cref{fig:wave_vectors}.}\label{fig:spatial_cone}
+ \end{figure}
+The grating equation can then be written as
+\begin{equation}
+    \sin \left( \alpha \right) + \sin \left( \beta_n \right) = \frac{n \bar{\lambda}}{d} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 \dotsc ,
+\end{equation}
+which elucidates the need for $\bar{\lambda}$ to be comparable to $d$ while the actual wavelength can be much smaller: by $\lambda = \bar{\lambda} \sin \left( \gamma \right)$.
+%\emph{Don't make me tap the sign...}
+
+
+%\bibliographystyle{alpha}
+%\bibliography{sample}
+
+\end{document}

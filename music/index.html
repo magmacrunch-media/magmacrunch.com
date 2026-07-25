@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>music — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ── PAGE-SPECIFIC: music index ── */
+        :root {
+            --nav-accent: var(--mc-ember);
+            --nav-glow: rgba(255,61,0,0.4);
+            --nav-brand: var(--mc-cereal-cyan);
+            --nav-brand-glow: rgba(0,245,255,0.6);
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--rose); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--rose); opacity: 0.7; }
+        .breadcrumb .current { color: var(--rose); }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--rose);
+            text-shadow: 0 0 16px rgba(255,61,110,0.6);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--yellow);
+            letter-spacing: 0.1em;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* ── WAVEFORM CANVAS ── */
+        .waveform-wrap {
+            width: min(600px, 90vw);
+            margin-bottom: 44px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        #waveCanvas {
+            width: 100%;
+            height: 60px;
+            display: block;
+            image-rendering: pixelated;
+        }
+
+        /* ── NAV CARDS: override to be bigger / stacked for music ── */
+        .music-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            width: min(520px, 90vw);
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+
+        .music-card {
+            display: flex;
+            align-items: stretch;
+            text-decoration: none;
+            border: 2px solid #1e1e2e;
+            border-bottom: none;
+            background: var(--deep);
+            transition: background 0.15s, border-color 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .music-card:last-child {
+            border-bottom: 2px solid #1e1e2e;
+        }
+
+        /* left color accent bar */
+        .music-card::before {
+            content: '';
+            display: block;
+            width: 4px;
+            flex-shrink: 0;
+            background: var(--card-accent, var(--rose));
+            transition: width 0.15s;
+        }
+
+        .music-card:hover {
+            background: #16161f;
+            border-color: var(--card-accent, var(--rose));
+        }
+        .music-card:hover::before { width: 7px; }
+        .music-card:hover .mc-arrow { opacity: 1; transform: translateX(0); }
+
+        .mc-inner {
+            padding: 20px 22px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .mc-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--card-accent, var(--rose));
+            letter-spacing: 0.08em;
+            margin-bottom: 7px;
+            display: block;
+        }
+
+        .mc-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            line-height: 1.5;
+        }
+
+        .mc-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--card-accent, var(--rose));
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+
+        /* ── COMING SOON ── */
+        .coming-soon {
+            width: min(640px, 90vw);
+            margin-top: 32px;
+            border: 1px dashed #2a2a1a;
+            padding: 28px;
+            text-align: center;
+            background: rgba(255,224,58,0.02);
+            animation: fadeUp 0.5s 0.28s ease both;
+        }
+        .coming-soon p {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            line-height: 2.4;
+        }
+        .coming-soon span { color: var(--yellow); opacity: 0.5; }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+            .mc-label { font-size: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <span class="current">music</span>
+    </div>
+
+    <h1 class="page-title">// music //</h1>
+
+    <!-- ANIMATED WAVEFORM -->
+    <div class="waveform-wrap">
+        <canvas id="waveCanvas" width="600" height="60"></canvas>
+    </div>
+
+    <!-- MUSIC NAV CARDS -->
+    <div class="music-cards">
+
+        <a href="jukebox/" class="music-card" style="--card-accent: var(--purple);">
+            <div class="mc-inner">
+                <div class="mc-text">
+                    <span class="mc-label" style="color:var(--purple);">jukebox</span>
+                    <span class="mc-desc">magmacrunch streaming · choose a song</span>
+                </div>
+                <span class="mc-arrow" style="color:var(--purple);">▶</span>
+            </div>
+        </a>
+
+        <a href="distributed-music.html" class="music-card" style="--card-accent: var(--green);">
+            <div class="mc-inner">
+                <div class="mc-text">
+                    <span class="mc-label">on streaming services</span>
+                    <span class="mc-desc">distributed via LANDR · Spotify, Apple Music &amp; more</span>
+                </div>
+                <span class="mc-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="../visual/music-videos.html" class="music-card" style="--card-accent: var(--cyan);">
+            <div class="mc-inner">
+                <div class="mc-text">
+                    <span class="mc-label" style="color:var(--cyan);">music videos</span>
+                    <span class="mc-desc">no-budget video productions · YouTube</span>
+                </div>
+                <span class="mc-arrow" style="color:var(--cyan);">▶</span>
+            </div>
+        </a>
+
+        <a href="physical-media/" class="music-card" style="--card-accent: var(--yellow);">
+            <div class="mc-inner">
+                <div class="mc-text">
+                    <span class="mc-label" style="color:var(--yellow);">physical media</span>
+                    <span class="mc-desc">floppy disk · CD</span>
+                </div>
+                    <span class="mc-arrow" style="color:var(--yellow);">▶</span>
+            </div>
+        </a>
+
+    </div>
+
+    <!-- COMING SOON -->
+    <div class="coming-soon">
+        <p>more releases coming soon<br><span>✦</span><br>tape production also in the works</p>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+// ── ANIMATED WAVEFORM ──
+(function () {
+    const canvas = document.getElementById('waveCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width;
+    const H = canvas.height;
+    const cols = [
+        'var(--rose)', 'var(--yellow)', 'var(--cyan)',
+        'var(--green)', 'var(--purple)', 'var(--orange)'
+    ];
+    const resolvedCols = ['#ff3d6e','#ffe03a','#00f5ff','#39ff6e','#c45fff','#ff7c1f'];
+
+    // Each "bar" in the waveform
+    const BAR_W = 3;
+    const GAP   = 1;
+    const COUNT = Math.floor(W / (BAR_W + GAP));
+
+    // Seed heights with a mix of sine waves
+    const phases  = Array.from({length: COUNT}, (_, i) => Math.random() * Math.PI * 2);
+    const speeds  = Array.from({length: COUNT}, (_, i) => 0.018 + Math.random() * 0.024);
+    const heights = Array.from({length: COUNT}, (_, i) => 0.3 + Math.random() * 0.7);
+    const colorIdx = Array.from({length: COUNT}, (_, i) => i % resolvedCols.length);
+
+    let t = 0;
+
+    let animId;
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        const mid = H / 2;
+
+        for (let i = 0; i < COUNT; i++) {
+            const amp = heights[i] * (mid - 2);
+            const y   = Math.sin(phases[i] + t * speeds[i] * 60) * amp;
+            const barH = Math.max(2, Math.abs(y) * 2);
+            const x   = i * (BAR_W + GAP);
+
+            ctx.fillStyle = resolvedCols[colorIdx[i]];
+            ctx.globalAlpha = 0.55 + 0.45 * Math.abs(Math.sin(phases[i] + t * speeds[i] * 60));
+            ctx.fillRect(x, mid - barH / 2, BAR_W, barH);
+        }
+        ctx.globalAlpha = 1;
+        t++;
+        animId = requestAnimationFrame(draw);
+    }
+
+    draw();
+    window.__pageCleanup = function() { cancelAnimationFrame(animId); };
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            cancelAnimationFrame(animId);
+        } else {
+            draw();
+        }
+    });
+})();
+</script>
+
+</body>
+</html>

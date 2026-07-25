@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jon McCoy — music videos — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="jm-shared.css">
+    <link rel="stylesheet" href="jm-music-videos.css">
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        '33c830f0-d5be-4baf-b8db-3dc754e74c16',
+        name:      'Jon McCoy',
+        abbr:      'JM',
+        accent:    'blue',
+        backColor: 'c-back',
+        siblings:  ['about', 'photography', 'music-videos', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="jm-page jm-music-videos-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">jhm</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// Jon McCoy //</div>
+        <div class="page-title">MUSIC VIDEOS</div>
+        <div class="sub-nav" id="sub-nav">
+            <a href="./"          class="nav-card c-back">← back</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
+            <a href="photography.html"  class="nav-card c-photography">photography</a>
+            <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"     class="nav-card c-releases">releases</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="videos-section">
+        <div class="video-list" id="miniVideoList"></div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+const VIDEOS = [
+    { title: "Try", year: "2024", ytId: "To6AJJ7-iCY", archiveId: "jhm-try", mbid: "9c8c4211-8c81-4c54-9147-a3763dbde4f5", dmId: "x9hg4eg" },
+];
+
+// ─── Utilities ────────────────────────────────────────────────────────────────
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+function esc(str) {
+    return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function formatDuration(ms) {
+    if (!ms) return null;
+    const s = Math.floor(ms / 1000);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function formatRelDates(begin, end) {
+    if (!begin && !end) return null;
+    if (begin && end && begin === end) return begin;
+    if (begin && end) return `${begin} – ${end}`;
+    if (begin) return `from ${begin}`;
+    return `until ${end}`;
+}
+
+async function fetchWithRetry(url, retries = 4) {
+    for (let i = 0; i < retries; i++) {
+        let res;
+        try {
+            res = await fetch(url);
+        } catch (networkErr) {
+            if (i === retries - 1) throw networkErr;
+            await delay(1500 * (i + 1));
+            continue;
+        }
+        if (res.status === 429 || res.status === 503) {
+            if (i === retries - 1) throw new Error(`HTTP ${res.status} after ${retries} attempts`);
+            await delay(2500 * (i + 1));
+            continue;
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+    }
+}
+
+// ─── MusicBrainz data → structured object ────────────────────────────────────
+
+function parseMBData(data) {
+    const out = {};
+
+    const dur = formatDuration(data.length);
+    if (dur) out.duration = dur;
+
+    if (data.disambiguation) out.disambiguation = esc(data.disambiguation);
+    if (data.annotation)     out.annotation     = esc(data.annotation);
+
+    if (data.isrcs?.length) out.isrcs = data.isrcs.map(esc);
+
+    if (data.tags?.length) {
+        out.tags = data.tags
+            .sort((a, b) => b.count - a.count)
+            .map(t => esc(t.name));
+    }
+
+    if (data.releases?.length) {
+        out.releases = data.releases.slice(0, 3).map(rel => ({
+            title:   esc(rel.title),
+            date:    rel.date ? esc(rel.date) : null,
+            country: rel.country ? esc(rel.country) : null,
+            status:  rel.status ? esc(rel.status) : null,
+        }));
+    }
+
+    if (data['artist-credit']?.length) {
+        out.artist = esc(data['artist-credit'].map(c => c.name ?? c.artist?.name ?? '').join(''));
+    }
+
+    const crew = [], labels = [], works = [], links = [], misc = [];
+
+    for (const r of (data.relations ?? [])) {
+        const type = r.type || '';
+
+        if (r['target-type'] === 'artist' && r.artist) {
+            const attrs = (r.attributes ?? []).map(a => {
+                const credited = r['attribute-values']?.[a];
+                return credited ? esc(credited) : esc(a);
+            });
+            const dates = formatRelDates(r.begin, r.end);
+            crew.push({ role: esc(type), name: esc(r.artist.name), attrs, dates });
+        }
+
+        else if (r['target-type'] === 'label' && r.label) {
+            const dates = formatRelDates(r.begin, r.end);
+            labels.push({ role: esc(type), name: esc(r.label.name), dates });
+        }
+
+        else if (r['target-type'] === 'work' && r.work) {
+            const w = r.work;
+            const workEntry = { role: esc(type), title: esc(w.title) };
+            if (w.disambiguation) workEntry.disambiguation = esc(w.disambiguation);
+            if (w.language)       workEntry.language       = esc(w.language);
+            if (w.iswcs?.length)  workEntry.iswcs          = w.iswcs.map(esc);
+
+            const workCrew = [];
+            for (const wr of (w.relations ?? [])) {
+                const wType = wr.type || '';
+                if (wr['target-type'] === 'artist' && wr.artist) {
+                    const attrs = (wr.attributes ?? []).map(a => {
+                        const credited = wr['attribute-values']?.[a];
+                        return credited ? esc(credited) : esc(a);
+                    });
+                    const dates = formatRelDates(wr.begin, wr.end);
+                    workCrew.push({ role: esc(wType), name: esc(wr.artist.name), attrs, dates });
+                }
+                if (wr['target-type'] === 'label' && wr.label) {
+                    workCrew.push({ role: esc(wType), name: esc(wr.label.name) });
+                }
+            }
+            if (workCrew.length) workEntry.crew = workCrew;
+            works.push(workEntry);
+        }
+
+        else if (r['target-type'] === 'url' && r.url?.resource) {
+            try {
+                links.push({
+                    label: esc(type || 'link'),
+                    href:  esc(r.url.resource),
+                    host:  esc(new URL(r.url.resource).hostname),
+                });
+            } catch {}
+        }
+
+        else if (r['target-type'] && type) {
+            const name = r[r['target-type']]?.name || r[r['target-type']]?.title || '';
+            if (name) misc.push({ type: esc(type), name: esc(name) });
+        }
+    }
+
+    if (crew.length)   out.crew   = crew;
+    if (labels.length) out.labels = labels;
+    if (works.length)  out.works  = works;
+    if (links.length)  out.links  = links;
+    if (misc.length)   out.misc   = misc;
+
+    return out;
+}
+
+// ─── Render MusicBrainz panel ─────────────────────────────────────────────────
+
+function row(label, val) {
+    return `<div class="mb-row"><span class="mb-label">${label}</span><span class="mb-val">${val}</span></div>`;
+}
+
+function renderMBPanel(el, data) {
+    const rows = [];
+
+    if (data.artist)         rows.push(row('artist', data.artist));
+    if (data.duration)       rows.push(row('duration', data.duration));
+    if (data.disambiguation) rows.push(row('note', data.disambiguation));
+    if (data.annotation)     rows.push(row('annotation', data.annotation));
+    if (data.isrcs?.length)  rows.push(row('isrc', data.isrcs.join(', ')));
+    if (data.tags?.length)   rows.push(row('tags', data.tags.join(', ')));
+
+    for (const rel of (data.releases ?? [])) {
+        const meta = [rel.date, rel.country, rel.status].filter(Boolean).join(' · ');
+        rows.push(row('release', rel.title + (meta ? ` <span class="mb-date">(${meta})</span>` : '')));
+    }
+
+    for (const c of (data.crew ?? [])) {
+        let val = esc(c.name);
+        if (c.attrs?.length) val += ` <span class="mb-date">(${c.attrs.join(', ')})</span>`;
+        if (c.dates)         val += ` <span class="mb-date">[${c.dates}]</span>`;
+        rows.push(row(c.role, val));
+    }
+
+    for (const l of (data.labels ?? [])) {
+        let val = esc(l.name);
+        if (l.dates) val += ` <span class="mb-date">[${l.dates}]</span>`;
+        rows.push(row(l.role || 'label', val));
+    }
+
+    for (const w of (data.works ?? [])) {
+        let titleVal = w.title;
+        if (w.disambiguation) titleVal += ` <span class="mb-date">(${w.disambiguation})</span>`;
+        if (w.language)       titleVal += ` <span class="mb-date">[${w.language}]</span>`;
+        if (w.iswcs?.length)  titleVal += ` <span class="mb-date">ISWC: ${w.iswcs.join(', ')}</span>`;
+        rows.push(row(w.role || 'work', titleVal));
+        for (const c of (w.crew ?? [])) {
+            let val = c.name;
+            if (c.attrs?.length) val += ` <span class="mb-date">(${c.attrs.join(', ')})</span>`;
+            if (c.dates)         val += ` <span class="mb-date">[${c.dates}]</span>`;
+            rows.push(row(`↳ ${c.role}`, val));
+        }
+    }
+
+    for (const l of (data.links ?? [])) {
+        rows.push(row(l.label, `<a href="${l.href}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${l.host}</a>`));
+    }
+
+    for (const m of (data.misc ?? [])) {
+        rows.push(row(m.type, m.name));
+    }
+
+    el.innerHTML = rows.length
+        ? `<div class="mb-table">${rows.join('')}</div>`
+        : `<div class="mb-empty">no musicbrainz data</div>`;
+}
+
+// ─── Build embed src ──────────────────────────────────────────────────────────
+
+function embedSrc(v) {
+    if (v.archiveId) return `https://archive.org/embed/${v.archiveId}`;
+    return `https://www.youtube.com/embed/${v.ytId}?rel=0`;
+}
+
+// ─── Build cards ──────────────────────────────────────────────────────────────
+
+const videoList = document.getElementById('miniVideoList');
+let mbQueue = Promise.resolve();
+
+VIDEOS.forEach(v => {
+    const watchUrl   = `https://www.youtube.com/watch?v=${v.ytId}`;
+    const archiveUrl = v.archiveId ? `https://archive.org/details/${v.archiveId}` : null;
+
+    const entry = document.createElement('div');
+    entry.className = 'video-entry';
+
+    const header = document.createElement('div');
+    header.className = 'video-header';
+
+    const titleWrap = document.createElement('div');
+    titleWrap.className = 'video-title-wrap';
+
+    const year = document.createElement('span');
+    year.className = 'video-year';
+    year.textContent = v.year;
+
+    const title = document.createElement('h2');
+    title.className = 'video-title';
+    title.textContent = v.title;
+
+    titleWrap.append(year, title);
+    header.append(titleWrap);
+
+    const embedWrap = document.createElement('div');
+    embedWrap.className = v.archiveId ? 'video-embed ia-embed' : 'video-embed';
+    embedWrap.innerHTML = `<iframe src="${embedSrc(v)}" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`;
+
+    const extLinks = document.createElement('div');
+    extLinks.className = 'video-ext-links';
+
+    if (archiveUrl) {
+        const a = document.createElement('a');
+        a.className = 'ext-link ext-archive';
+        a.href = archiveUrl; a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = '⬡ internet archive';
+        extLinks.appendChild(a);
+    }
+    const yt = document.createElement('a');
+    yt.className = 'ext-link ext-yt';
+    yt.href = watchUrl; yt.target = '_blank'; yt.rel = 'noopener';
+    yt.textContent = '▶ youtube';
+    extLinks.appendChild(yt);
+
+    if (v.dmId) {
+        const dm = document.createElement('a');
+        dm.className = 'ext-link ext-dm';
+        dm.href = `https://www.dailymotion.com/video/${v.dmId}`;
+        dm.target = '_blank'; dm.rel = 'noopener';
+        dm.textContent = '▶ dailymotion';
+        extLinks.appendChild(dm);
+    }
+
+    const mbPanel = document.createElement('div');
+    mbPanel.className = 'video-mb';
+    if (v.mbid) {
+        mbPanel.id = `mb-${v.ytId}`;
+        mbPanel.innerHTML = '<div class="mb-loading">loading musicbrainz…</div>';
+    }
+
+    entry.append(header, embedWrap, extLinks, mbPanel);
+    videoList.appendChild(entry);
+
+    if (v.mbid) {
+        mbQueue = mbQueue.then(() => delay(1000)).then(() => fetchMB(v.mbid, `mb-${v.ytId}`));
+    }
+});
+
+// ─── MusicBrainz fetch ────────────────────────────────────────────────────────
+
+async function fetchMB(mbid, elId) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    try {
+        const data = await fetchWithRetry(
+            `https://musicbrainz.org/ws/2/recording/${mbid}?inc=releases+artists+isrcs+annotation+tags+url-rels+artist-rels+label-rels+work-rels+work-level-rels&fmt=json`
+        );
+        renderMBPanel(el, parseMBData(data));
+    } catch (e) {
+        el.innerHTML = `<div class="mb-error">musicbrainz error: ${esc(e.message)}</div>`;
+    }
+}
+</script>
+
+<style>
+.video-list { width: 100%; }
+
+/* ── Video entry ── */
+.video-entry { margin-bottom: 3rem; width: 100%; }
+
+/* ── Header ── */
+.video-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0.6rem;
+}
+.video-title-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+.video-year {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--jm-light-cool);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+.video-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--jm-cream);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ── External links ── */
+.video-ext-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+}
+.ext-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 3px;
+    text-decoration: none;
+    border: none;
+}
+
+/* ── Embed ── */
+.video-embed {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.video-embed.ia-embed { --ia-bar: 52px; }
+.video-embed.ia-embed iframe {
+    top: calc(-1 * var(--ia-bar));
+    height: calc(100% + var(--ia-bar));
+}
+
+/* ── MusicBrainz panel ── */
+.video-mb { margin-top: 0.75rem; }
+.mb-table {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.mb-row { display: contents; }
+.mb-label {
+    color: var(--jm-mid-cool);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding-top: 3px;
+    white-space: nowrap;
+}
+.mb-val { color: inherit; }
+.mb-date { opacity: 0.6; }
+.mb-coords { display: block; font-size: 0.72rem; opacity: 0.55; }
+.mb-loading { font-size: 0.78rem; opacity: 0.45; font-style: italic; }
+.mb-empty { font-size: 0.78rem; opacity: 0.35; font-style: italic; }
+.mb-error { font-size: 0.78rem; color: var(--jm-rose); }
+</style>
+
+</body>
+</html>

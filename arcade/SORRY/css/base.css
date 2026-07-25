@@ -1,0 +1,84 @@
+/* base.css — CSS custom properties, reset, and global typography
+   Load this first — all other stylesheets depend on these variables. */
+
+/* ── BOARD / COLOR PALETTE ── */
+:root {
+  --felt:     #6b3a2a;
+  --border:   #1a1008;
+
+  /* Slot color variables — defaults match original palette.
+     These are overridden at game start via JS when players choose colors. */
+  --color-red:    #f03a47;
+  --color-blue:   #3a86ff;
+  --color-yellow: #ffcc00;
+  --color-green:  #2ecc71;
+
+  /* Convenience aliases used by board/game CSS */
+  --red:    var(--color-red);
+  --blue:   var(--color-blue);
+  --yellow: var(--color-yellow);
+  --green:  var(--color-green);
+
+  /* Slide tints — also overridden at game start */
+  --slide-red:    #ffcccc;
+  --slide-blue:   #cce0ff;
+  --slide-yellow: #fff5cc;
+  --slide-green:  #ccffdd;
+
+  --cream:        #ebe6d6;
+  --board-center: #1a1a2e;
+  --sq-size:      38px;
+  --gap:          2px;
+}
+
+/* ── NETWORK / UI PALETTE ── */
+:root {
+  --net-bg:      #0d0f1a;
+  --net-panel:   #141828;
+  --net-border:  #2a3060;
+  --net-accent:  #4fffb0;
+  --net-accent2: #ff6b6b;
+  --net-accent3: #ffd93d;
+  --net-text:    #c8d0f0;
+  --net-dim:     #5a6080;
+  --net-glow:    0 0 12px rgba(79,255,176,0.4);
+}
+
+/* ── RESET ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── GLOBAL ── */
+body {
+  width: 100%;
+  background: #000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  font-family: 'Press Start 2P', monospace;
+  color: #eee;
+  /* Prevent scaled/wide content from creating a horizontal scrollbar */
+  overflow-x: hidden;
+}
+
+/* During gameplay remove body padding so no grey gap shows around the board */
+body.game-active {
+  padding: 0;
+  background: #000;
+}
+
+h1 {
+  font-size: 24px;
+  color: var(--yellow);
+  text-shadow: 2px 2px 0 #886600;
+  letter-spacing: 4px;
+  margin-bottom: 24px;
+}
+
+
+/* ── MOBILE TOUCH ── */
+/* Prevent double-tap zoom on game elements — pawn clicks need to be instant */
+.board, .pawn, .cell, .big-zone, button {
+  touch-action: manipulation;
+}

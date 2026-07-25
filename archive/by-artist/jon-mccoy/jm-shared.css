@@ -1,0 +1,75 @@
+/* Jon McCoy shared color palette — muted cool / warm neutrals */
+:root {
+    --jm-bg:        #484e58;
+    --jm-surface:   #2e3540;
+    --jm-raised:    #2e3038;
+    --jm-body:      #7080a0;
+    --jm-muted:     #8a9aaa;
+    --jm-heading:   #b8c4cc;
+    --jm-taupe:     #a89880;
+    --jm-sand:      #c8b8a0;
+    --jm-cream:     #e8ddd0;
+    --jm-sage:      #7a9080;
+    --jm-rose:      #b89898;
+    --jm-ice:       #d0d8e0;
+    --jm-deep-cool: #383e48;
+    --jm-mid-cool:  #6070a0;
+    --jm-light-cool:#c0ccd8;
+    --jm-deep-warm: #786050;
+    --jm-pale-warm: #f0e8d8;
+    --jm-deep-sage: #587868;
+    --jm-muted-rose:#c8a8a8;
+    --jm-blue-grey:  #6a7088;
+    --jm-near-white:#f5f0ec;
+    --jm-periwinkle:#9090b8;
+    --jm-pale-sage: #b0c8b8;
+    --jm-dusty-plum: #786878;
+    --jm-near-black: #0e1014;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.jm-page { background: var(--jm-near-black); --credit-color: var(--jm-muted); --nav-accent: var(--jm-sage); --nav-glow: rgba(122,144,128,0.4); --nav-brand: var(--jm-rose); --nav-brand-glow: rgba(184,152,152,0.7); }
+body.jm-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.jm-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.jm-page .sub-nav .nav-card::after { display: none; }
+body.jm-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* Back button: sage */
+body.jm-page .sub-nav .nav-card.c-back { background: transparent; color: var(--jm-sage); border-color: var(--jm-sage); }
+body.jm-page .sub-nav .nav-card.c-back:hover { background: var(--jm-sage); color: var(--jm-near-white); }
+
+/* About button: mid cool */
+body.jm-page .sub-nav .nav-card.c-about { background: var(--jm-mid-cool); color: var(--jm-cream); border-color: var(--jm-mid-cool); }
+body.jm-page .sub-nav .nav-card.c-about:hover { background: transparent; border-color: var(--jm-mid-cool); color: var(--jm-near-white); }
+
+/* Photography button: dusty plum */
+body.jm-page .sub-nav .nav-card.c-photography { background: var(--jm-dusty-plum); color: var(--jm-cream); border-color: var(--jm-dusty-plum); }
+body.jm-page .sub-nav .nav-card.c-photography:hover { background: transparent; border-color: var(--jm-dusty-plum); color: var(--jm-near-white); }
+
+/* Releases button: pale warm */
+body.jm-page .sub-nav .nav-card.c-releases { background: var(--jm-pale-warm); color: var(--jm-bg); border-color: var(--jm-pale-warm); }
+body.jm-page .sub-nav .nav-card.c-releases:hover { background: transparent; border-color: var(--jm-pale-warm); color: var(--jm-near-white); }
+
+/* Recordings button: muted rose */
+body.jm-page .sub-nav .nav-card.c-recordings { background: var(--jm-muted-rose); color: var(--jm-bg); border-color: var(--jm-muted-rose); }
+body.jm-page .sub-nav .nav-card.c-recordings:hover { background: transparent; border-color: var(--jm-muted-rose); color: var(--jm-near-white); }
+
+/* Works button: deep sage */
+body.jm-page .sub-nav .nav-card.c-works { background: var(--jm-deep-sage); color: var(--jm-cream); border-color: var(--jm-deep-sage); }
+body.jm-page .sub-nav .nav-card.c-works:hover { background: transparent; border-color: var(--jm-deep-sage); color: var(--jm-near-white); }
+
+/* Music videos button: light cool */
+body.jm-page .sub-nav .nav-card.c-music-videos { background: var(--jm-light-cool); color: var(--jm-bg); border-color: var(--jm-light-cool); }
+body.jm-page .sub-nav .nav-card.c-music-videos:hover { background: transparent; border-color: var(--jm-light-cool); color: var(--jm-near-white); }
+
+body.jm-page .nav-card::after { display: none; }
+
+body.jm-page footer { color: var(--jm-muted); }
+body.jm-page footer span { color: var(--jm-sage); }

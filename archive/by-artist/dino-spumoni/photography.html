@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dino spumoni — photography — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="ds-shared.css">
+    <link rel="stylesheet" href="ds-photography.css">
+</head>
+<body class="ds-page ds-photography-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">d.spum</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// dino spumoni //</div>
+        <div class="page-title">PHOTOGRAPHY</div>
+        <div class="sub-nav">
+            <a href="./"          class="nav-card c-back">← back</a>
+            <a href="about.html"          class="nav-card c-about">about</a>
+            <a href="events.html"         class="nav-card c-events">events</a>
+            <a href="recordings.html"      class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"        class="nav-card c-releases">releases</a>
+            <a href="works.html"           class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="photo-strip-wrap" id="dsStripWrap">
+            <div class="photo-strip" id="dsStrip">
+                <div class="photo-item wide" data-index="0">
+                    <img src="../../../assets/photos/dspum/dino-spumoni.jpg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">dino spumoni</div>
+                </div>
+                <div class="photo-item wide" data-index="1">
+                    <img src="../../../assets/photos/dspum/dspumpic1.jpeg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">dspumpic1</div>
+                </div>
+                <div class="photo-item wide" data-index="2">
+                    <img src="../../../assets/photos/dspum/dspumpic2.jpeg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">dspumpic2</div>
+                </div>
+                <div class="photo-item wide" data-index="3">
+                    <img src="../../../assets/photos/dspum/dspumpic3.jpeg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">dspumpic3</div>
+                </div>
+                <div class="photo-item wide" data-index="4">
+                    <img src="../../../assets/photos/dspum/dspumpic4.jpeg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">dspumpic4</div>
+                </div>
+                <div class="photo-item wide" data-index="5">
+                    <img src="../../../assets/photos/dspum/IMG_2981.JPG" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">IMG 2981</div>
+                </div>
+                <div class="photo-item wide" data-index="6">
+                    <img src="../../../assets/photos/dspum/IMG_3126.JPG" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">IMG 3126</div>
+                </div>
+                <div class="photo-item wide" data-index="7">
+                    <img src="../../../assets/photos/dspum/IMG_3364.jpg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">IMG 3364</div>
+                </div>
+                <div class="photo-item wide" data-index="8">
+                    <img src="../../../assets/photos/dspum/17883781_10209331770394411_5904460346900477928_n.jpg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">dino spumoni</div>
+                </div>
+                <div class="photo-item wide" data-index="9">
+                    <img src="../../../assets/photos/dspum/couchpic.jpeg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">couch pic</div>
+                </div>
+                <div class="photo-item wide" data-index="10">
+                    <img src="../../../assets/photos/dspum/dspum-feb26pic.jpeg" alt="Dino Spumoni" loading="lazy">
+                    <div class="photo-caption">feb 26 pic</div>
+                </div>
+                <div class="photo-item wide" data-index="11">
+                    <img src="../../../assets/photos/dspum/d_spum_drawing.png" alt="Dino Spumoni drawing" loading="lazy">
+                    <div class="photo-caption">drawing</div>
+                </div>
+            </div>
+            <div class="strip-scroll-hint" id="dsScrollHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="photo-lightbox" id="dsLightbox">
+        <button class="lb-close" id="dsLbClose">[ close ]</button>
+        <div class="lb-img-wrap"><img id="dsLbImg" src="" alt=""></div>
+        <div class="lb-cap" id="dsLbCap"></div>
+        <div class="lb-nav">
+            <button class="lb-btn" id="dsLbPrev">← prev</button>
+            <span class="lb-counter" id="dsLbCounter"></span>
+            <button class="lb-btn" id="dsLbNext">next →</button>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    var strip = document.getElementById('dsStrip');
+    var wrap  = document.getElementById('dsStripWrap');
+    var isDown = false, startX, scrollLeft;
+    strip.addEventListener('mousedown', function(e) { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+    strip.addEventListener('mouseleave', function() { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    function() { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  function(e) { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
+    strip.addEventListener('scroll', function() { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+})();
+
+(function() {
+    var items   = document.querySelectorAll('#dsStrip .photo-item');
+    var lb      = document.getElementById('dsLightbox');
+    var lbImg   = document.getElementById('dsLbImg');
+    var lbCap   = document.getElementById('dsLbCap');
+    var lbCount = document.getElementById('dsLbCounter');
+    var strip   = document.getElementById('dsStrip');
+    var photos  = Array.from(items).map(function(item) { return { src: item.querySelector('img').src, alt: item.querySelector('img').alt, caption: item.querySelector('.photo-caption').textContent.trim() }; });
+    var current = 0;
+    function open(index) { current = index; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = (current + 1) + ' / ' + photos.length;
+        var wrap = lbImg.closest('.lb-img-wrap');
+        wrap.classList.remove('vertical');
+        if (lbImg.complete && lbImg.naturalWidth && lbImg.naturalHeight) {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+        }
+        lbImg.onload = function() {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+            else wrap.classList.remove('vertical');
+        };
+    }
+    function nav(dir) { current = (current + dir + photos.length) % photos.length; show(); }
+    items.forEach(function(item) { item.addEventListener('click', function() { if (!strip.classList.contains('dragging')) open(parseInt(item.dataset.index)); }); });
+    document.getElementById('dsLbClose').addEventListener('click', close);
+    document.getElementById('dsLbPrev').addEventListener('click', function() { nav(-1); });
+    document.getElementById('dsLbNext').addEventListener('click', function() { nav(1); });
+    lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function(e) { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') nav(-1); if (e.key === 'ArrowRight') nav(1); });
+})();
+</script>
+</body>
+</html>

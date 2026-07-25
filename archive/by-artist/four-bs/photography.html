@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Four B's — photography — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="4b-shared.css">
+    <link rel="stylesheet" href="4b-photography.css">
+</head>
+<body class="fb-page fb-photography-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">bbbb</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// The Four B's //</div>
+        <div class="page-title">PHOTOGRAPHY</div>
+        <div class="sub-nav">
+            <a href="./"      class="nav-card c-back">← back</a>
+            <a href="about.html"      class="nav-card c-about">about</a>
+            <a href="events.html"      class="nav-card c-events">events</a>
+            <a href="recordings.html"  class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"    class="nav-card c-releases">releases</a>
+            <a href="works.html"       class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="photo-strip-wrap" id="4bStripWrap">
+            <div class="photo-strip" id="4bStrip">
+                <div class="photo-item wide" data-index="0">
+                    <img src="../../../assets/photos/four_bs/the-four-bs.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">the four b's</div>
+                </div>
+                <div class="photo-item wide" data-index="1">
+                    <img src="../../../assets/photos/four_bs/fourBs-linkbanner.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">link banner</div>
+                </div>
+                <div class="photo-item wide" data-index="2">
+                    <img src="../../../assets/photos/four_bs/cover .jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">cover</div>
+                </div>
+                <div class="photo-item wide" data-index="3">
+                    <img src="../../../assets/photos/four_bs/ohwowfourbs.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">oh wow four bs</div>
+                </div>
+                <div class="photo-item wide" data-index="4">
+                    <img src="../../../assets/photos/four_bs/2013-01-16 17.36.31.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">2013</div>
+                </div>
+                <div class="photo-item wide" data-index="5">
+                    <img src="../../../assets/photos/four_bs/IMG_0437.jpg" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">IMG 0437</div>
+                </div>
+                <div class="photo-item wide" data-index="6">
+                    <img src="../../../assets/photos/four_bs/IMG_0592.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">IMG 0592</div>
+                </div>
+                <div class="photo-item wide" data-index="7">
+                    <img src="../../../assets/photos/four_bs/P1000274.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">P1000274</div>
+                </div>
+                <div class="photo-item wide" data-index="8">
+                    <img src="../../../assets/photos/four_bs/P1000276.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">P1000276</div>
+                </div>
+                <div class="photo-item wide" data-index="9">
+                    <img src="../../../assets/photos/four_bs/P1000277.JPG" alt="The Four B's" loading="lazy">
+                    <div class="photo-caption">P1000277</div>
+                </div>
+            </div>
+            <div class="strip-scroll-hint" id="4bScrollHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="photo-lightbox" id="4bLightbox">
+        <button class="lb-close" id="4bLbClose">[ close ]</button>
+        <div class="lb-img-wrap"><img id="4bLbImg" src="" alt=""></div>
+        <div class="lb-cap" id="4bLbCap"></div>
+        <div class="lb-nav">
+            <button class="lb-btn" id="4bLbPrev">← prev</button>
+            <span class="lb-counter" id="4bLbCounter"></span>
+            <button class="lb-btn" id="4bLbNext">next →</button>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const strip = document.getElementById('4bStrip');
+    const wrap  = document.getElementById('4bStripWrap');
+    const hint  = document.getElementById('4bScrollHint');
+    let isDown = false, startX, scrollLeft;
+
+    strip.addEventListener('mousedown', e => {
+        isDown = true; strip.classList.add('dragging');
+        startX = e.pageX - strip.offsetLeft;
+        scrollLeft = strip.scrollLeft;
+    });
+    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  e => {
+        if (!isDown) return;
+        e.preventDefault();
+        strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2;
+    });
+    strip.addEventListener('scroll', () => {
+        if (strip.scrollLeft > 30) wrap.classList.add('scrolled');
+    }, { passive: true });
+})();
+(function() {
+    const items   = document.querySelectorAll('#4bStrip .photo-item');
+    const lb      = document.getElementById('4bLightbox');
+    const lbImg   = document.getElementById('4bLbImg');
+    const lbCap   = document.getElementById('4bLbCap');
+    const lbCount = document.getElementById('4bLbCounter');
+    const strip   = document.getElementById('4bStrip');
+
+    const photos = Array.from(items).map(item => ({
+        src:     item.querySelector('img').src,
+        alt:     item.querySelector('img').alt,
+        caption: item.querySelector('.photo-caption').textContent.trim()
+    }));
+
+    let current = 0;
+
+    function open(index) {
+        current = index;
+        show();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = `${current + 1} / ${photos.length}`;
+        const wrap = lbImg.closest('.lb-img-wrap');
+        wrap.classList.remove('vertical');
+        if (lbImg.complete && lbImg.naturalWidth && lbImg.naturalHeight) {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+        }
+        lbImg.onload = () => {
+            if (lbImg.naturalHeight > lbImg.naturalWidth) wrap.classList.add('vertical');
+            else wrap.classList.remove('vertical');
+        };
+    }
+    function nav(dir) {
+        current = (current + dir + photos.length) % photos.length;
+        show();
+    }
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            if (!strip.classList.contains('dragging'))
+                open(parseInt(item.dataset.index));
+        });
+    });
+
+    document.getElementById('4bLbClose').addEventListener('click', close);
+    document.getElementById('4bLbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('4bLbNext').addEventListener('click', () => nav(1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   nav(-1);
+        if (e.key === 'ArrowRight')  nav(1);
+    });
+})();
+</script>
+</body>
+</html>

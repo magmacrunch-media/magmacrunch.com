@@ -1,0 +1,202 @@
+/* ══════════════════════════════════════════════════════════
+   start-screen.css — Solitaire Deluxe | MagmaCrunch Media
+   Miami Vice BBS / Windows shareware circa 1989–1995
+   ══════════════════════════════════════════════════════════ */
+
+.start-screen {
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 24px;
+    /* Dark starfield-ish chrome panel */
+    background:
+        radial-gradient(ellipse at 50% 0%, #1a0030 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 100%, #001830 0%, transparent 60%),
+        var(--chrome-bg);
+}
+
+.start-content {
+    text-align: center;
+    max-width: 560px;
+    width: 100%;
+}
+
+/* ── Pixel banner ────────────────────────────────────────── */
+.pixel-banner {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--cyan-dim);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* ── Game title ──────────────────────────────────────────── */
+.game-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(22px, 4vw, 38px);
+    font-weight: 900;
+    color: #ffffff;
+    text-shadow:
+        0 0 8px  var(--pink),
+        0 0 20px var(--pink-glow),
+        2px 2px 0 var(--purple-dim),
+        3px 3px 0 #000;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    letter-spacing: 3px;
+    animation: flicker-pink 7s ease-in-out infinite;
+}
+
+.title-suit {
+    display: inline-block;
+    font-size: clamp(26px, 5vw, 48px);
+    vertical-align: middle;
+    line-height: 1;
+}
+/* Pink suits */
+.title-suit.suit-pink {
+    color: var(--pink);
+    text-shadow:
+        0 0 6px var(--pink),
+        0 0 20px var(--pink-glow),
+        2px 2px 0 #000;
+}
+/* Cyan suits */
+.title-suit.suit-cyan {
+    color: var(--cyan);
+    text-shadow:
+        0 0 6px var(--cyan),
+        0 0 20px var(--cyan-glow),
+        2px 2px 0 #000;
+}
+
+/* ── Neon divider ────────────────────────────────────────── */
+.neon-divider {
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--pink)  15%,
+        var(--gold)  45%,
+        var(--cyan)  75%,
+        transparent 100%
+    );
+    margin: 18px auto;
+    max-width: 460px;
+    box-shadow: 0 0 6px var(--pink-glow), 0 0 6px var(--cyan-glow);
+}
+
+/* ── Subtitle / version ──────────────────────────────────── */
+.game-subtitle {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--gold);
+    font-size: clamp(9px, 1.4vw, 11px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    text-shadow: 0 0 6px var(--gold-dim);
+}
+.game-version {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--chrome-dark);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin-bottom: 0;
+}
+
+/* ── Button panel — single start prompt ─────────────────── */
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 22px auto;
+    max-width: 380px;
+    background: var(--chrome-bg);
+    border: 2px solid;
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    padding: 16px;
+    box-shadow: inset 1px 1px 0 var(--chrome-light);
+    position: relative;
+}
+
+/* Pink-cyan-gold stripe across the top */
+.start-buttons::before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan));
+    position: absolute;
+    top: -3px; left: -3px; right: -3px;
+}
+
+.start-btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 14px 16px;
+    width: 100%;
+    min-height: 48px;
+    text-align: center;
+    background: var(--chrome-bg);
+    color: var(--suit-black);
+    border: 2px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+    box-shadow: inset 1px 1px 0 var(--chrome-light), inset -1px -1px 0 var(--chrome-dark);
+    cursor: pointer;
+    transition: none;
+    text-transform: uppercase;
+}
+.start-btn:hover {
+    background: #d8d8ff;
+    color: var(--purple-dim);
+}
+.start-btn:active {
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    box-shadow: inset 1px 1px 0 var(--chrome-dark), inset -1px -1px 0 var(--chrome-light);
+}
+
+/* PRIMARY — pink neon */
+.start-btn.primary {
+    background: #1a0028;
+    color: var(--pink);
+    border-color: var(--pink-dim);
+    box-shadow:
+        0 0 8px var(--pink-glow),
+        inset 0 0 8px rgba(255,45,120,0.08);
+    text-shadow: 0 0 8px var(--pink);
+}
+.start-btn.primary:hover {
+    background: #2a0040;
+    color: #fff;
+    box-shadow: 0 0 18px var(--pink-glow), inset 0 0 12px rgba(255,45,120,0.15);
+    border-color: var(--pink);
+    text-shadow: 0 0 12px var(--pink);
+}
+.start-btn.primary:active {
+    box-shadow: 0 0 6px var(--pink-glow), inset 0 0 6px rgba(255,45,120,0.2);
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.start-footer {
+    margin-top: 8px;
+    border-top: 2px solid;
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    padding-top: 16px;
+}
+.start-footer p {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--chrome-dark);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    line-height: 2.8;
+}
+.footer-blink {
+    color: var(--cyan-dim) !important;
+    font-size: 7px !important;
+    text-shadow: 0 0 6px var(--cyan-glow) !important;
+}

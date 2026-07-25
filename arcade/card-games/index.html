@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>card games — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* ══ PAGE: card games ══ */
+        :root {
+            --nav-accent: #39ff6e;
+            --nav-brand: #39ff6e;
+            --nav-glow: rgba(57,255,110,0.4);
+            --nav-brand-glow: rgba(57,255,110,0.7);
+        }
+        body {
+            background: #0a0612;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #8a7fa8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #39ff6e; }
+        .breadcrumb .sep { margin: 0 8px; color: #39ff6e; opacity: 0.7; }
+        .breadcrumb .current { color: #39ff6e; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title-ascii-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .page-title-ascii {
+            display: inline-block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 7px;
+            line-height: 1.25;
+            color: #39ff6e;
+            text-shadow: 0 0 8px rgba(57,255,110,0.5);
+            white-space: pre;
+            text-align: left;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1200px) { .page-title-ascii { font-size: 5.5px; } }
+        @media (max-width: 900px)  { .page-title-ascii { font-size: 4px; } }
+        @media (max-width: 600px)  { .page-title-ascii { font-size: 3px; } }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #39ff6e;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 8px rgba(57,255,110,0.5);
+        }
+
+        .section-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: #39ff6e;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border: 2px solid #39ff6e;
+            background: #150b29;
+            text-align: center;
+            text-shadow: 0 0 12px rgba(57,255,110,0.6);
+            width: 100%;
+            max-width: 1100px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        @media (min-width: 1100px) {
+            .game-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .game-card {
+            display: block;
+            text-decoration: none;
+            border: 2px solid #3a2d5c;
+            background: #150b29;
+            padding: 0;
+            position: relative;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            border-color: var(--card-color, #39ff6e);
+            box-shadow: 0 0 24px var(--card-color, #39ff6e),
+                        inset 0 0 40px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+        }
+
+        .game-card:hover .card-arrow { opacity: 1; }
+
+        .card-inner { padding: 20px 20px 18px; }
+
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 11px);
+            color: #f0f8ff;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            letter-spacing: 0.05em;
+        }
+
+        .card-canvas-wrap {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: transparent;
+        }
+
+        .card-canvas-wrap canvas {
+            image-rendering: pixelated;
+            width: 76px;
+            height: 76px;
+        }
+
+        .card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a7fa8;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-play {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--card-color, #39ff6e);
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-arrow {
+            opacity: 0;
+            transition: opacity 0.15s;
+            animation: blink 0.6s step-end infinite;
+        }
+
+        .card-tags {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            letter-spacing: 0.08em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .card-tag {
+            padding: 2px 5px;
+            border: 1px solid currentColor;
+            opacity: 0.7;
+        }
+
+        footer { border-top-color: #3a2d5c; }
+        footer span { color: #39ff6e; }
+
+        @media (max-width: 640px) {
+            .game-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../">home</a>
+        <span class="sep">›</span>
+        <a href="../">arcade</a>
+        <span class="sep">›</span>
+        <span class="current">card games</span>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title-ascii-wrap"><pre class="page-title-ascii">
+ #####                           #####                             
+#     #   ##   #####  #####     #     #   ##   #    # ######  #### 
+#        #  #  #    # #    #    #        #  #  ##  ## #      #     
+#       #    # #    # #    #    #  #### #    # # ## # #####   #### 
+#       ###### #####  #    #    #     # ###### #    # #           #
+#     # #    # #   #  #    #    #     # #    # #    # #      #    #
+ #####  #    # #    # #####      #####  #    # #    # ######  #### 
+</pre></div>
+        <div class="page-subtitle">// deal 'em up //</div>
+    </div>
+
+    <!-- Card Games -->
+    <div class="game-grid">
+
+        <a href="../solitaire/" class="game-card" style="--card-color: #00f0ff">
+            <div class="card-inner">
+                <div class="card-title">KLONDIKE<br>SOLITAIRE</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cSolitaire" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">classic card game. draw 3. timed scoring. top 10 leaderboard.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../cribbage/" class="game-card" style="--card-color: #ffd700">
+            <div class="card-inner">
+                <div class="card-title">CRIBBAGE</div>
+                <div class="card-canvas-wrap">
+                    <div style="font-size: 48px; line-height: 1;">&#127185;</div>
+                </div>
+                <div class="card-desc">the classic card game. first to 121 points wins. pegging, hands, and the crib.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../scandinavian-stud/" class="game-card" style="--card-color: #39ff84">
+            <div class="card-inner">
+                <div class="card-title">SÖKÖ</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cSoko" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">scandinavian stud. five card poker with a finnish twist. four-card straights &amp; flushes.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../solitaire_THLD/" class="game-card" style="--card-color: #ff6f1a">
+            <div class="card-inner">
+                <div class="card-title">TEXAS HOLD'EM<br>LAVA DOME</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cTHLD" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">poker solitaire. build hands. score big. don't get burned.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../tarot/" class="game-card" style="--card-color: #ffd700">
+            <div class="card-inner">
+                <div class="card-title">FRENCH<br>TAROT</div>
+                <div class="card-canvas-wrap">
+                    <div style="font-size: 48px; line-height: 1;">🃏</div>
+                </div>
+                <div class="card-desc">78-card tarot deck. trick-taking. bidding. the classic french card game.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+<script>
+// ── Klondike Solitaire preview ──
+(function() {
+    const canvas = document.getElementById('cSolitaire');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#003838';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.fillStyle = '#ff2d78';
+    ctx.fillRect(0, 0, 72, 3);
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(0, 3, 24, 2);
+    ctx.fillStyle = '#00e5ff';
+    ctx.fillRect(48, 3, 24, 2);
+    const cardY = 20, cardH = 24, cardW = 18;
+    ctx.fillStyle = '#1a4a4a';
+    ctx.fillRect(6, cardY, cardW, cardH);
+    ctx.fillStyle = '#2a6a6a';
+    for (let py = 0; py < cardH; py += 4) {
+        for (let px = 0; px < cardW; px += 4) {
+            ctx.fillRect(6 + px, cardY + py, 2, 2);
+        }
+    }
+    ctx.strokeStyle = '#00e5ff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(6, cardY, cardW, cardH);
+    ctx.fillStyle = '#f8f9fa';
+    ctx.fillRect(27, cardY, cardW, cardH);
+    ctx.strokeStyle = '#ffd700';
+    ctx.strokeRect(27, cardY, cardW, cardH);
+    ctx.fillStyle = '#ff2d78';
+    ctx.font = 'bold 8px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('A', 36, cardY + 10);
+    ctx.fillText('\u2665', 36, cardY + 20);
+    ctx.fillStyle = '#1a4a4a';
+    ctx.fillRect(48, cardY, cardW, cardH);
+    ctx.fillStyle = '#2a6a6a';
+    for (let py = 0; py < cardH; py += 4) {
+        for (let px = 0; px < cardW; px += 4) {
+            ctx.fillRect(48 + px, cardY + py, 2, 2);
+        }
+    }
+    ctx.strokeStyle = '#00e5ff';
+    ctx.strokeRect(48, cardY, cardW, cardH);
+    ctx.fillStyle = '#ff2d78';
+    ctx.font = '10px serif';
+    ctx.fillText('\u2665', 16, 58);
+    ctx.fillText('\u2666', 36, 58);
+    ctx.fillStyle = '#111';
+    ctx.fillText('\u2660', 56, 58);
+})();
+
+// ── Scandinavian Stud preview ──
+(function() {
+    const c = document.getElementById('cSoko');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a1628';
+    ctx.fillRect(0, 0, 72, 72);
+    const grad = ctx.createRadialGradient(36, 36, 0, 36, 36, 40);
+    grad.addColorStop(0, '#1a2a44');
+    grad.addColorStop(1, '#0a1628');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 72, 72);
+    const cardW = 14, cardH = 20, startY = 12;
+    const cards = [
+        { x: 10, suit: 'spades',   rank: 'K', faceUp: false },
+        { x: 22, suit: 'hearts',   rank: 'A', faceUp: true },
+        { x: 32, suit: 'diamonds', rank: 'Q', faceUp: true },
+        { x: 42, suit: 'clubs',    rank: 'J', faceUp: true },
+        { x: 52, suit: 'spades',   rank: '10', faceUp: true }
+    ];
+    cards.forEach(card => {
+        if (!card.faceUp) {
+            ctx.fillStyle = '#162040';
+            ctx.fillRect(card.x, startY, cardW, cardH);
+            ctx.strokeStyle = '#00f5ff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(card.x, startY, cardW, cardH);
+            ctx.fillStyle = '#1e3050';
+            for (let py = 2; py < cardH - 2; py += 3) {
+                for (let px = 2; px < cardW - 2; px += 3) {
+                    ctx.fillRect(card.x + px, startY + py, 1, 1);
+                }
+            }
+        } else {
+            ctx.fillStyle = '#f0ead8';
+            ctx.fillRect(card.x, startY, cardW, cardH);
+            ctx.strokeStyle = '#00f5ff';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(card.x, startY, cardW, cardH);
+            ctx.fillStyle = card.suit === 'hearts' || card.suit === 'diamonds' ? '#ff3d6e' : '#0a1628';
+            ctx.font = '5px "Press Start 2P", monospace';
+            ctx.textAlign = 'left';
+            ctx.fillText(card.rank, card.x + 2, startY + 7);
+            const symbols = { hearts: '\u2665', diamonds: '\u2666', clubs: '\u2663', spades: '\u2660' };
+            ctx.font = '8px serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(symbols[card.suit], card.x + cardW / 2, startY + 16);
+        }
+    });
+    ctx.fillStyle = '#00f5ff';
+    ctx.font = '8px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('\u2660\u2665\u2666\u2663', 36, 62);
+    ctx.fillStyle = '#39ff6e';
+    ctx.fillRect(10, 68, 52, 2);
+})();
+
+// ── Texas Hold'em Lava Dome preview ──
+(function() {
+    const c = document.getElementById('cTHLD');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#1c0000';
+    ctx.fillRect(0, 0, 72, 72);
+    const lava = ctx.createLinearGradient(0, 50, 0, 72);
+    lava.addColorStop(0, '#6b0000');
+    lava.addColorStop(0.5, '#9b0000');
+    lava.addColorStop(1, '#ff5500');
+    ctx.fillStyle = lava;
+    ctx.fillRect(0, 50, 72, 22);
+    ctx.fillStyle = '#ff7700';
+    ctx.beginPath(); ctx.arc(12, 62, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(36, 66, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(60, 60, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#cc2200';
+    ctx.beginPath(); ctx.arc(52, 18, 12, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffcc00';
+    ctx.beginPath(); ctx.arc(52, 18, 8, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#cc2200';
+    ctx.beginPath(); ctx.arc(52, 18, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#ff5500';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(52, 18, 12, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = '#fff8f0';
+    ctx.fillRect(14, 10, 18, 26);
+    ctx.strokeStyle = '#1c0000';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(14, 10, 18, 26);
+    ctx.fillStyle = '#1c0000';
+    ctx.font = 'bold 7px Courier New, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('A', 20, 20);
+    ctx.fillText('\u2660', 25, 32);
+})();
+
+// ── Keyboard nav ──
+(function() {
+    const cards = Array.from(document.querySelectorAll('.game-card'));
+    let selected = -1;
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            selected = (selected + 1) % cards.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            selected = (selected - 1 + cards.length) % cards.length;
+        } else if (e.key === 'Enter' && selected >= 0) {
+            window.location.href = cards[selected].href;
+            return;
+        } else { return; }
+        cards.forEach((c, i) => {
+            c.style.transform = i === selected ? 'translateY(-3px)' : '';
+            c.style.boxShadow = i === selected ? '0 0 28px var(--card-color, #39ff6e)' : '';
+        });
+    });
+})();
+</script>
+
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+
+</body>
+</html>

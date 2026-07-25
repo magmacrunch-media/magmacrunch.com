@@ -1,0 +1,162 @@
+/* ══════════════════════════════════════════════════════════
+   game-layout.css — Solitaire Deluxe | MagmaCrunch Media © 2026
+   Win3.1 chrome header · neon accents · green felt table
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Header ───────────────────────────────────────────────── */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: var(--chrome-bg);
+    border-bottom: 2px solid;
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    box-shadow: inset 0 1px 0 var(--chrome-light);
+}
+
+h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--suit-black);
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    line-height: 1;
+    text-shadow: none;
+}
+/* Neon gradient underline replacing AOL yellow */
+h1::after {
+    content: '';
+    display: block;
+    height: 2px;
+    background: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan));
+    margin-top: 4px;
+    box-shadow: 0 0 4px var(--pink-glow);
+}
+.suit-pink { color: var(--pink); }
+
+/* ── Stats — sunken LCD boxes ─────────────────────────────── */
+.stats { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.score-container {
+    background: #0a0a1a;
+    border: 2px solid;
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    padding: 4px 12px;
+    text-align: center;
+    min-width: 72px;
+    box-shadow: inset 1px 1px 0 var(--chrome-dark);
+}
+.score-label {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--cyan-dim);
+    font-size: 7px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+.score {
+    font-family: 'VT323', monospace;
+    color: var(--pink);
+    font-size: 28px;
+    font-weight: normal;
+    line-height: 1;
+    text-shadow: 0 0 6px var(--pink-glow);
+}
+
+/* ── Neon stripe between header and game table ───────────── */
+.game-area {
+    border-top: 3px solid transparent;
+    border-image: linear-gradient(90deg, var(--pink), var(--gold), var(--cyan)) 1;
+}
+
+/* ── Game area — green felt ───────────────────────────────── */
+.game-area {
+    padding: 14px 12px;
+    background:
+        repeating-linear-gradient(
+            45deg,
+            transparent, transparent 4px,
+            rgba(0,0,0,0.025) 4px, rgba(0,0,0,0.025) 5px
+        ),
+        linear-gradient(160deg,
+            var(--felt-hi)    0%,
+            var(--felt-green) 35%,
+            var(--felt-mid)   100%
+        );
+    border: 2px solid;
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    min-height: 500px;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.15);
+}
+
+/* ── Top row ──────────────────────────────────────────────── */
+.top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+}
+.stock-waste      { display: flex; gap: 10px; }
+.foundation-piles { display: flex; gap: 10px; }
+
+/* ── Card spots ───────────────────────────────────────────── */
+.card-spot {
+    width: 100px;
+    height: 140px;
+    border: 1px dashed rgba(255,255,255,0.22);
+    border-radius: 4px;
+    background: rgba(0,0,0,0.22);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3);
+}
+.card-spot > .card {
+    flex-shrink: 0;
+    width: 100px;
+    height: 140px;
+    position: absolute;
+    top: 0; left: 0;
+}
+
+/* Foundation ghost suits */
+.card-spot.foundation::before {
+    font-size: 38px;
+    color: rgba(255,255,255,0.12);
+    line-height: 1;
+}
+#foundation-0::before { content: attr(data-suit); }
+#foundation-1::before { content: attr(data-suit); color: rgba(255,100,100,0.15); }
+#foundation-2::before { content: attr(data-suit); color: rgba(255,100,100,0.15); }
+#foundation-3::before { content: attr(data-suit); }
+
+/* ── Tableau ──────────────────────────────────────────────── */
+.tableau {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.tableau-column {
+    width: 100px;
+    min-height: 140px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.tableau-column::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100px; height: 140px;
+    border: 1px dashed rgba(255,255,255,0.12);
+    border-radius: 4px;
+    background: rgba(0,0,0,0.12);
+    z-index: 0;
+}
+.tableau-column:not(:empty)::before { display: none; }

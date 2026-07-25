@@ -1,0 +1,75 @@
+/* College Green Apt. shared color palette — walnut / linen / dusty violet theme */
+:root {
+    --cg-deep:     #382e28;
+    --cg-dark:     #504438;
+    --cg-surface:  #a09080;
+    --cg-muted:    #a09080;
+    --cg-light:    #c8bea8;
+    --cg-cream:    #e8e0cc;
+    --cg-white:    #f8f4e8;
+    --cg-green:    #607850;
+    --cg-cta:      #c07838;
+    --cg-heading:  #8878a8;
+    --cg-nature:   #607850;
+    --cg-warm:     #c07838;
+    --cg-cool:     #8878a8;
+    --cg-sage:     #b8a0c8;
+    --cg-deep2:    #4a6838;
+    --cg-gold:     #e8a858;
+    --cg-lavender: #b8a0c8;
+    --cg-taupe:    #6a5840;
+    --cg-bluegrey: #384858;
+    --cg-bg:       #0e0c0a;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.cg-page { background: var(--cg-bg); --credit-color: var(--cg-muted); --nav-accent: var(--cg-cta); --nav-glow: rgba(192,120,56,0.4); --nav-brand: #d8a068; --nav-brand-glow: rgba(216,160,104,0.7); }
+body.cg-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.cg-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.cg-page .sub-nav .nav-card::after { display: none; }
+body.cg-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-about: dusty lavender (formerly c-sage) */
+body.cg-page .sub-nav .nav-card.c-about { background: var(--cg-lavender); color: var(--cg-deep); border-color: var(--cg-lavender); }
+body.cg-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-lavender); }
+
+/* c-recordings: nature green (formerly c-cyan) */
+body.cg-page .sub-nav .nav-card.c-recordings { background: var(--cg-nature); color: var(--cg-deep); border-color: var(--cg-nature); }
+body.cg-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-nature); }
+
+/* c-works: warm cta (formerly c-yellow) */
+body.cg-page .sub-nav .nav-card.c-works { background: var(--cg-cta); color: var(--cg-deep); border-color: var(--cg-cta); }
+body.cg-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-cta); }
+
+/* c-green: blue-grey */
+body.cg-page .sub-nav .nav-card.c-green { background: var(--cg-bluegrey); color: var(--cg-deep); border-color: var(--cg-bluegrey); }
+body.cg-page .sub-nav .nav-card.c-green:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-bluegrey); }
+
+/* c-rose: cool purple */
+body.cg-page .sub-nav .nav-card.c-rose { background: var(--cg-cool); color: var(--cg-deep); border-color: var(--cg-cool); }
+body.cg-page .sub-nav .nav-card.c-rose:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-cool); }
+
+/* c-personnel: surface taupe (formerly c-blue) */
+body.cg-page .sub-nav .nav-card.c-personnel { background: var(--cg-surface); color: var(--cg-deep); border-color: var(--cg-surface); }
+body.cg-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-surface); }
+
+/* c-lavender: dusty lavender */
+body.cg-page .sub-nav .nav-card.c-lavender { background: var(--cg-lavender); color: var(--cg-deep); border-color: var(--cg-lavender); }
+body.cg-page .sub-nav .nav-card.c-lavender:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-lavender); }
+
+/* About button self-link hider */
+body.cg-page .sub-nav a[href="about.html"] {
+    background: var(--cg-lavender);
+    color: var(--cg-deep);
+    border-color: var(--cg-lavender);
+}
+
+body.cg-page footer { color: var(--cg-muted); }
+body.cg-page footer span { color: var(--cg-cta); }

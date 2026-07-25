@@ -1,0 +1,118 @@
+/* Juanito Thompson — games page (green accent) */
+body.jt-page.jt-games-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.jt-page.jt-games-page main > * { background: var(--jt-bg); }
+
+body.jt-page.jt-games-page .breadcrumb a { color: var(--jt-green); }
+body.jt-page.jt-games-page .breadcrumb a:hover { color: var(--jt-teal-bright); }
+body.jt-page.jt-games-page .breadcrumb .sep { color: var(--jt-green); opacity: 0.5; }
+body.jt-page.jt-games-page .breadcrumb .current { color: var(--jt-green); }
+
+body.jt-page.jt-games-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jt-page.jt-games-page .artist-label,
+body.jt-page.jt-games-page .page-header .artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jt-green) !important;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+body.jt-page.jt-games-page .page-title,
+body.jt-page.jt-games-page .page-header .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--jt-green) !important;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(57,255,132,0.4) !important;
+}
+
+body.jt-page.jt-games-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.jt-page.jt-games-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--jt-green), var(--jt-teal), var(--jt-green), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+body.jt-page.jt-games-page .place-body { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; color: var(--jt-body); font-size: 16px; line-height: 1.7; }
+body.jt-page.jt-games-page .place-body p { margin-bottom: 1.5em; }
+
+/* Back button: transparent + page accent */
+body.jt-page.jt-games-page .nav-card.c-back { background: transparent !important; color: var(--jt-green) !important; border-color: var(--jt-green) !important; }
+body.jt-page.jt-games-page .nav-card.c-back:hover { background: rgba(57,255,132,0.15) !important; color: var(--jt-offwhite) !important; }
+
+body.jt-page.jt-games-page .nav-card::after { display: none; }
+
+/* Games grid */
+.games-grid { width: 100%; max-width: 960px; padding: 0 20px; }
+
+.game-card-link { text-decoration: none; display: block; }
+.game-card-link:hover .game-card { border-color: var(--jt-green); box-shadow: 0 0 24px rgba(57,255,132,0.15); }
+.game-card-link:hover .game-card-badge { background: var(--jt-green); color: var(--jt-bg); }
+
+.game-card {
+    border: 1px solid var(--jt-borders);
+    background: var(--jt-surface);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.game-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--jt-borders);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.game-card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jt-green);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 14px rgba(57,255,132,0.35);
+}
+
+.game-card-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--jt-green);
+    border: 1px solid var(--jt-green);
+    padding: 5px 12px;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+
+.game-card-body { padding: 20px 24px; }
+
+.game-card-desc {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--jt-body);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    opacity: 0.85;
+}
+
+.game-card-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.game-card-tag {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: var(--jt-bg);
+    background: var(--jt-teal);
+    padding: 3px 8px;
+    letter-spacing: 0.08em;
+}
+
+.game-card-note {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--jt-mid);
+    opacity: 0.7;
+}
+
+@media (max-width: 500px) {
+    .game-card-header { flex-direction: column; gap: 12px; }
+}

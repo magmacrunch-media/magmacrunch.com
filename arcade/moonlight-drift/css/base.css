@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#backgroundGradient {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    max-width: 177.78vh; /* Match game container aspect ratio */
+    max-height: 56.25vw;
+    background: linear-gradient(to bottom, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    z-index: -2;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #000000; /* Black letterbox bars */
+    font-family: 'Montserrat', sans-serif;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}

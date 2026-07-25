@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JUKEBOX//MANAGER</title>
+    <link rel="icon" type="image/png" href="jukebox-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap');
+
+        :root {
+            --black: #080808;
+            --deep: #111118;
+            --rose: #ff3d6e;
+            --yellow: #ffe03a;
+            --cyan: #00f5ff;
+            --green: #39ff6e;
+            --orange: #ff7c1f;
+            --purple: #c45fff;
+            --white: #f0ead8;
+            --dim: #8a7a8a;
+            --slate: #8899aa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Courier Prime', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: repeating-linear-gradient(
+                0deg, transparent, transparent 2px,
+                rgba(0,0,0,0.18) 2px, rgba(0,0,0,0.18) 4px
+            );
+        }
+
+        /* ── Header ──────────────────────────────────────────────────────── */
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 2px solid var(--purple);
+            box-shadow: 0 0 20px rgba(196,95,255,0.4);
+            background: var(--black);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 16px; }
+
+        h1.glitch {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--purple);
+            text-shadow: 0 0 10px rgba(196,95,255,0.7);
+            position: relative;
+        }
+
+        h1.glitch::before,
+        h1.glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.8;
+        }
+
+        h1.glitch::before {
+            animation: glitch-1 2s infinite linear alternate-reverse;
+            clip-path: inset(0 0 65% 0);
+            color: var(--cyan);
+        }
+
+        h1.glitch::after {
+            animation: glitch-2 2s infinite linear alternate-reverse;
+            clip-path: inset(65% 0 0 0);
+            color: var(--yellow);
+        }
+
+        @keyframes glitch-1 {
+            0%, 95% { transform: translate(0); }
+            96% { transform: translate(-2px, 1px); }
+            97% { transform: translate(2px, -1px); }
+            98% { transform: translate(-1px, 2px); }
+            99% { transform: translate(1px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-2 {
+            0%, 95% { transform: translate(0); }
+            96% { transform: translate(2px, -1px); }
+            97% { transform: translate(-2px, 1px); }
+            98% { transform: translate(1px, -2px); }
+            99% { transform: translate(-1px, 2px); }
+            100% { transform: translate(0); }
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .track-count {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--slate);
+            background: var(--deep);
+            padding: 6px 10px;
+            border: 1px solid #2a2a3a;
+        }
+
+        /* ── Main Content ────────────────────────────────────────────────── */
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 24px;
+            overflow: hidden;
+        }
+
+        /* ── Toolbar ─────────────────────────────────────────────────────── */
+
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toolbar-divider {
+            width: 2px;
+            height: 24px;
+            background: #2a2a3a;
+            margin: 0 8px;
+        }
+
+        /* ── Buttons ─────────────────────────────────────────────────────── */
+
+        .btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            padding: 10px 16px;
+            border: 2px solid;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-transform: uppercase;
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .btn-cyan {
+            color: var(--cyan);
+            border-color: var(--cyan);
+        }
+        .btn-cyan:hover {
+            background: var(--cyan);
+            color: var(--black);
+            box-shadow: 0 0 15px rgba(0,245,255,0.4);
+        }
+
+        .btn-rose {
+            color: var(--rose);
+            border-color: var(--rose);
+        }
+        .btn-rose:hover {
+            background: var(--rose);
+            color: var(--black);
+            box-shadow: 0 0 15px rgba(255,61,110,0.4);
+        }
+
+        .btn-green {
+            color: var(--green);
+            border-color: var(--green);
+        }
+        .btn-green:hover {
+            background: var(--green);
+            color: var(--black);
+            box-shadow: 0 0 15px rgba(57,255,110,0.4);
+        }
+
+        .btn-yellow {
+            color: var(--yellow);
+            border-color: var(--yellow);
+        }
+        .btn-yellow:hover {
+            background: var(--yellow);
+            color: var(--black);
+            box-shadow: 0 0 15px rgba(255,224,58,0.4);
+        }
+
+        .btn-purple {
+            color: var(--purple);
+            border-color: var(--purple);
+        }
+        .btn-purple:hover {
+            background: var(--purple);
+            color: var(--black);
+            box-shadow: 0 0 15px rgba(196,95,255,0.4);
+        }
+
+        .btn-orange {
+            color: var(--orange);
+            border-color: var(--orange);
+        }
+        .btn-orange:hover {
+            background: var(--orange);
+            color: var(--black);
+            box-shadow: 0 0 15px rgba(255,124,31,0.4);
+        }
+
+        .btn-sm {
+            font-size: 8px;
+            padding: 8px 12px;
+        }
+
+        /* ── Song List ───────────────────────────────────────────────────── */
+
+        .song-list-header {
+            display: grid;
+            grid-template-columns: 40px 40px 1fr 1fr 80px 80px 50px;
+            gap: 12px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #2a2a3a;
+        }
+
+        .song-list-header span {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+
+        .song-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .song-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .song-list::-webkit-scrollbar-track {
+            background: var(--deep);
+        }
+
+        .song-list::-webkit-scrollbar-thumb {
+            background: #2a2a3a;
+            border: 1px solid #3a3a4a;
+        }
+
+        .song-card {
+            display: grid;
+            grid-template-columns: 40px 40px 1fr 1fr 80px 80px 50px;
+            gap: 12px;
+            align-items: center;
+            background: var(--deep);
+            border: 2px solid #2a2a3a;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s, opacity 0.3s;
+            cursor: default;
+        }
+
+        .song-card:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 0 12px rgba(0,245,255,0.15);
+        }
+
+        .song-card.hidden {
+            opacity: 0.4;
+            border-color: #2a2a3a;
+        }
+
+        .song-card.hidden:hover {
+            border-color: var(--yellow);
+            box-shadow: 0 0 12px rgba(255,224,58,0.15);
+        }
+
+        .song-card.dragging {
+            opacity: 0.5;
+            border-color: var(--purple);
+            box-shadow: 0 0 20px rgba(196,95,255,0.3);
+        }
+
+        .song-card.drag-over {
+            border-color: var(--green);
+            box-shadow: 0 0 15px rgba(57,255,110,0.3);
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: var(--dim);
+            font-size: 14px;
+            text-align: center;
+            user-select: none;
+            transition: color 0.2s;
+        }
+
+        .drag-handle:hover {
+            color: var(--cyan);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .song-number {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--dim);
+            text-align: center;
+        }
+
+        .song-field {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 6px 8px;
+            transition: border-color 0.2s, background 0.2s;
+            width: 100%;
+        }
+
+        .song-field:hover {
+            border-color: #2a2a3a;
+        }
+
+        .song-field:focus {
+            outline: none;
+            border-color: var(--cyan);
+            background: rgba(0,245,255,0.05);
+        }
+
+        .song-field.artist {
+            color: var(--slate);
+        }
+
+        .song-field.duration {
+            color: var(--yellow);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            text-align: center;
+        }
+
+        .song-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--dim);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 6px;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--white);
+            border-color: #2a2a3a;
+        }
+
+        .icon-btn.visibility:hover {
+            color: var(--yellow);
+            border-color: var(--yellow);
+        }
+
+        .icon-btn.visibility.visible {
+            color: var(--green);
+        }
+
+        .icon-btn.delete:hover {
+            color: var(--rose);
+            border-color: var(--rose);
+        }
+
+        .add-song-btn {
+            width: 100%;
+            margin-top: 8px;
+            padding: 12px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--dim);
+            background: transparent;
+            border: 2px dashed #2a2a3a;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .add-song-btn:hover {
+            color: var(--green);
+            border-color: var(--green);
+            box-shadow: 0 0 12px rgba(57,255,110,0.15);
+        }
+
+        /* ── Export Panel ─────────────────────────────────────────────────── */
+
+        .export-panel {
+            margin-top: 20px;
+            border-top: 2px solid #2a2a3a;
+            padding-top: 16px;
+        }
+
+        .export-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--yellow);
+            margin-bottom: 12px;
+            text-shadow: 0 0 8px rgba(255,224,58,0.5);
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* ── Toast ────────────────────────────────────────────────────────── */
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            padding: 12px 20px;
+            background: var(--deep);
+            border: 2px solid var(--green);
+            color: var(--green);
+            box-shadow: 0 0 20px rgba(57,255,110,0.3);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease, fadeOut 0.3s ease 2s forwards;
+        }
+
+        .toast.error {
+            border-color: var(--rose);
+            color: var(--rose);
+            box-shadow: 0 0 20px rgba(255,61,110,0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* ── Modal ───────────────────────────────────────────────────────── */
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(8,8,8,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.hidden { display: none; }
+
+        .modal {
+            background: var(--black);
+            border: 2px solid var(--rose);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 0 40px rgba(255,61,110,0.4);
+        }
+
+        .modal h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: var(--rose);
+            margin-bottom: 16px;
+        }
+
+        .modal p {
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* ── Footer ──────────────────────────────────────────────────────── */
+
+        footer {
+            padding: 12px 24px;
+            border-top: 2px solid #2a2a3a;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            text-align: center;
+        }
+
+        footer span { color: var(--purple); }
+
+        /* ── Responsive ──────────────────────────────────────────────────── */
+
+        @media (max-width: 700px) {
+            .song-list-header,
+            .song-card {
+                grid-template-columns: 30px 30px 1fr 60px 40px;
+            }
+            .song-list-header span:nth-child(2),
+            .song-list-header span:nth-child(4),
+            .song-card .song-field.artist {
+                display: none;
+            }
+            .toolbar { flex-direction: column; }
+            .toolbar-divider { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1 class="glitch" data-text="JUKEBOX//MANAGER">JUKEBOX//MANAGER</h1>
+        </div>
+        <div class="header-right">
+            <span id="track-count" class="track-count">0 TRACKS</span>
+        </div>
+    </header>
+
+    <main>
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <button id="btn-import" class="btn btn-cyan btn-sm">IMPORT JSON</button>
+                <input type="file" id="file-input" accept=".json" style="display:none">
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-group">
+                <button id="btn-export-json" class="btn btn-green btn-sm">EXPORT JSON</button>
+                <button id="btn-copy-tracks" class="btn btn-purple btn-sm">COPY TRACKS JS</button>
+                <button id="btn-copy-jukebox" class="btn btn-orange btn-sm">COPY JUKEBOX_SONGS JS</button>
+            </div>
+            <div class="toolbar-divider"></div>
+            <div class="toolbar-group">
+                <button id="btn-reset" class="btn btn-rose btn-sm">RESET</button>
+            </div>
+        </div>
+
+        <div class="song-list-header">
+            <span>#</span>
+            <span></span>
+            <span>TITLE</span>
+            <span>ARTIST</span>
+            <span>DURATION</span>
+            <span>STATUS</span>
+            <span></span>
+        </div>
+
+        <div id="song-list" class="song-list"></div>
+
+        <button id="btn-add" class="add-song-btn">+ ADD SONG</button>
+
+        <div class="export-panel">
+            <h2 class="export-title">EXPORT</h2>
+            <div class="export-buttons">
+                <button id="btn-export-json-lg" class="btn btn-green">DOWNLOAD songs.json</button>
+                <button id="btn-copy-tracks-lg" class="btn btn-purple">COPY TRACKS JS</button>
+                <button id="btn-copy-jukebox-lg" class="btn btn-orange">COPY JUKEBOX_SONGS JS</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        JUKEBOX//MANAGER v1.0 &mdash; <span>MAGMACRUNCH MEDIA</span>
+    </footer>
+
+    <!-- Confirm modal -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h2>ARE YOU SURE?</h2>
+            <p id="confirm-message">This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn btn-rose">DO IT</button>
+                <button id="confirm-no" class="btn btn-cyan">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+
+        /* ── Default song data (embedded from songs.json) ── */
+        const DEFAULT_SONGS = [
+            { title: "Reverse Osmosis Reversed", artist: "Juanito Thompson", file: "Juanito Thompson - That Definitely Did Destroy Me - 01 Reverse Osmosis Reversed.ogg", duration: "4:51", hidden: false },
+            { title: "Heavy Water", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 08 Heavy Water.ogg", duration: "5:03", hidden: false },
+            { title: "Somewhere", artist: "C.P. Rutledge", file: "C.P. Rutledge - Somewhere.ogg", duration: "4:15", hidden: false },
+            { title: "Birds", artist: "Texas Hold'Em Lava Dome", file: "Texas Hold'Em Lava Dome - Birds - 01 Birds.ogg", duration: "4:47", hidden: false },
+            { title: "A January Gathering", artist: "Bears Crossing", file: "Bears Crossing - A January Gathering.ogg", duration: "2:34", hidden: false },
+            { title: "Neopolitan Mood", artist: "James R. McCoy", file: "James R. McCoy - Neopolitan Mood.ogg", duration: "3:16", hidden: false },
+            { title: "makemecookies! x4.", artist: "Jimmi", file: "Jimmi - JIMMI - 07 makemecookies! x4.ogg", duration: "0:51", hidden: false },
+            { title: "Millstone Woods May 2018", artist: "Dag Henderson", file: "Dag Henderson - Millstone Woods May 2018.ogg", duration: "3:38", hidden: false },
+            { title: "The End", artist: "Jon McCoy", file: "Jon McCoy - The End.ogg", duration: "3:26", hidden: false },
+            { title: "Qikiqtarjuaq", artist: "Juanito Thompson", file: "Juanito Thompson - It's Twenty-Fourteen - 01 Qikiqtarjuaq.ogg", duration: "6:20", hidden: false },
+            { title: "Everything is falling all together, all at once, even the universe", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 05 Everything is falling all together, all at once, even the universe.ogg", duration: "4:28", hidden: false }
+        ];
+
+        let songs = JSON.parse(JSON.stringify(DEFAULT_SONGS));
+
+        /* ── DOM refs ── */
+        const songList = document.getElementById('song-list');
+        const trackCount = document.getElementById('track-count');
+        const fileInput = document.getElementById('file-input');
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmMessage = document.getElementById('confirm-message');
+        const confirmYes = document.getElementById('confirm-yes');
+        const confirmNo = document.getElementById('confirm-no');
+
+        let pendingConfirm = null;
+        let dragSrcIndex = null;
+
+        /* ── Render ── */
+        function render() {
+            songList.innerHTML = '';
+            songs.forEach((song, i) => {
+                const card = document.createElement('div');
+                card.className = 'song-card' + (song.hidden ? ' hidden' : '');
+                card.draggable = true;
+                card.dataset.index = i;
+
+                card.innerHTML =
+                    '<div class="song-number">' + (i + 1) + '</div>' +
+                    '<div class="drag-handle" title="Drag to reorder">&#9776;</div>' +
+                    '<input type="text" class="song-field title" value="' + escHtml(song.title) + '" data-field="title" data-index="' + i + '">' +
+                    '<input type="text" class="song-field artist" value="' + escHtml(song.artist) + '" data-field="artist" data-index="' + i + '">' +
+                    '<input type="text" class="song-field duration" value="' + escHtml(song.duration) + '" data-field="duration" data-index="' + i + '" placeholder="M:SS">' +
+                    '<div class="song-actions">' +
+                        '<button class="icon-btn visibility' + (song.hidden ? '' : ' visible') + '" data-index="' + i + '" title="' + (song.hidden ? 'Show' : 'Hide') + '">' + (song.hidden ? '&#128065;' : '&#128064;') + '</button>' +
+                    '</div>' +
+                    '<div class="song-actions">' +
+                        '<button class="icon-btn delete" data-index="' + i + '" title="Delete">&#10006;</button>' +
+                    '</div>';
+
+                songList.appendChild(card);
+            });
+
+            trackCount.textContent = songs.length + ' TRACK' + (songs.length !== 1 ? 'S' : '');
+            attachEvents();
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        /* ── Events ── */
+        function attachEvents() {
+            /* Field edits */
+            document.querySelectorAll('.song-field').forEach(el => {
+                el.addEventListener('change', function() {
+                    const i = parseInt(this.dataset.index);
+                    const field = this.dataset.field;
+                    songs[i][field] = this.value;
+                });
+            });
+
+            /* Visibility toggle */
+            document.querySelectorAll('.icon-btn.visibility').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const i = parseInt(this.dataset.index);
+                    songs[i].hidden = !songs[i].hidden;
+                    render();
+                });
+            });
+
+            /* Delete */
+            document.querySelectorAll('.icon-btn.delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const i = parseInt(this.dataset.index);
+                    showConfirm('Delete "' + songs[i].title + '" by ' + songs[i].artist + '?', function() {
+                        songs.splice(i, 1);
+                        render();
+                    });
+                });
+            });
+
+            /* Drag and drop */
+            document.querySelectorAll('.song-card').forEach(card => {
+                card.addEventListener('dragstart', function(e) {
+                    dragSrcIndex = parseInt(this.dataset.index);
+                    this.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', dragSrcIndex);
+                });
+
+                card.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                    document.querySelectorAll('.song-card').forEach(c => c.classList.remove('drag-over'));
+                });
+
+                card.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    this.classList.add('drag-over');
+                });
+
+                card.addEventListener('dragleave', function() {
+                    this.classList.remove('drag-over');
+                });
+
+                card.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('drag-over');
+                    const targetIndex = parseInt(this.dataset.index);
+                    if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
+                        const moved = songs.splice(dragSrcIndex, 1)[0];
+                        songs.splice(targetIndex, 0, moved);
+                        render();
+                    }
+                    dragSrcIndex = null;
+                });
+            });
+        }
+
+        /* ── Confirm modal ── */
+        function showConfirm(msg, onYes) {
+            confirmMessage.textContent = msg;
+            confirmModal.classList.remove('hidden');
+            pendingConfirm = onYes;
+        }
+
+        confirmYes.addEventListener('click', function() {
+            confirmModal.classList.add('hidden');
+            if (pendingConfirm) pendingConfirm();
+            pendingConfirm = null;
+        });
+
+        confirmNo.addEventListener('click', function() {
+            confirmModal.classList.add('hidden');
+            pendingConfirm = null;
+        });
+
+        /* ── Toast ── */
+        function showToast(msg, isError) {
+            const toast = document.createElement('div');
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        /* ── Import ── */
+        document.getElementById('btn-import').addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!Array.isArray(data)) throw new Error('Not an array');
+                    /* Normalize: ensure hidden field exists */
+                    songs = data.map(s => ({
+                        title: s.title || '',
+                        artist: s.artist || '',
+                        file: s.file || '',
+                        duration: s.duration || '',
+                        hidden: s.hidden || false
+                    }));
+                    render();
+                    showToast('Imported ' + songs.length + ' songs');
+                } catch (err) {
+                    showToast('Import failed: ' + err.message, true);
+                }
+            };
+            reader.readAsText(file);
+            fileInput.value = '';
+        });
+
+        /* ── Export JSON ── */
+        function downloadJson() {
+            const json = JSON.stringify(songs, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'songs.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Downloaded songs.json');
+        }
+
+        /* ── Generate TRACKS JS for jukebox.js ── */
+        function generateTracksJs() {
+            const lines = songs.map(function(s) {
+                const path = 'music/jukebox/songs/' + s.file;
+                return '        { title: ' + JSON.stringify(s.title) +
+                       ', artist: ' + JSON.stringify(s.artist) +
+                       ', file: ' + JSON.stringify(path) +
+                       ', duration: ' + JSON.stringify(s.duration) + ' }';
+            });
+            return 'const TRACKS = [\n' + lines.join(',\n') + '\n    ];';
+        }
+
+        /* ── Generate JUKEBOX_SONGS JS for index.html ── */
+        function generateJukeboxSongsJs() {
+            const lines = songs.map(function(s) {
+                return '    { title: ' + JSON.stringify(s.title) +
+                       ', artist: ' + JSON.stringify(s.artist) +
+                       ', file: ' + JSON.stringify(s.file) +
+                       ', duration: ' + JSON.stringify(s.duration) + ' }';
+            });
+            return 'const JUKEBOX_SONGS = [\n' + lines.join(',\n') + '\n];';
+        }
+
+        /* ── Copy to clipboard ── */
+        function copyToClipboard(text, label) {
+            navigator.clipboard.writeText(text).then(function() {
+                showToast('Copied ' + label + ' to clipboard');
+            }, function() {
+                showToast('Copy failed', true);
+            });
+        }
+
+        /* ── Button bindings ── */
+        document.getElementById('btn-export-json').addEventListener('click', downloadJson);
+        document.getElementById('btn-export-json-lg').addEventListener('click', downloadJson);
+
+        document.getElementById('btn-copy-tracks').addEventListener('click', function() {
+            copyToClipboard(generateTracksJs(), 'TRACKS JS');
+        });
+        document.getElementById('btn-copy-tracks-lg').addEventListener('click', function() {
+            copyToClipboard(generateTracksJs(), 'TRACKS JS');
+        });
+
+        document.getElementById('btn-copy-jukebox').addEventListener('click', function() {
+            copyToClipboard(generateJukeboxSongsJs(), 'JUKEBOX_SONGS JS');
+        });
+        document.getElementById('btn-copy-jukebox-lg').addEventListener('click', function() {
+            copyToClipboard(generateJukeboxSongsJs(), 'JUKEBOX_SONGS JS');
+        });
+
+        document.getElementById('btn-add').addEventListener('click', function() {
+            songs.push({ title: 'New Song', artist: 'Artist', file: 'filename.ogg', duration: '0:00', hidden: false });
+            render();
+            /* Scroll to bottom */
+            songList.scrollTop = songList.scrollHeight;
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', function() {
+            showConfirm('Reset all songs to defaults? This will discard your changes.', function() {
+                songs = JSON.parse(JSON.stringify(DEFAULT_SONGS));
+                render();
+                showToast('Reset to defaults');
+            });
+        });
+
+        /* ── Init ── */
+        render();
+    })();
+    </script>
+</body>
+</html>

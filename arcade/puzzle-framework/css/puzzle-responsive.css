@@ -1,0 +1,94 @@
+/**
+ * puzzle-responsive.css — Responsive breakpoints for puzzle games
+ * Scales tiles and controls for different screen sizes
+ */
+
+/* ── Tablet (max-width: 768px) ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .game-board {
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .tile {
+        font-size: 20px;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+
+    .modal-body p {
+        font-size: 8px;
+    }
+
+    .btn {
+        font-size: 9px;
+        padding: 10px 20px;
+    }
+}
+
+/* ── Mobile (max-width: 480px) ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    .game-board {
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .tile {
+        font-size: 16px;
+    }
+
+    .modal-body p {
+        font-size: 7px;
+        line-height: 1.6;
+    }
+
+    .btn {
+        font-size: 8px;
+        padding: 8px 16px;
+    }
+
+    .dropdown-selected {
+        font-size: 9px;
+        padding: 8px 12px;
+    }
+
+    .dropdown-option {
+        font-size: 8px;
+        padding: 8px 12px;
+    }
+
+    .score-box {
+        padding: 6px 12px;
+    }
+
+    .score-value {
+        font-size: 14px;
+    }
+
+    .control-btn {
+        font-size: 7px;
+        padding: 6px 10px;
+    }
+}
+
+/* ── Small Mobile (max-width: 360px) ───────────────────────────────────────── */
+@media (max-width: 360px) {
+    .tile {
+        font-size: 14px;
+    }
+
+    .game-board {
+        gap: 3px;
+        padding: 3px;
+    }
+}

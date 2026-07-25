@@ -1,0 +1,75 @@
+/* Green Street Apt. — about (dusty violet sage accent) */
+body.gs-page.gs-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
+body.gs-page.gs-about-page main > * { background: var(--gs-bg); }
+
+body.gs-page.gs-about-page .breadcrumb { color: var(--dim); }
+body.gs-page.gs-about-page .breadcrumb a { color: var(--gs-sage); }
+body.gs-page.gs-about-page .breadcrumb a:hover { color: var(--gs-cream); }
+body.gs-page.gs-about-page .breadcrumb .sep { color: var(--gs-sage); opacity: 0.6; }
+body.gs-page.gs-about-page .breadcrumb .current { color: var(--gs-sage); }
+
+body.gs-page.gs-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.gs-page.gs-about-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--gs-sage); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.gs-page.gs-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--gs-sage); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(136, 120, 168, 0.5); }
+
+/* Current page: about (c-about active) */
+body.gs-page.gs-about-page .nav-card.c-about {
+    background: var(--gs-bg);
+    color: var(--gs-sage);
+    border-color: var(--gs-sage);
+}
+body.gs-page.gs-about-page .nav-card.c-about:hover {
+    background: transparent;
+    color: var(--gs-sage);
+}
+
+body.gs-page.gs-about-page .place-body {
+    max-width: 960px;
+    width: 100%;
+    padding: 0 20px;
+    color: var(--gs-body);
+    font-size: 15px;
+    line-height: 1.8;
+}
+body.gs-page.gs-about-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.gs-page.gs-about-page .place-body a {
+    color: var(--gs-sage);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.gs-page.gs-about-page .place-body a:hover { color: var(--gs-cream); border-bottom-color: var(--gs-cream); }
+body.gs-page.gs-about-page .place-body a[target="_blank"] { color: var(--gs-accent); border-bottom-color: transparent; }
+body.gs-page.gs-about-page .place-body a[target="_blank"]:hover { color: var(--gs-warm); border-bottom-color: var(--gs-warm); }
+body.gs-page.gs-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+body.gs-page.gs-about-page .place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--gs-sage);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(136,120,168,0.4);
+}
+
+body.gs-page.gs-about-page .divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gs-sage), var(--gs-brand), var(--gs-sage), transparent);
+    margin: 8px 0 40px;
+    opacity: 0.4;
+}
+
+body.gs-page.gs-about-page .mb-link-wrap { width:100%; max-width:700px; padding:0 20px; margin-top:40px; animation:fadeUp 0.5s 0.15s ease both; }
+body.gs-page.gs-about-page .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--gs-muted); text-decoration:none; border:1px solid var(--gs-dark); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+body.gs-page.gs-about-page .mb-link:hover { color:var(--gs-accent); border-color:var(--gs-accent); }

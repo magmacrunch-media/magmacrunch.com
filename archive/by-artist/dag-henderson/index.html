@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dag henderson — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+<link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="dh-shared.css">
+    <link rel="preload" as="image" href="../../../assets/photos/dag_henderson/dag-henderson-cover.jpg">
+    <style>
+        /* ══ PAGE: by-artist / dag-henderson ══ */
+
+        main { position: relative; padding: 0; }
+
+        /* ── BREADCRUMB ── */
+        body.dh-page .breadcrumb a { color: var(--dh-body); }
+        body.dh-page .breadcrumb a:hover { color: var(--dh-amber); }
+        body.dh-page .breadcrumb .sep { color: var(--dh-body); opacity: 0.6; }
+        body.dh-page .breadcrumb .current { color: var(--dh-body); }
+
+        /* ── ARTIST HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 35%;
+            filter: saturate(0.95) brightness(0.72);
+            will-change: transform;
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(58, 88, 48, 0.09);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8,10,6,0.0)  0%,
+                rgba(8,10,6,0.0)  85%,
+                rgba(8,10,6,0.85) 100%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dh-brand);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--dh-amber);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(120, 144, 96, 0.65),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--dh-brand);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* ── SUB-NAV CARDS ── */
+        .sub-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 48px;
+        }
+        body.dh-page .sub-nav .nav-card.c-about { background: var(--dh-brand); color: var(--dh-amber); border-color: var(--dh-brand); }
+        body.dh-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--dh-leaf); }
+        body.dh-page .sub-nav .nav-card.c-photography { background: var(--dh-steel); color: var(--dh-mist); border-color: var(--dh-steel); }
+        body.dh-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--dh-slate); }
+        body.dh-page .sub-nav .nav-card.c-recordings { background: var(--dh-sage); color: var(--dh-deep); border-color: var(--dh-sage); }
+        body.dh-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--dh-brand); }
+        body.dh-page .sub-nav .nav-card.c-releases { background: var(--dh-violet-mid); color: var(--dh-gold); border-color: var(--dh-violet-mid); }
+        body.dh-page .sub-nav .nav-card.c-releases:hover { background: transparent; color: var(--dh-violet-deep); }
+        body.dh-page .sub-nav .nav-card.c-works { background: var(--dh-amber-glow); color: var(--dh-deep); border-color: var(--dh-amber-glow); }
+        body.dh-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--dh-gold); }
+        body.dh-page .sub-nav .nav-card.c-events { background: var(--dh-rust-dark); color: var(--dh-amber); border-color: var(--dh-rust-dark); }
+        body.dh-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--dh-rust); }
+        body.dh-page .sub-nav .nav-card.c-back { background: transparent; color: var(--dh-brand); border-color: var(--dh-brand); }
+        body.dh-page .sub-nav .nav-card.c-back:hover { background: var(--dh-brand); border-color: var(--dh-brand); color: var(--dh-amber); }
+        body.dh-page .sub-nav .nav-card::after { display: none; }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--dh-brand), var(--dh-amber), var(--dh-brand), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── LAYOUT ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dh-brand);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--dh-brand);
+            opacity: 0.9;
+        }
+
+        /* ── ANIMATION CANVAS AREA ── */
+        .animation-wrap {
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        .animation-placeholder {
+            width: 100%;
+            aspect-ratio: 16/7;
+            background: rgba(58, 88, 48, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 32px 0;
+        }
+        .animation-placeholder canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            transform: scale(3);
+            border-bottom: 2px solid var(--dh-brand);
+            box-shadow: 0 20px 50px rgba(58, 88, 48, 0.2);
+        }
+        .animation-placeholder .label {
+            position: absolute;
+            top: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dh-bg);
+            padding: 0 10px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dh-amber);
+            white-space: nowrap;
+        }
+        .animation-placeholder .inner {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            text-align: center;
+            line-height: 2;
+        }
+        .animation-caption {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dh-brand);
+            letter-spacing: 0.1em;
+            margin-top: 16px;
+            opacity: 0.7;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--dh-body);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dh-leaf);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--dh-leaf);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover { background: var(--dh-leaf); color: var(--dh-deep); }
+
+        /* ── MINI VIDEO SECTION ── */
+        .videos-wrap {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.18s ease both;
+        }
+        .videos-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dh-brand);
+            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+            opacity: 0.8;
+        }
+        .mini-video-list {
+            width: 100%;
+            border: 1px solid #1a1a2a;
+        }
+        .mini-video-entry {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-bottom: 1px solid #1a1a2a;
+            cursor: pointer;
+            min-height: 100px;
+        }
+        .mini-video-entry:last-child { border-bottom: none; }
+        .mini-video-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25) saturate(0.6);
+            transition: filter 0.3s ease;
+            z-index: 0;
+        }
+        .mini-video-entry:hover .mini-video-bg,
+        .mini-video-entry.active .mini-video-bg {
+            filter: brightness(0.15) saturate(0.4);
+        }
+        .mini-video-entry::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(8,8,8,0.5) 0%, transparent 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .mini-video-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            width: 100%;
+        }
+        .mini-thumb {
+            flex-shrink: 0;
+            width: 120px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border: 1px solid #2a2a3a;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .mini-video-entry:hover .mini-thumb { border-color: var(--dh-brand); }
+        .mini-video-entry.active .mini-thumb { border-color: var(--dh-rust); }
+        .mini-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mini-play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+        }
+        .mini-play-icon {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, transform 0.2s, background 0.2s;
+        }
+        .mini-play-icon::after {
+            content: '';
+            display: block;
+            width: 0; height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 9px solid var(--white);
+            margin-left: 2px;
+            transition: border-left-color 0.2s;
+        }
+        .mini-video-entry:hover .mini-play-icon {
+            border-color: var(--dh-brand);
+            background: rgba(58, 88, 48, 0.2);
+            transform: scale(1.1);
+        }
+        .mini-video-entry:hover .mini-play-icon::after { border-left-color: var(--dh-brand); }
+        .mini-video-entry.active .mini-play-icon { border-color: var(--dh-rust); }
+        .mini-iframe-wrap {
+            display: none;
+            width: 120px;
+            aspect-ratio: 16/9;
+            flex-shrink: 0;
+            border: 1px solid var(--dh-rust);
+        }
+        .mini-iframe-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
+        .mini-video-entry.active .mini-thumb       { display: none; }
+        .mini-video-entry.active .mini-iframe-wrap { display: block; }
+        .mini-video-meta { flex: 1; min-width: 0; }
+        .mini-video-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dh-brand);
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+        .mini-video-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(7px, 1.2vw, 10px);
+            color: var(--white);
+            letter-spacing: 0.05em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .mini-yt-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px;
+            color: var(--dim);
+            text-decoration: none;
+            border: 1px solid #2a2a3a;
+            padding: 3px 8px;
+            letter-spacing: 0.06em;
+            transition: color 0.15s, border-color 0.15s;
+            display: inline-block;
+        }
+        .mini-yt-link:hover { color: var(--dh-purple); border-color: var(--dh-purple); }
+
+        @media (max-width: 640px) {
+            .sub-nav { flex-direction: column; }
+            .mini-thumb, .mini-iframe-wrap { width: 90px; }
+        }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dh-body); text-decoration:none; border:1px solid var(--dh-muted); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--dh-amber); border-color:var(--dh-amber); }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+    </style>
+</head>
+<body class="dh-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">dh</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" style="object-position: center 35%" src="../../../assets/photos/dag_henderson/dag-henderson-cover.jpg" alt="Dag Henderson">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">DAG<br>HENDERSON</div>
+                <div class="artist-abbr">[ DH ]</div>
+                <div class="sub-nav">
+                    <a href="about.html"        class="nav-card c-about">about</a>
+                    <a href="photography.html"  class="nav-card c-photography">photography</a>
+                    <a href="music-videos.html" class="nav-card c-events">music videos</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"   class="nav-card c-releases">releases</a>
+                    <a href="works.html"      class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a class="mb-link" href="https://musicbrainz.org/artist/605cc914-2aff-4e2b-9657-524c7009cb18" target="_blank" rel="noopener">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+
+</body>
+</html>

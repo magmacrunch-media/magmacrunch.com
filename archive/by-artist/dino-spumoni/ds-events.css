@@ -1,0 +1,40 @@
+/* Dino Spumoni — events (bright-teal accent) */
+body.ds-page.ds-events-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.ds-page.ds-events-page main > * { background: var(--ds-bg); }
+
+body.ds-page.ds-events-page .breadcrumb a { color: var(--ds-bright-teal); }
+body.ds-page.ds-events-page .breadcrumb a:hover { color: var(--ds-heading); }
+body.ds-page.ds-events-page .breadcrumb .sep { color: var(--ds-bright-teal); opacity: 0.5; }
+body.ds-page.ds-events-page .breadcrumb .current { color: var(--ds-bright-teal); }
+
+body.ds-page.ds-events-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ds-page.ds-events-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ds-bright-teal) !important; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ds-page.ds-events-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ds-bright-teal) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(64, 168, 136, 0.5) !important; }
+
+body.ds-page.ds-events-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--ds-deep-teal), var(--ds-bright-teal), var(--ds-deep-teal), transparent); margin: 0 0 36px; opacity: 0.4; }
+
+/* Event cards — override template global vars */
+body.ds-page.ds-events-page .event-card { display: flex; gap: 18px; border: 1px solid var(--ds-surface) !important; background: transparent !important; padding: 0; margin-bottom: 14px; transition: border-color 0.15s; }
+body.ds-page.ds-events-page .event-card:hover { border-color: var(--ds-bright-teal) !important; }
+body.ds-page.ds-events-page .event-info h3 { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--ds-bright-teal); letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.ds-page.ds-events-page .event-info h3 a { color: var(--ds-bright-teal) !important; text-decoration: none; }
+body.ds-page.ds-events-page .event-info h3 a:hover { color: var(--ds-heading) !important; }
+body.ds-page.ds-events-page .event-type { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--ds-bright-teal); font-style: italic; margin-left: 6px; }
+body.ds-page.ds-events-page .event-info p { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--ds-heading); opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.ds-page.ds-events-page .event-info p strong { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--ds-mid); letter-spacing: 0.08em; margin-right: 6px; }
+body.ds-page.ds-events-page .event-info a { color: var(--ds-bright-teal) !important; text-decoration: none; }
+body.ds-page.ds-events-page .event-info a:hover { color: var(--ds-heading) !important; }
+body.ds-page.ds-events-page .tag { display: inline-block; background: var(--ds-surface); border: 1px solid var(--ds-mid); padding: 2px 7px; margin: 2px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--ds-bright-teal); }
+body.ds-page.ds-events-page .tag:hover { border-color: var(--ds-bright-teal); }
+body.ds-page.ds-events-page .error-msg { color: var(--ds-brick); opacity: 0.7; }
+body.ds-page.ds-events-page .cancelled-tag { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--ds-brick); letter-spacing: 0.1em; margin-left: 8px; }
+body.ds-page.ds-events-page .pullout-tag { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--ds-brick); letter-spacing: 0.1em; margin-left: 8px; }
+body.ds-page.ds-events-page .event-art { width: 120px; min-width: 120px; height: 120px; background: var(--ds-deep) !important; border-right: 1px solid var(--ds-surface) !important; display: flex; align-items: center; justify-content: center; font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--ds-sky); overflow: hidden; flex-shrink: 0; }
+
+/* Back button: transparent + page accent */
+body.ds-page.ds-events-page .nav-card.c-back { background: transparent !important; color: var(--ds-bright-teal) !important; border-color: var(--ds-bright-teal) !important; }
+body.ds-page.ds-events-page .nav-card.c-back:hover { background: var(--ds-bright-teal) !important; color: var(--ds-deep) !important; }
+
+body.ds-page.ds-events-page .nav-card::after { display: none; }
+
+@media (max-width: 500px) { body.ds-page.ds-events-page .event-art { width: 72px; min-width: 72px; height: 72px; } }

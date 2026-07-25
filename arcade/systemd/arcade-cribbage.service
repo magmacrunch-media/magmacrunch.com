@@ -1,0 +1,14 @@
+[Unit]
+Description=MagmaCrunch Arcade - Cribbage
+After=network.target
+
+[Service]
+Type=simple
+User=jake
+WorkingDirectory=/home/jake/arcade/cribbage
+ExecStart=/home/jake/arcade/venv/bin/python3 server.py --port 8766
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

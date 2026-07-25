@@ -1,0 +1,75 @@
+/* Twin Maples — about (sage blue accent) */
+body.tm-page.tm-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
+body.tm-page.tm-about-page main > * { background: var(--tm-bg); }
+
+body.tm-page.tm-about-page .breadcrumb { color: var(--dim); }
+body.tm-page.tm-about-page .breadcrumb a { color: var(--tm-sage); }
+body.tm-page.tm-about-page .breadcrumb a:hover { color: var(--tm-cream); }
+body.tm-page.tm-about-page .breadcrumb .sep { color: var(--tm-sage); opacity: 0.6; }
+body.tm-page.tm-about-page .breadcrumb .current { color: var(--tm-sage); }
+
+body.tm-page.tm-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.tm-page.tm-about-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--tm-sage); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.tm-page.tm-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--tm-sage); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(122, 176, 192, 0.5); }
+
+/* Current page: about (c-about active) */
+body.tm-page.tm-about-page .nav-card.c-about {
+    background: var(--tm-bg);
+    color: var(--tm-sage);
+    border-color: var(--tm-sage);
+}
+body.tm-page.tm-about-page .nav-card.c-about:hover {
+    background: transparent;
+    color: var(--tm-sage);
+}
+
+body.tm-page.tm-about-page .place-body {
+    max-width: 960px;
+    width: 100%;
+    padding: 0 20px;
+    color: var(--tm-body);
+    font-size: 15px;
+    line-height: 1.8;
+}
+body.tm-page.tm-about-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.tm-page.tm-about-page .place-body a {
+    color: var(--tm-sage);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.tm-page.tm-about-page .place-body a:hover { color: var(--tm-cream); border-bottom-color: var(--tm-cream); }
+body.tm-page.tm-about-page .place-body a[target="_blank"] { color: var(--tm-accent); border-bottom-color: transparent; }
+body.tm-page.tm-about-page .place-body a[target="_blank"]:hover { color: var(--tm-warm); border-bottom-color: var(--tm-warm); }
+body.tm-page.tm-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+body.tm-page.tm-about-page .place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--tm-sage);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(122,176,192,0.4);
+}
+
+body.tm-page.tm-about-page .divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--tm-sage), var(--tm-brand), var(--tm-sage), transparent);
+    margin: 8px 0 40px;
+    opacity: 0.4;
+}
+
+body.tm-page.tm-about-page .mb-link-wrap { width:100%; max-width:700px; padding:0 20px; margin-top:40px; animation:fadeUp 0.5s 0.15s ease both; }
+body.tm-page.tm-about-page .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--tm-muted); text-decoration:none; border:1px solid var(--tm-dark); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+body.tm-page.tm-about-page .mb-link:hover { color:var(--tm-warm); border-color:var(--tm-warm); }

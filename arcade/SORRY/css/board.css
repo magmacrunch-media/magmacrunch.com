@@ -1,0 +1,328 @@
+/* board.css — Board rendering: grid, cells, zones, pawns, highlights
+   Depends on: base.css */
+
+/* ── OUTER BOARD FRAME ── */
+.board-frame {
+  background: var(--border);
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  position: relative;
+  overflow: hidden;
+  /* Explicit size prevents layout from ever needing to measure content */
+  width:  662px;
+  height: 662px;
+  flex-shrink: 0;
+}
+
+/* ── BOARD GRID ── */
+.board {
+  display: grid;
+  grid-template-columns: repeat(16, var(--sq-size));
+  grid-template-rows:    repeat(16, var(--sq-size));
+  gap: var(--gap);
+  background: var(--felt);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 8px 8px;
+  border: 4px solid var(--border);
+  position: relative;
+  /* layout+paint containment isolates repaints without breaking grid auto-size.
+     'strict' (which includes 'size') was causing grid collapse — removed. */
+  contain: layout paint;
+  /* Explicit size matches grid: 16×38px cells + 15×2px gaps + 4px border each side */
+  width:  638px;
+  height: 638px;
+}
+
+/* ── PERIMETER CELLS ── */
+.cell {
+  background: var(--cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: rgba(0,0,0,0.8);
+  position: relative;
+  box-shadow: inset -1px -1px 2px rgba(0,0,0,0.1);
+}
+
+.cell.corner { background: #e8e4d8; }
+
+.cell.bg-red    { background: var(--slide-red);    color: #b00; }
+.cell.bg-blue   { background: var(--slide-blue);   color: #008; }
+.cell.bg-yellow { background: var(--slide-yellow); color: #860; }
+.cell.bg-green  { background: var(--slide-green);  color: #060; }
+
+/* ── SAFE ZONE CELLS ── */
+.cell.safe {
+  z-index: 3;
+  font-size: 10px;
+}
+.cell.safe.bg-red    { background: var(--safe-red);    color: color-mix(in srgb, var(--color-red) 70%, #000); }
+.cell.safe.bg-blue   { background: var(--safe-blue);   color: color-mix(in srgb, var(--color-blue) 70%, #000); }
+.cell.safe.bg-yellow { background: var(--safe-yellow); color: color-mix(in srgb, var(--color-yellow) 70%, #000); }
+.cell.safe.bg-green  { background: var(--safe-green);  color: color-mix(in srgb, var(--color-green) 70%, #000); }
+
+/* ── BIG ZONES (Start / Home circles) ── */
+.big-zone {
+  border-radius: 50%;
+  border: 4px solid #111;
+  box-shadow: 3px 3px 8px rgba(0,0,0,0.6), inset 0 0 15px rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  position: relative; /* needed for ::before pulse ring */
+  overflow: visible;  /* allow ring to extend beyond circle edge */
+}
+
+.zone-red    { background: var(--red); }
+.zone-blue   { background: var(--blue); }
+.zone-yellow { background: var(--yellow); }
+.zone-green  { background: var(--green); }
+
+.zone-inner {
+  width: 82%; height: 82%;
+  border-radius: 50%;
+  border: 2px dashed rgba(255,255,255,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Per-color complement overrides for zone labels and borders */
+.zone-red    .zone-inner { color: var(--complement-red);    border-color: var(--complement-red);    text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+.zone-blue   .zone-inner { color: var(--complement-blue);   border-color: var(--complement-blue);   text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+.zone-yellow .zone-inner { color: var(--complement-yellow); border-color: var(--complement-yellow); text-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+.zone-green  .zone-inner { color: var(--complement-green);  border-color: var(--complement-green);  text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+
+.home-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.pawn-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.start-arrow {
+  position: absolute;
+  font-size: 16px;
+}
+
+/* Arrows use complement colors too */
+.zone-red    .start-arrow { color: var(--complement-red);    }
+.zone-blue   .start-arrow { color: var(--complement-blue);   }
+.zone-yellow .start-arrow { color: var(--complement-yellow); }
+.zone-green  .start-arrow { color: var(--complement-green);  }
+
+/* ── CENTER LOGO ── */
+.center-logo {
+  grid-column: 6 / span 6;
+  grid-row: 6 / span 6;
+  background: conic-gradient(
+    var(--blue)    25%,
+    var(--yellow)   0 50%,
+    var(--green)    0 75%,
+    var(--red)      0
+  );
+  border: 4px solid #111;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.center-diamond {
+  width: 70%; height: 70%;
+  background: var(--board-center);
+  background-image: radial-gradient(circle, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 4px 4px;
+  transform: rotate(45deg);
+  border: 4px solid #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4), inset 0 0 10px rgba(0,0,0,0.2);
+}
+
+.logo-text {
+  transform: rotate(-45deg);
+  font-size: 18px;
+  color: white;
+  -webkit-text-stroke: 1px #111;
+  text-shadow: 3px 3px 0 #111;
+  letter-spacing: 2px;
+}
+
+/* ── PAWNS ── */
+.pawn {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.85);
+  box-shadow: 0 0 0 2px #000, 2px 2px 5px rgba(0,0,0,0.6);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.pawn:hover { transform: scale(1.25); }
+
+.pawn-red    { background: var(--red); }
+.pawn-blue   { background: var(--blue); }
+.pawn-yellow { background: var(--yellow); }
+.pawn-green  { background: var(--green); }
+
+/* Inside a zone, pawn borders switch to the zone's complement color */
+.zone-red    .pawn { border-color: var(--complement-red);    }
+.zone-blue   .pawn { border-color: var(--complement-blue);   }
+.zone-yellow .pawn { border-color: var(--complement-yellow); }
+.zone-green  .pawn { border-color: var(--complement-green);  }
+
+/* ── ACTIVE TURN ZONE HIGHLIGHTS ──
+   Uses a pseudo-element ring that animates only `opacity` and `transform:scale`
+   — both GPU-compositable. No box-shadow changes mid-animation. */
+.big-zone.active-turn {
+  /* Static outline ring — no animation on this property */
+  box-shadow: 0 0 0 4px white, 3px 3px 8px rgba(0,0,0,0.6);
+  will-change: transform;
+  transform: translateZ(0); /* force own compositor layer */
+}
+
+/* Animated glow ring via pseudo-element — only opacity+scale change */
+.big-zone.active-turn::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: transparent;
+  border: 6px solid white;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: pulse-ring 1.2s ease-in-out infinite;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.3; transform: scale(1.00) translateZ(0); }
+  50%       { opacity: 0.7; transform: scale(1.04) translateZ(0); }
+}
+
+/* Per-color ring colors */
+.big-zone.active-turn[data-active-color="red"]    { box-shadow: 0 0 0 4px var(--red),    3px 3px 8px rgba(0,0,0,0.6); }
+.big-zone.active-turn[data-active-color="blue"]   { box-shadow: 0 0 0 4px var(--blue),   3px 3px 8px rgba(0,0,0,0.6); }
+.big-zone.active-turn[data-active-color="yellow"] { box-shadow: 0 0 0 4px var(--yellow), 3px 3px 8px rgba(0,0,0,0.6); }
+.big-zone.active-turn[data-active-color="green"]  { box-shadow: 0 0 0 4px var(--green),  3px 3px 8px rgba(0,0,0,0.6); }
+
+.big-zone.active-turn[data-active-color="red"]::before    { border-color: var(--red); }
+.big-zone.active-turn[data-active-color="blue"]::before   { border-color: var(--blue); }
+.big-zone.active-turn[data-active-color="yellow"]::before { border-color: var(--yellow); }
+.big-zone.active-turn[data-active-color="green"]::before  { border-color: var(--green); }
+
+/* ── PAWN MOVEMENT HIGHLIGHTS ──
+   Static box-shadow (no animation), scale-only pulse for GPU compositing. */
+.pawn-movable {
+  cursor: pointer;
+  /* Static glow — set once, never animated */
+  box-shadow: 0 0 0 3px white, 0 0 10px 4px rgba(255,255,255,0.55), 0 0 0 2px #000;
+  animation: pawn-pulse 0.8s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+@keyframes pawn-pulse {
+  0%, 100% { transform: scale(1)    translateZ(0); }
+  50%       { transform: scale(1.22) translateZ(0); }
+}
+
+.pawn-selected {
+  transform: scale(1.3) !important;
+  animation: none !important;
+  box-shadow: 0 0 0 3px #ffcc00, 0 0 12px 5px rgba(255,204,0,0.8), 0 0 0 2px #000 !important;
+}
+
+/* Legal destination cell */
+.dest-highlight {
+  cursor: pointer;
+  position: relative;
+}
+.dest-highlight::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border-radius: 3px;
+  border: 2px solid white;
+  background: rgba(255,255,255,0.25);
+  animation: dest-pulse 0.8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+.dest-highlight[data-dest-color="red"]::after    { border-color: var(--red);    background: rgba(240,58,71,0.3); }
+.dest-highlight[data-dest-color="blue"]::after   { border-color: var(--blue);   background: rgba(58,134,255,0.3); }
+.dest-highlight[data-dest-color="yellow"]::after { border-color: var(--yellow); background: rgba(255,204,0,0.3); }
+.dest-highlight[data-dest-color="green"]::after  { border-color: var(--green);  background: rgba(46,204,113,0.3); }
+
+@keyframes dest-pulse {
+  0%,100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+/* Home zone gets a circular highlight instead of square */
+.big-zone.dest-highlight::after {
+  inset: 4px;
+  border-radius: 50%;
+}
+
+/* ── SLIDE ANIMATIONS ── */
+
+/* Ripple flash along slide cells */
+.cell.slide-flash {
+  background: var(--slide-flash-color, #fff) !important;
+  box-shadow: inset 0 0 12px 4px var(--slide-flash-color, #fff),
+              0 0 16px 6px var(--slide-flash-color, #fff);
+  z-index: 10;
+  animation: slide-cell-flash 0.18s ease-out forwards;
+  will-change: background, box-shadow;
+}
+@keyframes slide-cell-flash {
+  0%   { filter: brightness(2.5); }
+  100% { filter: brightness(1); }
+}
+
+/* Bumped pawn shake + scale-out */
+.pawn.slide-bump-eject {
+  animation: slide-bump 0.55s ease-out forwards;
+  will-change: transform, opacity;
+}
+@keyframes slide-bump {
+  0%   { transform: scale(1)    rotate(0deg);   opacity: 1; }
+  20%  { transform: scale(1.5)  rotate(-25deg); opacity: 1; }
+  40%  { transform: scale(1.4)  rotate(20deg);  opacity: 0.9; }
+  70%  { transform: scale(0.7)  rotate(-10deg); opacity: 0.6; }
+  100% { transform: scale(0.3)  rotate(30deg);  opacity: 0; }
+}
+
+/* Moving pawn whoosh on arrival */
+.pawn.slide-whoosh {
+  animation: slide-whoosh 0.38s ease-out forwards;
+  will-change: transform, box-shadow;
+}
+@keyframes slide-whoosh {
+  0%   { transform: scale(0.6); box-shadow: 0 0 0 2px #000, 0 0 0px 0px rgba(255,255,255,0); }
+  50%  { transform: scale(1.6); box-shadow: 0 0 0 2px #000, 0 0 20px 8px rgba(255,255,255,0.8); }
+  100% { transform: scale(1);   box-shadow: 0 0 0 2px #000, 2px 2px 5px rgba(0,0,0,0.6); }
+}

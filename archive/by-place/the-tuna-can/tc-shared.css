@@ -1,0 +1,67 @@
+/* The Tuna Can shared color palette — warm amber / dusty brown theme */
+:root {
+    --tc-brand:   #6a5018;
+    --tc-amber:   #b87828;
+    --tc-bright:  #e8c870;
+    --tc-heading: #e8d890;
+    --tc-body:    #c8c0a0;
+    --tc-deep:    #2e2c20;
+    --tc-dark:    #1e1c14;
+    --tc-mid:     #3a3828;
+    --tc-muted:   #787060;
+    --tc-cream:   #e8d890;
+    --tc-gold:    #c8a040;
+    --tc-red:     #a83840;
+    --tc-green:   #507840;
+    --tc-olive:   #3d4a30;
+    --tc-terra:   #8a4a30;
+    --tc-wheat:   #d4b880;
+    --tc-copper:  #c0784a;
+    --tc-khaki:   #a8a870;
+    --tc-offwhite: #f5f0e0;
+    --tc-bg:       #0e0d09;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.tc-page { background: var(--tc-bg); --credit-color: var(--tc-muted); --nav-accent: var(--tc-amber); --nav-glow: rgba(184,120,40,0.4); --nav-brand: #d0a050; --nav-brand-glow: rgba(208,160,80,0.7); }
+body.tc-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.tc-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.tc-page .sub-nav .nav-card::after { display: none; }
+body.tc-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-recordings: amber */
+body.tc-page .sub-nav .nav-card.c-recordings { background: var(--tc-amber); color: var(--tc-dark); border-color: var(--tc-amber); }
+body.tc-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-amber); }
+
+/* c-works: bright */
+body.tc-page .sub-nav .nav-card.c-works { background: var(--tc-bright); color: var(--tc-dark); border-color: var(--tc-bright); }
+body.tc-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-bright); }
+
+/* c-about: khaki */
+body.tc-page .sub-nav .nav-card.c-about { background: var(--tc-khaki); color: var(--tc-dark); border-color: var(--tc-khaki); }
+body.tc-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-khaki); }
+
+/* c-rose: red */
+body.tc-page .sub-nav .nav-card.c-rose { background: var(--tc-red); color: var(--tc-dark); border-color: var(--tc-red); }
+body.tc-page .sub-nav .nav-card.c-rose:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-red); }
+
+/* c-personnel: green */
+body.tc-page .sub-nav .nav-card.c-personnel { background: var(--tc-green); color: var(--tc-dark); border-color: var(--tc-green); }
+body.tc-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-green); }
+
+/* About button self-link hider — khaki solid */
+body.tc-page .sub-nav a[href="about.html"] {
+    background: var(--tc-khaki);
+    color: var(--tc-dark);
+    border-color: var(--tc-khaki);
+}
+
+body.tc-page footer { color: var(--tc-muted); }
+body.tc-page footer span { color: var(--tc-amber); }

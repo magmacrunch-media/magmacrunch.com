@@ -1,0 +1,206 @@
+/* =====================================================================
+   Helsinki 1989 — modals.css
+   Modal overlays, game over, pause, high scores, credits
+   ===================================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,14,20,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-overlay.hidden { display: none; }
+
+.modal {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-bright);
+  box-shadow: var(--glow-ice), 0 0 50px rgba(122,155,173,0.12);
+  padding: 30px 28px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  position: relative;
+}
+.modal::before, .modal::after {
+  content: '';
+  position: absolute;
+  width: 10px; height: 10px;
+  border-color: var(--ice);
+  border-style: solid;
+  opacity: 0.5;
+}
+.modal::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.modal::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.modal h2 {
+  font-size: 20px;
+  color: var(--ice);
+  text-shadow: var(--glow-ice);
+  letter-spacing: 6px;
+  margin-bottom: 4px;
+}
+.modal .modal-sub {
+  font-size: 10px;
+  color: var(--slate);
+  letter-spacing: 3px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.modal .modal-sub-en {
+  font-size: 9px;
+  color: var(--subtext);
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+.modal p {
+  font-size: 8px;
+  color: var(--text);
+  line-height: 1.9;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* initials input */
+.initials-input {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--ice);
+  color: var(--ice);
+  text-shadow: var(--glow-ice);
+  text-align: center;
+  width: 100px;
+  letter-spacing: 10px;
+  outline: none;
+  margin: 16px auto;
+  display: block;
+  text-transform: uppercase;
+}
+
+/* scores table */
+.scores-table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+.scores-table th {
+  font-size: 10px;
+  color: var(--ice);
+  padding: 6px 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-bright);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.scores-table th .th-en {
+  display: block;
+  font-size: 8px;
+  color: var(--slate);
+  letter-spacing: 1px;
+  margin-top: 1px;
+  opacity: 0.9;
+}
+.scores-table td {
+  font-size: 13px;
+  color: var(--frost);
+  padding: 7px 8px;
+  border-bottom: 1px solid rgba(42,74,90,0.5);
+  letter-spacing: 1px;
+}
+.scores-table tr:first-child td  { color: var(--birch);  text-shadow: var(--glow-birch); font-size: 14px; }
+.scores-table tr:nth-child(2) td { color: var(--ice);    font-size: 13px; }
+.scores-table tr:nth-child(3) td { color: var(--slate);  font-size: 13px; }
+.scores-table tbody tr:hover td  { background: rgba(175,203,211,0.05); }
+
+/* =====================================================================
+   credits modal
+   ===================================================================== */
+.modal-credits {
+  max-width: 420px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+.modal-titlebar {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  text-align: center;
+}
+.modal-titlebar h2 {
+  font-size: 20px;
+  color: var(--ice);
+  text-shadow: var(--glow-ice);
+  letter-spacing: 6px;
+  margin-bottom: 2px;
+}
+.modal-titlebar .modal-sub   { margin-bottom: 0; }
+.modal-titlebar .modal-sub-en { margin-bottom: 0; }
+.modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex-grow: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-bright) transparent;
+  text-align: left;
+}
+.modal-body::-webkit-scrollbar { width: 4px; }
+.modal-body::-webkit-scrollbar-track { background: transparent; }
+.modal-body::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 2px; }
+.modal-body h3 {
+  font-size: 14px;
+  color: var(--birch);
+  text-shadow: var(--glow-birch);
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: normal;
+}
+.credits-section {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.credits-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 8px;
+}
+.credits-label {
+  font-size: 9px;
+  color: var(--ice);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.credits-label-en {
+  font-size: 8px;
+  color: var(--subtext);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.credits-value {
+  font-size: 10px;
+  color: var(--text);
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+.credits-value strong {
+  color: var(--birch);
+  text-shadow: var(--glow-birch);
+}
+.credits-value .cif {
+  font-size: 20px;
+  color: var(--birch);
+  text-shadow: var(--glow-birch);
+  display: block;
+  margin-top: 2px;
+}
+.modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}

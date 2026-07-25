@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 72px 20px 60px;
+            text-align: center;
+        }
+
+        .err-code {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(48px, 12vw, 120px);
+            color: var(--cyan);
+            text-shadow:
+                0 0 10px var(--cyan),
+                0 0 30px var(--cyan),
+                0 0 60px rgba(0, 245, 255, 0.4),
+                4px 4px 0px var(--purple),
+                8px 8px 0px var(--rose);
+            animation: flicker 4s ease-in-out infinite, fadeUp 0.6s ease both;
+            letter-spacing: 0.1em;
+        }
+
+        .err-msg {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(10px, 2.5vw, 18px);
+            color: var(--white);
+            margin-top: 1.5rem;
+            text-shadow: 0 0 12px rgba(255, 61, 110, 0.5);
+            animation: fadeUp 0.6s ease 0.2s both;
+        }
+
+        .err-home {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.8vw, 12px);
+            color: var(--yellow);
+            text-decoration: none;
+            margin-top: 3rem;
+            padding: 14px 28px;
+            border: 2px solid var(--yellow);
+            position: relative;
+            animation: fadeUp 0.6s ease 0.4s both, blink 1.2s step-end infinite;
+            transition: background 0.15s, color 0.15s;
+        }
+        .err-home::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; right: -4px;
+            width: 100%; height: 100%;
+            z-index: -1;
+            border: 2px solid var(--yellow);
+            opacity: 0.35;
+        }
+        .err-home:hover {
+            background: var(--yellow);
+            color: var(--black);
+        }
+        .err-home:hover::after { opacity: 0; }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92%      { opacity: 1; }
+            93%      { opacity: 0.6; }
+            94%      { opacity: 1; }
+            96%      { opacity: 0.8; }
+            97%      { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <nav id="nav-root"></nav>
+
+    <main>
+        <div class="err-code">404</div>
+        <div class="err-msg">PAGE NOT FOUND</div>
+        <a href="/" class="err-home">► PRESS START ◄</a>
+    </main>
+
+    <script src="nav.js"></script>
+</body>
+</html>

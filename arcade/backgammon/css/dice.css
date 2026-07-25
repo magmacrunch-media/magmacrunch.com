@@ -1,0 +1,162 @@
+/**
+ * dice.css — Dice animation, doubling cube
+ */
+
+/* ── Dice Area ──────────────────────────────────────────────────────────────── */
+.dice-area {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+/* ── Individual Die ─────────────────────────────────────────────────────────── */
+.die {
+    width: 48px;
+    height: 48px;
+    background: var(--bg-dice);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 6px;
+    box-shadow: 
+        0 0 15px var(--bg-dice-glow),
+        inset 0 0 10px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+}
+
+.die:hover {
+    transform: scale(1.05);
+}
+
+.die.rolling {
+    animation: diceRoll 0.5s ease-out;
+}
+
+@keyframes diceRoll {
+    0% { transform: rotate(0deg) scale(0.8); opacity: 0.5; }
+    25% { transform: rotate(90deg) scale(1.1); }
+    50% { transform: rotate(180deg) scale(0.9); }
+    75% { transform: rotate(270deg) scale(1.05); }
+    100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+/* ── Dice Dots ──────────────────────────────────────────────────────────────── */
+.die-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--bg-dice-dots);
+    border-radius: 50%;
+    align-self: center;
+    justify-self: center;
+}
+
+/* Dot positions for each value */
+.die[data-value="1"] .die-dot:nth-child(1) { grid-column: 2; grid-row: 2; }
+.die[data-value="2"] .die-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.die[data-value="2"] .die-dot:nth-child(2) { grid-column: 3; grid-row: 3; }
+.die[data-value="3"] .die-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.die[data-value="3"] .die-dot:nth-child(2) { grid-column: 2; grid-row: 2; }
+.die[data-value="3"] .die-dot:nth-child(3) { grid-column: 3; grid-row: 3; }
+.die[data-value="4"] .die-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.die[data-value="4"] .die-dot:nth-child(2) { grid-column: 3; grid-row: 1; }
+.die[data-value="4"] .die-dot:nth-child(3) { grid-column: 1; grid-row: 3; }
+.die[data-value="4"] .die-dot:nth-child(4) { grid-column: 3; grid-row: 3; }
+.die[data-value="5"] .die-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.die[data-value="5"] .die-dot:nth-child(2) { grid-column: 3; grid-row: 1; }
+.die[data-value="5"] .die-dot:nth-child(3) { grid-column: 2; grid-row: 2; }
+.die[data-value="5"] .die-dot:nth-child(4) { grid-column: 1; grid-row: 3; }
+.die[data-value="5"] .die-dot:nth-child(5) { grid-column: 3; grid-row: 3; }
+.die[data-value="6"] .die-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.die[data-value="6"] .die-dot:nth-child(2) { grid-column: 3; grid-row: 1; }
+.die[data-value="6"] .die-dot:nth-child(3) { grid-column: 1; grid-row: 2; }
+.die[data-value="6"] .die-dot:nth-child(4) { grid-column: 3; grid-row: 2; }
+.die[data-value="6"] .die-dot:nth-child(5) { grid-column: 1; grid-row: 3; }
+.die[data-value="6"] .die-dot:nth-child(6) { grid-column: 3; grid-row: 3; }
+
+/* ── Doubling Cube ──────────────────────────────────────────────────────────── */
+.doubling-cube {
+    width: 48px;
+    height: 48px;
+    background: var(--bg-doubling);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--bg-bg);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 0 10px var(--bg-doubling-glow);
+}
+
+.doubling-cube:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--bg-doubling-glow);
+}
+
+.doubling-cube.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.doubling-cube.disabled:hover {
+    transform: none;
+    box-shadow: 0 0 10px var(--bg-doubling-glow);
+}
+
+.doubling-cube.player-owned {
+    border: 2px solid var(--bg-checker-player);
+}
+
+.doubling-cube.ai-owned {
+    border: 2px solid var(--bg-checker-ai);
+}
+
+/* ── Dice Label ─────────────────────────────────────────────────────────────── */
+.dice-label {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* ── Roll Button ────────────────────────────────────────────────────────────── */
+.roll-btn {
+    background: var(--bg-dice);
+    border: none;
+    color: var(--bg-bg);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 0 10px var(--bg-dice-glow);
+}
+
+.roll-btn:hover {
+    background: #fff;
+    box-shadow: 0 0 20px var(--bg-dice-glow);
+    transform: scale(1.05);
+}
+
+.roll-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.roll-btn:disabled:hover {
+    transform: none;
+    box-shadow: 0 0 10px var(--bg-dice-glow);
+}
+
+/* ── Doubles Indicator ──────────────────────────────────────────────────────── */
+.doubles-indicator {
+    font-size: 10px;
+    color: var(--bg-highlight);
+    text-shadow: 0 0 8px var(--bg-highlight-glow);
+    animation: blink 1s step-end infinite;
+}

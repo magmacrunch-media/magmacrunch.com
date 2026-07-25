@@ -1,0 +1,57 @@
+/* Desktop-only message for mobile devices */
+
+#desktopOnlyMessage {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    z-index: 10000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#desktopOnlyMessage .icon {
+    font-size: 80px;
+    margin-bottom: 30px;
+}
+
+#desktopOnlyMessage .title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 24px;
+    color: #00d4ff;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+    margin-bottom: 20px;
+    text-transform: lowercase;
+}
+
+#desktopOnlyMessage .message {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    color: #ffffff;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Show message on mobile/tablet devices */
+@media (max-width: 1024px), (max-height: 600px) {
+    #desktopOnlyMessage {
+        display: flex !important;
+    }
+    
+    #gameContainer,
+    #backgroundGradient,
+    #starLayer1, #starLayer2, #starLayer3, #starLayer4, #starLayer5,
+    #starLayer6, #starLayer7, #starLayer8, #starLayer9, #starLayer10,
+    #starLayer11, #starLayer12, #starLayer13, #starLayer14, #starLayer15,
+    #loadingScreen {
+        display: none !important;
+    }
+}

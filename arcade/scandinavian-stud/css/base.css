@@ -1,0 +1,116 @@
+/* base.css — Sökö (Scandinavian Stud) | MagmaCrunch Media © 2026 */
+
+:root {
+    --dark: #0a1628;
+    --darker: #060e1a;
+    --mid: #1a2a44;
+    --accent: #00f5ff;
+    --accent-dim: #007a80;
+    --green: #39ff6e;
+    --red: #ff3d6e;
+    --gold: #ffe03a;
+    --orange: #ff7c1f;
+    --white: #f0ead8;
+    --slate: #4a6a7a;
+    --card-face-bg: #ffffff;
+    --card-back-bg: #0d0028;
+    --fc-red: #cc1111;
+    --fc-art-bg: #fffef5;
+    --fc-card-bg: #fffef5;
+    --fc-black: #111111;
+    --fc-blue: #1a3a8a;
+    --fc-gold: #d4a017;
+    --fc-skin: #f5cba7;
+    --fc-steel: #8899aa;
+    /* Chip animation variables */
+    --chip-bg: #0a1628;
+    --chip-border: #1a2a44;
+    --chip-text: #ffe03a;
+    --font-pixel: 'Press Start 2P', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--darker);
+    color: var(--white);
+    font-family: 'VT323', monospace;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* CRT scanlines */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Buttons */
+button {
+    font-family: 'Press Start 2P', monospace;
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+button:hover {
+    background: var(--accent);
+    color: var(--darker);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--darker);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}

@@ -1,0 +1,6 @@
+# Disable WiFi power saving — prevents the adapter from sleeping between packets
+sudo iw dev wlan0 set power_save off
+
+# Make it permanent across reboots
+echo 'ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan0", RUN+="/sbin/iw dev wlan0 set power_save off"' \
+  | sudo tee /etc/udev/rules.d/70-wifi-powersave.rules

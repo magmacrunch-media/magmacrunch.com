@@ -1,0 +1,46 @@
+/* SVFP recordings — warm amber */
+body.svfp-recordings-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.svfp-recordings-page main > * { background: var(--svfp-bg); }
+
+body.svfp-recordings-page .breadcrumb { color: var(--dim); }
+body.svfp-recordings-page .breadcrumb a { color: #e87040; }
+body.svfp-recordings-page .breadcrumb a:hover { color: #d946ef; }
+body.svfp-recordings-page .breadcrumb .sep { color: #e87040; opacity: 0.7; }
+body.svfp-recordings-page .breadcrumb .current { color: #e87040; }
+
+body.svfp-recordings-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.svfp-recordings-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #e87040; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.svfp-recordings-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #e87040; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(232,112,64,0.5); }
+
+body.svfp-recordings-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, #e87040, #d946ef, #e87040, transparent); opacity: 0.4; margin-bottom: 40px; }
+
+body.svfp-recordings-page #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--white); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
+body.svfp-recordings-page #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 24px; }
+
+body.svfp-recordings-page .recording-item { display: flex; gap: 16px; border: 1px solid #1e1e2e; background: var(--deep); padding: 0; margin-bottom: 12px; transition: border-color 0.15s; overflow: hidden; }
+body.svfp-recordings-page .recording-item:hover { border-color: #e87040; }
+
+body.svfp-recordings-page .recording-card { border: 1px solid #1e1e2e !important; background: var(--deep) !important; padding: 18px 20px !important; margin-bottom: 12px !important; transition: border-color 0.15s !important; }
+body.svfp-recordings-page .recording-card:hover { border-color: #e87040 !important; }
+body.svfp-recordings-page .recording-card h3 a { color: #e87040 !important; }
+body.svfp-recordings-page .recording-card a { color: #e87040 !important; }
+body.svfp-recordings-page .recording-card a:hover { color: var(--white) !important; }
+
+body.svfp-recordings-page .rec-art { width: 80px; min-width: 80px; height: 80px; background: var(--svfp-bg); border-right: 1px solid #1e1e2e; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+body.svfp-recordings-page .rec-art img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
+body.svfp-recordings-page .rec-art .no-art-msg { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--dim); text-align: center; padding: 8px; line-height: 1.8; }
+
+body.svfp-recordings-page .rec-info { padding: 14px 16px 14px 0; flex: 1; }
+body.svfp-recordings-page .rec-info h3 { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--white); letter-spacing: 0.05em; margin-bottom: 10px; line-height: 1.7; }
+body.svfp-recordings-page .rec-info h3 a { color: #e87040; text-decoration: none; }
+body.svfp-recordings-page .rec-info h3 a:hover { color: #d946ef; }
+body.svfp-recordings-page .rec-type { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--dim); font-style: italic; margin-left: 6px; }
+body.svfp-recordings-page .rec-info p { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--white); opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.svfp-recordings-page .rec-info p strong { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim); letter-spacing: 0.08em; margin-right: 6px; }
+body.svfp-recordings-page .rec-info a { color: #e87040; text-decoration: none; }
+body.svfp-recordings-page .rec-info a:hover { color: #d946ef; }
+
+body.svfp-recordings-page .nav-card.c-back { background: transparent; color: #e87040; border-color: #e87040; }
+body.svfp-recordings-page .nav-card.c-back:hover { background: #e87040; color: #f5d0ff; }
+
+@media (max-width: 500px) { .rec-art { width: 72px; min-width: 72px; height: 72px; } }
