@@ -4,7 +4,7 @@ Personal website for magmacrunch media — music, art, archives, and arcade game
 
 Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/)
 
-**Wiki**: [Full documentation](https://github.com/magmacrunchmedia/magmacrunch.com.wiki)
+**Wiki**: [Full documentation](https://github.com/magmacrunchmedia/magmacrunch.com/wiki)
 
 ---
 
@@ -35,7 +35,7 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 - **persistent jukebox** — mini audio player on every page, state saved to localStorage
 - **high scores** — ScoreClient with Raspberry Pi backend, localStorage fallback
 
-See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com.wiki) for full documentation on all systems.
+See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for full documentation on all systems.
 
 ---
 
