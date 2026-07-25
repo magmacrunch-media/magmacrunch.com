@@ -51,6 +51,11 @@ SERVICES = [
     {"name": "Private Auth", "unit": "arcade-private", "port": 8782, "icon": "🔒"},
 ]
 
+VALID_UNITS = {svc["unit"] for svc in SERVICES} | {"arcade-admin"}
+
+def valid_unit(unit):
+    return unit in VALID_UNITS
+
 # ── Score storage ────────────────────────────────────────────────────────────
 
 SCORES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scores")
@@ -59,6 +64,7 @@ JUKEBOX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jukebox
 THEMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.json")
 TV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tv-channels.json")
 TV_JS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "visual", "tv-channels.js")
+FAVICONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "favicons.json")
 
 # ── GitHub API ──────────────────────────────────────────────────────────────
 
@@ -249,6 +255,180 @@ def save_tv(channels):
     with open(TV_JS_PATH, "w") as f:
         f.write(js)
 
+def load_favicons():
+    """Load saved favicon designs from disk."""
+    if os.path.exists(FAVICONS_PATH):
+        with open(FAVICONS_PATH) as f:
+            return json.load(f)
+    return {}
+
+def save_favicons(designs):
+    """Save favicon designs to disk."""
+    with open(FAVICONS_PATH, "w") as f:
+        json.dump(designs, f, indent=2)
+
+def generate_favicon_files(pixels):
+    """Generate favicon.ico, favicon-32.png, and apple-touch-icon.png from pixel data.
+    Returns dict with ok, files (list of local paths), and error if failed.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return {"ok": False, "error": "Pillow not installed on server"}
+
+    try:
+        GRID = 16
+        # Create 16x16 image
+        img16 = Image.new('RGBA', (GRID, GRID), (8, 8, 8, 255))
+        for y in range(GRID):
+            row = pixels[y] if y < len(pixels) else []
+            for x in range(GRID):
+                color = row[x] if x < len(row) else None
+                if color and color != "null":
+                    # Parse hex color
+                    c = color.lstrip('#')
+                    if len(c) == 6:
+                        r, g, b = int(c[0:2], 16), int(c[2:4], 16), int(c[4:6], 16)
+                        img16.putpixel((x, y), (r, g, b, 255))
+
+        # Create 32x32 image
+        img32 = img16.resize((32, 32), Image.NEAREST)
+
+        # Create 180x180 apple touch icon
+        img180 = img16.resize((180, 180), Image.NEAREST)
+
+        # Paths
+        repo_root = _repo_root()
+        ico_path = os.path.join(repo_root, "favicon.ico")
+        png32_path = os.path.join(repo_root, "favicon-32.png")
+        apple_path = os.path.join(repo_root, "apple-touch-icon.png")
+
+        # Save files locally
+        img16.save(ico_path, format='ICO', sizes=[(16, 16), (32, 32)])
+        img32.save(png32_path, format='PNG')
+        img180.save(apple_path, format='PNG')
+
+        return {
+            "ok": True,
+            "files": [
+                {"path": "favicon.ico", "local": ico_path},
+                {"path": "favicon-32.png", "local": png32_path},
+                {"path": "apple-touch-icon.png", "local": apple_path},
+            ]
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+def github_commit_files(files, message, token):
+    """Commit multiple files to GitHub. Returns dict with ok, commit sha, error."""
+    import base64 as b64
+
+    repo = f"{GITHUB_OWNER}/{GITHUB_REPO}"
+    ref = "heads/main"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunch-Ops/2.1",
+    }
+
+    # Get current commit SHA
+    req = urllib.request.Request(
+        f"{GITHUB_API}/repos/{repo}/git/ref/{ref}",
+        headers=headers
+    )
+    try:
+        with urllib.request.urlopen(req) as resp:
+            ref_data = json.loads(resp.read())
+            commit_sha = ref_data["object"]["sha"]
+    except Exception as e:
+        return {"ok": False, "error": f"Failed to get ref: {e}"}
+
+    # Get tree SHA
+    req = urllib.request.Request(
+        f"{GITHUB_API}/repos/{repo}/git/commits/{commit_sha}",
+        headers=headers
+    )
+    try:
+        with urllib.request.urlopen(req) as resp:
+            commit_data = json.loads(resp.read())
+            base_tree = commit_data["tree"]["sha"]
+    except Exception as e:
+        return {"ok": False, "error": f"Failed to get commit: {e}"}
+
+    # Create blobs for each file
+    blob_shas = {}
+    for f in files:
+        with open(f["local"], "rb") as fh:
+            content = fh.read()
+        blob_data = json.dumps({
+            "content": b64.b64encode(content).decode("utf-8"),
+            "encoding": "base64"
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            f"{GITHUB_API}/repos/{repo}/git/blobs",
+            data=blob_data,
+            headers={**headers, "Content-Type": "application/json"},
+            method="POST"
+        )
+        try:
+            with urllib.request.urlopen(req) as resp:
+                blob_info = json.loads(resp.read())
+                blob_shas[f["path"]] = blob_info["sha"]
+        except Exception as e:
+            return {"ok": False, "error": f"Failed to create blob for {f['path']}: {e}"}
+
+    # Create tree
+    tree_items = [{"path": p, "mode": "100644", "type": "blob", "sha": s} for p, s in blob_shas.items()]
+    tree_data = json.dumps({
+        "base_tree": base_tree,
+        "tree": tree_items
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        f"{GITHUB_API}/repos/{repo}/git/trees",
+        data=tree_data,
+        headers={**headers, "Content-Type": "application/json"},
+        method="POST"
+    )
+    try:
+        with urllib.request.urlopen(req) as resp:
+            tree_info = json.loads(resp.read())
+            new_tree_sha = tree_info["sha"]
+    except Exception as e:
+        return {"ok": False, "error": f"Failed to create tree: {e}"}
+
+    # Create commit
+    commit_data = json.dumps({
+        "message": message,
+        "tree": new_tree_sha,
+        "parents": [commit_sha]
+    }).encode("utf-8")
+    req = urllib.request.Request(
+        f"{GITHUB_API}/repos/{repo}/git/commits",
+        data=commit_data,
+        headers={**headers, "Content-Type": "application/json"},
+        method="POST"
+    )
+    try:
+        with urllib.request.urlopen(req) as resp:
+            new_commit = json.loads(resp.read())
+            new_commit_sha = new_commit["sha"]
+    except Exception as e:
+        return {"ok": False, "error": f"Failed to create commit: {e}"}
+
+    # Update ref
+    ref_data = json.dumps({"sha": new_commit_sha}).encode("utf-8")
+    req = urllib.request.Request(
+        f"{GITHUB_API}/repos/{repo}/git/refs/{ref}",
+        data=ref_data,
+        headers={**headers, "Content-Type": "application/json"},
+        method="PATCH"
+    )
+    try:
+        with urllib.request.urlopen(req) as resp:
+            return {"ok": True, "commit": new_commit_sha}
+    except Exception as e:
+        return {"ok": False, "error": f"Failed to update ref: {e}"}
+
 def add_score(game_id, name, score, extra=None):
     """Add a score entry and return its rank (1-indexed)."""
     data = load_game_scores(game_id)
@@ -438,7 +618,10 @@ async def ws_handler(websocket):
 
             elif action == "logs":
                 unit = msg.get("service", "arcade-chat")
-                lines = msg.get("lines", 50)
+                if not valid_unit(unit):
+                    await websocket.send(json.dumps({"type": "error", "text": f"invalid service: {unit}"}))
+                    continue
+                lines = min(int(msg.get("lines", 50)), 500)
                 logs = await run_cmd_async(f"journalctl -u {unit} -n {lines} --no-pager", timeout=15)
                 await websocket.send(json.dumps({
                     "type": "logs",
@@ -464,26 +647,28 @@ async def ws_handler(websocket):
 
             elif action == "restart":
                 unit = msg.get("service")
-                if unit:
-                    result = await run_cmd_async(f"sudo systemctl restart {unit}", timeout=30)
-                    await websocket.send(json.dumps({
-                        "type": "restart_result",
-                        "service": unit,
-                        "result": result
-                    }))
-                    # Send updated status
-                    statuses = await run_cmd_async(
-                        f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
-                    )
-                    status_map = {}
-                    lines = statuses.split("\n")
-                    for i, svc in enumerate(SERVICES):
-                        status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
-                    await websocket.send(json.dumps({
-                        "type": "status",
-                        "services": SERVICES,
-                        "statuses": status_map
-                    }))
+                if not unit or not valid_unit(unit):
+                    await websocket.send(json.dumps({"type": "error", "text": f"invalid service: {unit}"}))
+                    continue
+                result = await run_cmd_async(f"sudo systemctl restart {unit}", timeout=30)
+                await websocket.send(json.dumps({
+                    "type": "restart_result",
+                    "service": unit,
+                    "result": result
+                }))
+                # Send updated status
+                statuses = await run_cmd_async(
+                    f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                )
+                status_map = {}
+                lines = statuses.split("\n")
+                for i, svc in enumerate(SERVICES):
+                    status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
+                await websocket.send(json.dumps({
+                    "type": "status",
+                    "services": SERVICES,
+                    "statuses": status_map
+                }))
 
             elif action == "restart_all":
                 result = await run_cmd_async("sudo systemctl restart 'arcade-*'", timeout=60)
@@ -732,6 +917,37 @@ async def ws_handler(websocket):
                     "ok": True
                 }))
 
+            elif action == "get_current_private_password":
+                private_config_path = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), "..", "private", "config.json"
+                )
+                try:
+                    with open(private_config_path) as f:
+                        private_config = json.load(f)
+                except Exception:
+                    await websocket.send(json.dumps({
+                        "type": "current_private_password",
+                        "ok": False,
+                        "error": "Could not read private server config"
+                    }))
+                    continue
+
+                if private_config.get("password_mode") == "auto":
+                    from datetime import datetime
+                    today = datetime.now()
+                    current_pw = f"lava{today.strftime('%m%d')}"
+                    mode = "auto"
+                else:
+                    current_pw = "(set in config — not shown for security)"
+                    mode = "manual"
+
+                await websocket.send(json.dumps({
+                    "type": "current_private_password",
+                    "ok": True,
+                    "password": current_pw,
+                    "mode": mode
+                }))
+
             elif action == "jukebox_load":
                 songs = await asyncio.get_event_loop().run_in_executor(
                     _executor, load_jukebox
@@ -788,6 +1004,98 @@ async def ws_handler(websocket):
                     "type": "tv_saved",
                     "ok": True
                 }))
+
+            # ── Favicon editor actions ──────────────────────────────────────
+
+            elif action == "favicon_load_all":
+                designs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_favicons
+                )
+                await websocket.send(json.dumps({
+                    "type": "favicon_list",
+                    "designs": designs
+                }))
+
+            elif action == "favicon_save":
+                name = msg.get("name", "").strip()
+                pixels = msg.get("pixels", [])
+                if not name:
+                    await websocket.send(json.dumps({
+                        "type": "favicon_saved",
+                        "ok": False,
+                        "error": "Name is required"
+                    }))
+                    continue
+                designs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_favicons
+                )
+                designs[name] = pixels
+                await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: save_favicons(designs)
+                )
+                await websocket.send(json.dumps({
+                    "type": "favicon_saved",
+                    "ok": True,
+                    "name": name
+                }))
+
+            elif action == "favicon_delete":
+                name = msg.get("name", "").strip()
+                if not name:
+                    continue
+                designs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, load_favicons
+                )
+                if name in designs:
+                    del designs[name]
+                    await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: save_favicons(designs)
+                    )
+                await websocket.send(json.dumps({
+                    "type": "favicon_deleted",
+                    "ok": True
+                }))
+
+            elif action == "favicon_deploy":
+                pixels = msg.get("pixels", [])
+                token = CONFIG.get("github_token", "")
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "favicon_deploy_result",
+                        "ok": False,
+                        "error": "No GitHub token configured"
+                    }))
+                    continue
+                # Generate favicon files using Python
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: generate_favicon_files(pixels)
+                    )
+                    if not result["ok"]:
+                        await websocket.send(json.dumps({
+                            "type": "favicon_deploy_result",
+                            "ok": False,
+                            "error": result["error"]
+                        }))
+                        continue
+                    # Commit to GitHub
+                    commit_msg = msg.get("message", "Update favicon via MAGMA//OPS")
+                    files_to_commit = result["files"]
+                    commit_result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: github_commit_files(files_to_commit, commit_msg, token)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "favicon_deploy_result",
+                        "ok": commit_result["ok"],
+                        "error": commit_result.get("error"),
+                        "commit": commit_result.get("commit")
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "favicon_deploy_result",
+                        "ok": False,
+                        "error": str(e)
+                    }))
 
             # ── GitHub deploy actions ──────────────────────────────────────
 
