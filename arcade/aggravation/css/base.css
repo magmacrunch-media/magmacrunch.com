@@ -3,6 +3,8 @@
  */
 
 :root {
+    --mc-back-color: var(--ag-text-dim);
+    --mc-back-glow: 0 0 8px var(--ag-accent);
     --ag-bg: #0a0612;
     --ag-bg-light: #150b29;
     --ag-text: #f0ead8;
@@ -61,22 +63,6 @@ body::after {
     z-index: 9999;
 }
 
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 16px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--ag-text-dim);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    z-index: 100;
-    transition: color 0.15s, text-shadow 0.15s;
-}
-.mc-back:hover {
-    color: var(--ag-accent);
-    text-shadow: 0 0 8px var(--ag-accent-glow);
-}
 
 #startScreen {
     display: flex;

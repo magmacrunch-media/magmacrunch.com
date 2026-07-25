@@ -1,0 +1,64 @@
+/* ═══════════════════════════════════════════════
+   magmacrunch arcade — shared base styles
+   arcade-base.css
+   ═══════════════════════════════════════════════
+   Include this in every arcade game to get:
+     - .mc-back link (override --mc-back-color per game)
+     - .scanlines overlay (add <div class="scanlines"> to body)
+   ═══════════════════════════════════════════════ */
+
+/* ── BACK LINK ──
+   Default color is cyan. Override per game with:
+     :root { --mc-back-color: #yourcolor; }
+     :root { --mc-back-glow: 0 0 8px #yourcolor; } */
+:root {
+    --mc-back-color: #00f5ff;
+    --mc-back-glow: 0 0 8px #00f5ff;
+}
+
+.mc-back {
+    position: fixed;
+    top: 12px;
+    left: 14px;
+    z-index: 10000;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--mc-back-color);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    pointer-events: auto;
+    transition: color 0.15s, text-shadow 0.15s;
+}
+
+.mc-back::before {
+    content: '← ';
+}
+
+.mc-back:hover {
+    color: #ffffff;
+    text-shadow: var(--mc-back-glow);
+}
+
+/* ── SCANLINES OVERLAY ──
+   Add <div class="scanlines"></div> to <body> to enable.
+   Override opacity with --mc-scanline-opacity. */
+:root {
+    --mc-scanline-opacity: 0.15;
+}
+
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, var(--mc-scanline-opacity)) 0px,
+        rgba(0, 0, 0, var(--mc-scanline-opacity)) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}

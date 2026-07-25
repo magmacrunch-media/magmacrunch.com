@@ -587,7 +587,8 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             // Special handling: MathJax config — merge macros without destroying runtime
             if (t.includes('MathJax') && t.includes('tex')) {
                 try {
-                    const cfg = eval('(' + t.replace(/MathJax\s*=\s*/, '') + ')');
+                    const valueStr = t.replace(/MathJax\s*=\s*/, '');
+                    const cfg = new Function('return (' + valueStr + ')')();
                     if (cfg && cfg.tex && cfg.tex.macros && MathJax.config && MathJax.config.tex) {
                         if (!MathJax.config.tex.macros) MathJax.config.tex.macros = {};
                         Object.assign(MathJax.config.tex.macros, cfg.tex.macros);
@@ -595,11 +596,15 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 } catch (e) { console.warn('SPA MathJax config:', e); }
                 continue;
             }
-            const m = t.match(/window\.([\w]+)\s*=/);
-            if (m && window[m[1]] !== undefined) {
-                try { delete window[m[1]]; } catch {}
+            const m = t.match(/window\.([\w]+)\s*=\s*([\s\S]+?)\s*;?\s*$/);
+            if (m) {
+                const varName = m[1];
+                const valueStr = m[2];
+                if (window[varName] !== undefined) {
+                    try { delete window[varName]; } catch {}
+                }
+                try { window[varName] = new Function('return (' + valueStr + ')')(); } catch (e) { console.warn('SPA config:', e); }
             }
-            try { eval(t); } catch (e) { console.warn('SPA config:', e); }
         }
 
         for (const src of externals) {
@@ -616,7 +621,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         }
 
         for (const t of inits) {
-            try { eval(t); } catch (e) { console.warn('SPA init:', e); }
+            try { new Function(t)(); } catch (e) { console.warn('SPA init:', e); }
         }
     }
 

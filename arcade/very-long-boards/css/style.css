@@ -4,6 +4,11 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+:root {
+    --mc-back-color: rgba(255, 46, 156, 0.5);
+    --mc-back-glow: 0 0 8px rgba(255, 46, 156, 0.95);
+}
+
 body {
     background: #0a0612;
     display: flex;
@@ -14,21 +19,6 @@ body {
     overflow: hidden;
 }
 
-/* ── MAGMACRUNCH ARCADE BACK LINK ── */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 14px;
-    z-index: 9999;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: rgba(255, 46, 156, 0.5);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.2s;
-}
-.mc-back::before { content: '← '; }
-.mc-back:hover { color: rgba(255, 46, 156, 0.95); }
 
 /* ── GAME CONTAINER ── */
 #game-container {

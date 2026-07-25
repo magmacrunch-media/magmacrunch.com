@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/arcade-base.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/loading.css">
     <link rel="stylesheet" href="css/stars.css">
@@ -30,25 +31,9 @@
     <link rel="stylesheet" href="css/fonts-retro.css">
     <link rel="stylesheet" href="css/modals-retro.css">
     <style>
-        /* ── magmacrunch arcade back link ── */
-        .mc-back {
-            position: fixed !important;
-            top: 12px !important;
-            left: 14px !important;
-            z-index: 99999 !important;
-            font-family: 'Press Start 2P', monospace !important;
-            font-size: 9px !important;
-            color: rgba(0, 212, 255, 0.5) !important;
-            text-decoration: none !important;
-            letter-spacing: 0.08em !important;
-            transition: color 0.2s !important;
-            pointer-events: auto !important;
-        }
-        .mc-back::before {
-            content: '← ';
-        }
-        .mc-back:hover {
-            color: rgba(0, 212, 255, 0.95);
+        :root {
+            --mc-back-color: rgba(0, 212, 255, 0.5);
+            --mc-back-glow: 0 0 8px rgba(0, 212, 255, 0.95);
         }
         body.game-active .mc-back {
             display: none;

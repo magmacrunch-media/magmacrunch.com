@@ -85,27 +85,6 @@ body {
     padding: 20px;
 }
 
-/* ── magmacrunch Back Link ──────────────────────────────────────────────────── */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 14px;
-    z-index: 10000;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: rgba(255, 140, 0, 0.6);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.2s;
-}
-
-.mc-back::before {
-    content: '← ';
-}
-
-.mc-back:hover {
-    color: rgba(255, 200, 80, 0.95);
-}
 
 /* ── Animations ─────────────────────────────────────────────────────────────── */
 @keyframes fadeIn {

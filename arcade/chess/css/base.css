@@ -4,6 +4,8 @@
 
 :root {
     /* ── Chess Neon Theme ──────────────────────────────────────────────────── */
+    --mc-back-color: var(--ch-player);
+    --mc-back-glow: 0 0 8px var(--ch-player);
     --ch-bg: #0a0612;
     --ch-board-dark: #1a0a2a;
     --ch-board-light: #2a1a3a;
@@ -36,29 +38,6 @@ body {
     font-family: 'Press Start 2P', monospace;
     min-height: 100vh;
     overflow-x: hidden;
-}
-
-/* ── Back Link ──────────────────────────────────────────────────────────────── */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 14px;
-    z-index: 10000;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: var(--ch-player);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.15s, text-shadow 0.15s;
-}
-
-.mc-back::before {
-    content: '← ';
-}
-
-.mc-back:hover {
-    color: #ffffff;
-    text-shadow: 0 0 8px var(--ch-player);
 }
 
 /* ── Container ──────────────────────────────────────────────────────────────── */

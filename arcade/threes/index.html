@@ -10,25 +10,9 @@
         .font-loading body {
             visibility: hidden;
         }
-
-        .mc-back {
-            position: fixed;
-            top: 12px;
-            left: 14px;
-            z-index: 10000;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: rgba(255, 140, 0, 0.6);
-            text-decoration: none;
-            letter-spacing: 0.08em;
-            transition: color 0.2s;
-            pointer-events: auto;
-        }
-        .mc-back::before {
-            content: '\2190 ';
-        }
-        .mc-back:hover {
-            color: rgba(255, 200, 80, 0.95);
+        :root {
+            --mc-back-color: rgba(255, 140, 0, 0.6);
+            --mc-back-glow: 0 0 8px rgba(255, 200, 80, 0.95);
         }
     </style>
     <script>
@@ -43,6 +27,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 
     <!-- Framework CSS -->
+    <link rel="stylesheet" href="../shared/arcade-base.css">
     <link rel="stylesheet" href="../puzzle-framework/css/puzzle-base.css">
     <link rel="stylesheet" href="../puzzle-framework/css/puzzle-grid.css">
     <link rel="stylesheet" href="../puzzle-framework/css/puzzle-modals.css">

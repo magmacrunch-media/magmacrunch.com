@@ -4,6 +4,8 @@
 
 /* ── CSS Variables ──────────────────────────────────────────────────────────── */
 :root {
+    --mc-back-color: var(--pc-text-dim);
+    --mc-back-glow: 0 0 8px var(--pc-accent);
     --pc-bg: #1a0a0a;
     --pc-bg-light: #2a1210;
     --pc-text: #f0ead8;
@@ -63,23 +65,6 @@ body::after {
     z-index: 9999;
 }
 
-/* ── Back link ──────────────────────────────────────────────────────────────── */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 16px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--pc-text-dim);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    z-index: 100;
-    transition: color 0.15s, text-shadow 0.15s;
-}
-.mc-back:hover {
-    color: var(--pc-accent);
-    text-shadow: 0 0 8px var(--pc-accent-glow);
-}
 
 /* ── Screens ────────────────────────────────────────────────────────────────── */
 #startScreen {

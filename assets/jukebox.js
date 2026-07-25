@@ -348,18 +348,6 @@
         // Progress seek
         progressWrap.addEventListener('click', seekTo);
 
-        // Keyboard shortcuts
-        window.addEventListener('keydown', (e) => {
-            const tag = document.activeElement && document.activeElement.tagName;
-            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-            if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlay(); }
-            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevTrack(); }
-            else if (e.key === 'ArrowRight') { e.preventDefault(); nextTrack(); }
-            else if (e.key === 'ArrowUp') { e.preventDefault(); setVolume(volume + 0.05); }
-            else if (e.key === 'ArrowDown') { e.preventDefault(); setVolume(volume - 0.05); }
-            else if (e.key === 'm' || e.key === 'M') { toggleMute(); }
-        });
-
         // Media Session API
         if ('mediaSession' in navigator) {
             navigator.mediaSession.setActionHandler('play', () => { if (!isPlaying) togglePlay(); });
@@ -402,13 +390,31 @@
         updateUI();
     }
 
-    /* ── SAVE STATE BEFORE UNLOAD ── */
-    window.addEventListener('beforeunload', () => {
-        stopSaveInterval();
-        if (audio && isPlaying) {
-            saveState();
-        }
-    });
+    /* ── KEYBOARD SHORTCUTS (one-time) ── */
+    if (!window.__mcJukeboxKeys) {
+        window.__mcJukeboxKeys = true;
+        window.addEventListener('keydown', (e) => {
+            const tag = document.activeElement && document.activeElement.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevTrack(); }
+            else if (e.key === 'ArrowRight') { e.preventDefault(); nextTrack(); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setVolume(volume + 0.05); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); setVolume(volume - 0.05); }
+            else if (e.key === 'm' || e.key === 'M') { toggleMute(); }
+        });
+    }
+
+    /* ── SAVE STATE BEFORE UNLOAD (one-time) ── */
+    if (!window.__mcJukeboxUnload) {
+        window.__mcJukeboxUnload = true;
+        window.addEventListener('beforeunload', () => {
+            stopSaveInterval();
+            if (audio && isPlaying) {
+                saveState();
+            }
+        });
+    }
 
     /* ── INIT ── */
     if (document.readyState === 'loading') {

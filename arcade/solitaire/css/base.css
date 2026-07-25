@@ -6,6 +6,8 @@
 
 :root {
     /* ── Neon Miami palette ──────────────────────────────── */
+    --mc-back-color: var(--cyan);
+    --mc-back-glow: 0 0 8px var(--cyan-glow);
     --pink:         #ff2d78;
     --pink-dim:     #c01050;
     --pink-glow:    rgba(255, 45, 120, 0.35);
@@ -87,27 +89,6 @@ body {
     align-items: flex-start;
     padding: 30px 12px 18px 60px;
     color: var(--chrome-bg);
-}
-
-/* magmacrunch arcade link */
-a.mc-back, .mc-back {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: var(--cyan);
-    text-decoration: none;
-    z-index: 10000;
-    transition: all 0.2s;
-}
-
-a.mc-back::before {
-    content: '← ';
-}
-
-a.mc-back:hover {
-    color: var(--cyan-glow);
 }
 
 body.game-active a.mc-back {

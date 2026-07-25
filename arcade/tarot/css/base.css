@@ -4,6 +4,8 @@
    ══════════════════════════════════════════════════════════ */
 
 :root {
+    --mc-back-color: var(--gold);
+    --mc-back-glow: 0 0 8px #ffff00;
     --bg-dark: #0a0612;
     --bg-mid: #150b29;
     --bg-light: #1a0a2a;
@@ -76,20 +78,6 @@ body::before {
     position: relative;
 }
 
-/* Back link */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 14px;
-    z-index: 10001;
-    font-family: var(--font-pixel);
-    font-size: 9px;
-    color: var(--gold);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-}
-.mc-back::before { content: '← '; }
-.mc-back:hover { color: #ffff00; }
 
 /* Buttons */
 button {
