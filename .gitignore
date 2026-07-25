@@ -8,4 +8,5 @@ node_modules/
 arcade/private/config.json
 arcade/admin/config.json
 arcade/admin/api-keys.json
+arcade/admin/github-token.json
 **/AGENTS.md

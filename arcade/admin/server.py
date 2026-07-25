@@ -31,10 +31,30 @@ DEFAULT_CONFIG = {
     "auth": False,
     "password": "changeme",
     "bind": "0.0.0.0",
-    "github_token": ""
 }
 
 CONFIG = {}
+
+# ── GitHub token (stored separately, never in config.json) ──────────────────
+
+ADMIN_DIR = os.path.dirname(os.path.abspath(__file__))
+GITHUB_TOKEN_PATH = os.path.join(ADMIN_DIR, "github-token.json")
+
+
+def load_github_token():
+    """Load GitHub token from github-token.json."""
+    try:
+        with open(GITHUB_TOKEN_PATH) as f:
+            data = json.load(f)
+            return data.get("token", "")
+    except (FileNotFoundError, json.JSONDecodeError):
+        return ""
+
+
+def save_github_token(token):
+    """Save GitHub token to github-token.json."""
+    with open(GITHUB_TOKEN_PATH, "w") as f:
+        json.dump({"token": token}, f, indent=2)
 
 # ── Service definitions ──────────────────────────────────────────────────────
 
@@ -1059,7 +1079,7 @@ async def ws_handler(websocket):
 
             elif action == "favicon_deploy":
                 pixels = msg.get("pixels", [])
-                token = CONFIG.get("github_token", "")
+                token = load_github_token()
                 if not token:
                     await websocket.send(json.dumps({
                         "type": "favicon_deploy_result",
@@ -1101,7 +1121,7 @@ async def ws_handler(websocket):
             # ── GitHub deploy actions ──────────────────────────────────────
 
             elif action == "github_test":
-                token = msg.get("github_token") or CONFIG.get("github_token", "")
+                token = msg.get("github_token") or load_github_token()
                 if not token:
                     await websocket.send(json.dumps({
                         "type": "github_test_result", "ok": False, "error": "No token configured"
@@ -1123,7 +1143,7 @@ async def ws_handler(websocket):
 
             elif action == "github_deploy_jukebox":
                 songs = msg.get("songs", [])
-                token = CONFIG.get("github_token", "")
+                token = load_github_token()
                 commit_msg = msg.get("message", "Update jukebox songs via MAGMA//OPS")
                 await asyncio.get_event_loop().run_in_executor(
                     _executor, lambda: save_jukebox(songs)
@@ -1149,7 +1169,7 @@ async def ws_handler(websocket):
 
             elif action == "github_deploy_tv":
                 channels = msg.get("channels", [])
-                token = CONFIG.get("github_token", "")
+                token = load_github_token()
                 commit_msg = msg.get("message", "Update TV channels via MAGMA//OPS")
                 await asyncio.get_event_loop().run_in_executor(
                     _executor, lambda: save_tv(channels)
@@ -1191,7 +1211,7 @@ async def ws_handler(websocket):
 
             elif action == "github_deploy_themes":
                 themes = msg.get("themes", [])
-                token = CONFIG.get("github_token", "")
+                token = load_github_token()
                 commit_msg = msg.get("message", "Update themes via MAGMA//OPS")
                 await asyncio.get_event_loop().run_in_executor(
                     _executor, lambda: save_themes(themes)
@@ -1216,7 +1236,7 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "github_sync_all":
-                token = CONFIG.get("github_token", "")
+                token = load_github_token()
                 commit_msg = msg.get("message", "Bulk sync from MAGMA//OPS dashboard")
                 if not token:
                     await websocket.send(json.dumps({
@@ -1301,7 +1321,7 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "github_backup":
-                token = CONFIG.get("github_token", "")
+                token = load_github_token()
                 commit_msg = msg.get("message", "Update cache via MAGMA//OPS")
                 backup_type = msg.get("backup_type", "musicbrainz")
 
@@ -1360,10 +1380,7 @@ async def ws_handler(websocket):
 
             elif action == "github_config_save":
                 github_token = msg.get("github_token", "")
-                CONFIG["github_token"] = github_token
-                config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
-                with open(config_path, "w") as f:
-                    json.dump(CONFIG, f, indent=2)
+                save_github_token(github_token)
                 await websocket.send(json.dumps({"type": "github_config_saved", "ok": True}))
 
     except websockets.ConnectionClosed:
@@ -1390,7 +1407,6 @@ class AdminHTTPHandler(SimpleHTTPRequestHandler):
             if os.path.exists(keys_path):
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
                 self.send_header("Cache-Control", "no-cache")
                 self.end_headers()
                 with open(keys_path, "rb") as f:
@@ -1398,7 +1414,6 @@ class AdminHTTPHandler(SimpleHTTPRequestHandler):
             else:
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json")
-                self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
                 self.wfile.write(b"{}")
         else:
@@ -1422,6 +1437,13 @@ def main():
             CONFIG = json.load(f)
     else:
         CONFIG = DEFAULT_CONFIG.copy()
+
+    # Migrate github_token from config.json → github-token.json (one-time)
+    if "github_token" in CONFIG and CONFIG["github_token"]:
+        save_github_token(CONFIG["github_token"])
+        del CONFIG["github_token"]
+        with open(config_path, "w") as f:
+            json.dump(CONFIG, f, indent=2)
 
     port = CONFIG.get("port", 8780)
     bind = CONFIG.get("bind", "0.0.0.0")
