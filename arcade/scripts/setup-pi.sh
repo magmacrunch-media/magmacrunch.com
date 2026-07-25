@@ -120,6 +120,7 @@ SERVICES=(
     "arcade-chinese-checkers"
     "arcade-parchisi"
     "arcade-aggravation"
+    "arcade-counter"
     "arcade-admin"
     "arcade-private"
 )
