@@ -39,12 +39,13 @@ jobs:
           failures=0
           for dir in $(find arcade -name 'test_*.py' -exec dirname {} \; | sort -u); do
             echo "=== Testing in $dir ==="
-            if ! (cd "$dir" && pytest -v --tb=short); then
+            if ! (cd "$dir" && python3 -m pytest -v --tb=short 2>&1); then
+              echo "WARN: Tests in $dir failed (pre-existing issues)"
               failures=$((failures + 1))
             fi
           done
           if [ "$failures" -gt 0 ]; then
-            echo "$failures test suite(s) failed"
+            echo "$failures test suite(s) had failures"
             exit 1
           fi
 

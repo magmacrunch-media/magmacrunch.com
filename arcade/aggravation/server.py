@@ -40,12 +40,20 @@ for c in COLORS:
 
 # ── Position helpers ──────────────────────────────────────────────────────────
 
+def pos_is_null(pos):
+    return pos is None
+
+
 def pos_is_track(pos):
     return isinstance(pos, dict) and 'track' in pos
 
 
 def pos_is_home(pos):
     return isinstance(pos, dict) and 'home' in pos
+
+
+def pos_is_finished(pos):
+    return pos == 'finished'
 
 
 def advance_position(color, from_pos, steps):
@@ -156,6 +164,20 @@ def get_legal_moves(color, dice_value, pawns):
         })
 
     return moves
+
+
+def ai_choose_move(color, dice_value, pawns):
+    """Simple AI: prefer captures, then entering from yard, then farthest forward."""
+    moves = get_legal_moves(color, dice_value, pawns)
+    if not moves:
+        return None
+    captures = [m for m in moves if m.get('capture')]
+    if captures:
+        return captures[0]
+    enters = [m for m in moves if m.get('enterFromYard')]
+    if enters:
+        return enters[0]
+    return max(moves, key=lambda m: m.get('newPos', {}).get('track', 0) if isinstance(m.get('newPos'), dict) else 0)
 
 
 # ── Game Class ────────────────────────────────────────────────────────────────
