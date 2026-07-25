@@ -1,0 +1,458 @@
+/* lobby.css — Lobby overlay, network status UI, shared chat and message styles,
+   rejected overlay, and color swatch picker.
+   Depends on: base.css */
+
+/* ── TERMINAL THEME VARIABLES ── */
+:root {
+  --term-bg:        #000000;
+  --term-panel:     #020202;
+  --term-border:    #1a1a1a;
+  --term-green:     #39ff14;
+  --term-green-dim: #39ff1466;
+  --term-green-mid: #25c40a;
+  --term-amber:     #ffb700;
+  --term-scanline:  rgba(0, 0, 0, 0.4);
+  --term-glow:      0 0 10px rgba(57,255,20,0.35);
+  --term-glow-lg:   0 0 20px rgba(57,255,20,0.5);
+}
+
+/* ── SORRY! TITLE — complement color ── */
+#lobby-overlay h1,
+#game-view h1 {
+  color: var(--my-complement, #ffd700);
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.4), 0 0 24px var(--my-complement, #ffd700);
+  transition: color 0.4s, text-shadow 0.4s;
+}
+
+/* ── LOBBY OVERLAY ── */
+#lobby-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.97);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-start;
+  overflow-y: auto;
+  z-index: 100; padding: 24px 16px;
+  font-family: 'Press Start 2P', monospace;
+  color: var(--my-color, var(--term-green));
+}
+#lobby-overlay.hidden { display: none; }
+#lobby-inner { display: flex; gap: 16px; width: 100%; max-width: 720px; align-items: flex-start; }
+#lobby-left  { width: 240px; flex-shrink: 0; display: flex; flex-direction: column; gap: 12px; }
+#lobby-right { flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+
+/* ── NETWORK STATUS BAR (lobby) ── */
+#net-status-bar {
+  width: 100%; max-width: 720px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--term-panel); border: 1px solid var(--my-color, var(--term-border));
+  border-radius: 4px; padding: 9px 14px; margin-bottom: 16px; font-size: 8px;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.5px; transition: border-color 0.3s;
+}
+#net-status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--net-accent2); flex-shrink: 0; transition: background .3s;
+}
+#net-status-dot.connected { background: #39ff14 !important; box-shadow: 0 0 10px rgba(57,255,20,0.5) !important; } /* always green — semantic indicator */
+#net-status-text { color: var(--my-color, var(--term-green-dim)); opacity: 0.7; font-size: 7px; transition: color 0.3s; }
+#net-player-badge {
+  margin-left: auto; background: var(--my-color-dim, rgba(57,255,20,0.08)); color: var(--my-color, var(--term-green));
+  border: 1px solid var(--my-color, rgba(57,255,20,0.3)); border-radius: 3px;
+  padding: 2px 8px; font-size: 7px; display: none;
+}
+
+/* ── SHARED NET-BOX PANEL ── */
+.net-box {
+  background: var(--term-panel);
+  border: 1px solid var(--my-color, var(--term-border));
+  border-radius: 4px;
+  padding: 16px;
+  /* Subtle scanline effect */
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    var(--term-scanline) 3px,
+    var(--term-scanline) 4px
+  );
+}
+.net-box-label {
+  font-size: 7px; color: var(--my-color, rgba(255,255,255,0.5)); letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 12px;
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: 0 0 8px var(--my-color-dim, rgba(57,255,20,0.25));
+}
+
+/* ── COLOR SWATCH PICKER ── */
+#color-picker-label {
+  font-size: 9px; color: var(--net-dim); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+#color-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.color-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.12s, border-color 0.12s, box-shadow 0.12s, opacity 0.12s;
+  position: relative;
+  outline: none;
+}
+.color-swatch:hover:not(.swatch-taken) {
+  transform: scale(1.18);
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 0 8px rgba(255,255,255,0.3);
+}
+.color-swatch.swatch-selected {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px #fff, 0 0 10px 3px rgba(255,255,255,0.5);
+  transform: scale(1.15);
+}
+.color-swatch.swatch-taken {
+  opacity: 0.22;
+  cursor: not-allowed;
+  filter: grayscale(60%);
+}
+/* X mark on taken swatches */
+.color-swatch.swatch-taken::after {
+  content: '✕';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: rgba(255,255,255,0.7);
+  font-family: sans-serif;
+  font-weight: bold;
+}
+#color-picker-hint {
+  font-size: 7px;
+  color: var(--term-green-dim);
+  font-family: 'Press Start 2P', monospace;
+  margin-bottom: 10px;
+  min-height: 13px;
+  transition: color 0.2s;
+  line-height: 1.8;
+}
+#color-picker-hint.hint-ok { color: var(--my-color, var(--term-green)); text-shadow: 0 0 8px var(--my-color-dim, rgba(57,255,20,0.4)); }
+
+/* ── JOIN FORM ── */
+#join-box input {
+  width: 100%; background: var(--term-bg); border: 1px solid var(--term-border); border-radius: 3px;
+  color: var(--my-color, var(--term-green)); font-family: 'Press Start 2P', monospace; font-size: 9px;
+  padding: 9px 12px; outline: none; margin-bottom: 10px;
+  transition: border-color .2s, box-shadow .2s;
+  caret-color: var(--my-color, var(--term-green));
+}
+#join-box input::placeholder { color: rgba(255,255,255,0.25); }
+#join-box input:focus {
+  border-color: var(--my-color, var(--term-green));
+  box-shadow: 0 0 10px var(--my-color-dim, rgba(57,255,20,0.35));
+}
+
+#join-btn {
+  width: 100%; background: var(--my-color, var(--term-green)); color: #030a03; border: none; border-radius: 3px;
+  font-family: 'Press Start 2P', monospace; font-size: 8px; padding: 11px;
+  cursor: pointer; letter-spacing: 1px; transition: opacity .15s, box-shadow .15s;
+}
+#join-btn:hover:not(:disabled) { opacity: .85; box-shadow: 0 0 20px var(--my-color-dim, rgba(57,255,20,0.5)); }
+#join-btn:disabled { opacity: .25; cursor: not-allowed; }
+
+/* ── PLAYER LIST ── */
+#player-list { display: flex; flex-direction: column; gap: 6px; }
+.p-slot {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 3px; font-size: 8px;
+  border: 1px solid var(--term-border); font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.3px; line-height: 1.6;
+}
+.p-slot.filled { background: rgba(57,255,20,0.04); border-color: var(--my-color, var(--term-green-dim)); }
+.p-slot.empty  { color: rgba(255,255,255,0.25); font-style: normal; border-style: dashed; opacity: 0.5; }
+.p-name      { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--my-color, var(--term-green)); }
+.color-pip   { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+.host-tag    { font-size: 6px; color: var(--term-amber); background: rgba(255,183,0,0.1); border: 1px solid rgba(255,183,0,0.35); border-radius: 2px; padding: 1px 5px; }
+.you-tag     { font-size: 6px; color: var(--my-color, var(--term-green)); background: rgba(57,255,20,0.1); border: 1px solid var(--my-color, rgba(57,255,20,0.35)); border-radius: 2px; padding: 1px 5px; }
+
+/* ── LOBBY STATUS + BUTTONS ── */
+#lobby-status-text {
+  font-size: 8px; color: var(--my-color, rgba(255,255,255,0.6)); line-height: 2;
+  margin-bottom: 12px; min-height: 36px; font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.3px;
+}
+#start-btn {
+  width: 100%; background: var(--my-color, var(--term-green)); color: #030a03; border: none; border-radius: 3px;
+  font-family: 'Press Start 2P', monospace; font-size: 8px; padding: 12px;
+  cursor: pointer; letter-spacing: 1px; transition: opacity .15s, box-shadow .15s; display: none;
+}
+#start-btn:hover:not(:disabled) { opacity: .85; box-shadow: 0 0 20px var(--my-color-dim, rgba(57,255,20,0.5)); }
+#start-btn:disabled { opacity: .2; cursor: not-allowed; }
+#waiting-for-host {
+  font-size: 8px; color: var(--my-color, var(--term-green-dim)); text-align: center;
+  line-height: 2; display: none; font-family: 'Press Start 2P', monospace;
+}
+
+/* ── SHARED CHAT WINDOWS — phosphor terminal style ── */
+.chat-window {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 8px;
+  font-family: 'Press Start 2P', monospace;
+  min-height: 80px;
+  /* Use background-color + background-image separately so neither wipes the other */
+  background-color: var(--term-bg);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,18,0,0.4) 3px,
+    rgba(0,18,0,0.4) 4px
+  );
+  border: 1px solid var(--term-border);
+  border-radius: 3px;
+  padding: 8px;
+}
+.chat-window::-webkit-scrollbar       { width: 4px; }
+.chat-window::-webkit-scrollbar-thumb { background: var(--term-border); border-radius: 2px; }
+.chat-window::-webkit-scrollbar-track { background: var(--term-bg); }
+
+#lobby-chat-window { height: 280px; flex: none; }
+/* game-chat-window flex sizing is controlled by game.css sidebar rules */
+#game-chat-window  { min-height: 80px; }
+
+/* ── CHAT INPUT ROW ── */
+.chat-input-row { display: flex; gap: 8px; }
+.chat-input-row input {
+  flex: 1; background: var(--term-bg); border: 1px solid var(--term-border); border-radius: 3px;
+  color: var(--my-color, var(--term-green)); font-family: 'Press Start 2P', monospace; font-size: 8px;
+  padding: 9px 12px; outline: none; transition: border-color .2s, box-shadow .2s;
+  caret-color: var(--my-color, var(--term-green));
+}
+.chat-input-row input::placeholder { color: rgba(255,255,255,0.2); }
+.chat-input-row input:focus {
+  border-color: var(--my-color, var(--term-green));
+  box-shadow: 0 0 10px var(--my-color-dim, rgba(57,255,20,0.35));
+}
+.chat-input-row button {
+  background: var(--term-panel); color: var(--my-color, var(--term-green));
+  border: 1px solid var(--term-border); border-radius: 3px;
+  font-family: 'Press Start 2P', monospace; font-size: 7px; padding: 9px 10px;
+  cursor: pointer; transition: border-color .2s, box-shadow .2s; letter-spacing: 0.5px;
+}
+.chat-input-row button:hover:not(:disabled) {
+  border-color: var(--my-color, var(--term-green));
+  box-shadow: 0 0 10px var(--my-color-dim, rgba(57,255,20,0.35));
+}
+.chat-input-row button:disabled { opacity: .3; cursor: not-allowed; }
+
+/* ── MESSAGE BUBBLES — terminal style ── */
+.msg { padding: 4px 6px; word-break: break-word; line-height: 1.8; }
+.msg .sender { font-size: 7px; color: rgba(255,255,255,0.35); margin-bottom: 2px; letter-spacing: 0.5px; }
+
+/* System messages — neutral dim, no color */
+.msg.system {
+  color: rgba(255,255,255,0.45);
+  font-size: 7px;
+  border-left: 2px solid rgba(255,255,255,0.15);
+  padding-left: 8px;
+  opacity: 0.8;
+}
+/* Your own chat — uses player color */
+.msg.mine {
+  color: var(--my-color, var(--term-green));
+  border-left: 2px solid var(--my-color, var(--term-green));
+  padding-left: 8px;
+  text-shadow: 0 0 6px var(--my-color-dim, rgba(57,255,20,0.4));
+}
+/* Others' chat — neutral fallback; JS overrides with sender's actual color */
+.msg.theirs {
+  color: rgba(255,255,255,0.65);
+  border-left: 2px solid rgba(255,255,255,0.2);
+  padding-left: 8px;
+}
+/* Card draw events */
+.msg.card-event {
+  color: var(--term-amber);
+  border-left: 3px solid var(--term-amber);
+  padding: 4px 8px;
+  font-size: 7px;
+  text-shadow: 0 0 6px rgba(255,183,0,0.4);
+}
+/* Game system events (log panel) — neutral dim */
+.msg.game-system {
+  color: rgba(255,255,255,0.4);
+  border-left: 2px solid rgba(255,255,255,0.15);
+  padding: 3px 8px;
+  font-size: 7px;
+  opacity: 0.9;
+}
+
+/* ── GAME IN PROGRESS BANNER ── */
+.game-in-progress-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 183, 0, 0.07);
+  border: 1px solid rgba(255, 183, 0, 0.45);
+  border-radius: 4px;
+  padding: 9px 14px;
+  margin-bottom: 10px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  flex-wrap: wrap;
+  animation: gip-fadein 0.4s ease both;
+}
+@keyframes gip-fadein {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.gip-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--term-amber);
+  box-shadow: 0 0 8px rgba(255, 183, 0, 0.8);
+  flex-shrink: 0;
+  animation: gip-blink 1.1s step-start infinite;
+}
+@keyframes gip-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+.gip-text {
+  color: var(--term-amber);
+  text-shadow: 0 0 8px rgba(255, 183, 0, 0.5);
+  letter-spacing: 1px;
+}
+.gip-sub {
+  color: rgba(255, 183, 0, 0.55);
+  font-size: 6px;
+  letter-spacing: 0.5px;
+}
+
+/* ── REJECTED OVERLAY ── */
+#rejected-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.96);
+  align-items: center; justify-content: center; z-index: 200;
+}
+#rejected-overlay.show { display: flex; }
+#rejected-box {
+  background: var(--term-panel); border: 1px solid #cc3344;
+  border-radius: 4px; padding: 32px; text-align: center;
+  max-width: 360px; font-family: 'Press Start 2P', monospace;
+}
+#rejected-box h2     { font-size: 12px; color: var(--net-accent2); margin-bottom: 12px; }
+#rejected-reason     { font-size: 8px; color: var(--term-green-dim); line-height: 2; margin-bottom: 20px; }
+#rejected-actions    { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+
+#rejected-spectate-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--term-green-dim);
+  border-radius: 3px;
+  color: var(--my-color, var(--term-green));
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 11px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+#rejected-spectate-btn:hover {
+  border-color: var(--my-color, var(--term-green));
+  box-shadow: 0 0 10px var(--my-color-dim, rgba(57,255,20,0.35));
+}
+
+#rejected-late-join-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--term-amber);
+  border-radius: 3px;
+  color: var(--term-amber);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 11px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+#rejected-late-join-btn:hover { box-shadow: 0 0 10px rgba(255,183,0,0.4); }
+
+.rejected-back-link {
+  font-size: 7px;
+  color: var(--term-green-dim);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  transition: opacity 0.15s, color 0.15s;
+}
+.rejected-back-link:hover { opacity: 1; color: var(--my-color, var(--term-green)); }
+
+
+/* ═══════════════════════════════════════════
+   MOBILE LAYOUT  (screens narrower than 600px)
+═══════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+
+  /* Reduce lobby overlay padding so content isn't squeezed */
+  #lobby-overlay {
+    padding: 16px 12px;
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+
+  /* Shrink h1 so it doesn't overflow narrow screens */
+  #lobby-overlay h1 {
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+
+  /* Allow status bar items to wrap rather than overflow */
+  #net-status-bar {
+    flex-wrap: wrap;
+  }
+
+  /* Stack lobby columns vertically */
+  #lobby-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #lobby-left {
+    width: 100%;
+  }
+
+  /* Chat window shorter on mobile */
+  #lobby-chat-window {
+    height: 160px;
+  }
+
+  /* Color swatches — more columns on narrow screens */
+  #color-swatches {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* Larger touch targets for buttons */
+  #join-btn,
+  #start-btn {
+    padding: 14px;
+    font-size: 8px;
+  }
+
+  .chat-input-row button {
+    padding: 10px 8px;
+    font-size: 7px;
+  }
+}

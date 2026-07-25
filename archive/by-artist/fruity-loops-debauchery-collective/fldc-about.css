@@ -1,0 +1,52 @@
+/* Fruity Loops Debauchery Bros — about page — accent: c-blue */
+body.fldc-page.fldc-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.fldc-page.fldc-about-page main > * { background: var(--fldc-bg); }
+
+body.fldc-page.fldc-about-page .breadcrumb { color: var(--fldc-arc-blue); }
+body.fldc-page.fldc-about-page .breadcrumb a { color: var(--fldc-arc-blue); }
+body.fldc-page.fldc-about-page .breadcrumb a:hover { color: var(--fldc-arc-blue-light); }
+body.fldc-page.fldc-about-page .breadcrumb .sep { color: var(--fldc-arc-blue); opacity: 0.6; }
+body.fldc-page.fldc-about-page .breadcrumb .current { color: var(--fldc-arc-blue); }
+
+body.fldc-page.fldc-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fldc-page.fldc-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--fldc-arc-blue); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fldc-page.fldc-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--fldc-arc-blue); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(48,96,176,0.5); }
+
+body.fldc-page.fldc-about-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--fldc-arc-dark), var(--fldc-arc-blue), var(--fldc-arc-dark), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.fldc-page.fldc-about-page .bio-section {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 20px;
+}
+body.fldc-page.fldc-about-page .bio-section p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--fldc-bg-screen-light);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.fldc-page.fldc-about-page .bio-section p a {
+    color: var(--fldc-arc-blue-light);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.fldc-page.fldc-about-page .bio-section p a:hover {
+    color: var(--fldc-arc-yellow);
+    border-bottom-color: var(--fldc-arc-yellow);
+}
+
+body.fldc-page.fldc-about-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-blue); border-color: var(--fldc-arc-blue); }
+body.fldc-page.fldc-about-page .nav-card.c-back:hover { background: var(--fldc-arc-blue); color: var(--fldc-bg-screen-pale); }
+
+body.fldc-page.fldc-about-page .nav-card::after { display: none; }
+body.fldc-page.fldc-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

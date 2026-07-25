@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twin Maples — personnel — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="tm-shared.css">
+    <link rel="stylesheet" href="tm-personnel.css">
+    <script>
+    window.PLACE_CONFIG = {
+        id:        'e697fa03-e300-421a-8fd3-3b026d8d4f13',
+        name:      'Twin Maples',
+        abbr:      'twin maples',
+        backColor: 'c-personnel',
+        siblings:  ['personnel', 'recordings', 'works'],
+        depth:     '../../../',
+    };
+    window.PLACE_CONFIG.accent = 'blue';
+    </script>
+</head>
+<body class="tm-page tm-personnel-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="place-label" id="place-label"></div>
+        <div class="page-title">PERSONNEL</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+    <div class="catalog-wrap">
+        <div id="status-bar">loading personnel…</div>
+        <div id="count-bar"></div>
+        <div id="artists-list"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/entity-map.js"></script>
+<script src="../../../templates/place_personnel.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var nav = document.getElementById('sub-nav');
+    if (nav.children.length > 1) {
+        var aboutLink = document.createElement('a');
+        aboutLink.href = 'about.html';
+        aboutLink.className = 'nav-card c-about';
+        aboutLink.textContent = 'about';
+        nav.insertBefore(aboutLink, nav.children[1]);
+    }
+});
+</script>
+</body>
+</html>

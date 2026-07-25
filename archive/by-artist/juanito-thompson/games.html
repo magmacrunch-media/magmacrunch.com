@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>juanito thompson — games — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="juanito-thompson-shared.css">
+    <link rel="stylesheet" href="juanito-thompson-games.css">
+
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        'ddcbeb01-edb5-4e74-b5cd-23d1b64d3086',
+        name:      'juanito thompson',
+        abbr:      'JT',
+        accent:    'green',
+        backColor: 'c-green',
+        siblings:  ['about', 'games', 'music-videos', 'network', 'photography', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="jt-page jt-games-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title">GAMES</div>
+        <div class="sub-nav">
+            <a href="./"         class="nav-card c-back">← back</a>
+            <a href="about.html"         class="nav-card c-about">about</a>
+            <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
+            <a href="network.html"       class="nav-card c-network">network</a>
+            <a href="photography.html"   class="nav-card c-photography">photography</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"      class="nav-card c-releases">releases</a>
+            <a href="works.html"         class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="place-body">
+        <p>Music-inspired games from the magmacrunch arcade.</p>
+    </div>
+
+    <div class="games-grid">
+        <a href="../../../arcade/george-boole/" class="game-card-link">
+            <div class="game-card">
+                <div class="game-card-header">
+                    <div class="game-card-title">GEORGE BOOLE<br>HAS ENTERED<br>THE CHAT</div>
+                    <div class="game-card-badge">PLAY</div>
+                </div>
+                <div class="game-card-body">
+                    <div class="game-card-desc">boolean logic puzzles. true or false? and, or, not.</div>
+                    <div class="game-card-meta">
+                        <span class="game-card-tag">music-inspired</span>
+                        <span class="game-card-note">named after a Juanito Thompson song</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const C = window.ARTIST_CONFIG;
+    if (!C) return;
+    const d = C.depth || '../../../';
+
+    const breadcrumbEl = document.querySelector('.breadcrumb');
+    if (breadcrumbEl) {
+        breadcrumbEl.innerHTML = `
+            <a href="${d}archive/">archive</a>
+            <span class="sep">›</span>
+            <a href="${d}archive/by-artist/">by artist</a>
+            <span class="sep">›</span>
+            <a href="./">${C.abbr.toLowerCase()}</a>
+        `;
+    }
+
+    const artistLabelEl = document.getElementById('artist-label');
+    if (artistLabelEl) artistLabelEl.textContent = `// ${C.name} //`;
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dag henderson — photography — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="dh-shared.css">
+    <link rel="stylesheet" href="dh-photography.css">
+</head>
+<body class="dh-page dh-photography-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">dh</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// dag henderson //</div>
+        <div class="page-title">PHOTOGRAPHY</div>
+        <div class="sub-nav">
+            <a href="./"          class="nav-card c-back">← back</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
+            <a href="music-videos.html" class="nav-card c-events">music videos</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"      class="nav-card c-releases">releases</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="section-label" style="margin-bottom:16px;">// photos //</div>
+        <div class="photo-strip-wrap" id="dhStripWrap">
+            <div class="photo-strip" id="dhStrip">
+                <div class="photo-item square" data-index="0">
+                    <img src="../../../assets/photos/placeholder.jpg" alt="Dag Henderson">
+                    <div class="photo-caption">add caption here</div>
+                </div>
+            </div>
+            <div class="strip-scroll-hint" id="dhScrollHint">← drag to scroll →</div>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<div class="photo-lightbox" id="dhLightbox">
+    <button class="lb-close" id="dhLbClose">[ close ]</button>
+    <div class="lb-img-wrap"><img id="dhLbImg" src="" alt=""></div>
+    <div class="lb-cap" id="dhLbCap"></div>
+    <div class="lb-nav">
+        <button class="lb-btn" id="dhLbPrev">← prev</button>
+        <span class="lb-counter" id="dhLbCounter"></span>
+        <button class="lb-btn" id="dhLbNext">next →</button>
+    </div>
+</div>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    const strip = document.getElementById('dhStrip');
+    const wrap  = document.getElementById('dhStripWrap');
+    const hint  = document.getElementById('dhScrollHint');
+    let isDown = false, startX, scrollLeft;
+
+    strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
+    strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+})();
+(function() {
+    const items   = document.querySelectorAll('#dhStrip .photo-item');
+    const lb      = document.getElementById('dhLightbox');
+    const lbImg   = document.getElementById('dhLbImg');
+    const lbCap   = document.getElementById('dhLbCap');
+    const lbCount = document.getElementById('dhLbCounter');
+    const strip   = document.getElementById('dhStrip');
+
+    const photos = Array.from(items).map(item => ({
+        src:     item.querySelector('img').src,
+        alt:     item.querySelector('img').alt,
+        caption: item.querySelector('.photo-caption').textContent.trim()
+    }));
+
+    let current = 0;
+
+    function open(index) {
+        current = index;
+        show();
+        lb.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+    function close() {
+        lb.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    function show() {
+        lbImg.src = photos[current].src;
+        lbImg.alt = photos[current].alt;
+        lbCap.textContent = photos[current].caption;
+        lbCount.textContent = `${current + 1} / ${photos.length}`;
+    }
+    function nav(dir) {
+        current = (current + dir + photos.length) % photos.length;
+        show();
+    }
+
+    items.forEach(item => {
+        item.addEventListener('click', () => {
+            if (!strip.classList.contains('dragging'))
+                open(parseInt(item.dataset.index));
+        });
+    });
+
+    document.getElementById('dhLbClose').addEventListener('click', close);
+    document.getElementById('dhLbPrev').addEventListener('click', () => nav(-1));
+    document.getElementById('dhLbNext').addEventListener('click', () => nav(1));
+    lb.addEventListener('click', e => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', e => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape')      close();
+        if (e.key === 'ArrowLeft')   nav(-1);
+        if (e.key === 'ArrowRight')  nav(1);
+    });
+})();
+</script>
+</body>
+</html>

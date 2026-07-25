@@ -1,0 +1,63 @@
+/* Green Street Apt. shared color palette — walnut / linen / warm amber theme */
+:root {
+    --gs-deep:    #382e28;
+    --gs-dark:     #504438;
+    --gs-surface:  #786858;
+    --gs-muted:    #a09080;
+    --gs-light:    #c8bea8;
+    --gs-cream:    #e8e0cc;
+    --gs-heading:  #f8f4e8;
+    --gs-body:     #c8a878;
+    --gs-brand:    #7888a8;
+    --gs-accent:   #c07838;
+    --gs-green:    #607850;
+    --gs-leaf:     #485840;
+    --gs-warm:     #e8c8a0;
+    --gs-rose:     #704858;
+    --gs-sage:     #8878a8;
+    --gs-bg:       #0e0c0a;
+}
+
+/* Sub-nav button colors — all pages use these */
+body.gs-page { background: var(--gs-bg); --credit-color: var(--gs-muted); --nav-accent: var(--gs-brand); --nav-glow: rgba(120,136,168,0.4); --nav-brand: #a0b0c8; --nav-brand-glow: rgba(160,176,200,0.7); }
+body.gs-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.gs-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.gs-page .sub-nav .nav-card::after { display: none; }
+body.gs-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* c-about: dusty violet (formerly c-sage) */
+body.gs-page .sub-nav .nav-card.c-about { background: var(--gs-sage); color: var(--gs-deep); border-color: var(--gs-sage); }
+body.gs-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-sage); }
+
+/* c-personnel: steel blue brand (formerly c-blue) */
+body.gs-page .sub-nav .nav-card.c-personnel { background: var(--gs-brand); color: var(--gs-deep); border-color: var(--gs-brand); }
+body.gs-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-brand); }
+
+/* c-recordings: warm amber accent (formerly c-cyan) */
+body.gs-page .sub-nav .nav-card.c-recordings { background: var(--gs-accent); color: var(--gs-deep); border-color: var(--gs-accent); }
+body.gs-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-accent); }
+
+/* c-works: window plant green (formerly c-yellow) */
+body.gs-page .sub-nav .nav-card.c-works { background: var(--gs-green); color: var(--gs-deep); border-color: var(--gs-green); }
+body.gs-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-green); }
+
+/* c-events: window plant green (formerly c-green) */
+body.gs-page .sub-nav .nav-card.c-events { background: var(--gs-green); color: var(--gs-deep); border-color: var(--gs-green); }
+body.gs-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-green); }
+
+/* About button self-link hider */
+body.gs-page .sub-nav a[href="about.html"] {
+    background: var(--gs-sage);
+    color: var(--gs-deep);
+    border-color: var(--gs-sage);
+}
+
+body.gs-page footer { color: var(--gs-muted); }
+body.gs-page footer span { color: var(--gs-accent); }

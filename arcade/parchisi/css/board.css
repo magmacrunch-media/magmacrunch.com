@@ -1,0 +1,59 @@
+/**
+ * board.css — Parchís board styling
+ */
+
+/* ── Board container ────────────────────────────────────────────────────────── */
+.board-container {
+    position: relative;
+    flex-shrink: 0;
+}
+
+#boardCanvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    width: 450px;
+    height: 450px;
+    border: 2px solid var(--pc-border);
+    background: var(--pc-bg);
+    cursor: crosshair;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+/* ── Board labels ───────────────────────────────────────────────────────────── */
+.board-label {
+    position: absolute;
+    font-size: 7px;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+}
+
+.board-label-red    { bottom: 4px;  left: 50%;  transform: translateX(-50%); color: var(--slot-red); }
+.board-label-blue   { left: 4px;    top: 50%;   transform: translateY(-50%) rotate(-90deg); color: var(--slot-blue); }
+.board-label-green  { right: 4px;   top: 50%;   transform: translateY(-50%) rotate(90deg);  color: var(--slot-green); }
+.board-label-yellow { top: 4px;     left: 50%;  transform: translateX(-50%); color: var(--slot-yellow); }
+
+/* ── Score display ──────────────────────────────────────────────────────────── */
+.scores-bar {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 450px;
+    padding: 6px 0;
+    font-size: 7px;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.score-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.score-value {
+    color: var(--pc-text-dim);
+}

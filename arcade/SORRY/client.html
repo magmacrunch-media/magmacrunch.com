@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SORRY!</title>
+  <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     LOBBY OVERLAY  (covers everything until game starts)
+════════════════════════════════════════════════════════ -->
+<div id="lobby-overlay">
+  <h1>SORRY!</h1>
+
+  <div id="net-status-bar">
+    <div id="net-status-dot"></div>
+    <span id="net-status-text">Connecting to server…</span>
+    <span id="net-player-badge"></span>
+  </div>
+
+  <div id="lobby-inner">
+    <!-- Left: join form + player slots + start -->
+    <div id="lobby-left">
+      <div class="net-box" id="join-box">
+        <div class="net-box-label">Your Name</div>
+        <input id="name-input" type="text" placeholder="Enter name…" maxlength="20" />
+        <button id="join-btn" disabled>JOIN</button>
+      </div>
+
+      <div class="net-box">
+        <div class="net-box-label" id="players-label">Players (0 / 4)</div>
+        <div id="player-list"></div>
+      </div>
+
+      <div class="net-box">
+        <div class="net-box-label">Lobby</div>
+        <div id="lobby-status-text">Waiting for connection…</div>
+        <button id="start-btn" disabled>START GAME</button>
+        <div id="waiting-for-host">Waiting for<br/>host to start…</div>
+      </div>
+    </div>
+
+    <!-- Right: lobby chat -->
+    <div id="lobby-right">
+      <div class="net-box" style="flex:1;display:flex;flex-direction:column;gap:10px;">
+        <div class="net-box-label">Chat</div>
+        <div id="lobby-chat-window" class="chat-window"></div>
+        <div class="chat-input-row">
+          <input id="lobby-msg-input" type="text" placeholder="Say something…" disabled />
+          <button id="lobby-send-btn" disabled>SEND</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /lobby-overlay -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     GAME VIEW  (hidden until game starts)
+════════════════════════════════════════════════════════ -->
+<div id="game-view" style="display:none;">
+
+  <h1>SORRY!</h1>
+
+  <!-- Status bar -->
+  <div id="net-status-bar-game">
+    <div id="net-status-dot-game"></div>
+    <span id="net-status-text-game"></span>
+    <span id="net-player-badge-game"></span>
+  </div>
+
+  <!-- Main layout: board on left, sidebar on right -->
+  <div id="game-layout">
+
+    <div class="board-frame">
+      <div class="board" id="board"></div>
+    </div>
+
+    <!-- Right sidebar: turn + dice + chat -->
+    <div id="game-sidebar">
+
+      <!-- Turn indicator -->
+      <div class="net-box" id="turn-box">
+        <div class="net-box-label">Current Turn</div>
+        <div id="hud-turn-name">—</div>
+        <div id="your-turn-flash">▶ YOUR TURN!</div>
+      </div>
+
+      <!-- Dice -->
+      <div class="net-box" id="dice-box">
+        <div class="net-box-label">Dice</div>
+        <span id="hud-dice-face">⚅</span>
+        <div id="hud-last-roll"></div>
+        <button id="hud-roll-btn" disabled>ROLL DICE</button>
+      </div>
+
+      <!-- In-game chat -->
+      <div class="net-box" style="flex:1;display:flex;flex-direction:column;gap:10px;min-height:0;">
+        <div class="net-box-label">Chat</div>
+        <div id="game-chat-window" class="chat-window"></div>
+        <div class="chat-input-row">
+          <input id="game-msg-input" type="text" placeholder="Say something…" disabled />
+          <button id="game-send-btn" disabled>SEND</button>
+        </div>
+      </div>
+
+    </div><!-- /game-sidebar -->
+
+  </div><!-- /game-layout -->
+</div><!-- /game-view -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     REJECTED OVERLAY
+════════════════════════════════════════════════════════ -->
+<div id="rejected-overlay">
+  <div id="rejected-box">
+    <h2>Game has already started...</h2>
+    <div id="rejected-reason"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════════════════════ -->
+<script src="board-config.js"></script>
+<script src="game-state.js"></script>
+<script src="board-renderer.js"></script>
+<script src="network.js"></script>
+<script>
+
+  // ── DOM refs ──────────────────────────────────────────────────────────────
+  var lobbyOverlay      = document.getElementById('lobby-overlay');
+  var gameView          = document.getElementById('game-view');
+
+  // Lobby
+  var netStatusDot      = document.getElementById('net-status-dot');
+  var netStatusText     = document.getElementById('net-status-text');
+  var netPlayerBadge    = document.getElementById('net-player-badge');
+  var nameInput         = document.getElementById('name-input');
+  var joinBtn           = document.getElementById('join-btn');
+  var playersLabel      = document.getElementById('players-label');
+  var playerList        = document.getElementById('player-list');
+  var lobbyStatusText   = document.getElementById('lobby-status-text');
+  var startBtn          = document.getElementById('start-btn');
+  var waitingForHost    = document.getElementById('waiting-for-host');
+  var lobbyChatWindow   = document.getElementById('lobby-chat-window');
+  var lobbyMsgInput     = document.getElementById('lobby-msg-input');
+  var lobbySendBtn      = document.getElementById('lobby-send-btn');
+
+  // Game view
+  var netStatusDotGame  = document.getElementById('net-status-dot-game');
+  var netStatusTextGame = document.getElementById('net-status-text-game');
+  var netPlayerBadgeGame= document.getElementById('net-player-badge-game');
+  var boardEl           = document.getElementById('board');
+  var hudTurnName       = document.getElementById('hud-turn-name');
+  var yourTurnFlash     = document.getElementById('your-turn-flash');
+  var hudDiceFace       = document.getElementById('hud-dice-face');
+  var hudLastRoll       = document.getElementById('hud-last-roll');
+  var hudRollBtn        = document.getElementById('hud-roll-btn');
+  var gameChatWindow    = document.getElementById('game-chat-window');
+  var gameMsgInput      = document.getElementById('game-msg-input');
+  var gameSendBtn       = document.getElementById('game-send-btn');
+
+  var rejectedOverlay   = document.getElementById('rejected-overlay');
+  var rejectedReason    = document.getElementById('rejected-reason');
+
+  var DICE_FACES  = ['','⚀','⚁','⚂','⚃','⚄','⚅'];
+  var COLOR_HEX   = { red:'#f03a47', blue:'#3a86ff', yellow:'#ffcc00', green:'#2ecc71' };
+  var COLOR_ORDER = ['red','blue','yellow','green'];
+
+  // ── Initial board render ──────────────────────────────────────────────────
+  renderBoard(boardEl);
+
+  // ── game-state → board renderer ──────────────────────────────────────────
+  onStateChange(function(state) {
+    update(boardEl, state);
+  });
+
+  // ── Chat helpers (write to whichever panel is active) ────────────────────
+  function addMsg(type, text, sender) {
+    // During lobby write to lobby chat; during game write to game chat
+    var target = lobbyOverlay.classList.contains('hidden') ? gameChatWindow : lobbyChatWindow;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg ' + type;
+    if (sender) {
+      var s = document.createElement('div'); s.className = 'sender'; s.textContent = sender;
+      wrap.appendChild(s);
+    }
+    var t = document.createElement('div'); t.textContent = text;
+    wrap.appendChild(t);
+    target.appendChild(wrap);
+    target.scrollTop = target.scrollHeight;
+    // Also mirror into game chat if we're in the game (so dice events show up)
+    if (!lobbyOverlay.classList.contains('hidden') && type === 'dice-event') {
+      // won't happen in lobby, but guard anyway
+    }
+  }
+
+  // ── Player list renderer ──────────────────────────────────────────────────
+  function renderPlayers(players, maxPlayers) {
+    playersLabel.textContent = 'Players (' + players.length + ' / ' + maxPlayers + ')';
+    playerList.innerHTML = '';
+    for (var i = 0; i < maxPlayers; i++) {
+      var slot = document.createElement('div');
+      if (i < players.length) {
+        slot.className = 'p-slot filled';
+        var pip = document.createElement('div');
+        pip.className = 'color-pip';
+        pip.style.background = COLOR_HEX[COLOR_ORDER[i]] || '#aaa';
+        var name = document.createElement('div'); name.className = 'p-name';
+        name.textContent = players[i];
+        slot.appendChild(pip); slot.appendChild(name);
+        if (i === 0) {
+          var ht = document.createElement('span'); ht.className = 'host-tag'; ht.textContent = 'HOST';
+          slot.appendChild(ht);
+        }
+        if (players[i] === Network.getMyName()) {
+          var yt = document.createElement('span'); yt.className = 'you-tag'; yt.textContent = 'YOU';
+          slot.appendChild(yt);
+        }
+      } else {
+        slot.className = 'p-slot empty';
+        slot.textContent = 'Slot ' + (i+1) + ' — open';
+      }
+      playerList.appendChild(slot);
+    }
+  }
+
+  // ── Dice animation ────────────────────────────────────────────────────────
+  function animateDice(result) {
+    hudDiceFace.classList.add('rolling');
+    setTimeout(function() {
+      hudDiceFace.textContent = DICE_FACES[result] || String(result);
+      hudDiceFace.classList.remove('rolling');
+      hudLastRoll.textContent = 'Last roll: ' + result;
+    }, 400);
+  }
+
+  // ── Switch from lobby to game view ────────────────────────────────────────
+  function showGameView() {
+    lobbyOverlay.classList.add('hidden');
+    gameView.style.display = 'block';
+    // Mirror connection status into game view bar
+    netStatusDotGame.className  = netStatusDot.className;
+    netStatusTextGame.textContent = Network.getMyName() + ' — playing';
+    netPlayerBadgeGame.textContent = netPlayerBadge.textContent;
+    netPlayerBadgeGame.style.display = 'block';
+    // Enable in-game chat
+    gameMsgInput.disabled = false;
+    gameSendBtn.disabled  = false;
+  }
+
+  // ── Network callbacks ─────────────────────────────────────────────────────
+
+  Network.onConnected = function() {
+    netStatusDot.classList.add('connected');
+    netStatusText.textContent = 'Connected — enter your name and join!';
+    joinBtn.disabled = false;
+    nameInput.focus();
+  };
+
+  Network.onDisconnected = function() {
+    netStatusDot.classList.remove('connected');
+    netStatusDotGame.classList.remove('connected');
+    netStatusText.textContent = 'Disconnected — try refreshing the page to reconnect';
+    netStatusTextGame.textContent = 'Disconnected';
+    joinBtn.disabled    = true;
+    hudRollBtn.disabled = true;
+    startBtn.disabled   = true;
+  };
+
+  Network.onRejected = function(reason) {
+    rejectedReason.textContent = reason;
+    rejectedOverlay.classList.add('show');
+  };
+
+  Network.onWelcome = function(playerName, isHost) {
+    joinBtn.disabled   = true;
+    nameInput.disabled = true;
+    netPlayerBadge.textContent = playerName + (isHost ? ' 👑' : '');
+    netPlayerBadge.style.display = 'block';
+    lobbyMsgInput.disabled = false;
+    lobbySendBtn.disabled  = false;
+    addMsg('system', 'You joined as ' + playerName + (isHost ? ' 👑 (Host)' : '') + '.');
+    if (isHost) {
+      startBtn.style.display = 'block';
+      startBtn.disabled = true;
+    } else {
+      waitingForHost.style.display = 'block';
+    }
+  };
+
+  Network.onPromotedToHost = function() {
+    netPlayerBadge.textContent = Network.getMyName() + ' 👑';
+    waitingForHost.style.display = 'none';
+    startBtn.style.display = 'block';
+    addMsg('system', 'You are now the host!');
+  };
+
+  Network.onLobbyUpdate = function(data) {
+    renderPlayers(data.players, data.maxPlayers);
+    if (Network.amIHost()) {
+      startBtn.disabled = !data.canStart;
+      lobbyStatusText.textContent = data.canStart
+        ? data.playerCount + ' player(s) ready. You can start!'
+        : 'Need at least ' + data.minPlayers + ' to start. (' + data.playerCount + '/' + data.maxPlayers + ' joined)';
+    } else {
+      lobbyStatusText.textContent = data.playerCount + '/' + data.maxPlayers + ' player(s) in lobby.';
+    }
+  };
+
+  Network.onSystemMessage = function(text) { addMsg('system', text); };
+  Network.onError         = function(text) { addMsg('system', '⚠ ' + text); };
+  Network.onChatMessage   = function(from, text) { addMsg('theirs', text, from); };
+
+  Network.onDiceResult = function(from, result) {
+    animateDice(result);
+    addMsg('dice-event', '🎲 ' + from + ' rolled ' + (DICE_FACES[result] || result) + ' ' + result + '!');
+  };
+
+  Network.onTurnUpdate = function(currentTurnName) {
+    hudTurnName.textContent = currentTurnName;
+    var isMe = (currentTurnName === Network.getMyName());
+    hudRollBtn.disabled = !isMe;
+    yourTurnFlash.classList.toggle('visible', isMe);
+  };
+
+  // Dismiss lobby and show board when game starts (fires for ALL players)
+  onStateChange(function(state) {
+    if (state.phase === 'playing' && gameView.style.display === 'none') {
+      showGameView();
+    }
+  });
+
+  // ── User actions ──────────────────────────────────────────────────────────
+  function doJoin() {
+    var name = nameInput.value.trim();
+    if (!name || !Network.isConnected()) return;
+    Network.joinGame(name);
+  }
+  joinBtn.addEventListener('click', doJoin);
+  nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doJoin(); });
+
+  startBtn.addEventListener('click', function() { Network.startGame(); });
+
+  hudRollBtn.addEventListener('click', function() { Network.rollDice(); });
+
+  function doChat(inputEl, nameGetter) {
+    var text = inputEl.value.trim();
+    if (!text || !Network.isConnected()) return;
+    addMsg('mine', text, nameGetter() + ' (you)');
+    Network.sendChat(text);
+    inputEl.value = '';
+    inputEl.focus();
+  }
+
+  lobbySendBtn.addEventListener('click', function() { doChat(lobbyMsgInput, Network.getMyName); });
+  lobbyMsgInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doChat(lobbyMsgInput, Network.getMyName); });
+
+  gameSendBtn.addEventListener('click', function() { doChat(gameMsgInput, Network.getMyName); });
+  gameMsgInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') doChat(gameMsgInput, Network.getMyName); });
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  Network.connect();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   tarot-cards.css — MagmaCrunch Tarot Deck
+   Card styling for 78-card French Tarot Nouveau deck
+   © 2026 MagmaCrunch Media — All Rights Reserved
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── CSS CUSTOM PROPERTIES ──────────────────────────────────────────────── */
+
+:root {
+    /* Card dimensions — standard Tarot Nouveau (63mm × 100mm → 1:1.587) */
+    --t-card-width: 100px;
+    --t-card-height: 159px;
+
+    /* Card colors */
+    --t-card-face-bg: #f8f9fa;
+    --t-card-back-bg: #0d0028;
+
+    /* Suit colors */
+    --t-card-red: #cc0000;
+    --t-card-black: #111111;
+
+    /* Border & shadow */
+    --t-card-border: #000;
+    --t-card-shadow: 2px 2px 0 #000;
+
+    /* Face card art colors */
+    --t-fc-art-bg: #f8f9fa;
+    --t-fc-gold: #d4a017;
+    --t-fc-black: #111111;
+    --t-fc-red: #cc0000;
+    --t-fc-skin: #e8b89d;
+    --t-fc-blue: #1a4a7a;
+    --t-fc-purple: #6a1b9a;
+
+    /* Trump card colors */
+    --t-trump-bg: #0d0028;
+    --t-trump-cyan: #00e5ff;
+    --t-trump-gold: #ffd700;
+    --t-oudler-glow: rgba(255, 215, 0, 0.4);
+
+    /* Excuse card colors */
+    --t-excuse-bg: #1a0028;
+    --t-excuse-pink: #ff2d78;
+
+    /* Font */
+    --t-card-font: Arial, 'Helvetica Neue', sans-serif;
+    --t-card-font-size-rank: 12px;
+    --t-card-font-size-suit: 10px;
+}
+
+/* ── BASE CARD STYLES ───────────────────────────────────────────────────── */
+
+.t-card {
+    width: var(--t-card-width);
+    height: var(--t-card-height);
+    background: var(--t-card-face-bg);
+    border-radius: 4px;
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    box-shadow: var(--t-card-shadow);
+    user-select: none;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.t-card.red { color: var(--t-card-red); }
+.t-card.black { color: var(--t-card-black); }
+
+.t-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 2px 6px 0 #000;
+    z-index: 50;
+}
+
+.t-card.selected {
+    outline: 3px solid #ffd700;
+    outline-offset: -2px;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+    z-index: 60;
+}
+
+.t-card.playable {
+    outline: 2px solid #39ff6e;
+    outline-offset: -1px;
+}
+
+.t-card.playable:hover {
+    box-shadow: 0 0 12px rgba(57, 255, 110, 0.5),
+                2px 6px 0 #000;
+}
+
+/* ── CARD CORNERS (rank + suit) ─────────────────────────────────────────── */
+
+.t-card-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+    z-index: 2;
+}
+
+.t-card-corner.top-left {
+    top: 4px;
+    left: 4px;
+}
+
+.t-card-corner.bottom-right {
+    bottom: 4px;
+    right: 4px;
+    transform: rotate(180deg);
+}
+
+.t-card-corner .corner-rank {
+    font-family: var(--t-card-font);
+    font-size: var(--t-card-font-size-rank);
+    font-weight: bold;
+    line-height: 1;
+}
+
+.t-card-corner .corner-suit {
+    font-family: var(--t-card-font);
+    font-size: var(--t-card-font-size-suit);
+    line-height: 1;
+    margin-top: -2px;
+}
+
+/* ── CARD PIPS (number cards 1-10) ──────────────────────────────────────── */
+
+.t-card-pips {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 10px;
+}
+
+.t-pip-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 18px 8px;
+    height: 100%;
+}
+
+.t-pip-row {
+    display: flex;
+    justify-content: space-between;
+    height: 16px;
+    line-height: 1;
+}
+
+.t-pip-row.single {
+    justify-content: center;
+}
+
+.t-pip {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.t-pip.rotated {
+    transform: rotate(180deg);
+    display: inline-block;
+}
+
+/* ── CARD FACE (for court cards J/C/D/R) ────────────────────────────────── */
+
+.t-card-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.t-card-face svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── CARD BACK ──────────────────────────────────────────────────────────── */
+
+.t-card-back {
+    background: var(--t-card-back-bg);
+    border-radius: 4px;
+    box-shadow: var(--t-card-shadow);
+    overflow: hidden;
+}
+
+.t-card-back svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* ── TRUMP CARD ─────────────────────────────────────────────────────────── */
+
+.t-card.trump {
+    background: linear-gradient(135deg, #0d0028 0%, #1a0a2a 100%);
+}
+
+.t-card.trump.oudler {
+    background: linear-gradient(135deg, #1a0a2a 0%, #2a1a3a 100%);
+    box-shadow: 2px 2px 0 #000, 0 0 8px var(--t-oudler-glow);
+}
+
+.t-trump-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.t-trump-number {
+    font-family: 'Press Start 2P', monospace;
+    color: var(--t-trump-cyan);
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+    line-height: 1;
+}
+
+.t-trump.oudler .t-trump-number {
+    color: var(--t-trump-gold);
+    text-shadow: 0 0 10px var(--t-oudler-glow);
+}
+
+.t-trump-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--t-trump-cyan);
+    opacity: 0.7;
+    margin-top: 8px;
+    letter-spacing: 0.1em;
+}
+
+.t-trump.oudler .t-trump-label {
+    color: var(--t-trump-gold);
+}
+
+/* ── EXCUSE CARD ────────────────────────────────────────────────────────── */
+
+.t-card.excuse {
+    background: linear-gradient(135deg, #1a0028 0%, #2a0a3a 100%);
+    box-shadow: 2px 2px 0 #000, 0 0 8px rgba(255, 45, 120, 0.3);
+}
+
+.t-excuse-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+/* ── CARD STATES ────────────────────────────────────────────────────────── */
+
+.t-card.face-down {
+    background: var(--t-card-back-bg);
+    cursor: default;
+}
+
+.t-card.face-down:hover {
+    transform: none;
+    box-shadow: var(--t-card-shadow);
+}
+
+/* ── TRICK CARD (smaller for center area) ───────────────────────────────── */
+
+.t-card.trick-card {
+    width: 70px;
+    height: 111px;
+    font-size: 0.8em;
+    cursor: default;
+}
+
+.t-card.trick-card:hover {
+    transform: none;
+}
+
+/* ── AI HAND (compact face-down) ────────────────────────────────────────── */
+
+.t-ai-hand {
+    display: flex;
+    justify-content: center;
+}
+
+.t-ai-hand .t-card {
+    width: 44px;
+    height: 70px;
+    margin-left: -16px;
+    cursor: default;
+}
+
+.t-ai-hand .t-card:first-child {
+    margin-left: 0;
+}
+
+.t-ai-hand .t-card:hover {
+    transform: none;
+}
+
+/* ── PLAYER HAND (overlapping fan) ──────────────────────────────────────── */
+
+.t-player-hand {
+    display: flex;
+    justify-content: center;
+    padding: 8px 40px;
+}
+
+.t-player-hand .t-card {
+    margin-left: -56px;
+}
+
+.t-player-hand .t-card:first-child {
+    margin-left: 0;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    :root {
+        --t-card-width: 70px;
+        --t-card-height: 111px;
+        --t-card-font-size-rank: 8px;
+        --t-card-font-size-suit: 7px;
+    }
+
+    .t-card-corner.top-left { top: 2px; left: 2px; }
+    .t-card-corner.bottom-right { bottom: 2px; right: 2px; }
+
+    .t-player-hand .t-card {
+        margin-left: -40px;
+    }
+
+    .t-ai-hand .t-card {
+        width: 36px;
+        height: 57px;
+        margin-left: -12px;
+    }
+}
+
+@media (max-width: 400px) {
+    :root {
+        --t-card-width: 56px;
+        --t-card-height: 89px;
+        --t-card-font-size-rank: 6px;
+        --t-card-font-size-suit: 5px;
+    }
+}

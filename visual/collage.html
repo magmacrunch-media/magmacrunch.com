@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>collage — visual — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../assets/archive.css">
+    <style>
+        /* ── MEMPHIS DESIGN PALETTE ── */
+        :root {
+            --mem-black:           #1A1A1A;
+            --mem-white:           #F5F5F0;
+            --mem-cream:           #F0E8D8;
+            --mem-red:             #FF3B30;
+            --mem-yellow:          #FFD600;
+            --mem-blue:            #0057FF;
+            --mem-green:           #00C853;
+            --mem-hot-pink:        #FF2D9B;
+            --mem-orange:          #FF6B00;
+            --mem-cyan:            #00D4FF;
+            --mem-violet:          #7B2FFF;
+            --mem-coral:           #FF5A5A;
+            --mem-mint:            #A8FFD8;
+            --mem-sky:             #A8D8FF;
+            --mem-blush:           #FFB8D8;
+            --mem-lemon:           #FFF176;
+            --mem-lilac:           #D8B8FF;
+            --mem-peach:           #FFD0A8;
+            --mem-aqua:            #B8FFF0;
+            --mem-squiggle-gray:   #C8C0B8;
+        }
+
+        /* ── NAV OVERRIDES (must use :root) ── */
+        :root {
+            --nav-accent: #FF2D9B;
+            --nav-glow: rgba(255,45,155,0.4);
+            --nav-brand: #F0E8D8;
+            --nav-brand-glow: rgba(240,232,216,0.7);
+        }
+
+        /* ── PAGE OVERRIDES ── */
+        body.memphis {
+            --black: #1A1A1A;
+            --deep: #F5F5F0;
+            --white: #1A1A1A;
+            --rose: #FF2D9B;
+            --yellow: #FFD600;
+            --orange: #FF6B00;
+            --dim: #C8C0B8;
+            --cyan: #00D4FF;
+            background-color: #F0E8D8;
+            background-image:
+                radial-gradient(circle, rgba(255,45,155,0.18) 1.5px, transparent 1.5px),
+                radial-gradient(circle, rgba(0,87,255,0.15) 1px, transparent 1px);
+            background-size: 24px 24px, 32px 32px;
+            background-position: 0 0, 12px 12px;
+            animation: memphis-drift 20s linear infinite;
+        }
+        @keyframes memphis-drift {
+            from { background-position: 0 0, 12px 12px; }
+            to   { background-position: 24px 24px, 44px 44px; }
+        }
+
+        /* ── FOOTER OVERRIDES ── */
+        body.memphis footer {
+            border-top-color: #1A1A1A;
+        }
+        body.memphis footer span {
+            color: #FF2D9B;
+        }
+
+        /* ── DROPDOWN OVERRIDES ── */
+        body.memphis .dropdown {
+            border-color: #FF2D9B;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 12px rgba(255,45,155,0.3);
+        }
+        body.memphis .dropdown a {
+            border-left: 3px solid transparent;
+            border-bottom-color: #E8DDD0;
+        }
+        body.memphis .dropdown a:nth-child(1) { border-left-color: #FF3B30; }
+        body.memphis .dropdown a:nth-child(2) { border-left-color: #0057FF; }
+        body.memphis .dropdown a:nth-child(3) { border-left-color: #00C853; }
+        body.memphis .dropdown a:nth-child(4) { border-left-color: #FFD600; }
+        body.memphis .dropdown a:nth-child(5) { border-left-color: #FF6B00; }
+        body.memphis .dropdown a:hover {
+            color: #F0E8D8;
+            background: #FF2D9B;
+        }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb a:hover { color: #0057FF; }
+        .breadcrumb .sep { color: #0057FF; opacity: 0.7; }
+        .breadcrumb .current { color: #0057FF; }
+
+        /* ── NAV OVERRIDES (memphis light theme) ── */
+        body.memphis nav {
+            background: linear-gradient(90deg, #FF3B30 0%, #FFD600 25%, #0057FF 50%, #00C853 75%, #FF2D9B 100%);
+        }
+        body.memphis nav::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.08;
+            background-image: radial-gradient(circle, #FF2D9B 1px, transparent 1px);
+            background-size: 16px 16px;
+            pointer-events: none;
+        }
+        body.memphis .nav-links a {
+            color: #F0E8D8;
+            border-left-color: rgba(255,255,255,0.2);
+        }
+        body.memphis .nav-links > li > a:hover {
+            color: #1A1A1A;
+            background: #FF2D9B;
+        }
+
+        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
+        
+        /* ── PAGE HEADER ── */
+        .page-header.centered {
+            text-align: center;
+            padding: 0 20px 40px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(13px, 2.8vw, 22px);
+            color: #FF3B30;
+            text-shadow: 0 0 20px rgba(255,59,48,0.5);
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #0057FF;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* ── SECTION DIVIDER ── */
+        .section-divider {
+            width: 100%;
+            max-width: 960px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #FF3B30, #FFD600, #0057FF, #00C853, #FF2D9B, transparent);
+            margin: 0 20px 48px;
+            opacity: 0.35;
+            animation: fadeUp 0.5s 0.08s ease both;
+        }
+
+        /* ── SERIES BLOCK ── */
+        .series-block {
+            width: 100%;
+            max-width: 960px;
+            padding: 0 20px;
+            margin-bottom: 72px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .series-header {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+
+        .series-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(9px, 1.6vw, 13px);
+            color: #1A1A1A;
+            letter-spacing: 0.08em;
+        }
+
+        .series-meta {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #C8C0B8;
+            letter-spacing: 0.12em;
+            opacity: 0.7;
+        }
+
+        .series-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: #1A1A1A;
+            line-height: 1.7;
+            letter-spacing: 0.02em;
+            margin-bottom: 24px;
+            max-width: 600px;
+            opacity: 0.8;
+        }
+
+        /* ── COLLAGE GRID ── */
+        .collage-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .collage-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .collage-item {
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #C8C0B8;
+            cursor: pointer;
+            background: #E8DDD0;
+            transition: border-color 0.2s;
+            aspect-ratio: 4/3;
+        }
+
+        /* Rotating Memphis border colors */
+        .collage-item:nth-child(6n+1) { border-color: #FF2D9B; }
+        .collage-item:nth-child(6n+2) { border-color: #FFD600; }
+        .collage-item:nth-child(6n+3) { border-color: #0057FF; }
+        .collage-item:nth-child(6n+4) { border-color: #00C853; }
+        .collage-item:nth-child(6n+5) { border-color: #FF6B00; }
+        .collage-item:nth-child(6n+6) { border-color: #00D4FF; }
+
+        .collage-item:hover {
+            border-color: #FF3B30;
+        }
+
+        .collage-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.45s ease, filter 0.3s ease;
+            filter: saturate(1.1) brightness(1.0);
+        }
+
+        .collage-item:hover img {
+            transform: scale(1.04);
+            filter: saturate(1.0) brightness(1.0);
+        }
+
+        /* caption overlay on hover */
+        .collage-caption {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 28px 14px 12px;
+            background: linear-gradient(to top, rgba(26,26,26,0.92) 0%, transparent 100%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #F0E8D8;
+            letter-spacing: 0.12em;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            line-height: 2;
+        }
+
+        .collage-item:hover .collage-caption {
+            opacity: 1;
+        }
+
+        /* number badge */
+        .collage-num {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #1A1A1A;
+            background: #FFD600;
+            padding: 3px 7px;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .collage-item:hover .collage-num {
+            opacity: 1;
+        }
+
+        /* ── LIGHTBOX ── */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26,26,26,0.97);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .lightbox.open { display: flex; }
+
+        .lightbox-img-wrap {
+            max-width: min(92vw, 1100px);
+            max-height: 82vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .lightbox-img-wrap img {
+            max-width: 100%;
+            max-height: 82vh;
+            object-fit: contain;
+            display: block;
+            border: 2px solid #FF2D9B;
+        }
+
+        .lightbox-caption {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #FFD600;
+            letter-spacing: 0.12em;
+            margin-top: 14px;
+            opacity: 0.7;
+            line-height: 2;
+            text-align: center;
+        }
+
+        .lightbox-nav {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-top: 16px;
+        }
+
+        .lb-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #0057FF;
+            background: none;
+            border: 1px solid #1A1A1A;
+            padding: 8px 16px;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .lb-btn:hover { color: #FF3B30; border-color: #FF3B30; }
+
+        .lb-close {
+            position: fixed;
+            top: 18px; right: 22px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #C8C0B8;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+            padding: 8px;
+            transition: color 0.15s;
+        }
+        .lb-close:hover { color: #FF2D9B; }
+
+        .lb-counter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #C8C0B8;
+            letter-spacing: 0.12em;
+            opacity: 0.55;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        /* ── EMPTY STATE (for future series) ── */
+        .coming-soon-block {
+            width: 100%;
+            max-width: 960px;
+            padding: 0 20px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        .coming-soon-inner {
+            border: 2px dashed #FF2D9B;
+            padding: 32px;
+            text-align: center;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #1A1A1A;
+            letter-spacing: 0.1em;
+            background: rgba(255,45,155,0.05);
+            line-height: 2.4;
+        }
+
+        @media (max-width: 640px) {
+            .series-header { flex-direction: column; gap: 6px; }
+        }
+    </style>
+</head>
+<body class="memphis">
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a><span class="sep">›</span>
+        <a href="./">visual</a><span class="sep">›</span>
+        <span class="current">collage art</span>
+    </div>
+    
+    <div class="page-header centered">
+        <h1 class="page-title">// collage art //</h1>
+        <p class="page-subtitle">cut · paste · rearrange ✦ mixed media</p>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ══ 2025 SERIES ══ -->
+    <div class="series-block" id="series-2025">
+        <div class="series-header">
+            <span class="series-title">2025</span>
+            <span class="series-meta">// cut &amp; paste · mixed media</span>
+        </div>
+        <p class="series-desc">Physical collages made from cut magazine clippings, newspaper, and found imagery.</p>
+
+        <div class="collage-grid" id="collage-grid-2025">
+
+            <div class="collage-item" data-series="2025" data-index="0">
+                <img src="../assets/collage/2025/JAM_2025collage_1.jpg"
+                     alt="Collage #1 — 2025"
+                     loading="eager">
+                <div class="collage-num">#01</div>
+                <div class="collage-caption">2025 · #01 · cut &amp; paste</div>
+            </div>
+
+            <div class="collage-item" data-series="2025" data-index="1">
+                <img src="../assets/collage/2025/JAM_2025collage_2.jpg"
+                     alt="Collage #2 — 2025"
+                     loading="lazy">
+                <div class="collage-num">#02</div>
+                <div class="collage-caption">2025 · #02 · cut &amp; paste</div>
+            </div>
+
+            <div class="collage-item" data-series="2025" data-index="2">
+                <img src="../assets/collage/2025/JAM_2025collage_3.jpg"
+                     alt="Collage #3 — 2025"
+                     loading="lazy">
+                <div class="collage-num">#03</div>
+                <div class="collage-caption">2025 · #03 · cut &amp; paste</div>
+            </div>
+
+            <div class="collage-item" data-series="2025" data-index="3">
+                <img src="../assets/collage/2025/JAM_2025collage_4.jpg"
+                     alt="Collage #4 — 2025"
+                     loading="lazy">
+                <div class="collage-num">#04</div>
+                <div class="collage-caption">2025 · #04 · cut &amp; paste</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══ FUTURE SERIES PLACEHOLDER ══ -->
+    <div class="coming-soon-block">
+        <div class="coming-soon-inner">
+            [ more series coming soon ]<br>
+            <span style="color:#00C853;opacity:0.5;">✦</span>
+        </div>
+    </div>
+
+</main>
+
+<!-- ══ LIGHTBOX ══ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <button class="lb-close" id="lbClose">✕</button>
+    <div class="lightbox-img-wrap">
+        <img id="lbImg" src="" alt="">
+    </div>
+    <div class="lightbox-caption" id="lbCaption"></div>
+    <div class="lightbox-nav">
+        <button class="lb-btn" id="lbPrev">← prev</button>
+        <span class="lb-counter" id="lbCounter"></span>
+        <button class="lb-btn" id="lbNext">next →</button>
+    </div>
+</div>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+// ── COLLAGE DATA ──
+// Collected from all .collage-item elements; supports multiple series
+const SERIES = {};
+
+document.querySelectorAll('.collage-item').forEach(item => {
+    const s = item.dataset.series;
+    if (!SERIES[s]) SERIES[s] = [];
+    const img = item.querySelector('img');
+    SERIES[s].push({
+        src:     img.src,
+        alt:     img.alt,
+        caption: item.querySelector('.collage-caption').textContent.trim()
+    });
+});
+
+// ── LIGHTBOX ──
+const lightbox = document.getElementById('lightbox');
+const lbImg    = document.getElementById('lbImg');
+const lbCap    = document.getElementById('lbCaption');
+const lbCount  = document.getElementById('lbCounter');
+
+let currentSeries = null;
+let currentIndex  = 0;
+
+function openLightbox(series, index) {
+    currentSeries = series;
+    currentIndex  = index;
+    showPhoto();
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+}
+
+function showPhoto() {
+    const photos = SERIES[currentSeries];
+    const p = photos[currentIndex];
+    lbImg.src = p.src;
+    lbImg.alt = p.alt;
+    lbCap.textContent = p.caption;
+    lbCount.textContent = `${currentIndex + 1} / ${photos.length}`;
+}
+
+function lbNav(dir) {
+    const len = SERIES[currentSeries].length;
+    currentIndex = (currentIndex + dir + len) % len;
+    showPhoto();
+}
+
+document.querySelectorAll('.collage-item').forEach(item => {
+    item.addEventListener('click', () => {
+        openLightbox(item.dataset.series, parseInt(item.dataset.index));
+    });
+});
+
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbPrev').addEventListener('click', () => lbNav(-1));
+document.getElementById('lbNext').addEventListener('click', () => lbNav(1));
+
+lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) closeLightbox();
+});
+
+document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape')      closeLightbox();
+    if (e.key === 'ArrowLeft')   lbNav(-1);
+    if (e.key === 'ArrowRight')  lbNav(1);
+});
+</script>
+
+</body>
+</html>

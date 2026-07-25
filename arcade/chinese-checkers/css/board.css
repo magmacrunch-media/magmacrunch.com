@@ -1,0 +1,42 @@
+/**
+ * board.css — Board and piece styling
+ */
+
+/* Board container */
+.board-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Piece animations */
+@keyframes pieceGlow {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--glow-color)); }
+    50% { filter: drop-shadow(0 0 12px var(--glow-color)); }
+}
+
+@keyframes moveFlash {
+    0% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Goal area indicators */
+.goal-indicator {
+    position: absolute;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cc-text-dim);
+    letter-spacing: 0.05em;
+    pointer-events: none;
+}
+
+.goal-indicator.top {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.goal-indicator.bottom {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}

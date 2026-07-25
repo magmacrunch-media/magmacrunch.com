@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Very Long Boards</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="../" class="mc-back">magmacrunch arcade</a>
+
+    <div id="game-container">
+        <canvas id="renderCanvas"></canvas>
+        <canvas id="garageCanvas" width="960" height="540" style="display:none; position:absolute; inset:0; z-index:1; pointer-events:none;"></canvas>
+
+        <!-- TITLE SCREEN -->
+        <div id="titleScreen" class="overlay active">
+            <div class="title-text">
+                <div class="title-main">VERY LONG<br>BOARDS</div>
+                <div class="title-sub">downhill skateboarding</div>
+                <div class="title-carl">a carl spatski game</div>
+            </div>
+            <div class="insert-coin" id="startPrompt">— PRESS ENTER TO START —</div>
+        </div>
+
+        <!-- CHARACTER SELECT -->
+        <div id="charSelect" class="overlay">
+            <div class="cs-title">SELECT YOUR CARL</div>
+            <div class="cs-cards">
+                <div class="cs-card" data-char="office-carl">
+                    <canvas class="cs-preview" id="csOffice" width="64" height="80"></canvas>
+                    <div class="cs-name">OFFICE CARL</div>
+                    <div class="cs-desc">the everyman</div>
+                    <div class="cs-stats">SPD ████░ HAND ████░ CRV ████░</div>
+                </div>
+                <div class="cs-card" data-char="party-carl">
+                    <canvas class="cs-preview" id="csParty" width="64" height="80"></canvas>
+                    <div class="cs-name">PARTY CARL</div>
+                    <div class="cs-desc">the maniac</div>
+                    <div class="cs-stats">SPD █████ HAND ███░░ CRV ███░░</div>
+                </div>
+                <div class="cs-card" data-char="dark-carl">
+                    <canvas class="cs-preview" id="csDark" width="64" height="80"></canvas>
+                    <div class="cs-name">DARK CARL</div>
+                    <div class="cs-desc">the enigma</div>
+                    <div class="cs-stats">SPD █████ HAND ███░░ CRV ████░</div>
+                </div>
+            </div>
+            <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO PLAY</div>
+        </div>
+
+        <!-- BOARD SELECT -->
+        <div id="boardSelect" class="overlay">
+            <div class="bs-title">CHOOSE YOUR BOARD</div>
+            <div class="bs-cards" id="boardCards"></div>
+            <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO RIDE</div>
+        </div>
+
+        <!-- COUNTDOWN -->
+        <div id="countdownOverlay" class="overlay" style="background:rgba(10,6,18,0.6);">
+            <div id="countdownText" style="font-size:72px; color:#ffe03a; text-shadow:0 0 30px rgba(255,224,58,0.8);">3</div>
+        </div>
+
+        <!-- HUD -->
+        <div id="hud" style="display:none;">
+            <div class="hud-score">SCORE: <span id="hudScore">0</span></div>
+            <div class="hud-speed">SPEED: <span id="hudSpeed">0</span></div>
+            <div class="hud-dist">DIST: <span id="hudDist">0</span>m</div>
+            <div id="hudTrick" style="position:absolute; top:50%; left:0; right:0; text-align:center; font-size:14px; color:#ffe03a; text-shadow:0 0 15px rgba(255,224,58,0.8); opacity:0; transition:opacity 0.1s; pointer-events:none;">TRICK!</div>
+            <div id="kickPrompt" style="position:absolute; bottom:60px; left:0; right:0; text-align:center; font-size:10px; color:#ffe03a; text-shadow:0 0 10px rgba(255,224,58,0.6);">PRESS &#x2191; TO KICK OFF</div>
+        </div>
+
+        <!-- GAME OVER -->
+        <div id="gameOver" class="overlay">
+            <div class="go-title">GAME OVER</div>
+            <div class="go-cause" id="goCause">SPLAT!</div>
+            <div class="go-score">SCORE: <span id="goScore">0</span></div>
+            <div class="go-dist">DISTANCE: <span id="goDist">0</span>m</div>
+            <div class="go-best">BEST: <span id="goBest">0</span></div>
+            <div class="go-actions">
+                <div class="go-action" data-action="retry">
+                    <span class="go-key">ENTER</span> RIDE AGAIN
+                </div>
+                <div class="go-action" data-action="setup">
+                    <span class="go-key">TAB</span> NEW SETUP
+                </div>
+            </div>
+        </div>
+
+        <!-- PAUSE -->
+        <div id="pauseScreen" class="overlay">
+            <div class="pause-text">PAUSED</div>
+            <div class="insert-coin">— PRESS ESC TO RESUME —</div>
+        </div>
+    </div>
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/characters.js"></script>
+    <script src="js/scene.js"></script>
+    <script src="js/terrain.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/obstacles.js"></script>
+    <script src="js/scenery.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/hud.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/garage.js"></script>
+    <script src="js/main.js"></script>
+
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+
+</body>
+</html>

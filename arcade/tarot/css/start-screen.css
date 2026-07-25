@@ -1,0 +1,105 @@
+/* ══════════════════════════════════════════════════════════
+   start-screen.css — French Tarot | MagmaCrunch Media © 2026
+   Title screen styles
+   ══════════════════════════════════════════════════════════ */
+
+.start-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
+    text-align: center;
+}
+
+.start-content {
+    max-width: 600px;
+    padding: 40px;
+}
+
+.game-title {
+    font-family: var(--font-pixel);
+    font-size: 48px;
+    color: var(--accent);
+    text-shadow:
+        4px 4px 0 var(--bg-dark),
+        8px 8px 0 rgba(0,0,0,0.3),
+        0 0 20px var(--accent-glow);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+}
+
+.game-subtitle {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--gold);
+    text-shadow: 0 0 10px var(--gold-glow);
+    margin-bottom: 32px;
+}
+
+.start-divider {
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 0 auto 40px;
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.start-btn {
+    font-family: var(--font-pixel);
+    font-size: 12px;
+    padding: 16px 32px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    min-width: 280px;
+    transition: all 0.15s;
+}
+
+.start-btn.primary {
+    background: var(--accent);
+    color: var(--bg-dark);
+    border-color: var(--accent);
+}
+
+.start-btn:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.start-press-prompt {
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--accent);
+    opacity: 0.7;
+    animation: blink 1s step-end infinite;
+    margin-bottom: 32px;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+.start-footer {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: #8a7fa8;
+    line-height: 1.8;
+}
+
+.start-copyright {
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    color: #4a4060;
+    margin-top: 32px;
+}

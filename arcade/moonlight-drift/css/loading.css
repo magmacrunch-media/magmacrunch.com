@@ -1,0 +1,109 @@
+#loadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0e27;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10001;
+    transition: opacity 0.5s ease-out;
+}
+
+#loadingScreen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-ascii {
+    font-family: monospace;
+    font-size: clamp(8px, 1.5vw, 16px);
+    color: #00d4ff;
+    margin: 0 0 30px 0;
+    line-height: 1.2;
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+    white-space: pre;
+}
+
+.loading-spinner {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    position: relative;
+}
+
+/* Create 8 small pixel blocks arranged in a circle */
+.loading-spinner::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: #00d4ff;
+    box-shadow: 
+        /* Top pixel */
+        0 -24px 0 #00d4ff,
+        /* Top-right pixel */
+        17px -17px 0 rgba(0, 212, 255, 0.9),
+        /* Right pixel */
+        24px 0 0 rgba(0, 212, 255, 0.8),
+        /* Bottom-right pixel */
+        17px 17px 0 rgba(0, 212, 255, 0.6),
+        /* Bottom pixel */
+        0 24px 0 rgba(0, 212, 255, 0.4),
+        /* Bottom-left pixel */
+        -17px 17px 0 rgba(0, 212, 255, 0.3),
+        /* Left pixel */
+        -24px 0 0 rgba(0, 212, 255, 0.2),
+        /* Top-left pixel */
+        -17px -17px 0 rgba(0, 212, 255, 0.1);
+    left: 50%;
+    top: 50%;
+    margin-left: -4px;
+    margin-top: -4px;
+    animation: pixelCircleSpin 1s steps(8) infinite;
+}
+
+/* Add glow effect */
+.loading-spinner::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: transparent;
+    box-shadow: 
+        0 -24px 12px rgba(0, 212, 255, 0.4),
+        17px -17px 12px rgba(0, 212, 255, 0.3),
+        24px 0 12px rgba(0, 212, 255, 0.2);
+    left: 50%;
+    top: 50%;
+    margin-left: -4px;
+    margin-top: -4px;
+    animation: pixelCircleSpin 1s steps(8) infinite;
+}
+
+@keyframes pixelCircleSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 2vw, 14px);
+    color: #ffffff;
+    font-weight: normal;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+    animation: loadingPulse 1.5s ease-in-out infinite;
+    text-shadow: 2px 2px 0 #0a0e27;
+}
+
+@keyframes loadingPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}

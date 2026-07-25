@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvin Gardens G12 — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="mg-shared.css">
+    <style>
+        /* ══ PAGE: by-place / marvin-gardens-g12 ══ */
+
+        main { position: relative; padding: 0; }
+
+        /* ── BREADCRUMB ── */
+        body.mg-page .breadcrumb a { color: var(--mg-muted); }
+        body.mg-page .breadcrumb a:hover { color: var(--mg-cream); }
+        body.mg-page .breadcrumb .sep { color: var(--mg-muted); opacity: 0.6; }
+        body.mg-page .breadcrumb .current { color: var(--mg-muted); }
+
+        /* ── HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 45%;
+            filter: saturate(0.8) brightness(0.72);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(56, 40, 72, 0.10);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(12,10,18,0.0)  0%,
+                rgba(12,10,18,0.0)  85%,
+                rgba(12,10,18,0.85) 100%
+            );
+        }
+
+        /* ── HERO INNER ── */
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            padding: 0 20px 36px;
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .artist-header {
+            width: 100%;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        /* ── ARTIST HEADER ── */
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #e8c060;
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--mg-cream);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(160, 40, 88, 0.65),
+                0 0 52px rgba(208, 72, 120, 0.20),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #e8c060;
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* ── SUB-NAV CARDS — all solid, dark text, no hover bg change ── */
+        body.mg-page .sub-nav .nav-card { font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.08em; padding: 10px 16px; border: 2px solid; text-decoration: none; }
+        body.mg-page .sub-nav .nav-card.c-sage   { background: var(--mg-sage); color: #1e1e1e; border-color: var(--mg-sage); }
+        body.mg-page .sub-nav .nav-card.c-rose   { background: var(--mg-accent); color: #1e1e1e; border-color: var(--mg-accent); }
+        body.mg-page .sub-nav .nav-card.c-cyan   { background: var(--mg-light); color: #1e1e1e; border-color: var(--mg-light); }
+        body.mg-page .sub-nav .nav-card.c-yellow { background: var(--mg-cta); color: #1e1e1e; border-color: var(--mg-cta); }
+        body.mg-page .sub-nav .nav-card.c-green  { background: var(--mg-leaf); color: #1e1e1e; border-color: var(--mg-leaf); }
+        body.mg-page .sub-nav .nav-card.c-blue   { background: var(--mg-brand); color: var(--mg-cream); border-color: var(--mg-brand); }
+        body.mg-page .sub-nav .nav-card::after { display: none; }
+        body.mg-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--mg-brand), var(--mg-accent), var(--mg-brand), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--mg-muted); text-decoration:none; border:1px solid var(--mg-dark); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--mg-accent); border-color:var(--mg-accent); }
+
+        @media (max-width:640px) { .artist-name{font-size:13px;} .sub-nav{flex-direction:column;} }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+    </style>
+</head>
+<body class="mg-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../by-place/">by place</a>
+        <span class="sep">›</span>
+        <span class="current">marvin gardens</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/marvin_gardens/marvin-gardens.jpg" alt="Marvin Gardens G12">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by place //</div>
+                <div class="artist-name">MARVIN GARDENS G12</div>
+                <div class="artist-abbr"> STATE COLLEGE (2016-2019)</div>
+
+                <div class="sub-nav">
+                    <a href="about.html"      class="nav-card c-about">about</a>
+                    <a href="personnel.html"  class="nav-card c-personnel">personnel</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="works.html"       class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-link-wrap">
+        <a href="https://musicbrainz.org/place/placeholder"
+           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+</body>
+</html>

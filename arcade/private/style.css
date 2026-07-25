@@ -1,0 +1,300 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRIVATE ARCADE — Login & Game List Styles
+   Retro CRT aesthetic matching magmacrunch arcade
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: #080808;
+  font-family: 'Press Start 2P', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  color: #f0ead8;
+}
+
+/* ── CRT Effects ────────────────────────────────────────────────────────── */
+
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.15) 0px,
+    rgba(0, 0, 0, 0.15) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* ── Container ──────────────────────────────────────────────────────────── */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  animation: fadeIn 0.5s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Lock Icon ──────────────────────────────────────────────────────────── */
+
+.lock-icon {
+  margin-bottom: 24px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255, 61, 110, 0.6)); }
+  50% { opacity: 0.7; filter: drop-shadow(0 0 16px rgba(255, 61, 110, 0.9)); }
+}
+
+/* ── Title ──────────────────────────────────────────────────────────────── */
+
+.title {
+  font-size: 32px;
+  color: #ff3d6e;
+  text-shadow:
+    0 0 10px rgba(255, 61, 110, 0.8),
+    0 0 20px rgba(255, 61, 110, 0.6),
+    0 0 40px rgba(255, 61, 110, 0.4);
+  letter-spacing: 0.2em;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 8px;
+  color: #ff3d6e;
+  letter-spacing: 0.15em;
+  opacity: 0.7;
+  margin-bottom: 24px;
+}
+
+/* ── Divider ────────────────────────────────────────────────────────────── */
+
+.divider {
+  width: 200px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ff3d6e, transparent);
+  margin: 16px 0;
+  box-shadow: 0 0 8px rgba(255, 61, 110, 0.5);
+}
+
+/* ── Login Form ─────────────────────────────────────────────────────────── */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.input-label {
+  font-size: 8px;
+  color: #ff3d6e;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  text-shadow: 0 0 6px rgba(255, 61, 110, 0.5);
+}
+
+.input-wrap {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.password-input {
+  flex: 1;
+  background: #0a0a0a;
+  border: 2px solid #ff3d6e;
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #f0ead8;
+  letter-spacing: 0.2em;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 8px rgba(255, 61, 110, 0.3);
+}
+
+.password-input:focus {
+  border-color: #ff3d6e;
+  box-shadow: 0 0 16px rgba(255, 61, 110, 0.6);
+}
+
+.password-input::placeholder {
+  color: rgba(255, 61, 110, 0.3);
+  letter-spacing: 0.2em;
+}
+
+.submit-btn {
+  background: #ff3d6e;
+  border: none;
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #080808;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 8px rgba(255, 61, 110, 0.5);
+}
+
+.submit-btn:hover {
+  background: #ff6b8a;
+  box-shadow: 0 0 16px rgba(255, 61, 110, 0.8);
+}
+
+.submit-btn:active {
+  transform: scale(0.95);
+}
+
+/* ── Error Message ──────────────────────────────────────────────────────── */
+
+.error {
+  font-size: 8px;
+  color: #ff3d6e;
+  text-shadow: 0 0 6px rgba(255, 61, 110, 0.6);
+  margin-top: 16px;
+  padding: 8px 16px;
+  border: 1px solid #ff3d6e;
+  border-radius: 4px;
+  background: rgba(255, 61, 110, 0.1);
+  animation: glitch 0.3s ease both;
+  text-align: center;
+}
+
+@keyframes glitch {
+  0% { transform: translateX(-2px); }
+  25% { transform: translateX(2px); }
+  50% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+  100% { transform: translateX(0); }
+}
+
+/* ── Game List (authenticated) ──────────────────────────────────────────── */
+
+.game-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  width: 100%;
+  max-width: 320px;
+}
+
+.game-list li {
+  margin: 12px 0;
+}
+
+.game-list a {
+  display: block;
+  font-size: 12px;
+  color: #ff3d6e;
+  text-decoration: none;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 61, 110, 0.3);
+  border-radius: 4px;
+  transition: all 0.2s;
+  text-align: center;
+  letter-spacing: 0.1em;
+}
+
+.game-list a:hover {
+  background: rgba(255, 61, 110, 0.1);
+  border-color: #ff3d6e;
+  box-shadow: 0 0 12px rgba(255, 61, 110, 0.4);
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
+.footer-text {
+  font-size: 6px;
+  color: #ff3d6e;
+  letter-spacing: 0.15em;
+  opacity: 0.5;
+  margin-top: 8px;
+}
+
+.footer-sub {
+  font-size: 6px;
+  color: #ff3d6e;
+  letter-spacing: 0.1em;
+  opacity: 0.3;
+  margin-top: 4px;
+}
+
+/* ── Back Link ───────────────────────────────────────────────────────────── */
+
+.mc-back {
+  position: fixed;
+  top: 12px;
+  left: 14px;
+  z-index: 9999;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: rgba(255, 61, 110, 0.6);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+  pointer-events: auto;
+}
+
+.mc-back::before { content: '← '; }
+.mc-back:hover { color: rgba(255, 61, 110, 0.95); }
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 480px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .password-input {
+    font-size: 10px;
+    padding: 10px 12px;
+  }
+}

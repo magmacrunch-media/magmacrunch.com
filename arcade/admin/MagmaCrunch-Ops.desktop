@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MagmaCrunch Ops
+Comment=Arcade Server Dashboard
+Exec=chromium --new-window http://localhost:8780
+Icon=/home/jake/arcade/admin/icons/magma-ops.png
+Terminal=false
+Type=Application
+Categories=System;Monitor;
+StartupNotify=true

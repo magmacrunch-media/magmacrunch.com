@@ -1,0 +1,29 @@
+/* Bottle Boys Collective — releases page — accent: c-releases */
+body.bbc-page.bbc-releases-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.bbc-page.bbc-releases-page main > * { background: var(--bbc-bg); }
+
+body.bbc-page.bbc-releases-page .breadcrumb { color: var(--bbc-warm-light); }
+body.bbc-page.bbc-releases-page .breadcrumb a { color: var(--bbc-warm-light); }
+body.bbc-page.bbc-releases-page .breadcrumb a:hover { color: var(--bbc-apricot); }
+body.bbc-page.bbc-releases-page .breadcrumb .sep { color: var(--bbc-warm-light); opacity: 0.6; }
+body.bbc-page.bbc-releases-page .breadcrumb .current { color: var(--bbc-warm-light); }
+
+body.bbc-page.bbc-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.bbc-page.bbc-releases-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--bbc-warm-light); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.bbc-page.bbc-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--bbc-warm-light); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(240, 192, 160, 0.5); }
+
+body.bbc-page.bbc-releases-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--bbc-warm-dark), var(--bbc-warm-light), var(--bbc-warm-dark), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+/* ── Nav card overrides ── */
+body.bbc-page.bbc-releases-page .nav-card.c-back { background: transparent; color: var(--bbc-warm-light); border-color: var(--bbc-warm-light); }
+body.bbc-page.bbc-releases-page .nav-card.c-back:hover { background: var(--bbc-warm-light); color: var(--bbc-surface); }
+
+body.bbc-page.bbc-releases-page .nav-card::after { display: none; }
+body.bbc-page.bbc-releases-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

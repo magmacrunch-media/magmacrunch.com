@@ -1,0 +1,118 @@
+/* C.P. Rutledge — games page — accent: green */
+body.cpr-page.cpr-games-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.cpr-page.cpr-games-page main > * { background: var(--cpr-bg); }
+
+body.cpr-page.cpr-games-page .breadcrumb a { color: var(--cpr-green); }
+body.cpr-page.cpr-games-page .breadcrumb a:hover { color: var(--cpr-light-green); }
+body.cpr-page.cpr-games-page .breadcrumb .sep { color: var(--cpr-green); opacity: 0.6; }
+body.cpr-page.cpr-games-page .breadcrumb .current { color: var(--cpr-green); }
+
+body.cpr-page.cpr-games-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cpr-page.cpr-games-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cpr-green); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cpr-page.cpr-games-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cpr-green); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(74, 184, 106, 0.5); }
+
+body.cpr-page.cpr-games-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cpr-green), var(--cpr-teal), var(--cpr-green), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.cpr-page.cpr-games-page .bio-section {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 20px;
+    animation: fadeUp 0.5s 0.2s ease both;
+}
+body.cpr-page.cpr-games-page .bio-section p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--cpr-cream);
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+/* Nav card overrides */
+body.cpr-page.cpr-games-page .nav-card.c-back { background: transparent; color: var(--cpr-green); border-color: var(--cpr-green); }
+body.cpr-page.cpr-games-page .nav-card.c-back:hover { background: var(--cpr-green); color: var(--cpr-cream); }
+
+body.cpr-page.cpr-games-page .nav-card::after { display: none; }
+body.cpr-page.cpr-games-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+/* Games grid */
+.games-grid { width: 100%; max-width: 960px; padding: 0 20px; }
+
+.game-card-link { text-decoration: none; display: block; }
+.game-card-link:hover .game-card { border-color: var(--cpr-green); box-shadow: 0 0 24px rgba(74, 184, 106, 0.15); }
+.game-card-link:hover .game-card-badge { background: var(--cpr-green); color: var(--cpr-surface); }
+
+.game-card {
+    border: 1px solid var(--cpr-raised);
+    background: var(--cpr-surface);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.game-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--cpr-raised);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.game-card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--cpr-green);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 14px rgba(74, 184, 106, 0.35);
+}
+
+.game-card-badge {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cpr-green);
+    border: 1px solid var(--cpr-green);
+    padding: 5px 12px;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+
+.game-card-body { padding: 20px 24px; }
+
+.game-card-desc {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--cpr-cream);
+    line-height: 1.6;
+    margin-bottom: 16px;
+    opacity: 0.85;
+}
+
+.game-card-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.game-card-tag {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: var(--cpr-surface);
+    background: var(--cpr-teal);
+    padding: 3px 8px;
+    letter-spacing: 0.08em;
+}
+
+.game-card-note {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--cpr-light-green);
+    opacity: 0.7;
+}
+
+@media (max-width: 500px) {
+    .game-card-header { flex-direction: column; gap: 12px; }
+}

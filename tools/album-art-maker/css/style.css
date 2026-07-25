@@ -1,0 +1,798 @@
+/* ── RESET ── */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ── PALETTE ── */
+:root {
+    --bg:        #080808;
+    --surface:   #111118;
+    --panel:     #15151d;
+    --border:    #2a2a3a;
+    --text:      #f0ead8;
+    --dim:       #6a6a7a;
+    --accent:    #a0a0b0;
+    --rose:      #ff3d6e;
+    --panel-w:   240px;
+}
+
+/* ── BASE ── */
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: 'Press Start 2P', monospace;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 8px;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    -webkit-user-select: none;
+    background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px
+    );
+}
+
+/* ── HEADER ── */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.header-left { display: flex; align-items: center; gap: 16px; }
+
+h1.glitch {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    color: var(--text);
+    position: relative;
+}
+
+h1.glitch::before,
+h1.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0.8;
+}
+
+h1.glitch::before {
+    animation: glitch-1 2s infinite linear alternate-reverse;
+    clip-path: inset(0 0 65% 0);
+    color: rgba(160,160,176,0.3);
+}
+
+h1.glitch::after {
+    animation: glitch-2 2s infinite linear alternate-reverse;
+    clip-path: inset(65% 0 0 0);
+    color: rgba(160,160,176,0.3);
+}
+
+@keyframes glitch-1 {
+    0%, 95% { transform: translate(0); }
+    96% { transform: translate(-2px, 1px); }
+    97% { transform: translate(2px, -1px); }
+    98% { transform: translate(-1px, 2px); }
+    99% { transform: translate(1px, -2px); }
+    100% { transform: translate(0); }
+}
+
+@keyframes glitch-2 {
+    0%, 95% { transform: translate(0); }
+    96% { transform: translate(2px, -1px); }
+    97% { transform: translate(-2px, 1px); }
+    98% { transform: translate(1px, -2px); }
+    99% { transform: translate(-1px, 2px); }
+    100% { transform: translate(0); }
+}
+
+.header-right {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.sys-stat {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--dim);
+    background: var(--surface);
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+}
+
+/* ── WORKSPACE LAYOUT ── */
+.workspace {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ── PANELS ── */
+.panel {
+    width: var(--panel-w);
+    background: var(--panel);
+    border-right: 2px solid var(--border);
+    padding: 12px 10px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.props-panel {
+    border-right: none;
+    border-left: 2px solid var(--border);
+    overflow-x: hidden;
+}
+
+.panel-label {
+    font-size: 9px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 4px;
+}
+
+.panel-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 2px 0;
+}
+
+/* ── TOOL BUTTONS ── */
+.tool-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+}
+
+.tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 6px 4px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.tool-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.tool-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(160,160,176,0.08);
+    box-shadow: 0 0 12px rgba(160,160,176,0.1), inset 0 0 12px rgba(160,160,176,0.03);
+}
+
+.tool-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.tool-name {
+    font-size: 6px;
+    letter-spacing: 0.1em;
+}
+
+/* ── SHAPES POPUP ── */
+.shapes-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.shapes-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+.shapes-btn-arrow {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+.shapes-popup {
+    display: none;
+    position: fixed;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    z-index: 50;
+    min-width: 220px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+.shapes-popup.open {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.shapes-popup-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+}
+
+.popup-section-label {
+    grid-column: 1 / -1;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    padding: 4px 0 2px;
+    border-top: 1px solid var(--border);
+}
+.popup-section-label:first-child {
+    border-top: none;
+}
+
+.shape-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+.shape-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+.shape-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(160,160,176,0.08);
+}
+
+/* ── REFERENCE IMAGE ── */
+.ref-upload-btn {
+    width: 100%;
+    padding: 8px;
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+}
+.ref-upload-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.ref-preview-wrap {
+    position: relative;
+    display: none;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.ref-preview-wrap.visible {
+    display: block;
+}
+
+.ref-canvas {
+    width: 100%;
+    display: block;
+    cursor: crosshair;
+    image-rendering: auto;
+}
+
+.ref-clear-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid var(--rose);
+    border-radius: 3px;
+    color: var(--rose);
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.ref-clear-btn:hover {
+    background: var(--rose);
+    color: #000;
+}
+
+.ref-hint {
+    font-size: 6px;
+    color: var(--dim);
+    text-align: center;
+    line-height: 1.4;
+    margin: 0;
+    display: none;
+}
+.ref-hint.visible {
+    display: block;
+}
+
+/* ── CENTER AREA ── */
+.center-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-width: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.canvas-wrap {
+    position: relative;
+    display: inline-block;
+    line-height: 0;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+#mainCanvas {
+    max-width: 100%;
+    max-height: calc(100vh - 80px);
+    width: auto;
+    height: auto;
+    cursor: crosshair;
+    image-rendering: auto;
+    display: block;
+}
+
+/* ── TEXT MODAL ── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    min-width: 340px;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-sizing: border-box;
+}
+
+.modal-header {
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+}
+
+.modal-textarea {
+    width: 100%;
+    min-height: 80px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    padding: 10px;
+    outline: none;
+    resize: vertical;
+}
+.modal-textarea:focus {
+    border-color: var(--accent);
+}
+
+.modal-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+.modal-btns .action-btn {
+    flex: none;
+    padding: 10px 20px;
+}
+.modal-btns .export-btn {
+    flex: none;
+    padding: 10px 20px;
+}
+
+/* ── PROPERTY CONTROLS ── */
+.prop-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.canvas-bg-row {
+    display: flex;
+    gap: 8px;
+}
+
+.canvas-bg-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.prop-label {
+    font-size: 8px;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+}
+
+.file-input {
+    width: 100%;
+    padding: 8px 10px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    outline: none;
+}
+.file-input:focus {
+    border-color: var(--accent);
+}
+
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.color-input {
+    width: 32px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+}
+.color-input::-webkit-color-swatch-wrapper { padding: 2px; }
+.color-input::-webkit-color-swatch { border: none; border-radius: 2px; }
+
+.color-hex-input {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 2px 4px;
+    width: 70px;
+    outline: none;
+}
+.color-hex-input:focus {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.no-fill-btn {
+    width: 24px;
+    height: 24px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    color: var(--dim);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+.no-fill-btn:hover { border-color: var(--rose); color: var(--rose); }
+.no-fill-btn.active { border-color: var(--rose); color: var(--rose); background: rgba(255,61,110,0.1); }
+
+.range-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rot-btn {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--accent);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+    line-height: 1;
+}
+.rot-btn:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+.rot-btn:active {
+    background: rgba(160,160,176,0.15);
+}
+
+.range-input {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    outline: none;
+}
+.range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.range-val {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    min-width: 28px;
+    text-align: right;
+}
+
+.prop-select {
+    width: 100%;
+    padding: 10px 30px 10px 10px;
+    background-color: var(--surface);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0a0b0' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px !important;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.prop-select:focus { border-color: var(--accent); }
+.prop-select option { background: var(--surface); color: var(--text); font-family: inherit; }
+
+/* ── CUSTOM RETRO DROPDOWN ── */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.dropdown-selected {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text);
+    padding: 8px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.15s;
+}
+
+.dropdown-selected:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(160,160,176,0.2);
+}
+
+.custom-dropdown.open .dropdown-selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(160,160,176,0.3);
+}
+
+.dropdown-arrow {
+    color: var(--accent);
+    font-size: 8px;
+    transition: transform 0.2s;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    border-top: none;
+    margin-top: -2px;
+    max-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: max-height 0.25s ease-out;
+    z-index: 50;
+}
+
+.custom-dropdown.open .dropdown-options {
+    max-height: 240px;
+}
+
+.dropdown-option {
+    padding: 7px 10px;
+    cursor: pointer;
+    transition: all 0.1s;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    white-space: nowrap;
+}
+
+.dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.dropdown-option:hover {
+    background: rgba(160,160,176,0.1);
+    border-left: 3px solid var(--accent);
+    color: var(--text);
+    padding-left: 7px;
+}
+
+.dropdown-option.active {
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    padding-left: 7px;
+    background: rgba(160,160,176,0.06);
+}
+
+.dropdown-options::-webkit-scrollbar { width: 4px; }
+.dropdown-options::-webkit-scrollbar-track { background: transparent; }
+.dropdown-options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── ACTION BUTTONS ── */
+.action-btns {
+    display: flex;
+    gap: 6px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 6px 6px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    cursor: pointer;
+    transition: all 0.12s;
+    letter-spacing: 0.05em;
+}
+.action-btn:hover { border-color: var(--accent); color: var(--text); }
+.action-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(160,160,176,0.08); }
+.action-btn.danger:hover { border-color: var(--rose); color: var(--rose); }
+
+.export-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+}
+.export-btn:hover {
+    background: var(--text);
+}
+
+/* ── FOOTER ── */
+footer {
+    padding: 12px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.footer-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+}
+
+.footer-text span { color: var(--accent); }
+
+/* ── SCROLLBAR ── */
+.panel::-webkit-scrollbar { width: 6px; }
+.panel::-webkit-scrollbar-track { background: transparent; }
+.panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.panel::-webkit-scrollbar-thumb:hover { background: var(--dim); }
+
+.shapes-popup::-webkit-scrollbar { width: 6px; }
+.shapes-popup::-webkit-scrollbar-track { background: transparent; }
+.shapes-popup::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+.shapes-popup::-webkit-scrollbar-thumb:hover { background: var(--dim); }
+
+/* ── CURSOR STATES ── */
+body.tool-select #mainCanvas { cursor: default; }
+body.tool-rect #mainCanvas,
+body.tool-circle #mainCanvas,
+body.tool-line #mainCanvas { cursor: crosshair; }
+body.tool-text #mainCanvas { cursor: text; }
+body.dragging #mainCanvas { cursor: grabbing; }

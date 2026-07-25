@@ -1,0 +1,301 @@
+/* ══════════════════════════════════════════════════════════
+   base.css — Solitaire Deluxe | MagmaCrunch Media © 2026
+   Aesthetic: Vaporwave Miami · Windows 3.1 shareware · 1980s PC
+   Dark teal desktop · Silver chrome frame · Hot pink + cyan neon
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+    /* ── Neon Miami palette ──────────────────────────────── */
+    --pink:         #ff2d78;
+    --pink-dim:     #c01050;
+    --pink-glow:    rgba(255, 45, 120, 0.35);
+    --cyan:         #00e5ff;
+    --cyan-dim:     #0099bb;
+    --cyan-glow:    rgba(0, 229, 255, 0.3);
+    --gold:         #ffd700;
+    --gold-dim:     #c8960a;
+    --purple:       #7b2fff;
+    --purple-dim:   #5010c0;
+
+    /* ── Desktop — dark teal, moodier than XP ───────────── */
+    --desktop:      #003838;
+    --desktop-hi:   #005555;
+    --desktop-lo:   #001e1e;
+
+    /* ── Window chrome — classic silver ─────────────────── */
+    --chrome-bg:    #c0c0c0;   /* Win3.1 / Win95 grey */
+    --chrome-light: #e0e0e0;
+    --chrome-dark:  #808080;
+    --chrome-hilit: #ffffff;
+    --chrome-shade: #404040;
+
+    /* ── Title bar — purple-to-cyan Miami gradient ───────── */
+    --title-left:   #4a007a;
+    --title-mid:    #2d0060;
+    --title-right:  #003060;
+
+    /* ── Green felt (game table — preserved) ─────────────── */
+    --felt-dark:    #061206;
+    --felt-mid:     #0d2b0d;
+    --felt-green:   #1a5c1a;
+    --felt-hi:      #226622;
+    --dim-green:    #2a7a2a;
+
+    /* ── Suit colors ─────────────────────────────────────── */
+    --suit-red:     #cc0000;
+    --suit-black:   #111111;
+
+    /* ── Card surfaces ───────────────────────────────────── */
+    --card-face-bg:  #fffef5;
+    --card-back-bg:  #1a3a8a;
+
+    /* ── Face-card art vars (face-cards.js — do not change) ─*/
+    --fc-art-bg:   #fffef5;
+    --fc-card-bg:  #fffef5;
+    --fc-black:    #111111;
+    --fc-red:      #cc1111;
+    --fc-blue:     #1a3a8a;
+    --fc-gold:     #d4a017;
+    --fc-skin:     #f5cba7;
+    --fc-steel:    #8899aa;
+
+    /* ── Legacy compat ───────────────────────────────────── */
+    --retro-red:   #cc0000;
+    --neon-green:  #39ff14;
+    --retro-gold:  #ffd700;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ── Body: dark Miami teal desktop ───────────────────────── */
+body {
+    font-family: 'Orbitron', 'Tahoma', sans-serif;
+    font-size: 11px;
+    background-color: var(--desktop);
+    background-image:
+        /* Subtle scanline texture */
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px, transparent 3px,
+            rgba(0, 255, 200, 0.015) 3px, rgba(0, 255, 200, 0.015) 4px
+        ),
+        radial-gradient(ellipse at 30% 20%, var(--desktop-hi) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 80%, var(--desktop-lo) 0%, transparent 60%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px 12px 18px 60px;
+    color: var(--chrome-bg);
+}
+
+/* magmacrunch arcade link */
+a.mc-back, .mc-back {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--cyan);
+    text-decoration: none;
+    z-index: 10000;
+    transition: all 0.2s;
+}
+
+a.mc-back::before {
+    content: '← ';
+}
+
+a.mc-back:hover {
+    color: var(--cyan-glow);
+}
+
+body.game-active a.mc-back {
+    display: none;
+}
+
+/* Kill old CRT overlays */
+.scanlines, .crt-vignette { display: none !important; }
+
+/* ── Container: raised Win3.1-style application window ───── */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    background: var(--chrome-bg);
+    /* Classic 3D-raised bevel — thick white top/left, dark bottom/right */
+    border: 3px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+    box-shadow:
+        inset 1px 1px 0 var(--chrome-light),
+        inset -1px -1px 0 var(--chrome-dark),
+        4px 4px 0 #000,
+        6px 6px 16px rgba(0,0,0,0.7);
+    position: relative;
+}
+
+/* ── Title bar ───────────────────────────────────────────── */
+.win-titlebar {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px 4px 8px;
+    /* Purple → indigo → dark teal gradient: the Miami PC aesthetic */
+    background: linear-gradient(90deg,
+        var(--title-left)  0%,
+        var(--title-mid)   40%,
+        #001840            70%,
+        var(--title-right) 100%
+    );
+    border-bottom: 2px solid #000;
+    min-height: 28px;
+    gap: 6px;
+    position: relative;
+}
+
+/* Pink glow line at very top of title bar */
+.win-titlebar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+        var(--pink) 0%,
+        var(--cyan) 50%,
+        var(--pink) 100%
+    );
+    opacity: 0.9;
+}
+
+.win-title-icon { font-size: 14px; }
+.win-title-text {
+    flex: 1;
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 0 8px var(--cyan), 0 0 2px #000;
+}
+.win-controls { display: flex; gap: 3px; }
+.win-controls span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 18px;
+    font-size: 10px;
+    font-weight: bold;
+    font-family: 'Tahoma', sans-serif;
+    color: #000;
+    background: linear-gradient(180deg, var(--chrome-light) 0%, var(--chrome-bg) 100%);
+    border: 2px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+    cursor: pointer;
+}
+.win-controls span:active {
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+}
+.win-close { color: var(--pink-dim) !important; font-weight: 900 !important; }
+
+/* ── Menu bar ─────────────────────────────────────────────── */
+.win-menubar {
+    background: var(--chrome-bg);
+    border-bottom: 2px solid;
+    border-color: var(--chrome-dark) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-dark);
+    padding: 1px 2px;
+    display: flex;
+    font-family: 'Tahoma', Verdana, sans-serif;
+    font-size: 12px;
+}
+.win-menubar span {
+    padding: 3px 10px;
+    cursor: default;
+    color: var(--suit-black);
+    user-select: none;
+}
+.win-menubar span:hover {
+    background: var(--title-mid);
+    color: #fff;
+}
+
+/* ── Neon accent stripe ───────────────────────────────────── */
+.neon-stripe {
+    height: 4px;
+    background: linear-gradient(90deg,
+        var(--pink)  0%,
+        var(--gold)  30%,
+        var(--cyan)  60%,
+        var(--pink)  100%
+    );
+    border-bottom: 1px solid #000;
+}
+
+/* ── Animations ───────────────────────────────────────────── */
+@keyframes blink-slow {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+@keyframes blink-fast {
+    0%, 40%  { opacity: 1; }
+    41%, 80% { opacity: 0; }
+    81%, 100%{ opacity: 1; }
+}
+@keyframes flicker-pink {
+    0%, 92%, 100% { text-shadow: 0 0 10px var(--pink), 0 0 30px var(--pink-glow); }
+    93% { text-shadow: none; }
+    96% { text-shadow: 0 0 10px var(--pink), 0 0 30px var(--pink-glow); }
+    97% { text-shadow: none; }
+}
+
+.blink-slow { animation: blink-slow 1.4s step-end infinite; }
+.blink-fast { animation: blink-fast 0.7s step-end infinite; }
+
+/* ── Utility ──────────────────────────────────────────────── */
+.suit-pink  { color: var(--pink); }
+.suit-cyan  { color: var(--cyan); }
+.red-suit   { color: var(--suit-red); }
+
+/* ── Base buttons — Win3.1 raised grey ───────────────────── */
+button {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 8px;
+    background: var(--chrome-bg);
+    color: var(--suit-black);
+    border: 2px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+    padding: 6px 14px;
+    border-radius: 0;
+    cursor: pointer;
+    box-shadow: inset 1px 1px 0 var(--chrome-light), inset -1px -1px 0 var(--chrome-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-height: 26px;
+    transition: none;
+}
+button:hover {
+    background: #d4d4ff;
+    color: var(--purple-dim);
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+}
+button:active {
+    /* Win3.1 pressed: bevel inverts */
+    border-color: var(--chrome-shade) var(--chrome-hilit) var(--chrome-hilit) var(--chrome-shade);
+    box-shadow: inset 1px 1px 0 var(--chrome-dark), inset -1px -1px 0 var(--chrome-light);
+    transform: none;
+    padding: 7px 13px 5px 15px; /* slight shift for pressed feel */
+}
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 16px; background: var(--chrome-bg); }
+::-webkit-scrollbar-thumb {
+    background: var(--chrome-bg);
+    border: 2px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+}
+::-webkit-scrollbar-button {
+    background: var(--chrome-bg);
+    height: 16px;
+    border: 2px solid;
+    border-color: var(--chrome-hilit) var(--chrome-shade) var(--chrome-shade) var(--chrome-hilit);
+}

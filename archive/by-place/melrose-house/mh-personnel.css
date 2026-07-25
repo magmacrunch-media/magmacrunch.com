@@ -1,0 +1,47 @@
+/* Melrose House — personnel (coral / warm sub-theme) */
+body.mh-page.mh-personnel-page main > * { background: var(--mh-bg); }
+
+body.mh-page.mh-personnel-page .breadcrumb { color: var(--dim); }
+body.mh-page.mh-personnel-page .breadcrumb a { color: var(--mh-coral); }
+body.mh-page.mh-personnel-page .breadcrumb a:hover { color: var(--mh-cream); }
+body.mh-page.mh-personnel-page .breadcrumb .sep { color: var(--mh-coral); opacity: 0.6; }
+body.mh-page.mh-personnel-page .breadcrumb .current { color: var(--mh-coral); }
+
+body.mh-page.mh-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.mh-page.mh-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--mh-coral); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.mh-page.mh-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--mh-coral); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+
+body.mh-page.mh-personnel-page .artist-card {
+    background: transparent !important;
+    border-color: var(--mh-surface);
+}
+body.mh-page.mh-personnel-page .artist-card h3 { color: var(--mh-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.mh-page.mh-personnel-page .artist-card h3 a { color: var(--mh-coral) !important; }
+body.mh-page.mh-personnel-page .artist-card h3 a:hover { color: var(--mh-peach) !important; }
+body.mh-page.mh-personnel-page .artist-card p { color: var(--mh-cream) !important; }
+body.mh-page.mh-personnel-page .artist-card p strong { color: var(--mh-muted) !important; }
+body.mh-page.mh-personnel-page .artist-card a { color: var(--mh-coral) !important; }
+body.mh-page.mh-personnel-page .artist-card a:hover { color: var(--mh-peach) !important; }
+body.mh-page.mh-personnel-page .artist-card:hover { border-color: var(--mh-coral) !important; }
+body.mh-page.mh-personnel-page .badge { color: var(--mh-bg) !important; }
+body.mh-page.mh-personnel-page .badge-founded  { background: var(--mh-coral) !important; }
+body.mh-page.mh-personnel-page .badge-member   { background: var(--mh-peach) !important; }
+body.mh-page.mh-personnel-page .badge-engineer { background: var(--mh-brand) !important; }
+body.mh-page.mh-personnel-page .badge-born     { background: var(--mh-gold) !important; }
+body.mh-page.mh-personnel-page .badge-other    { background: var(--mh-slate) !important; color: var(--mh-cream) !important; }
+body.mh-page.mh-personnel-page .tag { border-color: var(--mh-slate) !important; color: var(--mh-muted) !important; }
+
+/* Current page: personnel (c-personnel active) */
+body.mh-page.mh-personnel-page .nav-card.c-personnel {
+    background: var(--mh-bg);
+    color: var(--mh-coral);
+    border-color: var(--mh-coral);
+}
+body.mh-page.mh-personnel-page .nav-card.c-personnel:hover {
+    background: transparent;
+    color: var(--mh-coral);
+}
+
+@media (max-width: 500px) {
+    body.mh-page.mh-personnel-page .artist-card { border-color: var(--mh-muted); }
+}

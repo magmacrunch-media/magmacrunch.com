@@ -1,0 +1,72 @@
+/* chip-animation.css — Shared poker chip styling */
+/* Consuming games must define: --chip-bg, --chip-border, --chip-text, --font-pixel */
+
+/* Chip display area */
+.chip-display {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 200px;
+    padding: 12px 16px 8px;
+    background-color: var(--chip-bg, #0a0a0a);
+    border-top:    2px solid var(--chip-border, #333);
+    border-left:   2px solid var(--chip-border, #333);
+    border-bottom: 2px solid var(--chip-border, #222);
+    border-right:  2px solid var(--chip-border, #222);
+    flex-wrap: wrap;
+}
+
+/* Stack wrapper: count badge + canvas stack */
+.chip-stack-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stack-count {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 7px;
+    color: var(--chip-text, #ffe03a);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.stack-canvas {
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* Bust message */
+.bust-msg {
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 14px;
+    color: var(--red, #ff3d6e);
+    text-shadow: 0 0 10px var(--red, #ff3d6e);
+    letter-spacing: 4px;
+}
+
+/* Chip legend (denomination key) */
+.chip-legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 6px 8px;
+    background-color: var(--chip-bg, #0a0a0a);
+    border-top: 1px solid var(--chip-border, #333);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-pixel, 'Press Start 2P', monospace);
+    font-size: 6px;
+    color: var(--chip-text, #ffe03a);
+}
+
+.legend-item canvas {
+    image-rendering: pixelated;
+}

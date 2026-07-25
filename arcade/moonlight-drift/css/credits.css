@@ -1,0 +1,337 @@
+/* ================================================
+   CREDITS MODAL - SNES RETRO STYLE WITH SCROLLING
+   This overrides any smooth/modern styles
+   ================================================ */
+
+/* Credits modal is already styled in modals-retro.css,
+   but this file ensures no conflicts */
+
+#creditsModal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    /* Allow parent to be flex for centering */
+    display: flex;
+}
+
+#creditsModal .modal-content {
+    background: #3a4466; /* SNES blue-gray */
+    padding: 24px;
+    border-radius: 0; /* No rounded corners! */
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh; /* Limit height to allow scrolling */
+    border: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    
+    /* CHUNKY SNES-STYLE BORDER */
+    box-shadow: 
+        0 0 0 4px #6a7a9a,
+        0 0 0 8px #4a5a7a,
+        0 0 0 12px #2a3a5a,
+        0 12px 0 0 #1a2a4a,
+        0 16px 0 0 #0a1a3a;
+}
+
+#creditsModal h2 {
+    color: #ffd700; /* Gold for credits heading */
+    margin: 0 0 20px 0;
+    padding: 12px;
+    background: #2a3a5a;
+    text-transform: lowercase;
+    text-shadow: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    font-weight: normal;
+    letter-spacing: 0;
+    line-height: 1.8;
+    flex-shrink: 0; /* Don't shrink the header */
+    
+    /* Heading border */
+    box-shadow: 
+        0 0 0 2px #4a5a7a,
+        0 4px 0 0 #1a2a4a;
+}
+
+/* ================================================
+   SCROLLABLE CREDITS CONTENT WITH RETRO SCROLLBAR
+   ================================================ */
+.credits-content {
+    text-align: left;
+    margin: 0 auto;
+    max-width: 600px;
+    flex: 1; /* Take up available space */
+    overflow-y: scroll; /* Always show scrollbar! */
+    overflow-x: hidden;
+    padding: 12px; /* Equal padding all around */
+    padding-left: 16px; /* Slightly more on left to visually center */
+    padding-right: 4px; /* Less on right for scrollbar (scrollbar adds ~20px) */
+    
+    /* Retro inset border */
+    background: #2a3a5a;
+    box-shadow: 
+        inset 3px 3px 0 #1a2a4a,
+        inset -3px -3px 0 #3a4a6a;
+    
+    /* Firefox scrollbar */
+    scrollbar-width: auto;
+    scrollbar-color: #4a5a7a #1a2a4a;
+}
+
+/* ================================================
+   WEBKIT SCROLLBAR (Chrome, Safari, Edge) - CHUNKY SNES STYLE
+   ================================================ */
+.credits-content::-webkit-scrollbar {
+    width: 20px; /* Chunky retro scrollbar */
+}
+
+.credits-content::-webkit-scrollbar-track {
+    background: #1a2a4a; /* Dark inset background */
+    border: 3px solid #2a3a5a;
+    border-radius: 0;
+    
+    /* Inset shadow effect */
+    box-shadow: 
+        inset 2px 2px 0 #0a1a3a,
+        inset -2px -2px 0 #3a4a6a;
+}
+
+.credits-content::-webkit-scrollbar-thumb {
+    background: #4a5a7a;
+    border: none;
+    border-radius: 0; /* Square edges! */
+    
+    /* Chunky 3D button effect */
+    box-shadow: 
+        inset -2px -2px 0 #2a3a5a,    /* Bottom-right shadow */
+        inset 2px 2px 0 #6a7a9a,      /* Top-left highlight */
+        inset -4px -4px 0 #1a2a4a,    /* Inner bottom shadow */
+        inset 4px 4px 0 #7a89a8;      /* Inner top highlight */
+}
+
+.credits-content::-webkit-scrollbar-thumb:hover {
+    background: #5a6a8a;
+    box-shadow: 
+        inset -2px -2px 0 #3a4a6a,
+        inset 2px 2px 0 #7a8aaa,
+        inset -4px -4px 0 #2a3a5a,
+        inset 4px 4px 0 #8a99b8;
+}
+
+.credits-content::-webkit-scrollbar-thumb:active {
+    background: #3a4a6a; /* Darker when pressed */
+    box-shadow: 
+        inset 2px 2px 0 #1a2a4a,
+        inset -2px -2px 0 #4a5a7a;
+}
+
+/* Scrollbar arrow buttons */
+.credits-content::-webkit-scrollbar-button {
+    background: #4a5a7a;
+    height: 20px;
+    border: none;
+    border-radius: 0;
+    box-shadow: 
+        inset -2px -2px 0 #2a3a5a,
+        inset 2px 2px 0 #6a7a9a;
+}
+
+.credits-content::-webkit-scrollbar-button:hover {
+    background: #5a6a8a;
+    box-shadow: 
+        inset -2px -2px 0 #3a4a6a,
+        inset 2px 2px 0 #7a8aaa;
+}
+
+.credits-content::-webkit-scrollbar-button:active {
+    background: #3a4a6a;
+    box-shadow: 
+        inset 2px 2px 0 #1a2a4a,
+        inset -2px -2px 0 #4a5a7a;
+}
+
+.credits-content p {
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    line-height: 1.8;
+    margin: 0 0 32px 0; /* More bottom spacing between sections */
+    padding: 0 !important; /* Force remove padding */
+    background: transparent !important; /* Force remove background box */
+    border-radius: 0;
+    border: none !important;
+    border-bottom: 2px solid rgba(74, 90, 122, 0.3); /* Subtle separator line */
+    padding-bottom: 24px !important; /* Space above the separator */
+    text-transform: lowercase;
+    font-weight: normal;
+    letter-spacing: 0;
+    
+    /* Force remove credit box borders */
+    box-shadow: none !important;
+}
+
+.credits-content p:last-child {
+    border-bottom: none; /* No separator on last item */
+}
+
+.credits-content p:last-child {
+    margin-bottom: 0; /* No margin on last item */
+}
+
+.credits-content strong {
+    color: #ffd700; /* Gold for emphasis */
+    display: block;
+    margin-bottom: 12px; /* Space between heading and content */
+    text-transform: lowercase;
+    font-size: 10px;
+    font-weight: normal;
+    font-family: 'Press Start 2P', monospace;
+}
+
+/* ================================================
+   FIXED BUTTON CONTAINER AT BOTTOM
+   ================================================ */
+#creditsModal .modal-buttons {
+    margin-top: 20px;
+    flex-shrink: 0; /* Don't shrink the button area */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Close credits button - green SNES style */
+#closeCreditsModal {
+    background: #2ecc71;
+    color: #ffffff;
+    border: none;
+    padding: 16px 24px;
+    font-size: 12px;
+    font-weight: normal;
+    border-radius: 0;
+    cursor: pointer;
+    transition: none;
+    text-transform: lowercase;
+    font-family: 'Press Start 2P', monospace;
+    letter-spacing: 0;
+    
+    /* SNES chunky border */
+    box-shadow: 
+        0 6px 0 #1a7a3a,
+        0 -4px 0 #4edd91,
+        -4px 0 0 #25a555,
+        4px 0 0 #25a555,
+        -4px -4px 0 #3ed771,
+        4px -4px 0 #3ed771,
+        -4px 6px 0 #0f5a2a,
+        4px 6px 0 #0f5a2a;
+}
+
+#closeCreditsModal:hover {
+    background: #00d4ff; /* Cyan hover like other buttons */
+    color: #000000;
+    box-shadow: 
+        0 6px 0 #006a7f,
+        0 -4px 0 #33e0ff,
+        -4px 0 0 #00a0bf,
+        4px 0 0 #00a0bf,
+        -4px -4px 0 #00c4df,
+        4px -4px 0 #00c4df,
+        -4px 6px 0 #00505f,
+        4px 6px 0 #00505f;
+}
+
+#closeCreditsModal:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #1a7a3a,
+        0 -4px 0 #4edd91,
+        -4px 0 0 #25a555,
+        4px 0 0 #25a555;
+}
+
+/* Credits button styling removed - now using default button styles from buttons-retro.css */
+/* This allows #creditsBtn to match the other buttons (gray with cyan hover) */
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    #creditsModal .modal-content {
+        padding: 20px 15px;
+        width: 95%;
+        max-height: 85vh;
+        box-shadow: 
+            0 0 0 3px #6a7a9a,
+            0 0 0 6px #4a5a7a,
+            0 0 0 9px #2a3a5a,
+            0 9px 0 0 #1a2a4a;
+    }
+    
+    #creditsModal h2 {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .credits-content {
+        padding-right: 6px;
+    }
+    
+    .credits-content p {
+        font-size: 9px;
+        padding: 0;
+        margin: 0 0 16px 0;
+    }
+    
+    .credits-content strong {
+        font-size: 9px;
+    }
+    
+    /* Scrollbar slightly smaller on mobile */
+    .credits-content::-webkit-scrollbar {
+        width: 16px;
+    }
+    
+    #closeCreditsModal {
+        font-size: 10px;
+        padding: 14px 20px;
+    }
+}
+
+/* Remove all smooth transitions and animations */
+#creditsModal,
+#creditsModal .modal-content,
+#closeCreditsModal,
+#creditsBtn,
+.credits-content p {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* ================================================
+   DESIGN NOTES
+   ================================================ */
+/*
+   This file makes the credits modal match the SNES retro style:
+   - Press Start 2P font (pixel font)
+   - All lowercase text
+   - Chunky box-shadow borders (no border-radius)
+   - Blue-gray palette (#3a4466, #2a3a5a, #4a5a7a)
+   - Gold accent for headings (#ffd700)
+   - Purple credits button with cyan hover
+   - No smooth transitions or animations
+   
+   SCROLLING LAYOUT (like character selector):
+   - Credits content is scrollable with retro SNES scrollbar
+   - Close button fixed at bottom (doesn't scroll)
+   - Always shows scrollbar for consistency
+   - Chunky 20px scrollbar with 3D beveled effect
+   - Max height 80vh to ensure close button visible
+   - Flex layout: header (fixed) + scrollable content + buttons (fixed)
+*/

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottle Boys Collective — about — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="bbc-shared.css">
+    <link rel="stylesheet" href="bbc-about.css">
+    <style>
+        /* ── NEWSPAPER BIO STYLES ── */
+        .bio-section {
+            max-width: 720px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+        .bio-section p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.9;
+            color: var(--bbc-cream);
+            text-align: justify;
+            margin-bottom: 24px;
+        }
+        .bio-section p:last-child { margin-bottom: 0; }
+        .bio-section a {
+            color: var(--bbc-sky);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--bbc-dark);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .bio-section a:hover {
+            color: var(--bbc-sky-light);
+            border-bottom-color: var(--bbc-sky-light);
+        }
+
+        /* ── MEMBERS SIDEBAR ── */
+        .members-sidebar {
+            float: right;
+            width: 220px;
+            margin: 0 0 20px 24px;
+            border: 2px solid var(--bbc-apricot);
+            padding: 14px;
+            background: rgba(240,192,160,0.06);
+            display: none;
+        }
+        .members-sidebar .members-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--bbc-apricot);
+            letter-spacing: 0.15em;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(240,192,160,0.3);
+        }
+        .members-sidebar .member-entry {
+            margin-bottom: 10px;
+        }
+        .members-sidebar .member-entry:last-child { margin-bottom: 0; }
+        .members-sidebar .member-name {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--bbc-sky);
+            font-weight: 700;
+        }
+        .members-sidebar .member-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--bbc-mid);
+            margin-top: 2px;
+        }
+        @media (max-width: 640px) {
+            .members-sidebar {
+                float: none;
+                width: 100%;
+                margin: 0 0 20px 0;
+            }
+        }
+
+        /* Drop cap on first paragraph only */
+        .bio-section p:first-of-type::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5em;
+            float: left;
+            line-height: 0.8;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: var(--bbc-apricot);
+            font-weight: 900;
+            text-shadow: 0 0 10px rgba(240,192,160,0.4);
+        }
+
+        /* Divider glow */
+        main > .divider {
+            background: linear-gradient(90deg, transparent, var(--bbc-apricot), transparent);
+            box-shadow: 0 0 8px rgba(240,192,160,0.3);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="bbc-page bbc-about-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">bbc</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// bottle boys collective //</div>
+        <div class="page-title">ABOUT</div>
+        <div class="sub-nav">
+            <a href="./"         class="nav-card c-back">← back</a>
+            <a href="photography.html"   class="nav-card c-photography">photography</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"      class="nav-card c-releases">releases</a>
+            <a href="works.html"         class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="bio-section">
+        <div class="members-sidebar" id="artist-sidebar"></div>
+        <p><b>Bottle Boys</b> started in late 2017 when Jon, Cole, and Jake T. got together to make some noise at <a href="../../by-place/frogwood-manor/">Frogwood Manor</a>.
+                This is beleived to have occured in September of that year, but some Bottle Boys scholars argue for December of that year.
+                Using some recorded samples from the show <i>SpongeBob SquarePants</i> along with ambient guitar and synthesizer,
+                this recording session resulted in the very first Bottle Boys release: <strong><a href="https://bottleboys.bandcamp.com/album/squarepants-dose-drone-vol-1">SquarePants Dose Drone Vol. 1</a></strong>, consisting of four, lengthy untitled tracks.
+                Bottle Boys ventured into lyric-based music with elements of freak folk and were profilic with their song-writing in the following years.
+                Though much of their catalog from the late 2010s remains unreleased, a very lo-fi recording of a live performance at <a href="https://coffeeroastersnh.com/">Coffee Coffee</a>
+                in Salem, N.H. on August 23, 2018 was released <a href="https://bottleboys.bandcamp.com/album/coffee-coffee-open-mic-8-23-18">on Bandcamp</a> in 2023.
+                </p>
+            <p>During the initial Bottle Boys years, Jon and Cole continued to write music together.
+                They would share recordings in a Google Drive folder called <i><b>Northern Mountain Saddle Bellies</b></i>,
+                which eventually became the name of their duo project when a few of their songs were released by magmacrunch media in early 2023.
+                Around this time, Cole and Jon recorded their classic tune <strong><a href="https://magmacrunch.bandcamp.com/track/these-toads">These Toads</a></strong> at the old <b>Slaski House</b> down the street from Frogwood Manor.
+                In the summer of 2023, Cole and Jake T. recorded a EP under the Bottle Boys name called <strong><a href="https://bottleboys.bandcamp.com/album/the-legend-of-the-backpack-man">The Legend of the Backpack Man</a></strong>.
+                Later that year, NMSB wrote and recorded a song called <strong>Tollbooth Landy</strong>. However, as of spring 2026, this track is still in production for a guitar solo.
+                </p>
+            <p>The NMSB project expanded to include Ben N. aroumd the turn of 2023 to 2024. As a trio, they released two cover songs in 2024 that were released on Youtube:
+                <strong><a href="https://youtu.be/dI6jakL7WHw">Lonesome Town</a></strong> by Ricky Nelson
+                and <strong><a href="https://youtu.be/kTQDUde_U28">I don't want to live on the moon</a></strong> by Erine from <i>Sesame Street</i>.
+                </p>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+window.ARTIST_CONFIG = {
+    id: 'e33d1006-01a5-4266-aade-b7f6c1dff8e3',
+    name: 'Bottle Boys'
+};
+</script>
+<script src="../../../templates/artist_members.js"></script>
+</body>
+</html>

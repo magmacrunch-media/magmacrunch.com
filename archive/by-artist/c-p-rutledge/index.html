@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C.P. Rutledge — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="cpr-shared.css">
+    <style>
+        /* ══ PAGE: by-artist / c-p-rutledge ══ */
+
+        main { position: relative; padding: 0; }
+
+        /* ── BREADCRUMB ── */
+        body.cpr-page .breadcrumb a { color: var(--cpr-light-green); }
+        body.cpr-page .breadcrumb a:hover { color: var(--cpr-teal); }
+        body.cpr-page .breadcrumb .sep { color: var(--cpr-light-green); opacity: 0.6; }
+        body.cpr-page .breadcrumb .current { color: var(--cpr-light-green); }
+
+        /* ── ARTIST HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+            filter: saturate(0.95) brightness(0.72);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(240, 90, 90, 0.08);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(7,6,18,0.0)  0%,
+                rgba(7,6,18,0.0)  85%,
+                rgba(7,6,18,0.85) 100%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--cpr-red);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--cpr-heading);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(240, 90, 90, 0.6),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--cpr-red);
+            letter-spacing: 0.15em;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+        .artist-aka {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--dim);
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+            opacity: 0.75;
+        }
+        .artist-aka strong { color: var(--cpr-dark-yellow); font-style: normal; }
+
+/* ── SUB-NAV CARDS ── */
+        body.cpr-page .sub-nav .nav-card.c-deep   { background: var(--cpr-deep); color: var(--cpr-cream); border-color: var(--cpr-deep); }
+        body.cpr-page .sub-nav .nav-card.c-deep:hover { background: var(--cpr-purple); color: var(--cpr-cream); }
+        body.cpr-page .sub-nav .nav-card.c-purple { background: var(--cpr-purple); color: var(--cpr-cream); border-color: var(--cpr-purple); }
+        body.cpr-page .sub-nav .nav-card.c-purple:hover { background: var(--cpr-light-purple); color: var(--cpr-cream); }
+        body.cpr-page .sub-nav .nav-card.c-recordings   { background: var(--cpr-blue); color: var(--cpr-surface); border-color: var(--cpr-blue); }
+        body.cpr-page .sub-nav .nav-card.c-recordings:hover { background: var(--cpr-dark-blue); color: var(--cpr-cream); }
+        body.cpr-page .sub-nav .nav-card.c-releases  { background: var(--cpr-red); color: var(--cpr-cream); border-color: var(--cpr-red); }
+        body.cpr-page .sub-nav .nav-card.c-releases:hover { background: var(--cpr-dark-red); color: var(--cpr-cream); }
+        body.cpr-page .sub-nav .nav-card.c-works{ background: var(--cpr-yellow); color: var(--cpr-surface); border-color: var(--cpr-yellow); }
+        body.cpr-page .sub-nav .nav-card.c-works:hover { background: var(--cpr-dark-yellow); color: var(--cpr-cream); }
+        body.cpr-page .sub-nav .nav-card.c-green  { background: var(--cpr-green); color: var(--cpr-surface); border-color: var(--cpr-green); }
+        body.cpr-page .sub-nav .nav-card.c-green:hover { background: var(--cpr-dark-green); color: var(--cpr-cream); }
+        body.cpr-page .sub-nav .nav-card::after { display: none; }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--cpr-red), var(--cpr-gold), var(--cpr-red), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── LAYOUT ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--cpr-red);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--cpr-red);
+            opacity: 0.9;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--cpr-heading);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--cpr-teal);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--cpr-teal);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover { background: var(--cpr-teal); color: var(--black); }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--cpr-cream); text-decoration:none; border:1px solid var(--cpr-raised); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--cpr-teal); border-color:var(--cpr-teal); }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+
+        </style>
+</head>
+<body class="cpr-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    
+    
+
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">cpr</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/brother_dynamo/brother-dynamo.jpg" alt="C.P. Rutledge">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">rendering: courtesy of C.P. Rutledge &amp; Madison Russo</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">C.P. RUTLEDGE</div>
+                <div class="artist-abbr">[ CPR ]</div>
+                <div class="artist-aka">also performing as <strong>Brother Dynamo</strong></div>
+                <div class="sub-nav">
+                    <a href="about.html"        class="nav-card c-about">about</a>
+                    <a href="games.html"        class="nav-card c-green">games</a>
+                    <a href="photography.html" class="nav-card c-photography">photography</a>
+                    <a href="recordings.html"  class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"    class="nav-card c-releases">releases</a>
+                    <a href="works.html"       class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a class="mb-link" href="https://musicbrainz.org/artist/44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc" target="_blank" rel="noopener">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+</html>

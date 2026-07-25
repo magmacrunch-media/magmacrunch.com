@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dag henderson — about — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="dh-shared.css">
+    <link rel="stylesheet" href="dh-about.css">
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        '605cc914-2aff-4e2b-9657-524c7009cb18',
+        name:      'dag henderson',
+        abbr:      'DH',
+        accent:    'deep',
+        backColor: 'c-back',
+        siblings:  ['about', 'photography', 'music-videos', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="dh-page dh-about-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">dh</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// dag henderson //</div>
+        <div class="page-title">ABOUT</div>
+        <div class="sub-nav">
+            <a href="./"          class="nav-card c-back">← back</a>
+            <a href="music-videos.html" class="nav-card c-events">music videos</a>
+            <a href="photography.html"  class="nav-card c-photography">photography</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"      class="nav-card c-releases">releases</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>    
+
+    <div class="divider"></div>
+
+    <div class="bio-section">
+        <!-- ANIMATION AREA -->
+        <div class="animation-wrap">
+            <div class="animation-placeholder" id="dagAnimation">
+                <canvas id="spriteCanvas" width="64" height="64"></canvas>
+            </div>
+        </div>
+        <p>coming soon...</p>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+<script>
+const canvas = document.getElementById('spriteCanvas');
+const ctx = canvas.getContext('2d');
+
+const colors = {
+    '.': 'transparent',
+    'H': '#5d4037',
+    'S': '#f4d5b5',
+    'E': '#2c3e50',
+    'C': '#2c3e50',
+    'J': '#34495e',
+    'F': '#95a5a6',
+    'M': 'rgba(52, 152, 219, 0.25)',
+    'G': 'rgba(196, 95, 255, 0.4)',
+};
+
+const dagSprite = [
+    "......HHHH......",
+    ".....HSSSSH.....",
+    ".....HSEESH.....",
+    "......SSSS......",
+    ".......FF.......",
+    "...JJJJCCJJJJ...",
+    "..J..JJJJJJ..J..",
+    "..J..JJJJJJ..J..",
+    "..S..JJJJJJ..S..",
+    ".......CC.......",
+    ".......CC.......",
+    "......C..C......",
+    "......J..J......"
+];
+
+const particles = [];
+for (let i = 0; i < 7; i++) {
+    particles.push({
+        x: 32 + (Math.random() - 0.5) * 12,
+        y: 20 + Math.random() * 30,
+        offset: i * 0.8
+    });
+}
+
+function drawPixelArt(matrix, startX, startY, ghostOpacity = 1) {
+    for (let y = 0; y < matrix.length; y++) {
+        let row = matrix[y];
+        for (let x = 0; x < row.length; x++) {
+            let char = row[x];
+            if (char !== '.') {
+                ctx.fillStyle = colors[char];
+                if (char === 'G') {
+                    ctx.fillStyle = `rgba(196, 95, 255, ${ghostOpacity})`;
+                }
+                ctx.fillRect(startX + x, startY + y, 1, 1);
+            }
+        }
+    }
+}
+
+function drawMirror(pulse) {
+    ctx.fillStyle = `rgba(196, 95, 255, ${0.15 + pulse * 0.1})`;
+    ctx.fillRect(31, 15, 2, 40);
+}
+
+function drawParticles(time) {
+    particles.forEach((p, i) => {
+        let drift = Math.sin(time + p.offset) * 2;
+        let currentY = p.y + drift;
+        let opacity = 0.15 + Math.abs(Math.sin(time * 0.8 + i)) * 0.5;
+        ctx.fillStyle = `rgba(149, 165, 166, ${opacity})`;
+        ctx.fillRect(Math.floor(p.x), Math.floor(currentY), 1, 1);
+    });
+}
+
+let time = 0;
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    time += 0.05;
+
+    let breatheOffset = Math.sin(time) > 0 ? 0 : 1;
+    const shadowPulse = 0.3 + Math.sin(time * 1.5) * 0.15;
+
+    drawMirror(shadowPulse);
+    drawPixelArt(dagSprite, 10, 25 + breatheOffset);
+
+    const ghostSprite = dagSprite.map(row => row.replace(/[HSEJC]/g, 'G').replace(/F/g, '.'));
+    drawPixelArt(ghostSprite, 38, 25 + breatheOffset, shadowPulse);
+
+    drawParticles(time);
+
+    dagRafId = requestAnimationFrame(animate);
+}
+
+let dagRafId;
+animate();
+window.__pageCleanup = function() { cancelAnimationFrame(dagRafId); };
+
+const VIDEOS = [
+    { title: "Hologram of a Dream",   year: "2025", id: "mby4C5PZzlQ" },
+    { title: "Area Does Not Exist",   year: "2024", id: "T6lCJBrjFQ0" },
+    { title: "Millstone Woods May 2018", year: "2023", id: "3_jo3WEOPEI" },
+];
+
+const miniList = document.getElementById('miniVideoList');
+let activeEntry = null;
+
+VIDEOS.forEach(v => {
+    const thumbUrl = v.thumb || `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+    const embedUrl = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+    const watchUrl = `https://www.youtube.com/watch?v=${v.id}`;
+
+    const entry = document.createElement('div');
+    entry.className = 'mini-video-entry';
+    entry.innerHTML = `
+        <div class="mini-video-bg" style="background-image: url('${v.bg || thumbUrl}');"></div>
+        <div class="mini-video-content">
+            <div class="mini-thumb">
+                <img src="${thumbUrl}" alt="${v.title}" loading="lazy" referrerpolicy="no-referrer"
+                     onerror="if(!this.dataset.tried){this.dataset.tried='hq';this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg';}else if(this.dataset.tried==='hq'){this.dataset.tried='mq';this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg';}">
+                <div class="mini-play-btn"><div class="mini-play-icon"></div></div>
+            </div>
+            <div class="mini-iframe-wrap"></div>
+            <div class="mini-video-meta">
+                <div class="mini-video-year">${v.year}</div>
+                <div class="mini-video-title">${v.title}</div>
+                <a class="mini-yt-link" href="${watchUrl}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()">▶ open on youtube</a>
+            </div>
+        </div>
+    `;
+
+    entry.addEventListener('click', function () {
+        if (this.classList.contains('active')) return;
+        if (activeEntry && activeEntry !== this) {
+            activeEntry.classList.remove('active');
+            activeEntry.querySelector('.mini-iframe-wrap').innerHTML = '';
+        }
+        this.classList.add('active');
+        activeEntry = this;
+        this.querySelector('.mini-iframe-wrap').innerHTML =
+            `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    });
+
+    miniList.appendChild(entry);
+});
+</script>
+
+</body>
+</html>

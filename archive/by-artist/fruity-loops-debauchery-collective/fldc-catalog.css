@@ -1,0 +1,61 @@
+/* Fruity Loops Debauchery Bros — catalog pages base (recordings / releases / works) */
+body.fldc-page.fldc-recordings-page main,
+body.fldc-page.fldc-releases-page main,
+body.fldc-page.fldc-works-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.fldc-page.fldc-recordings-page main > *,
+body.fldc-page.fldc-releases-page main > *,
+body.fldc-page.fldc-works-page main > * { background: var(--fldc-bg); }
+
+body.fldc-page.fldc-recordings-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-blue-light); border-color: var(--fldc-arc-blue-light); }
+body.fldc-page.fldc-recordings-page .nav-card.c-back:hover { background: var(--fldc-arc-blue-light); color: var(--fldc-bg-surface); }
+
+body.fldc-page.fldc-releases-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-red); border-color: var(--fldc-arc-red); }
+body.fldc-page.fldc-releases-page .nav-card.c-back:hover { background: var(--fldc-arc-red); color: var(--fldc-bg-screen-pale); }
+
+body.fldc-page.fldc-works-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-yellow); border-color: var(--fldc-arc-yellow); }
+body.fldc-page.fldc-works-page .nav-card.c-back:hover { background: var(--fldc-arc-yellow); color: var(--fldc-bg-surface); }
+
+body.fldc-page.fldc-recordings-page .nav-card.c-blue,
+body.fldc-page.fldc-releases-page .nav-card.c-blue,
+body.fldc-page.fldc-works-page .nav-card.c-blue { background: var(--fldc-arc-blue); color: var(--fldc-bg-screen-pale); border-color: var(--fldc-arc-blue); }
+body.fldc-page.fldc-recordings-page .nav-card.c-blue:hover,
+body.fldc-page.fldc-releases-page .nav-card.c-blue:hover,
+body.fldc-page.fldc-works-page .nav-card.c-blue:hover { background: var(--fldc-arc-blue-light); border-color: var(--fldc-arc-blue-light); }
+
+body.fldc-page.fldc-recordings-page .nav-card.c-purple,
+body.fldc-page.fldc-releases-page .nav-card.c-purple,
+body.fldc-page.fldc-works-page .nav-card.c-purple { background: var(--fldc-arc-purple); color: var(--fldc-bg-screen-pale); border-color: var(--fldc-arc-purple); }
+body.fldc-page.fldc-recordings-page .nav-card.c-purple:hover,
+body.fldc-page.fldc-releases-page .nav-card.c-purple:hover,
+body.fldc-page.fldc-works-page .nav-card.c-purple:hover { background: var(--fldc-arc-blue-light); border-color: var(--fldc-arc-blue-light); }
+
+body.fldc-page.fldc-recordings-page .nav-card.c-cyan,
+body.fldc-page.fldc-releases-page .nav-card.c-cyan,
+body.fldc-page.fldc-works-page .nav-card.c-cyan { background: var(--fldc-arc-blue-light); color: var(--fldc-bg-surface); border-color: var(--fldc-arc-blue-light); }
+body.fldc-page.fldc-recordings-page .nav-card.c-cyan:hover,
+body.fldc-page.fldc-releases-page .nav-card.c-cyan:hover,
+body.fldc-page.fldc-works-page .nav-card.c-cyan:hover { background: var(--fldc-bg-screen-light); border-color: var(--fldc-bg-screen-light); }
+
+body.fldc-page.fldc-recordings-page .nav-card.c-rose,
+body.fldc-page.fldc-releases-page .nav-card.c-rose,
+body.fldc-page.fldc-works-page .nav-card.c-rose { background: var(--fldc-arc-red); color: var(--fldc-bg-screen-pale); border-color: var(--fldc-arc-red); }
+body.fldc-page.fldc-recordings-page .nav-card.c-rose:hover,
+body.fldc-page.fldc-releases-page .nav-card.c-rose:hover,
+body.fldc-page.fldc-works-page .nav-card.c-rose:hover { background: var(--fldc-arc-red-light); border-color: var(--fldc-arc-red-light); }
+
+body.fldc-page.fldc-recordings-page .nav-card.c-yellow,
+body.fldc-page.fldc-releases-page .nav-card.c-yellow,
+body.fldc-page.fldc-works-page .nav-card.c-yellow { background: var(--fldc-arc-yellow); color: var(--fldc-bg-surface); border-color: var(--fldc-arc-yellow); }
+body.fldc-page.fldc-recordings-page .nav-card.c-yellow:hover,
+body.fldc-page.fldc-releases-page .nav-card.c-yellow:hover,
+body.fldc-page.fldc-works-page .nav-card.c-yellow:hover { background: var(--fldc-arc-gold); border-color: var(--fldc-arc-gold); }
+
+body.fldc-page.fldc-recordings-page .nav-card,
+body.fldc-page.fldc-releases-page .nav-card,
+body.fldc-page.fldc-works-page .nav-card { font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.08em; padding: 10px 16px; border: 2px solid; text-decoration: none; }
+body.fldc-page.fldc-recordings-page .nav-card::after,
+body.fldc-page.fldc-releases-page .nav-card::after,
+body.fldc-page.fldc-works-page .nav-card::after { display: none; }
+body.fldc-page.fldc-recordings-page .nav-card:hover,
+body.fldc-page.fldc-releases-page .nav-card:hover,
+body.fldc-page.fldc-works-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

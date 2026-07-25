@@ -1,0 +1,58 @@
+/* Irvin House — works (neighbor brick warm accent) */
+body.ih-page.ih-works-page main > * { background: var(--ih-bg); }
+
+body.ih-page.ih-works-page .breadcrumb { color: var(--dim); }
+body.ih-page.ih-works-page .breadcrumb a { color: var(--ih-cta); }
+body.ih-page.ih-works-page .breadcrumb a:hover { color: var(--ih-cream); }
+body.ih-page.ih-works-page .breadcrumb .sep { color: var(--ih-cta); opacity: 0.6; }
+body.ih-page.ih-works-page .breadcrumb .current { color: var(--ih-cta); }
+
+body.ih-page.ih-works-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.ih-page.ih-works-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--ih-cta); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.ih-page.ih-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--ih-cta) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(168, 104, 72, 0.5); }
+
+body.ih-page.ih-works-page .work-card {
+    background: transparent !important;
+    border: 1px solid var(--ih-dark) !important;
+    padding: 18px 20px !important;
+    margin-bottom: 12px !important;
+}
+body.ih-page.ih-works-page .work-card:hover { border-color: var(--ih-cta) !important; }
+body.ih-page.ih-works-page .work-card h3 { color: var(--ih-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.ih-page.ih-works-page .work-card h3 a { color: var(--ih-cta) !important; text-decoration: none; }
+body.ih-page.ih-works-page .work-card h3 a:hover { color: var(--ih-cream) !important; }
+body.ih-page.ih-works-page .work-card p { color: var(--ih-body) !important; font-family: 'Courier Prime', monospace; font-size: 12px; opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.ih-page.ih-works-page .work-card p a { color: var(--ih-cta) !important; }
+body.ih-page.ih-works-page .work-card p strong { color: var(--ih-muted) !important; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.08em; margin-right: 6px; }
+body.ih-page.ih-works-page .work-card a { color: var(--ih-cta) !important; text-decoration: none; }
+body.ih-page.ih-works-page .work-card a:hover { color: var(--ih-cream) !important; }
+body.ih-page.ih-works-page .work-type { color: var(--ih-cta) !important; font-family: 'Courier Prime', monospace; font-size: 11px; font-style: italic; margin-left: 6px; }
+body.ih-page.ih-works-page .badge { display: inline-block; color: var(--ih-deep) !important; padding: 2px 8px; margin: 2px; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.06em; }
+body.ih-page.ih-works-page .badge-composed { background: var(--ih-cta) !important; }
+body.ih-page.ih-works-page .badge-lyrics { background: var(--ih-warm) !important; }
+body.ih-page.ih-works-page .badge-recorded { background: var(--ih-brand) !important; }
+body.ih-page.ih-works-page .badge-premiered { background: var(--ih-green) !important; }
+body.ih-page.ih-works-page .badge-other { background: var(--ih-deep) !important; color: var(--ih-cream) !important; }
+body.ih-page.ih-works-page .rec-label { display: inline-block; padding: 1px 5px; margin-left: 4px; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.05em; }
+body.ih-page.ih-works-page .rec-label.live { background: var(--ih-cta) !important; color: var(--ih-deep) !important; }
+body.ih-page.ih-works-page .rec-label.partial { background: var(--ih-heading) !important; color: var(--ih-deep) !important; }
+body.ih-page.ih-works-page .rec-label.video { background: var(--ih-brand) !important; color: var(--ih-deep) !important; }
+body.ih-page.ih-works-page .tag { background: var(--ih-dark) !important; border: 1px solid var(--ih-dark) !important; padding: 2px 7px !important; margin: 2px !important; color: var(--ih-muted) !important; font-family: 'Courier Prime', monospace; font-size: 11px; display: inline-block; }
+
+/* Current page: works (c-works active) */
+body.ih-page.ih-works-page .nav-card.c-works {
+    background: var(--ih-bg);
+    color: var(--ih-cta);
+    border-color: var(--ih-cta);
+}
+body.ih-page.ih-works-page .nav-card.c-works:hover {
+    background: transparent;
+    color: var(--ih-cta);
+}
+
+/* Override inline style for disambiguation text in recordings links */
+body.ih-page.ih-works-page .work-card p a[style] { color: var(--ih-cta) !important; }
+
+@media (max-width: 500px) {
+    body.ih-page.ih-works-page .work-card { border-color: var(--ih-muted) !important; }
+}

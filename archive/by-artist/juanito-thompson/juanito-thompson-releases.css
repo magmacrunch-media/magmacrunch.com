@@ -1,0 +1,67 @@
+/* Juanito Thompson — releases page (brick red accent) */
+body.jt-page.jt-releases-page .breadcrumb a { color: var(--jt-brick); }
+body.jt-page.jt-releases-page .breadcrumb a:hover { color: var(--jt-amber); }
+body.jt-page.jt-releases-page .breadcrumb .sep { color: var(--jt-brick); opacity: 0.5; }
+body.jt-page.jt-releases-page .breadcrumb .current { color: var(--jt-brick); }
+
+body.jt-page.jt-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jt-page.jt-releases-page .artist-label,
+body.jt-page.jt-releases-page .page-header .artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jt-brick) !important;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+body.jt-page.jt-releases-page .page-title,
+body.jt-page.jt-releases-page .page-header .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--jt-brick) !important;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(168,72,48,0.5) !important;
+}
+
+body.jt-page.jt-releases-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.jt-page.jt-releases-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--jt-brick), var(--jt-amber), var(--jt-brick), transparent); opacity: 0.4; margin-bottom: 40px; }
+
+body.jt-page.jt-releases-page #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jt-body); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
+body.jt-page.jt-releases-page #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--jt-mid); letter-spacing: 0.08em; margin-bottom: 24px; }
+
+body.jt-page.jt-releases-page .release-card { display: flex; gap: 18px; border: 1px solid var(--jt-surface); background: transparent; padding: 0; margin-bottom: 14px; transition: border-color 0.15s; }
+body.jt-page.jt-releases-page .release-card:hover { border-color: var(--jt-brick); }
+body.jt-page.jt-releases-page .album-art { width: 120px; min-width: 120px; height: 120px; background: var(--jt-raised); border-right: 1px solid var(--jt-surface); flex-shrink: 0; overflow: hidden; }
+body.jt-page.jt-releases-page .album-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+body.jt-page.jt-releases-page .release-info { padding: 16px 18px 16px 0; flex: 1; }
+body.jt-page.jt-releases-page .release-info h3 { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--jt-body); letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.jt-page.jt-releases-page .release-info h3 a { color: var(--jt-brick); text-decoration: none; }
+body.jt-page.jt-releases-page .release-info h3 a:hover { color: var(--jt-amber); }
+body.jt-page.jt-releases-page .disambiguation { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--jt-mid); font-style: italic; }
+body.jt-page.jt-releases-page .release-info p { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--jt-body); opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.jt-page.jt-releases-page .release-info p strong { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--jt-mid); letter-spacing: 0.08em; margin-right: 6px; }
+body.jt-page.jt-releases-page .release-info a { color: var(--jt-brick); text-decoration: none; }
+body.jt-page.jt-releases-page .release-info a:hover { color: var(--jt-amber); }
+body.jt-page.jt-releases-page .tag { display: inline-block; background: var(--jt-raised); border: 1px solid var(--jt-mid); padding: 2px 7px; margin: 2px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--jt-mid); }
+body.jt-page.jt-releases-page .error-msg { color: var(--jt-brick); opacity: 0.7; }
+
+body.jt-page.jt-releases-page .nav-card.c-back { background: transparent !important; color: var(--jt-brick) !important; border-color: var(--jt-brick) !important; }
+body.jt-page.jt-releases-page .nav-card.c-back:hover { background: var(--jt-brick) !important; color: var(--jt-bg) !important; }
+
+body.jt-page.jt-releases-page .nav-card.c-deep   { background: var(--jt-deep) !important; color: var(--jt-bg) !important; border-color: var(--jt-deep) !important; }
+body.jt-page.jt-releases-page .nav-card.c-deep:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+body.jt-page.jt-releases-page .nav-card.c-sky   { background: var(--jt-steel) !important; color: var(--jt-bg) !important; border-color: var(--jt-steel) !important; }
+body.jt-page.jt-releases-page .nav-card.c-sky:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+body.jt-page.jt-releases-page .nav-card.c-teal  { background: var(--jt-teal) !important; color: var(--jt-bg) !important; border-color: var(--jt-teal) !important; }
+body.jt-page.jt-releases-page .nav-card.c-teal:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+body.jt-page.jt-releases-page .nav-card.c-brick { background: var(--jt-brick) !important; color: var(--jt-bg) !important; border-color: var(--jt-brick) !important; }
+body.jt-page.jt-releases-page .nav-card.c-brick:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+body.jt-page.jt-releases-page .nav-card.c-gold { background: var(--jt-gold) !important; color: var(--jt-bg) !important; border-color: var(--jt-gold) !important; }
+body.jt-page.jt-releases-page .nav-card.c-gold:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.jt-page.jt-releases-page .nav-card::after { display: none; }
+
+@media (max-width: 500px) { .album-art { width: 72px; min-width: 72px; height: 72px; } }

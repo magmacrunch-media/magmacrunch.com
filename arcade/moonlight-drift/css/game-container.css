@@ -1,0 +1,42 @@
+/* Game container - responsive with 16:9 aspect ratio */
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    width: 100vw;
+    height: 100vh;
+    max-width: 177.78vh; /* 16:9 ratio: if constrained by height */
+    max-height: 56.25vw;  /* 16:9 ratio: if constrained by width */
+    z-index: 1;
+    margin: 0;
+    position: relative;
+}
+
+#canvasWrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+    margin: 0;
+}
+
+canvas {
+    border: none;
+    background: transparent;
+    display: block;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    margin: 0;
+}
+
+/* Canvas maintains 1280x720 internal resolution for rendering */

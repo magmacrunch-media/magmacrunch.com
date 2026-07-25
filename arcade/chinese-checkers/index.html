@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chinese Checkers — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <a href="../" class="mc-back">magmacrunch arcade</a>
+
+    <div class="scanlines"></div>
+
+    <div class="container">
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+                <h1 class="game-title">
+                    CHINESE<br>CHECKERS
+                </h1>
+                <p class="game-subtitle">// NEON EDITION //</p>
+
+                <div class="start-divider"></div>
+
+                <!-- Player Count Selector -->
+                <div class="player-count-section">
+                    <div class="player-count-label">PLAYERS</div>
+                    <div id="playerCountSelector" class="player-count-selector">
+                        <button class="player-count-btn active" data-count="2">2</button>
+                        <button class="player-count-btn" data-count="3">3</button>
+                        <button class="player-count-btn" data-count="4">4</button>
+                        <button class="player-count-btn" data-count="6">6</button>
+                    </div>
+                </div>
+
+                <div class="start-buttons">
+                    <button id="startGameBtn" class="start-btn primary">
+                        ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
+                    </button>
+                    <button id="onlineBtn" class="start-btn online">
+                        🌐&nbsp;&nbsp;PLAY ONLINE
+                    </button>
+                    <button id="helpBtn" class="start-btn">HOW TO PLAY</button>
+                    <button id="creditsBtn" class="start-btn">CREDITS</button>
+                </div>
+
+                <div class="start-footer">
+                    <p>CLASSIC CHINESE CHECKERS &nbsp;·&nbsp; VS AI OR ONLINE</p>
+                    <p>2-6 PLAYERS &nbsp;·&nbsp; HEXAGONAL BOARD</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" class="game-screen" style="display: none;">
+
+            <!-- Header -->
+            <div class="game-header">
+                <h1>
+                    <span style="color: #00f5ff;">◄</span>
+                    CHINESE CHECKERS
+                    <span style="color: #ff2d78;">►</span>
+                </h1>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">TURN</span>
+                        <span class="stat-value" id="turnIndicator">YOUR TURN</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">IN GOAL</span>
+                        <span class="stat-value" id="goalCount">0 / 10</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Board + Chat Layout -->
+            <div class="game-layout">
+                <!-- Board -->
+                <div class="board-area">
+                    <canvas id="boardCanvas"></canvas>
+                </div>
+
+                <!-- Chat -->
+            </div>
+
+            <!-- Message Area -->
+            <div class="message-area">
+                <div id="gameMessage" class="game-message">Click a piece to move</div>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <button id="newGameBtn" class="control-btn">NEW GAME</button>
+                <button id="menuBtn" class="control-btn">MENU</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
+    <div id="lobbyOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>ONLINE LOBBY</span>
+            </div>
+            <div class="modal-body">
+                <div id="lobbyContent">
+                    <div class="lobby-status" id="lobbyStatus">Connecting...</div>
+                    <div id="lobbyRoomCode" class="lobby-room-code" style="display: none;">
+                        Room: <span id="roomCodeDisplay"></span>
+                        <small>Share this code with your opponents</small>
+                    </div>
+                    <div class="lobby-room">
+                        <input type="text" id="roomCodeInput" placeholder="Enter room code (optional)" maxlength="4" style="text-transform: uppercase;">
+                    </div>
+                    <div class="lobby-actions">
+                        <button id="lobbyJoinBtn" class="start-btn primary">JOIN / CREATE ROOM</button>
+                        <button id="lobbyBackBtn" class="start-btn">BACK</button>
+                    </div>
+                    <div id="lobbyPlayers" class="lobby-players" style="display: none;">
+                        <div class="lobby-waiting">Waiting for opponents...</div>
+                        <div id="lobbyPlayerList"></div>
+                    </div>
+                    <div id="lobbyStartArea" class="lobby-actions" style="display: none;">
+                        <button id="lobbyStartBtn" class="start-btn primary">START GAME (2+ PLAYERS)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MODALS ═══════════════ -->
+
+    <!-- Instructions Modal -->
+    <div id="instructionsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>HOW TO PLAY</span>
+                <button id="closeInstructions" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>Chinese Checkers Rules</h3>
+                <p>Chinese Checkers is a classic board game for 2 players. The goal is to move all 10 of your marbles from your starting triangle to the opposite triangle.</p>
+
+                <h4>Setup</h4>
+                <ul>
+                    <li>You are <strong style="color: #00f5ff;">CYAN</strong> — your pieces start at the top triangle</li>
+                    <li>AI is <strong style="color: #ff2d78;">MAGENTA</strong> — its pieces start at the bottom triangle</li>
+                    <li>Each player has 10 marbles</li>
+                </ul>
+
+                <h4>Movement</h4>
+                <ul>
+                    <li>Click a piece to select it — legal moves will highlight</li>
+                    <li><strong style="color: #39ff6e;">Green highlights</strong> show adjacent moves</li>
+                    <li><strong style="color: #ffe03a;">Yellow highlights</strong> show hop moves</li>
+                    <li>Click a highlighted cell to move there</li>
+                </ul>
+
+                <h4>Hopping</h4>
+                <ul>
+                    <li>You can hop over an adjacent marble into an empty space beyond</li>
+                    <li>You can chain multiple hops in a single turn</li>
+                    <li>Hops can go in any direction</li>
+                    <li>You can also just move to an adjacent empty space</li>
+                </ul>
+
+                <h4>Winning</h4>
+                <ul>
+                    <li>Move all 10 of your marbles to the opposite triangle</li>
+                    <li>The first player to fill their goal triangle wins!</li>
+                </ul>
+
+                <div class="modal-footer">
+                    <button id="closeInstructionsBtn">GOT IT!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div id="creditsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>CREDITS</span>
+                <button id="closeCredits" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>Chinese Checkers — Neon Edition</h3>
+                <h4>Game Design & Development</h4>
+                <p>Jake A. McCoy</p>
+                <h4>Publisher</h4>
+                <p><strong>magmacrunch media</strong></p>
+                <h4>Built With</h4>
+                <p>Vanilla HTML, CSS & JavaScript · Press Start 2P font · Neon retro aesthetic</p>
+                <h4>About</h4>
+                <p>Classic Chinese Checkers with a neon arcade twist. Play against the AI opponent and master the art of hopping!</p>
+                <div class="modal-footer">
+                    <button id="closeCreditsBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal-overlay">
+        <div class="modal-content game-over-content">
+            <div class="modal-titlebar">
+                <span>GAME OVER</span>
+            </div>
+            <div class="modal-body">
+                <div class="game-over-icon">🏆</div>
+                <div id="gameOverTitle" class="game-over-title win">YOU WIN!</div>
+                <div id="gameOverMessage" class="game-over-message">Congratulations!</div>
+                <div class="modal-footer">
+                    <button id="playAgainBtn">PLAY AGAIN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script>var MP_DEFAULT_SERVER = 'ws://magmacrunch.duckdns.org:8772';</script>
+    <script src="../shared/multiplayer/protocol.js"></script>
+    <script src="../shared/multiplayer/network.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/multiplayer.js"></script>
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+    <script src="js/renderer.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

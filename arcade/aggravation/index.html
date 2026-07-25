@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggravation — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        .font-loading body { visibility: hidden; }
+    </style>
+    <script>
+        document.documentElement.classList.add('font-loading');
+        document.fonts.ready.then(function() {
+            document.documentElement.classList.remove('font-loading');
+        });
+    </script>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/lobby.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<a href="../" class="mc-back">magmacrunch arcade</a>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     START SCREEN
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="startScreen">
+    <div class="game-title">AGGRAVATION</div>
+    <div class="game-subtitle">// the classic marble race //</div>
+
+    <!-- LOCAL GAME -->
+    <div class="mode-section">
+        <div class="mode-label">// LOCAL GAME //</div>
+        <label class="form-label" for="playerCount">PLAYERS</label>
+        <select id="playerCount" class="form-select">
+            <option value="2">2 PLAYERS</option>
+            <option value="3">3 PLAYERS</option>
+            <option value="4" selected>4 PLAYERS</option>
+            <option value="5">5 PLAYERS</option>
+            <option value="6">6 PLAYERS</option>
+        </select>
+        <button id="localBtn" class="ag-btn">PLAY LOCAL</button>
+    </div>
+
+    <div class="mode-divider">OR</div>
+
+    <!-- ONLINE GAME -->
+    <div class="mode-section">
+        <div class="mode-label">// ONLINE //</div>
+        <input type="text" id="nameInput" class="ag-input" placeholder="your name" maxlength="20" autocomplete="off">
+        <input type="text" id="roomInput" class="ag-input" placeholder="room code (optional)" maxlength="4" autocomplete="off">
+        <button id="joinBtn" class="ag-btn">JOIN GAME</button>
+        <button id="createBtn" class="ag-btn ag-btn-secondary">CREATE ROOM</button>
+        <button id="spectateBtn" class="ag-btn ag-btn-secondary ag-btn-small">SPECTATE</button>
+    </div>
+
+    <div id="statusMsg" style="margin-top: 16px; font-size: 8px; color: var(--ag-text-dim);"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     LOBBY OVERLAY
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="lobbyOverlay" class="lobby-overlay">
+    <div class="lobby-panel">
+        <div class="lobby-title">LOBBY</div>
+        <div class="lobby-room">ROOM: <span id="lobbyRoomCode">----</span></div>
+
+        <div id="lobbyPlayers" class="lobby-players"></div>
+        <div id="lobbyStatus" class="lobby-status">0 / 6 players</div>
+
+        <button id="startGameBtn" class="ag-btn" style="display:none;">START GAME</button>
+
+        <div class="chat-panel">
+            <div class="chat-header">// CHAT //</div>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" class="ag-input" placeholder="say something..." maxlength="200" autocomplete="off">
+                <button id="chatBtn" class="ag-btn ag-btn-small">SEND</button>
+            </div>
+        </div>
+
+        <button id="lobbyQuitBtn" class="ag-btn ag-btn-secondary ag-btn-small" style="margin-top: 10px;">LEAVE</button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     GAME SCREEN
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="gameScreen">
+    <div class="board-container">
+        <canvas id="boardCanvas" width="210" height="210"></canvas>
+    </div>
+
+    <div class="game-sidebar">
+        <div id="turnInfo">WAITING...</div>
+
+        <div class="dice-area">
+            <div class="dice-label">DIE</div>
+            <div id="diceDisplay">-</div>
+            <button id="rollBtn" class="ag-btn" disabled>ROLL</button>
+        </div>
+
+        <div id="statusMsg2"></div>
+
+        <div id="scoresBar" class="scores-bar"></div>
+
+        <div class="chat-panel chat-panel-game">
+            <div class="chat-header">// CHAT //</div>
+            <div id="chatMessages2" class="chat-messages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput2" class="ag-input" placeholder="say something..." maxlength="200" autocomplete="off">
+                <button id="chatBtn2" class="ag-btn ag-btn-small">SEND</button>
+            </div>
+        </div>
+
+        <button id="quitBtn" class="ag-btn ag-btn-secondary ag-btn-small" style="margin-top: 10px;">QUIT</button>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     GAME OVER MODAL
+     ═══════════════════════════════════════════════════════════════════ -->
+<div id="gameOverModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-title">GAME OVER</div>
+        <div id="winnerText" class="modal-text"></div>
+        <button id="playAgainBtn" class="ag-btn">PLAY AGAIN</button>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/board-config.js"></script>
+<script src="js/game-state.js"></script>
+<script src="js/dice.js"></script>
+<script src="js/board-renderer.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/network.js"></script>
+<script src="js/ui.js"></script>
+
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+
+</body>
+</html>

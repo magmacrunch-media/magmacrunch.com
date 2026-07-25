@@ -1,0 +1,138 @@
+/* Juanito Thompson — photography page (steel blue accent) */
+body.jt-page.jt-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.jt-page.jt-photography-page main > * { background: var(--jt-bg); }
+
+body.jt-page.jt-photography-page .breadcrumb a { color: var(--jt-steel); }
+body.jt-page.jt-photography-page .breadcrumb a:hover { color: var(--jt-amber); }
+body.jt-page.jt-photography-page .breadcrumb .sep { color: var(--jt-steel); opacity: 0.5; }
+body.jt-page.jt-photography-page .breadcrumb .current { color: var(--jt-steel); }
+
+body.jt-page.jt-photography-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jt-page.jt-photography-page .artist-label,
+body.jt-page.jt-photography-page .page-header .artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jt-steel) !important;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+body.jt-page.jt-photography-page .page-title,
+body.jt-page.jt-photography-page .page-header .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--jt-steel) !important;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(96,104,120,0.5) !important;
+}
+
+body.jt-page.jt-photography-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.jt-page.jt-photography-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--jt-steel), var(--jt-teal), var(--jt-steel), transparent); opacity: 0.4; margin-bottom: 40px; }
+
+body.jt-page.jt-photography-page .nav-card.c-back { background: transparent !important; color: var(--jt-steel) !important; border-color: var(--jt-steel) !important; }
+body.jt-page.jt-photography-page .nav-card.c-back:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.jt-page.jt-photography-page .nav-card::after { display: none; }
+body.jt-page.jt-photography-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.jt-page.jt-photography-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--jt-steel), var(--jt-teal), var(--jt-steel), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+/* Photo strip (drag-scrollable) */
+body.jt-page.jt-photography-page .photo-strip-section { width: 100%; max-width: 900px; margin-bottom: 48px; animation: fadeUp 0.5s 0.1s ease both; }
+body.jt-page.jt-photography-page .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jt-steel); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--jt-steel); opacity: 0.9; }
+body.jt-page.jt-photography-page .photo-strip-wrap { position: relative; width: 100%; }
+body.jt-page.jt-photography-page .photo-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--jt-amber) var(--jt-surface);
+    padding-bottom: 10px;
+    cursor: grab;
+}
+body.jt-page.jt-photography-page .photo-strip:active { cursor: grabbing; }
+body.jt-page.jt-photography-page .photo-strip::-webkit-scrollbar { height: 3px; }
+body.jt-page.jt-photography-page .photo-strip::-webkit-scrollbar-track { background: var(--jt-surface); }
+body.jt-page.jt-photography-page .photo-strip::-webkit-scrollbar-thumb { background: var(--jt-amber); }
+
+body.jt-page.jt-photography-page .photo-item {
+    flex-shrink: 0;
+    position: relative;
+    height: clamp(200px, 35vw, 380px);
+    scroll-snap-align: start;
+    overflow: hidden;
+    border: 1px solid var(--jt-borders);
+    transition: border-color 0.2s;
+    cursor: pointer;
+}
+body.jt-page.jt-photography-page .photo-item:hover { border-color: var(--jt-amber); }
+body.jt-page.jt-photography-page .photo-item.landscape { aspect-ratio: 16/9; }
+body.jt-page.jt-photography-page .photo-item.square    { aspect-ratio: 1/1; }
+body.jt-page.jt-photography-page .photo-item.wide      { aspect-ratio: 4/3; }
+body.jt-page.jt-photography-page .photo-item.portrait  { aspect-ratio: 3/4; }
+
+body.jt-page.jt-photography-page .photo-strip-section.portrait .photo-item {
+    height: clamp(300px, 50vw, 500px);
+}
+
+body.jt-page.jt-photography-page .photo-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease, filter 0.3s ease;
+    filter: saturate(0.85) brightness(0.88);
+}
+body.jt-page.jt-photography-page .photo-item:hover img {
+    transform: scale(1.03);
+    filter: saturate(1.0) brightness(1.0);
+}
+body.jt-page.jt-photography-page .photo-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 22px 10px 8px;
+    background: linear-gradient(to top, rgba(10,10,12,0.88) 0%, transparent 100%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px; color: var(--jt-mid); letter-spacing: 0.1em;
+    opacity: 0; transition: opacity 0.25s ease;
+}
+body.jt-page.jt-photography-page .photo-item:hover .photo-caption { opacity: 1; }
+
+body.jt-page.jt-photography-page .strip-scroll-hint {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px; color: var(--jt-mid); letter-spacing: 0.15em;
+    margin-top: 8px; opacity: 0.35; text-align: right;
+    transition: opacity 0.4s;
+}
+body.jt-page.jt-photography-page .photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
+
+/* Photo lightbox */
+body.jt-page.jt-photography-page .photo-lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,10,12,0.96); z-index: 1000;
+    align-items: center; justify-content: center; flex-direction: column;
+}
+body.jt-page.jt-photography-page .photo-lightbox.open { display: flex; }
+body.jt-page.jt-photography-page .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+body.jt-page.jt-photography-page .lb-img-wrap.vertical { max-width: 50vw; max-height: 85vh; }
+body.jt-page.jt-photography-page .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid var(--jt-borders); }
+body.jt-page.jt-photography-page .lb-img-wrap.vertical img { max-width: 50vw; max-height: 85vh; }
+body.jt-page.jt-photography-page .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+body.jt-page.jt-photography-page .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--jt-mid);
+    background: none; border: 1px solid var(--jt-borders); padding: 7px 14px; cursor: pointer;
+    letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
+body.jt-page.jt-photography-page .lb-btn:hover { color: var(--jt-amber); border-color: var(--jt-amber); }
+body.jt-page.jt-photography-page .lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jt-mid);
+    background: none; border: none; cursor: pointer; padding: 8px;
+    letter-spacing: 0.1em; transition: color 0.15s; }
+body.jt-page.jt-photography-page .lb-close:hover { color: var(--jt-amber); }
+body.jt-page.jt-photography-page .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px;
+    color: var(--jt-mid); letter-spacing: 0.12em; opacity: 0.55; min-width: 50px; text-align: center; }
+body.jt-page.jt-photography-page .lb-cap { font-family: 'Press Start 2P', monospace; font-size: 6px;
+    color: var(--jt-mid); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
+
+@media (max-width: 500px) { }
