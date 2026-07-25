@@ -13,6 +13,7 @@ import argparse
 import asyncio
 import json
 import os
+import time
 import websockets
 from websockets.datastructures import Headers
 
@@ -34,6 +35,18 @@ def save_count(count):
 
 async def handler(websocket):
     count = load_count()
+    windows = {}  # key -> (start, count)
+
+    def rate_limit(key, max_count, window_sec):
+        now = time.monotonic()
+        start, cnt = windows.get(key, (now, 0))
+        if now - start > window_sec:
+            windows[key] = (now, 1)
+            return True
+        if cnt >= max_count:
+            return False
+        windows[key] = (start, cnt + 1)
+        return True
 
     try:
         async for message in websocket:
@@ -45,12 +58,16 @@ async def handler(websocket):
             action = data.get('action')
 
             if action == 'get_count':
+                if not rate_limit('get_count', 10, 10):
+                    continue
                 await websocket.send(json.dumps({
                     'type': 'count',
                     'count': count
                 }))
 
             elif action == 'increment':
+                if not rate_limit('increment', 3, 10):
+                    continue
                 count += 1
                 save_count(count)
                 await websocket.send(json.dumps({

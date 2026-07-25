@@ -461,7 +461,7 @@ document.addEventListener('keydown', function(e) {
 // ── Quit game ─────────────────────────────────────────────────────────────────
 function doQuitGame() {
   closeModal('quit-confirm-modal');
-  Chat.disconnect();
+  ChatWidget.disconnect();
   if (typeof Multiplayer !== 'undefined' && Multiplayer.isConnected()) {
     Multiplayer.quit();
   }

@@ -25,6 +25,27 @@ from websockets.datastructures import Headers
 
 logging.getLogger("websockets").setLevel(logging.WARNING)
 
+
+# ── Rate Limiter ──────────────────────────────────────────────────────────────
+
+class RateLimiter:
+    """Per-connection sliding window rate limiter."""
+
+    def __init__(self):
+        self._windows = {}  # key -> (window_start, count)
+
+    def check(self, key, max_count, window_sec):
+        now = time.monotonic()
+        window_start, count = self._windows.get(key, (now, 0))
+        if now - window_start > window_sec:
+            self._windows[key] = (now, 1)
+            return True
+        if count >= max_count:
+            return False
+        self._windows[key] = (window_start, count + 1)
+        return True
+
+
 # ── Configuration ────────────────────────────────────────────────────────────
 
 MAX_GLOBAL_MESSAGES = 100
@@ -193,6 +214,7 @@ async def broadcast_global_users():
 async def handler(websocket):
     """Handle a new chat connection."""
     connected_clients.add(websocket)
+    limiter = RateLimiter()
 
     try:
         # Send global history
@@ -210,6 +232,10 @@ async def handler(websocket):
 
         # Main message loop
         async for raw in websocket:
+            # Global flood protection: 20 msgs/sec per connection
+            if not limiter.check("global", 20, 1):
+                continue
+
             try:
                 msg = json.loads(raw)
             except json.JSONDecodeError:
@@ -218,6 +244,8 @@ async def handler(websocket):
             msg_type = msg.get('type')
 
             if msg_type == 'set_name':
+                if not limiter.check("set_name", 2, 10):
+                    continue
                 new_name = msg.get('name', '')[:20]
                 if not new_name:
                     new_name = generate_name()
@@ -284,6 +312,8 @@ async def handler(websocket):
                     await broadcast_user_list()
 
             elif msg_type == 'set_color':
+                if not limiter.check("set_color", 2, 10):
+                    continue
                 if websocket not in user_info:
                     continue
                 new_color = msg.get('color', '#fff')
@@ -326,6 +356,8 @@ async def handler(websocket):
                 await broadcast_user_list()
 
             elif msg_type == 'chat':
+                if not limiter.check("chat", 5, 10):
+                    continue
                 if websocket not in user_info:
                     continue
                 room = msg.get('room')
@@ -376,6 +408,9 @@ async def handler(websocket):
                     await broadcast(typing_msg, exclude=websocket)
 
             elif msg_type == 'status':
+                # Rate limit: 1 request per 10 seconds (matches status_broadcaster interval)
+                if not limiter.check("status", 1, 10):
+                    continue
                 # Status request
                 statuses = await get_all_statuses()
                 await websocket.send(json.dumps({

@@ -492,7 +492,7 @@
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'none';
         }
-        Chat.disconnect();
+        ChatWidget.disconnect();
         isMultiplayerMode = false;
     }
 
