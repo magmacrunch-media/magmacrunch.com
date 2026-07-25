@@ -338,6 +338,29 @@ window.NAV_CONFIG = {
     }
 })();
 
+/* ── AUTO FONT LOADER ──
+   Injects Google Fonts <link> tags so the browser
+   can fetch them in parallel with style.css (which
+   used to have a render-blocking @import). Fonts
+   swap in when ready via font-display: swap. */
+
+(function () {
+    if (document.querySelector('link[href*="fonts.googleapis.com"]')) return;
+    const preconnect1 = document.createElement('link');
+    preconnect1.rel = 'preconnect';
+    preconnect1.href = 'https://fonts.googleapis.com';
+    document.head.appendChild(preconnect1);
+    const preconnect2 = document.createElement('link');
+    preconnect2.rel = 'preconnect';
+    preconnect2.href = 'https://fonts.gstatic.com';
+    preconnect2.crossOrigin = 'anonymous';
+    document.head.appendChild(preconnect2);
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap';
+    document.head.appendChild(link);
+})();
+
 /* ── ABSOLUTIZE NAV HREFS ──
    Convert all <nav> links to absolute paths so
    they survive pushState URL changes from the SPA
@@ -592,6 +615,12 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                     }
                 });
                 mainEl.innerHTML = newMain.innerHTML;
+            }
+
+            const footerEl = document.querySelector('footer');
+            const newFooter = doc.querySelector('footer');
+            if (footerEl && newFooter) {
+                footerEl.innerHTML = newFooter.innerHTML;
             }
 
             // Hide chat widget on non-arcade pages
