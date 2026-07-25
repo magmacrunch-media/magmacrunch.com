@@ -593,6 +593,4 @@ if __name__ == "__main__":
         game_name='Cribbage'
     )
 
-    print(f"[Cribbage] Starting server on port {args.port}")
-    print(f"[Cribbage] Players connect via browser to play")
     server.run()

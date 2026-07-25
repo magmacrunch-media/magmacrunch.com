@@ -837,6 +837,4 @@ if __name__ == "__main__":
         game_name='Scandinavian Stud'
     )
 
-    print(f"[Scandinavian Stud] Starting server on port {args.port}")
-    print(f"[Scandinavian Stud] Players connect via browser to play")
     server.run()
