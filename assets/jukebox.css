@@ -438,4 +438,10 @@ body:has(main .jukebox) .mcj {
         width: 72px;
         height: 72px;
     }
+
+    /* larger touch targets */
+    .mcj-bar-play { padding: 8px 12px; font-size: 10px; }
+    .mcj-btn { padding: 10px 12px; }
+    .mcj-btn-skip { padding: 10px 10px; }
+    .mcj-mute { padding: 8px 10px; font-size: 12px; }
 }

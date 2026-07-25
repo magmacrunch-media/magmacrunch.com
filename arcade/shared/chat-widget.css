@@ -450,4 +450,11 @@
     .acw-online-panel {
         max-height: 40vh;
     }
+
+    /* larger touch targets */
+    .acw-header-btn { padding: 6px 8px; font-size: 16px; }
+    .acw-edit-name,
+    .acw-pick-color { padding: 8px; font-size: 16px; }
+    .acw-tab { padding: 12px 8px; }
+    .acw-input button { padding: 12px 20px; }
 }
