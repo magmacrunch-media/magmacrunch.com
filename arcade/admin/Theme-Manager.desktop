@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Theme Manager
+Comment=Browse and edit site color themes
+Exec=chromium --new-window http://localhost:8780/#themes
+Icon=/home/jake/arcade/admin/icons/theme-manager.png
+Terminal=false
+Type=Application
+Categories=Development;Design;
+StartupNotify=true

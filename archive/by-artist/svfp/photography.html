@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVFP — photography — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="svfp-shared.css">
+    <link rel="stylesheet" href="svfp-photography.css">
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        '260e4953-a937-4355-8389-d1baaf24eca5',
+        name:      'sex van floor plan',
+        abbr:      'SVFP',
+        accent:    'purple',
+        backColor: 'c-purple',
+        siblings:  ['documentary', 'events', 'releases', 'recordings', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="svfp-page svfp-photography-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">svfp</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// sex van floor plan //</div>
+        <div class="page-title">PHOTOGRAPHY</div>
+        <div class="sub-nav" id="sub-nav">
+            <a href="./"      class="nav-card c-back">← back</a>
+            <a href="about.html"      class="nav-card c-about">about</a>
+            <a href="documentary.html" class="nav-card c-documentary">documentary</a>
+            <a href="events.html"     class="nav-card c-events">events</a>
+            <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"   class="nav-card c-releases">releases</a>
+            <a href="works.html"      class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="photo-grid-wrap">
+        <div class="section-label">// may 2025</div>
+        <div class="photo-grid" id="photoGrid">
+            <div class="photo-slot" data-idx="0"><img src="../../../assets/photos/svfp/svfp-may2025-1.jpg" alt="SVFP — green light" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="1"><img src="../../../assets/photos/svfp/svfp-may2025-2.jpg" alt="SVFP — blue light guitar" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="2"><img src="../../../assets/photos/svfp/svfp-may2025-3.jpg" alt="SVFP — light streaks teal" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="3"><img src="../../../assets/photos/svfp/svfp-may2025-4.jpg" alt="SVFP — blue blur" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="4"><img src="../../../assets/photos/svfp/svfp-may2025-5.jpg" alt="SVFP — purple pizza" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="5"><img src="../../../assets/photos/svfp/svfp-may2025-6.jpg" alt="SVFP — red light two" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="6"><img src="../../../assets/photos/svfp/svfp-may2025-7.jpg" alt="SVFP — band portrait blue" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="7"><img src="../../../assets/photos/svfp/svfp-may2025-8.jpg" alt="SVFP — red cameras" loading="lazy"><div class="photo-slot-overlay"></div></div>
+            <div class="photo-slot" data-idx="8"><img src="../../../assets/photos/svfp/svfp-may2025-9.jpg" alt="SVFP — purple eating" loading="lazy"><div class="photo-slot-overlay"></div></div>
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+        <button class="lightbox-close" id="lbClose">✕</button>
+        <div class="lightbox-img-wrap">
+            <button class="lightbox-btn lightbox-prev" id="lbPrev">◀</button>
+            <img id="lbImg" src="" alt="">
+            <button class="lightbox-btn lightbox-next" id="lbNext">▶</button>
+        </div>
+        <div class="lightbox-counter" id="lbCounter"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script>
+const PHOTOS = [
+    { src: '../../../assets/photos/svfp/svfp-may2025-1.jpg', alt: 'SVFP — green light' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-2.jpg', alt: 'SVFP — blue light guitar' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-3.jpg', alt: 'SVFP — light streaks teal' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-4.jpg', alt: 'SVFP — blue blur' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-5.jpg', alt: 'SVFP — purple pizza' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-6.jpg', alt: 'SVFP — red light two' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-7.jpg', alt: 'SVFP — band portrait blue' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-8.jpg', alt: 'SVFP — red cameras' },
+    { src: '../../../assets/photos/svfp/svfp-may2025-9.jpg', alt: 'SVFP — purple eating' },
+];
+
+const lb      = document.getElementById('lightbox');
+const lbImg   = document.getElementById('lbImg');
+const lbCount = document.getElementById('lbCounter');
+let lbCurrent = 0;
+
+function lbOpen(idx) {
+    lbCurrent = idx;
+    lbImg.src = PHOTOS[idx].src;
+    lbImg.alt = PHOTOS[idx].alt;
+    lbCount.textContent = (idx + 1) + ' / ' + PHOTOS.length;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function lbClose() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+}
+function lbGo(dir) {
+    lbOpen(((lbCurrent + dir) + PHOTOS.length) % PHOTOS.length);
+}
+
+document.querySelectorAll('.photo-slot').forEach(slot => {
+    slot.addEventListener('click', () => lbOpen(+slot.dataset.idx));
+});
+document.getElementById('lbClose').addEventListener('click', lbClose);
+document.getElementById('lbPrev').addEventListener('click', () => lbGo(-1));
+document.getElementById('lbNext').addEventListener('click', () => lbGo(1));
+lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
+document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') lbClose();
+    if (e.key === 'ArrowLeft')  lbGo(-1);
+    if (e.key === 'ArrowRight') lbGo(1);
+});
+</script>
+</body>
+</html>

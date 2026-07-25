@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottle Boys Collective — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="bbc-shared.css">
+    <link rel="stylesheet" href="bbc-index.css">
+    <style>
+        /* ══ PAGE: by-artist / bottle-boys-collective ══ */
+
+        main { position: relative; padding: 0; }
+
+        /* ── BREADCRUMB ── */
+        body.bbc-page .breadcrumb a { color: var(--bbc-warm); }
+        body.bbc-page .breadcrumb a:hover { color: var(--bbc-warm-light); }
+        body.bbc-page .breadcrumb .sep { color: var(--bbc-warm); opacity: 0.6; }
+        body.bbc-page .breadcrumb .current { color: var(--bbc-warm); }
+
+        /* ── HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+            filter: saturate(0.85) brightness(0.65);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(88, 136, 176, 0.10);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(7,9,6,0.0)  0%,
+                rgba(7,9,6,0.0)  85%,
+                rgba(7,9,6,0.85) 100%
+            );
+        }
+
+        /* ── HERO INNER ── */
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .artist-header {
+            width: 100%;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        /* ── ARTIST HEADER ── */
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--bbc-warm-light);
+            letter-spacing: 0.2em;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--bbc-cream);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow: 0 0 28px rgba(88, 136, 176, 0.5);
+            margin-bottom: 6px;
+        }
+
+        .artist-aka {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--bbc-mid);
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+            opacity: 0.75;
+        }
+        .artist-aka strong { color: var(--bbc-warm-light); font-style: normal; }
+
+        /* ── SUB-NAV CARDS ── */
+        .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 48px; }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--bbc-sky-dark), var(--bbc-sky), var(--bbc-sky-dark), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── LAYOUT ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--bbc-sky);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--bbc-sky-dark);
+            opacity: 0.9;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--bbc-cream);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+        .bio p a { color: var(--bbc-warm-light); text-decoration: none; }
+        .bio p a:hover { text-decoration: underline; }
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--bbc-sky);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--bbc-sky);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover { background: var(--bbc-sky); color: var(--bbc-surface); }
+
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+
+        /* ── MB MEMBERS LINK ── */
+        .mb-members {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--bbc-mid);
+            border: 1px solid var(--bbc-dark);
+            padding: 6px 12px;
+            letter-spacing: 0.08em;
+            flex-wrap: wrap;
+            gap: 0 4px;
+        }
+        .mb-members .mb-abbr {
+            color: var(--bbc-cream);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .mb-members .mb-abbr:hover { color: var(--bbc-sky-light); }
+        .mb-members:hover { border-color: var(--bbc-sky-light); }
+        .mb-members .mb-sep { color: var(--bbc-dark); margin: 0 2px; }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--bbc-sky); text-decoration: none; border: 1px solid var(--bbc-sky-dark); padding: 6px 12px; letter-spacing: 0.08em; transition: color 0.15s, border-color 0.15s; display: inline-block; }
+        .mb-link:hover { color: var(--bbc-sky-light); border-color: var(--bbc-sky-light); }
+
+        /* ── PHOTO STRIP ── */
+        .photo-strip-section {
+            width: 100%;
+            max-width: 960px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+
+        @media (max-width: 640px) { .artist-name { font-size: 13px; } .sub-nav { flex-direction: column; } }
+    </style>
+</head>
+<body class="bbc-page bbc-index-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">bbc</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/bottle_boys/nmsb_slo24_4A.jpg" alt="Bottle Boys Collective">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Ben Nikitas</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">BOTTLE BOYS COLLECTIVE</div>
+                <div class="artist-aka"><strong>Bottle Boys</strong> & <strong>Northern Mountain Saddle Bellies</strong></div>
+
+                <div class="sub-nav">
+                    <a href="about.html"       class="nav-card c-about">about</a>
+                    <a href="photography.html" class="nav-card c-photography">photography</a>
+                    <a href="recordings.html"  class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"    class="nav-card c-releases">releases</a>
+                    <a href="works.html"       class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+            <div class="mb-members">
+                <span>▶ view on MusicBrainz —</span>
+                <a href="https://musicbrainz.org/artist/e33d1006-01a5-4266-aade-b7f6c1dff8e3" target="_blank" rel="noopener" class="mb-abbr">BB</a>
+                <span class="mb-sep">·</span>
+                <a href="https://musicbrainz.org/artist/dc2aa366-6f44-48dd-b1f9-a9aa705a6452" target="_blank" rel="noopener" class="mb-abbr">NMSB</a>
+            </div>
+        </div>
+    </div>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+(function() {
+    var strip = document.getElementById('bbcStrip');
+    var wrap  = document.getElementById('bbcStripWrap');
+    var isDown = false, startX, scrollLeft;
+    strip.addEventListener('mousedown', function(e) { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+    strip.addEventListener('mouseleave', function() { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mouseup',    function() { isDown = false; strip.classList.remove('dragging'); });
+    strip.addEventListener('mousemove',  function(e) { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
+    strip.addEventListener('scroll', function() { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+})();
+
+(function() {
+    var items   = document.querySelectorAll('#bbcStrip .photo-item');
+    var lb      = document.getElementById('bbcLightbox');
+    var lbImg   = document.getElementById('bbcLbImg');
+    var lbCap   = document.getElementById('bbcLbCap');
+    var lbCount = document.getElementById('bbcLbCounter');
+    var strip   = document.getElementById('bbcStrip');
+    var photos  = Array.from(items).map(function(item) { return { src: item.querySelector('img').src, alt: item.querySelector('img').alt, caption: item.querySelector('.photo-caption').textContent.trim() }; });
+    var current = 0;
+    function open(index) { current = index; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function close() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+    function show() { lbImg.src = photos[current].src; lbImg.alt = photos[current].alt; lbCap.textContent = photos[current].caption; lbCount.textContent = (current + 1) + ' / ' + photos.length; }
+    function nav(dir) { current = (current + dir + photos.length) % photos.length; show(); }
+    items.forEach(function(item) { item.addEventListener('click', function() { if (!strip.classList.contains('dragging')) open(parseInt(item.dataset.index)); }); });
+    document.getElementById('bbcLbClose').addEventListener('click', close);
+    document.getElementById('bbcLbPrev').addEventListener('click', function() { nav(-1); });
+    document.getElementById('bbcLbNext').addEventListener('click', function() { nav(1); });
+    lb.addEventListener('click', function(e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function(e) { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') nav(-1); if (e.key === 'ArrowRight') nav(1); });
+})();
+</script>
+</body>
+</html>

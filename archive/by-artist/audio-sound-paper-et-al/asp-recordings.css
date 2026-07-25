@@ -1,0 +1,28 @@
+/* Audio Sound Paper, et al. — recordings page — accent: amber */
+body.asp-page.asp-recordings-page main > * { background: var(--asp-bg); }
+
+body.asp-page.asp-recordings-page .breadcrumb { color: var(--asp-amber); }
+body.asp-page.asp-recordings-page .breadcrumb a { color: var(--asp-amber); }
+body.asp-page.asp-recordings-page .breadcrumb a:hover { color: var(--asp-amber-glow); }
+body.asp-page.asp-recordings-page .breadcrumb .sep { color: var(--asp-amber); opacity: 0.6; }
+body.asp-page.asp-recordings-page .breadcrumb .current { color: var(--asp-amber); }
+
+body.asp-page.asp-recordings-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.asp-page.asp-recordings-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--asp-amber); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.asp-page.asp-recordings-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--asp-amber); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(168, 72, 40, 0.5); }
+
+body.asp-page.asp-recordings-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--asp-brick), var(--asp-amber), var(--asp-brick), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+/* ── Nav card overrides ── */
+body.asp-page.asp-recordings-page .nav-card.c-back { background: transparent; color: var(--asp-amber); border-color: var(--asp-amber); }
+body.asp-page.asp-recordings-page .nav-card.c-back:hover { background: var(--asp-amber); color: var(--asp-cream); }
+
+body.asp-page.asp-recordings-page .nav-card::after { display: none; }
+body.asp-page.asp-recordings-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

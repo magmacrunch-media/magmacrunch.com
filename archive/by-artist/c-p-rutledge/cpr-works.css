@@ -1,0 +1,50 @@
+/* C.P. Rutledge — works */
+body.cpr-page.cpr-works-page main > * { background: var(--cpr-bg); }
+
+body.cpr-page.cpr-works-page .breadcrumb { color: var(--dim); }
+body.cpr-page.cpr-works-page .breadcrumb a { color: var(--cpr-yellow); }
+body.cpr-page.cpr-works-page .breadcrumb a:hover { color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .breadcrumb .sep { color: var(--cpr-yellow); opacity: 0.6; }
+body.cpr-page.cpr-works-page .breadcrumb .current { color: var(--cpr-yellow); }
+
+body.cpr-page.cpr-works-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cpr-page.cpr-works-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cpr-yellow); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cpr-page.cpr-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cpr-yellow); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(245, 192, 32, 0.5); }
+
+body.cpr-page.cpr-works-page .work-card {
+    background: var(--cpr-bg);
+    border-color: var(--cpr-raised);
+}
+body.cpr-page.cpr-works-page .work-card:hover { border-color: var(--cpr-yellow); }
+body.cpr-page.cpr-works-page .work-card h3 a { color: var(--cpr-yellow); }
+body.cpr-page.cpr-works-page .work-card h3 a:hover { color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .work-card a { color: var(--cpr-yellow); }
+
+body.cpr-page.cpr-works-page .nav-card.c-back {
+    background: transparent;
+    color: var(--cpr-yellow);
+    border-color: var(--cpr-yellow);
+}
+body.cpr-page.cpr-works-page .nav-card.c-back:hover {
+    background: var(--cpr-yellow);
+    color: var(--cpr-surface);
+}
+
+body.cpr-page.cpr-works-page .nav-card.c-about   { background: var(--cpr-deep); color: var(--cpr-cream); border-color: var(--cpr-deep); }
+body.cpr-page.cpr-works-page .nav-card.c-about:hover { background: transparent; border-color: var(--cpr-deep); color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .nav-card.c-photography { background: var(--cpr-purple); color: var(--cpr-cream); border-color: var(--cpr-purple); }
+body.cpr-page.cpr-works-page .nav-card.c-photography:hover { background: transparent; border-color: var(--cpr-purple); color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .nav-card.c-recordings   { background: var(--cpr-blue); color: var(--cpr-surface); border-color: var(--cpr-blue); }
+body.cpr-page.cpr-works-page .nav-card.c-recordingse:hover { background: transparent; border-color: var(--cpr-blue); color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .nav-card.c-releases   { background: var(--cpr-red); color: var(--cpr-cream); border-color: var(--cpr-red); }
+body.cpr-page.cpr-works-page .nav-card.c-releases:hover { background: transparent; border-color: var(--cpr-red); color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .nav-card.c-works { background: var(--cpr-yellow); color: var(--cpr-surface); border-color: var(--cpr-yellow); }
+body.cpr-page.cpr-works-page .nav-card.c-works:hover { background: transparent; border-color: var(--cpr-yellow); color: var(--cpr-cream); }
+body.cpr-page.cpr-works-page .nav-card.c-green  { background: var(--cpr-green); color: var(--cpr-surface); border-color: var(--cpr-green); }
+body.cpr-page.cpr-works-page .nav-card.c-green:hover { background: transparent; border-color: var(--cpr-green); color: var(--cpr-cream); }
+
+body.cpr-page.cpr-works-page .nav-card::after { display: none; }
+body.cpr-page.cpr-works-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.cpr-page.cpr-works-page .work-card .lyrics-link { font-family: 'Press Start 2P', monospace; font-size: 7px; background: var(--cpr-red); color: var(--cpr-cream); padding: 2px 7px; margin-left: 8px; text-decoration: none; vertical-align: middle; letter-spacing: 0.05em; }
+body.cpr-page.cpr-works-page .work-card .lyrics-link:hover { opacity: 0.7; }

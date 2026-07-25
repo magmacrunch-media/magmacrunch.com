@@ -1,0 +1,222 @@
+/* ══════════════════════════════════════════════════════════
+   cards.css — Solitaire Deluxe | MagmaCrunch Media © 2026
+   Card rendering — pixel art back, SVG face cards
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Base card shell ──────────────────────────────────────── */
+.card {
+    width: 100px;
+    height: 140px;
+    border-radius: 4px;                 /* slightly sharper for retro look */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 2px 2px 0 #000, 1px 1px 0 #000;
+    image-rendering: pixelated;
+    transition: transform 0.1s;
+}
+
+/* Tableau stacking offset */
+.tableau-column .card {
+    margin-top: -115px;
+}
+.tableau-column .card:first-child {
+    margin-top: 0;
+}
+
+/* Hover lift — only face-up */
+.card.face-up:hover {
+    transform: translateY(-4px);
+    box-shadow: 2px 6px 0 #000;
+    z-index: 50;
+}
+
+/* Selection highlight — gold pixel border */
+.card.selected {
+    outline: 3px solid var(--retro-gold);
+    outline-offset: -1px;
+    box-shadow: 0 0 0 1px #000,
+                0 0 12px rgba(255, 215, 0, 0.7),
+                2px 2px 0 #000;
+    z-index: 60;
+}
+
+/* ── Face-up card ─────────────────────────────────────────── */
+.card.face-up {
+    background: var(--card-face-bg);
+    z-index: 2;
+}
+.card.face-up.red { color: var(--fc-red); }
+.card.face-up.black { color: #111111; }
+
+/* ── Face-down card — inline SVG pixel art back ───────────── */
+.card.face-down {
+    background: var(--card-back-bg);
+    cursor: default;
+    overflow: hidden;
+}
+.card.face-down:hover {
+    transform: none;
+}
+
+/* ── Pixel-art card back SVG ──────────────────────────────── */
+.card-back-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    shape-rendering: crispEdges;
+    image-rendering: pixelated;
+}
+
+/* ── Corner pip labels (number & ace cards) ───────────────── */
+.card-corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Press Start 2P', monospace;
+    font-weight: normal;
+    line-height: 1;
+    z-index: 2;
+}
+.card-corner.top-left {
+    top: 4px;
+    left: 4px;
+}
+.card-corner.bottom-right {
+    bottom: 4px;
+    right: 4px;
+    transform: rotate(180deg);
+}
+.corner-rank {
+    font-family: Arial, 'Helvetica Neue', sans-serif;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 1;
+    margin-bottom: 1px;
+}
+/* Corner suit glyph — plain Unicode, clean and crisp */
+.corner-suit {
+    font-family: Arial, 'Helvetica Neue', sans-serif;
+    font-size: 11px;
+    line-height: 1;
+    display: block;
+}
+
+/* ── Suit pip layout (number cards) ──────────────────────── */
+.card-suit-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 70px;
+    height: 100%;
+    padding: 18px 4px;
+    z-index: 1;
+}
+.card-suit-center.single {
+    justify-content: center;
+    padding: 0;
+}
+/* Tighter padding for high-count cards so they don't overflow */
+.card-suit-center[data-rank="8"],
+.card-suit-center[data-rank="9"],
+.card-suit-center[data-rank="10"] { 
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+}
+
+/* suit-rows: full-height column wrapper (all cards use this now) */
+.suit-rows {
+    display: contents;
+}
+
+/* Individual pip row */
+.suit-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Center body pip — smooth Unicode, matches real cards */
+.pip {
+    font-family: Arial, 'Helvetica Neue', sans-serif;
+    font-size: 25px;
+    line-height: 0.75; /* Shrinks the vertical footprint so large pips fit */
+    display: inline-block;
+}
+.pip.rotated {
+    transform: rotate(180deg);
+    display: inline-block;
+    line-height: 0.75;
+}
+
+/* Ace large center pip */
+.pip-ace {
+    font-family: Arial, 'Helvetica Neue', sans-serif;
+    font-size: 52px;
+    line-height: 1;
+    display: block;
+}
+
+/* ── Face cards — SVG fills the card ─────────────────────── */
+.face-card-svg-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.face-card-svg-wrapper svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    shape-rendering: crispEdges;
+    image-rendering: pixelated;
+}
+
+/* ── Stock reset button ───────────────────────────────────── */
+.reset-stock {
+    background: #0d0028;
+    color: var(--cyan);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--cyan-dim);
+    text-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan-glow);
+    box-shadow: 0 0 10px rgba(0,229,255,0.2), 2px 2px 0 #000;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.reset-stock:hover {
+    background: #001830;
+    color: #fff;
+    border-color: var(--cyan);
+    text-shadow: 0 0 16px var(--cyan), 0 0 40px var(--cyan-glow);
+    box-shadow: 0 0 20px rgba(0,229,255,0.4), 2px 2px 0 #000;
+}
+
+/* ── Old compatibility stubs (kept, unused visually) ─────── */
+.card-rank, .card-rank-bottom, .card-suit,
+.card-back-wrapper, .card-back-image,
+.face-card, .face-card-corner, .face-card-center,
+.face-card-image, .card-back-border, .back-line {
+    /* kept for graceful fallback only */
+}

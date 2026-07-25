@@ -1,0 +1,140 @@
+.container {
+    /* MAGMA CRUNCH: Dark reddish-purple body, lit from below by lava */
+    background: linear-gradient(135deg, #1e0a1a 0%, #2a0808 50%, #1a0015 100%);
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: 
+        0 0 0 4px #F23C8F,
+        0 0 0 8px #1a0510,
+        0 0 20px rgba(242, 60, 143, 0.8),
+        0 0 40px rgba(180, 50, 0, 0.35),
+        inset 0 0 30px rgba(0, 0, 0, 0.7);
+    max-width: 600px;
+    width: 100%;
+    /* Blue outer border — berry on top, lava underneath */
+    border: 4px solid #14B8FF;
+    position: relative;
+    z-index: 1;
+    display: none;
+}
+
+.container.game-active {
+    display: block;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title-container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+h1 {
+    /* Magenta text, lava-orange shadow — cereal brand on a hot background */
+    color: #F23C8F;
+    font-size: 24px;
+    font-weight: normal;
+    text-shadow: 
+        4px 4px 0px #7a1500,
+        0 0 20px rgba(242, 60, 143, 0.9);
+    letter-spacing: 2px;
+    line-height: 1.2;
+}
+
+.subtitle {
+    color: #14B8FF;
+    font-size: 10px;
+    font-weight: normal;
+    text-shadow: 
+        2px 2px 0px #4a0800,
+        0 0 10px rgba(20, 184, 255, 0.7);
+    letter-spacing: 1px;
+}
+
+.score-container {
+    /* Score box: magenta top, deep lava-red bottom */
+    background: linear-gradient(135deg, #d03080 0%, #8a1a00 100%);
+    padding: 10px 20px;
+    border-radius: 0;
+    text-align: center;
+    box-shadow: 
+        0 0 0 3px #14B8FF,
+        0 0 15px rgba(242, 60, 143, 0.8),
+        0 0 25px rgba(180, 50, 0, 0.4);
+    border: 3px solid #1a0510;
+}
+
+.score-label {
+    color: #FFD54A;
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0px #5a2000;
+    margin-bottom: 6px;
+}
+
+.score {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: normal;
+    text-shadow: 
+        2px 2px 0px #4a0800,
+        0 0 10px rgba(255, 255, 255, 0.9);
+    letter-spacing: 2px;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.controls button {
+    flex: 1;
+}
+
+button {
+    /* Buttons: magenta face, lava-orange shadow — like cereal box print on hot foil */
+    background: linear-gradient(180deg, #c42070 0%, #7a1000 100%);
+    color: #ffffff;
+    border: 4px solid #14B8FF;
+    padding: 12px 20px;
+    border-radius: 0;
+    font-size: 10px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.1s;
+    box-shadow: 
+        0 6px 0 #0f0010,
+        0 0 12px rgba(242, 60, 143, 0.6),
+        0 0 20px rgba(160, 40, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.5;
+    font-family: 'Press Start 2P', cursive;
+    position: relative;
+}
+
+button:hover {
+    background: linear-gradient(180deg, #F23C8F 0%, #a02000 100%);
+    box-shadow: 
+        0 6px 0 #0f0010,
+        0 0 22px rgba(242, 60, 143, 1),
+        0 0 30px rgba(200, 60, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+button:active {
+    background: linear-gradient(180deg, #8a0050 0%, #500800 100%);
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #0f0010,
+        0 0 10px rgba(242, 60, 143, 0.5);
+}

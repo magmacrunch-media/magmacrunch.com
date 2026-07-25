@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iou a pack of american spirits (2026) — floppy disk — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../../style.css">
+    <style>
+        :root {
+            /* American Spirit Light Blue */
+            --as-cerulean:    #5B9DB8;
+            --as-sky:         #7BBDD4;
+            --as-pale-sky:    #A8CDD8;
+            --as-mist:        #D0E8F0;
+            --as-deep:        #2E6A88;
+            --as-midnight:    #1A3D52;
+            --as-kraft:       #C8A87A;
+            --as-tan:         #DEC098;
+            --as-parchment:   #EEE0C8;
+            --as-linen:       #F5EDE0;
+            --as-tobacco:     #8A6A3A;
+            --as-dark-brown:  #3A2810;
+            --as-white:       #F8F4EE;
+            --as-off-white:   #EDE8E0;
+            --as-silver:      #C0C8CC;
+            --as-slate:       #6A7A80;
+            --as-gold:        #C8A830;
+            --as-dark-gold:   #8A7020;
+            --as-red-seal:    #8B1A1A;
+            --as-black:       #1A1A18;
+
+            /* nav overrides */
+            --nav-accent: var(--as-cerulean);
+            --nav-glow: rgba(91,157,184,0.4);
+            --nav-brand: var(--as-linen);
+            --nav-brand-glow: rgba(245,237,224,0.7);
+        }
+
+        body { background: var(--as-black); }
+
+        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
+
+        /* breadcrumb */
+        .breadcrumb {
+            font-family:'Press Start 2P',monospace;
+            font-size:7px; color:var(--dim); letter-spacing:.1em;
+            margin-bottom:32px; align-self:flex-start;
+        }
+        .breadcrumb a { color:var(--dim); text-decoration:none; transition:color .15s; }
+        .breadcrumb a:hover { color:var(--as-cerulean); }
+        .breadcrumb .sep { margin:0 8px; color:var(--as-cerulean); opacity:.7; }
+        .breadcrumb .current { color:var(--as-cerulean); }
+
+        /* header */
+        .release-header { text-align:center; margin-bottom:40px; animation:fadeUp .5s ease both; }
+        .release-eyebrow { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--as-cerulean); letter-spacing:.25em; margin-bottom:12px; opacity:.85; }
+        .release-title {
+            font-family:'Press Start 2P',monospace; font-size:clamp(16px,3.5vw,28px);
+            color:var(--white); line-height:1.4; letter-spacing:.06em; margin-bottom:8px;
+        }
+        .release-artist { font-family:'Press Start 2P',monospace; font-size:9px; color:var(--as-deep); letter-spacing:.15em; margin-bottom:20px; opacity:.9; }
+        .release-artist a { color:var(--as-deep); text-decoration:none; transition:color .15s; }
+        .release-artist a:hover { color:var(--as-cerulean); }
+        .sub-nav { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; }
+
+        /* divider */
+        .section-divider {
+            width:100%; max-width:900px; height:1px;
+            background:linear-gradient(90deg,transparent,var(--as-deep),var(--as-cerulean),var(--as-deep),transparent);
+            margin:0 0 40px; opacity:.35; animation:fadeUp .5s .05s ease both;
+        }
+
+        /* content */
+        .content-wrap { width:100%; max-width:900px; }
+        .section-label { font-family:'Press Start 2P',monospace; font-size:7px; color:var(--as-deep); letter-spacing:.15em; margin-bottom:16px; padding-bottom:8px; border-bottom:1px solid var(--as-deep); opacity:.9; }
+
+        /* release block */
+        .release-block { display:flex; gap:28px; align-items:flex-start; margin-bottom:44px; animation:fadeUp .5s .1s ease both; }
+        @media (max-width:560px) { .release-block { flex-direction:column; align-items:center; } }
+        .cover-wrap { flex-shrink:0; width:200px; display:none; }
+        .cover-img { width:200px; height:200px; object-fit:cover; display:block; border:2px solid var(--as-deep); box-shadow:0 0 0 2px #080808,0 0 0 4px var(--as-midnight),0 0 28px rgba(91,157,184,.2); }
+        .cover-placeholder { width:200px; height:200px; border:2px solid var(--as-deep); background:var(--as-black); display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 2px #080808,0 0 0 4px var(--as-midnight); }
+        .cover-placeholder canvas { display:block; image-rendering:pixelated; width:80px; height:80px; }
+        .release-meta { flex:1; }
+        .meta-row { font-family:'Courier Prime',monospace; font-size:15px; color:var(--white); opacity:.8; margin-bottom:8px; line-height:1.5; display:flex; gap:8px; }
+        .meta-row strong { font-family:'Press Start 2P',monospace; font-size:8px; color:var(--dim); letter-spacing:.1em; flex-shrink:0; padding-top:2px; }
+        .meta-badge { display:inline-block; font-family:'Press Start 2P',monospace; font-size:10px; color:var(--as-white); background:var(--as-deep); padding:3px 8px; letter-spacing:.08em; margin-top:6px; }
+        .meta-badge.purple { background:var(--as-midnight); color:var(--as-white); }
+        .meta-badge.yellow { background:var(--yellow); }
+        .stream-links { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+        .stream-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--green); border:1px solid var(--green); padding:5px 12px; text-decoration:none; letter-spacing:.08em; transition:background .15s,color .15s; display:inline-block; }
+        .stream-link:hover { background:var(--green); color:var(--black); }
+        .stream-link.yellow { color:var(--yellow); border-color:var(--yellow); }
+        .stream-link.yellow:hover { background:var(--yellow); color:var(--black); }
+        .stream-link.purple { color:var(--as-cerulean); border-color:var(--as-cerulean); }
+        .stream-link.purple:hover { background:var(--as-cerulean); color:var(--as-white); }
+
+        /* about */
+        .about-section { margin-bottom:44px; animation:fadeUp .5s .15s ease both; }
+        .about-text { font-family:'Courier Prime',monospace; font-size:14px; color:var(--white); line-height:1.8; opacity:.85; }
+        .about-text a { color:var(--as-cerulean); text-decoration:underline; text-decoration-color:rgba(91,157,184,.4); transition:color .15s; }
+        .about-text a:hover { color:var(--as-sky); }
+
+        /* tracklist */
+        .tracklist-section { margin-bottom:44px; animation:fadeUp .5s .2s ease both; }
+        .track { display:flex; align-items:baseline; gap:10px; padding:8px 0; border-bottom:1px solid #2A3A40; transition:background .12s; }
+        .track:first-child { border-top:1px solid #2A3A40; }
+        .track:hover { background:rgba(91,157,184,.03); }
+        .track-num { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dim); letter-spacing:.06em; min-width:22px; flex-shrink:0; }
+        .track-title { font-family:'Courier Prime',monospace; font-size:14px; color:var(--white); flex:1; }
+        .track-len { font-family:'Courier Prime',monospace; font-size:12px; color:var(--dim); flex-shrink:0; }
+
+        /* specs */
+        .specs-section { margin-bottom:44px; animation:fadeUp .5s .25s ease both; }
+        .spec-row { display:flex; gap:12px; padding:7px 0; border-bottom:1px solid #2A3A40; font-family:'Courier Prime',monospace; font-size:13px; }
+        .spec-row:last-child { border-bottom:none; }
+        .spec-key { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--dim); letter-spacing:.08em; min-width:120px; flex-shrink:0; padding-top:2px; }
+        .spec-val { color:var(--white); opacity:.8; }
+
+        /* insert preview card */
+        .insert-card { margin-bottom:44px; animation:fadeUp .5s .22s ease both; }
+        .insert-preview { border:1px solid #2A3A40; background:#0e0e0c; padding:20px; margin-top:16px; overflow:hidden; position:relative; }
+        .insert-preview::after { content:''; position:absolute; bottom:0; left:0; right:0; height:60px; background:linear-gradient(to top,#0e0e0c 0%,transparent 100%); }
+        .insert-preview pre { font-family:'Courier Prime',monospace; font-size:clamp(3px,.5vw,5px); line-height:1.2; white-space:pre; color:#c8c8c8; display:block; max-height:180px; overflow:hidden; }
+        .insert-open { display:inline-block; margin-top:14px; }
+
+        @media (max-width:640px) {
+            .release-title { font-size:20px; }
+            .cover-wrap,.cover-img,.cover-placeholder { width:160px; }
+            .cover-img,.cover-placeholder { height:160px; }
+        }
+
+        /* ── FLOPPY GALLERY ── */
+        .floppy-gallery-section { 
+            margin-bottom: 44px; 
+            animation: fadeUp .5s .3s ease both; 
+        }
+        .floppy-gallery { 
+            display: flex; 
+            gap: 20px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+        }
+        .floppy-link { 
+            flex: 1; 
+            min-width: 150px; 
+            max-width: 280px; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease; 
+        }
+        .floppy-link:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 8px 24px rgba(91, 157, 184, 0.25); 
+        }
+        .floppy-img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+            border: 2px solid var(--as-midnight); 
+            background: #111;
+        }
+
+        /* ── ASCII FOOTER OVERLAY ── */
+        .ascii-footer-container {
+            position: relative;
+            width: 100%;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #1A2A30;
+            margin-bottom: 24px;
+            border: 1px solid var(--as-midnight);
+            animation: fadeUp .5s .35s ease both;
+        }
+        .ascii-bg-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            filter: brightness(0.35) saturate(0.8);
+        }
+        .ascii-overlay {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+        .ascii-logo-link {
+            text-decoration: none;
+            color: var(--as-deep);
+            transition: color 0.2s ease, text-shadow 0.2s ease, transform 0.2s ease;
+            display: inline-block;
+        }
+        .ascii-logo-link:hover {
+            color: var(--as-sky);
+            text-shadow: 0 0 12px rgba(91, 157, 184, 0.6);
+            transform: scale(1.02);
+        }
+        .ascii-logo {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(2.5px, 0.6vw, 6px); 
+            line-height: 1.15;
+            white-space: pre;
+            margin: 0;
+            font-weight: bold;
+        }
+        /* ── Nav cards (solid fill → transparent hover) ── */
+        .nav-card-row .nav-card,
+        .sub-nav .nav-card {
+            border-width: 2px;
+            border-style: solid;
+        }
+        .nav-card.c-cyan   { background: var(--as-cerulean); color: var(--as-white); border-color: var(--as-cerulean); }
+        .nav-card.c-green  { background: var(--as-sky); color: var(--as-white); border-color: var(--as-sky); }
+        .nav-card.c-yellow { background: var(--as-gold); color: var(--as-white); border-color: var(--as-gold); }
+        .nav-card.c-purple { background: var(--as-midnight); color: var(--as-white); border-color: var(--as-midnight); }
+
+        .nav-card.c-cyan:hover   { background: transparent !important; color: var(--as-cerulean) !important; }
+        .nav-card.c-green:hover  { background: transparent !important; color: var(--as-sky) !important; }
+        .nav-card.c-yellow:hover { background: transparent !important; color: var(--as-gold) !important; }
+        .nav-card.c-purple:hover { background: transparent !important; color: var(--as-midnight) !important; }
+
+        /* footer */
+        footer { color: var(--as-slate); }
+        footer span { color: var(--as-cerulean); }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../../">home</a><span class="sep">›</span>
+        <a href="../../../../music/">music</a><span class="sep">›</span>
+        <a href="../../">physical media</a><span class="sep">›</span>
+        <a href="../">floppy disk</a>
+    </div>
+
+    <div class="release-header">
+        <div class="release-eyebrow">// floppy series #2 //</div>
+        <h1 class="release-title">iou a pack of american spirits</h1>
+        <div class="release-artist">[ <a href="../../../../archive/by-artist/svfp/">sex van floor plan</a> ]</div>
+        <div class="sub-nav">
+            <!-- add stream/download/discogs/musicbrainz links here -->
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <div class="content-wrap">
+
+        <div class="release-block">
+            <div class="cover-wrap">
+                <div class="cover-placeholder"><canvas id="coverFloppy" width="24" height="24"></canvas></div>
+            </div>
+            <div class="release-meta">
+                <div style="margin-top:0px;">
+                    <span class="meta-badge">3.5″ FLOPPY</span>
+                    <span class="meta-badge purple" style="margin-left:6px;">SINGLE</span>
+                </div>
+            <div class="about-section">
+            <p class="about-text" style="margin-top:12px;">
+                The second single by <a href="../../../../archive/by-artist/svfp/">Sex Van Floor Plan</a>...
+            </p>
+            <div class="nav-card-row">
+                <a href="./iou-txt.html" class="nav-card c-cyan insert-open">iou.txt</a>
+                <a href="./disclaimer-txt.html" class="nav-card c-cyan insert-open">disclaimer.txt</a>
+                <a href="./lyrics-txt.html" class="nav-card c-cyan insert-open">lyrics.txt</a>
+            </div>
+        </div>
+            </div>
+        </div>
+
+        <div class="floppy-gallery-section">
+            <div class="section-label">// physical editions</div>
+            <div class="floppy-gallery">
+                <a href="https://www.discogs.com/release/37730745-Sex-Van-Floor-Plan-IOU-A-Pack-Of-American-Spirits" target="_blank" rel="noopener" class="floppy-link">
+                    <img src="../../../../assets/album-art/american_spirits-2026/american_spirits_blue.jpg" alt="Blue Floppy Disk 4/15" class="floppy-img">
+                </a>
+                <a href="https://www.discogs.com/release/37730766-Sex-Van-Floor-Plan-IOU-A-Pack-Of-American-Spirits" target="_blank" rel="noopener" class="floppy-link">
+                    <img src="../../../../assets/album-art/american_spirits-2026/american_spirits_orange.jpg" alt="Orange Floppy Disk 1/15" class="floppy-img">
+                </a>
+                <a href="https://www.discogs.com/release/37730715-Sex-Van-Floor-Plan-IOU-A-Pack-Of-American-Spirits" target="_blank" rel="noopener" class="floppy-link">
+                    <img src="../../../../assets/album-art/american_spirits-2026/american_spirits_yellow.jpg" alt="Yellow Floppy Disk 1/6" class="floppy-img">
+                </a>
+            </div>
+        </div>
+
+        <div class="tracklist-section">
+            <div class="section-label">// tracklist</div>
+            <div class="track">
+                <span class="track-num">01</span>
+                <span class="track-title">iou a pack of american spirits (EP version)</span>
+                <span class="track-len">1:57</span>
+            </div>
+            <!-- add bandcamp embed here -->
+        </div>
+
+        <div class="specs-section">
+            <div class="section-label">// specs</div>
+            <div class="spec-row"><span class="spec-key">format</span><span class="spec-val">3.5 inch floppy disk (MF2HD)</span></div>
+            <div class="spec-row"><span class="spec-key">capacity</span><span class="spec-val">1.44 MB</span></div>
+            <div class="spec-row"><span class="spec-key">audio format</span><span class="spec-val">64 kbps MP3 (stored on disk)</span></div>
+            <div class="spec-row"><span class="spec-key">label design</span><span class="spec-val">custom printed label</span></div>
+            <div class="spec-row"><span class="spec-key">catalog #</span><span class="spec-val">MCS047 · floppy series #2</span></div>
+            <div class="spec-row"><span class="spec-key">edition</span><span class="spec-val">15 copies: 5x blue, 5x orange, 5x yellow</span></div>
+        </div>
+
+        <div class="specs-section">
+            <div class="section-label">// credits</div>
+            <div class="spec-row"><span class="spec-key">lead vocals</span><span class="spec-val">Chuck</span></div>
+            <div class="spec-row"><span class="spec-key">guitar, vocals</span><span class="spec-val">Rho</span></div>
+            <div class="spec-row"><span class="spec-key">bass, vocals</span><span class="spec-val">Eli</span></div>
+            <div class="spec-row"><span class="spec-key">drums, vocals</span><span class="spec-val">Jake</span></div>
+            <div class="spec-row"><span class="spec-key">produced by</span><span class="spec-val">Rho</span></div>
+            <div class="spec-row"><span class="spec-key">written by</span><span class="spec-val">Rho</span></div>
+            <div class="spec-row"><span class="spec-key">label design by</span><span class="spec-val">Eli</span></div>
+            <div class="spec-row"><span class="spec-key">ASCII art by</span><span class="spec-val">Jake</span></div>
+            <div class="spec-row"><span class="spec-key">mixed &amp; mastered</span><span class="spec-val">Rho</span></div>
+            <div class="spec-row"><span class="spec-key">recorded</span><span class="spec-val">January 10, 2026 · Irvin House</span></div>
+            <div class="spec-row"><span class="spec-key">released digitally</span><span class="spec-val">July 17, 2026 · Sex Van Floor Plan EP</span></div>
+            <div class="spec-row"><span class="spec-key">released on floppy</span><span class="spec-val">June 26, 2026 · The Clam Shack</span></div>
+            <div class="spec-row"><span class="spec-key">funded by</span><span class="spec-val">magmacrunch media</span></div>
+        </div>   
+<!--
+        <div class="ascii-footer-container">
+            <img class="ascii-bg-img" src="../../../../assets/photos/svfp/telephone-bg.jpg" alt="Background Texture">
+            
+            
+            <div class="ascii-overlay">
+                <a href="https://www.instagram.com/sexvanfloorplan/" target="_blank" class="ascii-logo-link" aria-label="Sex Van Floor Plan Instagram">
+                    <pre class="ascii-logo">
+ (`-').->(`-')  _ (`-')               (`-') (`-')  _ <-. (`-')_                                                 (`-')      _  (`-')          (`-')  _ <-. (`-')_ 
+ ( OO)_  ( OO).-/ (OO )_.->          _(OO ) (OO ).-/    \( OO) )       <-.       <-.        .->        .->   <-.(OO )      \-.(OO )   <-.    (OO ).-/    \( OO) )
+(_)--\_)(,------. (_| \_)--.    ,--.(_/,-.\ / ,---.  ,--./ ,--/     (`-')-----.,--. )  (`-')----. (`-')----. ,------,)     _.'    \ ,--. )   / ,---.  ,--./ ,--/ 
+/    _ / |  .---' \  `.'  /     \   \ / (_/ | \ /`.\ |   \ |  |     (OO|(_\---'|  (`-')( OO).-.  '( OO).-.  '|   /`. '    (_...--'' |  (`-') | \ /`.\ |   \ |  | 
+\_..`--.(|  '--.   \    .')      \   /   /  '-'|_.' ||  . '|  |)     / |  '--. |  |OO )( _) | |  |( _) | |  ||  |_.' |    |  |_.' | |  |OO ) '-'|_.' ||  . '|  |)
+.-._)   \|  .--'   .'    \      _ \     /_)(|  .-.  ||  |\    |      \_)  .--'(|  '__ | \|  |)|  | \|  |)|  ||  .   .'    |  .___.'(|  '__ |(|  .-.  ||  |\    | 
+\       /|  `---. /  .'.  \     \-'\   /    |  | |  ||  | \   |       `|  |_)  |     |'  '  '-'  '  '  '-'  '|  |\  \     |  |      |     |' |  | |  ||  | \   | 
+ `-----' `------'`--'   '--'        `-'     `--' `--'`--'  `--'        `--'    `-----'    `-----'    `-----' `--' '--'    `--'      `-----'  `--' `--'`--'  `--'  
+                    </pre>
+                </a>
+            </div>
+            
+        </div>
+-->
+        <div class="back-nav" style="margin-top:32px;">
+            <a href="../" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--as-cerulean);text-decoration:none;opacity:0.7;transition:opacity .15s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">← back</a>
+        </div>
+
+    </div>
+
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../../nav.js"></script>
+
+
+</body>
+</html>

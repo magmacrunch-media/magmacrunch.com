@@ -1,0 +1,376 @@
+/**
+ * lobby.css — Lobby overlay styles
+ */
+
+/* ── Lobby ──────────────────────────────────────────────────────────────────── */
+#lobbyOverlay {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.lobby-title {
+    font-size: 14px;
+    color: var(--pc-accent);
+    text-shadow: 0 0 16px var(--pc-accent-glow);
+    letter-spacing: 0.1em;
+}
+
+.lobby-room-code {
+    font-size: 10px;
+    color: var(--pc-text-dim);
+    letter-spacing: 0.15em;
+}
+
+.lobby-room-code span {
+    color: var(--pc-accent);
+    font-size: 14px;
+}
+
+/* ── Player list ────────────────────────────────────────────────────────────── */
+#lobbyPlayers {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.lobby-player {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--pc-bg-light);
+    border: 1px solid var(--pc-border);
+    font-size: 9px;
+}
+
+.player-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.host-badge {
+    font-size: 6px;
+    color: #F1BF00;
+    border: 1px solid #F1BF00;
+    padding: 2px 4px;
+    margin-left: auto;
+    letter-spacing: 0.05em;
+}
+
+/* ── Lobby status ───────────────────────────────────────────────────────────── */
+#lobbyStatus {
+    font-size: 8px;
+    color: var(--pc-text-dim);
+    letter-spacing: 0.1em;
+}
+
+/* ── Lobby actions ──────────────────────────────────────────────────────────── */
+.lobby-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* ── Chat ───────────────────────────────────────────────────────────────────── */
+.chat-panel {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 10px;
+}
+
+.chat-header {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--pc-border);
+}
+
+#chatMessages {
+    height: 100px;
+    overflow-y: auto;
+    padding: 6px;
+    background: var(--pc-bg);
+    border: 1px solid var(--pc-border);
+    margin-bottom: 8px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.chat-msg {
+    margin-bottom: 2px;
+}
+
+.chat-name {
+    font-weight: bold;
+    font-size: 9px;
+}
+
+.chat-input-row {
+    display: flex;
+    gap: 6px;
+}
+
+.chat-input-row input {
+    flex: 1;
+    background: var(--pc-bg-light);
+    border: 1px solid var(--pc-border);
+    color: var(--pc-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px 10px;
+    outline: none;
+}
+.chat-input-row input:focus {
+    border-color: var(--pc-accent);
+}
+
+.chat-input-row button {
+    background: var(--pc-accent);
+    border: none;
+    color: var(--pc-bg);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* ── Global Arcade Chat ── */
+.chat-user-count {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+}
+
+.chat-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.chat-my-name {
+    font-size: 9px;
+    color: var(--pc-accent);
+}
+
+.chat-edit-name {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-edit-name:hover {
+    opacity: 0.7;
+}
+
+.chat-name-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--pc-accent);
+    color: var(--pc-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    width: 100px;
+    max-width: 100px;
+}
+
+.chat-name-input:focus {
+    outline: none;
+    border-color: var(--pc-accent);
+}
+
+.chat-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.chat-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--pc-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.chat-tab.active {
+    color: var(--pc-accent);
+    border-bottom-color: var(--pc-accent);
+}
+
+.chat-tab:hover {
+    color: var(--pc-text);
+}
+
+.chat-users {
+    padding: 4px 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+.chat-users-header {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    margin-bottom: 4px;
+}
+
+.chat-user {
+    font-size: 8px;
+    color: var(--pc-text);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-user-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.chat-user-status {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    margin-left: 4px;
+}
+
+.chat-typing {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    padding: 4px 8px;
+    font-style: italic;
+}
+
+/* Chat Color Picker */
+.chat-pick-color {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-pick-color:hover {
+    opacity: 0.7;
+}
+
+.color-picker-popup {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--pc-bg);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 8px;
+    z-index: 100;
+    min-width: 180px;
+}
+
+.color-strip {
+    width: 100%;
+    height: 20px;
+    border-radius: 3px;
+    cursor: crosshair;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.color-indicator {
+    position: absolute;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: transparent;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.color-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.color-preview-label {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+}
+
+.color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.color-reset-btn {
+    background: none;
+    border: 1px solid var(--pc-text-dim);
+    color: var(--pc-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: auto;
+}
+
+.color-reset-btn:hover {
+    border-color: var(--pc-accent);
+    color: var(--pc-accent);
+}
+
+/* Chat Online Users Panel */
+.chat-online {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.chat-online-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.chat-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.chat-online-name {
+    font-size: 9px;
+    color: var(--pc-text);
+}
+
+.chat-online-status {
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    margin-left: auto;
+}

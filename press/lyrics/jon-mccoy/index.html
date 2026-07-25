@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jon mccoy — lyrics — press — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <style>
+        :root {
+            --nav-accent: #7a9080;
+            --nav-glow: rgba(122,144,128,0.4);
+            --nav-brand: #b89898;
+            --nav-brand-glow: rgba(184,152,152,0.7);
+        }
+
+        body {
+            background-color: #0e1014;
+            color: #b8c4cc;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 72px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #383e48;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #6070a0; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #7a9080; }
+        .breadcrumb .sep { margin: 0 8px; color: #383e48; }
+        .breadcrumb .current { color: #7a9080; }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: #7a9080;
+            text-shadow: 2px 2px 0 rgba(122,144,128,0.3);
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #6070a0;
+            letter-spacing: 0.12em;
+            margin-bottom: 32px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        .section-divider {
+            width: min(640px, 90vw);
+            height: 2px;
+            background: #383e48;
+            margin-bottom: 48px;
+            position: relative;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+        .section-divider::after {
+            content: '✦';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #0e1014;
+            padding: 0 12px;
+            color: #7a9080;
+            font-size: 10px;
+        }
+
+        .pieces-wrap {
+            width: min(640px, 90vw);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            animation: fadeUp 0.5s 0.18s ease both;
+        }
+
+        .pieces-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #383e48;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+        }
+
+        .piece-card {
+            display: flex;
+            gap: 0;
+            border: 2px solid #383e48;
+            border-bottom: none;
+            background: #1a1e28;
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .piece-card:last-child { border-bottom: 2px solid #383e48; }
+        .piece-card:hover {
+            border-color: #7a9080;
+            background: #2e3540;
+        }
+
+        .piece-card::before {
+            content: '';
+            display: block;
+            width: 4px;
+            flex-shrink: 0;
+            background: #7a9080;
+            transition: width 0.15s;
+        }
+        .piece-card:hover::before { width: 7px; }
+
+        .piece-card-info {
+            padding: 16px 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .piece-card-text { flex: 1; }
+
+        .piece-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 10px);
+            color: #7a9080;
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            margin-bottom: 5px;
+        }
+
+        .piece-card-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #7a9080;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .piece-card:hover .piece-card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        footer {
+            background: #0e1014 !important;
+            border-top-color: #383e48 !important;
+            color: #6070a0 !important;
+        }
+        footer span { color: #7a9080 !important; }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../">home</a>
+        <span class="sep">›</span>
+        <a href="../../../press/">press</a>
+        <span class="sep">›</span>
+        <a href="../">lyrics</a>
+        <span class="sep">›</span>
+        <span class="current">jon mccoy</span>
+    </div>
+
+    <h1 class="page-title">// lyrics //</h1>
+    <p class="page-subtitle">jon mccoy</p>
+
+    <div class="section-divider"></div>
+
+    <div class="pieces-wrap">
+        <div class="pieces-label">// pieces //</div>
+
+        <a href="gone-by.html" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">gone by</div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="space.html" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">space</div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="starting-again.html" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">starting again</div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="try.html" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">try</div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+<script>window.addEventListener("pageshow",function(e){if(e.persisted)location.reload();});</script>
+</body>
+</html>

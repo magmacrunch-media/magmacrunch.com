@@ -1,0 +1,220 @@
+/* ── contributor-theme.css — monochromatic cyan theme for by-contributor section ── */
+/* Palette: #001a1f #012a33 #024959 #03738a #0489a3 #05a8c2 #5fc4d4 #7fd8e8 #a8e8f0 #d0f4f8 */
+/* Activated by body.ctb-page class on by-contributor pages */
+
+:root {
+    --ctb-void:     #001a1f;
+    --ctb-darkest:  #012a33;
+    --ctb-dark:     #024959;
+    --ctb-mid-dark: #03738a;
+    --ctb-deep:     #0489a3;
+    --ctb-bright:   #05a8c2;
+    --ctb-muted:    #5fc4d4;
+    --ctb-cyan:     #7fd8e8;
+    --ctb-light:    #a8e8f0;
+    --ctb-pale:     #d0f4f8;
+}
+
+/* ── Page background ── */
+body.ctb-page {
+    --nav-brand:       var(--ctb-cyan);
+    --nav-brand-glow:  rgba(127,216,232,0.7);
+    --nav-accent:      var(--ctb-mid-dark);
+    --nav-glow:        rgba(3,115,138,0.4);
+    background: var(--ctb-void);
+}
+
+/* ── Nav ── */
+body.ctb-page nav {
+    border-bottom-color: var(--ctb-mid-dark);
+    box-shadow: 0 0 18px var(--nav-glow);
+}
+
+body.ctb-page .nav-brand {
+    color: var(--ctb-cyan);
+    text-shadow: 0 0 10px var(--nav-brand-glow);
+}
+
+/* ── Hamburger ── */
+body.ctb-page .hamburger span {
+    background: var(--ctb-mid-dark);
+}
+
+/* ── Links ── */
+body.ctb-page a {
+    color: var(--ctb-cyan);
+}
+
+/* ── Footer ── */
+body.ctb-page footer span {
+    color: var(--ctb-cyan);
+}
+
+/* ── Ticker ── */
+body.ctb-page .ticker {
+    color: var(--ctb-bright);
+}
+
+body.ctb-page .ticker .sep {
+    color: var(--ctb-mid-dark);
+}
+
+/* ── Breadcrumb (contributor.css override) ── */
+body.ctb-page .breadcrumb a {
+    color: var(--ctb-muted);
+}
+
+body.ctb-page .breadcrumb a:hover {
+    color: var(--ctb-light);
+}
+
+body.ctb-page .breadcrumb .sep {
+    color: var(--ctb-cyan);
+}
+
+body.ctb-page .breadcrumb .current {
+    color: var(--ctb-cyan);
+}
+
+/* ── Contributor header ── */
+body.ctb-page .contrib-name {
+    color: var(--ctb-cyan);
+    text-shadow: 2px 2px 0px var(--ctb-darkest), 0 0 20px rgba(208,244,248,0.5);
+}
+
+/* ── Sections ── */
+body.ctb-page .section-divider {
+    background: linear-gradient(90deg, transparent, var(--ctb-cyan), transparent);
+}
+
+body.ctb-page .section-title {
+    color: var(--ctb-cyan);
+}
+
+/* ── Entries ── */
+body.ctb-page .entry {
+    border-color: var(--ctb-dark);
+    background: var(--ctb-darkest);
+}
+
+body.ctb-page .entry:hover {
+    border-color: var(--ctb-mid-dark);
+}
+
+body.ctb-page .entry-header:hover {
+    background: rgba(127,216,232,0.04);
+}
+
+body.ctb-page .entry-name a {
+    color: var(--ctb-pale);
+}
+
+body.ctb-page .entry-name a:hover {
+    color: var(--ctb-light);
+}
+
+body.ctb-page .entry-arrow {
+    color: var(--ctb-muted);
+}
+
+/* ── Instrument tags ── */
+body.ctb-page .instrument-tag {
+    background: var(--ctb-dark);
+    border-color: var(--ctb-mid-dark);
+    color: var(--ctb-muted);
+}
+
+/* ── Simple lists ── */
+body.ctb-page .simple-list li {
+    border-bottom-color: var(--ctb-dark);
+}
+
+body.ctb-page .simple-list a {
+    color: var(--ctb-pale);
+}
+
+body.ctb-page .simple-list a:hover {
+    color: var(--ctb-light);
+}
+
+/* ── Credit sections ── */
+body.ctb-page .credit-header:hover .section-title {
+    color: var(--ctb-light);
+}
+
+body.ctb-page .credit-list li {
+    border-bottom-color: var(--ctb-dark);
+}
+
+body.ctb-page .credit-list a {
+    color: var(--ctb-pale);
+}
+
+body.ctb-page .credit-list a:hover {
+    color: var(--ctb-light);
+}
+
+body.ctb-page .credit-count {
+    color: var(--ctb-muted);
+}
+
+body.ctb-page .credit-sub {
+    color: var(--ctb-muted);
+}
+
+/* ── MB link ── */
+body.ctb-page .mb-link {
+    border-color: var(--ctb-mid-dark);
+    color: var(--ctb-muted);
+}
+
+body.ctb-page .mb-link:hover {
+    color: var(--ctb-light);
+    border-color: var(--ctb-cyan);
+    box-shadow: 0 0 12px rgba(127,216,232,0.3);
+}
+
+/* ── Loading / error ── */
+body.ctb-page .loading {
+    color: var(--ctb-muted);
+}
+
+body.ctb-page .error-msg {
+    color: var(--ctb-light);
+}
+
+/* ── Index page specific ── */
+body.ctb-page .page-title {
+    color: var(--ctb-cyan);
+    text-shadow: 0 0 16px rgba(127,216,232,0.5);
+}
+
+body.ctb-page .page-subtitle {
+    color: var(--ctb-muted);
+}
+
+body.ctb-page .intro {
+    color: var(--ctb-pale);
+}
+
+body.ctb-page .card {
+    border-color: var(--ctb-dark);
+    background: var(--ctb-darkest);
+}
+
+body.ctb-page .card:hover {
+    border-color: var(--ctb-cyan);
+    box-shadow: 0 0 16px rgba(127,216,232,0.3);
+}
+
+body.ctb-page .card-title {
+    color: var(--ctb-pale);
+}
+
+body.ctb-page .card-sub {
+    color: var(--ctb-muted);
+}
+
+body.ctb-page .note {
+    color: var(--ctb-muted);
+}

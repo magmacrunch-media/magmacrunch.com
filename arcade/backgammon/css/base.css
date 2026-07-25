@@ -1,0 +1,618 @@
+/**
+ * base.css — CSS variables, reset, and base layout
+ */
+
+:root {
+    /* ── Backgammon Neon Theme ──────────────────────────────────────────────── */
+    --bg-bg: #0a0612;
+    --bg-board-bg: #0d0820;
+    --bg-point-light: #00f5ff;
+    --bg-point-dark: #ff2d78;
+    --bg-point-light-dim: rgba(0,245,255,0.3);
+    --bg-point-dark-dim: rgba(255,45,120,0.3);
+    --bg-checker-player: #00f5ff;
+    --bg-checker-player-glow: rgba(0,245,255,0.6);
+    --bg-checker-ai: #ff2d78;
+    --bg-checker-ai-glow: rgba(255,45,120,0.6);
+    --bg-bar-bg: #1a0a2a;
+    --bg-off-bg: #0a0a1a;
+    --bg-dice: #ffe03a;
+    --bg-dice-glow: rgba(255,224,58,0.6);
+    --bg-dice-dots: #0a0612;
+    --bg-doubling: #ff7c1f;
+    --bg-doubling-glow: rgba(255,124,31,0.6);
+    --bg-highlight: #39ff6e;
+    --bg-highlight-glow: rgba(57,255,110,0.5);
+    --bg-text: #f0ead8;
+    --bg-text-dim: #8a7fa8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-bg);
+    color: var(--bg-text);
+    font-family: 'Press Start 2P', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ── Back Link ──────────────────────────────────────────────────────────────── */
+.mc-back {
+    position: fixed;
+    top: 12px;
+    left: 14px;
+    z-index: 10000;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--bg-point-light);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.15s, text-shadow 0.15s;
+}
+
+.mc-back::before {
+    content: '← ';
+}
+
+.mc-back:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px var(--bg-point-light);
+}
+
+/* ── Container ──────────────────────────────────────────────────────────────── */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 20px 40px;
+}
+
+/* ── Start Screen ───────────────────────────────────────────────────────────── */
+.start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+}
+
+.start-content {
+    max-width: 500px;
+}
+
+.game-title {
+    font-size: clamp(24px, 5vw, 40px);
+    color: var(--bg-point-light);
+    text-shadow: 0 0 20px var(--bg-checker-player-glow);
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.game-subtitle {
+    font-size: 10px;
+    color: var(--bg-text-dim);
+    margin-bottom: 30px;
+    letter-spacing: 0.1em;
+}
+
+.start-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--bg-point-light), transparent);
+    margin: 20px 0;
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.start-btn {
+    background: transparent;
+    border: 2px solid var(--bg-point-light);
+    color: var(--bg-point-light);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+}
+
+.start-btn:hover {
+    background: var(--bg-point-light);
+    color: var(--bg-bg);
+    box-shadow: 0 0 20px var(--bg-checker-player-glow);
+}
+
+.start-btn.primary {
+    background: var(--bg-point-light);
+    color: var(--bg-bg);
+}
+
+.start-btn.primary:hover {
+    background: #ffffff;
+    box-shadow: 0 0 30px var(--bg-checker-player-glow);
+}
+
+.start-footer {
+    font-size: 8px;
+    color: var(--bg-text-dim);
+    line-height: 1.8;
+}
+
+/* ── Game Screen ────────────────────────────────────────────────────────────── */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.game-header {
+    text-align: center;
+}
+
+.game-header h1 {
+    font-size: 16px;
+    color: var(--bg-point-light);
+    text-shadow: 0 0 10px var(--bg-checker-player-glow);
+    margin-bottom: 10px;
+}
+
+.game-stats {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 8px;
+    color: var(--bg-text-dim);
+}
+
+.stat-value {
+    font-size: 14px;
+    color: var(--bg-dice);
+    text-shadow: 0 0 8px var(--bg-dice-glow);
+}
+
+/* ── Game Layout (Board + Chat) ────────────────────────────────────────────── */
+.game-layout {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 950px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+/* ── Game Chat ─────────────────────────────────────────────────────────────── */
+.game-chat {
+    width: 220px;
+    min-width: 180px;
+    background: var(--bg-board-bg);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Press Start 2P', monospace;
+    max-height: 500px;
+}
+
+.game-chat .chat-header {
+    font-size: 9px;
+    color: var(--bg-point-light);
+    padding: 10px;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+    text-align: center;
+}
+
+.game-chat .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    font-size: 8px;
+    line-height: 1.6;
+    color: var(--bg-text);
+    max-height: 400px;
+}
+
+.game-chat .chat-msg {
+    margin-bottom: 4px;
+    word-wrap: break-word;
+}
+
+.game-chat .chat-msg .chat-name {
+    font-weight: bold;
+}
+
+.game-chat .chat-msg.system {
+    color: var(--bg-text-dim);
+    font-style: italic;
+}
+
+.game-chat .chat-input {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    border-top: 1px solid rgba(0,245,255,0.2);
+}
+
+.game-chat .chat-input input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--bg-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px;
+    border-radius: 2px;
+    min-width: 0;
+}
+
+.game-chat .chat-input input::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+
+.game-chat .chat-input input:focus {
+    outline: none;
+    border-color: var(--bg-highlight);
+}
+
+.game-chat .chat-input button {
+    background: var(--bg-highlight);
+    color: var(--bg-bg);
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.game-chat .chat-input button:hover {
+    background: #fff;
+}
+
+/* ── Chat Tabs ─────────────────────────────────────────────────────────────── */
+.chat-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+}
+
+.chat-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--bg-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.chat-tab.active {
+    color: var(--bg-highlight);
+    border-bottom-color: var(--bg-highlight);
+}
+
+.chat-tab:hover {
+    color: var(--bg-text);
+}
+
+/* ── Chat Header with User Count ───────────────────────────────────────────── */
+.game-chat .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-user-count {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+}
+
+/* ── Chat User List ────────────────────────────────────────────────────────── */
+.chat-users {
+    padding: 4px 8px;
+    border-top: 1px solid rgba(0,245,255,0.2);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.chat-users-header {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    margin-bottom: 4px;
+}
+
+.chat-user {
+    font-size: 8px;
+    color: var(--bg-text);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-user-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* ── Chat Typing Indicator ─────────────────────────────────────────────────── */
+.chat-typing {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    padding: 4px 8px;
+    font-style: italic;
+}
+
+/* ── Chat Name Row ─────────────────────────────────────────────────────────── */
+.chat-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(0,245,255,0.2);
+}
+
+.chat-my-name {
+    font-size: 9px;
+    color: var(--bg-highlight);
+}
+
+.chat-edit-name {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-edit-name:hover {
+    opacity: 0.7;
+}
+
+.chat-name-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--bg-highlight);
+    color: var(--bg-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    width: 100px;
+    max-width: 100px;
+}
+
+.chat-name-input:focus {
+    outline: none;
+    border-color: var(--bg-highlight);
+}
+
+/* ── Chat Color Picker ────────────────────────────────────────────────────── */
+.chat-pick-color {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-pick-color:hover {
+    opacity: 0.7;
+}
+
+.color-picker-popup {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--bg-board-bg);
+    border: 1px solid rgba(0,245,255,0.3);
+    border-radius: 4px;
+    padding: 8px;
+    z-index: 100;
+    min-width: 180px;
+}
+
+.color-strip {
+    width: 100%;
+    height: 20px;
+    border-radius: 3px;
+    cursor: crosshair;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.color-indicator {
+    position: absolute;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: transparent;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.color-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.color-preview-label {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+}
+
+.color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.color-reset-btn {
+    background: none;
+    border: 1px solid var(--bg-text-dim);
+    color: var(--bg-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: auto;
+}
+
+.color-reset-btn:hover {
+    border-color: var(--bg-highlight);
+    color: var(--bg-highlight);
+}
+
+.chat-user-status {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    margin-left: 4px;
+}
+
+/* ── Chat Online Users Panel ───────────────────────────────────────────────── */
+.chat-online {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.chat-online-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,245,255,0.05);
+}
+
+.chat-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.chat-online-name {
+    font-size: 9px;
+    color: var(--bg-text);
+}
+
+.chat-online-status {
+    font-size: 7px;
+    color: var(--bg-text-dim);
+    margin-left: auto;
+}
+
+/* ── Board Area ─────────────────────────────────────────────────────────────── */
+.board-area {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+}
+
+/* ── Message Area ───────────────────────────────────────────────────────────── */
+.message-area {
+    text-align: center;
+    min-height: 30px;
+}
+
+.game-message {
+    font-size: 10px;
+    color: var(--bg-highlight);
+    text-shadow: 0 0 8px var(--bg-highlight-glow);
+}
+
+.game-message.warning {
+    color: var(--bg-dice);
+    text-shadow: 0 0 8px var(--bg-dice-glow);
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────────── */
+.game-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.control-btn {
+    background: transparent;
+    border: 1px solid var(--bg-text-dim);
+    color: var(--bg-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.control-btn:hover {
+    border-color: var(--bg-point-light);
+    color: var(--bg-point-light);
+}
+
+/* ── CRT Scanlines ──────────────────────────────────────────────────────────── */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────────── */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 4px var(--glow-color)); }
+    50% { filter: drop-shadow(0 0 12px var(--glow-color)); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>album art maker — magmacrunch media</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=3">
+    <style>
+        .tool-nav {
+            padding: 8px 24px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+        .tool-nav .back-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            background: var(--surface);
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            transition: color 0.15s, border-color 0.15s, text-shadow 0.15s;
+        }
+        .tool-nav .back-link:hover {
+            color: var(--text);
+            border-color: var(--dim);
+            text-shadow: 0 0 6px rgba(240,234,216,0.3);
+        }
+
+        /* Chrome glitch effect */
+        .chrome {
+            position: relative;
+            display: inline-block;
+        }
+        .chrome::before,
+        .chrome::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+        .chrome::before {
+            animation: chrome-glitch-1 3s infinite linear alternate-reverse;
+            clip-path: inset(0 0 50% 0);
+            color: rgba(160,160,176,0.35);
+        }
+        .chrome::after {
+            animation: chrome-glitch-2 3s infinite linear alternate-reverse;
+            clip-path: inset(50% 0 0 0);
+            color: rgba(160,160,176,0.35);
+        }
+        @keyframes chrome-glitch-1 {
+            0%, 92% { transform: translate(0); }
+            93% { transform: translate(-1px, 0); }
+            94% { transform: translate(1px, 0); }
+            95% { transform: translate(0); }
+        }
+        @keyframes chrome-glitch-2 {
+            0%, 94% { transform: translate(0); }
+            95% { transform: translate(1px, 0); }
+            96% { transform: translate(-1px, 0); }
+            97% { transform: translate(0); }
+        }
+
+        /* Diamond icon chrome */
+        .shape-btn .chrome {
+            font-size: 16px;
+            line-height: 1;
+        }
+        .shape-btn .chrome::before,
+        .shape-btn .chrome::after {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        @media (min-width: 769px) {
+            .mobile-notice { display: none; }
+        }
+        .mobile-notice {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            text-align: center;
+            padding: 16px 20px;
+            margin: 12px auto;
+            max-width: 500px;
+            border: 2px solid var(--cyan);
+            border-radius: 4px;
+            background: rgba(0,245,255,0.05);
+            color: var(--cyan);
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-notice">
+        This tool is best experienced on a desktop or laptop.<br>
+        Please visit on a wider screen for the full workspace.
+    </div>
+
+    <header>
+        <div class="header-left">
+            <h1 class="glitch" data-text="ALBUM//ART">ALBUM//ART</h1>
+        </div>
+        <div class="header-right">
+            <span class="sys-stat" id="canvasSizeStat">1024×1024</span>
+            <span class="sys-stat" id="elementCountStat">0 ELEMENTS</span>
+        </div>
+    </header>
+
+    <nav class="tool-nav">
+        <a href="../" class="back-link"><span class="chrome" data-text="← TOOLS">← magmacrunch tools</span></a>
+    </nav>
+
+    <div class="workspace">
+        <!-- LEFT PANEL: Tools -->
+        <aside class="panel tools-panel">
+            <div class="action-btns">
+                <button class="action-btn" id="undoBtn" title="Undo (Ctrl+Z)">UNDO</button>
+                <button class="action-btn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">REDO</button>
+            </div>
+            <div class="action-btns">
+                <button class="action-btn danger" id="deleteBtn" title="Delete selected (Del)">DELETE</button>
+                <button class="action-btn" id="clearBtn">CLEAR ALL</button>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="prop-group">
+                <div class="canvas-bg-row">
+                    <div class="canvas-bg-item">
+                        <label class="prop-label">CANVAS</label>
+                        <div class="custom-dropdown" id="canvasSizeDropdown">
+                            <div class="dropdown-selected">
+                                <span>1024</span>
+                                <span class="dropdown-arrow">&#9662;</span>
+                            </div>
+                            <div class="dropdown-options">
+                                <div class="dropdown-option" data-value="512">512</div>
+                                <div class="dropdown-option active" data-value="1024">1024</div>
+                                <div class="dropdown-option" data-value="2048">2048</div>
+                                <div class="dropdown-option" data-value="4096">4096</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="canvas-bg-item">
+                        <label class="prop-label">BG</label>
+                        <div class="color-row">
+                            <input type="color" id="bgColor" value="#ffffff" class="color-input">
+                            <input type="text" id="bgHex" class="color-hex-input" value="#ffffff" maxlength="7">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="tool-grid">
+                <button class="tool-btn active" data-tool="select" title="Select / Move (V)">
+                    <span class="tool-icon">&#9658;</span>
+                    <span class="tool-name">SELECT</span>
+                </button>
+                <button class="tool-btn" data-tool="text" title="Text (T)">
+                    <span class="tool-icon">T</span>
+                    <span class="tool-name">TEXT</span>
+                </button>
+                <button class="tool-btn" id="imageBtn" title="Upload Image (I)">
+                    <span class="tool-icon">&#9634;</span>
+                    <span class="tool-name">IMAGE</span>
+                </button>
+            </div>
+            <input type="file" id="imageFileInput" accept="image/*" hidden>
+
+            <div class="panel-divider"></div>
+
+            <button class="shapes-btn" id="shapesBtn" title="Choose a shape">
+                <span class="shapes-btn-label" id="shapesBtnLabel">RECT</span>
+                <span class="shapes-btn-arrow">&#9662;</span>
+            </button>
+
+            <div class="prop-group" id="waveProps" hidden>
+                <label class="prop-label">FREQUENCY</label>
+                <div class="range-row">
+                    <input type="range" id="wavelength" min="1" max="20" value="5" class="range-input">
+                    <span class="range-val" id="wavelengthVal">5</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="waveModeGroup" hidden>
+                <label class="prop-label">WAVE MODE</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="waveFilledBtn">FILLED</button>
+                    <button class="action-btn" id="waveOpenBtn">OPEN</button>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">REFERENCE</div>
+            <button class="ref-upload-btn" id="refUploadBtn">UPLOAD IMAGE</button>
+            <input type="file" id="refFileInput" accept="image/*" hidden>
+            <div class="ref-preview-wrap" id="refPreviewWrap">
+                <canvas id="refCanvas" class="ref-canvas"></canvas>
+                <button class="ref-clear-btn" id="refClearBtn" title="Remove reference">&times;</button>
+            </div>
+            <p class="ref-hint">click to sample color</p>
+        </aside>
+
+        <!-- SHAPES POPUP -->
+        <div class="shapes-popup" id="shapesPopup">
+            <div class="popup-section-label">BASIC</div>
+            <div class="shapes-popup-grid">
+                <button class="shape-btn" data-tool="rect" title="Rectangle (R)">
+                    <span class="tool-icon">&#9645;</span>
+                    <span class="tool-name">RECT</span>
+                </button>
+                <button class="shape-btn" data-tool="circle" title="Circle (C)">
+                    <span class="tool-icon">&#9675;</span>
+                    <span class="tool-name">CIRCLE</span>
+                </button>
+                <button class="shape-btn" data-tool="line" title="Line (L)">
+                    <span class="tool-icon">&#9585;</span>
+                    <span class="tool-name">LINE</span>
+                </button>
+                <button class="shape-btn" data-tool="triangle" title="Triangle">
+                    <span class="tool-icon">&#9653;</span>
+                    <span class="tool-name">TRI</span>
+                </button>
+                <button class="shape-btn" data-tool="pentagon" title="Pentagon">
+                    <span class="tool-icon">&#11043;</span>
+                    <span class="tool-name">PENTA</span>
+                </button>
+                <button class="shape-btn" data-tool="hexagon" title="Hexagon">
+                    <span class="tool-icon">&#11044;</span>
+                    <span class="tool-name">HEXA</span>
+                </button>
+                <button class="shape-btn" data-tool="diamond" title="Diamond">
+                    <span class="chrome" data-text="◇"><span class="tool-icon">&#9671;</span></span>
+                    <span class="tool-name">DIAMOND</span>
+                </button>
+                <button class="shape-btn" data-tool="star" title="Star">
+                    <span class="tool-icon">&#9733;</span>
+                    <span class="tool-name">STAR</span>
+                </button>
+                <button class="shape-btn" data-tool="arrow" title="Arrow">
+                    <span class="tool-icon">&#10148;</span>
+                    <span class="tool-name">ARROW</span>
+                </button>
+                <button class="shape-btn" data-tool="roundrect" title="Rounded Rect">
+                    <span class="tool-icon">&#9711;</span>
+                    <span class="tool-name">R. RECT</span>
+                </button>
+            </div>
+            <div class="popup-section-label">WAVES</div>
+            <div class="shapes-popup-grid">
+                <button class="shape-btn" data-tool="sine" title="Sine Wave">
+                    <span class="tool-icon">&#8767;</span>
+                    <span class="tool-name">SINE</span>
+                </button>
+                <button class="shape-btn" data-tool="squarewave" title="Square Wave">
+                    <span class="tool-icon">&#8861;</span>
+                    <span class="tool-name">SQUARE</span>
+                </button>
+                <button class="shape-btn" data-tool="sawtooth" title="Sawtooth Wave">
+                    <span class="tool-icon">&#8894;</span>
+                    <span class="tool-name">SAWTOOTH</span>
+                </button>
+                <button class="shape-btn" data-tool="trianglewave" title="Triangle Wave">
+                    <span class="tool-icon">&#8895;</span>
+                    <span class="tool-name">TRI WAVE</span>
+                </button>
+                <button class="shape-btn" data-tool="step" title="Step Function">
+                    <span class="tool-icon">&#8726;</span>
+                    <span class="tool-name">STEP</span>
+                </button>
+                <button class="shape-btn" data-tool="pulse" title="Pulse Train">
+                    <span class="tool-icon">&#8863;</span>
+                    <span class="tool-name">PULSE</span>
+                </button>
+            </div>
+            <div class="popup-section-label">CLIP ART</div>
+            <div class="shapes-popup-grid" id="clipartGrid">
+                <!-- populated by JS -->
+            </div>
+        </div>
+
+        <!-- CENTER: Canvas + Reference -->
+        <div class="center-area">
+            <div class="canvas-wrap" id="canvasWrap">
+                <canvas id="mainCanvas" width="1024" height="1024"></canvas>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Properties -->
+        <aside class="panel props-panel">
+            <div class="panel-label">PROPERTIES</div>
+
+            <div class="prop-group">
+                <label class="prop-label">FILL</label>
+                <div class="color-row">
+                    <input type="color" id="fillColor" value="#ffffff" class="color-input">
+                    <input type="text" id="fillHex" class="color-hex-input" value="#ffffff" maxlength="7">
+                    <button class="no-fill-btn" id="noFillBtn" title="No fill">&#8210;</button>
+                </div>
+            </div>
+
+            <div class="prop-group">
+                <label class="prop-label">STROKE</label>
+                <div class="color-row">
+                    <input type="color" id="strokeColor" value="#000000" class="color-input">
+                    <input type="text" id="strokeHex" class="color-hex-input" value="#000000" maxlength="7">
+                    <button class="no-fill-btn" id="noStrokeBtn" title="No stroke">&#8210;</button>
+                </div>
+            </div>
+
+            <div class="prop-group">
+                <label class="prop-label">STROKE WIDTH</label>
+                <div class="range-row">
+                    <input type="range" id="strokeWidth" min="1" max="40" value="4" class="range-input">
+                    <span class="range-val" id="strokeWidthVal">4</span>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="prop-group" id="rotationGroup" hidden>
+                <label class="prop-label">ROTATION</label>
+                <div class="range-row">
+                    <button class="rot-btn" id="rotMinus" title="Rotate −5°">&#8722;</button>
+                    <input type="range" id="rotation" min="0" max="360" value="0" class="range-input">
+                    <button class="rot-btn" id="rotPlus" title="Rotate +5°">+</button>
+                    <span class="range-val" id="rotationVal">0°</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="stepCountGroup" hidden>
+                <label class="prop-label">STEPS</label>
+                <div class="range-row">
+                    <input type="range" id="stepCount" min="2" max="20" value="5" class="range-input">
+                    <span class="range-val" id="stepCountVal">5</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="dutyGroup" hidden>
+                <label class="prop-label">DUTY CYCLE</label>
+                <div class="range-row">
+                    <input type="range" id="dutyCycle" min="5" max="95" value="20" class="range-input">
+                    <span class="range-val" id="dutyCycleVal">20%</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="opacityGroup" hidden>
+                <label class="prop-label">OPACITY</label>
+                <div class="range-row">
+                    <input type="range" id="opacity" min="0" max="100" value="100" class="range-input">
+                    <span class="range-val" id="opacityVal">100%</span>
+                </div>
+            </div>
+
+            <div class="prop-group" id="zorderGroup" hidden>
+                <label class="prop-label">LAYER ORDER</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="bringForwardBtn" title="Bring Forward">&#9650; FWD</button>
+                    <button class="action-btn" id="sendBackBtn" title="Send Backward">&#9660; BACK</button>
+                </div>
+            </div>
+
+            <div class="prop-group" id="textProps" hidden>
+                <label class="prop-label">FONT</label>
+                <div class="custom-dropdown" id="fontSelectDropdown">
+                    <div class="dropdown-selected">
+                        <span>Press Start 2P</span>
+                        <span class="dropdown-arrow">&#9662;</span>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option active" data-value="Press Start 2P">Press Start 2P</div>
+                        <div class="dropdown-option" data-value="VT323">VT323</div>
+                        <div class="dropdown-option" data-value="Silkscreen">Silkscreen</div>
+                        <div class="dropdown-option" data-value="DotGothic16">DotGothic16</div>
+                        <div class="dropdown-option" data-value="Pixelify Sans">Pixelify Sans</div>
+                        <div class="dropdown-option" data-value="Courier Prime">Courier Prime</div>
+                        <div class="dropdown-option" data-value="Futura">Futura</div>
+                        <div class="dropdown-option" data-value="Helvetica Neue">Helvetica Neue</div>
+                        <div class="dropdown-option" data-value="Arial">Arial</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prop-group" id="fontSizeGroup" hidden>
+                <label class="prop-label">FONT SIZE</label>
+                <div class="range-row">
+                    <input type="range" id="fontSize" min="8" max="200" value="48" class="range-input">
+                    <span class="range-val" id="fontSizeVal">48</span>
+                </div>
+            </div>
+
+            <button class="export-btn" id="editTextBtn" hidden>EDIT TEXT</button>
+
+            <div class="panel-divider"></div>
+
+            <div class="prop-group">
+                <label class="prop-label">FILE NAME</label>
+                <input type="text" id="fileName" class="file-input" value="album-art">
+            </div>
+            <button class="export-btn" id="exportBtn">EXPORT PNG</button>
+        </aside>
+    </div>
+
+    <!-- TEXT MODAL -->
+    <div class="modal-overlay" id="textModal" hidden>
+        <div class="modal-box">
+            <div class="modal-header">ADD TEXT</div>
+            <textarea id="modalTextInput" class="modal-textarea" placeholder="Type here..." rows="3"></textarea>
+            <div class="modal-row">
+                <label class="prop-label">FONT</label>
+                <div class="custom-dropdown" id="modalFontSelectDropdown">
+                    <div class="dropdown-selected">
+                        <span>Press Start 2P</span>
+                        <span class="dropdown-arrow">&#9662;</span>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option active" data-value="Press Start 2P">Press Start 2P</div>
+                        <div class="dropdown-option" data-value="VT323">VT323</div>
+                        <div class="dropdown-option" data-value="Silkscreen">Silkscreen</div>
+                        <div class="dropdown-option" data-value="DotGothic16">DotGothic16</div>
+                        <div class="dropdown-option" data-value="Pixelify Sans">Pixelify Sans</div>
+                        <div class="dropdown-option" data-value="Courier Prime">Courier Prime</div>
+                        <div class="dropdown-option" data-value="Futura">Futura</div>
+                        <div class="dropdown-option" data-value="Helvetica Neue">Helvetica Neue</div>
+                        <div class="dropdown-option" data-value="Arial">Arial</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-row">
+                <label class="prop-label">SIZE</label>
+                <input type="range" id="modalFontSize" min="8" max="200" value="48" class="range-input">
+                <span class="range-val" id="modalFontSizeVal">48</span>
+            </div>
+            <div class="modal-btns">
+                <button class="action-btn" id="modalCancel">CANCEL</button>
+                <button class="export-btn" id="modalAdd">ADD TEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span class="footer-text">ALBUM//ART v1.7 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+    </footer>
+
+    <script src="js/history.js"></script>
+    <script src="js/color.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/tools.js"></script>
+    <script src="js/clipart.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

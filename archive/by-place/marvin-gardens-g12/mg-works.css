@@ -1,0 +1,56 @@
+/* Marvin Gardens G12 — works (amber/gold accent) */
+body.mg-page.mg-works-page main > * { background: var(--mg-near-black); }
+
+body.mg-page.mg-works-page .breadcrumb { color: var(--dim); }
+body.mg-page.mg-works-page .breadcrumb a { color: var(--mg-heading); }
+body.mg-page.mg-works-page .breadcrumb a:hover { color: var(--mg-cream); }
+body.mg-page.mg-works-page .breadcrumb .sep { color: var(--mg-heading); opacity: 0.6; }
+body.mg-page.mg-works-page .breadcrumb .current { color: var(--mg-heading); }
+
+body.mg-page.mg-works-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.mg-page.mg-works-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--mg-heading); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.mg-page.mg-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--mg-heading) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(232, 192, 96, 0.5); }
+
+body.mg-page.mg-works-page .work-card {
+    background: transparent !important;
+    border-color: var(--mg-cta);
+}
+body.mg-page.mg-works-page .work-card:hover { border-color: var(--mg-heading) !important; }
+body.mg-page.mg-works-page .work-card h3 { color: var(--mg-heading) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.mg-page.mg-works-page .work-card h3 a { color: var(--mg-heading) !important; text-decoration: none; }
+body.mg-page.mg-works-page .work-card h3 a:hover { color: var(--mg-cream) !important; }
+body.mg-page.mg-works-page .work-card p { color: var(--mg-body) !important; font-family: 'Courier Prime', monospace; font-size: 12px; opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.mg-page.mg-works-page .work-card p a { color: var(--mg-heading) !important; }
+body.mg-page.mg-works-page .work-card p strong { color: var(--mg-muted) !important; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.08em; margin-right: 6px; }
+body.mg-page.mg-works-page .work-card a { color: var(--mg-heading) !important; text-decoration: none; }
+body.mg-page.mg-works-page .work-card a:hover { color: var(--mg-cream) !important; }
+body.mg-page.mg-works-page .work-type { color: var(--mg-heading) !important; font-family: 'Courier Prime', monospace; font-size: 11px; font-style: italic; margin-left: 6px; }
+body.mg-page.mg-works-page .badge { display: inline-block; color: var(--mg-deep) !important; padding: 2px 8px; margin: 2px; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.06em; }
+body.mg-page.mg-works-page .badge-composed { background: var(--mg-heading) !important; }
+body.mg-page.mg-works-page .badge-lyrics { background: var(--mg-cta) !important; }
+body.mg-page.mg-works-page .badge-recorded { background: var(--mg-brand) !important; }
+body.mg-page.mg-works-page .badge-premiered { background: var(--mg-cream) !important; }
+body.mg-page.mg-works-page .badge-other { background: var(--mg-surface) !important; color: var(--mg-cream) !important; }
+body.mg-page.mg-works-page .rec-label { display: inline-block; padding: 1px 5px; margin-left: 4px; font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.05em; }
+body.mg-page.mg-works-page .rec-label.live { background: var(--mg-cta) !important; color: var(--mg-deep) !important; }
+body.mg-page.mg-works-page .rec-label.partial { background: var(--mg-heading) !important; color: var(--mg-deep) !important; }
+body.mg-page.mg-works-page .rec-label.video { background: var(--mg-brand) !important; color: var(--mg-cream) !important; }
+body.mg-page.mg-works-page .tag { background: var(--mg-dark) !important; border: 1px solid var(--mg-cta) !important; padding: 2px 7px !important; margin: 2px !important; color: var(--mg-muted) !important; font-family: 'Courier Prime', monospace; font-size: 11px; display: inline-block; }
+
+/* Current page: works (c-works active) */
+body.mg-page.mg-works-page .nav-card.c-works {
+    background: var(--mg-near-black);
+    color: var(--mg-heading);
+    border-color: var(--mg-heading);
+}
+body.mg-page.mg-works-page .nav-card.c-works:hover {
+    background: transparent;
+    color: var(--mg-heading);
+}
+
+/* Override inline style for disambiguation text in recordings links */
+body.mg-page.mg-works-page .work-card p a[style] { color: var(--mg-heading) !important; }
+
+@media (max-width: 500px) {
+    body.mg-page.mg-works-page .work-card { border-color: var(--mg-muted) !important; }
+}

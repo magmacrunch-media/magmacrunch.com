@@ -1,0 +1,313 @@
+/* ================================================
+   RETRO PIXEL-ART BUTTON STYLES
+   SNES-inspired aesthetic to match pixel characters
+   ================================================ */
+
+/* Import pixel font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* ================================================
+   MAIN CONTROL BUTTONS (top of game)
+   ================================================ */
+#changeCharacterBtn,
+#scoreboardBtn,
+#creditsBtn,
+#muteBtn,
+#fullscreenBtn {
+    background: #5a6988;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: none;
+    border-radius: 0;
+    text-transform: lowercase;
+    letter-spacing: 0;
+    position: relative;
+    
+    /* Chunky SNES-style border */
+    box-shadow: 
+        0 6px 0 #2a3344,           /* Bottom shadow (dark) */
+        0 -4px 0 #7a89a8,          /* Top highlight (light) */
+        -4px 0 0 #4a5968,          /* Left shadow (medium) */
+        4px 0 0 #4a5968,           /* Right shadow (medium) */
+        -4px -4px 0 #6a7988,       /* Top-left corner */
+        4px -4px 0 #6a7988,        /* Top-right corner */
+        -4px 6px 0 #1a2334,        /* Bottom-left corner */
+        4px 6px 0 #1a2334;         /* Bottom-right corner */
+}
+
+#changeCharacterBtn:hover,
+#scoreboardBtn:hover,
+#creditsBtn:hover,
+#muteBtn:hover,
+#fullscreenBtn:hover {
+    background: #00d4ff;
+    color: #000000;
+    box-shadow: 
+        0 6px 0 #006a7f,
+        0 -4px 0 #33e0ff,
+        -4px 0 0 #00a0bf,
+        4px 0 0 #00a0bf,
+        -4px -4px 0 #00c4df,
+        4px -4px 0 #00c4df,
+        -4px 6px 0 #00505f,
+        4px 6px 0 #00505f;
+}
+
+#changeCharacterBtn:active,
+#scoreboardBtn:active,
+#creditsBtn:active,
+#muteBtn:active,
+#fullscreenBtn:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #2a3344,
+        0 -4px 0 #7a89a8,
+        -4px 0 0 #4a5968,
+        4px 0 0 #4a5968;
+}
+
+/* ================================================
+   MODAL CLOSE BUTTONS
+   ================================================ */
+
+/* Modal mute button - matches close button size/style */
+#modalMuteBtn {
+    background: #5a6988 !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 16px !important;
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 12px !important;
+    font-weight: normal !important;
+    cursor: pointer;
+    border-radius: 0 !important;
+    text-transform: lowercase !important;
+    letter-spacing: 0 !important;
+    transition: none !important;
+    
+    /* Chunky SNES-style border */
+    box-shadow: 
+        0 6px 0 #2a3344,
+        0 -4px 0 #7a89a8,
+        -4px 0 0 #4a5968,
+        4px 0 0 #4a5968,
+        -4px -4px 0 #6a7988,
+        4px -4px 0 #6a7988,
+        -4px 6px 0 #1a2334,
+        4px 6px 0 #1a2334 !important;
+}
+
+#modalMuteBtn:hover {
+    background: #00d4ff;
+    color: #000000;
+    box-shadow: 
+        0 6px 0 #006a7f,
+        0 -4px 0 #33e0ff,
+        -4px 0 0 #00a0bf,
+        4px 0 0 #00a0bf,
+        -4px -4px 0 #00c4df,
+        4px -4px 0 #00c4df,
+        -4px 6px 0 #00505f,
+        4px 6px 0 #00505f;
+}
+
+#modalMuteBtn:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #2a3344,
+        0 -4px 0 #7a89a8,
+        -4px 0 0 #4a5968,
+        4px 0 0 #4a5968;
+}
+
+#closeModal,
+#closeScoreboardModal,
+#closeCreditsModal {
+    width: 100%;
+    background: #2ecc71;
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+    border-radius: 0;
+    text-transform: lowercase;
+    /* margin-top: 20px; */
+    
+    /* Green button SNES-style border */
+    box-shadow: 
+        0 6px 0 #1a7a3a,
+        0 -4px 0 #4edd91,
+        -4px 0 0 #25a555,
+        4px 0 0 #25a555,
+        -4px -4px 0 #3ed771,
+        4px -4px 0 #3ed771,
+        -4px 6px 0 #0f5a2a,
+        4px 6px 0 #0f5a2a;
+}
+
+#closeModal:hover,
+#closeScoreboardModal:hover,
+#closeCreditsModal:hover {
+    background: #27ae60;
+    box-shadow: 
+        0 6px 0 #156a30,
+        0 -4px 0 #3ecd71,
+        -4px 0 0 #1f9545,
+        4px 0 0 #1f9545,
+        -4px -4px 0 #2ebd61,
+        4px -4px 0 #2ebd61,
+        -4px 6px 0 #0a4a20,
+        4px 6px 0 #0a4a20;
+}
+
+#closeModal:active,
+#closeScoreboardModal:active,
+#closeCreditsModal:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #1a7a3a,
+        0 -4px 0 #4edd91,
+        -4px 0 0 #25a555,
+        4px 0 0 #25a555;
+}
+
+/* ================================================
+   SUBMIT INITIALS BUTTON
+   ================================================ */
+#submitInitials {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 12px 24px;
+    background: #ffc107;
+    color: #000000;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-weight: normal;
+    text-transform: lowercase;
+    
+    /* Yellow/gold button SNES-style border */
+    box-shadow: 
+        0 6px 0 #996c00,
+        0 -4px 0 #ffd847,
+        -4px 0 0 #cc9a00,
+        4px 0 0 #cc9a00,
+        -4px -4px 0 #ffd020,
+        4px -4px 0 #ffd020,
+        -4px 6px 0 #664500,
+        4px 6px 0 #664500;
+}
+
+#submitInitials:hover {
+    background: #ffca28;
+    box-shadow: 
+        0 6px 0 #a67c00,
+        0 -4px 0 #ffe057,
+        -4px 0 0 #d9aa00,
+        4px 0 0 #d9aa00,
+        -4px -4px 0 #ffd830,
+        4px -4px 0 #ffd830,
+        -4px 6px 0 #735000,
+        4px 6px 0 #735000;
+}
+
+#submitInitials:active {
+    transform: translateY(4px);
+    box-shadow: 
+        0 2px 0 #996c00,
+        0 -4px 0 #ffd847,
+        -4px 0 0 #cc9a00,
+        4px 0 0 #cc9a00;
+}
+
+/* ================================================
+   INITIALS INPUT FIELD (pixel-art style)
+   ================================================ */
+#initialsInput {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    padding: 12px;
+    width: clamp(90px, 15vw, 110px);
+    text-align: center;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 0;
+    margin: 0 10px;
+    background: #f0f0f0;
+    color: #000000;
+    
+    /* Inset pixel border effect */
+    box-shadow: 
+        inset 4px 4px 0 #a0a0a0,
+        inset -4px -4px 0 #ffffff;
+}
+
+#initialsInput:focus {
+    outline: none;
+    background: #ffffff;
+    box-shadow: 
+        inset 4px 4px 0 #00d4ff,
+        inset -4px -4px 0 #66e0ff;
+}
+
+/* ================================================
+   RESPONSIVE ADJUSTMENTS
+   ================================================ */
+@media (max-width: 768px) {
+    #changeCharacterBtn,
+    #scoreboardBtn,
+    #creditsBtn,
+    #muteBtn,
+    #fullscreenBtn {
+        font-size: 8px;
+        padding: 10px 16px;
+    }
+    
+    #closeModal,
+    #closeScoreboardModal,
+    #closeCreditsModal,
+    #modalMuteBtn {
+        font-size: 10px;
+        padding: 14px;
+    }
+    
+    #submitInitials {
+        font-size: 9px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    #changeCharacterBtn,
+    #scoreboardBtn,
+    #creditsBtn,
+    #muteBtn,
+    #fullscreenBtn {
+        font-size: 7px;
+        padding: 8px 12px;
+    }
+}
+
+/* ================================================
+   REMOVE SMOOTH TRANSITIONS (keep it snappy!)
+   ================================================ */
+#changeCharacterBtn,
+#scoreboardBtn,
+#creditsBtn,
+#muteBtn,
+#fullscreenBtn,
+#modalMuteBtn,
+#closeModal,
+#closeScoreboardModal,
+#closeCreditsModal,
+#submitInitials {
+    transition: none !important;
+}

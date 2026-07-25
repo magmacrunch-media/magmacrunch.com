@@ -1,0 +1,47 @@
+/* Marvin Gardens G12 — personnel (pink/magenta accent) */
+body.mg-page.mg-personnel-page main > * { background: var(--mg-near-black); }
+
+body.mg-page.mg-personnel-page .breadcrumb { color: var(--dim); }
+body.mg-page.mg-personnel-page .breadcrumb a { color: var(--mg-accent); }
+body.mg-page.mg-personnel-page .breadcrumb a:hover { color: var(--mg-cream); }
+body.mg-page.mg-personnel-page .breadcrumb .sep { color: var(--mg-accent); opacity: 0.6; }
+body.mg-page.mg-personnel-page .breadcrumb .current { color: var(--mg-accent); }
+
+body.mg-page.mg-personnel-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.mg-page.mg-personnel-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--mg-accent); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.mg-page.mg-personnel-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--mg-accent) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(208, 72, 120, 0.5); }
+
+body.mg-page.mg-personnel-page .artist-card {
+    background: transparent !important;
+    border-color: var(--mg-accent);
+}
+body.mg-page.mg-personnel-page .artist-card h3 { color: var(--mg-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.mg-page.mg-personnel-page .artist-card h3 a { color: var(--mg-cream) !important; }
+body.mg-page.mg-personnel-page .artist-card h3 a:hover { color: var(--mg-accent) !important; }
+body.mg-page.mg-personnel-page .artist-card p { color: var(--mg-body) !important; }
+body.mg-page.mg-personnel-page .artist-card p strong { color: var(--mg-muted) !important; }
+body.mg-page.mg-personnel-page .artist-card a { color: var(--mg-accent) !important; }
+body.mg-page.mg-personnel-page .artist-card a:hover { color: var(--mg-cream) !important; }
+body.mg-page.mg-personnel-page .artist-card:hover { border-color: var(--mg-cream) !important; }
+body.mg-page.mg-personnel-page .badge { color: var(--mg-deep) !important; }
+body.mg-page.mg-personnel-page .badge-founded  { background: var(--mg-accent) !important; }
+body.mg-page.mg-personnel-page .badge-member   { background: var(--mg-light) !important; }
+body.mg-page.mg-personnel-page .badge-engineer { background: var(--mg-brand) !important; }
+body.mg-page.mg-personnel-page .badge-born     { background: var(--mg-heading) !important; }
+body.mg-page.mg-personnel-page .badge-other    { background: var(--mg-surface) !important; color: var(--mg-cream) !important; }
+body.mg-page.mg-personnel-page .tag { border-color: var(--mg-accent) !important; color: var(--mg-muted) !important; }
+
+/* Current page: personnel (c-personnel active) */
+body.mg-page.mg-personnel-page .nav-card.c-personnel {
+    background: var(--mg-near-black);
+    color: var(--mg-accent);
+    border-color: var(--mg-accent);
+}
+body.mg-page.mg-personnel-page .nav-card.c-personnel:hover {
+    background: transparent;
+    color: var(--mg-accent);
+}
+
+@media (max-width: 500px) {
+    body.mg-page.mg-personnel-page .artist-card { border-color: var(--mg-muted); }
+}

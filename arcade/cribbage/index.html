@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cribbage — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/start-screen.css">
+    <link rel="stylesheet" href="css/game-layout.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="../shared/multiplayer/lobby.css">
+    <style>
+        .mc-back {
+            position: fixed;
+            top: 12px;
+            left: 14px;
+            z-index: 10000;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #ffd700;
+            text-decoration: none;
+            letter-spacing: 0.08em;
+        }
+        .mc-back::before {
+            content: '← ';
+        }
+        .mc-back:hover {
+            color: #ffff00;
+        }
+        body.game-active .mc-back {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../" class="mc-back">magmacrunch arcade</a>
+
+    <div class="container">
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+                <h1 class="game-title">CRIBBAGE</h1>
+                <p class="game-subtitle">The classic card game</p>
+
+                <div class="start-divider"></div>
+
+                <div class="start-buttons">
+                    <button id="multiplayerBtn" class="start-btn primary">Multiplayer</button>
+                    <button id="startGameBtn" class="start-btn">Solo Game</button>
+                    <button id="viewRulesBtn" class="start-btn">How to Play</button>
+                    <button id="viewScoresBtn" class="start-btn">High Scores</button>
+                </div>
+
+                <p class="start-press-prompt">— press start —</p>
+
+                <div class="start-footer">
+                    <p>First to 121 points wins</p>
+                    <p>Standard 52-card deck &bull; 2 players</p>
+                </div>
+                <p class="start-copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" class="game-screen" style="display: none;">
+
+            <!-- Header -->
+            <div class="game-header">
+                <h1>CRIBBAGE</h1>
+            </div>
+
+            <!-- Two-column layout -->
+            <div class="game-layout">
+
+                <!-- Left column: Board + Count -->
+                <div class="board-column">
+                    <button id="boardToggle" class="board-toggle">▼ Board</button>
+                    <div id="cribbageBoard" class="cribbage-board"></div>
+                    <div class="count-display">
+                        <div>
+                            <div id="countDisplay" class="count-value">0</div>
+                            <div class="count-label">Count</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right column: Card play areas -->
+                <div class="play-column">
+                    <div class="ai-hand-area">
+                        <div class="section-title">Opponent's Hand</div>
+                        <div id="aiHand" class="hand-cards"></div>
+                    </div>
+
+                    <div class="starter-area">
+                        <div class="section-title">Starter</div>
+                        <div id="starterCard" class="starter-card"></div>
+                    </div>
+
+                    <div class="crib-area">
+                        <div class="section-title">Crib</div>
+                        <div id="cribArea" class="hand-cards"></div>
+                    </div>
+
+                    <div class="player-hand-area">
+                        <div class="section-title">Your Hand</div>
+                        <div id="playerHand" class="hand-cards"></div>
+                    </div>
+                </div>
+
+            </div><!-- end game-layout -->
+
+            <!-- Message area -->
+            <div id="messageArea" class="message-area">
+                <div class="game-message">Welcome to Cribbage!</div>
+            </div>
+
+            <!-- Action buttons -->
+            <div id="actionButtons" class="action-buttons"></div>
+
+            <!-- Game controls -->
+            <div class="game-controls">
+                <button id="newGameBtn" class="control-btn">New Game</button>
+                <button id="menuBtn" class="control-btn">Menu</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
+    <div id="lobbyOverlay" class="lobby-overlay" style="display: none;">
+        <div class="lobby-panel">
+            <h2 class="lobby-title">MULTIPLAYER LOBBY</h2>
+
+            <!-- Room Code -->
+            <div id="lobbyRoomCode" class="lobby-room-code" style="display: none;">
+                <div class="lobby-room-label">ROOM CODE</div>
+                <div id="roomCodeValue" class="lobby-room-value">----</div>
+            </div>
+
+            <!-- Player List -->
+            <div class="lobby-players">
+                <div class="lobby-players-title">Players</div>
+                <div id="lobbyPlayerList"></div>
+            </div>
+
+            <!-- Color Picker -->
+            <div class="lobby-colors">
+                <div class="lobby-colors-title">Your Color</div>
+                <div id="lobbyColorGrid" class="lobby-color-grid"></div>
+            </div>
+
+            <!-- Chat -->
+            <div class="lobby-chat">
+                <div id="lobbyChatMessages" class="lobby-chat-messages"></div>
+                <div class="lobby-chat-input">
+                    <input id="lobbyChatInput" type="text" placeholder="Type a message..." maxlength="200">
+                    <button id="lobbyChatSend">Send</button>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="lobby-buttons">
+                <button id="lobbyCreateRoom" class="lobby-btn primary">Create Room</button>
+                <button id="lobbyJoinRoom" class="lobby-btn">Join Room</button>
+                <button id="lobbyStartGame" class="lobby-btn primary" style="display: none;">Start Game</button>
+                <button id="lobbyLeave" class="lobby-btn">Leave</button>
+            </div>
+
+            <!-- Status -->
+            <div id="lobbyStatus" class="lobby-status"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script>var MP_DEFAULT_SERVER = 'cribbage.magmacrunch.com';</script>
+    <script src="../shared/multiplayer/protocol.js"></script>
+    <script src="../shared/multiplayer/network.js"></script>
+    <script src="../shared/score-client.js"></script>
+    <script>const scoreClient = ScoreClient.auto();</script>
+    <script src="js/config.js"></script>
+    <script src="js/hand-eval.js"></script>
+    <script src="js/cribbage-board.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

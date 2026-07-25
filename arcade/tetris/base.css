@@ -1,0 +1,136 @@
+/* =====================================================================
+   Helsinki 1989 — base.css
+   CSS variables, reset, body, CRT overlay, background effects
+   ===================================================================== */
+
+:root {
+  /* Core palette — cold, desaturated, Nordic */
+  --ice:        #AFCBD3;
+  --birch:      #D4C89A;
+  --slate:      #7A9BAD;
+  --clay:       #A26769;
+  --pine:       #5E7D6A;
+  --frost:      #C8D8DD;
+  --dusk:       #3A5A6A;
+
+  /* Backgrounds */
+  --bg:         #0E1820;
+  --panel-bg:   #131F28;
+  --board-bg:   #0A1218;
+
+  /* UI chrome */
+  --border:        #2A4A5A;
+  --border-bright: #4A7A8A;
+  --text:          #D0DDE0;
+  --subtext:       #4A6A7A;
+  --dim:           #2E4A56;
+
+  /* Glows */
+  --glow-ice:   0 0 6px #AFCBD3, 0 0 18px rgba(175,203,211,0.3);
+  --glow-birch: 0 0 6px #D4C89A, 0 0 18px rgba(212,200,154,0.3);
+  --glow-slate: 0 0 6px #7A9BAD, 0 0 14px rgba(122,155,173,0.25);
+  --glow-clay:  0 0 6px #A26769, 0 0 14px rgba(162,103,105,0.25);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* CRT scanline overlay — tighter, cooler */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.09) 3px,
+    rgba(0,0,0,0.09) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Cold grid background */
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(122,155,173,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(122,155,173,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: gridBreath 7s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes gridBreath {
+  0%,100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* Horizon — cold aurora at bottom */
+.bg-horizon {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 200px;
+  background: linear-gradient(to top,
+    rgba(94,125,106,0.08),
+    rgba(122,155,173,0.04),
+    transparent);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Aurora line at top */
+.bg-aurora {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent, var(--pine), var(--ice), var(--slate), var(--pine), transparent);
+  opacity: 0.6;
+  animation: auroraShift 9s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+@keyframes auroraShift {
+  0%,100% { opacity: 0.3; filter: blur(0px); }
+  50%      { opacity: 0.8; filter: blur(0.5px); }
+}
+
+/* Back link */
+.mc-back {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--slate);
+  text-decoration: none;
+  z-index: 6000;
+  opacity: 0.6;
+  pointer-events: auto;
+  transition: opacity 0.15s, color 0.15s;
+}
+.mc-back:hover {
+  opacity: 1;
+  color: var(--ice);
+}
+.mc-back::before {
+  content: '← ';
+}
+
+body.game-active .mc-back {
+  display: none;
+}

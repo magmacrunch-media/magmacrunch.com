@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVFP — events — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="svfp-shared.css">
+    <link rel="stylesheet" href="svfp-events.css">
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        '260e4953-a937-4355-8389-d1baaf24eca5',
+        name:      'sex van floor plan',
+        abbr:      'SVFP',
+        accent:    'purple',
+        backColor: 'c-purple',
+        siblings:  ['documentary', 'events', 'releases', 'recordings', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="svfp-page svfp-events-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">svfp</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// sex van floor plan //</div>
+        <div class="page-title">EVENTS</div>
+        <div class="sub-nav">
+            <a href="./"        class="nav-card c-back">← back</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
+            <a href="documentary.html" class="nav-card c-documentary">documentary</a>
+            <a href="photography.html" class="nav-card c-photography">photography</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"     class="nav-card c-releases">releases</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="flyers-wrap">
+        <div class="flyer-carousel">
+            <div class="flyer-stage" id="flyerStage">
+                <button class="flyer-arrow prev" id="flyerPrev">◀</button>
+                <button class="flyer-arrow next" id="flyerNext">▶</button>
+            </div>
+            <div class="flyer-meta">
+                <span class="flyer-title" id="flyerTitle"></span>
+                <span class="flyer-date"  id="flyerDate"></span>
+                <span class="flyer-tag"   id="flyerTag"></span>
+                <div class="flyer-controls">
+                    <div class="flyer-dots" id="flyerDots"></div>
+                    <span class="flyer-counter" id="flyerCounter"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="catalog-wrap">
+        <div id="status-bar">loading events…</div>
+        <div id="count-bar"></div>
+        <div id="events-list"></div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/entity-map.js"></script>
+<script src="../../../templates/artist_events.js"></script>
+<script>
+const FLYERS = [
+    { title: "@ The Spice Rack",     date: "Jun 14, 2025",  img: "../../../assets/flyers/svfp/spicerack-june2025-show_1.png",         status: "" },
+    { title: "@ The Spice Rack",     date: "Jun 14, 2025",  img: "../../../assets/flyers/svfp/spicerack-june2025-show_2.png",         status: "" },
+    { title: "@ The Spice Rack — Mud Wrasslin'", date: "Jul 4, 2025", img: "../../../assets/flyers/svfp/spicerack-july2025-show_got-shut-down.png", status: "shut-down" },
+    { title: "Sound Fest",           date: "Jul 7–26, 2025", img: "../../../assets/flyers/svfp/sound-fest-july2025_cancelled.png",     status: "cancelled" },
+    { title: "@ The Mansion",        date: "Jul 19, 2025",  img: "../../../assets/flyers/svfp/themansion-19july2025-show.png",         status: "" },
+    { title: "@ The Mansion",        date: "Jul 25, 2025",  img: "../../../assets/flyers/svfp/themansion-25july2025-show.png",         status: "" },
+    { title: "@ The Mansion",        date: "Sep 25, 2025",  img: "../../../assets/flyers/svfp/themansion-september2025-show.png",      status: "" },
+    { title: "@ 8 Ball",             date: "Oct 18, 2025",  img: "../../../assets/flyers/svfp/8ball-october2025-show.png",             status: "" },
+    { title: "@ Manny's",            date: "Oct 25, 2025",  img: "../../../assets/flyers/svfp/mannys-october2025-show.png",            status: "" },
+    { title: "Zeno-Ween! @ Zeno's",  date: "Oct 30, 2025",  img: "../../../assets/flyers/svfp/zenos-october2025-show.png",             status: "" },
+    { title: "@ Guild Hall, Swoyersville", date: "Nov 1, 2025", img: "../../../assets/flyers/svfp/swoyersville-november2025-show_v5.png", status: "" },
+    { title: "@ The Slums, Reading", date: "Nov 15, 2025",  img: "../../../assets/flyers/svfp/reading-november2025-show_v2.png",       status: "" },
+    { title: "@ Lancaster",          date: "Nov 2025",       img: "../../../assets/flyers/svfp/lancaster-november2025-show.png",        status: "" },
+    { title: "@ Manny's",            date: "Dec 16, 2025",  img: "../../../assets/flyers/svfp/mannys-december2025-show.png",           status: "" },
+];
+
+const STATUS_LABELS = { "cancelled": "cancelled", "shut-down": "shut down on the night" };
+
+const flyerStage   = document.getElementById('flyerStage');
+const flyerDots    = document.getElementById('flyerDots');
+const flyerTitle   = document.getElementById('flyerTitle');
+const flyerDate    = document.getElementById('flyerDate');
+const flyerTag     = document.getElementById('flyerTag');
+const flyerCounter = document.getElementById('flyerCounter');
+const flyerPrev    = document.getElementById('flyerPrev');
+const flyerNext    = document.getElementById('flyerNext');
+
+let flyerCurrent = 0;
+
+const flyerImgs = FLYERS.map((f, i) => {
+    const img = document.createElement('img');
+    img.src = f.img; img.alt = f.title;
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    if (i === 0) img.classList.add('visible');
+    flyerStage.insertBefore(img, flyerPrev);
+    return img;
+});
+
+const flyerDotEls = FLYERS.map((f, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'flyer-dot' + (i === 0 ? ' active' : '');
+    if (f.status === 'cancelled') dot.classList.add('is-cancelled');
+    if (f.status === 'shut-down') dot.classList.add('is-shut-down');
+    dot.setAttribute('aria-label', f.title);
+    dot.addEventListener('click', () => flyerGoTo(i));
+    flyerDots.appendChild(dot);
+    return dot;
+});
+
+function flyerGoTo(index) {
+    flyerImgs[flyerCurrent].classList.remove('visible');
+    flyerDotEls[flyerCurrent].classList.remove('active');
+    flyerCurrent = ((index % FLYERS.length) + FLYERS.length) % FLYERS.length;
+    flyerImgs[flyerCurrent].classList.add('visible');
+    flyerDotEls[flyerCurrent].classList.add('active');
+    const f = FLYERS[flyerCurrent];
+    flyerTitle.textContent = f.title;
+    flyerDate.textContent  = f.date || '';
+    flyerCounter.textContent = (flyerCurrent + 1) + ' / ' + FLYERS.length;
+    if (f.status) {
+        flyerTag.textContent = STATUS_LABELS[f.status] || f.status;
+        flyerTag.className = 'flyer-tag ' + f.status;
+    } else {
+        flyerTag.textContent = '';
+        flyerTag.className = 'flyer-tag';
+    }
+}
+
+flyerPrev.addEventListener('click', () => flyerGoTo(flyerCurrent - 1));
+flyerNext.addEventListener('click', () => flyerGoTo(flyerCurrent + 1));
+flyerGoTo(0);
+</script>
+</body>
+</html>

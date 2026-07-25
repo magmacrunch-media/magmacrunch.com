@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Jukebox Manager
+Comment=Edit jukebox songs and track order
+Exec=chromium --new-window http://localhost:8780/#jukebox
+Icon=/home/jake/arcade/admin/icons/jukebox-manager.png
+Terminal=false
+Type=Application
+Categories=AudioVideo;Audio;
+StartupNotify=true

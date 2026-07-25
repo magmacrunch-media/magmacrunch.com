@@ -1,0 +1,18 @@
+/* ══════════════════════════════════════════════════════════
+   cards.css — French Tarot | MagmaCrunch Media © 2026
+   Compatibility shim — all card styles now in deck/css/tarot-cards.css
+   ══════════════════════════════════════════════════════════ */
+
+/* Legacy class aliases — map old .tarot-card to new .t-card */
+.tarot-card { /* handled by tarot-cards.css */ }
+
+/* Trick card sizing override for game layout */
+.t-card.trick-card {
+    width: 70px;
+    height: 111px;
+    font-size: 0.8em;
+    cursor: default;
+}
+.t-card.trick-card:hover {
+    transform: none;
+}

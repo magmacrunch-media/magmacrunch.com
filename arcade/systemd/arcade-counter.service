@@ -1,0 +1,14 @@
+[Unit]
+Description=MagmaCrunch Arcade - Hit Counter
+After=network.target
+
+[Service]
+Type=simple
+User=jake
+WorkingDirectory=/home/jake/arcade/counter
+ExecStart=/home/jake/arcade/venv/bin/python3 counter-server.py --port 8783
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

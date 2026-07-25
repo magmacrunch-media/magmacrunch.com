@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════
+   counter.css — Retro hit counter widget
+   ═══════════════════════════════════════════════ */
+
+.hit-counter {
+    display: inline-block;
+    background: #0a0a0a;
+    border: 2px solid #1a3a1a;
+    padding: 12px 18px 10px;
+    box-shadow:
+        0 0 0 1px #0d2a0d,
+        0 0 20px rgba(57, 255, 110, 0.08),
+        inset 0 0 40px rgba(57, 255, 110, 0.03);
+    text-align: center;
+}
+
+.hit-counter-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #39ff6e;
+    letter-spacing: 0.15em;
+    margin-bottom: 8px;
+    text-shadow: 0 0 6px rgba(57, 255, 110, 0.5);
+    opacity: 0.8;
+}
+
+.hit-counter-digits {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.hit-counter-digit {
+    display: inline-block;
+    width: 22px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: #39ff6e;
+    background: #050d05;
+    border: 1px solid #1a3a1a;
+    text-shadow:
+        0 0 8px rgba(57, 255, 110, 0.8),
+        0 0 16px rgba(57, 255, 110, 0.4),
+        0 0 32px rgba(57, 255, 110, 0.2);
+    animation: digitGlow 2s ease-in-out infinite alternate;
+}
+
+.hit-counter-digit:nth-child(odd) {
+    animation-delay: 0.3s;
+}
+
+@keyframes digitGlow {
+    from {
+        text-shadow:
+            0 0 8px rgba(57, 255, 110, 0.8),
+            0 0 16px rgba(57, 255, 110, 0.4),
+            0 0 32px rgba(57, 255, 110, 0.2);
+    }
+    to {
+        text-shadow:
+            0 0 10px rgba(57, 255, 110, 1),
+            0 0 20px rgba(57, 255, 110, 0.6),
+            0 0 40px rgba(57, 255, 110, 0.3);
+    }
+}
+
+@media (max-width: 480px) {
+    .hit-counter-digit {
+        width: 18px;
+        height: 26px;
+        line-height: 26px;
+        font-size: 14px;
+    }
+}

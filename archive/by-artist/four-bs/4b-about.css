@@ -1,0 +1,32 @@
+/* The Four B's — about page — mid accent theme */
+body.fb-page.fb-about-page main { padding-top: 72px; }
+
+body.fb-page.fb-about-page .breadcrumb { color: var(--dim); }
+body.fb-page.fb-about-page .breadcrumb a { color: var(--4b-mid); }
+body.fb-page.fb-about-page .breadcrumb a:hover { color: var(--4b-amber); }
+body.fb-page.fb-about-page .breadcrumb .sep { color: var(--4b-mid); opacity: 0.6; }
+body.fb-page.fb-about-page .breadcrumb .current { color: var(--4b-mid); }
+
+body.fb-page.fb-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fb-page.fb-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--4b-mid); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fb-page.fb-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--4b-mid); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(138, 122, 88, 0.5); }
+
+body.fb-page.fb-about-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--4b-mid), var(--4b-heading), var(--4b-mid), transparent); margin: 0 0 36px; opacity: 0.4; }
+
+body.fb-page.fb-about-page .bio-section {
+    width: 100%;
+    max-width: 960px;
+    padding: 0 20px;
+}
+body.fb-page.fb-about-page .bio-section p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--4b-heading);
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+body.fb-page.fb-about-page .nav-card.c-back { background: transparent; color: var(--4b-mid); border-color: var(--4b-mid); }
+body.fb-page.fb-about-page .nav-card.c-back:hover { background: var(--4b-mid); color: var(--4b-heading); }
+
+body.fb-page.fb-about-page .nav-card::after { display: none; }

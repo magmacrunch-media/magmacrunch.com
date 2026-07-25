@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Backgammon — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/board.css">
+    <link rel="stylesheet" href="css/dice.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <a href="../" class="mc-back">magmacrunch arcade</a>
+
+    <div class="scanlines"></div>
+
+    <div class="container">
+
+        <!-- ═══════════════ START SCREEN ═══════════════ -->
+        <div id="startScreen" class="start-screen">
+            <div class="start-content">
+                <h1 class="game-title">
+                    BACKGAMMON
+                </h1>
+                <p class="game-subtitle">// NEON EDITION //</p>
+
+                <div class="start-divider"></div>
+
+                <div class="start-buttons">
+                    <button id="startGameBtn" class="start-btn primary">
+                        ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
+                    </button>
+                    <button id="onlineBtn" class="start-btn online">
+                        🌐&nbsp;&nbsp;PLAY ONLINE
+                    </button>
+                    <button id="helpBtn" class="start-btn">HOW TO PLAY</button>
+                    <button id="creditsBtn" class="start-btn">CREDITS</button>
+                </div>
+
+                <div class="start-footer">
+                    <p>CLASSIC BOARD GAME &nbsp;·&nbsp; VS AI OPPONENT</p>
+                    <p>DOUBLING CUBE &nbsp;·&nbsp; NEON RETRO STYLE</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
+        <div id="gameScreen" class="game-screen" style="display: none;">
+
+            <!-- Header -->
+            <div class="game-header">
+                <h1>
+                    <span style="color: #00f5ff;">◄</span>
+                    BACKGAMMON
+                    <span style="color: #ff2d78;">►</span>
+                </h1>
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">STAKES</span>
+                        <span class="stat-value" id="scoreValue">1</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">TURN</span>
+                        <span class="stat-value" id="turnIndicator">YOUR TURN</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Board + Chat Layout -->
+            <div class="game-layout">
+                <div class="board-area">
+                    <div id="boardContainer" class="board-container"></div>
+                </div>
+            </div>
+
+            <!-- Dice Area -->
+            <div class="dice-area">
+                <div>
+                    <div id="die1" class="die" data-value="0"></div>
+                    <div class="dice-label">DIE 1</div>
+                </div>
+                <div>
+                    <div id="doublingCube" class="doubling-cube">1</div>
+                    <div class="dice-label">DOUBLE</div>
+                </div>
+                <div>
+                    <div id="die2" class="die" data-value="0"></div>
+                    <div class="dice-label">DIE 2</div>
+                </div>
+            </div>
+
+            <!-- Roll Button -->
+            <button id="rollBtn" class="roll-btn">ROLL DICE</button>
+
+            <!-- Message Area -->
+            <div class="message-area">
+                <div id="gameMessage" class="game-message">Select a checker to move</div>
+            </div>
+
+            <!-- Game Controls -->
+            <div class="game-controls">
+                <button id="newGameBtn" class="control-btn">NEW GAME</button>
+                <button id="menuBtn" class="control-btn">MENU</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
+    <div id="lobbyOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>ONLINE LOBBY</span>
+            </div>
+            <div class="modal-body">
+                <div id="lobbyContent">
+                    <div class="lobby-status" id="lobbyStatus">Connecting...</div>
+                    <div id="lobbyRoomCode" class="lobby-room-code" style="display: none;">
+                        Room: <span id="roomCodeDisplay"></span>
+                        <small>Share this code with your opponent</small>
+                    </div>
+                    <div class="lobby-room">
+                        <input type="text" id="roomCodeInput" placeholder="Enter room code (optional)" maxlength="4" style="text-transform: uppercase;">
+                    </div>
+                    <div class="lobby-actions">
+                        <button id="lobbyJoinBtn" class="start-btn primary">JOIN / CREATE ROOM</button>
+                        <button id="lobbyBackBtn" class="start-btn">BACK</button>
+                    </div>
+                    <div id="lobbyPlayers" class="lobby-players" style="display: none;">
+                        <div class="lobby-waiting">Waiting for opponent...</div>
+                        <div id="lobbyPlayerList"></div>
+                    </div>
+                    <div id="lobbyStartArea" class="lobby-actions" style="display: none;">
+                        <button id="lobbyStartBtn" class="start-btn primary">START GAME</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ MODALS ═══════════════ -->
+
+    <!-- Instructions Modal -->
+    <div id="instructionsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>HOW TO PLAY</span>
+                <button id="closeInstructions" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>Backgammon Rules</h3>
+                <p>Backgammon is a classic two-player board game. The goal is to move all your checkers to your home board and then bear them off.</p>
+
+                <h4>Setup</h4>
+                <ul>
+                    <li>You are <strong style="color: #00f5ff;">CYAN</strong> — your home is points <strong>1-6</strong> (bottom right)</li>
+                    <li>AI is <strong style="color: #ff2d78;">MAGENTA</strong> — its home is points <strong>19-24</strong> (top right)</li>
+                    <li>You move from high points (24) to low points (1) — right to left on bottom row</li>
+                    <li>AI moves from low points (1) to high points (24) — left to right on top row</li>
+                </ul>
+
+                <h4>Board Layout</h4>
+                <div class="board-diagram">
+                    <pre>
+13-18  |BAR|  19-24
+12-7   |BAR|   6-1
+                    </pre>
+                </div>
+                <ul>
+                    <li><strong style="color: #ff2d78;">MAGENTA's home</strong>: top-right (19-24)</li>
+                    <li><strong style="color: #00f5ff;">CYAN's home</strong>: bottom-right (1-6)</li>
+                </ul>
+
+                <h4>Movement</h4>
+                <ul>
+                    <li><strong style="color: #00f5ff;">CYAN</strong>: 24→13 (top), then 12→1 (bottom)</li>
+                    <li><strong style="color: #ff2d78;">MAGENTA</strong>: 1→12 (bottom), then 13→24 (top)</li>
+                    <li>Both move toward their home, then bear off</li>
+                </ul>
+
+                <h4>Gameplay</h4>
+                <ul>
+                    <li>Roll dice to determine how many points you can move</li>
+                    <li>Click a checker to select it, then click a destination</li>
+                    <li>You must use both dice if possible</li>
+                    <li>If you roll doubles, you get 4 moves instead of 2</li>
+                </ul>
+
+                <h4>Hitting</h4>
+                <ul>
+                    <li>Landing on a single opponent checker (a "blot") sends it to the bar</li>
+                    <li>Checkers on the bar must re-enter before other moves</li>
+                </ul>
+
+                <h4>Bearing Off</h4>
+                <ul>
+                    <li>Once all your checkers are in your home board (points 1-6), you can bear off</li>
+                    <li>Roll the exact number or higher to remove a checker</li>
+                </ul>
+
+                <h4>Doubling Cube</h4>
+                <ul>
+                    <li>Before your turn, you can offer to double the stakes</li>
+                    <li>If the opponent accepts, the cube value doubles</li>
+                    <li>If they reject, they forfeit the game</li>
+                </ul>
+
+                <div class="modal-footer">
+                    <button id="closeInstructionsBtn">GOT IT!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div id="creditsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-titlebar">
+                <span>CREDITS</span>
+                <button id="closeCredits" class="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>Backgammon — Neon Edition</h3>
+                <h4>Game Design & Development</h4>
+                <p>Jake A. McCoy</p>
+                <h4>Publisher</h4>
+                <p><strong>magmacrunch media</strong></p>
+                <h4>Built With</h4>
+                <p>Vanilla HTML, CSS & JavaScript · Press Start 2P font · Neon retro aesthetic</p>
+                <h4>About</h4>
+                <p>Classic backgammon with a neon arcade twist. Play against the AI opponent and master the doubling cube!</p>
+                <div class="modal-footer">
+                    <button id="closeCreditsBtn">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal-overlay">
+        <div class="modal-content game-over-content">
+            <div class="modal-titlebar">
+                <span>GAME OVER</span>
+            </div>
+            <div class="modal-body">
+                <div class="game-over-icon">🏆</div>
+                <div id="gameOverTitle" class="game-over-title win">YOU WIN!</div>
+                <div id="gameOverMessage" class="game-over-score">Congratulations!</div>
+                <div id="gameOverScore" class="game-over-score">Score: 1x</div>
+                <div class="modal-footer">
+                    <button id="playAgainBtn">PLAY AGAIN</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript — ORDER MATTERS -->
+    <script>var MP_DEFAULT_SERVER = 'ws://magmacrunch.duckdns.org:8771';</script>
+    <script src="../shared/multiplayer/protocol.js"></script>
+    <script src="../shared/multiplayer/network.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/dice.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/multiplayer.js"></script>
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+    <script src="js/main.js"></script>
+</body>
+</html>

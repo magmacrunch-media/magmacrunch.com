@@ -1,0 +1,106 @@
+/* start-screen.css — Cribbage start screen | MagmaCrunch Media © 2026 */
+
+.start-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-mid) 100%);
+}
+
+.start-content {
+    text-align: center;
+    padding: 40px;
+    max-width: 500px;
+}
+
+.game-title {
+    font-family: var(--font-pixel);
+    font-size: 48px;
+    color: var(--accent);
+    text-shadow: 4px 4px 0 var(--wood), 8px 8px 0 rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+    letter-spacing: 0.1em;
+}
+
+.game-subtitle {
+    font-family: var(--font-mono);
+    font-size: 24px;
+    color: var(--cream);
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.start-divider {
+    width: 200px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 0 auto 40px;
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.start-btn {
+    font-family: var(--font-pixel);
+    font-size: 12px;
+    padding: 16px 32px;
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.start-btn:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.start-btn.primary {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+.start-btn.primary:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent-dim);
+}
+
+.start-press-prompt {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    color: var(--cream);
+    opacity: 0.7;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.start-footer {
+    margin-top: 40px;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--cream);
+    opacity: 0.6;
+    line-height: 1.8;
+}
+
+.start-copyright {
+    margin-top: 30px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cream);
+    opacity: 0.4;
+}

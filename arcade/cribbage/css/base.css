@@ -1,0 +1,130 @@
+/* base.css — Cribbage | MagmaCrunch Media © 2026 */
+
+:root {
+    /* Color palette - warm wood tones */
+    --bg-dark: #1a0f0a;
+    --bg-mid: #2d1f15;
+    --bg-light: #3d2a1c;
+    --wood: #8b5a2b;
+    --wood-light: #a0522d;
+    --felt: #1e4d2b;
+    --felt-light: #2d6b3f;
+    --accent: #ffd700;
+    --accent-dim: #b8960f;
+    --red: #dc143c;
+    --green: #32cd32;
+    --white: #f5f5dc;
+    --cream: #fffdd0;
+
+    /* Card colors */
+    --card-face-bg: #ffffff;
+    --card-back-bg: #1e4d2b;
+    --fc-red: #cc1111;
+    --fc-black: #111111;
+    --fc-gold: #d4a017;
+    --fc-skin: #f5cba7;
+    --fc-art-bg: #fffef5;
+
+    /* Chip animation variables (not used but required) */
+    --chip-bg: #1a0f0a;
+    --chip-border: #3d2a1c;
+    --chip-text: #ffd700;
+
+    /* Fonts */
+    --font-pixel: 'Press Start 2P', monospace;
+    --font-mono: 'VT323', monospace;
+
+    /* Board colors */
+    --board-bg: #4a3728;
+    --board-border: #2d1f15;
+    --hole-bg: #1a0f0a;
+    --hole-border: #0d0705;
+    --player-peg: #00f5ff;
+    --ai-peg: #ff3d6e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--white);
+    font-family: var(--font-mono);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* CRT scanlines */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.1) 2px,
+        rgba(0, 0, 0, 0.1) 4px
+    );
+    pointer-events: none;
+    z-index: 10000;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Buttons */
+button {
+    font-family: var(--font-pixel);
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+button:hover {
+    background: var(--accent);
+    color: var(--bg-dark);
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--wood);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--wood-light);
+}
