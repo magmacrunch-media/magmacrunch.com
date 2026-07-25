@@ -1,0 +1,42 @@
+/* ═══════════════════════════════════════════════
+   archive — works page template
+   templates/artist-works.css
+   ═══════════════════════════════════════════════
+   Set --section-accent in the page's <style> block:
+     :root { --section-accent: var(--jm-purple); }
+   ═══════════════════════════════════════════════ */
+
+/* Breadcrumb */
+.breadcrumb { color: var(--dim); }
+.breadcrumb a { color: var(--section-accent); }
+.breadcrumb a:hover { color: var(--cream, #f0ead8); }
+.breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+.breadcrumb .current { color: var(--section-accent); }
+
+/* Page header */
+.page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+.artist-label, .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--section-accent); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+.page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--section-accent); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,0,0,0.3); }
+
+/* Back nav-card */
+.nav-card.c-back { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+.nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+.nav-card::after { display: none; }
+
+/* Work cards */
+.work-card { background: transparent; border-color: var(--surface, #1a0d08); transition: border-color 0.2s; }
+.work-card:hover { border-color: var(--section-accent); }
+.work-card h3 { font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+.work-card h3 a { color: var(--section-accent); }
+.work-card h3 a:hover { color: var(--cream, #f0ead8); }
+.work-card p { line-height: 1.6; }
+.work-card a { color: var(--section-accent); }
+.work-card a:hover { color: var(--cream, #f0ead8); }
+.work-type { color: var(--section-accent); }
+
+/* Active nav-card for current page */
+.nav-card.c-works { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+
+@media (max-width: 500px) {
+    .work-card { border-color: var(--dim, #8a7a8a); }
+}
