@@ -172,6 +172,11 @@ nav {
     color: var(--black);
     background: var(--nav-brand, var(--mc-nav-accent-b));
 }
+.dropdown-view-all {
+    color: var(--nav-accent, var(--mc-nav-accent-a)) !important;
+    border-bottom: 2px solid var(--nav-accent, var(--mc-nav-accent-a)) !important;
+    font-weight: bold;
+}
 
 /* separator line inside dropdown */
 .dropdown .sep {

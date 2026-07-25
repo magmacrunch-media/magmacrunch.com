@@ -68,6 +68,7 @@ window.NAV_CONFIG = {
         if (sec.items && sec.items.length) {
             // Dropdown item
             navHTML += `\n<li><a href="${href}">${sec.label}</a><div class="dropdown">`;
+            navHTML += `\n<a href="${href}" class="dropdown-view-all">view all ${sec.label}</a>`;
             for (const item of sec.items) {
                 navHTML += `\n<a href="${depth}${item.href}">${item.label}</a>`;
             }

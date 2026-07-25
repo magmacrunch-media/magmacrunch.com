@@ -409,24 +409,24 @@ body:has(main .jukebox) .mcj {
 /* ── MOBILE ── */
 @media (max-width: 600px) {
     .mcj {
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
+        bottom: 16px;
+        left: 16px;
+        right: auto;
+        width: auto;
         z-index: 9998;
     }
 
     .mcj.minimized .mcj-bar {
-        border-radius: 0;
+        border-radius: 20px;
     }
 
     .mcj.expanded .mcj-bar {
-        border-radius: 0;
+        border-radius: 20px 20px 0 0;
         border-bottom-color: transparent;
     }
 
     .mcj-window {
-        border-radius: 0;
+        border-radius: 0 0 12px 12px;
         max-height: 0;
     }
 
