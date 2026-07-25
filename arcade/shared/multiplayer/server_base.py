@@ -134,8 +134,8 @@ class GameServer:
 
     Subclass and override game_factory to provide game-specific logic.
     The factory should return an object with:
-        - reset()
-        - handle_action(player_name, action) -> dict or None
+        - reset() -> dict or None (optional custom game_started data)
+        - handle_action(player_name, action, room=None) -> dict, list, or None
         - get_state() -> dict
     """
 
@@ -393,7 +393,9 @@ class GameServer:
             player_names = [room.player_names.get(p, "") for p in room.players]
             if hasattr(room.game, 'set_player_names'):
                 room.game.set_player_names(player_names)
-            room.game.reset()
+            # Store room ref so game can send targeted messages
+            room.game.room = room
+            reset_result = room.game.reset()
 
         # Build color map
         color_map = {}
@@ -402,11 +404,17 @@ class GameServer:
             color = room.player_colors.get(p, "")
             color_map[name] = color
 
-        await room.broadcast({
-            "type": "game_started",
-            "colorMap": color_map,
-            "state": room.game.get_state() if room.game else {},
-        })
+        # If reset() returned a dict, use it as custom game_started data
+        if isinstance(reset_result, dict):
+            msg = {"type": "game_started", "colorMap": color_map}
+            msg.update(reset_result)
+            await room.broadcast(msg)
+        else:
+            await room.broadcast({
+                "type": "game_started",
+                "colorMap": color_map,
+                "state": room.game.get_state() if room.game else {},
+            })
 
     async def _handle_chat(self, websocket, room, msg):
         """Relay chat message."""
@@ -436,7 +444,17 @@ class GameServer:
             return
 
         action = msg.get("action", {})
-        result = room.game.handle_action(name, action)
+
+        # Pass room if game supports it (for targeted messaging)
+        if getattr(room.game, '_accepts_room', None) is None:
+            import inspect
+            sig = inspect.signature(room.game.handle_action)
+            room.game._accepts_room = 'room' in sig.parameters
+
+        if room.game._accepts_room:
+            result = room.game.handle_action(name, action, room=room)
+        else:
+            result = room.game.handle_action(name, action)
 
         if isinstance(result, list):
             for msg in result:
