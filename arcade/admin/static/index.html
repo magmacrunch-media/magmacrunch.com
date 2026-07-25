@@ -381,6 +381,12 @@
                         </div>
                         <div class="toolbar-divider"></div>
                         <div class="toolbar-group">
+                            <button id="fav-btn-pixelate" class="btn btn-cyan btn-sm" style="display:none">PIXELATE</button>
+                            <button id="fav-btn-apply" class="btn btn-green btn-sm" style="display:none">APPLY</button>
+                            <button id="fav-btn-cancel-crop" class="btn btn-rose btn-sm" style="display:none">CANCEL</button>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
                             <button id="fav-btn-grid-toggle" class="btn btn-cyan btn-sm">GRID: ON</button>
                         </div>
                         <div class="toolbar-divider"></div>
@@ -395,7 +401,10 @@
                     <div class="favicon-main">
                         <div class="favicon-canvas-wrap">
                             <h3 class="section-title">EDITOR — 16×16</h3>
-                            <canvas id="fav-canvas" width="480" height="480"></canvas>
+                            <div class="favicon-canvas-container">
+                                <canvas id="fav-canvas" width="480" height="480"></canvas>
+                                <canvas id="fav-crop-overlay" width="480" height="480" style="display:none"></canvas>
+                            </div>
                             <div class="favicon-canvas-info">
                                 <span id="fav-pixel-info">X: — Y: —</span>
                             </div>
@@ -409,6 +418,10 @@
                                     <input type="color" id="fav-color-picker" value="#ff3d6e">
                                     <button id="fav-btn-add-color" class="btn btn-cyan btn-xs">+ ADD</button>
                                 </div>
+                                <label class="fav-toggle-label">
+                                    <input type="checkbox" id="fav-snap-toggle" checked>
+                                    SNAP TO PALETTE
+                                </label>
                             </div>
 
                             <div class="favicon-palette-section">
@@ -513,7 +526,7 @@
         </main>
 
         <footer>
-            <span class="footer-text">MAGMA//OPS v3.0 — MAGMACRUNCH OPERATIONS</span>
+            <span class="footer-text">MAGMA//OPS v3.1 — MAGMACRUNCH OPERATIONS</span>
         </footer>
     </div>
 

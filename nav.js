@@ -394,6 +394,31 @@ window.NAV_CONFIG = {
     }
 })();
 
+/* ═══════════════════════════════════════════════
+    HIT COUNTER LOADER
+    ───────────────────────────────────────────────
+    Loads assets/counter-client.js on every page
+    that has a <nav> element. Increments the
+    counter once per session (fire-and-forget).
+    ═══════════════════════════════════════════════ */
+
+(function () {
+    const nav = document.querySelector('nav');
+    if (!nav || document.body.classList.contains('no-counter')) return;
+
+    const depth = window.location.pathname.split('/').length - 2;
+    const root = depth > 0 ? '../'.repeat(depth) : '';
+
+    if (!document.querySelector('script[src*="counter-client.js"]')) {
+        const script = document.createElement('script');
+        script.src = root + 'assets/counter-client.js';
+        script.onload = function () {
+            if (window.CounterClient) CounterClient.increment();
+        };
+        document.body.appendChild(script);
+    }
+})();
+
 /* ── ABSOLUTIZE NAV HREFS ──
    Convert all <nav> links to absolute paths so
    they survive pushState URL changes from the SPA

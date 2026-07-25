@@ -1957,6 +1957,12 @@ footer {
     margin-bottom: 8px;
 }
 
+.favicon-canvas-container {
+    position: relative;
+    width: 480px;
+    height: 480px;
+}
+
 #fav-canvas {
     border: 2px solid var(--border);
     cursor: crosshair;
@@ -1964,6 +1970,16 @@ footer {
     image-rendering: crisp-edges;
     background: #080808;
     display: block;
+}
+
+#fav-crop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 480px;
+    height: 480px;
+    cursor: move;
+    border: 2px solid var(--border);
 }
 
 .favicon-canvas-info {
@@ -2170,6 +2186,25 @@ footer {
 
 .fav-saved-delete:hover {
     opacity: 1;
+}
+
+/* Toggle label for exact colors */
+.fav-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    cursor: pointer;
+}
+
+.fav-toggle-label input[type="checkbox"] {
+    accent-color: var(--yellow);
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────────────── */
