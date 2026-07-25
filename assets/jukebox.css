@@ -9,17 +9,23 @@
     bottom: 20px;
     left: 20px;
     z-index: 9998;
-    width: 300px;
+    width: 48px;
     font-family: 'Press Start 2P', monospace;
     color: var(--white, #f0ead8);
     user-select: none;
 }
 
-/* ── COLLAPSED BAR ── */
+.mcj.expanded {
+    width: auto;
+}
+
+/* ── FLOATING BUTTON (collapsed) ── */
 .mcj-bar {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
     background:
         repeating-linear-gradient(
             0deg,
@@ -29,30 +35,28 @@
             rgba(255,255,255,0.015) 4px
         ),
         var(--black, #080808);
-    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
-    padding: 8px 10px;
+    border: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border-radius: 12px;
     cursor: pointer;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.mcj.minimized .mcj-bar {
-    border-radius: 6px;
-}
-
-.mcj.expanded .mcj-bar {
-    border-radius: 6px 6px 0 0;
-    border-bottom-color: transparent;
+    box-shadow: 0 0 16px var(--nav-glow, rgba(255, 61, 110, 0.3));
+    transition: transform 0.15s, box-shadow 0.15s, border-radius 0.2s, border-color 0.2s;
 }
 
 .mcj-bar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px var(--nav-glow, rgba(255, 61, 110, 0.5));
     border-color: var(--yellow, #ffe03a);
-    box-shadow: 0 0 12px var(--nav-glow, rgba(255, 61, 110, 0.3));
 }
 
-/* ── MINI VINYL IN BAR ── */
+.mcj.expanded .mcj-bar {
+    border-radius: 12px 12px 0 0;
+    border-bottom-color: transparent;
+}
+
+/* ── VINYL DISC (in button) ── */
 .mcj-mini-vinyl {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     border: 1px solid #444;
     background:
@@ -72,7 +76,6 @@
             #333 0, #333 1px,
             #222 1px, #222 2px
         );
-    flex-shrink: 0;
     animation: mcj-spin 3s linear infinite;
     animation-play-state: paused;
 }
@@ -81,47 +84,59 @@
     animation-play-state: running;
 }
 
-/* ── BAR LABEL ── */
-.mcj-bar-label {
-    font-size: 8px;
-    color: var(--nav-accent, var(--rose, #ff3d6e));
-    text-shadow: 0 0 6px var(--nav-glow, rgba(255, 61, 110, 0.5));
-    flex-shrink: 0;
-    letter-spacing: 0.1em;
+@keyframes mcj-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
 }
 
-/* ── BAR BUTTONS ── */
-.mcj-bar-play {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: var(--yellow, #ffe03a);
-    background: none;
-    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
-    padding: 4px 6px;
-    cursor: pointer;
-    line-height: 1;
-    flex-shrink: 0;
-    transition: background 0.15s, color 0.15s;
-}
-
-.mcj-bar-play:hover {
+/* ── EXPANDED HEADER ── */
+.mcj-header {
     background: var(--nav-accent, var(--rose, #ff3d6e));
     color: var(--black, #080808);
-}
-
-.mcj.expanded .mcj-bar-play {
-    display: none;
-}
-
-.mcj-bar-chevron {
-    font-size: 6px;
-    color: var(--nav-accent, var(--rose, #ff3d6e));
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     flex-shrink: 0;
-    transition: transform 0.2s;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 12px;
+    border-left: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border-right: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border-bottom: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border-top: none;
+    transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }
 
-.mcj.expanded .mcj-bar-chevron {
-    transform: rotate(180deg);
+.mcj.expanded .mcj-header {
+    max-height: 40px;
+    opacity: 1;
+    padding: 8px 12px;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.mcj.minimized .mcj-header {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 12px;
+}
+
+.mcj-minimize {
+    background: none;
+    border: none;
+    color: var(--black, #080808);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.mcj-minimize:hover {
+    opacity: 0.7;
 }
 
 /* ── EXPANDED WINDOW ── */
@@ -138,9 +153,9 @@
             rgba(255,255,255,0.015) 4px
         ),
         var(--black, #080808);
-    border: 1px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
     border-top: none;
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 12px 12px;
     display: flex;
     flex-direction: column;
     transition: max-height 0.3s ease, opacity 0.2s ease;
@@ -149,6 +164,7 @@
 .mcj.expanded .mcj-window {
     max-height: 400px;
     opacity: 1;
+    width: 300px;
 }
 
 /* ── EXPANDED INNER LAYOUT ── */
@@ -206,11 +222,6 @@
 
 .mcj.playing .mcj-vinyl {
     animation-play-state: running;
-}
-
-@keyframes mcj-spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
 }
 
 /* ── TRACK INFO (expanded) ── */
@@ -412,21 +423,21 @@ body:has(main .jukebox) .mcj {
         bottom: 16px;
         left: 16px;
         right: auto;
-        width: auto;
+        width: 48px;
         z-index: 9998;
     }
 
-    .mcj.minimized .mcj-bar {
-        border-radius: 20px;
+    .mcj-bar {
+        border-radius: 14px;
     }
 
     .mcj.expanded .mcj-bar {
-        border-radius: 20px 20px 0 0;
+        border-radius: 14px 14px 0 0;
         border-bottom-color: transparent;
     }
 
     .mcj-window {
-        border-radius: 0 0 12px 12px;
+        border-radius: 0 0 14px 14px;
         max-height: 0;
     }
 
@@ -440,7 +451,6 @@ body:has(main .jukebox) .mcj {
     }
 
     /* larger touch targets */
-    .mcj-bar-play { padding: 8px 12px; font-size: 10px; }
     .mcj-btn { padding: 10px 12px; }
     .mcj-btn-skip { padding: 10px 10px; }
     .mcj-mute { padding: 8px 10px; font-size: 12px; }

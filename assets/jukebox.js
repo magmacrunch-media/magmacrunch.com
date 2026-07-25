@@ -35,7 +35,6 @@
 
     /* ── DOM REFS ── */
     let widgetEl = null;
-    let barPlayBtn = null;
     let expandedPlayBtn = null;
     let expandedMuteBtn = null;
     let expandedTitle = null;
@@ -45,7 +44,6 @@
     let progressFill = null;
     let volSlider = null;
     let volLabel = null;
-    let jukeboxLink = null;
 
     /* ── HELPERS ── */
     function fmtTime(s) {
@@ -225,12 +223,6 @@
         // Playing state on root element (drives vinyl spin)
         widgetEl.classList.toggle('playing', isPlaying);
 
-        // Bar play button
-        if (barPlayBtn) {
-            barPlayBtn.textContent = isPlaying ? '\u275A\u275A' : '\u25B6';
-            barPlayBtn.setAttribute('aria-label', isPlaying ? 'pause' : 'play');
-        }
-
         // Expanded play button
         if (expandedPlayBtn) {
             expandedPlayBtn.textContent = isPlaying ? '\u275A\u275A' : '\u25B6';
@@ -283,12 +275,14 @@
         widgetEl = document.createElement('div');
         widgetEl.className = 'mcj minimized';
         widgetEl.innerHTML =
-            /* ── COLLAPSED BAR ── */
-                '<div class="mcj-bar">' +
+            /* ── FLOATING BUTTON ── */
+            '<div class="mcj-bar">' +
                 '<div class="mcj-mini-vinyl"></div>' +
-                '<span class="mcj-bar-label">JUKEBOX</span>' +
-                '<button class="mcj-bar-play" aria-label="play">\u25B6</button>' +
-                '<span class="mcj-bar-chevron">\u25BC</span>' +
+            '</div>' +
+            /* ── EXPANDED HEADER ── */
+            '<div class="mcj-header">' +
+                '<span>// JUKEBOX //</span>' +
+                '<button class="mcj-minimize" aria-label="minimize">\u2014</button>' +
             '</div>' +
             /* ── EXPANDED WINDOW ── */
             '<div class="mcj-window">' +
@@ -319,7 +313,6 @@
         document.body.appendChild(widgetEl);
 
         /* ── CACHE REFS ── */
-        barPlayBtn = widgetEl.querySelector('.mcj-bar-play');
         expandedPlayBtn = widgetEl.querySelector('.mcj-btn-play');
         expandedMuteBtn = widgetEl.querySelector('.mcj-mute');
         expandedTitle = widgetEl.querySelector('.mcj-title');
@@ -332,16 +325,13 @@
 
         /* ── EVENT LISTENERS ── */
 
-        // Bar click → expand/collapse (not on play button)
-        widgetEl.querySelector('.mcj-bar').addEventListener('click', (e) => {
-            if (e.target.closest('.mcj-bar-play')) return;
-            toggleExpand();
-        });
+        // Bar click → expand/collapse
+        widgetEl.querySelector('.mcj-bar').addEventListener('click', toggleExpand);
 
-        // Bar play button → toggle playback (no expand)
-        barPlayBtn.addEventListener('click', (e) => {
+        // Minimize button → collapse
+        widgetEl.querySelector('.mcj-minimize').addEventListener('click', (e) => {
             e.stopPropagation();
-            togglePlay();
+            toggleExpand();
         });
 
         // Expanded transport
