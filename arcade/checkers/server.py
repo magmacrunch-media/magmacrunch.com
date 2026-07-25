@@ -12,7 +12,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared', 'multiplayer'))
-from server_base import GameServer
+from server_base import GameServer, copy_board_2d as copy_board
 
 # ── Constants ────────────────────────────────────────────────────────────────
 EMPTY = 0
@@ -33,10 +33,6 @@ INITIAL_BOARD = [
     [ 0,  1,  0,  1,  0,  1,  0,  1],
     [ 1,  0,  1,  0,  1,  0,  1,  0]
 ]
-
-
-def copy_board(board):
-    return [row[:] for row in board]
 
 
 def is_red(piece):

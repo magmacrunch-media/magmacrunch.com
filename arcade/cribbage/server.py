@@ -9,14 +9,13 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared', 'multiplayer'))
 
 from server_base import GameServer
+from card_constants import SUITS, RANKS
 import random
 from itertools import combinations
 
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
-SUITS = ['hearts', 'diamonds', 'clubs', 'spades']
-RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 RANK_VALUES = {
     'A': 1, '2': 2, '3': 3, '4': 4, '5': 5,
     '6': 6, '7': 7, '8': 8, '9': 9, '10': 10,
