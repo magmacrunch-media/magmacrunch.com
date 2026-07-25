@@ -17,6 +17,8 @@ from server_base import GameServer
 TRACK_SIZE = 60
 HOME_SIZE = 6
 NUM_PAWNS = 4
+MIN_PLAYERS = 2
+MAX_PLAYERS = 6
 
 COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange']
 
