@@ -33,7 +33,7 @@ var CounterClient = (function () {
 
         var h = window.location.hostname;
         if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8783';
-        return 'ws://magmacrunch.duckdns.org:8783';
+        return 'wss://magmacrunch.duckdns.org/counter';
     }
 
     // ── State ───────────────────────────────────────────────────────────────
