@@ -10,6 +10,7 @@ Requires: no external dependencies (uses stdlib only)
 
 import argparse
 import hashlib
+import hmac
 import json
 import os
 import secrets
@@ -179,7 +180,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
             params = parse_qs(body)
             password = params.get("password", [""])[0]
 
-            if password == get_effective_password():
+            if hmac.compare_digest(str(password), str(get_effective_password())):
                 token = generate_session_token()
                 sessions[token] = {"created": time.time(), "last_access": time.time()}
                 self.send_response(302)

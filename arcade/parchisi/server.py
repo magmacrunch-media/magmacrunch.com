@@ -130,6 +130,7 @@ class ParchisiGame:
         self.dice_values = [0, 0]
         self.consecutive_doubles = 0
         self.waiting_for_move = False
+        self.legal_moves = []
         self.phase = 'playing'
         self.current_turn_idx = 0
 
@@ -189,11 +190,68 @@ class ParchisiGame:
         self.dice_values = dice
         self.waiting_for_move = True
 
+        # Compute legal moves for validation
+        self.legal_moves = self._compute_legal_moves(slot, dice)
+
         return [{
             'type': 'dice_rolled',
             'playerName': player_name,
             'dice': dice,
         }]
+
+    def _compute_legal_moves(self, slot, dice):
+        """Compute all legal moves for a given slot and dice roll."""
+        moves = []
+        pawns = self.pawn_positions.get(slot, [None] * NUM_PAWNS)
+
+        for pi in range(NUM_PAWNS):
+            pos = pawns[pi]
+
+            # Try each die individually
+            for di, steps in enumerate(dice):
+                if steps == 0:
+                    continue
+                result = advance_position(slot, pos, steps)
+                if result is None:
+                    continue
+                # Check blockade on destination track
+                if is_track(result) and is_blockade(self.pawn_positions, result['track']):
+                    # Exception: landing on own pawn is ok (stacking)
+                    own_here = any(
+                        is_track(p) and p['track'] == result['track']
+                        for p in pawns if p is not pos
+                    )
+                    if not own_here:
+                        continue
+                capture = None
+                if is_track(result):
+                    capture = check_capture(slot, result['track'], self.pawn_positions)
+                moves.append({
+                    'pawnIndex': pi,
+                    'newPos': result,
+                    'capture': capture,
+                    'steps': steps,
+                    'dieIndex': di,
+                })
+
+            # Try combined dice (d1+d2) — only if both dice are non-zero and different positions
+            if dice[0] != 0 and dice[1] != 0:
+                total = dice[0] + dice[1]
+                result = advance_position(slot, pos, total)
+                if result is not None:
+                    if not (is_track(result) and is_blockade(self.pawn_positions, result['track'])):
+                        capture = None
+                        if is_track(result):
+                            capture = check_capture(slot, result['track'], self.pawn_positions)
+                        moves.append({
+                            'pawnIndex': pi,
+                            'newPos': result,
+                            'capture': capture,
+                            'steps': total,
+                            'dieIndex': -1,  # combined
+                        })
+
+        return moves
 
     def _handle_move(self, player_name, action):
         if self.phase != 'playing':
@@ -210,7 +268,23 @@ class ParchisiGame:
             return None
 
         new_pos = action.get('newPos')
-        capture = action.get('capture')
+
+        # Validate move against pre-computed legal moves
+        valid_move = None
+        for m in self.legal_moves:
+            if m['pawnIndex'] != pawn_idx:
+                continue
+            # Match position — handle both dict and string comparisons
+            if m['newPos'] == new_pos or (
+                isinstance(m['newPos'], dict) and isinstance(new_pos, dict) and m['newPos'] == new_pos
+            ):
+                valid_move = m
+                break
+
+        if not valid_move:
+            return None
+
+        capture = valid_move['capture']
 
         # Handle capture
         if capture and isinstance(capture, dict):

@@ -11,6 +11,7 @@ Requires: websockets (already installed for game servers)
 import argparse
 import asyncio
 import base64
+import hmac
 import json
 import os
 import subprocess
@@ -583,7 +584,7 @@ async def ws_handler(websocket):
                 token = msg.get("token")
                 if token not in authenticated_sessions:
                     if action == "login":
-                        if msg.get("password") == CONFIG.get("password"):
+                        if hmac.compare_digest(str(msg.get("password", "")), str(CONFIG.get("password", ""))):
                             token = generate_session_token()
                             authenticated_sessions.add(token)
                             await websocket.send(json.dumps({
@@ -841,7 +842,7 @@ async def ws_handler(websocket):
             elif action == "change_password":
                 current = msg.get("current", "")
                 new_pw = msg.get("new_password", "")
-                if current == CONFIG.get("password"):
+                if hmac.compare_digest(str(current), str(CONFIG.get("password", ""))):
                     if new_pw and len(new_pw) >= 4:
                         CONFIG["password"] = new_pw
                         # Save to config file
