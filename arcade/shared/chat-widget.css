@@ -11,46 +11,97 @@
     z-index: 9999;
     font-family: 'Courier Prime', monospace;
     color: #f0ead8;
-    width: 320px;
+    width: 48px;
 }
 
-/* ── Minimized Bar ─────────────────────────────────────────────────────── */
+.acw.expanded {
+    width: auto;
+}
+
+/* ── Floating Button (collapsed) ─────────────────────────────────────── */
 
 .acw-bar {
+    position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
     background: #1a1028;
     border: 2px solid #ff2e9c;
-    border-radius: 8px;
-    padding: 10px 14px;
+    border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 0 20px rgba(255, 46, 156, 0.3);
-    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 0 16px rgba(255, 46, 156, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s, border-radius 0.2s, border-color 0.2s;
     user-select: none;
 }
 
 .acw-bar:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(255, 46, 156, 0.5);
+    box-shadow: 0 0 24px rgba(255, 46, 156, 0.5);
+    border-color: #ff5ab5;
 }
 
-.acw-title {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: #ff2e9c;
-    letter-spacing: 0.1em;
+.acw.expanded .acw-bar {
+    border-radius: 12px 12px 0 0;
+    border-bottom-color: transparent;
 }
+
+/* ── Speech Bubble Icon ─────────────────────────────────────────────── */
+
+.acw-icon {
+    width: 20px;
+    height: 16px;
+    background: #ff2e9c;
+    border-radius: 4px;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.acw-icon::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 4px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid #ff2e9c;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #ff2e9c;
+    border-bottom: 5px solid transparent;
+}
+
+/* ── Online Count (below bubble) ────────────────────────────────────── */
+
+.acw-online-count {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: #39ff6e;
+    margin-top: 6px;
+    line-height: 1;
+    text-shadow: 0 0 4px rgba(57, 255, 110, 0.4);
+}
+
+/* ── Badge (unread overlay) ─────────────────────────────────────────── */
 
 .acw-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
     background: #ff2e9c;
     color: #0a0612;
     font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin: 0 8px;
+    font-size: 7px;
+    min-width: 14px;
+    height: 14px;
+    padding: 0 3px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     animation: acw-pulse 1s ease-in-out infinite;
+    line-height: 1;
 }
 
 @keyframes acw-pulse {
@@ -58,73 +109,48 @@
     50% { transform: scale(1.15); }
 }
 
-.acw-online {
-    font-size: 12px;
-    color: #5a5a6a;
-    white-space: nowrap;
-}
-
-.acw-online .dot {
-    color: #39ff6e;
-    margin-right: 4px;
-}
-
-/* ── Expanded Window ───────────────────────────────────────────────────── */
-
-.acw-window {
-    background: #150b29;
-    border: 2px solid #3a2d5c;
-    border-radius: 8px;
-    margin-top: 4px;
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.3s ease, opacity 0.2s ease, margin 0.3s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.acw.expanded .acw-window {
-    max-height: 450px;
-    opacity: 1;
-    margin-top: 4px;
-}
-
-.acw.minimized .acw-window {
-    max-height: 0;
-    opacity: 0;
-    margin-top: 0;
-}
-
-.acw.minimized .acw-bar {
-    border-radius: 8px;
-}
-
-.acw.expanded .acw-bar {
-    border-radius: 8px 8px 0 0;
-}
-
-/* ── Header ────────────────────────────────────────────────────────────── */
+/* ── Expanded Header ────────────────────────────────────────────────── */
 
 .acw-header {
     background: #ff2e9c;
     color: #0a0612;
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
-    padding: 8px 12px;
     letter-spacing: 0.1em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-shrink: 0;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 12px;
+    border-left: 2px solid #ff2e9c;
+    border-right: 2px solid #ff2e9c;
+    border-bottom: 2px solid #ff2e9c;
+    border-top: none;
+    transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }
 
-.acw-header-buttons {
-    display: flex;
-    gap: 4px;
+.acw.expanded .acw-header {
+    max-height: 40px;
+    opacity: 1;
+    padding: 8px 12px;
+    width: 320px;
+    box-sizing: border-box;
 }
 
-.acw-header-btn {
+.acw.minimized .acw-header {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 12px;
+}
+
+.acw-header-title {
+    letter-spacing: 0.1em;
+}
+
+.acw-minimize {
     background: none;
     border: none;
     color: #0a0612;
@@ -134,11 +160,37 @@
     line-height: 1;
 }
 
-.acw-header-btn:hover {
+.acw-minimize:hover {
     opacity: 0.7;
 }
 
-/* ── Name Row ──────────────────────────────────────────────────────────── */
+/* ── Expanded Window ───────────────────────────────────────────────── */
+
+.acw-window {
+    background: #150b29;
+    border: 2px solid #3a2d5c;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.acw.expanded .acw-window {
+    max-height: 450px;
+    opacity: 1;
+    width: 320px;
+}
+
+.acw.minimized .acw-window {
+    max-height: 0;
+    opacity: 0;
+}
+
+/* ── Name Row ──────────────────────────────────────────────────────── */
 
 .acw-name-row {
     padding: 6px 12px;
@@ -170,7 +222,7 @@
     opacity: 0.7;
 }
 
-/* ── Name Input ────────────────────────────────────────────────────────── */
+/* ── Name Input ────────────────────────────────────────────────────── */
 
 .acw-name-input {
     background: #0a0612;
@@ -185,7 +237,7 @@
     outline: none;
 }
 
-/* ── Color Picker ──────────────────────────────────────────────────────── */
+/* ── Color Picker ──────────────────────────────────────────────────── */
 
 .acw-color-popup {
     position: absolute;
@@ -244,7 +296,7 @@
     color: #ff2e9c;
 }
 
-/* ── Tabs ──────────────────────────────────────────────────────────────── */
+/* ── Tabs ──────────────────────────────────────────────────────────── */
 
 .acw-tabs {
     display: flex;
@@ -275,7 +327,7 @@
     border-bottom: 2px solid #ff2e9c;
 }
 
-/* ── Messages ──────────────────────────────────────────────────────────── */
+/* ── Messages ──────────────────────────────────────────────────────── */
 
 .acw-messages {
     flex: 1;
@@ -317,7 +369,7 @@
     font-weight: bold;
 }
 
-/* ── Online Panel ──────────────────────────────────────────────────────── */
+/* ── Online Panel ──────────────────────────────────────────────────── */
 
 .acw-online-panel {
     flex: 1;
@@ -354,7 +406,7 @@
     margin-left: auto;
 }
 
-/* ── Typing Indicator ──────────────────────────────────────────────────── */
+/* ── Typing Indicator ──────────────────────────────────────────────── */
 
 .acw-typing {
     font-size: 12px;
@@ -364,7 +416,7 @@
     flex-shrink: 0;
 }
 
-/* ── Input ─────────────────────────────────────────────────────────────── */
+/* ── Input ─────────────────────────────────────────────────────────── */
 
 .acw-input {
     display: flex;
@@ -405,37 +457,42 @@
     background: #ff5ab5;
 }
 
-/* ── Disconnected State ────────────────────────────────────────────────── */
+/* ── Disconnected State ────────────────────────────────────────────── */
 
 .acw.disconnected .acw-bar {
     border-color: #5a5a6a;
     opacity: 0.7;
 }
 
-.acw.disconnected .acw-title {
-    color: #5a5a6a;
+.acw.disconnected .acw-icon {
+    background: #5a5a6a;
 }
 
-/* ── Mobile ────────────────────────────────────────────────────────────── */
+.acw.disconnected .acw-icon::after {
+    border-left-color: #5a5a6a;
+    border-top-color: #5a5a6a;
+}
+
+/* ── Mobile ────────────────────────────────────────────────────────── */
 
 @media (max-width: 600px) {
     .acw {
         bottom: 16px;
         right: 16px;
         left: auto;
-        width: auto;
+        width: 48px;
     }
 
     .acw-bar {
-        border-radius: 20px;
+        border-radius: 14px;
     }
 
     .acw.expanded .acw-bar {
-        border-radius: 20px 20px 0 0;
+        border-radius: 14px 14px 0 0;
     }
 
     .acw-window {
-        border-radius: 0 0 12px 12px;
+        border-radius: 0 0 14px 14px;
         max-height: 0;
     }
 
@@ -453,6 +510,7 @@
 
     /* larger touch targets */
     .acw-header-btn { padding: 6px 8px; font-size: 16px; }
+    .acw-minimize { padding: 6px 8px; font-size: 16px; }
     .acw-edit-name,
     .acw-pick-color { padding: 8px; font-size: 16px; }
     .acw-tab { padding: 12px 8px; }
