@@ -55,6 +55,7 @@
             <button class="ops-tab" data-tab="accounts">ACCOUNTS</button>
             <button class="ops-tab" data-tab="security">SECURITY</button>
             <button class="ops-tab" data-tab="tv">TV</button>
+            <button class="ops-tab" data-tab="favicon">FAVICON</button>
            <button class="ops-tab" data-tab="github">GITHUB</button>
         </nav>
 
@@ -294,7 +295,11 @@
 
                 <section class="security-section">
                     <h2 class="section-title">PRIVATE ARCADE PASSWORD</h2>
-                    <p class="api-keys-note">Change the password for private arcade pages (SORRY!, Aggravation).</p>
+                    <p class="api-keys-note">Password for private arcade pages (SORRY!, Aggravation). Auto-rotates daily in lavaMMDD format.</p>
+                    <div class="current-private-pw-box">
+                        <span class="ref-label">TODAY'S PASSWORD</span>
+                        <span id="current-private-pw" class="current-private-pw">loading...</span>
+                    </div>
                     <div class="security-form">
                         <div class="security-row">
                             <label class="security-label">CURRENT PASSWORD</label>
@@ -364,6 +369,98 @@
                 <button id="tv-btn-add" class="add-song-btn">+ ADD CHANNEL</button>
             </div>
 
+            <!-- ═══ FAVICON TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-favicon" class="tab-panel hidden">
+                <div class="favicon-editor">
+                    <div class="favicon-toolbar">
+                        <div class="toolbar-group">
+                            <button id="fav-btn-clear" class="btn btn-rose btn-sm">CLEAR</button>
+                            <button id="fav-btn-fill" class="btn btn-orange btn-sm">FILL</button>
+                            <button id="fav-btn-upload" class="btn btn-purple btn-sm">UPLOAD IMAGE</button>
+                            <input type="file" id="fav-file-input" accept="image/*" style="display:none">
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button id="fav-btn-grid-toggle" class="btn btn-cyan btn-sm">GRID: ON</button>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button id="fav-btn-save" class="btn btn-green btn-sm">SAVE</button>
+                            <button id="fav-btn-deploy" class="btn btn-yellow btn-sm">DEPLOY TO SITE</button>
+                        </div>
+                        <div class="toolbar-spacer"></div>
+                        <span id="fav-save-status" class="api-save-status"></span>
+                    </div>
+
+                    <div class="favicon-main">
+                        <div class="favicon-canvas-wrap">
+                            <h3 class="section-title">EDITOR — 16×16</h3>
+                            <canvas id="fav-canvas" width="480" height="480"></canvas>
+                            <div class="favicon-canvas-info">
+                                <span id="fav-pixel-info">X: — Y: —</span>
+                            </div>
+                        </div>
+
+                        <div class="favicon-sidebar">
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">PALETTE</h3>
+                                <div id="fav-palette" class="fav-palette"></div>
+                                <div class="fav-custom-color">
+                                    <input type="color" id="fav-color-picker" value="#ff3d6e">
+                                    <button id="fav-btn-add-color" class="btn btn-cyan btn-xs">+ ADD</button>
+                                </div>
+                            </div>
+
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">TOOLS</h3>
+                                <div class="fav-tools">
+                                    <button id="fav-tool-draw" class="fav-tool-btn active" title="Draw">✏️</button>
+                                    <button id="fav-tool-erase" class="fav-tool-btn" title="Erase">◻️</button>
+                                    <button id="fav-tool-fill-bucket" class="fav-tool-btn" title="Fill">🪣</button>
+                                    <button id="fav-tool-eyedropper" class="fav-tool-btn" title="Pick Color">💧</button>
+                                </div>
+                            </div>
+
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">PREVIEW</h3>
+                                <div class="fav-preview-grid">
+                                    <div class="fav-preview-item">
+                                        <span class="fav-preview-label">16×16</span>
+                                        <canvas id="fav-preview-16" width="16" height="16"></canvas>
+                                    </div>
+                                    <div class="fav-preview-item">
+                                        <span class="fav-preview-label">32×32</span>
+                                        <canvas id="fav-preview-32" width="32" height="32"></canvas>
+                                    </div>
+                                    <div class="fav-preview-item">
+                                        <span class="fav-preview-label">TAB</span>
+                                        <div class="fav-preview-tab">
+                                            <canvas id="fav-preview-tab" width="16" height="16"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">EXPORT</h3>
+                                <div class="fav-export-btns">
+                                    <button id="fav-btn-export-png" class="btn btn-green btn-xs">PNG</button>
+                                    <button id="fav-btn-export-ico" class="btn btn-cyan btn-xs">ICO</button>
+                                    <button id="fav-btn-export-apple" class="btn btn-orange btn-xs">APPLE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="favicon-saved-section">
+                        <h3 class="section-title">SAVED DESIGNS</h3>
+                        <div id="fav-saved-list" class="fav-saved-list">
+                            <span class="fav-no-saved">No saved designs yet.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- ═══ GITHUB TAB ═══════════════════════════════════════════════════ -->
             <div id="tab-github" class="tab-panel hidden">
                 <section class="security-section">
@@ -416,7 +513,7 @@
         </main>
 
         <footer>
-            <span class="footer-text">MAGMA//OPS v2.1 — MAGMACRUNCH OPERATIONS</span>
+            <span class="footer-text">MAGMA//OPS v3.0 — MAGMACRUNCH OPERATIONS</span>
         </footer>
     </div>
 
@@ -484,6 +581,7 @@
     <script src="accounts.js"></script>
     <script src="api.js"></script>
     <script src="tv.js"></script>
+    <script src="favicons.js"></script>
     <script src="github.js"></script>
 </body>
 </html>

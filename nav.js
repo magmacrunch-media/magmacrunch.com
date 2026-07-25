@@ -84,6 +84,23 @@ window.NAV_CONFIG = {
     autoNav.innerHTML = navHTML;
 })();
 
+/* ── AUTO FAVICON ──
+   Injects favicon from site root using the same
+   depth prefix as nav links. Skips pages that
+   already have a <link rel="icon"> in <head>. */
+
+(function () {
+    if (document.querySelector('link[rel="icon"], link[rel="shortcut icon"]')) return;
+    const nav = document.getElementById('auto-nav');
+    if (!nav) return;
+    const depth = nav.dataset.depth || '';
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = depth + 'favicon.ico';
+    link.type = 'image/x-icon';
+    document.head.appendChild(link);
+})();
+
 /* ═══════════════════════════════════════════════
    INTERACTIVE FUNCTIONALITY
    (hamburger, dropdowns, active link)

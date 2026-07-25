@@ -34,9 +34,26 @@
     const secPrivateCurrentPw = $('#sec-private-current-pw');
     const secPrivateNewPw = $('#sec-private-new-pw');
     const secPrivateConfirmPw = $('#sec-private-confirm-pw');
+    const currentPrivatePwEl = $('#current-private-pw');
 
     let lastSaved = null;
     let keyAges = {};  // provider -> ISO date string of first save
+
+    // ── Current private password ───────────────────────────────────────────
+
+    function loadCurrentPrivatePassword() {
+        window.OPS.send({ action: 'get_current_private_password', token: window.OPS.authToken });
+    }
+
+    function renderCurrentPrivatePassword(msg) {
+        if (msg.ok && currentPrivatePwEl) {
+            currentPrivatePwEl.textContent = msg.password;
+            currentPrivatePwEl.className = 'current-private-pw';
+        } else if (currentPrivatePwEl) {
+            currentPrivatePwEl.textContent = 'error loading';
+            currentPrivatePwEl.className = 'current-private-pw error';
+        }
+    }
 
     // ── API Keys ──────────────────────────────────────────────────────────
 
@@ -271,9 +288,13 @@
                     secPrivateCurrentPw.value = '';
                     secPrivateNewPw.value = '';
                     secPrivateConfirmPw.value = '';
+                    loadCurrentPrivatePassword();
                 } else {
                     window.OPS.toast(msg.error || 'Password change failed', true);
                 }
+                break;
+            case 'current_private_password':
+                renderCurrentPrivatePassword(msg);
                 break;
         }
     };
@@ -284,5 +305,12 @@
     btnSaveKeys.addEventListener('click', saveApiKeys);
     btnChangePw.addEventListener('click', changePassword);
     btnChangePrivatePw.addEventListener('click', changePrivatePassword);
+
+    // Load current private password on connect
+    const origOnConnect = window.OPS.onConnect;
+    window.OPS.onConnect = function() {
+        if (origOnConnect) origOnConnect();
+        loadCurrentPrivatePassword();
+    };
 
 })();

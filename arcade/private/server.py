@@ -14,6 +14,7 @@ import json
 import os
 import secrets
 import time
+from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 
@@ -28,6 +29,19 @@ DEFAULT_CONFIG = {
 }
 
 CONFIG = {}
+
+# ── Daily password generation ──────────────────────────────────────────────────
+
+def generate_daily_password():
+    """Generate a simple daily password: lava + MMDD (e.g. lava0724)."""
+    today = datetime.now()
+    return f"lava{today.strftime('%m%d')}"
+
+def get_effective_password():
+    """Return the password to use for auth checks."""
+    if CONFIG.get("password_mode") == "auto":
+        return generate_daily_password()
+    return CONFIG.get("password", "changeme")
 
 # ── Session management ────────────────────────────────────────────────────────
 
@@ -165,7 +179,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
             params = parse_qs(body)
             password = params.get("password", [""])[0]
 
-            if password == CONFIG.get("password"):
+            if password == get_effective_password():
                 token = generate_session_token()
                 sessions[token] = {"created": time.time(), "last_access": time.time()}
                 self.send_response(302)
@@ -290,6 +304,10 @@ def main():
     print(f"")
     print(f"  Server:   http://localhost:{port}")
     print(f"  Auth:     ENABLED")
+    if CONFIG.get("password_mode") == "auto":
+        print(f"  Password: {generate_daily_password()} (auto-rotates daily)")
+    else:
+        print(f"  Password: (set in config)")
     print(f"  Routes:   {', '.join(CONFIG.get('routes', {}).keys())}")
     print(f"")
 

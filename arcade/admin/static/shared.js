@@ -55,6 +55,9 @@
             tConnected = performance.now();
             console.log('[OPS] Connected');
             clearTimeout(reconnectTimer);
+            // Request immediately on connect (works with or without auth)
+            requestStatus();
+            requestSystemInfo();
             statusTimer = setInterval(() => {
                 if (window.OPS.authToken) requestStatus();
             }, 10000);
@@ -199,7 +202,7 @@
 
     // ── Tab routing ───────────────────────────────────────────────────────
 
-    const TABS = ['arcade', 'jukebox', 'themes', 'accounts', 'security', 'tv', 'github'];
+    const TABS = ['arcade', 'jukebox', 'themes', 'accounts', 'security', 'tv', 'favicon', 'github'];
 
     function getActiveTab() {
         const hash = window.location.hash.replace('#', '');

@@ -169,11 +169,16 @@ h1.glitch::after {
 
 .tab-bar {
     display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     border-bottom: 2px solid var(--divider);
     background: var(--black);
     flex-shrink: 0;
     padding: 0 24px;
 }
+
+.tab-bar::-webkit-scrollbar { display: none; }
 
 .ops-tab {
     font-family: 'Press Start 2P', monospace;
@@ -229,12 +234,91 @@ main {
     animation: fadeIn 0.15s ease;
 }
 
-#tab-arcade  { --tab-accent: var(--cyan);  --tab-glow: rgba(0,245,255,0.2); --tab-glow-strong: rgba(0,245,255,0.5); }
-#tab-jukebox { --tab-accent: var(--purple); --tab-glow: rgba(196,95,255,0.2); --tab-glow-strong: rgba(196,95,255,0.5); }
-#tab-themes  { --tab-accent: var(--rose);   --tab-glow: rgba(255,61,110,0.2); --tab-glow-strong: rgba(255,61,110,0.5); }
-#tab-accounts { --tab-accent: var(--green);  --tab-glow: rgba(57,255,110,0.2); --tab-glow-strong: rgba(57,255,110,0.5); }
-#tab-security { --tab-accent: var(--yellow); --tab-glow: rgba(255,224,58,0.2); --tab-glow-strong: rgba(255,224,58,0.5); }
-#tab-tv { --tab-accent: var(--orange); --tab-glow: rgba(255,124,31,0.2); --tab-glow-strong: rgba(255,124,31,0.5); }
+/* ── Per-tab monochrome palettes ─────────────────────────────────────────── */
+#tab-arcade  { --tab-bright: #00f5ff; --tab-accent: #00c8d4; --tab-mid: #007a82; --tab-dim: #004a50; --tab-glow: rgba(0,245,255,0.25); --tab-glow-strong: rgba(0,245,255,0.5); --tab-bg: rgba(0,245,255,0.06); }
+#tab-jukebox { --tab-bright: #c45fff; --tab-accent: #a040d4; --tab-mid: #6a2a8a; --tab-dim: #3d1850; --tab-glow: rgba(196,95,255,0.25); --tab-glow-strong: rgba(196,95,255,0.5); --tab-bg: rgba(196,95,255,0.06); }
+#tab-themes  { --tab-bright: #ff3d6e; --tab-accent: #d4305a; --tab-mid: #8a2040; --tab-dim: #501228; --tab-glow: rgba(255,61,110,0.25); --tab-glow-strong: rgba(255,61,110,0.5); --tab-bg: rgba(255,61,110,0.06); }
+#tab-accounts { --tab-bright: #39ff6e; --tab-accent: #2dd45a; --tab-mid: #1e8a3a; --tab-dim: #115022; --tab-glow: rgba(57,255,110,0.25); --tab-glow-strong: rgba(57,255,110,0.5); --tab-bg: rgba(57,255,110,0.06); }
+#tab-security { --tab-bright: #ffe03a; --tab-accent: #d4b82e; --tab-mid: #8a7a1e; --tab-dim: #504812; --tab-glow: rgba(255,224,58,0.25); --tab-glow-strong: rgba(255,224,58,0.5); --tab-bg: rgba(255,224,58,0.06); }
+#tab-tv      { --tab-bright: #ff7c1f; --tab-accent: #d46518; --tab-mid: #8a4210; --tab-dim: #502808; --tab-glow: rgba(255,124,31,0.25); --tab-glow-strong: rgba(255,124,31,0.5); --tab-bg: rgba(255,124,31,0.06); }
+#tab-favicon { --tab-bright: #ffe03a; --tab-accent: #d4b82e; --tab-mid: #8a7a1e; --tab-dim: #504812; --tab-glow: rgba(255,224,58,0.25); --tab-glow-strong: rgba(255,224,58,0.5); --tab-bg: rgba(255,224,58,0.06); }
+#tab-github  { --tab-bright: #8899aa; --tab-accent: #6a7a88; --tab-mid: #4a5860; --tab-dim: #2e3840; --tab-glow: rgba(136,153,170,0.25); --tab-glow-strong: rgba(136,153,170,0.5); --tab-bg: rgba(136,153,170,0.06); }
+
+/* ── Per-tab button overrides (monochrome) ───────────────────────────────── */
+/* All buttons inside a tab panel use that tab's shades.
+   btn-rose is excluded — destructive actions stay red. */
+
+#tab-arcade .btn-cyan,  #tab-arcade .btn-green,  #tab-arcade .btn-purple,
+#tab-arcade .btn-yellow, #tab-arcade .btn-orange, #tab-arcade .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-arcade .btn-cyan:hover,  #tab-arcade .btn-green:hover,  #tab-arcade .btn-purple:hover,
+#tab-arcade .btn-yellow:hover, #tab-arcade .btn-orange:hover, #tab-arcade .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-jukebox .btn-cyan,  #tab-jukebox .btn-green,  #tab-jukebox .btn-purple,
+#tab-jukebox .btn-yellow, #tab-jukebox .btn-orange, #tab-jukebox .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-jukebox .btn-cyan:hover,  #tab-jukebox .btn-green:hover,  #tab-jukebox .btn-purple:hover,
+#tab-jukebox .btn-yellow:hover, #tab-jukebox .btn-orange:hover, #tab-jukebox .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-themes .btn-cyan,  #tab-themes .btn-green,  #tab-themes .btn-purple,
+#tab-themes .btn-yellow, #tab-themes .btn-orange, #tab-themes .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-themes .btn-cyan:hover,  #tab-themes .btn-green:hover,  #tab-themes .btn-purple:hover,
+#tab-themes .btn-yellow:hover, #tab-themes .btn-orange:hover, #tab-themes .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-accounts .btn-cyan,  #tab-accounts .btn-green,  #tab-accounts .btn-purple,
+#tab-accounts .btn-yellow, #tab-accounts .btn-orange, #tab-accounts .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-accounts .btn-cyan:hover,  #tab-accounts .btn-green:hover,  #tab-accounts .btn-purple:hover,
+#tab-accounts .btn-yellow:hover, #tab-accounts .btn-orange:hover, #tab-accounts .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-security .btn-cyan,  #tab-security .btn-green,  #tab-security .btn-purple,
+#tab-security .btn-yellow, #tab-security .btn-orange, #tab-security .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-security .btn-cyan:hover,  #tab-security .btn-green:hover,  #tab-security .btn-purple:hover,
+#tab-security .btn-yellow:hover, #tab-security .btn-orange:hover, #tab-security .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-tv .btn-cyan,  #tab-tv .btn-green,  #tab-tv .btn-purple,
+#tab-tv .btn-yellow, #tab-tv .btn-orange, #tab-tv .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-tv .btn-cyan:hover,  #tab-tv .btn-green:hover,  #tab-tv .btn-purple:hover,
+#tab-tv .btn-yellow:hover, #tab-tv .btn-orange:hover, #tab-tv .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-favicon .btn-cyan,  #tab-favicon .btn-green,  #tab-favicon .btn-purple,
+#tab-favicon .btn-yellow, #tab-favicon .btn-orange, #tab-favicon .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-favicon .btn-cyan:hover,  #tab-favicon .btn-green:hover,  #tab-favicon .btn-purple:hover,
+#tab-favicon .btn-yellow:hover, #tab-favicon .btn-orange:hover, #tab-favicon .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-github .btn-cyan,  #tab-github .btn-green,  #tab-github .btn-purple,
+#tab-github .btn-yellow, #tab-github .btn-orange, #tab-github .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-github .btn-cyan:hover,  #tab-github .btn-green:hover,  #tab-github .btn-purple:hover,
+#tab-github .btn-yellow:hover, #tab-github .btn-orange:hover, #tab-github .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
 
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -246,7 +330,7 @@ main {
 .section-title {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
-    color: var(--tab-accent, var(--yellow));
+    color: var(--tab-bright, var(--tab-accent, var(--yellow)));
     margin-bottom: 16px;
     text-shadow: 0 0 8px var(--tab-glow, rgba(255,224,58,0.5));
 }
@@ -272,7 +356,7 @@ main {
 }
 
 .server-card:hover {
-    border-color: var(--tab-accent);
+    border-color: var(--tab-bright, var(--tab-accent));
     box-shadow: 0 0 12px var(--tab-glow);
 }
 
@@ -375,6 +459,17 @@ main {
 
 .btn-slate { color: var(--slate); border-color: var(--slate); }
 .btn-slate:hover { background: var(--slate); color: var(--black); box-shadow: 0 0 15px rgba(136,153,170,0.5); }
+
+/* Default tab-aware button — uses monochrome shade when no explicit color class is set */
+.tab-panel .btn:not(.btn-rose):not(.btn-cyan):not(.btn-green):not(.btn-yellow):not(.btn-orange):not(.btn-purple):not(.btn-slate) {
+    color: var(--tab-accent, var(--cyan));
+    border-color: var(--tab-accent, var(--cyan));
+}
+.tab-panel .btn:not(.btn-rose):not(.btn-cyan):not(.btn-green):not(.btn-yellow):not(.btn-orange):not(.btn-purple):not(.btn-slate):hover {
+    background: var(--tab-accent, var(--cyan));
+    color: var(--black);
+    box-shadow: 0 0 15px var(--tab-glow-strong, rgba(0,245,255,0.5));
+}
 
 .btn-sm { font-size: 7px; padding: 6px 10px; }
 
@@ -603,7 +698,7 @@ main {
 .server-ref-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
-    color: var(--tab-accent);
+    color: var(--tab-bright, var(--tab-accent));
     text-shadow: 0 0 6px var(--tab-glow);
     margin-bottom: 12px;
     padding-bottom: 6px;
@@ -868,6 +963,28 @@ main {
     border-color: var(--tab-accent);
 }
 
+.current-private-pw-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--deep);
+    border: 2px solid var(--orange);
+    margin-bottom: 16px;
+}
+
+.current-private-pw {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--orange);
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.current-private-pw.error {
+    color: var(--rose);
+}
+
 /* ── API Keys Section ──────────────────────────────────────────────────── */
 
 .api-keys-section {
@@ -909,7 +1026,7 @@ main {
     transition: border-color 0.3s;
 }
 
-.api-key-card:hover { border-color: var(--tab-accent); }
+.api-key-card:hover { border-color: var(--tab-bright, var(--tab-accent)); }
 
 .api-key-card-header {
     display: flex;
@@ -988,7 +1105,7 @@ main {
     cursor: pointer;
 }
 
-.btn-toggle-vis:hover { border-color: var(--tab-accent); color: var(--tab-accent); }
+.btn-toggle-vis:hover { border-color: var(--tab-bright, var(--tab-accent)); color: var(--tab-bright, var(--tab-accent)); }
 
 .api-key-link {
     display: block;
@@ -1087,7 +1204,7 @@ main {
     cursor: default;
 }
 
-.song-card:hover { border-color: var(--tab-accent); box-shadow: 0 0 12px var(--tab-glow); }
+.song-card:hover { border-color: var(--tab-bright, var(--tab-accent)); box-shadow: 0 0 12px var(--tab-glow); }
 .song-card.hidden { opacity: 0.4; border-color: var(--border); }
 .song-card.hidden:hover { border-color: var(--yellow); box-shadow: 0 0 12px rgba(255,224,58,0.15); }
 .song-card.dragging { opacity: 0.5; border-color: var(--purple); box-shadow: 0 0 20px rgba(196,95,255,0.3); }
@@ -1102,7 +1219,7 @@ main {
     transition: color 0.2s;
 }
 
-.drag-handle:hover { color: var(--tab-accent); }
+.drag-handle:hover { color: var(--tab-bright, var(--tab-accent)); }
 .drag-handle:active { cursor: grabbing; }
 
 /* TV tab channel cards */
@@ -1256,7 +1373,7 @@ main {
     transition: all 0.15s;
 }
 
-.filter-btn:hover { border-color: var(--tab-accent); color: var(--tab-accent); }
+.filter-btn:hover { border-color: var(--tab-bright, var(--tab-accent)); color: var(--tab-bright, var(--tab-accent)); }
 .filter-btn.active { border-color: var(--purple); color: var(--purple); background: rgba(196,95,255,0.1); }
 
 .theme-count {
@@ -1284,7 +1401,7 @@ main {
     transition: all 0.15s;
 }
 
-.theme-card:hover { border-color: var(--tab-accent); box-shadow: 0 0 12px var(--tab-glow); }
+.theme-card:hover { border-color: var(--tab-bright, var(--tab-accent)); box-shadow: 0 0 12px var(--tab-glow); }
 .theme-card.active { border-color: var(--cyan); box-shadow: 0 0 12px rgba(0,245,255,0.3); }
 
 .theme-card-header {
@@ -1803,6 +1920,256 @@ footer {
 
 .gh-log-line:last-child {
     color: var(--cyan);
+}
+
+/* ── FAVICON EDITOR ────────────────────────────────────────────────────── */
+
+/* Tab accent */
+#tab-favicon { --tab-accent: var(--yellow); --tab-glow: rgba(255,224,58,0.2); }
+.ops-tab[data-tab="favicon"] { color: var(--yellow); }
+.ops-tab[data-tab="favicon"]:hover,
+.ops-tab[data-tab="favicon"].active { border-bottom-color: var(--yellow); text-shadow: 0 0 8px rgba(255,224,58,0.5); }
+
+.favicon-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.favicon-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.favicon-main {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.favicon-canvas-wrap {
+    flex-shrink: 0;
+}
+
+.favicon-canvas-wrap .section-title {
+    margin-bottom: 8px;
+}
+
+#fav-canvas {
+    border: 2px solid var(--border);
+    cursor: crosshair;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #080808;
+    display: block;
+}
+
+.favicon-canvas-info {
+    margin-top: 6px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+}
+
+.favicon-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 200px;
+}
+
+.favicon-palette-section .section-title {
+    margin-bottom: 8px;
+}
+
+/* Palette grid */
+.fav-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.fav-color-swatch {
+    width: 24px;
+    height: 24px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.1s;
+}
+
+.fav-color-swatch:hover {
+    transform: scale(1.15);
+}
+
+.fav-color-swatch.active {
+    border-color: var(--white);
+    box-shadow: 0 0 8px var(--yellow);
+    transform: scale(1.15);
+}
+
+.fav-custom-color {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+}
+
+.fav-custom-color input[type="color"] {
+    width: 32px;
+    height: 28px;
+    border: 1px solid var(--border);
+    background: var(--black);
+    cursor: pointer;
+    padding: 0;
+}
+
+.fav-custom-color input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.fav-custom-color input[type="color"]::-webkit-color-swatch { border: none; }
+
+/* Tools */
+.fav-tools {
+    display: flex;
+    gap: 4px;
+}
+
+.fav-tool-btn {
+    width: 36px;
+    height: 36px;
+    background: var(--deep);
+    border: 2px solid var(--border);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.fav-tool-btn:hover {
+    border-color: var(--yellow);
+}
+
+.fav-tool-btn.active {
+    border-color: var(--yellow);
+    box-shadow: 0 0 8px rgba(255,224,58,0.4);
+}
+
+/* Preview */
+.fav-preview-grid {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.fav-preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.fav-preview-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+}
+
+.fav-preview-item canvas {
+    border: 1px solid var(--border);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #080808;
+}
+
+.fav-preview-tab {
+    border: 1px solid #444;
+    border-radius: 2px;
+    padding: 2px 4px;
+    background: #222;
+}
+
+.fav-preview-tab canvas {
+    width: 16px;
+    height: 16px;
+    border: none;
+}
+
+/* Export buttons */
+.fav-export-btns {
+    display: flex;
+    gap: 6px;
+}
+
+/* Saved designs */
+.favicon-saved-section {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+}
+
+.favicon-saved-section .section-title {
+    margin-bottom: 10px;
+}
+
+.fav-saved-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.fav-no-saved {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--dim);
+}
+
+.fav-saved-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--deep);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+
+.fav-saved-item:hover {
+    border-color: var(--yellow);
+}
+
+.fav-saved-item.active {
+    border-color: var(--green);
+}
+
+.fav-saved-thumb {
+    width: 16px;
+    height: 16px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    border: 1px solid var(--border);
+}
+
+.fav-saved-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--white);
+}
+
+.fav-saved-delete {
+    background: none;
+    border: none;
+    color: var(--rose);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 2px;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.fav-saved-delete:hover {
+    opacity: 1;
 }
 
 /* ── Scrollbar ───────────────────────────────────────────────────────────── */
