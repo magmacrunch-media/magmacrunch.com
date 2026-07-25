@@ -1,0 +1,151 @@
+/* Fruity Loops Debauchery Bros — music-videos page — accent: c-orange */
+body.fldc-page.fldc-music-videos-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.fldc-page.fldc-music-videos-page main > * { background: var(--fldc-bg); }
+
+body.fldc-page.fldc-music-videos-page .breadcrumb { color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-music-videos-page .breadcrumb a { color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-music-videos-page .breadcrumb a:hover { color: var(--fldc-arc-yellow); }
+body.fldc-page.fldc-music-videos-page .breadcrumb .sep { color: var(--fldc-arc-orange); opacity: 0.6; }
+body.fldc-page.fldc-music-videos-page .breadcrumb .current { color: var(--fldc-arc-orange); }
+
+body.fldc-page.fldc-music-videos-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fldc-page.fldc-music-videos-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--fldc-arc-orange); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fldc-page.fldc-music-videos-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--fldc-arc-orange); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(208,96,32,0.45); }
+
+body.fldc-page.fldc-music-videos-page .divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--fldc-arc-dark), var(--fldc-arc-orange), var(--fldc-arc-dark), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+
+body.fldc-page.fldc-music-videos-page .videos-section { width: 100%; max-width: 960px; animation: fadeUp 0.5s 0.25s ease both; }
+body.fldc-page.fldc-music-videos-page .no-videos { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--fldc-bg-neutral); padding: 32px; text-align: center; opacity: 0.6; }
+
+/* ── Video list ── */
+.video-list { width: 100%; }
+
+/* ── Video entry ── */
+.video-entry { margin-bottom: 3rem; width: 100%; }
+
+/* ── Header ── */
+.video-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0.6rem;
+}
+.video-title-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+.video-year {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--fldc-arc-dark);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    white-space: nowrap;
+}
+.video-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--fldc-arc-orange);
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ── External links ── */
+.video-ext-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+}
+.ext-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.1em;
+    padding: 5px 10px;
+    text-decoration: none;
+    border: none;
+}
+.ext-yt {
+    border-color: var(--fldc-arc-orange);
+    color: var(--fldc-arc-orange);
+}
+.ext-yt:hover { background: var(--fldc-arc-orange); color: var(--fldc-bg-surface); }
+.ext-archive {
+    border-color: var(--fldc-arc-dark);
+    color: var(--fldc-arc-dark);
+}
+.ext-archive:hover { background: var(--fldc-arc-dark); color: var(--fldc-bg-screen-pale); }
+.ext-dm {
+    border-color: var(--fldc-arc-yellow);
+    color: var(--fldc-arc-yellow);
+}
+.ext-dm:hover { background: var(--fldc-arc-yellow); color: var(--fldc-bg-surface); }
+
+/* ── Embed ── */
+.video-embed {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+}
+.video-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.video-embed.ia-embed { --ia-bar: 52px; }
+.video-embed.ia-embed iframe {
+    top: calc(-1 * var(--ia-bar));
+    height: calc(100% + var(--ia-bar));
+}
+
+/* ── MusicBrainz panel ── */
+.video-mb { margin-top: 0.75rem; }
+.mb-table {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.mb-row { display: contents; }
+.mb-label {
+    color: var(--fldc-bg-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding-top: 3px;
+    white-space: nowrap;
+    opacity: 0.6;
+}
+.mb-val { color: var(--fldc-bg-light); }
+.mb-date { opacity: 0.6; }
+.mb-loading { font-size: 0.78rem; opacity: 0.45; font-style: italic; }
+.mb-empty { font-size: 0.78rem; opacity: 0.35; font-style: italic; }
+.mb-error { font-size: 0.78rem; color: var(--fldc-arc-red); }
+
+/* ── Nav card overrides ── */
+body.fldc-page.fldc-music-videos-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-orange); border-color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-music-videos-page .nav-card.c-back:hover { background: var(--fldc-arc-orange); color: var(--fldc-bg-surface); }
+
+body.fldc-page.fldc-music-videos-page .nav-card::after { display: none; }
+body.fldc-page.fldc-music-videos-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

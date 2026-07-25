@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by label — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../templates/label-theme.css">
+    <style>
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--lbl-violet); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--lbl-violet); opacity: 0.7; }
+        .breadcrumb .current { color: var(--lbl-violet); }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: var(--lbl-violet);
+            text-shadow: 0 0 16px rgba(157,78,221,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            margin-bottom: 32px;
+            letter-spacing: 0.12em;
+        }
+
+        .intro {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--white);
+            line-height: 1.7;
+            max-width: 600px;
+            text-align: center;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+
+        .grid-wrap {
+            width: min(900px, 95vw);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 2px solid #1e1e2e;
+            background: var(--deep);
+            padding: 16px;
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: var(--lbl-violet);
+            box-shadow: 0 0 16px rgba(157,78,221,0.3);
+        }
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--white);
+            letter-spacing: 0.08em;
+        }
+        .card-sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            margin-top: 6px;
+        }
+
+        .note {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--dim);
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="lbl-page">
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../">home</a>
+        <span class="sep">&rsaquo;</span>
+        <a href="../">archive</a>
+        <span class="sep">&rsaquo;</span>
+        <span class="current">by label</span>
+    </div>
+
+    <h1 class="page-title">// by label //</h1>
+
+    <p class="intro">
+        labels, publishers, and creative agencies associated with magmacrunch.
+    </p>
+
+    <div class="grid-wrap">
+        <a href="magmacrunch-media/" class="card">
+            <div class="card-title">MAGMACRUNCH MEDIA</div>
+            <div class="card-sub">record label</div>
+        </a>
+
+        <a href="magmacrunch-music/" class="card">
+            <div class="card-title">MAGMACRUNCH MUSIC</div>
+            <div class="card-sub">publisher</div>
+        </a>
+
+        <a href="the-slop-collective/" class="card">
+            <div class="card-title">THE SLOP COLLECTIVE</div>
+            <div class="card-sub">creative agency</div>
+        </a>
+
+        <a href="magmacrunch-arcade/" class="card">
+            <div class="card-title">MAGMACRUNCH ARCADE</div>
+            <div class="card-sub">game label</div>
+        </a>
+    </div>
+
+    <p class="note">
+        data sourced from MusicBrainz. contributions may be incomplete.
+    </p>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+
+</body>
+</html>

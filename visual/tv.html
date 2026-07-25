@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teevee — magmacrunch media</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ══════════════════════════════════════════
+           NAV OVERRIDES
+           ══════════════════════════════════════════ */
+        :root {
+            --nav-accent: #FFB800;
+            --nav-glow: rgba(255,184,0,0.4);
+            --nav-brand: #F0EAD8;
+            --nav-brand-glow: rgba(240,234,216,0.5);
+        }
+
+        /* ══════════════════════════════════════════
+           PAGE PALETTE
+           ══════════════════════════════════════════ */
+        :root {
+            --tv-amber: #FFB800;
+            --tv-amber-dim: #B38200;
+            --tv-cabinet: #2A2218;
+            --tv-cabinet-light: #3D3225;
+            --tv-bezel: #1A1610;
+            --tv-screen-off: #0A0A08;
+            --tv-screen-glow: rgba(180,220,160,0.15);
+            --tv-phosphor: #B4DCA0;
+            --tv-static: #C8C8C8;
+            --tv-knob: #4A3F30;
+            --tv-knob-face: #5C4E3A;
+            --tv-grille: #1E1A12;
+            --tv-badge-bg: #1C1810;
+            --tv-badge-text: #8A7A5A;
+        }
+
+        /* ══════════════════════════════════════════
+           BODY THEME
+           ══════════════════════════════════════════ */
+        body.broadcast {
+            --black: #0A0A12;
+            --deep: #111118;
+            --white: #F0EAD8;
+            --dim: #8A7A6A;
+            --rose: #FF6B6B;
+            --yellow: #FFB800;
+            --cyan: #00F5FF;
+            background: #0A0A12;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body.broadcast .dropdown a { border-left: 3px solid transparent; }
+        body.broadcast .dropdown a:nth-child(1) { border-left-color: #FF6B6B; }
+        body.broadcast .dropdown a:nth-child(2) { border-left-color: #FFB800; }
+        body.broadcast .dropdown a:nth-child(3) { border-left-color: #00F5FF; }
+        body.broadcast .dropdown a:nth-child(4) { border-left-color: #39FF6E; }
+
+        body.broadcast .breadcrumb .sep { color: var(--tv-amber); }
+        body.broadcast .breadcrumb .current { color: var(--tv-amber); }
+        body.broadcast footer span { color: var(--tv-amber); }
+
+        /* ══════════════════════════════════════════
+           BREADCRUMB (matches archive.css)
+           ══════════════════════════════════════════ */
+        .breadcrumb {
+            position: absolute;
+            top: 72px;
+            left: 20px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin: 0;
+        }
+        .breadcrumb a {
+            color: var(--dim);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .breadcrumb a:hover { color: var(--tv-amber); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--tv-amber); opacity: 0.7; }
+
+        /* ══════════════════════════════════════════
+           PAGE HEADER
+           ══════════════════════════════════════════ */
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(13px, 2.8vw, 22px);
+            color: var(--tv-amber);
+            text-shadow: 0 0 20px rgba(255,184,0,0.6), 0 0 40px rgba(255,184,0,0.3);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .page-subtitle {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--dim);
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        /* ══════════════════════════════════════════
+           TV CONTAINER
+           ══════════════════════════════════════════ */
+        .tv-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 20px 16px 60px;
+            animation: fadeUp 0.6s ease-out;
+        }
+        .tv {
+            position: relative;
+            width: 100%;
+            max-width: 860px;
+        }
+
+        /* ─── ANTENNA ─── */
+        .tv-antenna {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: -4px;
+            position: relative;
+            z-index: 1;
+        }
+        .antenna-prong {
+            width: 4px;
+            height: 60px;
+            background: linear-gradient(to top, var(--tv-cabinet-light), #6A5A40);
+            border-radius: 2px;
+            transform-origin: bottom center;
+            position: relative;
+        }
+        .antenna-prong.left { transform: rotate(-25deg); }
+        .antenna-prong.right { transform: rotate(25deg); }
+        .antenna-prong::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--tv-amber);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--tv-amber), 0 0 16px rgba(255,184,0,0.4);
+        }
+
+        /* ─── TV BODY ─── */
+        .tv-body {
+            display: grid;
+            grid-template-columns: 1fr 160px;
+            gap: 12px;
+            background: var(--tv-cabinet);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid var(--tv-cabinet-light);
+            box-shadow:
+                0 4px 24px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            position: relative;
+        }
+        .tv-body::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+            pointer-events: none;
+        }
+        .tv-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .tv-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-left: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* ─── SCREEN AREA ─── */
+        .tv-screen-area {
+            position: relative;
+            background: var(--tv-bezel);
+            border-radius: 10px;
+            padding: 10px;
+            border: 2px solid #0D0B08;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+        }
+        .tv-screen {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: var(--tv-screen-off);
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow:
+                inset 0 0 40px rgba(0,0,0,0.8),
+                inset 0 0 80px rgba(0,0,0,0.4);
+        }
+
+        /* ─── YOUTUBE PLAYER ─── */
+        #yt-player {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* ─── SCANLINE OVERLAY ─── */
+        .tv-screen::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.15) 2px,
+                rgba(0,0,0,0.15) 4px
+            );
+            pointer-events: none;
+            z-index: 3;
+            border-radius: 6px;
+        }
+
+        /* ─── PHOSPHOR GLOW ─── */
+        .tv-screen::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                ellipse at center,
+                var(--tv-screen-glow) 0%,
+                transparent 70%
+            );
+            pointer-events: none;
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            border-radius: 6px;
+        }
+        .tv-screen.on-air::before {
+            opacity: 1;
+        }
+
+        /* ─── STATIC CANVAS ─── */
+        #static-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+            border-radius: 6px;
+        }
+        #static-canvas.active {
+            opacity: 1;
+        }
+
+        /* ─── COLOR BARS ─── */
+        .color-bars {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 0;
+            pointer-events: none;
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+        }
+        .color-bars.active {
+            opacity: 1;
+        }
+        .color-bars div {
+            flex: 1;
+        }
+        .color-bars .bar-1 { background: #C0C0C0; }
+        .color-bars .bar-2 { background: #C0C000; }
+        .color-bars .bar-3 { background: #00C0C0; }
+        .color-bars .bar-4 { background: #00C000; }
+        .color-bars .bar-5 { background: #C000C0; }
+        .color-bars .bar-6 { background: #C00000; }
+        .color-bars .bar-7 { background: #0000C0; }
+
+        /* ─── SCREEN OFF ─── */
+        .tv-screen.off {
+            background: var(--tv-screen-off);
+        }
+        .tv-screen.off::before {
+            opacity: 0 !important;
+        }
+
+        /* ─── FLICKER ANIMATION ─── */
+        .tv-screen.flicker {
+            animation: screenFlicker 0.15s ease-out;
+        }
+        @keyframes screenFlicker {
+            0%   { opacity: 1; }
+            10%  { opacity: 0.2; }
+            20%  { opacity: 0.8; }
+            30%  { opacity: 0.1; }
+            40%  { opacity: 0.9; }
+            50%  { opacity: 0.3; }
+            60%  { opacity: 1; }
+            70%  { opacity: 0.5; }
+            80%  { opacity: 1; }
+            90%  { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        /* ─── SCREEN TURN ON ─── */
+        .tv-screen.turn-on {
+            animation: screenTurnOn 0.6s ease-out;
+        }
+        @keyframes screenTurnOn {
+            0%   { transform: scaleY(0.005) scaleX(0.3); filter: brightness(10); }
+            30%  { transform: scaleY(0.005) scaleX(1); filter: brightness(6); }
+            50%  { transform: scaleY(1) scaleX(1); filter: brightness(2); }
+            100% { transform: scaleY(1) scaleX(1); filter: brightness(1); }
+        }
+
+        /* ─── SCREEN TURN OFF ─── */
+        .tv-screen.turn-off {
+            animation: screenTurnOff 0.4s ease-in forwards;
+        }
+        @keyframes screenTurnOff {
+            0%   { transform: scaleY(1) scaleX(1); filter: brightness(1); }
+            40%  { transform: scaleY(0.005) scaleX(1); filter: brightness(6); }
+            70%  { transform: scaleY(0.005) scaleX(0.1); filter: brightness(10); }
+            100% { transform: scaleY(0) scaleX(0); filter: brightness(0); }
+        }
+
+        /* ─── CHANNEL DISPLAY ─── */
+        .tv-channel-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .tv-channel-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            margin-top: 8px;
+        }
+        .channel-number {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 14px;
+            color: var(--tv-amber);
+            text-shadow: 0 0 10px rgba(255,184,0,0.6);
+            letter-spacing: 2px;
+        }
+        .channel-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--tv-amber-dim);
+            letter-spacing: 1px;
+        }
+        .vu-meter {
+            display: flex;
+            gap: 2px;
+            align-items: flex-end;
+            height: 14px;
+        }
+        .vu-bar {
+            width: 3px;
+            background: var(--tv-amber);
+            border-radius: 1px;
+            opacity: 0.3;
+            transition: height 0.1s, opacity 0.1s;
+        }
+        .vu-bar.active {
+            opacity: 1;
+        }
+
+        /* ─── ON-SCREEN TITLE OVERLAY ─── */
+        .tv-screen-overlay {
+            position: absolute;
+            bottom: 22px;
+            left: 22px;
+            z-index: 6;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .tv-screen-overlay.visible { opacity: 1; }
+        .tv-on-screen-ch {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--tv-amber);
+            text-shadow: 0 0 12px rgba(255,184,0,0.6);
+        }
+        .tv-on-screen-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--tv-phosphor);
+            text-shadow: 0 0 6px rgba(180,220,160,0.4);
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .tv-on-screen-artist {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: rgba(180,220,160,0.6);
+        }
+
+        /* ─── SPEAKER GRILLE ─── */
+        .tv-grille {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 20px;
+        }
+        .grille-slot {
+            width: 40px;
+            height: 3px;
+            background: var(--tv-grille);
+            border-radius: 1px;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+        }
+
+        /* ─── CONTROLS PANEL ─── */
+        .tv-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .tv-knob {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .tv-knob:active .knob-face {
+            transform: scale(0.92);
+        }
+        .knob-face {
+            width: 44px;
+            height: 44px;
+            background: radial-gradient(circle at 35% 35%, var(--tv-knob-face), var(--tv-knob));
+            border-radius: 50%;
+            border: 2px solid #3A3020;
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.5),
+                inset 0 1px 2px rgba(255,255,255,0.08);
+            transition: transform 0.1s;
+            position: relative;
+        }
+        .knob-face::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 10px;
+            background: var(--tv-amber-dim);
+            border-radius: 1px;
+        }
+        .knob-face.no-tick::after { display: none; }
+        .knob-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--tv-badge-text);
+            letter-spacing: 1px;
+        }
+        .knob-arrow {
+            font-size: 18px;
+            color: var(--tv-amber-dim);
+            line-height: 1;
+            transition: color 0.15s;
+        }
+        .tv-knob:hover .knob-arrow {
+            color: var(--tv-amber);
+            text-shadow: 0 0 8px rgba(255,184,0,0.5);
+        }
+
+        /* ─── BRAND BADGE ─── */
+        .tv-brand {
+            text-align: center;
+            margin-top: 12px;
+        }
+        .tv-brand-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--tv-badge-text);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ─── TV GUIDE OVERLAY ─── */
+        .tv-guide {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            background: rgba(0,8,0,0.94);
+            overflow: hidden;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tv-guide.hidden { display: none; }
+        .tv-guide-header {
+            text-align: center;
+            padding: 10px 12px 6px;
+            border-bottom: 1px solid rgba(180,220,160,0.3);
+            flex-shrink: 0;
+            position: relative;
+        }
+        .guide-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: 1px solid rgba(180,220,160,0.3);
+            color: var(--tv-phosphor);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .guide-close:hover {
+            background: rgba(180,220,160,0.15);
+            border-color: var(--tv-phosphor);
+        }
+        .guide-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--tv-phosphor);
+            text-shadow: 0 0 8px rgba(180,220,160,0.5);
+            display: block;
+            letter-spacing: 2px;
+        }
+        .guide-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: rgba(180,220,160,0.5);
+            display: block;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+        .tv-guide-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+            scrollbar-width: none;
+        }
+        .tv-guide-scroll::-webkit-scrollbar { display: none; }
+        .guide-channel {
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            gap: 8px;
+            padding: 5px 12px;
+            border-bottom: 1px solid rgba(180,220,160,0.08);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .guide-channel:hover { background: rgba(180,220,160,0.1); }
+        .guide-channel.active { background: rgba(180,220,160,0.15); }
+        .guide-ch-num {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--tv-amber);
+            text-shadow: 0 0 6px rgba(255,184,0,0.4);
+            text-align: right;
+        }
+        .guide-ch-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--tv-phosphor);
+            text-shadow: 0 0 4px rgba(180,220,160,0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .guide-ch-artist {
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: rgba(180,220,160,0.45);
+            margin-top: 2px;
+        }
+
+        /* PiP: shrink video to corner when guide is open */
+        .tv-screen.guide-open #yt-player {
+            width: 30%;
+            height: 30%;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            top: auto;
+            left: auto;
+            z-index: 6;
+            border: 2px solid rgba(180,220,160,0.3);
+            border-radius: 4px;
+            opacity: 1 !important;
+        }
+
+        /* ─── LEGEND / KEYBOARD HINTS ─── */
+        .tv-legend {
+            text-align: center;
+            margin-top: 24px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--dim);
+            line-height: 1.8;
+        }
+        .tv-legend kbd {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            background: var(--tv-cabinet);
+            color: var(--tv-amber);
+            padding: 2px 6px;
+            border: 1px solid var(--tv-cabinet-light);
+            border-radius: 3px;
+            margin: 0 2px;
+        }
+
+        /* ══════════════════════════════════════════
+           ROTATE PROMPT (mobile portrait)
+           ══════════════════════════════════════════ */
+        .rotate-prompt {
+            display: none;
+        }
+
+        @media (max-width: 640px) and (orientation: portrait) {
+            .rotate-prompt {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 50vh;
+                gap: 16px;
+                animation: fadeUp 0.6s ease-out;
+            }
+            .tv-wrap,
+            .tv-legend,
+            .page-subtitle {
+                display: none;
+            }
+            .page-title {
+                margin-top: 24px;
+            }
+            .rotate-icon {
+                color: var(--tv-amber);
+                filter: drop-shadow(0 0 12px rgba(255,184,0,0.6));
+                animation: rotateHint 2s ease-in-out infinite;
+            }
+            @keyframes rotateHint {
+                0%, 100% { transform: rotate(0deg); }
+                25% { transform: rotate(-15deg); }
+                75% { transform: rotate(15deg); }
+            }
+            .rotate-text {
+                font-family: 'Press Start 2P', monospace;
+                font-size: 14px;
+                color: var(--tv-amber);
+                text-shadow: 0 0 20px rgba(255,184,0,0.6);
+                text-align: center;
+            }
+            .rotate-sub {
+                font-family: 'Courier Prime', monospace;
+                font-size: 12px;
+                color: var(--dim);
+                text-align: center;
+            }
+            .rotate-dismiss {
+                margin-top: 16px;
+                font-family: 'Press Start 2P', monospace;
+                font-size: 8px;
+                color: var(--tv-amber-dim);
+                background: transparent;
+                border: 1px solid var(--tv-cabinet-light);
+                padding: 8px 16px;
+                cursor: pointer;
+                border-radius: 4px;
+                transition: color 0.15s, border-color 0.15s;
+            }
+            .rotate-dismiss:hover {
+                color: var(--tv-amber);
+                border-color: var(--tv-amber);
+            }
+        }
+
+        @media (max-width: 640px) and (orientation: landscape) {
+            .rotate-prompt {
+                display: none;
+            }
+        }
+
+        /* ══════════════════════════════════════════
+           RESPONSIVE — TV LAYOUT
+           ══════════════════════════════════════════ */
+        @media (max-width: 640px) {
+            .tv-body { padding: 12px; border-radius: 12px; grid-template-columns: 1fr; }
+            .tv-right { flex-direction: row; flex-wrap: wrap; justify-content: center; border-left: none; border-top: 1px solid rgba(255,255,255,0.05); padding: 8px 0 0; gap: 12px; }
+            .tv-screen-area { padding: 6px; }
+            .antenna-prong { height: 40px; }
+            .tv-antenna { gap: 28px; }
+            .channel-number { font-size: 11px; }
+            .knob-face { width: 36px; height: 36px; }
+            .tv-legend { display: none; }
+            .tv-brand-text { font-size: 6px; }
+            .tv-on-screen-ch { font-size: 14px; }
+            .tv-on-screen-title { font-size: 7px; max-width: 180px; }
+        }
+
+        /* ══════════════════════════════════════════
+           AMBIENT GLOW
+           ══════════════════════════════════════════ */
+        .tv-ambient {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 500px;
+            background: radial-gradient(
+                ellipse at center,
+                rgba(255,184,0,0.06) 0%,
+                transparent 60%
+            );
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+        .tv-ambient.on {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="broadcast no-jukebox">
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <a href="./">visual</a>
+        <span class="sep">›</span>
+        <span class="current">teevee</span>
+    </div>
+
+    <!-- ROTATE PROMPT (mobile portrait only) -->
+    <div class="rotate-prompt" id="rotate-prompt">
+        <div class="rotate-icon">
+            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/>
+                <path d="M4 12h16"/>
+                <path d="M18 8l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <div class="rotate-text">ROTATE YOUR DEVICE</div>
+        <div class="rotate-sub">landscape mode recommended</div>
+        <button class="rotate-dismiss" id="rotate-dismiss">VIEW ANYWAY</button>
+    </div>
+
+    <h1 class="page-title">// teevee //</h1>
+    <p class="page-subtitle">channel flip through music videos &amp; film</p>
+
+    <!-- ═══ AMBIENT GLOW ═══ -->
+    <div class="tv-ambient" id="tv-ambient"></div>
+
+    <!-- ═══ TV SET ═══ -->
+    <div class="tv-wrap">
+        <div class="tv" id="tv">
+
+            <!-- ANTENNA -->
+            <div class="tv-antenna">
+                <div class="antenna-prong left"></div>
+                <div class="antenna-prong right"></div>
+            </div>
+
+            <!-- TV BODY -->
+            <div class="tv-body">
+
+                <!-- LEFT: Screen + Grille -->
+                <div class="tv-left">
+                    <div class="tv-screen-area">
+                        <div class="tv-screen off" id="tv-screen">
+                            <div class="color-bars" id="color-bars">
+                                <div class="bar-1"></div>
+                                <div class="bar-2"></div>
+                                <div class="bar-3"></div>
+                                <div class="bar-4"></div>
+                                <div class="bar-5"></div>
+                                <div class="bar-6"></div>
+                                <div class="bar-7"></div>
+                            </div>
+                            <canvas id="static-canvas"></canvas>
+                            <iframe id="yt-player"
+                                src="about:blank"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                                loading="lazy"></iframe>
+                            <!-- TV GUIDE OVERLAY -->
+                            <div id="tv-guide" class="tv-guide hidden">
+                                <div class="tv-guide-header">
+                                    <button class="guide-close" id="guide-close-btn" aria-label="close guide">&#10005;</button>
+                                    <span class="guide-title">MAGMACRUNCH CABLE</span>
+                                    <span class="guide-subtitle">CHANNEL GUIDE</span>
+                                </div>
+                                <div class="tv-guide-scroll" id="tv-guide-scroll"></div>
+                            </div>
+                        </div>
+                        <!-- ON-SCREEN TITLE OVERLAY (outside .tv-screen to avoid Error 153) -->
+                        <div class="tv-screen-overlay" id="tv-screen-overlay">
+                            <span class="tv-on-screen-ch" id="tv-on-screen-ch"></span>
+                            <span class="tv-on-screen-title" id="tv-on-screen-title"></span>
+                            <span class="tv-on-screen-artist" id="tv-on-screen-artist"></span>
+                        </div>
+                    </div>
+                    <div class="tv-grille">
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                        <div class="grille-slot"></div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Channel info + Controls + Brand -->
+                <div class="tv-right">
+                    <div class="tv-channel-display">
+                        <span class="channel-label">CH</span>
+                        <span class="channel-number" id="channel-number">--</span>
+                        <div class="vu-meter" id="vu-meter">
+                            <div class="vu-bar" style="height:4px"></div>
+                            <div class="vu-bar" style="height:7px"></div>
+                            <div class="vu-bar" style="height:10px"></div>
+                            <div class="vu-bar" style="height:6px"></div>
+                            <div class="vu-bar" style="height:12px"></div>
+                            <div class="vu-bar" style="height:8px"></div>
+                            <div class="vu-bar" style="height:5px"></div>
+                            <div class="vu-bar" style="height:11px"></div>
+                            <div class="vu-bar" style="height:7px"></div>
+                            <div class="vu-bar" style="height:9px"></div>
+                        </div>
+                    </div>
+                    <div class="tv-controls">
+                        <div class="tv-knob" id="btn-ch-down" role="button" tabindex="0" aria-label="channel down">
+                            <div class="knob-arrow">▼</div>
+                            <div class="knob-face"></div>
+                            <div class="knob-label">CH−</div>
+                        </div>
+                        <div class="tv-knob" id="btn-power" role="button" tabindex="0" aria-label="power">
+                            <div class="knob-face" style="background: radial-gradient(circle at 35% 35%, #5a2020, #3a1515); border-color: #4a2020;">
+                                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#ff3333;border-radius:50%;box-shadow:0 0 6px #ff3333;opacity:0.4;" id="power-led"></div>
+                            </div>
+                            <div class="knob-label">POWER</div>
+                        </div>
+                        <div class="tv-knob" id="btn-ch-up" role="button" tabindex="0" aria-label="channel up">
+                            <div class="knob-arrow">▲</div>
+                            <div class="knob-face"></div>
+                            <div class="knob-label">CH+</div>
+                        </div>
+                    </div>
+                    <div class="tv-controls">
+                        <div class="tv-knob" id="btn-playpause" role="button" tabindex="0" aria-label="play pause">
+                            <div class="knob-face no-tick" style="width: 38px; height: 38px;">
+                                <div id="pp-icon" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;color:var(--tv-amber);line-height:1;">&#9654;</div>
+                            </div>
+                            <div class="knob-label">PLAY</div>
+                        </div>
+                    <div class="tv-knob" id="btn-guide" role="button" tabindex="0" aria-label="tv guide">
+                        <div class="knob-face no-tick" style="background: radial-gradient(circle at 35% 35%, #2a4a2a, #1a3a1a); border-color: #2a4a2a; width: 38px; height: 38px;">
+                                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Press Start 2P';font-size:5px;color:#B4DCA0;white-space:nowrap;">GUIDE</div>
+                            </div>
+                            <div class="knob-label">GUIDE</div>
+                        </div>
+                    </div>
+                    <div class="tv-brand">
+                        <span class="tv-brand-text">MagmaCrunch TV</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEYBOARD HINTS -->
+    <div class="tv-legend">
+        <kbd>↑</kbd> <kbd>↓</kbd> random channel &nbsp;&middot;&nbsp;
+        <kbd>←</kbd> <kbd>→</kbd> random channel &nbsp;&middot;&nbsp;
+        <kbd>G</kbd> guide &nbsp;&middot;&nbsp;
+        <kbd>space</kbd> play / pause
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script src="tv-channels.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════
+   CHANNEL DATA — server-managed via tv-channels.js, hardcoded fallback
+   ══════════════════════════════════════════════════ */
+const CHANNELS = window.TV_CHANNELS || [
+    { title: "Hologram of a Dream",                          artist: "Dag Henderson",           id: "mby4C5PZzlQ", year: "2025" },
+    { title: "Sitting on a Dock in New Shoreham",            artist: "Juanito Thompson",        id: "BirxEyAj0u0", year: "2025" },
+    { title: "Very Long Boards",                             artist: "Carl Spatski",            id: "8xjZgv3us1Q", year: "2025" },
+    { title: "I'm gonna need more of a commitment than that",artist: "Juanito Thompson",        id: "KiFWHj1cmOY", year: "2025" },
+    { title: "Leaves",                                       artist: "Juanito Thompson",        id: "wv_6z79fQjQ", year: "2024" },
+    { title: "Summer Day",                                   artist: "Woah.",                   id: "QgJfLXhV15Y", year: "2024" },
+    { title: "Gravitational Voltage",                        artist: "Juanito Thompson",        id: "gtclSfU8oDM", year: "2024" },
+    { title: "Beach Ave.",                                   artist: "Juanito Thompson",        id: "tkpoCxpsUAk", year: "2024" },
+    { title: "Who is Richard Parker?",                       artist: "Juanito Thompson",        id: "xGzuJO_5364", year: "2024" },
+    { title: "Parade Float Electronics",                     artist: "Juanito Thompson",        id: "gjo9FdBJGRk", year: "2024" },
+    { title: "Figure the Shoreline",                         artist: "Texas Hold'Em Lava Dome", id: "Gm9XVmj0iVM", year: "2024" },
+    { title: "Point Judith",                                 artist: "Juanito Thompson",        id: "cCUC-a6v74E", year: "2024" },
+    { title: "Eternity spent in an arcade",                  artist: "Woah.",                   id: "lTmHfMZAimQ", year: "2024" },
+    { title: "Try",                                          artist: "Jon McCoy",               id: "To6AJJ7-iCY", year: "2024" },
+    { title: "Contemplate the Plate Tectonic",               artist: "Texas Hold'Em Lava Dome", id: "YnzQh-h5zq0", year: "2024" },
+    { title: "Area Does Not Exist",                          artist: "Dag Henderson",           id: "T6lCJBrjFQ0", year: "2024" },
+    { title: "Daffodil & Sweet Pea",                         artist: "Juanito Thompson",        id: "0QwOELVzeSo", year: "2024" },
+    { title: "Driving",                                      artist: "Woah.",                   id: "vmUJ2O3xwJw", year: "2024" },
+    { title: "Ancient Weeds",                                artist: "Juanito Thompson",        id: "pX3G_dtyMPI", year: "2023" },
+    { title: "Film School",                                  artist: "Texas Hold'Em Lava Dome", id: "VN_5u6tBPts", year: "2023" },
+    { title: "Little Piece No. 1",                           artist: "James R. McCoy",          id: "hlOYgcDvyaE", year: "2023" },
+    { title: "Millstone Woods May 2018",                     artist: "Dag Henderson",           id: "3_jo3WEOPEI", year: "2023" },
+    { title: "Bus full of time-traveling twenty-somethings", artist: "Texas Hold'Em Lava Dome", id: "OebpP5m3jms", year: "2023" },
+    { title: "Sex Van Floor Plan: The Documentary",          artist: "Allison Tocmo & Mariella Lionato", id: "VSGReUKVRjk", year: "2026" },
+    { title: "Live at Governor's Mansion",                   artist: "DDT LLC",                 id: "XqGW6aaLrzQ", year: "2016" },
+    { title: "balloon",                                      artist: "d.spum",                  id: "UOxY4pd_lUA", year: "2016" },
+    { title: "bass flip?",                                   artist: "Vinny Bobarino",          id: "AltFN6bzMPo", year: "2006" },
+];
+
+/* ══════════════════════════════════════════════════
+   STATE
+   ══════════════════════════════════════════════════ */
+let currentChannel = -1;
+let isPaused = false;
+let isPoweredOn = false;
+let isSwitching = false;
+let guideOpen = false;
+let vuInterval = null;
+
+const screen   = document.getElementById('tv-screen');
+const staticCanvas = document.getElementById('static-canvas');
+const staticCtx    = staticCanvas.getContext('2d');
+const colorBars    = document.getElementById('color-bars');
+const channelNum   = document.getElementById('channel-number');
+const ambient      = document.getElementById('tv-ambient');
+const powerLed     = document.getElementById('power-led');
+const vuMeter      = document.getElementById('vu-meter');
+
+/* ══════════════════════════════════════════════════
+   STATIC NOISE
+   ══════════════════════════════════════════════════ */
+function resizeStaticCanvas() {
+    const rect = screen.getBoundingClientRect();
+    staticCanvas.width  = Math.floor(rect.width / 3);
+    staticCanvas.height = Math.floor(rect.height / 3);
+}
+resizeStaticCanvas();
+window.addEventListener('resize', resizeStaticCanvas);
+
+let staticAnimFrame = null;
+function drawStatic() {
+    const w = staticCanvas.width, h = staticCanvas.height;
+    const imgData = staticCtx.createImageData(w, h);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+        const v = Math.random() * 255;
+        data[i] = v;
+        data[i+1] = v;
+        data[i+2] = v;
+        data[i+3] = 255;
+    }
+    staticCtx.putImageData(imgData, 0, 0);
+    staticAnimFrame = requestAnimationFrame(drawStatic);
+}
+
+function startStatic() {
+    staticCanvas.classList.add('active');
+    drawStatic();
+}
+function stopStatic() {
+    staticCanvas.classList.remove('active');
+    if (staticAnimFrame) {
+        cancelAnimationFrame(staticAnimFrame);
+        staticAnimFrame = null;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   VU METER
+   ══════════════════════════════════════════════════ */
+function startVuMeter() {
+    const bars = vuMeter.querySelectorAll('.vu-bar');
+    vuInterval = setInterval(() => {
+        bars.forEach(bar => {
+            const h = 3 + Math.random() * 11;
+            bar.style.height = h + 'px';
+            bar.classList.toggle('active', h > 7);
+        });
+    }, 120);
+}
+function stopVuMeter() {
+    clearInterval(vuInterval);
+    vuMeter.querySelectorAll('.vu-bar').forEach(bar => {
+        bar.style.height = '4px';
+        bar.classList.remove('active');
+    });
+}
+
+/* ─── ON-SCREEN TITLE OVERLAY ─── */
+let onScreenTimeout = null;
+function showOnScreenInfo(chNum, title, artist) {
+    const overlay = document.getElementById('tv-screen-overlay');
+    document.getElementById('tv-on-screen-ch').textContent = String(chNum).padStart(2, '0');
+    document.getElementById('tv-on-screen-title').textContent = title;
+    document.getElementById('tv-on-screen-artist').textContent = artist;
+    overlay.classList.add('visible');
+    clearTimeout(onScreenTimeout);
+    onScreenTimeout = setTimeout(() => overlay.classList.remove('visible'), 3000);
+}
+function hideOnScreenInfo() {
+    clearTimeout(onScreenTimeout);
+    document.getElementById('tv-screen-overlay').classList.remove('visible');
+}
+
+/* ══════════════════════════════════════════════════
+   YOUTUBE VIDEO — static iframe, src swap
+   ══════════════════════════════════════════════════ */
+const playerFrame = document.getElementById('yt-player');
+
+function loadVideo(videoId) {
+    playerFrame.style.opacity = '0';
+    playerFrame.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0&iv_load_policy=3&modestbranding=1&enablejsapi=1&controls=0&showinfo=0';
+    isPaused = false;
+    const icon = document.getElementById('pp-icon');
+    const label = document.querySelector('#btn-playpause .knob-label');
+    if (icon) icon.innerHTML = '&#9646;&#9646;';
+    if (label) label.textContent = 'PAUSE';
+    setTimeout(() => { playerFrame.style.opacity = '1'; }, 300);
+}
+
+function unloadVideo() {
+    playerFrame.style.opacity = '0';
+    playerFrame.src = 'about:blank';
+}
+
+function postYTCommand(func) {
+    if (playerFrame && playerFrame.contentWindow) {
+        playerFrame.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args: '' }), '*');
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   CHANNEL SWITCHING
+   ══════════════════════════════════════════════════ */
+function changeChannel(dir) {
+    if (isSwitching || !isPoweredOn) return;
+    isSwitching = true;
+
+    // Pick a random channel (avoid repeating the current one)
+    let next;
+    if (CHANNELS.length <= 1) {
+        next = 0;
+    } else {
+        do { next = Math.floor(Math.random() * CHANNELS.length); } while (next === currentChannel);
+    }
+    currentChannel = next;
+
+    const ch = CHANNELS[currentChannel];
+
+    // Phase 1: flicker + static
+    screen.classList.add('flicker');
+    startStatic();
+    stopVuMeter();
+    hideOnScreenInfo();
+
+    setTimeout(() => {
+        // Phase 2: color bars flash
+        stopStatic();
+        colorBars.classList.add('active');
+
+        // Update channel number
+        channelNum.textContent = String(currentChannel + 1).padStart(2, '0');
+
+        setTimeout(() => {
+            // Phase 3: load new video
+            colorBars.classList.remove('active');
+            loadVideo(ch.id);
+
+            // Phase 4: settle
+            screen.classList.remove('off', 'flicker');
+            screen.classList.add('on-air');
+            showOnScreenInfo(currentChannel + 1, ch.title, ch.artist);
+            startVuMeter();
+
+            isSwitching = false;
+        }, 200);
+    }, 350);
+}
+
+function togglePower() {
+    if (isSwitching) return;
+
+    if (isPoweredOn) {
+        // Turn off
+        isSwitching = true;
+        screen.classList.add('turn-off');
+        stopStatic();
+        stopVuMeter();
+        hideOnScreenInfo();
+        powerLed.style.opacity = '0.2';
+
+        setTimeout(() => {
+            screen.classList.remove('on-air', 'turn-off');
+            screen.classList.add('off');
+            channelNum.textContent = '--';
+            currentChannel = -1;
+            isPoweredOn = false;
+            isSwitching = false;
+            ambient.classList.remove('on');
+            unloadVideo();
+        }, 400);
+    } else {
+        // Turn on
+        isPoweredOn = true;
+        isSwitching = true;
+        screen.classList.remove('off');
+        screen.classList.add('turn-on', 'on-air');
+        powerLed.style.opacity = '1';
+        ambient.classList.add('on');
+
+        // Show static briefly
+        startStatic();
+
+        setTimeout(() => {
+            stopStatic();
+            currentChannel = Math.floor(Math.random() * CHANNELS.length);
+            const ch = CHANNELS[currentChannel];
+            channelNum.textContent = String(currentChannel + 1).padStart(2, '0');
+
+            loadVideo(ch.id);
+
+            screen.classList.remove('turn-on');
+            showOnScreenInfo(1, ch.title, ch.artist);
+            startVuMeter();
+            isSwitching = false;
+        }, 700);
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   TV GUIDE
+   ══════════════════════════════════════════════════ */
+function escGuide(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function toggleGuide() {
+    if (!isPoweredOn) return;
+    const guide = document.getElementById('tv-guide');
+    guideOpen = !guideOpen;
+    guide.classList.toggle('hidden', !guideOpen);
+    if (guideOpen) {
+        renderGuide();
+        screen.classList.add('guide-open');
+        stopVuMeter();
+    } else {
+        screen.classList.remove('guide-open');
+        if (currentChannel >= 0) startVuMeter();
+    }
+}
+
+function renderGuide() {
+    const list = document.getElementById('tv-guide-scroll');
+    list.innerHTML = '';
+    CHANNELS.forEach((ch, i) => {
+        const row = document.createElement('div');
+        row.className = 'guide-channel' + (i === currentChannel ? ' active' : '');
+        row.innerHTML =
+            '<div class="guide-ch-num">' + String(i + 1).padStart(2, '0') + '</div>' +
+            '<div class="guide-ch-info">' +
+                '<div class="guide-ch-title">' + escGuide(ch.title) + '</div>' +
+                '<div class="guide-ch-artist">' + escGuide(ch.artist) + ' · ' + escGuide(ch.year) + '</div>' +
+            '</div>';
+        row.addEventListener('click', function() {
+            currentChannel = i;
+            guideOpen = false;
+            document.getElementById('tv-guide').classList.add('hidden');
+            screen.classList.remove('guide-open');
+            screen.classList.add('flicker');
+            startStatic();
+            setTimeout(() => {
+                stopStatic();
+                loadVideo(ch.id);
+                channelNum.textContent = String(i + 1).padStart(2, '0');
+                showOnScreenInfo(i + 1, ch.title, ch.artist);
+                screen.classList.remove('flicker');
+                screen.classList.add('on-air');
+                startVuMeter();
+            }, 300);
+        });
+        list.appendChild(row);
+    });
+    const active = list.querySelector('.active');
+    if (active) active.scrollIntoView({ block: 'center' });
+}
+
+/* ══════════════════════════════════════════════════
+   CONTROLS
+   ══════════════════════════════════════════════════ */
+function togglePlayPause() {
+    if (!isPoweredOn || currentChannel < 0) return;
+    const icon = document.getElementById('pp-icon');
+    const label = document.querySelector('#btn-playpause .knob-label');
+    if (isPaused) {
+        postYTCommand('playVideo');
+        isPaused = false;
+        icon.innerHTML = '&#9646;&#9646;';
+        label.textContent = 'PAUSE';
+    } else {
+        postYTCommand('pauseVideo');
+        isPaused = true;
+        icon.innerHTML = '&#9654;';
+        label.textContent = 'PLAY';
+    }
+}
+
+document.getElementById('btn-ch-up').addEventListener('click', () => changeChannel(1));
+document.getElementById('btn-ch-down').addEventListener('click', () => changeChannel(-1));
+document.getElementById('btn-power').addEventListener('click', togglePower);
+document.getElementById('btn-playpause').addEventListener('click', togglePlayPause);
+document.getElementById('btn-guide').addEventListener('click', toggleGuide);
+document.getElementById('guide-close-btn').addEventListener('click', toggleGuide);
+
+/* ══════════════════════════════════════════════════
+   KEYBOARD CONTROLS
+   ══════════════════════════════════════════════════ */
+
+document.addEventListener('keydown', function(e) {
+    // Ignore if focused on an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    switch (e.key) {
+        case 'ArrowUp':
+        case 'ArrowRight':
+            e.preventDefault();
+            if (guideOpen) {
+                document.getElementById('tv-guide-scroll').scrollBy(0, -40);
+            } else {
+                changeChannel(1);
+            }
+            break;
+        case 'ArrowDown':
+        case 'ArrowLeft':
+            e.preventDefault();
+            if (guideOpen) {
+                document.getElementById('tv-guide-scroll').scrollBy(0, 40);
+            } else {
+                changeChannel(-1);
+            }
+            break;
+        case 'g':
+        case 'G':
+            e.preventDefault();
+            toggleGuide();
+            break;
+        case ' ':
+            e.preventDefault();
+            if (isPoweredOn && currentChannel >= 0) {
+                togglePlayPause();
+            }
+            break;
+        case 'm':
+        case 'M':
+            break;
+    }
+});
+
+/* ══════════════════════════════════════════════════
+   ROTATE PROMPT — orientation detection
+   ══════════════════════════════════════════════════ */
+const rotatePrompt = document.getElementById('rotate-prompt');
+const rotateDismiss = document.getElementById('rotate-dismiss');
+let rotateDismissed = false;
+
+if (rotateDismiss) {
+    rotateDismiss.addEventListener('click', function() {
+        rotateDismissed = true;
+        rotatePrompt.style.display = 'none';
+        document.querySelector('.tv-wrap').style.display = '';
+        document.querySelector('.page-subtitle').style.display = '';
+    });
+}
+
+const portraitMQL = window.matchMedia('(max-width: 640px) and (orientation: portrait)');
+function handleOrientation(e) {
+    if (rotateDismissed) return;
+    if (e.matches) {
+        rotatePrompt.style.display = '';
+        document.querySelector('.tv-wrap').style.display = 'none';
+        document.querySelector('.page-subtitle').style.display = 'none';
+    } else {
+        rotatePrompt.style.display = 'none';
+        document.querySelector('.tv-wrap').style.display = '';
+        document.querySelector('.page-subtitle').style.display = '';
+    }
+}
+portraitMQL.addEventListener('change', handleOrientation);
+handleOrientation(portraitMQL);
+
+/* ══════════════════════════════════════════════════
+   TOUCH SUPPORT — swipe to change channel
+   ══════════════════════════════════════════════════ */
+let touchStartY = 0;
+screen.addEventListener('touchstart', function(e) {
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+screen.addEventListener('touchend', function(e) {
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dy) > 40) {
+        changeChannel(dy < 0 ? 1 : -1);
+    }
+}, { passive: true });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,360 @@
+/**
+ * base.css — Parchís CSS variables, reset, layout, CRT scanlines
+ */
+
+/* ── CSS Variables ──────────────────────────────────────────────────────────── */
+:root {
+    --pc-bg: #1a0a0a;
+    --pc-bg-light: #2a1210;
+    --pc-text: #f0ead8;
+    --pc-text-dim: #a88a7f;
+    --pc-border: #5c3a2d;
+    --pc-accent: #F1BF00;
+    --pc-accent-glow: rgba(241,191,0,0.4);
+
+    --slot-red: #AA151B;
+    --slot-blue: #4059c8;
+    --slot-green: #39d353;
+    --slot-yellow: #F1BF00;
+    --board-center: #f0ead8;
+
+    --nav-accent: #F1BF00;
+    --nav-brand: #F1BF00;
+    --nav-glow: rgba(241,191,0,0.4);
+    --nav-brand-glow: rgba(241,191,0,0.7);
+}
+
+/* ── Reset ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--pc-bg);
+    color: var(--pc-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* ── CRT Scanlines ──────────────────────────────────────────────────────────── */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ── Back link ──────────────────────────────────────────────────────────────── */
+.mc-back {
+    position: fixed;
+    top: 12px;
+    left: 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    z-index: 100;
+    transition: color 0.15s, text-shadow 0.15s;
+}
+.mc-back:hover {
+    color: var(--pc-accent);
+    text-shadow: 0 0 8px var(--pc-accent-glow);
+}
+
+/* ── Screens ────────────────────────────────────────────────────────────────── */
+#startScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+#gameScreen {
+    display: none;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    max-width: 1200px;
+    padding: 60px 20px 20px;
+    gap: 20px;
+}
+
+#lobbyOverlay {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+/* ── Title ──────────────────────────────────────────────────────────────────── */
+.game-title {
+    font-size: 18px;
+    color: var(--pc-accent);
+    text-shadow: 0 0 20px var(--pc-accent-glow);
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+}
+
+.game-subtitle {
+    font-size: 8px;
+    color: var(--pc-text-dim);
+    margin-bottom: 30px;
+    letter-spacing: 0.15em;
+}
+
+/* ── Inputs ─────────────────────────────────────────────────────────────────── */
+.pc-input {
+    background: var(--pc-bg-light);
+    border: 2px solid var(--pc-border);
+    color: var(--pc-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 10px 14px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.pc-input:focus {
+    border-color: var(--pc-accent);
+}
+.pc-input::placeholder {
+    color: var(--pc-text-dim);
+    opacity: 0.5;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+.pc-btn {
+    background: var(--pc-accent);
+    color: var(--pc-bg);
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 12px 24px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    box-shadow: 0 0 12px var(--pc-accent-glow);
+    margin-bottom: 8px;
+}
+.pc-btn:hover {
+    background: #fff;
+    box-shadow: 0 0 24px var(--pc-accent-glow);
+    transform: translateY(-1px);
+}
+.pc-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.pc-btn-secondary {
+    background: transparent;
+    color: var(--pc-accent);
+    border: 2px solid var(--pc-accent);
+    box-shadow: none;
+}
+.pc-btn-secondary:hover {
+    background: var(--pc-accent);
+    color: var(--pc-bg);
+}
+
+.pc-btn-small {
+    font-size: 7px;
+    padding: 8px 16px;
+}
+
+/* ── Status bar ─────────────────────────────────────────────────────────────── */
+.status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--pc-bg-light);
+    border: 1px solid var(--pc-border);
+    font-size: 8px;
+    margin-bottom: 10px;
+}
+
+/* ── Turn info ──────────────────────────────────────────────────────────────── */
+#turnInfo {
+    font-size: 10px;
+    color: var(--pc-accent);
+    text-shadow: 0 0 8px var(--pc-accent-glow);
+}
+
+/* ── Status message ─────────────────────────────────────────────────────────── */
+#statusMsg {
+    font-size: 8px;
+    color: var(--pc-text-dim);
+    text-align: center;
+    min-height: 16px;
+}
+
+/* ── Modals ─────────────────────────────────────────────────────────────────── */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-box {
+    background: var(--pc-bg-light);
+    border: 2px solid var(--pc-accent);
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 0 40px var(--pc-accent-glow);
+}
+.modal-title {
+    font-size: 14px;
+    color: var(--pc-accent);
+    margin-bottom: 16px;
+}
+.modal-text {
+    font-size: 9px;
+    color: var(--pc-text);
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+
+/* ── Debug log ──────────────────────────────────────────────────────────────── */
+#debugLog {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background: rgba(0,0,0,0.9);
+    color: #39ff6e;
+    font-family: 'Courier Prime', monospace;
+    font-size: 8px;
+    padding: 6px 10px;
+    overflow-y: auto;
+    z-index: 50;
+    border-top: 1px solid #39ff6e;
+    white-space: pre-wrap;
+    display: none;
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* ── Settings gear ──────────────────────────────────────────────────────────── */
+.settings-gear {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: 1px solid var(--pc-border);
+    color: var(--pc-text-dim);
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 100;
+    padding: 4px 8px;
+    transition: color 0.15s, border-color 0.15s;
+    font-family: sans-serif;
+}
+.settings-gear:hover {
+    color: var(--pc-accent);
+    border-color: var(--pc-accent);
+}
+
+/* ── Settings modal ─────────────────────────────────────────────────────────── */
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+}
+.settings-label {
+    font-size: 9px;
+    color: var(--pc-text);
+    letter-spacing: 0.1em;
+}
+.lang-toggle {
+    display: flex;
+    gap: 4px;
+}
+.lang-btn {
+    background: var(--pc-bg);
+    border: 2px solid var(--pc-border);
+    color: var(--pc-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.lang-btn:hover {
+    border-color: var(--pc-accent);
+    color: var(--pc-text);
+}
+.lang-btn.active {
+    background: var(--pc-accent);
+    color: var(--pc-bg);
+    border-color: var(--pc-accent);
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+footer {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--pc-text-dim);
+    padding: 12px;
+    border-top: 1px solid var(--pc-border);
+    text-align: center;
+}
+footer span { color: #F1BF00; }

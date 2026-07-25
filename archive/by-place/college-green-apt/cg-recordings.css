@@ -1,0 +1,41 @@
+/* College Green Apt. — recordings (nature / window plant green sub-theme) */
+body.cg-page.cg-recordings-page main > * { background: var(--cg-bg); }
+
+body.cg-page.cg-recordings-page .breadcrumb { color: var(--dim); }
+body.cg-page.cg-recordings-page .breadcrumb a { color: var(--cg-nature); }
+body.cg-page.cg-recordings-page .breadcrumb a:hover { color: var(--cg-cream); }
+body.cg-page.cg-recordings-page .breadcrumb .sep { color: var(--cg-nature); opacity: 0.6; }
+body.cg-page.cg-recordings-page .breadcrumb .current { color: var(--cg-nature); }
+
+body.cg-page.cg-recordings-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cg-page.cg-recordings-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cg-nature); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cg-page.cg-recordings-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cg-nature) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+
+body.cg-page.cg-recordings-page .recording-card {
+    background: transparent !important;
+    border-color: var(--cg-bluegrey);
+}
+body.cg-page.cg-recordings-page .recording-card h3 { color: var(--cg-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.cg-page.cg-recordings-page .recording-card h3 a { color: var(--cg-nature) !important; }
+body.cg-page.cg-recordings-page .recording-card h3 a:hover { color: var(--cg-cream) !important; }
+body.cg-page.cg-recordings-page .recording-card p { color: var(--cg-cream) !important; }
+body.cg-page.cg-recordings-page .recording-card p strong { color: var(--cg-muted) !important; }
+body.cg-page.cg-recordings-page .recording-card a { color: var(--cg-nature) !important; }
+body.cg-page.cg-recordings-page .recording-card a:hover { color: var(--cg-cream) !important; }
+body.cg-page.cg-recordings-page .recording-card:hover { border-color: var(--cg-nature) !important; }
+body.cg-page.cg-recordings-page .place-rel-badge { background: var(--cg-nature) !important; color: var(--cg-deep) !important; }
+body.cg-page.cg-recordings-page .video-label { color: var(--cg-nature) !important; }
+body.cg-page.cg-recordings-page .disambiguation { color: var(--cg-muted) !important; }
+body.cg-page.cg-recordings-page .tag { border-color: var(--cg-dark) !important; color: var(--cg-muted) !important; }
+body.cg-page.cg-recordings-page .error-msg { color: var(--cg-cta) !important; }
+
+/* Current page: recordings (c-recordings active) */
+body.cg-page.cg-recordings-page .nav-card.c-recordings {
+    background: var(--cg-bg);
+    color: var(--cg-nature);
+    border-color: var(--cg-nature);
+}
+
+@media (max-width: 500px) {
+    body.cg-page.cg-recordings-page .recording-card { border-color: var(--cg-muted); }
+}

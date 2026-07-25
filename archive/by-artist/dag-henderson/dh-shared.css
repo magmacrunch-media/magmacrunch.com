@@ -1,0 +1,118 @@
+/* Dag Henderson shared color palette — deep forest / muted earth theme */
+:root {
+    --dh-deep:         #141a10;
+    --dh-surface:      #1e2818;
+    --dh-muted:        #3a3228;
+    --dh-body:         #5a5048;
+    --dh-slate:        #607880;
+    --dh-brand:        #3a5830;
+    --dh-leaf:         #789060;
+    --dh-purple:       #7848a8;
+    --dh-rust:         #c86010;
+    --dh-amber:        #f0c060;
+    --dh-violet-deep:  #3a1860;
+    --dh-violet-mid:   #7848a8;
+    --dh-violet-light: #a880d0;
+    --dh-sage:         #a8b890;
+    --dh-steel:        #607880;
+    --dh-mist:         #a0b0a8;
+    --dh-rust-dark:    #7a3010;
+    --dh-amber-glow:   #e8900a;
+    --dh-gold:         #f8d888;
+    --dh-tan:          #807060;
+    --dh-white:        #f0ece0;
+    --dh-bg:           #080a06;
+}
+
+body.dh-page { background: var(--dh-bg); --credit-color: var(--dh-muted); --nav-accent: var(--dh-brand); --nav-glow: rgba(58,88,48,0.4); --nav-brand: var(--dh-amber); --nav-brand-glow: rgba(240,192,96,0.7); }
+
+body.dh-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+body.dh-page .sub-nav .nav-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 16px;
+    border: 2px solid;
+    text-decoration: none;
+}
+body.dh-page .sub-nav .nav-card::after { display: none; }
+body.dh-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.dh-page .nav-card.c-back {
+    background: transparent;
+    color: var(--dh-brand);
+    border-color: var(--dh-brand);
+}
+body.dh-page .nav-card.c-back:hover {
+    background: var(--dh-brand);
+    border-color: var(--dh-brand);
+    color: var(--dh-white);
+}
+
+/* Page-named classes — solid color, transparent on hover */
+body.dh-page .nav-card.c-about {
+    background: var(--dh-brand);
+    color: var(--dh-amber);
+    border-color: var(--dh-brand);
+}
+body.dh-page .nav-card.c-about:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
+body.dh-page .nav-card.c-photography {
+    background: var(--dh-steel);
+    color: var(--dh-mist);
+    border-color: var(--dh-steel);
+}
+body.dh-page .nav-card.c-photography:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
+body.dh-page .nav-card.c-recordings {
+    background: var(--dh-sage);
+    color: var(--dh-deep);
+    border-color: var(--dh-sage);
+}
+body.dh-page .nav-card.c-recordings:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
+body.dh-page .nav-card.c-releases {
+    background: var(--dh-violet-mid);
+    color: var(--dh-gold);
+    border-color: var(--dh-violet-mid);
+}
+body.dh-page .nav-card.c-releases:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
+body.dh-page .nav-card.c-works {
+    background: var(--dh-amber-glow);
+    color: var(--dh-deep);
+    border-color: var(--dh-amber-glow);
+}
+body.dh-page .nav-card.c-works:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
+body.dh-page .nav-card.c-events {
+    background: var(--dh-rust-dark);
+    color: var(--dh-amber);
+    border-color: var(--dh-rust-dark);
+}
+body.dh-page .nav-card.c-events:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
+body.dh-page .nav-card::after { display: none; }
+
+body.dh-page .photo-lightbox { display: none; }
+
+body.dh-page footer { color: var(--dh-body); }
+body.dh-page footer span { color: var(--dh-leaf); }

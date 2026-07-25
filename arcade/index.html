@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>arcade — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* ══ PAGE: arcade ══ */
+        body {
+            --nav-accent: #ff2e9c;
+            --nav-brand: #ff2e9c;
+            --nav-glow: rgba(255,46,156,0.4);
+            --nav-brand-glow: rgba(255,46,156,0.7);
+            background: #0a0612;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #8a7fa8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #00f0ff; }
+        .breadcrumb .sep { margin: 0 8px; color: #00f0ff; opacity: 0.7; }
+        .breadcrumb .current { color: #00f0ff; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        /* ── HEADER ── */
+        .arcade-header {
+            text-align: center;
+            margin-bottom: 8px;
+            /* no fadeUp here — translateY + overflow can clip the ascii art */
+            animation: none;
+            opacity: 0;
+            animation: arcadeIn 0.6s ease forwards;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        @keyframes arcadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        /* no transforms, no scaling — just small font that fits */
+        .arcade-title-ascii-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .arcade-title-ascii {
+            display: inline-block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 7px;
+            line-height: 1.25;
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0,240,255,0.5);
+            white-space: pre;
+            text-align: left;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1200px) { .arcade-title-ascii { font-size: 5.5px; } }
+        @media (max-width: 900px)  { .arcade-title-ascii { font-size: 4px; } }
+        @media (max-width: 600px)  { .arcade-title-ascii { font-size: 3px; } }
+
+        .arcade-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #ff2e9c;
+            letter-spacing: 0.15em;
+            margin-top: 10px;
+            text-shadow: 0 0 8px rgba(255,46,156,0.6);
+        }
+
+        /* ── COIN + INSERT COIN ── */
+        .coin-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin: 24px 0 36px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        #coinCanvas, #coinCanvas2 {
+            image-rendering: pixelated;
+            width: 48px;
+            height: 48px;
+        }
+
+        .insert-coin {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: #fff733;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 12px rgba(255,247,51,0.8);
+            animation: blink 1s step-end infinite;
+        }
+
+        /* ── GAME GRID ── */
+        .game-grid {
+            display: grid;
+            /* 2-col min so 4 cards always sit as 2x2, never 3+1 */
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        /* on very wide screens, go 4-across */
+        @media (min-width: 1100px) {
+            .game-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .game-card {
+            display: block;
+            text-decoration: none;
+            border: 2px solid #3a2d5c;
+            background: #150b29;
+            padding: 0;
+            position: relative;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            border-color: var(--card-color, #ff2e9c);
+            box-shadow: 0 0 24px var(--card-color, #ff2e9c),
+                        inset 0 0 40px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+        }
+
+        .game-card:hover::before { height: 6px; }
+
+        /* player select arrow */
+        .game-card:hover .card-arrow { opacity: 1; }
+
+        .card-inner { padding: 20px 20px 18px; }
+
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 11px);
+            color: #f0f8ff;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            letter-spacing: 0.05em;
+        }
+
+        .card-canvas-wrap {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: transparent;
+        }
+
+        .card-canvas-wrap canvas {
+            image-rendering: pixelated;
+            width: 76px;
+            height: 76px;
+        }
+
+        .card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a7fa8;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-play {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--card-color, #ff2e9c);
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-arrow {
+            opacity: 0;
+            transition: opacity 0.15s;
+            animation: blink 0.6s step-end infinite;
+        }
+
+        /* ── CREDITS ── */
+        .credits-row {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            text-align: center;
+            animation: fadeUp 0.5s 0.35s ease both;
+        }
+
+        .credits-row a {
+            color: #00f0ff;
+            text-decoration: none;
+            transition: color 0.15s, text-shadow 0.15s;
+        }
+        .credits-row a:hover {
+            color: #ffffff;
+            text-shadow: 0 0 8px #00f0ff;
+        }
+
+        /* ── HIGH SCORE BOARD ── */
+        .scoreboard {
+            margin-top: 36px;
+            width: 100%;
+            max-width: 500px;
+            border: 2px solid #fff733;
+            background: #150b29;
+            box-shadow: 0 0 16px rgba(255,224,58,0.15);
+            animation: fadeUp 0.5s 0.4s ease both;
+        }
+
+        .scoreboard-header {
+            background: #fff733;
+            color: #0a0612;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            padding: 8px 16px;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+
+        .scoreboard-body {
+            padding: 16px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            padding: 6px 0;
+            border-bottom: 1px solid #1e1e2e;
+            letter-spacing: 0.08em;
+        }
+        .score-row:last-child { border-bottom: none; }
+        .score-rank { color: #ff2e9c; width: 28px; }
+        .score-name { color: #f0f8ff; flex: 1; }
+        .score-pts  { color: #fff733; }
+
+        @media (max-width: 640px) {
+            .insert-coin { font-size: 8px; }
+            .game-grid   { grid-template-columns: 1fr; }
+        }
+
+        /* ── Server Status + Chat ── */
+        .arcade-community {
+            width: 100%;
+            max-width: 500px;
+            margin: 24px auto 36px;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+
+        .mp-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mp-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #555;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .mp-status-dot.online {
+            background: #39ff14;
+            box-shadow: 0 0 8px rgba(57,255,20,0.6);
+        }
+
+        .mp-status-dot.offline {
+            background: #ff3d3d;
+            box-shadow: 0 0 8px rgba(255,61,61,0.4);
+        }
+
+        .mp-status-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+        }
+
+        /* Chat styles moved to chat-widget.css */
+
+        @media (max-width: 640px) {
+            .arcade-community { max-width: 100%; }
+            .chat-messages { height: 100px; }
+        }
+
+        .game-section {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: #fff733;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border: 2px solid #fff733;
+            background: #150b29;
+            text-align: center;
+            text-shadow: 0 0 12px rgba(255,224,58,0.6);
+        }
+
+        .section-header-multiplayer {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #ff2e9c;
+            letter-spacing: 0.12em;
+            margin: 30px 0 16px;
+            padding: 8px 12px;
+            border: 1px dashed #ff2e9c;
+            background: transparent;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .card-tags {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            letter-spacing: 0.08em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .card-tag {
+            padding: 2px 5px;
+            border: 1px solid currentColor;
+            opacity: 0.7;
+        }
+        .card-tag-original  { color: #39ff84; }
+        .card-tag-demo      { color: #fff733; }
+
+        .preview-title-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: #080808;
+        }
+
+        .preview-title-large {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #00f0ff;
+            margin: 0 0 4px 0;
+            text-shadow: 0 0 10px rgba(0,240,255,0.5);
+            line-height: 1;
+        }
+
+        .preview-title-subtitle {
+            font-family: 'Courier Prime', monospace;
+            font-size: 6px;
+            color: #f0f8ff;
+            margin: 0;
+            letter-spacing: 0.2em;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 640px) {
+            .insert-coin { font-size: 8px; }
+            .game-grid   { grid-template-columns: 1fr; }
+        }
+
+        /* ── SERVER STATUS ── */
+        .server-status-link {
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.15s;
+        }
+        .server-status-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .server-status {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+            animation: fadeUp 0.5s 0.5s ease both;
+        }
+
+        #serverCanvas {
+            image-rendering: pixelated;
+            width: 128px;
+            height: 128px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 16px rgba(0, 245, 255, 0.15));
+            transition: filter 0.3s ease;
+        }
+
+        .server-text {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            text-align: center;
+            line-height: 1.5;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        /* Occasional flicker effect on hover */
+        .server-status:hover .server-text {
+            filter: drop-shadow(0 0 24px rgba(0,240,255,0.4));
+            color: #00f0ff;
+            text-shadow: 0 0 8px rgba(0,240,255,0.8);
+            animation: blink 0.2s step-end 3;
+        }
+
+        /* ── FOOTER ── */
+        footer { border-top-color: #3a2d5c; }
+        footer span { color: #ff2e9c; }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <span class="current">arcade</span>
+    </div>
+
+<!-- Header -->
+    <div class="arcade-header">
+        <div class="arcade-title-ascii-wrap"><pre class="arcade-title-ascii">
+           |                            |             |    |         
+ . . .,---.|    ,---.,---.,-.-.,---.    |--- ,---.    |--- |---.,---.
+ | | ||---'|    |    |   || | ||---'    |    |   |    |    |   ||---'
+ `-'-'`---'`---'`---'`---'` ' '`---'    `---'`---'    `---'`   '`---'
+                                                                                                              /$$      
+                                                                                                             | $$      
+  /$$$$$$/$$$$   /$$$$$$   /$$$$$$  /$$$$$$/$$$$   /$$$$$$   /$$$$$$$  /$$$$$$  /$$   /$$ /$$$$$$$   /$$$$$$$| $$$$$$$ 
+ | $$_  $$_  $$ |____  $$ /$$__  $$| $$_  $$_  $$ |____  $$ /$$_____/ /$$__  $$| $$  | $$| $$__  $$ /$$_____/| $$__  $$
+ | $$ \ $$ \ $$  /$$$$$$$| $$  \ $$| $$ \ $$ \ $$  /$$$$$$$| $$      | $$  \__/| $$  | $$| $$  \ $$| $$      | $$  \ $$
+ | $$ | $$ | $$ /$$__  $$| $$  | $$| $$ | $$ | $$ /$$__  $$| $$      | $$      | $$  | $$| $$  | $$| $$      | $$  | $$
+ | $$ | $$ | $$|  $$$$$$$|  $$$$$$$| $$ | $$ | $$|  $$$$$$$|  $$$$$$$| $$      |  $$$$$$/| $$  | $$|  $$$$$$$| $$  | $$
+ |__/ |__/ |__/ \_______/ \____  $$|__/ |__/ |__/ \_______/ \_______/|__/       \______/ |__/ |__/ \_______/|__/ |__/
+                          /$$  \ $$                                                                                    
+                         |  $$$$$$/                                                                                    
+                          \______/                                                                                    
+                                                /$$                                                                    
+                                               | $$                                                                    
+  /$$$$$$   /$$$$$$   /$$$$$$$  /$$$$$$   /$$$$$$$  /$$$$$$                                                           
+ |____  $$ /$$__  $$ /$$_____/ |____  $$ /$$__  $$ /$$__  $$                                                          
+  /$$$$$$$| $$  \__/| $$        /$$$$$$$| $$  | $$| $$$$$$$$                                                          
+ /$$__  $$| $$      | $$       /$$__  $$| $$  | $$| $$_____/                                                          
+|  $$$$$$$| $$      |  $$$$$$$|  $$$$$$$|  $$$$$$$|  $$$$$$$                                                          
+ \_______/|__/       \_______/ \_______/ \_______/ \_______/                                                      
+</pre></div>
+        <div class="arcade-subtitle">// established december 2025 // in development //</div>
+    </div>
+
+    <!-- Coin + Insert Coin -->
+    <div class="coin-row">
+        <canvas id="coinCanvas" width="16" height="16" title="insert coin"></canvas>
+        <div class="insert-coin">— INSERT COIN —</div>
+        <canvas id="coinCanvas2" width="16" height="16" title="insert coin"></canvas>
+    </div>
+
+    <!-- Server Status -->
+    <div class="arcade-community">
+        <div class="mp-status">
+            <div class="mp-status-dot" id="mpServerStatus"></div>
+            <span class="mp-status-text" id="mpServerStatusText">CHECKING...</span>
+        </div>
+    </div>
+
+    <!-- Chat widget loads via JS -->
+
+    <!-- Collections -->
+    <div class="game-section">
+        <div class="section-header" style="border-color: #fff733; color: #fff733; text-shadow: 0 0 12px rgba(255,224,58,0.6);">// WEB COLLECTIONS //</div>
+        <div class="game-grid">
+
+            <a href="board-games/" class="game-card" style="--card-color: #00f5ff">
+                <div class="card-inner">
+                    <div class="card-title">BOARD<br>GAMES</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cBoardGames" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">chess, checkers, backgammon, parchisi. classic boards. neon edition.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="card-games/" class="game-card" style="--card-color: #39ff6e">
+                <div class="card-inner">
+                    <div class="card-title">CARD<br>GAMES</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cCardGames" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">solitaire, cribbage, sökö, texas hold'em. deal 'em up.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="puzzles/" class="game-card" style="--card-color: #ffe03a">
+                <div class="card-inner">
+                    <div class="card-title">PUZZLES</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cPuzzles" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">2048, george boole, 15 puzzle, tetris. brain busters.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="action/" class="game-card" style="--card-color: #ff2e9c">
+                <div class="card-inner">
+                    <div class="card-title">ACTION</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cAction" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">moonlight drift, very long boards, roderick tron. run, dodge, survive.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="http://magmacrunch.duckdns.org:8782/" class="game-card" style="--card-color: #ff3d6e">
+                <div class="card-inner">
+                    <div class="card-title">PRIVATE</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cPrivate" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">password-protected. ask jake for access.</div>
+                    <div class="card-play">▶ ENTER<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- HIDDEN: Music-Inspired section — crystal maze being made offline, pay2play to return as downloadable collection
+    <div class="game-section">
+        <div class="section-header" style="--card-color: #39ff84; border-color: #39ff84; color: #39ff84; text-shadow: 0 0 12px rgba(57,255,132,0.6);">// MUSIC-INSPIRED //</div>
+        <div class="game-grid">
+
+            <a href="crystal-mirror-maze/" class="game-card" style="--card-color: #b537f2">
+                <div class="card-inner">
+                    <div class="card-tags">
+                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
+                    </div>
+                    <div class="card-title">CRYSTAL<br>MIRROR MAZE</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cMaze" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">navigate a shifting labyrinth of reflections.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+            <a href="pay2play/pay2play.html" class="game-card" style="--card-color: #ff2e9c">
+                <div class="card-inner">
+                    <div class="card-tags">
+                        <span class="card-tag" style="color: #b537f2">SVFP-INSPIRED</span>
+                        <span class="card-tag" style="color: #fff733">UNDER CONSTRUCTION</span>
+                    </div>
+                    <div class="card-title">PAY2PLAY</div>
+                    <div class="card-canvas-wrap">
+                        <canvas id="cPay2play" width="72" height="72"></canvas>
+                    </div>
+                    <div class="card-desc">floppy disks, red telephones, coins. sex van floor plan universe.</div>
+                    <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+    -->
+
+    <!-- itch.io link -->
+    <div class="credits-row">
+        also on &nbsp;<a href="https://magmacrunch.itch.io/" target="_blank">itch.io ↗</a>
+    </div>
+
+    <a href="server.html" class="server-status-link">
+        <div class="server-status">
+            <canvas id="serverCanvas" width="128" height="128" title="magmacrunch server"></canvas>
+            <div class="server-text">supported by the magmacrunch server since March 2026</div>
+        </div>
+    </a>
+
+    <!-- Fake high score board for flavor -->
+    <!-- <div class="scoreboard"> -->
+    <!--     <div class="scoreboard-header">✦ HIGH SCORES ✦</div> -->
+    <!--     <div class="scoreboard-body"> -->
+    <!--         <div class="score-row"><span class="score-rank">1ST</span><span class="score-name">JAM</span><span class="score-pts">999999</span></div> -->
+    <!--         <div class="score-row"><span class="score-rank">2ND</span><span class="score-name">CPR</span><span class="score-pts">888420</span></div> -->
+    <!--         <div class="score-row"><span class="score-rank">3RD</span><span class="score-name">JHM</span><span class="score-pts">777001</span></div> -->
+    <!--         <div class="score-row"><span class="score-rank">4TH</span><span class="score-name">YOU</span><span class="score-pts">??????</span></div> -->
+    <!--     </div> -->
+    <!-- </div> -->
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js"></script>
+<script>
+// ─────────────────────────────────────────────────────────
+// COIN SPRITE (your original code, adapted for multiple canvases)
+// ─────────────────────────────────────────────────────────
+function drawCoin(canvas) {
+    const ctx = canvas.getContext('2d');
+    const coinPattern = [
+        '   ██████████   ',
+        '  ████████████  ',
+        ' ██████████████ ',
+        '████████████████',
+        '████  ████  ████',
+        '████   ██   ████',
+        '████   ██   ████',
+        '████  ████  ████',
+        '████  ████  ████',
+        '████   ██   ████',
+        '████   ██   ████',
+        '████  ████  ████',
+        '████████████████',
+        ' ██████████████ ',
+        '  ████████████  ',
+        '   ██████████   '
+    ];
+    const gold = '#FFD700', darkGold = '#DAA520', lightGold = '#FFED4E';
+    for (let y = 0; y < coinPattern.length; y++) {
+        const row = coinPattern[y];
+        for (let x = 0; x < row.length; x += 2) {
+            if (row.substr(x, 2) === '██') {
+                const px = x / 2;
+                ctx.fillStyle = (y < 4 || px < 4) ? lightGold : (y > 11 || px > 11) ? darkGold : gold;
+                ctx.fillRect(px, y, 1, 1);
+            }
+        }
+    }
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(5, 2, 1, 1);
+    ctx.fillRect(6, 3, 1, 1);
+}
+
+// Animated spinning coin using horizontal squish
+function animateCoin(canvas) {
+    const frames = 12;
+    let frame = 0;
+    const offscreen = document.createElement('canvas');
+    offscreen.width = 16; offscreen.height = 16;
+    drawCoin(offscreen);
+
+    const ctx = canvas.getContext('2d');
+    let intervalId = setInterval(() => {
+        ctx.clearRect(0, 0, 16, 16);
+        const phase = Math.abs(Math.sin((frame / frames) * Math.PI));
+        const scaleX = 0.15 + phase * 0.85;
+        const ox = (16 - 16 * scaleX) / 2;
+        ctx.drawImage(offscreen, ox, 0, 16 * scaleX, 16);
+        frame = (frame + 1) % frames;
+    }, 80);
+
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            clearInterval(intervalId);
+        } else {
+            intervalId = setInterval(() => {
+                ctx.clearRect(0, 0, 16, 16);
+                const phase = Math.abs(Math.sin((frame / frames) * Math.PI));
+                const scaleX = 0.15 + phase * 0.85;
+                const ox = (16 - 16 * scaleX) / 2;
+                ctx.drawImage(offscreen, ox, 0, 16 * scaleX, 16);
+                frame = (frame + 1) % frames;
+            }, 80);
+        }
+    });
+}
+
+animateCoin(document.getElementById('coinCanvas'));
+animateCoin(document.getElementById('coinCanvas2'));
+
+// ─────────────────────────────────────────────────────────
+// MINI PREVIEW SPRITES for each game card
+// ─────────────────────────────────────────────────────────
+
+
+
+
+/* HIDDEN: crystal mirror maze preview
+// Crystal mirror maze preview — 3D crystal gem with facets
+(function() {
+    const c = document.getElementById('cMaze');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark space background
+    ctx.fillStyle = '#080818';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // crystal gem (hexagonal prism, isometric projection)
+    const cx = 36, cy = 36;
+    const r = 20;
+
+    // top face (brightest)
+    ctx.fillStyle = '#c45fff';
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx + r, cy - r / 2);
+    ctx.lineTo(cx + r / 2, cy);
+    ctx.lineTo(cx - r / 2, cy);
+    ctx.lineTo(cx - r, cy - r / 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // right face (medium)
+    ctx.fillStyle = '#8a30df';
+    ctx.beginPath();
+    ctx.moveTo(cx + r, cy - r / 2);
+    ctx.lineTo(cx + r, cy + r / 2);
+    ctx.lineTo(cx + r / 2, cy + r);
+    ctx.lineTo(cx + r / 2, cy);
+    ctx.closePath();
+    ctx.fill();
+
+    // left face (darkest, mirror shimmer)
+    ctx.fillStyle = '#ff3d6e';
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(cx - r, cy - r / 2);
+    ctx.lineTo(cx - r, cy + r / 2);
+    ctx.lineTo(cx - r / 2, cy + r);
+    ctx.lineTo(cx - r / 2, cy);
+    ctx.closePath();
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // highlight edge
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx + r, cy - r / 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - r);
+    ctx.lineTo(cx - r, cy - r / 2);
+    ctx.stroke();
+
+    // reflection shimmer on left face
+    ctx.fillStyle = 'rgba(0, 245, 255, 0.3)';
+    ctx.beginPath();
+    ctx.moveTo(cx - r, cy - r / 2);
+    ctx.lineTo(cx - r, cy + r / 2);
+    ctx.lineTo(cx - r / 2, cy + r);
+    ctx.lineTo(cx - r / 2, cy);
+    ctx.closePath();
+    ctx.fill();
+
+    // small sparkle
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(26, 22, 2, 2);
+})();
+*/
+
+
+/* HIDDEN: cPay2play — to return as downloadable collection
+// cPay2play — SVFP-inspired floppy disk + red telephone
+(function() {
+    const c = document.getElementById('cPay2play');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // dark background
+    ctx.fillStyle = '#0a0808';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // red telephone (simplified)
+    ctx.fillStyle = '#cc2020';
+    ctx.fillRect(8, 10, 20, 28);
+    ctx.fillStyle = '#aa1818';
+    ctx.fillRect(10, 12, 16, 24);
+    // handset
+    ctx.fillStyle = '#222';
+    ctx.fillRect(12, 8, 12, 4);
+    ctx.fillRect(8, 6, 4, 6);
+    ctx.fillRect(24, 6, 4, 6);
+    // cord
+    ctx.strokeStyle = '#222';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(18, 38);
+    ctx.quadraticCurveTo(18, 48, 28, 52);
+    ctx.stroke();
+
+    // floppy disk
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(40, 14, 24, 24);
+    ctx.fillStyle = '#333';
+    ctx.fillRect(44, 16, 16, 10);
+    // label
+    ctx.fillStyle = '#ddd';
+    ctx.fillRect(44, 28, 16, 8);
+    // shutter
+    ctx.fillStyle = '#555';
+    ctx.fillRect(50, 16, 4, 6);
+
+    // coins
+    const coins = [[14, 56], [28, 58], [42, 54], [56, 57]];
+    coins.forEach(([x, y]) => {
+        ctx.fillStyle = '#FFD700';
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#DAA520';
+        ctx.beginPath();
+        ctx.arc(x, y, 2, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // accent line
+    ctx.fillStyle = '#ff2e9c';
+    ctx.fillRect(4, 68, 64, 2);
+})();
+*/
+
+
+// ── Board Games collection preview — checkerboard + detailed pieces ──
+(function() {
+    const c = document.getElementById('cBoardGames');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const sq = 8;
+    for (let r = 0; r < 8; r++) {
+        for (let col = 0; col < 8; col++) {
+            const x = 4 + col * sq;
+            const y = 4 + r * sq;
+            const isDark = (r + col) % 2 === 1;
+            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillRect(x, y, sq, sq);
+            // highlight on light squares
+            if (!isDark) {
+                ctx.fillStyle = 'rgba(255,255,255,0.06)';
+                ctx.fillRect(x, y, sq, 1);
+                ctx.fillRect(x, y, 1, sq);
+            }
+        }
+    }
+    // chess king (top-left area) — crown shape
+    ctx.fillStyle = '#ff2d78';
+    ctx.fillRect(10, 8, 6, 2);   // crown base
+    ctx.fillRect(10, 6, 2, 2);   // left tine
+    ctx.fillRect(13, 6, 2, 2);   // center tine (taller)
+    ctx.fillRect(11, 4, 4, 2);   // cross top
+    ctx.fillRect(12, 3, 2, 1);   // cross vertical
+    ctx.fillStyle = '#ff5a9e';
+    ctx.fillRect(10, 10, 6, 4);  // body highlight
+    ctx.fillStyle = '#ff2d78';
+    ctx.fillRect(11, 14, 4, 2);  // base
+    // shadow under king
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(9, 16, 8, 2);
+    // chess knight (center-right) — horse head profile
+    ctx.fillStyle = '#00f5ff';
+    ctx.fillRect(46, 18, 4, 2);  // ear
+    ctx.fillRect(44, 20, 6, 4);  // head
+    ctx.fillRect(44, 24, 4, 2);  // jaw
+    ctx.fillRect(42, 26, 6, 2);  // neck
+    ctx.fillRect(42, 28, 4, 4);  // base
+    ctx.fillStyle = '#00c8cc';
+    ctx.fillRect(45, 21, 2, 1);  // eye
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(41, 32, 6, 2);
+    // checkers piece (bottom-right) — ridged disc
+    ctx.fillStyle = '#ffe03a';
+    ctx.beginPath(); ctx.arc(58, 52, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ccaa00';
+    ctx.beginPath(); ctx.arc(58, 52, 3, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#ffe03a';
+    ctx.beginPath(); ctx.arc(58, 52, 1.5, 0, Math.PI * 2); ctx.fill();
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.arc(58, 54, 5, 0, Math.PI); ctx.fill();
+    // backgammon piece (bottom-left) — flat elongated disc
+    ctx.fillStyle = '#c45fff';
+    ctx.fillRect(10, 56, 8, 3);
+    ctx.fillStyle = '#9a30cc';
+    ctx.fillRect(10, 59, 8, 1);
+    // die (bottom-center) — 3D isometric look with 5 dots
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(32, 52, 10, 10);
+    ctx.fillStyle = '#ffaa55';
+    ctx.fillRect(32, 52, 10, 2);  // top edge highlight
+    ctx.fillRect(32, 52, 2, 10);  // left edge highlight
+    ctx.fillStyle = '#cc5500';
+    ctx.fillRect(40, 52, 2, 10);  // right shadow
+    ctx.fillRect(32, 60, 10, 2);  // bottom shadow
+    // dots (5-face pattern)
+    ctx.fillStyle = '#1a0a1a';
+    ctx.fillRect(34, 54, 2, 2);
+    ctx.fillRect(39, 54, 2, 2);
+    ctx.fillRect(36, 56, 2, 2);
+    ctx.fillRect(34, 59, 2, 2);
+    ctx.fillRect(39, 59, 2, 2);
+})();
+
+// ── Card Games collection preview — fanned hand + poker chips ──
+(function() {
+    const c = document.getElementById('cCardGames');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a1628';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#39ff6e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    // subtle table felt texture
+    ctx.fillStyle = 'rgba(57,255,110,0.03)';
+    for (let i = 0; i < 72; i += 4) ctx.fillRect(0, i, 72, 2);
+    const cardW = 18, cardH = 26;
+    const cards = [
+        { x: 6,  suit: '\u2660', rank: 'A', color: '#0a1628' },
+        { x: 18, suit: '\u2665', rank: 'K', color: '#ff3d6e' },
+        { x: 30, suit: '\u2666', rank: 'Q', color: '#ff3d6e' },
+        { x: 42, suit: '\u2663', rank: 'J', color: '#0a1628' },
+    ];
+    const startY = 10;
+    // card drop shadows
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    cards.forEach(card => ctx.fillRect(card.x + 2, startY + 2, cardW, cardH));
+    cards.forEach((card, i) => {
+        // card body
+        ctx.fillStyle = '#f0ead8';
+        ctx.fillRect(card.x, startY - i, cardW, cardH);
+        // inner border
+        ctx.strokeStyle = '#39ff6e';
+        ctx.lineWidth = 0.5;
+        ctx.strokeRect(card.x + 1, startY - i + 1, cardW - 2, cardH - 2);
+        // rank top-left
+        ctx.fillStyle = card.color;
+        ctx.font = "bold 5px 'Press Start 2P', monospace";
+        ctx.textAlign = 'left';
+        ctx.fillText(card.rank, card.x + 2, startY - i + 7);
+        // suit below rank
+        ctx.font = '6px serif';
+        ctx.fillText(card.suit, card.x + 3, startY - i + 13);
+        // centered large suit
+        ctx.font = '10px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(card.suit, card.x + cardW / 2, startY - i + 22);
+    });
+    // poker chips stacked (bottom-right)
+    const chipColors = ['#00f5ff', '#ff2e9c', '#ffe03a', '#39ff6e'];
+    chipColors.forEach((col, i) => {
+        const cx = 56, cy = 48 - i * 2;
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fillRect(cx - 7, cy + 1, 14, 5);
+        ctx.fillStyle = col;
+        ctx.fillRect(cx - 7, cy, 14, 5);
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.fillRect(cx - 5, cy + 1, 10, 3);
+    });
+    // chip detail lines
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    chipColors.forEach((_, i) => {
+        ctx.fillRect(50, 47 - i * 2, 12, 1);
+    });
+    // accent line
+    ctx.fillStyle = '#39ff6e';
+    ctx.fillRect(8, 62, 56, 2);
+})();
+
+// ── Puzzles collection preview — question mark grid ──
+(function() {
+    const c = document.getElementById('cPuzzles');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ffe03a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const tiles = [
+        { color: '#0a2a5a', text: '2' },
+        { color: '#b0006a', text: '?' },
+        { color: '#006a8a', text: '8' },
+        { color: '#1a0a2a', text: '' },
+    ];
+    const cellSize = 32, gap = 2, boardPad = 4;
+    tiles.forEach((t, i) => {
+        const x = (i % 2) * cellSize + boardPad;
+        const y = Math.floor(i / 2) * cellSize + boardPad;
+        ctx.fillStyle = t.color;
+        ctx.fillRect(x, y, cellSize - gap, cellSize - gap);
+        if (t.text) {
+            ctx.fillStyle = t.text === '?' ? '#ffe03a' : '#fff';
+            ctx.font = `bold 10px 'Press Start 2P', monospace`;
+            ctx.textAlign = 'center';
+            ctx.fillText(t.text, x + (cellSize - gap) / 2, y + (cellSize - gap) / 2 + 4);
+        }
+    });
+})();
+
+// ── Action collection preview — spaceship with exhaust, enemies, lasers ──
+(function() {
+    const c = document.getElementById('cAction');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0e27';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ff2e9c';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    // parallax starfield — big bright + small dim
+    const bigStars = [[8,8],[40,10],[56,6],[12,28],[50,18]];
+    const smallStars = [[4,14],[22,6],[34,4],[60,20],[16,36],[44,30],[28,22],[52,36],[8,44],[36,48],[62,44]];
+    ctx.fillStyle = '#ffffff';
+    bigStars.forEach(([x, y]) => ctx.fillRect(x, y, 2, 2));
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    smallStars.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
+    // enemy drone (top-right) — pixel alien
+    ctx.fillStyle = '#ff3d6e';
+    ctx.fillRect(52, 12, 6, 2);   // body
+    ctx.fillRect(50, 14, 10, 2);  // wide body
+    ctx.fillRect(52, 16, 2, 2);   // left leg
+    ctx.fillRect(56, 16, 2, 2);   // right leg
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(53, 13, 1, 1);   // left eye
+    ctx.fillRect(57, 13, 1, 1);   // right eye
+    // laser beam from enemy
+    ctx.fillStyle = '#ff3d6e';
+    ctx.fillRect(55, 18, 1, 12);
+    ctx.fillStyle = 'rgba(255,61,110,0.4)';
+    ctx.fillRect(54, 18, 3, 12);
+    // spaceship — detailed with cockpit, wings, panels
+    const sx = 28, sy = 30;
+    // main hull
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillRect(sx + 4, sy, 8, 20);
+    // cockpit window
+    ctx.fillStyle = '#004466';
+    ctx.fillRect(sx + 5, sy + 2, 6, 4);
+    ctx.fillStyle = '#00aacc';
+    ctx.fillRect(sx + 6, sy + 3, 4, 2);
+    // nose
+    ctx.fillStyle = '#00d4ff';
+    ctx.fillRect(sx + 6, sy - 2, 4, 2);
+    ctx.fillRect(sx + 7, sy - 4, 2, 2);
+    // left wing
+    ctx.fillStyle = '#ff6b9d';
+    ctx.fillRect(sx - 2, sy + 8, 6, 3);
+    ctx.fillRect(sx - 4, sy + 10, 4, 2);
+    ctx.fillRect(sx - 4, sy + 12, 2, 4);
+    // right wing
+    ctx.fillRect(sx + 10, sy + 8, 6, 3);
+    ctx.fillRect(sx + 12, sy + 10, 4, 2);
+    ctx.fillRect(sx + 14, sy + 12, 2, 4);
+    // panel lines
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(sx + 7, sy + 6, 2, 14);
+    // thruster glow
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(sx + 5, sy + 20, 6, 4);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(sx + 6, sy + 20, 4, 2);
+    // exhaust flame — layered for depth
+    ctx.fillStyle = '#ff7c1f';
+    ctx.fillRect(sx + 5, sy + 24, 6, 6);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(sx + 6, sy + 24, 4, 4);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(sx + 7, sy + 24, 2, 2);
+    // laser from ship
+    ctx.fillStyle = '#00f5ff';
+    ctx.fillRect(sx + 7, sy - 8, 1, 8);
+    ctx.fillStyle = 'rgba(0,245,255,0.4)';
+    ctx.fillRect(sx + 6, sy - 8, 3, 8);
+    // second enemy (small, bottom-left)
+    ctx.fillStyle = '#c45fff';
+    ctx.fillRect(10, 52, 4, 2);
+    ctx.fillRect(8, 54, 8, 2);
+    ctx.fillRect(10, 56, 2, 2);
+    ctx.fillRect(14, 56, 2, 2);
+    ctx.fillStyle = '#ffe03a';
+    ctx.fillRect(9, 53, 1, 1);
+    ctx.fillRect(15, 53, 1, 1);
+})();
+
+// ── Private collection preview — lock icon ──
+(function() {
+    const c = document.getElementById('cPrivate');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#0a0612';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#ff3d6e';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    // Lock body
+    ctx.fillStyle = '#1a0a1a';
+    ctx.fillRect(22, 30, 28, 22);
+    ctx.strokeStyle = '#ff3d6e';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(22, 30, 28, 22);
+    // Lock shackle
+    ctx.beginPath();
+    ctx.arc(36, 30, 10, Math.PI, 0);
+    ctx.strokeStyle = '#ff3d6e';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // Keyhole
+    ctx.fillStyle = '#ff3d6e';
+    ctx.beginPath();
+    ctx.arc(36, 38, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillRect(35, 38, 2, 8);
+})();
+
+// ─────────────────────────────────────────────────────────
+// keyboard navigation — arrow keys to highlight, enter to go
+// ─────────────────────────────────────────────────────────
+(function() {
+    const cards = Array.from(document.querySelectorAll('.game-card'));
+    let selected = -1;
+
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            selected = (selected + 1) % cards.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            selected = (selected - 1 + cards.length) % cards.length;
+        } else if (e.key === 'Enter' && selected >= 0) {
+            window.location.href = cards[selected].href;
+            return;
+        } else { return; }
+        cards.forEach((c, i) => {
+            c.style.transform = i === selected ? 'translateY(-3px)' : '';
+            c.style.boxShadow = i === selected
+                ? `0 0 28px var(--card-color, #ff2e9c)`
+                : '';
+        });
+    });
+})();
+
+// ─────────────────────────────────────────────────────────
+// SERVER ANIMATION (128x128 Retro Mainframe)
+// ─────────────────────────────────────────────────────────
+(function() {
+    const canvas = document.getElementById('serverCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let frame = 0;
+
+    // Helper function for blocky pixel-art tape reels
+    function drawTape(x, y, phase) {
+        ctx.fillStyle = '#d0d0d0'; // Tape color
+        ctx.fillRect(x - 4, y - 6, 8, 12);
+        ctx.fillRect(x - 6, y - 4, 12, 8);
+        ctx.fillStyle = '#111'; // Cutouts
+        
+        if (phase === 0) {
+            ctx.fillRect(x - 2, y - 6, 4, 12); 
+            ctx.fillRect(x - 6, y - 2, 12, 4); 
+        } else {
+            ctx.fillRect(x - 4, y - 4, 8, 8);
+            ctx.fillStyle = '#d0d0d0';
+            ctx.fillRect(x - 2, y - 2, 4, 4);
+        }
+    }
+
+    function drawServer() {
+        ctx.clearRect(0, 0, 128, 128);
+
+        // --- RACK CASING ---
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(24, 12, 80, 104);
+        
+        // Edge highlights & shadows for depth
+        ctx.fillStyle = '#2a2a2a';
+        ctx.fillRect(24, 12, 4, 104); // Left highlight
+        ctx.fillStyle = '#0a0a0a';
+        ctx.fillRect(100, 12, 4, 104); // Right shadow
+
+        // --- TOP: CRT MONITOR ---
+        ctx.fillStyle = '#222';
+        ctx.fillRect(32, 20, 64, 36);
+        
+        // CRT Screen 
+        ctx.fillStyle = '#081408'; // Dark phosphor green base
+        ctx.fillRect(36, 24, 56, 28);
+        
+        // Oscilloscope / Sine wave data on screen
+        ctx.fillStyle = '#39ff6e'; // Bright phosphor green
+        for (let x = 0; x < 52; x += 4) {
+            let yOff = Math.sin((frame * 0.4) + (x * 0.2)) * 8;
+            ctx.fillRect(38 + x, 36 + yOff, 3, 3);
+        }
+        
+        // Blinking REC/SYS indicator
+        if (frame % 8 < 4) {
+            ctx.fillStyle = '#ff3d6e';
+            ctx.fillRect(40, 26, 4, 4);
+        }
+
+        // --- MIDDLE: TAPE DRIVES ---
+        ctx.fillStyle = '#111';
+        ctx.fillRect(32, 60, 64, 24);
+        
+        // Drive housings
+        ctx.fillStyle = '#222';
+        ctx.fillRect(36, 64, 24, 16);
+        ctx.fillRect(68, 64, 24, 16);
+        
+        // Spinning tapes
+        let tapePhase = (frame % 4 < 2) ? 0 : 1;
+        drawTape(48, 72, tapePhase);
+        drawTape(80, 72, tapePhase);
+
+        // --- BOTTOM: SERVER BLADES & LEDS ---
+        for (let i = 0; i < 2; i++) {
+            let y = 88 + i * 12;
+            
+            // Blade face
+            ctx.fillStyle = '#111';
+            ctx.fillRect(32, y, 64, 8);
+            
+            // Randomly blinking status LEDs
+            for (let j = 0; j < 8; j++) {
+                // High activity chance
+                if (Math.random() > 0.4) {
+                    // Pulling from your aesthetic variables: cyan, rose, yellow, green
+                    let colors = ['#00f5ff', '#ff3d6e', '#ffe03a', '#39ff6e'];
+                    ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                    ctx.fillRect(36 + j * 7, y + 2, 4, 4);
+                } else {
+                    // Off state
+                    ctx.fillStyle = '#222';
+                    ctx.fillRect(36 + j * 7, y + 2, 4, 4);
+                }
+            }
+        }
+
+        // --- BASE & FLOOR CABLES ---
+        // Rack floor mount
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(20, 116, 88, 4);
+
+        // Thick data/power cables dropping down
+        ctx.fillStyle = (frame % 6 < 3) ? '#ff3d6e' : '#881133'; // Pulsing red cable
+        ctx.fillRect(40, 120, 6, 8);
+        
+        ctx.fillStyle = '#00f5ff'; // Steady cyan cable
+        ctx.fillRect(60, 120, 4, 8);
+        
+        ctx.fillStyle = '#ffe03a'; // Steady yellow cable
+        ctx.fillRect(80, 120, 4, 8);
+
+        frame++;
+        
+        // Low retro framerate
+        setTimeout(() => requestAnimationFrame(drawServer), 120);
+    }
+
+    // Start loop
+    drawServer();
+})();
+</script>
+
+<link rel="stylesheet" href="shared/chat-widget.css">
+<script src="shared/chat-widget.js"></script>
+<script>
+// ─────────────────────────────────────────────────────────
+// SERVER STATUS + GLOBAL CHAT (using shared/chat-widget.js)
+// ─────────────────────────────────────────────────────────
+(function() {
+    // ── Server Status ──────────────────────────────────────
+    const statusDot = document.getElementById('mpServerStatus');
+    const statusText = document.getElementById('mpServerStatusText');
+
+    function checkStatus() {
+        try {
+            var chatHost = (function() {
+                try {
+                    var param = new URLSearchParams(window.location.search).get('server');
+                    if (param) return param;
+                } catch(e) {}
+                var h = window.location.hostname;
+                if (h === 'localhost' || h === '127.0.0.1') return '192.168.1.16:8768';
+                return 'magmacrunch.duckdns.org';
+            })();
+            var controller = new AbortController();
+            var timeout = setTimeout(function() { controller.abort(); }, 5000);
+            fetch('https://' + chatHost, { mode: 'no-cors', signal: controller.signal })
+                .then(function() {
+                    clearTimeout(timeout);
+                    statusDot.className = 'mp-status-dot online';
+                    statusText.textContent = 'MULTIPLAYER ONLINE';
+                })
+                .catch(function() {
+                    clearTimeout(timeout);
+                    statusDot.className = 'mp-status-dot offline';
+                    statusText.textContent = 'SERVERS OFFLINE';
+                });
+        } catch(e) {
+            statusDot.className = 'mp-status-dot offline';
+            statusText.textContent = 'SERVERS OFFLINE';
+        }
+    }
+
+    // Check status on load
+    checkStatus();
+    // Check status every 30 seconds
+    setInterval(checkStatus, 30000);
+
+    // ── Connect chat using shared/chat-widget.js ──────────
+    ChatWidget.connect();
+})();
+</script>
+
+</body>
+</html>

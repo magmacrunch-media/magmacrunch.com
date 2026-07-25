@@ -1,0 +1,87 @@
+/* Audio Sound Paper, et al. shared color palette — warm brick / amber / night */
+:root {
+    --asp-surface:       #2e1e18;
+    --asp-raised:        #3e2e20;
+    --asp-dark:          #584030;
+    --asp-mid:           #806050;
+    --asp-light:         #b09070;
+    --asp-cream:         #f0e0c8;
+    --asp-terracotta:    #783020;
+    --asp-brick:         #a84828;
+    --asp-brick-light:   #c87858;
+    --asp-amber-shadow:  #906020;
+    --asp-amber:         #c89030;
+    --asp-amber-glow:    #f0d070;
+    --asp-skin:          #d08050;
+    --asp-red:           #c03020;
+    --asp-red-light:     #e05030;
+    --asp-night:         #181420;
+    --asp-shadow:        #282438;
+    --asp-night-blue:    #485878;
+    --asp-ivy-dark:      #2a3820;
+    --asp-ivy-light:     #607848;
+    --asp-highlight:     #f8e0a0;
+    --asp-bg:            #100b08;
+}
+
+body.asp-page { background: var(--asp-bg); --credit-color: var(--asp-mid); --nav-accent: var(--asp-brick); --nav-glow: rgba(168,72,40,0.4); --nav-brand: var(--asp-amber); --nav-brand-glow: rgba(200,144,48,0.7); }
+
+body.asp-page .nav-card.c-back {
+    background: transparent;
+    color: var(--asp-brick);
+    border-color: var(--asp-brick);
+}
+body.asp-page .nav-card.c-back:hover {
+    background: var(--asp-brick);
+    color: var(--asp-cream);
+}
+
+body.asp-page .nav-card.c-about {
+    background: var(--asp-brick);
+    color: var(--asp-cream);
+    border-color: var(--asp-brick);
+}
+body.asp-page .nav-card.c-about:hover {
+    background: transparent;
+    color: var(--asp-cream);
+    border-color: var(--asp-brick);
+}
+
+body.asp-page .nav-card.c-recordings {
+    background: var(--asp-amber);
+    color: var(--asp-night);
+    border-color: var(--asp-amber);
+}
+body.asp-page .nav-card.c-recordings:hover {
+    background: transparent;
+    color: var(--asp-cream);
+    border-color: var(--asp-amber);
+}
+
+body.asp-page .nav-card.c-releases {
+    background: var(--asp-red);
+    color: var(--asp-cream);
+    border-color: var(--asp-red);
+}
+body.asp-page .nav-card.c-releases:hover {
+    background: transparent;
+    color: var(--asp-cream);
+    border-color: var(--asp-red);
+}
+
+body.asp-page .nav-card.c-works {
+    background: var(--asp-amber-glow);
+    color: var(--asp-night);
+    border-color: var(--asp-amber-glow);
+}
+body.asp-page .nav-card.c-works:hover {
+    background: transparent;
+    color: var(--asp-cream);
+    border-color: var(--asp-amber-glow);
+}
+
+body.asp-page .nav-card::after { display: none; }
+body.asp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.asp-page footer { color: var(--asp-mid); }
+body.asp-page footer span { color: var(--asp-amber); }

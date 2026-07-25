@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlight Drift - Viewport Test (1280x720)</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        
+        .info {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-radius: 5px;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 100px);
+        }
+        
+        #gameFrame {
+            width: 1280px;
+            height: 720px;
+            border: 3px solid #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+            background: black;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        button {
+            background: #00d4ff;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        
+        button:hover {
+            background: #00a0cc;
+        }
+        
+        .warning {
+            background: #ff6b00;
+            color: white;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>🎮 Moonlight Drift - Viewport Test</h1>
+        <p><strong>Current Frame Size:</strong> <span id="frameSize">1280 × 720 px</span></p>
+        <p>This shows your game at the exact deployed viewport size</p>
+    </div>
+    
+    <div class="warning">
+        ⚠️ <strong>Testing Instructions:</strong><br>
+        1. Save your updated overlays.css to moonlight_drift/css/<br>
+        2. Place this file in your moonlight_drift folder<br>
+        3. Open in browser to see exact 1280x720 preview
+    </div>
+    
+    <div class="container">
+        <iframe id="gameFrame" src="./"></iframe>
+    </div>
+    
+    <div class="controls">
+        <button onclick="toggleSize('1280x720')">1280 × 720</button>
+        <button onclick="toggleSize('1920x1080')">1920 × 1080</button>
+        <button onclick="toggleSize('800x600')">800 × 600</button>
+        <button onclick="reload()">Reload Game</button>
+    </div>
+    
+    <script>
+        function toggleSize(size) {
+            const frame = document.getElementById('gameFrame');
+            const sizeDisplay = document.getElementById('frameSize');
+            
+            switch(size) {
+                case '1280x720':
+                    frame.style.width = '1280px';
+                    frame.style.height = '720px';
+                    sizeDisplay.textContent = '1280 × 720 px';
+                    break;
+                case '1920x1080':
+                    frame.style.width = '1920px';
+                    frame.style.height = '1080px';
+                    sizeDisplay.textContent = '1920 × 1080 px';
+                    break;
+                case '800x600':
+                    frame.style.width = '800px';
+                    frame.style.height = '600px';
+                    sizeDisplay.textContent = '800 × 600 px';
+                    break;
+            }
+        }
+        
+        function reload() {
+            document.getElementById('gameFrame').src = 'index.html?' + new Date().getTime();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by place — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../templates/contributor-theme.css">
+    <style>
+        :root {
+            --nav-brand:    #dd4ec0;
+            --nav-brand-glow: rgba(221,78,192,0.7);
+            --nav-accent:   #9a1879;
+            --nav-glow:     rgba(154,24,121,0.4);
+        }
+        body.ctb-page {
+            --ctb-void:     #2b0021;
+            --ctb-darkest:  #46002f;
+            --ctb-dark:     #6c0950;
+            --ctb-mid-dark: #9a1879;
+            --ctb-deep:     #b01b8c;
+            --ctb-bright:   #bf2c9d;
+            --ctb-muted:    #db85bd;
+            --ctb-cyan:     #dd4ec0;
+            --ctb-light:    #ff7dd0;
+            --ctb-pale:     #ffaae0;
+            background:     #2b0021;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #db85bd;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #db85bd; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #dd4ec0; }
+        .breadcrumb .sep { margin: 0 8px; color: #dd4ec0; opacity: 0.7; }
+        .breadcrumb .current { color: #dd4ec0; }
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: #dd4ec0;
+            text-shadow: 0 0 16px rgba(221,78,192,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #db85bd;
+            margin-bottom: 32px;
+            letter-spacing: 0.12em;
+        }
+        .grid-wrap {
+            width: min(900px, 95vw);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 2px solid #9a1879;
+            background: #2b0021;
+            padding: 16px;
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: #dd4ec0;
+            box-shadow: 0 0 16px rgba(221,78,192,0.3);
+        }
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #ffaae0;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+        .card-soon {
+            border: 2px dashed #9a1879;
+            background: #2b0021;
+            padding: 16px;
+            opacity: 0.5;
+        }
+        .card-soon .card-sub {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #db85bd;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        
+    </style>
+</head>
+<body class="ctb-page">
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../">home</a><span class="sep">›</span>
+        <a href="../">archive</a><span class="sep">›</span>
+        <span class="current">by place</span>
+    </div>
+    <h1 class="page-title">// by place //</h1>
+    <p class="page-subtitle">the magmacrunch archive</p>
+
+    <div class="grid-wrap">
+        <a href="college-green-apt/" class="card"><div class="card-title">College Green Apt.</div></a>
+        <a href="frogwood-manor/" class="card"><div class="card-title">Frogwood Manor</div></a>
+        <a href="green-street-apt/" class="card"><div class="card-title">Green Street Apt.</div></a>
+        <a href="irvin-house/" class="card"><div class="card-title">Irvin House</div></a>
+        <a href="marvin-gardens-g12/" class="card"><div class="card-title">Marvin Gardens G12</div></a>
+        <a href="melrose-house/" class="card"><div class="card-title">Melrose House</div></a>
+        <a href="the-tuna-can/" class="card"><div class="card-title">The Tuna Can</div></a>
+        <a href="twin-maples/" class="card"><div class="card-title">Twin Maples</div></a>
+        <div class="card-soon"><div class="card-title">Riverside Estate</div><div class="card-sub">coming soon</div></div>
+        <div class="card-soon"><div class="card-title">Spirit Castle</div><div class="card-sub">coming soon</div></div>
+        <div class="card-soon"><div class="card-title">The Toadstool</div><div class="card-sub">coming soon</div></div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+</body>
+</html>

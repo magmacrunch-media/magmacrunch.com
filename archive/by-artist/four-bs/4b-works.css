@@ -1,0 +1,30 @@
+/* The Four B's — works */
+body.fb-page.fb-works-page main > * { background: var(--4b-bg); }
+
+body.fb-page.fb-works-page .breadcrumb { color: var(--dim); }
+body.fb-page.fb-works-page .breadcrumb a { color: var(--4b-amber); }
+body.fb-page.fb-works-page .breadcrumb a:hover { color: var(--4b-chart); }
+body.fb-page.fb-works-page .breadcrumb .sep { color: var(--4b-amber); opacity: 0.6; }
+body.fb-page.fb-works-page .breadcrumb .current { color: var(--4b-amber); }
+
+body.fb-page.fb-works-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fb-page.fb-works-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--4b-amber); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fb-page.fb-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--4b-amber); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(240, 168, 48, 0.5); }
+
+body.fb-page.fb-works-page .work-card {
+    background: var(--4b-bg);
+    border-color: var(--4b-deep);
+}
+body.fb-page.fb-works-page .work-card:hover { border-color: var(--4b-amber); }
+body.fb-page.fb-works-page .work-card h3 a { color: var(--4b-chart); }
+body.fb-page.fb-works-page .work-card h3 a:hover { color: var(--4b-heading); }
+body.fb-page.fb-works-page .work-card a { color: var(--4b-chart); }
+
+body.fb-page.fb-works-page .nav-card::after { display: none; }
+
+body.fb-page.fb-works-page .nav-card.c-back { background: transparent; color: var(--4b-amber); border-color: var(--4b-amber); }
+body.fb-page.fb-works-page .nav-card.c-back:hover { background: var(--4b-amber); color: var(--4b-deep); }
+
+@media (max-width: 500px) {
+    body.fb-page.fb-works-page .work-card { border-color: var(--4b-mid); }
+}

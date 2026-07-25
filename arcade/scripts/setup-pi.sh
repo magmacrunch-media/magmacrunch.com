@@ -1,0 +1,177 @@
+#!/bin/bash
+# setup-pi.sh — One-shot installer for MagmaCrunch Arcade servers + dashboard
+#
+# Usage:
+#   sudo bash scripts/setup-pi.sh
+#
+# This script:
+#   1. Installs systemd service files for all game servers
+#   2. Installs the admin dashboard service
+#   3. Enables and starts all services
+#   4. Installs desktop shortcut on the Pi
+#   5. Prints a summary
+
+set -e
+
+# ── Colors ───────────────────────────────────────────────────────────────────
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+ok()   { echo -e "${GREEN}✓ $1${NC}"; }
+warn() { echo -e "${YELLOW}⚠ $1${NC}"; }
+err()  { echo -e "${RED}✗ $1${NC}"; }
+
+# ── Check root ───────────────────────────────────────────────────────────────
+
+if [[ $EUID -ne 0 ]]; then
+    err "This script must be run as root (use sudo)"
+    exit 1
+fi
+
+# ── Paths ────────────────────────────────────────────────────────────────────
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ARCADE_DIR="$(dirname "$SCRIPT_DIR")"
+SYSTEMD_DIR="$ARCADE_DIR/systemd"
+ADMIN_DIR="$ARCADE_DIR/admin"
+
+# ── Banner ───────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}╔══════════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║   MAGMACRUNCH ARCADE — Server Setup         ║${NC}"
+echo -e "${CYAN}╚══════════════════════════════════════════════╝${NC}"
+echo ""
+
+# ── Ensure venv exists ──────────────────────────────────────────────────────
+
+VENV_DIR="$ARCADE_DIR/venv"
+
+if [[ ! -d "$VENV_DIR" ]]; then
+    warn "Virtual environment not found, creating..."
+    sudo -u jake python3 -m venv "$VENV_DIR"
+    ok "Virtual environment created"
+fi
+
+# Install websockets if missing
+if ! sudo -u jake "$VENV_DIR/bin/python3" -c "import websockets" 2>/dev/null; then
+    warn "Installing websockets..."
+    sudo -u jake "$VENV_DIR/bin/pip" install websockets --quiet
+    ok "Websockets installed"
+fi
+
+# ── Install game server services ─────────────────────────────────────────────
+
+echo -e "${CYAN}Installing game server services...${NC}"
+
+for service_file in "$SYSTEMD_DIR"/*.service; do
+    if [[ -f "$service_file" ]]; then
+        name=$(basename "$service_file")
+        cp "$service_file" /etc/systemd/system/
+        ok "Installed $name"
+    fi
+done
+
+# ── Install admin dashboard service ──────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing admin dashboard...${NC}"
+
+if [[ -f "$ADMIN_DIR/systemd/arcade-admin.service" ]]; then
+    cp "$ADMIN_DIR/systemd/arcade-admin.service" /etc/systemd/system/
+    ok "Installed arcade-admin.service"
+fi
+
+# ── Install private server service ───────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing private server...${NC}"
+
+PRIVATE_DIR="$ARCADE_DIR/private"
+if [[ -f "$PRIVATE_DIR/systemd/arcade-private.service" ]]; then
+    cp "$PRIVATE_DIR/systemd/arcade-private.service" /etc/systemd/system/
+    ok "Installed arcade-private.service"
+fi
+
+# ── Reload systemd ──────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Reloading systemd...${NC}"
+systemctl daemon-reload
+ok "Systemd reloaded"
+
+# ── Enable and start services ───────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Enabling and starting services...${NC}"
+
+SERVICES=(
+    "arcade-sorry"
+    "arcade-cribbage"
+    "arcade-stud"
+    "arcade-chat"
+    "arcade-chess"
+    "arcade-checkers"
+    "arcade-backgammon"
+    "arcade-chinese-checkers"
+    "arcade-parchisi"
+    "arcade-aggravation"
+    "arcade-counter"
+    "arcade-admin"
+    "arcade-private"
+)
+
+for svc in "${SERVICES[@]}"; do
+    systemctl enable "$svc" 2>/dev/null
+    systemctl restart "$svc" 2>/dev/null
+    ok "Started $svc"
+done
+
+# ── Install desktop shortcut ────────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing desktop shortcut...${NC}"
+
+DESKTOP_DIR="/home/jake/Desktop"
+DESKTOP_FILE="$ADMIN_DIR/MagmaCrunch-Ops.desktop"
+
+if [[ -d "$DESKTOP_DIR" ]] && [[ -f "$DESKTOP_FILE" ]]; then
+    cp "$DESKTOP_FILE" "$DESKTOP_DIR/MagmaCrunch-Ops.desktop"
+    chmod +x "$DESKTOP_DIR/MagmaCrunch-Ops.desktop"
+    chown jake:jake "$DESKTOP_DIR/MagmaCrunch-Ops.desktop"
+    ok "Desktop shortcut installed"
+else
+    warn "Desktop directory not found — skipping shortcut"
+fi
+
+# Also install to applications menu
+APP_DIR="/home/jake/.local/share/applications"
+if [[ -f "$DESKTOP_FILE" ]]; then
+    mkdir -p "$APP_DIR"
+    cp "$DESKTOP_FILE" "$APP_DIR/MagmaCrunch-Ops.desktop"
+    chown -R jake:jake "$APP_DIR"
+    ok "Application menu entry installed"
+fi
+
+# ── Summary ──────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}────────────────────────────────────────────────${NC}"
+echo -e "${GREEN}Setup complete!${NC}"
+echo ""
+echo "  Dashboard:   http://localhost:8780"
+echo "  Dashboard:   http://$(hostname -I | awk '{print $1}'):8780"
+echo ""
+echo "  Desktop:     Double-click 'MagmaCrunch Ops' icon"
+echo ""
+echo "  Service management:"
+echo "    sudo systemctl status 'arcade-*'"
+echo "    sudo systemctl restart arcade-chat"
+echo "    journalctl -u 'arcade-*' -f"
+echo ""
+echo -e "${CYAN}────────────────────────────────────────────────${NC}"
+echo ""

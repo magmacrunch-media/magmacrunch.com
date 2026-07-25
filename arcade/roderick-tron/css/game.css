@@ -1,0 +1,84 @@
+/* game.css — Roderick Tron */
+
+.game-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    z-index: 1;
+}
+
+.game-container canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
+/* HUD overlay */
+.hud {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.hud.active {
+    opacity: 1;
+}
+
+.hud-left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hud-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.hud-score {
+    font-size: 10px;
+    color: var(--white);
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+    letter-spacing: 0.1em;
+}
+
+.hud-lives {
+    display: flex;
+    gap: 4px;
+}
+
+.hud-life {
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+    border-radius: 0;
+    box-shadow: 0 0 4px rgba(255, 61, 110, 0.5);
+}
+
+.hud-life.lost {
+    background: var(--dim);
+    opacity: 0.3;
+    box-shadow: none;
+}
+
+.hud-speed {
+    font-size: 7px;
+    color: var(--gold);
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+    letter-spacing: 0.1em;
+}

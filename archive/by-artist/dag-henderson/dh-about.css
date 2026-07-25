@@ -1,0 +1,24 @@
+/* Dag Henderson — about page (brand green accent) */
+body.dh-page.dh-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.dh-page.dh-about-page main > * { background: var(--dh-bg); }
+
+body.dh-page.dh-about-page .breadcrumb a { color: var(--dh-brand); }
+body.dh-page.dh-about-page .breadcrumb a:hover { color: var(--dh-leaf); }
+body.dh-page.dh-about-page .breadcrumb .sep { color: var(--dh-brand); opacity: 0.5; }
+body.dh-page.dh-about-page .breadcrumb .current { color: var(--dh-brand); }
+
+body.dh-page.dh-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.dh-page.dh-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--dh-brand) !important; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.9; }
+body.dh-page.dh-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--dh-brand) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(58,88,48,0.5) !important; }
+
+body.dh-page.dh-about-page .divider { width: 100%; max-width: 960px; height: 1px; background: linear-gradient(90deg, transparent, var(--dh-brand), var(--dh-leaf), var(--dh-brand), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+body.dh-page.dh-about-page .bio-section { width: 100%; max-width: 960px; padding: 0 20px; }
+body.dh-page.dh-about-page .bio-section p { font-family: 'Courier Prime', monospace; font-size: 15px; color: var(--dh-body); line-height: 1.8; margin-bottom: 16px; opacity: 0.9; }
+
+body.dh-page.dh-about-page .animation-wrap { display: flex; justify-content: center; align-items: center; margin: 40px auto; }
+body.dh-page.dh-about-page .animation-placeholder { display: flex; justify-content: center; align-items: center; }
+body.dh-page.dh-about-page #spriteCanvas { width: 256px; height: 256px; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+body.dh-page.dh-about-page .nav-card::after { display: none; }
+body.dh-page.dh-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

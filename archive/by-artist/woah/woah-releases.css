@@ -1,0 +1,41 @@
+/* Woah. — releases page — accent: sunset */
+body.woah-page.woah-releases-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.woah-page.woah-releases-page main > * { background: var(--woah-bg); }
+
+body.woah-page.woah-releases-page .catalog-wrap,
+body.woah-page.woah-releases-page .release-card,
+body.woah-page.woah-releases-page #status-bar,
+body.woah-page.woah-releases-page #count-bar,
+body.woah-page.woah-releases-page main {
+    background: transparent !important;
+}
+
+body.woah-page.woah-releases-page .breadcrumb { color: var(--woah-sunset); }
+body.woah-page.woah-releases-page .breadcrumb a { color: var(--woah-sunset); }
+body.woah-page.woah-releases-page .breadcrumb a:hover { color: var(--woah-rose-sky); }
+body.woah-page.woah-releases-page .breadcrumb .sep { color: var(--woah-sunset); opacity: 0.6; }
+body.woah-page.woah-releases-page .breadcrumb .current { color: var(--woah-sunset); }
+
+body.woah-page.woah-releases-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.woah-page.woah-releases-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--woah-sunset); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.woah-page.woah-releases-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--woah-sunset); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(232, 160, 160, 0.5); }
+
+body.woah-page.woah-releases-page .release-card {
+    background: transparent !important;
+    border-color: var(--woah-dusk);
+}
+body.woah-page.woah-releases-page .release-card:hover { border-color: var(--woah-sunset); }
+body.woah-page.woah-releases-page .release-info h3 a { color: var(--woah-blush); }
+body.woah-page.woah-releases-page .release-info h3 a:hover { color: var(--woah-pink-sky); }
+body.woah-page.woah-releases-page .release-info a { color: var(--woah-coastal); }
+body.woah-page.woah-releases-page .release-info a:hover { color: var(--woah-sunset); }
+
+body.woah-page.woah-releases-page .nav-card.c-back  { background: transparent; color: var(--woah-sunset); border-color: var(--woah-sunset); }
+body.woah-page.woah-releases-page .nav-card.c-back:hover { background: transparent; color: var(--woah-bg); }
+
+body.woah-page.woah-releases-page .nav-card::after { display: none; }
+body.woah-page.woah-releases-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+@media (max-width: 500px) {
+    body.woah-page.woah-releases-page .release-card { border-color: var(--woah-dusk); }
+}

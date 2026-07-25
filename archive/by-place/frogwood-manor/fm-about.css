@@ -1,0 +1,116 @@
+/* Frogwood Manor — about */
+body.fm-page.fm-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
+body.fm-page.fm-about-page main > * { background: var(--fm-bg); }
+
+body.fm-page.fm-about-page .breadcrumb { color: var(--dim); }
+body.fm-page.fm-about-page .breadcrumb a { color: var(--fm-sage); }
+body.fm-page.fm-about-page .breadcrumb a:hover { color: var(--fm-cream); }
+body.fm-page.fm-about-page .breadcrumb .sep { color: var(--fm-sage); opacity: 0.6; }
+body.fm-page.fm-about-page .breadcrumb .current { color: var(--fm-sage); }
+
+body.fm-page.fm-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fm-page.fm-about-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--fm-sage); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fm-page.fm-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--fm-sage); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(160, 48, 200, 0.5); }
+
+/* Current page: about (c-about active) */
+body.fm-page.fm-about-page .nav-card.c-about {
+    background: var(--fm-bg);
+    color: var(--fm-sage);
+    border-color: var(--fm-sage);
+}
+
+body.fm-page.fm-about-page .place-body {
+    max-width: 960px;
+    width: 100%;
+    padding: 0 20px;
+    color: var(--fm-light);
+    font-size: 15px;
+    line-height: 1.8;
+}
+body.fm-page.fm-about-page .place-body p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+    opacity: 0.9;
+}
+body.fm-page.fm-about-page .place-body a {
+    color: var(--fm-light);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+body.fm-page.fm-about-page .place-body a:hover { color: var(--fm-cream); border-bottom-color: var(--fm-cream); }
+body.fm-page.fm-about-page .place-body a[target="_blank"] { color: var(--fm-sage); border-bottom-color: transparent; }
+body.fm-page.fm-about-page .place-body a[target="_blank"]:hover { color: var(--fm-amber); border-bottom-color: var(--fm-amber); }
+body.fm-page.fm-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
+
+body.fm-page.fm-about-page .place-body p:first-of-type::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5em;
+    float: left;
+    line-height: 0.8;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--fm-sage);
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(106,152,120,0.4);
+}
+
+body.fm-page.fm-about-page .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--fm-sage);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--fm-sage);
+    opacity: 0.9;
+}
+
+body.fm-page.fm-about-page .place-photo-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 40px 0;
+}
+body.fm-page.fm-about-page .place-photo-row img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+body.fm-page.fm-about-page .place-figure {
+    margin: 40px auto;
+    max-width: 960px;
+}
+body.fm-page.fm-about-page .place-figure img {
+    width: 95%;
+    border-radius: 8px;
+}
+body.fm-page.fm-about-page .place-figure figcaption {
+    margin-top: 10px;
+    font-size: 0.9em;
+    color: var(--fm-muted);
+    text-align: center;
+}
+body.fm-page.fm-about-page .place-figure figcaption::before { content: '— '; }
+body.fm-page.fm-about-page .place-figure figcaption::after { content: ' —'; }
+
+body.fm-page.fm-about-page .divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--fm-sage), var(--fm-violet), var(--fm-sage), transparent);
+    margin: 8px 0 40px;
+    opacity: 0.4;
+}
+
+body.fm-page.fm-about-page .mb-link-wrap { width:100%; max-width:700px; padding:0 20px; margin-top:40px; animation:fadeUp 0.5s 0.15s ease both; }
+body.fm-page.fm-about-page .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--fm-muted); text-decoration:none; border:1px solid var(--fm-deep); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+body.fm-page.fm-about-page .mb-link:hover { color:var(--fm-amber); border-color:var(--fm-amber); }
+
+@media (max-width: 700px) {
+    body.fm-page.fm-about-page .place-photo-row { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,150 @@
+/* board.css — Cribbage board styling | MagmaCrunch Media © 2026 */
+
+.cribbage-board {
+    background: var(--board-bg);
+    border: 4px solid var(--board-border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 
+        inset 0 2px 4px rgba(0,0,0,0.3),
+        0 8px 24px rgba(0,0,0,0.5);
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    transition: padding 0.3s ease;
+}
+
+.cribbage-board.collapsed {
+    padding: 15px 20px;
+}
+
+/* Score displays */
+.board-scores {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.score-item {
+    text-align: center;
+}
+
+.score-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cream);
+    margin-bottom: 5px;
+}
+
+.score-value {
+    font-family: var(--font-pixel);
+    font-size: 24px;
+}
+
+.player-score .score-value {
+    color: var(--player-peg);
+}
+
+.ai-score .score-value {
+    color: var(--ai-peg);
+}
+
+/* Board tracks */
+.board-tracks {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 300px;
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+}
+
+.cribbage-board.collapsed .board-tracks {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    gap: 0;
+}
+
+.board-track {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: var(--bg-dark);
+    border-radius: 8px;
+}
+
+/* Board holes */
+.board-hole {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--hole-bg);
+    border: 1px solid var(--hole-border);
+    position: relative;
+    transition: all 0.2s;
+}
+
+.board-hole.marker {
+    background: var(--bg-light);
+}
+
+.board-hole.start {
+    background: var(--accent-dim);
+}
+
+.board-hole:hover {
+    transform: scale(1.2);
+}
+
+/* Pegs */
+.board-peg {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    z-index: 10;
+    transition: all 0.3s ease-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.board-peg.back-peg {
+    opacity: 0.6;
+    transform: scale(0.8);
+}
+
+/* Track labels */
+.track-label {
+    font-family: var(--font-pixel);
+    font-size: 8px;
+    color: var(--cream);
+    opacity: 0.6;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .cribbage-board {
+        padding: 15px;
+    }
+
+    .board-hole {
+        width: 10px;
+        height: 10px;
+    }
+
+    .board-peg {
+        width: 8px;
+        height: 8px;
+    }
+
+    .board-track {
+        gap: 2px;
+    }
+}

@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>about — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ── NAV OVERRIDES (about page uses mc palette) ── */
+        :root {
+            --nav-accent: var(--mc-crater);
+            --nav-glow: rgba(255,61,110,0.3);
+            --nav-brand: var(--mc-cereal-cyan);
+            --nav-brand-glow: rgba(0,245,255,0.6);
+        }
+
+        body {
+            background-color: var(--mc-sky-deep);
+            background-image: repeating-linear-gradient(
+                0deg, transparent, transparent 2px,
+                rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+            );
+            color: var(--mc-text-primary);
+        }
+
+        /* ── BREADCRUMB ── */
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--mc-smoke);
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--mc-smoke); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--mc-crater); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--mc-ash); }
+        .breadcrumb .current { color: var(--mc-text-primary); font-weight: 700; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+            gap: 0;
+        }
+
+        /* ── DATELINE ── */
+        .dateline {
+            width: 100%;
+            max-width: 960px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 10px 0;
+            border-top: 2px solid var(--mc-crater);
+            border-bottom: 1px solid var(--mc-border);
+            margin-bottom: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--mc-smoke);
+            box-shadow: 0 2px 12px rgba(255,61,110,0.15);
+        }
+        .dateline-sep { color: var(--mc-crater); }
+
+        /* ── PAGE TITLE ── */
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--mc-smoke);
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            text-transform: lowercase;
+        }
+
+        /* ── MASTHEAD ASCII ── */
+        .ascii-main {
+            width: 100%;
+            max-width: 960px;
+            margin-bottom: 8px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+        .ascii-main pre {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(3px, 0.7vw, 7px);
+            line-height: 1.2;
+            color: var(--mc-text-primary);
+            text-shadow: 0 0 10px rgba(255,45,155,0.3);
+            white-space: pre;
+            display: inline-block;
+            text-align: left;
+            flex-shrink: 0;
+        }
+
+        .ascii-since {
+            width: 100%;
+            max-width: 960px;
+            margin-bottom: 12px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+        .ascii-since pre {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(2px, 0.4vw, 4.5px);
+            line-height: 1.25;
+            color: var(--mc-smoke);
+            white-space: pre;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        /* ── ASCII BLOCK COLORS ── */
+        .ascii-block.ascii-masthead pre {
+            color: var(--mc-crater);
+            text-shadow: 0 0 10px rgba(255,61,110,0.4);
+        }
+        .ascii-block.ascii-since pre {
+            color: var(--mc-smoke);
+        }
+        .ascii-block.ascii-founded pre {
+            color: var(--mc-cereal-cyan);
+            text-shadow: 0 0 10px rgba(0,245,255,0.4);
+        }
+        .ascii-block.ascii-producers pre {
+            color: var(--mc-lava-bright);
+            text-shadow: 0 0 10px rgba(255,224,58,0.3);
+        }
+
+        /* ── FLOAT ASCII FOR TEXT WRAPPING ── */
+        .ascii-float-right {
+            float: right;
+            margin: 20px 20px 20px 24px;
+            max-width: 50%;
+        }
+        .ascii-float-right pre {
+            font-size: clamp(2px, 0.5vw, 5px) !important;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 960px;
+            height: 1px;
+            background: var(--mc-crater);
+            box-shadow: 0 0 8px rgba(255,61,110,0.4);
+            margin: 16px 0;
+        }
+
+        /* ── SINGLE COLUMN LAYOUT ── */
+        .newspaper-body {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* ── ZINE ELEMENTS ── */
+        .ascii-large pre {
+            font-size: clamp(4px, 0.85vw, 8px) !important;
+        }
+        .ascii-rotate { transform: rotate(-2deg); }
+        .ascii-rotate-alt { transform: rotate(1.5deg); }
+
+        .pull-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--mc-crater);
+            border-left: 4px solid var(--mc-crater);
+            padding: 16px 20px;
+            margin: 24px 0;
+            text-shadow: 0 0 8px rgba(255,61,110,0.3);
+            background: rgba(255,61,110,0.05);
+        }
+
+        .zine-bg-magenta {
+            background: rgba(255,61,110,0.08);
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .zine-bg-cyan {
+            background: rgba(0,245,255,0.08);
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .zine-border-magenta { border: 2px solid var(--mc-crater); padding: 8px; }
+        .zine-border-cyan { border: 2px solid var(--mc-cereal-cyan); padding: 8px; }
+
+        .zine-overlap { margin-top: -24px; }
+        .zine-mt-sm { margin-top: 8px; }
+        .zine-mt-lg { margin-top: 32px; }
+        .zine-mb-lg { margin-bottom: 32px; }
+        .zine-mb-xl { margin-bottom: 48px; }
+
+        /* Cereal animation canvas */
+        .cereal-canvas-wrap {
+            float: right;
+            margin: 8px 0 20px 24px;
+            width: 50%;
+            max-width: 300px;
+        }
+        .cereal-canvas-wrap canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            border: 2px solid var(--mc-crater);
+            box-shadow: 0 0 16px rgba(255,61,110,0.3);
+        }
+
+        /* Zine links */
+        .zine-links {
+            margin-top: 48px;
+            padding: 24px 0;
+            border-top: 2px solid var(--mc-crater);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            box-shadow: 0 -2px 12px rgba(255,61,110,0.15);
+        }
+        .zine-links a {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: var(--mc-cereal-cyan);
+            text-decoration: none;
+            padding: 6px 12px;
+            border: 1px solid var(--mc-cereal-cyan);
+            transition: all 0.15s;
+        }
+        .zine-links a:hover {
+            color: var(--mc-sky-deep);
+            background: var(--mc-cereal-cyan);
+            box-shadow: 0 0 8px rgba(0,245,255,0.4);
+        }
+
+        /* ── BODY TEXT ── */
+        .about-text {
+            width: 100%;
+            max-width: 960px;
+            padding: 0 20px;
+            animation: none;
+        }
+        .about-text p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--mc-text-primary);
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+        .about-text p:last-child { margin-bottom: 0; }
+        .about-text a {
+            color: var(--mc-cereal-cyan);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0,245,255,0.3);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        .about-text a:hover {
+            color: var(--mc-crater);
+            border-bottom-color: var(--mc-crater);
+        }
+
+        /* Drop cap */
+        .about-text p:first-of-type::first-letter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
+            float: left;
+            line-height: 0.85;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: var(--mc-crater);
+            text-shadow: 0 0 12px rgba(255,61,110,0.5);
+        }
+
+        /* Float ASCII art for text wrapping */
+
+        /* ── LOGO ── */
+        .logo-wrap {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .logo-wrap img {
+            width: min(160px, 100%);
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid var(--mc-crater);
+            box-shadow: 0 0 12px rgba(255,61,110,0.2);
+        }
+        .logo-wrap::before, .logo-wrap::after { display: none; }
+        .photo-caption {
+            font-family: 'Playfair Display', serif;
+            font-size: 9px;
+            font-style: italic;
+            color: var(--mc-smoke);
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        /* ── QUICK LINKS (old sidebar, now unused) ── */
+
+        /* Hide nav-cards on about page */
+        .nav-card { display: none; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--mc-sky-deep) !important;
+            border-top-color: var(--mc-border) !important;
+            color: var(--mc-smoke) !important;
+        }
+        footer span { color: var(--mc-crater) !important; }
+
+        /* ── MOBILE ── */
+        @media (max-width: 640px) {
+            .page-title { font-size: 10px; }
+            .about-text p { font-size: 13px; }
+            .dateline { font-size: 7px; gap: 10px; }
+            .ascii-main pre { font-size: clamp(2px, 1.5vw, 5px); }
+            .zine-links { flex-direction: column; align-items: center; }
+            .cereal-canvas-wrap { float: none; width: 80%; max-width: 260px; margin: 16px auto; }
+        }
+
+        /* ── ARTIST LINK STRIPS ── */
+        .link-strip {
+            position: relative;
+            width: 100%;
+            max-width: 960px;
+            height: 140px;
+            overflow: hidden;
+            border: 1px solid var(--mc-border);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .link-strip:hover {
+            border-color: var(--mc-crater);
+            box-shadow: 0 0 20px rgba(255,61,110,0.25);
+        }
+        .link-strip-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25) saturate(0.5);
+            transition: filter 0.3s;
+        }
+        .link-strip:hover .link-strip-bg {
+            filter: brightness(0.35) saturate(0.7);
+        }
+        .link-strip-inner {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: var(--mc-text-primary);
+            padding: 12px 20px;
+            box-sizing: border-box;
+        }
+        .link-strip-inner pre {
+            font-family: 'Courier Prime', monospace;
+            font-size: clamp(2px, 0.5vw, 5px);
+            line-height: 1.15;
+            white-space: pre;
+            text-shadow: 0 0 8px rgba(255,45,155,0.3);
+            overflow: hidden;
+        }
+        .strip-hover-tag {
+            position: absolute;
+            bottom: 10px;
+            right: 14px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--mc-crater);
+            letter-spacing: 0.06em;
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+            text-shadow: 0 0 8px rgba(255,61,110,0.5);
+        }
+        .link-strip:hover .strip-hover-tag { opacity: 1; }
+        .strips-divider {
+            width: 100%;
+            max-width: 960px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--mc-crater), var(--mc-cereal-cyan), var(--mc-crater), transparent);
+            margin-bottom: 24px;
+            opacity: 0.4;
+        }
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--mc-crater);
+            letter-spacing: 0.18em;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            text-shadow: 0 0 10px rgba(255,61,110,0.3);
+        }
+
+        @media (max-width: 640px) {
+            .link-strip { height: 110px; }
+            .link-strip-inner pre { font-size: clamp(1.5px, 1.2vw, 4px); }
+        }
+
+        /* ── EMAIL CALLOUT ── */
+        .email-callout {
+            width: 100%;
+            max-width: 960px;
+            text-align: center;
+            padding: 40px 24px;
+            margin: 40px 0;
+            border: 2px solid var(--mc-cereal-cyan);
+            background: rgba(0,245,255,0.04);
+            box-shadow: 0 0 24px rgba(0,245,255,0.15), inset 0 0 30px rgba(0,245,255,0.03);
+            position: relative;
+        }
+        .email-callout::before,
+        .email-callout::after {
+            content: '//';
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--mc-cereal-cyan);
+            opacity: 0.5;
+            position: absolute;
+            top: 12px;
+        }
+        .email-callout::before { left: 16px; }
+        .email-callout::after { right: 16px; }
+        .email-callout-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            color: var(--mc-cereal-cyan);
+            letter-spacing: 0.15em;
+            text-transform: lowercase;
+            margin-bottom: 16px;
+            text-shadow: 0 0 12px rgba(0,245,255,0.5);
+        }
+        .email-callout a {
+            font-family: 'Courier Prime', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--mc-cereal-cyan);
+            text-decoration: none;
+            border-bottom: 2px solid rgba(0,245,255,0.4);
+            padding-bottom: 2px;
+            transition: color 0.15s, border-color 0.15s, text-shadow 0.15s;
+        }
+        .email-callout a:hover {
+            color: #fff;
+            border-bottom-color: #fff;
+            text-shadow: 0 0 16px rgba(0,245,255,0.7);
+        }
+        .email-callout-sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--mc-smoke);
+            margin-top: 12px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 640px) {
+            .email-callout { padding: 28px 16px; margin: 28px 0; }
+            .email-callout-label { font-size: 9px; }
+            .email-callout a { font-size: 15px; }
+        }
+
+        /* ── PIXELATED LOGO GRID ── */
+        .logo-grid-section {
+            width: 100%;
+            background: var(--deep);
+            border-top: 2px solid #1a1a2a;
+            border-bottom: 2px solid #1a1a2a;
+            padding: 48px 28px 52px;
+            animation: fadeUp 0.5s 0.3s ease both;
+            margin-top: 48px;
+        }
+        .logo-grid-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--mc-lava-bright);
+            letter-spacing: 0.18em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 12px rgba(255,224,58,0.4);
+        }
+        .logo-grid-groups {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .logo-group { display: flex; flex-direction: column; gap: 12px; }
+        .logo-group-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--dim);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            opacity: 0.55;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #1a1a2a;
+        }
+        .logo-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+        .logo-link {
+            display: block;
+            position: relative;
+            text-decoration: none;
+            transition: transform 0.15s ease, filter 0.15s ease;
+            margin-bottom: 20px;
+        }
+        .logo-link:hover {
+            transform: scale(1.18);
+            filter: brightness(1.2) drop-shadow(0 0 8px rgba(255,224,58,0.55));
+        }
+        .logo-link::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 4.5px;
+            color: var(--mc-lava-bright);
+            white-space: nowrap;
+            letter-spacing: 0.06em;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            pointer-events: none;
+        }
+        .logo-link:hover::after { opacity: 0.85; }
+        .pixel-logo {
+            width: 48px;
+            height: 48px;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            display: block;
+            filter: saturate(0.85) brightness(0.9);
+            transition: filter 0.15s ease;
+        }
+        .logo-link:hover .pixel-logo { filter: saturate(1.1) brightness(1.1); }
+
+        @media (max-width: 640px) {
+            .logo-grid-section { padding: 36px 20px 44px; }
+            .pixel-logo { width: 40px; height: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <span class="current">about</span>
+    </div>
+
+    <div class="dateline">
+        <span>music collective &amp; independent record label</span>
+        <span class="dateline-sep">✦</span>
+        <span>no-budget music videos</span>
+        <span class="dateline-sep">✦</span>
+        <span>archive</span>
+        <span class="dateline-sep">✦</span>
+        <span>music publishing</span>
+        <span class="dateline-sep">✦</span>
+        <span>video games</span>
+        <span class="dateline-sep">✦</span>
+        <span>press</span>
+        <span class="dateline-sep">✦</span>
+        <span>web tools</span>
+        <span class="dateline-sep">✦</span>
+        <span>photography</span>
+        <span class="dateline-sep">✦</span>
+        <span>collage</span>
+        <span class="dateline-sep">✦</span>
+        <span>currently supporting Sex Van Floor Plan</span>
+    </div>
+
+    <h1 class="page-title">// about //</h1>
+
+    <!-- BIG ASCII (moved from home) -->
+    <div class="ascii-main ascii-block ascii-masthead">
+        <pre>
+                                                                                       __                               __                  
+                                                                                      /\ \                             /\ \  __             
+  ___ ___      __       __     ___ ___      __      ___   _ __   __  __    ___     ___\ \ \___       ___ ___      __   \_\ \/\_\     __     
+/' __` __`\  /'__`\   /'_ `\ /' __` __`\  /'__`\   /'___\/\`'__\/\ \/\ \ /' _ `\  /'___\ \  _ `\   /' __` __`\  /'__`\ /'_` \/\ \  /'__`\  
+/\ \/\ \/\ \/\ \L\.\_/\ \L\ \/\ \/\ \/\ \/\ \L\.\_/\ \__/\ \ \/ \ \ \_\ \/\ \/\ \/\ \__/\ \ \ \ \  /\ \/\ \/\ \/\  __//\ \L\ \ \ \/\ \L\.\_
+\ \_\ \_\ \_\ \__/.\_\ \____ \ \_\ \_\ \_\ \__/.\_\ \____\\ \_\  \ \____/\ \_\ \_\ \____\\ \_\ \_\ \ \_\ \_\ \_\ \____\ \___,_\ \_\ \__/.\_\
+ \/_/\/_/\/_/\/__/\/_/\/___L\ \/_/\/_/\/_/\/__/\/_/\/____/ \/_/   \/___/  \/_/\/_/\/____/ \/_/\/_/  \/_/\/_/\/_/\/____/\/__,_ /\/_/\/__/\/_/
+                        /\____/                                                                                                             
+                        \_/__/                                                                                                              
+
+                                     d8b                                .d8888b.   .d8888b.   .d8888b.   .d8888b. 
+                                     Y8P                               d88P  Y88b d88P  Y88b d88P  Y88b d88P  Y88b
+                                                                              888 888    888        888      .d88P
+                            .d8888b  888 88888b.   .d8888b .d88b.           .d88P 888    888      .d88P     8888" 
+                            88K      888 888 "88b d88P"   d8P  Y8b      .od888P"  888    888  .od888P"       "Y8b.
+                            "Y8888b. 888 888  888 888     88888888     d88P"      888    888 d88P"      888    888
+                                 X88 888 888  888 Y88b.   Y8b.         888"       Y88b  d88P 888"       Y88b  d88P
+                             88888P' 888 888  888  "Y8888P "Y8888      888888888   "Y8888P"  888888888   "Y8888P" </pre>
+    </div>
+
+    <!-- SMALLER "SINCE 2023 / MELODIES TO THEIR NOISE" ASCII -->
+    <div class="ascii-since ascii-block"><pre>
+.. __   __         ___ ___          ___  __       ___ .  __      __         ___  ___
+''/__` /  \  |\/| |__   |  |  |\/| |__  /__`    |  |  ' /__`    /  \ |  | |  |  |__ 
+  .__/ \__/  |  | |___  |  |  |  | |___ .__/    |  |    .__/    \__X \__/ |  |  |___
+
+       ___       __   __     __        __       __  ___       ___  __               
+ |\/| |__  |    /  \ |  \ | /  \ |  | /__` .   /  \  |  |__| |__  |__)              
+ |  | |___ |___ \__/ |__/ | \__/ \__/ .__/ ,   \__/  |  |  | |___ |  \              
+
+___          ___  __       ___ .  __           __     __   ___ ..                   
+ |  |  |\/| |__  /__`    |  |  ' /__`    |\ | /  \ | /__` |__  ''                   
+ |  |  |  | |___ .__/    |  |    .__/    | \| \__/ | .__/ |___                      </pre></div>
+
+    <div class="divider"></div>
+
+    <!-- Body text -->
+    <div class="about-text">
+        <!-- Cereal animation (floated right) -->
+        <div class="cereal-canvas-wrap">
+            <canvas id="cereal-scene" width="600" height="512"></canvas>
+        </div>
+
+        <!-- Pull quote: first paragraph -->
+          <p> 
+            Magmacrunch media is a creative collective that produces music, film, video games, web tools, writing, and more. 
+            Based across the United States in Pennsylvania, California, and New Hampshire, magmacrunch was founded in 2023 as an independent <a href="../archive/by-label/magmacrunch-media/">record label</a> for releasing a back catalog of home-recorded music. 
+            The label began <a href="../music/distributed-music.html">distributing music</a> new and old to streaming platforms and online stores in 2024, ranging from post-rock to inde folk to riot-grrrl punk. 
+            After <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a> was established as a publishing entity in 2025, early development of this website led to the creation of the <a href="../arcade/">magmacrunch arcade</a> as well as a historical  <a href="../archive/">archive</a>. 
+            The collective continues to branch out into other areas of art and technology, with future plans for constructing hardware, making documentaries, and more. 
+            </p>
+
+        <div class="pull-quote">
+            Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
+            That's why we decided to take a do-it-yourself approach by releasing our own music. 
+            This is the music we actually want to make, not just what we think people expect to hear.
+        </div>
+
+        <p>What makes magmacrunch media different from a traditional label is the relationship between the people involved.
+            Rather than having signed contracts giving advances that need to be repaid, the collective works with a rotating cast of producers and musicians on home recording, audio production, and more. 
+            Collaborators and contributors are friends or family, and always retain ownership of their recordings and songwriting. 
+            More broadly, magmacrunch media aims to support artists and creators who value authenticity but might not have the means to buy time in a recording studio at high costs. 
+            An affinity for retro technology also inspires releases on physical or otherwise obscure media formats, as well as the development of video games reminiscent of decades past. 
+
+        </p>
+
+        <!-- ASCII: "founded by JAM, CPR, JHM" — floated right -->
+        <div class="ascii-block ascii-founded ascii-float-right">
+            <pre>
+  __                       _          _   _                
+ / _| ___  _   _ _ __   __| | ___  __| | | |__  _   _      
+| |_ / _ \| | | | '_ \ / _` |/ _ \/ _` | | '_ \| | | |     
+|  _| (_) | |_| | | | | (_| |  __/ (_| | | |_) | |_| |     
+|_|  \___/ \__,_|_| |_|\__,_|\___|\__,_| |_.__/ \__, |     
+     _       _          __  __       ____       |___/      
+    | | __ _| | _____  |  \/  | ___ / ___|___  _   _       
+ _  | |/ _` | |/ / _ \ | |\/| |/ __| |   / _ \| | | |      
+| |_| | (_| |   <  __/ | |  | | (__| |__| (_) | |_| |_     
+ \___/ \__,_|_|\_\___| |_|  |_|\___|\____\___/ \__, ( )    
+  ____   ____    ____        _   _          _  |___/|/     
+ / ___| |  _ \  |  _ \ _   _| |_| | ___  __| | __ _  ___   
+| |     | |_) | | |_) | | | | __| |/ _ \/ _` |/ _` |/ _ \  
+| |___ _|  __/  |  _ <| |_| | |_| |  __/ (_| | (_| |  __/_ 
+ \____(_)_| (_) |_| \_\\__,_|\__|_|\___|\__,_|\__, |\___( )
+  ___         _               __  __       ___|___/     |/ 
+ ( _ )       | | ___  _ __   |  \/  | ___ / ___|___  _   _ 
+ / _ \/\  _  | |/ _ \| '_ \  | |\/| |/ __| |   / _ \| | | |
+| (_>  < | |_| | (_) | | | | | |  | | (__| |__| (_) | |_| |
+ \___/\/  \___/ \___/|_| |_| |_|  |_|\___|\____\___/ \__, |
+                                                     |___/ 
+                                                    </pre>
+        </div>
+
+        <div class="zine-bg-magenta">
+            <p>
+                McCoy brothers Jake, James, and Jon grew up playing music at Frogwood Manor in a forested neighborhood of New Hampshire. 
+                C.P. Rutledge grew up playing music at Spirit Castle, across the street. 
+                With other musicians living on the same block, this micro-scene was home to host of bands and music projects over the years; 
+                these include <a href="../archive/by-artist/vinny-bobarino/">Vinny Bobarino</a>, <a href="../archive/by-artist/juanito-thompson/">Juanito Thompson</a>,
+                <a href="../archive/by-artist/four-bs/">The Four B's</a>, and <a href="../archive/by-artist/bottle-boys-collective/">Bottle Boys</a>,
+                in addition to solo material by <a href="../archive/by-artist/c-p-rutledge/">C.P.</a>, and <a href="../archive/by-artist/jon-mccoy/">Jon</a>/<a href="../archive/by-artist/woah/">Woah</a>. 
+                Moving around for school and work briefly brought Jake and Jon to Iowa City, where they played in <a href="../archive/by-artist/thld/">Texas Hold'Em Lava Dome</a>, 
+                and recorded music at <a href="../archive/by-place/the-tuna-can/">The Tuna Can</a>. 
+                This slowly-growing musical output was in need of a home and there were plans to continue making even more. 
+                For this reason, magmacrunch media was founded in 2023 by Jake in Pennsylvania, C.P. in New Hampshire, and Jon in California. 
+                The label catalog has since seen new releases by long-time members of the collective, in addition to newer acts such as 
+                <a href="../archive/by-artist/dag-henderson/">Dag Henderson</a> and most recently, <a href="../archive/by-artist/svfp/">Sex Van Floor Plan</a> of Pennsylvania. 
+
+
+            </p>
+        </div>
+
+        <!-- ASCII: "with producers & musicians" — floated right
+        <div class="ascii-block ascii-producers ascii-float-right">
+            <pre>
+           ,--.  ,--.  ,--.                                                                                                                       
+ ,--.   ,--.`--',-'  '-.|  ,---.                                                                                                                   
+ |  |.'.|  |,--.'-.  .-'|  .-.  |                                                                                                                  
+ |   .'.   ||  |  |  |  |  | |  |                                                                                                                  
+ '--'   '--'`--'  `--'  `--' `--'                                   ,--.                                                                           
+                        ,--.                                      /  /                        ,--.      ,--.                                      
+ ,---. ,--.--. ,---.  ,-|  |,--.,--. ,---. ,---. ,--.--. ,---.   /  /,--,--,--.,--.,--. ,---. `--' ,---.`--' ,--,--.,--,--,  ,---.                
+ | .-. ||  .--'| .-. |' .-. ||  ||  || .--'| .-. :|  .--'(  .-'  /  / |        ||  ||  |(  .-' ,--.| .--',--.' ,-.  ||      \(  .-'                
+ | '-' '|  |   ' '-' '\ `-' |'  ''  '\ `--.\   --.|  |   .-'  `)/  /  |  |  |  |'  ''  '.-'  `)|  |\ `--.|  |\ '-'  ||  ||  |.-'  `)               
+ |  |-' `--'    `---'  `---'  `----'  `---' `----'`--'   `----'/  /   `--`--`--' `----' `----' `--' `---'`--' `--`--'`--''--'`----'                
+ `--'                                                         `--'                                                                                 
+ ,--------.                                           ,------.       ,------. ,--.                    ,-----.,--.                   ,--.           
+ '--.  .--',---.  ,--,--. ,---. ,--.,--. ,---.        |  .---'       |  .--. '|  ,---.  ,---.        '  .--./|  ,---. ,--.,--. ,---.|  |,-.        
+    |  |  | .-. :' ,-.  || .-. ||  ||  || .-. :       |  `--,        |  '--'.'|  .-.  || .-. |       |  |    |  .-.  ||  ||  || .--'|     /        
+    |  |  \   --.\ '-'  |' '-' ''  ''  '\   --.,--.   |  `---.,--.   |  |\  \ |  | |  |' '-' ',--.   '  '--'\|  | |  |'  ''  '\ `--.|  \  \ ,--.   
+    `--'   `----' `--`--'.`-  /  `----'  `----''-,/   `------''-,/   `--' '--'`--' `--' `---' '-,/    `-----'`--' `--' `----'  `---'`--'`--''-,/   
+                         `---'                                                                                                                     
+ ,------.,--.,--.       ,--.   ,--.                         ,--.  ,--.        ,--.                          ,-----.                                
+ |  .---'|  |`--'       |   `.'   | ,--,--.,--.  ,--.       |  '--'  | ,--,--.|  |,-. ,--,--.,--,--,        |  |) /_  ,---. ,--,--,                
+ |  `--, |  |,--.       |  |'.'|  |' ,-.  | \  `'  /        |  .--.  |' ,-.  ||     /' ,-.  ||      \       |  .-.  \| .-. :|      \               
+ |  `---.|  ||  |,--.   |  |   |  |\ '-'  | /  /.  \ ,--.   |  |  |  |\ '-'  ||  \  \\ '-'  ||  ||  |,--.   |  '--' /\   --.|  ||  |,--.           
+ `------'`--'`--''-,/   `--'   `--' `--`--''--'  '--''-,/   `--'  `--' `--`--'`--'`--'`--`--'`--''--''-,/   `------'  `----'`--''--''-,/           
+      ,--.                                            ,--.        ,--.             ,--------.        ,------.         ,------.        ,-----.      
+      |  | ,--,--.,--,--,--. ,---.  ,---.             |  | ,--,--.|  |,-. ,---.    '--.  .--'        |  .-.  \ ,-----.|  .--. ' ,---. |  |) /_     
+ ,--. |  |' ,-.  ||        || .-. :(  .-'        ,--. |  |' ,-.  ||     /| .-. :      |  |           |  |  \  :'-----'|  '--'.'| .-. ||  .-.  \    
+ |  '-'  /\ '-'  ||  |  |  |\   --..-'  `),--.   |  '-'  /\ '-'  ||  \  \\   --.      |  |.--.,--.   |  '--'  /       |  |\  \ ' '-' '|  '--' /,--.
+ `-----'  `--`--'`--`--`--' `----'`----' '-,/    `-----'  `--`--'`--'`--'`----'      `--''--''-,/   `-------'        `--' '--' `---' `------' '-,/
+ ,---.                ,--.  ,--.                                                                                                                  
+ |  o ,-.      ,---. ,-'  '-.|  ,---.  ,---. ,--.--. ,---.                                                                                         
+ .'     /_    | .-. |'-.  .-'|  .-.  || .-. :|  .--'(  .-'                                                                                         
+ |  o  .__)   ' '-' '  |  |  |  | |  |\   --.|  |   .-'  `)                                                                                        
+ `---'        `---'   `--'  `--' `--' `----'`--'   `----'                                                                                          </pre>
+        </div>
+        -->
+    </div>
+
+    <!-- EMAIL CALLOUT -->
+    <div class="email-callout">
+        <div class="email-callout-label">get in touch</div>
+        <a href="mailto:magmacrunchmedia@gmail.com">email us</a>
+        <div class="email-callout-sub">we'd love to hear from you</div>
+    </div>
+
+    <div class="strips-divider"></div>
+    <div class="section-label">// artists //</div>
+
+    <!-- SVFP -->
+    <div class="link-strip svfp">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/svfp/svfp-linkbanner.jpg'); background-position: center 40%;"></div>
+        <a href="https://linktr.ee/sexvanfloorplan" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Sex Van Floor Plan links">
+            <pre>
+   ,-,--.     ,----.          ,-.--,              ,-.-.  ,---.      .-._                                             
+ ,-.'-  _\ ,-.--` , \.--.-.  /=/, .'       ,--.-./=/ ,/.--.'  \    /==/ \  .-._                                      
+/==/_ ,_.'|==|-  _.-`\==\ -\/=/- /        /==/, ||=| -|\==\-/\ \   |==|, \/ /, /                                     
+\==\  \   |==|   `.-. \==\ `-' ,/         \==\,  \ / ,|/==/-|_\ |  |==|-  \|  |                                      
+ \==\ -\ /==/_ ,    /  |==|,  - |          \==\ - ' - /\==\,   - \ |==| ,  | -|                                      
+ _\==\ ,\|==|    .-'  /==/   ,   \          \==\ ,   | /==/ -   ,| |==| -   _ |                                      
+/==/\/ _ |==|_  ,`-._/==/, .--, - \         |==| -  ,//==/-  /\ - \|==|  /\ , |                                      
+\==\ - , /==/ ,     /\==\- \/=/ , /         \==\  _ / \==\ _.\=\.-'/==/, | |- |                                      
+ `--`---'`--`-----``  `--`-'  `--`           `--`--'   `--`        `--`./  `--`                                      
+     _,---.              _,.---._       _,.---._                           _ __               ,---.      .-._        
+  .-`.' ,  \   _.-.    ,-.' , -  `.   ,-.' , -  `.   .-.,.---.          .-`.' ,`.   _.-.    .--.'  \    /==/ \  .-._ 
+ /==/_  _.-' .-,.'|   /==/_,  ,  - \ /==/_,  ,  - \ /==/  `   \        /==/, -   \.-,.'|    \==\-/\ \   |==|, \/ /, /
+/==/-  '..-.|==|, |  |==|   .=.     |==|   .=.     |==|-, .=., |      |==| _ .=. |==|, |    /==/-|_\ |  |==|-  \|  | 
+|==|_ ,    /|==|- |  |==|_ : ;=:  - |==|_ : ;=:  - |==|   '='  /      |==| , '=',|==|- |    \==\,   - \ |==| ,  | -| 
+|==|   .--' |==|, |  |==| , '='     |==| , '='     |==|- ,   .'       |==|-  '..'|==|, |    /==/ -   ,| |==| -   _ | 
+|==|-  |    |==|- `-._\==\ -    ,_ / \==\ -    ,_ /|==|_  ,','.       |==|,  |   |==|- `-._/==/-  /\ - \|==|  /\ , | 
+/==/   \    /==/ - , ,/'.='. -   .'   '.='. -   .' /==/  /\ ,  )      /==/ - |   /==/ - , ,|==\ _.\=\.-'/==/, | |- | 
+`--`---'    `--`-----'   `--`--''       `--`--''   `--`-`--`--'       `--`---'   `--`-----' `--`        `--`./  `--` </pre>
+            <span class="strip-hover-tag">↗ linktr.ee/sexvanfloorplan</span>
+        </a>
+    </div>
+
+    <!-- THLD -->
+    <div class="link-strip thld">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/THLD/thld-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/texasholdemlavadome" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Texas Hold'Em Lava Dome links">
+            <pre>
+        ,----,                                                                                     ,--,                   ,---,                          
+      ,/   .`|                                                                ,--,    ,----..   ,---.'|                ,`--.' |                    ____  
+    ,`   .'  :   ,---,. ,--,     ,--,    ,---,       .--.--.                ,--.'|   /   /   \  |   | :       ,---,    |   :  :    ,---,.        ,'  , `.
+  ;    ;     / .'  .' | |'. \   / .`|   '  .' \     /  /    '.           ,--,  | :  /   .     : :   : |     .'  .' `\  |   |  '  ,'  .' |     ,-+-,.' _ |
+.'___,/    ,',---.'   | ; \ `\ /' / ;  /  ;    '.  |  :  /`. /        ,---.'|  : ' .   /   ;.  \|   ' :   ,---.'     \ '   :  |,---.'   |  ,-+-. ;   , ||
+|    :     | |   |   .' `. \  /  / .' :  :       \ ;  |  |--`         |   | : _' |.   ;   /  ` ;;   ; '   |   |  .`\  |;   |.' |   |   .' ,--.'|'   |  ;|
+;    |.';  ; :   :  |-,  \  \/  / ./  :  |   /\   \|  :  ;_           :   : |.'  |;   |  ; \ ; |'   | |__ :   : |  '  |'---'   :   :  |-,|   |  ,', |  ':
+`----'  |  | :   |  ;/|   \  \.'  /   |  :  ' ;.   :\  \    `.        |   ' '  ; :|   :  | ; | '|   | :.'||   ' '  ;  :        :   |  ;/||   | /  | |  ||
+    '   :  ; |   :   .'    \  ;  ;    |  |  ;/  \   \`----.   \       |   |  .'. |.   |  ' ' ' :'   :    ;'   | ;  .  |        |   :   .''   | :  | :  |,
+    |   |  ' |   |  |-,   / \  \  \   '  :  | \  \ ,'__ \  \  |       |   | :  | ''   ;  \; /  ||   |  ./ |   | :  |  '        |   |  |-,;   . |  ; |--' 
+    '   :  | '   :  ;/|  ;  /\  \  \  |  |  '  '--' /  /`--'  /       '   : |  : ; \   \  ',  / ;   : ;   '   : | /  ;         '   :  ;/||   : |  | ,    
+    ;   |.'  |   |    \./__;  \  ;  \ |  |  :      '--'.     /        |   | '  ,/   ;   :    /  |   ,/    |   | '` ,/          |   :    \|   : '  |/     
+    '---'    |   :   .'|   : / \  \  ;|  | ,'        `--'---'         ;   : ;--'     \   \ .'   '---'     ;   :  .'            |   :   .';   | |`-'      
+   ,--,      |   | ,'  ;   |/   \  ' |`--''                           |   ,/          `---`               |   ,.'              |   | ,'  |   ;/          
+,---.'|      `----'    `---'     `--`                                 '---',----..             ____       '---'                `----'    '---'           
+|   | :      ,---,                     ,---,                  ,---,       /   /   \          ,'  , `.    ,---,.                                          
+:   : |     '  .' \            ,---.  '  .' \               .'  .' `\    /   .     :      ,-+-,.' _ |  ,'  .' |                                          
+|   ' :    /  ;    '.         /__./| /  ;    '.           ,---.'     \  .   /   ;.  \  ,-+-. ;   , ||,---.'   |                                          
+;   ; '   :  :       \   ,---.;  ; |:  :       \          |   |  .`\  |.   ;   /  ` ; ,--.'|'   |  ;||   |   .'                                          
+'   | |__ :  |   /\   \ /___/ \  | |:  |   /\   \         :   : |  '  |;   |  ; \ ; ||   |  ,', |  '::   :  |-,                                          
+|   | :.'||  :  ' ;.   :\   ;  \ ' ||  :  ' ;.   :        |   ' '  ;  :|   :  | ; | '|   | /  | |  ||:   |  ;/|                                          
+'   :    ;|  |  ;/  \   \\   \  \: ||  |  ;/  \   \       '   | ;  .  |.   |  ' ' ' :'   | :  | :  |,|   :   .'                                          
+|   |  ./ '  :  | \  \ ,' ;   \  ' .'  :  | \  \ ,'       |   | :  |  ''   ;  \; /  |;   . |  ; |--' |   |  |-,                                          
+;   : ;   |  |  '  '--'    \   \   '|  |  '  '--'         '   : | /  ;  \   \  ',  / |   : |  | ,    '   :  ;/|                                          
+|   ,/    |  :  :           \   `  ;|  :  :               |   | '` ,/    ;   :    /  |   : '  |/     |   |    \                                          
+'---'     |  | ,'            :   \ ||  | ,'               ;   :  .'       \   \ .'   ;   | |`-'      |   :   .'                                          
+          `--''               '---" `--''                 |   ,.'          `---`     |   ;/          |   | ,'                                            
+                                                           '---'                      '---'           `----'                                                  
+</pre>
+            <span class="strip-hover-tag">↗ linktr.ee/texasholdemlavadome</span>
+        </a>
+    </div>
+
+    <!-- JUANITO THOMPSON -->
+    <div class="link-strip jt">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/juanito_thompson/juanitothompson-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/juanitothompson" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Juanito Thompson links">
+            <pre>
+                                         __    __                                       
+                                        /  |  /  |                                      
+       __  __    __   ______   _______  $$/  $$ |_     ______                          
+      /  |/  |  /  | /      \ /       \ /  |/ $$   |   /      \                         
+      $$/ $$ |  $$ | $$$$$$  |$$$$$$$  |$$ |$$$$$$/   /$$$$$$  |                        
+      /  |$$ |  $$ | /    $$ |$$ |  $$ |$$ |  $$ | __ $$ |  $$ |                        
+      $$ |$$ \__$$ |/$$$$$$$ |$$ |  $$ |$$ |  $$ |/  |$$ \__$$ |                        
+      $$ |$$    $$/ $$    $$ |$$ |  $$ |$$ |  $$  $$/ $$    $$/                         
+ __   $$ | $$$$$$/   $$$$$$$/ $$/   $$/ $$/    $$$$/   $$$$$$/                          
+/  \__$$ |                                                                              
+$$    $$/                                                                               
+ $$$$$$/                                                                                
+   __      __                                                                           
+  /  |    /  |                                                                          
+ _$$ |_   $$ |____    ______   _____  ____    ______    _______   ______   _______      
+/ $$   |  $$      \  /      \ /     \/    \  /      \  /       | /      \ /       \     
+$$$$$$/   $$$$$$$  |/$$$$$$  |$$$$$$ $$$$  |/$$$$$$  |/$$$$$$$/ /$$$$$$  |$$$$$$$  |    
+  $$ | __ $$ |  $$ |$$ |  $$ |$$ | $$ | $$ |$$ |  $$ |$$      \ $$ |  $$ |$$ |  $$ |    
+  $$ |/  |$$ |  $$ |$$ \__$$ |$$ | $$ | $$ |$$ |__$$ | $$$$$$  |$$ \__$$ |$$ |  $$ | __ 
+  $$  $$/ $$ |  $$ |$$    $$/ $$ | $$ | $$ |$$    $$/ /     $$/ $$    $$/ $$ |  $$ |/  |
+   $$$$/  $$/   $$/  $$$$$$/  $$/  $$/  $$/ $$$$$$$/  $$$$$$$/   $$$$$$/  $$/   $$/ $$/ 
+                                            $$ |                                        
+                                            $$ |                                        
+                                             $$/                                        </pre>
+            <span class="strip-hover-tag">↗ linktr.ee/juanitothompson</span>
+        </a>
+    </div>
+
+    <!-- WOAH. -->
+    <div class="link-strip woah">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/woah/woah-linkbanner.jpg'); background-position: center 40%;"></div>
+        <a href="https://linktr.ee/woah.music" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Woah. links">
+            <pre>
+`8.`888b                 ,8'  ,o888888o.           .8.          8 8888        8
+ `8.`888b               ,8'. 8888     `88.        .888.         8 8888        8
+  `8.`888b             ,8',8 8888       `8b      :88888.        8 8888        8
+   `8.`888b     .b    ,8' 88 8888        `8b    . `88888.       8 8888        8
+    `8.`888b    88b  ,8'  88 8888         88   .8. `88888.      8 8888        8
+     `8.`888b .`888b,8'   88 8888         88  .8`8. `88888.     8 8888        8
+      `8.`888b8.`8888'    88 8888        ,8P .8' `8. `88888.    8 8888888888888
+       `8.`888`8.`88'     `8 8888       ,8P .8'   `8. `88888.   8 8888        8
+        `8.`8' `8,`'       ` 8888     ,88' .888888888. `88888.  8 8888        8
+         `8.`   `8'           `8888888P'  .8'       `8. `88888. 8 8888        8</pre>
+            <span class="strip-hover-tag">↗ linktr.ee/woah.music</span>
+        </a>
+    </div>
+
+    <!-- DAG HENDERSON -->
+    <div class="link-strip dag">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/dag_henderson/daghenderson-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/daghenderson" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Dag Henderson links">
+            <pre>
+_________/\\\______________________________                                                                                             
+ ________\/\\\______________________________                                                                                            
+  ________\/\\\___________________/\\\\\\\\__                                                                                           
+   ________\/\\\___/\\\\\\\\\_____/\\\////\\\_                                                                                          
+    ___/\\\\\\\\\__\////////\\\___\//\\\\\\\\\_                                                                                        
+     __/\\\////\\\____/\\\\\\\\\\___\///////\\\_                                                                                        
+      _\/\\\__\/\\\___/\\\/////\\\___/\\_____\\\_                                                                                       
+       _\//\\\\\\\/\\_\//\\\\\\\\/\\_\//\\\\\\\\__                                                                                      
+        __\///////\//___\////////\//___\___________                                                                                     
+__/\\\______________________________________________/\\\________________________________________________________________________        
+ _\/\\\_____________________________________________\/\\\________________________________________________________________________       
+  _\/\\\_____________________________________________\/\\\________________________________________________________________________      
+   _\/\\\_____________/\\\\\\\\___/\\/\\\\\\__________\/\\\______/\\\\\\\\___/\\/\\\\\\\___/\\\\\\\\\\_____/\\\\\_____/\\/\\\\\\___     
+    _\/\\\\\\\\\\____/\\\/////\\\_\/\\\////\\\____/\\\\\\\\\____/\\\/////\\\_\/\\\/////\\\_\/\\\//////____/\\\///\\\__\/\\\////\\\__    
+     _\/\\\/////\\\__/\\\\\\\\\\\__\/\\\__\//\\\__/\\\////\\\___/\\\\\\\\\\\__\/\\\___\///__\/\\\\\\\\\\__/\\\__\//\\\_\/\\\__\//\\\_   
+      _\/\\\___\/\\\_\//\\///////___\/\\\___\/\\\_\/\\\__\/\\\__\//\\///////___\/\\\_________\////////\\\_\//\\\__/\\\__\/\\\___\/\\\_  
+       _\/\\\___\/\\\__\//\\\\\\\\\\_\/\\\___\/\\\_\//\\\\\\\/\\__\//\\\\\\\\\\_\/\\\__________/\\\\\\\\\\__\///\\\\\/___\/\\\___\/\\\_ 
+        _\///____\///____\//////////__\///____\///___\///////\//____\//////////__\///__________\//////////_____\/////_____\///____\///__ </pre>
+            <span class="strip-hover-tag">↗ linktr.ee/daghenderson</span>
+        </a>
+    </div>
+
+    <!-- JON McCOY -->
+    <div class="link-strip jonm">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/jon_mccoy/jonmccoy-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://artists.landr.com/jm_longwayhome" class="link-strip-inner" target="_blank" rel="noopener" aria-label="Jon McCoy links">
+            <pre>
+                      ,__ __         ___            
+ /\                  /|  |  |       / (_)           
+|  |  __   _  _       |  |  |   __ |      __        
+|  | /  \_/ |/ |      |  |  |  /   |     /  \_|   | 
+ \_|/\__/   |  |_/    |  |  |_/\___/\___/\__/  \_/|/
+  /|                                             /| 
+  \|                                             \| </pre>
+            <span class="strip-hover-tag">↗ artists.landr.com/jm_longwayhome</span>
+        </a>
+    </div>
+
+    <!-- THE FOUR B'S -->
+    <div class="link-strip fourbs">
+        <div class="link-strip-bg" style="background-image: url('../assets/photos/four_bs/fourBs-linkbanner.jpg'); background-position: center 50%;"></div>
+        <a href="https://linktr.ee/the4bs" class="link-strip-inner" target="_blank" rel="noopener" aria-label="The Four B's links">
+            <pre>
+:::==== :::  === :::=====      :::===== :::====  :::  === :::====       :::====   == :::=== 
+:::==== :::  === :::           :::      :::  === :::  === :::  ===      :::  === ==  :::    
+  ===   ======== ======        ======   ===  === ===  === =======       =======       ===== 
+  ===   ===  === ===           ===      ===  === ===  === === ===       ===  ===         ===
+  ===   ===  === ========      ===       ======   ======  ===  ===      =======      ======</pre>
+            <span class="strip-hover-tag">↗ linktr.ee/the4bs</span>
+        </a>
+    </div>
+
+    <!-- PIXELATED LOGO GRID -->
+    <div class="logo-grid-section">
+        <div class="logo-grid-label">// find us everywhere //</div>
+
+        <div class="logo-grid-groups">
+            <div class="logo-group">
+                <div class="logo-group-label">streaming &amp; music</div>
+                <div class="logo-row">
+                    <a href="https://magmacrunch.bandcamp.com/" target="_blank" rel="noopener" class="logo-link" data-label="bandcamp">
+                        <canvas class="pixel-logo" data-src="../assets/logos/bandcamp-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://open.spotify.com/playlist/7IUU00YYlHLDBTC7tvXNEY" target="_blank" rel="noopener" class="logo-link" data-label="spotify">
+                        <canvas class="pixel-logo" data-src="../assets/logos/spotify-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://soundcloud.com/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="soundcloud">
+                        <canvas class="pixel-logo" data-src="../assets/logos/soundcloud-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://network.landr.com/users/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="landr">
+                        <canvas class="pixel-logo" data-src="../assets/logos/landr-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.qobuz.com/us-en/label/magmacrunch-media/download-streaming-albums/6939549" target="_blank" rel="noopener" class="logo-link" data-label="qobuz">
+                        <canvas class="pixel-logo" data-src="../assets/logos/qboz-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+            <div class="logo-group">
+                <div class="logo-group-label">video</div>
+                <div class="logo-row">
+                    <a href="https://www.youtube.com/@magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="youtube">
+                        <canvas class="pixel-logo" data-src="../assets/logos/youtube-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.dailymotion.com/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="dailymotion">
+                        <canvas class="pixel-logo" data-src="../assets/logos/dailymotion-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://archive.org/search?query=magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="archive.org">
+                        <canvas class="pixel-logo" data-src="../assets/logos/internetarchive-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+            <div class="logo-group">
+                <div class="logo-group-label">catalog &amp; data</div>
+                <div class="logo-row">
+                    <a href="https://www.discogs.com/label/3354279-magmacrunch-media" target="_blank" rel="noopener" class="logo-link" data-label="discogs">
+                        <canvas class="pixel-logo" data-src="../assets/logos/discogs-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://musicbrainz.org/label/39446d03-fe9c-47d0-81a9-2b42d34fb400" target="_blank" rel="noopener" class="logo-link" data-label="musicbrainz">
+                        <canvas class="pixel-logo" data-src="../assets/logos/musicbrainz-logo.png" width="48" height="48"></canvas>
+                    </a>
+
+                </div>
+            </div>
+            <div class="logo-group">
+                <div class="logo-group-label">social</div>
+                <div class="logo-row">
+                    <a href="https://linktr.ee/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="linktree">
+                        <canvas class="pixel-logo" data-src="../assets/logos/linktree-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.instagram.com/magmacrunch/" target="_blank" rel="noopener" class="logo-link" data-label="instagram">
+                        <canvas class="pixel-logo" data-src="../assets/logos/instagram-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.tiktok.com/@magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="tiktok">
+                        <canvas class="pixel-logo" data-src="../assets/logos/tiktok-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.facebook.com/magmacrunch/" target="_blank" rel="noopener" class="logo-link" data-label="facebook">
+                        <canvas class="pixel-logo" data-src="../assets/logos/facebook-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.threads.com/@magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="threads">
+                        <canvas class="pixel-logo" data-src="../assets/logos/threads-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://bsky.app/profile/magmacrunch.bsky.social" target="_blank" rel="noopener" class="logo-link" data-label="bluesky">
+                        <canvas class="pixel-logo" data-src="../assets/logos/bluesky-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://www.tumblr.com/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="tumblr">
+                        <canvas class="pixel-logo" data-src="../assets/logos/tumblr-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://pixelfed.social/magmacrunch" target="_blank" rel="noopener" class="logo-link" data-label="pixelfed">
+                        <canvas class="pixel-logo" data-src="../assets/logos/pixelfed-logo.png" width="48" height="48"></canvas>
+                    </a>
+                    <a href="https://substack.com/@magmacrunchmedia" target="_blank" rel="noopener" class="logo-link" data-label="substack">
+                        <canvas class="pixel-logo" data-src="../assets/logos/substack-logo.png" width="48" height="48"></canvas>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+(function () {
+    var PIXEL_SIZE = 16;
+    function pixelate(canvas) {
+        var src = canvas.dataset.src;
+        if (!src) return;
+        var img = new Image();
+        img.onload = function () {
+            var off = document.createElement('canvas');
+            off.width = PIXEL_SIZE;
+            off.height = PIXEL_SIZE;
+            var offCtx = off.getContext('2d');
+            offCtx.imageSmoothingEnabled = true;
+            offCtx.drawImage(img, 0, 0, PIXEL_SIZE, PIXEL_SIZE);
+            var ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(off, 0, 0, PIXEL_SIZE, PIXEL_SIZE, 0, 0, canvas.width, canvas.height);
+        };
+        img.onerror = function () {
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#1e1e2e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+        img.src = src;
+    }
+    document.querySelectorAll('canvas.pixel-logo').forEach(pixelate);
+})();
+</script>
+<script>
+(function () {
+    document.querySelectorAll('.link-strip').forEach(function (strip) {
+        strip.addEventListener('click', function (e) {
+            var link = strip.querySelector('a.link-strip-inner');
+            if (link && e.target !== link && !link.contains(e.target)) {
+                window.open(link.href, '_blank', 'noopener');
+            }
+        });
+    });
+})();
+</script>
+
+<script src="../nav.js"></script>
+<script>
+(function () {
+  const canvas = document.getElementById('cereal-scene');
+  if (!canvas) return;
+  const ctx    = canvas.getContext('2d');
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.scale(2, 2);
+
+  const W = 300, H = 256;
+
+  const BOWL_CENTER_X = 224;
+  const BOWL_TOP = 195;
+  const SPOUT_X = 145;
+  const SPOUT_Y = 85;
+
+  const C = {
+    pink:     '#FF3D6E', /* --mc-crater */
+    darkPink: '#2D0A0A', /* --mc-mount-mid */
+    slate:    '#6A5A52', /* --mc-smoke */
+    cyan:     '#00F5FF', /* --mc-cereal-cyan */
+    yellow:   '#ffe03a', /* --mc-lava-bright */
+    dark:     '#0A0518', /* --mc-sky-deep */
+    milk:     '#ffe03a'  /* --mc-lava-bright */
+  };
+
+  let cerealBits = [];
+  let splashes   = [];
+  let frame      = 0;
+
+  function spawnCereal() {
+    const types = ['loop', 'star', 'rock'];
+    const type = types[Math.floor(Math.random() * types.length)];
+
+    let color = C.yellow;
+    if (type === 'loop') color = C.pink;
+    if (type === 'star') color = C.cyan;
+
+    cerealBits.push({
+      x: SPOUT_X + (Math.random() - 0.5) * 16,
+      y: SPOUT_Y + (Math.random() - 0.5) * 8,
+      vx: Math.random() * 2.5 + 2.0,
+      vy: Math.random() * -1.5 - 0.5,
+      col: color,
+      type: type,
+      targetY: BOWL_TOP + 2 + Math.random() * 10,
+      floating: false,
+      angle: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.25
+    });
+  }
+
+  function spawnSplash(x, y, color) {
+    for (let i = 0; i < 5; i++) {
+      splashes.push({
+        x: x, y: y,
+        vx: (Math.random() - 0.5) * 4.5,
+        vy: -(Math.random() * 3.5 + 2),
+        col: color,
+        life: 1,
+        decay: 0.07 + Math.random() * 0.05
+      });
+    }
+  }
+
+  function drawVolcanoBoxArt(cx, cy) {
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    ctx.fillStyle = C.cyan;
+    ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = C.dark;
+    ctx.beginPath(); ctx.arc(0, 0, 26, 0, Math.PI * 2); ctx.fill();
+
+    /* ── volcano body — flat rim between peaks ── */
+    ctx.fillStyle = C.slate;
+    ctx.beginPath();
+    ctx.moveTo(-20, 16);
+    ctx.quadraticCurveTo(-12, 2, -8, -10);
+    ctx.lineTo(8, -10);
+    ctx.quadraticCurveTo(12, 2, 20, 16);
+    ctx.fill();
+
+    /* ── lava flow down the front ── */
+    ctx.fillStyle = C.pink;
+    ctx.beginPath();
+    ctx.moveTo(-4, -9);
+    ctx.lineTo(4, -9);
+    ctx.quadraticCurveTo(7, 0, 5, 7);
+    ctx.quadraticCurveTo(0, 10, -5, 7);
+    ctx.quadraticCurveTo(-7, 0, -4, -9);
+    ctx.fill();
+
+    /* ── crater rim edge ── */
+    ctx.fillStyle = C.pink;
+    ctx.beginPath();
+    ctx.ellipse(0, -10, 7, 2.8, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = C.yellow;
+    ctx.beginPath();
+    ctx.ellipse(0, -10, 5.5, 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* ── eruption particles (pixel-art debris) ── */
+    var t1 = (frame % 14 < 7);
+    var t2 = (frame % 11 < 5);
+
+    ctx.fillStyle = t1 ? C.yellow : C.pink;
+    ctx.fillRect(-1, -14, 2, 2);
+    ctx.fillRect(0, -20, 2, 2);
+
+    ctx.fillStyle = t2 ? C.pink : C.cyan;
+    ctx.fillRect(-5, -17, 2, 1);
+    ctx.fillRect(4, -15, 1, 2);
+    ctx.fillRect(-3, -21, 1, 1);
+    ctx.fillRect(6, -12, 1, 1);
+    ctx.fillRect(-8, -13, 1, 1);
+
+    ctx.fillStyle = C.yellow;
+    ctx.fillRect(2, -18, 1, 1);
+    ctx.fillRect(-6, -11, 1, 1);
+
+    ctx.restore();
+  }
+
+  function drawBox() {
+    ctx.save();
+    ctx.translate(110, 130);
+    ctx.rotate(Math.PI / 6);
+
+    const w = 90;
+    const h = 135;
+    const fx = -w / 2;
+    const fy = -h / 2;
+    const dx = -20;
+    const dy = -15;
+
+    ctx.fillStyle = '#09090c';
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(fx + w, fy);
+    ctx.lineTo(fx + w + dx, fy + dy);
+    ctx.lineTo(fx + dx, fy + dy);
+    ctx.fill();
+
+    ctx.fillStyle = C.darkPink;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(fx, fy + h);
+    ctx.lineTo(fx + dx, fy + h + dy);
+    ctx.lineTo(fx + dx, fy + dy);
+    ctx.fill();
+
+    ctx.fillStyle = C.pink;
+    ctx.fillRect(fx, fy, w, h);
+
+    ctx.fillStyle = '#ff6cb2';
+    ctx.fillRect(fx, fy, 2, h);
+
+    ctx.fillStyle = C.cyan;
+    ctx.fillRect(fx, fy + 12, w, 16);
+
+    drawVolcanoBoxArt(0, -2);
+
+    ctx.font = '8px "Press Start 2P"';
+    ctx.textAlign = 'center';
+
+    ctx.fillStyle = '#110006';
+    ctx.fillText('MAGMA', 2, 40);
+    ctx.fillText('CRUNCH', 2, 54);
+
+    ctx.fillStyle = C.cyan;
+    ctx.fillText('MAGMA', 1, 39);
+    ctx.fillText('CRUNCH', 1, 53);
+
+    ctx.fillStyle = C.yellow;
+    ctx.fillText('MAGMA', 0, 38);
+    ctx.fillText('CRUNCH', 0, 52);
+
+    ctx.strokeStyle = C.pink;
+    ctx.lineWidth = 0.75;
+    ctx.beginPath();
+    ctx.moveTo(fx - 18, fy - 15);
+    ctx.lineTo(fx + w - 18, fy - 15);
+    ctx.stroke();
+
+    ctx.fillStyle = C.darkPink;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(fx + w, fy);
+    ctx.lineTo(fx + w - 8, fy - 20);
+    ctx.lineTo(fx - 5, fy - 22);
+    ctx.fill();
+
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(fx, fy);
+    ctx.lineTo(fx + w, fy);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawBowlAndLiquid() {
+    const cx = BOWL_CENTER_X;
+    const cy = BOWL_TOP;
+    const bw = 55;
+    const ry = 14;
+
+    ctx.fillStyle = C.dark;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, bw, ry, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(cx, cy + 2, bw - 2, ry - 2, 0, 0, Math.PI * 2);
+    ctx.clip();
+
+    for (let y = cy - ry; y <= cy + ry + 10; y += 2) {
+      for (let x = cx - bw; x <= cx + bw; x += 2) {
+        const wave = Math.sin(x * 0.15 + frame * 0.1) + Math.cos(y * 0.2 - frame * 0.08);
+        if (wave > 0.5) ctx.fillStyle = C.pink;
+        else if (wave < -0.4) ctx.fillStyle = C.cyan;
+        else ctx.fillStyle = C.milk;
+        ctx.fillRect(x, y, 2, 2);
+      }
+    }
+    ctx.restore();
+
+    ctx.fillStyle = C.slate;
+    ctx.beginPath();
+    ctx.moveTo(cx + bw, cy);
+    ctx.bezierCurveTo(cx + bw, cy + 30, cx + 30, cy + 45, cx + 20, cy + 45);
+    ctx.lineTo(cx - 20, cy + 45);
+    ctx.bezierCurveTo(cx - 30, cy + 45, cx - bw, cy + 30, cx - bw, cy);
+    ctx.ellipse(cx, cy, bw, ry, 0, Math.PI, 0, true);
+    ctx.fill();
+
+    ctx.strokeStyle = C.cyan;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, bw, ry, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.moveTo(cx - bw + 6, cy + 10);
+    ctx.bezierCurveTo(cx - bw + 6, cy + 30, cx - 20, cy + 35, cx - 20, cy + 35);
+    ctx.lineTo(cx - 10, cy + 35);
+    ctx.bezierCurveTo(cx - 10, cy + 35, cx - bw + 15, cy + 30, cx - bw + 15, cy + 10);
+    ctx.fill();
+  }
+
+  function drawCereal() {
+    for (const c of cerealBits) {
+      ctx.save();
+      const x = Math.floor(c.x);
+      const y = Math.floor(c.y + (c.floating ? Math.sin(frame * 0.15 + c.x) * 2 : 0));
+
+      ctx.translate(x, y);
+      if (!c.floating) ctx.rotate(c.angle);
+
+      ctx.fillStyle = c.col;
+      if (c.type === 'loop') {
+        ctx.fillRect(-3, -3, 6, 6);
+        ctx.clearRect(-1, -1, 2, 2);
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.fillRect(1, 1, 1, 1);
+      } else if (c.type === 'star') {
+        ctx.fillRect(-1, -3, 2, 6);
+        ctx.fillRect(-3, -1, 6, 2);
+        ctx.fillRect(-2, -2, 1, 1);
+        ctx.fillRect(1, 1, 1, 1);
+        ctx.fillRect(1, -2, 1, 1);
+        ctx.fillRect(-2, 1, 1, 1);
+      } else {
+        ctx.fillRect(-2, -2, 4, 4);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, 1.5, 1.5);
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawSplashes() {
+    for (const s of splashes) {
+      ctx.globalAlpha = Math.max(0, s.life);
+      ctx.fillStyle = s.col;
+      ctx.fillRect(Math.floor(s.x), Math.floor(s.y), 2, 2);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function update() {
+    if (frame % 3 === 0) spawnCereal();
+
+    for (const s of splashes) {
+      s.x += s.vx;
+      s.y += s.vy;
+      s.vy += 0.42;
+      s.life -= s.decay;
+    }
+    splashes = splashes.filter(s => s.life > 0);
+
+    for (const c of cerealBits) {
+      if (!c.floating) {
+        c.x += c.vx;
+        c.y += c.vy;
+        c.vy += 0.35;
+        c.angle += c.spin;
+
+        if (c.y >= c.targetY && c.x > BOWL_CENTER_X - 55 && c.x < BOWL_CENTER_X + 55) {
+          c.floating = true;
+          c.y = c.targetY;
+          c.vx = 0;
+          c.vy = 0;
+          spawnSplash(c.x, c.y, Math.random() > 0.5 ? C.pink : C.cyan);
+        } else if (c.y > H + 20) {
+          c.life = 0;
+        }
+      } else {
+        c.x += (BOWL_CENTER_X - c.x) * 0.005;
+      }
+    }
+
+    cerealBits = cerealBits.filter(c => c.y <= H + 20 && c.life !== 0);
+    if (cerealBits.length > 55) {
+      const floaters = cerealBits.filter(c => c.floating);
+      if (floaters.length > 32) cerealBits.splice(cerealBits.indexOf(floaters[0]), 1);
+    }
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, W, H);
+    drawBowlAndLiquid();
+    drawCereal();
+    drawSplashes();
+    drawBox();
+  }
+
+  const TARGET_FPS = 24;
+  const FRAME_MS   = 1000 / TARGET_FPS;
+  let lastTime = 0;
+  let rafId;
+
+  function loop(ts) {
+    rafId = requestAnimationFrame(loop);
+    if (ts - lastTime < FRAME_MS) return;
+    lastTime = ts;
+    update();
+    render();
+    frame++;
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(rafId);
+    else { lastTime = 0; rafId = requestAnimationFrame(loop); }
+  });
+
+  document.fonts.ready.then(() => {
+    rafId = requestAnimationFrame(loop);
+  });
+})();
+</script>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+</body>
+</html>

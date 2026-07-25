@@ -1,0 +1,159 @@
+/* Responsive styles - Media queries for different screen sizes */
+
+@media (max-width: 1200px) {
+    /* Card sizing */
+    .card, .card-spot {
+        width: 80px;
+        height: 112px;
+    }
+    
+    .card-spot > .card {
+        width: 80px;
+        height: 112px;
+    }
+    
+    /* Tableau adjustments */
+    .tableau-column {
+        width: 80px;
+    }
+    
+    .tableau-column .card {
+        margin-top: -92px;
+    }
+    
+    /* Card text sizing */
+    .card-rank, .card-rank-bottom {
+        font-size: 20px;
+    }
+    
+    .card-suit {
+        font-size: 36px;
+    }
+    
+    .card-back {
+        font-size: 48px;
+    }
+    
+    /* Spacing adjustments */
+    .foundation-piles {
+        gap: 10px;
+    }
+    
+    .stock-waste {
+        gap: 10px;
+    }
+    
+    /* Number card corners */
+    .corner-rank {
+        font-size: 16px;
+    }
+    
+    .corner-suit {
+        font-size: 12px;
+    }
+    
+    /* Suit symbols */
+    .suit-symbol {
+        font-size: 22px;
+    }
+    
+    .card-suit-center.single .suit-symbol {
+        font-size: 48px;
+    }
+    
+    /* Face card images */
+    .face-card-image {
+        width: 48px;
+        height: 56px;
+    }
+}
+
+@media (max-width: 800px) {
+    /* Card sizing */
+    .card, .card-spot {
+        width: 60px;
+        height: 84px;
+    }
+    
+    .card-spot > .card {
+        width: 60px;
+        height: 84px;
+    }
+    
+    /* Tableau adjustments */
+    .tableau-column {
+        width: 60px;
+        gap: 3px;
+    }
+    
+    .tableau-column .card {
+        margin-top: -69px;
+    }
+    
+    .tableau {
+        gap: 8px;
+    }
+    
+    /* Spacing adjustments */
+    .stock-waste, .foundation-piles {
+        gap: 8px;
+    }
+    
+    /* Card text sizing */
+    .card-rank, .card-rank-bottom {
+        font-size: 16px;
+    }
+    
+    .card-suit {
+        font-size: 28px;
+    }
+    
+    .card-back {
+        font-size: 36px;
+    }
+    
+    /* Header adjustments */
+    h1 {
+        font-size: 28px;
+    }
+    
+    /* Stats layout */
+    .stats {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .score-container {
+        flex: 1;
+        min-width: 70px;
+    }
+    
+    /* Number card corners */
+    .corner-rank {
+        font-size: 12px;
+    }
+    
+    .corner-suit {
+        font-size: 10px;
+    }
+    
+    /* Suit symbols */
+    .suit-symbol {
+        font-size: 16px;
+    }
+    
+    .card-suit-center.single .suit-symbol {
+        font-size: 36px;
+    }
+    
+    /* Face card images */
+    .face-card-image {
+        width: 36px;
+        height: 42px;
+    }
+    
+    /* Card suit center padding */
+    .card-suit-center {
+        padding: 18px 8px;
+    }
+}

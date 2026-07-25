@@ -1,0 +1,710 @@
+/* ============================================================
+   archive.css — shared styles for all magmacrunch archive pages
+   covers: place pages, artist pages, sub-pages (personnel,
+   recordings, works, releases, events)
+   ============================================================ */
+
+/* ── LAYOUT ── */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 60px;
+    position: relative;
+}
+
+/* ── BREADCRUMB (matches music/visual index pages — absolute over hero images) ── */
+main .breadcrumb {
+    position: absolute;
+    top: 72px;
+    left: 20px;
+    z-index: 10;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+main .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+main .breadcrumb a:hover { color: var(--cyan); }
+main .breadcrumb .sep { margin: 0 8px; color: var(--cyan); opacity: 0.7; }
+main .breadcrumb .current { color: var(--cyan); }
+
+/* ── BREADCRUMB (place variant) ── */
+main .breadcrumb-place a:hover { color: var(--green); }
+main .breadcrumb-place .sep { color: var(--green); opacity: 0.7; }
+main .breadcrumb-place .current { color: var(--green); }
+
+/* ── PAGE HEADER (sub-pages) ── */
+.page-header {
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+}
+.page-header.centered {
+    text-align: center;
+    padding: 0 20px 40px;
+    max-width: 700px;
+}
+.place-label,
+.artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--cyan);
+    letter-spacing: 0.2em;
+    margin-bottom: 10px;
+    opacity: 0.8;
+}
+.page-eyebrow {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--cyan);
+    letter-spacing: 0.25em;
+    margin-bottom: 10px;
+    opacity: 0.7;
+    text-transform: uppercase;
+}
+.page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--yellow);
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(255,224,58,0.35);
+}
+.page-title.cyan-title {
+    color: var(--cyan);
+    font-size: clamp(13px, 2.8vw, 22px);
+    text-shadow: 0 0 20px rgba(34,211,238,0.5);
+    margin-bottom: 10px;
+}
+.page-subtitle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+}
+
+/* ── SUB-NAV ── */
+.sub-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 36px;
+}
+.subpage-links {
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+    animation: fadeUp 0.5s 0.15s ease both;
+}
+.subpage-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    opacity: 0.8;
+}
+.subpage-grid {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* ── DIVIDERS ── */
+.divider {
+    width: 100%;
+    max-width: 960px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), var(--cyan), transparent);
+    margin: 0 0 36px;
+    opacity: 0.4;
+}
+.divider.artist {
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--yellow), var(--cyan), transparent);
+}
+.section-divider {
+    width: 100%;
+    max-width: 700px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), var(--cyan), transparent);
+    margin: 0 20px 40px;
+    opacity: 0.3;
+    animation: fadeUp 0.5s 0.05s ease both;
+}
+.section-divider.artist {
+    background: linear-gradient(90deg, transparent, var(--rose), var(--yellow), var(--rose), transparent);
+    opacity: 0.35;
+    animation: fadeUp 0.5s 0.08s ease both;
+}
+
+/* ── CATALOG WRAP + STATUS ── */
+.catalog-wrap {
+    width: 100%;
+    max-width: 960px;
+    animation: fadeUp 0.5s 0.1s ease both;
+}
+#status-bar {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cyan);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+    min-height: 18px;
+}
+#count-bar {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+}
+
+/* ── SHARED CARD BASE ── */
+.artist-card,
+.recording-card,
+.work-card,
+.release-card,
+.event-card {
+    border: 1px solid #1e1e2e;
+    background: var(--deep);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    transition: border-color 0.15s;
+}
+.artist-card:hover    { border-color: var(--cyan); }
+.recording-card:hover { border-color: var(--cyan); }
+.work-card:hover      { border-color: var(--cyan); }
+.work-card.artist-works:hover { border-color: var(--rose); }
+
+.artist-card h3,
+.recording-card h3,
+.work-card h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+.artist-card h3 a,
+.recording-card h3 a,
+.work-card h3 a {
+    color: var(--white);
+    text-decoration: none;
+}
+.artist-card h3 a:hover,
+.recording-card h3 a:hover { color: var(--cyan); }
+.work-card h3 a:hover       { color: var(--cyan); }
+.work-card.artist-works h3 a:hover { color: var(--rose); }
+
+.artist-card p,
+.recording-card p,
+.work-card p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--white);
+    opacity: 0.8;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+.artist-card p strong,
+.recording-card p strong,
+.work-card p strong {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    margin-right: 6px;
+}
+.artist-card a,
+.recording-card a,
+.work-card a { color: var(--cyan); text-decoration: none; }
+.artist-card a:hover,
+.recording-card a:hover,
+.work-card a:hover { color: var(--white); }
+
+/* card type labels */
+.artist-type {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--dim);
+    font-style: italic;
+    margin-left: 6px;
+}
+.work-type {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--cyan);
+    font-style: italic;
+    margin-left: 6px;
+}
+.work-type.artist-accent { color: var(--rose); }
+.video-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--purple);
+    font-style: italic;
+    margin-left: 6px;
+}
+.disambiguation,
+.alternate-names {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--dim);
+    font-style: italic;
+}
+
+/* ── RELEASE CARDS ── */
+.release-card {
+    display: flex;
+    gap: 18px;
+    padding: 0;
+    margin-bottom: 14px;
+}
+.release-card:hover { border-color: var(--yellow); }
+.album-art {
+    width: 120px;
+    min-width: 120px;
+    height: 120px;
+    background: #0d0d18;
+    border-right: 1px solid #1e1e2e;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+.album-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.release-info { padding: 16px 18px 16px 0; flex: 1; }
+.release-info h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+.release-info h3 a { color: var(--white); text-decoration: none; }
+.release-info h3 a:hover { color: var(--yellow); }
+.release-info p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--white);
+    opacity: 0.8;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+.release-info p strong {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    margin-right: 6px;
+}
+.release-info a { color: var(--cyan); text-decoration: none; }
+.release-info a:hover { color: var(--white); }
+
+/* ── EVENT CARDS ── */
+.event-card {
+    display: flex;
+    gap: 16px;
+    padding: 0;
+    overflow: hidden;
+}
+.event-card:hover { border-color: var(--cyan); }
+.event-card.cancelled { border-color: #2a2a3a; opacity: 0.65; }
+.event-poster {
+    width: 110px;
+    min-width: 110px;
+    height: 110px;
+    background: #0d0d18;
+    border-right: 1px solid #1e1e2e;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.event-poster img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
+.event-poster .no-art-msg {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: #2a2a4a;
+    text-align: center;
+    padding: 8px;
+    line-height: 1.8;
+}
+.event-info { padding: 14px 16px 14px 0; flex: 1; }
+.event-info h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    line-height: 1.7;
+}
+.event-info h3 a { color: var(--white); text-decoration: none; }
+.event-info h3 a:hover { color: var(--cyan); }
+.event-type {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    font-style: italic;
+    margin-left: 6px;
+}
+.cancelled-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: var(--rose);
+    letter-spacing: 0.06em;
+    margin-left: 8px;
+}
+.event-info p {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--white);
+    opacity: 0.8;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+.event-info p strong {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    margin-right: 6px;
+}
+.event-info a { color: var(--cyan); text-decoration: none; }
+.event-info a:hover { color: var(--white); }
+.performer-cancelled { color: var(--rose); font-style: italic; font-size: 10px; }
+
+/* ── BADGES ── */
+.badge {
+    display: inline-block;
+    color: #000;
+    padding: 2px 8px;
+    margin: 2px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    letter-spacing: 0.06em;
+}
+/* personnel badges */
+.badge-founded  { background: var(--rose); }
+.badge-member   { background: var(--orange); }
+.badge-engineer { background: var(--cyan); }
+.badge-born     { background: var(--yellow); }
+/* recordings badges */
+.badge-recorded { background: var(--cyan); }
+.badge-mixed    { background: var(--purple); color: var(--white); }
+.badge-mastered { background: #10b981; }
+/* works badges */
+.badge-composed  { background: var(--rose); }
+.badge-lyrics    { background: var(--orange); }
+.badge-premiered { background: var(--yellow); }
+/* fallback */
+.badge-other { background: #4a4a6a; color: var(--white); }
+
+/* recording attribute labels */
+.rec-label {
+    display: inline-block;
+    padding: 1px 5px;
+    margin-left: 4px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    letter-spacing: 0.05em;
+}
+.rec-label.live    { background: var(--rose);   color: #000; }
+.rec-label.partial { background: var(--orange); color: #000; }
+.rec-label.video   { background: var(--cyan);   color: #000; }
+
+/* ── TAGS ── */
+.tag {
+    display: inline-block;
+    background: #1a1a2e;
+    border: 1px solid #2a2a4a;
+    padding: 2px 7px;
+    margin: 2px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--dim);
+}
+
+/* ── COVER / PHOTO PLACEHOLDER (index pages) ── */
+.cover-wrap {
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s 0.1s ease both;
+}
+.cover-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    opacity: 0.8;
+}
+.cover-photo {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: 1px dashed #1a3a4a;
+    background: rgba(34,211,238,0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cover-photo span {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+}
+
+/* ── BIO (artist index pages) ── */
+.bio-wrap {
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s 0.1s ease both;
+}
+.bio-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    opacity: 0.8;
+}
+.bio-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    color: var(--white);
+    line-height: 1.75;
+    opacity: 0.85;
+}
+.bio-text a {
+    color: var(--rose);
+    text-decoration: underline;
+    text-decoration-color: rgba(255,61,110,0.4);
+    transition: color 0.15s;
+}
+.bio-text a:hover { color: var(--yellow); }
+
+/* ── MUSICBRAINZ LINK ── */
+.mb-link-wrap {
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+    margin-top: 40px;
+    animation: fadeUp 0.5s 0.2s ease both;
+}
+.mb-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    text-decoration: none;
+    border: 1px solid #1a1a2a;
+    padding: 6px 12px;
+    letter-spacing: 0.08em;
+    transition: color 0.15s, border-color 0.15s;
+    display: inline-block;
+}
+.mb-link:hover { color: var(--cyan); border-color: var(--cyan); }
+
+/* photo credit overlay */
+.photo-credit {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--credit-color, rgba(240, 234, 216, 0.45));
+    letter-spacing: 0.1em;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ── VIDEO LIST (artist index) ── */
+.videos-wrap {
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s 0.15s ease both;
+}
+.videos-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    opacity: 0.8;
+}
+.mini-video-list { width: 100%; border: 1px solid #1a1a2a; }
+.mini-video-entry {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-bottom: 1px solid #1a1a2a;
+    cursor: pointer;
+    min-height: 100px;
+}
+.mini-video-entry:last-child { border-bottom: none; }
+.mini-video-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.25) saturate(0.6);
+    transition: filter 0.3s ease;
+    z-index: 0;
+}
+.mini-video-entry:hover .mini-video-bg,
+.mini-video-entry.active .mini-video-bg { filter: brightness(0.15) saturate(0.4); }
+.mini-video-entry::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(8,8,8,0.5) 0%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+.mini-video-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 18px;
+    width: 100%;
+}
+.mini-thumb {
+    flex-shrink: 0;
+    width: 120px;
+    aspect-ratio: 16/9;
+    background: #000;
+    border: 1px solid #2a2a3a;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+}
+.mini-video-entry:hover .mini-thumb { border-color: var(--cyan); }
+.mini-video-entry.active .mini-thumb { border-color: var(--yellow); }
+.mini-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mini-play-btn {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+}
+.mini-play-icon {
+    width: 28px; height: 28px;
+    border: 2px solid var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+}
+.mini-play-icon::after {
+    content: '';
+    display: block;
+    width: 0; height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 9px solid var(--white);
+    margin-left: 2px;
+    transition: border-left-color 0.2s;
+}
+.mini-video-entry:hover .mini-play-icon {
+    border-color: var(--cyan);
+    background: rgba(0,245,255,0.15);
+    transform: scale(1.1);
+}
+.mini-video-entry:hover .mini-play-icon::after { border-left-color: var(--cyan); }
+.mini-video-entry.active .mini-play-icon { border-color: var(--yellow); }
+.mini-iframe-wrap {
+    display: none;
+    width: 120px;
+    aspect-ratio: 16/9;
+    flex-shrink: 0;
+    border: 1px solid var(--cyan);
+}
+.mini-iframe-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
+.mini-video-entry.active .mini-thumb       { display: none; }
+.mini-video-entry.active .mini-iframe-wrap { display: block; }
+.mini-video-meta { flex: 1; min-width: 0; }
+.mini-video-year {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+    opacity: 0.8;
+}
+.mini-video-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(7px, 1.2vw, 10px);
+    color: var(--white);
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+.mini-yt-link {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 5px;
+    color: var(--dim);
+    text-decoration: none;
+    border: 1px solid #2a2a3a;
+    padding: 3px 8px;
+    letter-spacing: 0.06em;
+    transition: color 0.15s, border-color 0.15s;
+    display: inline-block;
+}
+.mini-yt-link:hover { color: var(--cyan); border-color: var(--cyan); }
+
+/* ── CAROUSEL PLACEHOLDER ── */
+.carousel-wrap {
+    width: 100%;
+    max-width: 700px;
+    padding: 0 20px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s 0.2s ease both;
+}
+.carousel-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--cyan);
+    letter-spacing: 0.12em;
+    margin-bottom: 14px;
+    opacity: 0.8;
+}
+.carousel-empty {
+    border: 1px dashed #1a2a2a;
+    padding: 32px;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    background: rgba(0,0,0,0.2);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+    .page-title { font-size: 13px; }
+    .subpage-grid { flex-direction: column; }
+    .mini-thumb, .mini-iframe-wrap { width: 90px; }
+}
+@media (max-width: 500px) {
+    .album-art { width: 72px; min-width: 72px; height: 72px; }
+    .event-poster { width: 72px; min-width: 72px; height: 72px; }
+}

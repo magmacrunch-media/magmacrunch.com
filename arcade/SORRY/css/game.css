@@ -1,0 +1,1265 @@
+/* game.css — In-game UI: layout, sidebar, card system, HUD elements,
+   game log, debug panel, and game-over overlay.
+   Depends on: base.css, lobby.css (for .net-box, .chat-window, .msg) */
+
+/* ═══════════════════════════════════════════
+   GAME VIEW LAYOUT
+═══════════════════════════════════════════ */
+
+#game-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 20px 20px;  /* top breathing room since body padding is removed in-game */
+  background: #000;
+  overflow-x: hidden;       /* board scale transform must not bleed horizontally */
+}
+
+/* ── GAME STATUS BAR ── */
+#net-status-bar-game {
+  width: 100%; max-width: 1100px;
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap;          /* items wrap to a second line on narrow screens */
+  background: var(--term-panel); border: 1px solid var(--term-border);
+  border-radius: 4px; padding: 9px 14px; margin-bottom: 16px;
+  font-size: 7px; font-family: 'Press Start 2P', monospace; color: var(--term-green-dim);
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0,18,0,0.3) 3px, rgba(0,18,0,0.3) 4px
+  );
+}
+#net-status-dot-game {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--net-accent2); flex-shrink: 0;
+}
+#net-status-dot-game.connected { background: #39ff14 !important; box-shadow: 0 0 10px rgba(57,255,20,0.5) !important; } /* always green — semantic */
+#net-player-badge-game {
+  margin-left: auto; background: rgba(57,255,20,0.08); color: var(--my-color, var(--term-green));
+  border: 1px solid rgba(57,255,20,0.25); border-radius: 3px;
+  padding: 2px 8px; font-size: 7px; display: none;
+}
+
+/* ── MY COLOR BADGE ── */
+#my-color-badge {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 16px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-family: 'Press Start 2P', monospace;
+  font-weight: bold;
+  letter-spacing: 3px;
+  border: 2px solid currentColor;
+  /* Static glow — not animated */
+  box-shadow: 0 0 16px currentColor;
+  white-space: nowrap;
+  will-change: opacity;
+  animation: badge-pulse 2.5s ease-in-out infinite;
+}
+#my-color-badge.visible { display: flex; }
+
+@keyframes badge-pulse {
+  0%, 100% { opacity: 0.8; }
+  50%       { opacity: 1.0; }
+}
+
+/* ── MAIN LAYOUT: board column + sidebar ── */
+#game-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-width: 1100px;
+}
+
+/* Left column: board stacked above game log */
+#game-main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+  width: 662px; /* matches .board-frame explicit width */
+}
+
+/* Right sidebar */
+#game-sidebar {
+  width: 280px; flex-shrink: 0;
+  display: flex; flex-direction: column; gap: 12px;
+  height: 660px;        /* fixed height matching the board column */
+  overflow: hidden;     /* hard clip — nothing escapes the sidebar */
+}
+
+/* The chat net-box must be the flex child that absorbs leftover space
+   AND must never let its contents overflow the sidebar. */
+#game-sidebar > .net-box:has(#game-chat-window) {
+  flex: 1 1 0;          /* grow to fill, shrink to nothing if needed */
+  min-height: 0;        /* critical: allows flex children to shrink below content size */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;     /* contain the chat window inside the box */
+}
+
+#game-chat-window {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;  /* allow scroll rather than overflow */
+  overflow-y: auto;
+}
+
+/* ── GLOBAL ARCADE CHAT ── */
+#gameChat {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  overflow-y: auto;
+}
+
+#gameChat .chat-header {
+  font-size: 9px;
+  color: var(--neon-cyan);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--term-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-user-count {
+  font-size: 7px;
+  color: var(--dim);
+}
+
+.chat-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--term-border);
+}
+
+.chat-my-name {
+  font-size: 9px;
+  color: var(--neon-green);
+}
+
+.chat-edit-name {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  padding: 2px;
+}
+
+.chat-edit-name:hover {
+  opacity: 0.7;
+}
+
+.chat-name-input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--neon-green);
+  color: var(--term-text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 2px 4px;
+  border-radius: 2px;
+  width: 100px;
+  max-width: 100px;
+}
+
+.chat-name-input:focus {
+  outline: none;
+  border-color: var(--neon-green);
+}
+
+.chat-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--term-border);
+}
+
+.chat-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  padding: 6px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.chat-tab.active {
+  color: var(--neon-green);
+  border-bottom-color: var(--neon-green);
+}
+
+.chat-tab:hover {
+  color: var(--term-text);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 8px;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.chat-msg {
+  margin-bottom: 3px;
+  word-wrap: break-word;
+}
+
+.chat-msg .chat-name {
+  font-weight: bold;
+}
+
+.chat-msg.system {
+  color: var(--dim);
+  font-style: italic;
+}
+
+.chat-users {
+  padding: 4px 8px;
+  border-top: 1px solid var(--term-border);
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.chat-users-header {
+  font-size: 7px;
+  color: var(--dim);
+  margin-bottom: 4px;
+}
+
+.chat-user {
+  font-size: 8px;
+  color: var(--term-text);
+  padding: 2px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-user-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.chat-user-status {
+  font-size: 7px;
+  color: var(--dim);
+  margin-left: 4px;
+}
+
+.chat-typing {
+  font-size: 7px;
+  color: var(--dim);
+  padding: 4px 8px;
+  font-style: italic;
+}
+
+#gameChat .chat-input {
+  display: flex;
+  gap: 4px;
+  padding: 6px 8px;
+  border-top: 1px solid var(--term-border);
+}
+
+#gameChat .chat-input input {
+  flex: 1;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--term-border);
+  color: var(--term-text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 5px;
+  border-radius: 2px;
+  min-width: 0;
+}
+
+#gameChat .chat-input input::placeholder {
+  color: var(--dim);
+}
+
+#gameChat .chat-input input:focus {
+  outline: none;
+  border-color: var(--neon-green);
+}
+
+#gameChat .chat-input button {
+  background: var(--neon-green);
+  color: #111;
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 5px 8px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+/* Chat Color Picker */
+.chat-pick-color {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-pick-color:hover {
+    opacity: 0.7;
+}
+
+.color-picker-popup {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #1a1a2e;
+    border: 1px solid var(--term-border);
+    border-radius: 4px;
+    padding: 8px;
+    z-index: 100;
+    min-width: 180px;
+}
+
+.color-strip {
+    width: 100%;
+    height: 20px;
+    border-radius: 3px;
+    cursor: crosshair;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.color-indicator {
+    position: absolute;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: transparent;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.color-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.color-preview-label {
+    font-size: 7px;
+    color: var(--dim);
+}
+
+.color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.color-reset-btn {
+    background: none;
+    border: 1px solid var(--dim);
+    color: var(--dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: auto;
+}
+
+.color-reset-btn:hover {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+}
+
+/* Chat Online Users Panel */
+.chat-online {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.chat-online-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.chat-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chat-online-name {
+  font-size: 9px;
+  color: var(--term-text);
+}
+
+.chat-online-status {
+  font-size: 7px;
+  color: var(--dim);
+  margin-left: auto;
+}
+
+/* ── GAME LOG (below board) ── */
+#game-log-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--term-panel);
+  border-color: var(--term-border);
+  border-radius: 4px;
+}
+.game-log-window {
+  max-height: 110px;
+  min-height: 60px;
+  flex: none !important;
+  /* Slightly amber-tinted background to distinguish from chat */
+  background-color: #010101 !important;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(20,14,0,0.5) 3px,
+    rgba(20,14,0,0.5) 4px
+  ) !important;
+  border-color: #2a2000 !important;
+}
+
+/* ═══════════════════════════════════════════
+   TURN / HUD
+═══════════════════════════════════════════ */
+
+#turn-box { text-align: center; }
+
+#hud-turn-name {
+  font-family: 'Press Start 2P', monospace; font-size: 15px;
+  color: var(--net-accent3); margin-bottom: 8px; line-height: 1.5;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+#your-turn-flash { font-size: 10px; color: var(--my-color, var(--term-green)); opacity: 0; transition: opacity .3s; text-shadow: 0 0 10px var(--my-color-dim, rgba(57,255,20,0.5)); }
+#your-turn-flash.visible { opacity: 1; }
+
+#opponent-thinking {
+  font-size: 7px;
+  font-family: 'Press Start 2P', monospace;
+  color: #888;
+  min-height: 14px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  line-height: 1.8;
+}
+#opponent-thinking.thinking-active {
+  opacity: 1;
+  color: var(--net-accent3);
+  animation: thinking-blink 1.4s ease-in-out infinite;
+}
+@keyframes thinking-blink {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+
+/* ── TURN STATUS LINE ── */
+#turn-status {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  min-height: 14px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  line-height: 2;
+  transition: color 0.3s;
+  white-space: normal;
+  word-break: break-word;
+}
+#turn-status.turn-status-prompt  { color: var(--net-accent3); }
+#turn-status.turn-status-good    { color: var(--my-color, var(--term-green)); text-shadow: 0 0 8px var(--my-color-dim, rgba(57,255,20,0.4)); }
+#turn-status.turn-status-bad     { color: #ff6b6b;            }
+#turn-status.turn-status-waiting { color: rgba(200,200,200,0.35);     }
+
+/* ═══════════════════════════════════════════
+   CARD SYSTEM
+═══════════════════════════════════════════ */
+
+#card-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#card-display {
+  perspective: 600px;
+  width: 140px;
+  height: 100px;
+}
+
+#card-face {
+  width: 100%; height: 100%;
+  background: #fdfbf7;
+  border: 3px solid #1a1a2e;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  box-shadow: 3px 3px 0 #1a1a2e;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative corner pips */
+#card-face::before,
+#card-face::after {
+  content: '✦';
+  position: absolute;
+  font-size: 8px;
+  color: rgba(0,0,0,0.15);
+}
+#card-face::before { top: 4px; left: 6px; }
+#card-face::after  { bottom: 4px; right: 6px; }
+
+#card-value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 22px;
+  color: #1a1a2e;
+  line-height: 1;
+}
+
+#card-desc {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  color: #555;
+  text-align: center;
+  line-height: 1.8;
+}
+
+#cards-remaining {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #888;
+}
+
+/* Card drawn-by label */
+#card-drawn-by {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  min-height: 14px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  line-height: 1.8;
+}
+#card-drawn-by.mine   { color: #2ecc71; }
+#card-drawn-by.theirs { color: #888; }
+
+/* ── CARD FLIP ANIMATION ── */
+@keyframes flipOut {
+  from { transform: rotateY(0deg);   opacity: 1; }
+  to   { transform: rotateY(90deg);  opacity: 0; }
+}
+@keyframes flipIn {
+  from { transform: rotateY(-90deg); opacity: 0; }
+  to   { transform: rotateY(0deg);   opacity: 1; }
+}
+#card-face.flip-out { animation: flipOut 0.2s ease-in  forwards; }
+#card-face.flip-in  { animation: flipIn  0.3s ease-out forwards; }
+
+/* ── CARD OWNERSHIP STATES ── */
+#card-face.card-mine {
+  border-color: var(--my-color, #4fffb0);
+  box-shadow: 3px 3px 0 #1a1a2e, 0 0 14px 4px rgba(79,255,176,0.35);
+}
+#card-face.card-theirs {
+  filter: grayscale(60%) brightness(0.85);
+  border-color: #444;
+  box-shadow: 3px 3px 0 #111;
+  opacity: 0.7;
+}
+
+/* ── CARD PLAYABILITY STATES ── */
+#card-face.card-playable {
+  border-color: var(--green);
+  /* Static glow — not animated */
+  box-shadow: 3px 3px 0 #1a1a2e, 0 0 18px 6px rgba(46,204,113,0.6);
+  background: #f4fff8;
+  will-change: opacity;
+  animation: card-playable-pulse 1.4s ease-in-out infinite;
+}
+#card-face.card-playable #card-value { color: #1a6b3c; }
+#card-face.card-playable #card-desc  { color: #2a7a4c; }
+@keyframes card-playable-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%       { opacity: 1.0; }
+}
+
+#card-face.card-unplayable {
+  border-color: #cc3344;
+  box-shadow: 3px 3px 0 #330a0e;
+  background: #fff5f5;
+  filter: saturate(0.4) brightness(0.92);
+  position: relative;
+}
+#card-face.card-unplayable #card-value { color: #991122; }
+#card-face.card-unplayable #card-desc  { color: #bb3344; }
+/* Red diagonal X */
+#card-face.card-unplayable::before,
+#card-face.card-unplayable::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 90%; height: 3px;
+  background: rgba(180,30,50,0.55);
+  border-radius: 2px;
+}
+#card-face.card-unplayable::before { transform: translate(-50%, -50%) rotate(20deg); }
+#card-face.card-unplayable::after  { transform: translate(-50%, -50%) rotate(-20deg); }
+
+/* ── DRAW / DISCARD BUTTONS ── */
+#hud-draw-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--my-color, var(--term-green));
+  border: 2px solid var(--my-color, var(--term-green));
+  border-radius: 3px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 11px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, box-shadow 0.15s, color 0.3s, border-color 0.3s;
+  text-shadow: 0 0 8px var(--my-color-dim, rgba(57,255,20,0.35));
+}
+#hud-draw-btn:hover:not(:disabled) {
+  background: var(--my-color-dim, rgba(57,255,20,0.1));
+  box-shadow: 0 0 20px var(--my-color-dim, rgba(57,255,20,0.5)), inset 0 0 12px var(--my-color-dim, rgba(57,255,20,0.08));
+}
+#hud-draw-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  text-shadow: none;
+}
+
+#hud-discard-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--net-accent2);          /* fallback before color is applied */
+  border: 2px solid var(--net-accent2);
+  border-radius: 6px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 9px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.15s, box-shadow 0.15s, color 0.3s, border-color 0.3s;
+  animation: discard-appear 0.25s ease-out;
+}
+#hud-discard-btn:hover {
+  background: var(--discard-hover-bg, rgba(204,51,68,0.15));
+  box-shadow: 0 0 10px rgba(255,255,255,0.15);
+}
+@keyframes discard-appear {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   DEBUG PANEL
+═══════════════════════════════════════════ */
+
+#debug-box { padding: 10px 12px; }
+#debug-body { margin-top: 8px; }
+.debug-log {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+}
+.debug-line { display: flex; gap: 6px; line-height: 1.5; flex-wrap: wrap; }
+.debug-ts    { color: #444; flex-shrink: 0; }
+.debug-label { color: var(--my-color, #4fffb0); flex-shrink: 0; }
+.debug-data  { color: #aaa; word-break: break-all; }
+
+/* ═══════════════════════════════════════════
+   GAME OVER OVERLAY
+═══════════════════════════════════════════ */
+
+#gameover-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+#gameover-overlay.show {
+  display: flex;
+  animation: go-fade-in 0.5s ease;
+}
+@keyframes go-fade-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+#gameover-box {
+  background: #1a1a2e;
+  border: 3px solid #333;
+  border-radius: 12px;
+  padding: 48px 60px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(0,0,0,0.9);
+  position: relative;
+  overflow: hidden;
+  max-width: 480px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+#gameover-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 36px;
+  letter-spacing: 6px;
+  animation: go-pulse 1.5s ease-in-out infinite alternate;
+}
+@keyframes go-pulse {
+  from { transform: scale(1); }
+  to   { transform: scale(1.06); }
+}
+
+#gameover-subtitle  { font-size: 11px; letter-spacing: 4px; color: #888; }
+
+#gameover-winner-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+#gameover-pip {
+  display: inline-block;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+#gameover-winner-name { font-size: 20px; letter-spacing: 3px; }
+#gameover-you-tag     { font-size: 9px; color: #aaa; white-space: nowrap; }
+#gameover-message     { font-size: 9px; color: #ccc; letter-spacing: 2px; }
+
+#gameover-pawns {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+.gameover-pawn {
+  width: 28px !important;
+  height: 28px !important;
+  animation: go-bounce 0.7s ease-in-out infinite alternate;
+}
+.gameover-pawn:nth-child(2) { animation-delay: 0.15s; }
+.gameover-pawn:nth-child(3) { animation-delay: 0.30s; }
+.gameover-pawn:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes go-bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-8px); }
+}
+
+/* ── SIDEBAR CHAT INPUT — never let it shrink or get clipped ── */
+#game-sidebar .chat-input-row {
+  flex-shrink: 0;  /* always full height, never compressed */
+}
+#game-sidebar .chat-input-row input {
+  min-width: 0;    /* allow input to shrink horizontally if needed */
+}
+
+/* ── GAME OVER — PLAY AGAIN BUTTON ── */
+#gameover-restart-btn {
+  margin-top: 8px;
+  background: transparent;
+  color: var(--my-color, var(--term-green));
+  border: 2px solid var(--my-color, var(--term-green));
+  border-radius: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  padding: 14px 28px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: background 0.15s, box-shadow 0.15s;
+  animation: discard-appear 0.4s ease-out 0.6s both;
+}
+#gameover-restart-btn:hover {
+  background: rgba(79,255,176,0.12);
+  box-shadow: 0 0 16px rgba(79,255,176,0.5);
+}
+
+
+/* ── MUTE BUTTON ── */
+#mute-btn {
+  margin-left: auto;
+  background: transparent;
+  border: 1px solid var(--net-border);
+  border-radius: 5px;
+  color: rgba(255,255,255,0.3);
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+#mute-btn:hover { border-color: var(--my-color, var(--term-green)); color: var(--my-color, var(--term-green)); }
+
+/* ── DRAW CARD BUTTON — player color applied via JS inline style (border + color + box-shadow) ── */
+/* The base style is defined above; JS overrides border-color, color, box-shadow on game start */
+
+/* ═══════════════════════════════════════════
+   MOBILE LAYOUT  (screens narrower than 780px)
+═══════════════════════════════════════════ */
+
+@media (max-width: 780px) {
+
+  /* Remove side padding on the game view itself */
+  #game-view {
+    padding: 0 8px;
+  }
+
+  /* Stack board column and sidebar vertically */
+  #game-layout {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Scale the board down to fit the screen width.
+     The board is 662px wide; we leave 16px of breathing room on each side.
+     transform-origin: top center keeps it anchored to the top of its box. */
+  #game-main-col {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .board-frame {
+    transform-origin: top center;
+    transform: scale(var(--board-scale, 1));
+    /* Pull subsequent content up by the pixels the scaled board "gives back".
+       Formula: scaled_height = 662 * scale, so saved = 662 - 662*scale = 662*(1-scale).
+       We negate that to shrink the layout gap: margin-bottom = -662*(1-scale)
+       which simplifies to 662*scale - 662 = 662*(scale-1).
+       Also clamp so it never goes positive (would add space when scale=1). */
+    margin-bottom: calc(662px * (var(--board-scale, 1) - 1));
+    /* Prevent the non-scaled layout width from overflowing the viewport */
+    max-width: 100vw;
+  }
+
+  /* Sidebar goes full width below the board */
+  #game-sidebar {
+    width: 100%;
+    height: auto;        /* no fixed height on mobile — let content flow */
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* Chat box fills available space but caps at a reasonable height */
+  #game-sidebar > .net-box:has(#game-chat-window) {
+    flex: none;
+    height: auto;
+  }
+
+  #game-chat-window {
+    height: 140px !important;
+    min-height: 0 !important;
+  }
+
+  /* Game log below board also full width */
+  #game-log-box {
+    width: 100%;
+  }
+  .game-log-window {
+    max-height: 80px;
+  }
+
+  /* Status bar — hide less important badges to save space */
+  #net-player-badge-game {
+    display: none !important;
+  }
+
+  /* Shrink the SORRY! h1 so it doesn't overflow on small screens */
+  #game-view h1 {
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  /* Tighten color badge on small screens */
+  #my-color-badge {
+    font-size: 10px;
+    padding: 3px 10px;
+    letter-spacing: 1px;
+  }
+
+  /* Make draw/discard buttons easier to tap */
+  #hud-draw-btn,
+  #hud-discard-btn {
+    padding: 14px;
+    font-size: 10px;
+  }
+
+  /* Tighten game-over box padding so it fits on narrow screens */
+  #gameover-box {
+    padding: 32px 24px;
+  }
+  #gameover-title {
+    font-size: 26px;
+    letter-spacing: 3px;
+  }
+  #gameover-winner-name {
+    font-size: 15px;
+  }
+
+  /* Larger pawn tap targets */
+  .pawn {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   MODAL OVERLAYS (How to Play, Credits, Quit Confirm)
+═══════════════════════════════════════════════════ */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 7, 18, 0.88);
+  z-index: 600;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.modal-open {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--net-panel);
+  border: 1px solid var(--net-border);
+  border-radius: 14px;
+  padding: 32px 28px 28px;
+  max-width: 640px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+  font-family: 'IBM Plex Mono', monospace;
+  animation: modal-in 0.2s ease;
+}
+.modal-box-narrow { max-width: 420px; }
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: 1px solid var(--net-border);
+  border-radius: 6px;
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+  padding: 3px 9px;
+  cursor: pointer;
+  font-family: 'IBM Plex Mono', monospace;
+  transition: border-color 0.15s, color 0.15s;
+}
+.modal-close:hover { border-color: var(--net-accent2); color: var(--net-accent2); }
+
+.modal-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 13px;
+  color: var(--my-color, var(--term-green));
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+  padding-right: 32px;
+}
+
+.modal-body {
+  font-size: 12px;
+  color: var(--net-text);
+  line-height: 1.7;
+}
+.modal-body p { margin-bottom: 12px; }
+.modal-body strong { color: #fff; }
+.modal-body em { color: var(--net-accent3); font-style: normal; }
+
+.modal-body-centered { text-align: center; }
+
+.modal-section-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2px;
+  margin: 20px 0 8px;
+  text-transform: uppercase;
+}
+
+/* Card grid in how-to-play */
+.modal-card-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 14px;
+  align-items: start;
+  margin-bottom: 4px;
+}
+.modal-card-pip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 26px;
+  background: #fdfbf7;
+  color: #1a1a2e;
+  border-radius: 5px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  border: 1px solid #ccc;
+  flex-shrink: 0;
+  padding: 0 6px;
+}
+.sorry-pip {
+  font-size: 7px;
+  background: #fff0cc;
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+/* ── CREDITS ── */
+.credits-logo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 32px;
+  color: var(--net-accent3);
+  text-shadow: 3px 3px 0 #886600;
+  margin-bottom: 4px;
+}
+.credits-tagline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.credits-block {
+  margin-bottom: 20px;
+}
+.credits-role {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.credits-name {
+  font-size: 14px;
+  color: var(--net-text);
+  margin-bottom: 2px;
+}
+.credits-note {
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  line-height: 1.5;
+}
+.credits-divider {
+  height: 1px;
+  background: var(--net-border);
+  margin: 20px 0;
+}
+.credits-footer {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  line-height: 1.8;
+}
+.credits-link {
+  color: var(--my-color, var(--term-green));
+  text-decoration: none;
+  font-size: 10px;
+}
+.credits-link:hover { text-decoration: underline; }
+
+/* ── QUIT MODAL ── */
+.quit-warn {
+  font-size: 13px;
+  color: var(--net-text);
+  margin: 8px 0 8px;
+  line-height: 1.6;
+}
+.quit-warn-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 24px;
+}
+.quit-btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+.quit-cancel-btn {
+  flex: 1;
+  max-width: 140px;
+  background: var(--net-panel);
+  color: var(--net-text);
+  border: 1px solid var(--net-border);
+  border-radius: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.quit-cancel-btn:hover { border-color: var(--my-color, var(--term-green)); color: var(--my-color, var(--term-green)); }
+.quit-confirm-btn {
+  flex: 1;
+  max-width: 140px;
+  background: rgba(255,255,255,0.08);   /* fallback before color applied */
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, color 0.3s, border-color 0.3s;
+}
+.quit-confirm-btn:hover {
+  filter: brightness(1.15);
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
+}
+
+/* ── QUIT BUTTON in status bar ── */
+#quit-game-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);   /* fallback before color applied */
+  border-radius: 5px;
+  color: rgba(255,255,255,0.5);
+  font-size: 8px;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+#quit-game-btn:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+/* ── GAME HEADER ICON BUTTONS (📖 ★) ── */
+.game-hdr-btn {
+  background: transparent;
+  border: 1px solid var(--net-border);
+  border-radius: 5px;
+  color: rgba(255,255,255,0.3);
+  font-size: 13px;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.game-hdr-btn:hover { border-color: var(--my-color, var(--term-green)); color: var(--my-color, var(--term-green)); }
+
+/* ── SPECTATOR BADGE ── */
+#spectator-badge {
+  background: rgba(255,204,0,0.1);
+  color: var(--net-accent3);
+  border: 1px solid rgba(255,204,0,0.3);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 9px;
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ── LOBBY HELP BUTTONS ROW ── */
+#lobby-help-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.help-link-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid var(--term-border);
+  border-radius: 3px;
+  color: var(--term-green-dim);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 6px;
+  padding: 8px 4px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: border-color 0.15s, color 0.15s, text-shadow 0.15s;
+  line-height: 1.8;
+}
+.help-link-btn:hover { border-color: var(--my-color, var(--term-green)); color: var(--my-color, var(--term-green)); text-shadow: 0 0 8px var(--my-color-dim, rgba(57,255,20,0.35)); }
+
+/* ── SPECTATE BUTTON ── */
+#spectate-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--term-border);
+  border-radius: 3px;
+  color: var(--term-green-dim);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 9px;
+  margin-top: 6px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: border-color 0.15s, color 0.15s, text-shadow 0.15s;
+}
+#spectate-btn:hover:not(:disabled) {
+  border-color: var(--term-amber);
+  color: var(--term-amber);
+  text-shadow: 0 0 8px rgba(255,183,0,0.5);
+}
+#spectate-btn:disabled { opacity: 0.25; cursor: not-allowed; }

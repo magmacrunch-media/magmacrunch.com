@@ -1,0 +1,38 @@
+/* College Green Apt. — works (warm amber / cta sub-theme) */
+body.cg-page.cg-works-page main > * { background: var(--cg-bg); }
+
+body.cg-page.cg-works-page .breadcrumb { color: var(--dim); }
+body.cg-page.cg-works-page .breadcrumb a { color: var(--cg-cta); }
+body.cg-page.cg-works-page .breadcrumb a:hover { color: var(--cg-cream); }
+body.cg-page.cg-works-page .breadcrumb .sep { color: var(--cg-cta); opacity: 0.6; }
+body.cg-page.cg-works-page .breadcrumb .current { color: var(--cg-cta); }
+
+body.cg-page.cg-works-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.cg-page.cg-works-page .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--cg-cta); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.cg-page.cg-works-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--cg-cta) !important; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+
+body.cg-page.cg-works-page .work-card {
+    background: transparent !important;
+    border-color: var(--cg-bluegrey);
+}
+body.cg-page.cg-works-page .work-card h3 { color: var(--cg-cream) !important; font-family: 'Press Start 2P', monospace; font-size: 12px; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1.7; }
+body.cg-page.cg-works-page .work-card h3 a { color: var(--cg-gold) !important; }
+body.cg-page.cg-works-page .work-card h3 a:hover { color: var(--cg-cream) !important; }
+body.cg-page.cg-works-page .work-card p { color: var(--cg-cream) !important; }
+body.cg-page.cg-works-page .work-card p strong { color: var(--cg-muted) !important; }
+body.cg-page.cg-works-page .work-card a { color: var(--cg-gold) !important; }
+body.cg-page.cg-works-page .work-card a:hover { color: var(--cg-cream) !important; }
+body.cg-page.cg-works-page .work-card:hover { border-color: var(--cg-gold) !important; }
+body.cg-page.cg-works-page .work-type { color: var(--cg-cta) !important; }
+body.cg-page.cg-works-page .tag { border-color: var(--cg-dark) !important; color: var(--cg-muted) !important; }
+
+/* Current page: works (c-works active) */
+body.cg-page.cg-works-page .nav-card.c-works {
+    background: var(--cg-bg);
+    color: var(--cg-cta);
+    border-color: var(--cg-cta);
+}
+
+@media (max-width: 500px) {
+    body.cg-page.cg-works-page .work-card { border-color: var(--cg-muted); }
+}

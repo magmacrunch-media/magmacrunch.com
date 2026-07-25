@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THLD — archive — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="thld-shared.css">
+    <style>
+        /* ══ PAGE: by-artist / thld ══ */
+
+        :root {
+            --thld-deep:        #1a1209;
+            --thld-dark:        #2e1e0f;
+            --thld-mid:         #4a2c10;
+            --thld-accent:      #c94b1a;
+            --thld-glow:        #e07a2f;
+            --thld-text:        #d4b896;
+            --thld-muted:       #8a6040;
+            --thld-highlight:   #f0c060;
+            --thld-red:         #b22020;
+        }
+
+        /* breadcrumb red accent */
+        body.thld-page main .breadcrumb a { color: #b22020; }
+        body.thld-page main .breadcrumb a:hover { color: #f0c060; }
+        body.thld-page main .breadcrumb .sep { color: #8b1a1a; opacity: 0.8; }
+        body.thld-page main .breadcrumb .current { color: #d63030; font-weight: bold; }
+
+        /* body text links */
+        .bio a { color: var(--thld-red); }
+        .bio a:hover { color: var(--thld-highlight); }
+
+        main { position: relative; padding: 0; }
+
+        /* ── ARTIST HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            /* ──min-height: clamp(420px, 75vw, 680px); ── */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* landscape drawing — show the full stage scene */
+            object-position: center 10%;
+            /* illustration is already warm and dark-edged, very light treatment */
+            filter: saturate(0.9) brightness(0.78);
+        }
+        /* warm amber tint echoing the stage backdrop */
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(201, 75, 26, 0.12);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(14,9,5,0.0)  0%,
+                rgba(14,9,5,0.0)  85%,
+                rgba(14,9,5,0.85) 100%
+            );
+        }
+        /* hero inner: breadcrumb at top, artist header at bottom */
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--thld-highlight);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.95;
+            text-shadow: 0 0 12px rgba(240,192,96,0.5);
+        }
+
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: #8a2018;
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(138, 32, 24, 0.65),
+                0 2px 10px rgba(0, 0, 0, 0.95);
+            margin-bottom: 6px;
+        }
+
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--thld-glow);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.9;
+            text-shadow: 0 0 12px rgba(224,122,47,0.4);
+        }
+
+        /* ── SUB-NAV CARDS ── */
+        body.thld-page .sub-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 48px;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--thld-accent), var(--thld-glow), var(--thld-accent), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── LAYOUT: bio above, carousel below ── */
+        .artist-body {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        @media (max-width: 700px) {
+            .artist-body { grid-template-columns: 1fr; }
+        }
+
+        /* ── SECTION LABELS ── */
+        .section-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--thld-accent);
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--thld-accent);
+            opacity: 0.9;
+        }
+
+        /* ── BIO ── */
+        .bio p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--thld-text);
+            line-height: 1.8;
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .bio .quote {
+            border-left: 2px solid var(--thld-highlight);
+            padding-left: 14px;
+            margin: 24px 0;
+            font-style: italic;
+            color: var(--thld-highlight);
+            opacity: 0.85;
+        }
+
+        .bio .link-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .ext-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--thld-highlight);
+            text-decoration: none;
+            letter-spacing: 0.1em;
+            padding: 7px 12px;
+            border: 1px solid var(--thld-highlight);
+            transition: background 0.15s, color 0.15s;
+        }
+        .ext-link:hover {
+            background: var(--thld-highlight);
+            color: var(--thld-deep);
+        }
+
+        /* ── DISCOGRAPHY ── */
+        .discog-list {
+            list-style: none;
+        }
+
+        .discog-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+            padding: 7px 0;
+            border-bottom: 1px solid var(--thld-mid);
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--thld-text);
+            line-height: 1.4;
+        }
+        .discog-item:last-child { border-bottom: none; }
+
+        .discog-title { flex: 1; opacity: 0.9; }
+
+        .discog-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--thld-muted);
+            white-space: nowrap;
+            letter-spacing: 0.08em;
+        }
+
+        /* highlight "major" releases */
+        .discog-item.major .discog-title {
+            color: var(--thld-highlight);
+        }
+        .discog-item.major .discog-year {
+            color: var(--thld-accent);
+        }
+
+        /* ── RELEASE CAROUSEL (floated single-image) ── */
+        .release-carousel-wrap {
+            float: right;
+            margin: 0 0 20px 28px;
+            width: 220px;
+            flex-shrink: 0;
+        }
+
+        .carousel-single-img {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            border: 1px solid var(--thld-mid);
+            overflow: hidden;
+            background: var(--thld-deep);
+        }
+        .carousel-single-img img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            filter: saturate(0.85) brightness(0.9);
+        }
+        .carousel-single-img img.visible { opacity: 1; }
+
+        /* prev / next arrows */
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(26,18,9,0.7);
+            border: none;
+            color: var(--thld-muted);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            padding: 6px 7px;
+            cursor: pointer;
+            z-index: 2;
+            transition: color 0.15s, background 0.15s;
+            line-height: 1;
+        }
+        .carousel-arrow:hover { color: var(--thld-glow); background: rgba(26,18,9,0.95); }
+        .carousel-arrow.prev { left: 0; }
+        .carousel-arrow.next { right: 0; }
+
+        /* title / year below image */
+        .carousel-meta {
+            margin-top: 8px;
+        }
+        .carousel-now-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5.5px;
+            color: var(--thld-glow);
+            letter-spacing: 0.08em;
+            line-height: 1.7;
+            display: block;
+        }
+        .carousel-now-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px;
+            color: var(--thld-muted);
+            letter-spacing: 0.08em;
+            opacity: 0.55;
+            margin-top: 3px;
+            display: block;
+        }
+
+        /* dots + pause row */
+        .carousel-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .carousel-dots {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .carousel-dot {
+            width: 5px;
+            height: 5px;
+            background: var(--thld-mid);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .carousel-dot.active { background: var(--thld-glow); }
+        .carousel-pause {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px;
+            color: var(--thld-muted);
+            background: none;
+            border: 1px solid var(--thld-mid);
+            padding: 3px 7px;
+            cursor: pointer;
+            letter-spacing: 0.06em;
+            transition: color 0.15s, border-color 0.15s;
+            white-space: nowrap;
+        }
+        .carousel-pause:hover { color: var(--thld-glow); border-color: var(--thld-glow); }
+
+        .photo-note {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 48px;
+            padding: 16px;
+            border: 1px solid var(--thld-mid);
+            background: var(--thld-dark);
+            animation: fadeUp 0.5s 0.2s ease both;
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: var(--thld-muted);
+            line-height: 1.6;
+        }
+
+        .photo-note span {
+            color: var(--thld-accent);
+            font-style: italic;
+        }
+
+        /* ── ASCII LOGO ── */
+
+
+        /* ── VIDEOS ── */
+        .videos-section {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 48px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .mini-video-list {
+            width: 100%;
+            border: 1px solid var(--thld-mid);
+        }
+        .mini-video-entry {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--thld-mid);
+            cursor: pointer;
+            min-height: 100px;
+        }
+        .mini-video-entry:last-child { border-bottom: none; }
+        .mini-video-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.25) saturate(0.6);
+            transition: filter 0.3s ease;
+            z-index: 0;
+        }
+        .mini-video-entry:hover .mini-video-bg,
+        .mini-video-entry.active .mini-video-bg { filter: brightness(0.15) saturate(0.4); }
+        .mini-video-entry::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(26,18,9,0.5) 0%, transparent 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .mini-video-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            width: 100%;
+        }
+        .mini-thumb {
+            flex-shrink: 0;
+            width: 120px;
+            aspect-ratio: 16/9;
+            background: var(--thld-deep);
+            border: 1px solid var(--thld-mid);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .mini-video-entry:hover .mini-thumb { border-color: var(--thld-accent); }
+        .mini-video-entry.active .mini-thumb { border-color: var(--thld-highlight); }
+        .mini-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mini-play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+        }
+        .mini-play-icon {
+            width: 28px; height: 28px;
+            border: 2px solid var(--thld-text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s, transform 0.2s, background 0.2s;
+        }
+        .mini-play-icon::after {
+            content: '';
+            display: block;
+            width: 0; height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 9px solid var(--thld-text);
+            margin-left: 2px;
+            transition: border-left-color 0.2s;
+        }
+        .mini-video-entry:hover .mini-play-icon {
+            border-color: var(--thld-accent);
+            background: rgba(201,75,26,0.2);
+            transform: scale(1.1);
+        }
+        .mini-video-entry:hover .mini-play-icon::after { border-left-color: var(--thld-accent); }
+        .mini-video-entry.active .mini-play-icon { border-color: var(--thld-highlight); }
+        .mini-iframe-wrap {
+            display: none;
+            width: 120px;
+            aspect-ratio: 16/9;
+            flex-shrink: 0;
+            border: 1px solid var(--thld-accent);
+        }
+        .mini-iframe-wrap iframe { width: 100%; height: 100%; display: block; border: none; }
+        .mini-video-entry.active .mini-thumb       { display: none; }
+        .mini-video-entry.active .mini-iframe-wrap { display: block; }
+        .mini-video-meta { flex: 1; min-width: 0; }
+        .mini-video-year {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--thld-accent);
+            letter-spacing: 0.12em;
+            margin-bottom: 6px;
+            opacity: 0.8;
+        }
+        .mini-video-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(7px, 1.2vw, 10px);
+            color: var(--thld-text);
+            letter-spacing: 0.05em;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        .mini-yt-link {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px;
+            color: var(--thld-muted);
+            text-decoration: none;
+            border: 1px solid var(--thld-mid);
+            padding: 3px 8px;
+            letter-spacing: 0.06em;
+            transition: color 0.15s, border-color 0.15s;
+            display: inline-block;
+        }
+        .mini-yt-link:hover { color: var(--thld-accent); border-color: var(--thld-accent); }
+        @media (max-width: 500px) {
+            .mini-thumb, .mini-iframe-wrap { width: 80px; }
+        }
+
+        /* ── CAROUSEL PLACEHOLDER ── */
+        /* ── PHOTO STRIP ── */
+        .photo-strip-section {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s 0.25s ease both;
+        }
+
+        .photo-strip-wrap { position: relative; width: 100%; }
+
+        .photo-strip {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--thld-glow) var(--thld-deep);
+            padding-bottom: 10px;
+            cursor: grab;
+        }
+        .photo-strip:active { cursor: grabbing; }
+        .photo-strip::-webkit-scrollbar { height: 3px; }
+        .photo-strip::-webkit-scrollbar-track { background: var(--thld-deep); }
+        .photo-strip::-webkit-scrollbar-thumb { background: var(--thld-glow); }
+
+        .photo-item {
+            flex-shrink: 0;
+            position: relative;
+            height: clamp(200px, 35vw, 380px);
+            scroll-snap-align: start;
+            overflow: hidden;
+            border: 1px solid var(--thld-mid);
+            transition: border-color 0.2s;
+            cursor: pointer;
+        }
+        .photo-item:hover { border-color: var(--thld-glow); }
+        .photo-item.landscape { aspect-ratio: 16/9; }
+        .photo-item.square    { aspect-ratio: 1/1; }
+        .photo-item.wide      { aspect-ratio: 4/3; }
+
+        .photo-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease, filter 0.3s ease;
+            filter: saturate(0.85) brightness(0.88);
+        }
+        .photo-item:hover img {
+            transform: scale(1.03);
+            filter: saturate(1.0) brightness(1.0);
+        }
+        .photo-caption {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 22px 10px 8px;
+            background: linear-gradient(to top, rgba(26,18,9,0.88) 0%, transparent 100%);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 5px; color: var(--thld-muted); letter-spacing: 0.1em;
+            opacity: 0; transition: opacity 0.25s ease;
+        }
+        .photo-item:hover .photo-caption { opacity: 1; }
+
+        .strip-scroll-hint {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px; color: var(--thld-muted); letter-spacing: 0.15em;
+            margin-top: 8px; opacity: 0.35; text-align: right;
+            transition: opacity 0.4s;
+        }
+        .photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
+
+        /* ── PHOTO LIGHTBOX ── */
+        .photo-lightbox {
+            display: none; position: fixed; inset: 0;
+            background: rgba(26,18,9,0.96); z-index: 1000;
+            align-items: center; justify-content: center; flex-direction: column;
+        }
+        .photo-lightbox.open { display: flex; }
+        .lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+        .lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid var(--thld-mid); }
+        .lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+        .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--thld-muted);
+            background: none; border: 1px solid var(--thld-mid); padding: 7px 14px; cursor: pointer;
+            letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
+        .lb-btn:hover { color: var(--thld-glow); border-color: var(--thld-glow); }
+        .lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--thld-muted);
+            background: none; border: none; cursor: pointer; padding: 8px;
+            letter-spacing: 0.1em; transition: color 0.15s; }
+        .lb-close:hover { color: var(--thld-glow); }
+        .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px;
+            color: var(--thld-muted); letter-spacing: 0.12em; opacity: 0.55; min-width: 50px; text-align: center; }
+        .lb-cap { font-family: 'Press Start 2P', monospace; font-size: 6px;
+            color: var(--thld-muted); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
+
+        /* ── ACTIVE YEARS BADGE ── */
+        .years-badge {
+            display: inline-block;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--thld-bg);
+            background: var(--thld-red);
+            padding: 4px 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
+
+        /* ── MB MEMBERS LINK ── */
+        .mb-members {
+            display: inline-flex;
+            align-items: center;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: var(--thld-muted);
+            border: 1px solid var(--thld-mid);
+            padding: 6px 12px;
+            letter-spacing: 0.08em;
+            flex-wrap: wrap;
+            gap: 0 4px;
+        }
+        .mb-members .mb-abbr {
+            color: var(--thld-text);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .mb-members .mb-abbr:hover { color: var(--thld-glow); }
+        .mb-members:hover { border-color: var(--thld-glow); }
+        .mb-members .mb-sep { color: var(--thld-mid); margin: 0 2px; }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+    </style>
+</head>
+<body class="thld-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">thld</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/THLD/thld-drawing.jpg" alt="Texas Hold'Em Lava Dome live">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">drawing: Sergio Pontillo</span>
+
+        <div class="hero-inner">
+            <!-- ARTIST HEADER -->
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">TEXAS HOLD'EM<br>LAVA DOME, ET AL.</div>
+                <div class="artist-abbr"> <strong>THLD</strong> | <strong>Tornado Massacre</strong> | <strong> Ocean, I Miss You</strong> </div>
+                <div class="years-badge">OCT 2015 — MAY 2016 & BEYOND</div>
+
+                <!-- sub-page nav -->
+                <div class="sub-nav">
+                    <a href="about.html"       class="nav-card c-about">about</a>
+                    <a href="events.html"      class="nav-card c-events">events</a>
+                    <a href="games.html"       class="nav-card c-games">games</a>
+                    <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
+                    <a href="photography.html" class="nav-card c-photography">photography</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"   class="nav-card c-releases">releases</a>
+                    <a href="works.html"      class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+            <a class="ext-link" href="https://linktr.ee/texasholdemlavadome" target="_blank" rel="noopener">▶ stream / download music</a>
+            <div class="mb-members">
+                <span>▶ view on MusicBrainz —</span>
+                <a href="https://musicbrainz.org/artist/4d945923-9deb-4cd0-a477-6e1474cb306c" target="_blank" rel="noopener" class="mb-abbr">THLD</a>
+                <span class="mb-sep">·</span>
+                <a href="https://musicbrainz.org/artist/e1e53b08-af12-4d5a-8508-c620d5279ba3" target="_blank" rel="noopener" class="mb-abbr">TM</a>
+                <span class="mb-sep">·</span>
+                <a href="https://musicbrainz.org/artist/30d9cd20-3f5c-4a83-b13b-58ba8c690e2e" target="_blank" rel="noopener" class="mb-abbr">OIMY</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- PHOTO LIGHTBOX -->
+    <div class="photo-lightbox" id="thldLightbox">
+        <button class="lb-close" id="thldLbClose">[ close ]</button>
+        <div class="lb-img-wrap"><img id="thldLbImg" src="" alt=""></div>
+        <div class="lb-cap" id="thldLbCap"></div>
+        <div class="lb-nav">
+            <button class="lb-btn" id="thldLbPrev">← prev</button>
+            <span class="lb-counter" id="thldLbCounter"></span>
+            <button class="lb-btn" id="thldLbNext">next →</button>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js"></script>
+
+</body>
+</html>

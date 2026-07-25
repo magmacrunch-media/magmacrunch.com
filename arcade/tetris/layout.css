@@ -1,0 +1,290 @@
+/* =====================================================================
+   Helsinki 1989 — layout.css
+   App structure, panels, stats, controls, gameplay snow, board, buttons
+   ===================================================================== */
+
+/* =====================================================================
+   layout
+   ===================================================================== */
+#app {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Thin cold rule */
+.neon-stripe {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, var(--dusk), var(--ice), var(--slate), var(--dusk), transparent);
+  box-shadow: 0 0 8px rgba(175,203,211,0.2);
+}
+
+header { text-align: center; }
+header h1 {
+  font-size: 50px;
+  letter-spacing: 16px;
+  color: var(--ice);
+  text-shadow: var(--glow-ice);
+  margin-bottom: 8px;
+  margin-top: 20px;
+  font-weight: normal;
+}
+header .byline {
+  font-size: 14px;
+  color: var(--slate);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+header .byline a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+header .byline a:hover {
+  color: var(--birch);
+}
+
+.game-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+/* =====================================================================
+   panels
+   ===================================================================== */
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--glow-slate);
+  padding: 12px;
+  width: 140px;
+  position: relative;
+}
+/* Corner tick marks — Nordic precision */
+.panel::before, .panel::after {
+  content: '';
+  position: absolute;
+  width: 7px; height: 7px;
+  border-color: var(--ice);
+  border-style: solid;
+  opacity: 0.4;
+}
+.panel::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+.panel::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+.panel-label {
+  font-size: 10px;
+  color: var(--ice);
+  letter-spacing: 3px;
+  margin-bottom: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.panel-label-sub {
+  font-size: 9px;
+  color: var(--slate);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.stat-block { margin-bottom: 14px; }
+.stat-block .stat-label {
+  font-size: 9px;
+  color: var(--slate);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stat-block .stat-label svg {
+  flex-shrink: 0;
+  opacity: 0.65;
+}
+.stat-block .stat-value {
+  font-size: 26px;
+  color: var(--birch);
+  text-shadow: var(--glow-birch);
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+.stat-en {
+  font-size: 8px;
+  color: var(--subtext);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: -2px;
+  margin-bottom: 6px;
+}
+
+/* Controls list */
+.ctrl-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+.ctrl-row svg {
+  flex-shrink: 0;
+}
+.ctrl-key {
+  background: #1A2E3A;
+  border: 1px solid var(--border-bright);
+  color: var(--ice);
+  font-size: 10px;
+  padding: 1px 4px;
+  min-width: 20px;
+  text-align: center;
+  border-radius: 2px;
+  letter-spacing: 0;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+.ctrl-fi {
+  font-size: 10px;
+  color: var(--text);
+  letter-spacing: 1px;
+  line-height: 1.2;
+}
+.ctrl-en {
+  font-size: 8px;
+  color: var(--slate);
+  letter-spacing: 1px;
+}
+
+/* =====================================================================
+   gameplay snow — fixed layer behind board, very faint Nordic flurry
+   ===================================================================== */
+#gameplay-snow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  overflow: hidden;
+}
+.gs-particle {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  border-radius: 50%;
+}
+/* Layer A — frost white */
+.gs-layer-a {
+  box-shadow:
+     120px  40px rgba(200,216,221,0.35),  340px  90px rgba(200,216,221,0.28),
+     580px  25px rgba(200,216,221,0.32),  820px  70px rgba(200,216,221,0.25),
+    1060px  45px rgba(200,216,221,0.30), 1280px  85px rgba(200,216,221,0.27),
+    1520px  30px rgba(200,216,221,0.33),  200px 180px rgba(200,216,221,0.22),
+     450px 220px rgba(200,216,221,0.26),  700px 160px rgba(200,216,221,0.29),
+     950px 200px rgba(200,216,221,0.20), 1150px 175px rgba(200,216,221,0.24),
+    1400px 210px rgba(200,216,221,0.22),  80px  320px rgba(200,216,221,0.26),
+     310px 360px rgba(200,216,221,0.19),  560px 300px rgba(200,216,221,0.23),
+     800px 380px rgba(200,216,221,0.17), 1040px 340px rgba(200,216,221,0.21),
+    1300px 370px rgba(200,216,221,0.18), 1550px 310px rgba(200,216,221,0.24),
+     180px 480px rgba(200,216,221,0.20),  420px 520px rgba(200,216,221,0.16),
+     670px 460px rgba(200,216,221,0.22),  910px 500px rgba(200,216,221,0.15),
+    1160px 470px rgba(200,216,221,0.19), 1380px 510px rgba(200,216,221,0.17),
+    1620px 490px rgba(200,216,221,0.21),  260px 640px rgba(200,216,221,0.18),
+     500px 680px rgba(200,216,221,0.14),  750px 620px rgba(200,216,221,0.20),
+    1000px 660px rgba(200,216,221,0.13), 1240px 630px rgba(200,216,221,0.17),
+    1480px 670px rgba(200,216,221,0.15),   50px 780px rgba(200,216,221,0.16),
+     380px 820px rgba(200,216,221,0.12),  630px 760px rgba(200,216,221,0.18),
+     880px 800px rgba(200,216,221,0.11), 1120px 770px rgba(200,216,221,0.15),
+    1360px 810px rgba(200,216,221,0.13), 1600px 790px rgba(200,216,221,0.16);
+  animation: gsfall-a 30s linear infinite;
+}
+/* Layer B — slate blue, slower */
+.gs-layer-b {
+  box-shadow:
+     220px  60px rgba(122,155,173,0.22),  470px 100px rgba(122,155,173,0.18),
+     720px  50px rgba(122,155,173,0.20),  970px  80px rgba(122,155,173,0.16),
+    1200px  65px rgba(122,155,173,0.19), 1440px  95px rgba(122,155,173,0.17),
+     150px 240px rgba(122,155,173,0.16),  390px 280px rgba(122,155,173,0.13),
+     640px 260px rgba(122,155,173,0.18),  890px 300px rgba(122,155,173,0.14),
+    1100px 250px rgba(122,155,173,0.17), 1350px 285px rgba(122,155,173,0.15),
+     280px 420px rgba(122,155,173,0.14),  530px 460px rgba(122,155,173,0.11),
+     780px 400px rgba(122,155,173,0.16), 1020px 445px rgba(122,155,173,0.12),
+    1260px 415px rgba(122,155,173,0.14), 1500px 455px rgba(122,155,173,0.13),
+     100px 580px rgba(122,155,173,0.13),  350px 620px rgba(122,155,173,0.10),
+     600px 560px rgba(122,155,173,0.15),  850px 600px rgba(122,155,173,0.11),
+    1080px 575px rgba(122,155,173,0.13), 1320px 610px rgba(122,155,173,0.12),
+    1560px 585px rgba(122,155,173,0.14),  430px 740px rgba(122,155,173,0.11),
+     680px 780px rgba(122,155,173,0.09),  930px 720px rgba(122,155,173,0.12),
+    1170px 760px rgba(122,155,173,0.10), 1410px 740px rgba(122,155,173,0.11);
+  animation: gsfall-b 46s linear infinite;
+  animation-delay: -18s;
+}
+@keyframes gsfall-a {
+  0%   { transform: translateY(   0px) translateX(  0px); }
+  100% { transform: translateY(1100px) translateX( 18px); }
+}
+@keyframes gsfall-b {
+  0%   { transform: translateY(   0px) translateX(  0px); }
+  100% { transform: translateY(1100px) translateX(-12px); }
+}
+
+/* =====================================================================
+   canvas / board
+   ===================================================================== */
+#board-wrap {
+  position: relative;
+  border: 1px solid var(--border-bright);
+  box-shadow: var(--glow-slate), inset 0 0 40px rgba(10,18,24,0.5);
+}
+#board { display: block; }
+
+/* =====================================================================
+   buttons
+   ===================================================================== */
+.btn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  padding: 8px 12px;
+  border: 1px solid var(--clay);
+  background: transparent;
+  color: var(--clay);
+  text-shadow: var(--glow-clay);
+  box-shadow: var(--glow-clay);
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 8px;
+  text-transform: uppercase;
+}
+.btn:hover {
+  background: rgba(162,103,105,0.1);
+  border-color: var(--frost);
+  color: var(--frost);
+}
+.btn.cyan {
+  border-color: var(--ice);
+  color: var(--ice);
+  text-shadow: var(--glow-ice);
+  box-shadow: var(--glow-ice);
+}
+.btn.cyan:hover {
+  background: rgba(175,203,211,0.08);
+  border-color: var(--frost);
+  color: var(--frost);
+}

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juanito Thompson — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="juanito-thompson-shared.css">
+    <style>
+
+        body.jt-page { background: var(--jt-bg); }
+
+        main { position: relative; padding: 0; }
+
+        /* ── HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 55%;
+            filter: saturate(0.85) brightness(0.65);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(200, 90, 24, 0.07);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(10,10,12,0.0)  0%,
+                rgba(10,10,12,0.0)  85%,
+                rgba(10,10,12,0.85) 100%
+            );
+        }
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px 36px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── BREADCRUMB ── */
+        body.jt-page .breadcrumb a          { color: var(--jt-brick); }
+        body.jt-page .breadcrumb a:hover    { color: var(--jt-amber); }
+        body.jt-page .breadcrumb .sep       { color: var(--jt-deep); opacity: 0.8; }
+        body.jt-page .breadcrumb .current   { color: var(--jt-brick); font-weight: bold; }
+
+        /* ── ARTIST HEADER ── */
+        .artist-header { width: 100%; max-width: 900px; margin-bottom: 0; animation: fadeUp 0.5s ease both; }
+        .artist-label { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--jt-gold); letter-spacing: 0.2em; margin-bottom: 12px; opacity: 0.85; }
+        .artist-name {
+            font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.6vw, 22px);
+            color: #fff; line-height: 1.6; letter-spacing: 0.06em;
+            text-shadow: 0 0 28px rgba(200,90,24,0.6), 0 2px 10px rgba(0,0,0,0.95);
+            margin-bottom: 6px;
+        }
+        .artist-note { font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--jt-mid); letter-spacing: 0.04em; margin-top: -8px;
+            margin-bottom: 16px; opacity: 0.8; line-height: 1.6; }
+        .artist-note a { color: var(--jt-amber); text-decoration: none; }
+        .artist-note a:hover { text-decoration: underline; }
+        .years-badge { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--black); background: var(--jt-cta); padding: 4px 10px; letter-spacing: 0.1em; margin-bottom: 20px; }
+
+        .section-divider {
+            width: 100%; max-width: 900px; height: 1px;
+            background: linear-gradient(90deg, transparent, var(--jt-brick), var(--jt-amber), var(--jt-brick), transparent);
+            margin: 0 20px 40px; opacity: 0.3; animation: fadeUp 0.5s 0.05s ease both;
+        }
+        .content-wrap { width: 100%; max-width: 900px; padding: 0 20px; }
+        .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jt-gold); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--jt-gold); opacity: 0.9; }
+
+        .bio-wrap { animation: fadeUp 0.5s 0.08s ease both; margin-bottom: 40px; }
+        .bio-text { font-family: 'Courier Prime', monospace; font-size: 15px; color: var(--jt-body); line-height: 1.75; opacity: 0.85; margin-bottom: 16px; }
+        .bio-text a { color: var(--jt-brick); text-decoration: none; }
+        .bio-text a:hover { color: var(--jt-amber); text-decoration: underline; }
+        .stream-link { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jt-teal); border: 1px solid var(--jt-teal); padding: 6px 14px; text-decoration: none; letter-spacing: 0.08em; transition: background 0.15s, color 0.15s; }
+        .stream-link:hover { background: var(--jt-teal); color: var(--jt-body); }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--jt-mid); text-decoration:none; border:1px solid var(--jt-surface); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--jt-amber); border-color:var(--jt-amber); }
+
+        .releases-wrap { animation: fadeUp 0.5s 0.11s ease both; margin-bottom: 40px; }
+        .release-item { font-family: 'Courier Prime', monospace; font-size: 14px; color: rgba(240,234,216,0.75); padding: 8px 0; border-bottom: 1px solid var(--jt-surface); display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+        .release-item:last-child { border-bottom: none; }
+        .release-name { color: var(--jt-body); }
+        .release-year { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--jt-amber); letter-spacing: 0.1em; flex-shrink: 0; }
+
+        .videos-wrap { animation: fadeUp 0.5s 0.14s ease both; margin-bottom: 40px; }
+        .mini-video-list { width: 100%; border: 1px solid var(--jt-surface); }
+        .mini-video-entry { position: relative; width: 100%; display: flex; align-items: center; overflow: hidden; border-bottom: 1px solid var(--jt-surface); cursor: pointer; min-height: 100px; }
+        .mini-video-entry:last-child { border-bottom: none; }
+        .mini-video-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(0.25) saturate(0.6); transition: filter 0.3s ease; z-index: 0; }
+        .mini-video-entry:hover .mini-video-bg, .mini-video-entry.active .mini-video-bg { filter: brightness(0.15) saturate(0.4); }
+        .mini-video-entry::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(10,10,12,0.5) 0%, transparent 100%); z-index: 1; pointer-events: none; }
+        .mini-video-content { position: relative; z-index: 2; display: flex; align-items: center; gap: 16px; padding: 14px 18px; width: 100%; }
+        .mini-thumb { flex-shrink: 0; width: 120px; aspect-ratio: 16/9; background: var(--jt-bg); border: 1px solid var(--jt-raised); position: relative; overflow: hidden; transition: border-color 0.2s; }
+        .mini-video-entry:hover .mini-thumb { border-color: var(--jt-amber); }
+        .mini-video-entry.active .mini-thumb { display: none; }
+        .mini-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .mini-play-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); }
+        .mini-play-icon { width: 28px; height: 28px; border: 2px solid var(--jt-body); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: border-color 0.2s, transform 0.2s, background 0.2s; }
+        .mini-play-icon::after { content: ''; display: block; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 9px solid var(--jt-body); margin-left: 2px; transition: border-left-color 0.2s; }
+        .mini-video-entry:hover .mini-play-icon { border-color: var(--jt-amber); background: rgba(200,90,24,0.18); transform: scale(1.1); }
+        .mini-video-entry:hover .mini-play-icon::after { border-left-color: var(--jt-amber); }
+        .mini-iframe-wrap { display: none; width: 120px; aspect-ratio: 16/9; }
+        .mini-video-entry.active .mini-iframe-wrap { display: block; }
+        .mini-iframe-wrap iframe { width: 100%; height: 100%; border: none; display: block; }
+        .mini-video-meta { flex: 1; min-width: 0; }
+        .mini-video-year { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--jt-amber); letter-spacing: 0.1em; margin-bottom: 6px; }
+        .mini-video-title { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--jt-body); letter-spacing: 0.05em; line-height: 1.6; margin-bottom: 8px; }
+        .mini-yt-link { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--jt-mid); text-decoration: none; border: 1px solid var(--jt-raised); padding: 3px 8px; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; display: inline-block; }
+        .mini-yt-link:hover { color: var(--jt-amber); border-color: var(--jt-amber); }
+
+        .subpage-wrap { animation: fadeUp 0.5s 0.17s ease both; margin-bottom: 40px; }
+        .subpage-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .mascot-banner {
+            width: 100%; max-width: 100%; margin-top: 48px; margin-bottom: 0;
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            min-height: 720px; animation: fadeUp 0.5s 0.2s ease both;
+        }
+        .mascot-banner-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; object-position: center 60%;
+            filter: saturate(0.7) brightness(0.58);
+        }
+        .mascot-banner::before {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background: linear-gradient(to bottom, rgba(10,10,12,0.05) 0%, rgba(10,10,12,0.35) 55%, rgba(10,10,12,0.80) 100%);
+        }
+        .mascot-banner-text { position: relative; z-index: 2; padding: 24px 20px 32px; text-align: center; }
+        .mascot-name { font-family: 'Press Start 2P', monospace; font-size: clamp(7px, 1.6vw, 13px); color: var(--jt-amber); letter-spacing: 0.3em; text-shadow: 0 0 18px rgba(232,144,10,0.55); display: block; margin-bottom: 10px; }
+        .mascot-tagline { font-family: 'Courier Prime', monospace; font-size: clamp(11px, 1.5vw, 14px); color: var(--jt-mid); letter-spacing: 0.1em; opacity: 0.6; display: block; }
+
+        @media (max-width: 640px) {
+            .subpage-grid { flex-direction: column; }
+            .mini-thumb, .mini-iframe-wrap { width: 90px; }
+            .mascot-banner { min-height: 180px; }
+        }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+    </style>
+</head>
+<body class="jt-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    
+    
+
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <span class="current">jt</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/frogwood_manor/outside-frogwood-manor-downstairs.jpg" alt="Frogwood Manor exterior at night">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by artist //</div>
+                <div class="artist-name">JUANITO<br>THOMPSON</div>
+                <div class="artist-note">a close relative to <a href="../vinny-bobarino/">Vinny Bobarino</a></div>
+                <div class="years-badge">2009 — PRESENT</div>
+                <div class="sub-nav">
+                    <a href="about.html"        class="nav-card c-about">about</a>
+                    <a href="games.html"        class="nav-card c-games">games</a>
+                    <a href="music-videos.html"  class="nav-card c-music-videos">music videos</a>
+                    <a href="network.html"     class="nav-card c-network">network</a>
+                    <a href="photography.html"  class="nav-card c-photography">photography</a>
+                    <a href="recordings.html"   class="nav-card c-recordings">recordings</a>
+                    <a href="releases.html"     class="nav-card c-releases">releases</a>
+                    <a href="works.html"        class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a class="stream-link" href="https://linktr.ee/juanitothompson" target="_blank" rel="noopener">▶ stream / download music</a>
+        <a class="mb-link" href="https://musicbrainz.org/artist/ddcbeb01-edb5-4e74-b5cd-23d1b64d3086" target="_blank" rel="noopener">▶ view on MusicBrainz</a>
+        </div>
+    </div>
+
+    <div class="content-wrap">
+
+    </div><!-- /.content-wrap -->
+
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+
+<script src="../../../nav.js"></script>
+<script>
+const VIDEOS = [
+    { title: "Leaves",                                        year: "2024", id: "wv_6z79fQjQ" },
+    { title: "I'm gonna need more of a commitment than that", year: "2025", id: "KiFWHj1cmOY" },
+    { title: "Sitting on a Dock in New Shoreham",            year: "2025", id: "BirxEyAj0u0" },
+];
+const miniList = document.getElementById('miniVideoList');
+let activeEntry = null;
+VIDEOS.forEach(v => {
+    const thumbUrl = v.thumb || `https://img.youtube.com/vi/${v.id}/maxresdefault.jpg`;
+    const embedUrl = `https://www.youtube.com/embed/${v.id}?autoplay=1&rel=0`;
+    const watchUrl = `https://www.youtube.com/watch?v=${v.id}`;
+    const entry = document.createElement('div');
+    entry.className = 'mini-video-entry';
+    entry.innerHTML = `
+        <div class="mini-video-bg" style="background-image: url('${v.bg || thumbUrl}');"></div>
+        <div class="mini-video-content">
+            <div class="mini-thumb">
+                <img src="${thumbUrl}" alt="${v.title}" loading="lazy" referrerpolicy="no-referrer"
+                     onerror="if(!this.dataset.tried){this.dataset.tried='hq';this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg';}else if(this.dataset.tried==='hq'){this.dataset.tried='mq';this.src='https://img.youtube.com/vi/${v.id}/mqdefault.jpg';}">
+                <div class="mini-play-btn"><div class="mini-play-icon"></div></div>
+            </div>
+            <div class="mini-iframe-wrap"></div>
+            <div class="mini-video-meta">
+                <div class="mini-video-year">${v.year}</div>
+                <div class="mini-video-title">${v.title}</div>
+                <a class="mini-yt-link" href="${watchUrl}" target="_blank" rel="noopener"
+                   onclick="event.stopPropagation()">▶ open on youtube</a>
+            </div>
+        </div>`;
+    entry.addEventListener('click', function() {
+        if (this.classList.contains('active')) return;
+        if (activeEntry && activeEntry !== this) {
+            activeEntry.classList.remove('active');
+            activeEntry.querySelector('.mini-iframe-wrap').innerHTML = '';
+        }
+        this.classList.add('active');
+        activeEntry = this;
+        this.querySelector('.mini-iframe-wrap').innerHTML =
+            `<iframe src="${embedUrl}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    });
+    miniList.appendChild(entry);
+});
+</script>
+</body>
+</html>

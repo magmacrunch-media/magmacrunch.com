@@ -1,0 +1,155 @@
+/**
+ * board.css — Aggravation board canvas + dice + sidebar
+ */
+
+.board-container {
+    flex-shrink: 0;
+}
+
+#boardCanvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    width: 540px;
+    height: 540px;
+    border: 2px solid var(--ag-border);
+    cursor: pointer;
+}
+
+.game-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 200px;
+    max-width: 240px;
+}
+
+#turnInfo {
+    font-size: 11px;
+    text-align: center;
+    color: var(--ag-accent);
+    text-shadow: 0 0 8px var(--ag-accent-glow);
+    padding: 10px;
+    border: 2px solid var(--ag-border);
+    background: var(--ag-bg-light);
+}
+
+.dice-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    border: 2px solid var(--ag-border);
+    background: var(--ag-bg-light);
+}
+
+.dice-label {
+    font-size: 7px;
+    color: var(--ag-text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 10px;
+}
+
+#diceDisplay {
+    font-size: 28px;
+    color: var(--ag-text);
+    margin-bottom: 14px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s;
+}
+
+#diceDisplay.rolled {
+    color: var(--ag-accent);
+    animation: dicePop 0.3s ease;
+}
+
+@keyframes dicePop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+#statusMsg {
+    font-size: 8px;
+    color: var(--ag-text-dim);
+    text-align: center;
+    min-height: 20px;
+    padding: 8px;
+}
+
+#statusMsg2 {
+    font-size: 8px;
+    color: var(--ag-text-dim);
+    text-align: center;
+    min-height: 20px;
+    padding: 8px;
+}
+
+.scores-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border: 2px solid var(--ag-border);
+    background: var(--ag-bg-light);
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 7px;
+}
+
+.score-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.score-name {
+    flex: 1;
+    letter-spacing: 0.05em;
+}
+
+.score-value {
+    color: var(--ag-text-dim);
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-box {
+    background: var(--ag-bg-light);
+    border: 2px solid var(--ag-accent);
+    padding: 30px;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 0 40px var(--ag-accent-glow);
+}
+
+.modal-title {
+    font-size: 16px;
+    color: var(--ag-accent);
+    margin-bottom: 16px;
+}
+
+.modal-text {
+    font-size: 10px;
+    color: var(--ag-text);
+    margin-bottom: 20px;
+    line-height: 1.8;
+}

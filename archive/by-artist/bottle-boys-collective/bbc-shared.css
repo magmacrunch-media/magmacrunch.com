@@ -1,0 +1,137 @@
+/* Bottle Boys Collective shared color palette — film / sky / warm earth */
+:root {
+    --bbc-surface:     #2a3028;
+    --bbc-raised:      #384038;
+    --bbc-dark:        #506050;
+    --bbc-mid:         #887870;
+    --bbc-light:       #c0b0a0;
+    --bbc-sky-dark:    #5888b0;
+    --bbc-sky:         #78a8c8;
+    --bbc-sky-light:   #a8c8e0;
+    --bbc-sky-pale:    #d0e4f0;
+    --bbc-skin-warm:   #e0a880;
+    --bbc-skin-light:  #f0d0b8;
+    --bbc-highlight:   #f8f0e8;
+    --bbc-warm-dark:   #905030;
+    --bbc-warm:        #c07848;
+    --bbc-warm-light:  #e8b870;
+    --bbc-green-dark:  #304828;
+    --bbc-green:       #507840;
+    --bbc-green-light: #80a858;
+    --bbc-bridge-cool: #6898a0;
+    --bbc-bridge-warm: #d09888;
+    --bbc-cream:       #f0e8d8;
+    --bbc-sea-mist:    #c8e0d8;
+    --bbc-warm-grey:   #7a6858;
+    --bbc-mauve:       #a07888;
+    --bbc-sage:        #3a5840;
+    --bbc-apricot:     #f0c0a0;
+    --bbc-bg:          #070906;
+}
+
+body.bbc-page { background: var(--bbc-bg); --credit-color: var(--bbc-mid); --nav-accent: var(--bbc-apricot); --nav-glow: rgba(240,192,160,0.4); --nav-brand: var(--bbc-sky); --nav-brand-glow: rgba(120,168,200,0.7); }
+
+body.bbc-page .nav-card.c-back {
+    background: transparent;
+    color: var(--bbc-sky-dark);
+    border-color: var(--bbc-sky-dark);
+}
+
+body.bbc-page .nav-card.c-warm {
+    background: var(--bbc-warm);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-warm);
+}
+
+body.bbc-page .nav-card.c-deep {
+    background: var(--bbc-sky-dark);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-sky-dark);
+}
+
+body.bbc-page .nav-card.c-cyan {
+    background: var(--bbc-sky);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-sky);
+}
+
+body.bbc-page .nav-card.c-recordings {
+    background: var(--bbc-warm);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-warm);
+}
+
+body.bbc-page .nav-card.c-releases {
+    background: var(--bbc-warm-light);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-warm-light);
+}
+
+body.bbc-page .nav-card.c-blue {
+    background: var(--bbc-sky-light);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-sky-light);
+}
+
+body.bbc-page .nav-card.c-events {
+    background: var(--bbc-green);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-green);
+}
+
+body.bbc-page .nav-card.c-purple {
+    background: var(--bbc-bridge-cool);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-bridge-cool);
+}
+
+body.bbc-page .nav-card.c-photography {
+    background: var(--bbc-sea-mist);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-sea-mist);
+}
+
+body.bbc-page .nav-card.c-grey-warm {
+    background: var(--bbc-warm-grey);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-warm-grey);
+}
+
+body.bbc-page .nav-card.c-mauve {
+    background: var(--bbc-mauve);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-mauve);
+}
+
+body.bbc-page .nav-card.c-works {
+    background: var(--bbc-green-light);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-green-light);
+}
+
+body.bbc-page .nav-card.c-about {
+    background: var(--bbc-apricot);
+    color: var(--bbc-surface);
+    border-color: var(--bbc-apricot);
+}
+
+body.bbc-page .nav-card::after { display: none; }
+body.bbc-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+
+body.bbc-page .nav-card.c-back:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sky-dark); }
+body.bbc-page .nav-card.c-warm:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-warm); }
+body.bbc-page .nav-card.c-deep:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sky-dark); }
+body.bbc-page .nav-card.c-cyan:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sky); }
+body.bbc-page .nav-card.c-recordings:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-warm); }
+body.bbc-page .nav-card.c-releases:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-warm-light); }
+body.bbc-page .nav-card.c-blue:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sky-light); }
+body.bbc-page .nav-card.c-events:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-green); }
+body.bbc-page .nav-card.c-purple:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-bridge-cool); }
+body.bbc-page .nav-card.c-photography:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-sea-mist); }
+body.bbc-page .nav-card.c-grey-warm:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-warm-grey); }
+body.bbc-page .nav-card.c-mauve:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-mauve); }
+body.bbc-page .nav-card.c-works:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-green-light); }
+body.bbc-page .nav-card.c-about:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-apricot); }
+
+body.bbc-page footer { color: var(--bbc-mid); }
+body.bbc-page footer span { color: var(--bbc-sky); }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tuna Can — personnel — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="tc-shared.css">
+    <link rel="stylesheet" href="tc-personnel.css">
+    <script>
+    window.PLACE_CONFIG = {
+        id:        '3ecebfcc-6824-46a9-9e1a-ecc26f69a4a2',
+        name:      'The Tuna Can',
+        abbr:      'tuna can',
+        backColor: 'c-personnel',
+        siblings:  ['personnel', 'recordings', 'works'],
+        depth:     '../../../',
+    };
+    window.PLACE_CONFIG.accent = 'blue';
+    </script>
+</head>
+<body class="tc-page tc-personnel-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="place-label" id="place-label"></div>
+        <div class="page-title">PERSONNEL</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+    <div class="catalog-wrap">
+        <div id="status-bar">loading personnel…</div>
+        <div id="count-bar"></div>
+        <div id="artists-list"></div>
+    </div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/entity-map.js"></script>
+<script src="../../../templates/place_personnel.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var nav = document.getElementById('sub-nav');
+    if (nav && !nav.querySelector('a[href="about.html"]')) {
+        var aboutLink = document.createElement('a');
+        aboutLink.href = 'about.html';
+        aboutLink.className = 'nav-card c-about';
+        aboutLink.textContent = 'about';
+        nav.insertBefore(aboutLink, nav.children[1]);
+    }
+});
+</script>
+</body>
+</html>

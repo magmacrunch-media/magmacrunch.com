@@ -1,0 +1,317 @@
+/**
+ * base.css — CSS variables, reset, and base layout
+ */
+
+:root {
+    /* ── Chess Neon Theme ──────────────────────────────────────────────────── */
+    --ch-bg: #0a0612;
+    --ch-board-dark: #1a0a2a;
+    --ch-board-light: #2a1a3a;
+    --ch-board-border: #00f5ff;
+    --ch-player: #00f5ff;
+    --ch-player-glow: rgba(0,245,255,0.6);
+    --ch-ai: #ff2d78;
+    --ch-ai-glow: rgba(255,45,120,0.6);
+    --ch-highlight: #39ff6e;
+    --ch-highlight-glow: rgba(57,255,110,0.5);
+    --ch-last-move: #ffe03a;
+    --ch-last-move-glow: rgba(255,224,58,0.4);
+    --ch-check: #ff3d3d;
+    --ch-check-glow: rgba(255,61,61,0.6);
+    --ch-text: #f0ead8;
+    --ch-text-dim: #8a7fa8;
+    --ch-selected: #ffffff;
+    --ch-selected-glow: rgba(255,255,255,0.8);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--ch-bg);
+    color: var(--ch-text);
+    font-family: 'Press Start 2P', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ── Back Link ──────────────────────────────────────────────────────────────── */
+.mc-back {
+    position: fixed;
+    top: 12px;
+    left: 14px;
+    z-index: 10000;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--ch-player);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.15s, text-shadow 0.15s;
+}
+
+.mc-back::before {
+    content: '← ';
+}
+
+.mc-back:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px var(--ch-player);
+}
+
+/* ── Container ──────────────────────────────────────────────────────────────── */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 20px 40px;
+}
+
+/* ── Start Screen ───────────────────────────────────────────────────────────── */
+.start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+}
+
+.start-content {
+    max-width: 500px;
+}
+
+.game-title {
+    font-size: clamp(24px, 5vw, 40px);
+    color: var(--ch-player);
+    text-shadow: 0 0 20px var(--ch-player-glow);
+    margin-bottom: 20px;
+    line-height: 1.3;
+}
+
+.game-subtitle {
+    font-size: 10px;
+    color: var(--ch-text-dim);
+    margin-bottom: 30px;
+    letter-spacing: 0.1em;
+}
+
+.start-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--ch-player), transparent);
+    margin: 20px 0;
+}
+
+.start-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.start-btn {
+    background: transparent;
+    border: 2px solid var(--ch-player);
+    color: var(--ch-player);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+}
+
+.start-btn:hover {
+    background: var(--ch-player);
+    color: var(--ch-bg);
+    box-shadow: 0 0 20px var(--ch-player-glow);
+}
+
+.start-btn.primary {
+    background: var(--ch-player);
+    color: var(--ch-bg);
+}
+
+.start-btn.primary:hover {
+    background: #ffffff;
+    box-shadow: 0 0 30px var(--ch-player-glow);
+}
+
+.start-footer {
+    font-size: 8px;
+    color: var(--ch-text-dim);
+    line-height: 1.8;
+}
+
+/* ── Game Screen ────────────────────────────────────────────────────────────── */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.game-header {
+    text-align: center;
+    width: 100%;
+}
+
+.game-header h1 {
+    font-size: 16px;
+    color: var(--ch-player);
+    text-shadow: 0 0 10px var(--ch-player-glow);
+    margin-bottom: 10px;
+}
+
+.game-stats {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 8px;
+    color: var(--ch-text-dim);
+}
+
+.stat-value {
+    font-size: 14px;
+    color: var(--ch-highlight);
+    text-shadow: 0 0 8px var(--ch-highlight-glow);
+}
+
+/* ── Game Layout ────────────────────────────────────────────────────────────── */
+.game-layout {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: center;
+}
+
+/* ── Board Area ─────────────────────────────────────────────────────────────── */
+.board-area {
+    position: relative;
+    flex-shrink: 0;
+}
+
+/* ── Side Panel ─────────────────────────────────────────────────────────────── */
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 180px;
+    max-width: 240px;
+    flex: 1;
+}
+
+/* ── Message Area ───────────────────────────────────────────────────────────── */
+.message-area {
+    text-align: center;
+    min-height: 25px;
+}
+
+.game-message {
+    font-size: 10px;
+    color: var(--ch-highlight);
+    text-shadow: 0 0 8px var(--ch-highlight-glow);
+}
+
+.game-message.check {
+    color: var(--ch-check);
+    text-shadow: 0 0 8px var(--ch-check-glow);
+}
+
+/* ── Timer ──────────────────────────────────────────────────────────────────── */
+.timer-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 500px;
+}
+
+.timer {
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--ch-text-dim);
+}
+
+.timer.player {
+    color: var(--ch-player);
+}
+
+.timer.ai {
+    color: var(--ch-ai);
+}
+
+.timer.active {
+    border-color: var(--ch-highlight);
+    box-shadow: 0 0 8px var(--ch-highlight-glow);
+}
+
+/* ── Controls ───────────────────────────────────────────────────────────────── */
+.game-controls {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.control-btn {
+    background: transparent;
+    border: 1px solid var(--ch-text-dim);
+    color: var(--ch-text-dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.control-btn:hover {
+    border-color: var(--ch-player);
+    color: var(--ch-player);
+}
+
+/* ── CRT Scanlines ──────────────────────────────────────────────────────────── */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────────── */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}

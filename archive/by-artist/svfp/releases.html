@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVFP — releases — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="svfp-shared.css">
+    <link rel="stylesheet" href="svfp-releases.css">
+    <script>
+    window.ARTIST_CONFIG = {
+        id:        '260e4953-a937-4355-8389-d1baaf24eca5',
+        name:      'sex van floor plan',
+        abbr:      'SVFP',
+        accent:    'rose',
+        backColor: 'c-purple',
+        siblings:  ['documentary', 'events', 'releases', 'recordings', 'works'],
+        depth:     '../../../',
+    };
+    </script>
+</head>
+<body class="svfp-page svfp-releases-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">svfp</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// sex van floor plan //</div>
+        <div class="page-title">RELEASES</div>
+        <div class="sub-nav">
+            <a href="./"        class="nav-card c-back">← back</a>
+            <a href="about.html"        class="nav-card c-about">about</a>
+            <a href="documentary.html" class="nav-card c-documentary">documentary</a>
+            <a href="events.html"      class="nav-card c-events">events</a>
+            <a href="photography.html" class="nav-card c-photography">photography</a>
+            <a href="recordings.html"    class="nav-card c-recordings">recordings</a>
+            <a href="works.html"        class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="release-carousel-wrap">
+        <div class="carousel-single-img" id="svfpCarouselImg">
+            <button class="carousel-arrow prev" id="svfpPrev">◀</button>
+            <button class="carousel-arrow next" id="svfpNext">▶</button>
+        </div>
+        <div class="carousel-meta">
+            <span class="carousel-now-title" id="svfpNowTitle">—</span>
+            <span class="carousel-now-year"  id="svfpNowYear">—</span>
+        </div>
+        <div class="carousel-controls">
+            <div class="carousel-dots" id="svfpDots"></div>
+            <button class="carousel-pause" id="svfpPause">⏸</button>
+        </div>
+    </div>
+
+    <div class="catalog-wrap">
+        <div id="status-bar">loading releases…</div>
+        <div id="count-bar"></div>
+        <div id="releases-list"></div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/entity-map.js"></script>
+<script src="../../../templates/artist_releases.js"></script>
+<script>
+const RELEASES = [
+    { title: "pay 2 play", year: "2025", img: "../../../assets/album-art/pay2play.jpg" },
+];
+
+const imgWrap  = document.getElementById('svfpCarouselImg');
+const dotsWrap = document.getElementById('svfpDots');
+const nowTitle = document.getElementById('svfpNowTitle');
+const nowYear  = document.getElementById('svfpNowYear');
+const pauseBtn = document.getElementById('svfpPause');
+const prevBtn  = document.getElementById('svfpPrev');
+const nextBtn  = document.getElementById('svfpNext');
+
+let current = 0, autoTimer = null, paused = false;
+const INTERVAL = 3200;
+const single = RELEASES.length === 1;
+
+const imgs = RELEASES.map((r, i) => {
+    const img = document.createElement('img');
+    img.src = r.img; img.alt = r.title;
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    if (i === 0) img.classList.add('visible');
+    imgWrap.insertBefore(img, imgWrap.querySelector('.carousel-arrow'));
+    return img;
+});
+
+const dots = single ? [] : RELEASES.map((r, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', r.title);
+    dot.addEventListener('click', () => goTo(i, true));
+    dotsWrap.appendChild(dot);
+    return dot;
+});
+
+if (single) {
+    prevBtn.classList.add('hidden');
+    nextBtn.classList.add('hidden');
+    pauseBtn.classList.add('hidden');
+}
+
+function goTo(index, userInitiated = false) {
+    imgs[current].classList.remove('visible');
+    if (dots[current]) dots[current].classList.remove('active');
+    current = ((index % RELEASES.length) + RELEASES.length) % RELEASES.length;
+    imgs[current].classList.add('visible');
+    if (dots[current]) dots[current].classList.add('active');
+    nowTitle.textContent = RELEASES[current].title;
+    nowYear.textContent  = RELEASES[current].year;
+    if (userInitiated) { clearInterval(autoTimer); if (!paused) startAuto(); }
+}
+
+function startAuto() {
+    if (single) return;
+    autoTimer = setInterval(() => goTo(current + 1), INTERVAL);
+}
+
+prevBtn.addEventListener('click', () => goTo(current - 1, true));
+nextBtn.addEventListener('click', () => goTo(current + 1, true));
+pauseBtn.addEventListener('click', () => {
+    paused = !paused;
+    if (paused) { clearInterval(autoTimer); pauseBtn.textContent = '▶'; }
+    else { startAuto(); pauseBtn.textContent = '⏸'; }
+});
+imgWrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
+imgWrap.addEventListener('mouseleave', () => { if (!paused) startAuto(); });
+
+goTo(0);
+startAuto();
+</script>
+</body>
+</html>

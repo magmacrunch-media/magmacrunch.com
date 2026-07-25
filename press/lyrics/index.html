@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lyrics — press — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        :root {
+            --nav-accent: #c02828;
+            --nav-glow: rgba(192,40,40,0.4);
+            --nav-brand: #c02828;
+            --nav-brand-glow: rgba(192,40,40,0.6);
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #f0e4c8;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 72px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #888; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c02828; }
+        .breadcrumb .sep { margin: 0 8px; color: #333; }
+        .breadcrumb .current { color: #c02828; }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: #c02828;
+            text-shadow: 2px 2px 0 rgba(192,40,40,0.3);
+            margin-bottom: 10px;
+            letter-spacing: 0.08em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 0.12em;
+            margin-bottom: 32px;
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        .section-divider {
+            width: min(640px, 90vw);
+            height: 2px;
+            background: #333;
+            margin-bottom: 48px;
+            position: relative;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+        .section-divider::after {
+            content: '✦';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            padding: 0 12px;
+            color: #c02828;
+            font-size: 10px;
+        }
+
+        .pieces-wrap {
+            width: min(640px, 90vw);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            animation: fadeUp 0.5s 0.18s ease both;
+        }
+
+        .pieces-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+        }
+
+        .piece-card {
+            display: flex;
+            gap: 0;
+            border: 2px solid #333;
+            border-bottom: none;
+            background: #222;
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s;
+            position: relative;
+            overflow: hidden;
+        }
+        .piece-card:last-child { border-bottom: 2px solid #333; }
+        .piece-card:hover {
+            border-color: #c02828;
+            background: #2a2a2a;
+        }
+
+        .piece-card::before {
+            content: '';
+            display: block;
+            width: 4px;
+            flex-shrink: 0;
+            background: #c02828;
+            transition: width 0.15s;
+        }
+        .piece-card:hover::before { width: 7px; }
+
+        .piece-card-info {
+            padding: 16px 20px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .piece-card-text { flex: 1; }
+
+        .piece-card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 10px);
+            color: #c02828;
+            letter-spacing: 0.06em;
+            line-height: 1.7;
+            margin-bottom: 5px;
+        }
+
+        .piece-card-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .piece-card-meta .type {
+            display: inline-block;
+            background: #c02828;
+            color: #1a1a1a;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            padding: 2px 6px;
+            letter-spacing: 0.08em;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .piece-card-arrow {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #c02828;
+            opacity: 0;
+            transform: translateX(-6px);
+            transition: opacity 0.15s, transform 0.15s;
+            flex-shrink: 0;
+        }
+        .piece-card:hover .piece-card-arrow {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        footer {
+            background: #111 !important;
+            border-top-color: #333 !important;
+            color: #666 !important;
+        }
+        footer span { color: #c02828 !important; }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../">home</a>
+        <span class="sep">›</span>
+        <a href="../../press/">press</a>
+        <span class="sep">›</span>
+        <span class="current">lyrics</span>
+    </div>
+
+    <h1 class="page-title">// lyrics //</h1>
+
+    <div class="section-divider"></div>
+
+    <div class="pieces-wrap">
+        <div class="pieces-label">// artists //</div>
+
+        <a href="jon-mccoy/" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">jon mccoy</div>
+                    <div class="piece-card-meta">
+                        <span class="type">artist</span>
+                        songs &nbsp;·&nbsp; 4 pieces
+                    </div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="c-p-rutledge/" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">c.p. rutledge</div>
+                    <div class="piece-card-meta">
+                        <span class="type">artist</span>
+                        songs &nbsp;·&nbsp; 2 pieces
+                    </div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="sex-van-floor-plan/" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">sex van floor plan</div>
+                    <div class="piece-card-meta">
+                        <span class="type">artist</span>
+                        songs &nbsp;·&nbsp; 1 piece
+                    </div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <a href="thld/" class="piece-card">
+            <div class="piece-card-info">
+                <div class="piece-card-text">
+                    <div class="piece-card-title">texas hold'em lava dome</div>
+                    <div class="piece-card-meta">
+                        <span class="type">artist</span>
+                        songs &nbsp;·&nbsp; 1 piece
+                    </div>
+                </div>
+                <span class="piece-card-arrow">▶</span>
+            </div>
+        </a>
+
+        <!-- ADD FUTURE ARTISTS HERE -->
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+<script>window.addEventListener("pageshow",function(e){if(e.persisted)location.reload();});</script>
+</body>
+</html>

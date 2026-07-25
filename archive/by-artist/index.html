@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>by artist — magmacrunch archive</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../templates/contributor-theme.css">
+    <style>
+        :root {
+            --nav-brand:    #dd6f4e;
+            --nav-brand-glow: rgba(221,111,78,0.7);
+            --nav-accent:   #9a3818;
+            --nav-glow:     rgba(154,56,24,0.4);
+        }
+        body.ctb-page {
+            --ctb-void:     #2b0d00;
+            --ctb-darkest:  #461400;
+            --ctb-dark:     #6c2009;
+            --ctb-mid-dark: #9a3818;
+            --ctb-deep:     #b0421b;
+            --ctb-bright:   #bf522c;
+            --ctb-muted:    #dba185;
+            --ctb-cyan:     #dd6f4e;
+            --ctb-light:    #ff9d7d;
+            --ctb-pale:     #ffc4aa;
+            background:     #2b0d00;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #dba185;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #dba185; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #dd6f4e; }
+        .breadcrumb .sep { margin: 0 8px; color: #dd6f4e; opacity: 0.7; }
+        .breadcrumb .current { color: #dd6f4e; }
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 16px;
+            color: #dd6f4e;
+            text-shadow: 0 0 16px rgba(221,111,78,0.6);
+            margin-bottom: 8px;
+            letter-spacing: 0.1em;
+        }
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #dba185;
+            margin-bottom: 32px;
+            letter-spacing: 0.12em;
+        }
+        .grid-wrap {
+            width: min(900px, 95vw);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .card {
+            border: 2px solid #9a3818;
+            background: #2b0d00;
+            padding: 16px;
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .card:hover {
+            border-color: #dd6f4e;
+            box-shadow: 0 0 16px rgba(221,111,78,0.3);
+        }
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #ffc4aa;
+            letter-spacing: 0.08em;
+        }
+        .card-soon {
+            border: 2px dashed #9a3818;
+            background: #2b0d00;
+            padding: 16px;
+            opacity: 0.5;
+        }
+        .card-soon .card-sub {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            color: #dba185;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        
+    </style>
+</head>
+<body class="ctb-page">
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../">home</a><span class="sep">›</span>
+        <a href="../">archive</a><span class="sep">›</span>
+        <span class="current">by artist</span>
+    </div>
+    <h1 class="page-title">// by artist //</h1>
+    <p class="page-subtitle">the magmacrunch archive</p>
+
+    <div class="grid-wrap">
+        <a href="audio-sound-paper-et-al/" class="card"><div class="card-title">Audio Sound Paper, et al.</div></a>
+        <a href="bottle-boys-collective/" class="card"><div class="card-title">Bottle Boys Collective</div></a>
+        <a href="c-p-rutledge/" class="card"><div class="card-title">C.P. Rutledge</div></a>
+        <a href="dag-henderson/" class="card"><div class="card-title">Dag Henderson</div></a>
+        <a href="ddt-llc/" class="card"><div class="card-title">DDT LLC</div></a>
+        <a href="dino-spumoni/" class="card"><div class="card-title">Dino Spumoni</div></a>
+        <a href="four-bs/" class="card"><div class="card-title">Four B's</div></a>
+        <a href="fruity-loops-debauchery-collective/" class="card"><div class="card-title">Fruity Loops Debauchery Bros.</div></a>
+        <a href="jon-mccoy/" class="card"><div class="card-title">Jon McCoy</div></a>
+        <a href="juanito-thompson/" class="card"><div class="card-title">Juanito Thompson</div></a>
+        <a href="svfp/" class="card"><div class="card-title">Sex Van Floor Plan</div></a>
+        <a href="thld/" class="card"><div class="card-title">Texas Hold'Em Lava Dome, et al.</div></a>
+        <a href="vinny-bobarino/" class="card"><div class="card-title">Vinny Bobarino, et al.</div></a>
+        <a href="woah/" class="card"><div class="card-title">Woah.</div></a>
+        <div class="card-soon"><div class="card-title">Alien Hunting</div><div class="card-sub">coming soon</div></div>
+        <div class="card-soon"><div class="card-title">The Evergreen Drive</div><div class="card-sub">coming soon</div></div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+</body>
+</html>

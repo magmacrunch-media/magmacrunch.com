@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15 PUZZLE</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon">
+
+    <style>
+        .font-loading body {
+            visibility: hidden;
+        }
+
+        .mc-back {
+            position: fixed;
+            top: 12px;
+            left: 14px;
+            z-index: 10000;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: rgba(255, 140, 0, 0.6);
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            transition: color 0.2s;
+            pointer-events: auto;
+        }
+        .mc-back::before {
+            content: '\2190 ';
+        }
+        .mc-back:hover {
+            color: rgba(255, 200, 80, 0.95);
+        }
+
+    </style>
+    <script>
+        document.documentElement.classList.add('font-loading');
+        document.fonts.ready.then(() => {
+            document.documentElement.classList.remove('font-loading');
+        });
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+    <!-- Framework CSS -->
+    <link rel="stylesheet" href="../puzzle-framework/css/puzzle-base.css">
+    <link rel="stylesheet" href="../puzzle-framework/css/puzzle-grid.css">
+    <link rel="stylesheet" href="../puzzle-framework/css/puzzle-modals.css">
+    <link rel="stylesheet" href="../puzzle-framework/css/puzzle-responsive.css">
+
+    <!-- Game CSS -->
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+    <a href="../" class="mc-back">magmacrunch arcade</a>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <h1>15 PUZZLE</h1>
+            <div class="loading-spinner"></div>
+            <p>loading...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="title-container">
+                <h1 id="gameTitle">15 PUZZLE</h1>
+                <div class="subtitle">the classic sliding tile puzzle</div>
+            </div>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-label">moves</div>
+                    <div class="stat-value" id="moveCount">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">time</div>
+                    <div class="stat-value" id="timer">0:00</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">best</div>
+                    <div class="stat-value" id="bestScore">---</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="newGame">new game</button>
+            <button id="toggleScoreboard">high scores</button>
+            <button id="toggleInstructions">how to play</button>
+            <button id="toggleCredits">credits</button>
+        </div>
+
+        <div class="game-board" id="gameBoard"></div>
+    </div>
+
+    <!-- Title Screen -->
+    <div class="title-screen active" id="titleScreen">
+        <div class="title-screen-content">
+            <div class="title-main">
+                <h1 class="title-large" id="titleNumber">15</h1>
+                <h2 class="title-subtitle">SLIDING TILE PUZZLE</h2>
+            </div>
+
+            <button class="start-button" id="startButton">
+                <span class="start-text">press [space] or click to start</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Difficulty Selector Modal -->
+    <div class="difficulty-modal" id="difficultyModal">
+        <div class="difficulty-content">
+            <h3>SELECT GRID SIZE</h3>
+            <p class="difficulty-subtitle">choose your puzzle</p>
+
+            <div class="difficulty-selector-container">
+                <div class="custom-dropdown-diff" id="difficultyDropdown">
+                    <div class="dropdown-selected-diff" id="difficultyDropdownSelected">
+                        <span id="selectedDifficulty">4×4 MODE &bull; 15 PUZZLE</span>
+                        <span class="dropdown-arrow-diff">▼</span>
+                    </div>
+                    <div class="dropdown-options-diff" id="difficultyDropdownOptions">
+                        <div class="dropdown-option-diff" data-size="3">
+                            <span class="option-label-diff">3×3 MODE</span>
+                            <span class="option-target-diff">8 PUZZLE</span>
+                        </div>
+                        <div class="dropdown-option-diff highlighted" data-size="4">
+                            <span class="option-label-diff">4×4 MODE</span>
+                            <span class="option-target-diff">15 PUZZLE</span>
+                        </div>
+                        <div class="dropdown-option-diff" data-size="5">
+                            <span class="option-label-diff">5×5 MODE</span>
+                            <span class="option-target-diff">24 PUZZLE</span>
+                        </div>
+                        <div class="dropdown-option-diff" data-size="6">
+                            <span class="option-label-diff">6×6 MODE</span>
+                            <span class="option-target-diff">35 PUZZLE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="startGameBtn" class="start-game-button">START GAME</button>
+
+            <div class="difficulty-menu-buttons">
+                <button id="difficultyHowToPlay" class="difficulty-menu-btn">how to play</button>
+                <button id="difficultyHighScores" class="difficulty-menu-btn">high scores</button>
+                <button id="difficultyCredits" class="difficulty-menu-btn">credits</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div class="victory-modal" id="victoryModal">
+        <div class="victory-content">
+            <h2>PUZZLE SOLVED!</h2>
+            <div class="victory-stats">
+                <p>moves: <span id="victoryMoves">0</span></p>
+                <p>time: <span id="victoryTime">0:00</span></p>
+            </div>
+            <p class="victory-rank" id="victoryRank"></p>
+            <button id="playAgain">play again</button>
+        </div>
+    </div>
+
+    <!-- Initials Prompt -->
+    <div class="initials-prompt" id="initialsPrompt">
+        <h3>NEW HIGH SCORE!</h3>
+        <p>enter your initials:</p>
+        <input type="text" id="initialsInput" maxlength="3" placeholder="ABC">
+        <br>
+        <button id="submitInitials">submit</button>
+    </div>
+
+    <!-- Scoreboard Modal -->
+    <div class="scoreboard-modal" id="scoreboardModal">
+        <div class="scoreboard-content">
+            <h3>all-time high scores</h3>
+            <div class="score-columns" id="scoreColumns"></div>
+            <button id="closeScoreboard">close</button>
+        </div>
+    </div>
+
+    <!-- Instructions Modal -->
+    <div class="instructions-modal" id="instructionsModal">
+        <div class="instructions-content">
+            <h3>how to play</h3>
+            <p>The <strong>15 Puzzle</strong> (and its variants) is a classic sliding tile puzzle invented in the 1870s. Choose from 3×3, 4×4, 5×5, or 6×6 grid sizes.</p>
+            <p><strong>Use arrow keys or swipe</strong> to slide tiles into the empty space. Only tiles adjacent to the empty space can move.</p>
+            <p>The goal is to arrange the tiles in order from <strong>1 to N</strong>, reading left to right, top to bottom, with the empty space in the bottom-right corner.</p>
+            <p>Your score is your <strong>move count</strong> &mdash; fewer moves is better!</p>
+            <button id="closeInstructions">close</button>
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div class="credits-modal" id="creditsModal">
+        <div class="credits-content">
+            <h3>credits</h3>
+            <p><strong>design and development:</strong> Jake A. McCoy</p>
+            <p><strong>original concept:</strong> the 15 Puzzle, attributed to Noyes Chapman (1870s)</p>
+            <p><strong>technology & resources:</strong><br>
+            &bull; HTML5, CSS3, and pure vanilla JavaScript<br>
+            &bull; Press Start 2P font by CodeMan38 (Google Fonts)</p>
+            <p><strong>published by:</strong> magmacrunch media</p>
+            <p><strong>last updated:</strong> July 10, 2026</p>
+            <button id="closeCredits">close</button>
+        </div>
+    </div>
+
+    <!-- Framework JS -->
+    <script src="../puzzle-framework/js/puzzle-grid.js"></script>
+    <script src="../puzzle-framework/js/puzzle-input.js"></script>
+    <script src="../puzzle-framework/js/puzzle-game.js"></script>
+    <script src="../puzzle-framework/js/puzzle-scoring.js"></script>
+    <script src="../puzzle-framework/js/puzzle-ui.js"></script>
+    <script src="../puzzle-framework/js/puzzle-render.js"></script>
+
+    <!-- Game JS -->
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+
+</body>
+</html>

@@ -1,0 +1,269 @@
+/**
+ * responsive.css — Mobile layout adjustments
+ */
+
+/* ── Tablet ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .container {
+        padding: 50px 15px 30px;
+    }
+
+    .game-title {
+        font-size: 24px;
+    }
+
+    .game-subtitle {
+        font-size: 8px;
+    }
+
+    .start-btn {
+        font-size: 9px;
+        padding: 10px 20px;
+    }
+
+    .board-container {
+        max-width: 500px;
+    }
+
+    .board {
+        min-height: 300px;
+    }
+
+    .point {
+        min-height: 120px;
+    }
+
+    .point.top::before,
+    .point.bottom::before {
+        border-left-width: 12px;
+        border-right-width: 12px;
+        border-top-width: 100px;
+        border-bottom-width: 100px;
+    }
+
+    .checker {
+        width: 22px;
+        height: 22px;
+    }
+
+    .bar-checker {
+        width: 20px;
+        height: 20px;
+    }
+
+    .die {
+        width: 40px;
+        height: 40px;
+        padding: 5px;
+    }
+
+    .die-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .doubling-cube {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .game-stats {
+        gap: 20px;
+    }
+
+    .stat-value {
+        font-size: 12px;
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+
+    .modal-body p,
+    .modal-body li {
+        font-size: 8px;
+    }
+
+    .game-over-title {
+        font-size: 16px;
+    }
+
+    .game-over-stats {
+        gap: 20px;
+    }
+}
+
+/* ── Mobile ─────────────────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .container {
+        padding: 45px 10px 20px;
+    }
+
+    .game-title {
+        font-size: 20px;
+    }
+
+    .start-buttons {
+        gap: 10px;
+    }
+
+    .start-btn {
+        font-size: 8px;
+        padding: 8px 16px;
+    }
+
+    .board-container {
+        max-width: 400px;
+        border-width: 2px;
+    }
+
+    .board {
+        min-height: 260px;
+        padding: 5px;
+        gap: 1px;
+    }
+
+    .point {
+        min-height: 100px;
+    }
+
+    .point.top::before,
+    .point.bottom::before {
+        border-left-width: 8px;
+        border-right-width: 8px;
+        border-top-width: 80px;
+        border-bottom-width: 80px;
+    }
+
+    .checker {
+        width: 18px;
+        height: 18px;
+    }
+
+    .bar {
+        padding: 5px;
+    }
+
+    .bar-checker {
+        width: 16px;
+        height: 16px;
+    }
+
+    .point-number {
+        font-size: 6px;
+    }
+
+    .dice-area {
+        gap: 10px;
+    }
+
+    .die {
+        width: 36px;
+        height: 36px;
+        padding: 4px;
+    }
+
+    .die-dot {
+        width: 5px;
+        height: 5px;
+    }
+
+    .doubling-cube {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .roll-btn {
+        font-size: 8px;
+        padding: 8px 16px;
+    }
+
+    .game-header h1 {
+        font-size: 12px;
+    }
+
+    .game-stats {
+        gap: 15px;
+    }
+
+    .stat-label {
+        font-size: 7px;
+    }
+
+    .stat-value {
+        font-size: 10px;
+    }
+
+    .game-message {
+        font-size: 8px;
+    }
+
+    .control-btn {
+        font-size: 7px;
+        padding: 6px 12px;
+    }
+
+    .modal-body h3 {
+        font-size: 10px;
+    }
+
+    .modal-body h4 {
+        font-size: 9px;
+    }
+
+    .modal-body p,
+    .modal-body li {
+        font-size: 7px;
+        line-height: 1.6;
+    }
+
+    .modal-footer button {
+        font-size: 8px;
+        padding: 8px 20px;
+    }
+
+    .game-over-title {
+        font-size: 14px;
+    }
+
+    .game-over-score {
+        font-size: 10px;
+    }
+
+    .game-over-stats {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .game-over-stat-value {
+        font-size: 12px;
+    }
+
+    .confirm-btn {
+        font-size: 8px;
+        padding: 8px 16px;
+    }
+
+    .mc-back {
+        font-size: 7px;
+        top: 8px;
+        left: 10px;
+    }
+
+    .game-layout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .game-chat {
+        width: 100%;
+        max-width: 500px;
+        max-height: 150px;
+    }
+
+    .game-chat .chat-messages {
+        max-height: 80px;
+    }
+}

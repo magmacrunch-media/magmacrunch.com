@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>puzzles — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* ══ PAGE: puzzles ══ */
+        :root {
+            --nav-accent: #ffe03a;
+            --nav-brand: #ffe03a;
+            --nav-glow: rgba(255,224,58,0.4);
+            --nav-brand-glow: rgba(255,224,58,0.7);
+        }
+        body {
+            background: #0a0612;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #8a7fa8;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #8a7fa8; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #ffe03a; }
+        .breadcrumb .sep { margin: 0 8px; color: #ffe03a; opacity: 0.7; }
+        .breadcrumb .current { color: #ffe03a; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title-ascii-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .page-title-ascii {
+            display: inline-block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 4.5px;
+            line-height: 1.25;
+            color: #ffe03a;
+            text-shadow: 0 0 8px rgba(255,224,58,0.5);
+            white-space: pre;
+            text-align: left;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1200px) { .page-title-ascii { font-size: 4px; } }
+        @media (max-width: 900px)  { .page-title-ascii { font-size: 3px; } }
+        @media (max-width: 600px)  { .page-title-ascii { font-size: 2.5px; } }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #ffe03a;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 8px rgba(255,224,58,0.5);
+        }
+
+        .section-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            color: #ffe03a;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border: 2px solid #ffe03a;
+            background: #150b29;
+            text-align: center;
+            text-shadow: 0 0 12px rgba(255,224,58,0.6);
+            width: 100%;
+            max-width: 1100px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s 0.2s ease both;
+        }
+
+        @media (min-width: 1100px) {
+            .game-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .game-card {
+            display: block;
+            text-decoration: none;
+            border: 2px solid #3a2d5c;
+            background: #150b29;
+            padding: 0;
+            position: relative;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            border-color: var(--card-color, #ffe03a);
+            box-shadow: 0 0 24px var(--card-color, #ffe03a),
+                        inset 0 0 40px rgba(0,0,0,0.3);
+            transform: translateY(-3px);
+        }
+
+        .game-card:hover .card-arrow { opacity: 1; }
+
+        .card-inner { padding: 20px 20px 18px; }
+
+        .card-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(8px, 1.4vw, 11px);
+            color: #f0f8ff;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            letter-spacing: 0.05em;
+        }
+
+        .card-canvas-wrap {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: transparent;
+        }
+
+        .card-canvas-wrap canvas {
+            image-rendering: pixelated;
+            width: 76px;
+            height: 76px;
+        }
+
+        .card-desc {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #8a7fa8;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .card-play {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--card-color, #ffe03a);
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-arrow {
+            opacity: 0;
+            transition: opacity 0.15s;
+            animation: blink 0.6s step-end infinite;
+        }
+
+        .card-tags {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 6px;
+            letter-spacing: 0.08em;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .card-tag {
+            padding: 2px 5px;
+            border: 1px solid currentColor;
+            opacity: 0.7;
+        }
+
+        footer { border-top-color: #3a2d5c; }
+        footer span { color: #ffe03a; }
+
+        @media (max-width: 640px) {
+            .game-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../">home</a>
+        <span class="sep">›</span>
+        <a href="../">arcade</a>
+        <span class="sep">›</span>
+        <span class="current">puzzles</span>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title-ascii-wrap"><pre class="page-title-ascii">
+██████╗ ██╗   ██╗███████╗███████╗██╗     ███████╗     ██████╗  █████╗ ███╗   ███╗███████╗███████╗
+██╔══██╗██║   ██║╚══███╔╝╚══███╔╝██║     ██╔════╝    ██╔════╝ ██╔══██╗████╗ ████║██╔════╝██╔════╝
+██████╔╝██║   ██║  ███╔╝   ███╔╝ ██║     █████╗      ██║  ███╗███████║██╔████╔██║█████╗  ███████╗
+██╔═══╝ ██║   ██║ ███╔╝   ███╔╝  ██║     ██╔══╝      ██║   ██║██╔══██║██║╚██╔╝██║██╔══╝  ╚════██║
+██║     ╚██████╔╝███████╗███████╗███████╗███████╗    ╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗███████║
+╚═╝      ╚═════╝ ╚══════╝╚══════╝╚══════╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝  </pre></div>
+        <div class="page-subtitle">// brain busters //</div>
+    </div>
+
+    <!-- Puzzles -->
+    <div class="game-grid">
+
+        <a href="../2^N/" class="game-card" style="--card-color: #00f0ff">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag" style="color: #39ff6e">MOBILE</span>
+                </div>
+                <div class="card-title">2048 (actually, 2^N)</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="c2048" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">slide &amp; merge tiles. reach 2^N. how far can you go?</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../george-boole/" class="game-card" style="--card-color: #39ff84">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag" style="color: #39ff6e">MOBILE</span>
+                </div>
+                <div class="card-title">GEORGE BOOLE<br>HAS ENTERED<br>THE CHAT</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cBoole" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">boolean logic puzzles. true or false? and, or, not.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../fifteen-puzzle/" class="game-card" style="--card-color: #00f5ff">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag" style="color: #39ff6e">MOBILE</span>
+                </div>
+                <div class="card-title">15 PUZZLE</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cFifteen" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">the classic sliding tile puzzle. 3×3 to 6×6. fewer moves is better.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../threes/" class="game-card" style="--card-color: #00f5ff">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag" style="color: #39ff6e">MOBILE</span>
+                </div>
+                <div class="card-title">THREES</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cThrees" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">slide. merge. survive. 1+2=3, then same+same. how far can you go?</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../klotski/" class="game-card" style="--card-color: #ff2d4a">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag" style="color: #39ff6e">MOBILE</span>
+                </div>
+                <div class="card-title">KLOTSKI<br><span style="font-size: 8px; color: #ffd700;">横刀立马</span></div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cKlotski" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">classic Chinese sliding block puzzle. slide the general to the exit.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+        <a href="../tetris/" class="game-card" style="--card-color: #f0f8ff">
+            <div class="card-inner">
+                <div class="card-title">TETRIS</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cTetris" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">helsinki 1989. stack blocks. clear lines. don't let them reach the top.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js"></script>
+<script>
+// ── 2048 preview ──
+(function() {
+    const c = document.getElementById('c2048');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#150005';
+    ctx.fillRect(0, 0, 72, 72);
+    const tiles = [
+        { color: '#0a2a4a', text: '2',  textColor: '#5aaedd' },
+        { color: '#0d4a7a', text: '4',  textColor: '#7ec8f0' },
+        { color: '#1e0810', text: '',   textColor: '' },
+        { color: '#0a7abf', text: '8',  textColor: '#fff' },
+        { color: '#6a0060', text: '16', textColor: '#f07ad0' },
+        { color: '#b0006a', text: '32', textColor: '#fff' },
+        { color: '#1e0810', text: '',   textColor: '' },
+        { color: '#F23C8F', text: '64', textColor: '#fff' },
+        { color: '#1e0810', text: '',   textColor: '' },
+        { color: '#c47a00', text: '128',textColor: '#fff0a0' },
+        { color: '#FFD54A', text: '256',textColor: '#1a0a00' },
+        { color: '#b02070', text: '512',textColor: '#fff' },
+        { color: '#39ff6e', text: '2',  textColor: '#fff' },
+        { color: '#ff7c1f', text: '4',  textColor: '#fff' },
+        { color: '#ffe03a', text: '8',  textColor: '#000' },
+        { color: '#1e0810', text: '?',  textColor: '#555' },
+    ];
+    const cellSize = 17, gap = 2, boardPad = 4;
+    tiles.forEach((t, i) => {
+        const x = (i % 4) * cellSize + boardPad;
+        const y = Math.floor(i / 4) * cellSize + boardPad;
+        ctx.fillStyle = t.color;
+        ctx.fillRect(x, y, cellSize - gap, cellSize - gap);
+        if (t.text && t.text !== '?') {
+            ctx.fillStyle = t.textColor;
+            ctx.font = `bold ${t.text.length > 2 ? '4' : '5'}px 'Press Start 2P', monospace`;
+            ctx.textAlign = 'center';
+            ctx.fillText(t.text, x + (cellSize - gap) / 2, y + (cellSize - gap) / 2 + 3);
+        }
+    });
+    ctx.strokeStyle = '#F23C8F';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+})();
+
+// ── George Boole preview ──
+(function() {
+    const c = document.getElementById('cBoole');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#080808';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.fillStyle = '#39ff6e';
+    ctx.fillRect(4, 8, 14, 8);
+    ctx.fillRect(4, 24, 14, 8);
+    ctx.fillStyle = '#ff3d6e';
+    ctx.fillRect(4, 40, 14, 8);
+    ctx.fillRect(4, 56, 14, 8);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(22, 8, 24, 20);
+    ctx.strokeStyle = '#ffe03a';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(22, 8, 24, 20);
+    ctx.fillStyle = '#ffe03a';
+    ctx.font = '6px Courier New, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('AND', 34, 21);
+    ctx.fillStyle = '#1a1a1a';
+    ctx.fillRect(22, 40, 24, 20);
+    ctx.strokeStyle = '#c45fff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(22, 40, 24, 20);
+    ctx.fillStyle = '#c45fff';
+    ctx.fillText('OR', 34, 53);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(46, 18); ctx.lineTo(58, 18); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(46, 50); ctx.lineTo(58, 50); ctx.stroke();
+    ctx.fillStyle = '#39ff6e';
+    ctx.fillRect(58, 15, 8, 6);
+    ctx.fillStyle = '#ff3d6e';
+    ctx.fillRect(58, 47, 8, 6);
+})();
+
+// ── 15 Puzzle preview ──
+(function() {
+    const c = document.getElementById('cFifteen');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const tiles = [
+        [1,  2,  3,  4],
+        [5,  6,  7,  8],
+        [9,  10, 11, 0],
+        [13, 14, 15, 12]
+    ];
+    const colors = {
+        1: '#0a2a5a', 2: '#0a3a6a', 3: '#0a4a7a', 4: '#006a8a',
+        5: '#007a6a', 6: '#008a5a', 7: '#1a7a1a', 8: '#3a7a00',
+        9: '#6a6a00', 10: '#8a5a00', 11: '#aa4a00', 12: '#c43a00',
+        13: '#aa1a3a', 14: '#8a0a5a', 15: '#6a0080'
+    };
+    const textColors = {
+        1: '#5ba3f5', 2: '#6ec8ff', 3: '#8ed8ff', 4: '#a0f0ff',
+        5: '#40ffc8', 6: '#39ff6e', 7: '#5fff5f', 8: '#a0ff40',
+        9: '#ffe03a', 10: '#ffc832', 11: '#ffb03a', 12: '#ff9040',
+        13: '#ff5a7a', 14: '#ff3d8e', 15: '#e040ff'
+    };
+    const cellSize = 16, gap = 1, boardPad = 3;
+    for (let r = 0; r < 4; r++) {
+        for (let col = 0; col < 4; col++) {
+            const val = tiles[r][col];
+            const x = boardPad + col * (cellSize + gap);
+            const y = boardPad + r * (cellSize + gap);
+            ctx.fillStyle = val === 0 ? 'rgba(0,0,0,0.3)' : colors[val];
+            ctx.fillRect(x, y, cellSize, cellSize);
+            if (val > 0) {
+                ctx.fillStyle = textColors[val];
+                ctx.font = 'bold 7px "Press Start 2P", monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(val.toString(), x + cellSize / 2, y + cellSize / 2 + 1);
+            }
+        }
+    }
+})();
+
+// ── Threes preview ──
+(function() {
+    const c = document.getElementById('cThrees');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#1a0a2a';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+    const tiles = [
+        [1,  3,  6,  0],
+        [2,  3,  12, 24],
+        [0,  1,  6,  12],
+        [2,  1,  3,  6]
+    ];
+    const colors = {
+        1: '#1a1a2e', 2: '#0a2a5a', 3: '#005a6a',
+        6: '#006a4a', 12: '#4a6a00', 24: '#7a4a00'
+    };
+    const textColors = {
+        1: '#f0ead8', 2: '#6ec8ff', 3: '#00f5ff',
+        6: '#39ff6e', 12: '#ffe03a', 24: '#ff7c1f'
+    };
+    const cellSize = 16, gap = 1, boardPad = 3;
+    for (let r = 0; r < 4; r++) {
+        for (let col = 0; col < 4; col++) {
+            const val = tiles[r][col];
+            const x = boardPad + col * (cellSize + gap);
+            const y = boardPad + r * (cellSize + gap);
+            ctx.fillStyle = val === 0 ? 'rgba(0,0,0,0.3)' : colors[val];
+            ctx.fillRect(x, y, cellSize, cellSize);
+            if (val > 0) {
+                ctx.fillStyle = textColors[val];
+                ctx.font = 'bold 7px "Press Start 2P", monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(val.toString(), x + cellSize / 2, y + cellSize / 2 + 1);
+            }
+        }
+    }
+})();
+
+// ── Klotski preview ──
+(function() {
+    const c = document.getElementById('cKlotski');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    // Dark indigo background
+    ctx.fillStyle = '#0a0618';
+    ctx.fillRect(0, 0, 72, 72);
+
+    // Board border (neon red)
+    ctx.strokeStyle = '#ff2d4a';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(2, 2, 68, 68);
+
+    // Grid: 4 cols × 5 rows
+    const cellW = 16, cellH = 13, gap = 1, padX = 3, padY = 3;
+
+    // 2×2 block (gold) at center top
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect(padX + cellW + gap, padY, cellW * 2 + gap, cellH * 2 + gap);
+    ctx.fillStyle = '#ff8c00';
+    ctx.fillRect(padX + cellW + gap + 2, padY + 2, cellW * 2 + gap - 4, cellH * 2 + gap - 4);
+    ctx.fillStyle = '#1a0a00';
+    ctx.font = 'bold 7px "Press Start 2P", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('曹', padX + cellW + gap + cellW, padY + cellH + 3);
+
+    // 2×1 vertical blocks (jade green)
+    const jadeBlocks = [[0, 0], [3, 0], [0, 3], [3, 3], [1, 2], [2, 2]];
+    jadeBlocks.forEach(([col, row]) => {
+        ctx.fillStyle = '#00cc88';
+        ctx.fillRect(padX + col * (cellW + gap), padY + row * (cellH + gap), cellW, cellH * 2 + gap);
+        ctx.fillStyle = '#009966';
+        ctx.fillRect(padX + col * (cellW + gap) + 2, padY + row * (cellH + gap) + 2, cellW - 4, cellH * 2 + gap - 4);
+    });
+
+    // 1×1 blocks (cyan)
+    ctx.fillStyle = '#0088aa';
+    ctx.fillRect(padX, padY + 4 * (cellH + gap), cellW, cellH);
+    ctx.fillRect(padX + 3 * (cellW + gap), padY + 4 * (cellH + gap), cellW, cellH);
+
+    // Exit indicator (dashed red at bottom center)
+    ctx.strokeStyle = 'rgba(255, 45, 74, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([2, 2]);
+    ctx.strokeRect(padX + cellW + gap, padY + 3 * (cellH + gap), cellW * 2 + gap, cellH * 2 + gap);
+    ctx.setLineDash([]);
+})();
+
+// ── Tetris preview ──
+(function() {
+    const canvas = document.getElementById('cTetris');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#0a192f';
+    ctx.fillRect(0, 0, 72, 72);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 28, 72, 8);
+    ctx.fillRect(26, 0, 8, 72);
+    ctx.fillStyle = '#003580';
+    ctx.fillRect(0, 30, 72, 4);
+    ctx.fillRect(28, 0, 4, 72);
+    ctx.fillStyle = '#00ffff';
+    [[0,0],[1,0],[2,0],[1,1]].forEach(([bx,by]) => {
+        ctx.fillRect(30 + bx*9, 14 + by*9, 8, 8);
+    });
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillRect(30, 14, 27, 2);
+    ctx.fillRect(30, 14, 2, 18);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '6px Courier New, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText('888420', 68, 70);
+})();
+
+// ── Keyboard nav ──
+(function() {
+    const cards = Array.from(document.querySelectorAll('.game-card'));
+    let selected = -1;
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            selected = (selected + 1) % cards.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            selected = (selected - 1 + cards.length) % cards.length;
+        } else if (e.key === 'Enter' && selected >= 0) {
+            window.location.href = cards[selected].href;
+            return;
+        } else { return; }
+        cards.forEach((c, i) => {
+            c.style.transform = i === selected ? 'translateY(-3px)' : '';
+            c.style.boxShadow = i === selected ? '0 0 28px var(--card-color, #ffe03a)' : '';
+        });
+    });
+})();
+</script>
+
+<link rel="stylesheet" href="../shared/chat-widget.css">
+<script src="../shared/chat-widget.js"></script>
+<script>ChatWidget.connect();</script>
+
+</body>
+</html>

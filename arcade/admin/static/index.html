@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAGMA//OPS</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MAGMA//OPS">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#080808">
+    <meta property="og:title" content="MAGMA//OPS">
+    <meta property="og:description" content="MagmaCrunch Operations Dashboard">
+    <meta property="og:image" content="og-image.png">
+    <meta property="og:type" content="website">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login overlay -->
+    <div id="login-overlay" class="overlay hidden">
+        <div class="login-box">
+            <h2>ENTER ACCESS CODE</h2>
+            <input type="text" id="username-input" placeholder="USERNAME" value="admin" autocomplete="username">
+            <input type="password" id="password-input" placeholder="PASSWORD" autocomplete="current-password">
+            <button id="login-btn" class="btn btn-cyan">LOGIN</button>
+            <p id="login-error" class="login-error hidden">ACCESS DENIED</p>
+        </div>
+    </div>
+
+    <div id="app">
+        <header>
+            <div class="header-left">
+                <h1 class="glitch" data-text="MAGMA//OPS">MAGMA//OPS</h1>
+            </div>
+            <div class="header-right">
+                <span id="system-uptime" class="sys-stat"></span>
+                <span id="system-cpu" class="sys-stat"></span>
+                <span id="system-mem" class="sys-stat"></span>
+                <span id="system-temp" class="sys-stat"></span>
+                <button id="btn-system-menu" class="btn-system-menu" title="System Actions">&#9881;</button>
+            </div>
+        </header>
+
+        <nav class="tab-bar">
+            <button class="ops-tab" data-tab="arcade">ARCADE</button>
+            <button class="ops-tab" data-tab="jukebox">JUKEBOX</button>
+            <button class="ops-tab" data-tab="themes">THEMES</button>
+            <button class="ops-tab" data-tab="accounts">ACCOUNTS</button>
+            <button class="ops-tab" data-tab="security">SECURITY</button>
+            <button class="ops-tab" data-tab="tv">TV</button>
+            <button class="ops-tab" data-tab="favicon">FAVICON</button>
+           <button class="ops-tab" data-tab="github">GITHUB</button>
+        </nav>
+
+        <main>
+            <!-- ═══ ARCADE TAB ═══════════════════════════════════════════════ -->
+            <div id="tab-arcade" class="tab-panel">
+                <section class="status-section">
+                    <h2 class="section-title">SERVER STATUS</h2>
+                    <div id="status-grid" class="status-grid"></div>
+                    <div class="action-bar">
+                        <button id="btn-restart-all" class="btn btn-rose">RESTART ALL</button>
+                        <button id="btn-refresh" class="btn btn-cyan">REFRESH</button>
+                    </div>
+                </section>
+
+                <section class="log-section">
+                    <div class="log-header">
+                        <h2 class="section-title">LIVE LOGS</h2>
+                        <div class="log-controls">
+                            <select id="log-filter" class="select-retro">
+                                <option value="all">ALL SERVERS</option>
+                            </select>
+                            <button id="btn-stream" class="btn btn-green btn-sm">STREAM</button>
+                            <button id="btn-stop-stream" class="btn btn-rose btn-sm hidden">STOP</button>
+                            <button id="btn-clear-log" class="btn btn-yellow btn-sm">CLEAR</button>
+                        </div>
+                    </div>
+                    <div id="log-viewer" class="log-viewer">
+                        <div class="log-welcome">Click STREAM to start live logs, or use the buttons below to load recent entries.</div>
+                    </div>
+                    <div class="log-actions">
+                        <button id="btn-load-errors" class="btn btn-orange btn-sm">LOAD ERRORS</button>
+                        <button id="btn-load-today" class="btn btn-purple btn-sm">TODAY'S LOGS</button>
+                        <button id="btn-load-50" class="btn btn-cyan btn-sm">LAST 50</button>
+                    </div>
+                </section>
+
+                <section class="chat-section">
+                    <div class="chat-header">
+                        <h2 class="section-title">CHAT HISTORY</h2>
+                        <div class="chat-controls">
+                            <select id="chat-room-filter" class="select-retro">
+                                <option value="global">GLOBAL CHAT</option>
+                            </select>
+                            <button id="btn-refresh-chat" class="btn btn-cyan btn-sm">REFRESH</button>
+                            <button id="btn-clear-chat" class="btn btn-yellow btn-sm">CLEAR</button>
+                        </div>
+                    </div>
+                    <div id="chat-viewer" class="chat-viewer">
+                        <div class="log-welcome">Click REFRESH to load chat history.</div>
+                    </div>
+                </section>
+
+                <section class="scores-section">
+                    <div class="scores-header">
+                        <h2 class="section-title">HIGH SCORES</h2>
+                        <div class="scores-controls">
+                            <button id="btn-refresh-scores" class="btn btn-cyan btn-sm">REFRESH</button>
+                            <button id="btn-reset-scores" class="btn btn-rose btn-sm">RESET ALL</button>
+                        </div>
+                    </div>
+                    <div id="scores-grid" class="scores-grid">
+                        <div class="log-welcome">Click REFRESH to load high scores.</div>
+                    </div>
+                </section>
+
+                <!-- Server Reference -->
+                <section class="server-ref-section">
+                    <h2 class="section-title">SERVER REFERENCE</h2>
+                    <div class="server-ref-grid">
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">PORT MAP</h3>
+                            <table class="server-ref-table">
+                                <tr><td>8765</td><td>SORRY!</td><td>🎲 Multiplayer (2-4p)</td></tr>
+                                <tr><td>8766</td><td>Cribbage</td><td>🃏 Multiplayer (2p)</td></tr>
+                                <tr><td>8767</td><td>Scand. Stud</td><td>🂡 Multiplayer (2-4p)</td></tr>
+                                <tr><td>8768</td><td>Chat</td><td>💬 Global + room chat</td></tr>
+                                <tr><td>8769</td><td>Chess</td><td>♟ Local</td></tr>
+                                <tr><td>8770</td><td>Checkers</td><td>⬛ Multiplayer (2p)</td></tr>
+                                <tr><td>8771</td><td>Backgammon</td><td>🎯 Multiplayer (2p)</td></tr>
+                                <tr><td>8772</td><td>Chinese Checkers</td><td>✳ Multiplayer (2-6p)</td></tr>
+                                <tr><td>8773</td><td>Parchisi</td><td>🎲 Multiplayer (2-4p)</td></tr>
+                                <tr><td>8774</td><td>Aggravation</td><td>😤 Multiplayer (2-6p)</td></tr>
+                                <tr><td>8780</td><td>MAGMA//OPS</td><td>📊 Admin dashboard</td></tr>
+                                <tr><td>8781</td><td>OPS WebSocket</td><td>🔌 Live logs, status</td></tr>
+                                <tr><td>8782</td><td>Private Auth</td><td>🔒 Password gate</td></tr>
+                            </table>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">ARCHITECTURE</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line"><span class="ref-label">HOST</span> Raspberry Pi — 192.168.1.16</div>
+                                <div class="ref-line"><span class="ref-label">TAILSCALE</span> 100.74.172.4 (VPN access)</div>
+                                <div class="ref-line"><span class="ref-label">PUBLIC</span> magmacrunch.duckdns.org</div>
+                                <div class="ref-line"><span class="ref-label">OS</span> Debian 13 (trixie)</div>
+                                <div class="ref-line"><span class="ref-label">RUNTIME</span> Python 3 + websockets lib</div>
+                                <div class="ref-line"><span class="ref-label">SERVICES</span> systemd — auto-start on boot</div>
+                                <div class="ref-line"><span class="ref-label">AUTH</span> Password gate per service</div>
+                                <div class="ref-line"><span class="ref-label">DATA</span> JSON files on disk</div>
+                            </div>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">MULTIPLAYER FLOW</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line">1. Player opens game page</div>
+                                <div class="ref-line">2. Client connects via WebSocket to game port</div>
+                                <div class="ref-line">3. Server assigns 4-char room code (e.g. A3X7)</div>
+                                <div class="ref-line">4. Up to 6 players join same room</div>
+                                <div class="ref-line">5. Server validates all moves (authoritative)</div>
+                                <div class="ref-line">6. State broadcast to all players in room</div>
+                                <div class="ref-line">7. Spectators can watch without joining</div>
+                            </div>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">QUICK COMMANDS</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line"><code>sudo systemctl status 'arcade-*'</code></div>
+                                <div class="ref-line"><code>sudo systemctl restart arcade-chat</code></div>
+                                <div class="ref-line"><code>journalctl -u arcade-* -f</code></div>
+                                <div class="ref-line"><code>ssh jake@192.168.1.16</code></div>
+                                <div class="ref-line"><code>rsync -avz arcade/ jake@192.168.1.16:~/arcade/</code></div>
+                            </div>
+                        </div>
+                        <div class="server-ref-card">
+                            <h3 class="server-ref-label">SECURITY</h3>
+                            <div class="server-ref-diagram">
+                                <div class="ref-line"><span class="ref-label">FIREWALL</span> UFW — deny incoming, allow SSH/HTTP/HTTPS/games/admin</div>
+                                <div class="ref-line"><span class="ref-label">SSH</span> Key-only auth, fail2ban active</div>
+                                <div class="ref-line"><span class="ref-label">SSL</span> Let's Encrypt (magmacrunch.duckdns.org), auto-renew 2x daily</div>
+                                <div class="ref-line"><span class="ref-label">HEADERS</span> HSTS, X-Frame-Options, X-Content-Type-Options</div>
+                                <div class="ref-line"><span class="ref-label">AUTH</span> Admin dashboard (8780) + private arcade (8782) password-protected</div>
+                                <div class="ref-line"><span class="ref-label">PERMS</span> Config files mode 600 (owner-only)</div>
+                                <div class="ref-line"><span class="ref-label">SERVICES</span> systemd — auto-start, restart on crash</div>
+                                <div class="ref-line"><span class="ref-label">UPDATED</span> Jul 23 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ═══ JUKEBOX TAB ═══════════════════════════════════════════════ -->
+            <div id="tab-jukebox" class="tab-panel hidden">
+                <div class="jukebox-toolbar">
+                    <div class="toolbar-group">
+                        <button id="jb-btn-import" class="btn btn-cyan btn-sm">IMPORT JSON</button>
+                        <input type="file" id="jb-file-input" accept=".json" style="display:none">
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="jb-btn-export-json" class="btn btn-green btn-sm">EXPORT JSON</button>
+                        <button id="jb-btn-copy-tracks" class="btn btn-purple btn-sm">COPY TRACKS JS</button>
+                        <button id="jb-btn-copy-jukebox" class="btn btn-orange btn-sm">COPY JUKEBOX_SONGS JS</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="jb-btn-save" class="btn btn-green btn-sm">SAVE LOCAL</button>
+                        <button id="jb-btn-deploy" class="btn btn-cyan btn-sm">SAVE & DEPLOY</button>
+                        <button id="jb-btn-reset" class="btn btn-rose btn-sm">RESET</button>
+                    </div>
+                    <div class="toolbar-spacer"></div>
+                    <span id="jb-track-count" class="track-count">0 TRACKS</span>
+                </div>
+
+                <div class="song-list-header">
+                    <span>#</span>
+                    <span></span>
+                    <span>TITLE</span>
+                    <span>ARTIST</span>
+                    <span>DURATION</span>
+                    <span>STATUS</span>
+                    <span></span>
+                </div>
+
+                <div id="jb-song-list" class="song-list"></div>
+
+                <button id="jb-btn-add" class="add-song-btn">+ ADD SONG</button>
+            </div>
+
+            <!-- ═══ THEMES TAB ════════════════════════════════════════════════ -->
+            <div id="tab-themes" class="tab-panel hidden">
+                <div class="theme-toolbar">
+                    <div class="toolbar-group">
+                        <input type="file" id="tm-file-input" accept=".json" style="display:none">
+                        <button class="btn btn-cyan btn-sm" id="tm-btn-import">IMPORT JSON</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button class="btn btn-green btn-sm" id="tm-btn-copy-all-css">COPY ALL CSS</button>
+                        <button class="btn btn-yellow btn-sm" id="tm-btn-copy-all-json">COPY ALL JSON</button>
+                        <button class="btn btn-rose btn-sm" id="tm-btn-download-json">DOWNLOAD JSON</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button class="btn btn-green btn-sm" id="tm-btn-save">SAVE LOCAL</button>
+                        <button class="btn btn-cyan btn-sm" id="tm-btn-deploy">SAVE & DEPLOY</button>
+                        <button class="btn btn-slate btn-sm" id="tm-btn-reset">RESET</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <input type="text" class="search-input" id="tm-search-input" placeholder="SEARCH THEMES...">
+                    </div>
+                </div>
+                <div class="filter-bar" id="tm-filter-bar"><span class="filter-label">FILTER:</span></div>
+                <div class="theme-main" id="tm-main-content"></div>
+                <span id="tm-theme-count" class="theme-count">0 THEMES</span>
+            </div>
+
+            <!-- ═══ ACCOUNTS TAB ══════════════════════════════════════════════ -->
+            <div id="tab-accounts" class="tab-panel hidden">
+                <div class="accounts-toolbar">
+                    <input type="text" class="search-input" id="ac-search-input" placeholder="SEARCH ACCOUNTS...">
+                </div>
+                <div id="ac-content" class="accounts-content"></div>
+            </div>
+
+            <!-- ═══ SECURITY TAB ══════════════════════════════════════════════ -->
+            <div id="tab-security" class="tab-panel hidden">
+                <section class="security-section">
+                    <h2 class="section-title">ADMIN PASSWORD</h2>
+                    <p class="api-keys-note">Change the password used to access MAGMA//OPS.</p>
+                    <div class="security-form">
+                        <div class="security-row">
+                            <label class="security-label">CURRENT PASSWORD</label>
+                            <input type="password" id="sec-current-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">NEW PASSWORD</label>
+                            <input type="password" id="sec-new-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">CONFIRM NEW</label>
+                            <input type="password" id="sec-confirm-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <button id="btn-change-pw" class="btn btn-yellow btn-sm">CHANGE PASSWORD</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">PRIVATE ARCADE PASSWORD</h2>
+                    <p class="api-keys-note">Password for private arcade pages (SORRY!, Aggravation). Auto-rotates daily in lavaMMDD format.</p>
+                    <div class="current-private-pw-box">
+                        <span class="ref-label">TODAY'S PASSWORD</span>
+                        <span id="current-private-pw" class="current-private-pw">loading...</span>
+                    </div>
+                    <div class="security-form">
+                        <div class="security-row">
+                            <label class="security-label">CURRENT PASSWORD</label>
+                            <input type="password" id="sec-private-current-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">NEW PASSWORD</label>
+                            <input type="password" id="sec-private-new-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">CONFIRM NEW</label>
+                            <input type="password" id="sec-private-confirm-pw" class="security-input" autocomplete="off">
+                        </div>
+                        <button id="btn-change-private-pw" class="btn btn-orange btn-sm">CHANGE PASSWORD</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">API KEYS</h2>
+                    <p class="api-keys-note">API keys for MEDIA//SEARCH and archive templates. Green dot = key set, gray = empty.</p>
+                    <div class="api-keys-header">
+                        <div class="api-keys-controls">
+                            <button id="btn-load-keys" class="btn btn-cyan btn-sm">LOAD</button>
+                            <button id="btn-save-keys" class="btn btn-green btn-sm">SAVE</button>
+                        </div>
+                        <span id="api-save-status" class="api-save-status"></span>
+                    </div>
+                    <div id="api-keys-grid" class="api-keys-grid"></div>
+                </section>
+            </div>
+
+            <!-- ═══ TV TAB ══════════════════════════════════════════════════════ -->
+            <div id="tab-tv" class="tab-panel hidden">
+                <div class="jukebox-toolbar">
+                    <div class="toolbar-group">
+                        <button id="tv-btn-import" class="btn btn-cyan btn-sm">IMPORT JSON</button>
+                        <input type="file" id="tv-file-input" accept=".json" style="display:none">
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="tv-btn-export-json" class="btn btn-green btn-sm">EXPORT JSON</button>
+                        <button id="tv-btn-copy-js" class="btn btn-orange btn-sm">COPY TV_CHANNELS JS</button>
+                    </div>
+                    <div class="toolbar-divider"></div>
+                    <div class="toolbar-group">
+                        <button id="tv-btn-save" class="btn btn-green btn-sm">SAVE LOCAL</button>
+                        <button id="tv-btn-deploy" class="btn btn-cyan btn-sm">SAVE & DEPLOY</button>
+                        <button id="tv-btn-reset" class="btn btn-rose btn-sm">RESET</button>
+                    </div>
+                    <div class="toolbar-spacer"></div>
+                    <span id="tv-channel-count" class="track-count">0 CHANNELS</span>
+                </div>
+
+                <div class="song-list-header">
+                    <span>#</span>
+                    <span></span>
+                    <span>THUMB</span>
+                    <span>TITLE</span>
+                    <span>ARTIST</span>
+                    <span>YEAR</span>
+                    <span>YT ID</span>
+                    <span></span>
+                </div>
+
+                <div id="tv-channel-list" class="song-list"></div>
+
+                <button id="tv-btn-add" class="add-song-btn">+ ADD CHANNEL</button>
+            </div>
+
+            <!-- ═══ FAVICON TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-favicon" class="tab-panel hidden">
+                <div class="favicon-editor">
+                    <div class="favicon-toolbar">
+                        <div class="toolbar-group">
+                            <button id="fav-btn-clear" class="btn btn-rose btn-sm">CLEAR</button>
+                            <button id="fav-btn-fill" class="btn btn-orange btn-sm">FILL</button>
+                            <button id="fav-btn-upload" class="btn btn-purple btn-sm">UPLOAD IMAGE</button>
+                            <input type="file" id="fav-file-input" accept="image/*" style="display:none">
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button id="fav-btn-pixelate" class="btn btn-cyan btn-sm" style="display:none">PIXELATE</button>
+                            <button id="fav-btn-apply" class="btn btn-green btn-sm" style="display:none">APPLY</button>
+                            <button id="fav-btn-cancel-crop" class="btn btn-rose btn-sm" style="display:none">CANCEL</button>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button id="fav-btn-grid-toggle" class="btn btn-cyan btn-sm">GRID: ON</button>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button id="fav-btn-save" class="btn btn-green btn-sm">SAVE</button>
+                            <button id="fav-btn-deploy" class="btn btn-yellow btn-sm">DEPLOY TO SITE</button>
+                        </div>
+                        <div class="toolbar-spacer"></div>
+                        <span id="fav-save-status" class="api-save-status"></span>
+                    </div>
+
+                    <div class="favicon-main">
+                        <div class="favicon-canvas-wrap">
+                            <h3 class="section-title">EDITOR — 16×16</h3>
+                            <div class="favicon-canvas-container">
+                                <canvas id="fav-canvas" width="480" height="480"></canvas>
+                                <canvas id="fav-crop-overlay" width="480" height="480" style="display:none"></canvas>
+                            </div>
+                            <div class="favicon-canvas-info">
+                                <span id="fav-pixel-info">X: — Y: —</span>
+                            </div>
+                        </div>
+
+                        <div class="favicon-sidebar">
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">PALETTE</h3>
+                                <div id="fav-palette" class="fav-palette"></div>
+                                <div class="fav-custom-color">
+                                    <input type="color" id="fav-color-picker" value="#ff3d6e">
+                                    <button id="fav-btn-add-color" class="btn btn-cyan btn-xs">+ ADD</button>
+                                </div>
+                                <label class="fav-toggle-label">
+                                    <input type="checkbox" id="fav-snap-toggle" checked>
+                                    SNAP TO PALETTE
+                                </label>
+                            </div>
+
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">TOOLS</h3>
+                                <div class="fav-tools">
+                                    <button id="fav-tool-draw" class="fav-tool-btn active" title="Draw">✏️</button>
+                                    <button id="fav-tool-erase" class="fav-tool-btn" title="Erase">◻️</button>
+                                    <button id="fav-tool-fill-bucket" class="fav-tool-btn" title="Fill">🪣</button>
+                                    <button id="fav-tool-eyedropper" class="fav-tool-btn" title="Pick Color">💧</button>
+                                </div>
+                            </div>
+
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">PREVIEW</h3>
+                                <div class="fav-preview-grid">
+                                    <div class="fav-preview-item">
+                                        <span class="fav-preview-label">16×16</span>
+                                        <canvas id="fav-preview-16" width="16" height="16"></canvas>
+                                    </div>
+                                    <div class="fav-preview-item">
+                                        <span class="fav-preview-label">32×32</span>
+                                        <canvas id="fav-preview-32" width="32" height="32"></canvas>
+                                    </div>
+                                    <div class="fav-preview-item">
+                                        <span class="fav-preview-label">TAB</span>
+                                        <div class="fav-preview-tab">
+                                            <canvas id="fav-preview-tab" width="16" height="16"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="favicon-palette-section">
+                                <h3 class="section-title">EXPORT</h3>
+                                <div class="fav-export-btns">
+                                    <button id="fav-btn-export-png" class="btn btn-green btn-xs">PNG</button>
+                                    <button id="fav-btn-export-ico" class="btn btn-cyan btn-xs">ICO</button>
+                                    <button id="fav-btn-export-apple" class="btn btn-orange btn-xs">APPLE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="favicon-saved-section">
+                        <h3 class="section-title">SAVED DESIGNS</h3>
+                        <div id="fav-saved-list" class="fav-saved-list">
+                            <span class="fav-no-saved">No saved designs yet.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ GITHUB TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-github" class="tab-panel hidden">
+                <section class="security-section">
+                    <h2 class="section-title">GITHUB CONNECTION</h2>
+                    <p class="api-keys-note">Personal access token with <code>repo</code> scope. Stored in config.json (gitignored).</p>
+                    <div class="security-form">
+                        <div class="github-status-row">
+                            <span id="gh-status-dot" class="gh-status-dot"></span>
+                            <span id="gh-status-text">NOT CONNECTED</span>
+                        </div>
+                        <div class="security-row">
+                            <label class="security-label">TOKEN</label>
+                            <div class="token-row">
+                                <input type="password" id="gh-token-input" class="security-input" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+                                <button id="gh-btn-show-token" class="btn btn-cyan btn-sm">SHOW</button>
+                            </div>
+                        </div>
+                        <div class="token-actions">
+                            <button id="gh-btn-test" class="btn btn-green btn-sm">TEST CONNECTION</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">DEPLOY</h2>
+                    <p class="api-keys-note">Changes are saved locally then pushed to GitHub. Site auto-deploys in ~1 minute.</p>
+                    <div class="security-form">
+                        <div class="security-row">
+                            <label class="security-label">COMMIT MESSAGE</label>
+                            <input type="text" id="gh-commit-msg" class="security-input" placeholder="Update via MAGMA//OPS" autocomplete="off">
+                        </div>
+                        <button id="gh-btn-sync-all" class="btn btn-green btn-sm">SYNC ALL TO GITHUB</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">BACKUP</h2>
+                    <p class="api-keys-note">Run MusicBrainz/TMDB backup scripts, then commit changed cache files.</p>
+                    <div class="backup-actions">
+                        <button id="gh-btn-backup-mb" class="btn btn-cyan btn-sm">MUSICBRAINZ BACKUP</button>
+                        <button id="gh-btn-backup-tmdb" class="btn btn-orange btn-sm">TMDB BACKUP</button>
+                    </div>
+                </section>
+
+                <section class="security-section">
+                    <h2 class="section-title">ACTIVITY LOG</h2>
+                    <div id="gh-sync-log" class="gh-sync-log"></div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <span class="footer-text">MAGMA//OPS v3.1 — MAGMACRUNCH OPERATIONS</span>
+        </footer>
+    </div>
+
+    <!-- System Modal -->
+    <div id="system-modal" class="modal hidden">
+        <div class="modal-content system-modal-content">
+            <div class="system-modal-header">
+                <h3 class="modal-title">SYSTEM CONTROLS</h3>
+                <button id="close-system-modal" class="btn-close-modal">&times;</button>
+            </div>
+            <div class="system-modal-body">
+                <div class="system-info-grid">
+                    <div class="system-info-item">
+                        <span class="system-info-label">UPTIME</span>
+                        <span id="modal-uptime" class="system-info-value">&mdash;</span>
+                    </div>
+                    <div class="system-info-item">
+                        <span class="system-info-label">CPU TEMP</span>
+                        <span id="modal-temp" class="system-info-value">&mdash;</span>
+                    </div>
+                    <div class="system-info-item">
+                        <span class="system-info-label">MEMORY</span>
+                        <span id="modal-memory" class="system-info-value">&mdash;</span>
+                    </div>
+                    <div class="system-info-item">
+                        <span class="system-info-label">LOAD</span>
+                        <span id="modal-load" class="system-info-value">&mdash;</span>
+                    </div>
+                </div>
+                <div class="system-actions">
+                    <button id="modal-restart-pi" class="btn btn-orange">RESTART PI</button>
+                    <button id="modal-poweroff-pi" class="btn btn-rose">POWER OFF</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="confirm-title" class="modal-title">ARE YOU SURE?</h3>
+            <p id="confirm-message" class="modal-message"></p>
+            <div class="modal-actions">
+                <button id="confirm-yes" class="btn btn-rose">YES, DO IT</button>
+                <button id="confirm-no" class="btn btn-cyan">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme edit panel -->
+    <div id="tm-edit-overlay" class="edit-overlay"></div>
+    <div id="tm-edit-panel" class="edit-panel">
+        <div class="edit-header">
+            <span class="edit-title" id="tm-edit-title">EDITING</span>
+            <button class="edit-close" id="tm-edit-close">X</button>
+        </div>
+        <div class="edit-body" id="tm-edit-body"></div>
+        <div class="edit-footer" id="tm-edit-footer"></div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="arcade.js"></script>
+    <script src="jukebox.js"></script>
+    <script src="theme.js"></script>
+    <script src="accounts.js"></script>
+    <script src="api.js"></script>
+    <script src="tv.js"></script>
+    <script src="favicons.js"></script>
+    <script src="github.js"></script>
+</body>
+</html>

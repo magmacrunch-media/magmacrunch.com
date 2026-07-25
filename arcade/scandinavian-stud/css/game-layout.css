@@ -1,0 +1,698 @@
+/* game-layout.css — Sökö (Scandinavian Stud) */
+
+#gameScreen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+    background: radial-gradient(ellipse at center, var(--mid) 0%, var(--darker) 100%);
+}
+
+.game-header {
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--accent-dim);
+    margin-bottom: 15px;
+}
+
+.game-header h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+    margin-bottom: 10px;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 10px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.stat-en {
+    font-size: 10px;
+    color: var(--accent-dim);
+    text-transform: lowercase;
+    letter-spacing: 0;
+}
+
+.stat-value {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--gold);
+}
+
+.street-label {
+    font-size: 14px;
+    color: var(--accent-dim);
+    letter-spacing: 0.1em;
+}
+
+/* AI Areas */
+.ai-areas {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.ai-area {
+    background: rgba(26, 42, 68, 0.5);
+    border: 1px solid var(--accent-dim);
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 120px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.ai-area.folded {
+    opacity: 0.4;
+    border-color: var(--red);
+}
+
+.ai-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--accent-dim);
+}
+
+.ai-name-text {
+    font-size: 12px;
+    color: var(--white);
+}
+
+.ai-chips {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--gold);
+}
+
+.ai-cards {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.ai-cards .card {
+    width: 50px;
+    height: 70px;
+    font-size: 10px;
+}
+
+/* Scale pips and corners for AI card size */
+.ai-cards .card .pip { font-size: 12px; line-height: 0.8; }
+.ai-cards .card .pip.rotated { font-size: 12px; line-height: 0.8; }
+.ai-cards .card .pip-ace { font-size: 24px; }
+.ai-cards .card .corner-rank { font-size: 7px; }
+.ai-cards .card .corner-suit { font-size: 6px; }
+.ai-cards .card .card-suit-center { max-width: 35px; padding: 8px 2px; }
+.ai-cards .card .card-corner.top-left { top: 2px; left: 2px; }
+.ai-cards .card .card-corner.bottom-right { bottom: 2px; right: 2px; }
+
+.ai-hand {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 6px;
+}
+
+/* Pot Display */
+.pot-display {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.pot-icon {
+    font-size: 24px;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+}
+
+/* Player Area */
+.player-area {
+    background: rgba(26, 42, 68, 0.7);
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.player-cards {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.player-cards .card {
+    width: 70px;
+    height: 100px;
+    font-size: 14px;
+}
+
+/* Scale pips and corners for player card size */
+.player-cards .card .pip { font-size: 17px; line-height: 0.8; }
+.player-cards .card .pip.rotated { font-size: 17px; line-height: 0.8; }
+.player-cards .card .pip-ace { font-size: 36px; }
+.player-cards .card .corner-rank { font-size: 9px; }
+.player-cards .card .corner-suit { font-size: 8px; }
+.player-cards .card .card-suit-center { max-width: 50px; padding: 12px 3px; }
+.player-cards .card .card-corner.top-left { top: 3px; left: 3px; }
+.player-cards .card .card-corner.bottom-right { bottom: 3px; right: 3px; }
+
+.player-hand {
+    font-size: 16px;
+    color: var(--green);
+    margin-top: 10px;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 15px 0;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    font-size: 11px;
+    padding: 12px 20px;
+    min-width: 100px;
+}
+
+.action-btn.check {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.action-btn.call {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.action-btn.raise {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.action-btn.fold {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+/* Message Area */
+.message-area {
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Action Log */
+.action-log {
+    max-height: 80px;
+    overflow-y: auto;
+    margin: 10px auto;
+    padding: 8px;
+    background: rgba(26, 42, 68, 0.3);
+    border: 1px solid var(--accent-dim);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--slate);
+    max-width: 500px;
+    width: 100%;
+}
+
+.action-log .log-entry {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(74, 106, 122, 0.2);
+}
+
+.action-log .log-entry:last-child {
+    border-bottom: none;
+}
+
+.action-log .log-player {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.action-log .log-action {
+    color: var(--white);
+}
+
+.action-log .log-amount {
+    color: var(--gold);
+}
+
+.game-over-message {
+    background: rgba(26, 42, 68, 0.9);
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px auto;
+    max-width: 400px;
+}
+
+.game-over-message.win {
+    border-color: var(--green);
+}
+
+.game-over-message.lose {
+    border-color: var(--red);
+}
+
+.game-over-message h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.game-over-message.win h2 {
+    color: var(--green);
+}
+
+.game-over-message.lose h2 {
+    color: var(--red);
+}
+
+.game-over-message p {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-top: 1px solid var(--accent-dim);
+    margin-top: auto;
+}
+
+.control-btn {
+    font-size: 10px;
+    padding: 8px 15px;
+}
+
+/* Game Chat */
+.game-chat {
+    width: 220px;
+    min-width: 180px;
+    background: #1a1a2e;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-mono);
+    max-height: 500px;
+}
+
+.game-chat .chat-header {
+    font-size: 9px;
+    color: var(--accent);
+    padding: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+}
+
+.game-chat .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+    font-size: 8px;
+    line-height: 1.6;
+    color: #e0e0e0;
+    max-height: 350px;
+}
+
+.game-chat .chat-msg {
+    margin-bottom: 4px;
+    word-wrap: break-word;
+}
+
+.game-chat .chat-msg .chat-name {
+    font-weight: bold;
+}
+
+.game-chat .chat-msg.system {
+    color: #888;
+    font-style: italic;
+}
+
+.game-chat .chat-input {
+    display: flex;
+    gap: 4px;
+    padding: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.game-chat .chat-input input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #e0e0e0;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 6px;
+    border-radius: 2px;
+    min-width: 0;
+}
+
+.game-chat .chat-input input::placeholder {
+    color: rgba(255,255,255,0.2);
+}
+
+.game-chat .chat-input input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.game-chat .chat-input button {
+    background: var(--accent);
+    color: #1a1a2e;
+    border: none;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.game-chat .chat-input button:hover {
+    background: #fff;
+}
+
+/* Chat Tabs */
+.chat-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.chat-tab {
+    flex: 1;
+    background: none;
+    border: none;
+    color: #888;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+}
+
+.chat-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+.chat-tab:hover {
+    color: #e0e0e0;
+}
+
+/* Chat Header with User Count */
+.game-chat .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-user-count {
+    font-size: 7px;
+    color: #888;
+}
+
+/* Chat User List */
+.chat-users {
+    padding: 4px 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    max-height: 80px;
+    overflow-y: auto;
+}
+
+.chat-users-header {
+    font-size: 7px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.chat-user {
+    font-size: 8px;
+    color: #e0e0e0;
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-user-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.chat-user-status {
+    font-size: 7px;
+    color: #888;
+    margin-left: 4px;
+}
+
+/* Chat Typing Indicator */
+.chat-typing {
+    font-size: 7px;
+    color: #888;
+    padding: 4px 8px;
+    font-style: italic;
+}
+
+/* Chat Name Row */
+.chat-name-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.chat-my-name {
+    font-size: 9px;
+    color: var(--accent);
+}
+
+.chat-edit-name {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-edit-name:hover {
+    opacity: 0.7;
+}
+
+.chat-name-input {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--accent);
+    color: #e0e0e0;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    width: 100px;
+    max-width: 100px;
+}
+
+.chat-name-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Chat Color Picker */
+.chat-pick-color {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    padding: 2px;
+}
+
+.chat-pick-color:hover {
+    opacity: 0.7;
+}
+
+.color-picker-popup {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #1a1a2e;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 8px;
+    z-index: 100;
+    min-width: 180px;
+}
+
+.color-strip {
+    width: 100%;
+    height: 20px;
+    border-radius: 3px;
+    cursor: crosshair;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.color-indicator {
+    position: absolute;
+    top: -3px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: transparent;
+    pointer-events: none;
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.color-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.color-preview-label {
+    font-size: 7px;
+    color: #888;
+}
+
+.color-preview {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.color-reset-btn {
+    background: none;
+    border: 1px solid #888;
+    color: #888;
+    font-family: var(--font-mono);
+    font-size: 6px;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-left: auto;
+}
+
+.color-reset-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Chat Online Users Panel */
+.chat-online {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.chat-online-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.chat-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.chat-online-name {
+    font-size: 9px;
+    color: #e0e0e0;
+}
+
+.chat-online-status {
+    font-size: 7px;
+    color: #888;
+    margin-left: auto;
+}
+
+@media (max-width: 600px) {
+    .stats {
+        gap: 15px;
+    }
+    
+    .stat-label {
+        font-size: 10px;
+    }
+    
+    .stat-value {
+        font-size: 12px;
+    }
+    
+    .ai-area {
+        min-width: 100px;
+        padding: 8px;
+    }
+    
+    .ai-cards .card {
+        width: 40px;
+        height: 56px;
+        font-size: 8px;
+    }
+    
+    .ai-cards .card .pip { font-size: 10px; line-height: 0.8; }
+    .ai-cards .card .pip.rotated { font-size: 10px; line-height: 0.8; }
+    .ai-cards .card .pip-ace { font-size: 20px; }
+    .ai-cards .card .corner-rank { font-size: 6px; }
+    .ai-cards .card .corner-suit { font-size: 5px; }
+    .ai-cards .card .card-suit-center { max-width: 28px; padding: 6px 2px; }
+    .ai-cards .card .card-corner.top-left { top: 1px; left: 1px; }
+    .ai-cards .card .card-corner.bottom-right { bottom: 1px; right: 1px; }
+    
+    .player-cards .card {
+        width: 60px;
+        height: 84px;
+        font-size: 12px;
+    }
+
+    .player-cards .card .pip { font-size: 14px; line-height: 0.8; }
+    .player-cards .card .pip.rotated { font-size: 14px; line-height: 0.8; }
+    .player-cards .card .pip-ace { font-size: 30px; }
+    .player-cards .card .corner-rank { font-size: 8px; }
+    .player-cards .card .corner-suit { font-size: 7px; }
+    .player-cards .card .card-suit-center { max-width: 42px; padding: 10px 2px; }
+    .player-cards .card .card-corner.top-left { top: 2px; left: 2px; }
+    .player-cards .card .card-corner.bottom-right { bottom: 2px; right: 2px; }
+}

@@ -1,0 +1,30 @@
+name: Backup MusicBrainz Data
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: write
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run backup script
+        run: node scripts/backup-musicbrainz.mjs --skip-existing
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archive/_cache/
+          git diff --cached --quiet || git commit -m "Update MusicBrainz cache"
+          git push

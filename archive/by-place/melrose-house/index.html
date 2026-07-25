@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melrose House — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="mh-shared.css">
+    <style>
+        /* ══ PAGE: by-place / melrose-house ══ */
+
+        main { position: relative; padding: 0; }
+
+        /* ── BREADCRUMB ── */
+        body.mh-page .breadcrumb a { color: var(--mh-bread); }
+        body.mh-page .breadcrumb a:hover { color: var(--mh-cream); }
+        body.mh-page .breadcrumb .sep { color: var(--mh-bread); opacity: 0.6; }
+        body.mh-page .breadcrumb .current { color: var(--mh-bread); }
+
+        /* ── HERO ── */
+        .artist-hero {
+            width: 100%;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+            margin-bottom: 0;
+        }
+        .artist-hero-img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 40%;
+            filter: saturate(0.9) brightness(0.60);
+        }
+        .artist-hero-tint {
+            position: absolute;
+            inset: 0;
+            background: rgba(104, 120, 160, 0.08);
+            mix-blend-mode: screen;
+        }
+        .artist-hero-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(12,13,15,0.0)  0%,
+                rgba(12,13,15,0.0)  85%,
+                rgba(12,13,15,0.85) 100%
+            );
+        }
+
+        /* ── HERO INNER ── */
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            padding: 0 20px 36px;
+            width: 100%;
+            max-width: 900px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        /* ── ARTIST HEADER ── */
+        .artist-header {
+            width: 100%;
+            margin-bottom: 0;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--mh-brand);
+            letter-spacing: 0.2em;
+            margin-bottom: 12px;
+            opacity: 0.85;
+        }
+
+        .artist-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(14px, 3vw, 24px);
+            color: var(--mh-cream);
+            line-height: 1.6;
+            letter-spacing: 0.06em;
+            text-shadow:
+                0 0 28px rgba(104, 120, 160, 0.45),
+                0 2px 10px rgba(0, 0, 0, 0.9);
+            margin-bottom: 6px;
+        }
+
+        .artist-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: var(--mh-brand);
+            letter-spacing: 0.15em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            width: 100%;
+            max-width: 900px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--mh-brand), var(--mh-gold), var(--mh-brand), transparent);
+            margin: 8px 0 40px;
+            opacity: 0.4;
+        }
+
+        /* ── MB LINK ── */
+        .mb-link-wrap { width:100%; max-width:900px; padding:0 20px; margin-bottom: 40px; animation:fadeUp 0.5s 0.15s ease both; }
+        .mb-link { font-family:'Press Start 2P',monospace; font-size:6px; color:var(--mh-muted); text-decoration:none; border:1px solid var(--mh-deep); padding:6px 12px; letter-spacing:0.08em; transition:color 0.15s,border-color 0.15s; display:inline-block; }
+        .mb-link:hover { color:var(--mh-gold); border-color:var(--mh-gold); }
+
+        /* ── FOOTER ── */
+        footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
+    </style>
+</head>
+<body class="mh-page">
+<nav id="auto-nav" data-depth="../../../"></nav>
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../by-place/">by place</a>
+        <span class="sep">›</span>
+        <span class="current">melrose house</span>
+    </div>
+
+    <div class="artist-hero">
+        <img class="artist-hero-img" src="../../../assets/photos/melrose-house/melrose-house.jpg" alt="Melrose House">
+        <div class="artist-hero-tint"></div>
+        <div class="artist-hero-gradient"></div>
+        <span class="photo-credit">photo: Jake McCoy</span>
+
+        <div class="hero-inner">
+            <div class="artist-header">
+                <div class="artist-label">// by place //</div>
+                <div class="artist-name">MELROSE HOUSE</div>
+                <div class="artist-abbr">IOWA CITY (2014-2015)</div>
+
+                <div class="sub-nav">
+                    <a href="about.html"      class="nav-card c-about">about</a>
+                    <a href="personnel.html"  class="nav-card c-personnel">personnel</a>
+                    <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+                    <a href="works.html"       class="nav-card c-works">works</a>
+                </div>
+            </div>
+        </div>
+        <div class="mb-link-wrap">
+        <a href="https://musicbrainz.org/place/f30be60e-94b4-465a-8e75-8cbdefaffbc8"
+           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
+        </div>
+
+    </div>
+
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+</body>
+</html>

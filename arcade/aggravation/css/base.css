@@ -1,0 +1,188 @@
+/**
+ * base.css — Aggravation CSS variables, reset, layout, CRT scanlines
+ */
+
+:root {
+    --ag-bg: #0a0612;
+    --ag-bg-light: #150b29;
+    --ag-text: #f0ead8;
+    --ag-text-dim: #8a7fa8;
+    --ag-border: #3a2d5c;
+    --ag-accent: #ffe03a;
+    --ag-accent-glow: rgba(255,224,58,0.4);
+
+    --slot-red: #ff3d6e;
+    --slot-blue: #00f5ff;
+    --slot-green: #39ff6e;
+    --slot-yellow: #ffe03a;
+    --slot-purple: #c45fff;
+    --slot-orange: #ff7c1f;
+
+    --nav-accent: #ffe03a;
+    --nav-brand: #ffe03a;
+    --nav-glow: rgba(255,224,58,0.4);
+    --nav-brand-glow: rgba(255,224,58,0.7);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: var(--ag-bg);
+    color: var(--ag-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.mc-back {
+    position: fixed;
+    top: 12px;
+    left: 16px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--ag-text-dim);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    z-index: 100;
+    transition: color 0.15s, text-shadow 0.15s;
+}
+.mc-back:hover {
+    color: var(--ag-accent);
+    text-shadow: 0 0 8px var(--ag-accent-glow);
+}
+
+#startScreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+#gameScreen {
+    display: none;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100vh;
+    width: 100%;
+    max-width: 1100px;
+    padding: 60px 20px 20px;
+    gap: 20px;
+}
+
+.game-title {
+    font-size: 22px;
+    color: var(--ag-accent);
+    text-shadow: 0 0 20px var(--ag-accent-glow);
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+}
+
+.game-subtitle {
+    font-size: 8px;
+    color: var(--ag-text-dim);
+    margin-bottom: 30px;
+    letter-spacing: 0.15em;
+}
+
+.form-label {
+    font-size: 8px;
+    color: var(--ag-text-dim);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-select {
+    background: var(--ag-bg-light);
+    border: 2px solid var(--ag-border);
+    color: var(--ag-text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 10px 14px;
+    width: 100%;
+    max-width: 260px;
+    margin-bottom: 20px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.15s;
+}
+.form-select:focus {
+    border-color: var(--ag-accent);
+}
+
+.ag-btn {
+    background: var(--ag-accent);
+    color: var(--ag-bg);
+    border: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 12px 24px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+    box-shadow: 0 0 12px var(--ag-accent-glow);
+    margin-bottom: 8px;
+}
+.ag-btn:hover {
+    background: #fff;
+    box-shadow: 0 0 24px var(--ag-accent-glow);
+    transform: translateY(-1px);
+}
+.ag-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.ag-btn-small {
+    font-size: 7px;
+    padding: 8px 16px;
+}
+
+.ag-btn-secondary {
+    background: transparent;
+    color: var(--ag-accent);
+    border: 2px solid var(--ag-accent);
+    box-shadow: none;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}

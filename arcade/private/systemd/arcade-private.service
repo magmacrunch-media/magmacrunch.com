@@ -1,0 +1,14 @@
+[Unit]
+Description=MagmaCrunch Arcade - Private Auth Server
+After=network.target
+
+[Service]
+Type=simple
+User=jake
+WorkingDirectory=/home/jake/arcade/private
+ExecStart=/home/jake/arcade/venv/bin/python3 server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
