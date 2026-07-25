@@ -7,8 +7,10 @@
 
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { join, relative as relPath, dirname, sep } from 'path';
+import { fileURLToPath } from 'url';
 
-const ROOT = '/Users/jakemccoy/Documents/website';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const ROOT = join(__dirname, '..');
 
 function walk(dir, acc = []) {
     for (const entry of readdirSync(dir)) {

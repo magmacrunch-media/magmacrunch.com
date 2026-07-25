@@ -29,6 +29,11 @@ import string
 import time
 import websockets
 
+
+def copy_board_2d(board):
+    """Deep-copy a 2D list (list of lists)."""
+    return [row[:] for row in board]
+
 logging.getLogger("websockets").setLevel(logging.WARNING)
 
 

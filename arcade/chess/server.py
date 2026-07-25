@@ -9,7 +9,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared', 'multiplayer'))
-from server_base import GameServer
+from server_base import GameServer, copy_board_2d as copy_board
 
 # ── Constants ────────────────────────────────────────────────────────────────
 
@@ -39,10 +39,6 @@ INITIAL_BOARD = [
     [(PAWN, WHITE)] * 8,
     [(ROOK, WHITE), (KNIGHT, WHITE), (BISHOP, WHITE), (QUEEN, WHITE), (KING, WHITE), (BISHOP, WHITE), (KNIGHT, WHITE), (ROOK, WHITE)],
 ]
-
-
-def copy_board(board):
-    return [row[:] for row in board]
 
 
 def in_bounds(r, c):
