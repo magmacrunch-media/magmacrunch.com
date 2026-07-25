@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install ESLint
+        run: npm ci
+
+      - name: Lint JavaScript
+        run: npm run lint
+
+  test-python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Python tests
+        run: |
+          find arcade -name 'test_*.py' -exec dirname {} \; | sort -u | while read dir; do
+            echo "=== Testing in $dir ==="
+            cd "$dir"
+            pytest -v --tb=short 2>&1 || exit 1
+            cd "$GITHUB_WORKSPACE"
+          done
+
+  test-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run JS tests
+        run: |
+          for test_file in $(find arcade -name 'test-*.js' -path '*/tests/*'); do
+            echo "=== Running $test_file ==="
+            node "$test_file" || exit 1
+          done

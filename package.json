@@ -4,7 +4,11 @@
   "description": "magmacrunch media — dev tooling only, no build step",
   "scripts": {
     "lint": "eslint nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js",
-    "lint:fix": "eslint --fix nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js"
+    "lint:fix": "eslint --fix nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js",
+    "test:py": "find arcade -name 'test_*.py' -exec dirname {} \\; | sort -u | while read dir; do echo \"=== $dir ===\" && cd \"$dir\" && pytest -v --tb=short && cd \"$OLDPWD\"; done",
+    "test:js": "find arcade -name 'test-*.js' -path '*/tests/*' -exec node {} \\;",
+    "test": "npm run lint && npm run test:js",
+    "build-search": "node scripts/build-search-index.js"
   },
   "devDependencies": {
     "eslint": "^8.56.0"
