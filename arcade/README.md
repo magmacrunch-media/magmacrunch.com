@@ -9,17 +9,27 @@ Pixel art games — vanilla HTML/CSS/JS, no frameworks, no build step.
 | game | type | status |
 |------|------|--------|
 | 2^N | tile puzzle (2048) | complete |
-| cribbage | card game (cribbage) | under construction |
+| aggravation | board game (multiplayer) | complete |
+| backgammon | board game (multiplayer) | complete |
+| checkers | board game (multiplayer) | complete |
+| chess | board game (multiplayer) | complete |
+| chinese-checkers | board game (multiplayer) | complete |
+| cribbage | card game (multiplayer) | complete |
 | crystal-mirror-maze | exploration | under construction |
+| fifteen-puzzle | tile puzzle | complete |
 | george-boole | logic puzzle | complete |
+| klotski | tile puzzle | complete |
 | moonlight-drift | side-scroller | complete |
+| parchisi | board game (multiplayer) | complete |
 | pay2play | experimental | under construction |
 | roderick-tron | platformer | under construction |
-| scandinavian-stud | card game (poker) | under construction |
+| scandinavian-stud | card game (multiplayer) | complete |
 | solitaire | card game (klondike) | complete |
 | solitaire_THLD | card game (hold'em) | complete |
 | SORRY! | board game (multiplayer) | complete |
+| tarot | card game (french tarot) | complete |
 | tetris | classic | complete |
+| threes | tile puzzle | complete |
 | very-long-boards | downhill skater | complete |
 
 ---

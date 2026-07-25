@@ -20,12 +20,10 @@ A browser-based single-player chess game vs AI, built with vanilla HTML/CSS/JS a
 - Added to arcade index.html game grid
 
 **Not yet implemented:**
-- Online multiplayer (future: use `shared/multiplayer/` framework)
 - Color choosing mechanism
 - Sound effects
 - Game analysis (review moves after game ends)
 - Opening book (common opening moves for AI)
-- Chat window (future: near move history panel)
 
 ---
 
@@ -94,11 +92,9 @@ Open `index.html` directly in a browser. No build step, no server needed.
 
 ## Future Roadmap (for all three games)
 
-- **Online multiplayer** — Use `shared/multiplayer/` framework
 - **Color choosing** — Allow players to pick their color
 - **Sound effects** — Piece moves, captures, check, game end
 - **Game analysis** — Review moves after game ends
-- **Chat window** — Near move history panel
 
 ---
 

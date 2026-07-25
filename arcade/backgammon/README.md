@@ -20,7 +20,6 @@ A browser-based single-player backgammon game vs AI, built with vanilla HTML/CSS
 - Added to arcade index.html game grid
 
 **Not yet implemented:**
-- Online multiplayer (future: use `shared/multiplayer/` framework)
 - Advanced AI strategy
 - Sound effects
 - Move history display

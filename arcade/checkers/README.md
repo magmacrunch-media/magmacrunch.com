@@ -18,7 +18,6 @@ A browser-based single-player checkers game vs AI, built with vanilla HTML/CSS/J
 - Added to arcade index.html game grid
 
 **Not yet implemented:**
-- Online multiplayer (future: use `shared/multiplayer/` framework)
 - Color choosing mechanism
 - Advanced AI strategy (minimax, alpha-beta pruning)
 - Sound effects
