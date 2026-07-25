@@ -16,11 +16,12 @@ How to add custom color schemes to archive pages (by-artist, by-place, by-contri
 
 ## Template System
 
-Three template scripts handle different page types:
+Three template families handle different page types:
 
 | Template | Config object | Pages |
 |----------|--------------|-------|
 | `templates/artist_*.js` | `window.ARTIST_CONFIG` | events, releases, recordings, works |
+| `templates/collective_*.js` | `window.COLLECTIVE_CONFIG` | recordings, releases, works (multi-artist) |
 | `templates/place_*.js` | `window.PLACE_CONFIG` | personnel, recordings, works, events |
 | `templates/contributor.js` | `window.__CONTRIBUTOR_CONFIG` | single page showing all credits |
 
@@ -42,6 +43,37 @@ window.ARTIST_CONFIG = {
     ticker:    ['extra', 'phrases'],                   // optional ticker text
 };
 ```
+
+**COLLECTIVE_CONFIG** (used by `collective_recordings.js`, `collective_releases.js`, `collective_works.js`):
+
+```js
+window.COLLECTIVE_CONFIG = {
+    ids:       ['uuid1', 'uuid2', ...],               // MusicBrainz artist UUIDs (array)
+    name:      'collective name',
+    abbr:      'ABBR',
+    accent:    'cyan',
+    backColor: 'c-back',
+    siblings:  ['about', 'recordings', 'releases', 'works'],
+    depth:     '../../../',
+    slug:      'collective-slug',                      // optional, for cache lookup
+    ticker:    ['extra', 'phrases'],                   // optional
+
+    // Theme overrides (all optional):
+    cssVarPrefix:  'thld',                             // CSS var prefix (e.g. 'thld' → var(--thld-cyan))
+    accentRgbMap:  { cyan: '224,122,47' },             // custom RGB values per color key
+    mutedColorVar: 'var(--thld-muted)',                // muted text color CSS var
+
+    // Works-only (optional):
+    lyricsPath: '../../../press/lyrics/artist/',
+    lyricsMap:  { 'song title': 'lyrics-file.html' },
+};
+```
+
+Key differences from ARTIST_CONFIG:
+- `ids` (array) instead of `id` (string) — supports multiple MusicBrainz artists
+- `slug` — used for cache path (`_cache/collectives/{slug}.json`), omit if no cache
+- Theme overrides allow per-artist customization without changing the template
+- Templates add entity-map integration and MusicBrainz attribution automatically
 
 **PLACE_CONFIG** (used by `place_recordings.js`, `place_works.js`, `place_personnel.js`):
 
@@ -270,6 +302,40 @@ See `ARCHIVE_THEMING.md` reference implementations for CSS patterns. For custom 
 ## Adding a New Place
 
 Same pattern as artist but use `window.PLACE_CONFIG` and place templates (`place_recordings.js`, `place_works.js`, `place_personnel.js`). Place subpages use `personnel.html` instead of `events.html`.
+
+## Adding a New Collective Artist
+
+For multi-artist groups (e.g. bands, collectives), use `window.COLLECTIVE_CONFIG` instead of `ARTIST_CONFIG`:
+
+1. Create folder: `archive/by-artist/your-collective/`
+2. Create stub files: `recordings.html`, `releases.html`, `works.html` (plus `index.html`, `about.html`, etc.)
+3. Create `your-collective-shared.css` with scoped palette and nav theme variables
+4. Create per-section CSS files (e.g., `your-collective-recordings.css`)
+5. Set `window.COLLECTIVE_CONFIG` in each stub with `ids[]` array of MusicBrainz artist UUIDs
+6. Load entity-map and the collective template:
+   ```html
+   <script src="../../../templates/entity-map.js"></script>
+   <script src="../../../templates/collective_recordings.js"></script>
+   ```
+7. If the collective has custom colors not in the standard palette, add `accentRgbMap` to override RGB values
+8. If using a custom CSS variable prefix (e.g. `--thld-*` instead of `--*`), set `cssVarPrefix`
+
+Example stub:
+```html
+<script>
+window.COLLECTIVE_CONFIG = {
+    ids:    ['uuid1', 'uuid2'],
+    slug:   'my-collective',
+    name:   'My Collective',
+    abbr:   'MC',
+    accent: 'cyan',
+    siblings: ['about', 'recordings', 'releases', 'works'],
+    depth:  '../../../',
+};
+</script>
+<script src="../../../templates/entity-map.js"></script>
+<script src="../../../templates/collective_recordings.js"></script>
+```
 
 ## Adding a New Contributor
 
