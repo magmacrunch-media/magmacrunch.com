@@ -1,0 +1,53 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "script"
+    },
+    "rules": {
+        "no-unused-vars": ["warn", { "args": "none" }],
+        "no-undef": "error",
+        "no-redeclare": "warn",
+        "no-duplicate-case": "error",
+        "no-empty": ["warn", { "allowEmptyCatch": true }],
+        "no-unreachable": "error",
+        "no-constant-condition": "warn",
+        "no-extra-semi": "error",
+        "no-dupe-keys": "error",
+        "no-shadow-restricted-names": "error",
+        "use-isnan": "error",
+        "valid-typeof": "error",
+        "eqeqeq": ["warn", "smart"],
+        "no-caller": "error",
+        "no-eval": "warn",
+        "no-implied-eval": "warn",
+        "no-new-wrappers": "error",
+        "no-throw-literal": "warn",
+        "no-self-compare": "warn",
+        "no-unused-expressions": "warn",
+        "no-useless-call": "warn",
+        "no-useless-concat": "warn",
+        "no-useless-escape": "warn",
+        "no-with": "error",
+        "no-loop-func": "warn",
+        "no-new-func": "warn",
+        "no-var": "off",
+        "prefer-const": "off",
+        "strict": "off"
+    },
+    "globals": {
+        "NAV_CONFIG": "readonly",
+        "CounterClient": "writable",
+        "ARTIST_CONFIG": "writable",
+        "PLACE_CONFIG": "writable",
+        "COLLECTIVE_CONFIG": "writable",
+        "__CONTRIBUTOR_CONFIG": "writable",
+        "__LABEL_CONFIG": "writable",
+        "__ENTITY_MAP": "writable",
+        "MathJax": "writable",
+        "module": "readonly"
+    }
+}

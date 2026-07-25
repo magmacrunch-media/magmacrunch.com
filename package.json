@@ -1,0 +1,12 @@
+{
+  "name": "magmacrunch-website",
+  "private": true,
+  "description": "magmacrunch media — dev tooling only, no build step",
+  "scripts": {
+    "lint": "eslint nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js",
+    "lint:fix": "eslint --fix nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0"
+  }
+}
