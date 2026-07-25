@@ -20,238 +20,58 @@
 
     <div class="scanlines"></div>
 
-    <div class="container">
+    <div class="container"></div>
 
-        <!-- ═══════════════ START SCREEN ═══════════════ -->
-        <div id="startScreen" class="start-screen">
-            <div class="start-content">
-                <h1 class="game-title">
-                    CHECKERS
-                </h1>
-                <p class="game-subtitle">// NEON EDITION //</p>
+    <script src="../shared/board-game-template.js"></script>
+    <script>
+    BoardGameTemplate.render({
+        title: 'CHECKERS',
+        subtitle: '// NEON EDITION //',
+        footer: ['CLASSIC CHECKERS \u00a0·\u00a0 VS AI OPPONENT', 'MANDATORY JUMPS \u00a0·\u00a0 KING PROMOTION'],
+        buttons: [
+            { id: 'startGameBtn', label: 'CLICK OR PRESS SPACE TO START', cls: 'primary', icon: '▶\u00a0\u00a0' },
+            { id: 'onlineBtn', label: 'PLAY ONLINE', icon: '🌐\u00a0\u00a0' },
+            { id: 'helpBtn', label: 'HOW TO PLAY' },
+            { id: 'creditsBtn', label: 'CREDITS' }
+        ],
+        gameControls: [
+            { id: 'newGameBtn', label: 'NEW GAME' },
+            { id: 'menuBtn', label: 'MENU' }
+        ],
+        mpServer: 'ws://magmacrunch.duckdns.org:8770',
+        instructions: '<h3>Checkers Rules</h3>' +
+            '<p>Checkers is a classic two-player board game. The goal is to capture all of your opponent\'s pieces or block them from making any moves.</p>' +
+            '<h4>Setup</h4><ul>' +
+            '<li>You are <strong style="color: #00f5ff;">CYAN</strong> — your pieces start at the bottom</li>' +
+            '<li>AI is <strong style="color: #ff2d78;">MAGENTA</strong> — its pieces start at the top</li>' +
+            '<li>Pieces can only move on dark squares</li>' +
+            '<li>Regular pieces move diagonally forward only</li></ul>' +
+            '<h4>Movement</h4><ul>' +
+            '<li>Click a piece to select it — legal moves will highlight</li>' +
+            '<li>Click a highlighted square to move there</li>' +
+            '<li>Regular pieces move diagonally forward one square</li>' +
+            '<li>Kings (promoted pieces) can move forward and backward</li></ul>' +
+            '<h4>Capturing</h4><ul>' +
+            '<li>Jump over an opponent\'s piece to capture it</li>' +
+            '<li>Jumps are <strong>mandatory</strong> — you must jump if possible</li>' +
+            '<li>Multiple jumps in one turn are allowed (and required!)</li></ul>' +
+            '<h4>King Promotion</h4><ul>' +
+            '<li>When a piece reaches the opposite end, it becomes a <strong>King</strong></li>' +
+            '<li>Kings can move both forward and backward diagonally</li></ul>' +
+            '<h4>Winning</h4><ul>' +
+            '<li>Capture all of your opponent\'s pieces</li>' +
+            '<li>Or block all of your opponent\'s legal moves</li></ul>',
+        credits: '<h3>Checkers — Neon Edition</h3>' +
+            '<h4>Game Design & Development</h4><p>Jake A. McCoy</p>' +
+            '<h4>Publisher</h4><p><strong>magmacrunch media</strong></p>' +
+            '<h4>Built With</h4><p>Vanilla HTML, CSS & JavaScript · Press Start 2P font · Neon retro aesthetic</p>' +
+            '<h4>About</h4><p>Classic checkers with a neon arcade twist. Play against the AI opponent and master the art of multiple jumps!</p>',
+        scripts: [
+            'js/config.js', 'js/board.js', 'js/ai.js',
+            'js/game.js', 'js/multiplayer.js', 'js/main.js'
+        ]
+    });
+    </script>
 
-                <div class="start-divider"></div>
-
-                <div class="start-buttons">
-                    <button id="startGameBtn" class="start-btn primary">
-                        ▶&nbsp;&nbsp;CLICK OR PRESS SPACE TO START
-                    </button>
-                    <button id="onlineBtn" class="start-btn online">
-                        🌐&nbsp;&nbsp;PLAY ONLINE
-                    </button>
-                    <button id="helpBtn" class="start-btn">HOW TO PLAY</button>
-                    <button id="creditsBtn" class="start-btn">CREDITS</button>
-                </div>
-
-                <div class="start-footer">
-                    <p>CLASSIC CHECKERS &nbsp;·&nbsp; VS AI OPPONENT</p>
-                    <p>MANDATORY JUMPS &nbsp;·&nbsp; KING PROMOTION</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ═══════════════ GAME SCREEN ═══════════════ -->
-        <div id="gameScreen" class="game-screen" style="display: none;">
-
-            <!-- Header -->
-            <div class="game-header">
-                <h1>
-                    <span style="color: #00f5ff;">◄</span>
-                    CHECKERS
-                    <span style="color: #ff2d78;">►</span>
-                </h1>
-                <div class="game-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">TURN</span>
-                        <span class="stat-value" id="turnIndicator">YOUR TURN</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Board + Chat Layout -->
-            <div class="game-layout">
-                <div class="board-area">
-                    <div id="boardContainer" class="board-container"></div>
-                </div>
-            </div>
-
-            <!-- Message Area -->
-            <div class="message-area">
-                <div id="gameMessage" class="game-message">Select a piece to move</div>
-            </div>
-
-            <!-- Game Controls -->
-            <div class="game-controls">
-                <button id="newGameBtn" class="control-btn">NEW GAME</button>
-                <button id="menuBtn" class="control-btn">MENU</button>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- ═══════════════ LOBBY OVERLAY ═══════════════ -->
-    <div id="lobbyOverlay" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-titlebar">
-                <span>ONLINE LOBBY</span>
-            </div>
-            <div class="modal-body">
-                <div id="lobbyContent">
-                    <div class="lobby-status" id="lobbyStatus">Connecting...</div>
-                    <div id="lobbyRoomCode" class="lobby-room-code" style="display: none;">
-                        Room: <span id="roomCodeDisplay"></span>
-                        <small>Share this code with your opponent</small>
-                    </div>
-                    <div class="lobby-room">
-                        <input type="text" id="roomCodeInput" placeholder="Enter room code (optional)" maxlength="4" style="text-transform: uppercase;">
-                    </div>
-                    <div class="lobby-actions">
-                        <button id="lobbyJoinBtn" class="start-btn primary">JOIN / CREATE ROOM</button>
-                        <button id="lobbyBackBtn" class="start-btn">BACK</button>
-                    </div>
-                    <div id="lobbyPlayers" class="lobby-players" style="display: none;">
-                        <div class="lobby-waiting">Waiting for opponent...</div>
-                        <div id="lobbyPlayerList"></div>
-                    </div>
-                    <div id="lobbyStartArea" class="lobby-actions" style="display: none;">
-                        <button id="lobbyStartBtn" class="start-btn primary">START GAME</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ═══════════════ MODALS ═══════════════ -->
-
-    <!-- Instructions Modal -->
-    <div id="instructionsModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-titlebar">
-                <span>HOW TO PLAY</span>
-                <button id="closeInstructions" class="modal-close">✕</button>
-            </div>
-            <div class="modal-body">
-                <h3>Checkers Rules</h3>
-                <p>Checkers is a classic two-player board game. The goal is to capture all of your opponent's pieces or block them from making any moves.</p>
-
-                <h4>Setup</h4>
-                <ul>
-                    <li>You are <strong style="color: #00f5ff;">CYAN</strong> — your pieces start at the bottom</li>
-                    <li>AI is <strong style="color: #ff2d78;">MAGENTA</strong> — its pieces start at the top</li>
-                    <li>Pieces can only move on dark squares</li>
-                    <li>Regular pieces move diagonally forward only</li>
-                </ul>
-
-                <h4>Board Layout</h4>
-                <div class="board-diagram">
-                    <pre>
-  a b c d e f g h
-8 . o . o . o . o  8
-7 o . o . o . o .  7
-6 . o . o . o . o  6
-5 . . . . . . . .  5
-4 . . . . . . . .  4
-3 x . x . x . x .  3
-2 . x . x . x . x  2
-1 x . x . x . x .  1
-  a b c d e f g h
-                    </pre>
-                </div>
-                <ul>
-                    <li><strong style="color: #ff2d78;">o</strong> = AI pieces (top)</li>
-                    <li><strong style="color: #00f5ff;">x</strong> = Your pieces (bottom)</li>
-                    <li><strong>.</strong> = Empty dark squares</li>
-                </ul>
-
-                <h4>Movement</h4>
-                <ul>
-                    <li>Click a piece to select it — legal moves will highlight</li>
-                    <li>Click a highlighted square to move there</li>
-                    <li>Regular pieces move diagonally forward one square</li>
-                    <li>Kings (promoted pieces) can move forward and backward</li>
-                </ul>
-
-                <h4>Capturing</h4>
-                <ul>
-                    <li>Jump over an opponent's piece to capture it</li>
-                    <li>Jumps are <strong>mandatory</strong> — you must jump if possible</li>
-                    <li>Multiple jumps in one turn are allowed (and required!)</li>
-                    <li>Click a piece that can jump, then click the destination</li>
-                </ul>
-
-                <h4>King Promotion</h4>
-                <ul>
-                    <li>When a piece reaches the opposite end of the board, it becomes a <strong>King</strong></li>
-                    <li>Kings are marked with a crown symbol (♛)</li>
-                    <li>Kings can move both forward and backward diagonally</li>
-                </ul>
-
-                <h4>Winning</h4>
-                <ul>
-                    <li>Capture all of your opponent's pieces</li>
-                    <li>Or block all of your opponent's legal moves</li>
-                </ul>
-
-                <div class="modal-footer">
-                    <button id="closeInstructionsBtn">GOT IT!</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Credits Modal -->
-    <div id="creditsModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-titlebar">
-                <span>CREDITS</span>
-                <button id="closeCredits" class="modal-close">✕</button>
-            </div>
-            <div class="modal-body">
-                <h3>Checkers — Neon Edition</h3>
-                <h4>Game Design & Development</h4>
-                <p>Jake A. McCoy</p>
-                <h4>Publisher</h4>
-                <p><strong>magmacrunch media</strong></p>
-                <h4>Built With</h4>
-                <p>Vanilla HTML, CSS & JavaScript · Press Start 2P font · Neon retro aesthetic</p>
-                <h4>About</h4>
-                <p>Classic checkers with a neon arcade twist. Play against the AI opponent and master the art of multiple jumps!</p>
-                <div class="modal-footer">
-                    <button id="closeCreditsBtn">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Game Over Modal -->
-    <div id="gameOverModal" class="modal-overlay">
-        <div class="modal-content game-over-content">
-            <div class="modal-titlebar">
-                <span>GAME OVER</span>
-            </div>
-            <div class="modal-body">
-                <div class="game-over-icon">🏆</div>
-                <div id="gameOverTitle" class="game-over-title win">YOU WIN!</div>
-                <div id="gameOverMessage" class="game-over-message">Congratulations!</div>
-                <div class="modal-footer">
-                    <button id="playAgainBtn">PLAY AGAIN</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript — ORDER MATTERS -->
-    <script>var MP_DEFAULT_SERVER = 'ws://magmacrunch.duckdns.org:8770';</script>
-    <script src="../shared/multiplayer/protocol.js"></script>
-    <script src="../shared/multiplayer/network.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/board.js"></script>
-    <script src="js/ai.js"></script>
-    <script src="js/game.js"></script>
-    <script src="js/multiplayer.js"></script>
-<link rel="stylesheet" href="../shared/chat-widget.css">
-<script src="../shared/chat-widget.js"></script>
-<script>ChatWidget.connect();</script>
-    <script src="js/main.js"></script>
 </body>
 </html>
