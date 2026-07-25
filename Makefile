@@ -90,6 +90,9 @@ backup-mb: ## Run MusicBrainz cache backup
 
 # ── Build ─────────────────────────────────────
 
-.PHONY: search-index
+.PHONY: search-index optimize-images
 search-index: ## Rebuild search-index.json
 	node scripts/build-search-index.js
+
+optimize-images: ## Optimize oversized images (flyers, photos)
+	node scripts/optimize-images.mjs
