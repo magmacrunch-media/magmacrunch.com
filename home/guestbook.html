@@ -6,6 +6,7 @@
     <title>guestbook — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../assets/logo.jpg">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../assets/counter.css">
     <style>
         /* ── PAGE-SPECIFIC: guestbook ── */
         :root {
@@ -265,6 +266,8 @@
 __ejm\___/________dwb`---`____________________________________________
     </pre>
 
+    <div id="hit-counter" style="margin-bottom: 32px;"></div>
+
     <div class="guestbook-wrap">
 
         <!-- FORM -->
@@ -290,6 +293,17 @@ __ejm\___/________dwb`---`____________________________________________
 </footer>
 
 <script src="../nav.js"></script>
+<script>
+    // Initialize counter display (loaded by nav.js)
+    function initCounter() {
+        if (window.CounterClient) {
+            CounterClient.display('#hit-counter');
+        } else {
+            setTimeout(initCounter, 100);
+        }
+    }
+    initCounter();
+</script>
 <script>
     // ── Google Apps Script backend (unchanged from original) ──
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIKFyhLKbCR3VnOzl1vkKu8vQdWw8ENmUiHVgTBGSlQLYeTMn7hDiANlGbZACGElvc/exec';
