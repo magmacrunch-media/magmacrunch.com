@@ -549,9 +549,10 @@ class GameServer:
         async def _health_check(connection, request):
             """Return 426 for plain HTTP requests, allow WebSocket upgrades."""
             from websockets.http11 import Response
+            from websockets.datastructures import Headers
             if request.headers.get("Upgrade", "").lower() == "websocket":
                 return None
-            return Response(426, "Upgrade Required", {"Upgrade": "websocket"}, b"")
+            return Response(426, "Upgrade Required", Headers([("Upgrade", "websocket")]), b"")
 
         async def _run():
             async with websockets.serve(

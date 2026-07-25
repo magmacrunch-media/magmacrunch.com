@@ -5,9 +5,6 @@ Requires:  pip install websockets
 """
 
 import argparse
-import asyncio
-import json
-import random
 import sys
 import os
 
