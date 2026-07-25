@@ -617,12 +617,6 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 mainEl.innerHTML = newMain.innerHTML;
             }
 
-            const footerEl = document.querySelector('footer');
-            const newFooter = doc.querySelector('footer');
-            if (footerEl && newFooter) {
-                footerEl.innerHTML = newFooter.innerHTML;
-            }
-
             // Hide chat widget on non-arcade pages
             const chatWidget = document.getElementById('arcadeChatWidget');
             if (chatWidget) {
