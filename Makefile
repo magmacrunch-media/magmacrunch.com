@@ -19,12 +19,19 @@ help: ## Show available commands
 
 # ── Linting ───────────────────────────────────
 
-.PHONY: lint lint-fix
+.PHONY: lint lint-fix lint-all lint-game
 lint: ## Run ESLint on shared JS
 	npx eslint nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js
 
 lint-fix: ## Auto-fix ESLint issues
 	npx eslint --fix nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js
+
+lint-all: ## Run ESLint on ALL JS (many game-specific warnings expected)
+	npx eslint nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js "arcade/**/js/*.js" --no-error-on-unmatched-pattern
+
+lint-game: ## Lint a specific game: make lint-game GAME=chess
+	@if [ -z "$(GAME)" ]; then echo "Usage: make lint-game GAME=chess"; exit 1; fi
+	npx eslint arcade/$(GAME)/js/*.js 2>/dev/null || true
 
 # ── Testing ───────────────────────────────────
 
