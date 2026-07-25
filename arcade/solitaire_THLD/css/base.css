@@ -5,6 +5,8 @@
 
 /* ── CSS Variables ─────────────────────────────────────────── */
 :root {
+    --mc-back-color: var(--cyan);
+    --mc-back-glow: 0 0 8px var(--cyan-glow);
     /* Lava palette - SNES-style limited colors */
     --black:        #0a0000;
     --dark-red:     #1c0000;
@@ -202,33 +204,6 @@ button:active {
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0; }
-}
-
-/* magmacrunch arcade link */
-a.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    font-family: var(--font-pixel);
-    font-size: 8px;
-    color: var(--cyan);
-    text-decoration: none;
-    padding: 6px 10px;
-    background: rgba(0,0,0,0.6);
-    border: 1px solid var(--cyan-dim);
-    border-radius: 3px;
-    z-index: 9999;
-    transition: all 0.2s;
-    overflow: visible;
-}
-
-a.mc-back::before {
-    content: '← ';
-}
-
-a.mc-back:hover {
-    color: var(--cyan-glow);
-    border-color: var(--cyan-glow);
 }
 
 /* ── Pixel shimmer (for highlights) ───────────────────────── */

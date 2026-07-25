@@ -4,6 +4,8 @@
 
 :root {
     /* ── Backgammon Neon Theme ──────────────────────────────────────────────── */
+    --mc-back-color: var(--bg-point-light);
+    --mc-back-glow: 0 0 8px var(--bg-point-light);
     --bg-bg: #0a0612;
     --bg-board-bg: #0d0820;
     --bg-point-light: #00f5ff;
@@ -39,29 +41,6 @@ body {
     font-family: 'Press Start 2P', monospace;
     min-height: 100vh;
     overflow-x: hidden;
-}
-
-/* ── Back Link ──────────────────────────────────────────────────────────────── */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 14px;
-    z-index: 10000;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: var(--bg-point-light);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.15s, text-shadow 0.15s;
-}
-
-.mc-back::before {
-    content: '← ';
-}
-
-.mc-back:hover {
-    color: #ffffff;
-    text-shadow: 0 0 8px var(--bg-point-light);
 }
 
 /* ── Container ──────────────────────────────────────────────────────────────── */

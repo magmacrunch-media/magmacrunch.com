@@ -6,22 +6,11 @@
 <title>TETRIS — Helsinki 1989</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23FFFFFF'/%3E%3Crect x='0' y='11' width='32' height='10' fill='%23003580'/%3E%3Crect x='10' y='0' width='10' height='32' fill='%23003580'/%3E%3C/svg%3E">
 <style>
-    .mc-back {
-        position: fixed;
-        top: 16px;
-        left: 16px;
-        z-index: 10000;
-        font-family: 'Press Start 2P', monospace;
-        font-size: 9px;
-        color: var(--slate);
-        text-decoration: none;
-        opacity: 0.6;
-        pointer-events: auto;
-        transition: opacity 0.15s, color 0.15s;
+    :root {
+        --mc-back-color: var(--slate);
     }
-    .mc-back::before { content: '← '; }
-    .mc-back:hover { opacity: 1; color: var(--ice); }
 </style>
+<link rel="stylesheet" href="../shared/arcade-base.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=block" rel="stylesheet">

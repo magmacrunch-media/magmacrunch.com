@@ -16,25 +16,9 @@
         .font-loading body {
             visibility: hidden;
         }
-
-        /* ── magmacrunch arcade back link ── */
-        .mc-back {
-            position: fixed;
-            top: 12px;
-            left: 14px;
-            z-index: 10000;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: rgba(138, 43, 226, 0.6);
-            text-decoration: none;
-            letter-spacing: 0.08em;
-            transition: color 0.2s;
-        }
-        .mc-back::before {
-            content: '← ';
-        }
-        .mc-back:hover {
-            color: rgba(0, 255, 255, 0.95);
+        :root {
+            --mc-back-color: rgba(138, 43, 226, 0.6);
+            --mc-back-glow: 0 0 8px rgba(0, 255, 255, 0.95);
         }
         body.game-active .mc-back {
             opacity: 0.5;
@@ -51,6 +35,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/arcade-base.css">
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/themes.css">
     <link rel="stylesheet" href="css/container.css">

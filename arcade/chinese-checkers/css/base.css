@@ -4,6 +4,8 @@
 
 :root {
     /* ── Chinese Checkers Neon Theme ──────────────────────────────────────── */
+    --mc-back-color: var(--cc-player1);
+    --mc-back-glow: 0 0 8px var(--cc-player1);
     --cc-bg: #0a0612;
     --cc-board-bg: #150b29;
     --cc-cell-empty: #2a1a3a;
@@ -36,28 +38,6 @@ body {
     overflow-x: hidden;
 }
 
-/* ── Back Link ──────────────────────────────────────────────────────────────── */
-.mc-back {
-    position: fixed;
-    top: 12px;
-    left: 14px;
-    z-index: 10000;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: var(--cc-player1);
-    text-decoration: none;
-    letter-spacing: 0.08em;
-    transition: color 0.15s, text-shadow 0.15s;
-}
-
-.mc-back::before {
-    content: '← ';
-}
-
-.mc-back:hover {
-    color: #ffffff;
-    text-shadow: 0 0 8px var(--cc-player1);
-}
 
 /* ── Container ──────────────────────────────────────────────────────────────── */
 .container {

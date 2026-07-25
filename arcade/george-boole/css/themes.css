@@ -700,59 +700,43 @@ body[data-theme="matrix"] .tile[data-intensity="5"] { background: #007a00; }
    Each mode tints the "← magmacrunch arcade" link to match.
    ============================================================ */
 
-body[data-theme="gameboy"] .mc-back {
-    color: rgba(155, 188, 15, 0.55);
-}
-body[data-theme="gameboy"] .mc-back:hover {
-    color: rgba(155, 188, 15, 0.95);
+body[data-theme="gameboy"] {
+    --mc-back-color: rgba(155, 188, 15, 0.55);
+    --mc-back-glow: 0 0 8px rgba(155, 188, 15, 0.95);
 }
 
-body[data-theme="nes"] .mc-back {
-    color: rgba(255, 215, 0, 0.55);
-}
-body[data-theme="nes"] .mc-back:hover {
-    color: rgba(255, 99, 71, 0.95);
+body[data-theme="nes"] {
+    --mc-back-color: rgba(255, 215, 0, 0.55);
+    --mc-back-glow: 0 0 8px rgba(255, 99, 71, 0.95);
 }
 
-body[data-theme="snes"] .mc-back {
-    color: rgba(138, 43, 226, 0.6);
-}
-body[data-theme="snes"] .mc-back:hover {
-    color: rgba(0, 255, 255, 0.95);
+body[data-theme="snes"] {
+    --mc-back-color: rgba(138, 43, 226, 0.6);
+    --mc-back-glow: 0 0 8px rgba(0, 255, 255, 0.95);
 }
 
-body[data-theme="genesis"] .mc-back {
-    color: rgba(255, 215, 0, 0.55);
-}
-body[data-theme="genesis"] .mc-back:hover {
-    color: rgba(65, 105, 225, 0.95);
+body[data-theme="genesis"] {
+    --mc-back-color: rgba(255, 215, 0, 0.55);
+    --mc-back-glow: 0 0 8px rgba(65, 105, 225, 0.95);
 }
 
-body[data-theme="arcade"] .mc-back {
-    color: rgba(255, 165, 0, 0.55);
-}
-body[data-theme="arcade"] .mc-back:hover {
-    color: rgba(255, 165, 0, 0.95);
+body[data-theme="arcade"] {
+    --mc-back-color: rgba(255, 165, 0, 0.55);
+    --mc-back-glow: 0 0 8px rgba(255, 165, 0, 0.95);
 }
 
-body[data-theme="neogeo"] .mc-back {
-    color: rgba(0, 255, 255, 0.55);
-}
-body[data-theme="neogeo"] .mc-back:hover {
-    color: rgba(255, 20, 147, 0.95);
+body[data-theme="neogeo"] {
+    --mc-back-color: rgba(0, 255, 255, 0.55);
+    --mc-back-glow: 0 0 8px rgba(255, 20, 147, 0.95);
 }
 
-body[data-theme="ps1"] .mc-back {
-    color: rgba(255, 215, 0, 0.55);
-}
-body[data-theme="ps1"] .mc-back:hover {
-    color: rgba(192, 192, 192, 0.95);
+body[data-theme="ps1"] {
+    --mc-back-color: rgba(255, 215, 0, 0.55);
+    --mc-back-glow: 0 0 8px rgba(192, 192, 192, 0.95);
 }
 
-body[data-theme="matrix"] .mc-back {
-    color: rgba(0, 255, 0, 0.45);
-}
-body[data-theme="matrix"] .mc-back:hover {
-    color: rgba(0, 255, 0, 0.95);
+body[data-theme="matrix"] {
+    --mc-back-color: rgba(0, 255, 0, 0.45);
+    --mc-back-glow: 0 0 8px rgba(0, 255, 0, 0.95);
 }
 

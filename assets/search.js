@@ -347,22 +347,25 @@
         return d.innerHTML;
     }
 
-    /* ── GLOBAL KEYBOARD SHORTCUTS ── */
-    document.addEventListener('keydown', (e) => {
-        /* Don't trigger if typing in an input/textarea */
-        const tag = document.activeElement?.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    /* ── GLOBAL KEYBOARD SHORTCUTS (one-time) ── */
+    if (!window.__mcSearchKeys) {
+        window.__mcSearchKeys = true;
+        document.addEventListener('keydown', (e) => {
+            /* Don't trigger if typing in an input/textarea */
+            const tag = document.activeElement?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
-        /* / or Ctrl+K or Cmd+K */
-        if (e.key === '/' || (e.key === 'k' && (e.ctrlKey || e.metaKey))) {
-            e.preventDefault();
-            if (isOpen()) {
-                close();
-            } else {
-                open();
+            /* / or Ctrl+K or Cmd+K */
+            if (e.key === '/' || (e.key === 'k' && (e.ctrlKey || e.metaKey))) {
+                e.preventDefault();
+                if (isOpen()) {
+                    close();
+                } else {
+                    open();
+                }
             }
-        }
-    });
+        });
+    }
 
     /* ── NAV ICON INJECTION ── */
     function injectSearchIcon() {
@@ -392,6 +395,8 @@
 
     /* ── INIT ── */
     function init() {
+        if (window.__mcSearchInit) return;
+        window.__mcSearchInit = true;
         injectSearchIcon();
         loadIndex();
     }
