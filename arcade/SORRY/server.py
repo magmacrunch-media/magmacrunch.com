@@ -11,7 +11,7 @@ import random
 
 # Add shared multiplayer directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'shared', 'multiplayer'))
-from server_base import GameServer, SLOT_COLORS
+from server_base import GameServer, SLOT_COLORS, PALETTE
 
 # ── Card deck ──────────────────────────────────────────────────────────────────
 
@@ -283,7 +283,6 @@ class SorryGame:
         new_color = (action.get('color') or '').strip()
 
         # Validate against the shared palette
-        from server_base import PALETTE
         if new_color not in PALETTE:
             return None
 
