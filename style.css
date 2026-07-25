@@ -92,6 +92,8 @@ body {
 
 a { color: var(--mc-crater); }
 
+img { max-width: 100%; height: auto; }
+
 /* ── NAV ── */
 nav {
     position: fixed;
