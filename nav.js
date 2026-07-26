@@ -555,8 +555,8 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 await new Promise((res, rej) => {
                     const s = document.createElement('script');
                     s.src = bustSrc;
-                    s.onload = res;
-                    s.onerror = rej;
+                    s.onload = () => { s.remove(); res(); };
+                    s.onerror = () => { s.remove(); rej(); };
                     document.body.appendChild(s);
                 });
             } catch (e) { console.warn('SPA external:', src, e); }

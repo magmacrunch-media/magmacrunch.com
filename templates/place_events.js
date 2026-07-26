@@ -192,6 +192,7 @@
     let posterQueue = Promise.resolve();
     function loadPoster(eventId) {
         posterQueue = posterQueue.then(() => delay(300)).then(() => {
+            if (window.__mcPageAborted) return;
             const art = document.getElementById(`art-${eventId}`);
             const row = document.getElementById(`event-${eventId}`);
             if (!art || !row) return;
