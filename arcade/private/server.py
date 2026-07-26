@@ -69,6 +69,28 @@ def cleanup_expired_sessions():
     for t in expired:
         del sessions[t]
 
+# ── Login rate limiting ───────────────────────────────────────────────────────
+
+MAX_LOGIN_ATTEMPTS = 5
+LOCKOUT_SECONDS = 300  # 5 minutes
+
+login_attempts = {}  # ip -> {"failures": int, "locked_until": timestamp}
+
+def is_locked_out(ip):
+    entry = login_attempts.get(ip)
+    if not entry:
+        return False
+    return time.time() < entry.get("locked_until", 0)
+
+def record_login_failure(ip):
+    entry = login_attempts.setdefault(ip, {"failures": 0, "locked_until": 0})
+    entry["failures"] += 1
+    if entry["failures"] >= MAX_LOGIN_ATTEMPTS:
+        entry["locked_until"] = time.time() + LOCKOUT_SECONDS
+
+def record_login_success(ip):
+    login_attempts.pop(ip, None)
+
 # ── HTTP Handler ──────────────────────────────────────────────────────────────
 
 class PrivateHTTPHandler(BaseHTTPRequestHandler):
@@ -175,12 +197,19 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path == "/login":
+            ip = self.client_address[0]
+
+            if is_locked_out(ip):
+                self._serve_login_page(error="TOO MANY ATTEMPTS — TRY AGAIN LATER")
+                return
+
             content_length = int(self.headers.get("Content-Length", 0))
             body = self.rfile.read(content_length).decode("utf-8")
             params = parse_qs(body)
             password = params.get("password", [""])[0]
 
             if hmac.compare_digest(str(password), str(get_effective_password())):
+                record_login_success(ip)
                 token = generate_session_token()
                 sessions[token] = {"created": time.time(), "last_access": time.time()}
                 self.send_response(302)
@@ -190,6 +219,7 @@ class PrivateHTTPHandler(BaseHTTPRequestHandler):
                 self.send_header("Pragma", "no-cache")
                 self.end_headers()
             else:
+                record_login_failure(ip)
                 # Wrong password -> serve login page with error
                 self._serve_login_page(error="ACCESS DENIED — INCORRECT PASSWORD")
             return

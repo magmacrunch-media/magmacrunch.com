@@ -28,9 +28,9 @@ import websockets
 
 DEFAULT_CONFIG = {
     "port": 8780,
-    "auth": False,
+    "auth": True,
     "password": "changeme",
-    "bind": "0.0.0.0",
+    "bind": "127.0.0.1",
 }
 
 CONFIG = {}
@@ -714,9 +714,12 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "stream_start":
+                service_filter = msg.get("service", "all")
+                if service_filter != "all" and not valid_unit(service_filter):
+                    await websocket.send(json.dumps({"type": "error", "text": f"invalid service: {service_filter}"}))
+                    continue
                 if stream_task and not stream_task.done():
                     stream_task.cancel()
-                service_filter = msg.get("service", "all")
                 stream_task = asyncio.create_task(stream_logs(websocket, service_filter))
 
             elif action == "stream_stop":
@@ -903,7 +906,7 @@ async def ws_handler(websocket):
                     }))
                     continue
 
-                if current != private_config.get("password"):
+                if not hmac.compare_digest(str(current), str(private_config.get("password", ""))):
                     await websocket.send(json.dumps({
                         "type": "private_password_changed",
                         "ok": False,
