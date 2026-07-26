@@ -1268,6 +1268,7 @@ document.getElementById('guide-close-btn').addEventListener('click', toggleGuide
 /* ══════════════════════════════════════════════════
    KEYBOARD CONTROLS
    ══════════════════════════════════════════════════ */
+const tvAbort = new AbortController();
 
 document.addEventListener('keydown', function(e) {
     // Ignore if focused on an input
@@ -1307,7 +1308,7 @@ document.addEventListener('keydown', function(e) {
         case 'M':
             break;
     }
-});
+}, { signal: tvAbort.signal });
 
 /* ══════════════════════════════════════════════════
    ROTATE PROMPT — orientation detection
@@ -1354,6 +1355,20 @@ screen.addEventListener('touchend', function(e) {
         changeChannel(dy < 0 ? 1 : -1);
     }
 }, { passive: true });
+
+/* ══════════════════════════════════════════════════
+   CLEANUP — prevent resource leaks on SPA navigation
+   ══════════════════════════════════════════════════ */
+window.__pageCleanup = function() {
+    stopStatic();
+    stopVuMeter();
+    clearTimeout(onScreenTimeout);
+    cancelAnimationFrame(staticAnimFrame);
+    window.removeEventListener('resize', resizeStaticCanvas);
+    portraitMQL.removeEventListener('change', handleOrientation);
+    tvAbort.abort();
+    unloadVideo();
+};
 
 </script>
 

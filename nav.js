@@ -581,6 +581,12 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             }
             window.__MB_CACHE = null;
 
+            // Reset scroll lock from lightboxes
+            document.body.style.overflow = '';
+
+            // Remove template-injected <style> tags (no data-spa)
+            document.querySelectorAll('head style:not([data-spa])').forEach(e => e.remove());
+
             const doc = await fetchDoc(url);
 
             swapCSS(doc, url);
