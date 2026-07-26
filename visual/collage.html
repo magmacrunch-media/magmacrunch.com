@@ -557,12 +557,14 @@ lightbox.addEventListener('click', e => {
     if (e.target === lightbox) closeLightbox();
 });
 
+if (window.__collageKeyAbort) window.__collageKeyAbort.abort();
+window.__collageKeyAbort = new AbortController();
 document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape')      closeLightbox();
     if (e.key === 'ArrowLeft')   lbNav(-1);
     if (e.key === 'ArrowRight')  lbNav(1);
-});
+}, { signal: window.__collageKeyAbort && window.__collageKeyAbort.signal });
 </script>
 
 </body>

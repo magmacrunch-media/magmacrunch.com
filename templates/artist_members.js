@@ -12,6 +12,11 @@
    ═══════════════════════════════════════════════ */
 
 (function () {
+    /* Disconnect previous observer on SPA re-execution */
+    if (window.__artistMembersObserver) {
+        window.__artistMembersObserver.disconnect();
+    }
+
     let lastConfigId = null;
 
     function esc(s) {
@@ -21,6 +26,7 @@
     }
 
     function fetchJSON(url) {
+        if (window.__mcPageAborted) return Promise.reject(new Error('page navigated away'));
         return fetch(url).then(function(r) {
             if (!r.ok) throw new Error('API error: ' + r.status);
             return r.json();
@@ -174,4 +180,5 @@
     });
 
     observer.observe(document.body, { childList: true, subtree: true });
+    window.__artistMembersObserver = observer;
 })();
