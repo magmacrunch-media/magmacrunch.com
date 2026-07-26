@@ -535,7 +535,7 @@ window.CanvasRenderer = (function () {
 
         // draw elements
         for (const el of elements) {
-            drawElementTo(tmpCtx, el, canvasSize);
+            drawElementTo(tmpCtx, el);
         }
 
         // download
@@ -549,106 +549,16 @@ window.CanvasRenderer = (function () {
         render(elements);
     }
 
-    function drawElementTo(targetCtx, el, size) {
-        targetCtx.save();
-        if (el.opacity != null && el.opacity < 100) {
-            targetCtx.globalAlpha = el.opacity / 100;
+    function drawElementTo(targetCtx, el) {
+        // Swap the module-level ctx so drawElement (and everything it calls)
+        // draws onto targetCtx instead of the live canvas.
+        const savedCtx = ctx;
+        ctx = targetCtx;
+        try {
+            drawElement(el);
+        } finally {
+            ctx = savedCtx;
         }
-        // For shapes handled by drawElement (default case), rotation is applied inside drawElement.
-        // Only apply rotation here for the basic types drawn directly with targetCtx.
-        const delegatedTypes = ['triangle', 'pentagon', 'hexagon', 'diamond', 'star', 'arrow', 'roundrect', 'sine', 'squarewave', 'sawtooth', 'trianglewave', 'step', 'pulse', 'clipart'];
-        if (!delegatedTypes.includes(el.type)) {
-            applyRotation(targetCtx, el);
-        }
-
-        switch (el.type) {
-            case 'rect':
-                if (el.fill && el.fill !== 'none') {
-                    targetCtx.fillStyle = el.fill;
-                    targetCtx.fillRect(el.x, el.y, el.w, el.h);
-                }
-                if (el.stroke && el.stroke !== 'none' && el.strokeWidth > 0) {
-                    targetCtx.strokeStyle = el.stroke;
-                    targetCtx.lineWidth = el.strokeWidth;
-                    targetCtx.strokeRect(el.x, el.y, el.w, el.h);
-                }
-                break;
-
-            case 'circle': {
-                const cx = el.x + el.w / 2;
-                const cy = el.y + el.h / 2;
-                targetCtx.beginPath();
-                targetCtx.ellipse(cx, cy, Math.abs(el.w / 2), Math.abs(el.h / 2), 0, 0, Math.PI * 2);
-                if (el.fill && el.fill !== 'none') {
-                    targetCtx.fillStyle = el.fill;
-                    targetCtx.fill();
-                }
-                if (el.stroke && el.stroke !== 'none' && el.strokeWidth > 0) {
-                    targetCtx.strokeStyle = el.stroke;
-                    targetCtx.lineWidth = el.strokeWidth;
-                    targetCtx.stroke();
-                }
-                break;
-            }
-
-            case 'line':
-                if (el.stroke && el.stroke !== 'none') {
-                    targetCtx.strokeStyle = el.stroke;
-                    targetCtx.lineWidth = el.strokeWidth || 4;
-                    targetCtx.lineCap = 'round';
-                    targetCtx.beginPath();
-                    targetCtx.moveTo(el.x, el.y);
-                    targetCtx.lineTo(el.x + el.w, el.y + el.h);
-                    targetCtx.stroke();
-                }
-                break;
-
-            case 'text': {
-                if (!el.text) break;
-                const fontSize = el.fontSize || 48;
-                const font = el.font || 'Press Start 2P';
-                targetCtx.font = `${fontSize}px "${font}"`;
-                targetCtx.textBaseline = 'top';
-                const lines = el.text.split('\n');
-                const lineHeight = fontSize * 1.3;
-                for (let i = 0; i < lines.length; i++) {
-                    const ly = el.y + i * lineHeight;
-                    if (el.fill && el.fill !== 'none') {
-                        targetCtx.fillStyle = el.fill;
-                        targetCtx.fillText(lines[i], el.x, ly);
-                    }
-                    if (el.stroke && el.stroke !== 'none' && el.strokeWidth > 0) {
-                        targetCtx.strokeStyle = el.stroke;
-                        targetCtx.lineWidth = el.strokeWidth;
-                        targetCtx.lineJoin = 'round';
-                        targetCtx.strokeText(lines[i], el.x, ly);
-                    }
-                }
-                break;
-            }
-
-            case 'image': {
-                const img = loadImage(el);
-                if (img.complete) {
-                    targetCtx.drawImage(img, el.x, el.y, el.w, el.h);
-                }
-                break;
-            }
-
-            default: {
-                // new shapes: swap ctx temporarily and use same draw functions
-                const savedCtx = ctx;
-                ctx = targetCtx;
-                try {
-                    drawElement(el);
-                } finally {
-                    ctx = savedCtx;
-                }
-                break;
-            }
-        }
-
-        targetCtx.restore();
     }
 
     function getCanvas() { return canvas; }
