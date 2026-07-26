@@ -24,13 +24,7 @@ function drawBackground() {
     ctx.stroke();
 }
 
-function updateCanvasScale() {
-    // This function can be used to handle canvas scaling if needed
-    // Currently placeholder
-}
-
 function renderGame(thrustActive, isGameRunning, timestamp = 0, showCharacter = true) {
-    updateCanvasScale();
     drawBackground();
     drawStars(ctx);
     drawObstacles(ctx, canvas.height);

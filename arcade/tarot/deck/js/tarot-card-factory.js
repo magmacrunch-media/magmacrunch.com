@@ -3,7 +3,7 @@
 // Main API: creates DOM elements for any of the 78 cards
 // ═══════════════════════════════════════════════════════════════════════════
 
-const TarotDeck = {
+const TarotCardFactory = {
 
     // ── CARD BACK (vaporwave design) ──────────────────────────────────────
     getCardBackHTML() {

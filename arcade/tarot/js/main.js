@@ -477,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderAIHand(container, hand) {
         container.innerHTML = '';
         hand.forEach(() => {
-            const cardEl = TarotDeck.createCardBack();
+            const cardEl = TarotCardFactory.createCardBack();
             container.appendChild(cardEl);
         });
     }
