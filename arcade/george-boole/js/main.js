@@ -126,16 +126,16 @@ function fadeInMusic(audioElement, duration = 2000) {
     // If music has already faded in once, just play at full volume
     if (musicHasFadedIn && audioElement.paused) {
         audioElement.volume = 1;
-        audioElement.play().catch(error => {
-            console.log('Audio playback prevented by browser:', error);
+        audioElement.play().catch(() => {
+            // Browser may block audio, that's ok
         });
         return;
     }
-    
+
     // First time: fade in from 0 to 1 (OPTIMIZED: 15 steps instead of 50)
     audioElement.volume = 0;
-    audioElement.play().catch(error => {
-        console.log('Audio playback prevented by browser:', error);
+    audioElement.play().catch(() => {
+        // Browser may block audio, that's ok
     });
     
     const steps = 15; // Reduced from 50 for better performance
@@ -194,7 +194,9 @@ function setupVisibilityHandler() {
         } else {
             // Tab visible again - resume if music is enabled
             if (musicEnabled && gameMusic.paused) {
-                gameMusic.play().catch(e => console.log('Resume prevented:', e));
+                gameMusic.play().catch(() => {
+                    // Browser may block audio, that's ok
+                });
             }
         }
     });
