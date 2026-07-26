@@ -580,6 +580,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 window.__pageCleanup = null;
             }
             window.__MB_CACHE = null;
+            window.__mcPageAborted = true;
 
             // Reset scroll lock from lightboxes
             document.body.style.overflow = '';
@@ -638,6 +639,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             document.title = doc.title;
 
             await runScripts(doc, url);
+            window.__mcPageAborted = false;
 
             // Re-render MathJax if present (for pages with equations)
             if (window.MathJax) {

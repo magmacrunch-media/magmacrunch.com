@@ -419,6 +419,7 @@
     /* ── FETCH WITH RATE LIMITING ── */
 
     function fetchMB(url) {
+        if (window.__mcPageAborted) return Promise.reject(new Error('page navigated away'));
         return fetch(url).then(function(res) {
             if (!res.ok) throw new Error('API error: ' + res.status);
             return res.json();

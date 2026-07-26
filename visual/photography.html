@@ -720,12 +720,14 @@ document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', () => lbNav(-1));
 document.getElementById('lbNext').addEventListener('click', () => lbNav(1));
 lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+if (window.__photoKeyAbort) window.__photoKeyAbort.abort();
+window.__photoKeyAbort = new AbortController();
 document.addEventListener('keydown', e => {
     if (!lightbox.classList.contains('open')) return;
     if (e.key === 'Escape') closeLightbox();
     if (e.key === 'ArrowLeft') lbNav(-1);
     if (e.key === 'ArrowRight') lbNav(1);
-});
+}, { signal: window.__photoKeyAbort.signal });
 </script>
 </body>
 </html>

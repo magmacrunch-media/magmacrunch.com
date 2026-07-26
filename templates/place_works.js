@@ -173,6 +173,7 @@
     }
 
     async function fetchWithRetry(url, tries = 4) {
+        if (window.__mcPageAborted) throw new Error('page navigated away');
         for (let i = 0; i < tries; i++) {
             try {
                 const res = await fetch(url);
