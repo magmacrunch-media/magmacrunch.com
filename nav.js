@@ -345,7 +345,7 @@ window.NAV_CONFIG = {
    swap in when ready via font-display: swap. */
 
 (function () {
-    if (document.querySelector('link[href*="fonts.googleapis.com"]')) return;
+    if (document.querySelector('link[href*="fonts.googleapis.com"][href*="Courier+Prime"]')) return;
     const preconnect1 = document.createElement('link');
     preconnect1.rel = 'preconnect';
     preconnect1.href = 'https://fonts.googleapis.com';
