@@ -30,8 +30,14 @@
 
     function loadImageFile(file) {
         var reader = new FileReader();
+        reader.onerror = function() {
+            alert('Failed to read file.');
+        };
         reader.onload = function(ev) {
             var img = new Image();
+            img.onerror = function() {
+                alert('Failed to load image.');
+            };
             img.onload = function() {
                 // Auto-size: fit image into MAX_WORK_SIZE while preserving aspect ratio
                 var iw = img.naturalWidth;
