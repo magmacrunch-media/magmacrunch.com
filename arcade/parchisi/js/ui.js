@@ -276,12 +276,18 @@ var UI = (function() {
 
     function handleStartGame() { Network.startGame(); }
 
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function updateLobby(msg) {
         if (msg.playersInfo) {
             els.lobbyPlayers.innerHTML = msg.playersInfo.map(function(p) {
-                var dot = '<span class="player-dot" style="background:' + p.color + '"></span>';
+                var dot = '<span class="player-dot" style="background:' + escapeHtml(p.color) + '"></span>';
                 var host = p.isHost ? ' <span class="host-badge">' + I18n.t('hostBadge') + '</span>' : '';
-                return '<div class="lobby-player">' + dot + ' ' + p.name + host + '</div>';
+                return '<div class="lobby-player">' + dot + ' ' + escapeHtml(p.name) + host + '</div>';
             }).join('');
         }
         var count = msg.playerCount || 0;

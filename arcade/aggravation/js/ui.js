@@ -330,13 +330,19 @@ var UI = (function() {
         }
     }
 
+    function escapeHtml(text) {
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function updateLobby(msg) {
         if (msg.playersInfo) {
             els.lobbyPlayers.innerHTML = msg.playersInfo.map(function(p) {
-                var dot = '<span class="player-dot" style="background:' + p.color + '"></span>';
+                var dot = '<span class="player-dot" style="background:' + escapeHtml(p.color) + '"></span>';
                 var host = p.isHost ? ' <span class="host-badge">HOST</span>' : '';
-                var slot = p.slot ? ' <span class="slot-badge">' + p.slot.toUpperCase() + '</span>' : '';
-                return '<div class="lobby-player">' + dot + ' ' + p.name + host + slot + '</div>';
+                var slot = p.slot ? ' <span class="slot-badge">' + escapeHtml(p.slot.toUpperCase()) + '</span>' : '';
+                return '<div class="lobby-player">' + dot + ' ' + escapeHtml(p.name) + host + slot + '</div>';
             }).join('');
         }
         var count = msg.playerCount || 0;
@@ -602,7 +608,7 @@ var UI = (function() {
             var hex = SLOT_COLORS[color];
             html += '<div class="score-item">' +
                 '<div class="score-dot" style="background:' + hex + '"></div>' +
-                '<span class="score-name" style="color:' + hex + '">' + name + '</span>' +
+                '<span class="score-name" style="color:' + hex + '">' + escapeHtml(name) + '</span>' +
                 '<span class="score-value">' + score + '/' + AC.NUM_PAWNS + '</span>' +
                 '</div>';
         });
@@ -616,7 +622,7 @@ var UI = (function() {
         var isHuman = winner === humanColor;
         els.winnerText.innerHTML = isHuman ?
             '<span style="color:' + SLOT_COLORS[winner] + '">YOU WIN!</span>' :
-            '<span style="color:' + SLOT_COLORS[winner] + '">' + name + '</span> WINS!';
+            '<span style="color:' + SLOT_COLORS[winner] + '">' + escapeHtml(name) + '</span> WINS!';
         els.gameOverModal.classList.add('active');
     }
 

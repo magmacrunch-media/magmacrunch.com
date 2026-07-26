@@ -587,6 +587,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function updatePlayerList(players) {
         lobbyPlayerList.innerHTML = '';
         if (!players) return;
@@ -595,8 +601,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.className = 'lobby-player';
             div.innerHTML = `
-                <div class="lobby-player-color" style="background-color: ${p.color}"></div>
-                <div class="lobby-player-name">${p.name}</div>
+                <div class="lobby-player-color" style="background-color: ${escapeHtml(p.color)}"></div>
+                <div class="lobby-player-name">${escapeHtml(p.name)}</div>
                 ${p.isHost ? '<div class="lobby-player-host">HOST</div>' : ''}
             `;
             lobbyPlayerList.appendChild(div);
@@ -615,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function addLobbyChatMessage(from, text, color) {
         const div = document.createElement('div');
         div.className = 'lobby-chat-msg';
-        div.innerHTML = `<span class="chat-name" style="color: ${color || '#4a6a7a'}">${from}:</span> ${text}`;
+        div.innerHTML = `<span class="chat-name" style="color: ${escapeHtml(color || '#4a6a7a')}">${escapeHtml(from)}:</span> ${escapeHtml(text)}`;
         lobbyChatMessages.appendChild(div);
         lobbyChatMessages.scrollTop = lobbyChatMessages.scrollHeight;
     }
