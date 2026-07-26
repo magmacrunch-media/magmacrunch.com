@@ -6,7 +6,6 @@
 
     // ── Config ──────────────────────────────────────────────────────────────
 
-    const PI_HOST = 'http://192.168.1.16:8780'; // MAGMA//OPS host for API keys
     const PER_PAGE = 24;
 
     // ── DOM refs ──────────────────────────────────────────────────────────
@@ -99,17 +98,10 @@
 
     async function loadApiKeys() {
         if (_apiKeysLoaded) return _apiKeys || {};
-        if (!PI_HOST) return {};
-        // Mixed content guard: can't fetch HTTP from HTTPS page
-        if (location.protocol === 'https:' && PI_HOST.startsWith('http:')) {
-            console.warn('[MediaSearch] Mixed content: cannot fetch API keys from HTTP host on HTTPS page');
-            _apiKeysLoaded = true;
-            return {};
-        }
         try {
             const ctrl = new AbortController();
             const timer = setTimeout(() => ctrl.abort(), 4000);
-            const res = await fetch(`${PI_HOST}/api-keys.json`, { signal: ctrl.signal });
+            const res = await fetch('api-keys.json', { signal: ctrl.signal });
             clearTimeout(timer);
             if (!res.ok) return {};
             _apiKeys = await res.json();
