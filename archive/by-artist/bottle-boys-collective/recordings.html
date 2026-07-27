@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="bbc-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-recordings.css">
-    <style>:root { --section-accent: var(--bbc-warm); }</style>
+    <style>
+        :root { --section-accent: var(--bbc-warm); }
+        body.bbc-page.bbc-recordings-page .breadcrumb a { color: var(--section-accent); }
+        body.bbc-page.bbc-recordings-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.bbc-page.bbc-recordings-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.bbc-page.bbc-recordings-page .breadcrumb .current { color: var(--section-accent); }
+        body.bbc-page.bbc-recordings-page .artist-label { color: var(--section-accent); }
+        body.bbc-page.bbc-recordings-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(192,120,72,0.45); }
+    </style>
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:       [

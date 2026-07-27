@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="ddt-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-releases.css">
-    <style>:root { --section-accent: var(--ddt-cta); }</style>
+    <style>
+        :root { --section-accent: var(--ddt-cta); }
+        body.ddt-page.ddt-releases-page .breadcrumb a { color: var(--section-accent); }
+        body.ddt-page.ddt-releases-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.ddt-page.ddt-releases-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.ddt-page.ddt-releases-page .breadcrumb .current { color: var(--section-accent); }
+        body.ddt-page.ddt-releases-page .artist-label { color: var(--section-accent); }
+        body.ddt-page.ddt-releases-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(192,64,48,0.45); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '0335c576-94a4-4adb-a323-6effff5914e0',

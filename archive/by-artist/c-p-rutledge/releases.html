@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="cpr-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-releases.css">
-    <style>:root { --section-accent: var(--cpr-red); }</style>
+    <style>
+        :root { --section-accent: var(--cpr-red); }
+        body.cpr-page.cpr-releases-page .breadcrumb a { color: var(--section-accent); }
+        body.cpr-page.cpr-releases-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.cpr-page.cpr-releases-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.cpr-page.cpr-releases-page .breadcrumb .current { color: var(--section-accent); }
+        body.cpr-page.cpr-releases-page .artist-label { color: var(--section-accent); }
+        body.cpr-page.cpr-releases-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(240,90,90,0.45); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '44c1e0bd-be4c-4a0b-8f06-864c8e2fedcc',

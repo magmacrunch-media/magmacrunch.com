@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="thld-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-works.css">
-    <style>:root { --section-accent: var(--thld-highlight); }</style>
+    <style>
+        :root { --section-accent: var(--thld-highlight); }
+        body.thld-page.thld-works-page .breadcrumb a { color: var(--section-accent); }
+        body.thld-page.thld-works-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.thld-page.thld-works-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.thld-page.thld-works-page .breadcrumb .current { color: var(--section-accent); }
+        body.thld-page.thld-works-page .artist-label { color: var(--section-accent); }
+        body.thld-page.thld-works-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(240,192,96,0.45); }
+    </style>
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:       ['4d945923-9deb-4cd0-a477-6e1474cb306c', 'e1e53b08-af12-4d5a-8508-c620d5279ba3', '30d9cd20-3f5c-4a83-b13b-58ba8c690e2e'],

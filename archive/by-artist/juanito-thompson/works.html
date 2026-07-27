@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="juanito-thompson-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-works.css">
-    <style>:root { --section-accent: var(--jt-gold); }</style>
+    <style>
+        :root { --section-accent: var(--jt-gold); }
+        body.jt-page.jt-works-page .breadcrumb a { color: var(--section-accent); }
+        body.jt-page.jt-works-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.jt-page.jt-works-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.jt-page.jt-works-page .breadcrumb .current { color: var(--section-accent); }
+        body.jt-page.jt-works-page .artist-label { color: var(--section-accent); }
+        body.jt-page.jt-works-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(245,200,66,0.45); }
+    </style>
 
     <script>
     window.ARTIST_CONFIG = {

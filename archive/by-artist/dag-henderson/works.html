@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="dh-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-works.css">
-    <style>:root { --section-accent: var(--dh-amber-glow); }</style>
+    <style>
+        :root { --section-accent: var(--dh-amber-glow); }
+        body.dh-page.dh-works-page .breadcrumb a { color: var(--section-accent); }
+        body.dh-page.dh-works-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.dh-page.dh-works-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.dh-page.dh-works-page .breadcrumb .current { color: var(--section-accent); }
+        body.dh-page.dh-works-page .artist-label { color: var(--section-accent); }
+        body.dh-page.dh-works-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(232,144,10,0.45); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '605cc914-2aff-4e2b-9657-524c7009cb18',
