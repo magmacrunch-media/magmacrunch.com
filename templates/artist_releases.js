@@ -56,6 +56,7 @@ const COLOR_MAP = {
         'c-deep':   'var(--jt-deep)',
         'c-gold':   'var(--jt-gold)',
         'c-sky':    'var(--jt-steel)',
+        'c-jm-rose': 'var(--jm-rose)',
     };
     const backColorVar = BACK_COLOR_VAR[C.backColor] || 'var(--orange)';
 
@@ -74,6 +75,9 @@ const COLOR_MAP = {
         deep:   '122,48,16',
         gold:   '245,200,66',
         sky:    '96,104,120',
+        'jm-muted-rose': '200,168,168',
+        'jm-deep-warm':  '120,96,80',
+        'jm-deep-sage':  '88,120,104',
     };
     const accentRgb = ACCENT_RGB[accent] || '255,61,110';
     const accentVar = `var(--${accent})`;
