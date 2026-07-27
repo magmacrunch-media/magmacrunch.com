@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="fldc-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-releases.css">
-    <style>:root { --section-accent: var(--fldc-arc-red); }</style>
+    <style>
+        :root { --section-accent: var(--fldc-arc-red); }
+        body.fldc-page.fldc-releases-page .breadcrumb a { color: var(--section-accent); }
+        body.fldc-page.fldc-releases-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.fldc-page.fldc-releases-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.fldc-page.fldc-releases-page .breadcrumb .current { color: var(--section-accent); }
+        body.fldc-page.fldc-releases-page .artist-label { color: var(--section-accent); }
+        body.fldc-page.fldc-releases-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(168,40,32,0.45); }
+    </style>
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:       [

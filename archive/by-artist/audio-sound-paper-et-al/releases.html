@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="asp-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-releases.css">
-    <style>:root { --section-accent: var(--asp-red); }</style>
+    <style>
+        :root { --section-accent: var(--asp-red); }
+        body.asp-page.asp-releases-page .breadcrumb a { color: var(--section-accent); }
+        body.asp-page.asp-releases-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.asp-page.asp-releases-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.asp-page.asp-releases-page .breadcrumb .current { color: var(--section-accent); }
+        body.asp-page.asp-releases-page .artist-label { color: var(--section-accent); }
+        body.asp-page.asp-releases-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(192,48,32,0.45); }
+    </style>
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:       [

@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="asp-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-works.css">
-    <style>:root { --section-accent: var(--asp-amber-glow); }</style>
+    <style>
+        :root { --section-accent: var(--asp-amber-glow); }
+        body.asp-page.asp-works-page .breadcrumb a { color: var(--section-accent); }
+        body.asp-page.asp-works-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.asp-page.asp-works-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.asp-page.asp-works-page .breadcrumb .current { color: var(--section-accent); }
+        body.asp-page.asp-works-page .artist-label { color: var(--section-accent); }
+        body.asp-page.asp-works-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(240,208,112,0.45); }
+    </style>
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:       [

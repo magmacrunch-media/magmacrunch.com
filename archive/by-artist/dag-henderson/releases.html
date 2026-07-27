@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="dh-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-releases.css">
-    <style>:root { --section-accent: var(--dh-violet-mid); }</style>
+    <style>
+        :root { --section-accent: var(--dh-violet-mid); }
+        body.dh-page.dh-releases-page .breadcrumb a { color: var(--section-accent); }
+        body.dh-page.dh-releases-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.dh-page.dh-releases-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.dh-page.dh-releases-page .breadcrumb .current { color: var(--section-accent); }
+        body.dh-page.dh-releases-page .artist-label { color: var(--section-accent); }
+        body.dh-page.dh-releases-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(120,72,168,0.45); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '605cc914-2aff-4e2b-9657-524c7009cb18',

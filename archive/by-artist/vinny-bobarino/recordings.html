@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="vb-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-recordings.css">
-    <style>:root { --section-accent: var(--vb-nature-glow); }</style>
+    <style>
+        :root { --section-accent: var(--vb-nature-glow); }
+        body.vb-page.vb-recordings-page .breadcrumb a { color: var(--section-accent); }
+        body.vb-page.vb-recordings-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.vb-page.vb-recordings-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.vb-page.vb-recordings-page .breadcrumb .current { color: var(--section-accent); }
+        body.vb-page.vb-recordings-page .artist-label { color: var(--section-accent); }
+        body.vb-page.vb-recordings-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(106,154,122,0.45); }
+    </style>
     <script>
     window.COLLECTIVE_CONFIG = {
         ids:       ['f701c2bc-6eb6-4e7b-b950-f0c2426cb91c', '856f7f94-8c21-49cb-9364-e1f7b429f9ef', '246bff13-d203-4879-a22b-9ad6b5ddae7c', 'd9179190-dcf2-469e-b4c8-3624b97dc11a'],
