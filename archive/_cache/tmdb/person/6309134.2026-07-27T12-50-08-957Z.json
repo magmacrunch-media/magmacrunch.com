@@ -1,14 +1,14 @@
 {
-  "fetchedAt": "2026-07-27T12:50:08.241Z",
+  "fetchedAt": "2026-07-27T10:13:10.523Z",
   "entityType": "tmdb-person",
-  "id": 5285267,
-  "name": "Jake A. McCoy",
-  "profile_path": "/3doHrrCcavjvHpjn6u4IAnkI4e4.jpg",
-  "known_for_department": "Directing",
-  "place_of_birth": "USA",
+  "id": 6309134,
+  "name": "Ellis Hester",
+  "profile_path": null,
+  "known_for_department": "Acting",
+  "place_of_birth": null,
   "biography": "",
   "birthday": null,
-  "gender": 2,
+  "gender": 0,
   "external_ids": {},
   "credits": {
     "cast": [
