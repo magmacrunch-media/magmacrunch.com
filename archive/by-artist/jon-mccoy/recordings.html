@@ -9,7 +9,13 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="jm-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-recordings.css">
-    <style>:root { --section-accent: var(--jm-muted-rose); }</style>
+    <style>
+        :root { --section-accent: var(--jm-muted-rose); }
+        body.jm-page.jm-recordings-page .breadcrumb a { color: var(--jm-muted-rose); }
+        body.jm-page.jm-recordings-page .breadcrumb a:hover { color: var(--jm-cream); }
+        body.jm-page.jm-recordings-page .breadcrumb .sep { color: var(--jm-muted-rose); opacity: 0.6; }
+        body.jm-page.jm-recordings-page .breadcrumb .current { color: var(--jm-muted-rose); }
+    </style>
 </head>
 <body class="jm-page jm-recordings-page">
 <nav id="auto-nav" data-depth="../../../"></nav>
