@@ -324,27 +324,6 @@
         }
         .mini-yt-link:hover { color: var(--jm-sage); border-color: var(--jm-sage); }
 
-        /* ── MusicBrainz link ── */
-        .mb-link-wrap {
-            width: 100%;
-            max-width: 900px;
-            padding: 0 20px;
-            margin-bottom: 40px;
-            animation: fadeUp 0.5s 0.15s ease both;
-        }
-        .mb-link {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: var(--jm-muted);
-            text-decoration: none;
-            border: 1px solid #1a1a2a;
-            padding: 6px 12px;
-            letter-spacing: 0.08em;
-            transition: color 0.15s, border-color 0.15s;
-            display: inline-block;
-        }
-        .mb-link:hover { color: var(--jm-sage); border-color: var(--jm-sage); }
-
         @media (max-width: 640px) {
             .sub-nav { flex-direction: column; }
             .mini-thumb, .mini-iframe-wrap { width: 90px; }
@@ -381,6 +360,7 @@
                 <div class="artist-abbr">[ JM ]</div>
                 <div class="sub-nav">
                     <a href="about.html"      class="nav-card c-about">about</a>
+                    <a href="links.html"      class="nav-card c-links">links</a>
                     <a href="music-videos.html" class="nav-card c-music-videos">music videos</a>
                     <a href="photography.html" class="nav-card c-photography">photography</a>
                     <a href="recordings.html" class="nav-card c-recordings">recordings</a>
@@ -388,10 +368,6 @@
                     <a href="works.html"      class="nav-card c-works">works</a>
                 </div>
             </div>
-        </div>
-        <div class="mb-link-wrap">
-        <a href="https://musicbrainz.org/artist/33c830f0-d5be-4baf-b8db-3dc754e74c16"
-           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
         </div>
     </div>
 

@@ -69,6 +69,10 @@ body.jm-page .sub-nav .nav-card.c-works:hover { background: transparent; border-
 body.jm-page .sub-nav .nav-card.c-music-videos { background: var(--jm-light-cool); color: var(--jm-bg); border-color: var(--jm-light-cool); }
 body.jm-page .sub-nav .nav-card.c-music-videos:hover { background: transparent; border-color: var(--jm-light-cool); color: var(--jm-near-white); }
 
+/* Links button: periwinkle */
+body.jm-page .sub-nav .nav-card.c-links { background: var(--jm-periwinkle); color: var(--jm-near-white); border-color: var(--jm-periwinkle); }
+body.jm-page .sub-nav .nav-card.c-links:hover { background: transparent; border-color: var(--jm-periwinkle); color: var(--jm-near-white); }
+
 body.jm-page .nav-card::after { display: none; }
 
 body.jm-page footer { color: var(--jm-muted); }
