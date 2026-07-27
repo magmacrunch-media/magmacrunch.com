@@ -33,7 +33,8 @@ rsync -a "$SOURCE/" "$TMPDIR/" \
   --exclude='archive/_cache/' \
   --exclude='arcade/admin/scores/' \
   --exclude='node_modules/' \
-  --exclude='.git/'
+  --exclude='.git/' \
+  --exclude='.github/'
 
 cd "$TMPDIR"
 git add -A
