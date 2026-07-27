@@ -1,14 +1,14 @@
 {
-  "fetchedAt": "2026-07-27T10:13:09.922Z",
+  "fetchedAt": "2026-07-20T09:39:37.125Z",
   "entityType": "tmdb-person",
-  "id": 6309136,
-  "name": "Rho Kalupson",
-  "profile_path": null,
-  "known_for_department": "Acting",
-  "place_of_birth": null,
+  "id": 5285267,
+  "name": "Jake A. McCoy",
+  "profile_path": "/3doHrrCcavjvHpjn6u4IAnkI4e4.jpg",
+  "known_for_department": "Directing",
+  "place_of_birth": "USA",
   "biography": "",
   "birthday": null,
-  "gender": 0,
+  "gender": 2,
   "external_ids": {},
   "credits": {
     "cast": [
