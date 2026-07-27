@@ -64,6 +64,10 @@ body.vb-page .sub-nav .nav-card.c-releases:hover { background: transparent; colo
 body.vb-page .sub-nav .nav-card.c-works { background: var(--vb-bulb); color: var(--vb-bg); border-color: var(--vb-bulb); }
 body.vb-page .sub-nav .nav-card.c-works:hover { background: transparent; color: var(--vb-body); }
 
+/* Links button: solid peach */
+body.vb-page .sub-nav .nav-card.c-links { background: var(--vb-peach); color: var(--vb-bg); border-color: var(--vb-peach); }
+body.vb-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--vb-body); }
+
 body.vb-page .nav-card::after { display: none; }
 
 body.vb-page footer { color: var(--vb-mid); }
