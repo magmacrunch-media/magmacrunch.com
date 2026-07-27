@@ -706,12 +706,27 @@
 
     /* ── FETCH WITH RATE LIMITING ── */
 
-    function fetchMB(url) {
+    function fetchWithRetry(url, retries) {
+        if (retries === undefined) retries = 4;
         if (window.__mcPageAborted) return Promise.reject(new Error('page navigated away'));
-        return fetch(url).then(function(res) {
-            if (!res.ok) throw new Error('API error: ' + res.status);
-            return res.json();
-        });
+        var i = 0;
+        function attempt() {
+            return fetch(url).then(function(res) {
+                if (res.status === 429 || res.status === 503) {
+                    if (i === retries - 1) throw new Error('HTTP ' + res.status + ' after ' + retries + ' attempts');
+                    i++;
+                    return delay(2500 * i).then(attempt);
+                }
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            }).catch(function(err) {
+                if (err.message && err.message.indexOf('HTTP') === 0) throw err;
+                if (i === retries - 1) throw err;
+                i++;
+                return delay(1500 * i).then(attempt);
+            });
+        }
+        return attempt();
     }
 
     function delay(ms) {
@@ -731,7 +746,7 @@
         if (_cache && _cache.responses && _cache.responses[inc]) {
             return Promise.resolve(_cache.responses[inc]);
         }
-        return fetchMB('https://musicbrainz.org/ws/2/artist/' + MB_ID + '?fmt=json&inc=' + inc);
+        return fetchWithRetry('https://musicbrainz.org/ws/2/artist/' + MB_ID + '?fmt=json&inc=' + inc);
     }
 
     loadCache().then(function() {
