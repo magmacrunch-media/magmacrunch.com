@@ -56,6 +56,11 @@ const COLOR_MAP = {
         slate:  '136,153,170',
         blue:    '70,120,255',
         magenta:'255,45,120',
+        'ddt-gold':       '240,200,64',
+        'svfp-lilac':     '200,160,216',
+        'ds-bright-teal': '100,200,180',
+        'thld-warm-brown':'200,140,80',
+        '4b-leaf':        '120,180,80',
     };
     const accentRgb = ACCENT_RGB[accent] || '57,255,110';
     const accentVar = `var(--${accent})`;
