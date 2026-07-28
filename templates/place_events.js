@@ -68,16 +68,6 @@
     // ── 1. INJECT PAGE STYLES ──
     const style = document.createElement('style');
     style.textContent = `
-        main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-
-        .breadcrumb { position: relative; z-index: 10; font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--dim); letter-spacing: 0.1em; margin-top: -8px; margin-bottom: 16px; align-self: flex-start; }
-
-        .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
-
-        .catalog-wrap { width: 100%; max-width: 960px; animation: fadeUp 0.5s 0.1s ease both; }
-        #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--white); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
-        #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 24px; }
-
         .event-card { display: flex; gap: 16px; border: 1px solid #1e1e2e; background: var(--deep); margin-bottom: 12px; transition: border-color 0.15s; overflow: hidden; }
         .event-card:hover { border-color: ${accentVar}; }
         .event-card.cancelled { border-color: #2a2a3a; opacity: 0.65; }
