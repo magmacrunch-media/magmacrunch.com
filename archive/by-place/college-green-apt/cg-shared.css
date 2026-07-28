@@ -20,10 +20,14 @@
     --cg-taupe:    #6a5840;
     --cg-bluegrey: #384858;
     --cg-bg:       #0e0c0a;
+    --nav-accent:   var(--cg-cta);
+    --nav-glow:     rgba(192,120,56,0.4);
+    --nav-brand:    #d8a068;
+    --nav-brand-glow: rgba(216,160,104,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
-body.cg-page { background: var(--cg-bg); --credit-color: var(--cg-muted); --nav-accent: var(--cg-cta); --nav-glow: rgba(192,120,56,0.4); --nav-brand: #d8a068; --nav-brand-glow: rgba(216,160,104,0.7); }
+body.cg-page { background: var(--cg-bg); --credit-color: var(--cg-muted); }
 body.cg-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.cg-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;

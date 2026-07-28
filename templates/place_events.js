@@ -60,6 +60,7 @@
         slate:   '136,153,170',
         blue:    '70,120,255',
         magenta: '255,45,120',
+        'fm-brand':    '168,90,24',
     };
     const accentRgb = ACCENT_RGB[accent] || '57,255,110';
     const accentVar = `var(--${accent})`;

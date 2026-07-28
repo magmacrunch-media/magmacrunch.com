@@ -8,7 +8,17 @@
     <link rel="stylesheet" href="../../../style.css">
     <link rel="stylesheet" href="tm-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-personnel.css">
-    <style>:root { --section-accent: var(--tm-brand); }</style>
+    <style>
+        :root { --section-accent: var(--tm-brand); }
+        body.tm-page.tm-personnel-page .breadcrumb a { color: var(--section-accent); }
+        body.tm-page.tm-personnel-page .breadcrumb a:hover { color: var(--tm-cream); }
+        body.tm-page.tm-personnel-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.tm-page.tm-personnel-page .breadcrumb .current { color: var(--section-accent); }
+        body.tm-page.tm-personnel-page .place-label { color: var(--section-accent); }
+        body.tm-page.tm-personnel-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(74,104,88,0.45); }
+        body.tm-page.tm-personnel-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.tm-page.tm-personnel-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.PLACE_CONFIG = {
         id:        'e697fa03-e300-421a-8fd3-3b026d8d4f13',
@@ -18,7 +28,7 @@
         siblings:  ['personnel', 'recordings', 'works'],
         depth:     '../../../',
     };
-    window.PLACE_CONFIG.accent = 'blue';
+    window.PLACE_CONFIG.accent = 'tm-brand';
     </script>
 </head>
 <body class="tm-page tm-personnel-page">

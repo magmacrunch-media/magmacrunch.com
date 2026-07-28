@@ -10,7 +10,17 @@
     <link rel="stylesheet" href="cg-shared.css">
     <link rel="stylesheet" href="cg-about.css">
     <link rel="stylesheet" href="../../../templates/artist-recordings.css">
-    <style>:root { --section-accent: var(--cg-nature); }</style>
+    <style>
+        :root { --section-accent: var(--cg-nature); }
+        body.cg-page.cg-recordings-page .breadcrumb a { color: var(--section-accent); }
+        body.cg-page.cg-recordings-page .breadcrumb a:hover { color: var(--cg-cream); }
+        body.cg-page.cg-recordings-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.cg-page.cg-recordings-page .breadcrumb .current { color: var(--section-accent); }
+        body.cg-page.cg-recordings-page .place-label { color: var(--section-accent); }
+        body.cg-page.cg-recordings-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(96,120,80,0.45); }
+        body.cg-page.cg-recordings-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.cg-page.cg-recordings-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.PLACE_CONFIG = {
         id:        'c6c69d44-8408-4a0a-9dbf-8b3ee903bc5f',
@@ -20,7 +30,7 @@
         siblings:  ['personnel', 'recordings', 'works'],
         depth:     '../../../',
     };
-        window.PLACE_CONFIG.accent = 'cyan';
+        window.PLACE_CONFIG.accent = 'cg-nature';
     </script>
 </head>
 <body class="cg-page cg-recordings-page">
@@ -49,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (nav && !nav.querySelector('a[href="about.html"]')) {
         var aboutLink = document.createElement('a');
         aboutLink.href = 'about.html';
-        aboutLink.className = 'nav-card c-sage';
+        aboutLink.className = 'nav-card c-about';
         aboutLink.textContent = 'about';
         nav.insertBefore(aboutLink, nav.children[1]);
     }

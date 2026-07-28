@@ -10,7 +10,17 @@
     <link rel="stylesheet" href="fm-shared.css">
     <link rel="stylesheet" href="fm-about.css">
     <link rel="stylesheet" href="../../../templates/artist-recordings.css">
-    <style>:root { --section-accent: var(--fm-sky); }</style>
+    <style>
+        :root { --section-accent: var(--fm-sky); }
+        body.fm-page.fm-recordings-page .breadcrumb a { color: var(--section-accent); }
+        body.fm-page.fm-recordings-page .breadcrumb a:hover { color: var(--fm-cream); }
+        body.fm-page.fm-recordings-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.fm-page.fm-recordings-page .breadcrumb .current { color: var(--section-accent); }
+        body.fm-page.fm-recordings-page .place-label { color: var(--section-accent); }
+        body.fm-page.fm-recordings-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(96,128,232,0.45); }
+        body.fm-page.fm-recordings-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.fm-page.fm-recordings-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.PLACE_CONFIG = {
         id:        '362e9df6-ce39-4805-841e-c113e4e2a7c9',
@@ -20,7 +30,7 @@
         siblings:  ['events', 'personnel', 'recordings', 'works'],
         depth:     '../../../',
     };
-        window.PLACE_CONFIG.accent = 'cyan';
+        window.PLACE_CONFIG.accent = 'fm-sky';
     </script>
 </head>
 <body class="fm-page fm-recordings-page">
@@ -49,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (nav && !nav.querySelector('a[href="about.html"]')) {
         var aboutLink = document.createElement('a');
         aboutLink.href = 'about.html';
-        aboutLink.className = 'nav-card c-sage';
+        aboutLink.className = 'nav-card c-about';
         aboutLink.textContent = 'about';
         nav.insertBefore(aboutLink, nav.children[1]);
     }

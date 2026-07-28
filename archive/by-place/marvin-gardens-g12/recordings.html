@@ -9,7 +9,17 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="mg-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-recordings.css">
-    <style>:root { --section-accent: var(--mg-cream); }</style>
+    <style>
+        :root { --section-accent: var(--mg-cream); }
+        body.mg-page.mg-recordings-page .breadcrumb a { color: var(--section-accent); }
+        body.mg-page.mg-recordings-page .breadcrumb a:hover { color: var(--mg-offwhite); }
+        body.mg-page.mg-recordings-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.mg-page.mg-recordings-page .breadcrumb .current { color: var(--section-accent); }
+        body.mg-page.mg-recordings-page .place-label { color: var(--section-accent); }
+        body.mg-page.mg-recordings-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(240,128,160,0.45); }
+        body.mg-page.mg-recordings-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.mg-page.mg-recordings-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.PLACE_CONFIG = {
         id:        'd8a1b49b-3573-4117-ae93-794816c57d4d',
@@ -19,7 +29,7 @@
         siblings:  ['personnel', 'recordings', 'works'],
         depth:     '../../../',
     };
-        window.PLACE_CONFIG.accent = 'cyan';
+        window.PLACE_CONFIG.accent = 'mg-cream';
     </script>
 </head>
 <body class="mg-page mg-recordings-page">
@@ -48,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (nav.children.length > 1) {
         var aboutLink = document.createElement('a');
         aboutLink.href = 'about.html';
-        aboutLink.className = 'nav-card c-sage';
+        aboutLink.className = 'nav-card c-about';
         aboutLink.textContent = 'about';
         nav.insertBefore(aboutLink, nav.children[1]);
     }

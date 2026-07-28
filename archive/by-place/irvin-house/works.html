@@ -9,7 +9,17 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="ih-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-works.css">
-    <style>:root { --section-accent: var(--ih-cta); }</style>
+    <style>
+        :root { --section-accent: var(--ih-cta); }
+        body.ih-page.ih-works-page .breadcrumb a { color: var(--section-accent); }
+        body.ih-page.ih-works-page .breadcrumb a:hover { color: var(--ih-cream); }
+        body.ih-page.ih-works-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.ih-page.ih-works-page .breadcrumb .current { color: var(--section-accent); }
+        body.ih-page.ih-works-page .place-label { color: var(--section-accent); }
+        body.ih-page.ih-works-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(168,104,72,0.45); }
+        body.ih-page.ih-works-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.ih-page.ih-works-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.PLACE_CONFIG = {
         id:        '26cbb244-48c7-49e5-863c-5dde5388dde1',
@@ -19,7 +29,7 @@
         siblings:  ['personnel', 'recordings', 'works', 'about'],
         depth:     '../../../',
     };
-        window.PLACE_CONFIG.accent = 'yellow';
+        window.PLACE_CONFIG.accent = 'ih-cta';
     </script>
 </head>
 <body class="ih-page ih-works-page">
