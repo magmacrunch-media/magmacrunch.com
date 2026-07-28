@@ -2,6 +2,8 @@
 
 How to add custom color schemes to archive pages (by-artist, by-place, by-contributor). For reference implementations, study the actual files — not this doc in isolation.
 
+**For detailed theming documentation, see [Archive Theming](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Archive-Theming) on the GitHub wiki.**
+
 ---
 
 ## Reference Implementations
