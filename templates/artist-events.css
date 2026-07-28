@@ -8,7 +8,7 @@
 
 /* Sub-page layout — overrides archive.css hero-page defaults */
 main { padding: 72px 20px 60px; }
-main .breadcrumb { position: relative; z-index: 10; margin-top: -8px; margin-bottom: 16px; align-self: flex-start; }
+main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 .catalog-wrap { width: 100%; max-width: 960px; animation: fadeUp 0.5s 0.1s ease both; }
 #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--white); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
