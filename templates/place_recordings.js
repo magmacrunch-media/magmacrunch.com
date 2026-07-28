@@ -67,6 +67,14 @@
         slate:   '136,153,170',
         blue:    '70,120,255',
         magenta: '255,45,120',
+        'mh-brand':    '104,120,160',
+        'fm-sky':      '96,128,232',
+        'ih-accent':   '128,184,200',
+        'mg-cream':    '240,128,160',
+        'gs-accent':   '192,120,56',
+        'cg-nature':   '96,120,80',
+        'tc-amber':    '184,120,40',
+        'tm-accent':   '192,120,72',
     };
     const accentRgb = ACCENT_RGB[accent] || '0,245,255';
     const accentVar = `var(--${accent})`;

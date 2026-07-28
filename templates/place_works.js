@@ -60,6 +60,14 @@
         slate:   '136,153,170',
         blue:    '70,120,255',
         magenta: '255,45,120',
+        'mh-gold':     '212,160,96',
+        'fm-amber':    '232,160,64',
+        'ih-cta':      '168,104,72',
+        'mg-heading':  '232,192,96',
+        'gs-green':    '96,120,80',
+        'cg-cta':      '192,120,56',
+        'tc-bright':   '232,200,112',
+        'tm-warm':     '212,184,112',
     };
     const accentRgb = ACCENT_RGB[accent] || '255,224,58';
     const accentVar = `var(--${accent})`;

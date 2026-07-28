@@ -6,9 +6,20 @@
     <title>Melrose House — personnel — magmacrunch media</title>
     <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
     <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="mh-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-personnel.css">
-    <style>:root { --section-accent: var(--mh-coral); }</style>
+    <style>
+        :root { --section-accent: var(--mh-coral); }
+        body.mh-page.mh-personnel-page .breadcrumb a { color: var(--section-accent); }
+        body.mh-page.mh-personnel-page .breadcrumb a:hover { color: var(--mh-cream); }
+        body.mh-page.mh-personnel-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.mh-page.mh-personnel-page .breadcrumb .current { color: var(--section-accent); }
+        body.mh-page.mh-personnel-page .place-label { color: var(--section-accent); }
+        body.mh-page.mh-personnel-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(200,120,120,0.45); }
+        body.mh-page.mh-personnel-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.mh-page.mh-personnel-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.PLACE_CONFIG = {
         id:        'f30be60e-94b4-465a-8e75-8cbdefaffbc8',
@@ -18,7 +29,7 @@
         siblings:  ['about', 'personnel', 'recordings', 'works'],
         depth:     '../../../',
     };
-    window.PLACE_CONFIG.accent = 'blue';
+    window.PLACE_CONFIG.accent = 'mh-coral';
     </script>
 </head>
 <body class="mh-page mh-personnel-page">
