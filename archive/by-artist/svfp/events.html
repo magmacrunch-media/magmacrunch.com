@@ -10,13 +10,23 @@
     <link rel="stylesheet" href="svfp-shared.css">
     <link rel="stylesheet" href="svfp-events.css">
     <link rel="stylesheet" href="../../../templates/artist-events.css">
-    <style>:root { --section-accent: #c8a0d8; }</style>
+    <style>
+        :root { --section-accent: var(--svfp-lilac); }
+        body.svfp-page.svfp-events-page .breadcrumb a { color: var(--section-accent); }
+        body.svfp-page.svfp-events-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.svfp-page.svfp-events-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.svfp-page.svfp-events-page .breadcrumb .current { color: var(--section-accent); }
+        body.svfp-page.svfp-events-page .artist-label { color: var(--section-accent); }
+        body.svfp-page.svfp-events-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(200,160,216,0.45); }
+        body.svfp-page.svfp-events-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.svfp-page.svfp-events-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '260e4953-a937-4355-8389-d1baaf24eca5',
         name:      'sex van floor plan',
         abbr:      'SVFP',
-        accent:    'purple',
+        accent:    'svfp-lilac',
         backColor: 'c-purple',
         siblings:  ['documentary', 'events', 'releases', 'recordings', 'works'],
         depth:     '../../../',

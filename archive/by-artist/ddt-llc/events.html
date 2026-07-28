@@ -9,13 +9,23 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="ddt-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-events.css">
-    <style>:root { --section-accent: var(--ddt-gold); }</style>
+    <style>
+        :root { --section-accent: var(--ddt-gold); }
+        body.ddt-page.ddt-events-page .breadcrumb a { color: var(--section-accent); }
+        body.ddt-page.ddt-events-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.ddt-page.ddt-events-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.ddt-page.ddt-events-page .breadcrumb .current { color: var(--section-accent); }
+        body.ddt-page.ddt-events-page .artist-label { color: var(--section-accent); }
+        body.ddt-page.ddt-events-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(240,200,64,0.45); }
+        body.ddt-page.ddt-events-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.ddt-page.ddt-events-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '0335c576-94a4-4adb-a323-6effff5914e0',
         name:      'DDT LLC',
         abbr:      'DDT',
-        accent:    'green',
+        accent:    'ddt-gold',
         backColor: 'c-orange',
         siblings:  ['about', 'events', 'photography', 'releases'],
         depth:     '../../../',

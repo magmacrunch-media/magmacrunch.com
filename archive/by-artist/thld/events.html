@@ -9,13 +9,23 @@
     <link rel="stylesheet" href="../../../assets/archive.css">
     <link rel="stylesheet" href="thld-shared.css">
     <link rel="stylesheet" href="../../../templates/artist-events.css">
-    <style>:root { --section-accent: var(--thld-warm-brown); }</style>
+    <style>
+        :root { --section-accent: var(--thld-warm-brown); }
+        body.thld-page.thld-events-page .breadcrumb a { color: var(--section-accent); }
+        body.thld-page.thld-events-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.thld-page.thld-events-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.thld-page.thld-events-page .breadcrumb .current { color: var(--section-accent); }
+        body.thld-page.thld-events-page .artist-label { color: var(--section-accent); }
+        body.thld-page.thld-events-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(200,140,80,0.45); }
+        body.thld-page.thld-events-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.thld-page.thld-events-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
     <script>
     window.ARTIST_CONFIG = {
         id:        '4d945923-9deb-4cd0-a477-6e1474cb306c',
         name:      "texas hold'em lava dome, et al.",
         abbr:      'THLD',
-        accent:    'green',
+        accent:    'thld-warm-brown',
         backColor: 'c-orange',
         siblings:  ['about', 'events', 'games', 'music-videos', 'photography', 'recordings', 'releases', 'works'],
         depth:     '../../../',
