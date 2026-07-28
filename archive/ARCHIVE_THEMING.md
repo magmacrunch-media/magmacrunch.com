@@ -357,3 +357,72 @@ window.COLLECTIVE_CONFIG = {
 1. Search at https://musicbrainz.org
 2. Navigate to the artist/place page
 3. The UUID is in the URL: `https://musicbrainz.org/artist/260e4953-a937-4355-8389-d1baaf24eca5`
+
+---
+
+## Single-Artist Page Theming (Current Approach)
+
+For single-artist archive pages (recordings, releases, works), the theming is controlled by a single CSS variable: `--section-accent`.
+
+### How It Works
+
+The CSS templates (`templates/artist-*.css`) use `--section-accent` for all themed elements:
+
+```css
+.breadcrumb a { color: var(--section-accent); }
+.artist-label { color: var(--section-accent); }
+.page-title { color: var(--section-accent); }
+.nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+```
+
+### Setting Up a New Artist
+
+1. Define the accent color in `[prefix]-shared.css`:
+   ```css
+   :root { --my-artist-accent: #a8b890; }
+   ```
+
+2. Set `--section-accent` in each page's inline `<style>`:
+   ```html
+   <style>:root { --section-accent: var(--my-artist-accent); }</style>
+   ```
+
+3. Match the config `accent` value:
+   ```js
+   window.ARTIST_CONFIG = {
+       accent: 'my-artist-accent',  // → var(--my-artist-accent)
+   };
+   ```
+
+4. Add RGB values to `ACCENT_RGB` in JS templates for text-shadow:
+   ```js
+   const ACCENT_RGB = { 'my-artist-accent': '168,184,144' };
+   ```
+
+### The Override Pattern
+
+Each page needs high-specificity body-class overrides to ensure `--section-accent` is used:
+
+```html
+<style>
+    :root { --section-accent: var(--my-artist-accent); }
+    body.my-page.my-recordings-page .breadcrumb a { color: var(--section-accent); }
+    body.my-page.my-recordings-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+    body.my-page.my-recordings-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+    body.my-page.my-recordings-page .breadcrumb .current { color: var(--section-accent); }
+    body.my-page.my-recordings-page .artist-label { color: var(--section-accent); }
+    body.my-page.my-recordings-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(168,184,144,0.45); }
+    body.my-page.my-recordings-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+    body.my-page.my-recordings-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+</style>
+```
+
+### Reference: Jon McCoy
+
+| Page | `--section-accent` | Config `accent` |
+|------|-------------------|-----------------|
+| recordings | `var(--jm-muted-rose)` | `jm-muted-rose` |
+| releases | `var(--jm-deep-warm)` | `jm-deep-warm` |
+| works | `var(--jm-deep-sage)` | `jm-deep-sage` |
+
+See [Archive Theming](Archive-Theming) wiki page for full details.
