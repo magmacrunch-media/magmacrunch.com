@@ -115,9 +115,6 @@ const COLOR_MAP = {
     // ── 1. INJECT PAGE-SPECIFIC STYLES ──
     const style = document.createElement('style');
     style.textContent = `
-        main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-
-        .breadcrumb { position: relative; z-index: 10; font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--dim); letter-spacing: 0.1em; margin-top: -8px; margin-bottom: 16px; align-self: flex-start; }
         .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
         .breadcrumb a:hover { color: ${accentVar}; }
         .breadcrumb .sep { margin: 0 8px; color: ${accentVar}; opacity: 0.7; }
@@ -126,11 +123,6 @@ const COLOR_MAP = {
         .page-header { width: 100%; max-width: 960px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
         .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: ${backColorVar}; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
         .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: ${accentVar}; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(${accentRgb},0.45); }
-        .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
-
-        .catalog-wrap { width: 100%; max-width: 960px; animation: fadeUp 0.5s 0.1s ease both; }
-        #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--white); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
-        #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 24px; }
 
         .work-card { border: 1px solid #1e1e2e; background: var(--deep); padding: 18px 20px; margin-bottom: 12px; transition: border-color 0.15s; }
         .work-card:hover { border-color: ${accentVar}; }
