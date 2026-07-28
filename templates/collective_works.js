@@ -89,6 +89,12 @@
         deep:   '122,48,16',
         gold:   '245,200,66',
         sky:    '96,104,120',
+        'green-light':   '128,168,88',
+        'arc-blue-light': '88,152,216',
+        'arc-red':        '168,40,32',
+        'arc-yellow':     '216,208,64',
+        'nature-glow':    '106,154,122',
+        '4b-chart':       '168,216,72',
     };
     const ACCENT_RGB = C.accentRgbMap ? { ...DEFAULT_ACCENT_RGB, ...C.accentRgbMap } : DEFAULT_ACCENT_RGB;
     const accentRgb = ACCENT_RGB[accent] || '255,224,58';
