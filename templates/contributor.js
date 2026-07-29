@@ -676,7 +676,7 @@
         }
 
         /* TMDB attribution */
-        if (_tmdb) {
+        if (_tmdb && !window.__mcPageAborted) {
             var footer = document.querySelector('footer');
             if (footer) {
                 footer.insertAdjacentHTML('beforeend',
@@ -689,8 +689,9 @@
         }
 
         /* MusicBrainz attribution */
-        var footer = document.querySelector('footer');
-        if (footer) {
+        if (!window.__mcPageAborted) {
+          var footer = document.querySelector('footer');
+          if (footer) {
             footer.insertAdjacentHTML('beforeend',
                 '<div class="mb-data-attribution">' +
                     '<img src="' + (config.depth || '../../../') + 'assets/logos/MB_logo.svg" alt="MusicBrainz">' +
@@ -698,6 +699,7 @@
                     'Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" rel="noopener">CC BY-NC-SA 3.0</a>.</p>' +
                 '</div>'
             );
+          }
         }
 
         /* Profile photo */

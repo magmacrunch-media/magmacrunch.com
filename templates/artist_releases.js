@@ -344,6 +344,7 @@ const COLOR_MAP = {
 
 // MusicBrainz attribution
 (function() {
+    if (window.__mcPageAborted) return;
     var footer = document.querySelector('footer');
     if (footer && !footer.querySelector('.mb-data-attribution')) {
         footer.insertAdjacentHTML('beforeend',
