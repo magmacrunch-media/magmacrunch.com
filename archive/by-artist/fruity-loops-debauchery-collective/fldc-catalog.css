@@ -5,6 +5,9 @@ body.fldc-page.fldc-works-page main { flex: 1; display: flex; flex-direction: co
 body.fldc-page.fldc-recordings-page main > *,
 body.fldc-page.fldc-releases-page main > *,
 body.fldc-page.fldc-works-page main > * { background: var(--fldc-bg); }
+body.fldc-page.fldc-recordings-page main .breadcrumb,
+body.fldc-page.fldc-releases-page main .breadcrumb,
+body.fldc-page.fldc-works-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
 body.fldc-page.fldc-recordings-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-blue-light); border-color: var(--fldc-arc-blue-light); }
 body.fldc-page.fldc-recordings-page .nav-card.c-back:hover { background: var(--fldc-arc-blue-light); color: var(--fldc-bg-surface); }

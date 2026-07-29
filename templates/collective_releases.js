@@ -100,9 +100,6 @@
     // ── 1. INJECT PAGE-SPECIFIC STYLES ──
     const style = document.createElement('style');
     style.textContent = `
-        main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-
-        .breadcrumb { position: relative; z-index: 10; font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--dim); letter-spacing: 0.1em; margin-top: -8px; margin-bottom: 16px; align-self: flex-start; }
         .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
         .breadcrumb a:hover { color: ${accentVar}; }
         .breadcrumb .sep { margin: 0 8px; color: ${accentVar}; opacity: 0.7; }

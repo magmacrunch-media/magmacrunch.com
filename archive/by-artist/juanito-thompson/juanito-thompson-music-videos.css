@@ -3,6 +3,7 @@
 
 body.jt-page.jt-music-videos-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.jt-page.jt-music-videos-page main > * { background: var(--jt-bg); }
+body.jt-page.jt-music-videos-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
 body.jt-music-videos-page .breadcrumb { color: var(--jt-pale-warm); }
 body.jt-music-videos-page .breadcrumb a { color: var(--jt-pale-warm); }

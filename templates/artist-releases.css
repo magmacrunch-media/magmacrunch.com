@@ -6,6 +6,10 @@
      :root { --section-accent: var(--jm-cyan); }
    ═══════════════════════════════════════════════ */
 
+/* Sub-page layout — overrides archive.css hero-page defaults */
+main { padding: 72px 20px 60px; }
+main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+
 /* Breadcrumb */
 .breadcrumb { color: var(--dim); }
 .breadcrumb a { color: var(--section-accent); }
