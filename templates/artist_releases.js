@@ -24,6 +24,7 @@
 
 (function () {
     const C = window.ARTIST_CONFIG;
+    const __navIdAtStart = window.__mcNavId;
     if (!C) { console.error('artist_releases.js: window.ARTIST_CONFIG is not defined'); return; }
 
     const d      = C.depth  || '../../../';
@@ -209,7 +210,7 @@ const COLOR_MAP = {
     }
 
     async function fetchWithRetry(url, retries = 4) {
-        if (window.__mcPageAborted) throw new Error('page navigated away');
+        if (window.__mcNavId !== __navIdAtStart) throw new Error('page navigated away');
         for (let i = 0; i < retries; i++) {
             let res;
             try {
@@ -344,7 +345,7 @@ const COLOR_MAP = {
 
 // MusicBrainz attribution
 (function() {
-    if (window.__mcPageAborted) return;
+    if (window.__mcNavId !== __navIdAtStart) return;
     var footer = document.querySelector('footer');
     if (footer && !footer.querySelector('.mb-data-attribution')) {
         footer.insertAdjacentHTML('beforeend',

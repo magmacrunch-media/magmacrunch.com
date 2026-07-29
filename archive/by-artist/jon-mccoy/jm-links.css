@@ -8,6 +8,9 @@ body.jm-page.jm-links-page .breadcrumb a:hover { color: var(--jm-cream); }
 body.jm-page.jm-links-page .breadcrumb .sep { color: var(--jm-periwinkle); opacity: 0.5; }
 body.jm-page.jm-links-page .breadcrumb .current { color: var(--jm-periwinkle); }
 
+body.jm-page.jm-links-page .nav-card.c-back { background: transparent; color: var(--jm-periwinkle); border-color: var(--jm-periwinkle); }
+body.jm-page.jm-links-page .nav-card.c-back:hover { background: var(--jm-periwinkle); color: var(--jm-cream); }
+
 body.jm-page.jm-links-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
 body.jm-page.jm-links-page .artist-label {
     font-family: 'Press Start 2P', monospace;

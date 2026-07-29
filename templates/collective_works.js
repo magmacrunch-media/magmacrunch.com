@@ -28,6 +28,7 @@
 
 (function () {
     const C = window.COLLECTIVE_CONFIG;
+    const __navIdAtStart = window.__mcNavId;
     if (!C || !C.ids?.length) { console.error('collective_works.js: window.COLLECTIVE_CONFIG missing or has no ids'); return; }
 
     const d          = C.depth      || '../../../';
@@ -222,7 +223,7 @@
     const formatAttrs = attrs => attrs?.length ? ` (${attrs.map(esc).join(', ')})` : '';
 
     async function fetchWithRetry(url, retries = 4) {
-        if (window.__mcPageAborted) throw new Error('page navigated away');
+        if (window.__mcNavId !== __navIdAtStart) throw new Error('page navigated away');
         for (let i = 0; i < retries; i++) {
             let res;
             try { res = await fetch(url); }
@@ -426,7 +427,7 @@
 
         // MusicBrainz attribution
         (function() {
-            if (window.__mcPageAborted) return;
+            if (window.__mcNavId !== __navIdAtStart) return;
             var footer = document.querySelector('footer');
             if (footer && !footer.querySelector('.mb-data-attribution')) {
                 footer.insertAdjacentHTML('beforeend',

@@ -20,7 +20,7 @@ body.jm-page.jm-music-videos-page .no-videos { font-family: 'Courier Prime', mon
 body.jm-page.jm-music-videos-page .error-msg { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jm-rose); padding: 32px; text-align: center; opacity: 0.7; }
 
 /* Nav card overrides */
-body.jm-page.jm-music-videos-page .nav-card.c-back { background: transparent; color: var(--jm-sage); border-color: var(--jm-sage); }
-body.jm-page.jm-music-videos-page .nav-card.c-back:hover { background: var(--jm-sage); color: var(--jm-cream); }
+body.jm-page.jm-music-videos-page .nav-card.c-back { background: transparent; color: var(--jm-light-cool); border-color: var(--jm-light-cool); }
+body.jm-page.jm-music-videos-page .nav-card.c-back:hover { background: var(--jm-light-cool); color: var(--jm-cream); }
 
 body.jm-page.jm-music-videos-page .nav-card::after { display: none; }

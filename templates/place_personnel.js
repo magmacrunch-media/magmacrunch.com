@@ -16,6 +16,7 @@
 
 (function () {
     const C = window.PLACE_CONFIG;
+    const __navIdAtStart = window.__mcNavId;
     if (!C) { console.error('place_personnel.js: window.PLACE_CONFIG is not defined'); return; }
 
     const d      = C.depth  || '../../../';
@@ -30,6 +31,7 @@
     }
 
     const COLOR_MAP = {
+        about:      'c-about',
         events:     'c-events',
         recordings: 'c-recordings',
         works:      'c-works',
@@ -159,7 +161,7 @@
     }
 
     async function fetchWithRetry(url, tries = 4) {
-        if (window.__mcPageAborted) throw new Error('page navigated away');
+        if (window.__mcNavId !== __navIdAtStart) throw new Error('page navigated away');
         for (let i = 0; i < tries; i++) {
             try {
                 const res = await fetch(url);
@@ -340,7 +342,7 @@
 
 // MusicBrainz attribution
 (function() {
-    if (window.__mcPageAborted) return;
+    if (window.__mcNavId !== __navIdAtStart) return;
     var footer = document.querySelector('footer');
     if (footer && !footer.querySelector('.mb-data-attribution')) {
         footer.insertAdjacentHTML('beforeend',
