@@ -168,37 +168,8 @@
         }
         .ext-link:hover { background: var(--bbc-sky); color: var(--bbc-surface); }
 
-        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
-
         /* ── FOOTER ── */
         footer { position: absolute; bottom: 0; left: 0; right: 0; border-top: none; z-index: 2; }
-
-        /* ── MB MEMBERS LINK ── */
-        .mb-members {
-            display: inline-flex;
-            align-items: center;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: var(--bbc-mid);
-            border: 1px solid var(--bbc-dark);
-            padding: 6px 12px;
-            letter-spacing: 0.08em;
-            flex-wrap: wrap;
-            gap: 0 4px;
-        }
-        .mb-members .mb-abbr {
-            color: var(--bbc-cream);
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-        .mb-members .mb-abbr:hover { color: var(--bbc-sky-light); }
-        .mb-members:hover { border-color: var(--bbc-sky-light); }
-        .mb-members .mb-sep { color: var(--bbc-dark); margin: 0 2px; }
-
-        /* ── MB LINK ── */
-        .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
-        .mb-link { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--bbc-sky); text-decoration: none; border: 1px solid var(--bbc-sky-dark); padding: 6px 12px; letter-spacing: 0.08em; transition: color 0.15s, border-color 0.15s; display: inline-block; }
-        .mb-link:hover { color: var(--bbc-sky-light); border-color: var(--bbc-sky-light); }
 
         /* ── PHOTO STRIP ── */
         .photo-strip-section {
@@ -238,6 +209,7 @@
 
                 <div class="sub-nav">
                     <a href="about.html"       class="nav-card c-about">about</a>
+                    <a href="links.html"       class="nav-card c-links">links</a>
                     <a href="photography.html" class="nav-card c-photography">photography</a>
                     <a href="recordings.html"  class="nav-card c-recordings">recordings</a>
                     <a href="releases.html"    class="nav-card c-releases">releases</a>
@@ -245,14 +217,7 @@
                 </div>
             </div>
         </div>
-        <div class="mb-link-wrap">
-            <div class="mb-members">
-                <span>▶ view on MusicBrainz —</span>
-                <a href="https://musicbrainz.org/artist/e33d1006-01a5-4266-aade-b7f6c1dff8e3" target="_blank" rel="noopener" class="mb-abbr">BB</a>
-                <span class="mb-sep">·</span>
-                <a href="https://musicbrainz.org/artist/dc2aa366-6f44-48dd-b1f9-a9aa705a6452" target="_blank" rel="noopener" class="mb-abbr">NMSB</a>
-            </div>
-        </div>
+
     </div>
 
 <footer>&copy; 2026 <span>magmacrunch media</span></footer>
