@@ -47,6 +47,10 @@ body.ddt-page .nav-card.c-events:hover { background: transparent; border-color: 
 body.ddt-page .nav-card.c-releases { background: var(--ddt-cta); color: var(--ddt-heading); border-color: var(--ddt-cta); }
 body.ddt-page .nav-card.c-releases:hover { background: transparent; border-color: var(--ddt-cta); color: var(--ddt-offwhite); }
 
+/* c-links: solid tan */
+body.ddt-page .nav-card.c-links { background: var(--ddt-tan); color: var(--ddt-deep); border-color: var(--ddt-tan); }
+body.ddt-page .nav-card.c-links:hover { background: transparent; border-color: var(--ddt-tan); color: var(--ddt-offwhite); }
+
 body.ddt-page .nav-card::after { display: none; }
 
 body.ddt-page footer { color: var(--ddt-mid); }
