@@ -155,27 +155,3 @@ body.asp-page .bio strong {
     color: var(--asp-brick-light);
     font-weight: normal;
 }
-
-body.asp-page .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
-
-/* ── MB MEMBERS LINK ── */
-body.asp-page .mb-members {
-    display: inline-flex;
-    align-items: center;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 6px;
-    color: var(--asp-mid);
-    border: 1px solid var(--asp-dark);
-    padding: 6px 12px;
-    letter-spacing: 0.08em;
-    flex-wrap: wrap;
-    gap: 0 4px;
-}
-body.asp-page .mb-members .mb-abbr {
-    color: var(--asp-cream);
-    text-decoration: none;
-    transition: color 0.15s;
-}
-body.asp-page .mb-members .mb-abbr:hover { color: var(--asp-amber-glow); }
-body.asp-page .mb-members:hover { border-color: var(--asp-amber-glow); }
-body.asp-page .mb-members .mb-sep { color: var(--asp-dark); margin: 0 2px; }
