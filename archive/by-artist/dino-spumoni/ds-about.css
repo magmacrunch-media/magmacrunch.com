@@ -1,6 +1,7 @@
 /* Dino Spumoni — about */
 body.ds-page.ds-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.ds-page.ds-about-page main > * { background: var(--ds-bg); }
+body.ds-page.ds-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
 body.ds-page.ds-about-page .breadcrumb a { color: var(--ds-heading); }
 body.ds-page.ds-about-page .breadcrumb a:hover { color: var(--ds-cta); }

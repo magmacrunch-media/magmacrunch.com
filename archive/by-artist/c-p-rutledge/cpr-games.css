@@ -1,6 +1,7 @@
 /* C.P. Rutledge — games page — accent: green */
 body.cpr-page.cpr-games-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.cpr-page.cpr-games-page main > * { background: var(--cpr-bg); }
+body.cpr-page.cpr-games-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
 body.cpr-page.cpr-games-page .breadcrumb a { color: var(--cpr-green); }
 body.cpr-page.cpr-games-page .breadcrumb a:hover { color: var(--cpr-light-green); }
