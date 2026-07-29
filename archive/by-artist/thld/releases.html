@@ -50,21 +50,6 @@
         <div class="sub-nav" id="sub-nav"></div>
     </div>
 
-    <div class="release-carousel-wrap">
-        <div class="carousel-single-img" id="thldCarouselImg">
-            <button class="carousel-arrow prev" id="thldPrev">◀</button>
-            <button class="carousel-arrow next" id="thldNext">▶</button>
-        </div>
-        <div class="carousel-meta">
-            <span class="carousel-now-title" id="thldNowTitle">—</span>
-            <span class="carousel-now-year"  id="thldNowYear">—</span>
-        </div>
-        <div class="carousel-controls">
-            <div class="carousel-dots" id="thldDots"></div>
-            <button class="carousel-pause" id="thldPause">⏸</button>
-        </div>
-    </div>
-
     <div class="catalog-wrap">
         <div id="status-bar">loading releases…</div>
         <div id="count-bar"></div>
@@ -75,85 +60,5 @@
 <script src="../../../nav.js"></script>
 <script src="../../../templates/entity-map.js"></script>
 <script src="../../../templates/collective_releases.js"></script>
-<script>
-const RELEASES = [
-    { title: "HELLO, WORLD / LOVE, SPACE",        year: "2015", img: "../../../assets/album-art/hello-world-love-space.jpg" },
-    { title: "Its Twenty-Sixteen",                 year: "2016", img: "../../../assets/album-art/its-2016.jpg" },
-    { title: "Pine",                               year: "2016", img: "../../../assets/album-art/pine.jpg" },
-    { title: "Lights",                             year: "2016", img: "../../../assets/album-art/lights.jpg" },
-    { title: "Adenosine",                          year: "2016", img: "../../../assets/album-art/adenosine.jpg" },
-    { title: "Seeing Stars",                       year: "2016", img: "../../../assets/album-art/seeing-stars.jpg" },
-    { title: "TEXAS TOAST MAGMA CRUNCH",           year: "2016", img: "../../../assets/album-art/texas-toast-magma-crunch.jpg" },
-    { title: "THLD432",                            year: "2016", img: "../../../assets/album-art/THLD432.jpg" },
-    { title: "Martial Law in Garrison Oaks",       year: "2018", img: "../../../assets/album-art/martial-law-in-garrison-oaks.jpg" },
-    { title: "Hazardous Metals in Ambient Air",    year: "2018", img: "../../../assets/album-art/hazardous-metals-in-ambient-air.jpg" },
-    { title: "Pompous Fanfare for All Occasions",  year: "2019", img: "../../../assets/album-art/pompous-fanfare-for-all-occasions.jpg" },
-    { title: "THLD432'",                          year: "2020", img: "../../../assets/album-art/THLD432-prime.jpg" },
-];
-
-const imgWrap  = document.getElementById('thldCarouselImg');
-const dotsWrap = document.getElementById('thldDots');
-const nowTitle = document.getElementById('thldNowTitle');
-const nowYear  = document.getElementById('thldNowYear');
-const pauseBtn = document.getElementById('thldPause');
-const prevBtn  = document.getElementById('thldPrev');
-const nextBtn  = document.getElementById('thldNext');
-
-let current = 0, autoTimer = null, paused = false;
-const INTERVAL = 3000;
-const single = RELEASES.length === 1;
-
-const imgs = RELEASES.map((r, i) => {
-    const img = document.createElement('img');
-    img.src = r.img; img.alt = r.title;
-    img.loading = i === 0 ? 'eager' : 'lazy';
-    if (i === 0) img.classList.add('visible');
-    imgWrap.insertBefore(img, imgWrap.querySelector('.carousel-arrow'));
-    return img;
-});
-
-const dots = single ? [] : RELEASES.map((r, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-    dot.setAttribute('aria-label', r.title);
-    dot.addEventListener('click', () => goTo(i, true));
-    dotsWrap.appendChild(dot);
-    return dot;
-});
-
-function goTo(index, userInitiated = false) {
-    imgs[current].classList.remove('visible');
-    dots[current].classList.remove('active');
-    current = ((index % RELEASES.length) + RELEASES.length) % RELEASES.length;
-    imgs[current].classList.add('visible');
-    dots[current].classList.add('active');
-    nowTitle.textContent = RELEASES[current].title;
-    nowYear.textContent  = RELEASES[current].year;
-    if (userInitiated) { clearInterval(autoTimer); if (!paused) startAuto(); }
-}
-
-function startAuto() { autoTimer = setInterval(() => goTo(current + 1), INTERVAL); }
-
-prevBtn.addEventListener('click', () => goTo(current - 1, true));
-nextBtn.addEventListener('click', () => goTo(current + 1, true));
-
-pauseBtn.addEventListener('click', () => {
-    paused = !paused;
-    if (paused) { clearInterval(autoTimer); pauseBtn.textContent = '▶'; }
-    else { startAuto(); pauseBtn.textContent = '⏸'; }
-});
-
-imgWrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
-imgWrap.addEventListener('mouseleave', () => { if (!paused) startAuto(); });
-
-goTo(0);
-startAuto();
-
-if (single) {
-    prevBtn.classList.add('hidden');
-    nextBtn.classList.add('hidden');
-    pauseBtn.classList.add('hidden');
-}
-</script>
 </body>
 </html>
