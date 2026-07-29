@@ -1,101 +1,101 @@
 /* SVFP events — #9d7fe3 lavender */
-body.svfp-events-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.svfp-events-page main > .breadcrumb,
-body.svfp-events-page main > .page-header,
-body.svfp-events-page main > .catalog-wrap { background: var(--svfp-bg); }
-body.svfp-events-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.svfp-page.svfp-events-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.svfp-page.svfp-events-page main > .breadcrumb,
+body.svfp-page.svfp-events-page main > .page-header,
+body.svfp-page.svfp-events-page main > .catalog-wrap { background: var(--svfp-bg); }
+body.svfp-page.svfp-events-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
-body.svfp-events-page .breadcrumb { color: var(--dim); }
-body.svfp-events-page .breadcrumb a { color: #c8a0d8; }
-body.svfp-events-page .breadcrumb a:hover { color: #d946ef; }
-body.svfp-events-page .breadcrumb .sep { color: #c8a0d8; opacity: 0.7; }
-body.svfp-events-page .breadcrumb .current { color: #c8a0d8; }
+body.svfp-page.svfp-events-page .breadcrumb { color: var(--dim); }
+body.svfp-page.svfp-events-page .breadcrumb a { color: #c8a0d8; }
+body.svfp-page.svfp-events-page .breadcrumb a:hover { color: #d946ef; }
+body.svfp-page.svfp-events-page .breadcrumb .sep { color: #c8a0d8; opacity: 0.7; }
+body.svfp-page.svfp-events-page .breadcrumb .current { color: #c8a0d8; }
 
-body.svfp-events-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.svfp-events-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #c8a0d8; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
-body.svfp-events-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #c8a0d8; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(200,160,216,0.5); }
+body.svfp-page.svfp-events-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.svfp-page.svfp-events-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #c8a0d8; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.svfp-page.svfp-events-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #c8a0d8; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(200,160,216,0.5); }
 
-body.svfp-events-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, #9d7fe3, #d946ef, #9d7fe3, transparent); opacity: 0.4; margin-bottom: 40px; }
+body.svfp-page.svfp-events-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, #9d7fe3, #d946ef, #9d7fe3, transparent); opacity: 0.4; margin-bottom: 40px; }
 
-body.svfp-events-page #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--white); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
-body.svfp-events-page #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 24px; }
+body.svfp-page.svfp-events-page #status-bar { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--white); letter-spacing: 0.1em; margin-bottom: 16px; min-height: 18px; }
+body.svfp-page.svfp-events-page #count-bar { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim); letter-spacing: 0.08em; margin-bottom: 24px; }
 
-body.svfp-events-page .event-card { display: flex; gap: 16px; border: 1px solid #1e1e2e; background: var(--deep); padding: 0; margin-bottom: 12px; transition: border-color 0.15s; overflow: hidden; }
-body.svfp-events-page .event-card:hover { border-color: #9d7fe3; }
-body.svfp-events-page .event-card.cancelled { border-color: #2a2a3a; opacity: 0.65; }
+body.svfp-page.svfp-events-page .event-card { display: flex; gap: 16px; border: 1px solid #1e1e2e; background: var(--deep); padding: 0; margin-bottom: 12px; transition: border-color 0.15s; overflow: hidden; }
+body.svfp-page.svfp-events-page .event-card:hover { border-color: #9d7fe3; }
+body.svfp-page.svfp-events-page .event-card.cancelled { border-color: #2a2a3a; opacity: 0.65; }
 
-body.svfp-events-page .event-art { width: 110px; min-width: 110px; height: 110px; background: var(--svfp-bg); border-right: 1px solid #1e1e2e; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-body.svfp-events-page .event-art img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
-body.svfp-events-page .event-art .no-art-msg { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--dim); text-align: center; padding: 8px; line-height: 1.8; }
+body.svfp-page.svfp-events-page .event-art { width: 110px; min-width: 110px; height: 110px; background: var(--svfp-bg); border-right: 1px solid #1e1e2e; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+body.svfp-page.svfp-events-page .event-art img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: pointer; }
+body.svfp-page.svfp-events-page .event-art .no-art-msg { font-family: 'Press Start 2P', monospace; font-size: 5px; color: var(--dim); text-align: center; padding: 8px; line-height: 1.8; }
 
-body.svfp-events-page .event-info { padding: 14px 16px 14px 0; flex: 1; }
-body.svfp-events-page .event-info h3 { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--white); letter-spacing: 0.05em; margin-bottom: 10px; line-height: 1.7; }
-body.svfp-events-page .event-info h3 a { color: #9d7fe3; text-decoration: none; }
-body.svfp-events-page .event-info h3 a:hover { color: #d946ef; }
-body.svfp-events-page .event-type { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--dim); font-style: italic; margin-left: 6px; }
-body.svfp-events-page .cancelled-label { font-family: 'Press Start 2P', monospace; font-size: 5px; color: #e03070; letter-spacing: 0.06em; margin-left: 8px; }
-body.svfp-events-page .event-info p { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--white); opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
-body.svfp-events-page .event-info p strong { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim); letter-spacing: 0.08em; margin-right: 6px; }
-body.svfp-events-page .event-info a { color: #9d7fe3; text-decoration: none; }
-body.svfp-events-page .event-info a:hover { color: #d946ef; }
+body.svfp-page.svfp-events-page .event-info { padding: 14px 16px 14px 0; flex: 1; }
+body.svfp-page.svfp-events-page .event-info h3 { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--white); letter-spacing: 0.05em; margin-bottom: 10px; line-height: 1.7; }
+body.svfp-page.svfp-events-page .event-info h3 a { color: #9d7fe3; text-decoration: none; }
+body.svfp-page.svfp-events-page .event-info h3 a:hover { color: #d946ef; }
+body.svfp-page.svfp-events-page .event-type { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--dim); font-style: italic; margin-left: 6px; }
+body.svfp-page.svfp-events-page .cancelled-label { font-family: 'Press Start 2P', monospace; font-size: 5px; color: #e03070; letter-spacing: 0.06em; margin-left: 8px; }
+body.svfp-page.svfp-events-page .event-info p { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--white); opacity: 0.8; margin-bottom: 5px; line-height: 1.5; }
+body.svfp-page.svfp-events-page .event-info p strong { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim); letter-spacing: 0.08em; margin-right: 6px; }
+body.svfp-page.svfp-events-page .event-info a { color: #9d7fe3; text-decoration: none; }
+body.svfp-page.svfp-events-page .event-info a:hover { color: #d946ef; }
 
-body.svfp-events-page .nav-card.c-back { background: transparent; color: #c8a0d8; border-color: #c8a0d8; }
-body.svfp-events-page .nav-card.c-back:hover { background: #c8a0d8; color: #080810; }
+body.svfp-page.svfp-events-page .nav-card.c-back { background: transparent; color: #c8a0d8; border-color: #c8a0d8; }
+body.svfp-page.svfp-events-page .nav-card.c-back:hover { background: #c8a0d8; color: #080810; }
 
-body.svfp-events-page .flyers-wrap { animation: fadeUp 0.5s 0.14s ease both; margin-bottom: 40px; }
-body.svfp-events-page .flyer-carousel { display: flex; flex-direction: column; align-items: center; }
-body.svfp-events-page .flyer-stage {
+body.svfp-page.svfp-events-page .flyers-wrap { animation: fadeUp 0.5s 0.14s ease both; margin-bottom: 40px; }
+body.svfp-page.svfp-events-page .flyer-carousel { display: flex; flex-direction: column; align-items: center; }
+body.svfp-page.svfp-events-page .flyer-stage {
     position: relative; width: 480px; height: 600px;
     background: #0a0a14; border: 1px solid #2a1a3a;
     overflow: hidden;
 }
-body.svfp-events-page .flyer-stage img {
+body.svfp-page.svfp-events-page .flyer-stage img {
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: contain; display: block;
     opacity: 0; transition: opacity 0.35s ease; background: #0a0a14;
 }
-body.svfp-events-page .flyer-stage img.visible { opacity: 1; }
-body.svfp-events-page .flyer-arrow {
+body.svfp-page.svfp-events-page .flyer-stage img.visible { opacity: 1; }
+body.svfp-page.svfp-events-page .flyer-arrow {
     position: absolute; top: 50%; transform: translateY(-50%);
     background: rgba(8,8,18,0.78); border: none; color: var(--dim);
     font-family: 'Press Start 2P', monospace; font-size: 10px;
     padding: 12px 14px; cursor: pointer; z-index: 2; line-height: 1;
     transition: color 0.15s, background 0.15s;
 }
-body.svfp-events-page .flyer-arrow:hover { color: #d946ef; background: rgba(8,8,18,0.97); }
-body.svfp-events-page .flyer-arrow.prev { left: 0; }
-body.svfp-events-page .flyer-arrow.next { right: 0; }
-body.svfp-events-page .flyer-meta { width: 100%; max-width: 640px; margin-top: 12px; padding: 0 2px; }
-body.svfp-events-page .flyer-title {
+body.svfp-page.svfp-events-page .flyer-arrow:hover { color: #d946ef; background: rgba(8,8,18,0.97); }
+body.svfp-page.svfp-events-page .flyer-arrow.prev { left: 0; }
+body.svfp-page.svfp-events-page .flyer-arrow.next { right: 0; }
+body.svfp-page.svfp-events-page .flyer-meta { width: 100%; max-width: 640px; margin-top: 12px; padding: 0 2px; }
+body.svfp-page.svfp-events-page .flyer-title {
     font-family: 'Press Start 2P', monospace; font-size: 7px; color: #a020c8;
     letter-spacing: 0.1em; line-height: 1.8; display: block; margin-bottom: 4px;
 }
-body.svfp-events-page .flyer-date {
+body.svfp-page.svfp-events-page .flyer-date {
     font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim);
     letter-spacing: 0.08em; opacity: 0.6; display: block; margin-bottom: 8px;
 }
-body.svfp-events-page .flyer-tag {
+body.svfp-page.svfp-events-page .flyer-tag {
     font-family: 'Press Start 2P', monospace; font-size: 5px;
     letter-spacing: 0.08em; padding: 2px 7px; display: inline-block; margin-bottom: 8px;
 }
-body.svfp-events-page .flyer-tag.cancelled  { color: #e03070; border: 1px solid #e03070; }
-body.svfp-events-page .flyer-tag.shut-down  { color: #d946ef; border: 1px solid #d946ef; }
-body.svfp-events-page .flyer-controls { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
-body.svfp-events-page .flyer-dots { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
-body.svfp-events-page .flyer-dot {
+body.svfp-page.svfp-events-page .flyer-tag.cancelled  { color: #e03070; border: 1px solid #e03070; }
+body.svfp-page.svfp-events-page .flyer-tag.shut-down  { color: #d946ef; border: 1px solid #d946ef; }
+body.svfp-page.svfp-events-page .flyer-controls { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+body.svfp-page.svfp-events-page .flyer-dots { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; }
+body.svfp-page.svfp-events-page .flyer-dot {
     width: 5px; height: 5px; background: #2a2a3a; border: none;
     cursor: pointer; transition: background 0.2s; padding: 0; flex-shrink: 0;
 }
-body.svfp-events-page .flyer-dot.active       { background: #a020c8; }
-body.svfp-events-page .flyer-dot.is-cancelled.active { background: #e03070; }
-body.svfp-events-page .flyer-dot.is-shut-down.active { background: #d946ef; }
-body.svfp-events-page .flyer-counter {
+body.svfp-page.svfp-events-page .flyer-dot.active       { background: #a020c8; }
+body.svfp-page.svfp-events-page .flyer-dot.is-cancelled.active { background: #e03070; }
+body.svfp-page.svfp-events-page .flyer-dot.is-shut-down.active { background: #d946ef; }
+body.svfp-page.svfp-events-page .flyer-counter {
     font-family: 'Press Start 2P', monospace; font-size: 5px;
     color: var(--dim); letter-spacing: 0.08em; opacity: 0.45; white-space: nowrap;
 }
 @media (max-width: 640px) {
-    body.svfp-events-page .flyer-stage { max-width: 100%; }
-    body.svfp-events-page .flyer-meta  { max-width: 100%; }
+    body.svfp-page.svfp-events-page .flyer-stage { max-width: 100%; }
+    body.svfp-page.svfp-events-page .flyer-meta  { max-width: 100%; }
 }
 
 @media (max-width: 500px) { .event-art { width: 72px; min-width: 72px; height: 72px; } }

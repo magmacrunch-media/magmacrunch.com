@@ -4,19 +4,19 @@ body.svfp-page.svfp-documentary-page main > * { background: var(--svfp-bg); }
 body.svfp-page.svfp-documentary-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
 /* ── BREADCRUMB ── */
-body.svfp-documentary-page .breadcrumb { color: var(--dim); }
-body.svfp-documentary-page .breadcrumb a { color: #e060a0; }
-body.svfp-documentary-page .breadcrumb a:hover { color: #d946ef; }
-body.svfp-documentary-page .breadcrumb .sep { color: #e060a0; opacity: 0.7; }
-body.svfp-documentary-page .breadcrumb .current { color: #e060a0; }
+body.svfp-page.svfp-documentary-page .breadcrumb { color: var(--dim); }
+body.svfp-page.svfp-documentary-page .breadcrumb a { color: #e060a0; }
+body.svfp-page.svfp-documentary-page .breadcrumb a:hover { color: #d946ef; }
+body.svfp-page.svfp-documentary-page .breadcrumb .sep { color: #e060a0; opacity: 0.7; }
+body.svfp-page.svfp-documentary-page .breadcrumb .current { color: #e060a0; }
 
 /* ── PAGE HEADER ── */
-body.svfp-documentary-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.svfp-documentary-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #e060a0; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
-body.svfp-documentary-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #e060a0; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+body.svfp-page.svfp-documentary-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.svfp-page.svfp-documentary-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #e060a0; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.svfp-page.svfp-documentary-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #e060a0; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
 
 /* ── HERO ── */
-body.svfp-documentary-page .doc-hero {
+body.svfp-page.svfp-documentary-page .doc-hero {
     width: 100%; max-width: 960px;
     position: relative;
     min-height: 320px;
@@ -28,19 +28,19 @@ body.svfp-documentary-page .doc-hero {
     border: 1px solid #2a1a3a;
     animation: fadeUp 0.5s 0.05s ease both;
 }
-body.svfp-documentary-page .doc-hero-img {
+body.svfp-page.svfp-documentary-page .doc-hero-img {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
     object-fit: cover;
     object-position: center 30%;
     filter: saturate(0.85) brightness(0.55);
 }
-body.svfp-documentary-page .doc-hero-tint {
+body.svfp-page.svfp-documentary-page .doc-hero-tint {
     position: absolute; inset: 0;
     background: rgba(224, 96, 160, 0.10);
     mix-blend-mode: screen;
 }
-body.svfp-documentary-page .doc-hero-gradient {
+body.svfp-page.svfp-documentary-page .doc-hero-gradient {
     position: absolute; inset: 0;
     background: linear-gradient(
         to bottom,
@@ -49,11 +49,11 @@ body.svfp-documentary-page .doc-hero-gradient {
         rgba(10,10,20,0.88) 100%
     );
 }
-body.svfp-documentary-page .doc-hero-inner {
+body.svfp-page.svfp-documentary-page .doc-hero-inner {
     position: relative; z-index: 1;
     padding: 28px 24px;
 }
-body.svfp-documentary-page .doc-hero-title {
+body.svfp-page.svfp-documentary-page .doc-hero-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(10px, 2vw, 16px);
     color: #f8b0ff;
@@ -62,7 +62,7 @@ body.svfp-documentary-page .doc-hero-title {
     text-shadow: 0 0 20px rgba(224, 96, 160, 0.6), 0 2px 8px rgba(0,0,0,0.9);
     margin-bottom: 8px;
 }
-body.svfp-documentary-page .doc-hero-tagline {
+body.svfp-page.svfp-documentary-page .doc-hero-tagline {
     font-family: 'Courier Prime', monospace;
     font-size: 14px;
     color: var(--svfp-heading);
@@ -71,10 +71,10 @@ body.svfp-documentary-page .doc-hero-tagline {
     opacity: 0.85;
     margin-bottom: 12px;
 }
-body.svfp-documentary-page .doc-hero-badges {
+body.svfp-page.svfp-documentary-page .doc-hero-badges {
     display: flex; flex-wrap: wrap; gap: 8px;
 }
-body.svfp-documentary-page .doc-badge {
+body.svfp-page.svfp-documentary-page .doc-badge {
     font-family: 'Press Start 2P', monospace;
     font-size: 6px;
     letter-spacing: 0.1em;
@@ -85,12 +85,12 @@ body.svfp-documentary-page .doc-badge {
 }
 
 /* ── YOUTUBE EMBED ── */
-body.svfp-documentary-page .video-wrap {
+body.svfp-page.svfp-documentary-page .video-wrap {
     width: 100%; max-width: 960px;
     margin-bottom: 36px;
     animation: fadeUp 0.5s 0.1s ease both;
 }
-body.svfp-documentary-page .video-container {
+body.svfp-page.svfp-documentary-page .video-container {
     position: relative;
     width: 100%;
     padding-bottom: 56.25%;
@@ -99,7 +99,7 @@ body.svfp-documentary-page .video-container {
     border: 1px solid #2a1a3a;
     background: #0a0a14;
 }
-body.svfp-documentary-page .video-container iframe {
+body.svfp-page.svfp-documentary-page .video-container iframe {
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
@@ -107,12 +107,12 @@ body.svfp-documentary-page .video-container iframe {
 }
 
 /* ── DETAIL SECTIONS ── */
-body.svfp-documentary-page .doc-details {
+body.svfp-page.svfp-documentary-page .doc-details {
     width: 100%; max-width: 960px;
     animation: fadeUp 0.5s 0.15s ease both;
     margin-bottom: 36px;
 }
-body.svfp-documentary-page .doc-section-label {
+body.svfp-page.svfp-documentary-page .doc-section-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     color: #e060a0;
@@ -122,7 +122,7 @@ body.svfp-documentary-page .doc-section-label {
     border-bottom: 1px solid #e060a0;
     opacity: 0.9;
 }
-body.svfp-documentary-page .doc-overview {
+body.svfp-page.svfp-documentary-page .doc-overview {
     font-family: 'Courier Prime', monospace;
     font-size: 15px;
     color: var(--svfp-body);
@@ -132,7 +132,7 @@ body.svfp-documentary-page .doc-overview {
 }
 
 /* ── TAGLINE CALLOUT ── */
-body.svfp-documentary-page .doc-tagline-wrap {
+body.svfp-page.svfp-documentary-page .doc-tagline-wrap {
     width: 100%; max-width: 960px;
     margin-bottom: 36px;
     padding: 20px 24px;
@@ -140,7 +140,7 @@ body.svfp-documentary-page .doc-tagline-wrap {
     background: rgba(224, 96, 160, 0.06);
     animation: fadeUp 0.5s 0.18s ease both;
 }
-body.svfp-documentary-page .doc-tagline-text {
+body.svfp-page.svfp-documentary-page .doc-tagline-text {
     font-family: 'Courier Prime', monospace;
     font-size: 16px;
     color: var(--svfp-heading);
@@ -149,24 +149,24 @@ body.svfp-documentary-page .doc-tagline-text {
 }
 
 /* ── CAST ── */
-body.svfp-documentary-page .doc-cast {
+body.svfp-page.svfp-documentary-page .doc-cast {
     width: 100%; max-width: 960px;
     margin-bottom: 36px;
     animation: fadeUp 0.5s 0.2s ease both;
 }
-body.svfp-documentary-page .cast-grid {
+body.svfp-page.svfp-documentary-page .cast-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 12px;
 }
-body.svfp-documentary-page .cast-card {
+body.svfp-page.svfp-documentary-page .cast-card {
     background: var(--svfp-raised);
     border: 1px solid #2a1a3a;
     padding: 16px;
     transition: border-color 0.2s;
 }
-body.svfp-documentary-page .cast-card:hover { border-color: #e060a0; }
-body.svfp-documentary-page .cast-name {
+body.svfp-page.svfp-documentary-page .cast-card:hover { border-color: #e060a0; }
+body.svfp-page.svfp-documentary-page .cast-name {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     color: #e060a0;
@@ -174,15 +174,15 @@ body.svfp-documentary-page .cast-name {
     line-height: 1.6;
     margin-bottom: 6px;
 }
-body.svfp-documentary-page .cast-name a {
+body.svfp-page.svfp-documentary-page .cast-name a {
     color: #e060a0;
     text-decoration: none;
     transition: color 0.15s;
 }
-body.svfp-documentary-page .cast-name a:hover {
+body.svfp-page.svfp-documentary-page .cast-name a:hover {
     color: #f8b0ff;
 }
-body.svfp-documentary-page .cast-role {
+body.svfp-page.svfp-documentary-page .cast-role {
     font-family: 'Courier Prime', monospace;
     font-size: 13px;
     color: var(--dim);
@@ -190,22 +190,22 @@ body.svfp-documentary-page .cast-role {
 }
 
 /* ── INFO TABLE ── */
-body.svfp-documentary-page .doc-info {
+body.svfp-page.svfp-documentary-page .doc-info {
     width: 100%; max-width: 960px;
     margin-bottom: 36px;
     animation: fadeUp 0.5s 0.22s ease both;
 }
-body.svfp-documentary-page .info-grid {
+body.svfp-page.svfp-documentary-page .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 12px;
 }
-body.svfp-documentary-page .info-item {
+body.svfp-page.svfp-documentary-page .info-item {
     background: var(--svfp-raised);
     border: 1px solid #2a1a3a;
     padding: 14px 16px;
 }
-body.svfp-documentary-page .info-label {
+body.svfp-page.svfp-documentary-page .info-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 6px;
     color: var(--dim);
@@ -214,7 +214,7 @@ body.svfp-documentary-page .info-label {
     margin-bottom: 8px;
     opacity: 0.6;
 }
-body.svfp-documentary-page .info-value {
+body.svfp-page.svfp-documentary-page .info-value {
     font-family: 'Courier Prime', monospace;
     font-size: 14px;
     color: var(--svfp-heading);
@@ -222,15 +222,15 @@ body.svfp-documentary-page .info-value {
 }
 
 /* ── KEYWORDS ── */
-body.svfp-documentary-page .doc-keywords {
+body.svfp-page.svfp-documentary-page .doc-keywords {
     width: 100%; max-width: 960px;
     margin-bottom: 36px;
     animation: fadeUp 0.5s 0.25s ease both;
 }
-body.svfp-documentary-page .keyword-list {
+body.svfp-page.svfp-documentary-page .keyword-list {
     display: flex; flex-wrap: wrap; gap: 8px;
 }
-body.svfp-documentary-page .keyword-tag {
+body.svfp-page.svfp-documentary-page .keyword-tag {
     font-family: 'Press Start 2P', monospace;
     font-size: 5.5px;
     color: var(--dim);
@@ -240,15 +240,15 @@ body.svfp-documentary-page .keyword-tag {
     background: transparent;
     transition: color 0.15s, border-color 0.15s;
 }
-body.svfp-documentary-page .keyword-tag:hover { color: #e060a0; border-color: #e060a0; }
+body.svfp-page.svfp-documentary-page .keyword-tag:hover { color: #e060a0; border-color: #e060a0; }
 
 /* ── TMDB LINK ── */
-body.svfp-documentary-page .doc-external {
+body.svfp-page.svfp-documentary-page .doc-external {
     width: 100%; max-width: 960px;
     margin-bottom: 40px;
     animation: fadeUp 0.5s 0.28s ease both;
 }
-body.svfp-documentary-page .tmdb-link {
+body.svfp-page.svfp-documentary-page .tmdb-link {
     display: inline-block;
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
@@ -259,16 +259,16 @@ body.svfp-documentary-page .tmdb-link {
     letter-spacing: 0.08em;
     transition: background 0.2s, color 0.2s;
 }
-body.svfp-documentary-page .tmdb-link:hover { background: #e060a0; color: #0a0a14; }
+body.svfp-page.svfp-documentary-page .tmdb-link:hover { background: #e060a0; color: #0a0a14; }
 
 /* ── NAV CARD OVERRIDES ── */
-body.svfp-documentary-page .nav-card.c-back { background: transparent; color: #e060a0; border-color: #e060a0; }
-body.svfp-documentary-page .nav-card.c-back:hover { background: #e060a0; color: #080810; }
+body.svfp-page.svfp-documentary-page .nav-card.c-back { background: transparent; color: #e060a0; border-color: #e060a0; }
+body.svfp-page.svfp-documentary-page .nav-card.c-back:hover { background: #e060a0; color: #080810; }
 
-body.svfp-documentary-page .nav-card.c-documentary { display: none; }
+body.svfp-page.svfp-documentary-page .nav-card.c-documentary { display: none; }
 
 @media (max-width: 640px) {
-    body.svfp-documentary-page .doc-hero { min-height: 220px; }
-    body.svfp-documentary-page .cast-grid { grid-template-columns: repeat(2, 1fr); }
-    body.svfp-documentary-page .info-grid { grid-template-columns: 1fr; }
+    body.svfp-page.svfp-documentary-page .doc-hero { min-height: 220px; }
+    body.svfp-page.svfp-documentary-page .cast-grid { grid-template-columns: repeat(2, 1fr); }
+    body.svfp-page.svfp-documentary-page .info-grid { grid-template-columns: 1fr; }
 }

@@ -8,9 +8,8 @@ body.vb-page.vb-about-page .breadcrumb a:hover { color: var(--vb-amber); }
 body.vb-page.vb-about-page .breadcrumb .sep { color: var(--vb-deep); opacity: 0.5; }
 body.vb-page.vb-about-page .breadcrumb .current { color: var(--vb-deep); }
 
-body.vb-page.vb-about-page .page-header { position: relative; width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.vb-page.vb-about-page .artist-label,
-body.vb-page.vb-about-page .page-header .artist-label {
+body.vb-page.vb-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.vb-page.vb-about-page .artist-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     color: var(--vb-deep) !important;
@@ -19,8 +18,7 @@ body.vb-page.vb-about-page .page-header .artist-label {
     opacity: 0.9;
 }
 
-body.vb-page.vb-about-page .page-title,
-body.vb-page.vb-about-page .page-header .page-title {
+body.vb-page.vb-about-page .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(12px, 2.5vw, 20px);
     color: var(--vb-deep) !important;
@@ -33,11 +31,11 @@ body.vb-page.vb-about-page .page-header .page-title {
 body.vb-page.vb-about-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.vb-page.vb-about-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--vb-deep), var(--vb-amber), var(--vb-deep), transparent); opacity: 0.4; margin-bottom: 40px; }
 
-body.vb-page.vb-about-page .place-body { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--vb-body); font-size: 16px; line-height: 1.7; }
-body.vb-page.vb-about-page .place-body p { margin-bottom: 1.5em; }
-body.vb-page.vb-about-page .place-body .quote { border-left: 2px solid var(--vb-deep); padding-left: 14px; margin: 24px 0; font-style: italic; color: var(--vb-body); opacity: 0.85; }
-body.vb-page.vb-about-page .place-body a { color: var(--vb-sky); }
-body.vb-page.vb-about-page .place-body a:hover { color: var(--vb-amber); }
+body.vb-page.vb-about-page .bio-section { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--vb-body); font-size: 16px; line-height: 1.7; }
+body.vb-page.vb-about-page .bio-section p { margin-bottom: 1.5em; }
+body.vb-page.vb-about-page .bio-section .quote { border-left: 2px solid var(--vb-deep); padding-left: 14px; margin: 24px 0; font-style: italic; color: var(--vb-body); opacity: 0.85; }
+body.vb-page.vb-about-page .bio-section a { color: var(--vb-sky); }
+body.vb-page.vb-about-page .bio-section a:hover { color: var(--vb-amber); }
 
 body.vb-page.vb-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
 body.vb-page.vb-about-page .ext-link {

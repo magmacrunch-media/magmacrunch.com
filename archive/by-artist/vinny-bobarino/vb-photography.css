@@ -8,9 +8,8 @@ body.vb-page.vb-photography-page .breadcrumb a:hover { color: var(--vb-amber); }
 body.vb-page.vb-photography-page .breadcrumb .sep { color: var(--vb-sky); opacity: 0.5; }
 body.vb-page.vb-photography-page .breadcrumb .current { color: var(--vb-sky); }
 
-body.vb-page.vb-photography-page .page-header { position: relative; width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.vb-page.vb-photography-page .artist-label,
-body.vb-page.vb-photography-page .page-header .artist-label {
+body.vb-page.vb-photography-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.vb-page.vb-photography-page .artist-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     color: var(--vb-sky) !important;
@@ -19,8 +18,7 @@ body.vb-page.vb-photography-page .page-header .artist-label {
     opacity: 0.9;
 }
 
-body.vb-page.vb-photography-page .page-title,
-body.vb-page.vb-photography-page .page-header .page-title {
+body.vb-page.vb-photography-page .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(12px, 2.5vw, 20px);
     color: var(--vb-sky) !important;

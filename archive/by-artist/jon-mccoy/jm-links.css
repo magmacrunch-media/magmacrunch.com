@@ -1,0 +1,49 @@
+/* Jon McCoy — links page — periwinkle accent */
+body.jm-page.jm-links-page main { padding: 72px 20px 60px; }
+body.jm-page.jm-links-page main > * { background: var(--jm-near-black); }
+
+body.jm-page.jm-links-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.jm-page.jm-links-page .breadcrumb a { color: var(--jm-periwinkle); }
+body.jm-page.jm-links-page .breadcrumb a:hover { color: var(--jm-cream); }
+body.jm-page.jm-links-page .breadcrumb .sep { color: var(--jm-periwinkle); opacity: 0.5; }
+body.jm-page.jm-links-page .breadcrumb .current { color: var(--jm-periwinkle); }
+
+body.jm-page.jm-links-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.jm-page.jm-links-page .artist-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jm-periwinkle) !important;
+    letter-spacing: 0.2em;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+body.jm-page.jm-links-page .page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(12px, 2.5vw, 20px);
+    color: var(--jm-periwinkle) !important;
+    letter-spacing: 0.08em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px rgba(144,144,184,0.5) !important;
+}
+
+body.jm-page.jm-links-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--jm-periwinkle), var(--jm-rose), var(--jm-periwinkle), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+body.jm-page.jm-links-page .links-body { max-width: 700px; margin: 0 auto; padding: 0 20px; color: var(--jm-sand); }
+body.jm-page.jm-links-page .links-body .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--jm-periwinkle); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--jm-periwinkle); opacity: 0.9; }
+
+.mb-link-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border: 1px solid var(--jm-deep-cool);
+    text-decoration: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--jm-muted);
+    letter-spacing: 0.08em;
+    transition: border-color 0.15s, color 0.15s;
+}
+.mb-link-card:hover { border-color: var(--jm-periwinkle); color: var(--jm-periwinkle); }

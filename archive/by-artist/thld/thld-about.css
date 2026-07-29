@@ -13,9 +13,9 @@ body.thld-page.thld-about-page .page-header { width: 100%; max-width: 960px; mar
 body.thld-page.thld-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--thld-olive); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
 body.thld-page.thld-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--thld-olive); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(90,120,64,0.5); }
 
-body.thld-page.thld-about-page .place-body { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--thld-text); font-size: 16px; line-height: 1.7; }
-body.thld-page.thld-about-page .place-body p { margin-bottom: 1.5em; }
-body.thld-page.thld-about-page .place-body .quote {
+body.thld-page.thld-about-page .bio-section { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--thld-text); font-size: 16px; line-height: 1.7; }
+body.thld-page.thld-about-page .bio-section p { margin-bottom: 1.5em; }
+body.thld-page.thld-about-page .bio-section .quote {
     border-left: 2px solid var(--thld-highlight);
     padding-left: 14px;
     margin: 24px 0;
@@ -23,8 +23,8 @@ body.thld-page.thld-about-page .place-body .quote {
     color: var(--thld-highlight);
     opacity: 0.85;
 }
-body.thld-page.thld-about-page .place-body a { color: var(--thld-accent); }
-body.thld-page.thld-about-page .place-body a:hover { color: var(--thld-highlight); }
+body.thld-page.thld-about-page .bio-section a { color: var(--thld-accent); }
+body.thld-page.thld-about-page .bio-section a:hover { color: var(--thld-highlight); }
 
 body.thld-page.thld-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
 body.thld-page.thld-about-page .ext-link {

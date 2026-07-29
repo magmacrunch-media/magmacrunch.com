@@ -9,8 +9,7 @@ body.jt-page.jt-photography-page .breadcrumb .sep { color: var(--jt-steel); opac
 body.jt-page.jt-photography-page .breadcrumb .current { color: var(--jt-steel); }
 
 body.jt-page.jt-photography-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.jt-page.jt-photography-page .artist-label,
-body.jt-page.jt-photography-page .page-header .artist-label {
+body.jt-page.jt-photography-page .artist-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     color: var(--jt-steel) !important;
@@ -19,8 +18,7 @@ body.jt-page.jt-photography-page .page-header .artist-label {
     opacity: 0.9;
 }
 
-body.jt-page.jt-photography-page .page-title,
-body.jt-page.jt-photography-page .page-header .page-title {
+body.jt-page.jt-photography-page .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(12px, 2.5vw, 20px);
     color: var(--jt-steel) !important;

@@ -21,13 +21,13 @@ body.thld-page.thld-games-page .divider {
     opacity: 0.4;
 }
 
-body.thld-page.thld-games-page .place-body {
+body.thld-page.thld-games-page .games-intro {
     width: 100%;
     max-width: 960px;
     padding: 0 20px;
     animation: fadeUp 0.5s 0.2s ease both;
 }
-body.thld-page.thld-games-page .place-body p {
+body.thld-page.thld-games-page .games-intro p {
     font-family: 'Courier Prime', monospace;
     font-size: 14px;
     color: var(--thld-text);
