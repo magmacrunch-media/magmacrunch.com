@@ -182,6 +182,7 @@ window.NAV_CONFIG = {
     // color map for sibling nav cards
     const COLOR_MAP = {
         events: 'c-rose',
+        links: 'c-links',
         recordings: 'c-cyan',
         releases: 'c-cyan',
         works: 'c-purple',
