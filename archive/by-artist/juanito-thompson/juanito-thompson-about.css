@@ -1,7 +1,7 @@
 /* Juanito Thompson — about page (deep ember accent) */
 body.jt-page.jt-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.jt-page.jt-about-page main > * { background: var(--jt-bg); }
-body.jt-page.jt-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.jt-page.jt-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.jt-page.jt-about-page .breadcrumb a { color: var(--jt-taupe); }
 body.jt-page.jt-about-page .breadcrumb a:hover { color: var(--jt-main); }

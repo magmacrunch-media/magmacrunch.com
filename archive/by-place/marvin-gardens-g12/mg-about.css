@@ -1,7 +1,7 @@
 /* Marvin Gardens G12 — about (steel blue sage accent) */
 body.mg-page.mg-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
 body.mg-page.mg-about-page main > * { background: var(--mg-near-black); }
-body.mg-page.mg-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.mg-page.mg-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.mg-page.mg-about-page .breadcrumb { color: var(--dim); }
 body.mg-page.mg-about-page .breadcrumb a { color: var(--mg-sage); }

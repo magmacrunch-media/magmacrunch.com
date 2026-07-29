@@ -3,7 +3,7 @@ body.svfp-page.svfp-events-page main { flex: 1; display: flex; flex-direction: c
 body.svfp-page.svfp-events-page main > .breadcrumb,
 body.svfp-page.svfp-events-page main > .page-header,
 body.svfp-page.svfp-events-page main > .catalog-wrap { background: var(--svfp-bg); }
-body.svfp-page.svfp-events-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.svfp-page.svfp-events-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.svfp-page.svfp-events-page .breadcrumb { color: var(--dim); }
 body.svfp-page.svfp-events-page .breadcrumb a { color: #c8a0d8; }

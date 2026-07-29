@@ -2,7 +2,7 @@
 body.jm-page.jm-links-page main { padding: 72px 20px 60px; }
 body.jm-page.jm-links-page main > * { background: var(--jm-near-black); }
 
-body.jm-page.jm-links-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.jm-page.jm-links-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 body.jm-page.jm-links-page .breadcrumb a { color: var(--jm-periwinkle); }
 body.jm-page.jm-links-page .breadcrumb a:hover { color: var(--jm-cream); }
 body.jm-page.jm-links-page .breadcrumb .sep { color: var(--jm-periwinkle); opacity: 0.5; }

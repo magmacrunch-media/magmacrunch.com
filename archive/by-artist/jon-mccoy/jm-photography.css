@@ -1,7 +1,7 @@
 /* Jon McCoy — photography page — dusty plum accent */
 body.jm-page.jm-photography-page main { padding: 72px 20px 60px; }
 
-body.jm-page.jm-photography-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.jm-page.jm-photography-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 body.jm-page.jm-photography-page .breadcrumb { color: var(--dim); }
 body.jm-page.jm-photography-page .breadcrumb a { color: var(--jm-dusty-plum); }
 body.jm-page.jm-photography-page .breadcrumb a:hover { color: var(--jm-cream); }
