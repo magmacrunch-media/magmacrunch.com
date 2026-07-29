@@ -115,6 +115,12 @@ body.bbc-page .nav-card.c-about {
     border-color: var(--bbc-apricot);
 }
 
+body.bbc-page .nav-card.c-links {
+    background: var(--bbc-mauve);
+    color: var(--bbc-cream);
+    border-color: var(--bbc-mauve);
+}
+
 body.bbc-page .nav-card::after { display: none; }
 body.bbc-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
@@ -132,6 +138,7 @@ body.bbc-page .nav-card.c-grey-warm:hover { background: transparent; color: var(
 body.bbc-page .nav-card.c-mauve:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-mauve); }
 body.bbc-page .nav-card.c-works:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-green-light); }
 body.bbc-page .nav-card.c-about:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-apricot); }
+body.bbc-page .nav-card.c-links:hover { background: transparent; color: var(--bbc-highlight); border-color: var(--bbc-mauve); }
 
 body.bbc-page footer { color: var(--bbc-mid); }
 body.bbc-page footer span { color: var(--bbc-sky); }

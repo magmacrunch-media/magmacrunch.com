@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottle Boys Collective — links — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="bbc-shared.css">
+    <style>
+        body.bbc-page.bbc-links-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+        body.bbc-page.bbc-links-page main > * { background: var(--bbc-bg); }
+
+        body.bbc-page.bbc-links-page .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
+        body.bbc-page.bbc-links-page .breadcrumb a { color: var(--bbc-mauve); }
+        body.bbc-page.bbc-links-page .breadcrumb a:hover { color: var(--bbc-sky-light); }
+        body.bbc-page.bbc-links-page .breadcrumb .sep { color: var(--bbc-mauve); opacity: 0.5; }
+        body.bbc-page.bbc-links-page .breadcrumb .current { color: var(--bbc-mauve); }
+
+        body.bbc-page.bbc-links-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+        body.bbc-page.bbc-links-page .artist-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--bbc-mauve) !important;
+            letter-spacing: 0.2em;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        body.bbc-page.bbc-links-page .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(12px, 2.5vw, 20px);
+            color: var(--bbc-mauve) !important;
+            letter-spacing: 0.08em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(160,120,136,0.5) !important;
+        }
+
+        body.bbc-page.bbc-links-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--bbc-mauve), var(--bbc-bridge-cool), var(--bbc-mauve), transparent); margin: 0 0 40px; opacity: 0.4; }
+
+        body.bbc-page.bbc-links-page .links-body { max-width: 700px; margin: 0 auto; padding: 0 20px; color: var(--bbc-cream); }
+        body.bbc-page.bbc-links-page .links-body .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--bbc-mauve); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--bbc-mauve); opacity: 0.9; }
+
+        .mb-links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 600px;
+        }
+        .mb-link-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border: 1px solid var(--bbc-dark);
+            text-decoration: none;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .mb-link-item:hover {
+            border-color: var(--bbc-mauve);
+            background: rgba(160,120,136,0.05);
+        }
+        .mb-link-abbr {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: var(--bbc-mauve);
+            min-width: 40px;
+        }
+        .mb-link-name {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: var(--bbc-cream);
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body class="bbc-page bbc-links-page">
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+    <div class="breadcrumb">
+        <a href="../../../archive/">archive</a>
+        <span class="sep">›</span>
+        <a href="../../../archive/by-artist/">by artist</a>
+        <span class="sep">›</span>
+        <a href="./">bbc</a>
+    </div>
+
+    <div class="page-header">
+        <div class="artist-label">// bottle boys collective //</div>
+        <div class="page-title">LINKS</div>
+        <div class="sub-nav">
+            <a href="./"              class="nav-card c-back">← back</a>
+            <a href="about.html"      class="nav-card c-about">about</a>
+            <a href="photography.html" class="nav-card c-photography">photography</a>
+            <a href="recordings.html" class="nav-card c-recordings">recordings</a>
+            <a href="releases.html"   class="nav-card c-releases">releases</a>
+            <a href="works.html"      class="nav-card c-works">works</a>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="links-body">
+        <div class="section-label">MUSICBRAINZ</div>
+        <div class="mb-links-list">
+            <a href="https://musicbrainz.org/artist/e33d1006-01a5-4266-aade-b7f6c1dff8e3" target="_blank" rel="noopener" class="mb-link-item">
+                <span class="mb-link-abbr">BB</span>
+                <span class="mb-link-name">Bottle Boys</span>
+            </a>
+            <a href="https://musicbrainz.org/artist/dc2aa366-6f44-48dd-b1f9-a9aa705a6452" target="_blank" rel="noopener" class="mb-link-item">
+                <span class="mb-link-abbr">NMSB</span>
+                <span class="mb-link-name">Northern Mountain Saddle Bellies</span>
+            </a>
+        </div>
+    </div>
+</main>
+
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+</body>
+</html>
