@@ -80,6 +80,17 @@ body.asp-page .nav-card.c-works:hover {
     border-color: var(--asp-amber-glow);
 }
 
+body.asp-page .nav-card.c-links {
+    background: var(--asp-ivy-light);
+    color: var(--asp-cream);
+    border-color: var(--asp-ivy-light);
+}
+body.asp-page .nav-card.c-links:hover {
+    background: transparent;
+    color: var(--asp-cream);
+    border-color: var(--asp-ivy-light);
+}
+
 body.asp-page .nav-card::after { display: none; }
 body.asp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
