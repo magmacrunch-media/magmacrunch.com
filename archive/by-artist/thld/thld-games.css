@@ -1,7 +1,7 @@
 /* THLD — games page — accent: apricot */
 body.thld-page.thld-games-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.thld-page.thld-games-page main > * { background: var(--thld-bg); }
-body.thld-page.thld-games-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.thld-page.thld-games-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.thld-page.thld-games-page .breadcrumb a { color: var(--thld-apricot); }
 body.thld-page.thld-games-page .breadcrumb a:hover { color: var(--thld-highlight); }

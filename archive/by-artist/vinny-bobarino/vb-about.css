@@ -1,7 +1,7 @@
 /* Vinny Bobarino — about page (deep red accent) */
 body.vb-page.vb-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.vb-page.vb-about-page main > * { background: var(--vb-near-black); }
-body.vb-page.vb-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.vb-page.vb-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.vb-page.vb-about-page .breadcrumb a { color: var(--vb-deep); }
 body.vb-page.vb-about-page .breadcrumb a:hover { color: var(--vb-amber); }

@@ -1,7 +1,7 @@
 /* Woah. — photography page — accent: blush */
 body.woah-page.woah-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.woah-page.woah-photography-page main > * { background: var(--woah-bg); }
-body.woah-page.woah-photography-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.woah-page.woah-photography-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.woah-page.woah-photography-page .breadcrumb { color: var(--woah-blush); }
 body.woah-page.woah-photography-page .breadcrumb a { color: var(--woah-blush); }

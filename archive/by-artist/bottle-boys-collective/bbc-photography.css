@@ -1,7 +1,7 @@
 /* Bottle Boys Collective — photography page — accent: c-photography */
 body.bbc-page.bbc-photography-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.bbc-page.bbc-photography-page main > * { background: var(--bbc-bg); }
-body.bbc-page.bbc-photography-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.bbc-page.bbc-photography-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
 body.bbc-page.bbc-photography-page .breadcrumb { color: var(--bbc-sea-mist); }
 body.bbc-page.bbc-photography-page .breadcrumb a { color: var(--bbc-sea-mist); }
