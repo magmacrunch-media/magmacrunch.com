@@ -1,7 +1,7 @@
 /* The Four B's — about page — mid accent theme */
-body.fb-page.fb-about-page main { padding-top: 72px; }
+body.fb-page.fb-about-page main { padding: 72px 20px 60px; }
 
-body.fb-page.fb-about-page main .breadcrumb { position: relative; top: auto; left: 20px; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
+body.fb-page.fb-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 body.fb-page.fb-about-page .breadcrumb { color: var(--dim); }
 body.fb-page.fb-about-page .breadcrumb a { color: var(--4b-mid); }
 body.fb-page.fb-about-page .breadcrumb a:hover { color: var(--4b-amber); }

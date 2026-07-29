@@ -8,8 +8,7 @@ body.jt-page.jt-network-page .breadcrumb .sep { color: var(--jt-teal); opacity: 
 body.jt-page.jt-network-page .breadcrumb .current { color: var(--jt-teal); }
 
 body.jt-page.jt-network-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.jt-page.jt-network-page .artist-label,
-body.jt-page.jt-network-page .page-header .artist-label {
+body.jt-page.jt-network-page .artist-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     color: var(--jt-teal) !important;
@@ -17,8 +16,7 @@ body.jt-page.jt-network-page .page-header .artist-label {
     margin-bottom: 8px;
     opacity: 0.8;
 }
-body.jt-page.jt-network-page .page-title,
-body.jt-page.jt-network-page .page-header .page-title {
+body.jt-page.jt-network-page .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(12px, 2.5vw, 20px);
     color: var(--jt-teal) !important;

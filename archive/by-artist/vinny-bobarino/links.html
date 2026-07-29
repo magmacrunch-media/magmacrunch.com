@@ -22,15 +22,15 @@
     <style>
         body.vb-page.vb-links-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
         body.vb-page.vb-links-page main > * { background: var(--vb-near-black); }
+        body.vb-page.vb-links-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
         body.vb-page.vb-links-page .breadcrumb a { color: var(--vb-peach); }
         body.vb-page.vb-links-page .breadcrumb a:hover { color: var(--vb-amber); }
         body.vb-page.vb-links-page .breadcrumb .sep { color: var(--vb-peach); opacity: 0.5; }
         body.vb-page.vb-links-page .breadcrumb .current { color: var(--vb-peach); }
 
-        body.vb-page.vb-links-page .page-header { position: relative; width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-        body.vb-page.vb-links-page .artist-label,
-        body.vb-page.vb-links-page .page-header .artist-label {
+        body.vb-page.vb-links-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+        body.vb-page.vb-links-page .artist-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
             color: var(--vb-peach) !important;
@@ -39,8 +39,7 @@
             opacity: 0.9;
         }
 
-        body.vb-page.vb-links-page .page-title,
-        body.vb-page.vb-links-page .page-header .page-title {
+        body.vb-page.vb-links-page .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(12px, 2.5vw, 20px);
             color: var(--vb-peach) !important;
@@ -52,8 +51,8 @@
 
         body.vb-page.vb-links-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--vb-peach), var(--vb-amber), var(--vb-peach), transparent); margin: 0 0 40px; opacity: 0.4; }
 
-        body.vb-page.vb-links-page .place-body { max-width: 700px; margin: 0 auto; padding: 0 20px; color: var(--vb-body); }
-        body.vb-page.vb-links-page .place-body .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--vb-peach); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--vb-peach); opacity: 0.9; }
+        body.vb-page.vb-links-page .links-body { max-width: 700px; margin: 0 auto; padding: 0 20px; color: var(--vb-body); }
+        body.vb-page.vb-links-page .links-body .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--vb-peach); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--vb-peach); opacity: 0.9; }
 
         .mb-links-list {
             display: flex;
@@ -116,7 +115,7 @@
 
     <div class="divider"></div>
 
-    <div class="place-body">
+    <div class="links-body">
         <div class="section-label">MUSICBRAINZ</div>
         <div class="mb-links-list">
             <a href="https://musicbrainz.org/artist/f701c2bc-6eb6-4e7b-b950-f0c2426cb91c" target="_blank" rel="noopener" class="mb-link-item">

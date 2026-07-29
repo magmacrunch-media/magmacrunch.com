@@ -1,6 +1,7 @@
 /* Irvin House — about (slate lavender sage accent) */
 body.ih-page.ih-about-page main { flex:1; display:flex; flex-direction:column; align-items:center; padding:72px 20px 60px; }
 body.ih-page.ih-about-page main > * { background: var(--ih-bg); }
+body.ih-page.ih-about-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: -8px 0 16px; align-self: flex-start; }
 
 body.ih-page.ih-about-page .breadcrumb { color: var(--dim); }
 body.ih-page.ih-about-page .breadcrumb a { color: var(--ih-sage); }

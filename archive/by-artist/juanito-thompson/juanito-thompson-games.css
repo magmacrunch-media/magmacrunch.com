@@ -9,8 +9,7 @@ body.jt-page.jt-games-page .breadcrumb .sep { color: var(--jt-green); opacity: 0
 body.jt-page.jt-games-page .breadcrumb .current { color: var(--jt-green); }
 
 body.jt-page.jt-games-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.jt-page.jt-games-page .artist-label,
-body.jt-page.jt-games-page .page-header .artist-label {
+body.jt-page.jt-games-page .artist-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     color: var(--jt-green) !important;
@@ -19,8 +18,7 @@ body.jt-page.jt-games-page .page-header .artist-label {
     opacity: 0.9;
 }
 
-body.jt-page.jt-games-page .page-title,
-body.jt-page.jt-games-page .page-header .page-title {
+body.jt-page.jt-games-page .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(12px, 2.5vw, 20px);
     color: var(--jt-green) !important;
@@ -33,8 +31,8 @@ body.jt-page.jt-games-page .page-header .page-title {
 body.jt-page.jt-games-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.jt-page.jt-games-page .divider { width: 100%; max-width: 900px; height: 1px; background: linear-gradient(90deg, transparent, var(--jt-green), var(--jt-teal), var(--jt-green), transparent); margin: 0 0 40px; opacity: 0.4; }
 
-body.jt-page.jt-games-page .place-body { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; color: var(--jt-body); font-size: 16px; line-height: 1.7; }
-body.jt-page.jt-games-page .place-body p { margin-bottom: 1.5em; }
+body.jt-page.jt-games-page .games-intro { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; color: var(--jt-body); font-size: 16px; line-height: 1.7; }
+body.jt-page.jt-games-page .games-intro p { margin-bottom: 1.5em; }
 
 /* Back button: transparent + page accent */
 body.jt-page.jt-games-page .nav-card.c-back { background: transparent !important; color: var(--jt-green) !important; border-color: var(--jt-green) !important; }

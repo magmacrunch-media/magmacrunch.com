@@ -5,19 +5,19 @@ body.svfp-page.svfp-about-page main .breadcrumb { position: relative; top: auto;
 body.svfp-page.svfp-about-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
 body.svfp-page.svfp-about-page main > * { background: var(--svfp-bg); }
 
-body.svfp-about-page .breadcrumb { color: var(--dim); }
-body.svfp-about-page .breadcrumb a { color: #a020c8; }
-body.svfp-about-page .breadcrumb a:hover { color: #d946ef; }
-body.svfp-about-page .breadcrumb .sep { color: #a020c8; opacity: 0.7; }
-body.svfp-about-page .breadcrumb .current { color: #a020c8; }
+body.svfp-page.svfp-about-page .breadcrumb { color: var(--dim); }
+body.svfp-page.svfp-about-page .breadcrumb a { color: #a020c8; }
+body.svfp-page.svfp-about-page .breadcrumb a:hover { color: #d946ef; }
+body.svfp-page.svfp-about-page .breadcrumb .sep { color: #a020c8; opacity: 0.7; }
+body.svfp-page.svfp-about-page .breadcrumb .current { color: #a020c8; }
 
-body.svfp-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.svfp-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #a020c8; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
-body.svfp-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #a020c8; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
+body.svfp-page.svfp-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.svfp-page.svfp-about-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: #a020c8; letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.svfp-page.svfp-about-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: #a020c8; letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: none; }
 
-body.svfp-about-page .place-body { max-width: 700px; margin: 60px auto; padding: 0 20px; color: #c8b8e8; font-size: 16px; line-height: 1.7; }
-body.svfp-about-page .place-body p { margin-bottom: 1.5em; }
-body.svfp-about-page .place-body p:first-of-type::first-letter {
+body.svfp-page.svfp-about-page .bio-section { max-width: 700px; margin: 60px auto; padding: 0 20px; color: #c8b8e8; font-size: 16px; line-height: 1.7; }
+body.svfp-page.svfp-about-page .bio-section p { margin-bottom: 1.5em; }
+body.svfp-page.svfp-about-page .bio-section p:first-of-type::first-letter {
     font-family: 'Press Start 2P', monospace;
     font-size: 2.2em;
     float: left;
@@ -28,34 +28,34 @@ body.svfp-about-page .place-body p:first-of-type::first-letter {
     text-shadow: 0 0 10px rgba(160, 32, 200, 0.4);
 }
 
-body.svfp-about-page .nav-card.c-back { background: transparent; color: #a020c8; border-color: #a020c8; }
-body.svfp-about-page .nav-card.c-back:hover { background: #a020c8; color: #f5d0ff; }
+body.svfp-page.svfp-about-page .nav-card.c-back { background: transparent; color: #a020c8; border-color: #a020c8; }
+body.svfp-page.svfp-about-page .nav-card.c-back:hover { background: #a020c8; color: #f5d0ff; }
 
-body.svfp-about-page .nav-card::after { display: none; }
-body.svfp-about-page .sub-nav a[href="about.html"] { display: none; }
-body.svfp-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+body.svfp-page.svfp-about-page .nav-card::after { display: none; }
+body.svfp-page.svfp-about-page .sub-nav a[href="about.html"] { display: none; }
+body.svfp-page.svfp-about-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
 /* ── BIO ── */
-body.svfp-about-page .bio-wrap { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; animation: fadeUp 0.5s 0.08s ease both; }
-body.svfp-about-page .bio-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-body.svfp-about-page .bio-link { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim); border: 1px solid #2a2a3a; padding: 5px 12px; text-decoration: none; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; }
-body.svfp-about-page .bio-link:hover { color: var(--svfp-brand); border-color: var(--svfp-brand); }
-body.svfp-about-page .bio-link.stream { color: var(--svfp-accent); border-color: var(--svfp-accent); }
-body.svfp-about-page .bio-link.stream:hover { background: var(--svfp-accent); color: var(--svfp-bg); }
-body.svfp-about-page .floppy-link { font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--svfp-heading); margin-top: 6px; }
-body.svfp-about-page .floppy-link a { color: var(--svfp-brand); text-decoration: none; }
-body.svfp-about-page .floppy-link a:hover { text-decoration: underline; }
+body.svfp-page.svfp-about-page .bio-wrap { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; animation: fadeUp 0.5s 0.08s ease both; }
+body.svfp-page.svfp-about-page .bio-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+body.svfp-page.svfp-about-page .bio-link { display: inline-block; font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim); border: 1px solid #2a2a3a; padding: 5px 12px; text-decoration: none; letter-spacing: 0.06em; transition: color 0.15s, border-color 0.15s; }
+body.svfp-page.svfp-about-page .bio-link:hover { color: var(--svfp-brand); border-color: var(--svfp-brand); }
+body.svfp-page.svfp-about-page .bio-link.stream { color: var(--svfp-accent); border-color: var(--svfp-accent); }
+body.svfp-page.svfp-about-page .bio-link.stream:hover { background: var(--svfp-accent); color: var(--svfp-bg); }
+body.svfp-page.svfp-about-page .floppy-link { font-family: 'Courier Prime', monospace; font-size: 13px; color: var(--svfp-heading); margin-top: 6px; }
+body.svfp-page.svfp-about-page .floppy-link a { color: var(--svfp-brand); text-decoration: none; }
+body.svfp-page.svfp-about-page .floppy-link a:hover { text-decoration: underline; }
 
 /* ── FLYER ── */
-body.svfp-about-page .release-flyer-wrap { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; animation: fadeUp 0.5s 0.10s ease both; }
-body.svfp-about-page .release-flyer-link { display: block; width: 100%; max-width: 480px; margin: 0 auto; border: 1px solid #2a1a3a; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
-body.svfp-about-page .release-flyer-link:hover { border-color: var(--svfp-cta); box-shadow: 0 0 24px rgba(224, 48, 112, 0.28); }
-body.svfp-about-page .release-flyer-link img { width: 100%; display: block; filter: saturate(0.92) brightness(0.96); transition: filter 0.3s ease; }
-body.svfp-about-page .release-flyer-link:hover img { filter: saturate(1.0) brightness(1.0); }
-body.svfp-about-page .release-flyer-caption { margin-top: 10px; text-align: center; }
-body.svfp-about-page .release-flyer-caption span { font-family: 'Press Start 2P', monospace; font-size: 5.5px; color: var(--dim); letter-spacing: 0.1em; opacity: 0.6; }
-body.svfp-about-page .release-flyer-caption a { color: var(--svfp-cta); text-decoration: none; opacity: 0.85; transition: opacity 0.15s; }
-body.svfp-about-page .release-flyer-caption a:hover { opacity: 1; }
+body.svfp-page.svfp-about-page .release-flyer-wrap { max-width: 700px; margin: 0 auto 40px; padding: 0 20px; animation: fadeUp 0.5s 0.10s ease both; }
+body.svfp-page.svfp-about-page .release-flyer-link { display: block; width: 100%; max-width: 480px; margin: 0 auto; border: 1px solid #2a1a3a; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s; }
+body.svfp-page.svfp-about-page .release-flyer-link:hover { border-color: var(--svfp-cta); box-shadow: 0 0 24px rgba(224, 48, 112, 0.28); }
+body.svfp-page.svfp-about-page .release-flyer-link img { width: 100%; display: block; filter: saturate(0.92) brightness(0.96); transition: filter 0.3s ease; }
+body.svfp-page.svfp-about-page .release-flyer-link:hover img { filter: saturate(1.0) brightness(1.0); }
+body.svfp-page.svfp-about-page .release-flyer-caption { margin-top: 10px; text-align: center; }
+body.svfp-page.svfp-about-page .release-flyer-caption span { font-family: 'Press Start 2P', monospace; font-size: 5.5px; color: var(--dim); letter-spacing: 0.1em; opacity: 0.6; }
+body.svfp-page.svfp-about-page .release-flyer-caption a { color: var(--svfp-cta); text-decoration: none; opacity: 0.85; transition: opacity 0.15s; }
+body.svfp-page.svfp-about-page .release-flyer-caption a:hover { opacity: 1; }
 
 /* ── ASCII BANNER ── */
 body.svfp-page.svfp-about-page main .ascii-logo-wrap {
@@ -65,11 +65,11 @@ body.svfp-page.svfp-about-page main .ascii-logo-wrap {
     background: url('../../../assets/photos/svfp/svfp-november2025-motel1.jpg') center 40% / cover no-repeat;
     padding: 28px 20px;
 }
-body.svfp-about-page .ascii-logo-wrap::before { content: ''; position: absolute; inset: 0; background: rgba(8, 8, 18, 0.62); }
-body.svfp-about-page .ascii-logo-link { text-decoration: none; display: block; position: relative; z-index: 1; }
-body.svfp-about-page .ascii-logo {
+body.svfp-page.svfp-about-page .ascii-logo-wrap::before { content: ''; position: absolute; inset: 0; background: rgba(8, 8, 18, 0.62); }
+body.svfp-page.svfp-about-page .ascii-logo-link { text-decoration: none; display: block; position: relative; z-index: 1; }
+body.svfp-page.svfp-about-page .ascii-logo {
     font-family: 'Courier Prime', monospace; font-size: clamp(4px, 0.9vw, 8px); line-height: 1.2;
     color: var(--svfp-cta); text-shadow: 0 0 8px rgba(224, 48, 112, 0.45);
     white-space: pre; display: inline-block; transition: color 0.2s, text-shadow 0.2s;
 }
-body.svfp-about-page .ascii-logo-link:hover .ascii-logo { color: #ffffff; text-shadow: 0 0 14px rgba(224, 48, 112, 0.7); }
+body.svfp-page.svfp-about-page .ascii-logo-link:hover .ascii-logo { color: #ffffff; text-shadow: 0 0 14px rgba(224, 48, 112, 0.7); }

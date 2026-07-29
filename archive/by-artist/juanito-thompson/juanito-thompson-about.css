@@ -9,8 +9,7 @@ body.jt-page.jt-about-page .breadcrumb .sep { color: var(--jt-taupe); opacity: 0
 body.jt-page.jt-about-page .breadcrumb .current { color: var(--jt-taupe); }
 
 body.jt-page.jt-about-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.jt-page.jt-about-page .artist-label,
-body.jt-page.jt-about-page .page-header .artist-label {
+body.jt-page.jt-about-page .artist-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     color: var(--jt-taupe) !important;
@@ -19,8 +18,7 @@ body.jt-page.jt-about-page .page-header .artist-label {
     opacity: 0.9;
 }
 
-body.jt-page.jt-about-page .page-title,
-body.jt-page.jt-about-page .page-header .page-title {
+body.jt-page.jt-about-page .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: clamp(12px, 2.5vw, 20px);
     color: var(--jt-taupe) !important;
@@ -33,10 +31,10 @@ body.jt-page.jt-about-page .page-header .page-title {
 body.jt-page.jt-about-page .sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
 body.jt-page.jt-about-page .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--jt-taupe), var(--jt-amber), var(--jt-taupe), transparent); opacity: 0.4; margin-bottom: 40px; }
 
-body.jt-page.jt-about-page .place-body { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--jt-body); font-size: 16px; line-height: 1.7; }
-body.jt-page.jt-about-page .place-body p { margin-bottom: 1.5em; }
-body.jt-page.jt-about-page .place-body a { color: var(--jt-teal); }
-body.jt-page.jt-about-page .place-body a:hover { color: var(--jt-amber); }
+body.jt-page.jt-about-page .bio-section { max-width: 700px; margin: 60px auto; padding: 0 20px; color: var(--jt-body); font-size: 16px; line-height: 1.7; }
+body.jt-page.jt-about-page .bio-section p { margin-bottom: 1.5em; }
+body.jt-page.jt-about-page .bio-section a { color: var(--jt-teal); }
+body.jt-page.jt-about-page .bio-section a:hover { color: var(--jt-amber); }
 
 body.jt-page.jt-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
 body.jt-page.jt-about-page .ext-link {
