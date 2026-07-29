@@ -570,6 +570,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
     /* ── NAVIGATION ── */
     let navigating = false;
+    // Monotonic token identifying the current page instance. Templates capture
+    // this at load time and compare before mutating shared DOM (e.g. footer
+    // attribution badges) from a slow-finishing async fetch, so stale work from
+    // a page the user has already left can't write into the current page.
+    window.__mcNavId = window.__mcNavId || 0;
 
     async function navigate(url, push) {
         if (navigating) return;
@@ -582,6 +587,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             }
             window.__MB_CACHE = null;
             window.__mcPageAborted = true;
+            window.__mcNavId++;
 
             // Reset scroll lock from lightboxes
             document.body.style.overflow = '';

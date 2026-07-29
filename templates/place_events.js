@@ -16,6 +16,7 @@
 
 (function () {
     const C = window.PLACE_CONFIG;
+    const __navIdAtStart = window.__mcNavId;
     if (!C) { console.error('place_events.js: window.PLACE_CONFIG is not defined'); return; }
 
     const d      = C.depth  || '../../../';
@@ -30,6 +31,7 @@
     }
 
     const COLOR_MAP = {
+        about:      'c-about',
         events:     'c-events',
         recordings: 'c-recordings',
         works:      'c-works',
@@ -157,7 +159,7 @@
     }
 
     async function fetchWithRetry(url, retries = 4) {
-        if (window.__mcPageAborted) throw new Error('page navigated away');
+        if (window.__mcNavId !== __navIdAtStart) throw new Error('page navigated away');
         for (let i = 0; i < retries; i++) {
             let res;
             try { res = await fetch(url); }
@@ -176,7 +178,7 @@
     let posterQueue = Promise.resolve();
     function loadPoster(eventId) {
         posterQueue = posterQueue.then(() => delay(300)).then(() => {
-            if (window.__mcPageAborted) return;
+            if (window.__mcNavId !== __navIdAtStart) return;
             const art = document.getElementById(`art-${eventId}`);
             const row = document.getElementById(`event-${eventId}`);
             if (!art || !row) return;
