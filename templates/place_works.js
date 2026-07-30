@@ -130,7 +130,7 @@
     const subNavEl = document.getElementById('sub-nav');
     if (subNavEl) {
         subNavEl.innerHTML = [
-            `<a href="./" class="nav-card ${C.backColor || 'c-cyan'}">← back</a>`,
+            `<a href="./" class="nav-card c-back">← back</a>`,
             ...(C.siblings || []).filter(s => s !== 'works').map(s =>
                 `<a href="${s}.html" class="nav-card ${COLOR_MAP[s] || 'c-cyan'}">${s}</a>`
             )

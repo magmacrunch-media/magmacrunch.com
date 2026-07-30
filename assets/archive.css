@@ -107,6 +107,13 @@ main .breadcrumb-place .current { color: var(--green); }
     gap: 10px;
     margin-bottom: 36px;
 }
+/* Hero pages: keep this row's height constant regardless of which font
+   is active, so a font-swap reflow can't shift the bottom-anchored
+   hero block (and its title) above it. Scroll instead of wrapping. */
+.artist-hero .artist-header .sub-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
 .subpage-links {
     width: 100%;
     max-width: 700px;
