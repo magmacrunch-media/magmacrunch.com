@@ -339,29 +339,6 @@ window.NAV_CONFIG = {
     }
 })();
 
-/* ── AUTO FONT LOADER ──
-   Injects Google Fonts <link> tags so the browser
-   can fetch them in parallel with style.css (which
-   used to have a render-blocking @import). Fonts
-   swap in when ready via font-display: swap. */
-
-(function () {
-    if (document.querySelector('link[href*="fonts.googleapis.com"][href*="Courier+Prime"]')) return;
-    const preconnect1 = document.createElement('link');
-    preconnect1.rel = 'preconnect';
-    preconnect1.href = 'https://fonts.googleapis.com';
-    document.head.appendChild(preconnect1);
-    const preconnect2 = document.createElement('link');
-    preconnect2.rel = 'preconnect';
-    preconnect2.href = 'https://fonts.gstatic.com';
-    preconnect2.crossOrigin = 'anonymous';
-    document.head.appendChild(preconnect2);
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap';
-    document.head.appendChild(link);
-})();
-
 /* ── ABSOLUTIZE NAV HREFS ──
    Convert all <nav> links to absolute paths so
    they survive pushState URL changes from the SPA
@@ -447,6 +424,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
     function swapCSS(doc, baseURL) {
         const newHrefs = collectHrefs(doc, baseURL);
+        const loadPromises = [];
 
         // Remove old page-specific CSS NOT in new page
         document.querySelectorAll('link[' + SPA + ']').forEach(el => {
@@ -467,6 +445,10 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                     const c = document.createElement('link');
                     c.rel = 'stylesheet';
                     c.href = a;
+                    loadPromises.push(new Promise(resolve => {
+                        c.addEventListener('load', resolve, { once: true });
+                        c.addEventListener('error', resolve, { once: true });
+                    }));
                     document.head.appendChild(c);
                 }
             } else {
@@ -475,6 +457,10 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                     c.rel = 'stylesheet';
                     c.href = a;
                     c.setAttribute(SPA, '');
+                    loadPromises.push(new Promise(resolve => {
+                        c.addEventListener('load', resolve, { once: true });
+                        c.addEventListener('error', resolve, { once: true });
+                    }));
                     document.head.appendChild(c);
                 }
             }
@@ -486,6 +472,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             c.setAttribute(SPA, '');
             document.head.appendChild(c);
         });
+
+        // Resolves once every newly-added stylesheet has loaded (or failed),
+        // so callers can wait for CSS to be ready before swapping in content
+        // that depends on it — avoids a flash of unstyled/mispositioned markup.
+        return Promise.all(loadPromises);
     }
 
     /* ── SCRIPT MANAGEMENT ── */
@@ -597,7 +588,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
             const doc = await fetchDoc(url);
 
-            swapCSS(doc, url);
+            await swapCSS(doc, url);
             document.body.className = doc.body.className;
 
             // Update favicon
