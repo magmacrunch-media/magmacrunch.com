@@ -14,6 +14,18 @@ main {
     position: relative;
 }
 
+/* ── HIDE STUB ELEMENTS UNTIL JS POPULATES THEM ──
+   Some sub-pages ship these empty and fill them in via a
+   template script; hide the empty shell so it doesn't flash
+   visible before content arrives. visibility (not display) so
+   the reserved layout space doesn't shift once populated. ── */
+main .breadcrumb:empty,
+.artist-label:empty,
+.place-label:empty,
+.sub-nav:empty {
+    visibility: hidden;
+}
+
 /* ── BREADCRUMB (matches music/visual index pages — absolute over hero images) ── */
 main .breadcrumb {
     position: absolute;
