@@ -39,6 +39,7 @@
 
     const COLOR_MAP = {
         about:      'c-about',
+        links:      'c-links',
         events:     'c-events',
         recordings: 'c-recordings',
         works:      'c-works',
