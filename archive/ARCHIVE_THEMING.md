@@ -427,4 +427,4 @@ Each page needs high-specificity body-class overrides to ensure `--section-accen
 | releases | `var(--jm-deep-warm)` | `jm-deep-warm` |
 | works | `var(--jm-deep-sage)` | `jm-deep-sage` |
 
-See [Archive Theming](Archive-Theming) wiki page for full details.
+See [Archive Theming](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Archive-Theming) wiki page for full details.
