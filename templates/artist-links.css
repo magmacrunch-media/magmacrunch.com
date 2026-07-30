@@ -1,0 +1,112 @@
+/* ═══════════════════════════════════════════════
+   archive — links page template
+   templates/artist-links.css
+   Shared by both by-artist and by-place pages.
+   ═══════════════════════════════════════════════
+   Set --section-accent in the page's <style> block:
+     :root { --section-accent: var(--fm-brand); }
+   ═══════════════════════════════════════════════ */
+
+/* Main layout */
+main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
+
+/* Breadcrumb */
+.breadcrumb { color: var(--dim); }
+.breadcrumb a { color: var(--section-accent); }
+.breadcrumb a:hover { color: var(--cream, #f0ead8); }
+.breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+.breadcrumb .current { color: var(--section-accent); }
+
+/* Page header */
+.page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+.artist-label, .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--section-accent); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+.page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--section-accent); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,0,0,0.3); }
+.sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+
+/* Back nav-card */
+.nav-card.c-back { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+.nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+.nav-card::after { display: none; }
+
+/* Active nav-card for current page */
+.nav-card.c-links { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+
+/* Divider */
+.divider {
+    width: 100%;
+    max-width: 900px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--section-accent), transparent);
+    margin: 8px 0 40px;
+    opacity: 0.4;
+}
+
+/* Links body */
+.links-body {
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    color: var(--cream, #f0ead8);
+}
+.links-body .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--section-accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--section-accent);
+    opacity: 0.9;
+}
+.links-body .section-label:not(:first-child) { margin-top: 32px; }
+
+/* Single-link card (solo entity, or single-source sections like Bandcamp/Discogs) */
+.mb-link-card {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--section-accent);
+    text-decoration: none;
+    border: 1px solid var(--section-accent);
+    padding: 10px 18px;
+    letter-spacing: 0.08em;
+    transition: background 0.15s, color 0.15s;
+    display: inline-block;
+    margin-bottom: 24px;
+}
+.mb-link-card:hover { background: var(--section-accent); color: var(--black, #080808); }
+
+/* Multi-member link list (collectives) */
+.mb-links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin-bottom: 24px;
+}
+.mb-link-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--surface, #1a0d08);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+}
+.mb-link-item:hover {
+    border-color: var(--section-accent);
+    background: color-mix(in srgb, var(--section-accent) 8%, transparent);
+}
+.mb-link-abbr {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--section-accent);
+    min-width: 40px;
+}
+.mb-link-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--cream, #f0ead8);
+    opacity: 0.9;
+}
