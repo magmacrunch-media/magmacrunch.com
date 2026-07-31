@@ -42,7 +42,7 @@
     const COLOR_MAP = {
         about:       'c-about',
         links:       'c-links',
-        music-videos:'c-events',
+        'music-videos': 'c-events',
         photography: 'c-photography',
         events:      'c-events',
         recordings:  'c-recordings',
