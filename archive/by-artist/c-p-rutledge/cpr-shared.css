@@ -95,6 +95,16 @@ body.cpr-page .nav-card.c-cyan:hover {
     color: var(--cpr-cream);
 }
 
+body.cpr-page .nav-card.c-links {
+    background: var(--cpr-teal);
+    color: var(--cpr-surface);
+    border-color: var(--cpr-teal);
+}
+body.cpr-page .nav-card.c-links:hover {
+    background: var(--cpr-dark-blue);
+    color: var(--cpr-cream);
+}
+
 body.cpr-page .nav-card::after { display: none; }
 
 body.cpr-page .nav-card.c-back {

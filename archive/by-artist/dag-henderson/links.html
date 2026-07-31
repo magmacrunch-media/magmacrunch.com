@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dag henderson — links — magmacrunch media</title>
+    <link rel="icon" type="image/jpeg" href="../../../assets/logo.jpg">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="dh-shared.css">
+    <link rel="stylesheet" href="../../../templates/artist-links.css">
+    <style>
+        :root { --section-accent: var(--dh-tan); }
+        body.dh-page.dh-links-page .breadcrumb a { color: var(--section-accent); }
+        body.dh-page.dh-links-page .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        body.dh-page.dh-links-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.dh-page.dh-links-page .breadcrumb .current { color: var(--section-accent); }
+        body.dh-page.dh-links-page .artist-label { color: var(--section-accent); }
+        body.dh-page.dh-links-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(128,112,96,0.45); }
+        body.dh-page.dh-links-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.dh-page.dh-links-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+    </style>
+    <script>
+    window.ARTIST_CONFIG = {
+        name:      'dag henderson',
+        abbr:      'DH',
+        siblings:  ['about', 'links', 'music-videos', 'photography', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+        links:     [
+            {
+                section: 'MUSICBRAINZ',
+                items: [{ id: '605cc914-2aff-4e2b-9657-524c7009cb18' }]
+            },
+            {
+                section: 'DISCOGS',
+                items: [{ url: 'https://www.discogs.com/artist/13340649-Dag-Henderson', label: '▶ Dag Henderson on Discogs' }]
+            }
+        ]
+    };
+    </script>
+</head>
+<body class="dh-page dh-links-page">
+<nav id="auto-nav" data-depth="../../../"></nav><main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title">LINKS</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="links-body" id="links-body"></div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/artist_links.js"></script>
+</body>
+</html>
