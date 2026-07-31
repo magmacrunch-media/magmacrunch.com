@@ -65,8 +65,8 @@ body.jt-page .sub-nav .nav-card {
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
     letter-spacing: 0.08em;
-    padding: 10px 12px;
-    border: 1px solid;
+    padding: 12px 20px;
+    border: 2px solid;
     text-decoration: none;
 }
 body.jt-page .sub-nav .nav-card::after { display: none; }
