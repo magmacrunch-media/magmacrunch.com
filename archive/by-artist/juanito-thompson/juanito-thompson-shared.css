@@ -114,6 +114,14 @@ body.jt-page .sub-nav .nav-card.c-games:hover { background: inherit !important; 
 body.jt-page .sub-nav .nav-card.c-links { background: var(--jt-purple); color: var(--jt-offwhite); border-color: var(--jt-purple); }
 body.jt-page .sub-nav .nav-card.c-links:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
 
+/* c-events: alias for music-videos (used by artist_links.js template) */
+body.jt-page .sub-nav .nav-card.c-events { background: var(--jt-pale-warm); color: var(--jt-deep); border-color: var(--jt-pale-warm); }
+body.jt-page .sub-nav .nav-card.c-events:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-cyan: fallback for template COLOR_MAP (games/network) */
+body.jt-page .sub-nav .nav-card.c-cyan { background: var(--jt-teal-pale); color: var(--jt-bg); border-color: var(--jt-teal-pale); }
+body.jt-page .sub-nav .nav-card.c-cyan:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
 body.jt-page .nav-card::after { display: none; }
 
 body.jt-page footer { color: var(--jt-mid); }
