@@ -56,6 +56,7 @@
 (function() {
     var strip = document.getElementById('fldcStrip');
     var wrap  = document.getElementById('fldcStripWrap');
+    if (!strip || !wrap) return;
     var isDown = false, startX, scrollLeft;
     strip.addEventListener('mousedown', function(e) { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
     strip.addEventListener('mouseleave', function() { isDown = false; strip.classList.remove('dragging'); });
@@ -71,6 +72,7 @@
     var lbCap   = document.getElementById('fldcLbCap');
     var lbCount = document.getElementById('fldcLbCounter');
     var strip   = document.getElementById('fldcStrip');
+    if (!lb || !lbImg || !lbCap || !lbCount || !strip) return;
     var photos  = Array.from(items).map(function(item) { return { src: item.querySelector('img').src, alt: item.querySelector('img').alt, caption: item.querySelector('.photo-caption').textContent.trim() }; });
     var current = 0;
     function open(index) { current = index; show(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
