@@ -110,6 +110,16 @@ body.dh-page .nav-card.c-events:hover {
     color: var(--dh-white);
 }
 
+body.dh-page .nav-card.c-links {
+    background: var(--dh-tan);
+    color: var(--dh-white);
+    border-color: var(--dh-tan);
+}
+body.dh-page .nav-card.c-links:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
 body.dh-page .nav-card::after { display: none; }
 
 body.dh-page .photo-lightbox { display: none; }

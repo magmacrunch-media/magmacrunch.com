@@ -1,5 +1,6 @@
 /* The Four B's shared color palette — earthy green / harvest theme */
 :root {
+    /* Core */
     --4b-deep:     #1a1408;
     --4b-mid:      #8a7a58;
     --4b-heading:  #e8ddb0;
@@ -14,6 +15,35 @@
     --4b-bg:       #0c0a04;
     --4b-dust:     #7a6040;
     --4b-ember:    #e85838;
+
+    /* Deeper greens */
+    --4b-forest:   #1a4020;
+    --4b-moss:     #3a5830;
+    --4b-sage:     #7a9860;
+    --4b-fern:     #90b870;
+
+    /* Warm neutrals */
+    --4b-bark:     #4a3820;
+    --4b-sand:     #c8b888;
+    --4b-parchment:#e0d8c0;
+    --4b-cream:    #f8f4e8;
+
+    /* Warm / fire */
+    --4b-coal:     #2a1e10;
+    --4b-clay:     #a03820;
+    --4b-ochre:    #c88820;
+    --4b-gold:     #d4a820;
+    --4b-straw:    #e8d078;
+
+    /* Sky / water */
+    --4b-navy:     #0e2e58;
+    --4b-steel:    #3a6888;
+    --4b-mist:     #a0b8cc;
+    --4b-fog:      #c8d8e0;
+
+    /* UI chrome */
+    --4b-iron:     #3a3428;
+    --4b-stone:    #6a6050;
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -57,6 +87,10 @@ body.fb-page .sub-nav .nav-card.c-releases:hover { background: transparent; bord
 /* Works button: golden amber */
 body.fb-page .sub-nav .nav-card.c-works { background: var(--4b-amber); color: var(--4b-deep); border-color: var(--4b-amber); }
 body.fb-page .sub-nav .nav-card.c-works:hover { background: transparent; border-color: var(--4b-amber); color: var(--4b-offwhite); }
+
+/* Links button: steel blue */
+body.fb-page .sub-nav .nav-card.c-links { background: var(--4b-steel); color: var(--4b-heading); border-color: var(--4b-steel); }
+body.fb-page .sub-nav .nav-card.c-links:hover { background: transparent; border-color: var(--4b-steel); color: var(--4b-offwhite); }
 
 body.fb-page .nav-card::after { display: none; }
 
