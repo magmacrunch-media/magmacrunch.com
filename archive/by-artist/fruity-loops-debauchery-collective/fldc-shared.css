@@ -125,6 +125,18 @@ body.fldc-page .nav-card.c-works:hover {
     color: var(--fldc-bg-screen-pale);
 }
 
+/* c-links: arc green (links button) */
+body.fldc-page .nav-card.c-links {
+    background: var(--fldc-arc-green);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-green);
+}
+body.fldc-page .nav-card.c-links:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-green);
+    color: var(--fldc-bg-screen-pale);
+}
+
 body.fldc-page .nav-card::after { display: none; }
 body.fldc-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
