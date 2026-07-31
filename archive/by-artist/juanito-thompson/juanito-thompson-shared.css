@@ -19,6 +19,43 @@
     --jt-taupe:         #8a7060;
     --jt-offwhite:      #f8f0e4;
     --jt-green:         #39ff84;
+
+    /* Text hierarchy */
+    --jt-text-dim:      #a0a8b0;
+    --jt-text-muted:    #707880;
+    --jt-text-faint:    #505860;
+
+    /* Rust/fire extended */
+    --jt-lava:          #e86828;
+    --jt-blaze:         #ff7a30;
+    --jt-hot:           #ff9a50;
+    --jt-ember:         #3a1005;
+
+    /* Amber/gold extended */
+    --jt-honey:         #d4780a;
+    --jt-brass:         #c8a030;
+    --jt-pale-gold:     #f8e090;
+
+    /* Teal extended */
+    --jt-teal-deep:     #0d4a38;
+    --jt-teal-mid:      #1f8868;
+    --jt-teal-pale:     #60b898;
+    --jt-teal-mist:     #a0d8c8;
+
+    /* Cool surface variants */
+    --jt-surface-cool:  #1a1c24;
+    --jt-raised-cool:   #262a34;
+    --jt-border-bright: #606878;
+
+    /* Neon green extended */
+    --jt-green-dim:     #20a858;
+    --jt-green-deep:    #0a5030;
+    --jt-green-glow:    #80ffb0;
+
+    /* Accents */
+    --jt-red:           #e03020;
+    --jt-blue-steel:    #4a6888;
+    --jt-purple:        #6a4888;
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -72,6 +109,10 @@ body.jt-page .sub-nav .nav-card.c-works:hover { background: inherit !important; 
 /* c-games: solid green (games) */
 body.jt-page .sub-nav .nav-card.c-games { background: var(--jt-green); color: var(--jt-bg); border-color: var(--jt-green); }
 body.jt-page .sub-nav .nav-card.c-games:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
+
+/* c-links: solid purple (links button) */
+body.jt-page .sub-nav .nav-card.c-links { background: var(--jt-purple); color: var(--jt-offwhite); border-color: var(--jt-purple); }
+body.jt-page .sub-nav .nav-card.c-links:hover { background: inherit !important; color: var(--jt-offwhite) !important; box-shadow: none !important; }
 
 body.jt-page .nav-card::after { display: none; }
 
