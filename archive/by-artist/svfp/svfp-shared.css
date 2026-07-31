@@ -71,6 +71,9 @@ body.svfp-page .nav-card.c-documentary:hover { background: transparent !importan
 body.svfp-page .nav-card.c-links { background: var(--svfp-teal-bright); color: var(--svfp-bg); border-color: var(--svfp-teal-bright); }
 body.svfp-page .nav-card.c-links:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
 
+/* Row break for two-row subnav layouts */
+body.svfp-page .sub-nav .row-break { flex-basis: 100%; height: 0; margin: -10px 0; }
+
 body.svfp-page .nav-card::after { display: none; }
 body.svfp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
