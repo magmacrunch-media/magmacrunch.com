@@ -41,8 +41,10 @@
 
     const COLOR_MAP = {
         about:       'c-about',
+        games:       'c-games',
         links:       'c-links',
         'music-videos': 'c-events',
+        network:     'c-network',
         photography: 'c-photography',
         events:      'c-events',
         recordings:  'c-recordings',
