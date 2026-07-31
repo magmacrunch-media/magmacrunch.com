@@ -20,6 +20,7 @@
     --svfp-cool-dark: #2850a0;   /* Cool dark — Deep cool blue */
     --svfp-sky:       #60a0e0;   /* Cool bright — Bright sky blue */
     --svfp-teal:      #1a6060;   /* Dark teal — Deep teal */
+    --svfp-teal-bright: #30b0b0; /* Bright teal — Links button */
     --svfp-ice:       #a8c8f0;   /* Light cool — Ice blue */
     /* ── warm ── */
     --svfp-warm:      #e87040;   /* Warm outlier — Warm amber */
@@ -65,6 +66,13 @@ body.svfp-page .nav-card.c-works:hover { background: transparent !important; col
 /* c-documentary: rose accent */
 body.svfp-page .nav-card.c-documentary { background: var(--svfp-rose); color: var(--svfp-offwhite); border-color: var(--svfp-rose); }
 body.svfp-page .nav-card.c-documentary:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
+
+/* c-links: bright teal */
+body.svfp-page .nav-card.c-links { background: var(--svfp-teal-bright); color: var(--svfp-bg); border-color: var(--svfp-teal-bright); }
+body.svfp-page .nav-card.c-links:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
+
+/* Row break for two-row subnav layouts */
+body.svfp-page .sub-nav .row-break { flex-basis: 100%; height: 0; }
 
 body.svfp-page .nav-card::after { display: none; }
 body.svfp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

@@ -41,6 +41,7 @@
 
     const COLOR_MAP = {
         about:       'c-about',
+        documentary: 'c-documentary',
         games:       'c-games',
         links:       'c-links',
         'music-videos': 'c-events',
