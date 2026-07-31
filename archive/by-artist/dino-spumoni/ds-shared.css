@@ -69,6 +69,10 @@ body.ds-page .nav-card.c-works:hover { background: transparent; border-color: va
 body.ds-page .nav-card.c-blue { background: var(--ds-brand); color: var(--ds-heading); border-color: var(--ds-brand); }
 body.ds-page .nav-card.c-blue:hover { background: transparent; border-color: var(--ds-brand); color: var(--ds-offwhite); }
 
+/* c-links: solid brick (links button) */
+body.ds-page .nav-card.c-links { background: var(--ds-brick); color: var(--ds-offwhite); border-color: var(--ds-brick); }
+body.ds-page .nav-card.c-links:hover { background: transparent; border-color: var(--ds-brick); color: var(--ds-offwhite); }
+
 body.ds-page .nav-card::after { display: none; }
 
 body.ds-page footer { color: var(--ds-mid); }
