@@ -66,8 +66,6 @@
             flex-direction: column;
         }
 
-
-
         /* ── ARTIST HEADER ── */
         .artist-header {
             width: 100%;
@@ -77,7 +75,7 @@
         .artist-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: var(--cpr-red);
+            color: var(--cpr-bg);
             letter-spacing: 0.2em;
             margin-bottom: 12px;
             opacity: 0.85;
@@ -104,12 +102,12 @@
         .artist-aka {
             font-family: 'Courier Prime', monospace;
             font-size: 13px;
-            color: var(--dim);
+            color: var(--cpr-red);
             letter-spacing: 0.04em;
             margin-bottom: 20px;
             opacity: 0.75;
         }
-        .artist-aka strong { color: var(--cpr-dark-yellow); font-style: normal; }
+        .artist-aka strong { color: var(--cpr-deep); font-style: normal; }
 
 /* ── SUB-NAV CARDS ── */
         body.cpr-page .sub-nav .nav-card.c-deep   { background: var(--cpr-deep); color: var(--cpr-cream); border-color: var(--cpr-deep); }
@@ -201,8 +199,6 @@
 
 <main>
     
-    
-
     <div class="breadcrumb">
         <a href="../../../archive/">archive</a>
         <span class="sep">›</span>
@@ -219,9 +215,8 @@
 
         <div class="hero-inner">
             <div class="artist-header">
-                <div class="artist-label">// by artist //</div>
+                <div class="artist-label">// artist archive //</div>
                 <div class="artist-name">C.P. RUTLEDGE</div>
-                <div class="artist-abbr">[ CPR ]</div>
                 <div class="artist-aka">also performing as <strong>Brother Dynamo</strong></div>
                 <div class="sub-nav">
                     <a href="about.html"        class="nav-card c-about">about</a>
