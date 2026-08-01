@@ -51,14 +51,13 @@ body.gs-page.gs-about-page .place-body a[target="_blank"]:hover { color: var(--g
 body.gs-page.gs-about-page .place-body a[target="_blank"]::after { content: ' ↗'; font-size: 0.8em; opacity: 0.7; }
 
 body.gs-page.gs-about-page .place-body p:first-of-type::first-letter {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5em;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
     float: left;
-    line-height: 0.8;
+    line-height: 0.85;
     margin-right: 8px;
     margin-top: 4px;
     color: var(--gs-sage);
-    font-weight: 900;
     text-shadow: 0 0 10px rgba(136,120,168,0.4);
 }
 
