@@ -84,22 +84,14 @@ window.NAV_CONFIG = {
     autoNav.innerHTML = navHTML;
 })();
 
-/* ── AUTO FAVICON ──
-   Injects favicon from site root using the same
-   depth prefix as nav links. Skips pages that
-   already have a <link rel="icon"> in <head>. */
-
-(function () {
-    if (document.querySelector('link[rel="icon"], link[rel="shortcut icon"]')) return;
-    const nav = document.getElementById('auto-nav');
-    if (!nav) return;
-    const depth = nav.dataset.depth || '';
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    link.href = depth + 'favicon.ico';
-    link.type = 'image/x-icon';
-    document.head.appendChild(link);
-})();
+/* ── FAVICON ──
+   Every page declares its own <link rel="icon"> pointing at the root
+   favicon.ico. There used to be a JS injector here for pages without one; it
+   was unreachable (it required both a missing icon link AND <nav id="auto-nav">,
+   a combination no page has) and it targeted a favicon.ico that didn't exist.
+   The real file at the site root now covers those pages via the browser's own
+   /favicon.ico fallback, which works without scripting. The SPA router keeps
+   the icon in sync on navigation — see the favicon block in navigate(). */
 
 /* ═══════════════════════════════════════════════
    INTERACTIVE FUNCTIONALITY
@@ -624,17 +616,27 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             const css = swapCSS(doc, url);
             await css.ready;
 
-            // Update favicon
-            const newFavicon = doc.querySelector('link[rel="icon"]');
-            if (newFavicon) {
-                let favicon = document.querySelector('link[rel="icon"]');
-                if (!favicon) {
-                    favicon = document.createElement('link');
-                    favicon.rel = 'icon';
-                    document.head.appendChild(favicon);
-                }
-                favicon.href = newFavicon.href;
-                if (newFavicon.type) favicon.type = newFavicon.type;
+            // Update favicon. Read the raw attribute and resolve it against the
+            // TARGET url: fetchDoc() builds `doc` with DOMParser, and a DOMParser
+            // document inherits the baseURI of the page that created it — the one
+            // we're leaving — so newFavicon.href would resolve against the old
+            // path and 404 on any deep→shallow navigation. Same reason
+            // collectHrefs() and runScripts() go through abs().
+            const newFavicon = doc.querySelector('link[rel="icon"], link[rel="shortcut icon"]');
+            const newFaviconHref = newFavicon && newFavicon.getAttribute('href');
+            if (newFaviconHref) {
+                // Replace rather than mutate: assigning .href on the live element
+                // is unreliable (Safari/Firefox often keep the committed icon).
+                // Removing every match also stops duplicates accumulating when a
+                // page uses rel="shortcut icon".
+                document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"]')
+                    .forEach(el => el.remove());
+                const favicon = document.createElement('link');
+                favicon.rel = 'icon';
+                favicon.href = abs(newFaviconHref, url);
+                const faviconType = newFavicon.getAttribute('type');
+                if (faviconType) favicon.type = faviconType;
+                document.head.appendChild(favicon);
             }
 
             const newMain = doc.querySelector('main');
