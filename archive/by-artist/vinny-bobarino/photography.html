@@ -115,12 +115,23 @@
 
     <div class="divider"></div>
 
-    <!-- BEARS CROSSING -->
+    <!-- HANGOUT — CAMBRIDGE, MA -->
     <div class="photo-strip-section">
-        <div class="section-label">BEARS CROSSING — JANUARY 2010</div>
-        <div class="photo-strip-wrap" id="bcWrap">
-            <div class="photo-strip" id="bcStrip"></div>
-            <div class="strip-scroll-hint" id="bcHint">← drag to scroll →</div>
+        <div class="section-label">HANGOUT — CAMBRIDGE, MA — JANUARY 2010</div>
+        <div class="photo-strip-wrap" id="hangoutWrap">
+            <div class="photo-strip" id="hangoutStrip"></div>
+            <div class="strip-scroll-hint" id="hangoutHint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- RECORDING — CROMWELL, CT -->
+    <div class="photo-strip-section">
+        <div class="section-label">RECORDING — CROMWELL, CT — JANUARY 2010</div>
+        <div class="photo-strip-wrap" id="recordingWrap">
+            <div class="photo-strip" id="recordingStrip"></div>
+            <div class="strip-scroll-hint" id="recordingHint">← drag to scroll →</div>
         </div>
     </div>
 </main>
@@ -241,34 +252,42 @@ const FROGWOOD_MANOR = [
     { src: '../../../assets/photos/frogwood_manor/vinny-bobarino-era/trophys.JPG', alt: 'Vinny Bobarino — trophys', caption: 'trophys', aspect: 'wide' },
 ];
 
-const BEARS_CROSSING = [
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0042.JPG', alt: 'Bears Crossing — IMG 0042', caption: 'IMG 0042', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0069.JPG', alt: 'Bears Crossing — IMG 0069', caption: 'IMG 0069', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0070.JPG', alt: 'Bears Crossing — IMG 0070', caption: 'IMG 0070', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0087.JPG', alt: 'Bears Crossing — IMG 0087', caption: 'IMG 0087', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0093.JPG', alt: 'Bears Crossing — IMG 0093', caption: 'IMG 0093', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0120.JPG', alt: 'Bears Crossing — IMG 0120', caption: 'IMG 0120', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0127.JPG', alt: 'Bears Crossing — IMG 0127', caption: 'IMG 0127', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0128.JPG', alt: 'Bears Crossing — IMG 0128', caption: 'IMG 0128', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0129.JPG', alt: 'Bears Crossing — IMG 0129', caption: 'IMG 0129', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0130.JPG', alt: 'Bears Crossing — IMG 0130', caption: 'IMG 0130', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0131.JPG', alt: 'Bears Crossing — IMG 0131', caption: 'IMG 0131', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0132.JPG', alt: 'Bears Crossing — IMG 0132', caption: 'IMG 0132', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0133.JPG', alt: 'Bears Crossing — IMG 0133', caption: 'IMG 0133', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0151.JPG', alt: 'Bears Crossing — IMG 0151', caption: 'IMG 0151', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0152.JPG', alt: 'Bears Crossing — IMG 0152', caption: 'IMG 0152', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0153.JPG', alt: 'Bears Crossing — IMG 0153', caption: 'IMG 0153', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0154.JPG', alt: 'Bears Crossing — IMG 0154', caption: 'IMG 0154', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0155.JPG', alt: 'Bears Crossing — IMG 0155', caption: 'IMG 0155', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0156.JPG', alt: 'Bears Crossing — IMG 0156', caption: 'IMG 0156', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0157.JPG', alt: 'Bears Crossing — IMG 0157', caption: 'IMG 0157', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0158.JPG', alt: 'Bears Crossing — IMG 0158', caption: 'IMG 0158', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0160.JPG', alt: 'Bears Crossing — IMG 0160', caption: 'IMG 0160', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0161.JPG', alt: 'Bears Crossing — IMG 0161', caption: 'IMG 0161', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0162.JPG', alt: 'Bears Crossing — IMG 0162', caption: 'IMG 0162', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0163.JPG', alt: 'Bears Crossing — IMG 0163', caption: 'IMG 0163', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/IMG_0164.JPG', alt: 'Bears Crossing — IMG 0164', caption: 'IMG 0164', aspect: 'wide' },
-    { src: '../../../assets/photos/vinny-bobarino/bears-crossing/17436_1228487355472_936747_n-mitchell.jpg', alt: 'Bears Crossing — mitchell', caption: 'mitchell', aspect: 'wide' },
+const HANGOUT = [
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/19640_567876668620_17908759_33467685_6519132_n.jpg', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/19640_567876688580_17908759_33467689_3701858_n.jpg', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/19640_567876718520_17908759_33467695_4298477_n.jpg', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/22675_506461002015_108400194_30132073_122328_n.jpg', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0084.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0086.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0087.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0089.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0093.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0115.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0118.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/hangout_2010/IMG_0120.JPG', alt: 'Bears Crossing — hangout — Cambridge, MA', caption: 'Bears Crossing — hangout', aspect: 'wide' },
+];
+
+const RECORDING = [
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0127.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0128.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0129.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0130.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'portrait' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0131.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'portrait' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0132.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'portrait' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0133.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0151.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0152.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0153.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0154.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0155.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0156.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'portrait' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0157.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0158.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0160.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0161.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0162.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0163.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
+    { src: '../../../assets/photos/bears_crossing/recording_2010/IMG_0164.JPG', alt: 'Bears Crossing — recording — Cromwell, CT', caption: 'Bears Crossing — recording', aspect: 'wide' },
 ];
 
 const lb = document.getElementById('vbLightbox');
@@ -343,7 +362,8 @@ initStrip(GUITAR_HERO, 'ghStrip', 'ghWrap', 'ghHint');
 initStrip(SKATEBOARDING, 'skateStrip', 'skateWrap', 'skateHint');
 initStrip(SKY_TREES, 'skyStrip', 'skyWrap', 'skyHint');
 initStrip(FROGWOOD_MANOR, 'fwStrip', 'fwWrap', 'fwHint');
-initStrip(BEARS_CROSSING, 'bcStrip', 'bcWrap', 'bcHint');
+initStrip(HANGOUT, 'hangoutStrip', 'hangoutWrap', 'hangoutHint');
+initStrip(RECORDING, 'recordingStrip', 'recordingWrap', 'recordingHint');
 
 document.getElementById('vbLbClose').addEventListener('click', closeLightbox);
 document.getElementById('vbLbPrev').addEventListener('click', () => navLightbox(-1));
