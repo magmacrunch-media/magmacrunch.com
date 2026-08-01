@@ -5,8 +5,8 @@
     --mg-dark:        #382848;
     --mg-surface:     #4a2830;
     --mg-muted:       #7848a0;
-    --mg-light:       #d880c0;
-    --mg-cream:       #f080a0;
+    --mg-pink:       #d880c0;
+    --mg-rose:       #f080a0;
     --mg-offwhite:    #f8f0f8;
     --mg-near-black:  #0c0a12;
 
@@ -16,15 +16,15 @@
 
     /* ── warm ── */
     --mg-cta:         #c87830;
-    --mg-heading:     #e8c060;
-    --mg-body:        #c8a868;
+    --mg-gold:       #e8c060;
+    --mg-tan:        #c8a868;
 
     /* ── greens ── */
     --mg-green:       #388040;
     --mg-leaf:        #60b858;
 
     /* ── teal ── */
-    --mg-sage:        #60a8c0;
+    --mg-teal-light: #60a8c0;
 
     /* ── text hierarchy ── */
     --mg-text-bright:    #f8f0f8;
@@ -126,17 +126,17 @@ body.mg-page .sub-nav .nav-card {
 body.mg-page .sub-nav .nav-card::after { display: none; }
 body.mg-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
-/* c-about: teal (formerly c-sage) */
-body.mg-page .sub-nav .nav-card.c-about { background: var(--mg-sage); color: var(--mg-deep); border-color: var(--mg-sage); }
-body.mg-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-sage); }
+/* c-about: teal-light (formerly c-sage) */
+body.mg-page .sub-nav .nav-card.c-about { background: var(--mg-teal-light); color: var(--mg-deep); border-color: var(--mg-teal-light); }
+body.mg-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-teal-light); }
 
 /* c-personnel: magenta accent (formerly c-rose) */
 body.mg-page .sub-nav .nav-card.c-personnel { background: var(--mg-accent); color: var(--mg-deep); border-color: var(--mg-accent); }
 body.mg-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-accent); }
 
-/* c-recordings: light pink (formerly c-cyan) */
-body.mg-page .sub-nav .nav-card.c-recordings { background: var(--mg-light); color: var(--mg-deep); border-color: var(--mg-light); }
-body.mg-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-light); }
+/* c-recordings: pink (formerly c-cyan) */
+body.mg-page .sub-nav .nav-card.c-recordings { background: var(--mg-pink); color: var(--mg-deep); border-color: var(--mg-pink); }
+body.mg-page .sub-nav .nav-card.c-recordings:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-pink); }
 
 /* c-works: amber CTA (formerly c-yellow) */
 body.mg-page .sub-nav .nav-card.c-works { background: var(--mg-cta); color: var(--mg-deep); border-color: var(--mg-cta); }
@@ -157,9 +157,9 @@ body.mg-page .sub-nav .nav-card.c-photography:hover { background: transparent; c
 
 /* About button self-link hider */
 body.mg-page .sub-nav a[href="about.html"] {
-    background: var(--mg-sage);
+    background: var(--mg-teal-light);
     color: var(--mg-deep);
-    border-color: var(--mg-sage);
+    border-color: var(--mg-teal-light);
 }
 
 body.mg-page footer { color: var(--mg-muted); }

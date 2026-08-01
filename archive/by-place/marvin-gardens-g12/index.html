@@ -15,7 +15,7 @@
 
         /* ── BREADCRUMB ── */
         body.mg-page .breadcrumb a { color: var(--mg-muted); }
-        body.mg-page .breadcrumb a:hover { color: var(--mg-cream); }
+        body.mg-page .breadcrumb a:hover { color: var(--mg-rose); }
         body.mg-page .breadcrumb .sep { color: var(--mg-muted); opacity: 0.6; }
         body.mg-page .breadcrumb .current { color: var(--mg-muted); }
 
@@ -78,7 +78,7 @@
         .artist-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #e8c060;
+            color: var(--mg-gold);
             letter-spacing: 0.2em;
             margin-bottom: 12px;
             opacity: 0.85;
@@ -87,7 +87,7 @@
         .artist-name {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(14px, 3vw, 24px);
-            color: var(--mg-cream);
+color: var(--mg-rose);
             line-height: 1.6;
             letter-spacing: 0.06em;
             text-shadow:
@@ -100,7 +100,7 @@
         .artist-abbr {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: #e8c060;
+            color: var(--mg-cta);
             letter-spacing: 0.15em;
             margin-top: -8px;
             margin-bottom: 16px;
@@ -109,12 +109,12 @@
 
         /* ── SUB-NAV CARDS — all solid, dark text, no hover bg change ── */
         body.mg-page .sub-nav .nav-card { font-family: 'Press Start 2P', monospace; font-size: 8px; letter-spacing: 0.08em; padding: 10px 16px; border: 2px solid; text-decoration: none; }
-        body.mg-page .sub-nav .nav-card.c-sage   { background: var(--mg-sage); color: #1e1e1e; border-color: var(--mg-sage); }
+        body.mg-page .sub-nav .nav-card.c-sage   { background: var(--mg-teal-light); color: #1e1e1e; border-color: var(--mg-teal-light); }
         body.mg-page .sub-nav .nav-card.c-rose   { background: var(--mg-accent); color: #1e1e1e; border-color: var(--mg-accent); }
-        body.mg-page .sub-nav .nav-card.c-cyan   { background: var(--mg-light); color: #1e1e1e; border-color: var(--mg-light); }
+        body.mg-page .sub-nav .nav-card.c-cyan   { background: var(--mg-pink); color: #1e1e1e; border-color: var(--mg-pink); }
         body.mg-page .sub-nav .nav-card.c-yellow { background: var(--mg-cta); color: #1e1e1e; border-color: var(--mg-cta); }
         body.mg-page .sub-nav .nav-card.c-green  { background: var(--mg-leaf); color: #1e1e1e; border-color: var(--mg-leaf); }
-        body.mg-page .sub-nav .nav-card.c-blue   { background: var(--mg-brand); color: var(--mg-cream); border-color: var(--mg-brand); }
+        body.mg-page .sub-nav .nav-card.c-blue   { background: var(--mg-brand); color: var(--mg-rose); border-color: var(--mg-brand); }
         body.mg-page .sub-nav .nav-card::after { display: none; }
         body.mg-page .sub-nav .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
@@ -173,10 +173,6 @@
             </div>
         </div>
 
-        <div class="mb-link-wrap">
-        <a href="https://musicbrainz.org/place/placeholder"
-           target="_blank" class="mb-link">▶ view on MusicBrainz</a>
-        </div>
     </div>
 
 </main>
