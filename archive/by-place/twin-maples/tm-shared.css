@@ -25,6 +25,9 @@
     --tm-text-faint:     #606858;
     --tm-text-disabled:  #404838;
 
+    /* ── lavender ── */
+    --tm-lavender:       #a890b8;
+
     /* ── dark grounds ── */
     --tm-void:           #040604;
     --tm-near-black:     #080c08;
@@ -131,9 +134,9 @@ body.tm-page .sub-nav .nav-card.c-works:hover { background: transparent; color: 
 body.tm-page .sub-nav .nav-card.c-green { background: var(--tm-leaf); color: var(--tm-deep); border-color: var(--tm-leaf); }
 body.tm-page .sub-nav .nav-card.c-green:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-leaf); }
 
-/* c-links: terra */
-body.tm-page .sub-nav .nav-card.c-links { background: var(--tm-terra); color: var(--tm-deep); border-color: var(--tm-terra); }
-body.tm-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-terra); }
+/* c-links: lavender */
+body.tm-page .sub-nav .nav-card.c-links { background: var(--tm-lavender); color: var(--tm-deep); border-color: var(--tm-lavender); }
+body.tm-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-lavender); }
 
 /* c-photography: mint pale */
 body.tm-page .sub-nav .nav-card.c-photography { background: var(--tm-mint-pale); color: var(--tm-deep); border-color: var(--tm-mint-pale); }
