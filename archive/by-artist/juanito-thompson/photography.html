@@ -47,6 +47,17 @@
 
     <div class="divider"></div>
 
+    <!-- BAND -->
+    <div class="photo-strip-section">
+        <div class="section-label">BAND</div>
+        <div class="photo-strip-wrap" id="bandStripWrap">
+            <div class="photo-strip" id="bandStrip"></div>
+            <div class="strip-scroll-hint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
     <!-- PHOTO STRIP -->
     <div class="photo-strip-section">
         <div class="section-label">YOU'LL UNDERSTAND WHEN YOU'RE OLDER</div>
@@ -106,7 +117,7 @@
     <div class="photo-strip-section">
         <div class="section-label">RECORDING OF REVERSE OSMOSIS REVERSED</div>
         <div style="max-width:500px;">
-            <img src="../../../assets/photos/juanito_thompson/IMG_0826.JPG" alt="Juanito Thompson — recording of osmosis reversed" style="width:100%;display:block;border:1px solid var(--jt-borders);">
+            <img src="../../../assets/photos/juanito_thompson/band/IMG_0826.JPG" alt="Juanito Thompson — recording of osmosis reversed" style="width:100%;display:block;border:1px solid var(--jt-borders);">
             <div style="font-family:'Press Start 2P',monospace;font-size:6px;color:var(--jt-mid);letter-spacing:0.1em;margin-top:12px;opacity:1.0;">frogwood manor · august 2013</div>
         </div>
     </div>
@@ -149,9 +160,20 @@
 </script>
 <script>
 const PHOTOS_YUO = [
-    { src: '../../../assets/photos/juanito_thompson/youllunderstandwhenyoureolder/IMG_1159.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1159', aspect: 'wide' },
-    { src: '../../../assets/photos/juanito_thompson/youllunderstandwhenyoureolder/IMG_1160.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1160', aspect: 'wide' },
-    { src: '../../../assets/photos/juanito_thompson/youllunderstandwhenyoureolder/IMG_1163.JPG', alt: 'Juanito Thompson - youll understand when youre older', caption: 'IMG 1163', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/youllunderstandwhenyoureolder/IMG_1159.JPG', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/youllunderstandwhenyoureolder/IMG_1160.JPG', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/youllunderstandwhenyoureolder/IMG_1163.JPG', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+];
+
+const PHOTOS_BAND = [
+    { src: '../../../assets/photos/juanito_thompson/band/5091_1019848312453_1712547658_43742_2863086_n.jpg', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/band/5091_1019848352454_1712547658_43743_7612649_n.jpg', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/band/5215_1019977675687_1712547658_44073_7709500_n.jpg', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/band/6612_1020824096847_1712547658_46471_4654994_n.jpg', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/band/0005159542_20.jpeg', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'wide' },
+    { src: '../../../assets/photos/juanito_thompson/band/DSC02699.JPG', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'landscape' },
+    { src: '../../../assets/photos/juanito_thompson/band/IMG_0290.JPG', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'landscape' },
+    { src: '../../../assets/photos/juanito_thompson/band/IMG_0826.JPG', alt: 'Juanito Thompson — band', caption: 'Juanito Thompson — band', aspect: 'portrait' },
 ];
 
 const PHOTOS_DD = [
@@ -242,6 +264,7 @@ function initStrip(photos, stripId, wrapId) {
     });
 }
 
+initStrip(PHOTOS_BAND, 'bandStrip', 'bandStripWrap');
 initStrip(PHOTOS_YUO, 'photoStrip', 'photoStripWrap');
 initStrip(PHOTOS_DD, 'ddStrip', 'ddStripWrap');
 initStrip(PHOTOS_EARTH, 'earthStrip', 'earthStripWrap');
