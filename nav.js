@@ -262,23 +262,34 @@ window.NAV_CONFIG = {
     const depth = window.location.pathname.split('/').length - 2;
     const root = depth > 0 ? '../'.repeat(depth) : '';
 
-    // Load CSS
+    // Load CSS, keeping a promise for when it's actually applied.
+    let cssReady;
     if (!document.querySelector('link[href*="jukebox.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = root + 'assets/jukebox.css';
+        cssReady = new Promise((resolve) => {
+            link.addEventListener('load', resolve, { once: true });
+            link.addEventListener('error', resolve, { once: true });
+        });
         document.head.appendChild(link);
+    } else {
+        cssReady = Promise.resolve();
     }
 
-    // Load JS — return a promise so the SPA router can await it
+    // Load JS only once the stylesheet is live. The script builds the whole
+    // widget and appends it to <body> on DOMContentLoaded, so if it won the
+    // race against its own stylesheet the markup painted unstyled in normal
+    // flow (visible "▶ ◀◀ ▶▶ 0:00 / 0:00" text) before snapping to
+    // position:fixed. Returns a promise so the SPA router can await it.
     if (!document.querySelector('script[src*="jukebox.js"]')) {
-        window.__jukeboxReady = new Promise((resolve) => {
+        window.__jukeboxReady = cssReady.then(() => new Promise((resolve) => {
             const script = document.createElement('script');
             script.src = root + 'assets/jukebox.js';
             script.onload = resolve;
             script.onerror = resolve;
             document.body.appendChild(script);
-        });
+        }));
     } else {
         window.__jukeboxReady = Promise.resolve();
     }
@@ -298,19 +309,29 @@ window.NAV_CONFIG = {
     const depth = window.location.pathname.split('/').length - 2;
     const root = depth > 0 ? '../'.repeat(depth) : '';
 
-    /* Load CSS */
+    /* Load CSS, keeping a promise for when it's actually applied. */
+    let cssReady;
     if (!document.querySelector('link[href*="search.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = root + 'assets/search.css';
+        cssReady = new Promise((resolve) => {
+            link.addEventListener('load', resolve, { once: true });
+            link.addEventListener('error', resolve, { once: true });
+        });
         document.head.appendChild(link);
+    } else {
+        cssReady = Promise.resolve();
     }
 
-    /* Load JS */
+    /* Load JS only once the stylesheet is live — same unstyled-markup race as
+       the jukebox above. */
     if (!document.querySelector('script[src*="search.js"]')) {
-        const script = document.createElement('script');
-        script.src = root + 'assets/search.js';
-        document.body.appendChild(script);
+        cssReady.then(() => {
+            const script = document.createElement('script');
+            script.src = root + 'assets/search.js';
+            document.body.appendChild(script);
+        });
     }
 })();
 
@@ -426,16 +447,24 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         const newHrefs = collectHrefs(doc, baseURL);
         const loadPromises = [];
 
-        // Remove old page-specific CSS NOT in new page
+        // Collect the outgoing page's CSS but DON'T remove it yet. These files
+        // hold the per-artist/per-place palette (the :root --xx-* vars) and the
+        // sub-page layout; dropping them here would leave the still-visible old
+        // content unstyled for the length of the stylesheet fetch — the page
+        // title falls back to the archive default and the breadcrumb jumps to
+        // the top-left corner. The caller removes these via dropStale() only
+        // once the new sheets are live and the new content is in the DOM.
+        const stale = [];
         document.querySelectorAll('link[' + SPA + ']').forEach(el => {
             const existingAbs = abs(el.getAttribute('href'), location.href);
-            if (!newHrefs.has(existingAbs)) el.remove();
+            if (!newHrefs.has(existingAbs)) stale.push(el);
         });
+        document.querySelectorAll('style[' + SPA + ']').forEach(e => stale.push(e));
+        // Template-injected <style> tags from the outgoing page (no data-spa).
+        document.querySelectorAll('head style:not([' + SPA + '])').forEach(e => stale.push(e));
 
-        // Remove old inline styles
-        document.querySelectorAll('style[' + SPA + ']').forEach(e => e.remove());
-
-        // Add new page-specific CSS
+        // Add new page-specific CSS — appended after the outgoing sheets, so
+        // during the brief overlap the incoming rules win on source order.
         doc.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
             const raw = el.getAttribute('href');
             if (!raw) return;
@@ -473,10 +502,15 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             document.head.appendChild(c);
         });
 
-        // Resolves once every newly-added stylesheet has loaded (or failed),
-        // so callers can wait for CSS to be ready before swapping in content
-        // that depends on it — avoids a flash of unstyled/mispositioned markup.
-        return Promise.all(loadPromises);
+        // `ready` resolves once every newly-added stylesheet has loaded (or
+        // failed), so callers can wait for CSS to be ready before swapping in
+        // content that depends on it. `dropStale` tears down the outgoing
+        // page's CSS and must be called synchronously alongside the content
+        // swap, so the browser never paints an unstyled in-between state.
+        return {
+            ready: Promise.all(loadPromises),
+            dropStale: () => stale.forEach(el => el.remove()),
+        };
     }
 
     /* ── SCRIPT MANAGEMENT ── */
@@ -583,13 +617,12 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             // Reset scroll lock from lightboxes
             document.body.style.overflow = '';
 
-            // Remove template-injected <style> tags (no data-spa)
-            document.querySelectorAll('head style:not([data-spa])').forEach(e => e.remove());
-
             const doc = await fetchDoc(url);
 
-            await swapCSS(doc, url);
-            document.body.className = doc.body.className;
+            // Load the incoming CSS first; the outgoing page keeps its own
+            // styles (and colors) until the commit block below.
+            const css = swapCSS(doc, url);
+            await css.ready;
 
             // Update favicon
             const newFavicon = doc.querySelector('link[rel="icon"]');
@@ -606,7 +639,8 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
             const newMain = doc.querySelector('main');
             if (newMain) {
-                // Resolve relative src/href to absolute using target page URL
+                // Resolve relative src/href to absolute using target page URL.
+                // Operates on the detached document, so nothing is visible yet.
                 newMain.querySelectorAll('[src]').forEach(el => {
                     const src = el.getAttribute('src');
                     if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
@@ -619,14 +653,21 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                         el.setAttribute('href', new URL(href, url).href);
                     }
                 });
-                mainEl.innerHTML = newMain.innerHTML;
             }
 
             const newFooter = doc.querySelector('footer');
             const curFooter = document.querySelector('footer');
-            if (newFooter && curFooter) {
-                curFooter.innerHTML = newFooter.innerHTML;
-            }
+
+            // ── COMMIT ──────────────────────────────────────────────────
+            // Body class, content and the old-CSS teardown all happen in one
+            // synchronous block. No await in here, so the browser cannot paint
+            // a half-swapped page: the outgoing content is never shown with the
+            // incoming body class, and never shown with its own CSS removed.
+            document.body.className = doc.body.className;
+            if (newMain) mainEl.innerHTML = newMain.innerHTML;
+            if (newFooter && curFooter) curFooter.innerHTML = newFooter.innerHTML;
+            css.dropStale();
+            // ────────────────────────────────────────────────────────────
 
             // Hide chat widget on non-arcade pages
             const chatWidget = document.getElementById('arcadeChatWidget');

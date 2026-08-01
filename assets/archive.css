@@ -17,13 +17,30 @@ main {
 /* ── HIDE STUB ELEMENTS UNTIL JS POPULATES THEM ──
    Some sub-pages ship these empty and fill them in via a
    template script; hide the empty shell so it doesn't flash
-   visible before content arrives. visibility (not display) so
-   the reserved layout space doesn't shift once populated. ── */
+   visible before content arrives. ── */
 main .breadcrumb:empty,
 .artist-label:empty,
 .place-label:empty,
 .sub-nav:empty {
     visibility: hidden;
+}
+
+/* ── ...AND RESERVE THE SPACE THEY WILL OCCUPY ──
+   visibility:hidden alone reserves nothing: an empty block generates no line
+   boxes, so it measures 0px tall and the whole page jumps down once the
+   template script fills it in (measured: 75px of .page-title movement on a
+   by-place sub-page). These floors are scoped to :empty so they can never
+   affect a populated element. 1em matches the single-line height of each
+   label; the sub-nav floor is one .nav-card row — 10px line box + 20px
+   padding + 4px border per style.css. Same idea as #status-bar's min-height
+   below. ── */
+main .breadcrumb:empty,
+.artist-label:empty,
+.place-label:empty {
+    min-height: 1em;
+}
+.sub-nav:empty {
+    min-height: 34px;
 }
 
 /* ── BREADCRUMB (matches music/visual index pages — absolute over hero images) ── */
