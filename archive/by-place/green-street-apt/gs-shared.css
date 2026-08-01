@@ -1,5 +1,6 @@
 /* Green Street Apt. shared color palette — walnut / linen / warm amber theme */
 :root {
+    /* ── base ── */
     --gs-deep:    #382e28;
     --gs-dark:     #504438;
     --gs-surface:  #786858;
@@ -8,18 +9,101 @@
     --gs-cream:    #e8e0cc;
     --gs-heading:  #f8f4e8;
     --gs-body:     #c8a878;
+    --gs-bg:       #0e0c0a;
+
+    /* ── brand / accent ── */
     --gs-brand:    #7888a8;
     --gs-accent:   #c07838;
+
+    /* ── greens ── */
     --gs-green:    #607850;
     --gs-leaf:     #485840;
+
+    /* ── warm ── */
     --gs-warm:     #e8c8a0;
+
+    /* ── rose / violet ── */
     --gs-rose:     #704858;
     --gs-sage:     #8878a8;
-    --gs-bg:       #0e0c0a;
-    --nav-accent:   var(--gs-brand);
-    --nav-glow:     rgba(120,136,168,0.4);
-    --nav-brand:    #a0b0c8;
-    --nav-brand-glow: rgba(160,176,200,0.7);
+
+    /* ── text hierarchy ── */
+    --gs-text-bright:    #f8f4e8;
+    --gs-text-body:      #d8c8a8;
+    --gs-text-dim:       #a09080;
+    --gs-text-faint:     #706050;
+    --gs-text-disabled:  #504030;
+
+    /* ── blue-gray ramp ── */
+    --gs-slate-deep: #283040;
+    --gs-slate:      #485868;
+    --gs-slate-mid:  #607888;
+    --gs-slate-light:#90a8b8;
+    --gs-slate-pale: #c0d0d8;
+    --gs-steel:      #384858;
+    --gs-ice:        #d8e4ec;
+
+    /* ── brown/earth extended ── */
+    --gs-bark:       #2a2018;
+    --gs-umber:      #3a2e20;
+    --gs-clay:       #604830;
+    --gs-sand:       #b8a888;
+    --gs-dust:       #d8ccb8;
+    --gs-parchment:  #f0e8d8;
+
+    /* ── green extended ── */
+    --gs-forest:     #1e3018;
+    --gs-moss:       #3a5028;
+    --gs-fern:       #506840;
+    --gs-olive:      #788858;
+    --gs-pale-green: #a8b890;
+    --gs-lichen:     #c0c8a8;
+
+    /* ── teal ── */
+    --gs-teal-deep:  #183028;
+    --gs-teal:       #305848;
+    --gs-teal-mid:   #487860;
+    --gs-teal-light: #789880;
+    --gs-teal-mist:  #a8c0b0;
+
+    /* ── rose/mauve extended ── */
+    --gs-deep-rose:  #402028;
+    --gs-mauve:      #805868;
+    --gs-blush:      #c08888;
+    --gs-petal:      #e0b0b0;
+    --gs-rose-pale:  #f0d0d0;
+
+    /* ── warm accent extended ── */
+    --gs-rust:       #904828;
+    --gs-terra:      #a03820;
+    --gs-amber:      #c89040;
+    --gs-honey:      #d8a848;
+    --gs-gold:       #e8c060;
+    --gs-butter:     #f8e098;
+
+    /* ── cool dark grounds ── */
+    --gs-night:      #080c10;
+    --gs-dusk:       #101820;
+    --gs-dusk-warm:  #100e08;
+    --gs-void:       #060504;
+
+    /* ── borders ── */
+    --gs-border-dark:  #2a2018;
+    --gs-border-mid:   #504030;
+    --gs-border-light: #786850;
+    --gs-border-cool:  #384858;
+    --gs-border-warm:  #604830;
+
+    /* ── highlight / glow ── */
+    --gs-glow-warm:  #f0d0a0;
+    --gs-glow-cool:  #c0d8e8;
+    --gs-glow-green: #c0d0a8;
+    --gs-glow-rose:  #e8c0c0;
+
+    /* ── nav ── */
+    --nav-accent:      var(--gs-brand);
+    --nav-glow:        rgba(120,136,168,0.4);
+    --nav-brand:       #a0b0c8;
+    --nav-brand-glow:  rgba(160,176,200,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -55,6 +139,14 @@ body.gs-page .sub-nav .nav-card.c-works:hover { background: transparent; color: 
 /* c-events: window plant green (formerly c-green) */
 body.gs-page .sub-nav .nav-card.c-events { background: var(--gs-green); color: var(--gs-deep); border-color: var(--gs-green); }
 body.gs-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-green); }
+
+/* c-links: teal mid */
+body.gs-page .sub-nav .nav-card.c-links { background: var(--gs-teal-mid); color: var(--gs-deep); border-color: var(--gs-teal-mid); }
+body.gs-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-teal-mid); }
+
+/* c-photography: mauve */
+body.gs-page .sub-nav .nav-card.c-photography { background: var(--gs-mauve); color: var(--gs-deep); border-color: var(--gs-mauve); }
+body.gs-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-mauve); }
 
 /* About button self-link hider */
 body.gs-page .sub-nav a[href="about.html"] {
