@@ -1,25 +1,115 @@
 /* Marvin Gardens G12 shared color palette — burgundy / violet / amber theme */
 :root {
-    --mg-deep:     #283828;
-    --mg-dark:     #382848;
-    --mg-surface:  #4a2830;
-    --mg-muted:    #7848a0;
-    --mg-light:    #d880c0;
-    --mg-cream:    #f080a0;
-    --mg-brand:    #a02858;
-    --mg-accent:   #d04878;
-    --mg-cta:      #c87830;
-    --mg-heading:  #e8c060;
-    --mg-body:     #c8a868;
-    --mg-green:    #388040;
-    --mg-leaf:     #60b858;
-    --mg-sage:     #60a8c0;
-    --mg-offwhite: #f8f0f8;
-    --mg-near-black: #0c0a12;
-    --nav-accent:   var(--mg-brand);
-    --nav-glow:     rgba(160,40,88,0.4);
-    --nav-brand:    var(--mg-accent);
-    --nav-brand-glow: rgba(208,72,120,0.7);
+    /* ── base ── */
+    --mg-deep:        #283828;
+    --mg-dark:        #382848;
+    --mg-surface:     #4a2830;
+    --mg-muted:       #7848a0;
+    --mg-light:       #d880c0;
+    --mg-cream:       #f080a0;
+    --mg-offwhite:    #f8f0f8;
+    --mg-near-black:  #0c0a12;
+
+    /* ── brand / accent ── */
+    --mg-brand:       #a02858;
+    --mg-accent:      #d04878;
+
+    /* ── warm ── */
+    --mg-cta:         #c87830;
+    --mg-heading:     #e8c060;
+    --mg-body:        #c8a868;
+
+    /* ── greens ── */
+    --mg-green:       #388040;
+    --mg-leaf:        #60b858;
+
+    /* ── teal ── */
+    --mg-sage:        #60a8c0;
+
+    /* ── text hierarchy ── */
+    --mg-text-bright:    #f8f0f8;
+    --mg-text-body:      #e0c0d0;
+    --mg-text-dim:       #a07888;
+    --mg-text-faint:     #705058;
+    --mg-text-disabled:  #483040;
+
+    /* ── dark grounds ── */
+    --mg-void:          #060408;
+    --mg-abyss:         #08060e;
+    --mg-deep-plum:     #140a1e;
+    --mg-deep-forest:   #0e1a0e;
+    --mg-surface-low:   #1a1028;
+    --mg-surface-mid:   #281838;
+    --mg-raised:        #382048;
+
+    /* ── purple ramp ── */
+    --mg-deep-violet:   #3a1060;
+    --mg-violet:        #5a1880;
+    --mg-bright-violet: #9030c0;
+    --mg-lavender:      #b878d8;
+    --mg-pale-lilac:    #d8b0f0;
+    --mg-lilac-mist:    #ecd8f8;
+
+    /* ── pink/magenta extended ── */
+    --mg-deep-rose:     #601030;
+    --mg-crimson:       #a01840;
+    --mg-hot-pink:      #e02880;
+    --mg-neon-pink:     #ff40a0;
+    --mg-blush:         #f090b8;
+    --mg-petal:         #f8c0d8;
+    --mg-magenta:       #d020a0;
+    --mg-bright-magenta:#f030c0;
+
+    /* ── gold/amber extended ── */
+    --mg-deep-gold:     #6a4810;
+    --mg-rust-gold:     #a06820;
+    --mg-amber:         #d09030;
+    --mg-pale-gold:     #f0d070;
+    --mg-butter:        #f8e898;
+
+    /* ── warm orange/CTA extended ── */
+    --mg-ember:         #803010;
+    --mg-terra:         #c05020;
+    --mg-peach:         #f0a060;
+    --mg-salmon:        #f0b888;
+
+    /* ── green extended ── */
+    --mg-forest:        #1a3018;
+    --mg-moss:          #284828;
+    --mg-fern:          #4a6838;
+    --mg-olive:         #789848;
+    --mg-pale-green:    #a8c878;
+    --mg-mint:          #80e888;
+
+    /* ── teal/sage extended ── */
+    --mg-teal-deep:     #183838;
+    --mg-teal:          #286858;
+    --mg-teal-mid:      #409898;
+    --mg-teal-bright:   #60c0b8;
+    --mg-teal-mist:     #a0d8d0;
+    --mg-sky:           #80c8e0;
+    --mg-pale-sky:      #c0e0f0;
+
+    /* ── borders ── */
+    --mg-border-dark:   #201028;
+    --mg-border-mid:    #482038;
+    --mg-border-light:  #783058;
+    --mg-border-warm:   #604018;
+    --mg-border-green:  #284828;
+    --mg-border-cool:   #285858;
+
+    /* ── highlight / glow ── */
+    --mg-glow-pink:     #f8a0c0;
+    --mg-glow-gold:     #f8d888;
+    --mg-glow-green:    #b0e8a0;
+    --mg-glow-teal:     #a0d8d0;
+    --mg-glow-violet:   #d0a0f0;
+
+    /* ── nav ── */
+    --nav-accent:      var(--mg-brand);
+    --nav-glow:        rgba(160,40,88,0.4);
+    --nav-brand:       var(--mg-accent);
+    --nav-brand-glow:  rgba(208,72,120,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -55,6 +145,14 @@ body.mg-page .sub-nav .nav-card.c-works:hover { background: transparent; color: 
 /* c-events: leaf (formerly c-green) */
 body.mg-page .sub-nav .nav-card.c-events { background: var(--mg-leaf); color: var(--mg-deep); border-color: var(--mg-leaf); }
 body.mg-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-leaf); }
+
+/* c-links: green */
+body.mg-page .sub-nav .nav-card.c-links { background: var(--mg-green); color: var(--mg-deep); border-color: var(--mg-green); }
+body.mg-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--mg-offwhite); border-color: var(--mg-green); }
+
+/* c-photography: mint */
+body.mg-page .sub-nav .nav-card.c-photography { background: var(--mg-mint); color: var(--mg-deep); border-color: var(--mg-mint); }
+body.mg-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--mg-deep); border-color: var(--mg-mint); }
 
 
 /* About button self-link hider */
