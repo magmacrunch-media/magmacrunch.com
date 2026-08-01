@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════
+   archive — photography page template
+   templates/artist-photography.css
+   Shared by both by-artist and by-place pages.
+   ═══════════════════════════════════════════════
+   Set --section-accent in the page's <style> block:
+     :root { --section-accent: var(--fm-brand); }
+   ═══════════════════════════════════════════════ */
+
+/* Main layout */
+main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
+
+/* Breadcrumb */
+.breadcrumb { color: var(--dim); }
+.breadcrumb a { color: var(--section-accent); }
+.breadcrumb a:hover { color: var(--cream, #f0ead8); }
+.breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+.breadcrumb .current { color: var(--section-accent); }
+
+/* Page header */
+.page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+.artist-label, .place-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--section-accent); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+.page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--section-accent); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,0,0,0.3); }
+.sub-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
+
+/* Back nav-card */
+.nav-card.c-back { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+.nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+.nav-card::after { display: none; }
+
+/* Active nav-card for current page */
+.nav-card.c-photography { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--section-accent), transparent);
+    opacity: 0.4;
+    margin-bottom: 40px;
+}
+
+/* Photo strip section */
+.photo-strip-section { width: 100%; max-width: 900px; margin-bottom: 48px; animation: fadeUp 0.5s 0.25s ease both; }
+.photo-strip-section .section-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--section-accent); letter-spacing: 0.15em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--section-accent); opacity: 0.9; }
+
+.photo-strip-wrap { position: relative; width: 100%; }
+.photo-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--section-accent) var(--surface, #1a0d08);
+    padding-bottom: 10px;
+    cursor: grab;
+}
+.photo-strip:active { cursor: grabbing; }
+.photo-strip::-webkit-scrollbar { height: 3px; }
+.photo-strip::-webkit-scrollbar-track { background: var(--surface, #1a0d08); }
+.photo-strip::-webkit-scrollbar-thumb { background: var(--section-accent); }
+
+.photo-item { flex-shrink: 0; position: relative; height: clamp(200px, 35vw, 380px); scroll-snap-align: start; overflow: hidden; border: 1px solid var(--surface, #1a0d08); transition: border-color 0.2s; cursor: pointer; }
+.photo-item:hover { border-color: var(--section-accent); }
+.photo-item.landscape { aspect-ratio: 16/9; }
+.photo-item.square    { aspect-ratio: 1/1; }
+.photo-item.wide       { aspect-ratio: 4/3; }
+.photo-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease, filter 0.3s ease; filter: saturate(0.85) brightness(0.88); }
+.photo-item:hover img { transform: scale(1.03); filter: saturate(1.0) brightness(1.0); }
+
+.photo-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 22px 10px 8px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+    font-family: 'Press Start 2P', monospace; font-size: 5px;
+    color: var(--dim, #8a7a8a); letter-spacing: 0.1em;
+    opacity: 0; transition: opacity 0.25s ease;
+}
+.photo-item:hover .photo-caption { opacity: 1; }
+
+.strip-scroll-hint { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim, #8a7a8a); letter-spacing: 0.15em; margin-top: 8px; opacity: 0.35; text-align: right; transition: opacity 0.4s; }
+.photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
+
+/* Photo lightbox */
+.photo-lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
+.photo-lightbox.open { display: flex; }
+.lb-img-wrap { max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+.lb-img-wrap.vertical { max-width: 50vw; max-height: 85vh; }
+.lb-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 1px solid var(--surface, #1a0d08); }
+.lb-img-wrap.vertical img { max-width: 50vw; max-height: 85vh; }
+.lb-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+.lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--dim, #8a7a8a); background: none; border: 1px solid var(--surface, #1a0d08); padding: 7px 14px; cursor: pointer; letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
+.lb-btn:hover { color: var(--section-accent); border-color: var(--section-accent); }
+.lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--dim, #8a7a8a); background: none; border: none; cursor: pointer; padding: 8px; letter-spacing: 0.1em; transition: color 0.15s; }
+.lb-close:hover { color: var(--section-accent); }
+.lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim, #8a7a8a); letter-spacing: 0.12em; opacity: 0.55; min-width: 50px; text-align: center; }
+.lb-cap { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--dim, #8a7a8a); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
+
+/* Empty section */
+.photo-strip-empty { padding: 20px; font-family: 'Courier Prime', monospace; color: var(--dim, #8a7a8a); font-size: 14px; }
