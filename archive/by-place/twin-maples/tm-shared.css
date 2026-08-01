@@ -1,25 +1,100 @@
 /* Twin Maples shared color palette — muted forest green / warm amber / cool blue theme */
 :root {
-    --tm-deep:     #1e2420;
-    --tm-dark:     #283028;
-    --tm-surface:  #3a4a38;
-    --tm-muted:    #6a7868;
-    --tm-light:    #98a888;
-    --tm-cream:    #d4d8c8;
-    --tm-heading:  #d4b898;
-    --tm-body:     #b8b098;
-    --tm-brand:    #4a6858;
-    --tm-accent:   #c07848;
-    --tm-warm:     #d4b870;
-    --tm-sage:     #7ab0c0;
-    --tm-wheat:    #d4b898;
-    --tm-leaf:     #8a9878;
-    --tm-bright:   #e8c870;
-    --tm-bg:       #0c0f0d;
-    --nav-accent:   var(--tm-brand);
-    --nav-glow:     rgba(74,104,88,0.4);
-    --nav-brand:    var(--tm-warm);
-    --nav-brand-glow: rgba(212,184,112,0.7);
+    /* ── base ── */
+    --tm-deep:       #1e2420;
+    --tm-dark:       #283028;
+    --tm-surface:    #3a4a38;
+    --tm-muted:      #6a7868;
+    --tm-light:      #98a888;
+    --tm-cream:      #d4d8c8;
+    --tm-heading:    #d4b898;
+    --tm-body:       #b8b098;
+    --tm-brand:      #4a6858;
+    --tm-accent:     #c07848;
+    --tm-warm:       #d4b870;
+    --tm-sage:       #7ab0c0;
+    --tm-wheat:      #d4b898;
+    --tm-leaf:       #8a9878;
+    --tm-bright:     #e8c870;
+    --tm-bg:         #0c0f0d;
+
+    /* ── text hierarchy ── */
+    --tm-text-bright:    #f0ede8;
+    --tm-text-body:      #d0c8b0;
+    --tm-text-dim:       #909880;
+    --tm-text-faint:     #606858;
+    --tm-text-disabled:  #404838;
+
+    /* ── dark grounds ── */
+    --tm-void:           #040604;
+    --tm-near-black:     #080c08;
+    --tm-surface-low:    #141814;
+    --tm-surface-mid:    #1e2420;
+    --tm-raised:         #303830;
+    --tm-border-dark:    #283028;
+    --tm-border-mid:     #404e40;
+    --tm-border-light:   #586858;
+
+    /* ── green ramp ── */
+    --tm-forest-deep:    #0e1810;
+    --tm-forest:         #1a2e1c;
+    --tm-moss:           #2a4028;
+    --tm-fern:           #486040;
+    --tm-olive:          #708860;
+    --tm-pale-green:     #b0c0a0;
+    --tm-lichen:         #c8d4b8;
+    --tm-mint-pale:      #d8e8d0;
+
+    /* ── brand/teal extended ── */
+    --tm-brand-deep:     #1e3828;
+    --tm-brand-mid:      #386050;
+    --tm-brand-bright:   #608870;
+    --tm-brand-pale:     #90b8a0;
+    --tm-brand-mist:     #c0d8c8;
+
+    /* ── sage/blue extended ── */
+    --tm-slate-deep:     #1a2830;
+    --tm-slate:          #304858;
+    --tm-slate-mid:      #507080;
+    --tm-sage-bright:    #90c8d8;
+    --tm-sage-pale:      #b8dce8;
+    --tm-ice:            #d8eef4;
+    --tm-sky:            #6898b0;
+
+    /* ── warm/amber extended ── */
+    --tm-ember:          #6a3010;
+    --tm-rust:           #904828;
+    --tm-terra:          #b86030;
+    --tm-copper:         #d08848;
+    --tm-honey:          #e0c060;
+    --tm-pale-gold:      #f0d888;
+    --tm-butter:         #f8eaa8;
+
+    /* ── wheat/body extended ── */
+    --tm-sand-deep:      #6a5830;
+    --tm-sand:           #a89060;
+    --tm-sand-light:     #c8b080;
+    --tm-parchment:      #e8dcc0;
+    --tm-linen:          #f4ede0;
+
+    /* ── warm neutrals ── */
+    --tm-bark:           #2a2018;
+    --tm-umber:          #3a2e20;
+    --tm-taupe:          #706050;
+    --tm-stone:          #908070;
+
+    /* ── highlight / glow ── */
+    --tm-glow-green:     #c0d8a8;
+    --tm-glow-warm:      #f0d090;
+    --tm-glow-sage:      #b8e0e8;
+    --tm-glow-gold:      #f8e4a0;
+    --tm-glow-earth:     #e0c0a0;
+
+    /* ── nav ── */
+    --nav-accent:      var(--tm-brand);
+    --nav-glow:        rgba(74,104,88,0.4);
+    --nav-brand:       var(--tm-warm);
+    --nav-brand-glow:  rgba(212,184,112,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -55,6 +130,14 @@ body.tm-page .sub-nav .nav-card.c-works:hover { background: transparent; color: 
 /* c-green: leaf */
 body.tm-page .sub-nav .nav-card.c-green { background: var(--tm-leaf); color: var(--tm-deep); border-color: var(--tm-leaf); }
 body.tm-page .sub-nav .nav-card.c-green:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-leaf); }
+
+/* c-links: terra */
+body.tm-page .sub-nav .nav-card.c-links { background: var(--tm-terra); color: var(--tm-deep); border-color: var(--tm-terra); }
+body.tm-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--tm-cream); border-color: var(--tm-terra); }
+
+/* c-photography: mint pale */
+body.tm-page .sub-nav .nav-card.c-photography { background: var(--tm-mint-pale); color: var(--tm-deep); border-color: var(--tm-mint-pale); }
+body.tm-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--tm-deep); border-color: var(--tm-mint-pale); }
 
 /* About button self-link hider */
 body.tm-page .sub-nav a[href="about.html"] {
