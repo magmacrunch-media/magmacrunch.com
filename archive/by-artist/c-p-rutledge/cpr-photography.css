@@ -80,6 +80,7 @@ body.cpr-page.cpr-photography-page .photo-item:hover { border-color: var(--cpr-p
 body.cpr-page.cpr-photography-page .photo-item.landscape { aspect-ratio: 16/9; }
 body.cpr-page.cpr-photography-page .photo-item.square    { aspect-ratio: 1/1; }
 body.cpr-page.cpr-photography-page .photo-item.wide      { aspect-ratio: 4/3; }
+body.cpr-page.cpr-photography-page .photo-item.portrait  { aspect-ratio: 3/4; }
 body.cpr-page.cpr-photography-page .photo-item img {
     width: 100%; height: 100%;
     object-fit: cover; display: block;
