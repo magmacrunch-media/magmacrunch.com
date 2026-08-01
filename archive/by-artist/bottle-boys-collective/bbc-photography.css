@@ -29,6 +29,16 @@ body.bbc-page.bbc-photography-page .photo-strip-section {
     margin-bottom: 48px;
     animation: fadeUp 0.5s 0.25s ease both;
 }
+body.bbc-page.bbc-photography-page .photo-strip-section .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--bbc-sea-mist);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--bbc-sea-mist);
+    opacity: 0.9;
+}
 body.bbc-page.bbc-photography-page .photo-strip-wrap { position: relative; width: 100%; }
 body.bbc-page.bbc-photography-page .photo-strip {
     display: flex;
