@@ -1,29 +1,107 @@
 /* The Tuna Can shared color palette — warm amber / dusty brown theme */
 :root {
-    --tc-brand:   #6a5018;
-    --tc-amber:   #b87828;
-    --tc-bright:  #e8c870;
-    --tc-heading: #e8d890;
-    --tc-body:    #c8c0a0;
-    --tc-deep:    #2e2c20;
-    --tc-dark:    #1e1c14;
-    --tc-mid:     #3a3828;
-    --tc-muted:   #787060;
-    --tc-cream:   #e8d890;
-    --tc-gold:    #c8a040;
-    --tc-red:     #a83840;
-    --tc-green:   #507840;
-    --tc-olive:   #3d4a30;
-    --tc-terra:   #8a4a30;
-    --tc-wheat:   #d4b880;
-    --tc-copper:  #c0784a;
-    --tc-khaki:   #a8a870;
-    --tc-offwhite: #f5f0e0;
-    --tc-bg:       #0e0d09;
-    --nav-accent:   var(--tc-amber);
-    --nav-glow:     rgba(184,120,40,0.4);
-    --nav-brand:    #d0a050;
-    --nav-brand-glow: rgba(208,160,80,0.7);
+    /* ── base ── */
+    --tc-brand:      #6a5018;
+    --tc-amber:      #b87828;
+    --tc-bright:     #e8c870;
+    --tc-heading:    #e8d890;
+    --tc-body:       #c8c0a0;
+    --tc-deep:       #2e2c20;
+    --tc-dark:       #1e1c14;
+    --tc-mid:        #3a3828;
+    --tc-muted:      #787060;
+    --tc-cream:      #e8d890;
+    --tc-gold:       #c8a040;
+    --tc-red:        #a83840;
+    --tc-green:      #507840;
+    --tc-olive:      #3d4a30;
+    --tc-terra:      #8a4a30;
+    --tc-wheat:      #d4b880;
+    --tc-copper:     #c0784a;
+    --tc-khaki:      #a8a870;
+    --tc-offwhite:   #f5f0e0;
+    --tc-bg:         #0e0d09;
+
+    /* ── text hierarchy ── */
+    --tc-text-bright:    #f8f4e8;
+    --tc-text-body:      #d8d0b0;
+    --tc-text-dim:       #a09878;
+    --tc-text-faint:     #706848;
+    --tc-text-disabled:  #484030;
+
+    /* ── dark grounds ── */
+    --tc-void:          #060604;
+    --tc-near-black:    #0a0904;
+    --tc-surface-low:   #161408;
+    --tc-surface-mid:   #201e10;
+    --tc-raised:        #282618;
+    --tc-border-dark:   #302e18;
+    --tc-border-mid:    #504830;
+    --tc-border-light:  #786848;
+
+    /* ── gold/amber extended ── */
+    --tc-deep-gold:     #4a3810;
+    --tc-dark-amber:    #7a5018;
+    --tc-honey:         #d49838;
+    --tc-pale-gold:     #f0dc98;
+    --tc-butter:        #f8eeb8;
+    --tc-straw:         #f0e4a0;
+
+    /* ── red extended ── */
+    --tc-deep-red:      #501818;
+    --tc-crimson:       #782028;
+    --tc-brick:         #903030;
+    --tc-rose-earth:    #c05048;
+    --tc-blush-earth:   #d08870;
+
+    /* ── terra/copper extended ── */
+    --tc-rust:          #6a3018;
+    --tc-sienna:        #a85830;
+    --tc-clay:          #c07048;
+    --tc-salmon:        #d89870;
+    --tc-peach-earth:   #e8b888;
+
+    /* ── green extended ── */
+    --tc-forest:        #1e3018;
+    --tc-moss:          #304828;
+    --tc-fern:          #486838;
+    --tc-sage:          #789858;
+    --tc-pale-green:    #a8b880;
+    --tc-lichen:        #c8d0a8;
+
+    /* ── cool counterpoint ── */
+    --tc-slate-deep:    #202830;
+    --tc-slate:         #485868;
+    --tc-slate-mid:     #607880;
+    --tc-slate-light:   #90a8b0;
+    --tc-fog:           #c0ccd0;
+
+    /* ── teal ── */
+    --tc-teal-deep:     #183028;
+    --tc-teal:          #2a5848;
+    --tc-teal-mid:      #408868;
+    --tc-teal-light:    #70a888;
+    --tc-teal-mist:     #a8c8b8;
+
+    /* ── warm neutrals extended ── */
+    --tc-bark:          #3a2a18;
+    --tc-umber:         #4a3820;
+    --tc-sand:          #b8a878;
+    --tc-parchment:     #e0d4b8;
+    --tc-linen:         #f0e8d0;
+
+    /* ── highlight / glow ── */
+    --tc-glow-gold:     #f8e098;
+    --tc-glow-warm:     #f8c888;
+    --tc-glow-green:    #c0d4a0;
+    --tc-glow-cool:     #b8d0d8;
+    --tc-glow-red:      #e8a898;
+
+    /* ── nav ── */
+    --nav-accent:      var(--tc-amber);
+    --nav-glow:        rgba(184,120,40,0.4);
+    --nav-brand:       #d0a050;
+    --nav-brand-glow:  rgba(208,160,80,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -59,6 +137,14 @@ body.tc-page .sub-nav .nav-card.c-rose:hover { background: transparent; color: v
 /* c-personnel: green */
 body.tc-page .sub-nav .nav-card.c-personnel { background: var(--tc-green); color: var(--tc-dark); border-color: var(--tc-green); }
 body.tc-page .sub-nav .nav-card.c-personnel:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-green); }
+
+/* c-links: teal mid */
+body.tc-page .sub-nav .nav-card.c-links { background: var(--tc-teal-mid); color: var(--tc-dark); border-color: var(--tc-teal-mid); }
+body.tc-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-teal-mid); }
+
+/* c-photography: slate mid */
+body.tc-page .sub-nav .nav-card.c-photography { background: var(--tc-slate-mid); color: var(--tc-offwhite); border-color: var(--tc-slate-mid); }
+body.tc-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--tc-offwhite); border-color: var(--tc-slate-mid); }
 
 /* About button self-link hider — khaki solid */
 body.tc-page .sub-nav a[href="about.html"] {
