@@ -1,25 +1,108 @@
 /* Irvin House shared color palette — slate / steel blue / warm terracotta theme */
 :root {
+    /* ── base ── */
     --ih-deep:    #4a5058;
     --ih-dark:    #6a7278;
     --ih-muted:   #9098a0;
     --ih-light:   #b8c8d8;
     --ih-cream:   #dce8f0;
+    --ih-bg:      #0c0e10;
+
+    /* ── brand / accent ── */
     --ih-brand:   #7090b8;
     --ih-accent:  #80b8c8;
+
+    /* ── greens ── */
     --ih-green:   #608850;
+    --ih-leaf:    #4a7858;
+
+    /* ── warm ── */
     --ih-cta:     #a86848;
     --ih-heading: #c8b890;
     --ih-body:    #907060;
-    --ih-leaf:    #4a7858;
     --ih-warm:    #d4906a;
+
+    /* ── purples / sage ── */
     --ih-sage:    #8888b0;
     --ih-wheat:   #b8d0b0;
-    --ih-bg:      #0c0e10;
-    --nav-accent:   var(--ih-brand);
-    --nav-glow:     rgba(112,144,184,0.4);
-    --nav-brand:    var(--ih-accent);
-    --nav-brand-glow: rgba(128,184,200,0.7);
+
+    /* ── text hierarchy ── */
+    --ih-text-bright:    #f0f4f8;
+    --ih-text-body:      #c8d4e0;
+    --ih-text-dim:       #8898a8;
+    --ih-text-faint:     #586070;
+    --ih-text-disabled:  #384048;
+
+    /* ── blue ramp ── */
+    --ih-navy:        #1a2838;
+    --ih-deep-blue:   #2a3f58;
+    --ih-mid-blue:    #4a6888;
+    --ih-pale-blue:   #a0b8d0;
+    --ih-mist:        #d0dce8;
+    --ih-ice:         #e8f0f8;
+
+    /* ── cool gray ramp ── */
+    --ih-void:        #060810;
+    --ih-near-black:  #0a0c10;
+    --ih-surface:     #181e24;
+    --ih-raised:      #242c34;
+    --ih-border-dark: #303840;
+    --ih-border-mid:  #485058;
+    --ih-border-light:#687078;
+
+    /* ── green extended ── */
+    --ih-forest:     #1e3020;
+    --ih-moss:       #385828;
+    --ih-fern:       #507840;
+    --ih-olive:      #788858;
+    --ih-pale-green: #a8c098;
+    --ih-lichen:     #c8d8b8;
+
+    /* ── teal ── */
+    --ih-teal-deep:  #183830;
+    --ih-teal:       #286858;
+    --ih-teal-mid:   #409878;
+    --ih-teal-bright:#60b898;
+    --ih-teal-mist:  #a0d0c0;
+
+    /* ── warm/terra extended ── */
+    --ih-ember:    #6a2818;
+    --ih-rust:     #904830;
+    --ih-terra:    #c06040;
+    --ih-salmon:   #e09070;
+    --ih-peach:    #f0b898;
+    --ih-blush:    #f8d0b8;
+
+    /* ── sage/mauve extended ── */
+    --ih-deep-sage:     #484858;
+    --ih-violet-gray:   #707090;
+    --ih-lavender:      #a8a8c8;
+    --ih-pale-lavender: #d0d0e8;
+    --ih-lilac-mist:    #e8e8f4;
+
+    /* ── wheat/straw extended ── */
+    --ih-straw-deep: #687848;
+    --ih-straw:      #98a870;
+    --ih-pale-straw: #c8d8a8;
+    --ih-linen:      #e8ecd8;
+
+    /* ── warm neutrals ── */
+    --ih-bark:       #2a2018;
+    --ih-taupe:      #706050;
+    --ih-sand:       #b0a888;
+    --ih-parchment:  #e8e0cc;
+
+    /* ── highlight / glow ── */
+    --ih-glow-blue:  #b0d0f0;
+    --ih-glow-warm:  #f0c8a0;
+    --ih-glow-green: #b8d8b0;
+    --ih-glow-sage:  #c8c8e0;
+
+    /* ── nav ── */
+    --nav-accent:      var(--ih-brand);
+    --nav-glow:        rgba(112,144,184,0.4);
+    --nav-brand:       var(--ih-accent);
+    --nav-brand-glow:  rgba(128,184,200,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -55,6 +138,14 @@ body.ih-page .sub-nav .nav-card.c-works:hover { background: transparent; color: 
 /* c-events: leaf (formerly c-sage) */
 body.ih-page .sub-nav .nav-card.c-events { background: var(--ih-green); color: var(--ih-deep); border-color: var(--ih-green); }
 body.ih-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-green); }
+
+/* c-links: teal mid */
+body.ih-page .sub-nav .nav-card.c-links { background: var(--ih-teal-mid); color: var(--ih-deep); border-color: var(--ih-teal-mid); }
+body.ih-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-teal-mid); }
+
+/* c-photography: terra */
+body.ih-page .sub-nav .nav-card.c-photography { background: var(--ih-terra); color: var(--ih-deep); border-color: var(--ih-terra); }
+body.ih-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-terra); }
 
 
 /* About button self-link hider */
