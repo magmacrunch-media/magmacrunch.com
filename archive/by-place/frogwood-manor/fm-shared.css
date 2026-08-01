@@ -145,9 +145,9 @@ body.fm-page .sub-nav .nav-card.c-magenta:hover { background: transparent; color
 body.fm-page .sub-nav .nav-card.c-links { background: var(--fm-teal); color: var(--fm-deep); border-color: var(--fm-teal); }
 body.fm-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-teal); }
 
-/* c-photography: gold */
-body.fm-page .sub-nav .nav-card.c-photography { background: var(--fm-gold); color: var(--fm-deep); border-color: var(--fm-gold); }
-body.fm-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-gold); }
+/* c-photography: lavender */
+body.fm-page .sub-nav .nav-card.c-photography { background: var(--fm-lavender); color: var(--fm-deep); border-color: var(--fm-lavender); }
+body.fm-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-lavender); }
 
 /* About button self-link hider */
 body.fm-page .sub-nav a[href="about.html"] {
