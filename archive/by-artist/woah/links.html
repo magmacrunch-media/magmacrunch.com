@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Woah. — links — magmacrunch media</title>
+    <link rel="icon" type="image/x-icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../style.css">
+    <link rel="stylesheet" href="../../../assets/archive.css">
+    <link rel="stylesheet" href="woah-shared.css">
+    <link rel="stylesheet" href="../../../templates/artist-links.css">
+    <style>
+        :root { --section-accent: var(--woah-mauve); }
+        body.woah-page.woah-links-page .breadcrumb a { color: var(--section-accent); }
+        body.woah-page.woah-links-page .breadcrumb a:hover { color: var(--woah-blush); }
+        body.woah-page.woah-links-page .breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+        body.woah-page.woah-links-page .breadcrumb .current { color: var(--section-accent); }
+        body.woah-page.woah-links-page .artist-label { color: var(--section-accent); }
+        body.woah-page.woah-links-page .page-title { color: var(--section-accent); text-shadow: 0 0 20px rgba(144,128,160,0.45); }
+        body.woah-page.woah-links-page .nav-card.c-back { color: var(--section-accent); border-color: var(--section-accent); }
+        body.woah-page.woah-links-page .nav-card.c-back:hover { background: var(--section-accent); color: var(--woah-bg); }
+    </style>
+    <script>
+    window.ARTIST_CONFIG = {
+        name:      'woah',
+        abbr:      'woah',
+        siblings:  ['about', 'music-videos', 'photography', 'recordings', 'releases', 'works'],
+        depth:     '../../../',
+        links:     [
+            {
+                section: 'DATABASES',
+                items: [
+                    { url: 'https://musicbrainz.org/artist/0cb54a5f-3c60-4635-abb3-e6bc60fa7d9f', name: 'MusicBrainz' },
+                    { url: 'https://www.discogs.com/artist/13328664-woah', name: 'Discogs' },
+                ]
+            },
+            {
+                section: 'STREAMING',
+                items: [
+                    { url: 'https://open.spotify.com/artist/4ZOKJipRMEtL6Twea5aCHB', name: 'Spotify' },
+                    { url: 'https://music.apple.com/us/artist/woah/1697605089', name: 'Apple Music' },
+                    { url: 'https://www.deezer.com/us/artist/276492711', name: 'Deezer' },
+                    { url: 'https://tidal.com/artist/49561046', name: 'Tidal' },
+                    { url: 'https://www.pandora.com/artist/woah/AR746VpnxtJzdhV', name: 'Pandora' },
+                ]
+            },
+            {
+                section: 'SOCIAL',
+                items: [
+                    { url: 'https://linktr.ee/woah.music', name: 'Linktree' },
+                ]
+            }
+        ]
+    };
+    </script>
+</head>
+<body class="woah-page woah-links-page">
+<nav id="auto-nav" data-depth="../../../"></nav><main>
+    <div class="breadcrumb"></div>
+
+    <div class="page-header">
+        <div class="artist-label" id="artist-label"></div>
+        <div class="page-title">LINKS</div>
+        <div class="sub-nav" id="sub-nav"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="links-body" id="links-body"></div>
+</main>
+<footer>&copy; 2026 <span>magmacrunch media</span></footer>
+<script src="../../../nav.js"></script>
+<script src="../../../templates/artist_links.js"></script>
+</body>
+</html>
