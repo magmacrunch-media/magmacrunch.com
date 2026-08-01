@@ -16,6 +16,16 @@ body.jm-page.jm-about-page .divider { width: 100%; max-width: 960px; height: 1px
 
 body.jm-page.jm-about-page .bio-section { width: 100%; max-width: 960px; padding: 0 20px; }
 body.jm-page.jm-about-page .bio-section p { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--jm-sand); line-height: 1.8; margin-bottom: 16px; }
+body.jm-page.jm-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
+    float: left;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--jm-mid-cool);
+    text-shadow: 0 0 10px rgba(96,112,160,0.4);
+}
 
 body.jm-page.jm-about-page .nav-card.c-back { background: transparent; color: var(--jm-mid-cool); border-color: var(--jm-mid-cool); }
 body.jm-page.jm-about-page .nav-card.c-back:hover { background: var(--jm-mid-cool); color: var(--jm-cream); }

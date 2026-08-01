@@ -36,6 +36,16 @@ body.vb-page.vb-about-page .bio-section p { margin-bottom: 1.5em; }
 body.vb-page.vb-about-page .bio-section .quote { border-left: 2px solid var(--vb-deep); padding-left: 14px; margin: 24px 0; font-style: italic; color: var(--vb-body); opacity: 0.85; }
 body.vb-page.vb-about-page .bio-section a { color: var(--vb-sky); }
 body.vb-page.vb-about-page .bio-section a:hover { color: var(--vb-amber); }
+body.vb-page.vb-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
+    float: left;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--vb-deep);
+    text-shadow: 0 0 10px rgba(192,56,32,0.4);
+}
 
 body.vb-page.vb-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
 body.vb-page.vb-about-page .ext-link {

@@ -18,6 +18,16 @@ body.ddt-page.ddt-about-page .bio-section { width: 100%; max-width: 960px; paddi
 body.ddt-page.ddt-about-page .bio-section p { font-family: 'Courier Prime', monospace; font-size: 15px; color: var(--ddt-heading); line-height: 1.8; margin-bottom: 16px; opacity: 0.9; }
 body.ddt-page.ddt-about-page .bio-section p a { color: var(--ddt-amber); text-decoration: none; border-bottom: 1px solid transparent; transition: color 0.15s, border-color 0.15s; }
 body.ddt-page.ddt-about-page .bio-section p a:hover { color: var(--ddt-tan); border-bottom-color: var(--ddt-tan); }
+body.ddt-page.ddt-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
+    float: left;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--ddt-amber);
+    text-shadow: 0 0 10px rgba(184,120,64,0.4);
+}
 
 body.ddt-page.ddt-about-page .nav-card.c-back { background: transparent; color: var(--ddt-amber); border-color: var(--ddt-amber); }
 body.ddt-page.ddt-about-page .nav-card.c-back:hover { background: var(--ddt-amber); color: var(--ddt-offwhite); }

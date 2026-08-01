@@ -25,6 +25,16 @@ body.thld-page.thld-about-page .bio-section .quote {
 }
 body.thld-page.thld-about-page .bio-section a { color: var(--thld-accent); }
 body.thld-page.thld-about-page .bio-section a:hover { color: var(--thld-highlight); }
+body.thld-page.thld-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
+    float: left;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--thld-olive);
+    text-shadow: 0 0 10px rgba(90,120,64,0.4);
+}
 
 body.thld-page.thld-about-page .link-row { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; }
 body.thld-page.thld-about-page .ext-link {

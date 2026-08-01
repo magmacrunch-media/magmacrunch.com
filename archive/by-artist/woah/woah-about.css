@@ -35,6 +35,16 @@ body.woah-page.woah-about-page .bio-section p {
     margin-bottom: 16px;
     opacity: 0.9;
 }
+body.woah-page.woah-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
+    float: left;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--woah-ocean);
+    text-shadow: 0 0 10px rgba(120,128,144,0.4);
+}
 
 body.woah-page.woah-about-page .nav-card.c-back { background: transparent; color: var(--woah-ocean); border-color: var(--woah-ocean); }
 body.woah-page.woah-about-page .nav-card.c-back:hover { background: var(--woah-ocean); color: var(--woah-pink-sky); }

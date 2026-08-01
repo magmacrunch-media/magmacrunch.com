@@ -16,6 +16,16 @@ body.dh-page.dh-about-page .divider { width: 100%; max-width: 960px; height: 1px
 
 body.dh-page.dh-about-page .bio-section { width: 100%; max-width: 960px; padding: 0 20px; }
 body.dh-page.dh-about-page .bio-section p { font-family: 'Courier Prime', monospace; font-size: 15px; color: var(--dh-body); line-height: 1.8; margin-bottom: 16px; opacity: 0.9; }
+body.dh-page.dh-about-page .bio-section p:first-of-type::first-letter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 2.2em;
+    float: left;
+    line-height: 0.85;
+    margin-right: 8px;
+    margin-top: 4px;
+    color: var(--dh-brand);
+    text-shadow: 0 0 10px rgba(58,88,48,0.4);
+}
 
 body.dh-page.dh-about-page .animation-wrap { display: flex; justify-content: center; align-items: center; margin: 40px auto; }
 body.dh-page.dh-about-page .animation-placeholder { display: flex; justify-content: center; align-items: center; }
