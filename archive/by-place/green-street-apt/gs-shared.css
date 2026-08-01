@@ -140,9 +140,9 @@ body.gs-page .sub-nav .nav-card.c-works:hover { background: transparent; color: 
 body.gs-page .sub-nav .nav-card.c-events { background: var(--gs-green); color: var(--gs-deep); border-color: var(--gs-green); }
 body.gs-page .sub-nav .nav-card.c-events:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-green); }
 
-/* c-links: teal mid */
-body.gs-page .sub-nav .nav-card.c-links { background: var(--gs-teal-mid); color: var(--gs-deep); border-color: var(--gs-teal-mid); }
-body.gs-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-teal-mid); }
+/* c-links: gold */
+body.gs-page .sub-nav .nav-card.c-links { background: var(--gs-gold); color: var(--gs-deep); border-color: var(--gs-gold); }
+body.gs-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--gs-cream); border-color: var(--gs-gold); }
 
 /* c-photography: mauve */
 body.gs-page .sub-nav .nav-card.c-photography { background: var(--gs-mauve); color: var(--gs-deep); border-color: var(--gs-mauve); }
