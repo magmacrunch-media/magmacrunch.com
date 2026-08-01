@@ -56,7 +56,7 @@ body.jt-page.jt-about-page .divider { width: 100%; max-width: 900px; height: 1px
 
 /* Back button: transparent + page accent */
 body.jt-page.jt-about-page .nav-card.c-back { background: transparent !important; color: var(--jt-taupe) !important; border-color: var(--jt-taupe) !important; }
-body.jt-page.jt-about-page .nav-card.c-back:hover { background: var(--jt-deep) !important; color: var(--jt-bg) !important; }
+body.jt-page.jt-about-page .nav-card.c-back:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
 
 body.jt-page.jt-about-page .nav-card::after { display: none; }
