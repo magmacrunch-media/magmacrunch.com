@@ -21,6 +21,10 @@
     --thld-olive:      #5a7840;
     --thld-olive-alt:  #6a8850;
     --thld-purple:     #6a5878;
+    /* ── cool (new) ── */
+    --thld-sky:        #60a0e0;
+    --thld-lime:       #39ff6e;
+    --thld-ice:        #a8c8f0;
     /* ── text / light ── */
     --thld-text:       #d4b896;
     --thld-highlight:  #f0c060;
@@ -83,6 +87,10 @@ body.thld-page .sub-nav .nav-card.c-works:hover { background: inherit !important
 /* c-games: solid apricot (games) */
 body.thld-page .sub-nav .nav-card.c-games { background: var(--thld-apricot); color: var(--thld-bg); border-color: var(--thld-apricot); }
 body.thld-page .sub-nav .nav-card.c-games:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
+
+/* c-links: solid sky blue (links) */
+body.thld-page .sub-nav .nav-card.c-links { background: var(--thld-sky); color: var(--thld-bg); border-color: var(--thld-sky); }
+body.thld-page .sub-nav .nav-card.c-links:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
 
 body.thld-page footer { color: var(--thld-muted); }
 body.thld-page footer span { color: var(--thld-highlight); }
