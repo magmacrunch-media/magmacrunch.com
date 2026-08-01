@@ -108,7 +108,7 @@
             <button class="lb-btn" id="lbNext">next →</button>
         </div>
     `;
-    document.body.appendChild(lb);
+    document.querySelector('main').appendChild(lb);
 
     const lbImg = lb.querySelector('#lbImg');
     const lbCap = lb.querySelector('#lbCap');
