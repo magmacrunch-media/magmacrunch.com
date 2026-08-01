@@ -75,6 +75,10 @@ body.woah-page .sub-nav .nav-card.c-lavender:hover { background: var(--woah-coas
 body.woah-page .sub-nav .nav-card.c-links { background: var(--woah-mauve); color: var(--woah-pink-sky); border-color: var(--woah-mauve); }
 body.woah-page .sub-nav .nav-card.c-links:hover { background: var(--woah-coastal); border-color: var(--woah-coastal); color: var(--woah-blush); }
 
+/* c-events: alias for music videos (used by artist_links.js template) */
+body.woah-page .sub-nav .nav-card.c-events { background: var(--woah-sunset); color: var(--woah-bg); border-color: var(--woah-sunset); }
+body.woah-page .sub-nav .nav-card.c-events:hover { background: var(--woah-rose-sky); border-color: var(--woah-rose-sky); color: var(--woah-blush); }
+
 body.woah-page .nav-card::after { display: none; }
 
 body.woah-page footer { color: var(--woah-ocean); }
