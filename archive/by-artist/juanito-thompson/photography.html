@@ -91,6 +91,17 @@
 
     <div class="divider"></div>
 
+    <!-- NIGEL -->
+    <div class="photo-strip-section">
+        <div class="section-label">NIGEL</div>
+        <div class="photo-strip-wrap" id="nigelStripWrap">
+            <div class="photo-strip" id="nigelStrip"></div>
+            <div class="strip-scroll-hint">← drag to scroll →</div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
     <!-- RECORDING OF OSMOSIS REVERSED -->
     <div class="photo-strip-section">
         <div class="section-label">RECORDING OF REVERSE OSMOSIS REVERSED</div>
@@ -162,6 +173,10 @@ const PHOTOS_RT = [
     { src: '../../../assets/photos/juanito_thompson/reverse_telescope_reversed/IMG_1220.JPG', alt: 'Juanito Thompson - reverse telescope reversed', caption: 'IMG 1220', aspect: 'portrait' },
 ];
 
+const PHOTOS_NIGEL = [
+    { src: '../../../assets/photos/frogwood_manor/basement/nigel-the-bulldog.jpg', alt: 'Nigel the bulldog', caption: 'Nigel the bulldog', aspect: 'wide' },
+];
+
 const lb = document.getElementById('photoLightbox');
 const lbImg = document.getElementById('lbImg');
 const lbCap = document.getElementById('lbCap');
@@ -231,6 +246,7 @@ initStrip(PHOTOS_YUO, 'photoStrip', 'photoStripWrap');
 initStrip(PHOTOS_DD, 'ddStrip', 'ddStripWrap');
 initStrip(PHOTOS_EARTH, 'earthStrip', 'earthStripWrap');
 initStrip(PHOTOS_RT, 'rtStrip', 'rtStripWrap');
+initStrip(PHOTOS_NIGEL, 'nigelStrip', 'nigelStripWrap');
 
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
 document.getElementById('lbPrev').addEventListener('click', () => navLightbox(-1));
