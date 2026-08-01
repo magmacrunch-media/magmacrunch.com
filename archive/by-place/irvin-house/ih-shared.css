@@ -143,9 +143,9 @@ body.ih-page .sub-nav .nav-card.c-events:hover { background: transparent; color:
 body.ih-page .sub-nav .nav-card.c-links { background: var(--ih-teal-mid); color: var(--ih-deep); border-color: var(--ih-teal-mid); }
 body.ih-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-teal-mid); }
 
-/* c-photography: terra */
-body.ih-page .sub-nav .nav-card.c-photography { background: var(--ih-terra); color: var(--ih-deep); border-color: var(--ih-terra); }
-body.ih-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-terra); }
+/* c-photography: wheat */
+body.ih-page .sub-nav .nav-card.c-photography { background: var(--ih-wheat); color: var(--ih-deep); border-color: var(--ih-wheat); }
+body.ih-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--ih-cream); border-color: var(--ih-wheat); }
 
 
 /* About button self-link hider */
