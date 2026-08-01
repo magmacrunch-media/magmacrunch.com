@@ -1,15 +1,23 @@
 /* Frogwood Manor shared color palette — umber / plum / cobalt theme */
 :root {
+    /* ── base ── */
     --fm-deep:     #382820;
     --fm-dark:      #301828;
     --fm-surface:   #2a2a50;
     --fm-muted:     #9888a0;
     --fm-light:     #f8d888;
     --fm-cream:     #f8e8d8;
+    --fm-bg:        #0c0810;
+
+    /* ── blues ── */
     --fm-cobalt:    #4080f0;
+    --fm-sky:       #6080e8;
+
+    /* ── warm ── */
     --fm-brand:     #a85a18;
     --fm-amber:     #e8a040;
-    --fm-sky:       #6080e8;
+
+    /* ── purples / pinks ── */
     --fm-violet:    #a030c8;
     --fm-sage:      #6a9878;
     --fm-pink:      #f040a0;
@@ -18,11 +26,77 @@
     --fm-lilac:     #c8a0d8;
     --fm-plum:      #281838;
     --fm-peach:     #f0b060;
-    --fm-bg:        #0c0810;
-    --nav-accent:   var(--fm-brand);
-    --nav-glow:     rgba(168,90,24,0.4);
-    --nav-brand:    #d08838;
-    --nav-brand-glow: rgba(208,136,56,0.7);
+
+    /* ── text hierarchy ── */
+    --fm-text-bright:    #f8f0e8;
+    --fm-text-body:      #c8b8d0;
+    --fm-text-dim:       #887898;
+    --fm-text-faint:     #584860;
+    --fm-text-disabled:  #382838;
+
+    /* ── dark grounds ── */
+    --fm-void:        #060408;
+    --fm-abyss:       #0a0614;
+    --fm-deep-plum:   #180e28;
+    --fm-deep-navy:   #0e1428;
+
+    /* ── surface ramp ── */
+    --fm-surface-low:  #1e1c38;
+    --fm-surface-mid:  #343058;
+    --fm-surface-high: #484470;
+    --fm-raised:       #585488;
+
+    /* ── blue extended ── */
+    --fm-navy:        #1a2a80;
+    --fm-royal:       #2850c8;
+    --fm-periwinkle:  #8098e8;
+    --fm-ice:         #b0c0f8;
+    --fm-mist:        #d8e0f8;
+
+    /* ── violet/purple extended ── */
+    --fm-deep-violet:   #580878;
+    --fm-bright-violet: #c050f0;
+    --fm-lavender:      #d8b0f0;
+    --fm-pale-lilac:    #ecd8f8;
+
+    /* ── pink extended ── */
+    --fm-hot-pink:   #ff1880;
+    --fm-blush:      #f890c8;
+    --fm-petal:      #f8c0e0;
+    --fm-magenta:    #e020a0;
+
+    /* ── warm/amber extended ── */
+    --fm-rust:    #803010;
+    --fm-terra:   #c04820;
+    --fm-gold:    #d4a020;
+    --fm-butter:  #f8e098;
+    --fm-honey:   #e8b848;
+
+    /* ── green extended ── */
+    --fm-forest:    #284838;
+    --fm-moss:      #486848;
+    --fm-fern:      #5a8868;
+    --fm-mint:      #90c8a0;
+    --fm-pale-sage: #b8d8b8;
+
+    /* ── teal ── */
+    --fm-teal-deep:   #103830;
+    --fm-teal:        #208060;
+    --fm-teal-bright: #30b888;
+    --fm-teal-mist:   #88d8b8;
+
+    /* ── borders ── */
+    --fm-border-dark:  #201828;
+    --fm-border-mid:   #403058;
+    --fm-border-light: #605880;
+    --fm-border-warm:  #604020;
+    --fm-border-cool:  #304080;
+
+    /* ── nav ── */
+    --nav-accent:      var(--fm-brand);
+    --nav-glow:        rgba(168,90,24,0.4);
+    --nav-brand:       #d08838;
+    --nav-brand-glow:  rgba(208,136,56,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -66,6 +140,14 @@ body.fm-page .sub-nav .nav-card.c-personnel:hover { background: transparent; col
 /* c-magenta: hot pink */
 body.fm-page .sub-nav .nav-card.c-magenta { background: var(--fm-pink); color: var(--fm-deep); border-color: var(--fm-pink); }
 body.fm-page .sub-nav .nav-card.c-magenta:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-pink); }
+
+/* c-links: teal */
+body.fm-page .sub-nav .nav-card.c-links { background: var(--fm-teal); color: var(--fm-deep); border-color: var(--fm-teal); }
+body.fm-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-teal); }
+
+/* c-photography: gold */
+body.fm-page .sub-nav .nav-card.c-photography { background: var(--fm-gold); color: var(--fm-deep); border-color: var(--fm-gold); }
+body.fm-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--fm-cream); border-color: var(--fm-gold); }
 
 /* About button self-link hider */
 body.fm-page .sub-nav a[href="about.html"] {
