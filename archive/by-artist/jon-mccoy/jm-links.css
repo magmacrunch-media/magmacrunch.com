@@ -50,3 +50,36 @@ body.jm-page.jm-links-page .links-body .section-label { font-family: 'Press Star
     transition: border-color 0.15s, color 0.15s;
 }
 .mb-link-card:hover { border-color: var(--jm-periwinkle); color: var(--jm-periwinkle); }
+
+.mb-links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 600px;
+    margin-bottom: 24px;
+}
+body.jm-page.jm-links-page .mb-link-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--jm-deep-cool);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+}
+body.jm-page.jm-links-page .mb-link-item:hover {
+    border-color: var(--jm-periwinkle);
+    background: rgba(144,144,184,0.05);
+}
+body.jm-page.jm-links-page .mb-link-abbr {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--jm-periwinkle);
+    min-width: 40px;
+}
+body.jm-page.jm-links-page .mb-link-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 14px;
+    color: var(--jm-sand);
+    opacity: 0.9;
+}
