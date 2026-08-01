@@ -71,6 +71,10 @@ body.woah-page .sub-nav .nav-card.c-music-videos:hover { background: var(--woah-
 body.woah-page .sub-nav .nav-card.c-lavender { background: var(--woah-lavender); color: var(--woah-bg); border-color: var(--woah-lavender); }
 body.woah-page .sub-nav .nav-card.c-lavender:hover { background: var(--woah-coastal); border-color: var(--woah-coastal); color: var(--woah-blush); }
 
+/* Links button: mauve */
+body.woah-page .sub-nav .nav-card.c-links { background: var(--woah-mauve); color: var(--woah-pink-sky); border-color: var(--woah-mauve); }
+body.woah-page .sub-nav .nav-card.c-links:hover { background: var(--woah-coastal); border-color: var(--woah-coastal); color: var(--woah-blush); }
+
 body.woah-page .nav-card::after { display: none; }
 
 body.woah-page footer { color: var(--woah-ocean); }
