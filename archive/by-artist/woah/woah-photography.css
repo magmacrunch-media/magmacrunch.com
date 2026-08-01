@@ -29,6 +29,16 @@ body.woah-page.woah-photography-page .divider {
     margin-bottom: 48px;
     animation: fadeUp 0.5s 0.25s ease both;
 }
+.photo-strip-section .section-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--woah-blush);
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--woah-blush);
+    opacity: 0.9;
+}
 .photo-strip-wrap { position: relative; width: 100%; }
 .photo-strip {
     display: flex;
