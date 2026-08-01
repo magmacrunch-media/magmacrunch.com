@@ -36,7 +36,7 @@ body.jt-page.jt-games-page .games-intro p { margin-bottom: 1.5em; }
 
 /* Back button: transparent + page accent */
 body.jt-page.jt-games-page .nav-card.c-back { background: transparent !important; color: var(--jt-green) !important; border-color: var(--jt-green) !important; }
-body.jt-page.jt-games-page .nav-card.c-back:hover { background: rgba(57,255,132,0.15) !important; color: var(--jt-offwhite) !important; }
+body.jt-page.jt-games-page .nav-card.c-back:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
 body.jt-page.jt-games-page .nav-card::after { display: none; }
 
