@@ -1,5 +1,6 @@
 /* College Green Apt. shared color palette — walnut / linen / dusty violet theme */
 :root {
+    /* ── base ── */
     --cg-deep:     #382e28;
     --cg-dark:     #504438;
     --cg-surface:  #a09080;
@@ -7,23 +8,103 @@
     --cg-light:    #c8bea8;
     --cg-cream:    #e8e0cc;
     --cg-white:    #f8f4e8;
+    --cg-bg:       #0e0c0a;
+
+    /* ── greens ── */
     --cg-green:    #607850;
-    --cg-cta:      #c07838;
-    --cg-heading:  #8878a8;
     --cg-nature:   #607850;
+    --cg-deep2:    #4a6838;
+
+    /* ── warm / cta ── */
+    --cg-cta:      #c07838;
     --cg-warm:     #c07838;
+    --cg-gold:     #e8a858;
+
+    /* ── purples ── */
+    --cg-heading:  #8878a8;
     --cg-cool:     #8878a8;
     --cg-sage:     #b8a0c8;
-    --cg-deep2:    #4a6838;
-    --cg-gold:     #e8a858;
     --cg-lavender: #b8a0c8;
+
+    /* ── neutrals ── */
     --cg-taupe:    #6a5840;
     --cg-bluegrey: #384858;
-    --cg-bg:       #0e0c0a;
-    --nav-accent:   var(--cg-cta);
-    --nav-glow:     rgba(192,120,56,0.4);
-    --nav-brand:    #d8a068;
-    --nav-brand-glow: rgba(216,160,104,0.7);
+
+    /* ── text hierarchy ── */
+    --cg-text-bright:    #f0e8d8;
+    --cg-text-body:      #c8baa8;
+    --cg-text-dim:       #907860;
+    --cg-text-faint:     #604838;
+    --cg-text-disabled:  #483828;
+
+    /* ── brown/earth ramp ── */
+    --cg-bark:       #2a2018;
+    --cg-umber:      #3a2e20;
+    --cg-clay:       #604830;
+    --cg-sand:       #b8a888;
+    --cg-dust:       #d8cdb8;
+
+    /* ── green extended ── */
+    --cg-forest:     #1e3018;
+    --cg-moss:       #3a5028;
+    --cg-fern:       #4e6838;
+    --cg-leaf:       #789858;
+    --cg-pale-green: #a8b890;
+
+    /* ── blue-gray extended ── */
+    --cg-slate-deep: #202c38;
+    --cg-slate:      #485868;
+    --cg-slate-mid:  #607080;
+    --cg-slate-light:#90a0b0;
+    --cg-fog:        #c0ccd8;
+
+    /* ── purple/lavender extended ── */
+    --cg-deep-purple: #302838;
+    --cg-violet:      #605078;
+    --cg-lilac:       #9888b8;
+    --cg-pale-lilac:  #d0c8e0;
+
+    /* ── warm/gold extended ── */
+    --cg-rust:       #904828;
+    --cg-amber:      #c89040;
+    --cg-honey:      #d8b060;
+    --cg-pale-gold:  #f0d098;
+
+    /* ── terracotta / red-earth ── */
+    --cg-terra:        #a03820;
+    --cg-brick:        #7a2818;
+    --cg-sienna:       #c05030;
+    --cg-blush-earth:  #d08060;
+    --cg-rose-dust:    #c89888;
+
+    /* ── teal ── */
+    --cg-teal-deep:  #183028;
+    --cg-teal:       #305848;
+    --cg-teal-mid:   #487860;
+    --cg-teal-light: #789880;
+    --cg-teal-mist:  #a8c0b0;
+
+    /* ── warm gray ── */
+    --cg-warm-gray-dark:  #383028;
+    --cg-warm-gray:       #585048;
+    --cg-warm-gray-light: #908880;
+    --cg-warm-gray-pale:  #c0b8b0;
+
+    /* ── dark grounds ── */
+    --cg-void:        #060504;
+    --cg-near-black:  #0a0808;
+    --cg-deep-brown:  #181210;
+
+    /* ── borders ── */
+    --cg-border-dark:   #2a2018;
+    --cg-border-mid:    #504030;
+    --cg-border-light:  #786850;
+
+    /* ── nav ── */
+    --nav-accent:      var(--cg-cta);
+    --nav-glow:        rgba(192,120,56,0.4);
+    --nav-brand:       #d8a068;
+    --nav-brand-glow:  rgba(216,160,104,0.7);
 }
 
 /* Sub-nav button colors — all pages use these */
@@ -67,6 +148,14 @@ body.cg-page .sub-nav .nav-card.c-personnel:hover { background: transparent; col
 /* c-lavender: dusty lavender */
 body.cg-page .sub-nav .nav-card.c-lavender { background: var(--cg-lavender); color: var(--cg-deep); border-color: var(--cg-lavender); }
 body.cg-page .sub-nav .nav-card.c-lavender:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-lavender); }
+
+/* c-links: teal mid */
+body.cg-page .sub-nav .nav-card.c-links { background: var(--cg-teal-mid); color: var(--cg-deep); border-color: var(--cg-teal-mid); }
+body.cg-page .sub-nav .nav-card.c-links:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-teal-mid); }
+
+/* c-photography: sienna */
+body.cg-page .sub-nav .nav-card.c-photography { background: var(--cg-sienna); color: var(--cg-deep); border-color: var(--cg-sienna); }
+body.cg-page .sub-nav .nav-card.c-photography:hover { background: transparent; color: var(--cg-cream); border-color: var(--cg-sienna); }
 
 /* About button self-link hider */
 body.cg-page .sub-nav a[href="about.html"] {
