@@ -101,6 +101,18 @@ body.fldc-page .nav-card.c-music-videos:hover {
     color: var(--fldc-arc-orange);
 }
 
+/* c-events: alias for music videos (used by artist_links.js template) */
+body.fldc-page .nav-card.c-events {
+    background: var(--fldc-arc-orange);
+    color: var(--fldc-bg-screen-pale);
+    border-color: var(--fldc-arc-orange);
+}
+body.fldc-page .nav-card.c-events:hover {
+    background: transparent;
+    border-color: var(--fldc-arc-orange);
+    color: var(--fldc-arc-orange);
+}
+
 /* c-rose: arc red (releases) */
 body.fldc-page .nav-card.c-releases {
     background: var(--fldc-arc-red);
