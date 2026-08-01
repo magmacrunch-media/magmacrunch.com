@@ -76,6 +76,29 @@
         </div>
     </div>
 
+    <div class="divider"></div>
+
+    <div class="photo-strip-section">
+        <div class="section-label">// digital overlays //</div>
+        <div class="photo-strip-wrap" id="doStripWrap">
+            <div class="photo-strip" id="doStrip">
+                <div class="photo-item square" data-index="0">
+                    <img src="../../../assets/photos/woah/woah/woah1.JPG" alt="Digital overlay by Jake McCoy" loading="lazy">
+                    <div class="photo-caption">digital overlays by Jake McCoy</div>
+                </div>
+                <div class="photo-item square" data-index="1">
+                    <img src="../../../assets/photos/woah/woah/woah2.JPG" alt="Digital overlay by Jake McCoy" loading="lazy">
+                    <div class="photo-caption">digital overlays by Jake McCoy</div>
+                </div>
+                <div class="photo-item square" data-index="2">
+                    <img src="../../../assets/photos/woah/woah/woah3.JPG" alt="Digital overlay by Jake McCoy" loading="lazy">
+                    <div class="photo-caption">digital overlays by Jake McCoy</div>
+                </div>
+            </div>
+            <div class="strip-scroll-hint">← drag to scroll →</div>
+        </div>
+    </div>
+
     <div class="photo-lightbox" id="woahLightbox">
         <button class="lb-close" id="woahLbClose">[ close ]</button>
         <div class="lb-img-wrap"><img id="woahLbImg" src="" alt=""></div>
@@ -93,19 +116,18 @@
 <script src="../../../nav.js"></script>
 <script>
 (function() {
-    const strip = document.getElementById('woahStrip');
-    const wrap  = document.getElementById('woahStripWrap');
-    const hint  = document.getElementById('woahScrollHint');
-    let isDown = false, startX, scrollLeft;
-
-    strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
-    strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
-    strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
-    strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
-    strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+    document.querySelectorAll('.photo-strip').forEach(strip => {
+        const wrap = strip.closest('.photo-strip-wrap');
+        let isDown = false, startX, scrollLeft;
+        strip.addEventListener('mousedown', e => { isDown = true; strip.classList.add('dragging'); startX = e.pageX - strip.offsetLeft; scrollLeft = strip.scrollLeft; });
+        strip.addEventListener('mouseleave', () => { isDown = false; strip.classList.remove('dragging'); });
+        strip.addEventListener('mouseup',    () => { isDown = false; strip.classList.remove('dragging'); });
+        strip.addEventListener('mousemove',  e => { if (!isDown) return; e.preventDefault(); strip.scrollLeft = scrollLeft - (e.pageX - strip.offsetLeft - startX) * 1.2; });
+        strip.addEventListener('scroll', () => { if (strip.scrollLeft > 30) wrap.classList.add('scrolled'); }, { passive: true });
+    });
 })();
 (function() {
-    const items   = document.querySelectorAll('#woahStrip .photo-item');
+    const items   = document.querySelectorAll('#woahStrip .photo-item, #doStrip .photo-item');
     const lb      = document.getElementById('woahLightbox');
     const lbImg   = document.getElementById('woahLbImg');
     const lbCap   = document.getElementById('woahLbCap');
