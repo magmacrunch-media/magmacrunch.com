@@ -666,6 +666,15 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             // a half-swapped page: the outgoing content is never shown with the
             // incoming body class, and never shown with its own CSS removed.
             document.body.className = doc.body.className;
+
+            // Sync <meta name="referrer"> from incoming page so referrer
+            // policy doesn't leak across SPA navigations.
+            document.querySelectorAll('meta[name="referrer"]').forEach(m => m.remove());
+            const incomingReferrer = doc.querySelector('meta[name="referrer"]');
+            if (incomingReferrer) {
+                document.head.appendChild(incomingReferrer.cloneNode(true));
+            }
+
             if (newMain) mainEl.innerHTML = newMain.innerHTML;
             if (newFooter && curFooter) curFooter.innerHTML = newFooter.innerHTML;
             css.dropStale();
