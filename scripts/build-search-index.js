@@ -72,7 +72,7 @@ function parseMainPages() {
     { file: 'home/about.html', title: 'About', desc: 'About magmacrunch media' },
     { file: 'home/guestbook.html', title: 'Guestbook', desc: 'Sign the guestbook' },
     { file: 'music/index.html', title: 'Music Hub', desc: 'Music landing page' },
-    { file: 'music/distributed-music.html', title: 'Distributed Music', desc: 'Stream and download releases' },
+    { file: 'music/distributed-music/index.html', title: 'Distributed Music', desc: 'Stream and download releases' },
     { file: 'music/jukebox/index.html', title: 'Jukebox', desc: 'Audio jukebox player' },
     { file: 'music/physical-media/index.html', title: 'Physical Media', desc: 'CDs, tapes, and floppy disks' },
     { file: 'music/physical-media/cd/index.html', title: 'CD Releases', desc: 'CD releases catalog' },
@@ -113,13 +113,13 @@ function parseMainPages() {
 
 // ── Distributed Music ──────────────────────────────────────
 function parseDistributedMusic() {
-  const html = fs.readFileSync(path.join(ROOT, 'music/distributed-music.html'), 'utf8');
+  const html = fs.readFileSync(path.join(ROOT, 'music/distributed-music/index.html'), 'utf8');
   const cardRegex = /<!-- ═══ (.+?) ═══ -->[\s\S]*?id="([^"]+)"[\s\S]*?dist-title">([^<]+)<[\s\S]*?dist-artist">by <a href="([^"]+)">([^<]+)<[\s\S]*?dist-description">\s*<p>\s*([\s\S]*?)\s*<\/p>/g;
   let match;
   while ((match = cardRegex.exec(html)) !== null) {
     const [, , id, title, , artistName, desc] = match;
     const cleanDesc = desc.replace(/\s+/g, ' ').trim();
-    addItem(`${title}`, 'music', `music/distributed-music.html#${id}`, `${artistName} — ${cleanDesc}`);
+    addItem(`${title}`, 'music', `music/distributed-music/#${id}`, `${artistName} — ${cleanDesc}`);
   }
 }
 
