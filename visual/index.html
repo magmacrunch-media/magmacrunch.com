@@ -6,8 +6,9 @@
     <title>visual — magmacrunch media</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="visual.css">
     <style>
-        /* ── NAV OVERRIDES (using :root like guestbook) ── */
+        /* ── NAV OVERRIDES ── */
         :root {
             --nav-accent: #FF3800;
             --nav-glow: rgba(255,56,0,0.4);
@@ -15,7 +16,7 @@
             --nav-brand-glow: rgba(57,255,20,0.7);
         }
 
-        /* ── WARHOL POP ART PALETTE ── */
+        /* ── POP ART PALETTE ── */
         :root {
             --pop-hotpink:      #FF1F5B;
             --pop-tangerine:    #FF6B00;
@@ -46,6 +47,20 @@
             --pop-magenta:      #CC00AA;
         }
 
+        /* ── SHARED PATTERN VARS ── */
+        :root {
+            --bc-accent: #F5A623;
+            --footer-border: #AAFF00;
+            --footer-accent: #FF1493;
+            --dd-1: #FF1493;
+            --dd-2: #00CCA3;
+            --dd-3: #F5A623;
+            --dd-4: #39FF14;
+            --dd-5: #FF6600;
+            --dd-hover-color: #39FF14;
+            --dd-hover-bg: #1A0533;
+        }
+
         /* ── PAGE OVERRIDES ── */
         body.pop-art {
             --black: #111111;
@@ -57,67 +72,22 @@
             background: #FF1F5B;
         }
 
-        /* ── FOOTER OVERRIDES ── */
-        body.pop-art footer {
-            border-top-color: #AAFF00;
-        }
-        body.pop-art footer span {
-            color: #FF1493;
-        }
-
-        /* ── DROPDOWN OVERRIDES ── */
-        body.pop-art .dropdown a {
-            border-left: 3px solid transparent;
-            border-bottom-color: rgba(0,0,0,0.2);
-        }
-        body.pop-art .dropdown a:nth-child(1) { border-left-color: #FF1493; }
-        body.pop-art .dropdown a:nth-child(2) { border-left-color: #00CCA3; }
-        body.pop-art .dropdown a:nth-child(3) { border-left-color: #F5A623; }
-        body.pop-art .dropdown a:nth-child(4) { border-left-color: #39FF14; }
-        body.pop-art .dropdown a:nth-child(5) { border-left-color: #FF6600; }
-        body.pop-art .dropdown a:hover {
-            color: #39FF14;
-            background: #1A0533;
-        }
-
-        /* ── BREADCRUMB ── */
-        .breadcrumb {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #F5F0E8;
-            letter-spacing: 0.1em;
-            margin-top: -8px;
-            margin-bottom: 16px;
+        /* ── BREADCRUMB — non-absolute variant ── */
+        main .breadcrumb {
+            position: static;
             align-self: flex-start;
-        }
-        .breadcrumb a { color: #F5F0E8; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #F5A623; }
-        .breadcrumb .sep { margin: 0 8px; color: #F5A623; opacity: 0.7; }
-        .breadcrumb .current { color: #F5A623; }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 80px 20px 60px;
+            margin: -8px 0 16px;
         }
 
+        /* ── PAGE TITLE / SUBTITLE ── */
         .page-title {
-            font-family: 'Press Start 2P', monospace;
             font-size: 18px;
             color: #00BFFF;
             text-shadow: 0 0 16px rgba(0,191,255,0.6);
-            margin-bottom: 10px;
-            letter-spacing: 0.1em;
             animation: fadeUp 0.5s ease both;
         }
-
         .page-subtitle {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
             color: #FF007F;
-            letter-spacing: 0.1em;
             margin-bottom: 48px;
             animation: fadeUp 0.5s 0.05s ease both;
         }
@@ -210,7 +180,6 @@
         .visual-card:hover:not(.coming-soon)::before { width: 7px; }
         .visual-card:hover:not(.coming-soon) .vc-arrow { opacity: 1; transform: translateX(0); }
 
-        /* coming soon state */
         .visual-card.coming-soon {
             cursor: default;
             opacity: 0.45;
@@ -266,7 +235,6 @@
         }
 
         @media (max-width: 640px) {
-            .page-title { font-size: 13px; }
             .vc-label { font-size: 8px; }
         }
 

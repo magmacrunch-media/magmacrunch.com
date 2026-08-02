@@ -23,7 +23,7 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 ├── press/             # journals: scientific/, experimental/
 ├── scripts/           # backup-musicbrainz.mjs
 ├── templates/         # JS template scripts for archive pages
-└── visual/            # gallery pages (collage, photography, music-videos)
+└── visual/            # gallery pages (collage, photography, music-videos, teevee)
 ```
 
 ## Key conventions
@@ -85,24 +85,20 @@ Use `body.my-theme` only for non-nav overrides (background, text colors, etc.).
 
 ## Page-specific color themes
 
-Visual pages use a two-part theming pattern:
+Visual pages use a three-part theming pattern:
 
-1. **`:root`** — nav overrides (accent, glow, brand, brand-glow) + theme palette CSS variables
-2. **`body.theme-name`** — page overrides (background, text, dim, rose, yellow, etc.)
+1. **`visual/visual.css`** — shared base styles (main layout, breadcrumb, page-header, footer, dropdown) that consume CSS custom properties
+2. **`:root`** — nav overrides + theme palette + shared pattern vars (`--bc-accent`, `--footer-border`, `--footer-accent`, `--dd-1`–`--dd-5`, `--dd-hover-color`, `--dd-hover-bg`)
+3. **`body.theme-name`** — page overrides (background, text, dim, rose, yellow, etc.)
+
+Each visual subpage links `visual.css` for shared structure and keeps its unique component CSS inline. All 5 themes are preserved as inline `:root` palette + `body.theme` overrides.
 
 Existing themes:
 - `visual/index.html` — Pop Art (`:root` + `body.pop-art`)
 - `visual/music-videos.html` — MTV (`:root` + `body.mtv`)
-- `visual/collage.html` — Editorial Magazine (`:root` + `body.editorial`)
-
-Dropdown menus can be styled with colored left borders per item:
-```css
-body.theme .dropdown a { border-left: 3px solid transparent; }
-body.theme .dropdown a:nth-child(1) { border-left-color: #color1; }
-body.theme .dropdown a:nth-child(2) { border-left-color: #color2; }
-/* etc. */
-body.theme .dropdown a:hover { background: #accent; }
-```
+- `visual/collage.html` — Memphis (`:root` + `body.memphis`)
+- `visual/photography.html` — City Pop (`:root` + `body.city-pop`)
+- `visual/tv.html` — Broadcast (`:root` + `body.broadcast`)
 
 ## Color palette (defined in style.css)
 

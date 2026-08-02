@@ -6,7 +6,7 @@
     <title>photography — magmacrunch media</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../assets/archive.css">
+    <link rel="stylesheet" href="visual.css">
     <style>
         /* ── CITY POP PALETTE ── */
         :root {
@@ -32,12 +32,26 @@
             --cp-cassette-gold:  #E8C86A;
         }
 
-        /* ── NAV OVERRIDES (must use :root) ── */
+        /* ── NAV OVERRIDES ── */
         :root {
             --nav-accent: #FF4FA0;
             --nav-glow: rgba(255,79,160,0.4);
             --nav-brand: #C0C8E0;
             --nav-brand-glow: rgba(192,200,224,0.7);
+        }
+
+        /* ── SHARED PATTERN VARS ── */
+        :root {
+            --bc-accent: #00E5CC;
+            --footer-border: #2A2A5A;
+            --footer-accent: #FF8FB0;
+            --dd-1: #FF8FB0;
+            --dd-2: #00E5CC;
+            --dd-3: #C8AEFF;
+            --dd-4: #FFB48A;
+            --dd-5: #6B6BFF;
+            --dd-hover-color: #0D0D2B;
+            --dd-hover-bg: #00E5CC;
         }
 
         /* ── PAGE OVERRIDES ── */
@@ -60,41 +74,15 @@
             background-attachment: fixed;
         }
 
-        /* ── FOOTER OVERRIDES ── */
-        body.city-pop footer {
-            border-top-color: #2A2A5A;
-        }
-        body.city-pop footer span {
-            color: #FF8FB0;
-        }
-
         /* ── DROPDOWN OVERRIDES ── */
         body.city-pop .dropdown {
             border-color: #FF4FA0;
             box-shadow: 0 8px 24px rgba(0,0,0,0.7), 0 0 12px rgba(255,79,160,0.3);
         }
-        body.city-pop .dropdown a {
-            border-left: 3px solid transparent;
-            border-bottom-color: #1E1E4A;
-        }
-        body.city-pop .dropdown a:nth-child(1) { border-left-color: #FF8FB0; }
-        body.city-pop .dropdown a:nth-child(2) { border-left-color: #00E5CC; }
-        body.city-pop .dropdown a:nth-child(3) { border-left-color: #C8AEFF; }
-        body.city-pop .dropdown a:nth-child(4) { border-left-color: #FFB48A; }
-        body.city-pop .dropdown a:nth-child(5) { border-left-color: #6B6BFF; }
-        body.city-pop .dropdown a:hover {
-            color: #0D0D2B;
-            background: #00E5CC;
-        }
 
-        /* ── BREADCRUMB ── */
-        .breadcrumb a:hover { color: #00E5CC; }
-        .breadcrumb .sep { color: #00E5CC; opacity: 0.7; }
-        .breadcrumb .current { color: #00E5CC; }
-
-        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
-        .page-title { font-family:'Press Start 2P',monospace; font-size:clamp(13px,2.8vw,22px); color:#FF8FB0; text-shadow:0 0 20px rgba(255,143,176,0.5); margin-bottom:10px; letter-spacing:0.08em; }
-        .page-subtitle { font-family:'Press Start 2P',monospace; font-size:7px; color:#FFB48A; letter-spacing:0.12em; }
+        /* ── PAGE TITLE / SUBTITLE ── */
+        .page-title { font-size:clamp(13px,2.8vw,22px); color:#FF8FB0; text-shadow:0 0 20px rgba(255,143,176,0.5); letter-spacing:0.08em; }
+        .page-subtitle { color:#FFB48A; letter-spacing:0.12em; }
 
         .ascii-camera {
             font-family: 'Courier Prime', monospace;
@@ -108,177 +96,51 @@
             overflow-x: auto;
         }
 
-        .section-divider { width:100%; max-width:900px; height:1px; background:linear-gradient(90deg,transparent,#FF8FB0,#5EEEF0,#C8AEFF,transparent); margin:0 20px 56px; opacity:0.3; animation:fadeUp 0.5s 0.05s ease both; }
+        .section-divider { width:100%; max-width:900px; background:linear-gradient(90deg,transparent,#FF8FB0,#5EEEF0,#C8AEFF,transparent); margin:0 20px 56px; opacity:0.3; animation:fadeUp 0.5s 0.05s ease both; }
 
         /* ── SERIES BLOCK ── */
         .series { width:100%; max-width:960px; padding:0 20px; margin-bottom:72px; animation:fadeUp 0.5s ease both; }
         #series-summer12 { animation: none !important; opacity: 1 !important; }
-
         .series-header { display:flex; align-items:baseline; gap:20px; margin-bottom:6px; }
         .series-title { font-family:'Press Start 2P',monospace; font-size:clamp(9px,1.6vw,13px); color:#F0EEF8; letter-spacing:0.08em; }
         .series-meta { font-family:'Press Start 2P',monospace; font-size:6px; color:#A0A8FF; letter-spacing:0.12em; opacity:0.7; }
-
         .series-desc { font-family:'Courier Prime',monospace; font-size:13px; color:#C0C8E0; line-height:1.7; letter-spacing:0.02em; margin-bottom:20px; max-width:600px; opacity:0.8; }
 
         /* ── HORIZONTAL SCROLL STRIP ── */
-        .photo-strip-wrap {
-            position: relative;
-            width: 100%;
-        }
-        .photo-strip {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scrollbar-color: #00E5CC #141438;
-            padding-bottom: 10px;
-            cursor: grab;
-        }
+        .photo-strip-wrap { position: relative; width: 100%; }
+        .photo-strip { display: flex; gap: 6px; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #00E5CC #141438; padding-bottom: 10px; cursor: grab; }
         .photo-strip:active { cursor: grabbing; }
         .photo-strip::-webkit-scrollbar { height: 3px; }
         .photo-strip::-webkit-scrollbar-track { background: #141438; }
         .photo-strip::-webkit-scrollbar-thumb { background: #00E5CC; opacity: 0.5; }
 
-        .photo-item {
-            flex-shrink: 0;
-            position: relative;
-            height: clamp(220px, 38vw, 420px);
-            scroll-snap-align: start;
-            overflow: hidden;
-            border: 1px solid #2A2A5A;
-            transition: border-color 0.2s;
-            cursor: pointer;
-        }
+        .photo-item { flex-shrink: 0; position: relative; height: clamp(220px, 38vw, 420px); scroll-snap-align: start; overflow: hidden; border: 1px solid #2A2A5A; transition: border-color 0.2s; cursor: pointer; }
         .photo-item:hover { border-color: #00E5CC; }
-
-        /* vary widths based on aspect ratio of each image */
         .photo-item.landscape { aspect-ratio: 4/3; }
         .photo-item.portrait  { aspect-ratio: 3/4; }
         .photo-item.wide      { aspect-ratio: 16/9; }
 
-        .photo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block;
-            transition: transform 0.4s ease, filter 0.3s ease;
-            filter: saturate(1.1) brightness(1.0);
-        }
-        .photo-item:hover img {
-            transform: scale(1.03);
-            filter: saturate(1.0) brightness(1.0);
-        }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform 0.4s ease, filter 0.3s ease; filter: saturate(1.1) brightness(1.0); }
+        .photo-item:hover img { transform: scale(1.03); filter: saturate(1.0) brightness(1.0); }
 
-        /* caption overlay on hover */
-        .photo-caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 24px 12px 10px;
-            background: linear-gradient(to top, rgba(13,13,43,0.85) 0%, transparent 100%);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 5px;
-            color: #F0EEF8;
-            letter-spacing: 0.1em;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-        }
+        .photo-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 24px 12px 10px; background: linear-gradient(to top, rgba(13,13,43,0.85) 0%, transparent 100%); font-family: 'Press Start 2P', monospace; font-size: 5px; color: #F0EEF8; letter-spacing: 0.1em; opacity: 0; transition: opacity 0.25s ease; }
         .photo-item:hover .photo-caption { opacity: 1; }
 
-        /* scroll hint arrow */
-        .strip-scroll-hint {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #C0C8E0;
-            letter-spacing: 0.15em;
-            margin-top: 10px;
-            opacity: 0.4;
-            text-align: right;
-            padding-right: 4px;
-            transition: opacity 0.3s;
-        }
+        .strip-scroll-hint { font-family: 'Press Start 2P', monospace; font-size: 6px; color: #C0C8E0; letter-spacing: 0.15em; margin-top: 10px; opacity: 0.4; text-align: right; padding-right: 4px; transition: opacity 0.3s; }
         .photo-strip-wrap.scrolled .strip-scroll-hint { opacity: 0; }
 
         /* ── LIGHTBOX ── */
-        .lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(13,13,43,0.97);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(13,13,43,0.97); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
         .lightbox.open { display: flex; }
-
-        .lightbox-img-wrap {
-            position: relative;
-            max-width: 90vw;
-            max-height: 82vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .lightbox-img-wrap img {
-            max-width: 90vw;
-            max-height: 82vh;
-            object-fit: contain;
-            display: block;
-            border: 1px solid #2A2A5A;
-        }
-
-        .lightbox-nav {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-            margin-top: 18px;
-        }
-        .lb-btn {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: #A0A8FF;
-            background: none;
-            border: 1px solid #2A2A5A;
-            padding: 8px 16px;
-            cursor: pointer;
-            letter-spacing: 0.1em;
-            transition: color 0.15s, border-color 0.15s;
-        }
+        .lightbox-img-wrap { position: relative; max-width: 90vw; max-height: 82vh; display: flex; align-items: center; justify-content: center; }
+        .lightbox-img-wrap img { max-width: 90vw; max-height: 82vh; object-fit: contain; display: block; border: 1px solid #2A2A5A; }
+        .lightbox-nav { display: flex; align-items: center; gap: 32px; margin-top: 18px; }
+        .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: #A0A8FF; background: none; border: 1px solid #2A2A5A; padding: 8px 16px; cursor: pointer; letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
         .lb-btn:hover { color: #00E5CC; border-color: #00E5CC; }
-        .lb-close {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #C0C8E0;
-            background: none;
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.1em;
-            transition: color 0.15s;
-            padding: 8px;
-        }
+        .lb-close { font-family: 'Press Start 2P', monospace; font-size: 7px; color: #C0C8E0; background: none; border: none; cursor: pointer; letter-spacing: 0.1em; transition: color 0.15s; padding: 8px; }
         .lb-close:hover { color: #FF8FB0; }
-        .lb-counter {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #C0C8E0;
-            letter-spacing: 0.12em;
-            opacity: 0.6;
-            min-width: 60px;
-            text-align: center;
-        }
-        .lb-caption {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #FFB48A;
-            letter-spacing: 0.1em;
-            margin-top: 10px;
-            opacity: 0.5;
-            min-height: 14px;
-        }
+        .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px; color: #C0C8E0; letter-spacing: 0.12em; opacity: 0.6; min-width: 60px; text-align: center; }
+        .lb-caption { font-family: 'Press Start 2P', monospace; font-size: 6px; color: #FFB48A; letter-spacing: 0.1em; margin-top: 10px; opacity: 0.5; min-height: 14px; }
 
         @media (max-width: 640px) {
             .photo-item { height: clamp(160px, 55vw, 260px); }
