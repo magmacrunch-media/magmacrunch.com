@@ -9,10 +9,9 @@
     <meta http-equiv="Expires" content="0">
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="visual.css">
     <style>
-        /* ══════════════════════════════════════════
-           NAV OVERRIDES
-           ══════════════════════════════════════════ */
+        /* ── NAV OVERRIDES ── */
         :root {
             --nav-accent: #FFB800;
             --nav-glow: rgba(255,184,0,0.4);
@@ -20,9 +19,7 @@
             --nav-brand-glow: rgba(240,234,216,0.5);
         }
 
-        /* ══════════════════════════════════════════
-           PAGE PALETTE
-           ══════════════════════════════════════════ */
+        /* ── TV PALETTE ── */
         :root {
             --tv-amber: #FFB800;
             --tv-amber-dim: #B38200;
@@ -40,9 +37,21 @@
             --tv-badge-text: #8A7A5A;
         }
 
-        /* ══════════════════════════════════════════
-           BODY THEME
-           ══════════════════════════════════════════ */
+        /* ── SHARED PATTERN VARS ── */
+        :root {
+            --bc-accent: #FFB800;
+            --footer-border: #FFB800;
+            --footer-accent: #FFB800;
+            --dd-1: #FF6B6B;
+            --dd-2: #FFB800;
+            --dd-3: #00F5FF;
+            --dd-4: #39FF6E;
+            --dd-5: transparent;
+            --dd-hover-color: #FFB800;
+            --dd-hover-bg: transparent;
+        }
+
+        /* ── BODY THEME ── */
         body.broadcast {
             --black: #0A0A12;
             --deep: #111118;
@@ -56,42 +65,8 @@
             overflow-x: hidden;
         }
 
-        body.broadcast .dropdown a { border-left: 3px solid transparent; }
-        body.broadcast .dropdown a:nth-child(1) { border-left-color: #FF6B6B; }
-        body.broadcast .dropdown a:nth-child(2) { border-left-color: #FFB800; }
-        body.broadcast .dropdown a:nth-child(3) { border-left-color: #00F5FF; }
-        body.broadcast .dropdown a:nth-child(4) { border-left-color: #39FF6E; }
-
-        body.broadcast .breadcrumb .sep { color: var(--tv-amber); }
-        body.broadcast .breadcrumb .current { color: var(--tv-amber); }
-        body.broadcast footer span { color: var(--tv-amber); }
-
-        /* ══════════════════════════════════════════
-           BREADCRUMB (matches archive.css)
-           ══════════════════════════════════════════ */
-        .breadcrumb {
-            position: absolute;
-            top: 72px;
-            left: 20px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--dim);
-            letter-spacing: 0.1em;
-            margin: 0;
-        }
-        .breadcrumb a {
-            color: var(--dim);
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-        .breadcrumb a:hover { color: var(--tv-amber); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--tv-amber); opacity: 0.7; }
-
-        /* ══════════════════════════════════════════
-           PAGE HEADER
-           ══════════════════════════════════════════ */
+        /* ── PAGE TITLE / SUBTITLE ── */
         .page-title {
-            font-family: 'Press Start 2P', monospace;
             font-size: clamp(13px, 2.8vw, 22px);
             color: var(--tv-amber);
             text-shadow: 0 0 20px rgba(255,184,0,0.6), 0 0 40px rgba(255,184,0,0.3);
@@ -106,189 +81,43 @@
             margin-bottom: 32px;
         }
 
-        /* ══════════════════════════════════════════
-           TV CONTAINER
-           ══════════════════════════════════════════ */
-        .tv-wrap {
-            display: flex;
-            justify-content: center;
-            padding: 80px 16px 60px;
-            animation: fadeUp 0.6s ease-out;
-        }
-        .tv {
-            position: relative;
-            width: 100%;
-            max-width: 1100px;
-        }
+        /* ── TV CONTAINER ── */
+        .tv-wrap { display: flex; justify-content: center; padding: 80px 16px 60px; animation: fadeUp 0.6s ease-out; }
+        .tv { position: relative; width: 100%; max-width: 1100px; }
 
         /* ─── ANTENNA ─── */
-        .tv-antenna {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: -4px;
-            position: relative;
-            z-index: 1;
-        }
-        .antenna-prong {
-            width: 4px;
-            height: 60px;
-            background: linear-gradient(to top, var(--tv-cabinet-light), #6A5A40);
-            border-radius: 2px;
-            transform-origin: bottom center;
-            position: relative;
-        }
+        .tv-antenna { display: flex; justify-content: center; gap: 40px; margin-bottom: -4px; position: relative; z-index: 1; }
+        .antenna-prong { width: 4px; height: 60px; background: linear-gradient(to top, var(--tv-cabinet-light), #6A5A40); border-radius: 2px; transform-origin: bottom center; position: relative; }
         .antenna-prong.left { transform: rotate(-25deg); }
         .antenna-prong.right { transform: rotate(25deg); }
-        .antenna-prong::after {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            background: var(--tv-amber);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--tv-amber), 0 0 16px rgba(255,184,0,0.4);
-        }
+        .antenna-prong::after { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 8px; height: 8px; background: var(--tv-amber); border-radius: 50%; box-shadow: 0 0 8px var(--tv-amber), 0 0 16px rgba(255,184,0,0.4); }
 
         /* ─── TV BODY ─── */
-        .tv-body {
-            display: grid;
-            grid-template-columns: 1fr 160px;
-            gap: 12px;
-            background: var(--tv-cabinet);
-            border-radius: 16px;
-            padding: 20px;
-            border: 2px solid var(--tv-cabinet-light);
-            box-shadow:
-                0 4px 24px rgba(0,0,0,0.6),
-                inset 0 1px 0 rgba(255,255,255,0.05);
-            position: relative;
-        }
-        .tv-body::before {
-            content: '';
-            position: absolute;
-            inset: 4px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.03);
-            pointer-events: none;
-        }
-        .tv-left {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .tv-right {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-left: 1px solid rgba(255,255,255,0.05);
-        }
+        .tv-body { display: grid; grid-template-columns: 1fr 160px; gap: 12px; background: var(--tv-cabinet); border-radius: 16px; padding: 20px; border: 2px solid var(--tv-cabinet-light); box-shadow: 0 4px 24px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05); position: relative; }
+        .tv-body::before { content: ''; position: absolute; inset: 4px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); pointer-events: none; }
+        .tv-left { display: flex; flex-direction: column; gap: 8px; }
+        .tv-right { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 8px 0; border-left: 1px solid rgba(255,255,255,0.05); }
 
         /* ─── SCREEN AREA ─── */
-        .tv-screen-area {
-            position: relative;
-            background: var(--tv-bezel);
-            border-radius: 10px;
-            padding: 10px;
-            border: 2px solid #0D0B08;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
-        }
-        .tv-screen {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            background: var(--tv-screen-off);
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow:
-                inset 0 0 40px rgba(0,0,0,0.8),
-                inset 0 0 80px rgba(0,0,0,0.4);
-        }
-
-        /* ─── YOUTUBE PLAYER ─── */
-        #yt-player {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            border: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+        .tv-screen-area { position: relative; background: var(--tv-bezel); border-radius: 10px; padding: 10px; border: 2px solid #0D0B08; box-shadow: inset 0 2px 8px rgba(0,0,0,0.8); }
+        .tv-screen { position: relative; width: 100%; aspect-ratio: 16/9; background: var(--tv-screen-off); border-radius: 6px; overflow: hidden; box-shadow: inset 0 0 40px rgba(0,0,0,0.8), inset 0 0 80px rgba(0,0,0,0.4); }
+        #yt-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; opacity: 0; transition: opacity 0.3s ease; }
 
         /* ─── SCANLINE OVERLAY ─── */
-        .tv-screen::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.15) 2px,
-                rgba(0,0,0,0.15) 4px
-            );
-            pointer-events: none;
-            z-index: 3;
-            border-radius: 6px;
-        }
+        .tv-screen::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px); pointer-events: none; z-index: 3; border-radius: 6px; }
 
         /* ─── PHOSPHOR GLOW ─── */
-        .tv-screen::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(
-                ellipse at center,
-                var(--tv-screen-glow) 0%,
-                transparent 70%
-            );
-            pointer-events: none;
-            z-index: 4;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            border-radius: 6px;
-        }
-        .tv-screen.on-air::before {
-            opacity: 1;
-        }
+        .tv-screen::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, var(--tv-screen-glow) 0%, transparent 70%); pointer-events: none; z-index: 4; opacity: 0; transition: opacity 0.5s ease; border-radius: 6px; }
+        .tv-screen.on-air::before { opacity: 1; }
 
         /* ─── STATIC CANVAS ─── */
-        #static-canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            opacity: 0;
-            pointer-events: none;
-            border-radius: 6px;
-        }
-        #static-canvas.active {
-            opacity: 1;
-        }
+        #static-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; opacity: 0; pointer-events: none; border-radius: 6px; }
+        #static-canvas.active { opacity: 1; }
 
         /* ─── COLOR BARS ─── */
-        .color-bars {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            opacity: 0;
-            pointer-events: none;
-            border-radius: 6px;
-            overflow: hidden;
-            display: flex;
-        }
-        .color-bars.active {
-            opacity: 1;
-        }
-        .color-bars div {
-            flex: 1;
-        }
+        .color-bars { position: absolute; inset: 0; z-index: 1; opacity: 0; pointer-events: none; border-radius: 6px; overflow: hidden; display: flex; }
+        .color-bars.active { opacity: 1; }
+        .color-bars div { flex: 1; }
         .color-bars .bar-1 { background: #C0C0C0; }
         .color-bars .bar-2 { background: #C0C000; }
         .color-bars .bar-3 { background: #00C0C0; }
@@ -297,426 +126,90 @@
         .color-bars .bar-6 { background: #C00000; }
         .color-bars .bar-7 { background: #0000C0; }
 
-        /* ─── SCREEN OFF ─── */
-        .tv-screen.off {
-            background: var(--tv-screen-off);
-        }
-        .tv-screen.off::before {
-            opacity: 0 !important;
-        }
-
-        /* ─── FLICKER ANIMATION ─── */
-        .tv-screen.flicker {
-            animation: screenFlicker 0.15s ease-out;
-        }
-        @keyframes screenFlicker {
-            0%   { opacity: 1; }
-            10%  { opacity: 0.2; }
-            20%  { opacity: 0.8; }
-            30%  { opacity: 0.1; }
-            40%  { opacity: 0.9; }
-            50%  { opacity: 0.3; }
-            60%  { opacity: 1; }
-            70%  { opacity: 0.5; }
-            80%  { opacity: 1; }
-            90%  { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        /* ─── SCREEN TURN ON ─── */
-        .tv-screen.turn-on {
-            animation: screenTurnOn 0.6s ease-out;
-        }
-        @keyframes screenTurnOn {
-            0%   { transform: scaleY(0.005) scaleX(0.3); filter: brightness(10); }
-            30%  { transform: scaleY(0.005) scaleX(1); filter: brightness(6); }
-            50%  { transform: scaleY(1) scaleX(1); filter: brightness(2); }
-            100% { transform: scaleY(1) scaleX(1); filter: brightness(1); }
-        }
-
-        /* ─── SCREEN TURN OFF ─── */
-        .tv-screen.turn-off {
-            animation: screenTurnOff 0.4s ease-in forwards;
-        }
-        @keyframes screenTurnOff {
-            0%   { transform: scaleY(1) scaleX(1); filter: brightness(1); }
-            40%  { transform: scaleY(0.005) scaleX(1); filter: brightness(6); }
-            70%  { transform: scaleY(0.005) scaleX(0.1); filter: brightness(10); }
-            100% { transform: scaleY(0) scaleX(0); filter: brightness(0); }
-        }
+        /* ─── SCREEN STATES ─── */
+        .tv-screen.off { background: var(--tv-screen-off); }
+        .tv-screen.off::before { opacity: 0 !important; }
+        .tv-screen.flicker { animation: screenFlicker 0.15s ease-out; }
+        @keyframes screenFlicker { 0%{opacity:1} 10%{opacity:0.2} 20%{opacity:0.8} 30%{opacity:0.1} 40%{opacity:0.9} 50%{opacity:0.3} 60%{opacity:1} 70%{opacity:0.5} 80%{opacity:1} 90%{opacity:0.7} 100%{opacity:1} }
+        .tv-screen.turn-on { animation: screenTurnOn 0.6s ease-out; }
+        @keyframes screenTurnOn { 0%{transform:scaleY(0.005) scaleX(0.3);filter:brightness(10)} 30%{transform:scaleY(0.005) scaleX(1);filter:brightness(6)} 50%{transform:scaleY(1) scaleX(1);filter:brightness(2)} 100%{transform:scaleY(1) scaleX(1);filter:brightness(1)} }
+        .tv-screen.turn-off { animation: screenTurnOff 0.4s ease-in forwards; }
+        @keyframes screenTurnOff { 0%{transform:scaleY(1) scaleX(1);filter:brightness(1)} 40%{transform:scaleY(0.005) scaleX(1);filter:brightness(6)} 70%{transform:scaleY(0.005) scaleX(0.1);filter:brightness(10)} 100%{transform:scaleY(0) scaleX(0);filter:brightness(0)} }
 
         /* ─── CHANNEL DISPLAY ─── */
-        .tv-channel-display {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-        }
-        .tv-channel-display {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            margin-top: 8px;
-        }
-        .channel-number {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 14px;
-            color: var(--tv-amber);
-            text-shadow: 0 0 10px rgba(255,184,0,0.6);
-            letter-spacing: 2px;
-        }
-        .channel-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--tv-amber-dim);
-            letter-spacing: 1px;
-        }
-        .vu-meter {
-            display: flex;
-            gap: 2px;
-            align-items: flex-end;
-            height: 14px;
-        }
-        .vu-bar {
-            width: 3px;
-            background: var(--tv-amber);
-            border-radius: 1px;
-            opacity: 0.3;
-            transition: height 0.1s, opacity 0.1s;
-        }
-        .vu-bar.active {
-            opacity: 1;
-        }
+        .tv-channel-display { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; margin-top: 8px; }
+        .channel-number { font-family: 'Press Start 2P', monospace; font-size: 14px; color: var(--tv-amber); text-shadow: 0 0 10px rgba(255,184,0,0.6); letter-spacing: 2px; }
+        .channel-label { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--tv-amber-dim); letter-spacing: 1px; }
+        .vu-meter { display: flex; gap: 2px; align-items: flex-end; height: 14px; }
+        .vu-bar { width: 3px; background: var(--tv-amber); border-radius: 1px; opacity: 0.3; transition: height 0.1s, opacity 0.1s; }
+        .vu-bar.active { opacity: 1; }
 
         /* ─── ON-SCREEN TITLE OVERLAY ─── */
-        .tv-screen-overlay {
-            position: absolute;
-            bottom: 22px;
-            left: 22px;
-            z-index: 6;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
+        .tv-screen-overlay { position: absolute; bottom: 22px; left: 22px; z-index: 6; display: flex; flex-direction: column; gap: 2px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
         .tv-screen-overlay.visible { opacity: 1; }
-        .tv-on-screen-ch {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-            color: var(--tv-amber);
-            text-shadow: 0 0 12px rgba(255,184,0,0.6);
-        }
-        .tv-on-screen-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: var(--tv-phosphor);
-            text-shadow: 0 0 6px rgba(180,220,160,0.4);
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .tv-on-screen-artist {
-            font-family: 'Courier Prime', monospace;
-            font-size: 11px;
-            color: rgba(180,220,160,0.6);
-        }
+        .tv-on-screen-ch { font-family: 'Press Start 2P', monospace; font-size: 18px; color: var(--tv-amber); text-shadow: 0 0 12px rgba(255,184,0,0.6); }
+        .tv-on-screen-title { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--tv-phosphor); text-shadow: 0 0 6px rgba(180,220,160,0.4); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .tv-on-screen-artist { font-family: 'Courier Prime', monospace; font-size: 11px; color: rgba(180,220,160,0.6); }
 
         /* ─── SPEAKER GRILLE ─── */
-        .tv-grille {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            padding: 0 20px;
-        }
-        .grille-slot {
-            width: 40px;
-            height: 3px;
-            background: var(--tv-grille);
-            border-radius: 1px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
-        }
+        .tv-grille { display: flex; justify-content: center; gap: 6px; padding: 0 20px; }
+        .grille-slot { width: 40px; height: 3px; background: var(--tv-grille); border-radius: 1px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.6); }
 
         /* ─── CONTROLS PANEL ─── */
-        .tv-controls {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-        .tv-knob {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-        .tv-knob:active .knob-face {
-            transform: scale(0.92);
-        }
-        .knob-face {
-            width: 44px;
-            height: 44px;
-            background: radial-gradient(circle at 35% 35%, var(--tv-knob-face), var(--tv-knob));
-            border-radius: 50%;
-            border: 2px solid #3A3020;
-            box-shadow:
-                0 2px 6px rgba(0,0,0,0.5),
-                inset 0 1px 2px rgba(255,255,255,0.08);
-            transition: transform 0.1s;
-            position: relative;
-        }
-        .knob-face::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 10px;
-            background: var(--tv-amber-dim);
-            border-radius: 1px;
-        }
+        .tv-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .tv-knob { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; -webkit-user-select: none; user-select: none; }
+        .tv-knob:active .knob-face { transform: scale(0.92); }
+        .knob-face { width: 44px; height: 44px; background: radial-gradient(circle at 35% 35%, var(--tv-knob-face), var(--tv-knob)); border-radius: 50%; border: 2px solid #3A3020; box-shadow: 0 2px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.08); transition: transform 0.1s; position: relative; }
+        .knob-face::after { content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); width: 2px; height: 10px; background: var(--tv-amber-dim); border-radius: 1px; }
         .knob-face.no-tick::after { display: none; }
-        .knob-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: var(--tv-badge-text);
-            letter-spacing: 1px;
-        }
-        .knob-arrow {
-            font-size: 18px;
-            color: var(--tv-amber-dim);
-            line-height: 1;
-            transition: color 0.15s;
-        }
-        .tv-knob:hover .knob-arrow {
-            color: var(--tv-amber);
-            text-shadow: 0 0 8px rgba(255,184,0,0.5);
-        }
+        .knob-label { font-family: 'Press Start 2P', monospace; font-size: 6px; color: var(--tv-badge-text); letter-spacing: 1px; }
+        .knob-arrow { font-size: 18px; color: var(--tv-amber-dim); line-height: 1; transition: color 0.15s; }
+        .tv-knob:hover .knob-arrow { color: var(--tv-amber); text-shadow: 0 0 8px rgba(255,184,0,0.5); }
 
         /* ─── BRAND BADGE ─── */
-        .tv-brand {
-            text-align: center;
-            margin-top: 12px;
-        }
-        .tv-brand-text {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--tv-badge-text);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
+        .tv-brand { text-align: center; margin-top: 12px; }
+        .tv-brand-text { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--tv-badge-text); letter-spacing: 3px; text-transform: uppercase; }
 
         /* ─── TV GUIDE OVERLAY ─── */
-        .tv-guide {
-            position: absolute;
-            inset: 0;
-            z-index: 5;
-            background: rgba(0,8,0,0.94);
-            overflow: hidden;
-            border-radius: 6px;
-            display: flex;
-            flex-direction: column;
-        }
+        .tv-guide { position: absolute; inset: 0; z-index: 5; background: rgba(0,8,0,0.94); overflow: hidden; border-radius: 6px; display: flex; flex-direction: column; }
         .tv-guide.hidden { display: none; }
-        .tv-guide-header {
-            text-align: center;
-            padding: 10px 12px 6px;
-            border-bottom: 1px solid rgba(180,220,160,0.3);
-            flex-shrink: 0;
-            position: relative;
-        }
-        .guide-close {
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            background: none;
-            border: 1px solid rgba(180,220,160,0.3);
-            color: var(--tv-phosphor);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            padding: 4px 8px;
-            cursor: pointer;
-            border-radius: 3px;
-            transition: background 0.15s, border-color 0.15s;
-        }
-        .guide-close:hover {
-            background: rgba(180,220,160,0.15);
-            border-color: var(--tv-phosphor);
-        }
-        .guide-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: var(--tv-phosphor);
-            text-shadow: 0 0 8px rgba(180,220,160,0.5);
-            display: block;
-            letter-spacing: 2px;
-        }
-        .guide-subtitle {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: rgba(180,220,160,0.5);
-            display: block;
-            margin-top: 4px;
-            letter-spacing: 1px;
-        }
-        .tv-guide-scroll {
-            flex: 1;
-            overflow-y: auto;
-            padding: 8px 0;
-            scrollbar-width: none;
-        }
+        .tv-guide-header { text-align: center; padding: 10px 12px 6px; border-bottom: 1px solid rgba(180,220,160,0.3); flex-shrink: 0; position: relative; }
+        .guide-close { position: absolute; top: 8px; right: 10px; background: none; border: 1px solid rgba(180,220,160,0.3); color: var(--tv-phosphor); font-family: 'Press Start 2P', monospace; font-size: 8px; padding: 4px 8px; cursor: pointer; border-radius: 3px; transition: background 0.15s, border-color 0.15s; }
+        .guide-close:hover { background: rgba(180,220,160,0.15); border-color: var(--tv-phosphor); }
+        .guide-title { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--tv-phosphor); text-shadow: 0 0 8px rgba(180,220,160,0.5); display: block; letter-spacing: 2px; }
+        .guide-subtitle { font-family: 'Press Start 2P', monospace; font-size: 6px; color: rgba(180,220,160,0.5); display: block; margin-top: 4px; letter-spacing: 1px; }
+        .tv-guide-scroll { flex: 1; overflow-y: auto; padding: 8px 0; scrollbar-width: none; }
         .tv-guide-scroll::-webkit-scrollbar { display: none; }
-        .guide-channel {
-            display: grid;
-            grid-template-columns: 36px 1fr;
-            gap: 8px;
-            padding: 5px 12px;
-            border-bottom: 1px solid rgba(180,220,160,0.08);
-            cursor: pointer;
-            transition: background 0.15s;
-        }
+        .guide-channel { display: grid; grid-template-columns: 36px 1fr; gap: 8px; padding: 5px 12px; border-bottom: 1px solid rgba(180,220,160,0.08); cursor: pointer; transition: background 0.15s; }
         .guide-channel:hover { background: rgba(180,220,160,0.1); }
         .guide-channel.active { background: rgba(180,220,160,0.15); }
-        .guide-ch-num {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: var(--tv-amber);
-            text-shadow: 0 0 6px rgba(255,184,0,0.4);
-            text-align: right;
-        }
-        .guide-ch-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--tv-phosphor);
-            text-shadow: 0 0 4px rgba(180,220,160,0.3);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .guide-ch-artist {
-            font-family: 'Courier Prime', monospace;
-            font-size: 10px;
-            color: rgba(180,220,160,0.45);
-            margin-top: 2px;
-        }
+        .guide-ch-num { font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--tv-amber); text-shadow: 0 0 6px rgba(255,184,0,0.4); text-align: right; }
+        .guide-ch-title { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--tv-phosphor); text-shadow: 0 0 4px rgba(180,220,160,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .guide-ch-artist { font-family: 'Courier Prime', monospace; font-size: 10px; color: rgba(180,220,160,0.45); margin-top: 2px; }
 
         /* PiP: shrink video to corner when guide is open */
-        .tv-screen.guide-open #yt-player {
-            width: 30%;
-            height: 30%;
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            top: auto;
-            left: auto;
-            z-index: 6;
-            border: 2px solid rgba(180,220,160,0.3);
-            border-radius: 4px;
-            opacity: 1 !important;
-        }
+        .tv-screen.guide-open #yt-player { width: 30%; height: 30%; position: absolute; bottom: 8px; right: 8px; top: auto; left: auto; z-index: 6; border: 2px solid rgba(180,220,160,0.3); border-radius: 4px; opacity: 1 !important; }
 
         /* ─── LEGEND / KEYBOARD HINTS ─── */
-        .tv-legend {
-            text-align: center;
-            margin-top: 24px;
-            font-family: 'Courier Prime', monospace;
-            font-size: 11px;
-            color: var(--dim);
-            line-height: 1.8;
-        }
-        .tv-legend kbd {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            background: var(--tv-cabinet);
-            color: var(--tv-amber);
-            padding: 2px 6px;
-            border: 1px solid var(--tv-cabinet-light);
-            border-radius: 3px;
-            margin: 0 2px;
-        }
+        .tv-legend { text-align: center; margin-top: 24px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--dim); line-height: 1.8; }
+        .tv-legend kbd { font-family: 'Press Start 2P', monospace; font-size: 7px; background: var(--tv-cabinet); color: var(--tv-amber); padding: 2px 6px; border: 1px solid var(--tv-cabinet-light); border-radius: 3px; margin: 0 2px; }
 
-        /* ══════════════════════════════════════════
-           ROTATE PROMPT (mobile portrait)
-           ══════════════════════════════════════════ */
-        .rotate-prompt {
-            display: none;
-        }
-
+        /* ─── ROTATE PROMPT ─── */
+        .rotate-prompt { display: none; }
         @media (max-width: 640px) and (orientation: portrait) {
-            .rotate-prompt {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                min-height: 50vh;
-                gap: 16px;
-                animation: fadeUp 0.6s ease-out;
-            }
-            .tv-wrap,
-            .tv-legend,
-            .page-subtitle {
-                display: none;
-            }
-            .page-title {
-                margin-top: 24px;
-            }
-            .rotate-icon {
-                color: var(--tv-amber);
-                filter: drop-shadow(0 0 12px rgba(255,184,0,0.6));
-                animation: rotateHint 2s ease-in-out infinite;
-            }
-            @keyframes rotateHint {
-                0%, 100% { transform: rotate(0deg); }
-                25% { transform: rotate(-15deg); }
-                75% { transform: rotate(15deg); }
-            }
-            .rotate-text {
-                font-family: 'Press Start 2P', monospace;
-                font-size: 14px;
-                color: var(--tv-amber);
-                text-shadow: 0 0 20px rgba(255,184,0,0.6);
-                text-align: center;
-            }
-            .rotate-sub {
-                font-family: 'Courier Prime', monospace;
-                font-size: 12px;
-                color: var(--dim);
-                text-align: center;
-            }
-            .rotate-dismiss {
-                margin-top: 16px;
-                font-family: 'Press Start 2P', monospace;
-                font-size: 8px;
-                color: var(--tv-amber-dim);
-                background: transparent;
-                border: 1px solid var(--tv-cabinet-light);
-                padding: 8px 16px;
-                cursor: pointer;
-                border-radius: 4px;
-                transition: color 0.15s, border-color 0.15s;
-            }
-            .rotate-dismiss:hover {
-                color: var(--tv-amber);
-                border-color: var(--tv-amber);
-            }
+            .rotate-prompt { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; gap: 16px; animation: fadeUp 0.6s ease-out; }
+            .tv-wrap, .tv-legend, .page-subtitle { display: none; }
+            .page-title { margin-top: 24px; }
+            .rotate-icon { color: var(--tv-amber); filter: drop-shadow(0 0 12px rgba(255,184,0,0.6)); animation: rotateHint 2s ease-in-out infinite; }
+            @keyframes rotateHint { 0%,100%{transform:rotate(0deg)} 25%{transform:rotate(-15deg)} 75%{transform:rotate(15deg)} }
+            .rotate-text { font-family: 'Press Start 2P', monospace; font-size: 14px; color: var(--tv-amber); text-shadow: 0 0 20px rgba(255,184,0,0.6); text-align: center; }
+            .rotate-sub { font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--dim); text-align: center; }
+            .rotate-dismiss { margin-top: 16px; font-family: 'Press Start 2P', monospace; font-size: 8px; color: var(--tv-amber-dim); background: transparent; border: 1px solid var(--tv-cabinet-light); padding: 8px 16px; cursor: pointer; border-radius: 4px; transition: color 0.15s, border-color 0.15s; }
+            .rotate-dismiss:hover { color: var(--tv-amber); border-color: var(--tv-amber); }
         }
+        @media (max-width: 640px) and (orientation: landscape) { .rotate-prompt { display: none; } }
 
-        @media (max-width: 640px) and (orientation: landscape) {
-            .rotate-prompt {
-                display: none;
-            }
-        }
-
-        /* ══════════════════════════════════════════
-           RESPONSIVE — TV LAYOUT
-           ══════════════════════════════════════════ */
+        /* ─── RESPONSIVE ─── */
         @media (max-width: 640px) {
             .tv-body { padding: 12px; border-radius: 12px; grid-template-columns: 1fr; }
             .tv-right { flex-direction: row; flex-wrap: wrap; justify-content: center; border-left: none; border-top: 1px solid rgba(255,255,255,0.05); padding: 8px 0 0; gap: 12px; }
@@ -731,29 +224,9 @@
             .tv-on-screen-title { font-size: 7px; max-width: 180px; }
         }
 
-        /* ══════════════════════════════════════════
-           AMBIENT GLOW
-           ══════════════════════════════════════════ */
-        .tv-ambient {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 700px;
-            height: 500px;
-            background: radial-gradient(
-                ellipse at center,
-                rgba(255,184,0,0.06) 0%,
-                transparent 60%
-            );
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-        .tv-ambient.on {
-            opacity: 1;
-        }
+        /* ─── AMBIENT GLOW ─── */
+        .tv-ambient { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 700px; height: 500px; background: radial-gradient(ellipse at center, rgba(255,184,0,0.06) 0%, transparent 60%); pointer-events: none; z-index: -1; opacity: 0; transition: opacity 1s; }
+        .tv-ambient.on { opacity: 1; }
     </style>
 </head>
 <body class="broadcast no-jukebox">

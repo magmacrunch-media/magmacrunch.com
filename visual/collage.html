@@ -6,7 +6,7 @@
     <title>collage — visual — magmacrunch media</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../assets/archive.css">
+    <link rel="stylesheet" href="visual.css">
     <style>
         /* ── MEMPHIS DESIGN PALETTE ── */
         :root {
@@ -32,12 +32,26 @@
             --mem-squiggle-gray:   #C8C0B8;
         }
 
-        /* ── NAV OVERRIDES (must use :root) ── */
+        /* ── NAV OVERRIDES ── */
         :root {
             --nav-accent: #FF2D9B;
             --nav-glow: rgba(255,45,155,0.4);
             --nav-brand: #F0E8D8;
             --nav-brand-glow: rgba(240,232,216,0.7);
+        }
+
+        /* ── SHARED PATTERN VARS ── */
+        :root {
+            --bc-accent: #0057FF;
+            --footer-border: #1A1A1A;
+            --footer-accent: #FF2D9B;
+            --dd-1: #FF3B30;
+            --dd-2: #0057FF;
+            --dd-3: #00C853;
+            --dd-4: #FFD600;
+            --dd-5: #FF6B00;
+            --dd-hover-color: #F0E8D8;
+            --dd-hover-bg: #FF2D9B;
         }
 
         /* ── PAGE OVERRIDES ── */
@@ -63,39 +77,13 @@
             to   { background-position: 24px 24px, 44px 44px; }
         }
 
-        /* ── FOOTER OVERRIDES ── */
-        body.memphis footer {
-            border-top-color: #1A1A1A;
-        }
-        body.memphis footer span {
-            color: #FF2D9B;
-        }
-
         /* ── DROPDOWN OVERRIDES ── */
         body.memphis .dropdown {
             border-color: #FF2D9B;
             box-shadow: 0 8px 24px rgba(0,0,0,0.3), 0 0 12px rgba(255,45,155,0.3);
         }
-        body.memphis .dropdown a {
-            border-left: 3px solid transparent;
-            border-bottom-color: #E8DDD0;
-        }
-        body.memphis .dropdown a:nth-child(1) { border-left-color: #FF3B30; }
-        body.memphis .dropdown a:nth-child(2) { border-left-color: #0057FF; }
-        body.memphis .dropdown a:nth-child(3) { border-left-color: #00C853; }
-        body.memphis .dropdown a:nth-child(4) { border-left-color: #FFD600; }
-        body.memphis .dropdown a:nth-child(5) { border-left-color: #FF6B00; }
-        body.memphis .dropdown a:hover {
-            color: #F0E8D8;
-            background: #FF2D9B;
-        }
 
-        /* ── BREADCRUMB ── */
-        .breadcrumb a:hover { color: #0057FF; }
-        .breadcrumb .sep { color: #0057FF; opacity: 0.7; }
-        .breadcrumb .current { color: #0057FF; }
-
-        /* ── NAV OVERRIDES (memphis light theme) ── */
+        /* ── NAV GRADIENT ── */
         body.memphis nav {
             background: linear-gradient(90deg, #FF3B30 0%, #FFD600 25%, #0057FF 50%, #00C853 75%, #FF2D9B 100%);
         }
@@ -108,46 +96,24 @@
             background-size: 16px 16px;
             pointer-events: none;
         }
-        body.memphis .nav-links a {
-            color: #F0E8D8;
-            border-left-color: rgba(255,255,255,0.2);
-        }
-        body.memphis .nav-links > li > a:hover {
-            color: #1A1A1A;
-            background: #FF2D9B;
-        }
+        body.memphis .nav-links a { color: #F0E8D8; border-left-color: rgba(255,255,255,0.2); }
+        body.memphis .nav-links > li > a:hover { color: #1A1A1A; background: #FF2D9B; }
 
-        main { flex:1; display:flex; flex-direction:column; align-items:center; padding:80px 20px 60px; }
-        
         /* ── PAGE HEADER ── */
-        .page-header.centered {
-            text-align: center;
-            padding: 0 20px 40px;
-            animation: fadeUp 0.5s ease both;
-        }
+        .page-header.centered { animation: fadeUp 0.5s ease both; }
 
         .page-title {
-            font-family: 'Press Start 2P', monospace;
             font-size: clamp(13px, 2.8vw, 22px);
             color: #FF3B30;
             text-shadow: 0 0 20px rgba(255,59,48,0.5);
-            margin-bottom: 10px;
             letter-spacing: 0.08em;
         }
 
-        .page-subtitle {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #0057FF;
-            letter-spacing: 0.1em;
-            animation: fadeUp 0.5s 0.05s ease both;
-        }
+        .page-subtitle { color: #0057FF; animation: fadeUp 0.5s 0.05s ease both; }
 
         /* ── SECTION DIVIDER ── */
         .section-divider {
-            width: 100%;
             max-width: 960px;
-            height: 1px;
             background: linear-gradient(90deg, transparent, #FF3B30, #FFD600, #0057FF, #00C853, #FF2D9B, transparent);
             margin: 0 20px 48px;
             opacity: 0.35;
@@ -163,237 +129,61 @@
             animation: fadeUp 0.5s 0.1s ease both;
         }
 
-        .series-header {
-            display: flex;
-            align-items: baseline;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-
-        .series-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: clamp(9px, 1.6vw, 13px);
-            color: #1A1A1A;
-            letter-spacing: 0.08em;
-        }
-
-        .series-meta {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #C8C0B8;
-            letter-spacing: 0.12em;
-            opacity: 0.7;
-        }
-
-        .series-desc {
-            font-family: 'Courier Prime', monospace;
-            font-size: 13px;
-            color: #1A1A1A;
-            line-height: 1.7;
-            letter-spacing: 0.02em;
-            margin-bottom: 24px;
-            max-width: 600px;
-            opacity: 0.8;
-        }
+        .series-header { display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap; margin-bottom: 8px; }
+        .series-title { font-family: 'Press Start 2P', monospace; font-size: clamp(9px, 1.6vw, 13px); color: #1A1A1A; letter-spacing: 0.08em; }
+        .series-meta { font-family: 'Press Start 2P', monospace; font-size: 6px; color: #C8C0B8; letter-spacing: 0.12em; opacity: 0.7; }
+        .series-desc { font-family: 'Courier Prime', monospace; font-size: 13px; color: #1A1A1A; line-height: 1.7; letter-spacing: 0.02em; margin-bottom: 24px; max-width: 600px; opacity: 0.8; }
 
         /* ── COLLAGE GRID ── */
-        .collage-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
+        .collage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        @media (max-width: 640px) { .collage-grid { grid-template-columns: 1fr; } }
 
-        @media (max-width: 640px) {
-            .collage-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .collage-item {
-            position: relative;
-            overflow: hidden;
-            border: 2px solid #C8C0B8;
-            cursor: pointer;
-            background: #E8DDD0;
-            transition: border-color 0.2s;
-            aspect-ratio: 4/3;
-        }
-
-        /* Rotating Memphis border colors */
+        .collage-item { position: relative; overflow: hidden; border: 2px solid #C8C0B8; cursor: pointer; background: #E8DDD0; transition: border-color 0.2s; aspect-ratio: 4/3; }
         .collage-item:nth-child(6n+1) { border-color: #FF2D9B; }
         .collage-item:nth-child(6n+2) { border-color: #FFD600; }
         .collage-item:nth-child(6n+3) { border-color: #0057FF; }
         .collage-item:nth-child(6n+4) { border-color: #00C853; }
         .collage-item:nth-child(6n+5) { border-color: #FF6B00; }
         .collage-item:nth-child(6n+6) { border-color: #00D4FF; }
+        .collage-item:hover { border-color: #FF3B30; }
 
-        .collage-item:hover {
-            border-color: #FF3B30;
-        }
+        .collage-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.45s ease, filter 0.3s ease; filter: saturate(1.1) brightness(1.0); }
+        .collage-item:hover img { transform: scale(1.04); filter: saturate(1.0) brightness(1.0); }
 
-        .collage-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.45s ease, filter 0.3s ease;
-            filter: saturate(1.1) brightness(1.0);
-        }
-
-        .collage-item:hover img {
-            transform: scale(1.04);
-            filter: saturate(1.0) brightness(1.0);
-        }
-
-        /* caption overlay on hover */
         .collage-caption {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
+            position: absolute; bottom: 0; left: 0; right: 0;
             padding: 28px 14px 12px;
             background: linear-gradient(to top, rgba(26,26,26,0.92) 0%, transparent 100%);
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #F0E8D8;
-            letter-spacing: 0.12em;
-            opacity: 0;
-            transition: opacity 0.25s ease;
-            line-height: 2;
+            font-family: 'Press Start 2P', monospace; font-size: 6px; color: #F0E8D8;
+            letter-spacing: 0.12em; opacity: 0; transition: opacity 0.25s ease; line-height: 2;
         }
+        .collage-item:hover .collage-caption { opacity: 1; }
 
-        .collage-item:hover .collage-caption {
-            opacity: 1;
-        }
-
-        /* number badge */
         .collage-num {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #1A1A1A;
-            background: #FFD600;
-            padding: 3px 7px;
-            letter-spacing: 0.1em;
-            opacity: 0;
-            transition: opacity 0.2s;
+            position: absolute; top: 10px; left: 10px;
+            font-family: 'Press Start 2P', monospace; font-size: 6px; color: #1A1A1A;
+            background: #FFD600; padding: 3px 7px; letter-spacing: 0.1em; opacity: 0; transition: opacity 0.2s;
         }
-
-        .collage-item:hover .collage-num {
-            opacity: 1;
-        }
+        .collage-item:hover .collage-num { opacity: 1; }
 
         /* ── LIGHTBOX ── */
-        .lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(26,26,26,0.97);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
+        .lightbox { display: none; position: fixed; inset: 0; background: rgba(26,26,26,0.97); z-index: 1000; align-items: center; justify-content: center; flex-direction: column; }
         .lightbox.open { display: flex; }
-
-        .lightbox-img-wrap {
-            max-width: min(92vw, 1100px);
-            max-height: 82vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .lightbox-img-wrap img {
-            max-width: 100%;
-            max-height: 82vh;
-            object-fit: contain;
-            display: block;
-            border: 2px solid #FF2D9B;
-        }
-
-        .lightbox-caption {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #FFD600;
-            letter-spacing: 0.12em;
-            margin-top: 14px;
-            opacity: 0.7;
-            line-height: 2;
-            text-align: center;
-        }
-
-        .lightbox-nav {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            margin-top: 16px;
-        }
-
-        .lb-btn {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: #0057FF;
-            background: none;
-            border: 1px solid #1A1A1A;
-            padding: 8px 16px;
-            cursor: pointer;
-            letter-spacing: 0.1em;
-            transition: color 0.15s, border-color 0.15s;
-        }
+        .lightbox-img-wrap { max-width: min(92vw, 1100px); max-height: 82vh; display: flex; align-items: center; justify-content: center; position: relative; }
+        .lightbox-img-wrap img { max-width: 100%; max-height: 82vh; object-fit: contain; display: block; border: 2px solid #FF2D9B; }
+        .lightbox-caption { font-family: 'Press Start 2P', monospace; font-size: 6px; color: #FFD600; letter-spacing: 0.12em; margin-top: 14px; opacity: 0.7; line-height: 2; text-align: center; }
+        .lightbox-nav { display: flex; align-items: center; gap: 28px; margin-top: 16px; }
+        .lb-btn { font-family: 'Press Start 2P', monospace; font-size: 8px; color: #0057FF; background: none; border: 1px solid #1A1A1A; padding: 8px 16px; cursor: pointer; letter-spacing: 0.1em; transition: color 0.15s, border-color 0.15s; }
         .lb-btn:hover { color: #FF3B30; border-color: #FF3B30; }
-
-        .lb-close {
-            position: fixed;
-            top: 18px; right: 22px;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: #C8C0B8;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1001;
-            padding: 8px;
-            transition: color 0.15s;
-        }
+        .lb-close { position: fixed; top: 18px; right: 22px; font-family: 'Press Start 2P', monospace; font-size: 9px; color: #C8C0B8; background: none; border: none; cursor: pointer; z-index: 1001; padding: 8px; transition: color 0.15s; }
         .lb-close:hover { color: #FF2D9B; }
+        .lb-counter { font-family: 'Press Start 2P', monospace; font-size: 6px; color: #C8C0B8; letter-spacing: 0.12em; opacity: 0.55; min-width: 60px; text-align: center; }
 
-        .lb-counter {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: #C8C0B8;
-            letter-spacing: 0.12em;
-            opacity: 0.55;
-            min-width: 60px;
-            text-align: center;
-        }
+        /* ── EMPTY STATE ── */
+        .coming-soon-block { width: 100%; max-width: 960px; padding: 0 20px; animation: fadeUp 0.5s 0.2s ease both; }
+        .coming-soon-inner { border: 2px dashed #FF2D9B; padding: 32px; text-align: center; font-family: 'Press Start 2P', monospace; font-size: 7px; color: #1A1A1A; letter-spacing: 0.1em; background: rgba(255,45,155,0.05); line-height: 2.4; }
 
-        /* ── EMPTY STATE (for future series) ── */
-        .coming-soon-block {
-            width: 100%;
-            max-width: 960px;
-            padding: 0 20px;
-            animation: fadeUp 0.5s 0.2s ease both;
-        }
-
-        .coming-soon-inner {
-            border: 2px dashed #FF2D9B;
-            padding: 32px;
-            text-align: center;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #1A1A1A;
-            letter-spacing: 0.1em;
-            background: rgba(255,45,155,0.05);
-            line-height: 2.4;
-        }
-
-        @media (max-width: 640px) {
-            .series-header { flex-direction: column; gap: 6px; }
-        }
+        @media (max-width: 640px) { .series-header { flex-direction: column; gap: 6px; } }
     </style>
 </head>
 <body class="memphis">

@@ -1,0 +1,83 @@
+/* ============================================================
+   visual.css — shared styles for visual/ subpages
+   Each page sets CSS custom properties in :root for theming.
+   ============================================================ */
+
+/* ── LAYOUT ── */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 20px 60px;
+}
+
+/* ── BREADCRUMB (absolute over hero area) ── */
+main .breadcrumb {
+    position: absolute;
+    top: 72px;
+    left: 20px;
+    z-index: 10;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    margin: 0;
+}
+main .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+main .breadcrumb a:hover { color: var(--bc-accent, var(--cyan)); }
+main .breadcrumb .sep { margin: 0 8px; color: var(--bc-accent, var(--cyan)); opacity: 0.7; }
+main .breadcrumb .current { color: var(--bc-accent, var(--cyan)); }
+
+/* ── PAGE HEADER ── */
+.page-header {
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+}
+.page-header.centered {
+    text-align: center;
+    padding: 0 20px 40px;
+    max-width: 700px;
+}
+
+/* ── PAGE TITLE / SUBTITLE BASE ── */
+.page-title {
+    font-family: 'Press Start 2P', monospace;
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+}
+.page-subtitle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.1em;
+}
+
+/* ── SECTION DIVIDER ── */
+.section-divider {
+    width: 100%;
+    max-width: 700px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), var(--cyan), transparent);
+    margin: 0 20px 48px;
+    opacity: 0.3;
+}
+
+/* ── FOOTER OVERRIDES ── */
+body footer { border-top-color: var(--footer-border); }
+body footer span { color: var(--footer-accent); }
+
+/* ── DROPDOWN OVERRIDES ── */
+body .dropdown a { border-left: 3px solid transparent; }
+body .dropdown a:nth-child(1) { border-left-color: var(--dd-1); }
+body .dropdown a:nth-child(2) { border-left-color: var(--dd-2); }
+body .dropdown a:nth-child(3) { border-left-color: var(--dd-3); }
+body .dropdown a:nth-child(4) { border-left-color: var(--dd-4); }
+body .dropdown a:nth-child(5) { border-left-color: var(--dd-5); }
+body .dropdown a:hover { color: var(--dd-hover-color); background: var(--dd-hover-bg); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+    .page-title { font-size: 13px; }
+}
