@@ -48,4 +48,3 @@ See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for ful
 - `node scripts/backup-musicbrainz.mjs` — snapshot MusicBrainz data to local cache
 - `./arcade/start-all.sh` — launch all game servers locally
 - Arcade games are self-contained — own CSS/JS, no shared state
-- See [AGENTS.md](AGENTS.md) for AI agent instructions
