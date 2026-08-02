@@ -10,6 +10,10 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 /                      # root: index.html, style.css, nav.js
 ├── animations/        # extracted canvas animations (volcano, cereal, coin, server, floppy)
 ├── arcade/            # self-contained pixel games (each has index.html + js/css)
+│   ├── arcade.css     # arcade index page styles + game card grid
+│   ├── gamecard-previews.js  # tile illustrations for each collection
+│   ├── pay2play/      # pay2play slot machine (CSS, JS, prizes)
+│   └── ...
 ├── archive/           # artist/place pages with MusicBrainz API integration
 │   ├── archive.css    # page-specific styles for archive index
 │   ├── emerac.js      # EMERAC component (LED grid, CRT display, MusicBrainz fetch)
@@ -18,9 +22,12 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 │   ├── by-label/      # label stubs with window.__LABEL_CONFIG
 │   ├── by-contributor/ # contributor stubs with window.__CONTRIBUTOR_CONFIG
 │   └── _cache/        # MusicBrainz data backups (JSON)
-├── home/              # about.html, guestbook.html, links/
-├── music/             # distributed-music.html, floppy-disk/
-├── press/             # journals: scientific/, experimental/
+├── home/              # about.html, about.css, guestbook.html, guestbook.css, links/
+├── music/             # distributed-music/, jukebox/, floppy-disk/
+│   ├── music.css      # music index styles
+│   ├── distributed-music/  # data-driven release catalog (releases.js + app.js)
+│   └── jukebox/       # fetches songs.json for playlist
+├── press/             # press.css, journals: scientific/, experimental/
 ├── scripts/           # backup-musicbrainz.mjs
 ├── templates/         # JS template scripts for archive pages
 └── visual/            # gallery pages (collage, photography/, music-videos, teevee/tv)
@@ -51,9 +58,41 @@ Each file is a self-contained IIFE with named constants, visibility change handl
 
 ## Page-specific CSS
 
-Some pages extract inline CSS to separate files:
-- `archive/archive.css` — archive index page styles + EMERAC component
-- `arcade/arcade.css` — arcade index page styles + game card grid
+Pages extract inline CSS to separate files:
+- `archive/archive.css` — archive index + EMERAC component
+- `arcade/arcade.css` — arcade index + game card grid
+- `home/about.css` — about page
+- `home/guestbook.css` — guestbook page
+- `music/music.css` — music index
+- `music/distributed-music/styles.css` — distributed music
+- `music/jukebox/styles.css` — jukebox
+- `press/press.css` — press index
+- `tools/tools.css` — tools index
+
+## Game card previews
+
+Tile illustrations for arcade collections are in `arcade/gamecard-previews.js`.
+Each preview is a self-contained IIFE that draws on a 72x72 canvas:
+- Board Games (checkerboard + pieces)
+- Card Games (fanned hand)
+- Puzzles (question mark grid)
+- Action (joystick)
+- Private (lock icon)
+
+Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments.
+
+## Distributed music
+
+Release data lives in `music/distributed-music/releases.js` as a `window.RELEASES` array.
+The page (`music/distributed-music/app.js`) fetches this data and renders cards dynamically.
+
+To add a new release: add an object to the `RELEASES` array in `releases.js`.
+
+## Jukebox
+
+The full jukebox page (`music/jukebox/`) fetches `songs.json` at runtime for the playlist.
+The mini-player widget (`assets/jukebox.js`) has its own embedded track list.
+`songs.json` is the single source of truth — MAGMA//OPS reads/writes it.
 
 ## MusicBrainz cache
 
