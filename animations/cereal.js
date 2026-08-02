@@ -56,7 +56,7 @@
   /* ── LIQUID WAVE ── */
   const WAVE_X_FREQ = 0.15, WAVE_TIME_SPEED = 0.1;
   const WAVE_Y_FREQ = 0.2, WAVE_SPACE_SPEED = 0.08;
-  const WAVE_HIGH = 0.5, WAVE_LOW = -0.4;
+  const WAVE_HIGH = 0.6, WAVE_LOW = -0.5;
 
   /* ── VOLCANO BOX ART ── */
   const ART_OUTER_R = 30, ART_INNER_R = 26;
@@ -78,7 +78,9 @@
     cyan:     '#00F5FF',
     yellow:   '#ffe03a',
     dark:     '#0A0518',
-    milk:     '#ffe03a',
+    milk:      '#F5E6D0',
+    milkLight: '#FFF5E6',
+    milkDark:  '#E0CEB8',
     boxBlack: '#09090c',
     boxEdge:  '#ff6cb2',
     boxLabel: '#110006'
@@ -291,8 +293,8 @@
       for (let x = cx - bw; x <= cx + bw; x += 2) {
         const wave = Math.sin(x * WAVE_X_FREQ + frame * WAVE_TIME_SPEED)
                    + Math.cos(y * WAVE_Y_FREQ - frame * WAVE_SPACE_SPEED);
-        if (wave > WAVE_HIGH) ctx.fillStyle = C.pink;
-        else if (wave < WAVE_LOW) ctx.fillStyle = C.cyan;
+        if (wave > WAVE_HIGH) ctx.fillStyle = C.milkLight;
+        else if (wave < WAVE_LOW) ctx.fillStyle = C.milkDark;
         else ctx.fillStyle = C.milk;
         ctx.fillRect(x, y, 2, 2);
       }
