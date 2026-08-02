@@ -293,7 +293,7 @@
                     }) || []).forEach(r => {
                         let type = r.type;
                         if (type === 'named after artist') type = 'associated artist names';
-                        if (type === 'is person')          type = 'performs as';
+                        if (type === 'is person')          type = r.direction === 'backward' ? 'performed by' : 'performs as';
                         if (type === 'founder' && artistType.toLowerCase() === 'person' && r['target-type'] === 'artist') type = 'founder of';
                         if (!otherMap.has(type)) otherMap.set(type, []);
                         const name = r.artist?.name;
