@@ -615,10 +615,10 @@
     </div>
     -->
 
-    <!-- itch.io link -->
+    <!-- itch.io link (commented out)
     <div class="credits-row">
         also on &nbsp;<a href="https://magmacrunch.itch.io/" target="_blank">itch.io ↗</a>
-    </div>
+    </div> -->
 
     <a href="server.html" class="server-status-link">
         <div class="server-status">
@@ -787,88 +787,49 @@
 */
 
 
-// ── Board Games collection preview — checkerboard + detailed pieces ──
+// ── Board Games collection preview — checkerboard + pieces ──
 (function() {
     const c = document.getElementById('cBoardGames');
     if (!c) return;
     const ctx = c.getContext('2d');
+
+    /* background + border */
     ctx.fillStyle = '#0a0612';
     ctx.fillRect(0, 0, 72, 72);
     ctx.strokeStyle = '#00f5ff';
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 68, 68);
+
+    /* checkerboard */
     const sq = 8;
     for (let r = 0; r < 8; r++) {
         for (let col = 0; col < 8; col++) {
             const x = 4 + col * sq;
             const y = 4 + r * sq;
-            const isDark = (r + col) % 2 === 1;
-            ctx.fillStyle = isDark ? '#1a0a2a' : '#2a1a3a';
+            ctx.fillStyle = (r + col) % 2 === 1 ? '#1a0a2a' : '#2a1a3a';
             ctx.fillRect(x, y, sq, sq);
-            // highlight on light squares
-            if (!isDark) {
-                ctx.fillStyle = 'rgba(255,255,255,0.06)';
-                ctx.fillRect(x, y, sq, 1);
-                ctx.fillRect(x, y, 1, sq);
-            }
         }
     }
-    // chess king (top-left area) — crown shape
-    ctx.fillStyle = '#ff2d78';
-    ctx.fillRect(10, 8, 6, 2);   // crown base
-    ctx.fillRect(10, 6, 2, 2);   // left tine
-    ctx.fillRect(13, 6, 2, 2);   // center tine (taller)
-    ctx.fillRect(11, 4, 4, 2);   // cross top
-    ctx.fillRect(12, 3, 2, 1);   // cross vertical
-    ctx.fillStyle = '#ff5a9e';
-    ctx.fillRect(10, 10, 6, 4);  // body highlight
-    ctx.fillStyle = '#ff2d78';
-    ctx.fillRect(11, 14, 4, 2);  // base
-    // shadow under king
-    ctx.fillStyle = 'rgba(0,0,0,0.3)';
-    ctx.fillRect(9, 16, 8, 2);
-    // chess knight (center-right) — horse head profile
-    ctx.fillStyle = '#00f5ff';
-    ctx.fillRect(46, 18, 4, 2);  // ear
-    ctx.fillRect(44, 20, 6, 4);  // head
-    ctx.fillRect(44, 24, 4, 2);  // jaw
-    ctx.fillRect(42, 26, 6, 2);  // neck
-    ctx.fillRect(42, 28, 4, 4);  // base
-    ctx.fillStyle = '#00c8cc';
-    ctx.fillRect(45, 21, 2, 1);  // eye
-    ctx.fillStyle = 'rgba(0,0,0,0.3)';
-    ctx.fillRect(41, 32, 6, 2);
-    // checkers piece (bottom-right) — ridged disc
-    ctx.fillStyle = '#ffe03a';
-    ctx.beginPath(); ctx.arc(58, 52, 5, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#ccaa00';
-    ctx.beginPath(); ctx.arc(58, 52, 3, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#ffe03a';
-    ctx.beginPath(); ctx.arc(58, 52, 1.5, 0, Math.PI * 2); ctx.fill();
-    // shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
-    ctx.beginPath(); ctx.arc(58, 54, 5, 0, Math.PI); ctx.fill();
-    // backgammon piece (bottom-left) — flat elongated disc
-    ctx.fillStyle = '#c45fff';
-    ctx.fillRect(10, 56, 8, 3);
-    ctx.fillStyle = '#9a30cc';
-    ctx.fillRect(10, 59, 8, 1);
-    // die (bottom-center) — 3D isometric look with 5 dots
-    ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(32, 52, 10, 10);
-    ctx.fillStyle = '#ffaa55';
-    ctx.fillRect(32, 52, 10, 2);  // top edge highlight
-    ctx.fillRect(32, 52, 2, 10);  // left edge highlight
-    ctx.fillStyle = '#cc5500';
-    ctx.fillRect(40, 52, 2, 10);  // right shadow
-    ctx.fillRect(32, 60, 10, 2);  // bottom shadow
-    // dots (5-face pattern)
-    ctx.fillStyle = '#1a0a1a';
-    ctx.fillRect(34, 54, 2, 2);
-    ctx.fillRect(39, 54, 2, 2);
-    ctx.fillRect(36, 56, 2, 2);
-    ctx.fillRect(34, 59, 2, 2);
-    ctx.fillRect(39, 59, 2, 2);
+
+    /* light piece — row 2, col 1 */
+    ctx.fillStyle = '#f0ece0';
+    ctx.beginPath();
+    ctx.arc(16, 24, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#c8c0b0';
+    ctx.beginPath();
+    ctx.arc(16, 24, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* dark piece — row 5, col 6 */
+    ctx.fillStyle = '#ff3d6e';
+    ctx.beginPath();
+    ctx.arc(56, 48, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#cc2050';
+    ctx.beginPath();
+    ctx.arc(56, 48, 1.5, 0, Math.PI * 2);
+    ctx.fill();
 })();
 
 // ── Card Games collection preview — fanned hand + poker chips ──
