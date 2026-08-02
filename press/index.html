@@ -6,249 +6,7 @@
     <title>press — magmacrunch media</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
-    <style>
-        /* ── NAV ZINE OVERRIDES ── */
-        :root {
-            --nav-accent: #c02828;
-            --nav-glow: rgba(192,40,40,0.4);
-            --nav-brand: #c02828;
-            --nav-brand-glow: rgba(192,40,40,0.6);
-        }
-
-        body {
-            background-color: #1a1a1a;
-            color: #f0e4c8;
-        }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 72px 20px 60px;
-        }
-
-        .breadcrumb {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #666;
-            letter-spacing: 0.1em;
-            margin-top: 0;
-            margin-bottom: 24px;
-            align-self: flex-start;
-        }
-        .breadcrumb a { color: #888; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #c02828; }
-        .breadcrumb .sep { margin: 0 8px; color: #333; }
-        .breadcrumb .current { color: #c02828; }
-
-        /* ── PAGE HEADER ── */
-        .page-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: clamp(14px, 3vw, 24px);
-            color: #c02828;
-            text-shadow: 2px 2px 0 rgba(192,40,40,0.3);
-            margin-bottom: 10px;
-            letter-spacing: 0.08em;
-            animation: fadeUp 0.5s ease both;
-        }
-
-        .page-subtitle {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #666;
-            letter-spacing: 0.12em;
-            margin-bottom: 32px;
-            animation: fadeUp 0.5s 0.05s ease both;
-        }
-
-        /* ── INTRO ── */
-        .press-intro {
-            width: min(640px, 90vw);
-            text-align: center;
-            margin-bottom: 48px;
-            animation: fadeUp 0.5s 0.1s ease both;
-        }
-
-        .press-intro p {
-            font-family: 'Courier Prime', monospace;
-            font-size: 14px;
-            line-height: 1.8;
-            color: #333;
-        }
-
-        .press-intro a {
-            color: #c02828;
-            text-decoration: underline;
-            text-decoration-color: rgba(192,40,40,0.3);
-        }
-        .press-intro a:hover { color: #8a1a1a; }
-
-        /* ── DIVIDER ── */
-        .section-divider {
-            width: min(640px, 90vw);
-            height: 2px;
-            background: #c8c0a8;
-            margin-bottom: 48px;
-            position: relative;
-            animation: fadeUp 0.5s 0.15s ease both;
-        }
-        .section-divider::after {
-            content: '✦';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            background: #f0e4c8;
-            padding: 0 12px;
-            color: #c02828;
-            font-size: 10px;
-        }
-
-        /* ── PIECE CARDS ── */
-        .pieces-wrap {
-            width: min(640px, 90vw);
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            animation: fadeUp 0.5s 0.18s ease both;
-        }
-
-        .pieces-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: #999;
-            letter-spacing: 0.15em;
-            margin-bottom: 20px;
-        }
-
-        .piece-card {
-            display: flex;
-            gap: 0;
-            border: 2px solid #333;
-            border-bottom: none;
-            background: #222;
-            text-decoration: none;
-            transition: border-color 0.15s, background 0.15s;
-            position: relative;
-            overflow: hidden;
-        }
-        .piece-card:last-child { border-bottom: 2px solid #333; }
-        .piece-card:hover {
-            border-color: #c02828;
-            background: #2a2a2a;
-        }
-
-        /* left accent bar */
-        .piece-card::before {
-            content: '';
-            display: block;
-            width: 4px;
-            flex-shrink: 0;
-            background: #c02828;
-            transition: width 0.15s;
-        }
-        .piece-card:hover::before { width: 7px; }
-
-        .piece-card-info {
-            padding: 16px 20px;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        .piece-card-text { flex: 1; }
-
-        .piece-card-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: clamp(8px, 1.4vw, 10px);
-            color: #c02828;
-            letter-spacing: 0.06em;
-            line-height: 1.7;
-            margin-bottom: 5px;
-        }
-
-        .piece-card-meta {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        .piece-card-meta .type {
-            display: inline-block;
-            background: #c02828;
-            color: #1a1a1a;
-            font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            padding: 2px 6px;
-            letter-spacing: 0.08em;
-            margin-right: 6px;
-            vertical-align: middle;
-        }
-
-        .piece-card-arrow {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: #c02828;
-            opacity: 0;
-            transform: translateX(-6px);
-            transition: opacity 0.15s, transform 0.15s;
-            flex-shrink: 0;
-        }
-        .piece-card:hover .piece-card-arrow {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* ── FOOTER OVERRIDE ── */
-        footer {
-            background: #111 !important;
-            border-top-color: #333 !important;
-            color: #666 !important;
-        }
-        footer span { color: #c02828 !important; }
-
-        @media (max-width: 640px) {
-            .page-title { font-size: 14px; }
-        }
-        /* ── CONTACT BOX ── */
-        .contact-box {
-            width: min(600px, 90vw);
-            border: 2px solid #333;
-            background: #222;
-            padding: 28px;
-            margin-top: 48px;
-            text-align: center;
-            animation: fadeUp 0.5s 0.2s ease both;
-        }
-        .contact-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: #c02828;
-            letter-spacing: 0.1em;
-            margin-bottom: 20px;
-        }
-        .contact-box p {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            color: #666;
-            letter-spacing: 0.08em;
-            line-height: 2.2;
-            margin-bottom: 12px;
-        }
-        .contact-box a {
-            color: #c02828;
-            font-weight: 700;
-            text-decoration: none;
-        }
-        .contact-box a:hover {
-            text-decoration: underline;
-        }
-
-    </style>
+    <link rel="stylesheet" href="press.css">
 </head>
 <body>
 
@@ -263,67 +21,32 @@
     </div>
 
     <h1 class="page-title">// press //</h1>
-    <p class="page-subtitle">magmacrunch press</p>
+    <p class="page-subtitle">zines & publications</p>
 
-    <div class="press-intro">
-        <p>a diy publishing house for essays, poetry, fiction, and experimental writing. no gatekeepers, no advance, no permission needed.</p>
-    </div>
+    <div class="zine-grid">
 
-    <div class="section-divider"></div>
-
-    <div class="pieces-wrap">
-        <div class="pieces-label">// journals //</div>
-
-        <a href="scientific/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">scientific</div>
-                    <div class="piece-card-meta">
-                        <span class="type">journal</span>
-                        science &amp; technology &nbsp;·&nbsp; 2 pieces
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
+        <a href="scientific/" class="zine-card">
+            <div class="zine-icon">🔬</div>
+            <div class="zine-title">Scientific Journal</div>
+            <div class="zine-desc">peer-reviewed findings from the field</div>
         </a>
 
-        <a href="experimental/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">experimental</div>
-                    <div class="piece-card-meta">
-                        <span class="type">journal</span>
-                        experimental writing &nbsp;·&nbsp; 1 piece
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
+        <a href="experimental/" class="zine-card">
+            <div class="zine-icon">🧪</div>
+            <div class="zine-title">Experimental Journal</div>
+            <div class="zine-desc">unconventional methods & results</div>
         </a>
 
-        <a href="lyrics/" class="piece-card">
-            <div class="piece-card-info">
-                <div class="piece-card-text">
-                    <div class="piece-card-title">lyrics</div>
-                    <div class="piece-card-meta">
-                        <span class="type">journal</span>
-                        lyrics &amp; songwriting &nbsp;·&nbsp; 8 pieces
-                    </div>
-                </div>
-                <span class="piece-card-arrow">▶</span>
-            </div>
+        <a href="lyrics/" class="zine-card">
+            <div class="zine-icon">📝</div>
+            <div class="zine-title">Lyrics</div>
+            <div class="zine-desc">song lyrics & liner notes</div>
         </a>
-
-        <!-- ADD FUTURE JOURNALS HERE -->
 
     </div>
 
-    <!-- SUBMISSIONS -->
-    <div class="section-divider"></div>
-
-    <div class="contact-box">
-        <div class="contact-label">// submissions //</div>
-        <p>send submissions to<br><a href="mailto:press@magmacrunch.com">press@magmacrunch.com</a></p>
-        <p>include your name (or pseudonym) and a short bio<br>if you want</p>
+    <div class="press-quote">
+        <p>"sometimes the notes say more than the music"</p>
     </div>
 
 </main>
@@ -334,5 +57,6 @@
 
 <script src="../nav.js"></script>
 <script>window.addEventListener("pageshow",function(e){if(e.persisted)location.reload();});</script>
+
 </body>
 </html>
