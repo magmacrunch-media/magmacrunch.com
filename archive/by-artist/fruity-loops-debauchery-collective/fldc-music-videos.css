@@ -105,18 +105,39 @@ body.fldc-page.fldc-music-videos-page .no-videos { font-family: 'Courier Prime',
     background: #000;
     overflow: hidden;
 }
-.video-embed iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
+
+/* Thumbnail */
+.video-thumb { position: absolute; inset: 0; cursor: pointer; }
+.video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.play-btn {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.3); transition: background 0.2s;
 }
-.video-embed.ia-embed { --ia-bar: 52px; }
-.video-embed.ia-embed iframe {
-    top: calc(-1 * var(--ia-bar));
-    height: calc(100% + var(--ia-bar));
+.video-thumb:hover .play-btn { background: rgba(0,0,0,0.45); }
+.play-icon {
+    width: 48px; height: 48px;
+    border: 2px solid var(--fldc-arc-orange); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
 }
+.play-icon::after {
+    content: ''; display: block;
+    width: 0; height: 0;
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+    border-left: 14px solid var(--fldc-arc-orange); margin-left: 3px;
+}
+.video-thumb:hover .play-icon {
+    border-color: var(--fldc-arc-yellow); background: rgba(240,180,48,0.15); transform: scale(1.08);
+}
+.video-thumb:hover .play-icon::after { border-left-color: var(--fldc-arc-yellow); }
+
+/* Iframe (hidden until click) */
+.video-iframe-wrap { display: none; position: absolute; inset: 0; }
+.video-iframe-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+.video-entry.active .video-thumb      { display: none; }
+.video-entry.active .video-iframe-wrap { display: block; }
+.video-embed.ia-embed .video-iframe-wrap iframe { top: -52px; height: calc(100% + 52px); }
 
 /* ── MusicBrainz panel ── */
 .video-mb { margin-top: 0.75rem; }

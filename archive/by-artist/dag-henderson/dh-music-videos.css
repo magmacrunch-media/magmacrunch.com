@@ -31,7 +31,39 @@ body.dh-page.dh-music-videos-page .ext-dm { border-color: var(--dh-rust-dark); c
 body.dh-page.dh-music-videos-page .ext-dm:hover { background: var(--dh-rust-dark); color: var(--dh-amber); }
 
 body.dh-page.dh-music-videos-page .video-embed { position: relative; width: 100%; aspect-ratio: 16 / 9; background: #000; overflow: hidden; margin-bottom: 16px; }
-body.dh-page.dh-music-videos-page .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+/* Thumbnail */
+body.dh-page.dh-music-videos-page .video-thumb { position: absolute; inset: 0; cursor: pointer; }
+body.dh-page.dh-music-videos-page .video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+body.dh-page.dh-music-videos-page .play-btn {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.3); transition: background 0.2s;
+}
+body.dh-page.dh-music-videos-page .video-thumb:hover .play-btn { background: rgba(0,0,0,0.45); }
+body.dh-page.dh-music-videos-page .play-icon {
+    width: 48px; height: 48px;
+    border: 2px solid var(--dh-rust-dark); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+body.dh-page.dh-music-videos-page .play-icon::after {
+    content: ''; display: block;
+    width: 0; height: 0;
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+    border-left: 14px solid var(--dh-rust-dark); margin-left: 3px;
+}
+body.dh-page.dh-music-videos-page .video-thumb:hover .play-icon {
+    border-color: var(--dh-amber); background: rgba(204,150,50,0.15); transform: scale(1.08);
+}
+body.dh-page.dh-music-videos-page .video-thumb:hover .play-icon::after { border-left-color: var(--dh-amber); }
+
+/* Iframe (hidden until click) */
+body.dh-page.dh-music-videos-page .video-iframe-wrap { display: none; position: absolute; inset: 0; }
+body.dh-page.dh-music-videos-page .video-iframe-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+body.dh-page.dh-music-videos-page .video-entry.active .video-thumb      { display: none; }
+body.dh-page.dh-music-videos-page .video-entry.active .video-iframe-wrap { display: block; }
+body.dh-page.dh-music-videos-page .video-embed.ia-embed .video-iframe-wrap iframe { top: -52px; height: calc(100% + 52px); }
 
 body.dh-page.dh-music-videos-page .nav-card.c-back {
     background: transparent;

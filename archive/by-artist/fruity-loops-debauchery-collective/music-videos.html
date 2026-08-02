@@ -212,11 +212,13 @@
 
     const videoList = document.getElementById('miniVideoList');
     let mbQueue = Promise.resolve();
+    let activeEntry = null;
 
     VIDEOS.forEach(v => {
         const watchUrl = v.ytId ? `https://www.youtube.com/watch?v=${v.ytId}` : null;
         const archiveUrl = v.archiveId ? `https://archive.org/details/${v.archiveId}` : null;
         const dmUrl = v.dmId ? `https://www.dailymotion.com/video/${v.dmId}` : null;
+        const thumbUrl = v.ytId ? `https://img.youtube.com/vi/${v.ytId}/maxresdefault.jpg` : null;
 
         const entry = document.createElement('div');
         entry.className = 'video-entry';
@@ -240,7 +242,19 @@
 
         const embedWrap = document.createElement('div');
         embedWrap.className = v.archiveId ? 'video-embed ia-embed' : 'video-embed';
-        embedWrap.innerHTML = `<iframe src="${embedSrc(v)}" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`;
+        if (thumbUrl) {
+            embedWrap.innerHTML = `
+                <div class="video-thumb">
+                    <img src="${thumbUrl}" alt="${esc(v.title)}" loading="lazy" referrerpolicy="no-referrer"
+                         onerror="if(!this.dataset.tried){this.dataset.tried='hq';this.src='https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg';}else if(this.dataset.tried==='hq'){this.dataset.tried='mq';this.src='https://img.youtube.com/vi/${v.ytId}/mqdefault.jpg';}">
+                    <div class="play-btn"><div class="play-icon"></div></div>
+                </div>
+                <div class="video-iframe-wrap">
+                    <iframe src="about:blank" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                </div>`;
+        } else {
+            embedWrap.innerHTML = `<iframe src="${embedSrc(v)}" allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>`;
+        }
 
         const extLinks = document.createElement('div');
         extLinks.className = 'video-ext-links';
@@ -276,6 +290,20 @@
 
         entry.append(header, embedWrap, extLinks, mbPanel);
         videoList.appendChild(entry);
+
+        if (thumbUrl) {
+            entry.addEventListener('click', function () {
+                if (this.classList.contains('active')) return;
+                if (activeEntry && activeEntry !== this) {
+                    activeEntry.classList.remove('active');
+                    const old = activeEntry.querySelector('.video-iframe-wrap iframe');
+                    if (old) old.src = 'about:blank';
+                }
+                this.classList.add('active');
+                activeEntry = this;
+                this.querySelector('.video-iframe-wrap iframe').src = embedSrc(v);
+            });
+        }
 
         if (v.mbid) {
             mbQueue = mbQueue.then(() => delay(1000)).then(() => fetchMB(v.mbid, `mb-${v.mbid}`));
