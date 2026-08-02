@@ -12,6 +12,7 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 
 ```
 /                     index.html, style.css, nav.js
+├── animations/       extracted canvas animations (volcano, cereal, coin, server, floppy)
 ├── archive/          MusicBrainz-powered catalog (artists, places, labels, contributors)
 ├── arcade/           20+ pixel art games (board, card, puzzle, action)
 ├── assets/           shared CSS/JS (jukebox, search, counter)
