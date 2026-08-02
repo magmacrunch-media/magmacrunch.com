@@ -16,6 +16,7 @@
   const BOWL_RY = 14;
   const BOWL_DEPTH = 45;
   const BOWL_BOTTOM_WIDTH = 25;
+  const BOWL_BOTTOM_RY = 6;
 
   /* ── SPOUT ── */
   const SPOUT_X = 145;
@@ -302,12 +303,13 @@
   function drawBowlBody(cx, cy, bw, ry) {
     const bx = BOWL_BOTTOM_WIDTH;
     const by = cy + BOWL_DEPTH;
+    const bry = BOWL_BOTTOM_RY;
 
     ctx.fillStyle = C.slate;
     ctx.beginPath();
     ctx.moveTo(cx + bw, cy);
     ctx.lineTo(cx + bx, by);
-    ctx.ellipse(cx, by, bx, ry, 0, 0, Math.PI, true);
+    ctx.ellipse(cx, by, bx, bry, 0, 0, Math.PI, false);
     ctx.lineTo(cx - bw, cy);
     ctx.ellipse(cx, cy, bw, ry, 0, Math.PI, 0, true);
     ctx.fill();
