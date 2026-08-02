@@ -51,6 +51,7 @@
         'c-blue':    'var(--blue)',
         'c-magenta': 'var(--magenta)',
         'c-darkgreen': 'var(--darkgreen)',
+        'c-personnel': 'var(--ih-brand)',
     };
     const backColorVar = BACK_COLOR_VAR[C.backColor] || 'var(--cyan)';
 
