@@ -19,7 +19,7 @@ window.NAV_CONFIG = {
         ]},
         { label: 'visual', href: 'visual/', items: [
             { href: 'visual/music-videos.html', label: 'music videos' },
-            { href: 'visual/tv.html', label: 'teevee' },
+            { href: 'visual/tv/', label: 'teevee' },
             { href: 'visual/collage.html', label: 'collage' },
             { href: 'visual/photography.html', label: 'photography' }
         ]},

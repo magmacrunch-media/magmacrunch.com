@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════
-   CHANNEL DATA — server-managed via tv-channels.js, hardcoded fallback
+   CHANNEL DATA — server-managed via channels.js, hardcoded fallback
    ══════════════════════════════════════════════════ */
 const CHANNELS = window.TV_CHANNELS || [
     { title: "Hologram of a Dream",                          artist: "Dag Henderson",           id: "mby4C5PZzlQ", year: "2025" },
