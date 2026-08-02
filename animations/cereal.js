@@ -173,7 +173,7 @@
     ctx.ellipse(0, ART_CRATER_Y, 5.5, 2, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    /* eruption particles */
+    /* eruption debris: two alternating color sets on a timer */
     var t1 = (frame % 14 < ART_ERUPTION_HALF_1);
     var t2 = (frame % 11 < ART_ERUPTION_HALF_2);
 
@@ -197,7 +197,9 @@
 
   /* ── DRAW: BOX ── */
 
+  /* 3D box: top face, side face, front face, edge highlight, banner */
   function drawBoxFaces(fx, fy, w, h, dx, dy) {
+    /* top face (dark) */
     ctx.fillStyle = C.boxBlack;
     ctx.beginPath();
     ctx.moveTo(fx, fy);
@@ -206,6 +208,7 @@
     ctx.lineTo(fx + dx, fy + dy);
     ctx.fill();
 
+    /* left side face */
     ctx.fillStyle = C.darkPink;
     ctx.beginPath();
     ctx.moveTo(fx, fy);
@@ -214,16 +217,20 @@
     ctx.lineTo(fx + dx, fy + dy);
     ctx.fill();
 
+    /* front face */
     ctx.fillStyle = C.pink;
     ctx.fillRect(fx, fy, w, h);
 
+    /* left edge highlight */
     ctx.fillStyle = C.boxEdge;
     ctx.fillRect(fx, fy, 2, h);
 
+    /* cyan banner strip */
     ctx.fillStyle = C.cyan;
     ctx.fillRect(fx, fy + 12, w, 16);
   }
 
+  /* three-layer text: shadow → cyan offset → yellow top */
   function drawBoxLabel(fx, fy, w) {
     ctx.font = '8px "Press Start 2P"';
     ctx.textAlign = 'center';
@@ -240,6 +247,7 @@
     ctx.fillText('MAGMA', 0, 38);
     ctx.fillText('CRUNCH', 0, 52);
 
+    /* pink line above the box opening */
     ctx.strokeStyle = C.pink;
     ctx.lineWidth = 0.75;
     ctx.beginPath();
@@ -302,6 +310,7 @@
     ctx.restore();
   }
 
+  /* bowl body: connects top ellipse to bottom ellipse via side lines */
   function drawBowlBody(cx, cy, bw, ry) {
     const bx = BOWL_BOTTOM_WIDTH;
     const by = cy + BOWL_DEPTH;
@@ -322,7 +331,7 @@
     ctx.ellipse(cx, cy, bw, ry, 0, 0, Math.PI * 2);
     ctx.stroke();
 
-    /* highlight reflection */
+    /* white reflection highlight on left side */
     ctx.fillStyle = 'rgba(255,255,255,0.1)';
     ctx.beginPath();
     ctx.moveTo(cx - bw + 6, cy + 10);
@@ -444,6 +453,7 @@
     }
 
     cerealBits = cerealBits.filter(c => c.y <= H + OFFSCREEN_MARGIN && c.life !== 0);
+    /* cap total cereal: remove oldest floater if over limit */
     if (cerealBits.length > MAX_CEREAL) {
       const floaters = cerealBits.filter(c => c.floating);
       if (floaters.length > MAX_FLOATERS) cerealBits.splice(cerealBits.indexOf(floaters[0]), 1);
