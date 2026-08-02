@@ -21,7 +21,7 @@ window.NAV_CONFIG = {
             { href: 'visual/music-videos.html', label: 'music videos' },
             { href: 'visual/tv/', label: 'teevee' },
             { href: 'visual/collage.html', label: 'collage' },
-            { href: 'visual/photography.html', label: 'photography' }
+            { href: 'visual/photography/', label: 'photography' }
         ]},
         { label: 'archive', href: 'archive/', items: [
             { href: 'archive/by-artist/', label: 'by artist' },

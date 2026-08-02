@@ -90,7 +90,7 @@
             ],
             nav:{accent:'#FF2D9B',glow:'rgba(255,45,155,0.4)',brand:'#F0E8D8',brandGlow:'rgba(240,232,216,0.7)'}
         },
-        {name:'City Pop',section:'visual',bodyClass:'city-pop',prefix:'cp',file:'visual/photography.html',
+        {name:'City Pop',section:'visual',bodyClass:'city-pop',prefix:'cp',file:'visual/photography/index.html',
             palette:[
                 {var:'--cp-night-sky',value:'#0D0D2B',label:'Night Sky'},{var:'--cp-deep-navy',value:'#141438',label:'Deep Navy'},
                 {var:'--cp-twilight',value:'#1E1E4A',label:'Twilight'},{var:'--cp-smoked-glass',value:'#2A2A5A',label:'Smoked Glass'},

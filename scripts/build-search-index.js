@@ -81,7 +81,7 @@ function parseMainPages() {
     { file: 'visual/index.html', title: 'Visual Hub', desc: 'Visual art landing page' },
     { file: 'visual/music-videos.html', title: 'Music Videos', desc: 'MTV-style music videos' },
     { file: 'visual/collage.html', title: 'Collage', desc: 'Editorial magazine collage art' },
-    { file: 'visual/photography.html', title: 'Photography', desc: 'Photography gallery' },
+    { file: 'visual/photography/index.html', title: 'Photography', desc: 'Photography gallery' },
     { file: 'visual/tv/index.html', title: 'Teevee', desc: 'Television-style content' },
     { file: 'archive/index.html', title: 'Archive Hub', desc: 'MusicBrainz archive' },
     { file: 'archive/by-artist/index.html', title: 'Artists', desc: 'Browse by artist' },
