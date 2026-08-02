@@ -6,179 +6,7 @@
     <title>tools — magmacrunch media</title>
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
-    <style>
-        :root {
-            --nav-accent: #00FFFF;
-            --nav-glow: rgba(0,255,255,0.4);
-            --nav-brand: #00FFFF;
-            --nav-brand-glow: rgba(0,255,255,0.7);
-        }
-
-        /* ── CYAN TERMINAL PALETTE ── */
-        body {
-            --cyan: #00FFFF;
-            --cyan-dim: #007A7A;
-            --cyan-glow: rgba(0,255,255,0.4);
-            --cyan-bright: #7DF9FF;
-            background: #040c0c;
-            background-image: repeating-linear-gradient(
-                0deg, transparent, transparent 2px,
-                rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px
-            );
-        }
-
-        footer {
-            border-top-color: var(--cyan-dim);
-        }
-        footer span {
-            color: var(--cyan);
-        }
-
-        .breadcrumb {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--cyan-dim);
-            letter-spacing: 0.1em;
-            margin-top: -8px;
-            margin-bottom: 16px;
-            align-self: flex-start;
-        }
-        .breadcrumb a { color: var(--cyan-dim); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--cyan); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--cyan); opacity: 0.7; }
-        .breadcrumb .current { color: var(--cyan); }
-
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 80px 20px 60px;
-        }
-
-        /* ── TERMINAL PROMPT ── */
-        .terminal-prompt {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: var(--cyan);
-            margin-bottom: 8px;
-            animation: fadeUp 0.5s ease both;
-        }
-        .terminal-prompt .cursor {
-            animation: blink-cyan 1s step-end infinite;
-        }
-
-        .page-title {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 18px;
-            color: var(--cyan);
-            text-shadow:
-                0 0 10px rgba(0,255,255,0.6),
-                0 0 30px rgba(0,255,255,0.3),
-                0 0 60px rgba(0,255,255,0.1);
-            margin-bottom: 10px;
-            letter-spacing: 0.1em;
-            animation: fadeUp 0.5s 0.05s ease both;
-        }
-
-        .page-subtitle {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: var(--cyan-dim);
-            letter-spacing: 0.05em;
-            margin-bottom: 48px;
-            animation: fadeUp 0.5s 0.1s ease both;
-        }
-
-        @keyframes blink-cyan {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* ── TOOL CARDS ── */
-        .tool-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            width: min(520px, 90vw);
-            animation: fadeUp 0.5s 0.15s ease both;
-        }
-
-        .tool-card {
-            display: flex;
-            align-items: stretch;
-            text-decoration: none;
-            border: 2px solid var(--cyan-dim);
-            border-bottom: none;
-            background: rgba(0,255,255,0.02);
-            transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
-            position: relative;
-            overflow: hidden;
-        }
-        .tool-card:last-child {
-            border-bottom: 2px solid var(--cyan-dim);
-        }
-
-        .tool-card::before {
-            content: '';
-            display: block;
-            width: 4px;
-            flex-shrink: 0;
-            background: var(--cyan);
-            transition: width 0.15s;
-        }
-
-        .tool-card:hover {
-            background: rgba(0,255,255,0.05);
-            border-color: var(--cyan);
-            box-shadow: 0 0 20px rgba(0,255,255,0.15),
-                        inset 0 0 40px rgba(0,255,255,0.02);
-        }
-        .tool-card:hover::before { width: 7px; }
-        .tool-card:hover .tc-arrow { opacity: 1; transform: translateX(0); }
-
-        .tc-inner {
-            padding: 20px 22px;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
-        .tc-label {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 9px;
-            color: var(--cyan);
-            letter-spacing: 0.08em;
-            margin-bottom: 7px;
-            display: block;
-            text-shadow: 0 0 8px rgba(0,255,255,0.4);
-        }
-
-        .tc-desc {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: var(--cyan-dim);
-            line-height: 1.5;
-        }
-
-        .tc-arrow {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 10px;
-            color: var(--cyan);
-            opacity: 0;
-            transform: translateX(-6px);
-            transition: opacity 0.15s, transform 0.15s;
-            flex-shrink: 0;
-            text-shadow: 0 0 8px rgba(0,255,255,0.6);
-        }
-
-        @media (max-width: 640px) {
-            .page-title { font-size: 13px; }
-            .tc-label { font-size: 8px; }
-        }
-    </style>
+    <link rel="stylesheet" href="tools.css">
 </head>
 <body>
 
@@ -192,41 +20,27 @@
         <span class="current">tools</span>
     </div>
 
-    <div class="terminal-prompt">root@magma:~$<span class="cursor"> █</span></div>
     <h1 class="page-title">// tools //</h1>
-    <p class="page-subtitle">creative utilities · free to use</p>
+    <p class="page-subtitle">browser-based utilities</p>
 
-    <!-- TOOL CARDS -->
-    <div class="tool-cards">
+    <div class="tool-grid">
 
         <a href="album-art-maker/" class="tool-card">
-            <div class="tc-inner">
-                <div class="tc-text">
-                    <span class="tc-label">ALBUM//ART</span>
-                    <span class="tc-desc">pixel art editor for album covers · text, shapes, images</span>
-                </div>
-                <span class="tc-arrow">▶</span>
-            </div>
+            <div class="tool-icon">🎨</div>
+            <div class="tool-title">Album Art Maker</div>
+            <div class="tool-desc">create pixel art album covers</div>
         </a>
 
         <a href="media-search/" class="tool-card">
-            <div class="tc-inner">
-                <div class="tc-text">
-                    <span class="tc-label">MEDIA//SEARCH</span>
-                    <span class="tc-desc">free media aggregator · CC-licensed images, video &amp; audio</span>
-                </div>
-                <span class="tc-arrow">▶</span>
-            </div>
+            <div class="tool-icon">🔍</div>
+            <div class="tool-title">Media Search</div>
+            <div class="tool-desc">search free media across multiple providers</div>
         </a>
 
         <a href="pixel-process/" class="tool-card">
-            <div class="tc-inner">
-                <div class="tc-text">
-                    <span class="tc-label">PIXEL//PROCESS</span>
-                    <span class="tc-desc">circuit-bent image processor · channel shift, pixel sort, FFT filter</span>
-                </div>
-                <span class="tc-arrow">▶</span>
-            </div>
+            <div class="tool-icon">⚡</div>
+            <div class="tool-title">Pixel Process</div>
+            <div class="tool-desc">glitch &amp; effect processor for images</div>
         </a>
 
     </div>
@@ -238,5 +52,6 @@
 </footer>
 
 <script src="../nav.js"></script>
+
 </body>
 </html>
