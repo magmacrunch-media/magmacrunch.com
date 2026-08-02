@@ -14,7 +14,7 @@ window.NAV_CONFIG = {
         { label: 'about', href: 'home/about.html' },
         { label: 'music', href: 'music/', items: [
             { href: 'music/jukebox/', label: 'jukebox' },
-            { href: 'music/distributed-music.html', label: 'distributed music' },
+            { href: 'music/distributed-music/', label: 'distributed music' },
             { href: 'music/physical-media/', label: 'physical media' }
         ]},
         { label: 'visual', href: 'visual/', items: [
