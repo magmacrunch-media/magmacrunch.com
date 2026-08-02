@@ -832,19 +832,20 @@
     ctx.fill();
 })();
 
-// ── Card Games collection preview — fanned hand + poker chips ──
+// ── Card Games collection preview — fanned hand ──
 (function() {
     const c = document.getElementById('cCardGames');
     if (!c) return;
     const ctx = c.getContext('2d');
+
+    /* background + border */
     ctx.fillStyle = '#0a1628';
     ctx.fillRect(0, 0, 72, 72);
     ctx.strokeStyle = '#39ff6e';
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 68, 68);
-    // subtle table felt texture
-    ctx.fillStyle = 'rgba(57,255,110,0.03)';
-    for (let i = 0; i < 72; i += 4) ctx.fillRect(0, i, 72, 2);
+
+    /* fanned hand of 4 cards */
     const cardW = 18, cardH = 26;
     const cards = [
         { x: 6,  suit: '\u2660', rank: 'A', color: '#0a1628' },
@@ -853,49 +854,37 @@
         { x: 42, suit: '\u2663', rank: 'J', color: '#0a1628' },
     ];
     const startY = 10;
-    // card drop shadows
+
+    /* card drop shadows */
     ctx.fillStyle = 'rgba(0,0,0,0.3)';
     cards.forEach(card => ctx.fillRect(card.x + 2, startY + 2, cardW, cardH));
+
+    /* cards */
     cards.forEach((card, i) => {
-        // card body
+        /* card body */
         ctx.fillStyle = '#f0ead8';
         ctx.fillRect(card.x, startY - i, cardW, cardH);
-        // inner border
+
+        /* inner border */
         ctx.strokeStyle = '#39ff6e';
         ctx.lineWidth = 0.5;
         ctx.strokeRect(card.x + 1, startY - i + 1, cardW - 2, cardH - 2);
-        // rank top-left
+
+        /* rank top-left */
         ctx.fillStyle = card.color;
         ctx.font = "bold 5px 'Press Start 2P', monospace";
         ctx.textAlign = 'left';
         ctx.fillText(card.rank, card.x + 2, startY - i + 7);
-        // suit below rank
+
+        /* suit below rank */
         ctx.font = '6px serif';
         ctx.fillText(card.suit, card.x + 3, startY - i + 13);
-        // centered large suit
+
+        /* centered large suit */
         ctx.font = '10px serif';
         ctx.textAlign = 'center';
         ctx.fillText(card.suit, card.x + cardW / 2, startY - i + 22);
     });
-    // poker chips stacked (bottom-right)
-    const chipColors = ['#00f5ff', '#ff2e9c', '#ffe03a', '#39ff6e'];
-    chipColors.forEach((col, i) => {
-        const cx = 56, cy = 48 - i * 2;
-        ctx.fillStyle = 'rgba(0,0,0,0.2)';
-        ctx.fillRect(cx - 7, cy + 1, 14, 5);
-        ctx.fillStyle = col;
-        ctx.fillRect(cx - 7, cy, 14, 5);
-        ctx.fillStyle = 'rgba(0,0,0,0.2)';
-        ctx.fillRect(cx - 5, cy + 1, 10, 3);
-    });
-    // chip detail lines
-    ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    chipColors.forEach((_, i) => {
-        ctx.fillRect(50, 47 - i * 2, 12, 1);
-    });
-    // accent line
-    ctx.fillStyle = '#39ff6e';
-    ctx.fillRect(8, 62, 56, 2);
 })();
 
 // ── Puzzles collection preview — question mark grid ──
