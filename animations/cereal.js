@@ -15,7 +15,7 @@
   const BOWL_WIDTH = 55;
   const BOWL_RY = 14;
   const BOWL_DEPTH = 45;
-  const BOWL_TAPER = 20;
+  const BOWL_BOTTOM_WIDTH = 25;
 
   /* ── SPOUT ── */
   const SPOUT_X = 145;
@@ -300,12 +300,15 @@
   }
 
   function drawBowlBody(cx, cy, bw, ry) {
+    const bx = BOWL_BOTTOM_WIDTH;
+    const by = cy + BOWL_DEPTH;
+
     ctx.fillStyle = C.slate;
     ctx.beginPath();
     ctx.moveTo(cx + bw, cy);
-    ctx.bezierCurveTo(cx + bw, cy + 30, cx + 30, cy + BOWL_DEPTH, cx + BOWL_TAPER, cy + BOWL_DEPTH);
-    ctx.lineTo(cx - BOWL_TAPER, cy + BOWL_DEPTH);
-    ctx.bezierCurveTo(cx - 30, cy + BOWL_DEPTH, cx - bw, cy + 30, cx - bw, cy);
+    ctx.lineTo(cx + bx, by);
+    ctx.ellipse(cx, by, bx, ry, 0, 0, Math.PI, true);
+    ctx.lineTo(cx - bw, cy);
     ctx.ellipse(cx, cy, bw, ry, 0, Math.PI, 0, true);
     ctx.fill();
 
@@ -325,7 +328,7 @@
     ctx.fill();
   }
 
-  function drawBowlAndLiquid() {
+  function drawBowlBack() {
     const cx = BOWL_CENTER_X;
     const cy = BOWL_TOP;
 
@@ -336,7 +339,10 @@
     ctx.fill();
 
     drawLiquidSurface(cx, cy, BOWL_WIDTH, BOWL_RY);
-    drawBowlBody(cx, cy, BOWL_WIDTH, BOWL_RY);
+  }
+
+  function drawBowlFront() {
+    drawBowlBody(BOWL_CENTER_X, BOWL_TOP, BOWL_WIDTH, BOWL_RY);
   }
 
   /* ── DRAW: CEREAL SHAPES ── */
@@ -363,20 +369,30 @@
     ctx.fillRect(0, 0, 1.5, 1.5);
   }
 
-  function drawCereal() {
+  function drawCerealPiece(c) {
+    ctx.save();
+    const x = Math.floor(c.x);
+    const y = Math.floor(c.y + (c.floating ? Math.sin(frame * CEREAL_FLOAT_SPEED + c.x) * CEREAL_FLOAT_AMPLITUDE : 0));
+
+    ctx.translate(x, y);
+    if (!c.floating) ctx.rotate(c.angle);
+
+    ctx.fillStyle = c.col;
+    if (c.type === 'loop') drawLoopShape();
+    else if (c.type === 'star') drawStarShape();
+    else drawRockShape();
+    ctx.restore();
+  }
+
+  function drawCerealFloating() {
     for (const c of cerealBits) {
-      ctx.save();
-      const x = Math.floor(c.x);
-      const y = Math.floor(c.y + (c.floating ? Math.sin(frame * CEREAL_FLOAT_SPEED + c.x) * CEREAL_FLOAT_AMPLITUDE : 0));
+      if (c.floating) drawCerealPiece(c);
+    }
+  }
 
-      ctx.translate(x, y);
-      if (!c.floating) ctx.rotate(c.angle);
-
-      ctx.fillStyle = c.col;
-      if (c.type === 'loop') drawLoopShape();
-      else if (c.type === 'star') drawStarShape();
-      else drawRockShape();
-      ctx.restore();
+  function drawCerealFalling() {
+    for (const c of cerealBits) {
+      if (!c.floating) drawCerealPiece(c);
     }
   }
 
@@ -432,8 +448,10 @@
 
   function render() {
     ctx.clearRect(0, 0, W, H);
-    drawBowlAndLiquid();
-    drawCereal();
+    drawBowlBack();
+    drawCerealFloating();
+    drawBowlFront();
+    drawCerealFalling();
     drawSplashes();
     drawBox();
   }
