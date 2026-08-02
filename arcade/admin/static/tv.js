@@ -1,7 +1,7 @@
 /**
  * tv.js — MAGMA//OPS TV tab
- * Channel list editor for visual/tv.html
- * Drag-drop reorder, add/delete, server persistence, generates tv-channels.js
+ * Channel list editor for visual/tv/index.html
+ * Drag-drop reorder, add/delete, server persistence, generates channels.js
  */
 
 (function() {

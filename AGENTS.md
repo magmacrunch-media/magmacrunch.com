@@ -23,7 +23,7 @@ Open `index.html` directly in browser. No build server, no package manager, no t
 ├── press/             # journals: scientific/, experimental/
 ├── scripts/           # backup-musicbrainz.mjs
 ├── templates/         # JS template scripts for archive pages
-└── visual/            # gallery pages (collage, photography, music-videos, teevee)
+└── visual/            # gallery pages (collage, photography, music-videos, teevee/tv)
 ```
 
 ## Key conventions
@@ -98,7 +98,7 @@ Existing themes:
 - `visual/music-videos.html` — MTV (`:root` + `body.mtv`)
 - `visual/collage.html` — Memphis (`:root` + `body.memphis`)
 - `visual/photography.html` — City Pop (`:root` + `body.city-pop`)
-- `visual/tv.html` — Broadcast (`:root` + `body.broadcast`)
+- `visual/tv/` — Broadcast (`:root` + `body.broadcast`)
 
 ## Color palette (defined in style.css)
 

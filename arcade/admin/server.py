@@ -84,7 +84,7 @@ API_KEYS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api-ke
 JUKEBOX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jukebox-songs.json")
 THEMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.json")
 TV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tv-channels.json")
-TV_JS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "visual", "tv-channels.js")
+TV_JS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "visual", "tv", "channels.js")
 FAVICONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "favicons.json")
 
 # ── GitHub API ──────────────────────────────────────────────────────────────
@@ -96,7 +96,7 @@ GITHUB_API = "https://api.github.com"
 GITHUB_PATHS = {
     "jukebox": "arcade/admin/jukebox-songs.json",
     "tv_json": "arcade/admin/tv-channels.json",
-    "tv_js":   "visual/tv-channels.js",
+    "tv_js":   "visual/tv/channels.js",
     "themes":  "arcade/admin/themes.json",
 }
 
@@ -259,10 +259,10 @@ def load_tv():
     return []
 
 def save_tv(channels):
-    """Save TV channels to disk and generate tv-channels.js for the teevee page."""
+    """Save TV channels to disk and generate channels.js for the teevee page."""
     with open(TV_PATH, "w") as f:
         json.dump(channels, f, indent=2)
-    # Generate the JS file that visual/tv.html includes
+    # Generate the JS file that visual/tv/index.html includes
     lines = []
     for ch in channels:
         lines.append(
@@ -1278,7 +1278,7 @@ async def ws_handler(websocket):
                                 _executor, lambda: github_get_file(GITHUB_PATHS["tv_js"], token)
                             )
                             files_to_commit.append({"path": GITHUB_PATHS["tv_js"], "content": tv_js, "sha": js_sha})
-                            files_changed.append("tv-channels.js")
+                            files_changed.append("channels.js")
 
                 # Check themes
                 if os.path.exists(THEMES_PATH):
