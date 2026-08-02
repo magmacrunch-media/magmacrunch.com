@@ -1,0 +1,229 @@
+        /* ── PAGE-SPECIFIC: guestbook ── */
+        :root {
+            --nav-accent: var(--green);
+            --nav-glow: rgba(57,255,110,0.4);
+            --nav-brand: #90ffaa;
+            --nav-brand-glow: rgba(144,255,170,0.7);
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--nearwhite); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--nearwhite); opacity: 0.7; }
+        .breadcrumb .current { color: var(--nearwhite); }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 18px;
+            color: var(--green);
+            text-shadow: 0 0 16px rgba(57,255,110,0.7), 0 0 32px rgba(57,255,110,0.3);
+            margin-bottom: 10px;
+            letter-spacing: 0.1em;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #e5b300;
+            letter-spacing: 0.1em;
+            margin-bottom: 36px;
+            opacity: 1;
+            text-shadow: 0 0 8px rgba(229,179,0,0.4);
+            animation: fadeUp 0.5s 0.05s ease both;
+        }
+
+        /* page glow effect */
+        main {
+            box-shadow: 
+                inset 0 0 100px rgba(57,255,110,0.02),
+                inset 0 0 200px rgba(57,255,110,0.01);
+        }
+
+        .guestbook-wrap {
+            width: min(680px, 95vw);
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .ascii-art {
+            font-family: 'Courier Prime', monospace;
+            font-size: 10px;
+            color: var(--green);
+            text-shadow: 0 0 6px rgba(57,255,110,0.3);
+            line-height: 1.2;
+            margin-bottom: 24px;
+            text-align: center;
+            opacity: 0.8;
+            animation: fadeUp 0.5s ease both;
+            white-space: pre;
+        }
+
+/* ── FORM ── */
+        .form-container {
+            border: 2px solid var(--green);
+            background: #0a0a0a;
+            padding: 24px;
+            margin-bottom: 36px;
+            box-shadow:
+                0 0 0 1px var(--green),
+                0 0 20px rgba(57,255,110,0.15),
+                inset 0 0 60px rgba(57,255,110,0.03);
+            position: relative;
+        }
+
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            background: #000;
+            border: 1px solid var(--nearwhite);
+            color: var(--nearwhite);
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            transition: all 0.2s;
+            outline: none;
+            display: block;
+            box-sizing: border-box;
+        }
+
+        .form-container input:focus, .form-container textarea:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 10px rgba(57,255,110,0.5), 0 0 20px rgba(240,240,240,0.1);
+            background: rgba(57,255,110,0.05);
+        }
+
+        .form-container input::placeholder, .form-container textarea::placeholder {
+            color: var(--nearwhite);
+            opacity: 0.5;
+        }
+
+        .form-container textarea {
+            min-height: 110px;
+            resize: vertical;
+            margin-bottom: 16px;
+        }
+
+        .submit-btn {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            background: var(--green);
+            color: #000;
+            border: 2px solid var(--green);
+            padding: 12px 24px;
+            cursor: pointer;
+            letter-spacing: 0.1em;
+            transition: all 0.15s;
+            position: relative;
+        }
+        .submit-btn:hover {
+            background: #000;
+            color: #e5b300;
+            border-color: #e5b300;
+            box-shadow: 0 0 20px rgba(229,179,0,0.4), 0 0 30px rgba(229,179,0,0.2);
+        }
+        .submit-btn:active {
+            transform: translate(2px, 2px);
+        }
+
+        .submit-status {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            margin-top: 4px;
+            min-height: 16px;
+            letter-spacing: 0.08em;
+        }
+        .submit-status.ok    { color: var(--green); }
+        .submit-status.error { color: var(--rose);  }
+
+        /* ── ENTRIES ── */
+        .entries-header {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--green);
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+            text-shadow: 0 0 8px rgba(57,255,110,0.4);
+        }
+
+        .entries-list { display: flex; flex-direction: column; gap: 0; }
+
+        .entry {
+            border: 1px solid #0a1a0a;
+            border-bottom: none;
+            padding: 16px 18px;
+            background: #050a05;
+            transition: background 0.15s;
+        }
+        .entry:last-child { border-bottom: 1px solid #0a1a0a; }
+        .entry:hover { background: #0a150a; }
+
+        .entry-name {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--green);
+            margin-bottom: 8px;
+            letter-spacing: 0.06em;
+        }
+        .entry-name::before { content: '▶ '; color: var(--green); opacity: 0.6; }
+
+.entry-message {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: var(--white);
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .entry-time {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            color: #e5b300;
+            opacity: 0.7;
+        }
+
+        /* ── FOOTER ── */
+        footer { color: var(--dim); border-top-color: #0a1a0a; }
+        footer span { color: var(--green); }
+
+        /* ── JUKEBOX OVERRIDES ── */
+        .mcj-bar { border-color: var(--green); }
+        .mcj-bar:hover { border-color: #e5b300; box-shadow: 0 0 12px rgba(229,179,0,0.3); }
+        .mcj-bar-label { color: var(--green); text-shadow: 0 0 6px rgba(57,255,110,0.5); }
+        .mcj-bar-play { border-color: var(--green); color: var(--green); }
+        .mcj-bar-play:hover { background: var(--green); color: #000; }
+        .mcj-btn { border-color: var(--green); color: var(--green); }
+        .mcj-btn:hover { background: var(--green); color: #000; }
+        .mcj-btn-play { background: #e5b300; color: #000; border-color: #e5b300; }
+        .mcj-btn-play:hover { background: #000; color: #e5b300; border-color: #e5b300; }
+        .mcj-vinyl { box-shadow: 0 0 0 2px var(--green), 0 0 16px rgba(57,255,110,0.4); }
+
+        .loading-msg {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: var(--dim);
+            text-align: center;
+            padding: 28px;
+            animation: blink 1s step-end infinite;
+            letter-spacing: 0.1em;
+        }
+
+        @media (max-width: 640px) {
+            .page-title { font-size: 13px; }
+            .ascii-art { font-size: 6.5px; }
+        }
