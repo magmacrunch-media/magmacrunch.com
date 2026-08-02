@@ -968,89 +968,49 @@
     });
 })();
 
-// ── Action collection preview — spaceship with exhaust, enemies, lasers ──
+// ── Action collection preview — arcade joystick ──
 (function() {
     const c = document.getElementById('cAction');
     if (!c) return;
     const ctx = c.getContext('2d');
-    ctx.fillStyle = '#0a0e27';
+
+    /* background + border */
+    ctx.fillStyle = '#0a0612';
     ctx.fillRect(0, 0, 72, 72);
     ctx.strokeStyle = '#ff2e9c';
     ctx.lineWidth = 2;
     ctx.strokeRect(2, 2, 68, 68);
-    // parallax starfield — big bright + small dim
-    const bigStars = [[8,8],[40,10],[56,6],[12,28],[50,18]];
-    const smallStars = [[4,14],[22,6],[34,4],[60,20],[16,36],[44,30],[28,22],[52,36],[8,44],[36,48],[62,44]];
-    ctx.fillStyle = '#ffffff';
-    bigStars.forEach(([x, y]) => ctx.fillRect(x, y, 2, 2));
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    smallStars.forEach(([x, y]) => ctx.fillRect(x, y, 1, 1));
-    // enemy drone (top-right) — pixel alien
-    ctx.fillStyle = '#ff3d6e';
-    ctx.fillRect(52, 12, 6, 2);   // body
-    ctx.fillRect(50, 14, 10, 2);  // wide body
-    ctx.fillRect(52, 16, 2, 2);   // left leg
-    ctx.fillRect(56, 16, 2, 2);   // right leg
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(53, 13, 1, 1);   // left eye
-    ctx.fillRect(57, 13, 1, 1);   // right eye
-    // laser beam from enemy
-    ctx.fillStyle = '#ff3d6e';
-    ctx.fillRect(55, 18, 1, 12);
-    ctx.fillStyle = 'rgba(255,61,110,0.4)';
-    ctx.fillRect(54, 18, 3, 12);
-    // spaceship — detailed with cockpit, wings, panels
-    const sx = 28, sy = 30;
-    // main hull
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillRect(sx + 4, sy, 8, 20);
-    // cockpit window
-    ctx.fillStyle = '#004466';
-    ctx.fillRect(sx + 5, sy + 2, 6, 4);
-    ctx.fillStyle = '#00aacc';
-    ctx.fillRect(sx + 6, sy + 3, 4, 2);
-    // nose
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillRect(sx + 6, sy - 2, 4, 2);
-    ctx.fillRect(sx + 7, sy - 4, 2, 2);
-    // left wing
-    ctx.fillStyle = '#ff6b9d';
-    ctx.fillRect(sx - 2, sy + 8, 6, 3);
-    ctx.fillRect(sx - 4, sy + 10, 4, 2);
-    ctx.fillRect(sx - 4, sy + 12, 2, 4);
-    // right wing
-    ctx.fillRect(sx + 10, sy + 8, 6, 3);
-    ctx.fillRect(sx + 12, sy + 10, 4, 2);
-    ctx.fillRect(sx + 14, sy + 12, 2, 4);
-    // panel lines
-    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-    ctx.fillRect(sx + 7, sy + 6, 2, 14);
-    // thruster glow
-    ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(sx + 5, sy + 20, 6, 4);
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(sx + 6, sy + 20, 4, 2);
-    // exhaust flame — layered for depth
-    ctx.fillStyle = '#ff7c1f';
-    ctx.fillRect(sx + 5, sy + 24, 6, 6);
-    ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(sx + 6, sy + 24, 4, 4);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(sx + 7, sy + 24, 2, 2);
-    // laser from ship
+
+    /* base */
+    ctx.fillStyle = '#1a1a2a';
+    ctx.fillRect(20, 48, 32, 12);
+    ctx.strokeStyle = '#ff2e9c';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(20, 48, 32, 12);
+
+    /* buttons on base */
     ctx.fillStyle = '#00f5ff';
-    ctx.fillRect(sx + 7, sy - 8, 1, 8);
-    ctx.fillStyle = 'rgba(0,245,255,0.4)';
-    ctx.fillRect(sx + 6, sy - 8, 3, 8);
-    // second enemy (small, bottom-left)
-    ctx.fillStyle = '#c45fff';
-    ctx.fillRect(10, 52, 4, 2);
-    ctx.fillRect(8, 54, 8, 2);
-    ctx.fillRect(10, 56, 2, 2);
-    ctx.fillRect(14, 56, 2, 2);
+    ctx.beginPath();
+    ctx.arc(30, 54, 3, 0, Math.PI * 2);
+    ctx.fill();
     ctx.fillStyle = '#ffe03a';
-    ctx.fillRect(9, 53, 1, 1);
-    ctx.fillRect(15, 53, 1, 1);
+    ctx.beginPath();
+    ctx.arc(42, 54, 3, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* stick */
+    ctx.fillStyle = '#d0d0d0';
+    ctx.fillRect(35, 24, 2, 24);
+
+    /* ball top */
+    ctx.fillStyle = '#ff3d6e';
+    ctx.beginPath();
+    ctx.arc(36, 20, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* highlight on ball */
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.fillRect(33, 17, 2, 2);
 })();
 
 // ── Private collection preview — lock icon ──
