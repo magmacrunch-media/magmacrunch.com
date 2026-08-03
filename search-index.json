@@ -25,7 +25,7 @@
     "c": "page",
     "u": "/music/index.html",
     "d": "Music landing page",
-    "b": "music — magmacrunch media home › music // music // jukebox magmacrunch streaming · choose a song ▶ on streaming services distributed via LANDR · Spotify, Apple Music & more ▶ music videos no-budget video productions · YouTube ▶ physical media floppy disk · CD ▶ more releases coming soon ✦ tape production also in the works"
+    "b": "music — magmacrunch media home › music // music // jukebox local streaming · choose a song ▶ on streaming services distributed via LANDR · all major platforms ▶ music videos no-budget video productions · YouTube ▶ physical media floppy disk · CD · tapes in the works ▶ more releases coming soon ✦ tape production also in the works -->"
   },
   {
     "t": "distributed music",
@@ -81,7 +81,7 @@
     "c": "page",
     "u": "/visual/index.html",
     "d": "Visual art landing page",
-    "b": "visual — magmacrunch media home › visual // visual // '. _ .' -= (~) =- .' # '. teevee retro broadcast · channel flip through music videos & film ▶ collage art mixed media · cut & paste · visual experiments ▶ photography digital · film · scans · mixed formats ▶ ___,-----.___ ,--' `--. / \\ / \\ | | | | | |~~~~~~~~~| | | \\ / | | \\ / | \\ \\ / / \\ | | / \\ | | / \\ | | / \\ | | / \\____|___| ___/ )___,-----'___( )___,-----'___( )___,-----'___( )___,-----'___( \\_____________/ \\___/"
+    "b": "visual — magmacrunch media home › visual // visual // '. _ .' -= (~) =- .' # '. TV video broadcast · flip through channels ▶ collage cut & paste · magazine clips ▶ photography digital · film · scans ▶ ___,-----.___ ,--' `--. / \\ / \\ | | | | | |~~~~~~~~~| | | \\ / | | \\ / | \\ \\ / / \\ | | / \\ | | / \\ | | / \\ | | / \\____|___| ___/ )___,-----'___( )___,-----'___( )___,-----'___( )___,-----'___( \\_____________/ \\___/"
   },
   {
     "t": "collage",
@@ -98,18 +98,18 @@
     "b": "photography — magmacrunch media home › visual › photography photography _______ |__/-\\[]| | (_) | |_______| /|\\ visual archive [ close ] ← prev next →"
   },
   {
-    "t": "teevee",
+    "t": "TV",
     "c": "page",
     "u": "/visual/tv/index.html",
     "d": "Television-style content",
-    "b": "teevee — magmacrunch media home › visual › teevee ROTATE YOUR DEVICE landscape mode recommended VIEW ANYWAY &#10005; MAGMACRUNCH CABLE CHANNEL GUIDE CH -- ▼ CH− POWER ▲ CH+ &#9654; PLAY GUIDE GUIDE MagmaCrunch TV ↑ ↓ random channel &middot; ← → random channel &middot; G guide &middot; space play / pause"
+    "b": "TV — magmacrunch media home › visual › TV ROTATE YOUR DEVICE landscape mode recommended VIEW ANYWAY &#10005; MAGMACRUNCH CABLE CHANNEL GUIDE CH -- ▼ CH− POWER ▲ CH+ &#9654; PLAY GUIDE GUIDE MagmaCrunch TV ↑ ↓ random channel &middot; ← → random channel &middot; G guide &middot; space play / pause"
   },
   {
     "t": "archive",
     "c": "page",
     "u": "/archive/index.html",
     "d": "MusicBrainz archive",
-    "b": "archive — magmacrunch media home › archive // archive // the magmacrunch archive EMERAC // DB_ACCESS :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \\/\\/ [- |_ ( () |\\/| [- ~|~ () ~|~ |-| [- /\\ /? ( |-| | \\/ [- _\\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:. by artist musicians and projects from the scene by place rehearsal spaces and recording locations by contributor credits and contributions by label labels, publishers, and creative agencies some artists listed may have no releases — or released elsewhere."
+    "b": "archive — magmacrunch media home › archive // archive // database of artists, places, contributors, & labels the magmacrunch archive --> EMERAC // DB_ACCESS :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \\/\\/ [- |_ ( () |\\/| [- ~|~ () ~|~ |-| [- /\\ /? ( |-| | \\/ [- _\\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:. by artist musicians and projects from the scene by place rehearsal spaces and recording locations by contributor credits and contributions by label labels, publishers, and creative agencies some artists listed may have no releases — or released elsewhere."
   },
   {
     "t": "by artist",
@@ -186,7 +186,7 @@
     "c": "page",
     "u": "/press/index.html",
     "d": "Journals and writing",
-    "b": "press — magmacrunch media home › press // press // magmacrunch press a diy publishing house for essays, poetry, fiction, and experimental writing. no gatekeepers, no advance, no permission needed. // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to press@magmacrunch.com include your name (or pseudonym) and a short bio if you want"
+    "b": "press — magmacrunch media home › press // press // magmacrunch press --> a diy publishing house for essays, poetry, fiction, and experimental writing // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to magmarunchmedia@mgmail.com include your name (or pseudonym) and a short bio if you want -->"
   },
   {
     "t": "scientific",
@@ -214,7 +214,7 @@
     "c": "page",
     "u": "/tools/index.html",
     "d": "Creative web tools",
-    "b": "tools — magmacrunch media home › tools root@magma:~$ █ // tools // creative utilities · free to use ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
+    "b": "tools — magmacrunch media home › tools root@magma:~$ █ --> // tools // creative utilities · free to use ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",
