@@ -1,46 +1,59 @@
 (function () {
   /* ── CANVAS ── */
-  const W = 64, H = 64, CENTER = 32;
-  const CRATER_TOP = 28;
+  const W = 400, H = 480, CENTER = 200;
+  
+  /* ── LAVA LAMP CONTAINER (Linear Taper) ── */
+  const LAMP_TOP = 60, LAMP_BOT = 400;
+  const LAMP_LIQUID = 'rgba(30, 10, 60, 0.85)';
+
+  function getLampBounds(y) {
+    if (y < LAMP_TOP) return { left: CENTER - 40, right: CENTER + 40 };
+    if (y > LAMP_BOT) return { left: CENTER - 150, right: CENTER + 150 };
+    
+    // Linear Taper: steadily getting narrower from bottom to top
+    const t = (y - LAMP_TOP) / (LAMP_BOT - LAMP_TOP);
+    const radius = 40 + 110 * t; 
+    return { left: CENTER - radius, right: CENTER + radius };
+  }
 
   /* ── CALDERA ── */
-  const CALDERA_RX = 8, CALDERA_RY = 3;
-  const CALDERA_INNER = 0.6;
-  const CALDERA_PAD = 2;
-  const CALDERA_TOP_BAND = 1.5;
+  const CRATER_TOP = 320; 
+  const CALDERA_RX = 28, CALDERA_RY = 8;
+  const CALDERA_INNER = 0.5;
+  const CALDERA_PAD = 4;
+  const CALDERA_TOP_BAND = 4;
 
   /* ── MOUNTAIN ── */
-  const MOUNTAIN_EXP = 1.2;
-  const MOUNTAIN_WIDTH_SCALE = 0.5;
-  const MOUNTAIN_BASE = 8;
-  const NOISE_A = 12.3, NOISE_B = 45.6, NOISE_THRESHOLD = 0.7;
+  const MOUNTAIN_EXP = 1.15;
+  const MOUNTAIN_WIDTH_SCALE = 0.8;
+  const MOUNTAIN_BASE = 25;
 
   /* ── LAVA FLOWS ── */
-  const FLOW1_OFFSET = 4, FLOW1_DEPTH = 0.35, FLOW1_FREQ = 0.3;
-  const FLOW2_OFFSET = 4, FLOW2_DEPTH = 0.35, FLOW2_FREQ = 0.4;
-  const FLOW3_FREQ = 0.15, FLOW3_SPEED_SCALE = 0.5;
+  const FLOW1_OFFSET = 15, FLOW1_DEPTH = 0.5, FLOW1_FREQ = 0.08;
+  const FLOW2_OFFSET = -15, FLOW2_DEPTH = 0.6, FLOW2_FREQ = 0.1;
+  const FLOW3_FREQ = 0.05, FLOW3_SPEED_SCALE = 0.4;
   const FLOW_SPEED = 0.1;
-  const FLOW_BASE_WIDTH = 1.2, FLOW_DEPTH_SCALE = 0.06;
-  const FLOW_AMP = 2;
-  const LAVA_TIME_SPEED = 0.15, LAVA_SPACE_SPEED = 0.2;
+  const FLOW_BASE_WIDTH = 5.0, FLOW_DEPTH_SCALE = 0.2;
+  const FLOW_AMP = 8;
+  const LAVA_TIME_SPEED = 0.15, LAVA_SPACE_SPEED = 0.08;
 
-  /* ── CEREAL PARTICLES ── */
-  const CEREAL_SPAWN_INTERVAL = 3;
+  /* ── CEREAL PARTICLES (Enhanced Lava Lamp Fluid Flow) ── */
+  const CEREAL_SPAWN_INTERVAL = 6;
   const CEREAL_CHANCE_MARSHMALLOW = 0.35;
-  const CEREAL_SPAWN_RADIUS = 14;
-  const CEREAL_SPAWN_OFFSET = 2;
-  const CEREAL_VX_RANGE = 3;
-  const CEREAL_VY_MIN = 1.5, CEREAL_VY_RANGE = 3.5;
-  const CEREAL_DECAY_MIN = 0.015, CEREAL_DECAY_RANGE = 0.02;
-  const CEREAL_GRAVITY = 0.18;
+  const CEREAL_SPAWN_RADIUS = 20;
+  const CEREAL_SPAWN_OFFSET = 4;
+  const CEREAL_VX_RANGE = 6;
+  const CEREAL_VY_MIN = 3, CEREAL_VY_RANGE = 4;
+  const CEREAL_DECAY_MIN = 0.0006, CEREAL_DECAY_RANGE = 0.0015; // Slower decay for continuous circulation
+  const CEREAL_GRAVITY = -0.05; 
+  const FLUID_DRAG = 0.95; 
 
-  /* ── LIGHTNING BOLTS ── */
-  const BOLT_CHANCE = 0.92;
-  const BOLT_X_LEFT_MIN = 2, BOLT_X_RIGHT_MIN = 50, BOLT_X_RANGE = 12;
-  const BOLT_Y_MIN = 4, BOLT_Y_RANGE = 16;
-  const BOLT_SEG_MIN = 4, BOLT_SEG_RANGE = 4;
-  const BOLT_SEG_LENGTH = 5;
-  const BOLT_ANGLE_RANGE = 1.2;
+  /* ── LIGHTNING BOLTS (Strictly Enclosed) ── */
+  const BOLT_CHANCE = 0.95;
+  const BOLT_Y_MIN = LAMP_TOP + 15, BOLT_Y_RANGE = 60;
+  const BOLT_SEG_MIN = 3, BOLT_SEG_RANGE = 4;
+  const BOLT_SEG_LENGTH = 10;
+  const BOLT_ANGLE_RANGE = 1.0;
   const BOLT_DECAY_MIN = 0.2, BOLT_DECAY_RANGE = 0.1;
 
   /* ── ANIMATION ── */
@@ -54,18 +67,22 @@
     lava0:     '#ffe03a',
     lava1:     '#ffad1f',
     bolt:      '#ffe03a',
-    cereal:    ['#ff3d6e', '#00f5ff', '#c45fff', '#39ff14', '#ffffff']
+    cereal:    ['#ff3d6e', '#00f5ff', '#c45fff', '#39ff14', '#ffffff'],
+    metal:     '#8a95a5',
+    metalDark: '#4a5462',
+    glassHighlight: 'rgba(255, 255, 255, 0.18)'
   };
 
   /* ── STATE ── */
   const canvas = document.getElementById('volcano');
+  canvas.width = W; 
+  canvas.height = H;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
   let cerealBits = [], bolts = [], frame = 0;
 
   /* ── SPAWNERS ── */
-
   function spawnCereal() {
     const isMarshmallow = Math.random() < CEREAL_CHANCE_MARSHMALLOW;
     cerealBits.push({
@@ -73,23 +90,28 @@
       y: CRATER_TOP - CEREAL_SPAWN_OFFSET,
       vx: (Math.random() - 0.5) * CEREAL_VX_RANGE,
       vy: -(Math.random() * CEREAL_VY_RANGE + CEREAL_VY_MIN),
-      life: 1,
+      life: 1.5,
       decay: CEREAL_DECAY_MIN + Math.random() * CEREAL_DECAY_RANGE,
       col: isMarshmallow
         ? C.cereal[Math.floor(Math.random() * C.cereal.length)]
         : C.cereal[0],
-      gravity: CEREAL_GRAVITY,
+      gravity: CEREAL_GRAVITY, 
       type: isMarshmallow ? 'marshmallow' : 'loop'
     });
   }
 
   function spawnBolt() {
+    const yStart = BOLT_Y_MIN + Math.random() * BOLT_Y_RANGE;
+    const bounds = getLampBounds(yStart);
+    // Keep lightning well clear of the inner glass margins
+    const margin = 12;
     const isLeft = Math.random() < 0.5;
+    
     bolts.push({
       x: isLeft
-        ? (BOLT_X_LEFT_MIN + Math.random() * BOLT_X_RANGE)
-        : (BOLT_X_RIGHT_MIN + Math.random() * BOLT_X_RANGE),
-      y: BOLT_Y_MIN + Math.random() * BOLT_Y_RANGE,
+        ? (bounds.left + margin + Math.random() * 8)
+        : (bounds.right - margin - 8 - Math.random() * 8),
+      y: yStart,
       life: 1,
       decay: BOLT_DECAY_MIN + Math.random() * BOLT_DECAY_RANGE,
       segs: BOLT_SEG_MIN + Math.floor(Math.random() * BOLT_SEG_RANGE),
@@ -98,10 +120,70 @@
   }
 
   /* ── DRAW ── */
+  function drawLampBackground() {
+    ctx.fillStyle = LAMP_LIQUID;
+    ctx.beginPath();
+    for (let y = LAMP_TOP; y <= LAMP_BOT; y++) {
+      ctx.lineTo(getLampBounds(y).right, y);
+    }
+    for (let y = LAMP_BOT; y >= LAMP_TOP; y--) {
+      ctx.lineTo(getLampBounds(y).left, y);
+    }
+    ctx.fill();
+  }
+
+  function drawLampForeground() {
+    ctx.fillStyle = C.glassHighlight;
+    
+    // Left glare
+    ctx.beginPath();
+    for (let y = LAMP_TOP; y <= LAMP_BOT; y++) {
+        ctx.lineTo(getLampBounds(y).left + 6, y);
+    }
+    for (let y = LAMP_BOT; y >= LAMP_TOP; y--) {
+        ctx.lineTo(getLampBounds(y).left + 18, y);
+    }
+    ctx.fill();
+
+    // Right glare
+    ctx.beginPath();
+    for (let y = LAMP_TOP; y <= LAMP_BOT; y++) {
+        ctx.lineTo(getLampBounds(y).right - 6, y);
+    }
+    for (let y = LAMP_BOT; y >= LAMP_TOP; y--) {
+        ctx.lineTo(getLampBounds(y).right - 18, y);
+    }
+    ctx.fill();
+
+    const topR = getLampBounds(LAMP_TOP).right - CENTER;
+    const baseR = getLampBounds(LAMP_BOT).right - CENTER;
+
+    // Metal Cap
+    ctx.fillStyle = C.metal;
+    ctx.beginPath();
+    ctx.moveTo(CENTER - topR - 2, LAMP_TOP);
+    ctx.lineTo(CENTER + topR + 2, LAMP_TOP);
+    ctx.lineTo(CENTER + 20, LAMP_TOP - 40);
+    ctx.lineTo(CENTER - 20, LAMP_TOP - 40);
+    ctx.fill();
+
+    // Metal Base
+    ctx.beginPath();
+    ctx.moveTo(CENTER - baseR - 2, LAMP_BOT);
+    ctx.lineTo(CENTER + baseR + 2, LAMP_BOT);
+    ctx.lineTo(CENTER + baseR + 25, H - 15);
+    ctx.lineTo(CENTER - baseR - 25, H - 15);
+    ctx.fill();
+    
+    ctx.fillStyle = C.metalDark;
+    ctx.fillRect(CENTER - baseR - 25, H - 15, (baseR + 25) * 2, 8);
+  }
 
   function drawCaldera() {
     for (let y = CRATER_TOP - CALDERA_RY; y <= CRATER_TOP; y++) {
+      const bounds = getLampBounds(y);
       for (let x = CENTER - CALDERA_RX - CALDERA_PAD; x <= CENTER + CALDERA_RX + CALDERA_PAD; x++) {
+        if (x < bounds.left || x >= bounds.right) continue;
         const dx = (x - CENTER) / CALDERA_RX;
         const dy = (y - CRATER_TOP) / CALDERA_RY;
         const d2 = dx * dx + dy * dy;
@@ -136,15 +218,17 @@
       const t = (frame * LAVA_TIME_SPEED + y * LAVA_SPACE_SPEED) % 1;
       return t > 0.5 ? C.lava0 : C.lava1;
     }
-    return Math.sin(x * NOISE_A + y * NOISE_B) > NOISE_THRESHOLD
-      ? C.mountDark
-      : C.mount;
+    
+    const noise = Math.sin(x * 0.15 + y * 0.25) * Math.sin(x * 0.2 - y * 0.15);
+    return noise > 0.2 ? C.mountDark : C.mount;
   }
 
   function drawMountainBody() {
-    for (let y = CRATER_TOP; y < H; y++) {
+    for (let y = CRATER_TOP; y < LAMP_BOT; y++) {
       const depth = y - CRATER_TOP;
-      const widthAtY = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
+      let widthAtY = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
+      const maxHalfWidth = getLampBounds(y).right - CENTER - 8;
+      widthAtY = Math.min(widthAtY, maxHalfWidth);
       const l = Math.floor(CENTER - widthAtY);
       const r = Math.floor(CENTER + widthAtY);
 
@@ -152,48 +236,58 @@
       const flow2 = calcFlowPosition(depth,  FLOW2_OFFSET,  FLOW2_DEPTH, FLOW2_FREQ, 1);
       const flow3 = calcFlowPosition(depth,  0,             0,           FLOW3_FREQ, FLOW3_SPEED_SCALE);
 
-      for (let x = 0; x <= W; x++) {
-        if (x >= l && x <= r) {
-          if (x === l || x === r) {
-            ctx.fillStyle = C.mountOut;
-          } else if (y === CRATER_TOP && Math.abs(x - CENTER) < CALDERA_RX) {
-            ctx.fillStyle = C.mountOut;
-          } else {
-            ctx.fillStyle = pixelColor(x, y, depth, flow1, flow2, flow3);
-          }
-          ctx.fillRect(x, y, 1, 1);
+      const bounds = getLampBounds(y);
+      const minX = Math.max(l, Math.floor(bounds.left));
+      const maxX = Math.min(r, Math.floor(bounds.right));
+
+      for (let x = minX; x <= maxX; x++) {
+        if (x === l || x === r) {
+          ctx.fillStyle = C.mountOut;
+        } else if (y === CRATER_TOP && Math.abs(x - CENTER) < CALDERA_RX) {
+          ctx.fillStyle = C.mountOut;
+        } else {
+          ctx.fillStyle = pixelColor(x, y, depth, flow1, flow2, flow3);
         }
+        ctx.fillRect(x, y, 1, 1);
       }
     }
   }
 
   function drawLoop(x, y) {
-    ctx.fillRect(x, y, 3, 3);
-    ctx.clearRect(x + 1, y + 1, 1, 1);
+    ctx.fillRect(x, y, 8, 8);
+    ctx.clearRect(x + 2, y + 2, 4, 4);
   }
 
   function drawMarshmallow(x, y) {
-    ctx.fillRect(x + 1, y, 2, 4);
-    ctx.fillRect(x, y + 1, 4, 2);
+    ctx.fillRect(x + 2, y, 6, 10);
+    ctx.fillRect(x, y + 2, 10, 6);
   }
 
   function drawCereal() {
     for (const c of cerealBits) {
       if (c.y < H) {
+        ctx.globalAlpha = Math.max(0.1, Math.min(1, c.life)); 
         ctx.fillStyle = c.col;
         const x = Math.floor(c.x), y = Math.floor(c.y);
         if (c.type === 'loop') drawLoop(x, y);
         else drawMarshmallow(x, y);
       }
     }
+    ctx.globalAlpha = 1.0;
   }
 
   function drawBoltSegments(x, y, segs, angle) {
     for (let i = 0; i < segs; i++) {
-      const nx = Math.floor(x + Math.cos(angle + (Math.random() - 0.5) * 2) * BOLT_SEG_LENGTH);
-      const ny = Math.floor(y + Math.sin(angle) * BOLT_SEG_LENGTH);
+      let nx = Math.floor(x + Math.cos(angle + (Math.random() - 0.5) * 2) * BOLT_SEG_LENGTH);
+      let ny = Math.floor(y + Math.sin(angle) * BOLT_SEG_LENGTH);
+      
+      const bounds = getLampBounds(ny);
+      // Hard clamp lightning safely inside the glass with a 10px buffer
+      nx = Math.max(bounds.left + 10, Math.min(bounds.right - 10, nx));
+      ny = Math.max(LAMP_TOP + 5, Math.min(CRATER_TOP - 5, ny));
+      
       ctx.strokeStyle = C.bolt;
-      ctx.lineWidth = 1;
+      ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.lineTo(nx, ny);
@@ -211,33 +305,147 @@
     ctx.globalAlpha = 1;
   }
 
-  /* ── UPDATE + RENDER ── */
+  function drawMountainOutline() {
+    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (let y = CRATER_TOP; y < LAMP_BOT; y++) {
+      const depth = y - CRATER_TOP;
+      let widthAtY = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
+      const maxHalfWidth = getLampBounds(y).right - CENTER - 8;
+      widthAtY = Math.min(widthAtY, maxHalfWidth);
+      const x = CENTER - widthAtY;
+      y === CRATER_TOP ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let y = CRATER_TOP; y < LAMP_BOT; y++) {
+      const depth = y - CRATER_TOP;
+      let widthAtY = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
+      const maxHalfWidth = getLampBounds(y).right - CENTER - 8;
+      widthAtY = Math.min(widthAtY, maxHalfWidth);
+      const x = CENTER + widthAtY;
+      y === CRATER_TOP ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
 
+  function drawLampEdges() {
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let y = LAMP_TOP; y <= LAMP_BOT; y++) {
+      const b = getLampBounds(y);
+      y === LAMP_TOP ? ctx.moveTo(b.left, y) : ctx.lineTo(b.left, y);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for (let y = LAMP_TOP; y <= LAMP_BOT; y++) {
+      const b = getLampBounds(y);
+      y === LAMP_TOP ? ctx.moveTo(b.right, y) : ctx.lineTo(b.right, y);
+    }
+    ctx.stroke();
+  }
+
+  /* ── UPDATE + RENDER ── */
   function update() {
     if (frame % CEREAL_SPAWN_INTERVAL === 0) spawnCereal();
     if (Math.random() > BOLT_CHANCE) spawnBolt();
+    
     for (const b of bolts) b.life -= b.decay;
     bolts = bolts.filter(b => b.life > 0);
+    
     for (const c of cerealBits) {
+      // Gentle swirling current simulation (adds organic lava lamp sideways drift)
+      const currentDrift = Math.sin(c.y * 0.02 + frame * 0.05) * 0.3;
+      c.vx += currentDrift;
+
       c.x += c.vx;
       c.y += c.vy;
+      c.vx *= FLUID_DRAG; 
+      c.vy *= FLUID_DRAG; 
+      
+      // Strict Convection Cycle: Rises near top, sinks near bottom
+      if (c.y < LAMP_TOP + 70) {
+          c.gravity = Math.abs(CEREAL_GRAVITY) * 1.2; // Heavier downpull when cold at top
+      } else if (c.y > LAMP_BOT - 60) {
+          c.gravity = -Math.abs(CEREAL_GRAVITY) * 1.5; // Stronger heat lift at bottom
+      }
+      
       c.vy += c.gravity;
       c.life -= c.decay;
+
+      // Unforgiving structural boundary checks for 10x10 cereal blocks
+      const bounds = getLampBounds(c.y); 
+      
+      if (c.x <= bounds.left + 3) { 
+          c.x = bounds.left + 3; 
+          c.vx = Math.abs(c.vx) * 0.7; 
+      }
+      if (c.x + 10 >= bounds.right - 3) { 
+          c.x = bounds.right - 13; 
+          c.vx = -Math.abs(c.vx) * 0.7; 
+      }
+      
+      if (c.y <= LAMP_TOP + 4) { 
+          c.y = LAMP_TOP + 4; 
+          c.vy = Math.abs(c.vy) * 0.4; 
+      }
+      
+      if (c.y >= LAMP_BOT - 14) {
+          c.y = LAMP_BOT - 14;
+          c.vy = -Math.abs(c.vy) * 0.4;
+      }
+
+      // Mountain collision mechanics
+      if (c.y > CRATER_TOP) {
+        const depth = c.y - CRATER_TOP;
+      let widthAtY = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
+      const maxHalfWidth = getLampBounds(c.y).right - CENTER - 8;
+      widthAtY = Math.min(widthAtY, maxHalfWidth);
+        const l = CENTER - widthAtY;
+        const r = CENTER + widthAtY;
+        
+        const cCenter = c.x + 5;
+        
+        if (cCenter > l && cCenter < r) {
+            if (Math.abs(cCenter - CENTER) < CALDERA_RX) {
+               // Re-erupt into the volcano flow loop
+               c.vy = -(Math.random() * CEREAL_VY_RANGE + CEREAL_VY_MIN);
+               c.gravity = -Math.abs(CEREAL_GRAVITY);
+               c.y = CRATER_TOP - 6;
+               c.life = 1.5; 
+            } else {
+               // Deflect smoothly down the outer slopes
+               if (cCenter < CENTER) {
+                   c.x = l - 11;
+                   c.vx -= 0.8;
+               } else {
+                   c.x = r + 1;
+                   c.vx += 0.8;
+               }
+            }
+        }
+      }
     }
-    // H+5 margin: let particles drift slightly below screen before removing
-    cerealBits = cerealBits.filter(c => c.life > 0 && c.y < H + 5);
+    
+    cerealBits = cerealBits.filter(c => c.life > 0 && c.y < LAMP_BOT + 10);
   }
 
   function render() {
     ctx.clearRect(0, 0, W, H);
+    
+    drawLampBackground();
     drawBolts();
     drawCaldera();
     drawMountainBody();
+    drawMountainOutline();
+    drawLampEdges();
     drawCereal();
+    drawLampForeground();
   }
 
   /* ── LOOP ── */
-
   let lastTime = 0, rafId;
 
   function loop(ts) {
