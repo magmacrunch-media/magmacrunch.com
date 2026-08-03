@@ -259,7 +259,7 @@ def load_tv():
     return []
 
 def save_tv(channels):
-    """Save TV channels to disk and generate channels.js for the teevee page."""
+    """Save TV channels to disk and generate channels.js for the TV page."""
     with open(TV_PATH, "w") as f:
         json.dump(channels, f, indent=2)
     # Generate the JS file that visual/tv/index.html includes

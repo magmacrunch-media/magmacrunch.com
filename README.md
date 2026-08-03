@@ -22,7 +22,7 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ├── scripts/          backup and build utilities
 ├── templates/        JS templates for archive pages
 ├── tools/            browser utilities (album art, media search, pixel process)
-└── visual/           gallery pages (collage, photography, music videos, teevee)
+└── visual/           gallery pages (collage, photography, music videos, TV)
 ```
 
 ---
