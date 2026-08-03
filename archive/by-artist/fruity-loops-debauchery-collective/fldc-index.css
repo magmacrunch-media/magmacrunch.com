@@ -227,7 +227,7 @@ body.fldc-page.fldc-index-page .breadcrumb .current { color: var(--fldc-bg-scree
 .lb-cap { font-family: 'Press Start 2P', monospace; font-size: 6px;
     color: var(--fldc-arc-orange); letter-spacing: 0.1em; margin-top: 8px; opacity: 0.45; min-height: 14px; }
 
-@media (max-width: 640px) { .artist-name { font-size: 12px; } .sub-nav { flex-direction: column; } }
+@media (max-width: 640px) { .artist-name { font-size: 12px; } }
 
 .fldc-page .mb-link-wrap { width: 100%; max-width: 900px; padding: 0 20px; margin-bottom: 40px; animation: fadeUp 0.5s 0.15s ease both; }
 
