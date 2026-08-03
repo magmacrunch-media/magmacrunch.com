@@ -1,3 +1,7 @@
+// Volcano lava-lamp animation — 400×480 canvas, rendered pixel-by-pixel.
+// Desktop version (see volcano-pixel.js for mobile fallback).
+// Draws: tapered glass container → lava liquid → lightning → caldera →
+//   mountain body with flowing lava → glass edges → cereal particles → metal cap/base.
 (function () {
   /* ── CANVAS ── */
   const W = 400, H = 480, CENTER = 200;
@@ -6,6 +10,8 @@
   const LAMP_TOP = 60, LAMP_BOT = 400;
   const LAMP_LIQUID = 'rgba(30, 10, 60, 0.85)';
 
+  // Returns the left/right glass edges at a given y coordinate.
+  // The lamp tapers linearly from 80px wide at the top to 300px at the bottom.
   function getLampBounds(y) {
     if (y < LAMP_TOP) return { left: CENTER - 40, right: CENTER + 40 };
     if (y > LAMP_BOT) return { left: CENTER - 150, right: CENTER + 150 };
@@ -17,6 +23,9 @@
   }
 
   /* ── CALDERA ── */
+  // Caldera = elliptical crater mouth at the volcano peak.
+  // CALDERA_INNER: normalized distance from center where bright lava core ends
+  // CALDERA_TOP_BAND: pixel band at top of ellipse rendered in accent color (mountOut)
   const CRATER_TOP = 320; 
   const CALDERA_RX = 28, CALDERA_RY = 8;
   const CALDERA_INNER = 0.5;
@@ -24,11 +33,16 @@
   const CALDERA_TOP_BAND = 4;
 
   /* ── MOUNTAIN ── */
+  // MOUNTAIN_EXP: exponent controls slope curvature (>1 = concave, wider at base)
   const MOUNTAIN_EXP = 1.15;
   const MOUNTAIN_WIDTH_SCALE = 0.8;
   const MOUNTAIN_BASE = 25;
 
   /* ── LAVA FLOWS ── */
+  // Three sinusoidal lava streams run down the mountain face.
+  // OFFSET: horizontal offset from center, DEPTH: how much the flow shifts with depth
+  // FREQ: spatial oscillation frequency, FLOW_SPEED: animation speed
+  // FLOW_BASE_WIDTH + DEPTH_SCALE: flow widens as it goes deeper
   const FLOW1_OFFSET = 15, FLOW1_DEPTH = 0.5, FLOW1_FREQ = 0.08;
   const FLOW2_OFFSET = -15, FLOW2_DEPTH = 0.6, FLOW2_FREQ = 0.1;
   const FLOW3_FREQ = 0.05, FLOW3_SPEED_SCALE = 0.4;
@@ -38,6 +52,13 @@
   const LAVA_TIME_SPEED = 0.15, LAVA_SPACE_SPEED = 0.08;
 
   /* ── CEREAL PARTICLES (Snowglobe × Lava Lamp) ── */
+  // Snowglobe × lava lamp particle physics:
+  // CONVECTION: upward pull strength (peaks at mid-height via sin curve)
+  // SINK: constant downward drift to keep particles circulating
+  // BROWNIAN_X/Y: random jitter per frame (breaks stringy paths)
+  // EDGE_PULL: pushes particles toward center (simulates lamp circulation)
+  // DRIFT_AMP/FREQ: sinusoidal horizontal drift with per-particle phase offset
+  // FLUID_DRAG: global fallback; per-particle drag varies (0.96–0.985)
   const CEREAL_SPAWN_INTERVAL = 6;
   const CEREAL_CHANCE_MARSHMALLOW = 0.35;
   const CEREAL_SPAWN_RADIUS = 20;
@@ -187,6 +208,8 @@
     ctx.fillRect(CENTER - baseR - 25, H - 15, (baseR + 25) * 2, 8);
   }
 
+  // Renders the crater mouth as a filled ellipse with three zones:
+  //   inner core (bright lava), top accent band (mountOut), outer ring (amber lava)
   function drawCaldera() {
     for (let y = CRATER_TOP - CALDERA_RY; y <= CRATER_TOP; y++) {
       const bounds = getLampBounds(y);
@@ -209,6 +232,8 @@
     }
   }
 
+  // Calculates the x-position of a lava flow stream at a given depth.
+  // Uses sine wave for oscillation, offset shifts the flow left/right.
   function calcFlowPosition(depth, offset, depthScale, freq, speedScale) {
     return Math.floor(
       CENTER + offset + depth * depthScale
@@ -216,6 +241,9 @@
     );
   }
 
+  // Returns color for a single mountain pixel.
+  // If within flowWidth of any lava stream → alternating bright lava colors.
+  // Otherwise → noise-based rock texture (mountDark or mount).
   function pixelColor(x, y, depth, flow1, flow2, flow3) {
     const dist1 = Math.abs(x - flow1);
     const dist2 = Math.abs(x - flow2);
@@ -313,6 +341,8 @@
     ctx.globalAlpha = 1;
   }
 
+  // Dark stroke along mountain edges — creates the visual illusion that
+  // the volcano sits behind the glass (occlusion cue).
   function drawMountainOutline() {
     ctx.strokeStyle = 'rgba(0,0,0,0.6)';
     ctx.lineWidth = 2;
@@ -338,6 +368,7 @@
     ctx.stroke();
   }
 
+  // Bright stroke along glass boundaries — sells the "glass in front" depth effect.
   function drawLampEdges() {
     ctx.strokeStyle = 'rgba(255,255,255,0.25)';
     ctx.lineWidth = 1.5;
@@ -396,7 +427,9 @@
       if (c.y <= LAMP_TOP + 4) { c.y = LAMP_TOP + 4; c.vy = Math.abs(c.vy) * 0.4; }
       if (c.y >= LAMP_BOT - 14) { c.y = LAMP_BOT - 14; c.vy = -Math.abs(c.vy) * 0.4; }
 
-      // Mountain collision mechanics
+      // Mountain collision:
+      //   - Over caldera center → re-erupt (launched back up)
+      //   - Over mountain slopes → deflected sideways down the outer face
       if (c.y > CRATER_TOP) {
         const depth = c.y - CRATER_TOP;
         let mWidth = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
@@ -428,6 +461,15 @@
     cerealBits = cerealBits.filter(c => c.life > 0 && c.y < LAMP_BOT + 10);
   }
 
+  // Layer order (back to front):
+  //   1. lamp liquid background
+  //   2. lightning bolts (behind volcano)
+  //   3. caldera (crater mouth)
+  //   4. mountain body (pixel-by-pixel)
+  //   5. mountain outline (dark occlusion edge)
+  //   6. lamp edge lines (bright glass edge)
+  //   7. cereal particles (floating inside lamp)
+  //   8. lamp foreground (glass glares, metal cap, metal base — always on top)
   function render() {
     ctx.clearRect(0, 0, W, H);
     
