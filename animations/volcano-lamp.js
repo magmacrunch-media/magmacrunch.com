@@ -37,16 +37,23 @@
   const FLOW_AMP = 8;
   const LAVA_TIME_SPEED = 0.15, LAVA_SPACE_SPEED = 0.08;
 
-  /* ── CEREAL PARTICLES (Enhanced Lava Lamp Fluid Flow) ── */
+  /* ── CEREAL PARTICLES (Snowglobe × Lava Lamp) ── */
   const CEREAL_SPAWN_INTERVAL = 6;
   const CEREAL_CHANCE_MARSHMALLOW = 0.35;
   const CEREAL_SPAWN_RADIUS = 20;
   const CEREAL_SPAWN_OFFSET = 4;
-  const CEREAL_VX_RANGE = 6;
-  const CEREAL_VY_MIN = 3, CEREAL_VY_RANGE = 4;
-  const CEREAL_DECAY_MIN = 0.0006, CEREAL_DECAY_RANGE = 0.0015; // Slower decay for continuous circulation
-  const CEREAL_GRAVITY = -0.05; 
-  const FLUID_DRAG = 0.95; 
+  const CEREAL_VX_RANGE = 4;
+  const CEREAL_VY_MIN = 2, CEREAL_VY_RANGE = 3;
+  const CEREAL_DECAY_MIN = 0.0006, CEREAL_DECAY_RANGE = 0.0015;
+  const CEREAL_CONVECTION = 0.008;
+  const CEREAL_SINK = 0.02;
+  const CEREAL_BROWNIAN_X = 0.4;
+  const CEREAL_BROWNIAN_Y = 0.2;
+  const CEREAL_EDGE_PULL = 0.02;
+  const CEREAL_DRIFT_AMP = 0.2;
+  const CEREAL_DRIFT_FREQ_Y = 0.02;
+  const CEREAL_DRIFT_FREQ_T = 0.05;
+  const FLUID_DRAG = 0.975;
 
   /* ── LIGHTNING BOLTS (Strictly Enclosed) ── */
   const BOLT_CHANCE = 0.95;
@@ -95,8 +102,9 @@
       col: isMarshmallow
         ? C.cereal[Math.floor(Math.random() * C.cereal.length)]
         : C.cereal[0],
-      gravity: CEREAL_GRAVITY, 
-      type: isMarshmallow ? 'marshmallow' : 'loop'
+      type: isMarshmallow ? 'marshmallow' : 'loop',
+      phase: Math.random() * Math.PI * 2,
+      drag: 0.96 + Math.random() * 0.025
     });
   }
 
@@ -356,67 +364,55 @@
     bolts = bolts.filter(b => b.life > 0);
     
     for (const c of cerealBits) {
-      // Gentle swirling current simulation (adds organic lava lamp sideways drift)
-      const currentDrift = Math.sin(c.y * 0.02 + frame * 0.05) * 0.3;
-      c.vx += currentDrift;
+      // Coherent drift — wave with per-particle phase offset
+      const drift = Math.sin(c.y * CEREAL_DRIFT_FREQ_Y + frame * CEREAL_DRIFT_FREQ_T + c.phase) * CEREAL_DRIFT_AMP;
+      c.vx += drift;
 
+      // Brownian perturbation — breaks stringy paths
+      c.vx += (Math.random() - 0.5) * CEREAL_BROWNIAN_X;
+      c.vy += (Math.random() - 0.5) * CEREAL_BROWNIAN_Y;
+
+      // Soft convection — smooth lava lamp circulation
+      const yNorm = (c.y - LAMP_TOP) / (LAMP_BOT - LAMP_TOP);
+      const convection = Math.sin(yNorm * Math.PI);
+      c.vy += convection * CEREAL_CONVECTION - CEREAL_SINK;
+
+      // Lateral circulation — edges pull inward
+      const bounds = getLampBounds(c.y);
+      const xNorm = (c.x - bounds.left) / (bounds.right - bounds.left);
+      c.vx += (xNorm - 0.5) * CEREAL_EDGE_PULL;
+
+      // Integrate with per-particle drag
       c.x += c.vx;
       c.y += c.vy;
-      c.vx *= FLUID_DRAG; 
-      c.vy *= FLUID_DRAG; 
-      
-      // Strict Convection Cycle: Rises near top, sinks near bottom
-      if (c.y < LAMP_TOP + 70) {
-          c.gravity = Math.abs(CEREAL_GRAVITY) * 1.2; // Heavier downpull when cold at top
-      } else if (c.y > LAMP_BOT - 60) {
-          c.gravity = -Math.abs(CEREAL_GRAVITY) * 1.5; // Stronger heat lift at bottom
-      }
-      
-      c.vy += c.gravity;
+      c.vx *= c.drag;
+      c.vy *= c.drag;
+
       c.life -= c.decay;
 
-      // Unforgiving structural boundary checks for 10x10 cereal blocks
-      const bounds = getLampBounds(c.y); 
-      
-      if (c.x <= bounds.left + 3) { 
-          c.x = bounds.left + 3; 
-          c.vx = Math.abs(c.vx) * 0.7; 
-      }
-      if (c.x + 10 >= bounds.right - 3) { 
-          c.x = bounds.right - 13; 
-          c.vx = -Math.abs(c.vx) * 0.7; 
-      }
-      
-      if (c.y <= LAMP_TOP + 4) { 
-          c.y = LAMP_TOP + 4; 
-          c.vy = Math.abs(c.vy) * 0.4; 
-      }
-      
-      if (c.y >= LAMP_BOT - 14) {
-          c.y = LAMP_BOT - 14;
-          c.vy = -Math.abs(c.vy) * 0.4;
-      }
+      // Boundary checks
+      if (c.x <= bounds.left + 3) { c.x = bounds.left + 3; c.vx = Math.abs(c.vx) * 0.7; }
+      if (c.x + 10 >= bounds.right - 3) { c.x = bounds.right - 13; c.vx = -Math.abs(c.vx) * 0.7; }
+      if (c.y <= LAMP_TOP + 4) { c.y = LAMP_TOP + 4; c.vy = Math.abs(c.vy) * 0.4; }
+      if (c.y >= LAMP_BOT - 14) { c.y = LAMP_BOT - 14; c.vy = -Math.abs(c.vy) * 0.4; }
 
       // Mountain collision mechanics
       if (c.y > CRATER_TOP) {
         const depth = c.y - CRATER_TOP;
-      let widthAtY = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
-      const maxHalfWidth = getLampBounds(c.y).right - CENTER - 8;
-      widthAtY = Math.min(widthAtY, maxHalfWidth);
-        const l = CENTER - widthAtY;
-        const r = CENTER + widthAtY;
+        let mWidth = Math.pow(depth, MOUNTAIN_EXP) * MOUNTAIN_WIDTH_SCALE + MOUNTAIN_BASE;
+        const maxHW = getLampBounds(c.y).right - CENTER - 8;
+        mWidth = Math.min(mWidth, maxHW);
+        const l = CENTER - mWidth;
+        const r = CENTER + mWidth;
         
         const cCenter = c.x + 5;
         
         if (cCenter > l && cCenter < r) {
             if (Math.abs(cCenter - CENTER) < CALDERA_RX) {
-               // Re-erupt into the volcano flow loop
                c.vy = -(Math.random() * CEREAL_VY_RANGE + CEREAL_VY_MIN);
-               c.gravity = -Math.abs(CEREAL_GRAVITY);
                c.y = CRATER_TOP - 6;
                c.life = 1.5; 
             } else {
-               // Deflect smoothly down the outer slopes
                if (cCenter < CENTER) {
                    c.x = l - 11;
                    c.vx -= 0.8;

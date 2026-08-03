@@ -47,7 +47,7 @@
 
         .volcano-canvas-wrap {
             width: min(340px, 72vw);
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 5 / 6;
         }
         .volcano-canvas-wrap canvas {
             display: block;
@@ -102,6 +102,7 @@
 
         @media (max-width: 640px) {
             .insert-coin { font-size: 8px; }
+            .volcano-canvas-wrap { aspect-ratio: 1 / 1; }
             .volcano-title {
                 text-shadow:
                     1px 1px 0px var(--mc-mount-mid),
@@ -141,6 +142,15 @@
 </footer>
 
 <script src="nav.js"></script>
-<script src="animations/volcano.js"></script>
+<script>
+(function() {
+    var src = window.innerWidth > 640
+        ? 'animations/volcano-lamp.js'
+        : 'animations/volcano-pixel.js';
+    var s = document.createElement('script');
+    s.src = src;
+    document.body.appendChild(s);
+})();
+</script>
 </body>
 </html>
