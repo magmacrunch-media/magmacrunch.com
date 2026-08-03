@@ -15,10 +15,10 @@ window.NAV_CONFIG = {
         { label: 'music', href: 'music/', items: [
             { href: 'music/jukebox/', label: 'jukebox' },
             { href: 'music/distributed-music/', label: 'distributed music' },
+            { href: 'music/music-videos.html', label: 'music videos' },
             { href: 'music/physical-media/', label: 'physical media' }
         ]},
         { label: 'visual', href: 'visual/', items: [
-            { href: 'visual/music-videos.html', label: 'music videos' },
             { href: 'visual/tv/', label: 'teevee' },
             { href: 'visual/collage.html', label: 'collage' },
             { href: 'visual/photography/', label: 'photography' }

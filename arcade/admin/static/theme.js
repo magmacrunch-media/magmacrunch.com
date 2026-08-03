@@ -59,7 +59,7 @@
             ],
             nav:{accent:'#FF3800',glow:'rgba(255,56,0,0.4)',brand:'#39FF14',brandGlow:'rgba(57,255,20,0.7)'}
         },
-        {name:'MTV',section:'visual',bodyClass:'mtv',prefix:'mtv',file:'visual/music-videos.html',
+        {name:'MTV',section:'music',bodyClass:'mtv',prefix:'mtv',file:'music/music-videos.html',
             palette:[
                 {var:'--mtv-black',value:'#0A0A0F',label:'Black'},{var:'--mtv-deep-purple',value:'#1A0533',label:'Deep Purple'},
                 {var:'--mtv-midnight',value:'#0D1F3C',label:'Midnight'},{var:'--mtv-oxide-red',value:'#3D0000',label:'Oxide Red'},

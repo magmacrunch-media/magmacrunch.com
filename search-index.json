@@ -4,14 +4,14 @@
     "c": "page",
     "u": "/index.html",
     "d": "magmacrunch media homepage",
-    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise — INSERT COIN — --> about jukebox archive arcade press say hi -->"
+    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise"
   },
   {
     "t": "about",
     "c": "page",
     "u": "/home/about.html",
     "d": "About magmacrunch media",
-    "b": "about — magmacrunch media home › about DIY music collective & independent record label ✦ no-budget music videos ✦ archive ✦ music publishing ✦ video games ✦ press ✦ web tools ✦ photography ✦ collage ✦ currently supporting Sex Van Floor Plan // about // __ __ /\\ \\ /\\ \\ __ ___ ___ __ __ ___ ___ __ ___ _ __ __ __ ___ ___\\ \\ \\___ ___ ___ __ \\_\\ \\/\\_\\ __ /' __` __`\\ /'__`\\ /'_ `\\ /' __` __`\\ /'__`\\ /'___\\/\\`'__\\/\\ \\/\\ \\ /' _ `\\ /'___\\ \\ _ `\\ /' __` __`\\ /'__`\\ /'_` \\/\\ \\ /'__`\\ /\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\L\\ \\/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\__/\\ \\ \\/ \\ \\ \\_\\ \\/\\ \\/\\ \\/\\ \\__/\\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\/\\ __//\\ \\L\\..."
+    "b": "about — magmacrunch media home › about music collective & independent record label ✦ no-budget music videos ✦ archive ✦ music publishing ✦ video games ✦ press ✦ web tools ✦ photography ✦ collage // about // __ __ /\\ \\ /\\ \\ __ ___ ___ __ __ ___ ___ __ ___ _ __ __ __ ___ ___\\ \\ \\___ ___ ___ __ \\_\\ \\/\\_\\ __ /' __` __`\\ /'__`\\ /'_ `\\ /' __` __`\\ /'__`\\ /'___\\/\\`'__\\/\\ \\/\\ \\ /' _ `\\ /'___\\ \\ _ `\\ /' __` __`\\ /'__`\\ /'_` \\/\\ \\ /'__`\\ /\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\L\\ \\/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\__/\\ \\ \\/ \\ \\ \\_\\ \\/\\ \\/\\ \\/\\ \\__/\\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\/\\ __//\\ \\L\\ \\ \\ \\/\\ \\L\\.\\_ \\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ \\____ \\..."
   },
   {
     "t": "guestbook",
@@ -30,7 +30,7 @@
   {
     "t": "distributed music",
     "c": "page",
-    "u": "/music/distributed-music.html",
+    "u": "/music/distributed-music/index.html",
     "d": "Stream and download releases",
     "b": "distributed music — magmacrunch media home › music › distributed music // magmacrunch media // DISTRIBUTED MUSIC stream · download · support magmacrunch media on streaming services ✦ via LANDR since 2024 ✦ YouTube Music ✦ Spotify ✦ Apple Music & iTunes ✦ Tidal ✦ Deezer ✦ Amazon Music ✦ Qobuz streaming & store ✦ Pandora ✦ iHeartRadio ✦ Audiomack ✦ KkBox ✦ more... ✦ // distribution to streaming services & online stores // Since August 2024, magmacrunch media has used LANDR to distribute music to all the major streaming services. This does not include the additional music on Bandcamp and YouTube ..."
   },
@@ -70,18 +70,18 @@
     "b": "floppy disk — music — magmacrunch media home › music › physical media › floppy disk // floppy disk // physical & obscure media series ✦ est. july 2025 --> a series of releases on 3.5″ floppy disk since 2025 // releases // pay2play (2025) sex van floor plan · 3.5″ floppy · jul 2025 ▶ iou a pack of american spirits (2026) sex van floor plan · 3.5″ floppy · jun 2026 ▶"
   },
   {
+    "t": "music videos",
+    "c": "page",
+    "u": "/music/music-videos.html",
+    "d": "MTV-style music videos",
+    "b": "music videos — magmacrunch media home › music › music videos // music videos // _______________ |,----------. |\\ || |=| | || || | | || . _o| | | __ |`-----------' |/ / / ~~~~~~~~~~~~~~~ / / ~~ click to play ✦ newest first no-budget productions ✦ since 2023 ✦ YouTube ✦ Internet Archive ✦ DailyMotion ✦ Facebook video ✦ Instagram ✦"
+  },
+  {
     "t": "visual",
     "c": "page",
     "u": "/visual/index.html",
     "d": "Visual art landing page",
-    "b": "visual — magmacrunch media home › visual // visual // '. _ .' -= (~) =- .' # '. music videos no-budget video productions · avant-garde short film influences ▶ teevee retro broadcast · channel flip through music videos & film ▶ collage art mixed media · cut & paste · visual experiments ▶ photography digital · film · scans · mixed formats ▶ ___,-----.___ ,--' `--. / \\ / \\ | | | | | |~~~~~~~~~| | | \\ / | | \\ / | \\ \\ / / \\ | | / \\ | | / \\ | | / \\ | | / \\____|___| ___/ )___,-----'___( )___,-----'___( )___,-----'___( )___,-----'___( \\_____________/ \\___/"
-  },
-  {
-    "t": "music videos",
-    "c": "page",
-    "u": "/visual/music-videos.html",
-    "d": "MTV-style music videos",
-    "b": "music videos — magmacrunch media home › visual › music videos // music videos // _______________ |,----------. |\\ || |=| | || || | | || . _o| | | __ |`-----------' |/ / / ~~~~~~~~~~~~~~~ / / ~~ click to play ✦ newest first no-budget productions ✦ since 2023 ✦ YouTube ✦ Internet Archive ✦ DailyMotion ✦ Facebook video ✦ Instagram ✦"
+    "b": "visual — magmacrunch media home › visual // visual // '. _ .' -= (~) =- .' # '. teevee retro broadcast · channel flip through music videos & film ▶ collage art mixed media · cut & paste · visual experiments ▶ photography digital · film · scans · mixed formats ▶ ___,-----.___ ,--' `--. / \\ / \\ | | | | | |~~~~~~~~~| | | \\ / | | \\ / | \\ \\ / / \\ | | / \\ | | / \\ | | / \\ | | / \\____|___| ___/ )___,-----'___( )___,-----'___( )___,-----'___( )___,-----'___( \\_____________/ \\___/"
   },
   {
     "t": "collage",
@@ -93,16 +93,16 @@
   {
     "t": "photography",
     "c": "page",
-    "u": "/visual/photography/",
+    "u": "/visual/photography/index.html",
     "d": "Photography gallery",
-    "b": "photography — magmacrunch media home › visual › photography photography _______ |__/-\\[]| | (_) | |_______| /|\\ visual archive Summer 2012 // cross-country road trip · USA Photographs taken from a moving car across the American west — mountains, plains, coastline, and sky. road trip · summer 2012 road trip · summer 2012 road trip · summer 2012 road trip · summer 2012 road trip · summer 2012 road trip · summer 2012 road trip · summer 2012 scroll → ... --> SVFP — May 2025 // view on archive green light blue light guitar light streaks teal blue blur purple pizza red light two band portrait blue r..."
+    "b": "photography — magmacrunch media home › visual › photography photography _______ |__/-\\[]| | (_) | |_______| /|\\ visual archive [ close ] ← prev next →"
   },
   {
     "t": "teevee",
     "c": "page",
-    "u": "/visual/tv/",
+    "u": "/visual/tv/index.html",
     "d": "Television-style content",
-    "b": "teevee — magmacrunch media home › visual › teevee ROTATE YOUR DEVICE landscape mode recommended VIEW ANYWAY // teevee // channel flip through music videos & film &#10005; MAGMACRUNCH CABLE CHANNEL GUIDE CH -- ▼ CH− POWER ▲ CH+ &#9654; PLAY GUIDE GUIDE MagmaCrunch TV ↑ ↓ random channel &middot; ← → random channel &middot; G guide &middot; space play / pause"
+    "b": "teevee — magmacrunch media home › visual › teevee ROTATE YOUR DEVICE landscape mode recommended VIEW ANYWAY &#10005; MAGMACRUNCH CABLE CHANNEL GUIDE CH -- ▼ CH− POWER ▲ CH+ &#9654; PLAY GUIDE GUIDE MagmaCrunch TV ↑ ↓ random channel &middot; ← → random channel &middot; G guide &middot; space play / pause"
   },
   {
     "t": "archive",
@@ -140,20 +140,6 @@
     "b": "by contributor — magmacrunch archive home › archive › by contributor // by contributor // musicians and their credits credits and contributions pulled from MusicBrainz — who played what, where, and when. ELIAS GREY MusicBrainz DAVID HAYES MusicBrainz CHUCK J'OB lead vocals RHO K. guitar · vocals JAKE A. MCCOY drums · bass · guitar · keys · vocals JAMES R. MCCOY bass · piano · violin · melodica · cello JON MCCOY guitar · bass · keys · vocals STEPHEN MCMILLAN MusicBrainz BEN NIKITAS bass · vocals D-ROB ROBINSON MusicBrainz C.P. RUTLEDGE guitar · violin · vocals ALEX S. MusicBrainz JAKE THOMAS Mu..."
   },
   {
-    "t": "contributors",
-    "c": "page",
-    "u": "/archive/more/contributors.html",
-    "d": "Additional contributor data",
-    "b": "contributors — magmacrunch media about › contributors // contributors // THANKS TO ← back loading contributors…"
-  },
-  {
-    "t": "video",
-    "c": "page",
-    "u": "/archive/more/video.html",
-    "d": "MusicBrainz video data",
-    "b": "video — archive — magmacrunch media video ✦ archive ✦ magmacrunch media ✦ video ✦ archive ✦ magmacrunch media ✦ archive › more › video // archive // VIDEO ← back loading videos…"
-  },
-  {
     "t": "arcade",
     "c": "page",
     "u": "/arcade/index.html",
@@ -179,7 +165,7 @@
     "c": "page",
     "u": "/arcade/card-games/index.html",
     "d": "Solitaire, cribbage, poker",
-    "b": "card games — arcade — magmacrunch media home › arcade › card games ##### ##### # # ## ##### ##### # # ## # # ###### #### # # # # # # # # # # ## ## # # # # # # # # # # #### # # # ## # ##### #### # ###### ##### # # # # ###### # # # # # # # # # # # # # # # # # # # # # ##### # # # # ##### ##### # # # # ###### #### // deal 'em up // KLONDIKE SOLITAIRE classic card game. draw 3. timed scoring. top 10 leaderboard. ▶ PLAY _ UNDER CONSTRUCTION CRIBBAGE &#127185; the classic card game. first to 121 points wins. pegging, hands, and the crib. ▶ PLAY _ UNDER CONSTRUCTION SÖKÖ scandinavian stud. five card p..."
+    "b": "card games — arcade — magmacrunch media home › arcade › card games ##### ##### # # ## ##### ##### # # ## # # ###### #### # # # # # # # # # # ## ## # # # # # # # # # # #### # # # ## # ##### #### # ###### ##### # # # # ###### # # # # # # # # # # # # # # # # # # # # # ##### # # # # ##### ##### # # # # ###### #### // deal 'em up // KLONDIKE SOLITAIRE classic card game. draw 3. timed scoring. top 10 leaderboard. ▶ PLAY _ CRIBBAGE &#127185; the classic card game. first to 121 points wins. pegging, hands, and the crib. ▶ PLAY _ SÖKÖ scandinavian stud. five card poker with a finnish twist. four-card s..."
   },
   {
     "t": "puzzles",
@@ -200,7 +186,7 @@
     "c": "page",
     "u": "/press/index.html",
     "d": "Journals and writing",
-    "b": "press — magmacrunch media home › press // press // magmacrunch press a diy publishing house for essays, poetry, fiction, and experimental writing. no gatekeepers, no advance, no permission needed. // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to magmacrunchmedia@gmail.com include your name (or pseudonym) and a short bio if you want"
+    "b": "press — magmacrunch media home › press // press // magmacrunch press a diy publishing house for essays, poetry, fiction, and experimental writing. no gatekeepers, no advance, no permission needed. // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to press@magmacrunch.com include your name (or pseudonym) and a short bio if you want"
   },
   {
     "t": "scientific",
@@ -229,230 +215,6 @@
     "u": "/tools/index.html",
     "d": "Creative web tools",
     "b": "tools — magmacrunch media home › tools root@magma:~$ █ // tools // creative utilities · free to use ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
-  },
-  {
-    "t": "Sex Van Floor Plan (2026)",
-    "c": "music",
-    "u": "/music/distributed-music.html#sex-van-floor-plan",
-    "d": "Sex Van Floor Plan — First released on CD on June 26, 2026. Distributed on July 17, 2026.",
-    "b": ""
-  },
-  {
-    "t": "Lights (2016)",
-    "c": "music",
-    "u": "/music/distributed-music.html#lights",
-    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 19. 2026.",
-    "b": ""
-  },
-  {
-    "t": "Pine (2016)",
-    "c": "music",
-    "u": "/music/distributed-music.html#pine",
-    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 18. 2026.",
-    "b": ""
-  },
-  {
-    "t": "Birds (2016)",
-    "c": "music",
-    "u": "/music/distributed-music.html#birds",
-    "d": "Texas Hold'Em Lava Dome — 2026 remastered version. Distributed on April 18. 2026.",
-    "b": ""
-  },
-  {
-    "t": "You'll Understand When You're Older (2014)",
-    "c": "music",
-    "u": "/music/distributed-music.html#youll-understand-when-youre-older",
-    "d": "Juanito Thompson — 2026 remastered & edited version of an EP recorded in November 2013 and released in March 2014. For copyright reaspons, the spoken-word Carl Sagan sample in the last track had to be removed using an online stem splitter (original mix files are currently lost). Distributed on April 4, 2026.",
-    "b": ""
-  },
-  {
-    "t": "George Boole has entered the chat (2026)",
-    "c": "music",
-    "u": "/music/distributed-music.html#george-boole",
-    "d": "Juanito Thompson — Distributed on March 22, 2026.",
-    "b": ""
-  },
-  {
-    "t": "HELLO, WORLD / LOVE, SPACE (2015)",
-    "c": "music",
-    "u": "/music/distributed-music.html#hello-world",
-    "d": "Texas Hold'Em Lava Dome — Distributed on November 9, 2025.",
-    "b": ""
-  },
-  {
-    "t": "Spooked (2025)",
-    "c": "music",
-    "u": "/music/distributed-music.html#spooked",
-    "d": "Juanito Thompson — Distributed and first released on October 30, 2025.",
-    "b": ""
-  },
-  {
-    "t": "pay2play (2025)",
-    "c": "music",
-    "u": "/music/distributed-music.html#pay2play",
-    "d": "Sex Van Floor Plan — Distributed and first released on July 18, 2025.",
-    "b": ""
-  },
-  {
-    "t": "Reverse Telescope Reversed (2025)",
-    "c": "music",
-    "u": "/music/distributed-music.html#reverse-telescope-reversed",
-    "d": "Juanito Thompson — Distributed and first released on June 28, 2025.",
-    "b": ""
-  },
-  {
-    "t": "Panic. (Don't Panic). Panic. (2023)",
-    "c": "music",
-    "u": "/music/distributed-music.html#panic",
-    "d": "The Four B's — Distributed on June 11, 2025.",
-    "b": ""
-  },
-  {
-    "t": "Long Way Home (2025)",
-    "c": "music",
-    "u": "/music/distributed-music.html#long-way-home",
-    "d": "Jon McCoy — Distributed and first released on May 1, 2025.",
-    "b": ""
-  },
-  {
-    "t": "Pompous Fanfare for All Occasions (2019)",
-    "c": "music",
-    "u": "/music/distributed-music.html#pompous-fanfare",
-    "d": "Texas Hold'Em Lava Dome — Distributed on November 20, 2024 (previous version distributed from August 8 until November 19, 2024).",
-    "b": ""
-  },
-  {
-    "t": "Millstone Woods May 2018 (2023)",
-    "c": "music",
-    "u": "/music/distributed-music.html#millstone-woods",
-    "d": "Dag Henderson — Distributed on November 17, 2024 (previous version distributed from September 30, 2024).",
-    "b": ""
-  },
-  {
-    "t": "World Can Wait (2021)",
-    "c": "music",
-    "u": "/music/distributed-music.html#world-can-wait",
-    "d": "Jon McCoy — Distributed on November 11, 2024.",
-    "b": ""
-  },
-  {
-    "t": "TEXAS TOAST MAGMA CRUNCH (2016)",
-    "c": "music",
-    "u": "/music/distributed-music.html#texas-toast-magma-crunch",
-    "d": "Texas Hold'Em Lava Dome — Distributed on November 5, 2024.",
-    "b": ""
-  },
-  {
-    "t": "songs (2019)",
-    "c": "music",
-    "u": "/music/distributed-music.html#songs-2019",
-    "d": "Jon McCoy — Distributed on November 4, 2024 (previous version distributed from September 16, 2024).",
-    "b": ""
-  },
-  {
-    "t": "Much Better Than Carl Spatski (2013)",
-    "c": "music",
-    "u": "/music/distributed-music.html#much-better-than",
-    "d": "Juanito Thompson — Distributed on October 22, 2024 (previous version distributed from August 29, 2024).",
-    "b": ""
-  },
-  {
-    "t": "It's Twenty-Fourteen (2014)",
-    "c": "music",
-    "u": "/music/distributed-music.html#its-2014",
-    "d": "Juanito Thompson — Distributed on October 22, 2024 (previous version distributed from August 13 until October 15, 2024).",
-    "b": ""
-  },
-  {
-    "t": "Adenosine (2016)",
-    "c": "music",
-    "u": "/music/distributed-music.html#adenosine",
-    "d": "Texas Hold'Em Lava Dome — Distributed on October 21, 2024 (previous version distributed from August 21 until October 18, 2024).",
-    "b": ""
-  },
-  {
-    "t": "Martial Law in Garrison Oaks (2018)",
-    "c": "music",
-    "u": "/music/distributed-music.html#martial-law-in-garrison-oaks",
-    "d": "Texas Hold'Em Lava Dome — Distributed on October 19, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Ancient Weeds (2023)",
-    "c": "music",
-    "u": "/music/distributed-music.html#ancient-weeds",
-    "d": "Juanito Thompson — Distributed on October 19, 2024.",
-    "b": ""
-  },
-  {
-    "t": "That Definitely Did Destroy Me (2013)",
-    "c": "music",
-    "u": "/music/distributed-music.html#that-definitely-did-destroy-me",
-    "d": "Juanito Thompson — Distributed on September 29, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Everything is falling all together, all at once, even the universe (2013)",
-    "c": "music",
-    "u": "/music/distributed-music.html#everything-is-falling-all-together",
-    "d": "The Four B's — Distributed on September 29, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Enter Stage Left Bowser (2013)",
-    "c": "music",
-    "u": "/music/distributed-music.html#enter-stage-left-bowser",
-    "d": "The Four B's — Distributed on September 28, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Juanito Thompson's Transatlantic Colleague (2023)",
-    "c": "music",
-    "u": "/music/distributed-music.html#transatlantic-colleague",
-    "d": "Dag Henderson — Distributed on September 28, 2024.",
-    "b": ""
-  },
-  {
-    "t": "The Four B's (2012)",
-    "c": "music",
-    "u": "/music/distributed-music.html#the-four-bs",
-    "d": "The Four B's — Distributed on September 25, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Heavy Water (2014)",
-    "c": "music",
-    "u": "/music/distributed-music.html#heavy-water",
-    "d": "The Four B's — Distributed on September 24, 2024.",
-    "b": ""
-  },
-  {
-    "t": "A Close Relative to Vinny Bobarino (2010)",
-    "c": "music",
-    "u": "/music/distributed-music.html#close-relative-to-vinny-bobarino",
-    "d": "Juanito Thompson — Distributed on September 24, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Hazardous Metals in Ambient Air (2018)",
-    "c": "music",
-    "u": "/music/distributed-music.html#hazardous-metals-in-ambient-air",
-    "d": "Texas Hold'Em Lava Dome — Distributed on August 10, 2024.",
-    "b": ""
-  },
-  {
-    "t": "Sitting on a Dock in New Shoreham (2023)",
-    "c": "music",
-    "u": "/music/distributed-music.html#sitting-on-a-dock",
-    "d": "Juanito Thompson — Distributed on August 7, 2024.",
-    "b": ""
-  },
-  {
-    "t": "The Empty West (2024)",
-    "c": "music",
-    "u": "/music/distributed-music.html#the-empty-west",
-    "d": "Woah. — Our first release on streaming services. Originally released on February 3, 2024 and distributed on August 5, 2024.",
-    "b": ""
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -522,14 +284,21 @@
     "c": "artist",
     "u": "/archive/by-artist/audio-sound-paper-et-al/about.html",
     "d": "Audio Sound Paper Et Al — About",
-    "b": "Audio Sound Paper, et al. — about — magmacrunch media archive › by artist › asp // audio sound paper, et al. // ABOUT ← back recordings releases works Singles Night, as in bills, cheese, and music. Melrose House, September 2014. That's where Jake, Stephen and Alex first met..."
+    "b": "Audio Sound Paper, et al. — about — magmacrunch media archive › by artist › asp // audio sound paper, et al. // ABOUT ← back links recordings releases works Singles Night, as in bills, cheese, and music. Melrose House, September 2014. That's where Jake, Stephen and Alex first met..."
   },
   {
     "t": "Audio Sound Paper, et al.",
     "c": "artist",
     "u": "/archive/by-artist/audio-sound-paper-et-al/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Audio Sound Paper, et al. — magmacrunch media archive › by artist › asp photo: Jake McCoy // by artist // AUDIO SOUND PAPER, ET AL. Audio Sound Paper | Duck Jagger | Murder Finger & Puma Man about recordings releases works ▶ view on MusicBrainz — ASP · DJ · MF · PM"
+    "b": "Audio Sound Paper, et al. — magmacrunch media archive › by artist › asp photo: Jake McCoy // artist archive // AUDIO SOUND PAPER, ET AL. Audio Sound Paper | Duck Jagger | Murder Finger & Puma Man about links recordings releases works"
+  },
+  {
+    "t": "Audio Sound Paper, et al.",
+    "c": "artist",
+    "u": "/archive/by-artist/audio-sound-paper-et-al/links.html",
+    "d": "Audio Sound Paper Et Al — Links",
+    "b": "Audio Sound Paper, et al. — links — magmacrunch media archive › by artist › asp // audio sound paper, et al. // LINKS ← back about recordings releases works MUSICBRAINZ ASP Audio Sound Paper DJ Duck Jagger MF Murder Finger PM Puma Man"
   },
   {
     "t": "Audio Sound Paper, et al.",
@@ -557,70 +326,84 @@
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/about.html",
     "d": "Bottle Boys Collective — About",
-    "b": "Bottle Boys Collective — about — magmacrunch media archive › by artist › bbc // bottle boys collective // ABOUT ← back photography recordings releases works Bottle Boys started in late 2017 when Jon, Cole, and Jake T. got together to make some noise at Frogwood Manor . This is beleived to have occured in September of that year, but some Bottle Boys scholars argue for December of that year. Using some recorded samples from the show SpongeBob SquarePants along with ambient guitar and synthesizer, this recording session resulted in the very first Bottle Boys release: SquarePants Dose Drone Vol. 1..."
+    "b": "Bottle Boys Collective — about — magmacrunch media archive › by artist › bbc // bottle boys collective // ABOUT ← back links photography recordings releases works Bottle Boys started in late 2017 when Jon, Cole, and Jake T. got together to make some noise at Frogwood Manor . This is beleived to have occured in September of that year, but some Bottle Boys scholars argue for December of that year. Using some recorded samples from the show SpongeBob SquarePants along with ambient guitar and synthesizer, this recording session resulted in the very first Bottle Boys release: SquarePants Dose Drone ..."
   },
   {
     "t": "Bottle Boys Collective",
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Bottle Boys Collective — archive — magmacrunch media archive › by artist › bbc photo: Ben Nikitas // by artist // BOTTLE BOYS COLLECTIVE Bottle Boys & Northern Mountain Saddle Bellies about photography recordings releases works ▶ view on MusicBrainz — BB · NMSB"
+    "b": "Bottle Boys Collective — archive — magmacrunch media archive › by artist › bbc photo: Ben Nikitas // artist archive // BOTTLE BOYS COLLECTIVE Bottle Boys & Northern Mountain Saddle Bellies about links photography recordings releases works"
+  },
+  {
+    "t": "Bottle Boys Collective",
+    "c": "artist",
+    "u": "/archive/by-artist/bottle-boys-collective/links.html",
+    "d": "Bottle Boys Collective — Links",
+    "b": "Bottle Boys Collective — links — magmacrunch media archive › by artist › bbc // bottle boys collective // LINKS ← back about photography recordings releases works BOTTLE BOYS BB Bandcamp BB MusicBrainz BB Discogs NORTHERN MOUNTAIN SADDLE BELLIES NMSB MusicBrainz NMSB Discogs"
   },
   {
     "t": "Bottle Boys Collective",
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/photography.html",
     "d": "Bottle Boys Collective — Photography",
-    "b": "Bottle Boys Collective — photography — magmacrunch media // bottle boys collective // PHOTOGRAPHY ← back about recordings releases works archive › by artist › bbc // photos // add caption here scroll → [ close ] ← prev next →"
+    "b": "Bottle Boys Collective — photography — magmacrunch media archive › by artist › bbc // bottle boys collective // PHOTOGRAPHY ← back about links recordings releases works // NMSB november 2023 // Jon & Cole Jon Cole Jon scroll → [ close ] ← prev next →"
   },
   {
     "t": "Bottle Boys Collective",
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/recordings.html",
     "d": "Bottle Boys Collective — Recordings",
-    "b": "Bottle Boys Collective — recordings — magmacrunch media RECORDINGS ← back about photography releases works loading recordings… SpongeBob Drone #1, All the pretty things in my backpack, SpongeBob Drone #4, (stage banter), The Backpack Man, Bottom of the bag (Extra Fingers), Casserole, King of the Worms, Pirate's Life, SpongeBob Drone #2, SpongeBob Drone #3, Grocery Harrison"
+    "b": "Bottle Boys Collective — recordings — magmacrunch media RECORDINGS loading recordings… SpongeBob Drone #1, All the pretty things in my backpack, SpongeBob Drone #4, (stage banter), The Backpack Man, Bottom of the bag (Extra Fingers), Casserole, King of the Worms, Pirate's Life, SpongeBob Drone #2, SpongeBob Drone #3, Grocery Harrison"
   },
   {
     "t": "Bottle Boys Collective",
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/releases.html",
     "d": "Bottle Boys Collective — Releases",
-    "b": "Bottle Boys Collective — releases — magmacrunch media RELEASES ← back about photography recordings works loading releases… Coffee Coffee open mic 8/23/18, SquarePants Dose Drone Vol. 1, The Legend of the Backpack Man, SquarePants Dose Drone Vol. 1"
+    "b": "Bottle Boys Collective — releases — magmacrunch media RELEASES loading releases… Coffee Coffee open mic 8/23/18, SquarePants Dose Drone Vol. 1, The Legend of the Backpack Man, SquarePants Dose Drone Vol. 1"
   },
   {
     "t": "Bottle Boys Collective",
     "c": "artist",
     "u": "/archive/by-artist/bottle-boys-collective/works.html",
     "d": "Bottle Boys Collective — Works",
-    "b": "Bottle Boys Collective — works — magmacrunch media WORKS ← back about photography recordings releases loading works…"
+    "b": "Bottle Boys Collective — works — magmacrunch media WORKS loading works…"
   },
   {
     "t": "C.P. Rutledge",
     "c": "artist",
     "u": "/archive/by-artist/c-p-rutledge/about.html",
     "d": "C P Rutledge — About",
-    "b": "C.P. Rutledge — about — magmacrunch media archive › by artist › cpr // C.P. Rutledge // ABOUT ← back games photography recordings releases works coming soon..."
+    "b": "C.P. Rutledge — about — magmacrunch media archive › by artist › cpr // C.P. Rutledge // ABOUT ← back games links photography recordings releases works coming soon..."
   },
   {
     "t": "C.P. Rutledge",
     "c": "artist",
     "u": "/archive/by-artist/c-p-rutledge/games.html",
     "d": "C P Rutledge — Games",
-    "b": "C.P. Rutledge — games — magmacrunch media GAMES ← back about photography recordings releases works Music-inspired games from the magmacrunch arcade. MOONLIGHT DRIFT PLAY coast through space. dodge obstacles. ride the moon. music-inspired named after a C.P. Rutledge song"
+    "b": "C.P. Rutledge — games — magmacrunch media GAMES ← back about links photography recordings releases works Music-inspired games from the magmacrunch arcade. MOONLIGHT DRIFT PLAY coast through space. dodge obstacles. ride the moon. music-inspired named after a C.P. Rutledge song"
   },
   {
     "t": "C.P. Rutledge",
     "c": "artist",
     "u": "/archive/by-artist/c-p-rutledge/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "C.P. Rutledge — archive — magmacrunch media archive › by artist › cpr rendering: courtesy of C.P. Rutledge & Madison Russo // by artist // C.P. RUTLEDGE [ CPR ] also performing as Brother Dynamo about games photography recordings releases works ▶ view on MusicBrainz"
+    "b": "C.P. Rutledge — archive — magmacrunch media archive › by artist › cpr rendering: courtesy of C.P. Rutledge & Madison Russo // artist archive // C.P. RUTLEDGE also performing as Brother Dynamo about games links photography recordings releases works"
+  },
+  {
+    "t": "C.P. Rutledge",
+    "c": "artist",
+    "u": "/archive/by-artist/c-p-rutledge/links.html",
+    "d": "C P Rutledge — Links",
+    "b": "C.P. Rutledge — links — magmacrunch media LINKS"
   },
   {
     "t": "C.P. Rutledge",
     "c": "artist",
     "u": "/archive/by-artist/c-p-rutledge/photography.html",
     "d": "C P Rutledge — Photography",
-    "b": "C.P. Rutledge — photography — magmacrunch media archive › by artist › cpr // C.P. Rutledge // PHOTOGRAPHY ← back about games recordings releases works // photos // c.p. rutledge scroll → [ close ] ← prev next →"
+    "b": "C.P. Rutledge — photography — magmacrunch media archive › by artist › cpr // C.P. Rutledge // PHOTOGRAPHY ← back about games links recordings releases works // photos // C.P. Rutledge Brother Dynamo Brother Dynamo Brother Dynamo scroll → [ close ] ← prev next →"
   },
   {
     "t": "C.P. Rutledge",
@@ -648,28 +431,35 @@
     "c": "artist",
     "u": "/archive/by-artist/dag-henderson/about.html",
     "d": "Dag Henderson — About",
-    "b": "dag henderson — about — magmacrunch media archive › by artist › dh // dag henderson // ABOUT ← back music videos photography recordings releases works coming soon..."
+    "b": "dag henderson — about — magmacrunch media archive › by artist › dh // dag henderson // ABOUT ← back links music videos photography recordings releases works coming soon..."
   },
   {
     "t": "dag henderson",
     "c": "artist",
     "u": "/archive/by-artist/dag-henderson/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "dag henderson — magmacrunch media archive › by artist › dh photo: Jake McCoy // by artist // DAG HENDERSON [ DH ] about photography music videos recordings releases works ▶ view on MusicBrainz"
+    "b": "dag henderson — magmacrunch media archive › by artist › dh photo: Jake McCoy // artist archive // DAG HENDERSON about links music videos photography recordings releases works"
+  },
+  {
+    "t": "dag henderson",
+    "c": "artist",
+    "u": "/archive/by-artist/dag-henderson/links.html",
+    "d": "Dag Henderson — Links",
+    "b": "dag henderson — links — magmacrunch media LINKS"
   },
   {
     "t": "dag henderson",
     "c": "artist",
     "u": "/archive/by-artist/dag-henderson/music-videos.html",
     "d": "Dag Henderson — Music Videos",
-    "b": "dag henderson — music videos — magmacrunch media archive › by artist › dh // dag henderson // MUSIC VIDEOS ← back about photography recordings releases works"
+    "b": "dag henderson — music videos — magmacrunch media archive › by artist › dh // dag henderson // MUSIC VIDEOS ← back about links photography recordings releases works"
   },
   {
     "t": "dag henderson",
     "c": "artist",
     "u": "/archive/by-artist/dag-henderson/photography.html",
     "d": "Dag Henderson — Photography",
-    "b": "dag henderson — photography — magmacrunch media archive › by artist › dh // dag henderson // PHOTOGRAPHY ← back about music videos recordings releases works // photos // add caption here ← drag to scroll → [ close ] ← prev next →"
+    "b": "dag henderson — photography — magmacrunch media archive › by artist › dh // dag henderson // PHOTOGRAPHY ← back about links music videos recordings releases works // photos // add caption here ← drag to scroll → [ close ] ← prev next →"
   },
   {
     "t": "dag henderson",
@@ -697,7 +487,7 @@
     "c": "artist",
     "u": "/archive/by-artist/ddt-llc/about.html",
     "d": "Ddt Llc — About",
-    "b": "DDT LLC — about — magmacrunch media archive › by artist › ddt // DDT LLC // ABOUT ← back photography events releases coming soon..."
+    "b": "DDT LLC — about — magmacrunch media archive › by artist › ddt // DDT LLC // ABOUT ← back events links photography releases coming soon..."
   },
   {
     "t": "DDT LLC",
@@ -711,14 +501,21 @@
     "c": "artist",
     "u": "/archive/by-artist/ddt-llc/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "DDT LLC — archive — magmacrunch media archive › by artist › ddt drawing: Sergio Pontillo // by artist // DDT LLC [ IOWA CITY ca. 2016 ] about events photography releases ▶ view on MusicBrainz"
+    "b": "DDT LLC — archive — magmacrunch media archive › by artist › ddt drawing: Sergio Pontillo // artist archive // DDT LLC about events links photography releases"
+  },
+  {
+    "t": "DDT LLC",
+    "c": "artist",
+    "u": "/archive/by-artist/ddt-llc/links.html",
+    "d": "Ddt Llc — Links",
+    "b": "DDT LLC — links — magmacrunch media archive › by artist › ddt // DDT LLC // LINKS ← back about events photography releases DATABASES MusicBrainz Discogs MUSIC Bandcamp LIVE VIDEO YouTube"
   },
   {
     "t": "DDT LLC",
     "c": "artist",
     "u": "/archive/by-artist/ddt-llc/photography.html",
     "d": "Ddt Llc — Photography",
-    "b": "DDT LLC — photography — magmacrunch media // DDT LLC // PHOTOGRAPHY ← back about events releases archive › by artist › ddt ddt llc ddt llc IMG 3102 IMG 3104 IMG 3105 scroll → [ close ] ← prev next →"
+    "b": "DDT LLC — photography — magmacrunch media archive › by artist › ddt // DDT LLC // PHOTOGRAPHY ← back about events links releases ddt llc ddt llc IMG 3102 IMG 3104 IMG 3105 scroll → [ close ] ← prev next →"
   },
   {
     "t": "DDT LLC",
@@ -732,7 +529,7 @@
     "c": "artist",
     "u": "/archive/by-artist/dino-spumoni/about.html",
     "d": "Dino Spumoni — About",
-    "b": "dino spumoni — about — magmacrunch media archive › by artist › d.spum // dino spumoni // ABOUT ← back events photography recordings releases works coming soon..."
+    "b": "dino spumoni — about — magmacrunch media archive › by artist › d.spum // dino spumoni // ABOUT ← back events links photography recordings releases works coming soon..."
   },
   {
     "t": "dino spumoni",
@@ -746,14 +543,21 @@
     "c": "artist",
     "u": "/archive/by-artist/dino-spumoni/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "dino spumoni — archive — magmacrunch media archive › by artist › d.spum photo: courtesy of Kat Rejsek // by artist // dino spumoni [ d.spum ] about events photography recordings releases works ▶ view on MusicBrainz"
+    "b": "dino spumoni — archive — magmacrunch media archive › by artist › d.spum photo: courtesy of Kat Rejsek // artist archive // dino spumoni [ d.spum ] about events links photography recordings releases works"
+  },
+  {
+    "t": "dino spumoni",
+    "c": "artist",
+    "u": "/archive/by-artist/dino-spumoni/links.html",
+    "d": "Dino Spumoni — Links",
+    "b": "dino spumoni — links — magmacrunch media LINKS"
   },
   {
     "t": "dino spumoni",
     "c": "artist",
     "u": "/archive/by-artist/dino-spumoni/photography.html",
     "d": "Dino Spumoni — Photography",
-    "b": "dino spumoni — photography — magmacrunch media archive › by artist › d.spum // dino spumoni // PHOTOGRAPHY ← back about events recordings releases works dino spumoni dspumpic1 dspumpic2 dspumpic3 dspumpic4 IMG 2981 IMG 3126 IMG 3364 dino spumoni couch pic feb 26 pic drawing ← drag to scroll → [ close ] ← prev next →"
+    "b": "dino spumoni — photography — magmacrunch media archive › by artist › d.spum // dino spumoni // PHOTOGRAPHY ← back about events links recordings releases works dino spumoni dspumpic1 dspumpic2 dspumpic3 dspumpic4 IMG 2981 IMG 3126 IMG 3364 dino spumoni couch pic feb 26 pic drawing ← drag to scroll → [ close ] ← prev next →"
   },
   {
     "t": "dino spumoni",
@@ -781,7 +585,7 @@
     "c": "artist",
     "u": "/archive/by-artist/four-bs/about.html",
     "d": "Four Bs — About",
-    "b": "The Four B's — about — magmacrunch media archive › by artist › bbbb // The Four B's // ABOUT ← back events photography recordings releases works coming soon..."
+    "b": "The Four B's — about — magmacrunch media archive › by artist › bbbb // The Four B's // ABOUT ← back events links photography recordings releases works coming soon..."
   },
   {
     "t": "The Four B's",
@@ -795,14 +599,21 @@
     "c": "artist",
     "u": "/archive/by-artist/four-bs/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "The Four B's — archive — magmacrunch media archive › by artist › bbbb photo: Jeff McCoy // by artist // THE FOUR B'S YOU'LL FIND OUT SOMEDAY, KID. about events photography recordings releases works ▶ view on MusicBrainz"
+    "b": "The Four B's — archive — magmacrunch media archive › by artist › bbbb photo: Jeff McCoy // artist archive // THE FOUR B'S YOU'LL FIND OUT SOMEDAY, KID. about events links photography recordings releases works"
+  },
+  {
+    "t": "The Four B's",
+    "c": "artist",
+    "u": "/archive/by-artist/four-bs/links.html",
+    "d": "Four Bs — Links",
+    "b": "The Four B's — links — magmacrunch media LINKS"
   },
   {
     "t": "The Four B's",
     "c": "artist",
     "u": "/archive/by-artist/four-bs/photography.html",
     "d": "Four Bs — Photography",
-    "b": "The Four B's — photography — magmacrunch media archive › by artist › bbbb // The Four B's // PHOTOGRAPHY ← back about events recordings releases works the four b's link banner cover oh wow four bs 2013 IMG 0437 IMG 0592 P1000274 P1000276 P1000277 ← drag to scroll → [ close ] ← prev next →"
+    "b": "The Four B's — photography — magmacrunch media archive › by artist › bbbb // The Four B's // PHOTOGRAPHY ← back about events links recordings releases works the four b's link banner cover oh wow four bs 2013 IMG 0437 IMG 0592 P1000274 P1000276 P1000277 ← drag to scroll → [ close ] ← prev next →"
   },
   {
     "t": "The Four B's",
@@ -830,14 +641,21 @@
     "c": "artist",
     "u": "/archive/by-artist/fruity-loops-debauchery-collective/about.html",
     "d": "Fruity Loops Debauchery Collective — About",
-    "b": "Fruity Loops Debauchery Bros. — about — magmacrunch media archive › by artist › fldb // Fruity Loops Debauchery Bros. // ABOUT ← back music videos photography recordings releases works coming soon..."
+    "b": "Fruity Loops Debauchery Bros. — about — magmacrunch media archive › by artist › fldb // Fruity Loops Debauchery Bros. // ABOUT ← back links music videos photography recordings releases works coming soon..."
   },
   {
     "t": "Fruity Loops Debauchery Bros.",
     "c": "artist",
     "u": "/archive/by-artist/fruity-loops-debauchery-collective/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Fruity Loops Debauchery Bros. — archive — magmacrunch media archive › by artist › fldb photo: Jon McCoy // by artist // FRUITY LOOPS DEBAUCHERY BROS. Anabolic Steroids and a Beaver Tranquilizer | Jimmi | Carl Spatski about music videos photography recordings releases works ▶ view on MusicBrainz — AS · J · CS"
+    "b": "Fruity Loops Debauchery Bros. — archive — magmacrunch media archive › by artist › fldb photo: Jon McCoy // artist archive // FRUITY LOOPS DEBAUCHERY BROS. Anabolic Steroids and a Beaver Tranquilizer | Jimmi | Carl Spatski about links music videos photography recordings releases works"
+  },
+  {
+    "t": "Fruity Loops Debauchery Bros.",
+    "c": "artist",
+    "u": "/archive/by-artist/fruity-loops-debauchery-collective/links.html",
+    "d": "Fruity Loops Debauchery Collective — Links",
+    "b": "Fruity Loops Debauchery Bros. — links — magmacrunch media LINKS"
   },
   {
     "t": "Fruity Loops Debauchery Bros.",
@@ -851,7 +669,7 @@
     "c": "artist",
     "u": "/archive/by-artist/fruity-loops-debauchery-collective/photography.html",
     "d": "Fruity Loops Debauchery Collective — Photography",
-    "b": "Fruity Loops Debauchery Bros. — photography — magmacrunch media // Fruity Loops Debauchery Bros. // PHOTOGRAPHY ← back about music videos recordings releases works archive › by artist › fldb // photos // scroll → [ close ] ← prev next →"
+    "b": "Fruity Loops Debauchery Bros. — photography — magmacrunch media archive › by artist › fldb // Fruity Loops Debauchery Bros. // PHOTOGRAPHY ← back about links music videos recordings releases works // photos // scroll → [ close ] ← prev next →"
   },
   {
     "t": "Fruity Loops Debauchery Bros.",
@@ -879,77 +697,91 @@
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/about.html",
     "d": "Jon Mccoy — About",
-    "b": "Jon McCoy — about — magmacrunch media archive › by artist › jhm // Jon McCoy // ABOUT ← back music videos photography recordings releases works coming sooon..."
+    "b": "Jon McCoy — about — magmacrunch media archive › by artist › jhm // Jon McCoy // ABOUT ← back links music videos photography recordings releases works coming sooon..."
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Jon McCoy — archive — magmacrunch media archive › by artist › jhm photo: Ben Nikitas // by artist // JON MCCOY [ JM ] about music videos photography recordings releases works ▶ view on MusicBrainz"
+    "b": "Jon McCoy — archive — magmacrunch media archive › by artist › jhm photo: Ben Nikitas // artist archive // JON MCCOY about links music videos photography recordings releases works"
+  },
+  {
+    "t": "Jon McCoy",
+    "c": "artist",
+    "u": "/archive/by-artist/jon-mccoy/links.html",
+    "d": "Jon Mccoy — Links",
+    "b": "Jon McCoy — links — magmacrunch media archive › by artist › jhm // Jon McCoy // LINKS ← back about music videos photography recordings releases works DATABASES MusicBrainz Discogs MUSIC Bandcamp SoundCloud STREAMING Spotify Apple Music Deezer Tidal"
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/music-videos.html",
     "d": "Jon Mccoy — Music Videos",
-    "b": "Jon McCoy — music videos — magmacrunch media archive › by artist › jhm // Jon McCoy // MUSIC VIDEOS ← back about photography recordings releases works"
+    "b": "Jon McCoy — music videos — magmacrunch media archive › by artist › jhm // Jon McCoy // MUSIC VIDEOS ← back about links photography recordings releases works"
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/photography.html",
     "d": "Jon Mccoy — Photography",
-    "b": "Jon McCoy — photography — magmacrunch media archive › by artist › jhm // Jon McCoy // PHOTOGRAPHY ← back about music videos recordings releases works // photos // add caption here ← drag to scroll → [ close ] ← prev next →"
+    "b": "Jon McCoy — photography — magmacrunch media archive › by artist › jhm // Jon McCoy // PHOTOGRAPHY ← back about links music videos recordings releases works // photos // add caption here ← drag to scroll → [ close ] ← prev next →"
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/recordings.html",
     "d": "Jon Mccoy — Recordings",
-    "b": "Jon McCoy — recordings — magmacrunch media archive › by artist › jhm // Jon McCoy // RECORDINGS ← back about music videos photography releases works loading recordings… Far From, Again & Again, The Canyon, In the Cold, World Can Wait, Space, Gone By, Floated Away, Starting Again, 1-27-18, old song, The End, untitled, Long Way Home, Rainy Day, Different Time, Reason to Believe, Try, The Mountain, Early Morning, Try, Vivid Dreams, Nothing Left But Time"
+    "b": "Jon McCoy — recordings — magmacrunch media archive › by artist › jhm // Jon McCoy // RECORDINGS ← back about links music videos photography releases works loading recordings… Far From, Again & Again, The Canyon, In the Cold, World Can Wait, Space, Gone By, Floated Away, Starting Again, 1-27-18, old song, The End, untitled, Long Way Home, Rainy Day, Different Time, Reason to Believe, Try, The Mountain, Early Morning, Try, Vivid Dreams, Nothing Left But Time"
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/releases.html",
     "d": "Jon Mccoy — Releases",
-    "b": "Jon McCoy — releases — magmacrunch media archive › by artist › jhm // Jon McCoy // RELEASES ← back about music videos photography recordings works loading releases… Starting Again, Reason to Believe, Try, World Can Wait, Vivid Dreams, songs, The End, World Can Wait, Space, Again & Again, Space, Vivid Dreams, In the Cold, Early Morning, Try, The End, World Can Wait, songs, Early Morning, songs, Long Way Home"
+    "b": "Jon McCoy — releases — magmacrunch media archive › by artist › jhm // Jon McCoy // RELEASES ← back about links music videos photography recordings works loading releases… Starting Again, Reason to Believe, Try, World Can Wait, Vivid Dreams, songs, The End, World Can Wait, Space, Again & Again, Space, Vivid Dreams, In the Cold, Early Morning, Try, The End, World Can Wait, songs, Early Morning, songs, Long Way Home"
   },
   {
     "t": "Jon McCoy",
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/works.html",
     "d": "Jon Mccoy — Works",
-    "b": "Jon McCoy — works — magmacrunch media archive › by artist › jhm // Jon McCoy // WORKS ← back about music videos photography recordings releases loading works…"
+    "b": "Jon McCoy — works — magmacrunch media archive › by artist › jhm // Jon McCoy // WORKS ← back about links music videos photography recordings releases loading works…"
   },
   {
     "t": "juanito thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/about.html",
     "d": "Juanito Thompson — About",
-    "b": "juanito thompson — about — magmacrunch media ABOUT ← back games music videos network photography recordings releases works NIGEL official mascot of juanito thompson A close relative to Vinny Bobarino , Juanito Thompson started as a home recording project during summer & winter breaks from college in 2009. What began as improvised recordings in a spare bedroom evolved into a years-long collaboration with a rotating cast of musicians, all captured on cheap equipment in borrowed spaces. The project has released ten albums across formats ranging from CDR home copies to streaming platforms, always ..."
+    "b": "juanito thompson — about — magmacrunch media ABOUT ← back games links music videos network photography recordings releases works A close relative to Vinny Bobarino , Juanito Thompson started as a home recording project during summer & winter breaks from college in 2009. What began as improvised recordings in a spare bedroom evolved into a years-long collaboration with a rotating cast of musicians, all captured on cheap equipment in borrowed spaces. The project has released ten albums across formats ranging from CDR home copies to streaming platforms, always operating outside any formal music i..."
   },
   {
     "t": "juanito thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/games.html",
     "d": "Juanito Thompson — Games",
-    "b": "juanito thompson — games — magmacrunch media GAMES ← back about music videos network photography recordings releases works Music-inspired games from the magmacrunch arcade. GEORGE BOOLE HAS ENTERED THE CHAT PLAY boolean logic puzzles. true or false? and, or, not. music-inspired named after a Juanito Thompson song"
+    "b": "juanito thompson — games — magmacrunch media GAMES ← back about links music videos network photography recordings releases works Music-inspired games from the magmacrunch arcade. GEORGE BOOLE HAS ENTERED THE CHAT PLAY boolean logic puzzles. true or false? and, or, not. music-inspired named after a Juanito Thompson song"
   },
   {
     "t": "Juanito Thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Juanito Thompson — magmacrunch media archive › by artist › jt photo: Jake McCoy // by artist // JUANITO THOMPSON a close relative to Vinny Bobarino 2009 — PRESENT about games music videos network photography recordings releases works ▶ stream / download music ▶ view on MusicBrainz"
+    "b": "Juanito Thompson — magmacrunch media archive › by artist › jt photo: Jake McCoy // artist archive // JUANITO THOMPSON about games links music videos network photography recordings releases works"
+  },
+  {
+    "t": "juanito thompson",
+    "c": "artist",
+    "u": "/archive/by-artist/juanito-thompson/links.html",
+    "d": "Juanito Thompson — Links",
+    "b": "juanito thompson — links — magmacrunch media LINKS"
   },
   {
     "t": "juanito thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/music-videos.html",
     "d": "Juanito Thompson — Music Videos",
-    "b": "juanito thompson — music videos — magmacrunch media archive › by artist › jt // juanito thompson // MUSIC VIDEOS ← back about games network photography recordings releases works"
+    "b": "juanito thompson — music videos — magmacrunch media archive › by artist › jt // juanito thompson // MUSIC VIDEOS ← back about games links network photography recordings releases works"
   },
   {
     "t": "juanito thompson",
@@ -963,91 +795,98 @@
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/photography.html",
     "d": "Juanito Thompson — Photography",
-    "b": "juanito thompson — photography — magmacrunch media PHOTOGRAPHY ← back about games music videos network recordings releases works YOU'LL UNDERSTAND WHEN YOU'RE OLDER ← drag to scroll → THAT DEFINITELY DID DESTROY ME ← drag to scroll → THE EARTH IS A COLD DEAD PLACE AND I AM VERY AFRAID TO DIE ← drag to scroll → REVERSE TELESCOPE REVERSED ← drag to scroll → RECORDING OF REVERSE OSMOSIS REVERSED frogwood manor · august 2013 [ close ] ← prev next →"
+    "b": "juanito thompson — photography — magmacrunch media PHOTOGRAPHY ← back about games links music videos network recordings releases works BAND ← drag to scroll → YOU'LL UNDERSTAND WHEN YOU'RE OLDER ← drag to scroll → THAT DEFINITELY DID DESTROY ME ← drag to scroll → THE EARTH IS A COLD DEAD PLACE AND I AM VERY AFRAID TO DIE ← drag to scroll → REVERSE TELESCOPE REVERSED ← drag to scroll → NIGEL ← drag to scroll → RECORDING OF REVERSE OSMOSIS REVERSED frogwood manor · august 2013 [ close ] ← prev next →"
   },
   {
     "t": "juanito thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/recordings.html",
     "d": "Juanito Thompson — Recordings",
-    "b": "juanito thompson — recordings — magmacrunch media RECORDINGS ← back about games music videos network photography releases works loading recordings… Point Judith, Reverse telescope reversed, Sitting on a Dock in New Shoreham, Daffodil & Sweet Pea, Point Judith, Kevin Juanito Thompson, Basement Nostalgia, Parade Float Electronics, Thought Equilibrium, Sunlight is more green than any other color, What year is this?, The Earth is a Cold Dead Place and I am Very Afraid to Die, Packed Bags, Gravitational Voltage, Ed Sleezer for State Representative, George Boole has entered the chat, Weird Things, Leaves, Earth as a Place of Human Occupation, The Bowser Song, That's Home, That's Us, That's Home, That's Us, I'm gonna need more of a commitment than that, Mind Satellite, Gravitational Voltage, What year is this?, Reverse Osmosis Reversed, hi jeff, how were you., I think I might have just figured out what death actually is, R. T., Ancient Weeds, Bobbi G., Leaves, I think I might have just figured out what death actually is, Qikiqtarjuaq, Who is Richard Parker?, Ehhh maybe we'll do that next weekend, Untitled, Red & Green Apples, 3:08 A.M., Cave Diving - Not Even Once, Dane Sleezer, Realtor, Bender Bending Rodriguez ascends to heaven, Who is Richard Parker?, (It Can't Be Christmas) Every Day, hi jeff, how were you., Leaves, Breakdown on Banshee Boardwalk, Darius Hodgekins, T. R., Untitled, George Boole has entered the chat, AMBi040, Ancient Weeds, Oh Brother, Earth as a Place of Human Occupation, Beach Ave., Untitled, Drinking Beer, Daffodil & Sweet Pea, Beach Ave., T. S., I'm gonna need more of a commitment than that, Ancient Weeds, Ehhh maybe we'll do that next weekend, I want Deadwood dead, Parade Float Electronics"
+    "b": "juanito thompson — recordings — magmacrunch media RECORDINGS ← back about games links music videos network photography releases works loading recordings… Point Judith, Reverse telescope reversed, Sitting on a Dock in New Shoreham, Daffodil & Sweet Pea, Point Judith, Kevin Juanito Thompson, Basement Nostalgia, Parade Float Electronics, Thought Equilibrium, Sunlight is more green than any other color, What year is this?, The Earth is a Cold Dead Place and I am Very Afraid to Die, Packed Bags, Gravitational Voltage, Ed Sleezer for State Representative, George Boole has entered the chat, Weird Things, Leaves, Earth as a Place of Human Occupation, The Bowser Song, That's Home, That's Us, That's Home, That's Us, I'm gonna need more of a commitment than that, Mind Satellite, Gravitational Voltage, What year is this?, Reverse Osmosis Reversed, hi jeff, how were you., I think I might have just figured out what death actually is, R. T., Ancient Weeds, Bobbi G., Leaves, I think I might have just figured out what death actually is, Qikiqtarjuaq, Who is Richard Parker?, Ehhh maybe we'll do that next weekend, Untitled, Red & Green Apples, 3:08 A.M., Cave Diving - Not Even Once, Dane Sleezer, Realtor, Bender Bending Rodriguez ascends to heaven, Who is Richard Parker?, (It Can't Be Christmas) Every Day, hi jeff, how were you., Leaves, Breakdown on Banshee Boardwalk, Darius Hodgekins, T. R., Untitled, George Boole has entered the chat, AMBi040, Ancient Weeds, Oh Brother, Earth as a Place of Human Occupation, Beach Ave., Untitled, Drinking Beer, Daffodil & Sweet Pea, Beach Ave., T. S., I'm gonna need more of a commitment than that, Ancient Weeds, Ehhh maybe we'll do that next weekend, I want Deadwood dead, Parade Float Electronics"
   },
   {
     "t": "juanito thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/releases.html",
     "d": "Juanito Thompson — Releases",
-    "b": "juanito thompson — releases — magmacrunch media RELEASES ← back about games music videos network photography recordings works loading releases… What year is this?, Juanito Thompson 7\", The Earth is a Cold Dead Place and I am Very Afraid to Die, Ancient Weeds, Millstone Woods May 2018, You'll Understand When You're Older, I'm gonna need more of a commitment than that, That Definitely Did Destroy Me, You'll Understand When You're Older, The Earth is a Cold Dead Place and I am Very Afraid to Die, Sitting on a Curb in Sturgis, Beach Ave., Sitting on a Dock in New Shoreham, Daffodil & Sweet Pea, The Earth is a Cold Dead Place and I am Very Afraid to Die, Ancient Weeds, Who is Richard Parker?, It's Twenty-Fourteen, Much Better Than Carl Spatski, Random Recordings: For Better or For Worse, Much Better Than Carl Spatski, Juanito Thompson's Transatlantic Colleague, Millstone Woods May 2018, It's Twenty-Fourteen, Reverse Telescope Reversed, Leaves, Sitting on a Curb in Sturgis, That Definitely Did Destroy Me, Much Better Than Carl Spatski, It's Twenty-Fourteen, A Close Relative to Vinny Bobarino, That Definitely Did Destroy Me, A Close Relative to Vinny Bobarino, Spooked, Sitting on a Dock in New Shoreham, George Boole has entered the chat, Qikiqtarjuaq, What year is this?, Parade Float Electronics, Gravitational Voltage, Point Judith"
+    "b": "juanito thompson — releases — magmacrunch media RELEASES ← back about games links music videos network photography recordings works loading releases… What year is this?, Juanito Thompson 7\", The Earth is a Cold Dead Place and I am Very Afraid to Die, Ancient Weeds, Millstone Woods May 2018, You'll Understand When You're Older, I'm gonna need more of a commitment than that, That Definitely Did Destroy Me, You'll Understand When You're Older, The Earth is a Cold Dead Place and I am Very Afraid to Die, Sitting on a Curb in Sturgis, Beach Ave., Sitting on a Dock in New Shoreham, Daffodil & Sweet Pea, The Earth is a Cold Dead Place and I am Very Afraid to Die, Ancient Weeds, Who is Richard Parker?, It's Twenty-Fourteen, Much Better Than Carl Spatski, Random Recordings: For Better or For Worse, Much Better Than Carl Spatski, Juanito Thompson's Transatlantic Colleague, Millstone Woods May 2018, It's Twenty-Fourteen, Reverse Telescope Reversed, Leaves, Sitting on a Curb in Sturgis, That Definitely Did Destroy Me, Much Better Than Carl Spatski, It's Twenty-Fourteen, A Close Relative to Vinny Bobarino, That Definitely Did Destroy Me, A Close Relative to Vinny Bobarino, Spooked, Sitting on a Dock in New Shoreham, George Boole has entered the chat, Qikiqtarjuaq, What year is this?, Parade Float Electronics, Gravitational Voltage, Point Judith"
   },
   {
     "t": "juanito thompson",
     "c": "artist",
     "u": "/archive/by-artist/juanito-thompson/works.html",
     "d": "Juanito Thompson — Works",
-    "b": "juanito thompson — works — magmacrunch media WORKS ← back about games music videos network photography recordings releases loading works…"
+    "b": "juanito thompson — works — magmacrunch media WORKS ← back about games links music videos network photography recordings releases loading works…"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/about.html",
     "d": "Svfp — About",
-    "b": "SVFP — about — magmacrunch media archive › by artist › svfp // sex van floor plan // ABOUT ← back documentary events photography recordings releases works SVFP was founded by Eli, Rho, & Chuck in 2024... ▶ stream / download pay2play ▶ view on MusicBrainz linktree instagram tiktok also check out the first floppy disk single → flyer by Ellis Grey · ↗ view on instagram ▗▄▄▄▖▗▖ ▗▄▄▄▖ ▗▄▄▖ ▗▖ ▗▖ ▗▄▖ ▗▄▄▖▗▖ ▗▖▗▖ ▗▖ ▗▄▄▖▗▖ ▗▖ ▗▖ ▗▄▖ ▗▖ ▗▖▗▄▄▄▖ ▐▌ ▐▌ █ ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ ▐▌ ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▗▞▘ ▐▌▐▌ ▐▌▐▌▗▞▘▐▌ ▐▛▀▀▘▐▌ █ ▐▛▀▚▖▐▛▀▜▌▐▌ ▐▌ ▐▌ ▐▛▀▜▌▐▌ ▐▌▐▌ ▐▛▚▖ ▐▌▐▛▀▜▌▐▛▚▖ ▐▛▀▀▘ ▐▙▄▄▖▐▙▄▄▖▗▄█▄▖ ▐▌ ▐▌▐▌ ▐▌▝▚▄▞▘ ▝..."
+    "b": "SVFP — about — magmacrunch media archive › by artist › svfp // sex van floor plan // ABOUT ← back documentary events links photography recordings releases works SVFP was founded by Eli, Rho, & Chuck in 2024... flyer by Ellis Grey · ↗ view on instagram ▗▄▄▄▖▗▖ ▗▄▄▄▖ ▗▄▄▖ ▗▖ ▗▖ ▗▄▖ ▗▄▄▖▗▖ ▗▖▗▖ ▗▖ ▗▄▄▖▗▖ ▗▖ ▗▖ ▗▄▖ ▗▖ ▗▖▗▄▄▄▖ ▐▌ ▐▌ █ ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌ ▐▌ ▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▗▞▘ ▐▌▐▌ ▐▌▐▌▗▞▘▐▌ ▐▛▀▀▘▐▌ █ ▐▛▀▚▖▐▛▀▜▌▐▌ ▐▌ ▐▌ ▐▛▀▜▌▐▌ ▐▌▐▌ ▐▛▚▖ ▐▌▐▛▀▜▌▐▛▚▖ ▐▛▀▀▘ ▐▙▄▄▖▐▙▄▄▖▗▄█▄▖ ▐▌ ▐▌▐▌ ▐▌▝▚▄▞▘ ▝▚▄▄▖▐▌ ▐▌▝▚▄▞▘▝▚▄▄▖▐▌ ▐▌ ▗▄▄▞▘▐▌ ▐▌▐▌ ▐▌▐▙▄▄▖"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/documentary.html",
     "d": "Svfp — Documentary",
-    "b": "SVFP — documentary — magmacrunch media archive › by artist › svfp // sex van floor plan // DOCUMENTARY ← back about events photography recordings releases works SEX VAN FLOOR PLAN: THE DOCUMENTARY \"It's a genre, not a gender— Anybody can be a Riot Girl.\" 2026 6 MIN DOCUMENTARY MUSIC // overview State College, Pennsylvania becomes isolating if one doesn't fit the mold. Sex Van Floor Plan is an observational documentary that takes an intimate look into the lives of the members of a small town punk band. Helmed by their bassist Ellis, the group works together to finish recording their first singl..."
+    "b": "SVFP — documentary — magmacrunch media archive › by artist › svfp // sex van floor plan // DOCUMENTARY ← back about events links photography recordings releases works SEX VAN FLOOR PLAN: THE DOCUMENTARY \"It's a genre, not a gender— Anybody can be a Riot Girl.\" 2026 6 MIN DOCUMENTARY MUSIC // overview State College, Pennsylvania becomes isolating if one doesn't fit the mold. Sex Van Floor Plan is an observational documentary that takes an intimate look into the lives of the members of a small town punk band. Helmed by their bassist Ellis, the group works together to finish recording their first..."
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/events.html",
     "d": "Svfp — Events",
-    "b": "SVFP — events — magmacrunch media archive › by artist › svfp // sex van floor plan // EVENTS ← back about documentary photography recordings releases works ◀ ▶ loading events…"
+    "b": "SVFP — events — magmacrunch media archive › by artist › svfp // sex van floor plan // EVENTS ← back about documentary links photography recordings releases works ◀ ▶ loading events…"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "SVFP — Sex Van Floor Plan — magmacrunch media archive › by artist › svfp photo: Jake McCoy // by artist // SEX VAN FLOOR PLAN [ SVFP ] 2024 — PRESENT about documentary events photography recordings releases works"
+    "b": "SVFP — Sex Van Floor Plan — magmacrunch media archive › by artist › svfp photo: Jake McCoy // artist archive // SEX VAN FLOOR PLAN about documentary events links photography recordings releases works"
+  },
+  {
+    "t": "SVFP",
+    "c": "artist",
+    "u": "/archive/by-artist/svfp/links.html",
+    "d": "Svfp — Links",
+    "b": "SVFP — links — magmacrunch media LINKS"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/photography.html",
     "d": "Svfp — Photography",
-    "b": "SVFP — photography — magmacrunch media archive › by artist › svfp // sex van floor plan // PHOTOGRAPHY ← back about documentary events recordings releases works // may 2025 ✕ ◀ ▶"
+    "b": "SVFP — photography — magmacrunch media archive › by artist › svfp // sex van floor plan // PHOTOGRAPHY ← back about documentary events links recordings releases works // may 2025 ✕ ◀ ▶"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/recordings.html",
     "d": "Svfp — Recordings",
-    "b": "SVFP — recordings — magmacrunch media archive › by artist › svfp // sex van floor plan // RECORDINGS ← back about documentary events photography releases works loading recordings… u.d.s., i changed my availability 4 u, pay2play, iou a pack of american spirits, afab, pay2play"
+    "b": "SVFP — recordings — magmacrunch media archive › by artist › svfp // sex van floor plan // RECORDINGS ← back about documentary events links photography releases works loading recordings… u.d.s., i changed my availability 4 u, pay2play, iou a pack of american spirits, afab, pay2play"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/releases.html",
     "d": "Svfp — Releases",
-    "b": "SVFP — releases — magmacrunch media archive › by artist › svfp // sex van floor plan // RELEASES ← back about documentary events photography recordings works ◀ ▶ — — ⏸ loading releases… pay2play, iou a pack of american spirits, pay2play, Sex Van Floor Plan"
+    "b": "SVFP — releases — magmacrunch media archive › by artist › svfp // sex van floor plan // RELEASES ← back about documentary events links photography recordings works loading releases… pay2play, iou a pack of american spirits, pay2play, Sex Van Floor Plan"
   },
   {
     "t": "SVFP",
     "c": "artist",
     "u": "/archive/by-artist/svfp/works.html",
     "d": "Svfp — Works",
-    "b": "SVFP — works — magmacrunch media archive › by artist › svfp // sex van floor plan // WORKS ← back about documentary events photography releases recordings loading works…"
+    "b": "SVFP — works — magmacrunch media archive › by artist › svfp // sex van floor plan // WORKS ← back about documentary events links photography releases recordings loading works…"
   },
   {
     "t": "THLD",
     "c": "artist",
     "u": "/archive/by-artist/thld/about.html",
     "d": "Thld — About",
-    "b": "THLD — about — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // ABOUT ← back events games music videos photography recordings releases works \"We are a Venn Diagram of brothers and physics grad school classmates from New Hampshire, New York and Wisconsin.\" THLD was active from October 2015 to May 2016, playing four local shows in Iowa City. With neither the time nor budget for studio recording, material home-recorded during sessions in The Tuna Can was used to produce a series of albums around 2018–2019, originally released on Bandcamp. The band's name — Texas ..."
+    "b": "THLD — about — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // ABOUT ← back events games links music videos photography recordings releases works \"We are a Venn Diagram of brothers and physics grad school classmates from New Hampshire, New York and Wisconsin.\" THLD was active from October 2015 to May 2016, playing four local shows in Iowa City. With neither the time nor budget for studio recording, material home-recorded during sessions in The Tuna Can was used to produce a series of albums around 2018–2019, originally released on Bandcamp. The band's name — ..."
   },
   {
     "t": "THLD",
@@ -1061,28 +900,35 @@
     "c": "artist",
     "u": "/archive/by-artist/thld/games.html",
     "d": "Thld — Games",
-    "b": "THLD — games — magmacrunch media GAMES ← back about events music videos photography recordings releases works Music-inspired games from the magmacrunch arcade. TEXAS HOLD'EM LAVA DOME PLAY poker solitaire. build hands. score big. don't get burned. music-inspired named after a THLD song"
+    "b": "THLD — games — magmacrunch media GAMES ← back about events links music videos photography recordings releases works Music-inspired games from the magmacrunch arcade. TEXAS HOLD'EM LAVA DOME PLAY poker solitaire. build hands. score big. don't get burned. music-inspired named after a THLD song"
   },
   {
     "t": "THLD",
     "c": "artist",
     "u": "/archive/by-artist/thld/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "THLD — archive — magmacrunch media archive › by artist › thld drawing: Sergio Pontillo // by artist // TEXAS HOLD'EM LAVA DOME, ET AL. THLD | Tornado Massacre | Ocean, I Miss You OCT 2015 — MAY 2016 & BEYOND about events games music videos photography recordings releases works ▶ stream / download music ▶ view on MusicBrainz — THLD · TM · OIMY [ close ] ← prev next →"
+    "b": "THLD — archive — magmacrunch media archive › by artist › thld drawing: Sergio Pontillo // artist archive // TEXAS HOLD'EM LAVA DOME, ET AL. THLD | Tornado Massacre | Ocean, I Miss You about events games links music videos photography recordings releases works [ close ] ← prev next →"
+  },
+  {
+    "t": "THLD",
+    "c": "artist",
+    "u": "/archive/by-artist/thld/links.html",
+    "d": "Thld — Links",
+    "b": "THLD — links — magmacrunch media LINKS"
   },
   {
     "t": "THLD",
     "c": "artist",
     "u": "/archive/by-artist/thld/music-videos.html",
     "d": "Thld — Music Videos",
-    "b": "THLD — music videos — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // MUSIC VIDEOS ← back about events games photography recordings releases works"
+    "b": "THLD — music videos — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // MUSIC VIDEOS ← back about events games links photography recordings releases works"
   },
   {
     "t": "THLD",
     "c": "artist",
     "u": "/archive/by-artist/thld/photography.html",
     "d": "Thld — Photography",
-    "b": "THLD — photography — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // PHOTOGRAPHY ← back about events games music videos recordings releases works the tuna can · night first show · nov 19, 2015 · photo: k. rejsek first show · nov 19, 2015 · photo: k. rejsek first show · drums rehearsal · the tuna can ocean i miss you show third show · instruments scroll → PINE IMG 0721 IMG 0724 IMG 0726 scroll → SECRET CONFERENCE ROOMS IMG 0186 IMG 0187 IMG 0188 IMG 0189 IMG 0190 scroll → [ close ] ← prev next → [ close ] ← prev next → [ close ] ← prev next →"
+    "b": "THLD — photography — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // PHOTOGRAPHY ← back about events games links music videos recordings releases works the tuna can · night first show · nov 19, 2015 · photo: k. rejsek first show · nov 19, 2015 · photo: k. rejsek first show · drums rehearsal · the tuna can ocean i miss you show third show · instruments scroll → PINE IMG 0721 IMG 0724 IMG 0726 scroll → SECRET CONFERENCE ROOMS IMG 0186 IMG 0187 IMG 0188 IMG 0189 IMG 0190 scroll → [ close ] ← prev next → [ close ] ← prev next → [ close ] ← prev next →"
   },
   {
     "t": "THLD",
@@ -1096,7 +942,7 @@
     "c": "artist",
     "u": "/archive/by-artist/thld/releases.html",
     "d": "Thld — Releases",
-    "b": "THLD — releases — magmacrunch media RELEASES ◀ ▶ — — ⏸ loading releases… remote recordings, vol. 1, Hazardous Metals in Ambient Air, Hello World 11/19/15, Birds, Hazardous Metals in Ambient Air, Pompous Fanfare for All Occasions, Tuna Can, It's Twenty-Sixteen, Pompous Fanfare for All Occasions, Bus full of time-traveling twenty-somethings, Live at Governor's Mansion 1.28.16, Film School, Adenosine, What happened to you in all the confusion?, Live at Governor's Mansion 11.19.15, Pompous Fanfare for All Occasions, Bus full of time-traveling twenty-somethings, COGSapalooza at Gabe's 4.16.16, Texas Toast Magma Crunch, Texas Toast Magma Crunch, Lights, Ocean, I Miss You, THLD432', THLD432', Pine, Adenosine, Tuna Can, Martial Law in Garrison Oaks, THLD432, Figure the Shoreline, Live at The Trumpet Blossom Cafe 3.3.16, Adenosine, HELLO, WORLD / LOVE, SPACE, Improv w/ Logan Stimmel at Governor's Mansion 4.21.16, Seeing Stars, Contemplate the Plate Tectonic, THLD432, Lights, Martial Law in Garrison Oaks, Hello World, Birds, remote recordings, vol. 1, Film School, Lights, Texas Toast Magma Crunch, Martial Law in Garrison Oaks, Birds, Pine"
+    "b": "THLD — releases — magmacrunch media RELEASES loading releases… remote recordings, vol. 1, Hazardous Metals in Ambient Air, Hello World 11/19/15, Birds, Hazardous Metals in Ambient Air, Pompous Fanfare for All Occasions, Tuna Can, It's Twenty-Sixteen, Pompous Fanfare for All Occasions, Bus full of time-traveling twenty-somethings, Live at Governor's Mansion 1.28.16, Film School, Adenosine, What happened to you in all the confusion?, Live at Governor's Mansion 11.19.15, Pompous Fanfare for All Occasions, Bus full of time-traveling twenty-somethings, COGSapalooza at Gabe's 4.16.16, Texas Toast Magma Crunch, Texas Toast Magma Crunch, Lights, Ocean, I Miss You, THLD432', THLD432', Pine, Adenosine, Tuna Can, Martial Law in Garrison Oaks, THLD432, Figure the Shoreline, Live at The Trumpet Blossom Cafe 3.3.16, Adenosine, HELLO, WORLD / LOVE, SPACE, Improv w/ Logan Stimmel at Governor's Mansion 4.21.16, Seeing Stars, Contemplate the Plate Tectonic, THLD432, Lights, Martial Law in Garrison Oaks, Hello World, Birds, remote recordings, vol. 1, Film School, Lights, Texas Toast Magma Crunch, Martial Law in Garrison Oaks, Birds, Pine"
   },
   {
     "t": "THLD",
@@ -1110,21 +956,28 @@
     "c": "artist",
     "u": "/archive/by-artist/vinny-bobarino/about.html",
     "d": "Vinny Bobarino — About",
-    "b": "Vinny Bobarino — about — magmacrunch media archive › by artist › vinny b // vinny bobarino, et al. // ABOUT ← back photography recordings releases works coming soon... well dave worked in mexico and bobby soon followed. they liked to talk about music while they rolled silverware together. jake was just kind of there. bobby bought a bass, jake had a drumset, dave played guitar. they jammed, it was cool. dave forgot the riff, bobby did a bass flip, jake still doesn't know what's going on. we practice about a few times a year."
+    "b": "Vinny Bobarino — about — magmacrunch media archive › by artist › vinny b // vinny bobarino, et al. // ABOUT ← back links photography recordings releases works coming soon... well dave worked in mexico and bobby soon followed. they liked to talk about music while they rolled silverware together. jake was just kind of there. bobby bought a bass, jake had a drumset, dave played guitar. they jammed, it was cool. dave forgot the riff, bobby did a bass flip, jake still doesn't know what's going on. we practice about a few times a year."
   },
   {
     "t": "Vinny Bobarino",
     "c": "artist",
     "u": "/archive/by-artist/vinny-bobarino/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Vinny Bobarino — archive — magmacrunch media archive › by artist › vinny b photo: Jake McCoy // by artist // VINNY BOBARINO, ET AL. Vinny Bobarino | Darius Hodgekins | Marcus Aurelius | Bears Crossing 2006 — 2010 about photography recordings releases works ▶ view on MusicBrainz — VB · DH · MA · BC"
+    "b": "Vinny Bobarino — archive — magmacrunch media archive › by artist › vinny b photo: Jake McCoy // artist archive // VINNY BOBARINO, ET AL. Vinny B. | Darius Hodgekins | Marcus Aurelius | Bears Crossing 2006 — 2010 about links photography recordings releases works"
+  },
+  {
+    "t": "Vinny Bobarino",
+    "c": "artist",
+    "u": "/archive/by-artist/vinny-bobarino/links.html",
+    "d": "Vinny Bobarino — Links",
+    "b": "Vinny Bobarino — links — magmacrunch media archive › by artist › vinny b // vinny bobarino, et al. // LINKS ← back about photography recordings releases works MUSICBRAINZ VB Vinny Bobarino DH Darius Hodgekins MA Marcus Aurelius BC Bears Crossing"
   },
   {
     "t": "Vinny Bobarino",
     "c": "artist",
     "u": "/archive/by-artist/vinny-bobarino/photography.html",
     "d": "Vinny Bobarino — Photography",
-    "b": "Vinny Bobarino — photography — magmacrunch media archive › by artist › vinny b // vinny bobarino, et al. // PHOTOGRAPHY ← back about recordings releases works BAND ← drag to scroll → PRACTICES ← drag to scroll → GUITAR HERO ← drag to scroll → SKATEBOARDING ← drag to scroll → SKY & TREES ← drag to scroll → FROGWOOD MANOR ← drag to scroll → BEARS CROSSING — JANUARY 2010 ← drag to scroll → [ close ] ← prev next →"
+    "b": "Vinny Bobarino — photography — magmacrunch media archive › by artist › vinny b // vinny bobarino, et al. // PHOTOGRAPHY ← back about links recordings releases works BAND ← drag to scroll → PRACTICES ← drag to scroll → GUITAR HERO ← drag to scroll → SKATEBOARDING ← drag to scroll → SKY & TREES ← drag to scroll → FROGWOOD MANOR ← drag to scroll → HANGOUT — CAMBRIDGE, MA — JANUARY 2010 ← drag to scroll → RECORDING — CROMWELL, CT — JANUARY 2010 ← drag to scroll → [ close ] ← prev next →"
   },
   {
     "t": "Vinny Bobarino",
@@ -1152,63 +1005,77 @@
     "c": "artist",
     "u": "/archive/by-artist/woah/about.html",
     "d": "Woah — About",
-    "b": "Woah. — about — magmacrunch media archive › by artist › woah. // woah. // ABOUT ← back music videos photography recordings releases works coming soon..."
+    "b": "Woah. — about — magmacrunch media archive › by artist › woah. // woah. // ABOUT ← back links music videos photography recordings releases works coming soon... ambient / instrumental project of Jon McCoy"
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/index.html",
     "d": "artist archive — recordings, works, events, releases",
-    "b": "Woah. — magmacrunch media archive › by artist › woah. photo: Ben Nikitas // by artist // Woah. ambient / instrumental project of Jon McCoy about music videos photography recordings releases works ▶ view on MusicBrainz"
+    "b": "Woah. — magmacrunch media archive › by artist › woah. photo: Ben Nikitas // artist archive // WOAH. about links music videos photography recordings releases works"
+  },
+  {
+    "t": "Woah.",
+    "c": "artist",
+    "u": "/archive/by-artist/woah/links.html",
+    "d": "Woah — Links",
+    "b": "Woah. — links — magmacrunch media LINKS"
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/music-videos.html",
     "d": "Woah — Music Videos",
-    "b": "Woah. — music videos — magmacrunch media archive › by artist › woah. // woah. // MUSIC VIDEOS ← back about photography recordings releases works"
+    "b": "Woah. — music videos — magmacrunch media archive › by artist › woah. // woah. // MUSIC VIDEOS ← back about links photography recordings releases works"
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/photography.html",
     "d": "Woah — Photography",
-    "b": "Woah. — photography — magmacrunch media archive › by artist › woah. // woah. // PHOTOGRAPHY ← back about music videos recordings releases works add caption here ← drag to scroll → [ close ] ← prev next →"
+    "b": "Woah. — photography — magmacrunch media archive › by artist › woah. // woah. // PHOTOGRAPHY ← back about links music videos recordings releases works // summer 2012 // summer 2012 summer 2012 summer 2012 summer 2012 summer 2012 summer 2012 summer 2012 ← drag to scroll → // digital overlays // digital overlays by Jake McCoy digital overlays by Jake McCoy digital overlays by Jake McCoy ← drag to scroll → [ close ] ← prev next →"
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/recordings.html",
     "d": "Woah — Recordings",
-    "b": "Woah. — recordings — magmacrunch media RECORDINGS ← back about music videos photography releases works loading recordings… Sunset on Planet X, Trapped at the Bottom of the Ocean, Driving, Summer Day, Point Sublime, Eternity Spent in an Arcade, Driving, Some Rain, Night Sounds, Untitled, 1-17-17 Ambient Synth, Inyo, Summer Day, Crystal Mirror Maze, Three Rivers, Eternity Spent in an Arcade"
+    "b": "Woah. — recordings — magmacrunch media RECORDINGS ← back about links music videos photography releases works loading recordings… Sunset on Planet X, Trapped at the Bottom of the Ocean, Driving, Summer Day, Point Sublime, Eternity Spent in an Arcade, Driving, Some Rain, Night Sounds, Untitled, 1-17-17 Ambient Synth, Inyo, Summer Day, Crystal Mirror Maze, Three Rivers, Eternity Spent in an Arcade"
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/releases.html",
     "d": "Woah — Releases",
-    "b": "Woah. — releases — magmacrunch media RELEASES ← back about music videos photography recordings works loading releases… The Empty West, Woah., 1-17-17 Ambient Synth, Woah., Diffracting Lasers, Summer Day, Crystal Mirror Maze, Driving, Eternity spent in an arcade"
+    "b": "Woah. — releases — magmacrunch media RELEASES ← back about links music videos photography recordings works loading releases… The Empty West, Woah., 1-17-17 Ambient Synth, Woah., Diffracting Lasers, Summer Day, Crystal Mirror Maze, Driving, Eternity spent in an arcade"
   },
   {
     "t": "Woah.",
     "c": "artist",
     "u": "/archive/by-artist/woah/works.html",
     "d": "Woah — Works",
-    "b": "Woah. — works — magmacrunch media WORKS ← back about music videos photography recordings releases loading works…"
+    "b": "Woah. — works — magmacrunch media WORKS ← back about links music videos photography recordings releases loading works…"
   },
   {
     "t": "College Green Apt.",
     "c": "place",
     "u": "/archive/by-place/college-green-apt/about.html",
     "d": "College Green Apt — About",
-    "b": "College Green Apt. — about — magmacrunch media archive › by place › college green // college green apt. // ABOUT ← back personnel recordings works Jake moved into College Green Apt. in the summer of 2012 when he started his PhD program at the University of Iowa. On the corner of Iowa City's College Green Park, the apartment was a section of the first floor of an old house with tall ceilings on E. College Ave. Jake's musical direction was unclear at this time, with his most recent involvement being with The Four B's. The musical instrumentation in house was limited initially to an acoustic guit..."
+    "b": "College Green Apt. — about — magmacrunch media archive › by place › college green // College Green Apt. // ABOUT ← back links personnel photography recordings works Jake moved into College Green Apt. in the summer of 2012 when he started his PhD program at the University of Iowa. On the corner of Iowa City's College Green Park, the apartment was a section of the first floor of an old house with tall ceilings on E. College Ave. Jake's musical direction was unclear at this time, with his most recent involvement being with The Four B's. The musical instrumentation in house was limited initially t..."
   },
   {
     "t": "College Green Apt.",
     "c": "place",
     "u": "/archive/by-place/college-green-apt/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "College Green Apt. — magmacrunch media archive › by place › college green photo: Jake McCoy // by place // COLLEGE GREEN APT. IOWA CITY (2012-2014) about personnel recordings works ▶ view on MusicBrainz"
+    "b": "College Green Apt. — magmacrunch media archive › by place › college green photo: Jake McCoy // place archive // COLLEGE GREEN APT. IOWA CITY, IOWA (2012-2014) about links personnel photography recordings works"
+  },
+  {
+    "t": "College Green Apt.",
+    "c": "place",
+    "u": "/archive/by-place/college-green-apt/links.html",
+    "d": "College Green Apt — Links",
+    "b": "College Green Apt. — links — magmacrunch media LINKS"
   },
   {
     "t": "College Green Apt.",
@@ -1216,6 +1083,13 @@
     "u": "/archive/by-place/college-green-apt/personnel.html",
     "d": "College Green Apt — Personnel",
     "b": "College Green Apt. — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "College Green Apt.",
+    "c": "place",
+    "u": "/archive/by-place/college-green-apt/photography.html",
+    "d": "College Green Apt — Photography",
+    "b": "College Green Apt. — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "College Green Apt.",
@@ -1236,7 +1110,7 @@
     "c": "place",
     "u": "/archive/by-place/frogwood-manor/about.html",
     "d": "Frogwood Manor — About",
-    "b": "Frogwood Manor — about — magmacrunch media archive › by place › frogwood // frogwood manor // ABOUT ← back events personnel recordings works coming soon..."
+    "b": "Frogwood Manor — about — magmacrunch media archive › by place › frogwood // Frogwood Manor // ABOUT ← back events links personnel photography recordings works The McCoys moved from the Midwest to New England in mid 1995, before Jon was born. Around the turn of the millenium, Jake and James started learning music as grade-school students; playing the drums and piano, respectively. Jon followed a few years later by learning the guitar. The three would go on to learn many secondary instruments over the years, and the house became a classic gathering spot for playing music in the neighborhood. Thi..."
   },
   {
     "t": "Frogwood Manor",
@@ -1250,7 +1124,14 @@
     "c": "place",
     "u": "/archive/by-place/frogwood-manor/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "Frogwood Manor — magmacrunch media archive › by place › frogwood photo: Jake McCoy // by place // FROGWOOD MANOR NEW HAMPSHIRE about events personnel recordings works ▶ view on MusicBrainz // about // coming soon..."
+    "b": "Frogwood Manor — magmacrunch media archive › by place › frogwood photo: Jake McCoy // place archive // FROGWOOD MANOR WINDHAM, NEW HAMPSHIRE (1995- PRESENT) about events links personnel photography recordings works"
+  },
+  {
+    "t": "Frogwood Manor",
+    "c": "place",
+    "u": "/archive/by-place/frogwood-manor/links.html",
+    "d": "Frogwood Manor — Links",
+    "b": "Frogwood Manor — links — magmacrunch media LINKS"
   },
   {
     "t": "Frogwood Manor",
@@ -1258,6 +1139,13 @@
     "u": "/archive/by-place/frogwood-manor/personnel.html",
     "d": "Frogwood Manor — Personnel",
     "b": "Frogwood Manor — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "Frogwood Manor",
+    "c": "place",
+    "u": "/archive/by-place/frogwood-manor/photography.html",
+    "d": "Frogwood Manor — Photography",
+    "b": "Frogwood Manor — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "Frogwood Manor",
@@ -1278,14 +1166,21 @@
     "c": "place",
     "u": "/archive/by-place/green-street-apt/about.html",
     "d": "Green Street Apt — About",
-    "b": "Green Street Apt. — about — magmacrunch media archive › by place › green street // Green Street Apt. // ABOUT ← back personnel recordings works coming soon..."
+    "b": "Green Street Apt. — about — magmacrunch media archive › by place › green street // Green Street Apt. // ABOUT ← back links personnel photography recordings works coming soon..."
   },
   {
     "t": "Green Street Apt.",
     "c": "place",
     "u": "/archive/by-place/green-street-apt/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "Green Street Apt. — magmacrunch media archive › by place › green street photo: Jake McCoy // by place // GREEN STREET APT. BURLINGTON (2017-2019) about personnel recordings works ▶ view on MusicBrainz"
+    "b": "Green Street Apt. — magmacrunch media archive › by place › green street photo: Jake McCoy // place archive // GREEN STREET APT. BURLINGTON, VERMONT (2017-2019) about links personnel photography recordings works"
+  },
+  {
+    "t": "Green Street Apt.",
+    "c": "place",
+    "u": "/archive/by-place/green-street-apt/links.html",
+    "d": "Green Street Apt — Links",
+    "b": "Green Street Apt. — links — magmacrunch media LINKS"
   },
   {
     "t": "Green Street Apt.",
@@ -1293,6 +1188,13 @@
     "u": "/archive/by-place/green-street-apt/personnel.html",
     "d": "Green Street Apt — Personnel",
     "b": "Green Street Apt. — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "Green Street Apt.",
+    "c": "place",
+    "u": "/archive/by-place/green-street-apt/photography.html",
+    "d": "Green Street Apt — Photography",
+    "b": "Green Street Apt. — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "Green Street Apt.",
@@ -1313,14 +1215,21 @@
     "c": "place",
     "u": "/archive/by-place/irvin-house/about.html",
     "d": "Irvin House — About",
-    "b": "Irvin House — about — magmacrunch media archive › by place › irvin house // Irvin House // ABOUT ← back personnel recordings works Irvin House is a recording studio and practice space in State College."
+    "b": "Irvin House — about — magmacrunch media archive › by place › irvin house // Irvin House // ABOUT ← back links personnel photography recordings works Irvin House is a recording studio and practice space in State College."
   },
   {
     "t": "Irvin House",
     "c": "place",
     "u": "/archive/by-place/irvin-house/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "Irvin House — magmacrunch media archive › by place › irvin house photo: Jake McCoy // by place // IRVIN HOUSE STATE COLLEGE (2021-present) about personnel recordings works ▶ view on MusicBrainz"
+    "b": "Irvin House — magmacrunch media archive › by place › irvin house photo: Jake McCoy // place archive // IRVIN HOUSE STATE COLLEGE, PENNSYLVANIA (2021-present) about links personnel photography recordings works"
+  },
+  {
+    "t": "Irvin House",
+    "c": "place",
+    "u": "/archive/by-place/irvin-house/links.html",
+    "d": "Irvin House — Links",
+    "b": "Irvin House — links — magmacrunch media LINKS"
   },
   {
     "t": "Irvin House",
@@ -1328,6 +1237,13 @@
     "u": "/archive/by-place/irvin-house/personnel.html",
     "d": "Irvin House — Personnel",
     "b": "Irvin House — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "Irvin House",
+    "c": "place",
+    "u": "/archive/by-place/irvin-house/photography.html",
+    "d": "Irvin House — Photography",
+    "b": "Irvin House — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "Irvin House",
@@ -1348,14 +1264,21 @@
     "c": "place",
     "u": "/archive/by-place/marvin-gardens-g12/about.html",
     "d": "Marvin Gardens G12 — About",
-    "b": "Marvin Gardens G12 — about — magmacrunch media archive › by place › marvin gardens // marvin gardens g12 // ABOUT ← back personnel recordings works Marvin Gardens G12 was an apartment and a small space for music editing and some extra recordings."
+    "b": "Marvin Gardens G12 — about — magmacrunch media archive › by place › marvin gardens // Marvin Gardens G12 // ABOUT ← back links personnel photography recordings works Marvin Gardens G12 was an apartment and a small space for music editing and some extra recordings."
   },
   {
     "t": "Marvin Gardens G12",
     "c": "place",
     "u": "/archive/by-place/marvin-gardens-g12/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "Marvin Gardens G12 — magmacrunch media archive › by place › marvin gardens photo: Jake McCoy // by place // MARVIN GARDENS G12 STATE COLLEGE (2016-2019) about personnel recordings works ▶ view on MusicBrainz"
+    "b": "Marvin Gardens G12 — magmacrunch media archive › by place › marvin gardens photo: Jake McCoy // place archive // MARVIN GARDENS G12 STATE COLLEGE, PENNSYLVANIA (2016-2019) about links personnel photography recordings works"
+  },
+  {
+    "t": "Marvin Gardens G12",
+    "c": "place",
+    "u": "/archive/by-place/marvin-gardens-g12/links.html",
+    "d": "Marvin Gardens G12 — Links",
+    "b": "Marvin Gardens G12 — links — magmacrunch media LINKS"
   },
   {
     "t": "Marvin Gardens G12",
@@ -1363,6 +1286,13 @@
     "u": "/archive/by-place/marvin-gardens-g12/personnel.html",
     "d": "Marvin Gardens G12 — Personnel",
     "b": "Marvin Gardens G12 — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "Marvin Gardens G12",
+    "c": "place",
+    "u": "/archive/by-place/marvin-gardens-g12/photography.html",
+    "d": "Marvin Gardens G12 — Photography",
+    "b": "Marvin Gardens G12 — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "Marvin Gardens G12",
@@ -1383,14 +1313,21 @@
     "c": "place",
     "u": "/archive/by-place/melrose-house/about.html",
     "d": "Melrose House — About",
-    "b": "Melrose House — about — magmacrunch media archive › by place › melrose house // melrose house // ABOUT ← back personnel recordings works Near Kinnick Stadium on the West side of Iowa City, Melrose House was home to Mike, Ryan, and Jake from 2014 to 2015. The house is in such close proximity to the football stadium that one simply cannot escape the tailgating culture on certain Saturday mornings in the fall. Just have a look at the next-door neighbors: So, Mike, Ryan, and Jake hosted four tailgating events in the fall of 2014: The theme for this weekend's tailgating is \"homonyms\" , August 30 TA..."
+    "b": "Melrose House — about — magmacrunch media archive › by place › melrose house // Melrose House // ABOUT ← back links personnel photography recordings works Near Kinnick Stadium on the West side of Iowa City, Melrose House was home to Mike, Ryan, and Jake from 2014 to 2015. The house is in such close proximity to the football stadium that one simply cannot escape the tailgating culture on certain Saturday mornings in the fall. Just have a look at the next-door neighbors: So, Mike, Ryan, and Jake hosted four tailgating events in the fall of 2014: The theme for this weekend's tailgating is \"homony..."
   },
   {
     "t": "Melrose House",
     "c": "place",
     "u": "/archive/by-place/melrose-house/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "Melrose House — magmacrunch media archive › by place › melrose house photo: Jake McCoy // by place // MELROSE HOUSE IOWA CITY (2014-2015) about personnel recordings works ▶ view on MusicBrainz"
+    "b": "Melrose House — magmacrunch media archive › by place › melrose house photo: Jake McCoy // place archive // MELROSE HOUSE IOWA CITY, IOWA (2014-2015) about links personnel photography recordings works"
+  },
+  {
+    "t": "Melrose House",
+    "c": "place",
+    "u": "/archive/by-place/melrose-house/links.html",
+    "d": "Melrose House — Links",
+    "b": "Melrose House — links — magmacrunch media LINKS"
   },
   {
     "t": "Melrose House",
@@ -1398,6 +1335,13 @@
     "u": "/archive/by-place/melrose-house/personnel.html",
     "d": "Melrose House — Personnel",
     "b": "Melrose House — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "Melrose House",
+    "c": "place",
+    "u": "/archive/by-place/melrose-house/photography.html",
+    "d": "Melrose House — Photography",
+    "b": "Melrose House — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "Melrose House",
@@ -1418,14 +1362,21 @@
     "c": "place",
     "u": "/archive/by-place/the-tuna-can/about.html",
     "d": "The Tuna Can — About",
-    "b": "The Tuna Can — about — magmacrunch media archive › by place › tuna can // the tuna can // ABOUT ← back personnel recordings works The Tuna Can was the de facto music space in the attic of a house on Evans Street in Iowa City. After leaving Melrose House near Kinnick Stadium in 2015, Jake moved into this place on the east side of Iowa City. The house on Evans Street was closer to downtown and walking distance from the DC Buena , the venerable Iowa City punk venue that was open from 1994 to 2016. The Tuna Can hosted two primary musical projects: Texas Hold'Em Lava Dome (THLD) and Audio Sound Pap..."
+    "b": "The Tuna Can — about — magmacrunch media archive › by place › tuna can // The Tuna Can // ABOUT ← back links personnel photography recordings works The Tuna Can was the de facto music space in the attic of a house on Evans Street in Iowa City. After leaving Melrose House near Kinnick Stadium in 2015, Jake moved into this place on the east side of Iowa City. The house on Evans Street was closer to downtown and walking distance from the DC Buena , the venerable Iowa City punk venue that was open from 1994 to 2016. The Tuna Can hosted two primary musical projects: Texas Hold'Em Lava Dome (THLD) a..."
   },
   {
     "t": "The Tuna Can",
     "c": "place",
     "u": "/archive/by-place/the-tuna-can/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "The Tuna Can — magmacrunch media archive › by place › tuna can photo: Jake McCoy // by place // THE TUNA CAN IOWA CITY (2015-2018) about personnel recordings works ▶ view on MusicBrainz"
+    "b": "The Tuna Can — magmacrunch media archive › by place › tuna can photo: Jake McCoy // place archive // THE TUNA CAN IOWA CITY, IOWA (2015-2018) about links personnel photography recordings works"
+  },
+  {
+    "t": "The Tuna Can",
+    "c": "place",
+    "u": "/archive/by-place/the-tuna-can/links.html",
+    "d": "The Tuna Can — Links",
+    "b": "The Tuna Can — links — magmacrunch media LINKS"
   },
   {
     "t": "The Tuna Can",
@@ -1433,6 +1384,13 @@
     "u": "/archive/by-place/the-tuna-can/personnel.html",
     "d": "The Tuna Can — Personnel",
     "b": "The Tuna Can — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "The Tuna Can",
+    "c": "place",
+    "u": "/archive/by-place/the-tuna-can/photography.html",
+    "d": "The Tuna Can — Photography",
+    "b": "The Tuna Can — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "The Tuna Can",
@@ -1453,14 +1411,21 @@
     "c": "place",
     "u": "/archive/by-place/twin-maples/about.html",
     "d": "Twin Maples — About",
-    "b": "Twin Maples — about — magmacrunch media archive › by place › twin maples // twin maples // ABOUT ← back personnel recordings works coming soon..."
+    "b": "Twin Maples — about — magmacrunch media archive › by place › twin maples // Twin Maples // ABOUT ← back links personnel photography recordings works coming soon..."
   },
   {
     "t": "Twin Maples",
     "c": "place",
     "u": "/archive/by-place/twin-maples/index.html",
     "d": "place archive — recordings, works, events, releases",
-    "b": "Twin Maples — magmacrunch media archive › by place › twin maples photo: Jake McCoy // by place // TWIN MAPLES BLOCK ISLAND about personnel recordings works ▶ view on MusicBrainz"
+    "b": "Twin Maples — magmacrunch media archive › by place › twin maples photo: Jake McCoy // place archive // TWIN MAPLES NEW SHOREHAM, RHODE ISLAND about links personnel photography recordings works"
+  },
+  {
+    "t": "Twin Maples",
+    "c": "place",
+    "u": "/archive/by-place/twin-maples/links.html",
+    "d": "Twin Maples — Links",
+    "b": "Twin Maples — links — magmacrunch media LINKS"
   },
   {
     "t": "Twin Maples",
@@ -1468,6 +1433,13 @@
     "u": "/archive/by-place/twin-maples/personnel.html",
     "d": "Twin Maples — Personnel",
     "b": "Twin Maples — personnel — magmacrunch media PERSONNEL loading personnel…"
+  },
+  {
+    "t": "Twin Maples",
+    "c": "place",
+    "u": "/archive/by-place/twin-maples/photography.html",
+    "d": "Twin Maples — Photography",
+    "b": "Twin Maples — photography — magmacrunch media PHOTOGRAPHY"
   },
   {
     "t": "Twin Maples",
