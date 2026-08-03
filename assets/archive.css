@@ -739,6 +739,13 @@ main .breadcrumb-place .current { color: var(--green); }
     .page-title { font-size: 13px; }
     .subpage-grid { flex-direction: column; }
     .mini-thumb, .mini-iframe-wrap { width: 90px; }
+    .artist-hero .artist-header .sub-nav {
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+    .artist-hero {
+        padding-bottom: 60px;
+    }
 }
 @media (max-width: 500px) {
     .album-art { width: 72px; min-width: 72px; height: 72px; }
