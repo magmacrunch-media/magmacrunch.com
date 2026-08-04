@@ -91,13 +91,16 @@
   const C = {
     mount:     '#1a0505',
     mountDark: '#110206',
+    mountMid:  '#2d0a0a',
     mountOut:  '#ff3d6e',
     lava0:     '#ffe03a',
     lava1:     '#ffad1f',
+    lavaOrange: '#ff6a00',
+    lavaDeep:  '#cc2200',
     bolt:      '#ffe03a',
     cereal:    ['#ff3d6e', '#00f5ff', '#c45fff', '#39ff14', '#ffffff'],
-    metal:     '#8a95a5',
-    metalDark: '#4a5462',
+    metal:     '#9a8878',
+    metalDark: '#3d3028',
     glassHighlight: 'rgba(255, 255, 255, 0.18)'
   };
 
@@ -209,7 +212,7 @@
   }
 
   // Renders the crater mouth as a filled ellipse with three zones:
-  //   inner core (bright lava), top accent band (mountOut), outer ring (amber lava)
+  //   inner core (bright lava), top accent band (mountOut), outer ring (deep red lava)
   function drawCaldera() {
     for (let y = CRATER_TOP - CALDERA_RY; y <= CRATER_TOP; y++) {
       const bounds = getLampBounds(y);
@@ -224,7 +227,7 @@
           } else if (y < CRATER_TOP - CALDERA_RY + CALDERA_TOP_BAND) {
             ctx.fillStyle = C.mountOut;
           } else {
-            ctx.fillStyle = C.lava1;
+            ctx.fillStyle = C.lavaDeep;
           }
           ctx.fillRect(x, y, 1, 1);
         }
@@ -242,8 +245,8 @@
   }
 
   // Returns color for a single mountain pixel.
-  // If within flowWidth of any lava stream → alternating bright lava colors.
-  // Otherwise → noise-based rock texture (mountDark or mount).
+  // If within flowWidth of any lava stream → three-color cycle (bright, amber, orange).
+  // Otherwise → noise-based three-tone rock texture (mountDark, mountMid, mount).
   function pixelColor(x, y, depth, flow1, flow2, flow3) {
     const dist1 = Math.abs(x - flow1);
     const dist2 = Math.abs(x - flow2);
@@ -252,11 +255,13 @@
 
     if (dist1 <= flowWidth || dist2 <= flowWidth || dist3 <= flowWidth) {
       const t = (frame * LAVA_TIME_SPEED + y * LAVA_SPACE_SPEED) % 1;
-      return t > 0.5 ? C.lava0 : C.lava1;
+      if (t < 0.33) return C.lava0;
+      if (t < 0.66) return C.lava1;
+      return C.lavaOrange;
     }
     
     const noise = Math.sin(x * 0.15 + y * 0.25) * Math.sin(x * 0.2 - y * 0.15);
-    return noise > 0.2 ? C.mountDark : C.mount;
+    return noise > 0.4 ? C.mountDark : noise > 0.1 ? C.mountMid : C.mount;
   }
 
   function drawMountainBody() {
