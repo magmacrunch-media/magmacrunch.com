@@ -1,14 +1,101 @@
 /* ── PAGE-SPECIFIC: music index ── */
 
-/* ── DORFIC NAV OVERRIDES ── */
+/* ═══════════════════════════════════════════════
+   DORFIC — Sony D-SJ301 color palette
+   ═══════════════════════════════════════════════ */
+
+:root {
+    /* Whites — shell body */
+    --dorf-white:          #F8F8F8;
+    --dorf-shell:          #F0F0EE;
+    --dorf-warm-white:     #E8E6E0;
+    --dorf-silver-white:   #E0E0DC;
+    --dorf-gray-white:     #D0D0CC;
+
+    /* Grays — panel labels, secondary text */
+    --dorf-label:          #A8A8A8;
+    --dorf-mid-gray:       #787878;
+    --dorf-dark-gray:      #484848;
+    --dorf-type-gray:      #383838;
+
+    /* Navy/black grip — the dark contrast mass */
+    --dorf-grip:           #1A1E28;
+    --dorf-grip-mid:       #242838;
+    --dorf-grip-light:     #343848;
+    --dorf-near-black:     #0E1018;
+    --dorf-black:          #080A10;
+
+    /* Amber/yellow — the big play button */
+    --dorf-amber:          #F0B800;
+    --dorf-amber-bright:   #F8C800;
+    --dorf-amber-deep:     #C89000;
+    --dorf-amber-glow:     #D4A010;
+
+    /* Orange — small buttons and G-Protection logo */
+    --dorf-orange:         #E87820;
+    --dorf-orange-bright:  #F08828;
+    --dorf-orange-deep:    #B85E10;
+    --dorf-orange-pale:    #F0A860;
+
+    /* UI chrome */
+    --dorf-text-primary:   #1A1E28;
+    --dorf-text-dim:       #606068;
+    --dorf-text-label:     #909098;
+    --dorf-surface:        #F4F4F2;
+    --dorf-raised:         #EAEAE6;
+    --dorf-border:         #D0D0CC;
+    --dorf-border-dark:    #A8A8A4;
+    --dorf-bg:             #F8F8F8;
+}
+
+/* ── REVERSE-DORFIC: NAV ── */
 :root {
     --nav-accent: #F0B800;
     --nav-glow: rgba(240,184,0,0.35);
-    --nav-brand: #1A1E28;
-    --nav-brand-glow: rgba(26,30,40,0.3);
+    --nav-brand: #F0B800;
+    --nav-brand-glow: rgba(240,184,0,0.5);
 }
 
-/* ── DORFIC BODY THEME ── */
+body.dorfic nav {
+    background: #1A1E28;
+    border-bottom: 2px solid #F0B800;
+    box-shadow: 0 0 18px rgba(240,184,0,0.3);
+}
+body.dorfic .nav-brand {
+    color: #F0B800;
+    text-shadow: 0 0 10px rgba(240,184,0,0.5);
+}
+body.dorfic .nav-links a {
+    color: #F0F0EE;
+    border-left-color: #343848;
+}
+body.dorfic .nav-links > li > a:hover {
+    color: #1A1E28;
+    background: #F0B800;
+}
+body.dorfic .hamburger span { background: #F0B800; }
+body.dorfic .hamburger { border-color: #F0B800; }
+
+/* ── DROPDOWN ── */
+body.dorfic .dropdown {
+    background: #1A1E28;
+    border-color: #F0B800;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 12px rgba(240,184,0,0.15);
+}
+body.dorfic .dropdown a {
+    color: #F0F0EE;
+    border-bottom-color: #343848;
+}
+body.dorfic .dropdown a:hover {
+    color: #1A1E28;
+    background: #F0B800;
+}
+body.dorfic .dropdown-view-all {
+    color: #F0B800 !important;
+    border-bottom-color: #F0B800 !important;
+}
+
+/* ── REVERSE-DORFIC: BODY ── */
 body.dorfic {
     --black: #080A10;
     --deep: #F4F4F2;
@@ -20,61 +107,25 @@ body.dorfic {
     --cyan: #343848;
     --green: #A8A8A8;
     --purple: #C89000;
-    background-color: #F8F8F8;
+    background-color: #E87820;
     background-image: none;
     color: #1A1E28;
-}
-
-/* ── NAV ── */
-body.dorfic nav {
-    background: #F0F0EE;
-    border-bottom: 2px solid #F0B800;
-    box-shadow: 0 0 18px rgba(240,184,0,0.25);
-}
-body.dorfic .nav-links a {
-    color: #1A1E28;
-    border-left-color: #D0D0CC;
-}
-body.dorfic .nav-links > li > a:hover {
-    color: #F8F8F8;
-    background: #F0B800;
-}
-body.dorfic .hamburger span { background: #F0B800; }
-body.dorfic .hamburger { border-color: #F0B800; }
-
-/* ── DROPDOWN ── */
-body.dorfic .dropdown {
-    background: #F0F0EE;
-    border-color: #F0B800;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 0 12px rgba(240,184,0,0.15);
-}
-body.dorfic .dropdown a {
-    color: #1A1E28;
-    border-bottom-color: #D0D0CC;
-}
-body.dorfic .dropdown a:hover {
-    color: #F8F8F8;
-    background: #1A1E28;
-}
-body.dorfic .dropdown-view-all {
-    color: #F0B800 !important;
-    border-bottom-color: #F0B800 !important;
 }
 
 /* ── BREADCRUMB ── */
 .breadcrumb {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
-    color: var(--dim);
+    color: #343848;
     letter-spacing: 0.1em;
     margin-top: -8px;
     margin-bottom: 16px;
     align-self: flex-start;
 }
-.breadcrumb a { color: var(--dim); text-decoration: none; transition: color 0.15s; }
-.breadcrumb a:hover { color: var(--rose); }
-.breadcrumb .sep { margin: 0 8px; color: var(--rose); opacity: 0.7; }
-.breadcrumb .current { color: var(--rose); }
+.breadcrumb a { color: #343848; text-decoration: none; transition: color 0.15s; }
+.breadcrumb a:hover { color: #1A1E28; }
+.breadcrumb .sep { margin: 0 8px; color: #1A1E28; opacity: 0.6; }
+.breadcrumb .current { color: #1A1E28; }
 
 main {
     flex: 1;
@@ -88,8 +139,8 @@ main {
 .page-title {
     font-family: 'Press Start 2P', monospace;
     font-size: 18px;
-    color: #F0B800;
-    text-shadow: 0 0 20px rgba(240,184,0,0.4), 0 2px 0 #C89000;
+    color: #1A1E28;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.15);
     margin-bottom: 10px;
     letter-spacing: 0.1em;
     animation: fadeUp 0.5s ease both;
@@ -98,7 +149,7 @@ main {
 .page-subtitle {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
-    color: #787878;
+    color: #343848;
     letter-spacing: 0.1em;
     margin-bottom: 48px;
     animation: fadeUp 0.5s 0.05s ease both;
@@ -108,9 +159,9 @@ main {
 .waveform-wrap {
     width: min(600px, 90vw);
     margin-bottom: 44px;
-    border: 1px solid #D0D0CC;
+    border: 1px solid rgba(26,30,40,0.2);
     border-radius: 4px;
-    background: #EAEAE6;
+    background: #E87820;
     padding: 12px;
     animation: fadeUp 0.5s 0.1s ease both;
 }
@@ -137,7 +188,7 @@ main {
     text-decoration: none;
     border: 2px solid #D0D0CC;
     border-bottom: none;
-    background: #F4F4F2;
+    background: #F8F8F8;
     transition: background 0.15s, border-color 0.15s;
     position: relative;
     overflow: hidden;
@@ -152,13 +203,13 @@ main {
     display: block;
     width: 4px;
     flex-shrink: 0;
-    background: var(--card-accent, #F0B800);
+    background: var(--card-accent, #1A1E28);
     transition: width 0.15s;
 }
 
 .music-card:hover {
     background: #EAEAE6;
-    border-color: var(--card-accent, #F0B800);
+    border-color: var(--card-accent, #1A1E28);
 }
 .music-card:hover::before { width: 7px; }
 .music-card:hover .mc-arrow { opacity: 1; transform: translateX(0); }
@@ -175,7 +226,7 @@ main {
 .mc-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 9px;
-    color: var(--card-accent, #F0B800);
+    color: var(--card-accent, #1A1E28);
     letter-spacing: 0.08em;
     margin-bottom: 7px;
     display: block;
@@ -191,7 +242,7 @@ main {
 .mc-arrow {
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
-    color: var(--card-accent, #F0B800);
+    color: var(--card-accent, #1A1E28);
     opacity: 0;
     transform: translateX(-6px);
     transition: opacity 0.15s, transform 0.15s;
@@ -205,13 +256,13 @@ main {
     border: 1px dashed #D0D0CC;
     padding: 28px;
     text-align: center;
-    background: rgba(240,184,0,0.04);
+    background: rgba(240,184,0,0.08);
     animation: fadeUp 0.5s 0.28s ease both;
 }
 .coming-soon p {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
-    color: #606068;
+    color: #343848;
     letter-spacing: 0.1em;
     line-height: 2.4;
 }
@@ -219,11 +270,11 @@ main {
 
 /* ── FOOTER ── */
 body.dorfic footer {
-    background: #F8F8F8;
-    border-top: 2px solid #D0D0CC;
-    color: #787878;
+    background: #E87820;
+    border-top: 2px solid #1A1E28;
+    color: #343848;
 }
-body.dorfic footer span { color: #F0B800; }
+body.dorfic footer span { color: #1A1E28; }
 
 /* ── MOBILE ── */
 @media (max-width: 640px) {
@@ -231,19 +282,19 @@ body.dorfic footer span { color: #F0B800; }
     .mc-label { font-size: 8px; }
 
     body.dorfic .nav-links {
-        background: #F0F0EE;
+        background: #1A1E28;
         border-bottom-color: #F0B800;
     }
     body.dorfic .nav-links > li > a {
-        color: #1A1E28;
-        border-bottom-color: #D0D0CC;
+        color: #F0F0EE;
+        border-bottom-color: #343848;
     }
     body.dorfic .dropdown {
-        background: #EAEAE6;
-        border-top-color: #D0D0CC;
+        background: #242838;
+        border-top-color: #343848;
     }
     body.dorfic .dropdown a {
-        color: #1A1E28;
-        border-bottom-color: #D0D0CC;
+        color: #F0F0EE;
+        border-bottom-color: #343848;
     }
 }

@@ -1,0 +1,49 @@
+/* ═══════════════════════════════════════════════
+   DORFIC — Sony D-SJ301 color palette
+   Reference file — not loaded by any page.
+   Used by: music/index.html (reverse-dorfic)
+   ═══════════════════════════════════════════════ */
+
+:root {
+    /* Whites — shell body */
+    --dorf-white:          #F8F8F8;
+    --dorf-shell:          #F0F0EE;
+    --dorf-warm-white:     #E8E6E0;
+    --dorf-silver-white:   #E0E0DC;
+    --dorf-gray-white:     #D0D0CC;
+
+    /* Grays — panel labels, secondary text */
+    --dorf-label:          #A8A8A8;
+    --dorf-mid-gray:       #787878;
+    --dorf-dark-gray:      #484848;
+    --dorf-type-gray:      #383838;
+
+    /* Navy/black grip — the dark contrast mass */
+    --dorf-grip:           #1A1E28;
+    --dorf-grip-mid:       #242838;
+    --dorf-grip-light:     #343848;
+    --dorf-near-black:     #0E1018;
+    --dorf-black:          #080A10;
+
+    /* Amber/yellow — the big play button */
+    --dorf-amber:          #F0B800;
+    --dorf-amber-bright:   #F8C800;
+    --dorf-amber-deep:     #C89000;
+    --dorf-amber-glow:     #D4A010;
+
+    /* Orange — small buttons and G-Protection logo */
+    --dorf-orange:         #E87820;
+    --dorf-orange-bright:  #F08828;
+    --dorf-orange-deep:    #B85E10;
+    --dorf-orange-pale:    #F0A860;
+
+    /* UI chrome */
+    --dorf-text-primary:   #1A1E28;
+    --dorf-text-dim:       #606068;
+    --dorf-text-label:     #909098;
+    --dorf-surface:        #F4F4F2;
+    --dorf-raised:         #EAEAE6;
+    --dorf-border:         #D0D0CC;
+    --dorf-border-dark:    #A8A8A4;
+    --dorf-bg:             #F8F8F8;
+}
