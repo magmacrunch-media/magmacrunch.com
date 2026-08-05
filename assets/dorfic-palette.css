@@ -5,45 +5,101 @@
    ═══════════════════════════════════════════════ */
 
 :root {
-    /* Whites — shell body */
+    /* ── Whites — shell body ── */
     --dorf-white:          #F8F8F8;
     --dorf-shell:          #F0F0EE;
     --dorf-warm-white:     #E8E6E0;
     --dorf-silver-white:   #E0E0DC;
     --dorf-gray-white:     #D0D0CC;
 
-    /* Grays — panel labels, secondary text */
+    /* ── Extended whites / surface ramp ── */
+    --dorf-white-cool:     #F4F4F8;
+    --dorf-white-warm:     #FAF8F0;
+    --dorf-off-white:      #ECEAE4;
+    --dorf-pale-gray:      #C8C8C4;
+    --dorf-light-gray:     #B8B8B4;
+
+    /* ── Grays — panel labels, secondary text ── */
     --dorf-label:          #A8A8A8;
     --dorf-mid-gray:       #787878;
     --dorf-dark-gray:      #484848;
     --dorf-type-gray:      #383838;
 
-    /* Navy/black grip — the dark contrast mass */
+    /* ── Gray ramp — more steps ── */
+    --dorf-gray-1:         #989898;
+    --dorf-gray-2:         #686868;
+    --dorf-gray-3:         #585858;
+    --dorf-gray-4:         #404040;
+    --dorf-gray-5:         #282828;
+
+    /* ── Navy/black grip — the dark contrast mass ── */
     --dorf-grip:           #1A1E28;
     --dorf-grip-mid:       #242838;
     --dorf-grip-light:     #343848;
     --dorf-near-black:     #0E1018;
     --dorf-black:          #080A10;
 
-    /* Amber/yellow — the big play button */
+    /* ── Navy extended — more depth in the grip family ── */
+    --dorf-navy-deep:      #080C18;
+    --dorf-navy-mid:       #1E2438;
+    --dorf-navy-bright:    #2E3448;
+    --dorf-navy-muted:     #404858;
+    --dorf-navy-pale:      #606878;
+    --dorf-navy-ghost:     #9098A8;
+
+    /* ── Amber/yellow — the big play button ── */
     --dorf-amber:          #F0B800;
     --dorf-amber-bright:   #F8C800;
     --dorf-amber-deep:     #C89000;
     --dorf-amber-glow:     #D4A010;
 
-    /* Orange — small buttons and G-Protection logo */
+    /* ── Amber extended ── */
+    --dorf-amber-pale:     #F8E080;
+    --dorf-amber-mist:     #FAF0B0;
+    --dorf-amber-dark:     #A07008;
+    --dorf-amber-ember:    #886000;
+    --dorf-gold:           #E0A800;
+
+    /* ── Orange — small buttons and G-Protection logo ── */
     --dorf-orange:         #E87820;
     --dorf-orange-bright:  #F08828;
     --dorf-orange-deep:    #B85E10;
     --dorf-orange-pale:    #F0A860;
 
-    /* UI chrome */
+    /* ── Orange extended ── */
+    --dorf-orange-muted:   #C87030;
+    --dorf-orange-warm:    #E89040;
+    --dorf-orange-light:   #F8B878;
+    --dorf-orange-mist:    #FAD0A0;
+    --dorf-terra:          #A04E10;
+
+    /* ── Accent / glow variants for UI ── */
+    --dorf-amber-glow-dim: rgba(240,184,0,0.2);
+    --dorf-amber-glow-mid: rgba(240,184,0,0.4);
+    --dorf-orange-glow-dim:rgba(232,120,32,0.2);
+    --dorf-orange-glow-mid:rgba(232,120,32,0.4);
+    --dorf-navy-glow-dim:  rgba(26,30,40,0.3);
+
+    /* ── Text hierarchy ── */
     --dorf-text-primary:   #1A1E28;
     --dorf-text-dim:       #606068;
     --dorf-text-label:     #909098;
+    --dorf-text-bright:    #F8F8F8;
+    --dorf-text-body:      #D0D0CC;
+    --dorf-text-muted:     #888890;
+    --dorf-text-faint:     #585860;
+    --dorf-text-disabled:  #383840;
+
+    /* ── UI chrome ── */
     --dorf-surface:        #F4F4F2;
     --dorf-raised:         #EAEAE6;
     --dorf-border:         #D0D0CC;
     --dorf-border-dark:    #A8A8A4;
     --dorf-bg:             #F8F8F8;
+
+    /* ── Borders extended ── */
+    --dorf-border-warm:    #D8C8A0;
+    --dorf-border-navy:    #303848;
+    --dorf-border-amber:   #C89820;
+    --dorf-border-orange:  #C07030;
 }

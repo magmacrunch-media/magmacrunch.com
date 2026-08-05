@@ -159,7 +159,6 @@ main {
 .waveform-wrap {
     width: min(600px, 90vw);
     margin-bottom: 44px;
-    border: 1px solid rgba(26,30,40,0.2);
     border-radius: 4px;
     background: #E87820;
     padding: 12px;
