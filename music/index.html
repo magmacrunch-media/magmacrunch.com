@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="music.css">
 </head>
-<body>
+<body class="dorfic">
 
 <nav id="auto-nav" data-depth="../"></nav>
 
@@ -30,43 +30,43 @@
     <!-- MUSIC NAV CARDS -->
     <div class="music-cards">
 
-        <a href="jukebox/" class="music-card" style="--card-accent: var(--purple);">
+        <a href="jukebox/" class="music-card" style="--card-accent: #F0B800;">
             <div class="mc-inner">
                 <div class="mc-text">
-                    <span class="mc-label" style="color:var(--purple);">jukebox</span>
+                    <span class="mc-label" style="color:#F0B800;">jukebox</span>
                     <span class="mc-desc">local streaming · choose a song</span>
                 </div>
-                <span class="mc-arrow" style="color:var(--purple);">▶</span>
+                <span class="mc-arrow" style="color:#F0B800;">▶</span>
             </div>
         </a>
 
-        <a href="distributed-music/" class="music-card" style="--card-accent: var(--green);">
+        <a href="distributed-music/" class="music-card" style="--card-accent: #E87820;">
             <div class="mc-inner">
                 <div class="mc-text">
-                    <span class="mc-label">on streaming services</span>
+                    <span class="mc-label" style="color:#E87820;">on streaming services</span>
                     <span class="mc-desc">distributed via LANDR · all major platforms</span>
                 </div>
-                <span class="mc-arrow">▶</span>
+                <span class="mc-arrow" style="color:#E87820;">▶</span>
             </div>
         </a>
 
-        <a href="music-videos.html" class="music-card" style="--card-accent: var(--cyan);">
+        <a href="music-videos.html" class="music-card" style="--card-accent: #343848;">
             <div class="mc-inner">
                 <div class="mc-text">
-                    <span class="mc-label" style="color:var(--cyan);">music videos</span>
+                    <span class="mc-label" style="color:#343848;">music videos</span>
                     <span class="mc-desc">no-budget video productions · YouTube</span>
                 </div>
-                <span class="mc-arrow" style="color:var(--cyan);">▶</span>
+                <span class="mc-arrow" style="color:#343848;">▶</span>
             </div>
         </a>
 
-        <a href="physical-media/" class="music-card" style="--card-accent: var(--yellow);">
+        <a href="physical-media/" class="music-card" style="--card-accent: #A8A8A8;">
             <div class="mc-inner">
                 <div class="mc-text">
-                    <span class="mc-label" style="color:var(--yellow);">physical media</span>
+                    <span class="mc-label" style="color:#A8A8A8;">physical media</span>
                     <span class="mc-desc">floppy disk · CD · tapes in the works</span>
                 </div>
-                    <span class="mc-arrow" style="color:var(--yellow);">▶</span>
+                    <span class="mc-arrow" style="color:#A8A8A8;">▶</span>
             </div>
         </a>
 
@@ -92,10 +92,10 @@
     const W = canvas.width;
     const H = canvas.height;
     const cols = [
-        'var(--rose)', 'var(--yellow)', 'var(--cyan)',
-        'var(--green)', 'var(--purple)', 'var(--orange)'
+        '#F0B800', '#E87820', '#343848',
+        '#A8A8A8', '#C89000', '#787878'
     ];
-    const resolvedCols = ['#ff3d6e','#ffe03a','#00f5ff','#39ff6e','#c45fff','#ff7c1f'];
+    const resolvedCols = ['#F0B800','#E87820','#343848','#A8A8A8','#C89000','#787878'];
 
     // Each "bar" in the waveform
     const BAR_W = 3;
