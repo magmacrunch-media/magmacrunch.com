@@ -27,6 +27,20 @@ const ScoreClient = (() => {
   let _pendingSaves = []; // queued saves for offline
   let _listeners = [];
 
+  // Persist pending saves across page loads
+  const _pendingKey = LS_PREFIX + '_pending';
+  function _lsLoadPending() {
+    try {
+      const raw = localStorage.getItem(_pendingKey);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+  function _lsSavePending() {
+    try { localStorage.setItem(_pendingKey, JSON.stringify(_pendingSaves)); }
+    catch { /* storage full */ }
+  }
+  _pendingSaves = _lsLoadPending();
+
   function _lsKey(game) {
     return LS_PREFIX + game;
   }
@@ -130,6 +144,7 @@ const ScoreClient = (() => {
   async function _flushPendingSaves() {
     while (_pendingSaves.length > 0) {
       const save = _pendingSaves.shift();
+      _lsSavePending();
       try {
         await _send({
           action: 'score_save',
@@ -140,8 +155,12 @@ const ScoreClient = (() => {
         });
       } catch {
         _pendingSaves.unshift(save);
+        _lsSavePending();
         break;
       }
+    }
+    if (_pendingSaves.length === 0) {
+      try { localStorage.removeItem(_pendingKey); } catch {}
     }
   }
 
@@ -233,6 +252,7 @@ const ScoreClient = (() => {
 
       // Queue for later sync
       _pendingSaves.push({ game, name, score, extra });
+      _lsSavePending();
       return { rank, synced: false };
     },
 

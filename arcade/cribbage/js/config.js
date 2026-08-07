@@ -1,8 +1,5 @@
 // config.js — Cribbage | MagmaCrunch Media © 2026
 
-// ── Score backend is now handled by ScoreClient (MAGMA//OPS dashboard) ──
-// No external API keys needed
-
 // ── Card configuration ───────────────────────────────────────
 const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];
 

@@ -11,13 +11,18 @@ Requires: websockets (already installed for game servers)
 import argparse
 import asyncio
 import base64
+import concurrent.futures
 import hmac
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
+import threading
 import urllib.error
 import urllib.request
+from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from threading import Thread
@@ -202,6 +207,7 @@ def github_commit_multiple(files, message, token):
 
 def load_game_scores(game_id):
     """Load scores for a specific game."""
+    game_id = _sanitize_game_id(game_id)
     path = os.path.join(SCORES_DIR, f"{game_id}.json")
     if not os.path.exists(path):
         return {"game": game_id, "scores": []}
@@ -209,11 +215,29 @@ def load_game_scores(game_id):
         return json.load(f)
 
 def save_game_scores(game_id, data):
-    """Save scores for a specific game."""
+    """Save scores for a specific game (atomic write)."""
+    game_id = _sanitize_game_id(game_id)
     os.makedirs(SCORES_DIR, exist_ok=True)
     path = os.path.join(SCORES_DIR, f"{game_id}.json")
-    with open(path, "w") as f:
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
         json.dump(data, f, indent=2)
+    os.replace(tmp, path)
+
+# ── Score locking ───────────────────────────────────────────────────────────
+
+_score_locks = {}
+_score_locks_lock = threading.Lock()
+
+def _get_score_lock(game_id):
+    with _score_locks_lock:
+        if game_id not in _score_locks:
+            _score_locks[game_id] = threading.Lock()
+        return _score_locks[game_id]
+
+def _sanitize_game_id(game_id):
+    """Strip anything that isn't alphanumeric, hyphen, or underscore."""
+    return re.sub(r'[^a-zA-Z0-9_-]', '', str(game_id))
 
 def load_api_keys():
     """Load API keys from disk."""
@@ -452,20 +476,23 @@ def github_commit_files(files, message, token):
 
 def add_score(game_id, name, score, extra=None):
     """Add a score entry and return its rank (1-indexed)."""
-    data = load_game_scores(game_id)
-    scores = data.get("scores", [])
-    entry = {"initials": name, "score": score}
-    if extra:
-        entry.update(extra)
-    scores.append(entry)
-    scores.sort(key=lambda s: s.get("score", 0), reverse=True)
-    scores = scores[:100]  # keep top 100
-    data["scores"] = scores
-    save_game_scores(game_id, data)
-    for i, s in enumerate(scores):
-        if s is entry:
-            return i + 1
-    return len(scores)
+    game_id = _sanitize_game_id(game_id)
+    lock = _get_score_lock(game_id)
+    with lock:
+        data = load_game_scores(game_id)
+        scores = data.get("scores", [])
+        entry = {"initials": name, "score": score}
+        if extra:
+            entry.update(extra)
+        scores.append(entry)
+        scores.sort(key=lambda s: s.get("score", 0), reverse=True)
+        scores = scores[:100]  # keep top 100
+        data["scores"] = scores
+        save_game_scores(game_id, data)
+        for i, s in enumerate(scores):
+            if s is entry:
+                return i + 1
+        return len(scores)
 
 # ── Auth sessions ────────────────────────────────────────────────────────────
 
@@ -476,8 +503,6 @@ def generate_session_token():
     return secrets.token_hex(16)
 
 # ── System commands ──────────────────────────────────────────────────────────
-
-import concurrent.futures
 
 _executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
 
@@ -787,61 +812,88 @@ async def ws_handler(websocket):
                     }))
 
             elif action == "score_load":
-                game_id = msg.get("game")
+                game_id = _sanitize_game_id(msg.get("game", ""))
                 if game_id:
-                    data = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda: load_game_scores(game_id)
-                    )
-                    await websocket.send(json.dumps({
-                        "type": "scores",
-                        "game": game_id,
-                        "scores": data.get("scores", [])
-                    }))
+                    try:
+                        data = await asyncio.get_event_loop().run_in_executor(
+                            _executor, lambda: load_game_scores(game_id)
+                        )
+                        await websocket.send(json.dumps({
+                            "type": "scores",
+                            "game": game_id,
+                            "scores": data.get("scores", [])
+                        }))
+                    except Exception as e:
+                        await websocket.send(json.dumps({
+                            "type": "error", "action": "score_load", "error": str(e)
+                        }))
 
             elif action == "score_save":
-                game_id = msg.get("game")
+                game_id = _sanitize_game_id(msg.get("game", ""))
                 name = msg.get("name", "").upper()[:3]
                 score_val = msg.get("score")
                 extra = msg.get("extra")
                 if game_id and name and score_val is not None:
-                    rank = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda: add_score(game_id, name, score_val, extra)
-                    )
-                    await websocket.send(json.dumps({
-                        "type": "score_saved",
-                        "game": game_id,
-                        "rank": rank
-                    }))
+                    try:
+                        rank = await asyncio.get_event_loop().run_in_executor(
+                            _executor, lambda: add_score(game_id, name, score_val, extra)
+                        )
+                        await websocket.send(json.dumps({
+                            "type": "score_saved",
+                            "game": game_id,
+                            "rank": rank
+                        }))
+                    except Exception as e:
+                        await websocket.send(json.dumps({
+                            "type": "error", "action": "score_save", "error": str(e)
+                        }))
 
             elif action == "scores_all":
                 def _load_all():
                     result = {}
                     if os.path.isdir(SCORES_DIR):
                         for fn in os.listdir(SCORES_DIR):
-                            if fn.endswith(".json"):
+                            if fn.endswith(".json") and fn != "backup":
                                 gid = fn[:-5]
                                 result[gid] = load_game_scores(gid)
                     return result
-                all_scores = await asyncio.get_event_loop().run_in_executor(
-                    _executor, _load_all
-                )
-                await websocket.send(json.dumps({
-                    "type": "scores_all",
-                    "games": all_scores
-                }))
-
-            elif action == "score_reset":
-                game_id = msg.get("game")
-                if game_id:
-                    await asyncio.get_event_loop().run_in_executor(
-                        _executor,
-                        lambda: save_game_scores(game_id, {"game": game_id, "scores": []})
+                try:
+                    all_scores = await asyncio.get_event_loop().run_in_executor(
+                        _executor, _load_all
                     )
                     await websocket.send(json.dumps({
-                        "type": "score_reset",
-                        "game": game_id,
-                        "ok": True
+                        "type": "scores_all",
+                        "games": all_scores
                     }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "error", "action": "scores_all", "error": str(e)
+                    }))
+
+            elif action == "score_reset":
+                game_id = _sanitize_game_id(msg.get("game", ""))
+                if game_id:
+                    def _reset_with_backup():
+                        src = os.path.join(SCORES_DIR, f"{game_id}.json")
+                        if os.path.exists(src):
+                            backup_dir = os.path.join(SCORES_DIR, "backup")
+                            os.makedirs(backup_dir, exist_ok=True)
+                            ts = datetime.now().strftime("%Y%m%d-%H%M%S")
+                            shutil.copy2(src, os.path.join(backup_dir, f"{game_id}-{ts}.json"))
+                        save_game_scores(game_id, {"game": game_id, "scores": []})
+                    try:
+                        await asyncio.get_event_loop().run_in_executor(
+                            _executor, _reset_with_backup
+                        )
+                        await websocket.send(json.dumps({
+                            "type": "score_reset",
+                            "game": game_id,
+                            "ok": True
+                        }))
+                    except Exception as e:
+                        await websocket.send(json.dumps({
+                            "type": "error", "action": "score_reset", "error": str(e)
+                        }))
 
             elif action == "api_keys_load":
                 keys = await asyncio.get_event_loop().run_in_executor(
