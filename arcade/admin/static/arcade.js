@@ -460,6 +460,7 @@
     modalRestartPi.addEventListener('click', () => {
         closeSystemModalFn();
         window.OPS.confirm('RESTART PI', 'This will reboot the Raspberry Pi. All servers will restart automatically.', () => {
+            window.OPS.showRebootOverlay();
             window.OPS.send({ action: 'restart_pi', token: window.OPS.authToken });
         });
     });
@@ -467,6 +468,7 @@
     modalPoweroffPi.addEventListener('click', () => {
         closeSystemModalFn();
         window.OPS.confirm('POWER OFF', 'This will shut down the Raspberry Pi completely. You will need physical access to turn it back on.', () => {
+            window.OPS.showRebootOverlay();
             window.OPS.send({ action: 'poweroff_pi', token: window.OPS.authToken });
         });
     });
@@ -492,10 +494,14 @@
         window.OPS.confirm(
             'AUTO-RESTART',
             `CPU temperature is ${temp}°C (critical: ${CRITICAL_TEMP}°C). Pi will auto-restart in ${AUTO_RESTART_DELAY} seconds unless cancelled.`,
-            () => window.OPS.send({ action: 'restart_pi', token: window.OPS.authToken })
+            () => {
+                window.OPS.showRebootOverlay();
+                window.OPS.send({ action: 'restart_pi', token: window.OPS.authToken });
+            }
         );
 
         autoRestartTimer = setTimeout(() => {
+            window.OPS.showRebootOverlay();
             window.OPS.send({ action: 'restart_pi', token: window.OPS.authToken });
             autoRestartTimer = null;
         }, AUTO_RESTART_DELAY * 1000);
