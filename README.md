@@ -19,6 +19,7 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ├── home/             about, guestbook, links
 ├── music/            jukebox, distributed music, physical media
 ├── press/            journals (scientific, experimental, lyrics)
+├── mcp-server/       MCP server — exposes project data + Pi management to AI assistants
 ├── scripts/          backup and build utilities
 ├── templates/        JS templates for archive pages
 ├── tools/            browser utilities (album art, media search, pixel process)
