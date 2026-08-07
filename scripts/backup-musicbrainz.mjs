@@ -4,11 +4,11 @@
  * Snapshots all MusicBrainz data used by the magmacrunch.com archive pages
  * into local JSON files. Run manually or via GitHub Action.
  *
- * Usage:  node scripts/backup-musicbrainz.mjs [--dry-run]
+ * Usage:  node scripts/backup-musicbrainz.mjs [--dry-run] [--skip-existing] [--stale-only]
  */
 
 import { writeFile, mkdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -17,6 +17,8 @@ const ROOT = resolve(__dirname, '..');
 const CACHE_DIR = resolve(ROOT, 'archive/_cache');
 const DRY_RUN = process.argv.includes('--dry-run');
 const SKIP_EXISTING = process.argv.includes('--skip-existing');
+const STALE_ONLY = process.argv.includes('--stale-only');
+const STALE_DAYS = 30;
 
 const API = 'https://musicbrainz.org/ws/2';
 const DELAY_MS = 1100;
@@ -165,6 +167,19 @@ async function writeCache(type, uuid, data) {
 
 function cacheExists(type, uuid) {
     return existsSync(resolve(CACHE_DIR, type, `${uuid}.json`));
+}
+
+function cacheIsStale(type, uuid) {
+    const file = resolve(CACHE_DIR, type, `${uuid}.json`);
+    if (!existsSync(file)) return true;
+    try {
+        const data = JSON.parse(readFileSync(file, 'utf8'));
+        if (!data.fetchedAt) return true;
+        const age = Date.now() - new Date(data.fetchedAt).getTime();
+        return age > STALE_DAYS * 24 * 60 * 60 * 1000;
+    } catch {
+        return true;
+    }
 }
 
 // ─── paginated list fetch ──────────────────────────────────────────
@@ -674,49 +689,56 @@ async function main() {
     console.log();
 
     if (DRY_RUN) console.log('[DRY RUN — no files will be written]\n');
-    if (SKIP_EXISTING) console.log('[SKIP EXISTING — already-cached entities will be skipped]\n');
+    if (STALE_ONLY) console.log(`[STALE ONLY — only refreshing caches older than ${STALE_DAYS} days]\n`);
+    else if (SKIP_EXISTING) console.log('[SKIP EXISTING — already-cached entities will be skipped]\n');
 
     const start = Date.now();
     let completed = 0, skipped = 0;
     const total = ARTISTS.length + PLACES.length + CONTRIBUTORS.length + LABELS.length + WORKS.length + COLLECTIVES.length;
 
     for (const entity of ARTISTS) {
-        if (SKIP_EXISTING && cacheExists('artists', entity.uuid)) { log(`[${completed + 1}/${total}] [artist] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        if (STALE_ONLY && !cacheIsStale('artists', entity.uuid)) { log(`[${completed + 1}/${total}] [artist] ${entity.name} — cache is fresh, skipping`); completed++; skipped++; continue; }
+        if (!STALE_ONLY && SKIP_EXISTING && cacheExists('artists', entity.uuid)) { log(`[${completed + 1}/${total}] [artist] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupArtist(entity);
         completed++;
     }
 
     for (const entity of PLACES) {
-        if (SKIP_EXISTING && cacheExists('places', entity.uuid)) { log(`[${completed + 1}/${total}] [place] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        if (STALE_ONLY && !cacheIsStale('places', entity.uuid)) { log(`[${completed + 1}/${total}] [place] ${entity.name} — cache is fresh, skipping`); completed++; skipped++; continue; }
+        if (!STALE_ONLY && SKIP_EXISTING && cacheExists('places', entity.uuid)) { log(`[${completed + 1}/${total}] [place] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupPlace(entity);
         completed++;
     }
 
     for (const entity of CONTRIBUTORS) {
-        if (SKIP_EXISTING && cacheExists('contributors', entity.uuid)) { log(`[${completed + 1}/${total}] [contributor] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        if (STALE_ONLY && !cacheIsStale('contributors', entity.uuid)) { log(`[${completed + 1}/${total}] [contributor] ${entity.name} — cache is fresh, skipping`); completed++; skipped++; continue; }
+        if (!STALE_ONLY && SKIP_EXISTING && cacheExists('contributors', entity.uuid)) { log(`[${completed + 1}/${total}] [contributor] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupContributor(entity);
         completed++;
     }
 
     for (const entity of LABELS) {
-        if (SKIP_EXISTING && cacheExists('labels', entity.uuid)) { log(`[${completed + 1}/${total}] [label] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        if (STALE_ONLY && !cacheIsStale('labels', entity.uuid)) { log(`[${completed + 1}/${total}] [label] ${entity.name} — cache is fresh, skipping`); completed++; skipped++; continue; }
+        if (!STALE_ONLY && SKIP_EXISTING && cacheExists('labels', entity.uuid)) { log(`[${completed + 1}/${total}] [label] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupLabel(entity);
         completed++;
     }
 
     for (const entity of WORKS) {
-        if (SKIP_EXISTING && cacheExists('works', entity.uuid)) { log(`[${completed + 1}/${total}] [work] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        if (STALE_ONLY && !cacheIsStale('works', entity.uuid)) { log(`[${completed + 1}/${total}] [work] ${entity.name} — cache is fresh, skipping`); completed++; skipped++; continue; }
+        if (!STALE_ONLY && SKIP_EXISTING && cacheExists('works', entity.uuid)) { log(`[${completed + 1}/${total}] [work] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupWork(entity);
         completed++;
     }
 
     for (const entity of COLLECTIVES) {
-        if (SKIP_EXISTING && cacheExists('collectives', entity.slug)) { log(`[${completed + 1}/${total}] [collective] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
+        if (STALE_ONLY && !cacheIsStale('collectives', entity.slug)) { log(`[${completed + 1}/${total}] [collective] ${entity.name} — cache is fresh, skipping`); completed++; skipped++; continue; }
+        if (!STALE_ONLY && SKIP_EXISTING && cacheExists('collectives', entity.slug)) { log(`[${completed + 1}/${total}] [collective] ${entity.name} — already cached, skipping`); completed++; skipped++; continue; }
         log(`[${completed + 1}/${total}]`);
         await backupCollective(entity);
         completed++;
