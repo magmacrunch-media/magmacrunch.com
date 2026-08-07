@@ -311,6 +311,7 @@ function submitInitials(onComplete) {
     sessionScores.push({ initials: initials, score: lastScore, isNew: true });
     sessionScores.sort((a, b) => b.score - a.score);
     sessionScores = sessionScores.slice(0, 10);
+    scoreClient.save('moonlight-drift', initials, lastScore);
     saveScores();
     updateScoreboard();
     initialsPromptDiv.style.display = 'none';
