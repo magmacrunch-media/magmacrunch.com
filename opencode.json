@@ -1,0 +1,9 @@
+{
+  "mcp": {
+    "magma": {
+      "command": "/opt/homebrew/bin/python3.14",
+      "args": ["mcp-server/magma-mcp.py"],
+      "cwd": "."
+    }
+  }
+}
