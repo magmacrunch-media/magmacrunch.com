@@ -55,6 +55,7 @@
             tConnected = performance.now();
             console.log('[OPS] Connected');
             clearTimeout(reconnectTimer);
+            hideRebootOverlay();
             // Request immediately on connect (works with or without auth)
             requestStatus();
             requestSystemInfo();
@@ -179,6 +180,25 @@
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2500);
     };
+
+    // ── Reboot overlay ────────────────────────────────────────────────────
+
+    let _rebootOverlay = null;
+
+    window.OPS.showRebootOverlay = function() {
+        if (_rebootOverlay) return;
+        _rebootOverlay = document.createElement('div');
+        _rebootOverlay.className = 'reboot-overlay';
+        _rebootOverlay.innerHTML = '<div class="spinner"></div><h2>REBOOTING PI</h2><p>This page will reconnect automatically.</p>';
+        document.body.appendChild(_rebootOverlay);
+    };
+
+    function hideRebootOverlay() {
+        if (_rebootOverlay) {
+            _rebootOverlay.remove();
+            _rebootOverlay = null;
+        }
+    }
 
     // ── Confirm modal ─────────────────────────────────────────────────────
 

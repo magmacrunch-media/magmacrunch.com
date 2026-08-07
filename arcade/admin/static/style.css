@@ -2212,4 +2212,46 @@ footer {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--black); }
 ::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* ── Reboot overlay ─────────────────────────────────────────────────────── */
+
+.reboot-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 8, 8, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    gap: 16px;
+}
+
+.reboot-overlay h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--orange);
+    text-shadow: 0 0 20px rgba(255, 124, 31, 0.5);
+    text-align: center;
+}
+
+.reboot-overlay p {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--dim);
+    text-align: center;
+}
+
+.reboot-overlay .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
 ::-webkit-scrollbar-thumb:hover { background: var(--purple); }
