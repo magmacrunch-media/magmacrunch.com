@@ -120,6 +120,11 @@ const WORKS = [
 ];
 
 const COLLECTIVES = [
+    { slug: 'thld', name: "texas hold'em lava dome, et al.", ids: [
+        '4d945923-9deb-4cd0-a477-6e1474cb306c',
+        'e1e53b08-af12-4d5a-8508-c620d5279ba3',
+        '30d9cd20-3f5c-4a83-b13b-58ba8c690e2e',
+    ]},
     { slug: 'audio-sound-paper-et-al', name: 'Audio Sound Paper, et al.', ids: [
         '76708e20-5d88-4699-adf6-a1f2118ef661',
         '0296c377-7f97-4099-9c83-e2edb5552eda',
