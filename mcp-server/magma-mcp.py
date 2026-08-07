@@ -1,9 +1,12 @@
 """Magma MCP Server — exposes magmacrunch.com data and Pi management to AI assistants."""
 
 import json
+import os
 import subprocess
+import time
 from pathlib import Path
 
+import requests
 from mcp.server.mcpserver import MCPServer
 
 # ---------------------------------------------------------------------------
@@ -20,6 +23,12 @@ PI_HOST = "192.168.1.16"
 PI_USER = "jake"
 
 ENTITY_TYPES = ["artists", "places", "contributors", "labels", "works", "collectives"]
+
+# Discogs API config
+DISCOGS_TOKEN = os.environ.get("DISCOGS_TOKEN", "")
+DISCOGS_BASE = "https://api.discogs.com"
+DISCOGS_CACHE_DIR = CACHE_DIR / "discogs"
+USER_AGENT = "MagmaCrunchMCP/1.0 +https://magmacrunch.com"
 
 mcp = MCPServer("magma-mcp")
 
@@ -188,6 +197,58 @@ def _ssh_run(cmd: str, timeout: int = 15) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Helpers — Discogs API
+# ---------------------------------------------------------------------------
+
+
+def _discogs_request(endpoint: str, params: dict | None = None) -> dict | None:
+    """Make an authenticated request to the Discogs API."""
+    if not DISCOGS_TOKEN:
+        return None
+    url = f"{DISCOGS_BASE}{endpoint}"
+    headers = {
+        "Authorization": f"Discogs token={DISCOGS_TOKEN}",
+        "User-Agent": USER_AGENT,
+    }
+    try:
+        resp = requests.get(url, headers=headers, params=params, timeout=10)
+        if resp.status_code == 404:
+            return None
+        resp.raise_for_status()
+        return resp.json()
+    except Exception:
+        return None
+
+
+def _read_discogs_cache(discogs_type: str, discogs_id: str) -> dict | None:
+    """Read a cached Discogs entity."""
+    d = DISCOGS_CACHE_DIR / discogs_type
+    if not d.is_dir():
+        return None
+    f = d / f"{discogs_id}.json"
+    if f.is_file():
+        return json.loads(f.read_text())
+    return None
+
+
+def _write_discogs_cache(discogs_type: str, discogs_id: str, data: dict) -> None:
+    """Write a Discogs entity to cache."""
+    d = DISCOGS_CACHE_DIR / discogs_type
+    d.mkdir(parents=True, exist_ok=True)
+    f = d / f"{discogs_id}.json"
+    f.write_text(json.dumps(data, indent=2))
+
+
+def _search_discogs(query: str, search_type: str = "release") -> list[dict]:
+    """Search Discogs for releases, artists, or labels."""
+    params = {"q": query, "type": search_type, "per_page": 10}
+    data = _discogs_request("/database/search", params)
+    if not data:
+        return []
+    return data.get("results", [])
+
+
+# ---------------------------------------------------------------------------
 # Tools — MusicBrainz cache
 # ---------------------------------------------------------------------------
 
@@ -328,6 +389,186 @@ def list_arcade_games() -> str:
     for g in games:
         server_info = f" [server port {g['port']}]" if g["has_server"] else ""
         lines.append(f"- {g['name']} ({g['path']}){server_info}")
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Tools — Discogs API
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def search_discogs(query: str, search_type: str = "release") -> str:
+    """Search Discogs for releases, artists, or labels.
+
+    Args:
+        query: Search string (e.g. artist name, album title)
+        search_type: One of: release, master, artist, label (default: release)
+    """
+    if not DISCOGS_TOKEN:
+        return "DISCOGS_TOKEN not set. Add it to your environment to enable Discogs search."
+    results = _search_discogs(query, search_type)
+    if not results:
+        return f"No Discogs results for '{query}' (type: {search_type})"
+    lines = [f"Found {len(results)} Discogs results for '{query}':\n"]
+    for r in results:
+        title = r.get("title", "Unknown")
+        rtype = r.get("type", "?")
+        rid = r.get("id", "?")
+        year = r.get("year", "")
+        year_str = f" ({year})" if year else ""
+        lines.append(f"- [{rtype}] {title}{year_str} [ID: {rid}]")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_discogs_release(release_id: str) -> str:
+    """Get full details for a Discogs release (ratings, stats, marketplace, tracklist).
+
+    Args:
+        release_id: Discogs release ID (numeric)
+    """
+    if not DISCOGS_TOKEN:
+        return "DISCOGS_TOKEN not set. Add it to your environment to enable Discogs lookups."
+    cached = _read_discogs_cache("release", release_id)
+    if cached and cached.get("data"):
+        data = cached["data"]
+    else:
+        data = _discogs_request(f"/releases/{release_id}")
+        if not data:
+            return f"Discogs release {release_id} not found."
+        _write_discogs_cache("release", release_id, {"fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ"), "discogsId": release_id, "type": "release", "data": data})
+
+    title = data.get("title", "Unknown")
+    artists = ", ".join(a.get("name", "?") for a in data.get("artists", []))
+    year = data.get("year", "?")
+    genres = ", ".join(data.get("genres", []))
+    styles = ", ".join(data.get("styles", []))
+    country = data.get("country", "?")
+
+    lines = [f"{title} — {artists} ({year})\n"]
+    lines.append(f"  Country: {country}")
+    if genres:
+        lines.append(f"  Genres: {genres}")
+    if styles:
+        lines.append(f"  Styles: {styles}")
+
+    community = data.get("community", {})
+    rating = community.get("rating", {})
+    if rating:
+        lines.append(f"  Rating: {rating.get('average', '?')}/5 ({rating.get('count', 0)} ratings)")
+    lines.append(f"  Have: {community.get('have', '?')} | Want: {community.get('want', '?')}")
+
+    marketplace = f"  For sale: {data.get('num_for_sale', '?')}"
+    lowest = data.get("lowest_price")
+    if lowest:
+        marketplace += f" | Lowest: {lowest}"
+    lines.append(marketplace)
+
+    tracklist = data.get("tracklist", [])
+    if tracklist:
+        lines.append(f"\n  Tracklist ({len(tracklist)} tracks):")
+        for t in tracklist[:15]:
+            pos = t.get("position", "")
+            dur = t.get("duration", "")
+            lines.append(f"    {pos} {t.get('title', '?')} ({dur})")
+
+    images = data.get("images", [])
+    if images:
+        lines.append(f"\n  Images: {len(images)} available")
+
+    uri = data.get("uri", "")
+    if uri:
+        lines.append(f"  Discogs: {uri}")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_discogs_artist(artist_id: str) -> str:
+    """Get artist profile, bio, and discography from Discogs.
+
+    Args:
+        artist_id: Discogs artist ID (numeric)
+    """
+    if not DISCOGS_TOKEN:
+        return "DISCOGS_TOKEN not set. Add it to your environment to enable Discogs lookups."
+    cached = _read_discogs_cache("artist", artist_id)
+    if cached and cached.get("data"):
+        data = cached["data"]
+    else:
+        data = _discogs_request(f"/artists/{artist_id}")
+        if not data:
+            return f"Discogs artist {artist_id} not found."
+        _write_discogs_cache("artist", artist_id, {"fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ"), "discogsId": artist_id, "type": "artist", "data": data})
+
+    name = data.get("name", "Unknown")
+    profile = data.get("profile", "No profile available.")
+    namevariations = data.get("namevariations", [])
+    members = data.get("members", [])
+
+    lines = [f"{name}\n"]
+    if profile:
+        lines.append(f"  {profile[:500]}")
+    if namevariations:
+        lines.append(f"\n  Name variations: {', '.join(namevariations[:5])}")
+    if members:
+        active = [m.get("name", "?") for m in members if m.get("active")]
+        inactive = [m.get("name", "?") for m in members if not m.get("active")]
+        if active:
+            lines.append(f"  Active members: {', '.join(active)}")
+        if inactive:
+            lines.append(f"  Former members: {', '.join(inactive)}")
+
+    urls = data.get("urls", [])
+    if urls:
+        lines.append(f"\n  Links: {', '.join(urls[:3])}")
+
+    uri = data.get("uri", "")
+    if uri:
+        lines.append(f"  Discogs: {uri}")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_discogs_label(label_id: str) -> str:
+    """Get label info and catalog from Discogs.
+
+    Args:
+        label_id: Discogs label ID (numeric)
+    """
+    if not DISCOGS_TOKEN:
+        return "DISCOGS_TOKEN not set. Add it to your environment to enable Discogs lookups."
+    cached = _read_discogs_cache("label", label_id)
+    if cached and cached.get("data"):
+        data = cached["data"]
+    else:
+        data = _discogs_request(f"/labels/{label_id}")
+        if not data:
+            return f"Discogs label {label_id} not found."
+        _write_discogs_cache("label", label_id, {"fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ"), "discogsId": label_id, "type": "label", "data": data})
+
+    name = data.get("name", "Unknown")
+    profile = data.get("profile", "No profile available.")
+    contact = data.get("contact_info", "")
+    sublabels = [sl.get("name", "?") for sl in data.get("sublabels", [])]
+    parent = data.get("parentLabel", {}).get("name", "")
+
+    lines = [f"{name}\n"]
+    if profile:
+        lines.append(f"  {profile[:500]}")
+    if parent:
+        lines.append(f"  Parent label: {parent}")
+    if sublabels:
+        lines.append(f"  Sub-labels: {', '.join(sublabels)}")
+    if contact:
+        lines.append(f"\n  Contact: {contact[:300]}")
+
+    uri = data.get("uri", "")
+    if uri:
+        lines.append(f"  Discogs: {uri}")
+
     return "\n".join(lines)
 
 

@@ -5,7 +5,10 @@
       "type": "local",
       "command": ["/opt/homebrew/bin/python3.14", "mcp-server/magma-mcp.py"],
       "cwd": ".",
-      "enabled": true
+      "enabled": true,
+      "env": {
+        "DISCOGS_TOKEN": "${DISCOGS_TOKEN}"
+      }
     }
   }
 }
