@@ -307,19 +307,49 @@ document.addEventListener('DOMContentLoaded', () => {
         const winner = state.lastWinner;
         const isPlayerWin = winner && winner.isHuman;
         const isTournamentWin = isPlayerWin && state.allOpponentsEliminated;
+        const playerChips = game.players[0].chips;
         
-        messageArea.innerHTML = `
-            <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
-                <h2>${isTournamentWin ? 'VOITIT PEILIN' : (isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose)}</h2>
-                <p>${isTournamentWin ? 'You conquered the table!' : `${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})`}</p>
-                <button id="nextHandBtn" class="action-btn">${isTournamentWin ? LABELS[lang].newGame : 'Seuraava käsi / next hand'} <span class="btn-sub">/ ${isTournamentWin ? 'new game' : 'next hand'}</span></button>
-            </div>
-        `;
+        if (isTournamentWin) {
+            messageArea.innerHTML = `
+                <div class="game-over-message win">
+                    <h2>VOITIT PEILIN</h2>
+                    <p>You conquered the table! ${playerChips} chips</p>
+                    <div style="margin: 12px 0;">
+                        <input id="stud-initials" type="text" maxlength="3" placeholder="AAA"
+                            style="width: 60px; text-align: center; font-family: 'Press Start 2P', monospace;
+                            font-size: 12px; padding: 6px; text-transform: uppercase;
+                            background: #1a1a2e; color: #ffe03a; border: 2px solid #ffe03a;">
+                        <button id="stud-save-btn" class="action-btn" style="margin-left: 8px;">TALLENNA / save</button>
+                    </div>
+                    <button id="nextHandBtn" class="action-btn">${LABELS[lang].newGame} <span class="btn-sub">/ new game</span></button>
+                </div>
+            `;
+            
+            const initialsInput = document.getElementById('stud-initials');
+            initialsInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+            });
+            
+            document.getElementById('stud-save-btn').addEventListener('click', () => {
+                const initials = initialsInput.value.trim() || 'AAA';
+                scoreClient.save('scandinavian-stud', initials, playerChips, { rounds: game.totalRounds });
+                document.getElementById('stud-save-btn').textContent = 'SAVED!';
+                document.getElementById('stud-save-btn').disabled = true;
+                initialsInput.disabled = true;
+            });
+        } else {
+            messageArea.innerHTML = `
+                <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
+                    <h2>${isPlayerWin ? LABELS[lang].youWin : LABELS[lang].youLose}</h2>
+                    <p>${winner ? winner.name : LABELS[lang].player} — ${isPlayerWin ? LABELS[lang].gameOverWin : LABELS[lang].gameOverLose} (${state.pot})</p>
+                    <button id="nextHandBtn" class="action-btn">Seuraava käsi / next hand <span class="btn-sub">/ next hand</span></button>
+                </div>
+            `;
+        }
         
         document.getElementById('nextHandBtn').addEventListener('click', () => {
             messageArea.innerHTML = '';
             if (isTournamentWin) {
-                // Reset entire game
                 startGame();
             } else {
                 game.prepareNextHand();

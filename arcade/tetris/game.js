@@ -426,6 +426,7 @@ function setupListeners() {
   wire('btn-submit', async () => {
     const initials = document.getElementById('initials-input').value.trim() || 'AAA';
     await saveScore(initials, score, level);
+    scoreClient.save('tetris', initials, score, { level });
     hideModal('modal-gameover');
     renderScores();
     showModal('modal-scores');
