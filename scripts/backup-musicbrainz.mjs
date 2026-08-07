@@ -7,7 +7,7 @@
  * Usage:  node scripts/backup-musicbrainz.mjs [--dry-run] [--skip-existing] [--stale-only]
  */
 
-import { writeFile, mkdir } from 'node:fs/promises';
+import { writeFile, mkdir, rename } from 'node:fs/promises';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -160,7 +160,9 @@ async function writeCache(type, uuid, data) {
         log(`  [dry-run] would write ${file} (${(JSON.stringify(data).length / 1024).toFixed(1)} KB)`);
         return;
     }
-    await writeFile(file, JSON.stringify(data, null, 2));
+    const tmp = file + '.tmp';
+    await writeFile(tmp, JSON.stringify(data, null, 2));
+    await rename(tmp, file);
     const size = (JSON.stringify(data).length / 1024).toFixed(1);
     log(`  cached ${size} KB → ${type}/${uuid}.json`);
 }
