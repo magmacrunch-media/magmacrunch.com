@@ -25,6 +25,11 @@ jobs:
         working-directory: arcade/tests
         run: npx playwright install chromium
 
+      - name: Start local server
+        run: |
+          python3 -m http.server 8080 &
+          sleep 1
+
       - name: Run smoke tests
         id: tests
         working-directory: arcade/tests
