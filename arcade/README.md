@@ -92,6 +92,7 @@ Page B ──postMessage──┘
 - **Widget** (`chat-widget.js`) — creates floating chat UI, sends messages through the SharedWorker. Falls back to direct WebSocket if SharedWorker is unavailable. Public API: `ChatWidget.connect()`, `.disconnect()`, `.joinRoom()`, `.leaveRoom()`, `.setName()`, `.setColor()`.
 - **Session tokens** — client generates a token stored in `sessionStorage`, sends with every `set_name`. Server tracks recently disconnected users (30s window) and restores name/color on reconnect.
 - **Server** (`chat-server.py`) — global chat, room sub-chats, typing indicators, server status pings. Delays `user_info` creation until `set_name` arrives (no anonymous flicker). Health check returns 426 for non-WebSocket HTTP requests.
+- **Logging** — connections/disconnections with IP, rate limit hits, high connection rate warnings. View via `journalctl -u arcade-chat` or admin dashboard LOGS tab.
 
 **Usage (in any game page):**
 ```html
