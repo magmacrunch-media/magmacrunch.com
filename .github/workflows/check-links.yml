@@ -39,7 +39,6 @@ jobs:
             --timeout 30
             --max-concurrency 64
             --format markdown
-            --output lychee/out.md
             './**/*.html'
             './**/*.md'
 
