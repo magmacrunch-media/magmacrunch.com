@@ -109,5 +109,5 @@ jobs:
         with:
           title: "Bot Status — ${{ github.event.schedule || 'manual' }}"
           body-filepath: ./status-report.md
-          category-name: "Bot Updates"
+          category-name: "General"
           github-token: ${{ secrets.GITHUB_TOKEN }}
