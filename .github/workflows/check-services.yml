@@ -1,0 +1,70 @@
+name: Check Pi Services
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: self-hosted
+    steps:
+      - name: Check service health
+        id: health
+        run: |
+          PI=192.168.1.16
+          FAILED=""
+          for entry in \
+            "8765:SORRY" "8766:Cribbage" "8767:Stud" "8768:Chat" \
+            "8769:Chess" "8770:Checkers" "8771:Backgammon" \
+            "8772:ChineseCheckers" "8773:Parchisi" "8774:Aggravation" \
+            "8782:Private" "8783:Counter" "8780:Admin"; do
+            PORT="${entry%%:*}"
+            NAME="${entry##*:}"
+            if nc -z -w2 "$PI" "$PORT" 2>/dev/null; then
+              echo "✓ $NAME (:$PORT)"
+            else
+              echo "✗ $NAME (:$PORT)"
+              FAILED="$FAILED $NAME"
+            fi
+          done
+          if [ -n "$FAILED" ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "### Down services:$FAILED" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### All services healthy ✓" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Write failure report
+        if: failure()
+        run: |
+          cat > ./service-report.md << 'EOF'
+          # Pi Service Health Check Failed
+
+          Some services on the Pi are not responding.
+
+          ## Check the workflow run
+
+          [View run details](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          ## Quick diagnosis
+
+          ```bash
+          ssh jake@192.168.1.16 "sudo systemctl status 'arcade-*' --no-pager"
+          ```
+
+          ## Restart a service
+
+          ```bash
+          ssh jake@192.168.1.16 "sudo systemctl restart arcade-<name>"
+          ```
+          EOF
+
+      - name: Create Issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Pi services down — ${{ github.run_id }}"
+          content-filepath: ./service-report.md
+          labels: alert, automated issue
