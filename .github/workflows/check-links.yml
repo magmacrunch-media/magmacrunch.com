@@ -56,8 +56,7 @@ jobs:
           title: "Broken links detected (${{ github.ref_name }})"
           body-filepath: ./lychee/out.md
           category-name: "Link Reports"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail on broken links
         if: steps.lychee.outputs.exit_code != 0
