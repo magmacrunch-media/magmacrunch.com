@@ -14,7 +14,6 @@ const GAMES = [
   { name: 'chess', path: 'chess', multiplayer: true },
   { name: 'chinese-checkers', path: 'chinese-checkers', multiplayer: true },
   { name: 'cribbage', path: 'cribbage', multiplayer: true },
-  { name: 'crystal-mirror-maze', path: 'crystal-mirror-maze' },
   { name: 'fifteen-puzzle', path: 'fifteen-puzzle' },
   { name: 'george-boole', path: 'george-boole' },
   { name: 'klotski', path: 'klotski' },
