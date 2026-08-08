@@ -49,6 +49,14 @@ jobs:
           path: .lycheecache
           key: ${{ steps.lychee.outputs.cache-primary-key }}
 
+      - name: Close previous broken-links issues
+        if: steps.lychee.outputs.exit_code != 0
+        run: |
+          gh issue list --label broken-links --state open --json number -q '.[].number' | \
+          xargs -I {} gh issue close {} --comment "Superseded by new scan"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Issue From File
         if: steps.lychee.outputs.exit_code != 0
         uses: peter-evans/create-issue-from-file@v5
