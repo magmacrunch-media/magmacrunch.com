@@ -26,4 +26,4 @@ jobs:
           title: "Weekly High Scores — ${{ github.event.schedule || 'manual' }}"
           body-filepath: ./scores-report.md
           category-name: "High Scores"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
