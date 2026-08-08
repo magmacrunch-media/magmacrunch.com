@@ -1,0 +1,30 @@
+name: Bake Cache into Pages
+
+on:
+  workflow_run:
+    workflows: ["Backup MusicBrainz Data"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  bake:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Bake cache into pages
+        run: node scripts/bake-cache.mjs
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archive/by-artist/ archive/by-place/ archive/by-contributor/ archive/by-label/
+          git diff --cached --quiet || git commit -m "Bake MusicBrainz cache into archive pages"
+          git push
