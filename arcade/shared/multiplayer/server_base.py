@@ -34,7 +34,9 @@ def copy_board_2d(board):
     """Deep-copy a 2D list (list of lists)."""
     return [row[:] for row in board]
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
 logging.getLogger("websockets").setLevel(logging.INFO)
+logger = logging.getLogger("game")
 
 
 # ── Color palette ────────────────────────────────────────────────────────────
@@ -153,6 +155,23 @@ class RateLimiter:
         return True
 
 
+# ── Connection Rate Tracking ──────────────────────────────────────────────────
+
+connection_history = {}  # ip -> [timestamps]
+
+def check_connection_rate(ip, max_count=10, window=60):
+    """Track connections per IP. Log warning if exceeding threshold."""
+    now = time.time()
+    timestamps = connection_history.get(ip, [])
+    timestamps = [t for t in timestamps if now - t < window]
+    if len(timestamps) >= max_count:
+        logger.warning("High connection rate: %s (%d in %ds)", ip, len(timestamps), window)
+        return False
+    timestamps.append(now)
+    connection_history[ip] = timestamps
+    return True
+
+
 # ── Game Server ──────────────────────────────────────────────────────────────
 
 class GameServer:
@@ -193,9 +212,12 @@ class GameServer:
 
     async def handler(self, websocket):
         """Main connection handler."""
+        ip = websocket.remote_address[0] if websocket.remote_address else "unknown"
+        check_connection_rate(ip)
         room = None
         player_name = None
         limiter = RateLimiter()
+        logger.info("Connect: %s", websocket.remote_address)
 
         try:
             # Send lobby snapshot immediately
@@ -204,6 +226,7 @@ class GameServer:
             async for raw in websocket:
                 # Global flood protection: 20 msgs/sec per connection
                 if not limiter.check("global", 20, 1):
+                    logger.warning("Rate limited: global from %s", websocket.remote_address)
                     continue
 
                 try:
@@ -231,10 +254,14 @@ class GameServer:
                 elif msg_type == "chat":
                     if limiter.check("chat", 5, 10):
                         await self._handle_chat(websocket, room, msg)
+                    else:
+                        logger.warning("Rate limited: chat from %s", websocket.remote_address)
 
                 elif msg_type == "game_action":
                     if limiter.check("game_action", 2, 3):
                         await self._handle_game_action(websocket, room, msg)
+                    else:
+                        logger.warning("Rate limited: game_action from %s", websocket.remote_address)
 
                 elif msg_type == "quit":
                     await self._handle_quit(websocket, room)
@@ -244,6 +271,7 @@ class GameServer:
         except websockets.ConnectionClosed:
             pass
         finally:
+            logger.info("Disconnect: %s", websocket.remote_address)
             if room and player_name:
                 await self._on_disconnect(websocket, room)
 
@@ -544,7 +572,7 @@ class GameServer:
 
     def run(self):
         """Start the server."""
-        print(f"[{self.game_name}] Starting WebSocket server on port {self.port}")
+        logger.info("[%s] Starting WebSocket server on port %d", self.game_name, self.port)
 
         async def _health_check(connection, request):
             """Return 426 for plain HTTP requests, allow WebSocket upgrades."""
@@ -564,7 +592,7 @@ class GameServer:
         try:
             asyncio.run(_run())
         except KeyboardInterrupt:
-            print(f"\n[{self.game_name}] Server stopped.")
+            logger.info("[%s] Server stopped.", self.game_name)
 
 
 # ── CLI entry point for testing ──────────────────────────────────────────────

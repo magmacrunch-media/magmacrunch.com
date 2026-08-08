@@ -23,7 +23,9 @@ import time
 import websockets
 from websockets.datastructures import Headers
 
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
 logging.getLogger("websockets").setLevel(logging.INFO)
+logger = logging.getLogger("chat")
 
 
 # ── Rate Limiter ──────────────────────────────────────────────────────────────
@@ -44,6 +46,23 @@ class RateLimiter:
             return False
         self._windows[key] = (window_start, count + 1)
         return True
+
+
+# ── Connection Rate Tracking ──────────────────────────────────────────────────
+
+connection_history = {}  # ip -> [timestamps]
+
+def check_connection_rate(ip, max_count=10, window=60):
+    """Track connections per IP. Log warning if exceeding threshold."""
+    now = time.time()
+    timestamps = connection_history.get(ip, [])
+    timestamps = [t for t in timestamps if now - t < window]
+    if len(timestamps) >= max_count:
+        logger.warning("High connection rate: %s (%d in %ds)", ip, len(timestamps), window)
+        return False
+    timestamps.append(now)
+    connection_history[ip] = timestamps
+    return True
 
 
 # ── Configuration ────────────────────────────────────────────────────────────
@@ -213,8 +232,11 @@ async def broadcast_global_users():
 
 async def handler(websocket):
     """Handle a new chat connection."""
+    ip = websocket.remote_address[0] if websocket.remote_address else "unknown"
+    check_connection_rate(ip)
     connected_clients.add(websocket)
     limiter = RateLimiter()
+    logger.info("Connect: %s", websocket.remote_address)
 
     try:
         # Send global history
@@ -234,6 +256,7 @@ async def handler(websocket):
         async for raw in websocket:
             # Global flood protection: 20 msgs/sec per connection
             if not limiter.check("global", 20, 1):
+                logger.warning("Rate limited: global from %s", websocket.remote_address)
                 continue
 
             try:
@@ -245,6 +268,7 @@ async def handler(websocket):
 
             if msg_type == 'set_name':
                 if not limiter.check("set_name", 2, 10):
+                    logger.warning("Rate limited: set_name from %s", websocket.remote_address)
                     continue
                 new_name = msg.get('name', '')[:20]
                 if not new_name:
@@ -313,6 +337,7 @@ async def handler(websocket):
 
             elif msg_type == 'set_color':
                 if not limiter.check("set_color", 2, 10):
+                    logger.warning("Rate limited: set_color from %s", websocket.remote_address)
                     continue
                 if websocket not in user_info:
                     continue
@@ -357,6 +382,7 @@ async def handler(websocket):
 
             elif msg_type == 'chat':
                 if not limiter.check("chat", 5, 10):
+                    logger.warning("Rate limited: chat from %s", websocket.remote_address)
                     continue
                 if websocket not in user_info:
                     continue
@@ -410,6 +436,7 @@ async def handler(websocket):
             elif msg_type == 'status':
                 # Rate limit: 1 request per 10 seconds (matches status_broadcaster interval)
                 if not limiter.check("status", 1, 10):
+                    logger.warning("Rate limited: status from %s", websocket.remote_address)
                     continue
                 # Status request
                 statuses = await get_all_statuses()
@@ -436,6 +463,7 @@ async def handler(websocket):
     except websockets.ConnectionClosed:
         pass
     finally:
+        logger.info("Disconnect: %s", websocket.remote_address)
         # Store session for potential reconnection
         info = user_info.get(websocket, {})
         session_token = info.get('session_token')
@@ -488,8 +516,8 @@ async def session_cleanup():
 # ── Main ────────────────────────────────────────────────────────────────────
 
 async def main(port):
-    print(f"[Chat] Starting chat server on port {port}")
-    print(f"[Chat] Checking game servers: {', '.join(GAME_SERVERS.keys())}")
+    logger.info("[Chat] Starting chat server on port %d", port)
+    logger.info("[Chat] Checking game servers: %s", ', '.join(GAME_SERVERS.keys()))
 
     # Start background tasks
     asyncio.create_task(status_broadcaster())
@@ -503,7 +531,7 @@ async def main(port):
         return Response(426, "Upgrade Required", Headers([("Upgrade", "websocket")]), b"")
 
     async with websockets.serve(handler, '0.0.0.0', port, process_request=_health_check):
-        print(f"[Chat] Chat server ready on ws://localhost:{port}")
+        logger.info("[Chat] Chat server ready on ws://localhost:%d", port)
         await asyncio.Future()  # Run forever
 
 
@@ -514,4 +542,4 @@ if __name__ == '__main__':
     try:
         asyncio.run(main(args.port))
     except KeyboardInterrupt:
-        print("\n[Chat] Server stopped.")
+        logger.info("[Chat] Server stopped.")
