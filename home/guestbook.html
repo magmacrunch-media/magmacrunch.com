@@ -13,7 +13,6 @@
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css">
-    <link rel="stylesheet" href="../assets/counter.css">
     <link rel="stylesheet" href="guestbook.css">
 </head>
 <body>
@@ -61,8 +60,6 @@ __ejm\___/________dwb`---`____________________________________________
 
     </div>
 
-    <div id="hit-counter" style="margin-top: 32px;"></div>
-
 </main>
 
 <footer>
@@ -70,17 +67,6 @@ __ejm\___/________dwb`---`____________________________________________
 </footer>
 
 <script src="../nav.js"></script>
-<script>
-    // Initialize counter display (loaded by nav.js)
-    function initCounter() {
-        if (window.CounterClient) {
-            CounterClient.display('#hit-counter');
-        } else {
-            setTimeout(initCounter, 100);
-        }
-    }
-    initCounter();
-</script>
 <script>
     // ── Google Apps Script backend (unchanged from original) ──
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIKFyhLKbCR3VnOzl1vkKu8vQdWw8ENmUiHVgTBGSlQLYeTMn7hDiANlGbZACGElvc/exec';
