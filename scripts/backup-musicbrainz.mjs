@@ -7,8 +7,8 @@
  * Usage:  node scripts/backup-musicbrainz.mjs [--dry-run] [--skip-existing] [--stale-only]
  */
 
-import { writeFile, mkdir, rename } from 'node:fs/promises';
-import { existsSync, readFileSync } from 'node:fs';
+import { writeFile, mkdir, rename, cp } from 'node:fs/promises';
+import { existsSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -150,6 +150,36 @@ const COLLECTIVES = [
 // Contributor pages fetch artist-rels + 6 more inc params, so they need
 // their own cache files even though the UUID overlaps with artists.
 
+// ─── snapshot backups ────────────────────────────────────────────
+
+const SNAPSHOTS_DIR = resolve(CACHE_DIR, 'snapshots');
+const MAX_SNAPSHOTS = 4;
+
+async function snapshotCache(type, uuid) {
+    const file = resolve(CACHE_DIR, type, `${uuid}.json`);
+    if (!existsSync(file)) return;
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const snapDir = resolve(SNAPSHOTS_DIR, date, type);
+    if (!existsSync(snapDir)) await mkdir(snapDir, { recursive: true });
+    const dest = resolve(snapDir, `${uuid}.json`);
+    if (existsSync(dest)) return; // already snapshotted today
+    await cp(file, dest);
+    log(`  snapshotted → snapshots/${date}/${type}/${uuid}.json`);
+}
+
+function cleanOldSnapshots() {
+    if (!existsSync(SNAPSHOTS_DIR)) return;
+    const dates = readdirSync(SNAPSHOTS_DIR)
+        .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))
+        .sort()
+        .reverse();
+    for (const old of dates.slice(MAX_SNAPSHOTS)) {
+        const dir = resolve(SNAPSHOTS_DIR, old);
+        rmSync(dir, { recursive: true, force: true });
+        log(`  cleaned old snapshot: ${old}`);
+    }
+}
+
 // ─── write cache file ──────────────────────────────────────────────
 
 async function writeCache(type, uuid, data) {
@@ -160,6 +190,8 @@ async function writeCache(type, uuid, data) {
         log(`  [dry-run] would write ${file} (${(JSON.stringify(data).length / 1024).toFixed(1)} KB)`);
         return;
     }
+    // Snapshot existing cache before overwriting
+    await snapshotCache(type, uuid);
     const tmp = file + '.tmp';
     await writeFile(tmp, JSON.stringify(data, null, 2));
     await rename(tmp, file);
@@ -751,6 +783,11 @@ async function main() {
     const sec = elapsed % 60;
     console.log(`\nDone! ${completed - skipped} entities backed up, ${skipped} skipped in ${min}m ${sec}s`);
     if (DRY_RUN) console.log('(dry run — no files were written)');
+
+    // Clean old snapshots (keep last 4)
+    if (!DRY_RUN) {
+        cleanOldSnapshots();
+    }
 }
 
 main().catch(err => {
