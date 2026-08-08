@@ -500,6 +500,61 @@ def add_score(game_id, name, score, extra=None):
                 return i + 1
         return len(scores)
 
+
+def _format_score_entry(entry):
+    """Format a score entry as a human-readable string."""
+    s = entry.get("score", 0)
+    parts = [str(s)]
+    if entry.get("level"):
+        parts.append(f"L{entry['level']}")
+    if entry.get("difficulty"):
+        parts.append(f"D{entry['difficulty']}")
+    if entry.get("time"):
+        parts.append(entry["time"])
+    if entry.get("moves"):
+        parts.append(f"{entry['moves']} moves")
+    if entry.get("won") is False:
+        parts.append("lost")
+    return " \u00b7 ".join(parts)
+
+
+def _notify_discord_high_score(game_id, name, score, extra):
+    """Send a Discord webhook when a new #1 score is set."""
+    webhook_url = CONFIG.get("discord_webhook_url")
+    if not webhook_url:
+        return
+    try:
+        data = load_game_scores(game_id)
+        game_name = data.get("game", game_id)
+        entry = {"initials": name, "score": score}
+        if extra:
+            entry.update(extra)
+        formatted = _format_score_entry(entry)
+        total = len(data.get("scores", []))
+
+        payload = json.dumps({
+            "embeds": [{
+                "title": "\U0001f3c6 New #1 Score!",
+                "description": f"**{name}** just took the top spot in **{game_name}**!",
+                "fields": [
+                    {"name": "Score", "value": formatted, "inline": True},
+                    {"name": "Total scores", "value": str(total), "inline": True},
+                ],
+                "color": 0xFFE03A,
+                "footer": {"text": "arcade-updates"},
+            }],
+        }).encode()
+
+        req = urllib.request.Request(
+            webhook_url,
+            data=payload,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        urllib.request.urlopen(req, timeout=10)
+    except Exception as e:
+        print(f"Discord webhook failed: {e}", file=sys.stderr)
+
 # ── Auth sessions ────────────────────────────────────────────────────────────
 
 authenticated_sessions = set()
@@ -911,6 +966,10 @@ async def ws_handler(websocket):
                         rank = await asyncio.get_event_loop().run_in_executor(
                             _executor, lambda: add_score(game_id, name, score_val, extra)
                         )
+                        if rank == 1:
+                            asyncio.ensure_future(asyncio.get_event_loop().run_in_executor(
+                                _executor, lambda: _notify_discord_high_score(game_id, name, score_val, extra)
+                            ))
                         await websocket.send(json.dumps({
                             "type": "score_saved",
                             "game": game_id,
