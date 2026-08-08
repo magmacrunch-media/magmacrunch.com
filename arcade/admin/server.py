@@ -35,7 +35,7 @@ DEFAULT_CONFIG = {
     "port": 8780,
     "auth": True,
     "password": "changeme",
-    "bind": "127.0.0.1",
+    "bind": "0.0.0.0",
 }
 
 CONFIG = {}
