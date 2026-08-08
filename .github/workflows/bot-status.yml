@@ -42,6 +42,7 @@ jobs:
             "Bake Cache:bake-cache.yml"
             "Weekly High Scores:weekly-scores.yml"
             "Arcade Smoke Test:smoke-test.yml"
+            "Fetch Play Counts:play-counts.yml"
             "MusicBrainz Backup:backup-musicbrainz.yml"
             "TMDB Backup:backup-tmdb.yml"
             "Bot Status Report:bot-status.yml"
