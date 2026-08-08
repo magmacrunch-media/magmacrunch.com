@@ -1,0 +1,64 @@
+name: Backup to Private Repo
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'arcade/admin/**'
+      - 'arcade/shared/**'
+      - 'arcade/*/server.py'
+      - 'arcade/chat-server.py'
+      - 'arcade/counter/**'
+      - 'scripts/**'
+      - 'mcp-server/**'
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync to private backup repo
+        env:
+          BACKUP_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
+        run: |
+          REPO_URL="https://x-access-token:${BACKUP_TOKEN}@github.com/magmacrunchmedia/magma-ops-backup.git"
+          TMPDIR=$(mktemp -d)
+
+          git init "$TMPDIR" -q
+          git -C "$TMPDIR" remote add origin "$REPO_URL"
+          git -C "$TMPDIR" fetch origin main || true
+          git -C "$TMPDIR" checkout -B main || true
+
+          rsync -a --delete \
+            . "$TMPDIR/" \
+            --exclude='*.png' \
+            --exclude='*.jpg' \
+            --exclude='*.JPG' \
+            --exclude='*.jpeg' \
+            --exclude='*.gif' \
+            --exclude='*.webp' \
+            --exclude='*.bmp' \
+            --exclude='*.ico' \
+            --exclude='*.svg' \
+            --exclude='*.ogg' \
+            --exclude='*.mp3' \
+            --exclude='*.wav' \
+            --exclude='*.mp4' \
+            --exclude='*.webm' \
+            --exclude='archive/_cache/' \
+            --exclude='arcade/admin/scores/' \
+            --exclude='node_modules/' \
+            --exclude='.git/' \
+            --exclude='.github/'
+
+          cd "$TMPDIR"
+          git add -A
+          git diff --cached --quiet && echo "No changes to back up." && exit 0
+          git -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "Backup from magmacrunch.com $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push --force origin main
+          echo "Backup pushed."
