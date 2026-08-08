@@ -1,0 +1,5809 @@
+{
+  "Arcade — 2^N": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(255, 140, 0, 0.6)",
+      "source": "arcade/2^N/index.html"
+    }
+  ],
+  "Arcade — SORRY": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(255, 140, 0, 0.6)",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#ff2d55",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#ff7c1e",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#ffe135",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#39d353",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#6cd4f5",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#4059c8",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#9b30ff",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#ff69b4",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#fff5e1",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#00fa9a",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#ff4f6d",
+      "source": "arcade/SORRY/index.html"
+    },
+    {
+      "name": "pc",
+      "value": "#7b68ee",
+      "source": "arcade/SORRY/index.html"
+    }
+  ],
+  "Arcade — action": [
+    {
+      "name": "nav-accent",
+      "value": "#ff2e9c",
+      "source": "arcade/action/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#b537f2",
+      "source": "arcade/action/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#00f0ff",
+      "source": "arcade/action/index.html"
+    }
+  ],
+  "Arcade — board-games": [
+    {
+      "name": "nav-accent",
+      "value": "#00f5ff",
+      "source": "arcade/board-games/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#F1BF00",
+      "source": "arcade/board-games/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#c45fff",
+      "source": "arcade/board-games/index.html"
+    }
+  ],
+  "Arcade — card-games": [
+    {
+      "name": "nav-accent",
+      "value": "#39ff6e",
+      "source": "arcade/card-games/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#00f0ff",
+      "source": "arcade/card-games/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#ffd700",
+      "source": "arcade/card-games/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#39ff84",
+      "source": "arcade/card-games/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#ff6f1a",
+      "source": "arcade/card-games/index.html"
+    }
+  ],
+  "Arcade — cribbage": [
+    {
+      "name": "mc-back-color",
+      "value": "#ffd700",
+      "source": "arcade/cribbage/index.html"
+    }
+  ],
+  "Arcade — crystal-mirror-maze": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(180, 140, 255, 0.5)",
+      "source": "arcade/crystal-mirror-maze/index.html"
+    }
+  ],
+  "Arcade — fifteen-puzzle": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(255, 140, 0, 0.6)",
+      "source": "arcade/fifteen-puzzle/index.html"
+    }
+  ],
+  "Arcade — george-boole": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(138, 43, 226, 0.6)",
+      "source": "arcade/george-boole/index.html"
+    }
+  ],
+  "Arcade — klotski": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(255, 140, 0, 0.6)",
+      "source": "arcade/klotski/index.html"
+    }
+  ],
+  "Arcade — moonlight-drift": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(0, 212, 255, 0.5)",
+      "source": "arcade/moonlight-drift/index.html"
+    }
+  ],
+  "Arcade — puzzles": [
+    {
+      "name": "nav-accent",
+      "value": "#ffe03a",
+      "source": "arcade/puzzles/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#00f0ff",
+      "source": "arcade/puzzles/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#39ff84",
+      "source": "arcade/puzzles/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#00f5ff",
+      "source": "arcade/puzzles/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#ff2d4a",
+      "source": "arcade/puzzles/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#f0f8ff",
+      "source": "arcade/puzzles/index.html"
+    }
+  ],
+  "Arcade — shared": [
+    {
+      "name": "mc-back-color",
+      "value": "#00f5ff",
+      "source": "arcade/shared/arcade-base.css"
+    }
+  ],
+  "Arcade — threes": [
+    {
+      "name": "mc-back-color",
+      "value": "rgba(255, 140, 0, 0.6)",
+      "source": "arcade/threes/index.html"
+    }
+  ],
+  "Archive — archive/by-artist/audio-sound-paper-et-al": [
+    {
+      "name": "asp-surface",
+      "value": "#2e1e18",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-raised",
+      "value": "#3e2e20",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-dark",
+      "value": "#584030",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-mid",
+      "value": "#806050",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-light",
+      "value": "#b09070",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-cream",
+      "value": "#f0e0c8",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-terracotta",
+      "value": "#783020",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-brick",
+      "value": "#a84828",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-brick-light",
+      "value": "#c87858",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-amber",
+      "value": "#c89030",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-amber-glow",
+      "value": "#f0d070",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-skin",
+      "value": "#d08050",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-red",
+      "value": "#c03020",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-red-light",
+      "value": "#e05030",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-night",
+      "value": "#181420",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-night-blue",
+      "value": "#485878",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-ivy-dark",
+      "value": "#2a3820",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-ivy-light",
+      "value": "#607848",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-highlight",
+      "value": "#f8e0a0",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    },
+    {
+      "name": "asp-bg",
+      "value": "#100b08",
+      "source": "archive/by-artist/audio-sound-paper-et-al/asp-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/bottle-boys-collective": [
+    {
+      "name": "bbc-surface",
+      "value": "#2a3028",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-raised",
+      "value": "#384038",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-dark",
+      "value": "#506050",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-mid",
+      "value": "#887870",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-light",
+      "value": "#c0b0a0",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-sky-dark",
+      "value": "#5888b0",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-sky",
+      "value": "#78a8c8",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-sky-light",
+      "value": "#a8c8e0",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-sky-pale",
+      "value": "#d0e4f0",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-skin-warm",
+      "value": "#e0a880",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-skin-light",
+      "value": "#f0d0b8",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-highlight",
+      "value": "#f8f0e8",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-warm-dark",
+      "value": "#905030",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-warm",
+      "value": "#c07848",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-warm-light",
+      "value": "#e8b870",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-green-dark",
+      "value": "#304828",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-green",
+      "value": "#507840",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-green-light",
+      "value": "#80a858",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-bridge-cool",
+      "value": "#6898a0",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-bridge-warm",
+      "value": "#d09888",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-cream",
+      "value": "#f0e8d8",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-sea-mist",
+      "value": "#c8e0d8",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-warm-grey",
+      "value": "#7a6858",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-mauve",
+      "value": "#a07888",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-sage",
+      "value": "#3a5840",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-apricot",
+      "value": "#f0c0a0",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    },
+    {
+      "name": "bbc-bg",
+      "value": "#070906",
+      "source": "archive/by-artist/bottle-boys-collective/bbc-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/c-p-rutledge": [
+    {
+      "name": "cpr-deep",
+      "value": "#5020a0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-surface",
+      "value": "#1a1840",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-raised",
+      "value": "#2a2060",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-red",
+      "value": "#f05a5a",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-yellow",
+      "value": "#f5c020",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-green",
+      "value": "#4ab86a",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-blue",
+      "value": "#68c8f0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-purple",
+      "value": "#9030b0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-teal",
+      "value": "#20b8a0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-orange",
+      "value": "#f09848",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-cream",
+      "value": "#f5e8c0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-dark-red",
+      "value": "#a02020",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-dark-yellow",
+      "value": "#c89010",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-dark-green",
+      "value": "#2a8040",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-dark-blue",
+      "value": "#2888c0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-light-purple",
+      "value": "#c080e0",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-light-green",
+      "value": "#90d8a8",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-warm-bridge",
+      "value": "#f07850",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "cpr-bg",
+      "value": "#070612",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#f08080",
+      "source": "archive/by-artist/c-p-rutledge/cpr-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/dag-henderson": [
+    {
+      "name": "dh-deep",
+      "value": "#141a10",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-surface",
+      "value": "#1e2818",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-muted",
+      "value": "#3a3228",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-body",
+      "value": "#5a5048",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-slate",
+      "value": "#607880",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-brand",
+      "value": "#3a5830",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-leaf",
+      "value": "#789060",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-purple",
+      "value": "#7848a8",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-rust",
+      "value": "#c86010",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-amber",
+      "value": "#f0c060",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-violet-deep",
+      "value": "#3a1860",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-violet-light",
+      "value": "#a880d0",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-sage",
+      "value": "#a8b890",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-mist",
+      "value": "#a0b0a8",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-rust-dark",
+      "value": "#7a3010",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-amber-glow",
+      "value": "#e8900a",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-gold",
+      "value": "#f8d888",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-tan",
+      "value": "#807060",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-white",
+      "value": "#f0ece0",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    },
+    {
+      "name": "dh-bg",
+      "value": "#080a06",
+      "source": "archive/by-artist/dag-henderson/dh-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/ddt-llc": [
+    {
+      "name": "ddt-deep",
+      "value": "#5a3a20",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-mid",
+      "value": "#8a5a2a",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-amber",
+      "value": "#b87840",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-tan",
+      "value": "#c89858",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-heading",
+      "value": "#e8d098",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-cta",
+      "value": "#c04030",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-gold",
+      "value": "#d4a820",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-nature",
+      "value": "#607858",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-offwhite",
+      "value": "#faf4e8",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "ddt-bg",
+      "value": "#0a0a14",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#d8a060",
+      "source": "archive/by-artist/ddt-llc/ddt-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/dino-spumoni": [
+    {
+      "name": "ds-deep",
+      "value": "#141820",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-surface",
+      "value": "#1e2a38",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-mid",
+      "value": "#3a5878",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-sky",
+      "value": "#6888a8",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-brand",
+      "value": "#4060a0",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-brick",
+      "value": "#8a3820",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-cta",
+      "value": "#d4782a",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-heading",
+      "value": "#f0d080",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-rose",
+      "value": "#d06880",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-teal",
+      "value": "#2a7868",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-deep-teal",
+      "value": "#1a5048",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-bright-teal",
+      "value": "#40a888",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-deep-rose",
+      "value": "#a04860",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-light-rose",
+      "value": "#e8a0b0",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-mid-blue",
+      "value": "#5878b0",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-light-warm",
+      "value": "#f8c8a0",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-dark-warm",
+      "value": "#5a2810",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-cool-neutral",
+      "value": "#6878a0",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-warm-neutral",
+      "value": "#c8a878",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-offwhite",
+      "value": "#f4ede0",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "ds-bg",
+      "value": "#080a0e",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#e8a060",
+      "source": "archive/by-artist/dino-spumoni/ds-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/four-bs": [
+    {
+      "name": "4b-deep",
+      "value": "#1a1408",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-mid",
+      "value": "#8a7a58",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-heading",
+      "value": "#e8ddb0",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-brand",
+      "value": "#2a6830",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-leaf",
+      "value": "#52b044",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-chart",
+      "value": "#a8d848",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-rust",
+      "value": "#c84810",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-amber",
+      "value": "#f0a830",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-blue",
+      "value": "#1e60b0",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-sky",
+      "value": "#5890c8",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-offwhite",
+      "value": "#f5f2e8",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-bg",
+      "value": "#0c0a04",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-dust",
+      "value": "#7a6040",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-ember",
+      "value": "#e85838",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-forest",
+      "value": "#1a4020",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-moss",
+      "value": "#3a5830",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-sage",
+      "value": "#7a9860",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-fern",
+      "value": "#90b870",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-bark",
+      "value": "#4a3820",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-sand",
+      "value": "#c8b888",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-parchment",
+      "value": "#e0d8c0",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-cream",
+      "value": "#f8f4e8",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-coal",
+      "value": "#2a1e10",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-clay",
+      "value": "#a03820",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-ochre",
+      "value": "#c88820",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-gold",
+      "value": "#d4a820",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-straw",
+      "value": "#e8d078",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-navy",
+      "value": "#0e2e58",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-steel",
+      "value": "#3a6888",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-mist",
+      "value": "#a0b8cc",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-fog",
+      "value": "#c8d8e0",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-iron",
+      "value": "#3a3428",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    },
+    {
+      "name": "4b-stone",
+      "value": "#6a6050",
+      "source": "archive/by-artist/four-bs/4b-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/fruity-loops-debauchery-collective": [
+    {
+      "name": "fldc-black",
+      "value": "#080808",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-surface",
+      "value": "#2a3830",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-raised",
+      "value": "#304838",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-mid",
+      "value": "#485840",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-neutral",
+      "value": "#8a9088",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-light",
+      "value": "#c8c4b0",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-wall",
+      "value": "#e8eee8",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-screen-dark",
+      "value": "#3060b0",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-screen-mid",
+      "value": "#5898d8",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg-screen-pale",
+      "value": "#f0f8f0",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-yellow",
+      "value": "#d8d040",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-gold",
+      "value": "#c89820",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-orange",
+      "value": "#d06020",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-red",
+      "value": "#a82820",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-red-light",
+      "value": "#e05030",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-green",
+      "value": "#48a840",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-teal",
+      "value": "#308878",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-purple",
+      "value": "#7848a8",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-arc-dark",
+      "value": "#602818",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-cool",
+      "value": "#60a8a0",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-pop",
+      "value": "#d05888",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    },
+    {
+      "name": "fldc-bg",
+      "value": "#10160e",
+      "source": "archive/by-artist/fruity-loops-debauchery-collective/fldc-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/jon-mccoy": [
+    {
+      "name": "jm-bg",
+      "value": "#484e58",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-surface",
+      "value": "#2e3540",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-raised",
+      "value": "#2e3038",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-body",
+      "value": "#7080a0",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-muted",
+      "value": "#8a9aaa",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-heading",
+      "value": "#b8c4cc",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-taupe",
+      "value": "#a89880",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-sand",
+      "value": "#c8b8a0",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-cream",
+      "value": "#e8ddd0",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-sage",
+      "value": "#7a9080",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-rose",
+      "value": "#b89898",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-ice",
+      "value": "#d0d8e0",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-deep-cool",
+      "value": "#383e48",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-mid-cool",
+      "value": "#6070a0",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-light-cool",
+      "value": "#c0ccd8",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-deep-warm",
+      "value": "#786050",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-pale-warm",
+      "value": "#f0e8d8",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-deep-sage",
+      "value": "#587868",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-muted-rose",
+      "value": "#c8a8a8",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-blue-grey",
+      "value": "#6a7088",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-near-white",
+      "value": "#f5f0ec",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-periwinkle",
+      "value": "#9090b8",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-pale-sage",
+      "value": "#b0c8b8",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-dusty-plum",
+      "value": "#786878",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    },
+    {
+      "name": "jm-near-black",
+      "value": "#0e1014",
+      "source": "archive/by-artist/jon-mccoy/jm-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/juanito-thompson": [
+    {
+      "name": "jt-bg",
+      "value": "#0a0a0c",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-surface",
+      "value": "#1c1e22",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-raised",
+      "value": "#2e3038",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-mid",
+      "value": "#383c44",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-steel",
+      "value": "#606878",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-deep",
+      "value": "#7a3010",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-dark-rust",
+      "value": "#5a2008",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-brick",
+      "value": "#a84830",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-cta",
+      "value": "#c85a18",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-amber",
+      "value": "#e8900a",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-pale-warm",
+      "value": "#f0b878",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-gold",
+      "value": "#f5c842",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-teal",
+      "value": "#1a7a5e",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-teal-bright",
+      "value": "#2a9070",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-taupe",
+      "value": "#8a7060",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-offwhite",
+      "value": "#f8f0e4",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-green",
+      "value": "#39ff84",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-text-dim",
+      "value": "#a0a8b0",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-text-muted",
+      "value": "#707880",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-text-faint",
+      "value": "#505860",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-lava",
+      "value": "#e86828",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-blaze",
+      "value": "#ff7a30",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-hot",
+      "value": "#ff9a50",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-ember",
+      "value": "#3a1005",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-honey",
+      "value": "#d4780a",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-brass",
+      "value": "#c8a030",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-pale-gold",
+      "value": "#f8e090",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-teal-deep",
+      "value": "#0d4a38",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-teal-mid",
+      "value": "#1f8868",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-teal-pale",
+      "value": "#60b898",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-teal-mist",
+      "value": "#a0d8c8",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-surface-cool",
+      "value": "#1a1c24",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-raised-cool",
+      "value": "#262a34",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-green-dim",
+      "value": "#20a858",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-green-deep",
+      "value": "#0a5030",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-green-glow",
+      "value": "#80ffb0",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-red",
+      "value": "#e03020",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-blue-steel",
+      "value": "#4a6888",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "jt-purple",
+      "value": "#6a4888",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#e88848",
+      "source": "archive/by-artist/juanito-thompson/juanito-thompson-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/svfp": [
+    {
+      "name": "svfp-brand",
+      "value": "#a020c8",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-accent",
+      "value": "#d946ef",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-cta",
+      "value": "#e03070",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-heading",
+      "value": "#c8b8e8",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-body",
+      "value": "#f5d0ff",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-surface",
+      "value": "#1e2235",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-raised",
+      "value": "#2e1a50",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-dark",
+      "value": "#3a2060",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-plum",
+      "value": "#281830",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-mid",
+      "value": "#6020b0",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-bright",
+      "value": "#9858d8",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-bridge",
+      "value": "#c8a0d8",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-rose",
+      "value": "#e060a0",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-cool-dark",
+      "value": "#2850a0",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-sky",
+      "value": "#60a0e0",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-teal",
+      "value": "#1a6060",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-teal-bright",
+      "value": "#30b0b0",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-ice",
+      "value": "#a8c8f0",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-warm",
+      "value": "#e87040",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-glow",
+      "value": "#f0b890",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-white",
+      "value": "#f8b0ff",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-offwhite",
+      "value": "#f5f0ff",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    },
+    {
+      "name": "svfp-bg",
+      "value": "#0a0a14",
+      "source": "archive/by-artist/svfp/svfp-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/thld": [
+    {
+      "name": "thld-deep",
+      "value": "#1a1209",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-dark",
+      "value": "#2e1e0f",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-mid",
+      "value": "#4a2c10",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-mahogany",
+      "value": "#7a3a18",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-forest",
+      "value": "#3a3018",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-accent",
+      "value": "#c94b1a",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-cta",
+      "value": "#c8381a",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-ember",
+      "value": "#a02818",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-brick",
+      "value": "#8a2018",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-amber",
+      "value": "#e07a2f",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-apricot",
+      "value": "#f0a050",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-honey",
+      "value": "#b07030",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-warm-brown",
+      "value": "#9a7a50",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-muted",
+      "value": "#8a6040",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-teal",
+      "value": "#4a7068",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-olive",
+      "value": "#5a7840",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-olive-alt",
+      "value": "#6a8850",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-purple",
+      "value": "#6a5878",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-sky",
+      "value": "#60a0e0",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-lime",
+      "value": "#39ff6e",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-ice",
+      "value": "#a8c8f0",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-text",
+      "value": "#d4b896",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-highlight",
+      "value": "#f0c060",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-cream",
+      "value": "#f8e4c0",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-pale-gold",
+      "value": "#f5d8a0",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-offwhite",
+      "value": "#fdf5e8",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    },
+    {
+      "name": "thld-bg",
+      "value": "#0e0905",
+      "source": "archive/by-artist/thld/thld-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/vinny-bobarino": [
+    {
+      "name": "vb-bg",
+      "value": "#1e2235",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-surface",
+      "value": "#2a1a10",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-mid",
+      "value": "#4a3828",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-deep",
+      "value": "#c03820",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-accent",
+      "value": "#e86020",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-amber",
+      "value": "#f5a030",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-heading",
+      "value": "#c8a840",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-body",
+      "value": "#f0ead8",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-nature",
+      "value": "#5a8a6a",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-nature-glow",
+      "value": "#6a9a7a",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-sky",
+      "value": "#6aaad8",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-bulb",
+      "value": "#f7e060",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-forest",
+      "value": "#3a6050",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-winter-sky",
+      "value": "#b8d8e8",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-peach",
+      "value": "#f0c8a0",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-dusk",
+      "value": "#3a2e48",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-party",
+      "value": "#e84838",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "vb-near-black",
+      "value": "#0d0e16",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#f0a050",
+      "source": "archive/by-artist/vinny-bobarino/vb-shared.css"
+    }
+  ],
+  "Archive — archive/by-artist/woah": [
+    {
+      "name": "woah-bg",
+      "value": "#0e0c10",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-surface",
+      "value": "#3a3028",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-dusk",
+      "value": "#584840",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-sandy",
+      "value": "#907060",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-ocean",
+      "value": "#788090",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-blush",
+      "value": "#f0c8b8",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-sunset",
+      "value": "#e8a0a0",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-rose-sky",
+      "value": "#c87888",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-lavender",
+      "value": "#b8c0d8",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-coastal",
+      "value": "#7888b0",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-deep-ocean",
+      "value": "#485878",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-sage-dark",
+      "value": "#3a5830",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-sage-mid",
+      "value": "#5a7848",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-sage-pale",
+      "value": "#90b878",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-rust",
+      "value": "#784030",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-terra",
+      "value": "#a86048",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-peach",
+      "value": "#d4a880",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-pink-sky",
+      "value": "#f8e0d0",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-gold",
+      "value": "#f0c890",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-mauve",
+      "value": "#9080a0",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-light-pink",
+      "value": "#fadce8",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    },
+    {
+      "name": "woah-pop-pink",
+      "value": "#ff9ec4",
+      "source": "archive/by-artist/woah/woah-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/college-green-apt": [
+    {
+      "name": "cg-deep",
+      "value": "#382e28",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-dark",
+      "value": "#504438",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-surface",
+      "value": "#a09080",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-light",
+      "value": "#c8bea8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-cream",
+      "value": "#e8e0cc",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-white",
+      "value": "#f8f4e8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-bg",
+      "value": "#0e0c0a",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-green",
+      "value": "#607850",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-deep2",
+      "value": "#4a6838",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-cta",
+      "value": "#c07838",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-gold",
+      "value": "#e8a858",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-heading",
+      "value": "#8878a8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-sage",
+      "value": "#b8a0c8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-taupe",
+      "value": "#6a5840",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-bluegrey",
+      "value": "#384858",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-text-bright",
+      "value": "#f0e8d8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-text-body",
+      "value": "#c8baa8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-text-dim",
+      "value": "#907860",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-text-faint",
+      "value": "#604838",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-text-disabled",
+      "value": "#483828",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-bark",
+      "value": "#2a2018",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-umber",
+      "value": "#3a2e20",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-clay",
+      "value": "#604830",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-sand",
+      "value": "#b8a888",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-dust",
+      "value": "#d8cdb8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-forest",
+      "value": "#1e3018",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-moss",
+      "value": "#3a5028",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-fern",
+      "value": "#4e6838",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-leaf",
+      "value": "#789858",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-pale-green",
+      "value": "#a8b890",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-slate-deep",
+      "value": "#202c38",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-slate",
+      "value": "#485868",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-slate-mid",
+      "value": "#607080",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-slate-light",
+      "value": "#90a0b0",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-fog",
+      "value": "#c0ccd8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-deep-purple",
+      "value": "#302838",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-violet",
+      "value": "#605078",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-lilac",
+      "value": "#9888b8",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-pale-lilac",
+      "value": "#d0c8e0",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-rust",
+      "value": "#904828",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-amber",
+      "value": "#c89040",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-honey",
+      "value": "#d8b060",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-pale-gold",
+      "value": "#f0d098",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-terra",
+      "value": "#a03820",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-brick",
+      "value": "#7a2818",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-sienna",
+      "value": "#c05030",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-blush-earth",
+      "value": "#d08060",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-rose-dust",
+      "value": "#c89888",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-teal-deep",
+      "value": "#183028",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-teal",
+      "value": "#305848",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-teal-mid",
+      "value": "#487860",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-teal-light",
+      "value": "#789880",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-teal-mist",
+      "value": "#a8c0b0",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-warm-gray-dark",
+      "value": "#383028",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-warm-gray",
+      "value": "#585048",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-warm-gray-light",
+      "value": "#908880",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-warm-gray-pale",
+      "value": "#c0b8b0",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-void",
+      "value": "#060504",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-near-black",
+      "value": "#0a0808",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "cg-deep-brown",
+      "value": "#181210",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#d8a068",
+      "source": "archive/by-place/college-green-apt/cg-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/frogwood-manor": [
+    {
+      "name": "fm-deep",
+      "value": "#382820",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-dark",
+      "value": "#301828",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-surface",
+      "value": "#2a2a50",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-muted",
+      "value": "#9888a0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-light",
+      "value": "#f8d888",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-cream",
+      "value": "#f8e8d8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-bg",
+      "value": "#0c0810",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-cobalt",
+      "value": "#4080f0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-sky",
+      "value": "#6080e8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-brand",
+      "value": "#a85a18",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-amber",
+      "value": "#e8a040",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-violet",
+      "value": "#a030c8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-sage",
+      "value": "#6a9878",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-pink",
+      "value": "#f040a0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-pink-light",
+      "value": "#e860c0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-rose",
+      "value": "#c02070",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-lilac",
+      "value": "#c8a0d8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-plum",
+      "value": "#281838",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-peach",
+      "value": "#f0b060",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-text-bright",
+      "value": "#f8f0e8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-text-body",
+      "value": "#c8b8d0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-text-dim",
+      "value": "#887898",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-text-faint",
+      "value": "#584860",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-text-disabled",
+      "value": "#382838",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-void",
+      "value": "#060408",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-abyss",
+      "value": "#0a0614",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-deep-plum",
+      "value": "#180e28",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-deep-navy",
+      "value": "#0e1428",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-surface-low",
+      "value": "#1e1c38",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-surface-mid",
+      "value": "#343058",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-surface-high",
+      "value": "#484470",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-raised",
+      "value": "#585488",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-navy",
+      "value": "#1a2a80",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-royal",
+      "value": "#2850c8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-periwinkle",
+      "value": "#8098e8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-ice",
+      "value": "#b0c0f8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-mist",
+      "value": "#d8e0f8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-deep-violet",
+      "value": "#580878",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-bright-violet",
+      "value": "#c050f0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-lavender",
+      "value": "#d8b0f0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-pale-lilac",
+      "value": "#ecd8f8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-hot-pink",
+      "value": "#ff1880",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-blush",
+      "value": "#f890c8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-petal",
+      "value": "#f8c0e0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-magenta",
+      "value": "#e020a0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-rust",
+      "value": "#803010",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-terra",
+      "value": "#c04820",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-gold",
+      "value": "#d4a020",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-butter",
+      "value": "#f8e098",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-honey",
+      "value": "#e8b848",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-forest",
+      "value": "#284838",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-moss",
+      "value": "#486848",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-fern",
+      "value": "#5a8868",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-mint",
+      "value": "#90c8a0",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-pale-sage",
+      "value": "#b8d8b8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-teal-deep",
+      "value": "#103830",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-teal",
+      "value": "#208060",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-teal-bright",
+      "value": "#30b888",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "fm-teal-mist",
+      "value": "#88d8b8",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#d08838",
+      "source": "archive/by-place/frogwood-manor/fm-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/green-street-apt": [
+    {
+      "name": "gs-deep",
+      "value": "#382e28",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-dark",
+      "value": "#504438",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-surface",
+      "value": "#786858",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-muted",
+      "value": "#a09080",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-light",
+      "value": "#c8bea8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-cream",
+      "value": "#e8e0cc",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-heading",
+      "value": "#f8f4e8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-body",
+      "value": "#c8a878",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-bg",
+      "value": "#0e0c0a",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-brand",
+      "value": "#7888a8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-accent",
+      "value": "#c07838",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-green",
+      "value": "#607850",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-leaf",
+      "value": "#485840",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-warm",
+      "value": "#e8c8a0",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-rose",
+      "value": "#704858",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-sage",
+      "value": "#8878a8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-text-body",
+      "value": "#d8c8a8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-text-faint",
+      "value": "#706050",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-text-disabled",
+      "value": "#504030",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-slate-deep",
+      "value": "#283040",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-slate",
+      "value": "#485868",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-slate-mid",
+      "value": "#607888",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-slate-light",
+      "value": "#90a8b8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-slate-pale",
+      "value": "#c0d0d8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-steel",
+      "value": "#384858",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-ice",
+      "value": "#d8e4ec",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-bark",
+      "value": "#2a2018",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-umber",
+      "value": "#3a2e20",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-clay",
+      "value": "#604830",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-sand",
+      "value": "#b8a888",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-dust",
+      "value": "#d8ccb8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-parchment",
+      "value": "#f0e8d8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-forest",
+      "value": "#1e3018",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-moss",
+      "value": "#3a5028",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-fern",
+      "value": "#506840",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-olive",
+      "value": "#788858",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-pale-green",
+      "value": "#a8b890",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-lichen",
+      "value": "#c0c8a8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-teal-deep",
+      "value": "#183028",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-teal",
+      "value": "#305848",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-teal-mid",
+      "value": "#487860",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-teal-light",
+      "value": "#789880",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-teal-mist",
+      "value": "#a8c0b0",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-deep-rose",
+      "value": "#402028",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-mauve",
+      "value": "#805868",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-blush",
+      "value": "#c08888",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-petal",
+      "value": "#e0b0b0",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-rose-pale",
+      "value": "#f0d0d0",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-rust",
+      "value": "#904828",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-terra",
+      "value": "#a03820",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-amber",
+      "value": "#c89040",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-honey",
+      "value": "#d8a848",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-gold",
+      "value": "#e8c060",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-butter",
+      "value": "#f8e098",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-night",
+      "value": "#080c10",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-dusk",
+      "value": "#101820",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-dusk-warm",
+      "value": "#100e08",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-void",
+      "value": "#060504",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-glow-warm",
+      "value": "#f0d0a0",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-glow-cool",
+      "value": "#c0d8e8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-glow-green",
+      "value": "#c0d0a8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "gs-glow-rose",
+      "value": "#e8c0c0",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#a0b0c8",
+      "source": "archive/by-place/green-street-apt/gs-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/irvin-house": [
+    {
+      "name": "ih-deep",
+      "value": "#4a5058",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-dark",
+      "value": "#6a7278",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-muted",
+      "value": "#9098a0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-light",
+      "value": "#b8c8d8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-cream",
+      "value": "#dce8f0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-bg",
+      "value": "#0c0e10",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-brand",
+      "value": "#7090b8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-accent",
+      "value": "#80b8c8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-green",
+      "value": "#608850",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-leaf",
+      "value": "#4a7858",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-cta",
+      "value": "#a86848",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-heading",
+      "value": "#c8b890",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-body",
+      "value": "#907060",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-warm",
+      "value": "#d4906a",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-sage",
+      "value": "#8888b0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-wheat",
+      "value": "#b8d0b0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-text-bright",
+      "value": "#f0f4f8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-text-body",
+      "value": "#c8d4e0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-text-dim",
+      "value": "#8898a8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-text-faint",
+      "value": "#586070",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-text-disabled",
+      "value": "#384048",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-navy",
+      "value": "#1a2838",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-deep-blue",
+      "value": "#2a3f58",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-mid-blue",
+      "value": "#4a6888",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-pale-blue",
+      "value": "#a0b8d0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-mist",
+      "value": "#d0dce8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-ice",
+      "value": "#e8f0f8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-void",
+      "value": "#060810",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-near-black",
+      "value": "#0a0c10",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-surface",
+      "value": "#181e24",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-raised",
+      "value": "#242c34",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-forest",
+      "value": "#1e3020",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-moss",
+      "value": "#385828",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-fern",
+      "value": "#507840",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-olive",
+      "value": "#788858",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-pale-green",
+      "value": "#a8c098",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-lichen",
+      "value": "#c8d8b8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-teal-deep",
+      "value": "#183830",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-teal",
+      "value": "#286858",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-teal-mid",
+      "value": "#409878",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-teal-bright",
+      "value": "#60b898",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-teal-mist",
+      "value": "#a0d0c0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-ember",
+      "value": "#6a2818",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-rust",
+      "value": "#904830",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-terra",
+      "value": "#c06040",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-salmon",
+      "value": "#e09070",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-peach",
+      "value": "#f0b898",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-blush",
+      "value": "#f8d0b8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-deep-sage",
+      "value": "#484858",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-violet-gray",
+      "value": "#707090",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-lavender",
+      "value": "#a8a8c8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-pale-lavender",
+      "value": "#d0d0e8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-lilac-mist",
+      "value": "#e8e8f4",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-straw-deep",
+      "value": "#687848",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-straw",
+      "value": "#98a870",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-pale-straw",
+      "value": "#c8d8a8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-linen",
+      "value": "#e8ecd8",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-bark",
+      "value": "#2a2018",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-taupe",
+      "value": "#706050",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-sand",
+      "value": "#b0a888",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-parchment",
+      "value": "#e8e0cc",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-glow-blue",
+      "value": "#b0d0f0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-glow-warm",
+      "value": "#f0c8a0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-glow-green",
+      "value": "#b8d8b0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    },
+    {
+      "name": "ih-glow-sage",
+      "value": "#c8c8e0",
+      "source": "archive/by-place/irvin-house/ih-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/marvin-gardens-g12": [
+    {
+      "name": "mg-deep",
+      "value": "#283828",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-dark",
+      "value": "#382848",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-surface",
+      "value": "#4a2830",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-muted",
+      "value": "#7848a0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-pink",
+      "value": "#d880c0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-rose",
+      "value": "#f080a0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-offwhite",
+      "value": "#f8f0f8",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-near-black",
+      "value": "#0c0a12",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-brand",
+      "value": "#a02858",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-accent",
+      "value": "#d04878",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-cta",
+      "value": "#c87830",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-gold",
+      "value": "#e8c060",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-tan",
+      "value": "#c8a868",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-green",
+      "value": "#388040",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-leaf",
+      "value": "#60b858",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-teal-light",
+      "value": "#60a8c0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-text-body",
+      "value": "#e0c0d0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-text-dim",
+      "value": "#a07888",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-text-faint",
+      "value": "#705058",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-text-disabled",
+      "value": "#483040",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-void",
+      "value": "#060408",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-abyss",
+      "value": "#08060e",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-deep-plum",
+      "value": "#140a1e",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-deep-forest",
+      "value": "#0e1a0e",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-surface-low",
+      "value": "#1a1028",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-surface-mid",
+      "value": "#281838",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-raised",
+      "value": "#382048",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-deep-violet",
+      "value": "#3a1060",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-violet",
+      "value": "#5a1880",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-bright-violet",
+      "value": "#9030c0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-lavender",
+      "value": "#b878d8",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-pale-lilac",
+      "value": "#d8b0f0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-lilac-mist",
+      "value": "#ecd8f8",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-deep-rose",
+      "value": "#601030",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-crimson",
+      "value": "#a01840",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-hot-pink",
+      "value": "#e02880",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-neon-pink",
+      "value": "#ff40a0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-blush",
+      "value": "#f090b8",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-petal",
+      "value": "#f8c0d8",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-magenta",
+      "value": "#d020a0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-bright-magenta",
+      "value": "#f030c0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-deep-gold",
+      "value": "#6a4810",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-rust-gold",
+      "value": "#a06820",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-amber",
+      "value": "#d09030",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-pale-gold",
+      "value": "#f0d070",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-butter",
+      "value": "#f8e898",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-ember",
+      "value": "#803010",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-terra",
+      "value": "#c05020",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-peach",
+      "value": "#f0a060",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-salmon",
+      "value": "#f0b888",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-forest",
+      "value": "#1a3018",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-moss",
+      "value": "#284828",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-fern",
+      "value": "#4a6838",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-olive",
+      "value": "#789848",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-pale-green",
+      "value": "#a8c878",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-mint",
+      "value": "#80e888",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-teal-deep",
+      "value": "#183838",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-teal",
+      "value": "#286858",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-teal-mid",
+      "value": "#409898",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-teal-bright",
+      "value": "#60c0b8",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-teal-mist",
+      "value": "#a0d8d0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-sky",
+      "value": "#80c8e0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-pale-sky",
+      "value": "#c0e0f0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-glow-pink",
+      "value": "#f8a0c0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-glow-gold",
+      "value": "#f8d888",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-glow-green",
+      "value": "#b0e8a0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    },
+    {
+      "name": "mg-glow-violet",
+      "value": "#d0a0f0",
+      "source": "archive/by-place/marvin-gardens-g12/mg-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/melrose-house": [
+    {
+      "name": "mh-deep",
+      "value": "#6a6e78",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-surface",
+      "value": "#786858",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-bread",
+      "value": "#3e4048",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-muted",
+      "value": "#9080a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-light",
+      "value": "#a0b0c8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-cream",
+      "value": "#c8d4e0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-coral",
+      "value": "#c87878",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-peach",
+      "value": "#e8a090",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-pale",
+      "value": "#f0c8c0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-gold",
+      "value": "#d4a060",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-brand",
+      "value": "#6878a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-sage",
+      "value": "#7ab8a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-lavender",
+      "value": "#c8a8d0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-sage2",
+      "value": "#a8c0a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-amber",
+      "value": "#e8b870",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-slate",
+      "value": "#5a6890",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-dark",
+      "value": "#2a2c30",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-bg",
+      "value": "#0c0d0f",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-text-bright",
+      "value": "#f0f2f8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-text-body",
+      "value": "#c8d0d8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-text-dim",
+      "value": "#8890a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-text-faint",
+      "value": "#586070",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-text-disabled",
+      "value": "#383c44",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-void",
+      "value": "#060608",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-near-black",
+      "value": "#0a0a0e",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-surface-low",
+      "value": "#141418",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-surface-mid",
+      "value": "#1e2024",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-raised",
+      "value": "#242830",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-navy",
+      "value": "#1a2038",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-deep-slate",
+      "value": "#2a3050",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-mid-slate",
+      "value": "#3a4868",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-pale-slate",
+      "value": "#8898b8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-sky-pale",
+      "value": "#b8c8e0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-ice",
+      "value": "#dce8f4",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-steel",
+      "value": "#4a5878",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-deep-purple",
+      "value": "#2a1e38",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-violet",
+      "value": "#504870",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-mauve",
+      "value": "#806888",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-pale-mauve",
+      "value": "#b090b8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-lilac",
+      "value": "#e0c8e8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-lilac-mist",
+      "value": "#f0e8f8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-deep-rust",
+      "value": "#5a2020",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-rust",
+      "value": "#8a3828",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-terra",
+      "value": "#b05038",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-salmon",
+      "value": "#d89080",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-blush",
+      "value": "#f0b8b0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-rose-pale",
+      "value": "#f8d8d0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-deep-gold",
+      "value": "#6a4818",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-honey",
+      "value": "#c89040",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-pale-gold",
+      "value": "#f0d098",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-butter",
+      "value": "#f8e8b8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-straw",
+      "value": "#f0e0a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-forest",
+      "value": "#1e3028",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-moss",
+      "value": "#3a5040",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-fern",
+      "value": "#587858",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-olive",
+      "value": "#789868",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-pale-sage",
+      "value": "#c0d4b8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-lichen",
+      "value": "#d8e4d0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-teal-deep",
+      "value": "#183830",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-teal",
+      "value": "#2a6858",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-teal-mid",
+      "value": "#409878",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-teal-bright",
+      "value": "#60b898",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-teal-mist",
+      "value": "#a8d0c0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-bark",
+      "value": "#2a2018",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-taupe",
+      "value": "#706050",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-sand",
+      "value": "#b0a080",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-parchment",
+      "value": "#e8e0c8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-glow-coral",
+      "value": "#f8c0b0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-glow-blue",
+      "value": "#b8d0e8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-glow-sage",
+      "value": "#b8d8c0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-glow-gold",
+      "value": "#f8d8a0",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    },
+    {
+      "name": "mh-glow-lavender",
+      "value": "#d8c0e8",
+      "source": "archive/by-place/melrose-house/mh-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/the-tuna-can": [
+    {
+      "name": "tc-brand",
+      "value": "#6a5018",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-amber",
+      "value": "#b87828",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-bright",
+      "value": "#e8c870",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-heading",
+      "value": "#e8d890",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-body",
+      "value": "#c8c0a0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-deep",
+      "value": "#2e2c20",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-dark",
+      "value": "#1e1c14",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-mid",
+      "value": "#3a3828",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-muted",
+      "value": "#787060",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-gold",
+      "value": "#c8a040",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-red",
+      "value": "#a83840",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-green",
+      "value": "#507840",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-olive",
+      "value": "#3d4a30",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-terra",
+      "value": "#8a4a30",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-wheat",
+      "value": "#d4b880",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-copper",
+      "value": "#c0784a",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-khaki",
+      "value": "#a8a870",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-offwhite",
+      "value": "#f5f0e0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-bg",
+      "value": "#0e0d09",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-text-bright",
+      "value": "#f8f4e8",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-text-body",
+      "value": "#d8d0b0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-text-dim",
+      "value": "#a09878",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-text-faint",
+      "value": "#706848",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-text-disabled",
+      "value": "#484030",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-void",
+      "value": "#060604",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-near-black",
+      "value": "#0a0904",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-surface-low",
+      "value": "#161408",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-surface-mid",
+      "value": "#201e10",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-raised",
+      "value": "#282618",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-deep-gold",
+      "value": "#4a3810",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-dark-amber",
+      "value": "#7a5018",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-honey",
+      "value": "#d49838",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-pale-gold",
+      "value": "#f0dc98",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-butter",
+      "value": "#f8eeb8",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-straw",
+      "value": "#f0e4a0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-deep-red",
+      "value": "#501818",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-crimson",
+      "value": "#782028",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-brick",
+      "value": "#903030",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-rose-earth",
+      "value": "#c05048",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-blush-earth",
+      "value": "#d08870",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-rust",
+      "value": "#6a3018",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-sienna",
+      "value": "#a85830",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-clay",
+      "value": "#c07048",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-salmon",
+      "value": "#d89870",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-peach-earth",
+      "value": "#e8b888",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-forest",
+      "value": "#1e3018",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-moss",
+      "value": "#304828",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-fern",
+      "value": "#486838",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-sage",
+      "value": "#789858",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-pale-green",
+      "value": "#a8b880",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-lichen",
+      "value": "#c8d0a8",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-slate-deep",
+      "value": "#202830",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-slate",
+      "value": "#485868",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-slate-mid",
+      "value": "#607880",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-slate-light",
+      "value": "#90a8b0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-fog",
+      "value": "#c0ccd0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-teal-deep",
+      "value": "#183028",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-teal",
+      "value": "#2a5848",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-teal-mid",
+      "value": "#408868",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-teal-light",
+      "value": "#70a888",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-teal-mist",
+      "value": "#a8c8b8",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-bark",
+      "value": "#3a2a18",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-umber",
+      "value": "#4a3820",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-sand",
+      "value": "#b8a878",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-parchment",
+      "value": "#e0d4b8",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-linen",
+      "value": "#f0e8d0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-glow-gold",
+      "value": "#f8e098",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-glow-warm",
+      "value": "#f8c888",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-glow-green",
+      "value": "#c0d4a0",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-glow-cool",
+      "value": "#b8d0d8",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "tc-glow-red",
+      "value": "#e8a898",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#d0a050",
+      "source": "archive/by-place/the-tuna-can/tc-shared.css"
+    }
+  ],
+  "Archive — archive/by-place/twin-maples": [
+    {
+      "name": "tm-deep",
+      "value": "#1e2420",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-dark",
+      "value": "#283028",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-surface",
+      "value": "#3a4a38",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-muted",
+      "value": "#6a7868",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-light",
+      "value": "#98a888",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-cream",
+      "value": "#d4d8c8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-heading",
+      "value": "#d4b898",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-body",
+      "value": "#b8b098",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-brand",
+      "value": "#4a6858",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-accent",
+      "value": "#c07848",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-warm",
+      "value": "#d4b870",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sage",
+      "value": "#7ab0c0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-leaf",
+      "value": "#8a9878",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-bright",
+      "value": "#e8c870",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-bg",
+      "value": "#0c0f0d",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-text-bright",
+      "value": "#f0ede8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-text-body",
+      "value": "#d0c8b0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-text-dim",
+      "value": "#909880",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-text-faint",
+      "value": "#606858",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-text-disabled",
+      "value": "#404838",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-lavender",
+      "value": "#a890b8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-void",
+      "value": "#040604",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-near-black",
+      "value": "#080c08",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-surface-low",
+      "value": "#141814",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-raised",
+      "value": "#303830",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-forest-deep",
+      "value": "#0e1810",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-forest",
+      "value": "#1a2e1c",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-moss",
+      "value": "#2a4028",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-fern",
+      "value": "#486040",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-olive",
+      "value": "#708860",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-pale-green",
+      "value": "#b0c0a0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-lichen",
+      "value": "#c8d4b8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-mint-pale",
+      "value": "#d8e8d0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-brand-deep",
+      "value": "#1e3828",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-brand-mid",
+      "value": "#386050",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-brand-bright",
+      "value": "#608870",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-brand-pale",
+      "value": "#90b8a0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-brand-mist",
+      "value": "#c0d8c8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-slate-deep",
+      "value": "#1a2830",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-slate",
+      "value": "#304858",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-slate-mid",
+      "value": "#507080",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sage-bright",
+      "value": "#90c8d8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sage-pale",
+      "value": "#b8dce8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-ice",
+      "value": "#d8eef4",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sky",
+      "value": "#6898b0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-ember",
+      "value": "#6a3010",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-rust",
+      "value": "#904828",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-crimson",
+      "value": "#c83028",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-terra",
+      "value": "#b86030",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-copper",
+      "value": "#d08848",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-honey",
+      "value": "#e0c060",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-pale-gold",
+      "value": "#f0d888",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-butter",
+      "value": "#f8eaa8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sand-deep",
+      "value": "#6a5830",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sand",
+      "value": "#a89060",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-sand-light",
+      "value": "#c8b080",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-parchment",
+      "value": "#e8dcc0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-linen",
+      "value": "#f4ede0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-bark",
+      "value": "#2a2018",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-umber",
+      "value": "#3a2e20",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-taupe",
+      "value": "#706050",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-stone",
+      "value": "#908070",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-glow-green",
+      "value": "#c0d8a8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-glow-warm",
+      "value": "#f0d090",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-glow-sage",
+      "value": "#b8e0e8",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-glow-gold",
+      "value": "#f8e4a0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    },
+    {
+      "name": "tm-glow-earth",
+      "value": "#e0c0a0",
+      "source": "archive/by-place/twin-maples/tm-shared.css"
+    }
+  ],
+  "Assets": [
+    {
+      "name": "dorf-white",
+      "value": "#F8F8F8",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-shell",
+      "value": "#F0F0EE",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-warm-white",
+      "value": "#E8E6E0",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-silver-white",
+      "value": "#E0E0DC",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gray-white",
+      "value": "#D0D0CC",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-white-cool",
+      "value": "#F4F4F8",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-white-warm",
+      "value": "#FAF8F0",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-off-white",
+      "value": "#ECEAE4",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-pale-gray",
+      "value": "#C8C8C4",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-light-gray",
+      "value": "#B8B8B4",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-label",
+      "value": "#A8A8A8",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-mid-gray",
+      "value": "#787878",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-dark-gray",
+      "value": "#484848",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-type-gray",
+      "value": "#383838",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gray-1",
+      "value": "#989898",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gray-2",
+      "value": "#686868",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gray-3",
+      "value": "#585858",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gray-4",
+      "value": "#404040",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gray-5",
+      "value": "#282828",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-grip",
+      "value": "#1A1E28",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-grip-mid",
+      "value": "#242838",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-grip-light",
+      "value": "#343848",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-near-black",
+      "value": "#0E1018",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-black",
+      "value": "#080A10",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-navy-deep",
+      "value": "#080C18",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-navy-mid",
+      "value": "#1E2438",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-navy-bright",
+      "value": "#2E3448",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-navy-muted",
+      "value": "#404858",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-navy-pale",
+      "value": "#606878",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-navy-ghost",
+      "value": "#9098A8",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber",
+      "value": "#F0B800",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-bright",
+      "value": "#F8C800",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-deep",
+      "value": "#C89000",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-glow",
+      "value": "#D4A010",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-pale",
+      "value": "#F8E080",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-mist",
+      "value": "#FAF0B0",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-dark",
+      "value": "#A07008",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-amber-ember",
+      "value": "#886000",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-gold",
+      "value": "#E0A800",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange",
+      "value": "#E87820",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-bright",
+      "value": "#F08828",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-deep",
+      "value": "#B85E10",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-pale",
+      "value": "#F0A860",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-muted",
+      "value": "#C87030",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-warm",
+      "value": "#E89040",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-light",
+      "value": "#F8B878",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-orange-mist",
+      "value": "#FAD0A0",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-terra",
+      "value": "#A04E10",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-text-dim",
+      "value": "#606068",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-text-label",
+      "value": "#909098",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-text-muted",
+      "value": "#888890",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-text-faint",
+      "value": "#585860",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-text-disabled",
+      "value": "#383840",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-surface",
+      "value": "#F4F4F2",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "dorf-raised",
+      "value": "#EAEAE6",
+      "source": "assets/dorfic-palette.css"
+    },
+    {
+      "name": "card-face-bg",
+      "value": "#f8f9fa",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "card-back-bg",
+      "value": "#1a4a4a",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "card-back-pattern",
+      "value": "#2a6a6a",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "card-red",
+      "value": "#cc0000",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "card-black",
+      "value": "#111111",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "fc-gold",
+      "value": "#d4a017",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "fc-skin",
+      "value": "#e8b89d",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "fc-blue",
+      "value": "#1a4a7a",
+      "source": "assets/cards/css/cards.css"
+    },
+    {
+      "name": "fc-purple",
+      "value": "#6a1b9a",
+      "source": "assets/cards/css/cards.css"
+    }
+  ],
+  "Global Palette (style.css)": [
+    {
+      "name": "black",
+      "value": "#080808",
+      "source": "style.css"
+    },
+    {
+      "name": "deep",
+      "value": "#111118",
+      "source": "style.css"
+    },
+    {
+      "name": "rose",
+      "value": "#ff3d6e",
+      "source": "style.css"
+    },
+    {
+      "name": "bubblegum",
+      "value": "#FF8584",
+      "source": "style.css"
+    },
+    {
+      "name": "yellow",
+      "value": "#ffe03a",
+      "source": "style.css"
+    },
+    {
+      "name": "cyan",
+      "value": "#00f5ff",
+      "source": "style.css"
+    },
+    {
+      "name": "green",
+      "value": "#39ff6e",
+      "source": "style.css"
+    },
+    {
+      "name": "orange",
+      "value": "#ff7c1f",
+      "source": "style.css"
+    },
+    {
+      "name": "purple",
+      "value": "#c45fff",
+      "source": "style.css"
+    },
+    {
+      "name": "white",
+      "value": "#f0ead8",
+      "source": "style.css"
+    },
+    {
+      "name": "dim",
+      "value": "#8a7a8a",
+      "source": "style.css"
+    },
+    {
+      "name": "slate",
+      "value": "#8899aa",
+      "source": "style.css"
+    },
+    {
+      "name": "blue",
+      "value": "#4678ff",
+      "source": "style.css"
+    },
+    {
+      "name": "magenta",
+      "value": "#ff2d78",
+      "source": "style.css"
+    },
+    {
+      "name": "darkgreen",
+      "value": "#1f7a3e",
+      "source": "style.css"
+    },
+    {
+      "name": "teal",
+      "value": "#1a7a5e",
+      "source": "style.css"
+    },
+    {
+      "name": "burntorange",
+      "value": "#ff6b35",
+      "source": "style.css"
+    },
+    {
+      "name": "violet",
+      "value": "#b24bff",
+      "source": "style.css"
+    },
+    {
+      "name": "mintteal",
+      "value": "#00e5b3",
+      "source": "style.css"
+    },
+    {
+      "name": "softpink",
+      "value": "#ff9eb5",
+      "source": "style.css"
+    },
+    {
+      "name": "nearwhite",
+      "value": "#f0f0f0",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-mount",
+      "value": "#1A0505",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-mount-dark",
+      "value": "#110206",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-mount-mid",
+      "value": "#2D0A0A",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-ash",
+      "value": "#3D3028",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-smoke",
+      "value": "#6A5A52",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-haze",
+      "value": "#9A8878",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-lava-amber",
+      "value": "#FFAD1F",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-lava-orange",
+      "value": "#FF6A00",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-lava-deep",
+      "value": "#CC2200",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-ember",
+      "value": "#FF3D00",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-sky-deep",
+      "value": "#0A0518",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-sky-mid",
+      "value": "#1A0A2E",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-gas-glow",
+      "value": "#2A1A0A",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-cereal-green",
+      "value": "#39FF14",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-cereal-white",
+      "value": "#FFFFFF",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-text-primary",
+      "value": "#FFF0E8",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-text-dim",
+      "value": "#C8A898",
+      "source": "style.css"
+    },
+    {
+      "name": "mc-surface",
+      "value": "#1A0D08",
+      "source": "style.css"
+    }
+  ],
+  "Home": [
+    {
+      "name": "nav-glow",
+      "value": "rgba(255,61,110,0.3)",
+      "source": "home/about.css"
+    },
+    {
+      "name": "nav-brand-glow",
+      "value": "rgba(0,245,255,0.6)",
+      "source": "home/about.css"
+    },
+    {
+      "name": "nav-glow",
+      "value": "rgba(57,255,110,0.4)",
+      "source": "home/guestbook.css"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#90ffaa",
+      "source": "home/guestbook.css"
+    }
+  ],
+  "Music": [
+    {
+      "name": "dorf-white",
+      "value": "#F8F8F8",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-shell",
+      "value": "#F0F0EE",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-warm-white",
+      "value": "#E8E6E0",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-silver-white",
+      "value": "#E0E0DC",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-gray-white",
+      "value": "#D0D0CC",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-label",
+      "value": "#A8A8A8",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-mid-gray",
+      "value": "#787878",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-dark-gray",
+      "value": "#484848",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-type-gray",
+      "value": "#383838",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-grip",
+      "value": "#1A1E28",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-grip-mid",
+      "value": "#242838",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-grip-light",
+      "value": "#343848",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-near-black",
+      "value": "#0E1018",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-black",
+      "value": "#080A10",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-amber",
+      "value": "#F0B800",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-amber-bright",
+      "value": "#F8C800",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-amber-deep",
+      "value": "#C89000",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-amber-glow",
+      "value": "#D4A010",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-orange",
+      "value": "#E87820",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-orange-bright",
+      "value": "#F08828",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-orange-deep",
+      "value": "#B85E10",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-orange-pale",
+      "value": "#F0A860",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-text-dim",
+      "value": "#606068",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-text-label",
+      "value": "#909098",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-surface",
+      "value": "#F4F4F2",
+      "source": "music/music.css"
+    },
+    {
+      "name": "dorf-raised",
+      "value": "#EAEAE6",
+      "source": "music/music.css"
+    },
+    {
+      "name": "nav-glow",
+      "value": "rgba(255,61,110,0.4)",
+      "source": "music/jukebox/styles.css"
+    },
+    {
+      "name": "nav-brand-glow",
+      "value": "rgba(0,245,255,0.6)",
+      "source": "music/jukebox/styles.css"
+    },
+    {
+      "name": "nav-glow",
+      "value": "rgba(57,255,20,0.4)",
+      "source": "music/distributed-music/styles.css"
+    }
+  ],
+  "Press": [
+    {
+      "name": "nav-accent",
+      "value": "#c02828",
+      "source": "press/press.css"
+    }
+  ],
+  "Templates": [
+    {
+      "name": "ctb-void",
+      "value": "#001a1f",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-darkest",
+      "value": "#012a33",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-dark",
+      "value": "#024959",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-mid-dark",
+      "value": "#03738a",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-deep",
+      "value": "#0489a3",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-bright",
+      "value": "#05a8c2",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-muted",
+      "value": "#5fc4d4",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-cyan",
+      "value": "#7fd8e8",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-light",
+      "value": "#a8e8f0",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "ctb-pale",
+      "value": "#d0f4f8",
+      "source": "templates/contributor-theme.css"
+    },
+    {
+      "name": "lbl-void",
+      "value": "#10002b",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-darkest",
+      "value": "#240046",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-dark",
+      "value": "#3c096c",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-mid-dark",
+      "value": "#5a189a",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-deep",
+      "value": "#6a1bb0",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-bright",
+      "value": "#782cbf",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-muted",
+      "value": "#b185db",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-violet",
+      "value": "#9d4edd",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-light",
+      "value": "#c77dff",
+      "source": "templates/label-theme.css"
+    },
+    {
+      "name": "lbl-pale",
+      "value": "#e0aaff",
+      "source": "templates/label-theme.css"
+    }
+  ],
+  "Visual — collage.html": [
+    {
+      "name": "mem-black",
+      "value": "#1A1A1A",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-white",
+      "value": "#F5F5F0",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-cream",
+      "value": "#F0E8D8",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-red",
+      "value": "#FF3B30",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-yellow",
+      "value": "#FFD600",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-blue",
+      "value": "#0057FF",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-green",
+      "value": "#00C853",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-hot-pink",
+      "value": "#FF2D9B",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-orange",
+      "value": "#FF6B00",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-cyan",
+      "value": "#00D4FF",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-violet",
+      "value": "#7B2FFF",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-coral",
+      "value": "#FF5A5A",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-mint",
+      "value": "#A8FFD8",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-sky",
+      "value": "#A8D8FF",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-blush",
+      "value": "#FFB8D8",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-lemon",
+      "value": "#FFF176",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-lilac",
+      "value": "#D8B8FF",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-peach",
+      "value": "#FFD0A8",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-aqua",
+      "value": "#B8FFF0",
+      "source": "visual/collage.html"
+    },
+    {
+      "name": "mem-squiggle-gray",
+      "value": "#C8C0B8",
+      "source": "visual/collage.html"
+    }
+  ],
+  "Visual — index.html": [
+    {
+      "name": "nav-accent",
+      "value": "#FF3800",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#39FF14",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-hotpink",
+      "value": "#FF1F5B",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-tangerine",
+      "value": "#FF6B00",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-yellow",
+      "value": "#FFE600",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-cyan",
+      "value": "#00C2FF",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-violet",
+      "value": "#7B2FBE",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-green",
+      "value": "#00B84C",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-coral",
+      "value": "#FF3D6B",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-lipstick",
+      "value": "#FF2D55",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-skyblue",
+      "value": "#00D4FF",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-orange",
+      "value": "#FF9500",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-black",
+      "value": "#111111",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-cream",
+      "value": "#F5F0E8",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-blaze",
+      "value": "#FF4500",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-rose-red",
+      "value": "#FF007F",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-deep-sky",
+      "value": "#00BFFF",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-deep-pink",
+      "value": "#FF1493",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-mango",
+      "value": "#F5A623",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-lime",
+      "value": "#AAFF00",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-vivid-violet",
+      "value": "#9400D3",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-silk-orange",
+      "value": "#FF6600",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-spring-green",
+      "value": "#00FF7F",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-white",
+      "value": "#FFFFFF",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-blue",
+      "value": "#0047FF",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-teal",
+      "value": "#00CCA3",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "pop-magenta",
+      "value": "#CC00AA",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "dd-hover-bg",
+      "value": "#1A0533",
+      "source": "visual/index.html"
+    },
+    {
+      "name": "card-accent",
+      "value": "#FFB800",
+      "source": "visual/index.html"
+    }
+  ],
+  "Visual — photography": [
+    {
+      "name": "cp-night-sky",
+      "value": "#0D0D2B",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-deep-navy",
+      "value": "#141438",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-twilight",
+      "value": "#1E1E4A",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-smoked-glass",
+      "value": "#2A2A5A",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-soft-white",
+      "value": "#F0EEF8",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-sakura-pink",
+      "value": "#FF8FB0",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-coral-sunrise",
+      "value": "#FF6E6E",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-peach-glow",
+      "value": "#FFB48A",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-butter-neon",
+      "value": "#FFE97A",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-mint-flash",
+      "value": "#7AFFD4",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-aqua-haze",
+      "value": "#5EEEF0",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-periwinkle",
+      "value": "#A0A8FF",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-lavender-mist",
+      "value": "#C8AEFF",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-blush-lilac",
+      "value": "#E8B0FF",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-horizon-pink",
+      "value": "#FF4FA0",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-electric-teal",
+      "value": "#00E5CC",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-neon-periwinkle",
+      "value": "#6B6BFF",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-chrome-silver",
+      "value": "#C0C8E0",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-rose-gold",
+      "value": "#E8A0B0",
+      "source": "visual/photography/index.html"
+    },
+    {
+      "name": "cp-cassette-gold",
+      "value": "#E8C86A",
+      "source": "visual/photography/index.html"
+    }
+  ],
+  "Visual — tv": [
+    {
+      "name": "nav-accent",
+      "value": "#FFB800",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "nav-brand",
+      "value": "#F0EAD8",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-amber-dim",
+      "value": "#B38200",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-cabinet",
+      "value": "#2A2218",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-cabinet-light",
+      "value": "#3D3225",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-bezel",
+      "value": "#1A1610",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-screen-off",
+      "value": "#0A0A08",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-screen-glow",
+      "value": "rgba(180,220,160,0.15)",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-static",
+      "value": "#C8C8C8",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-knob",
+      "value": "#4A3F30",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-knob-face",
+      "value": "#5C4E3A",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-grille",
+      "value": "#1E1A12",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-badge-bg",
+      "value": "#1C1810",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "tv-badge-text",
+      "value": "#8A7A5A",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "dd-1",
+      "value": "#FF6B6B",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "dd-3",
+      "value": "#00F5FF",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "dd-4",
+      "value": "#39FF6E",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "black",
+      "value": "#0A0A12",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "deep",
+      "value": "#111118",
+      "source": "visual/tv/index.html"
+    },
+    {
+      "name": "dim",
+      "value": "#8A7A6A",
+      "source": "visual/tv/index.html"
+    }
+  ]
+}
