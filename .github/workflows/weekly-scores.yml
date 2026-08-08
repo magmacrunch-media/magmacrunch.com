@@ -9,7 +9,7 @@ jobs:
   summary:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      discussions: write
     steps:
       - uses: actions/checkout@v4
 
@@ -20,9 +20,11 @@ jobs:
       - name: Generate summary
         run: node scripts/weekly-scores.mjs > scores-report.md
 
-      - name: Create Issue
-        uses: peter-evans/create-issue-from-file@v5
+      - name: Post to Discussion
+        uses: abirismyname/create-discussion@v2.1.0
         with:
           title: "Weekly High Scores — ${{ github.event.schedule || 'manual' }}"
-          content-filepath: ./scores-report.md
-          labels: scores, automated issue
+          body-filepath: ./scores-report.md
+          category-name: "High Scores"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

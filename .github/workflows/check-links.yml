@@ -11,7 +11,7 @@ jobs:
   linkChecker:
     runs-on: ubuntu-latest
     permissions:
-      issues: write
+      discussions: write
     steps:
       - uses: actions/checkout@v4
 
@@ -49,21 +49,15 @@ jobs:
           path: .lycheecache
           key: ${{ steps.lychee.outputs.cache-primary-key }}
 
-      - name: Close previous broken-links issues
+      - name: Post to Discussion
         if: steps.lychee.outputs.exit_code != 0
-        run: |
-          gh issue list --label broken-links --state open --json number -q '.[].number' | \
-          xargs -I {} gh issue close {} --comment "Superseded by new scan"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Issue From File
-        if: steps.lychee.outputs.exit_code != 0
-        uses: peter-evans/create-issue-from-file@v5
+        uses: abirismyname/create-discussion@v2.1.0
         with:
           title: "Broken links detected (${{ github.ref_name }})"
-          content-filepath: ./lychee/out.md
-          labels: report, automated issue, broken-links
+          body-filepath: ./lychee/out.md
+          category-name: "Link Reports"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Fail on broken links
         if: steps.lychee.outputs.exit_code != 0

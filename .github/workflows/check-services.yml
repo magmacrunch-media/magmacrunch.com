@@ -9,7 +9,7 @@ jobs:
   check:
     runs-on: self-hosted
     permissions:
-      issues: write
+      discussions: write
     steps:
       - name: Check service health
         id: health
@@ -63,10 +63,12 @@ jobs:
           ```
           EOF
 
-      - name: Create Issue on failure
+      - name: Post to Discussion
         if: failure()
-        uses: peter-evans/create-issue-from-file@v5
+        uses: abirismyname/create-discussion@v2.1.0
         with:
           title: "Pi services down — ${{ github.run_id }}"
-          content-filepath: ./service-report.md
-          labels: alert, automated issue
+          body-filepath: ./service-report.md
+          category-name: "Service Health"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
