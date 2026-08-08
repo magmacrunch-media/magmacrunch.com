@@ -41,6 +41,7 @@ Live site: [magmacrunch.com](https://magmacrunch.com)
 - **high scores** — ScoreClient with Raspberry Pi backend, localStorage fallback
 - **theme color audit** — scans all CSS files, generates visual color preview
 - **cache bake** — MusicBrainz data inlined into pages for instant loading
+- **monitoring** — fail2ban auto-bans scanners, TRAFFIC tab shows nginx analytics, app-level connection logging
 
 See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for full documentation on all systems.
 
