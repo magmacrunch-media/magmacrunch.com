@@ -4,3 +4,19 @@
 
 # mailto links
 ^mailto:
+
+# Root-relative links (work in production, not locally)
+^/$
+^/login$
+
+# Local file references (link checker can't resolve)
+^file://
+
+# External links that are temporarily/permanently unavailable
+^https?://www\.themoviedb\.org/person/5971128
+^https?://www\.themoviedb\.org/movie/1721141
+^https?://www\.youtube\.com/watch\?v=EXjXWocYlTU
+^https?://www\.sunnydalesounds\.com
+
+# Placeholder images (expected to be replaced with real photos)
+assets/photos/placeholder\.jpg
