@@ -11,7 +11,7 @@ jobs:
   linkChecker:
     runs-on: ubuntu-latest
     permissions:
-      discussions: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
 
@@ -49,14 +49,21 @@ jobs:
           path: .lycheecache
           key: ${{ steps.lychee.outputs.cache-primary-key }}
 
-      - name: Post to Discussion
+      - name: Create issue on broken links
         if: steps.lychee.outputs.exit_code != 0
-        uses: abirismyname/create-discussion@v2.1.0
+        uses: actions/github-script@v7
         with:
-          title: "Broken links detected (${{ github.ref_name }})"
-          body-filepath: ./lychee/out.md
-          category-name: "Link Reports"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('./lychee/out.md', 'utf8');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              title: `Broken links detected (${{ github.ref_name }})`,
+              body: body + '\n\n---\n*Created by check-links workflow*',
+              labels: ['automated issue', 'broken-links']
+            });
 
       - name: Fail on broken links
         if: steps.lychee.outputs.exit_code != 0
