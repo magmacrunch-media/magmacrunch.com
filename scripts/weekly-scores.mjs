@@ -100,9 +100,49 @@ function generateReport() {
   return lines.join('\n');
 }
 
-const report = generateReport();
+function generateDiscordPayload() {
+  const games = loadScores();
+  const totalScores = games.reduce((sum, g) => sum + g.scores.length, 0);
+  const players = playerStats(games);
+  const now = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-// If run directly, write to stdout
+  const medals = ['🥇', '🥈', '🥉'];
+  const fields = [];
+
+  for (const game of games.sort((a, b) => a.game.localeCompare(b.game))) {
+    const top = game.scores.slice(0, 5);
+    let value;
+
+    if (top.length === 0) {
+      value = '*No scores yet*';
+    } else {
+      value = top.map((s, i) => {
+        const rank = i < 3 ? medals[i] : `${i + 1}.`;
+        return `${rank} **${s.initials}** — ${formatScore(s)}`;
+      }).join('\n');
+    }
+
+    fields.push({ name: game.game, value, inline: true });
+  }
+
+  const footerParts = [`${games.length} games`, `${totalScores} scores`];
+  if (players.length > 0) {
+    footerParts.push(`${players.length} players`);
+  }
+
+  return JSON.stringify({
+    embeds: [{
+      title: `Weekly High Scores — ${now}`,
+      fields,
+      footer: { text: footerParts.join(' · ') },
+      color: 0xFF3D6E,
+    }],
+  }, null, 2);
+}
+
+const isDiscord = process.argv.includes('--discord');
+const output = isDiscord ? generateDiscordPayload() : generateReport();
+
 if (process.argv[1] && process.argv[1].endsWith('weekly-scores.mjs')) {
-  console.log(report);
+  console.log(output);
 }
