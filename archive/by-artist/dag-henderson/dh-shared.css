@@ -110,6 +110,16 @@ body.dh-page .nav-card.c-events:hover {
     color: var(--dh-white);
 }
 
+body.dh-page .nav-card.c-music-videos {
+    background: var(--dh-rust-dark);
+    color: var(--dh-amber);
+    border-color: var(--dh-rust-dark);
+}
+body.dh-page .nav-card.c-music-videos:hover {
+    background: transparent;
+    color: var(--dh-white);
+}
+
 body.dh-page .nav-card.c-links {
     background: var(--dh-tan);
     color: var(--dh-white);
