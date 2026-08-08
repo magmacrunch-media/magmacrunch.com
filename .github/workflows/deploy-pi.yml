@@ -24,6 +24,7 @@ jobs:
             --exclude '*.pyc' \
             --exclude '__pycache__' \
             --exclude 'scores/*.json' \
+            --exclude 'venv' \
             arcade/ jake@192.168.1.16:~/arcade/
 
           ssh -o StrictHostKeyChecking=no \
