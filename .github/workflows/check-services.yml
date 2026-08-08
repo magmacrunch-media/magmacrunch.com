@@ -8,6 +8,8 @@ on:
 jobs:
   check:
     runs-on: self-hosted
+    permissions:
+      issues: write
     steps:
       - name: Check service health
         id: health
