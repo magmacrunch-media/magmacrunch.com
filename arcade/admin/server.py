@@ -502,6 +502,73 @@ def generate_session_token():
     import secrets
     return secrets.token_hex(16)
 
+# ── Bot status helpers ───────────────────────────────────────────────────────
+
+def _fetch_bot_statuses(token):
+    """Fetch status of all GitHub Actions workflows."""
+    workflows = [
+        {"name": "CI", "file": "ci.yml"},
+        {"name": "Deploy to Pi", "file": "deploy-pi.yml"},
+        {"name": "Check Links", "file": "check-links.yml"},
+        {"name": "Check Archive Format", "file": "check-archive-format.yml"},
+        {"name": "Check Pi Services", "file": "check-services.yml"},
+        {"name": "Rebuild Search Index", "file": "rebuild-search-index.yml"},
+        {"name": "Generate Archive Stubs", "file": "generate-stubs.yml"},
+        {"name": "Bake Cache", "file": "bake-cache.yml"},
+        {"name": "Weekly High Scores", "file": "weekly-scores.yml"},
+        {"name": "Arcade Smoke Test", "file": "smoke-test.yml"},
+        {"name": "MusicBrainz Backup", "file": "backup-musicbrainz.yml"},
+        {"name": "TMDB Backup", "file": "backup-tmdb.yml"},
+        {"name": "Bot Status Report", "file": "bot-status.yml"},
+    ]
+
+    # Fetch recent runs
+    status, body = github_request("GET", "actions/runs?per_page=100", token)
+    runs = body.get("workflow_runs", []) if status == 200 else []
+
+    # Map runs to workflows
+    for wf in workflows:
+        wf_runs = [r for r in runs if r.get("path", "").endswith(wf["file"])]
+        if wf_runs:
+            latest = wf_runs[0]
+            wf["status"] = latest.get("status", "unknown")
+            wf["conclusion"] = latest.get("conclusion", "")
+            wf["createdAt"] = latest.get("created_at", "")
+            wf["event"] = latest.get("event", "")
+            wf["htmlUrl"] = latest.get("html_url", "")
+        else:
+            wf["status"] = "unknown"
+            wf["conclusion"] = ""
+            wf["createdAt"] = ""
+            wf["event"] = ""
+            wf["htmlUrl"] = ""
+
+    return workflows
+
+def _trigger_workflow(token, workflow_id):
+    """Trigger a GitHub Actions workflow dispatch."""
+    data = {"ref": "main"}
+    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_id}/dispatches"
+    headers = {
+        "Authorization": f"token {token}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunch-Ops/2.1",
+        "Content-Type": "application/json",
+    }
+    req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
+    try:
+        with urllib.request.urlopen(req) as resp:
+            return True, None
+    except urllib.error.HTTPError as e:
+        error_body = {}
+        try:
+            error_body = json.loads(e.read())
+        except Exception:
+            pass
+        return False, error_body.get("message", f"HTTP {e.code}")
+    except Exception as e:
+        return False, str(e)
+
 # ── System commands ──────────────────────────────────────────────────────────
 
 _executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
@@ -1437,6 +1504,41 @@ async def ws_handler(websocket):
                 github_token = msg.get("github_token", "")
                 save_github_token(github_token)
                 await websocket.send(json.dumps({"type": "github_config_saved", "ok": True}))
+
+            # ── Bot status actions ──────────────────────────────────────────
+
+            elif action == "bots_list":
+                token = load_github_token()
+                if not token:
+                    await websocket.send(json.dumps({
+                        "type": "bots_list_result", "workflows": [], "error": "No GitHub token — configure in GITHUB tab"
+                    }))
+                    continue
+
+                workflows = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _fetch_bot_statuses(token)
+                )
+                await websocket.send(json.dumps({
+                    "type": "bots_list_result", "workflows": workflows
+                }))
+
+            elif action == "bots_trigger":
+                token = load_github_token()
+                workflow_id = msg.get("workflow_id", "")
+                if not token or not workflow_id:
+                    await websocket.send(json.dumps({
+                        "type": "bots_trigger_result", "ok": False,
+                        "error": "Missing token or workflow_id"
+                    }))
+                    continue
+
+                ok, error = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _trigger_workflow(token, workflow_id)
+                )
+                await websocket.send(json.dumps({
+                    "type": "bots_trigger_result", "ok": ok, "workflow_id": workflow_id,
+                    "error": error
+                }))
 
     except websockets.ConnectionClosed:
         pass
