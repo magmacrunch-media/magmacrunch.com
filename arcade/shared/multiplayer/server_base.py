@@ -34,7 +34,7 @@ def copy_board_2d(board):
     """Deep-copy a 2D list (list of lists)."""
     return [row[:] for row in board]
 
-logging.getLogger("websockets").setLevel(logging.WARNING)
+logging.getLogger("websockets").setLevel(logging.INFO)
 
 
 # ── Color palette ────────────────────────────────────────────────────────────
