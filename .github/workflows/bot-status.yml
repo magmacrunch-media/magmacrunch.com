@@ -30,22 +30,27 @@ jobs:
           echo "| Bot | Last Run | Status | Trigger |" >> status-report.md
           echo "|---|---|---|---|" >> status-report.md
 
-          # List of workflows to check
+          # List of GH Actions workflows to check
+          # (Pi-managed bots run via cron on the Pi — not tracked here)
           WORKFLOWS=(
             "CI:ci.yml"
             "Deploy to Pi:deploy-pi.yml"
-            "Check Links:check-links.yml"
             "Check Archive Format:check-archive-format.yml"
-            "Check Pi Services:check-services.yml"
-            "Rebuild Search Index:rebuild-search-index.yml"
             "Generate Archive Stubs:generate-stubs.yml"
             "Bake Cache:bake-cache.yml"
-            "Weekly High Scores:weekly-scores.yml"
-            "Arcade Smoke Test:smoke-test.yml"
-            "Fetch Play Counts:play-counts.yml"
-            "MusicBrainz Backup:backup-musicbrainz.yml"
-            "TMDB Backup:backup-tmdb.yml"
             "Bot Status Report:bot-status.yml"
+          )
+
+          # Pi-managed bots (run via crontab on Pi — see arcade/scripts/bot-*.sh)
+          PI_BOTS=(
+            "Link Checker (Pi)"
+            "Service Health (Pi)"
+            "Smoke Test (Pi)"
+            "MusicBrainz Backup (Pi)"
+            "TMDB Backup (Pi)"
+            "Play Counts (Pi)"
+            "Weekly Scores (Pi)"
+            "Search Index (Pi)"
           )
 
           for entry in "${WORKFLOWS[@]}"; do
@@ -101,6 +106,17 @@ jobs:
             esac
 
             echo "| $NAME | $REL_TIME | $ICON $STATUS | $TRIGGER |" >> status-report.md
+          done
+
+          echo "" >> status-report.md
+          echo "---" >> status-report.md
+          echo "" >> status-report.md
+          echo "## Pi-Managed Bots" >> status-report.md
+          echo "" >> status-report.md
+          echo "These run via cron on the Raspberry Pi (see \`arcade/scripts/bot-*.sh\`):" >> status-report.md
+          echo "" >> status-report.md
+          for bot in "${PI_BOTS[@]}"; do
+            echo "| $bot | ✓ active | cron |" >> status-report.md
           done
 
           echo "" >> status-report.md

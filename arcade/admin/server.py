@@ -20,6 +20,7 @@ import shutil
 import subprocess
 import sys
 import threading
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime
@@ -522,11 +523,19 @@ def _format_score_entry(entry):
     return " \u00b7 ".join(parts)
 
 
+_last_notifications = {}  # {(game_id, name, score): timestamp}
+
+
 def _notify_discord_high_score(game_id, name, score, extra):
     """Send a Discord webhook when a new #1 score is set."""
     webhook_url = CONFIG.get("discord_webhook_url")
     if not webhook_url:
         return
+    key = (game_id, name, score)
+    now = time.time()
+    if key in _last_notifications and now - _last_notifications[key] < 60:
+        return  # skip duplicate within 60s
+    _last_notifications[key] = now
     try:
         data = load_game_scores(game_id)
         game_name = data.get("game", game_id)
