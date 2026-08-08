@@ -75,12 +75,12 @@ body.cpr-page .nav-card.c-works:hover {
     color: var(--cpr-cream);
 }
 
-body.cpr-page .nav-card.c-green {
+body.cpr-page .nav-card.c-games {
     background: var(--cpr-green);
     color: var(--cpr-surface);
     border-color: var(--cpr-green);
 }
-body.cpr-page .nav-card.c-green:hover {
+body.cpr-page .nav-card.c-games:hover {
     background: var(--cpr-dark-green);
     color: var(--cpr-cream);
 }
