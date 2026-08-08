@@ -1,0 +1,32 @@
+name: Rebuild Search Index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'archive/_cache/**/*.json'
+      - 'music/distributed-music/releases.js'
+      - 'music/jukebox/songs.json'
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build search index
+        run: node scripts/build-search-index.js
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add search-index.json
+          git diff --cached --quiet || git commit -m "Rebuild search index"
+          git push
