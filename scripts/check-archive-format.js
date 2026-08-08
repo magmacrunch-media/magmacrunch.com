@@ -91,6 +91,10 @@ function extractCards(navLines) {
 
 // ── Check: sub-nav CSS class matches link text ──
 function checkSubNavClasses(file, lines) {
+  // Load CSS files for this page to verify target classes exist
+  const dir = path.dirname(file);
+  const cssClasses = loadCssClasses(dir);
+
   const navs = extractSubNavs(lines);
   for (const nav of navs) {
     const cards = extractCards(nav.lines);
@@ -98,12 +102,41 @@ function checkSubNavClasses(file, lines) {
       if (card.cls === 'c-back') continue;
       const expected = TEXT_TO_CLASS[card.text];
       if (expected && card.cls !== expected) {
+        // Only warn if the target class is actually defined in CSS.
+        // If it's not defined, the current class may be intentional.
+        if (!cssClasses.has(expected)) continue;
         const lineNum = nav.startLine + card.lineOffset + 1;
         warn(file, lineNum,
           `sub-nav class mismatch: "${card.text}" link uses ${card.cls}, expected ${expected}`);
       }
     }
   }
+}
+
+// ── Load CSS class definitions from a directory's stylesheets ──
+function loadCssClasses(dir) {
+  const classes = new Set();
+  const root = path.resolve(__dirname, '..');
+
+  // Collect CSS files: *-shared.css in page dir, style.css at root, templates CSS
+  const cssFiles = [];
+  try {
+    for (const f of fs.readdirSync(dir)) {
+      if (f.endsWith('.css')) cssFiles.push(path.join(dir, f));
+    }
+  } catch {}
+  cssFiles.push(path.join(root, 'style.css'));
+
+  for (const cssFile of cssFiles) {
+    try {
+      const css = fs.readFileSync(cssFile, 'utf8');
+      // Match .nav-card.c-classname patterns (handles .nav-card.c-music-videos, body.x-page .nav-card.c-events, etc.)
+      const re = /\.nav-card\.([\w-]+)/g;
+      let m;
+      while ((m = re.exec(css))) classes.add(m[1]);
+    } catch {}
+  }
+  return classes;
 }
 
 // ── Check: orphan closing divs ──
