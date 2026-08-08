@@ -70,4 +70,4 @@ jobs:
           title: "Pi services down — ${{ github.run_id }}"
           body-filepath: ./service-report.md
           category-name: "Service Health"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
