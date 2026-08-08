@@ -116,41 +116,33 @@ function drawBranding(ctx, color) {
   ctx.fillText('magmacrunch.com', 60, HEIGHT - 50)
 
   // Pixel logo on the right
-  drawM(ctx, WIDTH - 180, HEIGHT - 200, color)
+  drawPixelM(ctx, WIDTH - 180, HEIGHT - 200, color)
 }
 
-function drawM(ctx, x, y, color) {
-  const w = 64, h = 64
-  ctx.strokeStyle = color
-  ctx.lineWidth = 5
-  ctx.lineCap = 'round'
+function drawPixelM(ctx, x, y, color) {
+  const s = 8
+  ctx.fillStyle = color
   ctx.shadowColor = color
   ctx.shadowBlur = 10
 
-  // Left leg up to left peak
-  ctx.beginPath()
-  ctx.moveTo(x, y + h)
-  ctx.lineTo(x + w * 0.2, y)
-  ctx.stroke()
+  const pattern = [
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 0, 0, 0, 0, 1, 1],
+    [1, 1, 1, 0, 0, 1, 1, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1],
+    [1, 0, 0, 1, 1, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1],
+  ]
 
-  // Left peak down to center valley
-  ctx.beginPath()
-  ctx.moveTo(x + w * 0.2, y)
-  ctx.lineTo(x + w * 0.5, y + h * 0.55)
-  ctx.stroke()
-
-  // Center valley up to right peak
-  ctx.beginPath()
-  ctx.moveTo(x + w * 0.5, y + h * 0.55)
-  ctx.lineTo(x + w * 0.8, y)
-  ctx.stroke()
-
-  // Right peak down to right leg
-  ctx.beginPath()
-  ctx.moveTo(x + w * 0.8, y)
-  ctx.lineTo(x + w, y + h)
-  ctx.stroke()
-
+  for (let row = 0; row < pattern.length; row++) {
+    for (let col = 0; col < pattern[row].length; col++) {
+      if (pattern[row][col]) {
+        ctx.fillRect(x + col * s, y + row * s, s, s)
+      }
+    }
+  }
   ctx.shadowBlur = 0
 }
 
