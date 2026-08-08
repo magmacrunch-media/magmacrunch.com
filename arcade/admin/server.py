@@ -47,13 +47,18 @@ GITHUB_TOKEN_PATH = os.path.join(ADMIN_DIR, "github-token.json")
 
 
 def load_github_token():
-    """Load GitHub token from github-token.json."""
+    """Load GitHub token from github-token.json or GITHUB_TOKEN env var."""
+    # First try the file
     try:
         with open(GITHUB_TOKEN_PATH) as f:
             data = json.load(f)
-            return data.get("token", "")
+            token = data.get("token", "")
+            if token:
+                return token
     except (FileNotFoundError, json.JSONDecodeError):
-        return ""
+        pass
+    # Fall back to environment variable
+    return os.environ.get("GITHUB_TOKEN", "")
 
 
 def save_github_token(token):
