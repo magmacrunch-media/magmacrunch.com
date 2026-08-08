@@ -20,7 +20,7 @@ jobs:
             "8765:SORRY" "8766:Cribbage" "8767:Stud" "8768:Chat" \
             "8769:Chess" "8770:Checkers" "8771:Backgammon" \
             "8772:ChineseCheckers" "8773:Parchisi" "8774:Aggravation" \
-            "8782:Private" "8783:Counter" "8780:Admin"; do
+            "8783:Counter"; do
             PORT="${entry%%:*}"
             NAME="${entry##*:}"
             if nc -z -w2 "$PI" "$PORT" 2>/dev/null; then
