@@ -15,7 +15,7 @@ jobs:
         env:
           PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
         run: |
-          echo "$PI_SSH_KEY" > /tmp/pi_key
+          echo "$PI_SSH_KEY" | base64 -d > /tmp/pi_key
           chmod 600 /tmp/pi_key
 
           rsync -avz --delete \
