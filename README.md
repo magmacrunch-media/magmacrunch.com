@@ -23,6 +23,7 @@ Live site: [magmacrunch.com](https://magmacrunchmedia.github.io/magmacrunch.com/
 ├── scripts/          backup and build utilities
 ├── templates/        JS templates for archive pages
 ├── tools/            browser utilities (album art, media search, pixel process)
+├── og/               generated OG preview images (1200x630 PNGs)
 └── visual/           gallery pages (collage, photography, music videos, TV)
 ```
 
@@ -48,5 +49,6 @@ See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for ful
 - `npm test` — lint + JS tests
 - `npm run test:py` — Python tests for multiplayer game servers
 - `node scripts/backup-musicbrainz.mjs` — snapshot MusicBrainz data to local cache
+- `npm run og` — regenerate OG preview images for social media
 - `./arcade/start-all.sh` — launch all game servers locally
 - Arcade games are self-contained — own CSS/JS, no shared state
