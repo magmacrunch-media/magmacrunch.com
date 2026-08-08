@@ -27,6 +27,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add archive/_cache/stats/lastfm/ scripts/play-counts.json
+          git add arcade/admin/stats/lastfm/ scripts/play-counts.json
           git diff --cached --quiet || git commit -m "Update Last.fm play counts"
           git push

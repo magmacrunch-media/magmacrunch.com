@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const CACHE_DIR = resolve(ROOT, 'archive/_cache/stats/lastfm');
+const CACHE_DIR = resolve(ROOT, 'arcade/admin/stats/lastfm');
 const HISTORY_DIR = resolve(CACHE_DIR, 'history');
 const ARTISTS_FILE = resolve(__dirname, 'play-counts.json');
 const DRY_RUN = process.argv.includes('--dry-run');
