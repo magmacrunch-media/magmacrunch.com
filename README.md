@@ -48,7 +48,7 @@ See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for ful
 
 ## bots & automation
 
-14 automated bots keep the site running:
+16 automated bots keep the site running:
 
 | Bot | What it does | Schedule |
 |---|---|---|
@@ -59,9 +59,11 @@ See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for ful
 | **Rebuild Search Index** | Rebuild search-index.json | On content change |
 | **Generate Archive Stubs** | Auto-generate archive page stubs | On config change |
 | **Bake Cache** | Inline MusicBrainz data into pages | After backup |
-| **Weekly High Scores** | Post leaderboard to Discussion | Weekly |
+| **Weekly High Scores** | Post leaderboard to Discussion + Discord | Weekly |
+| **Fetch Play Counts** | Fetch Last.fm play counts | Weekly |
 | **MusicBrainz Backup** | Snapshot MusicBrainz API data | Weekly |
 | **TMDB Backup** | Snapshot TMDB person data | Weekly |
+| **Backup to Private Repo** | Sync code to private backup repo | On code changes |
 | **Bot Status Report** | Check all bot statuses | Weekly |
 | **Theme Color Audit** | Scan CSS files, generate color preview | On CSS change |
 
