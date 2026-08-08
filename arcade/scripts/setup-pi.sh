@@ -97,6 +97,69 @@ if [[ -f "$PRIVATE_DIR/systemd/arcade-private.service" ]]; then
     ok "Installed arcade-private.service"
 fi
 
+# ── Install Node.js and lychee for cron bots ────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing cron bot dependencies...${NC}"
+
+# Node.js
+if ! command -v node &>/dev/null; then
+    warn "Installing Node.js..."
+    apt-get install -y -qq nodejs npm > /dev/null 2>&1
+    ok "Node.js $(node --version) installed"
+else
+    ok "Node.js $(node --version) already installed"
+fi
+
+# lychee (link checker)
+if ! command -v lychee &>/dev/null; then
+    warn "Installing lychee..."
+    LYCHEE_VERSION="v0.24.2"
+    ARCH=$(uname -m)
+    if [ "$ARCH" = "aarch64" ]; then
+        LYCHEE_ARCH="aarch64-unknown-linux-gnu"
+    else
+        LYCHEE_ARCH="x86_64-unknown-linux-gnu"
+    fi
+    cd /tmp
+    curl -sLO "https://github.com/lycheeverse/lychee/releases/download/lychee-${LYCHEE_VERSION}/lychee-${LYCHEE_ARCH}.tar.gz"
+    tar xzf "lychee-${LYCHEE_ARCH}.tar.gz"
+    mv "lychee-${LYCHEE_ARCH}/lychee" /usr/local/bin/
+    rm -rf "lychee-${LYCHEE_ARCH}" "lychee-${LYCHEE_ARCH}.tar.gz"
+    ok "lychee $(lychee --version) installed"
+else
+    ok "lychee $(lychee --version) already installed"
+fi
+
+# Clone website repo for cron bots
+WEBSITE_DIR="/home/jake/website"
+if [[ ! -d "$WEBSITE_DIR/.git" ]]; then
+    warn "Cloning website repo..."
+    sudo -u jake git clone --depth 1 https://github.com/magmacrunchmedia/magmacrunch.com.git "$WEBSITE_DIR"
+    sudo -u jake git config --global user.name "Pi Bot" --global user.email "pi@magmacrunch.com"
+    ok "Website repo cloned"
+else
+    ok "Website repo already exists"
+fi
+
+# Create .env template if missing
+ENV_FILE="/home/jake/arcade/.env"
+if [[ ! -f "$ENV_FILE" ]]; then
+    cat > "$ENV_FILE" << 'ENVEOF'
+# Pi Bot Environment — fill in before enabling cron jobs
+# GITHUB_PAT=ghp_...
+# TMDB_API_KEY=...
+# LASTFM_API_KEY=...
+# DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+ENVEOF
+    chmod 600 "$ENV_FILE"
+    ok "Created .env template"
+fi
+
+# Create logs directory
+mkdir -p /home/jake/arcade/logs
+chown -R jake:jake /home/jake/arcade/logs
+
 # ── Reload systemd ──────────────────────────────────────────────────────────
 
 echo ""
