@@ -33,6 +33,7 @@ jobs:
           if [ -n "$FAILED" ]; then
             echo "" >> "$GITHUB_STEP_SUMMARY"
             echo "### Down services:$FAILED" >> "$GITHUB_STEP_SUMMARY"
+            echo "failed=$FAILED" >> "$GITHUB_OUTPUT"
             exit 1
           fi
           echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -71,3 +72,36 @@ jobs:
           body-filepath: ./service-report.md
           category-name: "Service Health"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post to Discord
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          FAILED="${{ steps.health.outputs.failed }}"
+          SERVICE_LIST=$(echo "$FAILED" | sed 's/^[[:space:]]*//' | sed 's/ /\\n- /g')
+          cat > discord-payload.json << ENDOFJSON
+          {
+            "embeds": [{
+              "title": "⚠️ Arcade Services Down",
+              "description": "**The following services are not responding:**\n- ${SERVICE_LIST}",
+              "fields": [
+                {
+                  "name": "Diagnose",
+                  "value": "\`\`\`bash\nssh jake@192.168.1.16 'sudo systemctl status arcade-* --no-pager'\n\`\`\`"
+                },
+                {
+                  "name": "Restart all",
+                  "value": "\`\`\`bash\nssh jake@192.168.1.16 'sudo systemctl restart arcade-*'\n\`\`\`"
+                }
+              ],
+              "color": 16750848,
+              "footer": {
+                "text": "Service Health Check · every 30 min"
+              }
+            }]
+          }
+          ENDOFJSON
+          curl -s -H "Content-Type: application/json" \
+               -d @discord-payload.json \
+               "$DISCORD_WEBHOOK_URL"
