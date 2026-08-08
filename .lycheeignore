@@ -7,6 +7,7 @@
 
 # Root-relative links (work in production, not locally)
 ^/$
+/login$
 
 # Local file references (link checker can't resolve)
 ^file://

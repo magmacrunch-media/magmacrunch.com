@@ -33,7 +33,7 @@ jobs:
             --cache
             --max-cache-age 1d
             --exclude-all-private
-            --accept 200,204,403,429
+            --accept 200,202,204,403,429
             --max-retries 2
             --retry-wait-time 2
             --timeout 30
