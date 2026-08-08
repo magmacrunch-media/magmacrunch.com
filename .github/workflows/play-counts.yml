@@ -1,0 +1,32 @@
+name: Fetch Play Counts
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Fetch play counts from Last.fm
+        run: node scripts/fetch-play-counts.mjs --skip-existing
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add archive/_cache/stats/lastfm/ scripts/play-counts.json
+          git diff --cached --quiet || git commit -m "Update Last.fm play counts"
+          git push
