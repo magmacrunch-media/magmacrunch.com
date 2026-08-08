@@ -1634,6 +1634,34 @@ async def ws_handler(websocket):
                     "error": error
                 }))
 
+            elif action == "nginx_traffic":
+                lines = min(int(msg.get("lines", 1000)), 10000)
+                top_ips, status_codes, user_agents, total = await asyncio.gather(
+                    run_cmd_async(
+                        f"sudo tail -n {lines} /var/log/nginx/access.log | awk '{{print $1}}' | sort | uniq -c | sort -rn | head -15",
+                        timeout=15
+                    ),
+                    run_cmd_async(
+                        f"sudo tail -n {lines} /var/log/nginx/access.log | awk '{{print $9}}' | sort | uniq -c | sort -rn",
+                        timeout=15
+                    ),
+                    run_cmd_async(
+                        f"sudo tail -n {lines} /var/log/nginx/access.log | awk -F'\"' '{{print $6}}' | sort | uniq -c | sort -rn | head -15",
+                        timeout=15
+                    ),
+                    run_cmd_async(
+                        "sudo wc -l < /var/log/nginx/access.log",
+                        timeout=15
+                    ),
+                )
+                await websocket.send(json.dumps({
+                    "type": "nginx_traffic",
+                    "top_ips": top_ips,
+                    "status_codes": status_codes,
+                    "user_agents": user_agents,
+                    "total": total
+                }))
+
     except websockets.ConnectionClosed:
         pass
     finally:
