@@ -56,7 +56,8 @@
             <button class="ops-tab" data-tab="security">SECURITY</button>
             <button class="ops-tab" data-tab="tv">TV</button>
             <button class="ops-tab" data-tab="favicon">FAVICON</button>
-           <button class="ops-tab" data-tab="github">GITHUB</button>
+            <button class="ops-tab" data-tab="github">GITHUB</button>
+            <button class="ops-tab" data-tab="bots">BOTS</button>
         </nav>
 
         <main>
@@ -523,6 +524,22 @@
                     <div id="gh-sync-log" class="gh-sync-log"></div>
                 </section>
             </div>
+
+            <!-- ═══ BOTS TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-bots" class="tab-panel hidden">
+                <section class="scores-section">
+                    <div class="scores-header">
+                        <h2 class="section-title">WORKFLOW BOTS</h2>
+                        <div class="scores-controls">
+                            <button id="btn-refresh-bots" class="btn btn-cyan btn-sm">REFRESH</button>
+                        </div>
+                    </div>
+                    <p class="api-keys-note">GitHub Actions workflows. Configure GitHub token in the GITHUB tab.</p>
+                    <div id="bots-grid" class="scores-grid">
+                        <div class="log-welcome">Click REFRESH to load bot status.</div>
+                    </div>
+                </section>
+            </div>
         </main>
 
         <footer>
@@ -596,5 +613,6 @@
     <script src="tv.js"></script>
     <script src="favicons.js"></script>
     <script src="github.js"></script>
+    <script src="bots.js"></script>
 </body>
 </html>

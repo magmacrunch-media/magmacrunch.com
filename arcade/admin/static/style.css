@@ -243,6 +243,7 @@ main {
 #tab-tv      { --tab-bright: #ff7c1f; --tab-accent: #d46518; --tab-mid: #8a4210; --tab-dim: #502808; --tab-glow: rgba(255,124,31,0.25); --tab-glow-strong: rgba(255,124,31,0.5); --tab-bg: rgba(255,124,31,0.06); }
 #tab-favicon { --tab-bright: #ffe03a; --tab-accent: #d4b82e; --tab-mid: #8a7a1e; --tab-dim: #504812; --tab-glow: rgba(255,224,58,0.25); --tab-glow-strong: rgba(255,224,58,0.5); --tab-bg: rgba(255,224,58,0.06); }
 #tab-github  { --tab-bright: #8899aa; --tab-accent: #6a7a88; --tab-mid: #4a5860; --tab-dim: #2e3840; --tab-glow: rgba(136,153,170,0.25); --tab-glow-strong: rgba(136,153,170,0.5); --tab-bg: rgba(136,153,170,0.06); }
+#tab-bots    { --tab-bright: #ff7c1f; --tab-accent: #d46518; --tab-mid: #8a4210; --tab-dim: #502808; --tab-glow: rgba(255,124,31,0.25); --tab-glow-strong: rgba(255,124,31,0.5); --tab-bg: rgba(255,124,31,0.06); }
 
 /* ── Per-tab button overrides (monochrome) ───────────────────────────────── */
 /* All buttons inside a tab panel use that tab's shades.
@@ -317,6 +318,15 @@ main {
 }
 #tab-github .btn-cyan:hover,  #tab-github .btn-green:hover,  #tab-github .btn-purple:hover,
 #tab-github .btn-yellow:hover, #tab-github .btn-orange:hover, #tab-github .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-bots .btn-cyan,  #tab-bots .btn-green,  #tab-bots .btn-purple,
+#tab-bots .btn-yellow, #tab-bots .btn-orange, #tab-bots .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-bots .btn-cyan:hover,  #tab-bots .btn-green:hover,  #tab-bots .btn-purple:hover,
+#tab-bots .btn-yellow:hover, #tab-bots .btn-orange:hover, #tab-bots .btn-slate:hover {
     background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
 }
 
