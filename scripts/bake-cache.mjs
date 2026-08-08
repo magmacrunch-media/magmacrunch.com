@@ -28,6 +28,7 @@ const ARCHIVE_DIRS = [
 // Config variable names for each entity type
 const CONFIG_PATTERNS = {
   'by-artist': { regex: /window\.ARTIST_CONFIG\s*=\s*(\{[^}]+\})/s, cacheType: 'artists', uuidKey: 'id' },
+  'by-artist-collective': { regex: /window\.COLLECTIVE_CONFIG\s*=\s*(\{[\s\S]*?\})\s*;/s, cacheType: 'collectives', slugKey: 'slug' },
   'by-place': { regex: /window\.PLACE_CONFIG\s*=\s*(\{[^}]+\})/s, cacheType: 'places', uuidKey: 'id' },
   'by-contributor': { regex: /window\.__CONTRIBUTOR_CONFIG\s*=\s*(\{[^}]+\})/s, cacheType: 'contributors', uuidKey: 'MB_ID' },
   'by-label': { regex: /window\.__LABEL_CONFIG\s*=\s*(\{[^}]+\})/s, cacheType: 'labels', uuidKey: 'MB_ID' },
@@ -59,10 +60,11 @@ function extractConfig(html, pattern) {
   try {
     // Parse the config object from the match
     const configStr = match[1];
-    // Extract UUID using the key name
-    const uuidMatch = configStr.match(new RegExp(`${pattern.uuidKey}\\s*:\\s*['"]([^'"]+)['"]`));
-    if (!uuidMatch) return null;
-    return uuidMatch[1];
+    // Extract identifier using the key name
+    const key = pattern.uuidKey || pattern.slugKey;
+    const idMatch = configStr.match(new RegExp(`${key}\\s*:\\s*['"]([^'"]+)['"]`));
+    if (!idMatch) return null;
+    return idMatch[1];
   } catch {
     return null;
   }
@@ -94,26 +96,24 @@ function bakeCache(html, cacheData) {
 function processStub(filePath) {
   const html = readFileSync(filePath, 'utf8');
 
-  // Determine entity type from path
+  // Find matching pattern by checking HTML content
   let cacheType = null;
-  let uuidKey = null;
   let pattern = null;
 
-  for (const [dir, p] of Object.entries(CONFIG_PATTERNS)) {
-    if (filePath.includes(dir)) {
+  for (const [name, p] of Object.entries(CONFIG_PATTERNS)) {
+    if (p.regex.test(html)) {
       pattern = p;
       cacheType = p.cacheType;
-      uuidKey = p.uuidKey;
       break;
     }
   }
 
   if (!pattern) return;
 
-  const uuid = extractConfig(html, pattern);
-  if (!uuid) return;
+  const id = extractConfig(html, pattern);
+  if (!id) return;
 
-  const cacheData = loadCache(cacheType, uuid);
+  const cacheData = loadCache(cacheType, id);
   if (!cacheData) return;
 
   // Check if already baked (has same data)
