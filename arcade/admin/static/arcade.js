@@ -51,6 +51,10 @@
     const modalLoad = $('#modal-load');
     const modalRestartPi = $('#modal-restart-pi');
     const modalPoweroffPi = $('#modal-poweroff-pi');
+    const trafficLines = $('#traffic-lines');
+    const trafficTotal = $('#traffic-total');
+    const trafficGrid = $('#traffic-grid');
+    const btnRefreshTraffic = $('#btn-refresh-traffic');
 
     // ── Message handler ───────────────────────────────────────────────────
 
@@ -103,6 +107,10 @@
                     window.OPS.toast(`Scores reset for ${msg.game}`);
                     requestScores();
                 }
+                break;
+
+            case 'nginx_traffic':
+                renderTraffic(msg);
                 break;
         }
     };
@@ -173,6 +181,11 @@
 
     function loadApiKeys() {
         window.OPS.send({ action: 'api_keys_load', token: window.OPS.authToken });
+    }
+
+    function requestTraffic() {
+        const lines = parseInt(trafficLines.value, 10) || 1000;
+        window.OPS.send({ action: 'nginx_traffic', lines, token: window.OPS.authToken });
     }
 
     // ── Render status grid ────────────────────────────────────────────────
@@ -507,6 +520,64 @@
         }, AUTO_RESTART_DELAY * 1000);
     }
 
+    // ── Traffic rendering ─────────────────────────────────────────────────
+
+    function renderTraffic(msg) {
+        const total = parseInt(msg.total, 10);
+        if (!isNaN(total)) {
+            trafficTotal.textContent = `TOTAL REQUESTS: ${total.toLocaleString()}`;
+        }
+
+        trafficGrid.innerHTML = '';
+
+        const sections = [
+            { title: 'TOP IPs', data: msg.top_ips },
+            { title: 'STATUS CODES', data: msg.status_codes },
+            { title: 'USER AGENTS', data: msg.user_agents },
+        ];
+
+        sections.forEach(({ title, data }) => {
+            const card = document.createElement('div');
+            card.className = 'traffic-card';
+            card.innerHTML = `<h3 class="traffic-card-title">${title}</h3>`;
+
+            const lines = (data || '').split('\n').filter(l => l.trim());
+            if (lines.length === 0) {
+                card.innerHTML += '<div class="log-welcome">No data</div>';
+            } else {
+                const table = document.createElement('div');
+                table.className = 'traffic-table';
+                lines.forEach(line => {
+                    const parts = line.trim().split(/\s+/);
+                    const count = parts[0];
+                    const label = parts.slice(1).join(' ');
+                    const row = document.createElement('div');
+                    row.className = 'traffic-row';
+
+                    const suspicious = isSuspicious(label, title);
+                    if (suspicious) row.classList.add('suspicious');
+
+                    row.innerHTML = `<span class="traffic-count">${count}</span><span class="traffic-label">${window.OPS.escapeHtml(label)}</span>`;
+                    table.appendChild(row);
+                });
+                card.appendChild(table);
+            }
+            trafficGrid.appendChild(card);
+        });
+    }
+
+    function isSuspicious(label, section) {
+        if (section === 'USER AGENTS') {
+            if (!label || label === '-') return true;
+            if (/MSIE 7\.0|Chrome\/1[0-4]\.|Trident/i.test(label)) return true;
+            if (/libredtail|Scrapy|curl|wget|python-requests/i.test(label)) return true;
+        }
+        if (section === 'STATUS CODES') {
+            if (label === '426' || label === '400' || label === '403' || label === '404') return true;
+        }
+        return false;
+    }
+
     // ── Event listeners ───────────────────────────────────────────────────
 
     btnRefresh.addEventListener('click', requestStatus);
@@ -536,5 +607,7 @@
             setTimeout(requestScores, 1000);
         });
     });
+
+    btnRefreshTraffic.addEventListener('click', requestTraffic);
 
 })();

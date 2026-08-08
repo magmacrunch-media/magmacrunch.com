@@ -222,7 +222,7 @@
 
     // ── Tab routing ───────────────────────────────────────────────────────
 
-    const TABS = ['arcade', 'jukebox', 'themes', 'accounts', 'security', 'tv', 'favicon', 'github', 'bots', 'plays'];
+    const TABS = ['arcade', 'jukebox', 'themes', 'accounts', 'security', 'tv', 'favicon', 'github', 'bots', 'plays', 'traffic'];
 
     function getActiveTab() {
         const hash = window.location.hash.replace('#', '');

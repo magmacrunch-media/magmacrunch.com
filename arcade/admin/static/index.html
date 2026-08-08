@@ -59,6 +59,7 @@
             <button class="ops-tab" data-tab="github">GITHUB</button>
             <button class="ops-tab" data-tab="bots">BOTS</button>
             <button class="ops-tab" data-tab="plays">PLAYS</button>
+            <button class="ops-tab" data-tab="traffic">TRAFFIC</button>
         </nav>
 
         <main>
@@ -555,6 +556,27 @@
                     <div id="plays-leaderboard" class="plays-leaderboard"></div>
                     <div id="plays-grid" class="scores-grid">
                         <div class="log-welcome">Click REFRESH to load play counts.</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ═══ TRAFFIC TAB ═══════════════════════════════════════════════ -->
+            <div id="tab-traffic" class="tab-panel hidden">
+                <section class="scores-section">
+                    <div class="scores-header">
+                        <h2 class="section-title">NGINX TRAFFIC</h2>
+                        <div class="scores-controls">
+                            <select id="traffic-lines" class="select-retro">
+                                <option value="500">LAST 500</option>
+                                <option value="1000" selected>LAST 1,000</option>
+                                <option value="5000">LAST 5,000</option>
+                            </select>
+                            <button id="btn-refresh-traffic" class="btn btn-cyan btn-sm">REFRESH</button>
+                        </div>
+                    </div>
+                    <div id="traffic-total" class="traffic-total"></div>
+                    <div id="traffic-grid" class="traffic-grid">
+                        <div class="log-welcome">Click REFRESH to load nginx traffic data.</div>
                     </div>
                 </section>
             </div>
