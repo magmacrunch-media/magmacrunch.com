@@ -244,6 +244,7 @@ main {
 #tab-favicon { --tab-bright: #ffe03a; --tab-accent: #d4b82e; --tab-mid: #8a7a1e; --tab-dim: #504812; --tab-glow: rgba(255,224,58,0.25); --tab-glow-strong: rgba(255,224,58,0.5); --tab-bg: rgba(255,224,58,0.06); }
 #tab-github  { --tab-bright: #8899aa; --tab-accent: #6a7a88; --tab-mid: #4a5860; --tab-dim: #2e3840; --tab-glow: rgba(136,153,170,0.25); --tab-glow-strong: rgba(136,153,170,0.5); --tab-bg: rgba(136,153,170,0.06); }
 #tab-bots    { --tab-bright: #ff7c1f; --tab-accent: #d46518; --tab-mid: #8a4210; --tab-dim: #502808; --tab-glow: rgba(255,124,31,0.25); --tab-glow-strong: rgba(255,124,31,0.5); --tab-bg: rgba(255,124,31,0.06); }
+#tab-plays   { --tab-bright: #6e9fff; --tab-accent: #5580d4; --tab-mid: #3a5a8a; --tab-dim: #223550; --tab-glow: rgba(110,159,255,0.25); --tab-glow-strong: rgba(110,159,255,0.5); --tab-bg: rgba(110,159,255,0.06); }
 
 /* ── Per-tab button overrides (monochrome) ───────────────────────────────── */
 /* All buttons inside a tab panel use that tab's shades.
@@ -327,6 +328,15 @@ main {
 }
 #tab-bots .btn-cyan:hover,  #tab-bots .btn-green:hover,  #tab-bots .btn-purple:hover,
 #tab-bots .btn-yellow:hover, #tab-bots .btn-orange:hover, #tab-bots .btn-slate:hover {
+    background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
+}
+
+#tab-plays .btn-cyan,  #tab-plays .btn-green,  #tab-plays .btn-purple,
+#tab-plays .btn-yellow, #tab-plays .btn-orange, #tab-plays .btn-slate {
+    color: var(--tab-accent); border-color: var(--tab-mid);
+}
+#tab-plays .btn-cyan:hover,  #tab-plays .btn-green:hover,  #tab-plays .btn-purple:hover,
+#tab-plays .btn-yellow:hover, #tab-plays .btn-orange:hover, #tab-plays .btn-slate:hover {
     background: var(--tab-accent); color: var(--black); box-shadow: 0 0 15px var(--tab-glow-strong);
 }
 
@@ -684,6 +694,98 @@ main {
 .score-val { color: var(--yellow); flex: 1; text-align: right; }
 
 .score-card-actions { margin-top: 8px; text-align: right; }
+
+/* ── Plays Tab ──────────────────────────────────────────────────────── */
+
+.plays-leaderboard {
+    margin-bottom: 16px;
+}
+
+.plays-stats {
+    display: flex;
+    gap: 24px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 2px solid var(--border);
+}
+
+.plays-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.plays-stat-value {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: var(--tab-bright, var(--yellow));
+    text-shadow: 0 0 8px var(--tab-glow, rgba(255,224,58,0.5));
+}
+
+.plays-stat-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+}
+
+.plays-card-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--dim);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.score-card-rank {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--dim);
+    margin-right: 8px;
+}
+
+.plays-card-tracks {
+    margin: 8px 0;
+    padding: 8px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border);
+}
+
+.plays-tracks-header {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--tab-accent, var(--cyan));
+    margin-bottom: 8px;
+}
+
+.plays-track {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 0;
+    font-size: 9px;
+    border-bottom: 1px solid rgba(136,153,170,0.05);
+}
+
+.plays-track-rank {
+    color: var(--dim);
+    width: 18px;
+    text-align: right;
+}
+
+.plays-track-name {
+    color: var(--cyan);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.plays-track-count {
+    color: var(--yellow);
+    text-align: right;
+}
 
 /* ── Server Reference ─────────────────────────────────────────────────── */
 

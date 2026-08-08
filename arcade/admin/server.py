@@ -90,6 +90,7 @@ def valid_unit(unit):
 # ── Score storage ────────────────────────────────────────────────────────────
 
 SCORES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scores")
+STATS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stats")
 API_KEYS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api-keys.json")
 JUKEBOX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "jukebox-songs.json")
 THEMES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "themes.json")
@@ -966,6 +967,35 @@ async def ws_handler(websocket):
                         await websocket.send(json.dumps({
                             "type": "error", "action": "score_reset", "error": str(e)
                         }))
+
+            elif action == "plays_load":
+                def _load_plays():
+                    result = []
+                    lastfm_dir = os.path.join(STATS_DIR, "lastfm")
+                    if os.path.isdir(lastfm_dir):
+                        for fn in os.listdir(lastfm_dir):
+                            if fn.endswith(".json"):
+                                path = os.path.join(lastfm_dir, fn)
+                                try:
+                                    with open(path) as f:
+                                        result.append(json.load(f))
+                                except Exception:
+                                    pass
+                    # sort by playcount descending
+                    result.sort(key=lambda a: a.get("stats", {}).get("playcount", 0), reverse=True)
+                    return result
+                try:
+                    artists = await asyncio.get_event_loop().run_in_executor(
+                        _executor, _load_plays
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "plays_load",
+                        "artists": artists
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "error", "action": "plays_load", "error": str(e)
+                    }))
 
             elif action == "api_keys_load":
                 keys = await asyncio.get_event_loop().run_in_executor(

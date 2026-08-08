@@ -58,6 +58,7 @@
             <button class="ops-tab" data-tab="favicon">FAVICON</button>
             <button class="ops-tab" data-tab="github">GITHUB</button>
             <button class="ops-tab" data-tab="bots">BOTS</button>
+            <button class="ops-tab" data-tab="plays">PLAYS</button>
         </nav>
 
         <main>
@@ -540,6 +541,23 @@
                     </div>
                 </section>
             </div>
+
+            <!-- ═══ PLAYS TAB ════════════════════════════════════════════════ -->
+            <div id="tab-plays" class="tab-panel hidden">
+                <section class="scores-section">
+                    <div class="scores-header">
+                        <h2 class="section-title">PLAY COUNTS</h2>
+                        <div class="scores-controls">
+                            <button id="btn-refresh-plays" class="btn btn-cyan btn-sm">REFRESH</button>
+                        </div>
+                    </div>
+                    <p class="api-keys-note">Last.fm global play counts. Configure API key in the SECURITY tab.</p>
+                    <div id="plays-leaderboard" class="plays-leaderboard"></div>
+                    <div id="plays-grid" class="scores-grid">
+                        <div class="log-welcome">Click REFRESH to load play counts.</div>
+                    </div>
+                </section>
+            </div>
         </main>
 
         <footer>
@@ -614,5 +632,6 @@
     <script src="favicons.js"></script>
     <script src="github.js"></script>
     <script src="bots.js"></script>
+    <script src="plays.js"></script>
 </body>
 </html>

@@ -19,7 +19,9 @@
         archive:    { label: 'Internet Archive',  needsKey: false, url: 'https://archive.org/apis/' },
         tmdb:       { label: 'TMDB',             needsKey: true,  url: 'https://www.themoviedb.org/settings/api',
                       testUrl: (k) => `https://api.themoviedb.org/3/movie/550?api_key=${k}` },
-        musicbrainz:{ label: 'MusicBrainz',      needsKey: false, url: 'https://musicbrainz.org/doc/Development' }
+        musicbrainz:{ label: 'MusicBrainz',      needsKey: false, url: 'https://musicbrainz.org/doc/Development' },
+        lastfm:     { label: 'Last.fm',           needsKey: true,  url: 'https://www.last.fm/api/account/create',
+                      testUrl: (k) => `https://ws.audioscrobbler.com/2.0/?method=artist.search&artist=test&api_key=${k}&format=json` }
     };
 
     const apiKeysGrid = $('#api-keys-grid');
