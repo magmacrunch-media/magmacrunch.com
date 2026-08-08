@@ -1,0 +1,98 @@
+name: Check Archive Format
+
+on:
+  push:
+    branches: [main]
+    paths: ['archive/**']
+  pull_request:
+    branches: [main]
+    paths: ['archive/**']
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run checker
+        id: check
+        run: |
+          node scripts/check-archive-format.js --json > /tmp/check-result.json || true
+          COUNT=$(node -e "console.log(require('/tmp/check-result.json').count)")
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+
+      - name: Build issue body
+        if: steps.check.outputs.count != '0'
+        id: body
+        run: |
+          COUNT=${{ steps.check.outputs.count }}
+          SHA=$(echo "${{ github.sha }}" | cut -c1-7)
+          BRANCH="${{ github.ref_name }}"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          WARNINGS=$(node -e "
+            const d = require('/tmp/check-result.json');
+            const lines = d.warnings.map(w => 'WARN  ' + w.file + ':' + w.line + '\n      ' + w.msg);
+            console.log(lines.join('\n\n'));
+          ")
+
+          cat > /tmp/issue-body.md << BODY
+          ## Archive format warnings
+
+          **${COUNT}** warning${COUNT == 1 ? '' : 's'} found on \`${BRANCH}\` (${SHA})
+
+          \`\`\`
+          ${WARNINGS}
+          \`\`\`
+
+          ---
+          [View workflow run](${RUN_URL})
+          BODY
+
+      - name: Find existing issue
+        if: steps.check.outputs.count != '0'
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --search "Archive format warnings in:title" --state open --json number --limit 1)
+          NUMBER=$(echo "$ISSUE" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const a=JSON.parse(d);console.log(a[0]?.number||'')")
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update issue
+        if: steps.check.outputs.count != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NUMBER=${{ steps.existing.outputs.number }}
+          if [ -n "$NUMBER" ]; then
+            gh issue edit "$NUMBER" --body-file /tmp/issue-body.md
+            gh issue comment "$NUMBER" --body "Updated with latest scan results."
+          else
+            gh issue create \
+              --title "Archive format warnings" \
+              --body-file /tmp/issue-body.md \
+              --label "bug"
+          fi
+
+      - name: Close issue if clean
+        if: steps.check.outputs.count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh issue list --search "Archive format warnings in:title" --state open --json number --limit 1)
+          NUMBER=$(echo "$ISSUE" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const a=JSON.parse(d);console.log(a[0]?.number||'')")
+          if [ -n "$NUMBER" ]; then
+            gh issue close "$NUMBER" --comment "All checks passing — closing."
+          fi
+
+      - name: Fail if warnings
+        if: steps.check.outputs.count != '0'
+        run: exit 1
