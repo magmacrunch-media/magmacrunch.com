@@ -1,0 +1,109 @@
+name: Arcade Smoke Test
+
+on:
+  schedule:
+    - cron: '0 10 * * 1'  # Weekly Monday 10 AM UTC
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: arcade/tests
+        run: npm install
+
+      - name: Install Playwright browsers
+        working-directory: arcade/tests
+        run: npx playwright install chromium
+
+      - name: Run smoke tests
+        id: tests
+        working-directory: arcade/tests
+        run: |
+          node smoke-test.mjs 2>&1 | tee test-output.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+        continue-on-error: true
+
+      - name: Post results to Discussions
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const resultsPath = path.join(process.env.GITHUB_WORKSPACE, 'arcade/tests/results.md');
+            const body = fs.readFileSync(resultsPath, 'utf8');
+
+            const exitCode = '${{ steps.tests.outputs.exit_code }}';
+            const title = exitCode === '0'
+              ? `Arcade Smoke Test — ${new Date().toISOString().split('T')[0]}`
+              : `Arcade Smoke Test FAILED — ${new Date().toISOString().split('T')[0]}`;
+
+            // Get the Ideas category ID
+            const cats = await github.graphql(`
+              query {
+                repository(owner: "${context.repo.owner}", name: "${context.repo.name}") {
+                  discussionCategories(first: 10) {
+                    nodes { id name }
+                  }
+                }
+              }
+            `);
+
+            const ideasCat = cats.repository.discussionCategories.nodes.find(c => c.name === 'Show and tell');
+            if (!ideasCat) {
+              console.log('Show and tell category not found, skipping discussion');
+              return;
+            }
+
+            const repo = await github.graphql(`
+              query {
+                repository(owner: "${context.repo.owner}", name: "${context.repo.name}") { id }
+              }
+            `);
+
+            await github.graphql(`
+              mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+                createDiscussion(input: {repositoryId: $repositoryId, categoryId: $categoryId, title: $title, body: $body}) {
+                  discussion { url }
+                }
+              }
+            `, {
+              repositoryId: repo.repository.id,
+              categoryId: ideasCat.id,
+              title,
+              body
+            });
+
+      - name: Create issue on failure
+        if: steps.tests.outputs.exit_code != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const resultsPath = path.join(process.env.GITHUB_WORKSPACE, 'arcade/tests/results.md');
+            const body = fs.readFileSync(resultsPath, 'utf8');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              title: `Smoke test failed — ${new Date().toISOString().split('T')[0]}`,
+              body: body + '\n\n---\n*Created by smoke-test workflow*',
+              labels: ['automated issue', 'bug']
+            });
+
+      - name: Fail if tests failed
+        if: steps.tests.outputs.exit_code != '0'
+        run: exit 1
