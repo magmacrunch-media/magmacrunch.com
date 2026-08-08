@@ -1049,6 +1049,103 @@ def update_themes(themes_json: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Tools — Last.fm play counts
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def get_play_counts() -> str:
+    """List all artists with their Last.fm play counts and listeners, sorted by popularity."""
+    stats_dir = PROJECT_ROOT / "arcade" / "admin" / "stats" / "lastfm"
+    if not stats_dir.exists():
+        return "No play count data found. Run the Fetch Play Counts workflow first."
+
+    artists = []
+    for f in sorted(stats_dir.glob("*.json")):
+        try:
+            data = json.loads(f.read_text())
+            artists.append({
+                "name": data.get("name", f.stem),
+                "listeners": data.get("stats", {}).get("listeners", 0),
+                "playcount": data.get("stats", {}).get("playcount", 0),
+                "topTrack": data.get("topTracks", [{}])[0].get("name", "") if data.get("topTracks") else "",
+                "fetchedAt": data.get("fetchedAt", ""),
+            })
+        except Exception:
+            continue
+
+    # Sort by playcount descending
+    artists.sort(key=lambda a: a["playcount"], reverse=True)
+
+    lines = [f"# Last.fm Play Counts ({len(artists)} artists)", ""]
+    lines.append("| Artist | Play Count | Listeners | Top Track |")
+    lines.append("|---|---|---|---|")
+    for a in artists:
+        lines.append(f"| {a['name']} | {a['playcount']} | {a['listeners']} | {a['topTrack'][:40]} |")
+
+    total_plays = sum(a["playcount"] for a in artists)
+    total_listeners = sum(a["listeners"] for a in artists)
+    lines.append("")
+    lines.append(f"**Total:** {total_plays} plays across {total_listeners} listeners")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_artist_play_counts(artist_name: str) -> str:
+    """Get detailed Last.fm stats for a specific artist.
+
+    Args:
+        artist_name: Artist name or slug (e.g. "Jon McCoy" or "jon-mccoy")
+    """
+    stats_dir = PROJECT_ROOT / "arcade" / "admin" / "stats" / "lastfm"
+    if not stats_dir.exists():
+        return "No play count data found."
+
+    # Try to find by slug first, then by name
+    slug = artist_name.lower().replace(" ", "-").replace("'", "")
+    candidates = [stats_dir / f"{slug}.json"]
+
+    # Also try exact name match
+    for f in stats_dir.glob("*.json"):
+        try:
+            data = json.loads(f.read_text())
+            if data.get("name", "").lower() == artist_name.lower():
+                candidates.append(f)
+        except Exception:
+            continue
+
+    for path in candidates:
+        if path.exists():
+            data = json.loads(path.read_text())
+            lines = [
+                f"# {data.get('name', 'Unknown')}",
+                "",
+                f"- **Listeners:** {data.get('stats', {}).get('listeners', 0)}",
+                f"- **Play Count:** {data.get('stats', {}).get('playcount', 0)}",
+                f"- **Last Updated:** {data.get('fetchedAt', 'unknown')}",
+                "",
+                "## Top Tracks",
+                "",
+            ]
+            for i, track in enumerate(data.get("topTracks", []), 1):
+                lines.append(f"{i}. **{track['name']}** — {track.get('playcount', 0)} plays, {track.get('listeners', 0)} listeners")
+
+            return "\n".join(lines)
+
+    # List available artists
+    available = []
+    for f in stats_dir.glob("*.json"):
+        try:
+            data = json.loads(f.read_text())
+            available.append(data.get("name", f.stem))
+        except Exception:
+            continue
+
+    return f"Artist not found: {artist_name}. Available: {', '.join(available)}"
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
