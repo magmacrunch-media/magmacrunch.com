@@ -1,0 +1,28 @@
+name: Weekly High Scores
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  summary:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate summary
+        run: node scripts/weekly-scores.mjs > scores-report.md
+
+      - name: Create Issue
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Weekly High Scores — ${{ github.event.schedule || 'manual' }}"
+          content-filepath: ./scores-report.md
+          labels: scores, automated issue
