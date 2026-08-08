@@ -30,6 +30,12 @@ DISCOGS_BASE = "https://api.discogs.com"
 DISCOGS_CACHE_DIR = CACHE_DIR / "discogs"
 USER_AGENT = "MagmaCrunchMCP/1.0 +https://magmacrunch.com"
 
+# GitHub API config
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+GITHUB_API = "https://api.github.com"
+GITHUB_OWNER = "magmacrunchmedia"
+GITHUB_REPO = "magmacrunch.com"
+
 mcp = MCPServer("magma-mcp")
 
 # ---------------------------------------------------------------------------
@@ -680,6 +686,234 @@ def deploy_to_pi(local_path: str, service: str = "") -> str:
         output += f"\n\n{restart}"
 
     return output
+
+
+# ---------------------------------------------------------------------------
+# Tools — bots
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def list_bots() -> str:
+    """List all GitHub Actions workflows with their last run status."""
+    if not GITHUB_TOKEN:
+        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
+
+    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/runs?per_page=100"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunchMCP/1.0",
+    }
+
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code != 200:
+            return f"GitHub API error: {resp.status_code} — {resp.text}"
+
+        runs = resp.json().get("workflow_runs", [])
+
+        # Define all workflows to track
+        workflows = [
+            {"name": "CI", "file": "ci.yml"},
+            {"name": "Deploy to Pi", "file": "deploy-pi.yml"},
+            {"name": "Check Links", "file": "check-links.yml"},
+            {"name": "Check Archive Format", "file": "check-archive-format.yml"},
+            {"name": "Check Pi Services", "file": "check-services.yml"},
+            {"name": "Rebuild Search Index", "file": "rebuild-search-index.yml"},
+            {"name": "Generate Archive Stubs", "file": "generate-stubs.yml"},
+            {"name": "Bake Cache", "file": "bake-cache.yml"},
+            {"name": "Weekly High Scores", "file": "weekly-scores.yml"},
+            {"name": "Arcade Smoke Test", "file": "smoke-test.yml"},
+            {"name": "MusicBrainz Backup", "file": "backup-musicbrainz.yml"},
+            {"name": "TMDB Backup", "file": "backup-tmdb.yml"},
+            {"name": "Bot Status Report", "file": "bot-status.yml"},
+        ]
+
+        # Map runs to workflows
+        for wf in workflows:
+            wf_runs = [r for r in runs if r.get("path", "").endswith(wf["file"])]
+            if wf_runs:
+                latest = wf_runs[0]
+                wf["status"] = latest.get("conclusion") or latest.get("status", "unknown")
+                wf["last_run"] = latest.get("created_at", "")
+                wf["event"] = latest.get("event", "")
+            else:
+                wf["status"] = "never"
+                wf["last_run"] = ""
+                wf["event"] = ""
+
+        # Format output
+        lines = ["# GitHub Actions Workflows", ""]
+        lines.append("| Workflow | Status | Last Run | Trigger |")
+        lines.append("|---|---|---|---|")
+        for wf in workflows:
+            icon = "✓" if wf["status"] == "success" else "✗" if wf["status"] == "failure" else "—"
+            lines.append(f"| {wf['name']} | {icon} {wf['status']} | {wf['last_run'][:16] if wf['last_run'] else 'never'} | {wf['event']} |")
+
+        return "\n".join(lines)
+
+    except requests.RequestException as e:
+        return f"Request failed: {e}"
+
+
+@mcp.tool()
+def get_bot_status(workflow_name: str) -> str:
+    """Get detailed status of a specific workflow.
+
+    Args:
+        workflow_name: Name of the workflow (e.g. 'Deploy to Pi', 'Check Links')
+    """
+    if not GITHUB_TOKEN:
+        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
+
+    # Map friendly names to file names
+    workflow_map = {
+        "CI": "ci.yml", "Deploy to Pi": "deploy-pi.yml", "Check Links": "check-links.yml",
+        "Check Archive Format": "check-archive-format.yml", "Check Pi Services": "check-services.yml",
+        "Rebuild Search Index": "rebuild-search-index.yml", "Generate Archive Stubs": "generate-stubs.yml",
+        "Bake Cache": "bake-cache.yml", "Weekly High Scores": "weekly-scores.yml",
+        "Arcade Smoke Test": "smoke-test.yml", "MusicBrainz Backup": "backup-musicbrainz.yml",
+        "TMDB Backup": "backup-tmdb.yml", "Bot Status Report": "bot-status.yml",
+    }
+
+    workflow_file = workflow_map.get(workflow_name)
+    if not workflow_file:
+        return f"Unknown workflow: {workflow_name}. Available: {', '.join(workflow_map.keys())}"
+
+    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_file}/runs?per_page=5"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunchMCP/1.0",
+    }
+
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code != 200:
+            return f"GitHub API error: {resp.status_code} — {resp.text}"
+
+        runs = resp.json().get("workflow_runs", [])
+        if not runs:
+            return f"No runs found for {workflow_name}"
+
+        lines = [f"# {workflow_name} — Recent Runs", ""]
+        lines.append("| Run | Status | Trigger | Started |")
+        lines.append("|---|---|---|---|")
+
+        for run in runs:
+            status = run.get("conclusion") or run.get("status", "unknown")
+            icon = "✓" if status == "success" else "✗" if status == "failure" else "⏳"
+            created = run.get("created_at", "")[:16]
+            event = run.get("event", "")
+            run_id = run.get("id", "")
+            lines.append(f"| [{run_id}]({run.get('html_url', '')}) | {icon} {status} | {event} | {created} |")
+
+        return "\n".join(lines)
+
+    except requests.RequestException as e:
+        return f"Request failed: {e}"
+
+
+@mcp.tool()
+def trigger_bot(workflow_name: str) -> str:
+    """Trigger a GitHub Actions workflow manually.
+
+    Args:
+        workflow_name: Name of the workflow (e.g. 'Deploy to Pi', 'Check Links')
+    """
+    if not GITHUB_TOKEN:
+        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
+
+    # Map friendly names to file names
+    workflow_map = {
+        "CI": "ci.yml", "Deploy to Pi": "deploy-pi.yml", "Check Links": "check-links.yml",
+        "Check Archive Format": "check-archive-format.yml", "Check Pi Services": "check-services.yml",
+        "Rebuild Search Index": "rebuild-search-index.yml", "Generate Archive Stubs": "generate-stubs.yml",
+        "Bake Cache": "bake-cache.yml", "Weekly High Scores": "weekly-scores.yml",
+        "Arcade Smoke Test": "smoke-test.yml", "MusicBrainz Backup": "backup-musicbrainz.yml",
+        "TMDB Backup": "backup-tmdb.yml", "Bot Status Report": "bot-status.yml",
+    }
+
+    workflow_file = workflow_map.get(workflow_name)
+    if not workflow_file:
+        return f"Unknown workflow: {workflow_name}. Available: {', '.join(workflow_map.keys())}"
+
+    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_file}/dispatches"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunchMCP/1.0",
+        "Content-Type": "application/json",
+    }
+    data = {"ref": "main"}
+
+    try:
+        resp = requests.post(url, headers=headers, json=data, timeout=10)
+        if resp.status_code == 204:
+            return f"✓ Triggered {workflow_name}. Check the Actions tab for status."
+        else:
+            return f"Failed to trigger {workflow_name}: {resp.status_code} — {resp.text}"
+
+    except requests.RequestException as e:
+        return f"Request failed: {e}"
+
+
+@mcp.tool()
+def get_bot_runs(workflow_name: str, limit: int = 10) -> str:
+    """Get recent run history for a workflow.
+
+    Args:
+        workflow_name: Name of the workflow (e.g. 'Deploy to Pi', 'Check Links')
+        limit: Number of runs to return (default 10)
+    """
+    if not GITHUB_TOKEN:
+        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
+
+    # Map friendly names to file names
+    workflow_map = {
+        "CI": "ci.yml", "Deploy to Pi": "deploy-pi.yml", "Check Links": "check-links.yml",
+        "Check Archive Format": "check-archive-format.yml", "Check Pi Services": "check-services.yml",
+        "Rebuild Search Index": "rebuild-search-index.yml", "Generate Archive Stubs": "generate-stubs.yml",
+        "Bake Cache": "bake-cache.yml", "Weekly High Scores": "weekly-scores.yml",
+        "Arcade Smoke Test": "smoke-test.yml", "MusicBrainz Backup": "backup-musicbrainz.yml",
+        "TMDB Backup": "backup-tmdb.yml", "Bot Status Report": "bot-status.yml",
+    }
+
+    workflow_file = workflow_map.get(workflow_name)
+    if not workflow_file:
+        return f"Unknown workflow: {workflow_name}. Available: {', '.join(workflow_map.keys())}"
+
+    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_file}/runs?per_page={limit}"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "MagmaCrunchMCP/1.0",
+    }
+
+    try:
+        resp = requests.get(url, headers=headers, timeout=10)
+        if resp.status_code != 200:
+            return f"GitHub API error: {resp.status_code} — {resp.text}"
+
+        runs = resp.json().get("workflow_runs", [])
+        if not runs:
+            return f"No runs found for {workflow_name}"
+
+        lines = [f"# {workflow_name} — Last {len(runs)} Runs", ""]
+        for run in runs:
+            status = run.get("conclusion") or run.get("status", "unknown")
+            icon = "✓" if status == "success" else "✗" if status == "failure" else "⏳"
+            created = run.get("created_at", "")[:19].replace("T", " ")
+            event = run.get("event", "")
+            run_id = run.get("id", "")
+            duration = run.get("run_started_at", "")
+            lines.append(f"- {icon} **{status}** — {event} — {created} ([#{run_id}]({run.get('html_url', '')}))")
+
+        return "\n".join(lines)
+
+    except requests.RequestException as e:
+        return f"Request failed: {e}"
 
 
 # ---------------------------------------------------------------------------
