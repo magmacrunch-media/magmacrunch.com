@@ -2,8 +2,6 @@ name: Backup TMDB Data
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 6 * * 1'
 
 permissions:
   contents: write

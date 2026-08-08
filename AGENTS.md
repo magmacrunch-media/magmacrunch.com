@@ -453,53 +453,90 @@ gh secret set PI_SSH_KEY -R magmacrunchmedia/magmacrunch.com < ~/.ssh/id_ed25519
 - Reset it on the Pi with `sudo passwd jake` (requires physical access)
 - Then re-run `ssh-copy-id` and `gh secret set` above
 
-### Other workflows
+### Workflows on GitHub Actions
 
 | Workflow | Trigger | Purpose |
 |---|---|---|
 | `ci.yml` | Push/PR to `main` | ESLint + pytest + JS tests |
-| `backup-musicbrainz.yml` | Weekly (Mon 6AM UTC) | Snapshot MusicBrainz API data to `archive/_cache/` |
-| `backup-tmdb.yml` | Weekly (Mon 6:30 AM UTC) | Snapshot TMDB person data to `archive/_cache/tmdb/` |
+| `deploy-pi.yml` | Push to `main` / manual | Deploy `arcade/` to Raspberry Pi |
 | `bot-status.yml` | Weekly (Mon 7AM UTC) / manual | Check all bot statuses, post report to Discussion |
 | `bake-cache.yml` | After MusicBrainz backup / manual | Inline cache data into archive HTML pages |
-| `check-links.yml` | Push to `main` / weekly / manual | Scan HTML for broken links, create Discussion |
-| `check-services.yml` | Every 30 min / manual | TCP health check of Pi game servers |
 | `check-archive-format.yml` | Push/PR to `main` (archive changes) | Check archive HTML formatting, create/update Issue |
-| `deploy-pi.yml` | Push to `main` / manual | Deploy `arcade/` to Raspberry Pi |
 | `generate-stubs.yml` | Push to `main` (config change) | Auto-generate archive page stubs |
-| `rebuild-search-index.yml` | Push to `main` (HTML/JSON changes) | Rebuild `search-index.json` for client-side search |
-| `weekly-scores.yml` | Weekly (Mon 6AM UTC) / manual | Post high score leaderboard to Discussion |
 
-### Broken link checker
+### Workflows migrated to Pi cron
 
-`.github/workflows/check-links.yml` uses [lychee](https://github.com/lycheeverse/lychee-action) to scan all HTML/MD files for broken links.
+These workflows now run as cron jobs on the Raspberry Pi (`arcade/scripts/bot-*.sh`):
 
-- **Triggers**: Push to `main`, weekly (Mon 6 AM UTC), manual
+| Workflow | Cron | Purpose |
+|---|---|---|
+| `check-links.yml` | Mon 6 AM UTC | Lychee link checker → GitHub Issue |
+| `check-services.yml` | Every 30 min | TCP health check → Discussion + Discord |
+| `smoke-test.yml` | Mon 10 AM UTC | Playwright smoke tests → GitHub Issue |
+| `backup-musicbrainz.yml` | Mon 6 AM UTC | MusicBrainz cache backup → git push |
+| `backup-tmdb.yml` | Mon 6:30 AM UTC | TMDB cache backup → git push |
+| `play-counts.yml` | Mon 6 AM UTC | Last.fm play counts → git push |
+| `weekly-scores.yml` | Mon 6 AM UTC | Score leaderboard → Discussion + Discord |
+| `rebuild-search-index.yml` | Daily 7 AM UTC | Rebuild search index → git push |
+
+All migrated workflows retain `workflow_dispatch` triggers for manual runs from the GitHub UI.
+
+### Pi cron bot setup
+
+Scripts live in `arcade/scripts/` and are deployed to the Pi via rsync. Shared helpers are in `pi-bot-env.sh`.
+
+**Requirements on the Pi:**
+- Node.js 20+ (`sudo apt install nodejs`)
+- lychee (`/usr/local/bin/lychee`)
+- Playwright + Chromium (for smoke tests)
+- GitHub PAT with `repo` scope (for push + API access)
+
+**Environment file**: `~/arcade/.env` on the Pi:
+```
+GITHUB_PAT=ghp_...
+TMDB_API_KEY=...
+LASTFM_API_KEY=...
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+```
+
+**Adding a new Pi bot:**
+1. Create `arcade/scripts/bot-<name>.sh` that sources `pi-bot-env.sh`
+2. Use `gh_api` helper for GitHub API calls
+3. Use `discord_post` helper for Discord notifications
+4. Add cron entry: `crontab -e` on the Pi
+5. Logs go to `~/arcade/logs/<name>.log`
+
+**Cron jobs on the Pi:**
+```bash
+crontab -l    # View all cron jobs
+```
+
+**Viewing bot logs:**
+```bash
+ssh jake@192.168.1.16 "tail -50 ~/arcade/logs/check-links.log"
+ssh jake@192.168.1.16 "tail -50 ~/arcade/logs/check-services.log"
+```
+
+### Broken link checker (Pi)
+
+`arcade/scripts/bot-check-links.sh` uses lychee to scan all HTML/MD files for broken links.
+
+- **Cron**: Monday 6 AM UTC
 - **Excludes**: Private IPs (`192.168.*`, `localhost`), `mailto:` links
 - **Rate limits**: Accepts 403/429 (MusicBrainz bot protection)
-- **Reporting**: Auto-creates Discussion in "Link Reports" category
+- **Reporting**: Creates/updates GitHub Issue with broken link report
 - **Config**: `.lycheeignore` at repo root for exclude patterns
 
-### Pi service health check
+### Pi service health check (Pi)
 
-`.github/workflows/check-services.yml` — TCP port check of all public-facing Pi services.
+`arcade/scripts/bot-check-services.sh` — TCP port check of all public-facing Pi services.
 
-- **Triggers**: Every 30 minutes, manual
+- **Cron**: Every 30 minutes
 - **Checks**: Ports 8765–8774 (games), 8783 (counter) via `nc -z`
 - **Excludes**: Admin (8780, localhost-only), Private (8782, firewall-blocked)
-- **Reporting**: Auto-creates Discussion in "Service Health" category
-- **Runner**: Self-hosted on Mac (LAN access to Pi)
+- **Reporting**: Posts to GitHub Discussion + Discord webhook on failure
 
-### Search index auto-rebuild
-
-`.github/workflows/rebuild-search-index.yml` — rebuilds `search-index.json` when content changes.
-
-- **Triggers**: Push to `main` when HTML or JSON files change, manual
-- **Action**: Runs `node scripts/build-search-index.js`, commits if changed
-- **Commits as**: `github-actions[bot]`
-- **Note**: Hardcoded lists (arcade games, tools) still need manual code updates
-
-### Archive stub generator
+### Running the self-hosted runner
 
 `.github/workflows/generate-stubs.yml` — auto-generates stub HTML files for new archive pages.
 
@@ -526,25 +563,7 @@ gh secret set PI_SSH_KEY -R magmacrunchmedia/magmacrunch.com < ~/.ssh/id_ed25519
 - **Retention**: Last 4 snapshots (1 month of history)
 - **Use case**: Restore old data if MusicBrainz servers go down
 
-### Weekly high scores
-
-`.github/workflows/weekly-scores.yml` — posts a leaderboard summary to a GitHub Discussion each week.
-
-- **Triggers**: Weekly (Mon 6 AM UTC), manual
-- **Script**: `scripts/weekly-scores.mjs` reads all score JSONs, generates markdown
-- **Output**: Discussion in "High Scores" category with top 5 per game, total stats, player leaderboard
-- **Note**: Most scores lack timestamps — this is a static snapshot, not a weekly diff
-
-### Bot status report
-
-`.github/workflows/bot-status.yml` — posts a summary of all bot statuses to Discussion.
-
-- **Triggers**: Weekly (Mon 7 AM UTC), manual
-- **Action**: Checks last run of each workflow, generates markdown table
-- **Output**: Discussion in "General" category with status of all 11 bots
-- **Note**: Shows last run time, status, and trigger for each workflow
-
-### Archive format checker
+### Archive stub generator
 
 `.github/workflows/check-archive-format.yml` — validates formatting consistency across archive HTML files.
 

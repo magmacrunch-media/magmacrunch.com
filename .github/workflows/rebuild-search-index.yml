@@ -1,13 +1,6 @@
 name: Rebuild Search Index
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '**/*.html'
-      - 'archive/_cache/**/*.json'
-      - 'music/distributed-music/releases.js'
-      - 'music/jukebox/songs.json'
   workflow_dispatch:
 
 jobs:
