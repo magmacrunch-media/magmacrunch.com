@@ -114,9 +114,13 @@ GITHUB_PATHS = {
 def _repo_root():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 
-def github_request(method, path, token, data=None):
-    """Make a GitHub API request. Returns (status_code, parsed_body)."""
-    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{path}" if path else f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
+def github_request(method, path, token, data=None, use_contents=True):
+    """Make a GitHub API request. Returns (status_code, parsed_body).
+    use_contents=False to hit non-contents endpoints (actions, git, etc)."""
+    if use_contents:
+        url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{path}" if path else f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
+    else:
+        url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/{path}"
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
@@ -171,12 +175,12 @@ def github_commit_multiple(files, message, token):
         return False, {"error": "Failed to get repo info"}
     base_branch = repo_info.get("default_branch", "main")
 
-    status, branch_ref = github_request("GET", f"git/refs/heads/{base_branch}", token)
+    status, branch_ref = github_request("GET", f"git/refs/heads/{base_branch}", token, use_contents=False)
     if status != 200:
         return False, {"error": f"Failed to get branch ref: {base_branch}"}
     commit_sha = branch_ref["object"]["sha"]
 
-    status, commit_data = github_request("GET", f"git/commits/{commit_sha}", token)
+    status, commit_data = github_request("GET", f"git/commits/{commit_sha}", token, use_contents=False)
     if status != 200:
         return False, {"error": "Failed to get commit data"}
     base_tree_sha = commit_data["tree"]["sha"]
@@ -188,25 +192,25 @@ def github_commit_multiple(files, message, token):
             "content": base64.b64encode(f["content"].encode("utf-8")).decode("utf-8"),
             "encoding": "base64",
         }
-        status, blob = github_request("POST", "git/blobs", token, blob_data)
+        status, blob = github_request("POST", "git/blobs", token, blob_data, use_contents=False)
         if status != 201:
             return False, {"error": f"Failed to create blob for {f['path']}"}
         blob_items.append({"path": f["path"], "mode": "100644", "type": "blob", "sha": blob["sha"]})
 
     # Create tree
-    status, tree = github_request("POST", "git/trees", token, {"base_tree": base_tree_sha, "tree": blob_items})
+    status, tree = github_request("POST", "git/trees", token, {"base_tree": base_tree_sha, "tree": blob_items}, use_contents=False)
     if status != 201:
         return False, {"error": "Failed to create tree"}
 
     # Create commit
     status, new_commit = github_request("POST", "git/commits", token, {
         "message": message, "tree": tree["sha"], "parents": [commit_sha]
-    })
+    }, use_contents=False)
     if status != 201:
         return False, {"error": "Failed to create commit"}
 
     # Update ref
-    status, _ = github_request("PATCH", f"git/refs/heads/{base_branch}", token, {"sha": new_commit["sha"]})
+    status, _ = github_request("PATCH", f"git/refs/heads/{base_branch}", token, {"sha": new_commit["sha"]}, use_contents=False)
     if status == 200:
         return True, {"commit_sha": new_commit["sha"], "html_url": new_commit.get("html_url", "")}
     return False, {"error": "Failed to update ref"}
@@ -581,10 +585,13 @@ def _fetch_bot_statuses(token):
         {"name": "MusicBrainz Backup", "file": "backup-musicbrainz.yml"},
         {"name": "TMDB Backup", "file": "backup-tmdb.yml"},
         {"name": "Bot Status Report", "file": "bot-status.yml"},
+        {"name": "Backup Private", "file": "backup-private.yml"},
+        {"name": "Play Counts", "file": "play-counts.yml"},
+        {"name": "Theme Audit", "file": "theme-audit.yml"},
     ]
 
     # Fetch recent runs
-    status, body = github_request("GET", "actions/runs?per_page=100", token)
+    status, body = github_request("GET", "actions/runs?per_page=100", token, use_contents=False)
     runs = body.get("workflow_runs", []) if status == 200 else []
 
     # Map runs to workflows
