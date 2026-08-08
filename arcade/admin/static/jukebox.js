@@ -253,7 +253,6 @@
             btnDeploy.disabled = false;
             btnDeploy.textContent = 'SAVE & DEPLOY';
         }
-        }
     };
 
     // Also load on connect if we have a token
