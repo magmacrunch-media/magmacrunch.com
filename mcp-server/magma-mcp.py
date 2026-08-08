@@ -917,6 +917,138 @@ def get_bot_runs(workflow_name: str, limit: int = 10) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Tools — admin dashboard data
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def get_jukebox_songs() -> str:
+    """Read the jukebox song list from the admin dashboard data."""
+    songs_path = PROJECT_ROOT / "arcade" / "admin" / "jukebox-songs.json"
+    if not songs_path.exists():
+        # Fall back to canonical source
+        songs_path = PROJECT_ROOT / "music" / "jukebox" / "songs.json"
+    if not songs_path.exists():
+        return "No jukebox songs found."
+
+    try:
+        songs = json.loads(songs_path.read_text())
+        lines = [f"# Jukebox Songs ({len(songs)} tracks)", ""]
+        for i, s in enumerate(songs, 1):
+            hidden = " [hidden]" if s.get("hidden") else ""
+            lines.append(f"{i}. **{s['title']}** — {s['artist']} ({s.get('duration', '?')}){hidden}")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Error reading songs: {e}"
+
+
+@mcp.tool()
+def update_jukebox_songs(songs_json: str) -> str:
+    """Update the jukebox song list. Writes to admin data and canonical source.
+
+    Args:
+        songs_json: JSON array of songs, e.g. '[{"title": "...", "artist": "...", "file": "...", "duration": "4:47", "hidden": false}]'
+    """
+    try:
+        songs = json.loads(songs_json)
+    except json.JSONDecodeError as e:
+        return f"Invalid JSON: {e}"
+
+    # Write to admin data
+    admin_path = PROJECT_ROOT / "arcade" / "admin" / "jukebox-songs.json"
+    admin_path.parent.mkdir(parents=True, exist_ok=True)
+    admin_path.write_text(json.dumps(songs, indent=2) + "\n")
+
+    # Also write to canonical source
+    canonical_path = PROJECT_ROOT / "music" / "jukebox" / "songs.json"
+    canonical_path.write_text(json.dumps(songs, indent=2) + "\n")
+
+    return f"✓ Updated {len(songs)} songs in jukebox-songs.json and songs.json"
+
+
+@mcp.tool()
+def get_tv_channels() -> str:
+    """Read the TV channel list from the admin dashboard data."""
+    channels_path = PROJECT_ROOT / "arcade" / "admin" / "tv-channels.json"
+    if not channels_path.exists():
+        return "No TV channels found."
+
+    try:
+        channels = json.loads(channels_path.read_text())
+        lines = [f"# TV Channels ({len(channels)} channels)", ""]
+        for i, ch in enumerate(channels, 1):
+            lines.append(f"{i}. **{ch['title']}** — {ch['artist']} ({ch.get('year', '?')})")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Error reading channels: {e}"
+
+
+@mcp.tool()
+def update_tv_channels(channels_json: str) -> str:
+    """Update the TV channel list.
+
+    Args:
+        channels_json: JSON array of channels, e.g. '[{"title": "...", "artist": "...", "id": "YouTubeID", "year": "2024"}]'
+    """
+    try:
+        channels = json.loads(channels_json)
+    except json.JSONDecodeError as e:
+        return f"Invalid JSON: {e}"
+
+    channels_path = PROJECT_ROOT / "arcade" / "admin" / "tv-channels.json"
+    channels_path.parent.mkdir(parents=True, exist_ok=True)
+    channels_path.write_text(json.dumps(channels, indent=2) + "\n")
+
+    return f"✓ Updated {len(channels)} channels in tv-channels.json"
+
+
+@mcp.tool()
+def get_themes() -> str:
+    """Read the theme catalog from the admin dashboard data."""
+    themes_path = PROJECT_ROOT / "arcade" / "admin" / "themes.json"
+    if not themes_path.exists():
+        return "No themes found."
+
+    try:
+        themes = json.loads(themes_path.read_text())
+        sections = {}
+        for t in themes:
+            sec = t.get("section", "other")
+            if sec not in sections:
+                sections[sec] = []
+            sections[sec].append(t.get("name", "unnamed"))
+
+        lines = [f"# Theme Catalog ({len(themes)} themes)", ""]
+        for sec, names in sorted(sections.items()):
+            lines.append(f"## {sec} ({len(names)})")
+            for name in names:
+                lines.append(f"- {name}")
+            lines.append("")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Error reading themes: {e}"
+
+
+@mcp.tool()
+def update_themes(themes_json: str) -> str:
+    """Update the theme catalog.
+
+    Args:
+        themes_json: JSON array of theme objects with name, section, palette, nav fields
+    """
+    try:
+        themes = json.loads(themes_json)
+    except json.JSONDecodeError as e:
+        return f"Invalid JSON: {e}"
+
+    themes_path = PROJECT_ROOT / "arcade" / "admin" / "themes.json"
+    themes_path.parent.mkdir(parents=True, exist_ok=True)
+    themes_path.write_text(json.dumps(themes, indent=2) + "\n")
+
+    return f"✓ Updated {len(themes)} themes in themes.json"
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
