@@ -33,7 +33,7 @@ import websockets
 
 DEFAULT_CONFIG = {
     "port": 8780,
-    "auth": True,
+    "auth": False,
     "password": "changeme",
     "bind": "0.0.0.0",
 }
