@@ -23,7 +23,7 @@ import time
 import websockets
 from websockets.datastructures import Headers
 
-logging.getLogger("websockets").setLevel(logging.WARNING)
+logging.getLogger("websockets").setLevel(logging.INFO)
 
 
 # ── Rate Limiter ──────────────────────────────────────────────────────────────

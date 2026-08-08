@@ -109,14 +109,14 @@ function drawSubtitle(ctx, subtitle) {
   ctx.fillText(subtitle, 60, 320)
 }
 
-function drawBranding(ctx) {
+function drawBranding(ctx, color) {
   // Site URL at bottom
   ctx.fillStyle = '#4a4a4a'
   ctx.font = '10px "Press Start 2P"'
   ctx.fillText('magmacrunch.com', 60, HEIGHT - 50)
 
-  // Pixel "M" logo on the right
-  drawPixelM(ctx, WIDTH - 180, HEIGHT - 200, '#FF3D6E')
+  // Pixel logo on the right
+  drawPixelM(ctx, WIDTH - 180, HEIGHT - 200, color)
 }
 
 function drawPixelM(ctx, x, y, color) {
@@ -133,8 +133,8 @@ function drawPixelM(ctx, x, y, color) {
     [1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1],
     [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 1, 1, 0, 0, 1, 1, 1],
+    [1, 1, 0, 0, 0, 0, 1, 1],
   ]
 
   for (let row = 0; row < pattern.length; row++) {
@@ -161,7 +161,7 @@ function generateCard(page) {
   drawAccentBar(ctx, page.color)
   drawTitle(ctx, page.title, page.color)
   drawSubtitle(ctx, page.subtitle)
-  drawBranding(ctx)
+  drawBranding(ctx, page.color)
 
   return canvas.toBuffer('image/png')
 }
