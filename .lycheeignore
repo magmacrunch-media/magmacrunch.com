@@ -1,0 +1,6 @@
+# Private network
+^https?://192\.168\.
+^https?://localhost
+
+# mailto links
+^mailto:
