@@ -502,11 +502,12 @@ This installs systemd services for all servers + dashboard, enables auto-start o
 
 ### Admin dashboard
 
-`arcade/admin/` — Web-based monitoring and management UI.
+ `arcade/admin/` — Web-based monitoring and management UI (v4.0).
 
 - **Port**: 8780 (HTTP) + 8781 (WebSocket for live logs)
 - **Desktop shortcut**: "MagmaCrunch Ops" — opens dashboard in Chromium
 - **Config**: `arcade/admin/config.json` — set `auth: true` for password protection
+- **Dependency**: Uses `magmascript` Python library for GitHub API (`GHClient`) and Pi management (`PIClient(local=True)`)
 
 Commands:
 ```bash

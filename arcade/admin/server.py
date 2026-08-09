@@ -10,7 +10,6 @@ Requires: websockets (already installed for game servers)
 
 import argparse
 import asyncio
-import base64
 import concurrent.futures
 import hmac
 import json
@@ -21,14 +20,14 @@ import subprocess
 import sys
 import threading
 import time
-import urllib.error
-import urllib.request
 from datetime import datetime
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from threading import Thread
 
 import websockets
+
+from magmascript import GHClient, PIClient
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -67,6 +66,24 @@ def save_github_token(token):
     with open(GITHUB_TOKEN_PATH, "w") as f:
         json.dump({"token": token}, f, indent=2)
 
+# ── magmascript client setup ────────────────────────────────────────────────
+
+from magmascript.core.config import set_config as _set_magmascript_config, Config as _MagmascriptConfig
+
+_gh_client = None
+_pi_client = None
+
+def _init_gh_client():
+    """Initialize GHClient with the admin dashboard's GitHub token."""
+    global _gh_client, _pi_client
+    token = load_github_token()
+    if token:
+        cfg = _MagmascriptConfig()
+        cfg.gh.token = token
+        _set_magmascript_config(cfg)
+    _gh_client = GHClient()
+    _pi_client = PIClient(local=True)
+
 # ── Service definitions ──────────────────────────────────────────────────────
 
 SERVICES = [
@@ -101,10 +118,6 @@ FAVICONS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "favico
 
 # ── GitHub API ──────────────────────────────────────────────────────────────
 
-GITHUB_OWNER = "magmacrunchmedia"
-GITHUB_REPO = "magmacrunch.com"
-GITHUB_API = "https://api.github.com"
-
 GITHUB_PATHS = {
     "jukebox": "arcade/admin/jukebox-songs.json",
     "tv_json": "arcade/admin/tv-channels.json",
@@ -114,107 +127,6 @@ GITHUB_PATHS = {
 
 def _repo_root():
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
-
-def github_request(method, path, token, data=None, use_contents=True):
-    """Make a GitHub API request. Returns (status_code, parsed_body).
-    use_contents=False to hit non-contents endpoints (actions, git, etc)."""
-    if use_contents:
-        url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/contents/{path}" if path else f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}"
-    else:
-        url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/{path}"
-    headers = {
-        "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunch-Ops/2.1",
-    }
-    body = None
-    if data is not None:
-        body = json.dumps(data).encode("utf-8")
-        headers["Content-Type"] = "application/json"
-    req = urllib.request.Request(url, data=body, headers=headers, method=method)
-    try:
-        with urllib.request.urlopen(req) as resp:
-            return resp.status, json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        error_body = {}
-        try:
-            error_body = json.loads(e.read())
-        except Exception:
-            pass
-        return e.code, error_body
-    except Exception as e:
-        return 0, {"error": str(e)}
-
-def github_get_file(path, token):
-    """Fetch file content + SHA from GitHub. Returns (content_str, sha) or (None, None)."""
-    status, body = github_request("GET", path, token)
-    if status == 200 and "content" in body:
-        content = base64.b64decode(body["content"]).decode("utf-8")
-        return content, body.get("sha")
-    return None, None
-
-def github_put_file(path, content, sha, message, token):
-    """Create or update a file on GitHub. Returns (ok, result)."""
-    data = {
-        "message": message,
-        "content": base64.b64encode(content.encode("utf-8")).decode("utf-8"),
-    }
-    if sha:
-        data["sha"] = sha
-    status, body = github_request("PUT", path, token, data)
-    if status in (200, 201):
-        return True, body
-    return False, body
-
-def github_commit_multiple(files, message, token):
-    """Commit multiple files in a single GitHub API call using the Git Data API.
-    files: list of dicts: { "path": str, "content": str }
-    Returns (ok, result)."""
-    # Get current branch ref
-    status, repo_info = github_request("GET", "", token)
-    if status != 200:
-        return False, {"error": "Failed to get repo info"}
-    base_branch = repo_info.get("default_branch", "main")
-
-    status, branch_ref = github_request("GET", f"git/refs/heads/{base_branch}", token, use_contents=False)
-    if status != 200:
-        return False, {"error": f"Failed to get branch ref: {base_branch}"}
-    commit_sha = branch_ref["object"]["sha"]
-
-    status, commit_data = github_request("GET", f"git/commits/{commit_sha}", token, use_contents=False)
-    if status != 200:
-        return False, {"error": "Failed to get commit data"}
-    base_tree_sha = commit_data["tree"]["sha"]
-
-    # Create blobs
-    blob_items = []
-    for f in files:
-        blob_data = {
-            "content": base64.b64encode(f["content"].encode("utf-8")).decode("utf-8"),
-            "encoding": "base64",
-        }
-        status, blob = github_request("POST", "git/blobs", token, blob_data, use_contents=False)
-        if status != 201:
-            return False, {"error": f"Failed to create blob for {f['path']}"}
-        blob_items.append({"path": f["path"], "mode": "100644", "type": "blob", "sha": blob["sha"]})
-
-    # Create tree
-    status, tree = github_request("POST", "git/trees", token, {"base_tree": base_tree_sha, "tree": blob_items}, use_contents=False)
-    if status != 201:
-        return False, {"error": "Failed to create tree"}
-
-    # Create commit
-    status, new_commit = github_request("POST", "git/commits", token, {
-        "message": message, "tree": tree["sha"], "parents": [commit_sha]
-    }, use_contents=False)
-    if status != 201:
-        return False, {"error": "Failed to create commit"}
-
-    # Update ref
-    status, _ = github_request("PATCH", f"git/refs/heads/{base_branch}", token, {"sha": new_commit["sha"]}, use_contents=False)
-    if status == 200:
-        return True, {"commit_sha": new_commit["sha"], "html_url": new_commit.get("html_url", "")}
-    return False, {"error": "Failed to update ref"}
 
 def load_game_scores(game_id):
     """Load scores for a specific game."""
@@ -384,7 +296,7 @@ def github_commit_files(files, message, token):
     headers = {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunch-Ops/2.1",
+        "User-Agent": "MagmaCrunch-Ops/4.0",
     }
 
     # Get current commit SHA
@@ -576,76 +488,6 @@ def generate_session_token():
     import secrets
     return secrets.token_hex(16)
 
-# ── Bot status helpers ───────────────────────────────────────────────────────
-
-def _fetch_bot_statuses(token):
-    """Fetch status of all GitHub Actions workflows."""
-    workflows = [
-        {"name": "CI", "file": "ci.yml"},
-        {"name": "Deploy to Pi", "file": "deploy-pi.yml"},
-        {"name": "Check Links", "file": "check-links.yml"},
-        {"name": "Check Archive Format", "file": "check-archive-format.yml"},
-        {"name": "Check Pi Services", "file": "check-services.yml"},
-        {"name": "Rebuild Search Index", "file": "rebuild-search-index.yml"},
-        {"name": "Generate Archive Stubs", "file": "generate-stubs.yml"},
-        {"name": "Bake Cache", "file": "bake-cache.yml"},
-        {"name": "Weekly High Scores", "file": "weekly-scores.yml"},
-        {"name": "Arcade Smoke Test", "file": "smoke-test.yml"},
-        {"name": "MusicBrainz Backup", "file": "backup-musicbrainz.yml"},
-        {"name": "TMDB Backup", "file": "backup-tmdb.yml"},
-        {"name": "Bot Status Report", "file": "bot-status.yml"},
-        {"name": "Backup Private", "file": "backup-private.yml"},
-        {"name": "Play Counts", "file": "play-counts.yml"},
-        {"name": "Theme Audit", "file": "theme-audit.yml"},
-    ]
-
-    # Fetch recent runs
-    status, body = github_request("GET", "actions/runs?per_page=100", token, use_contents=False)
-    runs = body.get("workflow_runs", []) if status == 200 else []
-
-    # Map runs to workflows
-    for wf in workflows:
-        wf_runs = [r for r in runs if r.get("path", "").endswith(wf["file"])]
-        if wf_runs:
-            latest = wf_runs[0]
-            wf["status"] = latest.get("status", "unknown")
-            wf["conclusion"] = latest.get("conclusion", "")
-            wf["createdAt"] = latest.get("created_at", "")
-            wf["event"] = latest.get("event", "")
-            wf["htmlUrl"] = latest.get("html_url", "")
-        else:
-            wf["status"] = "unknown"
-            wf["conclusion"] = ""
-            wf["createdAt"] = ""
-            wf["event"] = ""
-            wf["htmlUrl"] = ""
-
-    return workflows
-
-def _trigger_workflow(token, workflow_id):
-    """Trigger a GitHub Actions workflow dispatch."""
-    data = {"ref": "main"}
-    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_id}/dispatches"
-    headers = {
-        "Authorization": f"token {token}",
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunch-Ops/2.1",
-        "Content-Type": "application/json",
-    }
-    req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST")
-    try:
-        with urllib.request.urlopen(req) as resp:
-            return True, None
-    except urllib.error.HTTPError as e:
-        error_body = {}
-        try:
-            error_body = json.loads(e.read())
-        except Exception:
-            pass
-        return False, error_body.get("message", f"HTTP {e.code}")
-    except Exception as e:
-        return False, str(e)
-
 # ── System commands ──────────────────────────────────────────────────────────
 
 _executor = concurrent.futures.ThreadPoolExecutor(max_workers=4)
@@ -666,64 +508,6 @@ async def run_cmd_async(cmd, timeout=10):
     """Run a shell command in a thread pool to avoid blocking the event loop."""
     loop = asyncio.get_event_loop()
     return await loop.run_in_executor(_executor, lambda: run_cmd(cmd, timeout))
-
-def get_service_status(unit):
-    """Get status of a systemd service."""
-    output = run_cmd(f"systemctl is-active {unit}")
-    return output
-
-def get_all_statuses():
-    """Get status of all services in one command."""
-    units = " ".join(svc["unit"] for svc in SERVICES)
-    output = run_cmd(f"systemctl is-active {units}")
-    statuses = {}
-    lines = output.split("\n")
-    for i, svc in enumerate(SERVICES):
-        statuses[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
-    return statuses
-
-def get_logs(unit, lines=50):
-    """Get recent logs for a service."""
-    return run_cmd(f"journalctl -u {unit} -n {lines} --no-pager", timeout=15)
-
-def get_logs_errors(lines=100):
-    """Get error-level logs from all arcade services."""
-    return run_cmd("journalctl -u 'arcade-*' -p err -n {lines} --no-pager".format(lines=lines), timeout=15)
-
-def get_logs_today():
-    """Get today's logs from all arcade services."""
-    return run_cmd("journalctl -u 'arcade-*' --since today --no-pager", timeout=15)
-
-def restart_service(unit):
-    """Restart a systemd service."""
-    return run_cmd(f"sudo systemctl restart {unit}", timeout=30)
-
-def restart_all():
-    """Restart all arcade services."""
-    return run_cmd("sudo systemctl restart 'arcade-*'", timeout=60)
-
-def get_system_info():
-    """Get Pi system information in one command."""
-    output = run_cmd("""
-        echo "UPTIME:$(uptime -p)"
-        echo "HOSTNAME:$(hostname)"
-        echo "MEMORY:$(free -h | awk '/^Mem:/ {print $3"/"$2}')"
-        echo "TEMP:$(vcgencmd measure_temp 2>/dev/null | cut -d= -f2 | cut -d'\"' -f1 || echo N/A)"
-        echo "LOAD:$(uptime | awk -F'load average:' '{print $2}')"
-    """)
-    info = {}
-    for line in output.split("\n"):
-        if ":" in line:
-            key, val = line.split(":", 1)
-            info[key.lower()] = val.strip()
-    # Map to expected keys
-    return {
-        "uptime": info.get("uptime", "N/A"),
-        "hostname": info.get("hostname", "N/A"),
-        "memory": info.get("memory", "N/A"),
-        "cpu_temp": info.get("temp", "N/A"),
-        "cpu_load": info.get("load", "N/A"),
-    }
 
 # ── Log streaming ────────────────────────────────────────────────────────────
 
@@ -793,17 +577,17 @@ async def ws_handler(websocket):
                         continue
 
             if action == "status":
-                statuses = await run_cmd_async(
-                    f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                services = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.services()
                 )
-                status_map = {}
-                lines = statuses.split("\n")
-                for i, svc in enumerate(SERVICES):
-                    status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
+                # Convert to the format the frontend expects
+                statuses = {}
+                for svc in services:
+                    statuses[svc.unit] = svc.status
                 await websocket.send(json.dumps({
                     "type": "status",
                     "services": SERVICES,
-                    "statuses": status_map
+                    "statuses": statuses
                 }))
 
             elif action == "logs":
@@ -811,8 +595,10 @@ async def ws_handler(websocket):
                 if not valid_unit(unit):
                     await websocket.send(json.dumps({"type": "error", "text": f"invalid service: {unit}"}))
                     continue
-                lines = min(int(msg.get("lines", 50)), 500)
-                logs = await run_cmd_async(f"journalctl -u {unit} -n {lines} --no-pager", timeout=15)
+                lines_count = min(int(msg.get("lines", 50)), 500)
+                logs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.logs(unit, lines_count)
+                )
                 await websocket.send(json.dumps({
                     "type": "logs",
                     "service": unit,
@@ -820,7 +606,9 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "logs_errors":
-                logs = await run_cmd_async("journalctl -u 'arcade-*' -p err -n 100 --no-pager", timeout=15)
+                logs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.logs_errors()
+                )
                 await websocket.send(json.dumps({
                     "type": "logs",
                     "service": "errors",
@@ -828,7 +616,9 @@ async def ws_handler(websocket):
                 }))
 
             elif action == "logs_today":
-                logs = await run_cmd_async("journalctl -u 'arcade-*' --since today --no-pager", timeout=15)
+                logs = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.logs_today()
+                )
                 await websocket.send(json.dumps({
                     "type": "logs",
                     "service": "today",
@@ -840,28 +630,29 @@ async def ws_handler(websocket):
                 if not unit or not valid_unit(unit):
                     await websocket.send(json.dumps({"type": "error", "text": f"invalid service: {unit}"}))
                     continue
-                result = await run_cmd_async(f"sudo systemctl restart {unit}", timeout=30)
+                result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.restart(unit)
+                )
                 await websocket.send(json.dumps({
                     "type": "restart_result",
                     "service": unit,
                     "result": result
                 }))
                 # Send updated status
-                statuses = await run_cmd_async(
-                    f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                services = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.services()
                 )
-                status_map = {}
-                lines = statuses.split("\n")
-                for i, svc in enumerate(SERVICES):
-                    status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
+                statuses = {svc.unit: svc.status for svc in services}
                 await websocket.send(json.dumps({
                     "type": "status",
                     "services": SERVICES,
-                    "statuses": status_map
+                    "statuses": statuses
                 }))
 
             elif action == "restart_all":
-                result = await run_cmd_async("sudo systemctl restart 'arcade-*'", timeout=60)
+                result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.restart_all()
+                )
                 await websocket.send(json.dumps({
                     "type": "restart_result",
                     "service": "all",
@@ -869,17 +660,14 @@ async def ws_handler(websocket):
                 }))
                 # Send updated status
                 await asyncio.sleep(2)
-                statuses = await run_cmd_async(
-                    f"systemctl is-active {' '.join(svc['unit'] for svc in SERVICES)}"
+                services = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.services()
                 )
-                status_map = {}
-                lines = statuses.split("\n")
-                for i, svc in enumerate(SERVICES):
-                    status_map[svc["unit"]] = lines[i].strip() if i < len(lines) else "unknown"
+                statuses = {svc.unit: svc.status for svc in services}
                 await websocket.send(json.dumps({
                     "type": "status",
                     "services": SERVICES,
-                    "statuses": status_map
+                    "statuses": statuses
                 }))
 
             elif action == "stream_start":
@@ -897,39 +685,33 @@ async def ws_handler(websocket):
                     stream_task = None
 
             elif action == "system_info":
-                info_raw = await run_cmd_async("""
-                    echo "UPTIME:$(uptime -p)"
-                    echo "HOSTNAME:$(hostname)"
-                    echo "MEMORY:$(free -h | awk '/^Mem:/ {print $3"/"$2}')"
-                    echo "TEMP:$(vcgencmd measure_temp 2>/dev/null | cut -d= -f2 | cut -d'\"' -f1 || echo N/A)"
-                    echo "LOAD:$(uptime | awk -F'load average:' '{print $2}')"
-                """)
-                parsed = {}
-                for line in info_raw.split("\n"):
-                    if ":" in line:
-                        key, val = line.split(":", 1)
-                        parsed[key.lower()] = val.strip()
-                info = {
-                    "uptime": parsed.get("uptime", "N/A"),
-                    "hostname": parsed.get("hostname", "N/A"),
-                    "memory": parsed.get("memory", "N/A"),
-                    "cpu_temp": parsed.get("temp", "N/A"),
-                    "cpu_load": parsed.get("load", "N/A"),
-                }
+                info = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.info()
+                )
                 await websocket.send(json.dumps({
                     "type": "system_info",
-                    "info": info
+                    "info": {
+                        "uptime": info.uptime,
+                        "hostname": info.hostname,
+                        "memory": info.memory,
+                        "cpu_temp": info.cpu_temp,
+                        "cpu_load": info.cpu_load,
+                    }
                 }))
 
             elif action == "restart_pi":
-                result = await run_cmd_async("sudo reboot", timeout=10)
+                result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.reboot()
+                )
                 await websocket.send(json.dumps({
                     "type": "pi_restart",
                     "result": result or "Rebooting..."
                 }))
 
             elif action == "poweroff_pi":
-                result = await run_cmd_async("sudo poweroff", timeout=10)
+                result = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.shutdown()
+                )
                 await websocket.send(json.dumps({
                     "type": "pi_poweroff",
                     "result": result or "Shutting down..."
@@ -1359,18 +1141,20 @@ async def ws_handler(websocket):
                         "type": "github_test_result", "ok": False, "error": "No token configured"
                     }))
                     continue
-                status, body = github_request("GET", "", token)
-                if status == 200:
+                try:
+                    info = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.repo_info()
+                    )
                     await websocket.send(json.dumps({
                         "type": "github_test_result", "ok": True,
-                        "repo": body.get("full_name", ""),
-                        "private": body.get("private", False),
-                        "default_branch": body.get("default_branch", ""),
+                        "repo": info.get("full_name", ""),
+                        "private": info.get("private", False),
+                        "default_branch": info.get("default_branch", ""),
                     }))
-                else:
+                except Exception as e:
                     await websocket.send(json.dumps({
                         "type": "github_test_result", "ok": False,
-                        "error": body.get("message", f"HTTP {status}")
+                        "error": str(e)
                     }))
 
             elif action == "github_deploy_jukebox":
@@ -1386,18 +1170,18 @@ async def ws_handler(websocket):
                     }))
                     continue
                 content = json.dumps(songs, indent=2) + "\n"
-                remote_content, remote_sha = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: github_get_file(GITHUB_PATHS["jukebox"], token)
-                )
-                ok, result = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: github_put_file(GITHUB_PATHS["jukebox"], content, remote_sha, commit_msg, token)
-                )
-                await websocket.send(json.dumps({
-                    "type": "github_jukebox_result", "ok": ok,
-                    "error": result.get("error") if not ok else None,
-                    "commit_url": result.get("html_url") if ok else None,
-                    "songs_count": len(songs),
-                }))
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.put_file(GITHUB_PATHS["jukebox"], content, commit_msg)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "github_jukebox_result", "ok": True,
+                        "commit_url": None, "songs_count": len(songs),
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "github_jukebox_result", "ok": False, "error": str(e),
+                    }))
 
             elif action == "github_deploy_tv":
                 channels = msg.get("channels", [])
@@ -1423,23 +1207,23 @@ async def ws_handler(websocket):
                 js_content = 'window.TV_CHANNELS = [\n' + ',\n'.join(lines) + '\n];\n'
                 json_content = json.dumps(channels, indent=2) + "\n"
 
-                files_to_commit = []
-                for key, path in [("tv_json", GITHUB_PATHS["tv_json"]), ("tv_js", GITHUB_PATHS["tv_js"])]:
-                    c = json_content if key == "tv_json" else js_content
-                    _, sha = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda p=path: github_get_file(p, token)
-                    )
-                    files_to_commit.append({"path": path, "content": c, "sha": sha})
+                files_to_commit = [
+                    {"path": GITHUB_PATHS["tv_json"], "content": json_content},
+                    {"path": GITHUB_PATHS["tv_js"], "content": js_content},
+                ]
 
-                ok, result = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: github_commit_multiple(files_to_commit, commit_msg, token)
-                )
-                await websocket.send(json.dumps({
-                    "type": "github_tv_result", "ok": ok,
-                    "error": result.get("error") if not ok else None,
-                    "commit_url": result.get("html_url") if ok else None,
-                    "channels_count": len(channels),
-                }))
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.commit_multiple(files_to_commit, commit_msg)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "github_tv_result", "ok": True,
+                        "commit_url": None, "channels_count": len(channels),
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "github_tv_result", "ok": False, "error": str(e),
+                    }))
 
             elif action == "github_deploy_themes":
                 themes = msg.get("themes", [])
@@ -1454,18 +1238,18 @@ async def ws_handler(websocket):
                     }))
                     continue
                 content = json.dumps(themes, indent=2) + "\n"
-                _, remote_sha = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: github_get_file(GITHUB_PATHS["themes"], token)
-                )
-                ok, result = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: github_put_file(GITHUB_PATHS["themes"], content, remote_sha, commit_msg, token)
-                )
-                await websocket.send(json.dumps({
-                    "type": "github_themes_result", "ok": ok,
-                    "error": result.get("error") if not ok else None,
-                    "commit_url": result.get("html_url") if ok else None,
-                    "themes_count": len(themes),
-                }))
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.put_file(GITHUB_PATHS["themes"], content, commit_msg)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "github_themes_result", "ok": True,
+                        "commit_url": None, "themes_count": len(themes),
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "github_themes_result", "ok": False, "error": str(e),
+                    }))
 
             elif action == "github_sync_all":
                 token = load_github_token()
@@ -1479,46 +1263,36 @@ async def ws_handler(websocket):
                 files_to_commit = []
                 files_changed = []
 
-                # Check jukebox
-                if os.path.exists(JUKEBOX_PATH):
-                    with open(JUKEBOX_PATH) as f:
+                def _check_file(local_path, gh_path, label):
+                    if not os.path.exists(local_path):
+                        return
+                    with open(local_path) as f:
                         local = f.read()
-                    remote, sha = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda: github_get_file(GITHUB_PATHS["jukebox"], token)
-                    )
+                    try:
+                        remote, _ = _gh_client.get_file(gh_path)
+                    except Exception:
+                        remote = None
                     if remote is None or local.strip() != remote.strip():
-                        files_to_commit.append({"path": GITHUB_PATHS["jukebox"], "content": local, "sha": sha})
-                        files_changed.append("jukebox-songs.json")
+                        files_to_commit.append({"path": gh_path, "content": local})
+                        files_changed.append(label)
 
-                # Check TV
-                if os.path.exists(TV_PATH):
-                    with open(TV_PATH) as f:
-                        local = f.read()
-                    remote, sha = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda: github_get_file(GITHUB_PATHS["tv_json"], token)
-                    )
-                    if remote is None or local.strip() != remote.strip():
-                        files_to_commit.append({"path": GITHUB_PATHS["tv_json"], "content": local, "sha": sha})
-                        files_changed.append("tv-channels.json")
-                        if os.path.exists(TV_JS_PATH):
-                            with open(TV_JS_PATH) as f:
-                                tv_js = f.read()
-                            _, js_sha = await asyncio.get_event_loop().run_in_executor(
-                                _executor, lambda: github_get_file(GITHUB_PATHS["tv_js"], token)
-                            )
-                            files_to_commit.append({"path": GITHUB_PATHS["tv_js"], "content": tv_js, "sha": js_sha})
-                            files_changed.append("channels.js")
+                await asyncio.get_event_loop().run_in_executor(_executor, lambda: (
+                    _check_file(JUKEBOX_PATH, GITHUB_PATHS["jukebox"], "jukebox-songs.json"),
+                    _check_file(TV_PATH, GITHUB_PATHS["tv_json"], "tv-channels.json"),
+                    _check_file(THEMES_PATH, GITHUB_PATHS["themes"], "themes.json"),
+                ))
 
-                # Check themes
-                if os.path.exists(THEMES_PATH):
-                    with open(THEMES_PATH) as f:
-                        local = f.read()
-                    remote, sha = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda: github_get_file(GITHUB_PATHS["themes"], token)
-                    )
-                    if remote is None or local.strip() != remote.strip():
-                        files_to_commit.append({"path": GITHUB_PATHS["themes"], "content": local, "sha": sha})
-                        files_changed.append("themes.json")
+                # Also check TV JS if TV JSON changed
+                if "tv-channels.json" in files_changed and os.path.exists(TV_JS_PATH):
+                    with open(TV_JS_PATH) as f:
+                        tv_js = f.read()
+                    try:
+                        remote, _ = _gh_client.get_file(GITHUB_PATHS["tv_js"])
+                    except Exception:
+                        remote = None
+                    if remote is None or tv_js.strip() != remote.strip():
+                        files_to_commit.append({"path": GITHUB_PATHS["tv_js"], "content": tv_js})
+                        files_changed.append("channels.js")
 
                 # Check scores
                 if os.path.isdir(SCORES_DIR):
@@ -1528,11 +1302,12 @@ async def ws_handler(websocket):
                             gh_path = f"arcade/admin/scores/{fn}"
                             with open(local_path) as f:
                                 local = f.read()
-                            remote, sha = await asyncio.get_event_loop().run_in_executor(
-                                _executor, lambda p=gh_path: github_get_file(p, token)
-                            )
+                            try:
+                                remote, _ = _gh_client.get_file(gh_path)
+                            except Exception:
+                                remote = None
                             if remote is None or local.strip() != remote.strip():
-                                files_to_commit.append({"path": gh_path, "content": local, "sha": sha})
+                                files_to_commit.append({"path": gh_path, "content": local})
                                 files_changed.append(fn)
 
                 if not files_to_commit:
@@ -1542,15 +1317,18 @@ async def ws_handler(websocket):
                     }))
                     continue
 
-                ok, result = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: github_commit_multiple(files_to_commit, commit_msg, token)
-                )
-                await websocket.send(json.dumps({
-                    "type": "github_sync_result", "ok": ok,
-                    "error": result.get("error") if not ok else None,
-                    "commit_url": result.get("html_url") if ok else None,
-                    "files_changed": files_changed,
-                }))
+                try:
+                    await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.commit_multiple(files_to_commit, commit_msg)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "github_sync_result", "ok": True,
+                        "files_changed": files_changed,
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "github_sync_result", "ok": False, "error": str(e),
+                    }))
 
             elif action == "github_backup":
                 token = load_github_token()
@@ -1589,30 +1367,35 @@ async def ws_handler(websocket):
                                 rel_path = os.path.relpath(local_path, _repo_root())
                                 with open(local_path) as f:
                                     local = f.read()
-                                remote, sha = await asyncio.get_event_loop().run_in_executor(
-                                    _executor, lambda p=rel_path: github_get_file(p, token)
-                                )
+                                try:
+                                    remote, _ = _gh_client.get_file(rel_path)
+                                except Exception:
+                                    remote = None
                                 if remote is None or local.strip() != remote.strip():
-                                    files_to_commit.append({"path": rel_path, "content": local, "sha": sha})
+                                    files_to_commit.append({"path": rel_path, "content": local})
                                     files_changed.append(rel_path)
 
                 if files_to_commit:
-                    ok, result = await asyncio.get_event_loop().run_in_executor(
-                        _executor, lambda: github_commit_multiple(files_to_commit, commit_msg, token)
-                    )
+                    try:
+                        await asyncio.get_event_loop().run_in_executor(
+                            _executor, lambda: _gh_client.commit_multiple(files_to_commit, commit_msg)
+                        )
+                        ok = True
+                    except Exception as e:
+                        ok = False
+                        files_changed = [str(e)]
                 else:
-                    ok, result = True, {"message": "No cache files changed"}
+                    ok = True
 
                 await websocket.send(json.dumps({
                     "type": "github_backup_result", "ok": ok,
-                    "error": result.get("error") if not ok else None,
-                    "commit_url": result.get("html_url") if ok else None,
                     "files_changed": files_changed,
                 }))
 
             elif action == "github_config_save":
                 github_token = msg.get("github_token", "")
                 save_github_token(github_token)
+                _init_gh_client()
                 await websocket.send(json.dumps({"type": "github_config_saved", "ok": True}))
 
             # ── Bot status actions ──────────────────────────────────────────
@@ -1625,12 +1408,29 @@ async def ws_handler(websocket):
                     }))
                     continue
 
-                workflows = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: _fetch_bot_statuses(token)
-                )
-                await websocket.send(json.dumps({
-                    "type": "bots_list_result", "workflows": workflows
-                }))
+                try:
+                    workflows = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.workflows()
+                    )
+                    # Convert to the format the frontend expects
+                    wf_list = []
+                    for w in workflows:
+                        wf_list.append({
+                            "name": w.name,
+                            "file": w.file,
+                            "status": w.status,
+                            "conclusion": w.conclusion,
+                            "createdAt": w.last_run,
+                            "event": w.event,
+                            "htmlUrl": w.html_url,
+                        })
+                    await websocket.send(json.dumps({
+                        "type": "bots_list_result", "workflows": wf_list
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "bots_list_result", "workflows": [], "error": str(e)
+                    }))
 
             elif action == "bots_trigger":
                 token = load_github_token()
@@ -1642,40 +1442,30 @@ async def ws_handler(websocket):
                     }))
                     continue
 
-                ok, error = await asyncio.get_event_loop().run_in_executor(
-                    _executor, lambda: _trigger_workflow(token, workflow_id)
-                )
-                await websocket.send(json.dumps({
-                    "type": "bots_trigger_result", "ok": ok, "workflow_id": workflow_id,
-                    "error": error
-                }))
+                try:
+                    await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _gh_client.trigger(workflow_id)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "bots_trigger_result", "ok": True, "workflow_id": workflow_id,
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "bots_trigger_result", "ok": False, "workflow_id": workflow_id,
+                        "error": str(e)
+                    }))
 
             elif action == "nginx_traffic":
                 lines = min(int(msg.get("lines", 1000)), 10000)
-                top_ips, status_codes, user_agents, total = await asyncio.gather(
-                    run_cmd_async(
-                        f"sudo tail -n {lines} /var/log/nginx/access.log | awk '{{print $1}}' | sort | uniq -c | sort -rn | head -15",
-                        timeout=15
-                    ),
-                    run_cmd_async(
-                        f"sudo tail -n {lines} /var/log/nginx/access.log | awk '{{print $9}}' | sort | uniq -c | sort -rn",
-                        timeout=15
-                    ),
-                    run_cmd_async(
-                        f"sudo tail -n {lines} /var/log/nginx/access.log | awk -F'\"' '{{print $6}}' | sort | uniq -c | sort -rn | head -15",
-                        timeout=15
-                    ),
-                    run_cmd_async(
-                        "sudo wc -l < /var/log/nginx/access.log",
-                        timeout=15
-                    ),
+                traffic = await asyncio.get_event_loop().run_in_executor(
+                    _executor, lambda: _pi_client.traffic(lines)
                 )
                 await websocket.send(json.dumps({
                     "type": "nginx_traffic",
-                    "top_ips": top_ips,
-                    "status_codes": status_codes,
-                    "user_agents": user_agents,
-                    "total": total
+                    "top_ips": traffic.top_ips,
+                    "status_codes": traffic.status_codes,
+                    "user_agents": traffic.user_agents,
+                    "total": traffic.total_requests
                 }))
 
     except websockets.ConnectionClosed:
@@ -1742,6 +1532,9 @@ def main():
 
     port = CONFIG.get("port", 8780)
     bind = CONFIG.get("bind", "0.0.0.0")
+
+    # Initialize magmascript clients
+    _init_gh_client()
 
     print(f"")
     print(f"  ╔══════════════════════════════════════════════╗")
