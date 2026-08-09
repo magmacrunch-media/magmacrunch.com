@@ -7,7 +7,7 @@ source "$SCRIPT_DIR/pi-bot-env.sh"
 
 echo "[$(date -u '+%Y-%m-%d %H:%M UTC')] Starting MusicBrainz backup"
 
-node scripts/backup-musicbrainz.mjs --skip-existing
+magmascript mb backup --skip-existing
 
 git add archive/_cache/
 git diff --cached --quiet || git commit -m "Update MusicBrainz cache"

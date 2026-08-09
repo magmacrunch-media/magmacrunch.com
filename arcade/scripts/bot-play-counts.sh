@@ -12,7 +12,7 @@ if [ -z "${LASTFM_API_KEY:-}" ]; then
     exit 1
 fi
 
-node scripts/fetch-play-counts.mjs --skip-existing
+magmascript lastfm fetch --skip-existing
 
 git add arcade/admin/stats/lastfm/ scripts/play-counts.json
 git diff --cached --quiet || git commit -m "Update Last.fm play counts"
