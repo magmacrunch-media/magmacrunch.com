@@ -586,7 +586,13 @@ def get_discogs_label(label_id: str) -> str:
 @mcp.tool()
 def check_pi_services() -> str:
     """Check status of all arcade services on the Raspberry Pi."""
-    result = _ssh_run("systemctl is-active arcade-* 2>/dev/null || true")
+    result = _ssh_run(
+        "systemctl list-units --type=service --all --no-legend | grep arcade | awk '{print $1}' | "
+        "while read svc; do "
+        "name=${svc%.service}; name=${name#arcade-}; "
+        "status=$(systemctl is-active $svc 2>/dev/null || echo inactive); "
+        "echo \"arcade-$name: $status\"; done"
+    )
     if not result["ok"]:
         return f"SSH failed: {result['error']}"
     lines = ["Pi service status:\n"]
