@@ -27,25 +27,17 @@ jobs:
             --exclude 'venv' \
             arcade/ jake@192.168.1.16:~/arcade/
 
+      - name: Deploy mcp-server/ to Pi
+        run: |
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude '__pycache__' \
+            --exclude '.venv' \
+            mcp-server/ jake@192.168.1.16:~/arcade/mcp-server/
+
+      - name: Restart Pi services
+        run: |
           ssh -o StrictHostKeyChecking=no \
             jake@192.168.1.16 "sudo systemctl restart 'arcade-*'"
 
-      - name: Install magmascript on Pi
-        run: |
-          # Build wheel from local magmascript repo
-          cd ~/Documents/magmascript
-          .venv/bin/python -m build --wheel -o dist/
 
-          # Copy wheel to Pi
-          scp -o StrictHostKeyChecking=no \
-            dist/magmascript-*.whl jake@192.168.1.16:~/
-
-          # Install in Pi's venv and symlink CLI
-          ssh -o StrictHostKeyChecking=no jake@192.168.1.16 \
-            "~/arcade/venv/bin/pip install --upgrade ~/magmascript-*.whl && \
-             ln -sf ~/arcade/venv/bin/magmascript ~/bin/magmascript && \
-             rm ~/magmascript-*.whl"
-
-          # Restart MCP server to pick up new tools
-          ssh -o StrictHostKeyChecking=no \
-            jake@192.168.1.16 "sudo systemctl restart arcade-mcp"
