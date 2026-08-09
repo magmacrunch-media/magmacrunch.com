@@ -2,12 +2,12 @@
 
 import json
 import os
-import subprocess
 import time
 from pathlib import Path
 
 import requests
 from mcp.server.mcpserver import MCPServer
+from magmascript import PIClient, GHClient
 
 # ---------------------------------------------------------------------------
 # Config
@@ -30,11 +30,7 @@ DISCOGS_BASE = "https://api.discogs.com"
 DISCOGS_CACHE_DIR = CACHE_DIR / "discogs"
 USER_AGENT = "MagmaCrunchMCP/1.0 +https://magmacrunch.com"
 
-# GitHub API config
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
-GITHUB_API = "https://api.github.com"
-GITHUB_OWNER = "magmacrunchmedia"
-GITHUB_REPO = "magmacrunch.com"
+# GitHub API config (now handled by magmascript GHClient)
 
 mcp = MCPServer("magma-mcp")
 
@@ -183,23 +179,8 @@ def _scan_arcade_games() -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
-# Helpers — SSH
+# Helpers — SSH (now handled by magmascript PIClient)
 # ---------------------------------------------------------------------------
-
-
-def _ssh_run(cmd: str, timeout: int = 15) -> dict:
-    """Run a command on the Pi via SSH."""
-    try:
-        result = subprocess.run(
-            ["ssh", "-o", "ConnectTimeout=5", "-o", "StrictHostKeyChecking=no",
-             f"{PI_USER}@{PI_HOST}", cmd],
-            capture_output=True, text=True, timeout=timeout,
-        )
-        return {"ok": True, "stdout": result.stdout.strip(), "stderr": result.stderr.strip(), "code": result.returncode}
-    except subprocess.TimeoutExpired:
-        return {"ok": False, "error": "SSH connection timed out"}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
 
 
 # ---------------------------------------------------------------------------
@@ -586,23 +567,14 @@ def get_discogs_label(label_id: str) -> str:
 @mcp.tool()
 def check_pi_services() -> str:
     """Check status of all arcade services on the Raspberry Pi."""
-    result = _ssh_run(
-        "systemctl list-units --type=service --all --no-legend | grep arcade | awk '{print $1}' | "
-        "while read svc; do "
-        "name=${svc%.service}; name=${name#arcade-}; "
-        "status=$(systemctl is-active $svc 2>/dev/null || echo inactive); "
-        "echo \"arcade-$name: $status\"; done"
-    )
-    if not result["ok"]:
-        return f"SSH failed: {result['error']}"
+    pi = PIClient()
+    services = pi.services()
+    if not services:
+        return "Pi service status:\n\n  (no services found — check if services are installed)"
     lines = ["Pi service status:\n"]
-    for line in result["stdout"].splitlines():
-        if ":" in line:
-            name, status = line.split(":", 1)
-            icon = "✓" if status.strip() == "active" else "✗"
-            lines.append(f"  {icon} {name.strip()}: {status.strip()}")
-    if len(lines) == 1:
-        lines.append("  (no services found — check if services are installed)")
+    for s in services:
+        icon = "✓" if s.ok else "✗"
+        lines.append(f"  {icon} {s.unit}: {s.status}")
     return "\n".join(lines)
 
 
@@ -614,12 +586,9 @@ def get_service_logs(service: str, lines_count: int = 30) -> str:
         service: Service name (e.g. arcade-chat, arcade-admin, arcade-sorry)
         lines_count: Number of log lines to return (default 30)
     """
-    result = _ssh_run(f"journalctl -u {service} -n {lines_count} --no-pager 2>&1")
-    if not result["ok"]:
-        return f"SSH failed: {result['error']}"
-    if result["code"] != 0:
-        return f"Error: {result['stderr'] or result['stdout']}"
-    return f"Logs for {service} (last {lines_count} lines):\n\n{result['stdout']}"
+    pi = PIClient()
+    logs = pi.logs(service, lines_count)
+    return f"Logs for {service} (last {lines_count} lines):\n\n{logs}"
 
 
 @mcp.tool()
@@ -629,31 +598,22 @@ def restart_pi_service(service: str) -> str:
     Args:
         service: Service name (e.g. arcade-chat, arcade-admin, arcade-sorry)
     """
-    result = _ssh_run(f"sudo systemctl restart {service}", timeout=20)
-    if not result["ok"]:
-        return f"SSH failed: {result['error']}"
-    if result["code"] == 0:
-        return f"✓ {service} restarted successfully."
-    return f"Failed to restart {service}:\n{result['stderr'] or result['stdout']}"
+    pi = PIClient()
+    return pi.restart(service)
 
 
 @mcp.tool()
 def get_pi_system_info() -> str:
     """Get Raspberry Pi system info (uptime, memory, CPU temp, load)."""
-    cmds = [
-        ("Uptime", "uptime -p"),
-        ("Memory", "free -h | grep Mem"),
-        ("CPU Temp", "vcgencmd measure_temp 2>/dev/null || cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null"),
-        ("Load", "cat /proc/loadavg"),
-        ("Disk", "df -h / | tail -1"),
+    pi = PIClient()
+    info = pi.info()
+    lines = [
+        "Pi system info:\n",
+        f"  Uptime: {info.uptime or '(unavailable)'}",
+        f"  Memory: {info.memory or '(unavailable)'}",
+        f"  CPU Temp: {info.cpu_temp or '(unavailable)'}",
+        f"  Load: {info.cpu_load or '(unavailable)'}",
     ]
-    lines = ["Pi system info:\n"]
-    for label, cmd in cmds:
-        result = _ssh_run(cmd)
-        if result["ok"] and result["code"] == 0:
-            lines.append(f"  {label}: {result['stdout']}")
-        else:
-            lines.append(f"  {label}: (unavailable)")
     return "\n".join(lines)
 
 
@@ -673,25 +633,8 @@ def deploy_to_pi(local_path: str, service: str = "") -> str:
     local = PROJECT_ROOT / local_path
     if not local.exists():
         return f"Path not found: {local_path}"
-
-    remote = f"{PI_USER}@{PI_HOST}:~/arcade/"
-    if local.is_file():
-        remote = f"{PI_USER}@{PI_HOST}:~/arcade/{local.name}"
-
-    result = subprocess.run(
-        ["rsync", "-avz", "--delete", str(local) + ("/" if local.is_dir() else ""), remote],
-        capture_output=True, text=True, timeout=30,
-    )
-    if result.returncode != 0:
-        return f"rsync failed:\n{result.stderr}"
-
-    output = f"✓ Deployed {local_path} to Pi.\n{result.stdout}"
-
-    if service:
-        restart = restart_pi_service(service)
-        output += f"\n\n{restart}"
-
-    return output
+    pi = PIClient()
+    return pi.deploy(str(local), service)
 
 
 # ---------------------------------------------------------------------------
@@ -702,65 +645,21 @@ def deploy_to_pi(local_path: str, service: str = "") -> str:
 @mcp.tool()
 def list_bots() -> str:
     """List all GitHub Actions workflows with their last run status."""
-    if not GITHUB_TOKEN:
-        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
-
-    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/runs?per_page=100"
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunchMCP/1.0",
-    }
-
     try:
-        resp = requests.get(url, headers=headers, timeout=10)
-        if resp.status_code != 200:
-            return f"GitHub API error: {resp.status_code} — {resp.text}"
+        gh = GHClient()
+        workflows = gh.workflows()
+    except Exception as e:
+        return f"GitHub API error: {e}"
 
-        runs = resp.json().get("workflow_runs", [])
-
-        # Define all workflows to track
-        workflows = [
-            {"name": "CI", "file": "ci.yml"},
-            {"name": "Deploy to Pi", "file": "deploy-pi.yml"},
-            {"name": "Check Links", "file": "check-links.yml"},
-            {"name": "Check Archive Format", "file": "check-archive-format.yml"},
-            {"name": "Check Pi Services", "file": "check-services.yml"},
-            {"name": "Rebuild Search Index", "file": "rebuild-search-index.yml"},
-            {"name": "Generate Archive Stubs", "file": "generate-stubs.yml"},
-            {"name": "Bake Cache", "file": "bake-cache.yml"},
-            {"name": "Weekly High Scores", "file": "weekly-scores.yml"},
-            {"name": "Arcade Smoke Test", "file": "smoke-test.yml"},
-            {"name": "MusicBrainz Backup", "file": "backup-musicbrainz.yml"},
-            {"name": "TMDB Backup", "file": "backup-tmdb.yml"},
-            {"name": "Bot Status Report", "file": "bot-status.yml"},
-        ]
-
-        # Map runs to workflows
-        for wf in workflows:
-            wf_runs = [r for r in runs if r.get("path", "").endswith(wf["file"])]
-            if wf_runs:
-                latest = wf_runs[0]
-                wf["status"] = latest.get("conclusion") or latest.get("status", "unknown")
-                wf["last_run"] = latest.get("created_at", "")
-                wf["event"] = latest.get("event", "")
-            else:
-                wf["status"] = "never"
-                wf["last_run"] = ""
-                wf["event"] = ""
-
-        # Format output
-        lines = ["# GitHub Actions Workflows", ""]
-        lines.append("| Workflow | Status | Last Run | Trigger |")
-        lines.append("|---|---|---|---|")
-        for wf in workflows:
-            icon = "✓" if wf["status"] == "success" else "✗" if wf["status"] == "failure" else "—"
-            lines.append(f"| {wf['name']} | {icon} {wf['status']} | {wf['last_run'][:16] if wf['last_run'] else 'never'} | {wf['event']} |")
-
-        return "\n".join(lines)
-
-    except requests.RequestException as e:
-        return f"Request failed: {e}"
+    lines = ["# GitHub Actions Workflows", ""]
+    lines.append("| Workflow | Status | Last Run | Trigger |")
+    lines.append("|---|---|---|---|")
+    for wf in workflows:
+        status = wf.conclusion or wf.status
+        icon = "✓" if status == "success" else "✗" if status == "failure" else "—"
+        last_run = wf.last_run[:16] if wf.last_run else "never"
+        lines.append(f"| {wf.name} | {icon} {status} | {last_run} | {wf.event} |")
+    return "\n".join(lines)
 
 
 @mcp.tool()
@@ -770,55 +669,26 @@ def get_bot_status(workflow_name: str) -> str:
     Args:
         workflow_name: Name of the workflow (e.g. 'Deploy to Pi', 'Check Links')
     """
-    if not GITHUB_TOKEN:
-        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
-
-    # Map friendly names to file names
-    workflow_map = {
-        "CI": "ci.yml", "Deploy to Pi": "deploy-pi.yml", "Check Links": "check-links.yml",
-        "Check Archive Format": "check-archive-format.yml", "Check Pi Services": "check-services.yml",
-        "Rebuild Search Index": "rebuild-search-index.yml", "Generate Archive Stubs": "generate-stubs.yml",
-        "Bake Cache": "bake-cache.yml", "Weekly High Scores": "weekly-scores.yml",
-        "Arcade Smoke Test": "smoke-test.yml", "MusicBrainz Backup": "backup-musicbrainz.yml",
-        "TMDB Backup": "backup-tmdb.yml", "Bot Status Report": "bot-status.yml",
-    }
-
-    workflow_file = workflow_map.get(workflow_name)
-    if not workflow_file:
-        return f"Unknown workflow: {workflow_name}. Available: {', '.join(workflow_map.keys())}"
-
-    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_file}/runs?per_page=5"
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunchMCP/1.0",
-    }
-
     try:
-        resp = requests.get(url, headers=headers, timeout=10)
-        if resp.status_code != 200:
-            return f"GitHub API error: {resp.status_code} — {resp.text}"
+        gh = GHClient()
+        runs = gh.workflow_runs(workflow_name, limit=5)
+    except KeyError as e:
+        return str(e)
+    except Exception as e:
+        return f"GitHub API error: {e}"
 
-        runs = resp.json().get("workflow_runs", [])
-        if not runs:
-            return f"No runs found for {workflow_name}"
+    if not runs:
+        return f"No runs found for {workflow_name}"
 
-        lines = [f"# {workflow_name} — Recent Runs", ""]
-        lines.append("| Run | Status | Trigger | Started |")
-        lines.append("|---|---|---|---|")
-
-        for run in runs:
-            status = run.get("conclusion") or run.get("status", "unknown")
-            icon = "✓" if status == "success" else "✗" if status == "failure" else "⏳"
-            created = run.get("created_at", "")[:16]
-            event = run.get("event", "")
-            run_id = run.get("id", "")
-            lines.append(f"| [{run_id}]({run.get('html_url', '')}) | {icon} {status} | {event} | {created} |")
-
-        return "\n".join(lines)
-
-    except requests.RequestException as e:
-        return f"Request failed: {e}"
+    lines = [f"# {workflow_name} — Recent Runs", ""]
+    lines.append("| Run | Status | Trigger | Started |")
+    lines.append("|---|---|---|---|")
+    for r in runs:
+        status = r.conclusion or r.status
+        icon = "✓" if status == "success" else "✗" if status == "failure" else "⏳"
+        created = r.created_at[:16]
+        lines.append(f"| [{r.id}]({r.html_url}) | {icon} {status} | {r.event} | {created} |")
+    return "\n".join(lines)
 
 
 @mcp.tool()
@@ -828,41 +698,13 @@ def trigger_bot(workflow_name: str) -> str:
     Args:
         workflow_name: Name of the workflow (e.g. 'Deploy to Pi', 'Check Links')
     """
-    if not GITHUB_TOKEN:
-        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
-
-    # Map friendly names to file names
-    workflow_map = {
-        "CI": "ci.yml", "Deploy to Pi": "deploy-pi.yml", "Check Links": "check-links.yml",
-        "Check Archive Format": "check-archive-format.yml", "Check Pi Services": "check-services.yml",
-        "Rebuild Search Index": "rebuild-search-index.yml", "Generate Archive Stubs": "generate-stubs.yml",
-        "Bake Cache": "bake-cache.yml", "Weekly High Scores": "weekly-scores.yml",
-        "Arcade Smoke Test": "smoke-test.yml", "MusicBrainz Backup": "backup-musicbrainz.yml",
-        "TMDB Backup": "backup-tmdb.yml", "Bot Status Report": "bot-status.yml",
-    }
-
-    workflow_file = workflow_map.get(workflow_name)
-    if not workflow_file:
-        return f"Unknown workflow: {workflow_name}. Available: {', '.join(workflow_map.keys())}"
-
-    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_file}/dispatches"
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunchMCP/1.0",
-        "Content-Type": "application/json",
-    }
-    data = {"ref": "main"}
-
     try:
-        resp = requests.post(url, headers=headers, json=data, timeout=10)
-        if resp.status_code == 204:
-            return f"✓ Triggered {workflow_name}. Check the Actions tab for status."
-        else:
-            return f"Failed to trigger {workflow_name}: {resp.status_code} — {resp.text}"
-
-    except requests.RequestException as e:
-        return f"Request failed: {e}"
+        gh = GHClient()
+        return gh.trigger(workflow_name)
+    except KeyError as e:
+        return str(e)
+    except Exception as e:
+        return f"Failed to trigger {workflow_name}: {e}"
 
 
 @mcp.tool()
@@ -873,53 +715,24 @@ def get_bot_runs(workflow_name: str, limit: int = 10) -> str:
         workflow_name: Name of the workflow (e.g. 'Deploy to Pi', 'Check Links')
         limit: Number of runs to return (default 10)
     """
-    if not GITHUB_TOKEN:
-        return "GITHUB_TOKEN not set. Add it to your environment to enable bot management."
-
-    # Map friendly names to file names
-    workflow_map = {
-        "CI": "ci.yml", "Deploy to Pi": "deploy-pi.yml", "Check Links": "check-links.yml",
-        "Check Archive Format": "check-archive-format.yml", "Check Pi Services": "check-services.yml",
-        "Rebuild Search Index": "rebuild-search-index.yml", "Generate Archive Stubs": "generate-stubs.yml",
-        "Bake Cache": "bake-cache.yml", "Weekly High Scores": "weekly-scores.yml",
-        "Arcade Smoke Test": "smoke-test.yml", "MusicBrainz Backup": "backup-musicbrainz.yml",
-        "TMDB Backup": "backup-tmdb.yml", "Bot Status Report": "bot-status.yml",
-    }
-
-    workflow_file = workflow_map.get(workflow_name)
-    if not workflow_file:
-        return f"Unknown workflow: {workflow_name}. Available: {', '.join(workflow_map.keys())}"
-
-    url = f"{GITHUB_API}/repos/{GITHUB_OWNER}/{GITHUB_REPO}/actions/workflows/{workflow_file}/runs?per_page={limit}"
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json",
-        "User-Agent": "MagmaCrunchMCP/1.0",
-    }
-
     try:
-        resp = requests.get(url, headers=headers, timeout=10)
-        if resp.status_code != 200:
-            return f"GitHub API error: {resp.status_code} — {resp.text}"
+        gh = GHClient()
+        runs = gh.workflow_runs(workflow_name, limit)
+    except KeyError as e:
+        return str(e)
+    except Exception as e:
+        return f"GitHub API error: {e}"
 
-        runs = resp.json().get("workflow_runs", [])
-        if not runs:
-            return f"No runs found for {workflow_name}"
+    if not runs:
+        return f"No runs found for {workflow_name}"
 
-        lines = [f"# {workflow_name} — Last {len(runs)} Runs", ""]
-        for run in runs:
-            status = run.get("conclusion") or run.get("status", "unknown")
-            icon = "✓" if status == "success" else "✗" if status == "failure" else "⏳"
-            created = run.get("created_at", "")[:19].replace("T", " ")
-            event = run.get("event", "")
-            run_id = run.get("id", "")
-            duration = run.get("run_started_at", "")
-            lines.append(f"- {icon} **{status}** — {event} — {created} ([#{run_id}]({run.get('html_url', '')}))")
-
-        return "\n".join(lines)
-
-    except requests.RequestException as e:
-        return f"Request failed: {e}"
+    lines = [f"# {workflow_name} — Last {len(runs)} Runs", ""]
+    for r in runs:
+        status = r.conclusion or r.status
+        icon = "✓" if status == "success" else "✗" if status == "failure" else "⏳"
+        created = r.created_at[:19].replace("T", " ")
+        lines.append(f"- {icon} **{status}** — {r.event} — {created} ([#{r.id}]({r.html_url}))")
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
