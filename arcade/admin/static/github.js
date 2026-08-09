@@ -114,6 +114,16 @@
             case 'github_config_saved':
                 // silent
                 break;
+
+            case 'github_config_loaded':
+                if (msg.ok) {
+                    // Token exists on server — auto-test the connection
+                    window.OPS.send({
+                        action: 'github_test',
+                        token: window.OPS.authToken,
+                    });
+                }
+                break;
         }
     };
 
@@ -182,6 +192,12 @@
     // ── Init ──────────────────────────────────────────────────────────────
 
     statusDot.className = 'gh-status-dot';
-    statusText.textContent = 'NOT CONNECTED';
+    statusText.textContent = 'CHECKING...';
+
+    // Check for saved token on server
+    window.OPS.send({
+        action: 'github_config_load',
+        token: window.OPS.authToken,
+    });
 
 })();
