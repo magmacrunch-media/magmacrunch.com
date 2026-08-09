@@ -969,6 +969,41 @@ def get_artist_play_counts(artist_name: str) -> str:
 # ---------------------------------------------------------------------------
 
 
+def _resolve_artist(name_or_uuid: str) -> tuple[str, str] | None:
+    """Resolve an artist name or UUID to (uuid, name). Returns None if not found."""
+    import re
+    import uuid as _uuid
+    # Check if it's already a UUID
+    try:
+        _uuid.UUID(name_or_uuid)
+        artist_file = CACHE_DIR / "artists" / f"{name_or_uuid}.json"
+        if artist_file.is_file():
+            data = json.loads(artist_file.read_text())
+            return (name_or_uuid, data.get("name", name_or_uuid))
+        return None
+    except ValueError:
+        pass
+
+    # Search by name (case-insensitive, strip punctuation for matching)
+    artists_dir = CACHE_DIR / "artists"
+    if not artists_dir.is_dir():
+        return None
+    query_lower = name_or_uuid.lower()
+    query_clean = re.sub(r'[^a-z0-9]', '', query_lower)
+    for f in artists_dir.glob("*.json"):
+        try:
+            data = json.loads(f.read_text())
+            name = data.get("name", "")
+            name_lower = name.lower()
+            name_clean = re.sub(r'[^a-z0-9]', '', name_lower)
+            # Exact match, substring match, or cleaned match
+            if query_lower in name_lower or query_clean in name_clean:
+                return (data.get("uuid", f.stem), name)
+        except Exception:
+            continue
+    return None
+
+
 def _extract_rights_from_artist_cache(data: dict) -> dict:
     """Extract ISRCs from an artist cache file's recordings subpage."""
     recordings = []
@@ -1063,7 +1098,7 @@ def _build_rights_index() -> dict:
 
 
 @mcp.tool()
-def search_rights(query: str) -> str:
+def search_rights(query: str, artist: str = "") -> str:
     """Search music rights data by title, ISRC, ISWC, or ASCAP ID.
 
     Searches across all cached recordings and works for matching identifiers
@@ -1072,27 +1107,43 @@ def search_rights(query: str) -> str:
 
     Args:
         query: Search string (title, ISRC, ISWC, or ASCAP ID)
+        artist: Optional artist name to filter results
     """
     index = _build_rights_index()
     query_upper = query.upper().strip()
     query_lower = query.lower().strip()
+
+    # Resolve artist filter to a name for matching
+    artist_filter = ""
+    if artist:
+        resolved = _resolve_artist(artist)
+        if resolved:
+            artist_filter = resolved[1].lower()
+        else:
+            artist_filter = artist.lower()
 
     matches = []
 
     # Search ISRC index
     for isrc, rec in index["isrc"].items():
         if query_upper in isrc.upper() or query_lower in rec.get("title", "").lower():
+            if artist_filter and artist_filter not in rec.get("artist", "").lower():
+                continue
             matches.append(rec)
 
     # Search ISWC index
     for iswc, work in index["iswc"].items():
         if query_upper in iswc.upper() or query_lower in work.get("title", "").lower():
+            if artist_filter and not any(artist_filter in c.lower() for c in work.get("composers", [])):
+                continue
             matches.append(work)
 
     # Search ASCAP index
     for ascap, work in index["ascap"].items():
         if query_upper in ascap.upper() or query_lower in work.get("title", "").lower():
             if work not in matches:
+                if artist_filter and not any(artist_filter in c.lower() for c in work.get("composers", [])):
+                    continue
                 matches.append(work)
 
     if not matches:
@@ -1227,18 +1278,22 @@ def get_work_rights(work_uuid: str) -> str:
 
 
 @mcp.tool()
-def artist_rights_catalog(artist_uuid: str) -> str:
+def artist_rights_catalog(artist: str) -> str:
     """Get full rights catalog (all ISRCs, ISWCs, ASCAP IDs) for an artist.
 
     Args:
-        artist_uuid: MusicBrainz artist UUID
+        artist: Artist name or MusicBrainz UUID
     """
+    resolved = _resolve_artist(artist)
+    if not resolved:
+        return f"Artist '{artist}' not found in cache"
+    artist_uuid, artist_name = resolved
+
     artist_file = CACHE_DIR / "artists" / f"{artist_uuid}.json"
     if not artist_file.is_file():
         return f"Artist {artist_uuid} not found in cache"
 
     data = json.loads(artist_file.read_text())
-    artist_name = data.get("name", "unknown")
 
     # Collect recordings with ISRCs
     rec_data = _extract_rights_from_artist_cache(data)
