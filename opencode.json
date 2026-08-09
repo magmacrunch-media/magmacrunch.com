@@ -2,13 +2,11 @@
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "magma": {
-      "type": "local",
-      "command": ["/opt/homebrew/bin/python3.14", "mcp-server/magma-mcp.py"],
-      "cwd": ".",
+      "type": "remote",
+      "url": "https://magmacrunch.duckdns.org/mcp",
       "enabled": true,
-      "env": {
-        "DISCOGS_TOKEN": "${DISCOGS_TOKEN}",
-        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
       }
     }
   }

@@ -97,6 +97,28 @@ if [[ -f "$PRIVATE_DIR/systemd/arcade-private.service" ]]; then
     ok "Installed arcade-private.service"
 fi
 
+# ── Install MCP server service ──────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing MCP server...${NC}"
+
+MCP_DIR="$ARCADE_DIR/mcp-server"
+if [[ -f "$MCP_DIR/serve.py" ]]; then
+    # Install mcp[cli] into venv if not present
+    if ! sudo -u jake "$VENV_DIR/bin/python3" -c "import mcp" 2>/dev/null; then
+        warn "Installing mcp[cli]..."
+        sudo -u jake "$VENV_DIR/bin/pip" install "mcp[cli]" --quiet
+        ok "mcp[cli] installed"
+    fi
+
+    if [[ -f "$ARCADE_DIR/systemd/arcade-mcp.service" ]]; then
+        cp "$ARCADE_DIR/systemd/arcade-mcp.service" /etc/systemd/system/
+        ok "Installed arcade-mcp.service"
+    fi
+else
+    warn "MCP server not found — skipping"
+fi
+
 # ── Install Node.js and lychee for cron bots ────────────────────────────────
 
 echo ""
@@ -151,6 +173,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
 # TMDB_API_KEY=...
 # LASTFM_API_KEY=...
 # DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+# MCP_API_KEY=...  (for remote MCP server — see AGENTS.md)
 ENVEOF
     chmod 600 "$ENV_FILE"
     ok "Created .env template"
@@ -186,6 +209,7 @@ SERVICES=(
     "arcade-counter"
     "arcade-admin"
     "arcade-private"
+    "arcade-mcp"
 )
 
 for svc in "${SERVICES[@]}"; do
@@ -228,6 +252,7 @@ echo -e "${GREEN}Setup complete!${NC}"
 echo ""
 echo "  Dashboard:   http://localhost:8780"
 echo "  Dashboard:   http://$(hostname -I | awk '{print $1}'):8780"
+echo "  MCP Server:  https://magmacrunch.duckdns.org/mcp"
 echo ""
 echo "  Desktop:     Double-click 'MagmaCrunch Ops' icon"
 echo ""

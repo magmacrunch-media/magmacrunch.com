@@ -1,0 +1,16 @@
+[Unit]
+Description=MagmaCrunch MCP Server
+After=network.target
+
+[Service]
+Type=simple
+User=jake
+WorkingDirectory=/home/jake/website
+EnvironmentFile=/home/jake/arcade/.env
+Environment=MCP_PORT=8785
+ExecStart=/home/jake/arcade/venv/bin/python3 /home/jake/arcade/mcp-server/serve.py
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
