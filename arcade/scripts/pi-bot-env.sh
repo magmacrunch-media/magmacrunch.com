@@ -2,7 +2,7 @@
 # Shared environment for Pi cron bots.
 # Sourced by individual bot scripts.
 #
-# After first setup, populate ~/arcade/.env with:
+# After first setup, populate ~/arcade-config/.env with:
 #   GITHUB_PAT=ghp_...
 #   TMDB_API_KEY=...
 #   LASTFM_API_KEY=...
@@ -13,7 +13,7 @@ set -euo pipefail
 PI_HOME="/home/jake"
 REPO_DIR="$PI_HOME/website"
 LOG_DIR="$PI_HOME/arcade/logs"
-ENV_FILE="$PI_HOME/arcade/.env"
+ENV_FILE="$PI_HOME/arcade-config/.env"
 
 mkdir -p "$LOG_DIR"
 

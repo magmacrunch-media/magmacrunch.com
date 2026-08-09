@@ -179,9 +179,11 @@ else
     ok "Website repo already exists"
 fi
 
-# Create .env template if missing
-ENV_FILE="/home/jake/arcade/.env"
+# Create .env template if missing (outside rsync path)
+ENV_DIR="/home/jake/arcade-config"
+ENV_FILE="$ENV_DIR/.env"
 if [[ ! -f "$ENV_FILE" ]]; then
+    mkdir -p "$ENV_DIR"
     cat > "$ENV_FILE" << 'ENVEOF'
 # Pi Bot Environment — fill in before enabling cron jobs
 # GITHUB_PAT=ghp_...
