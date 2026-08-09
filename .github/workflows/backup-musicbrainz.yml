@@ -12,12 +12,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 22
+          python-version: '3.12'
 
-      - name: Run backup script
-        run: node scripts/backup-musicbrainz.mjs --skip-existing
+      - name: Install magmascript
+        run: pip install magmascript
+
+      - name: Run backup
+        run: magmascript mb backup --skip-existing
+        env:
+          MAGMA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Commit and push if changed
         run: |
