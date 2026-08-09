@@ -7,7 +7,7 @@ source "$SCRIPT_DIR/pi-bot-env.sh"
 
 echo "[$(date -u '+%Y-%m-%d %H:%M UTC')] Rebuilding search index"
 
-node scripts/build-search-index.js
+magmascript search build-index
 
 git add search-index.json
 git diff --cached --quiet || git commit -m "Rebuild search index"
