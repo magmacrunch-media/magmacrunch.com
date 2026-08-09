@@ -119,6 +119,21 @@ else
     warn "MCP server not found — skipping"
 fi
 
+# ── Install magmascript ───────────────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing magmascript...${NC}"
+
+MAGMASCRIPT_WHEEL="/tmp/magmascript-*.whl"
+if ls $MAGMASCRIPT_WHEEL 1>/dev/null 2>&1; then
+    sudo -u jake "$VENV_DIR/bin/pip" install --upgrade $MAGMASCRIPT_WHEEL --quiet
+    mkdir -p /home/jake/bin
+    ln -sf "$VENV_DIR/bin/magmascript" /home/jake/bin/magmascript
+    ok "magmascript installed"
+else
+    warn "magmascript wheel not found in /tmp — skipping (deploy workflow will install it)"
+fi
+
 # ── Install Node.js and lychee for cron bots ────────────────────────────────
 
 echo ""
