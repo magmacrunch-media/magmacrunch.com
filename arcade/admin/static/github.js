@@ -194,10 +194,12 @@
     statusDot.className = 'gh-status-dot';
     statusText.textContent = 'CHECKING...';
 
-    // Check for saved token on server
-    window.OPS.send({
-        action: 'github_config_load',
-        token: window.OPS.authToken,
-    });
+    // Check for saved token on server (wait for WS connection)
+    window.OPS.onConnect = function() {
+        window.OPS.send({
+            action: 'github_config_load',
+            token: window.OPS.authToken,
+        });
+    };
 
 })();
