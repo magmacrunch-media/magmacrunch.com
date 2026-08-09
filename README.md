@@ -47,26 +47,70 @@ See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for ful
 
 ---
 
+## magmascript
+
+[magmascript](https://github.com/magmacrunchmedia/magmascript) is the primary CLI tool for managing this site. Install it with:
+
+```bash
+pip install magmascript
+```
+
+### Quick reference
+
+```bash
+# Scores
+magmascript scores report                    # markdown report
+magmascript scores report --discord          # Discord JSON payload
+magmascript scores report --post-discussion  # post to GitHub Discussion
+magmascript scores report --post-discord     # post to Discord
+
+# Archive
+magmascript archive check-format             # validate HTML formatting
+magmascript archive bake-cache               # inline cache into pages
+
+# MusicBrainz
+magmascript mb backup                        # full MusicBrainz backup
+magmascript mb backup --skip-existing        # skip cached entities
+
+# Last.fm
+magmascript lastfm fetch                     # fetch play counts
+
+# Search
+magmascript search build-index               # build search-index.json
+
+# Pi management
+magmascript pi status                        # service statuses
+magmascript pi logs arcade-chat              # service logs
+
+# GitHub
+magmascript gh workflows                     # workflow statuses
+magmascript gh sync                          # diff + commit data files
+```
+
+See [magmascript README](https://github.com/magmacrunchmedia/magmascript#readme) for full documentation.
+
+---
+
 ## bots & automation
 
 16 automated bots keep the site running:
 
-| Bot | What it does | Schedule |
-|---|---|---|
-| **CI** | ESLint + pytest + JS tests | Push/PR |
-| **Deploy to Pi** | rsync arcade/ → Raspberry Pi | Push to main |
-| **Check Links** | Scan for broken links | Weekly + push |
-| **Check Pi Services** | TCP health check of game servers | Every 30 min |
-| **Rebuild Search Index** | Rebuild search-index.json | On content change |
-| **Generate Archive Stubs** | Auto-generate archive page stubs | On config change |
-| **Bake Cache** | Inline MusicBrainz data into pages | After backup |
-| **Weekly High Scores** | Post leaderboard to Discussion + Discord | Weekly |
-| **Fetch Play Counts** | Fetch Last.fm play counts | Weekly |
-| **MusicBrainz Backup** | Snapshot MusicBrainz API data | Weekly |
-| **TMDB Backup** | Snapshot TMDB person data | Weekly |
-| **Backup to Private Repo** | Sync code to private backup repo | On code changes |
-| **Bot Status Report** | Check all bot statuses | Weekly |
-| **Theme Color Audit** | Scan CSS files, generate color preview | On CSS change |
+| Bot | What it does | Schedule | Tool |
+|---|---|---|---|
+| **CI** | ESLint + pytest + JS tests | Push/PR | GitHub Actions |
+| **Deploy to Pi** | rsync arcade/ → Raspberry Pi | Push to main | GitHub Actions |
+| **Check Links** | Scan for broken links | Weekly + push | Pi cron (lychee) |
+| **Check Pi Services** | TCP health check of game servers | Every 30 min | Pi cron |
+| **Rebuild Search Index** | Rebuild search-index.json | On content change | Pi cron |
+| **Generate Archive Stubs** | Auto-generate archive page stubs | On config change | GitHub Actions |
+| **Bake Cache** | Inline MusicBrainz data into pages | After backup | GitHub Actions |
+| **Weekly High Scores** | Post leaderboard to Discussion + Discord | Weekly | Pi cron + magmascript |
+| **Fetch Play Counts** | Fetch Last.fm play counts | Weekly | Pi cron + magmascript |
+| **MusicBrainz Backup** | Snapshot MusicBrainz API data | Weekly | Pi cron + magmascript |
+| **TMDB Backup** | Snapshot TMDB person data | Weekly | Pi cron |
+| **Backup to Private Repo** | Sync code to private backup repo | On code changes | Manual |
+| **Bot Status Report** | Check all bot statuses | Weekly | GitHub Actions |
+| **Theme Color Audit** | Scan CSS files, generate color preview | On CSS change | GitHub Actions |
 
 See [Bots wiki page](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Bots) for details.
 
@@ -76,15 +120,17 @@ See [Bots wiki page](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Bo
 
 | Script | Purpose | Usage |
 |---|---|---|
-| `backup-musicbrainz.mjs` | Snapshot MusicBrainz data | `node scripts/backup-musicbrainz.mjs` |
+| `backup-musicbrainz.mjs` | Snapshot MusicBrainz data | `magmascript mb backup` |
 | `backup-tmdb.mjs` | Snapshot TMDB data | `node scripts/backup-tmdb.mjs` |
-| `bake-cache.mjs` | Inline cache into HTML pages | `node scripts/bake-cache.mjs` |
-| `build-search-index.js` | Build search index | `node scripts/build-search-index.js` |
-| `generate-og.mjs` | Generate OG preview images | `node scripts/generate-og.mjs` |
+| `bake-cache.mjs` | Inline cache into HTML pages | `magmascript archive bake-cache` |
+| `build-search-index.js` | Build search index | `magmascript search build-index` |
+| `generate-og.mjs` | Generate OG preview images | `npm run og` |
 | `generate-theme-audit.mjs` | Scan CSS, generate color preview | `node scripts/generate-theme-audit.mjs` |
 | `generate-archive-stubs.mjs` | Generate archive page stubs | `node scripts/generate-archive-stubs.mjs` |
 | `scaffold-game.mjs` | Generate new game boilerplate | `node scripts/scaffold-game.mjs` |
-| `weekly-scores.mjs` | Generate high score summary | `node scripts/weekly-scores.mjs` |
+| `weekly-scores.mjs` | Generate high score summary | `magmascript scores report` |
+
+**Note**: Most scripts now have magmascript equivalents. Use `magmascript <domain> --help` to see available commands.
 
 ---
 
@@ -139,9 +185,7 @@ Discord/social media to re-fetch. Each page's `og:image` URL is in its `<head>`.
 - `npm run lint` — lint JavaScript (ESLint)
 - `npm test` — lint + JS tests
 - `npm run test:py` — Python tests for multiplayer game servers
-- `node scripts/backup-musicbrainz.mjs` — snapshot MusicBrainz data to local cache
 - `npm run og` — regenerate OG preview images for social media
 - `./arcade/start-all.sh` — launch all game servers locally
 - Arcade games are self-contained — own CSS/JS, no shared state
-- `node scripts/scaffold-game.mjs` — generate new game boilerplate
-- `node scripts/generate-theme-audit.mjs` — scan CSS files for color definitions
+- See [magmascript](https://github.com/magmacrunchmedia/magmascript#readme) for site management commands
