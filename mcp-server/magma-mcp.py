@@ -965,6 +965,366 @@ def get_artist_play_counts(artist_name: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Helpers — music rights
+# ---------------------------------------------------------------------------
+
+
+def _extract_rights_from_artist_cache(data: dict) -> dict:
+    """Extract ISRCs from an artist cache file's recordings subpage."""
+    recordings = []
+    subpages = data.get("subpages", {})
+    rec_details = subpages.get("recordings", {}).get("details", {})
+    for rec_id, rec_data in rec_details.items():
+        isrcs = rec_data.get("isrcs", [])
+        if not isrcs:
+            continue
+        title = rec_data.get("title", "unknown")
+        artist = rec_data.get("artist-credit", [{}])[0].get("name", data.get("name", "unknown"))
+        releases = [r.get("title", "") for r in rec_data.get("releases", []) if r.get("title")]
+        recordings.append({
+            "type": "recording",
+            "uuid": rec_id,
+            "title": title,
+            "artist": artist,
+            "identifiers": {"isrcs": isrcs},
+            "releases": releases,
+        })
+    return {"recordings": recordings}
+
+
+def _extract_rights_from_work_cache(data: dict) -> dict:
+    """Extract ISWCs and ASCAP IDs from a work cache file."""
+    work_data = data.get("data", {})
+    iswcs = work_data.get("iswcs", [])
+    ascap_ids = []
+    for attr in work_data.get("attributes", []):
+        if attr.get("type") == "ASCAP ID":
+            ascap_ids.append(attr.get("value", ""))
+
+    if not iswcs and not ascap_ids:
+        return {}
+
+    composers = []
+    for rel in work_data.get("relations", []):
+        if rel.get("type") in ("composer", "lyricist", "writer"):
+            artist = rel.get("artist", {})
+            if artist.get("name"):
+                composers.append(artist["name"])
+
+    return {
+        "type": "work",
+        "uuid": data.get("uuid", ""),
+        "title": data.get("name", "unknown"),
+        "composers": composers,
+        "identifiers": {"iswcs": iswcs, "ascap_ids": ascap_ids},
+    }
+
+
+def _build_rights_index() -> dict:
+    """Build a reverse index of ISRC -> recording and ISWC/ASCAP -> work across all cached data."""
+    isrc_index: dict[str, dict] = {}
+    iswc_index: dict[str, dict] = {}
+    ascap_index: dict[str, dict] = {}
+
+    # Index artists (for ISRCs)
+    artists_dir = CACHE_DIR / "artists"
+    if artists_dir.is_dir():
+        for f in artists_dir.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+                for rec in _extract_rights_from_artist_cache(data).get("recordings", []):
+                    for isrc in rec["identifiers"].get("isrcs", []):
+                        isrc_index[isrc] = rec
+            except Exception:
+                continue
+
+    # Index works (for ISWCs and ASCAP IDs)
+    works_dir = CACHE_DIR / "works"
+    if works_dir.is_dir():
+        for f in works_dir.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+                work = _extract_rights_from_work_cache(data)
+                if not work:
+                    continue
+                for iswc in work["identifiers"].get("iswcs", []):
+                    iswc_index[iswc] = work
+                for ascap in work["identifiers"].get("ascap_ids", []):
+                    ascap_index[ascap] = work
+            except Exception:
+                continue
+
+    return {"isrc": isrc_index, "iswc": iswc_index, "ascap": ascap_index}
+
+
+# ---------------------------------------------------------------------------
+# Tools — music rights
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def search_rights(query: str) -> str:
+    """Search music rights data by title, ISRC, ISWC, or ASCAP ID.
+
+    Searches across all cached recordings and works for matching identifiers
+    or title substrings. Returns matching recordings (with ISRCs) and works
+    (with ISWCs and ASCAP IDs).
+
+    Args:
+        query: Search string (title, ISRC, ISWC, or ASCAP ID)
+    """
+    index = _build_rights_index()
+    query_upper = query.upper().strip()
+    query_lower = query.lower().strip()
+
+    matches = []
+
+    # Search ISRC index
+    for isrc, rec in index["isrc"].items():
+        if query_upper in isrc.upper() or query_lower in rec.get("title", "").lower():
+            matches.append(rec)
+
+    # Search ISWC index
+    for iswc, work in index["iswc"].items():
+        if query_upper in iswc.upper() or query_lower in work.get("title", "").lower():
+            matches.append(work)
+
+    # Search ASCAP index
+    for ascap, work in index["ascap"].items():
+        if query_upper in ascap.upper() or query_lower in work.get("title", "").lower():
+            if work not in matches:
+                matches.append(work)
+
+    if not matches:
+        return f"No rights data found for '{query}'"
+
+    lines = [f"Found {len(matches)} match(es) for '{query}':\n"]
+    for m in matches:
+        kind = m.get("type", "recording")
+        title = m.get("title", "unknown")
+        uuid = m.get("uuid", "")
+        ids = m.get("identifiers", {})
+
+        if kind == "recording":
+            isrcs = ", ".join(ids.get("isrcs", [])) or "n/a"
+            artist = m.get("artist", "unknown")
+            releases = ", ".join(m.get("releases", [])[:3]) or "none"
+            lines.append(f"  [recording] {title}")
+            lines.append(f"    artist:  {artist}")
+            lines.append(f"    ISRC:    {isrcs}")
+            lines.append(f"    releases: {releases}")
+            lines.append(f"    mbid:    {uuid}")
+        else:
+            iswcs = ", ".join(ids.get("iswcs", [])) or "pending"
+            ascap = ", ".join(ids.get("ascap_ids", [])) or "n/a"
+            composers = ", ".join(m.get("composers", [])) or "unknown"
+            lines.append(f"  [work] {title}")
+            lines.append(f"    composers: {composers}")
+            lines.append(f"    ISWC:   {iswcs}")
+            lines.append(f"    ASCAP:  {ascap}")
+            lines.append(f"    mbid:   {uuid}")
+        lines.append("")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_recording_rights(recording_uuid: str) -> str:
+    """Get ISRC and release info for a specific recording by MusicBrainz UUID.
+
+    Args:
+        recording_uuid: MusicBrainz recording UUID
+    """
+    # Search all artist caches for this recording
+    artists_dir = CACHE_DIR / "artists"
+    if not artists_dir.is_dir():
+        return f"Artist cache not found"
+
+    for f in artists_dir.glob("*.json"):
+        try:
+            data = json.loads(f.read_text())
+            rec_details = data.get("subpages", {}).get("recordings", {}).get("details", {})
+            if recording_uuid in rec_details:
+                rec = rec_details[recording_uuid]
+                isrcs = rec.get("isrcs", [])
+                title = rec.get("title", "unknown")
+                artist = data.get("name", "unknown")
+                releases = [r.get("title", "") for r in rec.get("releases", []) if r.get("title")]
+
+                lines = [
+                    f"Recording: {title}",
+                    f"Artist:    {artist}",
+                    f"ISRC:      {', '.join(isrcs) if isrcs else 'none'}",
+                    f"Releases:  {', '.join(releases[:5]) if releases else 'none'}",
+                    f"MusicBrainz: https://musicbrainz.org/recording/{recording_uuid}",
+                ]
+                return "\n".join(lines)
+        except Exception:
+            continue
+
+    return f"Recording {recording_uuid} not found in cache"
+
+
+@mcp.tool()
+def get_work_rights(work_uuid: str) -> str:
+    """Get ISWC, ASCAP ID, and composer info for a specific work by MusicBrainz UUID.
+
+    Args:
+        work_uuid: MusicBrainz work UUID
+    """
+    # Check works cache first
+    work_file = CACHE_DIR / "works" / f"{work_uuid}.json"
+    if work_file.is_file():
+        data = json.loads(work_file.read_text())
+        work = _extract_rights_from_work_cache(data)
+        if work:
+            lines = [
+                f"Work:      {work['title']}",
+                f"Composers: {', '.join(work['composers']) or 'unknown'}",
+                f"ISWC:      {', '.join(work['identifiers']['iswcs']) or 'pending'}",
+                f"ASCAP ID:  {', '.join(work['identifiers']['ascap_ids']) or 'n/a'}",
+                f"MusicBrainz: https://musicbrainz.org/work/{work_uuid}",
+            ]
+            return "\n".join(lines)
+        return f"Work {work_uuid} found but has no rights data (ISWCs/ASCAP IDs not yet assigned)"
+
+    # Also check artist caches (works subpage details)
+    artists_dir = CACHE_DIR / "artists"
+    if artists_dir.is_dir():
+        for f in artists_dir.glob("*.json"):
+            try:
+                data = json.loads(f.read_text())
+                work_details = data.get("subpages", {}).get("works", {}).get("details", {})
+                if work_uuid in work_details:
+                    wd = work_details[work_uuid]
+                    work_data = wd.get("data", wd)
+                    iswcs = work_data.get("iswcs", [])
+                    ascap_ids = [
+                        a.get("value", "")
+                        for a in work_data.get("attributes", [])
+                        if a.get("type") == "ASCAP ID"
+                    ]
+                    composers = [
+                        r.get("artist", {}).get("name", "")
+                        for r in work_data.get("relations", [])
+                        if r.get("type") in ("composer", "lyricist", "writer")
+                        and r.get("artist", {}).get("name")
+                    ]
+                    title = wd.get("title") or work_data.get("title", "unknown")
+
+                    lines = [
+                        f"Work:      {title}",
+                        f"Composers: {', '.join(composers) or 'unknown'}",
+                        f"ISWC:      {', '.join(iswcs) or 'pending'}",
+                        f"ASCAP ID:  {', '.join(ascap_ids) or 'n/a'}",
+                        f"MusicBrainz: https://musicbrainz.org/work/{work_uuid}",
+                    ]
+                    return "\n".join(lines)
+            except Exception:
+                continue
+
+    return f"Work {work_uuid} not found in cache"
+
+
+@mcp.tool()
+def artist_rights_catalog(artist_uuid: str) -> str:
+    """Get full rights catalog (all ISRCs, ISWCs, ASCAP IDs) for an artist.
+
+    Args:
+        artist_uuid: MusicBrainz artist UUID
+    """
+    artist_file = CACHE_DIR / "artists" / f"{artist_uuid}.json"
+    if not artist_file.is_file():
+        return f"Artist {artist_uuid} not found in cache"
+
+    data = json.loads(artist_file.read_text())
+    artist_name = data.get("name", "unknown")
+
+    # Collect recordings with ISRCs
+    rec_data = _extract_rights_from_artist_cache(data)
+    recordings = rec_data.get("recordings", [])
+
+    # Collect works with ISWCs/ASCAP IDs
+    works = []
+    work_details = data.get("subpages", {}).get("works", {}).get("details", {})
+    for work_id, wd in work_details.items():
+        work_info = _extract_rights_from_work_cache({"uuid": work_id, "name": wd.get("title", "unknown"), "data": wd.get("data", {})})
+        if work_info:
+            works.append(work_info)
+
+    lines = [f"# Rights Catalog: {artist_name}", f"MusicBrainz: https://musicbrainz.org/artist/{artist_uuid}", ""]
+
+    if recordings:
+        lines.append(f"## Recordings ({len(recordings)} with ISRCs)")
+        lines.append("")
+        for rec in sorted(recordings, key=lambda r: r["title"]):
+            isrcs = ", ".join(rec["identifiers"]["isrcs"])
+            lines.append(f"  {rec['title']}: {isrcs}")
+        lines.append("")
+
+    if works:
+        lines.append(f"## Works ({len(works)} with ISWCs/ASCAP IDs)")
+        lines.append("")
+        for w in sorted(works, key=lambda w: w["title"]):
+            iswcs = ", ".join(w["identifiers"]["iswcs"]) or "pending"
+            ascap = ", ".join(w["identifiers"]["ascap_ids"]) or "n/a"
+            lines.append(f"  {w['title']}:")
+            lines.append(f"    ISWC:  {iswcs}")
+            lines.append(f"    ASCAP: {ascap}")
+        lines.append("")
+
+    if not recordings and not works:
+        lines.append("No rights data found for this artist.")
+
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def export_rights_catalog() -> str:
+    """Export all cached rights data as TSV for pasting into ASCAP forms or spreadsheets.
+
+    Output format: Title, Type, Artist/Composer, ISRC, ISWC, ASCAP ID
+    """
+    index = _build_rights_index()
+
+    lines = ["Title\tType\tArtist/Composer\tISRC\tISWC\tASCAP ID"]
+
+    seen = set()
+
+    for isrc, rec in sorted(index["isrc"].items()):
+        key = ("recording", rec.get("uuid", ""))
+        if key in seen:
+            continue
+        seen.add(key)
+        title = rec.get("title", "unknown")
+        artist = rec.get("artist", "unknown")
+        releases = ", ".join(rec.get("releases", [])[:2])
+        lines.append(f"{title}\trecording\t{artist}\t{isrc}\t\t")
+
+    for iswc, work in sorted(index["iswc"].items()):
+        key = ("work", work.get("uuid", ""))
+        if key in seen:
+            continue
+        seen.add(key)
+        title = work.get("title", "unknown")
+        composers = ", ".join(work.get("composers", []))
+        ascap = ", ".join(work.get("identifiers", {}).get("ascap_ids", []))
+        lines.append(f"{title}\twork\t{composers}\t\t{iswc}\t{ascap}")
+
+    for ascap_id, work in sorted(index["ascap"].items()):
+        key = ("work", work.get("uuid", ""))
+        if key in seen:
+            continue
+        seen.add(key)
+        title = work.get("title", "unknown")
+        composers = ", ".join(work.get("composers", []))
+        iswc = ", ".join(work.get("identifiers", {}).get("iswcs", []))
+        lines.append(f"{title}\twork\t{composers}\t\t{iswc}\t{ascap_id}")
+
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
