@@ -11,29 +11,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 22
+          python-version: '3.12'
 
-      - name: Generate summary
-        run: node scripts/weekly-scores.mjs > scores-report.md
+      - name: Install magmascript
+        run: pip install magmascript
 
-      - name: Post to Discussion
-        uses: abirismyname/create-discussion@v2.1.0
-        with:
-          title: "Weekly High Scores — ${{ github.event.schedule || 'manual' }}"
-          body-filepath: ./scores-report.md
-          category-name: "High Scores"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate Discord payload
-        run: node scripts/weekly-scores.mjs --discord > discord-payload.json
+      - name: Generate and post to Discussion
+        run: magmascript scores report --post-discussion
+        env:
+          MAGMA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Post to Discord
         if: env.DISCORD_WEBHOOK_URL != ''
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: |
-          curl -H "Content-Type: application/json" \
-               -d @discord-payload.json \
-               "$DISCORD_WEBHOOK_URL"
+        run: magmascript scores report --post-discord

@@ -17,15 +17,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 22
+          python-version: '3.12'
+
+      - name: Install magmascript
+        run: pip install magmascript
 
       - name: Run checker
         id: check
         run: |
-          node scripts/check-archive-format.js --json > /tmp/check-result.json || true
-          COUNT=$(node -e "console.log(require('/tmp/check-result.json').count)")
+          magmascript archive check-format --json > /tmp/check-result.json || true
+          COUNT=$(python3 -c "import json; print(json.load(open('/tmp/check-result.json'))['count'])")
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
       - name: Build issue body
@@ -37,10 +40,11 @@ jobs:
           BRANCH="${{ github.ref_name }}"
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
-          WARNINGS=$(node -e "
-            const d = require('/tmp/check-result.json');
-            const lines = d.warnings.map(w => 'WARN  ' + w.file + ':' + w.line + '\n      ' + w.msg);
-            console.log(lines.join('\n\n'));
+          WARNINGS=$(python3 -c "
+          import json
+          d = json.load(open('/tmp/check-result.json'))
+          lines = ['WARN  ' + w['file'] + ':' + str(w['line']) + '\n      ' + w['msg'] for w in d['warnings']]
+          print('\n\n'.join(lines))
           ")
 
           cat > /tmp/issue-body.md << BODY
@@ -63,7 +67,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ISSUE=$(gh issue list --search "Archive format warnings in:title" --state open --json number --limit 1)
-          NUMBER=$(echo "$ISSUE" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const a=JSON.parse(d);console.log(a[0]?.number||'')")
+          NUMBER=$(echo "$ISSUE" | python3 -c "import json,sys; a=json.load(sys.stdin); print(a[0]['number'] if a else '')")
           echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
 
       - name: Create or update issue
@@ -88,7 +92,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ISSUE=$(gh issue list --search "Archive format warnings in:title" --state open --json number --limit 1)
-          NUMBER=$(echo "$ISSUE" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const a=JSON.parse(d);console.log(a[0]?.number||'')")
+          NUMBER=$(echo "$ISSUE" | python3 -c "import json,sys; a=json.load(sys.stdin); print(a[0]['number'] if a else '')")
           if [ -n "$NUMBER" ]; then
             gh issue close "$NUMBER" --comment "All checks passing — closing."
           fi

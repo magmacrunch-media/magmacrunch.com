@@ -12,12 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-python@v5
         with:
-          node-version: 22
+          python-version: '3.12'
+
+      - name: Install magmascript
+        run: pip install magmascript
 
       - name: Fetch play counts from Last.fm
-        run: node scripts/fetch-play-counts.mjs --skip-existing
+        run: magmascript lastfm fetch --skip-existing
         env:
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
 
