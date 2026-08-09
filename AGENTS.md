@@ -4,6 +4,37 @@
 
 Open `index.html` directly in browser. No build server, no package manager, no tests.
 
+## magmascript
+
+[magmascript](https://github.com/magmacrunchmedia/magmascript) is the primary CLI tool for managing this site. Key commands:
+
+```bash
+# Scores
+magmascript scores report                    # markdown report
+magmascript scores report --post-discussion  # post to GitHub Discussion
+magmascript scores report --post-discord     # post to Discord
+
+# Archive
+magmascript archive check-format             # validate HTML formatting
+magmascript archive bake-cache               # inline cache into pages
+
+# MusicBrainz
+magmascript mb backup                        # full backup
+magmascript mb backup --skip-existing        # skip cached entities
+
+# Last.fm
+magmascript lastfm fetch                     # fetch play counts
+
+# Search
+magmascript search build-index               # build search-index.json
+
+# Pi management
+magmascript pi status                        # service statuses
+magmascript pi deploy <path>                 # deploy files
+```
+
+Set `MAGMACRUNCH_ROOT=/path/to/magmacrunch.com` for commands that access local files.
+
 ## Project structure
 
 ```
@@ -97,7 +128,15 @@ The mini-player widget (`assets/jukebox.js`) has its own embedded track list.
 
 ## MusicBrainz cache
 
-Templates check local JSON cache before hitting the MusicBrainz API. Run `node scripts/backup-musicbrainz.mjs` to snapshot all data. A GitHub Action runs this weekly with `--skip-existing`.
+Templates check local JSON cache before hitting the MusicBrainz API. Use magmascript to snapshot all data:
+
+```bash
+magmascript mb backup                        # full backup
+magmascript mb backup --skip-existing        # skip already-cached entities
+magmascript mb backup --stale-only           # only refresh stale caches
+```
+
+A GitHub Action and Pi cron job run this weekly with `--skip-existing`.
 
 Cache location: `archive/_cache/{artists,places,contributors,labels}/{uuid}.json`
 
