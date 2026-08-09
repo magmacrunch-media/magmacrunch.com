@@ -317,20 +317,47 @@ ssh jake@192.168.1.16 "sudo systemctl restart arcade-counter"
 
 ## MCP server
 
-Local MCP server that exposes magmacrunch.com data and Pi management to AI coding assistants. Runs as a subprocess spawned by opencode — not hosted on the Pi.
+Remote MCP server that exposes magmacrunch.com data and Pi management to AI coding assistants. Runs as a systemd service on the Raspberry Pi, accessible via HTTPS.
 
 ### Architecture
 
 ```
-opencode (Mac) ──subprocess──▶ magma-mcp.py ──filesystem──▶ archive/_cache/, arcade/admin/scores/
-     │                              │
-     └── MCP protocol              └── SSH ──▶ Raspberry Pi (service mgmt, deploy)
+opencode (Mac/Laptop) ──HTTPS──▶ nginx (Pi:443) ──▶ arcade-mcp (Pi:8785)
+     │                                    │                    │
+     └── MCP protocol (streamable-http)   └── API key auth    └── filesystem ──▶ archive/_cache/, arcade/admin/scores/
+                                                                                    SSH ──▶ Pi services (local)
 ```
 
-- **Server** (`mcp-server/magma-mcp.py`) — Python MCP server using `mcp[cli]` library
-- **Config** (`opencode.json`) — opencode auto-starts the server via `"type": "local"`
-- **Data access** — reads MusicBrainz cache, scores, archive pages, arcade games directly from filesystem
-- **Pi access** — SSH to `jake@192.168.1.16` for service management and deployment
+- **Server** (`mcp-server/serve.py`) — HTTP wrapper around `magma-mcp.py`, runs on Pi port 8785
+- **Proxy** — nginx reverse proxy at `https://magmacrunch.duckdns.org/mcp`
+- **Auth** — API key in `Authorization: Bearer <key>` header (validated by nginx)
+- **Config** (`opencode.json`) — opencode connects as `"type": "remote"`
+- **Service** (`arcade-mcp.service`) — systemd, auto-restarts, reads key from `~/arcade/.env`
+
+### Setup (one-time)
+
+```bash
+# On Pi — install deps
+~/arcade/venv/bin/pip install "mcp[cli]" requests
+
+# Generate API key
+python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+
+# Add to ~/arcade/.env
+echo 'MCP_API_KEY=<your-key>' >> ~/arcade/.env
+
+# Copy nginx config
+sudo cp ~/arcade/nginx-magmacrunch.conf /etc/nginx/sites-available/magmacrunch
+sudo cp /etc/nginx/sites-available/magmacrunch /etc/nginx/sites-enabled/magmacrunch
+sudo nginx -t && sudo systemctl reload nginx
+
+# Enable MCP service
+sudo systemctl enable arcade-mcp
+sudo systemctl start arcade-mcp
+
+# On Mac — add to ~/.zshrc
+export MCP_API_KEY="<your-key>"
+```
 
 ### Tools
 
@@ -348,14 +375,69 @@ opencode (Mac) ──subprocess──▶ magma-mcp.py ──filesystem──▶ 
 | | `restart_pi_service` | Restart a service |
 | | `get_pi_system_info` | Get uptime, memory, CPU temp, load |
 | Deployment | `deploy_to_pi` | rsync files to the Pi and optionally restart a service |
+| Discogs | `search_discogs` | Search Discogs for artists/labels/releases |
+| GitHub | `github_*` | Repository and workflow management |
 
-### Setup
+### Service management
 
 ```bash
-pip install -r mcp-server/requirements.txt
+# Status
+sudo systemctl status arcade-mcp
+
+# Restart
+sudo systemctl restart arcade-mcp
+
+# Logs
+journalctl -u arcade-mcp -f
+journalctl -u arcade-mcp -n 50
 ```
 
-Requires Python 3.10+ and SSH key access to `jake@192.168.1.16`.
+### opencode.json config
+
+```json
+{
+  "mcp": {
+    "magma": {
+      "type": "remote",
+      "url": "https://magmacrunch.duckdns.org/mcp",
+      "enabled": true,
+      "headers": {
+        "Authorization": "Bearer ${MCP_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+### Troubleshooting
+
+- **401 Unauthorized** — check `MCP_API_KEY` in both `~/.zshrc` (Mac) and `~/arcade/.env` (Pi)
+- **421 Invalid Host** — nginx proxy header mismatch; check `proxy_set_header Host 127.0.0.1:8785` in nginx config
+- **502 Bad Gateway** — MCP server not running; check `sudo systemctl status arcade-mcp`
+- **Connection refused** — port 443 not forwarded from router; check router config
+
+### Legacy (local subprocess)
+
+Before the remote server, the MCP ran as a local subprocess on the Mac:
+
+```json
+{
+  "mcp": {
+    "magma": {
+      "type": "local",
+      "command": ["/opt/homebrew/bin/python3.14", "mcp-server/magma-mcp.py"],
+      "cwd": ".",
+      "enabled": true,
+      "env": {
+        "DISCOGS_TOKEN": "${DISCOGS_TOKEN}",
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+This only works when the laptop is awake. The remote server is always available.
 
 ## Adding archive pages
 
