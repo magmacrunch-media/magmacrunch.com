@@ -1400,9 +1400,11 @@ async def ws_handler(websocket):
 
             elif action == "github_config_load":
                 token = load_github_token()
+                masked = ("*" * (len(token) - 4) + token[-4:]) if token else ""
                 await websocket.send(json.dumps({
                     "type": "github_config_loaded",
                     "ok": bool(token),
+                    "masked": masked,
                 }))
 
             # ── Bot status actions ──────────────────────────────────────────

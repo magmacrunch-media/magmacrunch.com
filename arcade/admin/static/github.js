@@ -117,7 +117,12 @@
 
             case 'github_config_loaded':
                 if (msg.ok) {
-                    // Token exists on server — auto-test the connection
+                    // Show masked token so user knows it's saved
+                    if (msg.masked) {
+                        tokenInput.value = msg.masked;
+                        tokenInput.placeholder = msg.masked;
+                    }
+                    // Auto-test the connection
                     window.OPS.send({
                         action: 'github_test',
                         token: window.OPS.authToken,
