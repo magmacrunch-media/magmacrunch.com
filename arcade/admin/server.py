@@ -1398,6 +1398,13 @@ async def ws_handler(websocket):
                 _init_gh_client()
                 await websocket.send(json.dumps({"type": "github_config_saved", "ok": True}))
 
+            elif action == "github_config_load":
+                token = load_github_token()
+                await websocket.send(json.dumps({
+                    "type": "github_config_loaded",
+                    "ok": bool(token),
+                }))
+
             # ── Bot status actions ──────────────────────────────────────────
 
             elif action == "bots_list":
