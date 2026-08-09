@@ -6,7 +6,7 @@ After=network.target
 Type=simple
 User=jake
 WorkingDirectory=/home/jake/website
-EnvironmentFile=/home/jake/arcade/.env
+EnvironmentFile=/home/jake/arcade-config/.env
 Environment=MCP_PORT=8785
 ExecStart=/home/jake/arcade/venv/bin/python3 /home/jake/arcade/mcp-server/serve.py
 Restart=always
