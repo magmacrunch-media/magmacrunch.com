@@ -5,6 +5,7 @@
       "type": "remote",
       "url": "https://magmacrunch.duckdns.org/mcp",
       "enabled": true,
+      "oauth": false,
       "headers": {
         "Authorization": "Bearer ${MCP_API_KEY}"
       }
