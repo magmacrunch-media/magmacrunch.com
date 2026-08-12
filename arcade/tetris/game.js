@@ -119,6 +119,16 @@ let dirty = false;
 const FRAME_MS = 1000 / 30;
 let dropAcc = 0;
 
+// DAS (Delayed Auto Shift) for lateral movement
+let dasActive = false;     // true = waiting for initial delay
+let dasDelayTimer = 0;
+let dasRepeatTimer = 0;
+const DAS_DELAY = 170;     // ms before auto-repeat starts
+const DAS_REPEAT = 50;     // ms between repeats
+
+// Buffered one-shot keys (survives across frames)
+let cQueued = false;
+
 function emptyGrid() {
   return Array.from({length: ROWS}, () => Array(COLS).fill(null));
 }
@@ -212,6 +222,18 @@ function holdAction() {
   dirty = true;
 }
 
+function doLateralMove() {
+  if (AdRPG.keys['arrowleft']) {
+    if (isValid(current.shape, { x: currentPos.x - 1, y: currentPos.y }))
+      currentPos.x--;
+  }
+  if (AdRPG.keys['arrowright']) {
+    if (isValid(current.shape, { x: currentPos.x + 1, y: currentPos.y }))
+      currentPos.x++;
+  }
+  dirty = true;
+}
+
 function updateHUD() {
   document.getElementById('score-display').textContent = score.toLocaleString();
   document.getElementById('level-display').textContent = level;
@@ -263,14 +285,30 @@ dropInterval = 800;
 function update(dt) {
   if (!current || gameOver) return;
 
-  // Continuous movement (held keys)
-  if (AdRPG.keys['arrowleft']) {
-    if (isValid(current.shape, { x: currentPos.x - 1, y: currentPos.y }))
-      currentPos.x--;
-  }
-  if (AdRPG.keys['arrowright']) {
-    if (isValid(current.shape, { x: currentPos.x + 1, y: currentPos.y }))
-      currentPos.x++;
+  // Lateral movement with DAS
+  const moveHeld = AdRPG.keys['arrowleft'] || AdRPG.keys['arrowright'];
+  if (moveHeld) {
+    if (dasActive) {
+      // First press: move immediately, start delay timer
+      doLateralMove();
+      dasActive = false;
+      dasDelayTimer = 0;
+      dasRepeatTimer = 0;
+    } else {
+      dasDelayTimer += dt * FRAME_MS;
+      if (dasDelayTimer >= DAS_DELAY) {
+        // Delay elapsed: auto-repeat
+        dasRepeatTimer += dt * FRAME_MS;
+        while (dasRepeatTimer >= DAS_REPEAT) {
+          dasRepeatTimer -= DAS_REPEAT;
+          doLateralMove();
+        }
+      }
+    }
+  } else {
+    dasActive = true;
+    dasDelayTimer = 0;
+    dasRepeatTimer = 0;
   }
 
   // One-shot actions
@@ -302,8 +340,10 @@ function update(dt) {
     AdRPG.keysPressed[' '] = false;
   }
 
-  if (AdRPG.keys['c']) {
+  // Hold key (buffered)
+  if (cQueued || AdRPG.keys['c']) {
     holdAction();
+    cQueued = false;
   }
 
   // Auto-drop
@@ -326,6 +366,8 @@ function startGame() {
   grid = emptyGrid();
   score = 0; level = 1; lines = 0;
   dropInterval = 800; dropAcc = 0;
+  dasActive = true; dasDelayTimer = 0; dasRepeatTimer = 0;
+  cQueued = false;
   holdPiece = null; holdUsed = false;
   gameOver = false; paused = false; started = true;
   AdRPG.setGameStarted(true);
@@ -510,6 +552,13 @@ function dismissTitle() {
   AdRPG.initInput({
     onPause: () => { if (started && !gameOver) togglePause(); },
     bindings: TETRIS_BINDINGS,
+  });
+
+  // Buffer C key press (survives across frames for reliable hold)
+  document.addEventListener('keydown', e => {
+    if ((e.key === 'c' || e.key === 'C') && started && !paused && !gameOver) {
+      cQueued = true;
+    }
   });
 
   // draw empty board on load
