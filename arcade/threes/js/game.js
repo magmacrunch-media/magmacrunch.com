@@ -14,7 +14,7 @@ var ThreesGame = (function() {
     var INITIAL_TILE_COUNT = 9;
 
     function create() {
-        var game = PuzzleGame.create({
+        var game = AdPuzzle.createGame({
             size: SIZE,
             spawnTiles: true,
             gameName: 'threes'
@@ -27,7 +27,7 @@ var ThreesGame = (function() {
                 var r = Math.random();
                 values.push(r < 0.33 ? 1 : r < 0.67 ? 2 : 3);
             }
-            var cells = PuzzleGrid.getEmptyCells(game.grid);
+            var cells = AdPuzzle.PuzzleGrid.getEmptyCells(game.grid);
             for (var v = 0; v < values.length && cells.length > 0; v++) {
                 var idx = Math.floor(Math.random() * cells.length);
                 var cell = cells.splice(idx, 1)[0];
@@ -80,7 +80,7 @@ var ThreesGame = (function() {
                 }
             }
             if (empty.length === 0) {
-                var allEmpty = PuzzleGrid.getEmptyCells(game.grid);
+                var allEmpty = AdPuzzle.PuzzleGrid.getEmptyCells(game.grid);
                 if (allEmpty.length === 0) return;
                 empty = allEmpty;
             }
@@ -105,7 +105,7 @@ var ThreesGame = (function() {
                     for (var r = 0; r < SIZE; r++) cells.push({ row: r, col: 0 });
                     break;
                 default:
-                    return PuzzleGrid.getEmptyCells(game.grid);
+                    return AdPuzzle.PuzzleGrid.getEmptyCells(game.grid);
             }
             return cells;
         }
@@ -116,7 +116,7 @@ var ThreesGame = (function() {
         };
 
         game.checkGameState = function() {
-            if (!PuzzleGrid.isFull(game.grid)) return;
+            if (!AdPuzzle.PuzzleGrid.isFull(game.grid)) return;
             if (hasValidMerges()) return;
             game.gameOver = true;
             game.endTime = Date.now();
