@@ -2,7 +2,49 @@
 
 let currentGame = null;
 let currentDifficulty = '11';
-window.isDifficultyModalOpen = false; // Track if we're in difficulty selection mode (accessible from game.js)
+let puzzleInput = null;
+window.isDifficultyModalOpen = false;
+
+function initPuzzleInput() {
+    const boardEl = document.getElementById('gameBoard');
+
+    if (currentGame) {
+        currentGame.renderer = AdPuzzle.createRenderer(boardEl);
+    }
+
+    if (puzzleInput) {
+        puzzleInput.destroy();
+    }
+
+    puzzleInput = AdPuzzle.createInput({
+        onMove: (dir) => {
+            if (!currentGame || currentGame.gameOver || currentGame.waitingForInitials) return;
+            const moved = currentGame.move(dir);
+            if (moved) {
+                currentGame.addRandomTile();
+                currentGame.render();
+                document.getElementById('score').textContent = currentGame.score;
+                if (currentGame.checkGameOver()) {
+                    if (currentGame.justWon) {
+                        const game = currentGame;
+                        setTimeout(() => game.handleGameOver(), 500);
+                    } else {
+                        currentGame.handleGameOver();
+                    }
+                }
+            }
+        },
+        isActive: () => {
+            return currentGame
+                && !currentGame.gameOver
+                && !currentGame.waitingForInitials
+                && document.querySelector('.container').classList.contains('game-active')
+                && !document.querySelector('.scoreboard-modal.active')
+                && !document.querySelector('.instructions-modal.active')
+                && !document.querySelector('.credits-modal.active');
+        },
+    }, boardEl);
+}
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', async () => {
@@ -120,6 +162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Start game with selected difficulty
             currentGame = new Game2048(difficulty, target);
+            initPuzzleInput();
         });
         
         // Legacy support for any remaining difficulty buttons
@@ -158,6 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 // Start game with selected difficulty
                 currentGame = new Game2048(difficulty, target);
+                initPuzzleInput();
             });
         });
 
