@@ -1,7 +1,7 @@
 {
   "name": "magmacrunch-website",
   "private": true,
-  "description": "magmacrunch media — dev tooling only, no build step",
+  "description": "magmacrunch media \u2014 dev tooling only, no build step",
   "scripts": {
     "lint": "eslint nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js",
     "lint:fix": "eslint --fix nav.js assets/*.js assets/cards/js/*.js templates/*.js arcade/shared/*.js",
@@ -11,12 +11,12 @@
     "test": "npm run lint && npm run test:js",
     "build-search": "node scripts/build-search-index.js",
     "og": "node scripts/generate-og.mjs",
-    "build:adenosine": "mkdir -p arcade/shared && cp node_modules/@adenosine/rpg/dist/index.global.js arcade/shared/adenosine-rpg.js && cp node_modules/@adenosine/score-client/dist/index.global.js arcade/shared/adenosine-score-client.js && cp node_modules/@adenosine/puzzle/dist/index.global.js arcade/shared/adenosine-puzzle.js"
+    "build:adenosine": "mkdir -p arcade/shared && cp node_modules/@magmacrunch/adenosine-rpg/dist/index.global.js arcade/shared/adenosine-rpg.js && cp node_modules/@magmacrunch/adenosine-score-client/dist/index.global.js arcade/shared/adenosine-score-client.js && cp node_modules/@magmacrunch/adenosine-puzzle/dist/index.global.js arcade/shared/adenosine-puzzle.js"
   },
   "dependencies": {
-    "@adenosine/puzzle": "^0.2.0",
-    "@adenosine/rpg": "^0.2.0",
-    "@adenosine/score-client": "^0.2.0"
+    "@magmacrunch/adenosine-puzzle": "^0.2.0",
+    "@magmacrunch/adenosine-rpg": "^0.2.0",
+    "@magmacrunch/adenosine-score-client": "^0.2.0"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.62",
