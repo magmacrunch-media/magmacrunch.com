@@ -317,8 +317,8 @@
             <p><strong>design and development:</strong> Jake A. McCoy </p>
             <p><strong>original concept:</strong> based on the 2014 puzzle game <em>2048</em> by Gabriele Cirulli</p>
             <p><strong>technology & resources:</strong><br>
-            • HTML5 (Canvas API & DOM), CSS3, and pure vanilla JavaScript<br>
-            • MAGMA//OPS backend (ScoreClient) for global highscores<br>
+            • HTML5 (DOM), CSS3, and pure vanilla JavaScript<br>
+            • <a href="https://github.com/magmacrunchmedia/adenosine" style="color:#ffa500">adenosine</a> score client (MAGMA//OPS backend)<br>
             • Press Start 2P font by CodeMan38 (Google Fonts)</p>
             <p><strong>published by:</strong> magmacrunch media</p>
             <p><strong>last updated:</strong> July 14, 2026</p>
@@ -328,8 +328,8 @@
     </div>
 
     <!-- JavaScript files - ORDER MATTERS! -->
-    <script src="../shared/score-client.js"></script>
-    <script>const scoreClient = ScoreClient.auto();</script>
+<script src="../shared/adenosine-score-client.js"></script>
+<script>const scoreClient = new AdScore.ScoreClient().auto();</script>
     <script src="js/config.js"></script>
     <script src="js/scoring.js"></script>
     <script src="js/game.js"></script>
