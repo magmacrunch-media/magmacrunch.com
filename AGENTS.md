@@ -43,6 +43,11 @@ Set `MAGMACRUNCH_ROOT=/path/to/magmacrunch.com` for commands that access local f
 ├── arcade/            # self-contained pixel games (each has index.html + js/css)
 │   ├── arcade.css     # arcade index page styles + game card grid
 │   ├── gamecard-previews.js  # tile illustrations for each collection
+│   ├── shared/        # shared code: adenosine engine, score-client, chat, cards
+│   │   ├── adenosine-rpg.js        # @adenosine/rpg IIFE build
+│   │   ├── adenosine-score-client.js # @adenosine/score-client IIFE build
+│   │   ├── score-client.js          # legacy score client (still used by some games)
+│   │   └── ...
 │   ├── pay2play/      # pay2play slot machine (CSS, JS, prizes)
 │   └── ...
 ├── archive/           # artist/place pages with MusicBrainz API integration
@@ -68,7 +73,7 @@ Set `MAGMACRUNCH_ROOT=/path/to/magmacrunch.com` for commands that access local f
 ## Key conventions
 
 - **Retro aesthetic required**: Keep "Press Start 2P" font, CRT scanlines, neon colors, pixel art
-- **Self-contained games**: Each arcade subfolder works standalone - don't add cross-game dependencies
+- **Self-contained games**: Each arcade subfolder works standalone. Shared dependencies (adenosine engine, score-client, chat-widget) live in `arcade/shared/`.
 - **MusicBrainz rate limit**: API allows ~1 req/sec. `fetchWithRetry` handles backoff - don't batch-fetch
 - **Canvas pixel art**: Use `image-rendering: pixelated` and draw at low resolution (64x64), scale with CSS
 - **Config via `window.*_CONFIG`**: Archive pages define config objects inline, templates read them
@@ -112,6 +117,36 @@ Each preview is a self-contained IIFE that draws on a 72x72 canvas:
 - Private (lock icon)
 
 Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments.
+
+## Adenosine game engine
+
+[adenosine](https://github.com/magmacrunchmedia/adenosine) is the game engine used by arcade games.
+Currently used by: tetris.
+
+### Loading in a game page
+
+```html
+<script src="../shared/adenosine-rpg.js"></script>
+<script src="../shared/adenosine-score-client.js"></script>
+```
+
+### Available globals
+
+- `AdRPG` — game loop, input, state (`createGameLoop`, `initInput`, `keys`, `keysPressed`)
+- `AdScore` — high score client (`ScoreClient`)
+
+### Integration pattern
+
+1. Call `AdRPG.initCanvas(canvasEl)` to register the board canvas
+2. Create loop: `AdRPG.createGameLoop({ update, render, fps: 30 })`
+3. Use `AdRPG.keys`/`AdRPG.keysPressed` for input (with custom bindings via `TETRIS_BINDINGS`)
+4. Sync state: `AdRPG.setGameStarted()`, `setGamePaused()`, `setGameOver()`
+5. Score client: `new AdScore.ScoreClient().auto()`
+
+### IIFE builds
+
+Adenosine packages ship both ESM (for npm) and IIFE (for `<script>` tags). IIFE files live in
+`arcade/shared/adenosine-*.js`. Build from the adenosine repo: `npm run build` produces `dist/index.global.js`.
 
 ## Distributed music
 
