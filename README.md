@@ -1,6 +1,6 @@
 # magmacrunch.com
 
-Personal website for magmacrunch media — music, art, archives, and arcade games. Static HTML/CSS/JS, no build step, no dependencies.
+Personal website for magmacrunch media — music, art, archives, and arcade games. Static HTML/CSS/JS. [adenosine](https://github.com/magmacrunchmedia/adenosine) engine for game systems.
 
 Live site: [magmacrunch.com](https://magmacrunch.com)
 
@@ -38,7 +38,7 @@ Live site: [magmacrunch.com](https://magmacrunch.com)
 - **archive templates** — thin HTML stubs + MusicBrainz UUID → full catalog pages
 - **arcade chat** — SharedWorker holds one WebSocket across page navigations
 - **persistent jukebox** — mini audio player on every page, state saved to localStorage
-- **high scores** — ScoreClient with Raspberry Pi backend, localStorage fallback
+- **high scores** — AdScore (adenosine) with Raspberry Pi backend, localStorage fallback
 - **theme color audit** — scans all CSS files, generates visual color preview
 - **cache bake** — MusicBrainz data inlined into pages for instant loading
 - **monitoring** — fail2ban auto-bans scanners, TRAFFIC tab shows nginx analytics, app-level connection logging
