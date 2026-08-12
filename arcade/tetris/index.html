@@ -339,7 +339,7 @@
       <div class="credits-section">
         <div class="credits-label">RAKENNETTU</div>
         <div class="credits-label-en">built with</div>
-        <div class="credits-value">Vanilla HTML, CSS &amp; JavaScript · Canvas API · Share Tech Mono font · JSONbin cloud scores</div>
+        <div class="credits-value">Vanilla HTML, CSS &amp; JavaScript · Canvas API · <a href="https://github.com/magmacrunchmedia/adenosine" style="color:var(--ice)">adenosine</a> game engine · Share Tech Mono font</div>
       </div>
 
       <div class="credits-section">
@@ -351,7 +351,7 @@
       <div class="credits-section">
         <div class="credits-label">PÄIVITETTY VIIMEKSI</div>
         <div class="credits-label-en">last updated</div>
-        <div class="credits-value">March 18, 2026</div>
+        <div class="credits-value">August 10, 2026</div>
       </div>
     </div>
     <div class="modal-footer">
@@ -360,8 +360,9 @@
   </div>
 </div>
 
-<script src="../shared/score-client.js"></script>
-<script>const scoreClient = ScoreClient.auto();</script>
+<script src="../shared/adenosine-rpg.js"></script>
+<script src="../shared/adenosine-score-client.js"></script>
+<script>const scoreClient = new AdScore.ScoreClient().auto();</script>
 <script src="game.js"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css">

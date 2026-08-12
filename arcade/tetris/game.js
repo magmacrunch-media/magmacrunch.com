@@ -47,6 +47,19 @@ const nCtx = nextCanvas.getContext('2d');
 const holdCanvas = document.getElementById('hold-canvas');
 const hCtx = holdCanvas.getContext('2d');
 
+// Register board canvas with adenosine engine
+AdRPG.initCanvas(boardCanvas);
+
+// Custom key bindings for tetris
+const TETRIS_BINDINGS = {
+  moveUp:    [],
+  moveDown:  [],
+  moveLeft:  ['arrowleft'],
+  moveRight: ['arrowright'],
+  pause:     ['escape', 'p'],
+  interact:  [' ', 'arrowup', 'arrowdown', 'c'],
+};
+
 function drawCell(ctx, x, y, color, glow, size=CELL) {
   const pad = 1;
   ctx.save();
@@ -101,11 +114,20 @@ function drawMiniPiece(ctx, shape, color, glow, canvasW, canvasH) {
 let grid, current, currentPos, nextPiece, holdPiece, holdUsed;
 let score, level, lines;
 let gameOver, paused, started;
-let dropInterval, lastDrop;
-let animFrameId;
-let dirty = false; // only render when state has changed
-// Sound stubs — wire up Web Audio API here
-// function playSfx(name) { /* TODO: 'rotate','drop','clear','gameover' */ }
+let dropInterval;
+let dirty = false;
+const FRAME_MS = 1000 / 30;
+let dropAcc = 0;
+
+// DAS (Delayed Auto Shift) for lateral movement
+let dasActive = false;     // true = waiting for initial delay
+let dasDelayTimer = 0;
+let dasRepeatTimer = 0;
+const DAS_DELAY = 170;     // ms before auto-repeat starts
+const DAS_REPEAT = 50;     // ms between repeats
+
+// Buffered one-shot keys (survives across frames)
+let cQueued = false;
 
 function emptyGrid() {
   return Array.from({length: ROWS}, () => Array(COLS).fill(null));
@@ -200,6 +222,18 @@ function holdAction() {
   dirty = true;
 }
 
+function doLateralMove() {
+  if (AdRPG.keys['arrowleft']) {
+    if (isValid(current.shape, { x: currentPos.x - 1, y: currentPos.y }))
+      currentPos.x--;
+  }
+  if (AdRPG.keys['arrowright']) {
+    if (isValid(current.shape, { x: currentPos.x + 1, y: currentPos.y }))
+      currentPos.x++;
+  }
+  dirty = true;
+}
+
 function updateHUD() {
   document.getElementById('score-display').textContent = score.toLocaleString();
   document.getElementById('level-display').textContent = level;
@@ -244,55 +278,117 @@ function render() {
 }
 
 // =====================================================================
-// Game loop
+// Game loop (adenosine)
 // =====================================================================
-let lastTime = 0, dropAcc = 0;
 dropInterval = 800;
 
-function loop(ts) {
-  if (!started || paused || gameOver) return;
-  const dt = ts - lastTime;
-  lastTime = ts;
-  // Guard against huge dt spikes (e.g. tab was backgrounded, or first frame after resume)
-  if (dt < 500) {
-    dropAcc += dt;
-    if (dropAcc >= dropInterval) {
-      dropAcc = 0;
-      if (isValid(current.shape, { x: currentPos.x, y: currentPos.y + 1 })) {
-        currentPos.y++;
-      } else {
-        lockPiece();
+function update(dt) {
+  if (!current || gameOver) return;
+
+  // Lateral movement with DAS
+  const moveHeld = AdRPG.keys['arrowleft'] || AdRPG.keys['arrowright'];
+  if (moveHeld) {
+    if (dasActive) {
+      // First press: move immediately, start delay timer
+      doLateralMove();
+      dasActive = false;
+      dasDelayTimer = 0;
+      dasRepeatTimer = 0;
+    } else {
+      dasDelayTimer += dt * FRAME_MS;
+      if (dasDelayTimer >= DAS_DELAY) {
+        // Delay elapsed: auto-repeat
+        dasRepeatTimer += dt * FRAME_MS;
+        while (dasRepeatTimer >= DAS_REPEAT) {
+          dasRepeatTimer -= DAS_REPEAT;
+          doLateralMove();
+        }
       }
-      dirty = true;
+    }
+  } else {
+    dasActive = true;
+    dasDelayTimer = 0;
+    dasRepeatTimer = 0;
+  }
+
+  // One-shot actions
+  if (AdRPG.keysPressed['arrowup']) {
+    const rot = rotateCW(current.shape);
+    for (const dx of [0, -1, 1, -2, 2]) {
+      if (isValid(rot, { x: currentPos.x + dx, y: currentPos.y })) {
+        current.shape = rot;
+        currentPos.x += dx;
+        break;
+      }
+    }
+    AdRPG.keysPressed['arrowup'] = false;
+  }
+
+  if (AdRPG.keysPressed['arrowdown']) {
+    if (isValid(current.shape, { x: currentPos.x, y: currentPos.y + 1 })) {
+      currentPos.y++;
+      score++;
+      updateHUD();
+    } else {
+      lockPiece();
+    }
+    AdRPG.keysPressed['arrowdown'] = false;
+  }
+
+  if (AdRPG.keysPressed[' ']) {
+    hardDrop();
+    AdRPG.keysPressed[' '] = false;
+  }
+
+  // Hold key (buffered)
+  if (cQueued || AdRPG.keys['c']) {
+    holdAction();
+    cQueued = false;
+  }
+
+  // Auto-drop
+  dropAcc += dt * FRAME_MS;
+  if (dropAcc >= dropInterval) {
+    dropAcc = 0;
+    if (isValid(current.shape, { x: currentPos.x, y: currentPos.y + 1 })) {
+      currentPos.y++;
+    } else {
+      lockPiece();
     }
   }
-  if (dirty) {
-    render();
-    dirty = false;
-  }
-  animFrameId = requestAnimationFrame(loop);
+
+  dirty = true;
 }
+
+const gameLoop = AdRPG.createGameLoop({ update, render, fps: 30 });
 
 function startGame() {
   grid = emptyGrid();
   score = 0; level = 1; lines = 0;
   dropInterval = 800; dropAcc = 0;
+  dasActive = true; dasDelayTimer = 0; dasRepeatTimer = 0;
+  cQueued = false;
   holdPiece = null; holdUsed = false;
   gameOver = false; paused = false; started = true;
+  AdRPG.setGameStarted(true);
+  AdRPG.setGamePaused(false);
+  AdRPG.setGameOver(false);
   nextPiece = randomPiece();
   spawnPiece();
   updateHUD();
   hCtx.clearRect(0,0,80,64);
   document.getElementById('btn-pause').style.display = 'block';
-  cancelAnimationFrame(animFrameId);
-  lastTime = performance.now();
+  gameLoop.stop();
   dirty = true;
-  animFrameId = requestAnimationFrame(loop);
+  gameLoop.start();
 }
 
 function endGame() {
   gameOver = true;
   started = false;
+  AdRPG.setGameOver(true);
+  AdRPG.setGameStarted(false);
+  gameLoop.stop();
   document.getElementById('btn-pause').style.display = 'none';
   // playSfx('gameover');
   document.getElementById('final-score').textContent = score.toLocaleString();
@@ -346,58 +442,15 @@ function hideModal(id) {
 }
 
 // =====================================================================
-// Input
+// Input (handled via adenosine in update loop)
 // =====================================================================
-document.addEventListener('keydown', e => {
-  if (!started || paused || gameOver) return;
-  switch(e.key) {
-    case 'ArrowLeft':
-      e.preventDefault();
-      if (isValid(current.shape, { x: currentPos.x-1, y: currentPos.y })) currentPos.x--;
-      break;
-    case 'ArrowRight':
-      e.preventDefault();
-      if (isValid(current.shape, { x: currentPos.x+1, y: currentPos.y })) currentPos.x++;
-      break;
-    case 'ArrowDown':
-      e.preventDefault();
-      if (isValid(current.shape, { x: currentPos.x, y: currentPos.y+1 })) { currentPos.y++; score++; updateHUD(); }
-      else lockPiece();
-      break;
-    case 'ArrowUp':
-      e.preventDefault();
-      { const rot = rotateCW(current.shape);
-        // wall kick attempts
-        for (const dx of [0,-1,1,-2,2]) {
-          if (isValid(rot, { x: currentPos.x+dx, y: currentPos.y })) {
-            current.shape = rot; currentPos.x += dx;
-            // playSfx('rotate');
-            break;
-          }
-        }
-      }
-      break;
-    case ' ':
-      e.preventDefault();
-      hardDrop();
-      break;
-    case 'c': case 'C':
-      holdAction();
-      break;
-    case 'p': case 'P':
-      togglePause();
-      break;
-  }
-  dirty = true;
-  render();
-});
-
 function togglePause() {
   if (!started || gameOver) return;
   paused = !paused;
+  AdRPG.setGamePaused(paused);
   document.getElementById('btn-pause').textContent = paused ? 'RESUME' : 'PAUSE';
   if (paused) { showModal('modal-pause'); }
-  else { hideModal('modal-pause'); lastTime = performance.now(); dirty = true; animFrameId = requestAnimationFrame(loop); }
+  else { hideModal('modal-pause'); }
 }
 
 // =====================================================================
@@ -417,8 +470,11 @@ function setupListeners() {
   wire('btn-pause', () => togglePause());
   wire('btn-resume', () => togglePause());
   wire('btn-quit', () => {
-    cancelAnimationFrame(animFrameId);
+    gameLoop.stop();
     started = false; paused = false; gameOver = false;
+    AdRPG.setGameStarted(false);
+    AdRPG.setGamePaused(false);
+    AdRPG.setGameOver(false);
     document.getElementById('btn-pause').style.display = 'none';
     hideModal('modal-pause');
     showTitleScreen();
@@ -437,6 +493,7 @@ function setupListeners() {
     showModal('modal-scores');
     if (started && !paused && !gameOver) {
       paused = true;
+      AdRPG.setGamePaused(true);
       document.getElementById('btn-pause').textContent = 'TAUKO / pause';
     }
   });
@@ -444,15 +501,17 @@ function setupListeners() {
     hideModal('modal-scores');
     if (started && paused && !gameOver) {
       paused = false;
+      AdRPG.setGamePaused(false);
       document.getElementById('btn-pause').textContent = 'TAUKO / pause';
-      lastTime = performance.now(); dirty = true;
-      animFrameId = requestAnimationFrame(loop);
+      dirty = true;
+      gameLoop.start();
     }
   });
   wire('btn-credits', () => {
     showModal('modal-credits');
     if (started && !paused && !gameOver) {
       paused = true;
+      AdRPG.setGamePaused(true);
       document.getElementById('btn-pause').textContent = 'TAUKO / pause';
     }
   });
@@ -460,9 +519,10 @@ function setupListeners() {
     hideModal('modal-credits');
     if (started && paused && !gameOver) {
       paused = false;
+      AdRPG.setGamePaused(false);
       document.getElementById('btn-pause').textContent = 'TAUKO / pause';
-      lastTime = performance.now(); dirty = true;
-      animFrameId = requestAnimationFrame(loop);
+      dirty = true;
+      gameLoop.start();
     }
   });
 }
@@ -470,13 +530,6 @@ function setupListeners() {
 // =====================================================================
 // Init
 // =====================================================================
-// Title overlay logic (hoisted so btn-quit can reuse showTitleScreen)
-function showTitleScreen() {
-  const to = document.getElementById('title-overlay');
-  to.classList.remove('dismissing');
-  to.style.display = '';
-}
-// Title overlay logic (hoisted so btn-quit can reuse showTitleScreen)
 function showTitleScreen() {
   const to = document.getElementById('title-overlay');
   to.classList.remove('dismissing');
@@ -494,6 +547,20 @@ function dismissTitle() {
 (async () => {
   await loadScores();
   setupListeners();
+
+  // Initialize adenosine input system
+  AdRPG.initInput({
+    onPause: () => { if (started && !gameOver) togglePause(); },
+    bindings: TETRIS_BINDINGS,
+  });
+
+  // Buffer C key press (survives across frames for reliable hold)
+  document.addEventListener('keydown', e => {
+    if ((e.key === 'c' || e.key === 'C') && started && !paused && !gameOver) {
+      cQueued = true;
+    }
+  });
+
   // draw empty board on load
   grid = emptyGrid();
   bCtx.fillStyle = '#0A1218';
