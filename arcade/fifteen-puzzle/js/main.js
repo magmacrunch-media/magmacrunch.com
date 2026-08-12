@@ -7,7 +7,7 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // ── Framework instances ───────────────────────────────────────────────
-        var ui = PuzzleUI.create();
+        var ui = AdPuzzle.createUI();
         var renderer = null;
         var input = null;
         var game = null;
@@ -48,7 +48,7 @@
 
         // ── Scoring (per grid size) ──────────────────────────────────────────
         function getScoring() {
-            return PuzzleScoring.create('fifteen-puzzle-' + selectedSize + 'x' + selectedSize, { ascending: true });
+            return AdPuzzle.createScoring('fifteen-puzzle-' + selectedSize + 'x' + selectedSize, { ascending: true });
         }
 
         // ── Best score display ───────────────────────────────────────────────
@@ -100,7 +100,7 @@
             boardEl.style.setProperty('--grid-size', selectedSize);
             boardEl.dataset.size = selectedSize;
 
-            renderer = PuzzleRender.create(boardEl, {
+            renderer = AdPuzzle.createRenderer(boardEl, {
                 tileClass: 'tile',
                 emptyClass: 'tile-empty'
             });
@@ -158,7 +158,7 @@
                 }
             });
 
-            input = PuzzleInput.create({
+            input = AdPuzzle.createInput({
                 onMove: function(dir) { game.handleMove(dir); },
                 isActive: function() { return game.isActive(); }
             }, boardEl);
