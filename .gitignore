@@ -17,3 +17,8 @@ archive/more/video.html
 mcp-server/.venv/
 mcp-server/__pycache__/
 drafts/
+
+# Adenosine IIFE builds (generated from npm packages)
+arcade/shared/adenosine-rpg.js
+arcade/shared/adenosine-score-client.js
+arcade/shared/adenosine-puzzle.js
