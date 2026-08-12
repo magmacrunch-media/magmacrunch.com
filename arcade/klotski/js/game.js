@@ -34,7 +34,7 @@ var KlotskiGame = (function() {
     var EXIT_COL = 1;
 
     function create() {
-        var game = PuzzleGame.create({
+        var game = AdPuzzle.createGame({
             size: COLS,
             spawnTiles: false,
             gameName: 'klotski'
@@ -47,7 +47,7 @@ var KlotskiGame = (function() {
 
         // ── Override init to create non-square grid ───────────────────────────
         game.init = function() {
-            game.grid = PuzzleGrid.create(COLS, ROWS);
+            game.grid = AdPuzzle.PuzzleGrid.create(COLS, ROWS);
             game.score = 0;
             game.moves = 0;
             game.gameOver = false;

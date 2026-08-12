@@ -7,8 +7,8 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // ── Framework instances ───────────────────────────────────────────────
-        var ui = PuzzleUI.create();
-        var scoring = PuzzleScoring.create('klotski', { ascending: true });
+        var ui = AdPuzzle.createUI();
+        var scoring = AdPuzzle.createScoring('klotski', { ascending: true });
         var input = null;
         var game = null;
         var timerInterval = null;
@@ -171,7 +171,7 @@
                 }
             });
 
-            input = PuzzleInput.create({
+            input = AdPuzzle.createInput({
                 onMove: function(dir) { game.handleMove(dir); },
                 isActive: function() { return game.isActive(); }
             }, boardEl);

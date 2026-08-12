@@ -11,7 +11,7 @@ var FifteenPuzzle = (function() {
         var totalTiles = size * size - 1;
         var shuffleMoves = size * size * 20;
 
-        var game = PuzzleGame.create({
+        var game = AdPuzzle.createGame({
             size: size,
             spawnTiles: false,
             gameName: 'fifteen-puzzle-' + size + 'x' + size
@@ -45,14 +45,14 @@ var FifteenPuzzle = (function() {
         };
 
         game.moveLeft = function() {
-            var empty = PuzzleGrid.findCell(game.grid, 0);
+            var empty = AdPuzzle.PuzzleGrid.findCell(game.grid, 0);
             if (empty && empty.col + 1 < size) {
-                PuzzleGrid.swap(game.grid, empty.row, empty.col, empty.row, empty.col + 1);
+                AdPuzzle.PuzzleGrid.swap(game.grid, empty.row, empty.col, empty.row, empty.col + 1);
             }
         };
 
         game.checkWin = function() {
-            return PuzzleGrid.isSolved(game.grid, solvedBoard);
+            return AdPuzzle.PuzzleGrid.isSolved(game.grid, solvedBoard);
         };
 
         game.checkGameState = function() {
@@ -78,7 +78,7 @@ var FifteenPuzzle = (function() {
                 game.moveInDirection(dir);
             }
 
-            if (PuzzleGrid.isSolved(game.grid, solvedBoard)) {
+            if (AdPuzzle.PuzzleGrid.isSolved(game.grid, solvedBoard)) {
                 shuffle();
             }
         }

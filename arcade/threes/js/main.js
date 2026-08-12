@@ -7,8 +7,8 @@
     document.addEventListener('DOMContentLoaded', function() {
 
         // ── Framework instances ───────────────────────────────────────────────
-        var ui = PuzzleUI.create();
-        var scoring = PuzzleScoring.create('threes');
+        var ui = AdPuzzle.createUI();
+        var scoring = AdPuzzle.createScoring('threes');
         var renderer = null;
         var input = null;
         var game = null;
@@ -50,7 +50,7 @@
         // ── High tile display ────────────────────────────────────────────────
         function getHighTile() {
             if (!game || !game.grid) return 0;
-            return PuzzleGrid.getMaxValue(game.grid);
+            return AdPuzzle.PuzzleGrid.getMaxValue(game.grid);
         }
 
         function updateHighTile() {
@@ -82,7 +82,7 @@
 
             game = ThreesGame.create();
 
-            renderer = PuzzleRender.create(boardEl, {
+            renderer = AdPuzzle.createRenderer(boardEl, {
                 tileClass: 'tile',
                 emptyClass: 'tile-empty'
             });
@@ -147,7 +147,7 @@
                 }
             });
 
-            input = PuzzleInput.create({
+            input = AdPuzzle.createInput({
                 onMove: function(dir) { game.handleMove(dir); },
                 isActive: function() { return game.isActive(); }
             }, boardEl);
