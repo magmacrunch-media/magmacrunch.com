@@ -610,10 +610,10 @@
             
             <p><strong>technology & resources:</strong><br>
             • HTML5 (Canvas API & DOM), CSS3, and pure vanilla JavaScript<br>
-            • Web Audio API (background music & SFX)<br>
+            • Web Audio API (background music &amp; SFX)<br>
             • MOOG <em>GRANDMOTHER</em> synth (sound effects)<br>
             • Press Start 2P font by CodeMan38 (Google Fonts)<br>
-            • MAGMA//OPS backend (ScoreClient) for global highscores</p>
+            • <a href="https://github.com/magmacrunchmedia/adenosine" style="color:#8a2be2">adenosine</a> puzzle framework &amp; score client</p>
             
             <p><strong>publisher:</strong><br>magmacrunch media</p>
             
@@ -630,9 +630,10 @@
         </div>
     </div>
 
-    <!-- JavaScript files - ORDER MATTERS! -->
-    <script src="../shared/score-client.js"></script>
-    <script>const scoreClient = ScoreClient.auto();</script>
+    <!-- JavaScript files -->
+<script src="../shared/adenosine-score-client.js"></script>
+<script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+<script src="../shared/adenosine-puzzle.js"></script>
     <script src="js/config.js"></script>
     <script src="js/scoring.js"></script>
     <script src="js/game.js"></script>
