@@ -142,6 +142,8 @@
         input.value = '';
         resultsEl.innerHTML = '';
         overlay.classList.add('open');
+        /* Lazy-load search index on first open (saves a network request per page load) */
+        if (!index.length) loadIndex();
         setTimeout(() => input.focus(), 50);
     }
 
@@ -398,7 +400,6 @@
         if (window.__mcSearchInit) return;
         window.__mcSearchInit = true;
         injectSearchIcon();
-        loadIndex();
     }
 
     if (document.readyState === 'loading') {
