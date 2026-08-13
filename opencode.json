@@ -9,6 +9,14 @@
       "headers": {
         "Authorization": "Bearer ${MCP_API_KEY}"
       }
+    },
+    "google": {
+      "type": "local",
+      "command": ["uvx", "workspace-mcp", "--tool-tier", "core", "--tools", "gmail", "calendar"],
+      "env": {
+        "GOOGLE_OAUTH_CLIENT_ID": "${GOOGLE_OAUTH_CLIENT_ID}",
+        "GOOGLE_OAUTH_CLIENT_SECRET": "${GOOGLE_OAUTH_CLIENT_SECRET}"
+      }
     }
   }
 }
