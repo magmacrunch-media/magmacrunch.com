@@ -12,6 +12,17 @@
         var input = null;
         var game = null;
         var timerInterval = null;
+        var allScores = [];
+
+        // ── Server scores ────────────────────────────────────────────────────
+        async function loadScores() {
+            try {
+                allScores = await scoreClient.load('klotski');
+            } catch (e) {
+                allScores = [];
+            }
+        }
+        loadScores();
 
         // ── DOM elements ─────────────────────────────────────────────────────
         var $ = ui.$;
@@ -234,6 +245,8 @@
             function onSubmit() {
                 var initials = inputEl.value.toUpperCase().replace(/[^A-Z]/g, '').substring(0, 3);
                 if (initials.length === 0) initials = 'AAA';
+                scoreClient.save('klotski', initials, moves, { time: elapsed });
+                allScores.push({ initials: initials, score: moves, time: elapsed, isNew: false });
                 ui.hideModal('initialsPrompt');
                 submitBtn.removeEventListener('click', onSubmit);
                 inputEl.removeEventListener('keydown', onKey);
@@ -288,7 +301,11 @@
         ui.setupModalClose('scoreboardModal', [$('#closeScoreboard')]);
 
         function renderScoreboard() {
-            var topScores = scoring.getTopScores('normal', 10);
+            var localScores = scoring.getTopScores('normal', 10);
+            var serverScores = allScores
+                .sort(function(a, b) { return a.score - b.score; })
+                .slice(0, 10);
+            var topScores = serverScores.length > 0 ? serverScores : localScores;
             var html = '<div class="score-list">';
             html += '<div class="score-header"><span class="rank-col">#</span><span class="name-col">NAME</span><span class="score-col">MOVES</span><span class="time-col">TIME</span></div>';
 
