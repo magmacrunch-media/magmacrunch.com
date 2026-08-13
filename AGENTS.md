@@ -121,18 +121,27 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 ## Adenosine game engine
 
 [adenosine](https://github.com/magmacrunchmedia/adenosine) is the game engine used by arcade games.
-Currently used by: tetris.
+- **adenosine-rpg.js** — game loop, input, state (used by tetris)
+- **adenosine-puzzle.js** — puzzle framework (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
+- **adenosine-score-client.js** — high score client (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
 
 ### Loading in a game page
 
 ```html
+<!-- RPG games (tetris) -->
 <script src="../shared/adenosine-rpg.js"></script>
 <script src="../shared/adenosine-score-client.js"></script>
+
+<!-- Puzzle games (2^N, george-boole, fifteen-puzzle, klotski, threes) -->
+<script src="../shared/adenosine-score-client.js"></script>
+<script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+<script src="../shared/adenosine-puzzle.js"></script>
 ```
 
 ### Available globals
 
 - `AdRPG` — game loop, input, state (`createGameLoop`, `initInput`, `keys`, `keysPressed`)
+- `AdPuzzle` — puzzle framework (`createGame`, `createUI`, `createScoring`, `createRenderer`, `createInput`)
 - `AdScore` — high score client (`ScoreClient`)
 
 ### Integration pattern
@@ -316,17 +325,34 @@ Game (browser) ──WebSocket──▶ admin/server.py ──file I/O──▶ 
      └── localStorage fallback (offline)                       └── JSON files (one per game)
 ```
 
-- **ScoreClient** (`arcade/shared/score-client.js`) — shared library that games include
+- **ScoreClient** — shared library that games include. Two versions:
+  - `arcade/shared/adenosine-score-client.js` (recommended) — `new AdScore.ScoreClient().auto()`
+  - `arcade/shared/score-client.js` (legacy) — `ScoreClient.auto()`
 - **Server** (`arcade/admin/server.py`) — WebSocket actions: `score_load`, `score_save`, `scores_all`, `score_reset`
-- **Storage** (`arcade/admin/scores/`) — one JSON file per game (e.g. `tetris.json`, `george-boole.json`)
+- **Storage** (`arcade/admin/scores/`) — one JSON file per game
 - **Dashboard** — HIGH SCORES section in MAGMA//OPS shows all leaderboards
+
+### Games with server-side scores
+
+| Game | Game ID | Score type | Client |
+|------|---------|-----------|--------|
+| tetris | `tetris` | points | adenosine |
+| 2^N | `2n` | target reached | adenosine |
+| george-boole | `george-boole` | points | adenosine |
+| fifteen-puzzle | `fifteen-puzzle` | moves (ascending) | adenosine |
+| klotski | `klotski` | moves (ascending) | adenosine |
+| threes | `threes` | points | adenosine |
+| moonlight-drift | `moonlight-drift` | obstacles passed | legacy |
+| solitaire | `solitaire` | score | legacy |
+| scandinavian-stud | `scandinavian-stud` | score | legacy |
+| solitaire_THLD | `solitaire-thld` | score | legacy |
 
 ### Adding scores to a new game
 
 1. Add to `index.html`:
    ```html
-   <script src="../shared/score-client.js"></script>
-   <script>const scoreClient = ScoreClient.auto();</script>
+   <script src="../shared/adenosine-score-client.js"></script>
+   <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
    ```
 2. In your game's scoring code:
    ```js
