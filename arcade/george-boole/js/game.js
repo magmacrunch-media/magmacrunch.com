@@ -9,8 +9,6 @@ class Game2048 {
         this.highestValueEver = 0; // Track highest value ever reached (for scoring)
         this.won = false; // Track if player reached max value
         this.gameOver = false;
-        this.touchStartX = 0;
-        this.touchStartY = 0;
         this.waitingForInitials = false;
         this.difficulty = difficulty;
         
@@ -70,6 +68,23 @@ class Game2048 {
         
         this.init();
         this.setupEventListeners();
+        
+        // Initialize puzzle input (keyboard + touch)
+        this.input = AdPuzzle.createInput({
+            onMove: (dir) => {
+                if (this.gameOver || this.waitingForInitials) return;
+                const moved = this.move(dir);
+                if (moved) {
+                    this.moves++;
+                    this.addRandomTile();
+                    this.render();
+                    if (this.checkGameOver()) {
+                        this.handleGameOver();
+                    }
+                }
+            },
+            isActive: () => !this.gameOver && !this.waitingForInitials,
+        }, document.getElementById('gameBoard'));
     }
     
     // Clean up event listeners and timeouts to prevent memory leaks
@@ -148,83 +163,6 @@ class Game2048 {
     }
     
     setupEventListeners() {
-        // Keyboard controls
-        const keyHandler = (e) => {
-            if (this.gameOver || this.waitingForInitials) return;
-            
-            let moved = false;
-            switch(e.key) {
-                case 'ArrowUp':
-                    e.preventDefault();
-                    moved = this.move('up');
-                    break;
-                case 'ArrowDown':
-                    e.preventDefault();
-                    moved = this.move('down');
-                    break;
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    moved = this.move('left');
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    moved = this.move('right');
-                    break;
-            }
-            
-            if (moved) {
-                this.moves++; // Increment move counter
-                this.addRandomTile();
-                this.render();
-                if (this.checkGameOver()) {
-                    this.handleGameOver();
-                }
-            }
-        };
-        
-        // Use addListener for proper cleanup
-        this.addListener(document, 'keydown', keyHandler);
-        
-        // Touch support with passive listeners for better performance
-        const touchStartHandler = (e) => {
-            this.touchStartX = e.touches[0].clientX;
-            this.touchStartY = e.touches[0].clientY;
-        };
-        
-        const touchEndHandler = (e) => {
-            if (this.gameOver || this.waitingForInitials) return;
-            
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-            
-            const dx = touchEndX - this.touchStartX;
-            const dy = touchEndY - this.touchStartY;
-            
-            const absDx = Math.abs(dx);
-            const absDy = Math.abs(dy);
-            
-            if (Math.max(absDx, absDy) > 30) {
-                let moved = false;
-                if (absDx > absDy) {
-                    moved = dx > 0 ? this.move('right') : this.move('left');
-                } else {
-                    moved = dy > 0 ? this.move('down') : this.move('up');
-                }
-                
-                if (moved) {
-                    this.moves++; // Increment move counter
-                    this.addRandomTile();
-                    this.render();
-                    if (this.checkGameOver()) {
-                        this.handleGameOver();
-                    }
-                }
-            }
-        };
-        
-        this.addListener(this.gameBoardElement, 'touchstart', touchStartHandler, { passive: true });
-        this.addListener(this.gameBoardElement, 'touchend', touchEndHandler);
-        
         // New game button
         const newGameHandler = () => {
             document.getElementById('difficultyModal').classList.add('active');
