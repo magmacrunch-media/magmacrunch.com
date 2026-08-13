@@ -1,5 +1,6 @@
 // main.js — Sökö (Scandinavian Stud) | MagmaCrunch Media © 2026
 // Bootstrap and UI management
+const { ChipAnim } = AdCards;
 
 document.addEventListener('DOMContentLoaded', () => {
     const game = new SokoGame();

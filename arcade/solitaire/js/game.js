@@ -1,4 +1,5 @@
 // game.js
+const { Card, Deck, getCardBackSVG } = AdCards;
 
 class Solitaire {
     constructor() {
