@@ -1,5 +1,6 @@
 // game.js — Sökö (Scandinavian Stud) | MagmaCrunch Media © 2026
 // Core game logic: dealing, betting, AI, showdown
+const { Deck } = AdCards;
 
 class SokoGame {
     constructor() {

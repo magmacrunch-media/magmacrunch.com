@@ -1,4 +1,5 @@
 // main.js - Texas Hold'Em Lava Dome | MagmaCrunch Media © 2024
+const { ChipAnim, DENOMS } = AdCards;
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Texas Hold'Em Lava Dome — MagmaCrunch Media © 2024");

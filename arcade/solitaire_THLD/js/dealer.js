@@ -1,5 +1,6 @@
 // dealer.js - Texas Hold'Em Lava Dome
 // Manages the deck and deals cards through each street of a Hold'Em hand
+const { Deck } = AdCards;
 
 class Dealer {
     constructor(state) {
