@@ -307,7 +307,7 @@ Each bit mode has its own distinct retro theme, with gate tiles using colors tha
 
 ## 🏆 Leaderboard
 
-- **Global scores** saved to cloud (JSONbin.io)
+- **Global scores** saved to MAGMA//OPS backend via ScoreClient
 - **Top 10** per difficulty mode
 - **OVERALL board**: top 10 scores across all modes with mode badge
 - **Sorted by points** (highest wins)

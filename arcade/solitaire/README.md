@@ -168,26 +168,21 @@ The window menu bar is wired in `game.js → setupEventListeners()`:
 
 ## Data Persistence
 
-High scores are saved to **JSONBin.io** (configured in `config.js`):
-
-```javascript
-const JSONBIN_API_KEY = '$2a$10$...'
-const JSONBIN_BIN_ID  = '...'
-```
+High scores are saved via **ScoreClient** (MAGMA//OPS WebSocket backend with localStorage fallback):
 
 Scores are stored as an array of up to 10 objects:
 ```javascript
 { initials: 'ABC', score: 1234, time: '5:42' }
 ```
 
-No `localStorage` or `sessionStorage` is used.
+localStorage is used as offline fallback when the Pi is unreachable.
 
 ---
 
 ## External Dependencies
 
 - **Google Fonts:** Orbitron (400, 700, 900) + VT323 — loaded via `<link>` in `index.html`
-- **JSONBin.io:** Free tier REST API for leaderboard persistence
+- **ScoreClient:** WebSocket-based score persistence via MAGMA//OPS backend (Pi)
 - No JavaScript libraries or build tools
 
 ---
