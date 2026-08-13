@@ -177,7 +177,7 @@ All colors defined as CSS variables in `base.css`:
 - Start screen with MagmaCrunch Media branding
 
 ### 🚧 Planned / In Progress
-- [ ] High score persistence (JSONBin.io integration — config keys present, wiring pending)
+- [x] High score persistence — ScoreClient integrated (MAGMA//OPS backend)
 - [ ] Card redesign — especially face cards (J, Q, K) themed to the band
 - [ ] Sound effects and/or background music
 - [ ] Resolve → cashout phase transition polish
@@ -187,7 +187,6 @@ All colors defined as CSS variables in `base.css`:
 
 ### 📋 Known Issues
 - Resolve panel calls `dome.resolveHand()` on render — should not be called twice
-- High score save/load not yet wired to new session end flow
 - Old poker solitaire HTML elements (`pokerGrid`, `rowScores`, etc.) still present in `index.html` modals but unused
 
 ---

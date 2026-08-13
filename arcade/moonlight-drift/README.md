@@ -16,7 +16,7 @@ This is a browser-based remake of the classic "Jetman" game (originally by Simon
 - **Pixel-Perfect Collision Detection**: Style-specific tapered collision that matches the visual obstacle shapes exactly (updated Feb 2026)
 - **Dynamic Color Themes**: Obstacles change color palettes every 10 obstacles with procedurally generated harmonious color schemes
 - **Three Visual Obstacle Styles**: Candy striped, faceted crystal, and rough crystal obstacles with unique tapered shapes
-- **Persistent High Scores**: Saved to JSONBin API with player initials (top scores displayed on leaderboard)
+- **Persistent High Scores**: Saved to MAGMA//OPS backend via ScoreClient with player initials (top scores displayed on leaderboard)
 - **Tiered Achievement System**: Color-coded rank displays (gold/silver/bronze/cyan/green) with dynamic game over borders and celebratory messages
 - **Looping Background Music**: "Moonlight Drift" by C.P. Rutledge using Web Audio API for gapless playback
 - **Parallax Star Field**: 15 layers of animated stars for depth
@@ -88,8 +88,7 @@ moonlight-drift/
 const GAP = 180;                    // Gap height between obstacles
 const OBSTACLE_WIDTH = 60;          // Width of obstacle pillars
 const OBSTACLE_SPEED = 3;           // Horizontal scroll speed
-const JSONBIN_API_KEY = '...';      // JSONBin API for high scores
-const JSONBIN_BIN_ID = '...';       // Bin ID for score storage
+// Score backend handled by ScoreClient (MAGMA//OPS dashboard)
 ```
 
 ### Game Loop (main.js)
@@ -333,7 +332,7 @@ player.y += player.velocity;
 
 ## 💾 Score Persistence & Achievement System
 
-High scores are saved to **JSONBin.io** API:
+High scores are saved to the **MAGMA//OPS backend** via ScoreClient (WebSocket to Raspberry Pi, localStorage fallback):
 
 ```javascript
 // Score structure
@@ -358,7 +357,7 @@ High scores are saved to **JSONBin.io** API:
    - 💠 **Ranks #4-5**: "HIGH SCORE! rank #X" (Cyan)
    - 💚 **Ranks #6-10**: "HIGH SCORE! rank #X" (Green)
 4. Player enters 3-character initials
-5. Submit to JSONBin API (PUT request)
+5. Submit to MAGMA//OPS backend via ScoreClient
 6. Game over screen appears with colored border and achievement banner
 7. Press space to restart
 
@@ -574,7 +573,7 @@ Edit `generateRandomTheme()` in `obstacles.js`:
   - Press Start 2P font by CodeMan38 (Google Fonts)
   - HTML5 Canvas API
   - Web Audio API (gapless music looping)
-  - JSONBin.io (high score persistence)
+  - ScoreClient / MAGMA//OPS backend (high score persistence)
   - Pure vanilla JavaScript (no frameworks!)
 - **Original Concept**: 
   - "Jetman" by Simon Dorsey (2007, Facebook)

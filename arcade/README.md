@@ -158,7 +158,7 @@ arcade-sample-pack/           # new project root (sibling to website/)
 2. **create hub page** — retro launcher listing all packs/games
 3. **copy game assets** — preserve directory structure, relative paths
 4. **bundle fonts locally** — download .woff2, replace Google CDN links with local @font-face
-5. **replace JSONBin with localStorage** — solitaire, 2^N, tetris, solitaire_THLD, scandinavian-stud use api.jsonbin.io for scoring; swap to local storage
+5. **score client is already local** — ScoreClient uses WebSocket to Pi with localStorage fallback; no external API dependency
 6. **fix navigation** — `.mc-back` links → hub page
 7. **configure Tauri** — window size, app icon, bundle metadata
 8. **build and test** — `npm run tauri dev` / `npm run tauri build`
@@ -168,7 +168,6 @@ arcade-sample-pack/           # new project root (sibling to website/)
 ### external dependencies to localize
 
 - **Google Fonts** — bundle .woff2 files locally
-- **JSONBin API** — replace with localStorage (offline-appropriate)
 - **Audio files** — already local, just verify paths
 
 ### what you'll learn
@@ -234,7 +233,7 @@ arcade/
 | local assets (css, js, images, audio) | cache-first | already local |
 | Google Fonts CDN | stale-while-revalidate | cache immediately, update in bg |
 | CDN libs (BabylonJS, Three.js) | cache-first | version-pinned |
-| JSONBin API | network-first, localStorage fallback | try network, fall back to local |
+| ScoreClient (Pi WebSocket) | cache-first | local fallback built in |
 
 ### HTML meta tags to add (all games)
 
@@ -257,26 +256,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js', { scope: '.' });
 }
 ```
-
-### localStorage fallback for JSONBin scores
-
-8 games use JSONBin for high scores. Modify to try network, fall back to localStorage:
-
-```js
-async function loadScores() {
-  try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`);
-    const data = await res.json();
-    localStorage.setItem(`scores_${BIN_ID}`, JSON.stringify(data));
-    return data;
-  } catch {
-    const cached = localStorage.getItem(`scores_${BIN_ID}`);
-    return cached ? JSON.parse(cached) : { records: [] };
-  }
-}
-```
-
-Games to update: 2^N, george-boole, moonlight-drift, tetris, solitaire, scandinavian-stud, solitaire_THLD, pay2play.
 
 ### cross-game dependencies (service worker must cache)
 
