@@ -66,16 +66,22 @@ global.setTimeout = function(fn, delay) {
 global.clearTimeout = function(){};
 global.currentGame = null;
 
-// Mock SoundEffects
-global.SoundEffects = {
-    play(){},
-    init(){},
+// Mock AdPuzzle (adenosine puzzle input library)
+global.AdPuzzle = {
+    createInput() { return {}; },
 };
 
-// Mock ScoreClient
-global.ScoreClient = {
-    load(){ return Promise.resolve([]); },
-    save(){ return Promise.resolve(); },
+// Mock AdAudio (adenosine audio library)
+global.AdAudio = {
+    playSfx() {},
+    playMusic() { return Promise.resolve(); },
+    init() { return Promise.resolve(); },
+};
+
+// Mock scoreClient (adenosine score-client instance)
+global.scoreClient = {
+    save() { return Promise.resolve(); },
+    load() { return Promise.resolve([]); },
 };
 
 // ── Load Game2048 ────────────────────────────────────────────────────────────
