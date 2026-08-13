@@ -201,6 +201,8 @@
     50% { box-shadow: 0 0 28px rgba(255, 215, 0, 0.95); }
 }
 
+.mc-back { z-index: 10001; }
+
 /* ── Title Screen ──────────────────────────────────────────────────────────── */
 .title-screen {
     position: fixed;
