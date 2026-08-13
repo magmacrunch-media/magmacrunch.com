@@ -23,6 +23,10 @@
     display: flex;
 }
 
+.settings-modal.menu-mode {
+    background: linear-gradient(180deg, #0a0a14 0%, #16213e 50%, #1a1a2e 100%);
+}
+
 .settings-content {
     background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
     padding: 30px;
