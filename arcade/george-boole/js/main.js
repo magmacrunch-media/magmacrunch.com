@@ -294,19 +294,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         // High Scores button - opens scoreboard from difficulty modal
         if (quickHighScores) {
             quickHighScores.addEventListener('click', () => {
+                loreScreen.classList.remove('active');
                 returnToLoreScreen = true;
                 const scoreDefault = getScoreboardDefault();
                 updateCustomDropdownValue(scoreDefault);
                 updateScoreboard(scoreDefault);
                 document.getElementById('scoreboardModal').classList.add('active');
+                document.getElementById('scoreboardModal').classList.add('menu-mode');
             });
         }
         
         // Settings button - opens settings from difficulty modal
         if (quickSettings) {
             quickSettings.addEventListener('click', () => {
+                loreScreen.classList.remove('active');
                 returnToLoreScreen = true;
                 document.getElementById('settingsModal').classList.add('active');
+                document.getElementById('settingsModal').classList.add('menu-mode');
             });
         }
 
@@ -365,6 +369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('closeScoreboard').addEventListener('click', () => {
             document.getElementById('scoreboardModal').classList.remove('active');
+            document.getElementById('scoreboardModal').classList.remove('menu-mode');
             
             // If we came from lore screen, go back to it
             if (returnToLoreScreen) {
@@ -381,6 +386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('scoreboardModal').addEventListener('click', (e) => {
             if (e.target.id === 'scoreboardModal') {
                 document.getElementById('scoreboardModal').classList.remove('active');
+                document.getElementById('scoreboardModal').classList.remove('menu-mode');
                 
                 // If we came from lore screen, go back to it
                 if (returnToLoreScreen) {
@@ -478,6 +484,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         document.getElementById('closeSettings').addEventListener('click', () => {
             document.getElementById('settingsModal').classList.remove('active');
+            document.getElementById('settingsModal').classList.remove('menu-mode');
             
             // If we came from lore screen, go back to it
             if (returnToLoreScreen) {
@@ -489,6 +496,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('settingsModal').addEventListener('click', (e) => {
             if (e.target.id === 'settingsModal') {
                 document.getElementById('settingsModal').classList.remove('active');
+                document.getElementById('settingsModal').classList.remove('menu-mode');
                 
                 // If we came from lore screen, go back to it
                 if (returnToLoreScreen) {
