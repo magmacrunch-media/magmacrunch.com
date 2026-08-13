@@ -1,21 +1,11 @@
-// main.js - WITH SOUND EFFECTS SYSTEM
+// main.js
 
 let currentGame = null;
-let currentDifficulty = '6'; // Default game difficulty (not used for scoreboard default)
+let currentDifficulty = '6';
 
-// Returns the difficulty to show in the scoreboard:
-// - 'overall' if no game has been played this session (or ever)
-// - otherwise the last-played mode (persisted across page loads)
 function getScoreboardDefault() {
     return localStorage.getItem('lastPlayedDifficulty') || 'overall';
 }
-let gameMusic = null;
-let musicEnabled = true;
-let sfxEnabled = true;
-let musicHasFadedIn = false; // Track if music has done initial fade-in
-
-// Store active fade interval to prevent leaks
-let activeFadeInterval = null;
 
 // Track if we opened instructions/credits from settings
 let returnToSettings = false;
@@ -26,193 +16,22 @@ let returnToLoreScreen = false;
 // Binary display mode - enabled by default
 let binaryDisplayMode = true;
 
-// Sound Effects Manager - OPTIMIZED with audio pool
-const SoundEffects = {
-    sounds: {},
-    audioPool: {}, // Pre-created audio elements for reuse
-    poolSize: 3, // Number of instances per sound
-    
-    // Initialize all sound effects with audio pool
-    init() {
-        const soundFiles = {
-            merge: 'audio/sfx/merge.ogg',
-            spawn: 'audio/sfx/spawn.ogg',
-            victory: 'audio/sfx/victory.ogg',
-            gameOver: 'audio/sfx/gameover.ogg',
-            move: 'audio/sfx/move.ogg',
-            highScore: 'audio/sfx/highscore.ogg'
-        };
-        
-        // Create audio pools for each sound
-        Object.keys(soundFiles).forEach(soundName => {
-            this.audioPool[soundName] = [];
-            for (let i = 0; i < this.poolSize; i++) {
-                const audio = new Audio();
-                audio.src = soundFiles[soundName];
-                audio.preload = 'auto';
-                audio.volume = 0.3;
-                
-                // Handle loading errors gracefully
-                audio.addEventListener('error', (e) => {
-                    if (i === 0) { // Only log once per sound type
-                        console.warn(`Sound effect not found: ${soundFiles[soundName]}`);
-                    }
-                });
-                
-                this.audioPool[soundName].push(audio);
-            }
-        });
-        
-        // Keep reference to first instance for volume control
-        Object.keys(soundFiles).forEach(soundName => {
-            this.sounds[soundName] = this.audioPool[soundName][0];
-        });
-    },
-    
-    // Play a sound effect using the audio pool
-    play(soundName) {
-        if (!sfxEnabled) return;
-        
-        const pool = this.audioPool[soundName];
-        if (!pool || pool.length === 0) {
-            console.warn(`Sound "${soundName}" not found`);
-            return;
-        }
-        
-        // Find an available audio element (not currently playing)
-        let audio = pool.find(a => a.paused || a.ended);
-        
-        // If all are playing, use the first one anyway
-        if (!audio) {
-            audio = pool[0];
-        }
-        
-        // Reset and play
-        audio.currentTime = 0;
-        audio.play().catch(err => {
-            // Browser may block audio, that's ok
-            // Removed console.log for performance
-        });
-    },
-    
-    // Set volume for a specific sound (0.0 to 1.0)
-    setVolume(soundName, volume) {
-        const pool = this.audioPool[soundName];
-        if (pool) {
-            pool.forEach(audio => {
-                audio.volume = Math.max(0, Math.min(1, volume));
-            });
-        }
-    },
-    
-    // Set volume for all sounds
-    setGlobalVolume(volume) {
-        Object.keys(this.audioPool).forEach(soundName => {
-            this.setVolume(soundName, volume);
-        });
-    }
-};
-
-// Audio fade-in function (only fades in first time, then loops seamlessly)
-function fadeInMusic(audioElement, duration = 2000) {
-    if (!musicEnabled) return;
-    
-    // Clear any existing fade interval to prevent leaks
-    if (activeFadeInterval !== null) {
-        clearInterval(activeFadeInterval);
-        activeFadeInterval = null;
-    }
-    
-    // If music has already faded in once, just play at full volume
-    if (musicHasFadedIn && audioElement.paused) {
-        audioElement.volume = 1;
-        audioElement.play().catch(() => {
-            // Browser may block audio, that's ok
-        });
-        return;
-    }
-
-    // First time: fade in from 0 to 1 (OPTIMIZED: 15 steps instead of 50)
-    audioElement.volume = 0;
-    audioElement.play().catch(() => {
-        // Browser may block audio, that's ok
-    });
-    
-    const steps = 15; // Reduced from 50 for better performance
-    const stepTime = duration / steps;
-    const volumeIncrement = 1 / steps;
-    let currentStep = 0;
-    
-    activeFadeInterval = setInterval(() => {
-        currentStep++;
-        audioElement.volume = Math.min(currentStep * volumeIncrement, 1);
-        
-        if (currentStep >= steps) {
-            clearInterval(activeFadeInterval);
-            activeFadeInterval = null;
-            musicHasFadedIn = true; // Mark that initial fade-in is complete
-        }
-    }, stepTime);
-}
-
-// Audio fade-out function (OPTIMIZED: 15 steps instead of 50)
-function fadeOutMusic(audioElement, duration = 1000) {
-    // Clear any existing fade interval to prevent leaks
-    if (activeFadeInterval !== null) {
-        clearInterval(activeFadeInterval);
-        activeFadeInterval = null;
-    }
-    
-    const steps = 15; // Reduced from 50 for better performance
-    const stepTime = duration / steps;
-    const volumeDecrement = audioElement.volume / steps;
-    let currentStep = 0;
-    
-    activeFadeInterval = setInterval(() => {
-        currentStep++;
-        audioElement.volume = Math.max(audioElement.volume - volumeDecrement, 0);
-        
-        if (currentStep >= steps) {
-            clearInterval(activeFadeInterval);
-            activeFadeInterval = null;
-            audioElement.pause();
-            musicHasFadedIn = false; // Reset flag when music stops
-        }
-    }, stepTime);
-}
-
-// Pause audio when tab is hidden to save resources
-function setupVisibilityHandler() {
-    document.addEventListener('visibilitychange', () => {
-        if (!gameMusic) return;
-        
-        if (document.hidden) {
-            // Tab hidden - pause to save CPU
-            if (!gameMusic.paused) {
-                gameMusic.pause();
-            }
-        } else {
-            // Tab visible again - resume if music is enabled
-            if (musicEnabled && gameMusic.paused) {
-                gameMusic.play().catch(() => {
-                    // Browser may block audio, that's ok
-                });
-            }
-        }
-    });
-}
-
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Initialize sound effects first
-        SoundEffects.init();
-        
-        // Get audio element
-        gameMusic = document.getElementById('gameMusic');
-        
-        // Setup visibility handler for better performance
-        setupVisibilityHandler();
+        // Initialize adenosine-audio
+        await AdAudio.init({
+            music: { url: 'audio/game-loop.ogg', volume: 0.3, fadeIn: 2.0 },
+            sfx: {
+                spawn:    { url: 'audio/sfx/spawn.ogg',    volume: 0.3, pool: 3 },
+                merge:    { url: 'audio/sfx/merge.ogg',     volume: 0.3, pool: 3 },
+                victory:  { url: 'audio/sfx/victory.ogg',   volume: 0.3, pool: 3 },
+                gameOver: { url: 'audio/sfx/gameover.ogg',  volume: 0.3, pool: 3 },
+                move:     { url: 'audio/sfx/move.ogg',      volume: 0.3, pool: 3 },
+                highScore:{ url: 'audio/sfx/highscore.ogg',  volume: 0.3, pool: 3 },
+            },
+        });
+        AdAudio.handleVisibility({ pauseMusic: true });
         
         // Start loading scores
         await loadScores();
@@ -235,9 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             loreScreen.classList.add('active');
             
             // Start music with fade-in
-            if (gameMusic) {
-                fadeInMusic(gameMusic, 2000);
-            }
+            AdAudio.playMusic();
         };
         
         // Function to advance from lore screen to difficulty selector
@@ -250,21 +67,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const quickSfxToggle = document.getElementById('quickSfxToggle');
             
             if (quickMusicToggle) {
-                if (musicEnabled) {
-                    quickMusicToggle.classList.add('active');
-                } else {
-                    quickMusicToggle.classList.remove('active');
-                }
-                quickMusicToggle.querySelector('.toggle-state').textContent = musicEnabled ? 'ON' : 'OFF';
+                const musicMuted = AdAudio.isMusicMuted();
+                quickMusicToggle.classList.toggle('active', !musicMuted);
+                quickMusicToggle.querySelector('.toggle-state').textContent = musicMuted ? 'OFF' : 'ON';
             }
             
             if (quickSfxToggle) {
-                if (sfxEnabled) {
-                    quickSfxToggle.classList.add('active');
-                } else {
-                    quickSfxToggle.classList.remove('active');
-                }
-                quickSfxToggle.querySelector('.toggle-state').textContent = sfxEnabled ? 'ON' : 'OFF';
+                const sfxMuted = AdAudio.isSfxMuted();
+                quickSfxToggle.classList.toggle('active', !sfxMuted);
+                quickSfxToggle.querySelector('.toggle-state').textContent = sfxMuted ? 'OFF' : 'ON';
             }
         };
         
@@ -539,28 +350,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Music toggle - with proper cleanup
+        // Music toggle
         document.getElementById('musicToggle').addEventListener('click', function() {
-            musicEnabled = !musicEnabled;
-            this.classList.toggle('active');
-            this.querySelector('.toggle-status').textContent = musicEnabled ? 'ON' : 'OFF';
+            const muted = AdAudio.toggleMusicMute();
+            this.classList.toggle('active', !muted);
+            this.querySelector('.toggle-status').textContent = muted ? 'OFF' : 'ON';
             
-            if (musicEnabled && gameMusic) {
-                fadeInMusic(gameMusic, 1000);
-            } else if (gameMusic) {
-                fadeOutMusic(gameMusic, 1000);
+            if (!muted) {
+                AdAudio.setMusicMuted(false, 0);
+            } else {
+                AdAudio.setMusicMuted(true, 1);
             }
         });
 
         // SFX toggle
         document.getElementById('sfxToggle').addEventListener('click', function() {
-            sfxEnabled = !sfxEnabled;
-            this.classList.toggle('active');
-            this.querySelector('.toggle-status').textContent = sfxEnabled ? 'ON' : 'OFF';
+            const muted = AdAudio.toggleSfxMute();
+            this.classList.toggle('active', !muted);
+            this.querySelector('.toggle-status').textContent = muted ? 'OFF' : 'ON';
             
             // Play a test sound when enabling
-            if (sfxEnabled) {
-                SoundEffects.play('spawn');
+            if (!muted) {
+                AdAudio.playSfx('spawn');
             }
         });
 
@@ -613,14 +424,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Cleanup on page unload to prevent memory leaks
+// Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (activeFadeInterval !== null) {
-        clearInterval(activeFadeInterval);
-        activeFadeInterval = null;
-    }
-    if (gameMusic) {
-        gameMusic.pause();
-        gameMusic.src = '';
-    }
+    AdAudio.destroy();
 });

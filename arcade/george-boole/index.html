@@ -52,11 +52,7 @@
 </head>
 <body>
     <a href="../" class="mc-back">magmacrunch arcade</a>
-    <!-- Background Music -->
-    <audio id="gameMusic" loop preload="auto">
-        <source src="audio/game-loop.ogg" type="audio/ogg">
-    </audio>
-    
+
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
@@ -633,6 +629,7 @@
     <!-- JavaScript files -->
 <script src="../shared/adenosine-score-client.js"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+<script src="../shared/adenosine-audio.js"></script>
 <script src="../shared/adenosine-puzzle.js"></script>
     <script src="js/config.js"></script>
     <script src="js/scoring.js"></script>
