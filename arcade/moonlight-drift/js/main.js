@@ -5,93 +5,31 @@ const instructionsDisplay = document.getElementById('instructions');
 const titleOverlay = document.getElementById('titleOverlay');
 const muteBtn = document.getElementById('muteBtn');
 
-// Web Audio API setup for gapless looping
-let audioContext;
-let audioBuffer;
-let crashSoundBuffer;
-let buttonSoundBuffer;
-let buttonSound2Buffer;
-let sourceNode;
-let gainNode;
+// Web Audio API setup via adenosine-audio
 let musicStarted = false;
-let isMuted = false;
-let audioLoaded = false;
-let crashSoundLoaded = false;
-let buttonSoundLoaded = false;
-let buttonSound2Loaded = false;
 
 async function loadAudio() {
-    try {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        const response = await fetch('audio/moonlightdrift-gameloop.ogg');
-        const arrayBuffer = await response.arrayBuffer();
-        audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        audioLoaded = true;
-
-        const crashResponse = await fetch('audio/crashsound.ogg');
-        const crashArrayBuffer = await crashResponse.arrayBuffer();
-        crashSoundBuffer = await audioContext.decodeAudioData(crashArrayBuffer);
-        crashSoundLoaded = true;
-
-        const buttonResponse = await fetch('audio/buttonsound1.ogg');
-        const buttonArrayBuffer = await buttonResponse.arrayBuffer();
-        buttonSoundBuffer = await audioContext.decodeAudioData(buttonArrayBuffer);
-        buttonSoundLoaded = true;
-
-        const button2Response = await fetch('audio/buttonsound2.ogg');
-        const button2ArrayBuffer = await button2Response.arrayBuffer();
-        buttonSound2Buffer = await audioContext.decodeAudioData(button2ArrayBuffer);
-        buttonSound2Loaded = true;
-    } catch (e) {
-        console.error('Error loading audio:', e);
-    }
+    await AdAudio.init({
+        music: { url: 'audio/moonlightdrift-gameloop.ogg', volume: 0.3, fadeIn: 2.0 },
+        sfx: {
+            crash:   { url: 'audio/crashsound.ogg', volume: 0.5 },
+            button1: { url: 'audio/buttonsound1.ogg', volume: 0.4 },
+            button2: { url: 'audio/buttonsound2.ogg', volume: 0.4 },
+        },
+    });
+    AdAudio.handleVisibility({ pauseMusic: true });
 }
 
 async function playMusic() {
-    if (!audioLoaded || musicStarted || !audioContext || !audioBuffer) {
-        return;
-    }
-
-    try {
-        if (audioContext.state === 'suspended') {
-            await audioContext.resume();
-        }
-
-        gainNode = audioContext.createGain();
-        gainNode.gain.value = 0;
-        gainNode.connect(audioContext.destination);
-
-        sourceNode = audioContext.createBufferSource();
-        sourceNode.buffer = audioBuffer;
-        sourceNode.connect(gainNode);
-        sourceNode.loop = true;
-        sourceNode.start(0);
-
-        const targetVolume = isMuted ? 0 : 0.3;
-        const currentTime = audioContext.currentTime;
-
-        gainNode.gain.setValueAtTime(0, currentTime);
-        gainNode.gain.linearRampToValueAtTime(targetVolume, currentTime + 2.0);
-
-        musicStarted = true;
-    } catch (e) {
-        console.error('Error starting music:', e);
-        musicStarted = false;
-    }
+    if (musicStarted) return;
+    await AdAudio.playMusic();
+    musicStarted = true;
 }
 
 function toggleMute() {
-    isMuted = !isMuted;
-    if (gainNode && audioContext) {
-        const targetVolume = isMuted ? 0 : 0.3;
-        const currentTime = audioContext.currentTime;
-
-        gainNode.gain.cancelScheduledValues(currentTime);
-        gainNode.gain.setValueAtTime(gainNode.gain.value, currentTime);
-        gainNode.gain.linearRampToValueAtTime(targetVolume, currentTime + 0.5);
-    }
-    const buttonText = isMuted ? 'SFX OFF' : 'SFX ON';
+    const muted = AdAudio.toggleMusicMute();
+    AdAudio.setSfxMuted(muted);
+    const buttonText = muted ? 'SFX OFF' : 'SFX ON';
 
     if (muteBtn) {
         muteBtn.textContent = buttonText;
@@ -103,66 +41,15 @@ function toggleMute() {
 }
 
 function playCrashSound() {
-    if (!crashSoundLoaded || !audioContext || isMuted) {
-        return;
-    }
-
-    try {
-        const sfxSource = audioContext.createBufferSource();
-        sfxSource.buffer = crashSoundBuffer;
-
-        const sfxGain = audioContext.createGain();
-        sfxGain.gain.value = 0.5;
-
-        sfxSource.connect(sfxGain);
-        sfxGain.connect(audioContext.destination);
-
-        sfxSource.start(0);
-    } catch (e) {
-        console.error('Error playing crash sound:', e);
-    }
+    AdAudio.playSfx('crash');
 }
 
 function playButtonSound() {
-    if (!buttonSoundLoaded || !audioContext || isMuted) {
-        return;
-    }
-
-    try {
-        const sfxSource = audioContext.createBufferSource();
-        sfxSource.buffer = buttonSoundBuffer;
-
-        const sfxGain = audioContext.createGain();
-        sfxGain.gain.value = 0.4;
-
-        sfxSource.connect(sfxGain);
-        sfxGain.connect(audioContext.destination);
-
-        sfxSource.start(0);
-    } catch (e) {
-        console.error('Error playing button sound:', e);
-    }
+    AdAudio.playSfx('button1');
 }
 
 function playButtonSound2() {
-    if (!buttonSound2Loaded || !audioContext || isMuted) {
-        return;
-    }
-
-    try {
-        const sfxSource = audioContext.createBufferSource();
-        sfxSource.buffer = buttonSound2Buffer;
-
-        const sfxGain = audioContext.createGain();
-        sfxGain.gain.value = 0.4;
-
-        sfxSource.connect(sfxGain);
-        sfxGain.connect(audioContext.destination);
-
-        sfxSource.start(0);
-    } catch (e) {
-        console.error('Error playing button sound 2:', e);
-    }
+    AdAudio.playSfx('button2');
 }
 
 // Make sound functions available globally
@@ -192,7 +79,7 @@ async function showCharacterSelectorOnStart() {
     characterModal.style.display = 'flex';
     renderCharacterGrid();
 
-    if (!musicStarted && audioLoaded) {
+    if (!musicStarted) {
         await playMusic();
     }
 }
@@ -541,3 +428,7 @@ if (creditsModal) {
         }
     });
 }
+
+window.addEventListener('beforeunload', () => {
+    AdAudio.destroy();
+});
