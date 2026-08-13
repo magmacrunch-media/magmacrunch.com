@@ -14,6 +14,17 @@
         var timerInterval = null;
         var selectedSize = 4;
         var scoring = null;
+        var allScores = [];
+
+        // ── Server scores ────────────────────────────────────────────────────
+        async function loadScores() {
+            try {
+                allScores = await scoreClient.load('fifteen-puzzle');
+            } catch (e) {
+                allScores = [];
+            }
+        }
+        loadScores();
 
         // ── DOM elements ─────────────────────────────────────────────────────
         var $ = ui.$;
@@ -180,6 +191,8 @@
             function onSubmit() {
                 var initials = inputEl.value.toUpperCase().replace(/[^A-Z]/g, '').substring(0, 3);
                 if (initials.length === 0) initials = 'AAA';
+                scoreClient.save('fifteen-puzzle', initials, moves, { time: elapsed, size: selectedSize });
+                allScores.push({ initials: initials, score: moves, time: elapsed, size: selectedSize, isNew: false });
                 ui.hideModal('initialsPrompt');
                 submitBtn.removeEventListener('click', onSubmit);
                 inputEl.removeEventListener('keydown', onKey);
@@ -294,7 +307,12 @@
 
         function renderScoreboard() {
             scoring = getScoring();
-            var topScores = scoring.getTopScores('normal', 10);
+            var localScores = scoring.getTopScores('normal', 10);
+            var serverScores = allScores
+                .filter(function(s) { return s.size === selectedSize; })
+                .sort(function(a, b) { return a.score - b.score; })
+                .slice(0, 10);
+            var topScores = serverScores.length > 0 ? serverScores : localScores;
             var info = sizeLabels[selectedSize];
             var html = '<div class="score-list">';
             html += '<div class="score-header"><span class="rank-col">#</span><span class="name-col">NAME</span><span class="score-col">MOVES</span><span class="time-col">TIME</span></div>';
