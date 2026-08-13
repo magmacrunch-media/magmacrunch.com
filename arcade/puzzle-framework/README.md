@@ -186,7 +186,7 @@ ui.setupDropdown(
 - **Variable grid sizes** — Support 3x3, 5x5, etc.
 - **Animation system** — Slide, merge, appear animations
 - **Sound effects** — Move, merge, win, game-over sounds
-- **JSONBin integration** — Cloud high scores
+- **Cloud high scores** — ScoreClient integration (MAGMA//OPS backend) — already implemented in fifteen-puzzle, klotski, threes
 - **Undo system** — Undo last move
 - **AI opponent** — For single-player puzzle games
 
