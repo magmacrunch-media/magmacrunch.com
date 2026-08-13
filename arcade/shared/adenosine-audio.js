@@ -37,7 +37,9 @@ var AdAudio = (() => {
     setSfxGlobalVolume: () => setSfxGlobalVolume,
     setSfxMuted: () => setSfxMuted,
     setSfxVolume: () => setSfxVolume,
-    stopMusic: () => stopMusic
+    stopMusic: () => stopMusic,
+    toggleMusicMute: () => toggleMusicMute,
+    toggleSfxMute: () => toggleSfxMute
   });
 
   // src/audio-context.ts
@@ -127,6 +129,10 @@ var AdAudio = (() => {
   function isMusicMuted() {
     return musicMuted;
   }
+  function toggleMusicMute() {
+    setMusicMuted(!musicMuted);
+    return musicMuted;
+  }
   function isMusicPlaying() {
     return musicStarted;
   }
@@ -203,6 +209,10 @@ var AdAudio = (() => {
     sfxMuted = muted;
   }
   function isSfxMuted() {
+    return sfxMuted;
+  }
+  function toggleSfxMute() {
+    sfxMuted = !sfxMuted;
     return sfxMuted;
   }
   function destroySfx() {
