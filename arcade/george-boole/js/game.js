@@ -309,9 +309,7 @@ class Game2048 {
             }
             
             // Play spawn sound
-            if (typeof SoundEffects !== 'undefined') {
-                SoundEffects.play('spawn');
-            }
+            AdAudio.playSfx('spawn');
         }
     }
     
@@ -407,9 +405,9 @@ class Game2048 {
         // 🔊 SOUND: Play merge sound if tiles merged, otherwise move sound
         if (boardChanged) {
             if (mergeOccurred) {
-                SoundEffects.play('merge');
+                AdAudio.playSfx('merge');
             } else {
-                SoundEffects.play('move');
+                AdAudio.playSfx('move');
             }
         }
         
@@ -564,9 +562,7 @@ class Game2048 {
                                 if (ii !== i) this.personalBestBoard[ii].fill(false);
                             }
                             this.showHeightBonus(current, heightBonus);
-                            if (typeof SoundEffects !== 'undefined') {
-                                SoundEffects.play('victory');
-                            }
+                            AdAudio.playSfx('victory');
                         } else if (current > this.highestValueEver) {
                             // New high but below the spawnable threshold — track it
                             // for future comparisons but don't award the gold tile.
@@ -759,9 +755,7 @@ class Game2048 {
             }
             
             // Play special overflow sound
-            if (typeof SoundEffects !== 'undefined') {
-                SoundEffects.play('highScore'); // Using high score sound for overflow
-            }
+            AdAudio.playSfx('highScore');
             
             // Show overflow notification popup
             this.showOverflowNotification(overflowBonus);
@@ -793,9 +787,7 @@ class Game2048 {
                 }
                 
                 // Play special overflow sound
-                if (typeof SoundEffects !== 'undefined') {
-                    SoundEffects.play('highScore');
-                }
+                AdAudio.playSfx('highScore');
                 
                 // Re-render to update any tiles that might be affected
                 this.render();
@@ -822,9 +814,7 @@ class Game2048 {
                 this.showHeightBonus(result, heightBonus);
                 
                 // Play victory sound for milestone
-                if (typeof SoundEffects !== 'undefined') {
-                    SoundEffects.play('victory');
-                }
+                AdAudio.playSfx('victory');
             } else if (result > this.highestValueEver) {
                 // New high but below the spawnable threshold — track it
                 // for future comparisons but don't award the gold tile.
@@ -994,8 +984,8 @@ class Game2048 {
     
     handleGameOver() {
         // Play game over sound (only if not victory)
-        if (!this.wasVictory && typeof SoundEffects !== 'undefined') {
-            SoundEffects.play('gameOver');
+        if (!this.wasVictory) {
+            AdAudio.playSfx('gameOver');
         }
         
         if (!Array.isArray(allScores)) {
@@ -1017,9 +1007,7 @@ class Game2048 {
             }
             
             // Play high score sound
-            if (typeof SoundEffects !== 'undefined') {
-                SoundEffects.play('highScore');
-            }
+            AdAudio.playSfx('highScore');
             
             this.waitingForInitials = true;
             

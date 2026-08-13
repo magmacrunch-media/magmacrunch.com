@@ -122,8 +122,12 @@ var AdAudio = (() => {
     if (musicGain) {
       const ctx2 = getCtx();
       musicGain.gain.cancelScheduledValues(ctx2.currentTime);
-      musicGain.gain.setValueAtTime(musicGain.gain.value, ctx2.currentTime);
-      musicGain.gain.linearRampToValueAtTime(muted ? 0 : musicVolume, ctx2.currentTime + rampTime);
+      if (rampTime <= 0) {
+        musicGain.gain.setValueAtTime(muted ? 0 : musicVolume, ctx2.currentTime);
+      } else {
+        musicGain.gain.setValueAtTime(musicGain.gain.value, ctx2.currentTime);
+        musicGain.gain.linearRampToValueAtTime(muted ? 0 : musicVolume, ctx2.currentTime + rampTime);
+      }
     }
   }
   function isMusicMuted() {
