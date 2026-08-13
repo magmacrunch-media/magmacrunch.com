@@ -119,6 +119,56 @@ else
     warn "MCP server not found — skipping"
 fi
 
+# ── Nginx MCP API key generation ─────────────────────────────────────────────
+
+echo ""
+echo -e "${CYAN}Installing nginx MCP API key generation...${NC}"
+
+# Create helper script that generates mcp-api-key.conf from .env
+cat > "$ARCADE_DIR/scripts/generate-mcp-api-key.sh" << 'SCRIPT'
+#!/bin/bash
+# Generates mcp-api-key.conf from .env for nginx
+ENV_FILE="/home/jake/arcade-config/.env"
+CONF_FILE="/home/jake/arcade/mcp-api-key.conf"
+KEY=$(grep "^MCP_API_KEY=" "$ENV_FILE" 2>/dev/null | cut -d= -f2)
+if [ -n "$KEY" ]; then
+    echo "set \$mcp_api_key \"$KEY\";" > "$CONF_FILE"
+else
+    echo "Warning: MCP_API_KEY not found in $ENV_FILE" >&2
+fi
+SCRIPT
+chmod +x "$ARCADE_DIR/scripts/generate-mcp-api-key.sh"
+ok "Created generate-mcp-api-key.sh"
+
+# Oneshot service: generates the file before nginx starts
+cat > /etc/systemd/system/generate-mcp-api-key.service << 'UNIT'
+[Unit]
+Description=Generate nginx MCP API key config
+Before=nginx.service
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/jake/arcade/scripts/generate-mcp-api-key.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+ok "Installed generate-mcp-api-key.service"
+
+# Nginx drop-in: depends on the oneshot service
+mkdir -p /etc/systemd/system/nginx.service.d
+cat > /etc/systemd/system/nginx.service.d/mcp-api-key.conf << 'DROPIN'
+[Unit]
+Requires=generate-mcp-api-key.service
+After=generate-mcp-api-key.service
+DROPIN
+ok "Installed nginx.service.d/mcp-api-key.conf drop-in"
+
+systemctl enable generate-mcp-api-key.service 2>/dev/null
+ok "Enabled generate-mcp-api-key.service"
+
 # ── Install magmascript ───────────────────────────────────────────────────────
 
 echo ""

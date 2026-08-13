@@ -254,7 +254,7 @@ window.NAV_CONFIG = {
     const depth = window.location.pathname.split('/').length - 2;
     const root = depth > 0 ? '../'.repeat(depth) : '';
 
-    // Load CSS, keeping a promise for when it's actually applied.
+    // Load CSS immediately — prevents FOUT when widget is created
     let cssReady;
     if (!document.querySelector('link[href*="jukebox.css"]')) {
         const link = document.createElement('link');
@@ -269,21 +269,25 @@ window.NAV_CONFIG = {
         cssReady = Promise.resolve();
     }
 
-    // Load JS only once the stylesheet is live. The script builds the whole
-    // widget and appends it to <body> on DOMContentLoaded, so if it won the
-    // race against its own stylesheet the markup painted unstyled in normal
-    // flow (visible "▶ ◀◀ ▶▶ 0:00 / 0:00" text) before snapping to
-    // position:fixed. Returns a promise so the SPA router can await it.
-    if (!document.querySelector('script[src*="jukebox.js"]')) {
-        window.__jukeboxReady = cssReady.then(() => new Promise((resolve) => {
-            const script = document.createElement('script');
-            script.src = root + 'assets/jukebox.js';
-            script.onload = resolve;
-            script.onerror = resolve;
-            document.body.appendChild(script);
-        }));
+    // Defer JS loading until browser is idle — widget is small and non-essential
+    function loadJukeboxJS() {
+        if (!document.querySelector('script[src*="jukebox.js"]')) {
+            window.__jukeboxReady = cssReady.then(() => new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = root + 'assets/jukebox.js';
+                script.onload = resolve;
+                script.onerror = resolve;
+                document.body.appendChild(script);
+            }));
+        } else {
+            window.__jukeboxReady = Promise.resolve();
+        }
+    }
+
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadJukeboxJS, { timeout: 2000 });
     } else {
-        window.__jukeboxReady = Promise.resolve();
+        setTimeout(loadJukeboxJS, 100);
     }
 })();
 
@@ -333,6 +337,8 @@ window.NAV_CONFIG = {
     Loads assets/counter-client.js on every page
     that has a <nav> element. Increments the
     counter once per session (fire-and-forget).
+    Deferred via requestIdleCallback to avoid
+    competing with critical rendering.
     ═══════════════════════════════════════════════ */
 
 (function () {
@@ -342,13 +348,21 @@ window.NAV_CONFIG = {
     const depth = window.location.pathname.split('/').length - 2;
     const root = depth > 0 ? '../'.repeat(depth) : '';
 
-    if (!document.querySelector('script[src*="counter-client.js"]')) {
-        const script = document.createElement('script');
-        script.src = root + 'assets/counter-client.js';
-        script.onload = function () {
-            if (window.CounterClient) CounterClient.increment();
-        };
-        document.body.appendChild(script);
+    function loadCounter() {
+        if (!document.querySelector('script[src*="counter-client.js"]')) {
+            const script = document.createElement('script');
+            script.src = root + 'assets/counter-client.js';
+            script.onload = function () {
+                if (window.CounterClient) CounterClient.increment();
+            };
+            document.body.appendChild(script);
+        }
+    }
+
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadCounter, { timeout: 2000 });
+    } else {
+        setTimeout(loadCounter, 100);
     }
 })();
 
