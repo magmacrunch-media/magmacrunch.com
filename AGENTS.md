@@ -622,39 +622,43 @@ journalctl -u arcade-chat -n 50
 
 ### MC1 Runner Setup
 
-MC1 (Windows PC) runs the self-hosted GitHub Actions runner:
+MC1 (Windows PC) runs the self-hosted GitHub Actions runner inside WSL2 Ubuntu:
 
-- **Service**: `actions.runner.magmacrunchmedia-magmacrunch.com.MC1-runner`
-- **Config**: `C:\actions-runner\`
-- **Start type**: Automatic (starts on boot)
-- **Labels**: `self-hosted`, `windows`
+- **Service**: `actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux`
+- **Config**: `~/actions-runner` (WSL2 Ubuntu: `wsl -d Ubuntu`)
+- **Start type**: enabled (auto-starts on boot via systemd)
+- **Labels**: `self-hosted`, `linux`
+- **SSH key**: `~/.ssh/id_ed25519` (WS2) — must be authorized on Pi
 
 **Workflows running on MC1:**
 - `deploy-pi.yml` — deploy to Pi
 - `check-services.yml` — TCP health check of Pi services
 - `smoke-test.yml` — Playwright smoke tests
 
-**Prerequisites installed on MC1:**
-- Git for Windows (includes Git Bash)
-- Node.js 24 LTS
-- Python 3.12
+**WSL2 prerequisites:**
+- Ubuntu (via `wsl --install -d Ubuntu`)
+- `git`, `curl`, `build-essential`, `libssl-dev`, `libicu-dev`
+- SSH key at `~/.ssh/id_ed25519` (copied from Windows: `/mnt/c/Users/magma/.ssh/`)
 
-### Updating the PI_SSH_KEY secret
-
-The deploy workflow uses SSH key auth to connect to the Pi via Tailscale.
-
-**Setup (one-time):**
+**Note:** The `~/.ssh/id_ed25519` key is the one authorized on the Pi. If WSL2 is reinstalled, copy the key again:
 ```bash
-# Copy public key to Pi (enter Pi password once)
-ssh-copy-id -i ~/.ssh/id_ed25519.pub jake@100.74.172.4
-
-# Update the GitHub secret
-gh secret set PI_SSH_KEY -R magmacrunchmedia/magmacrunch.com < ~/.ssh/id_ed25519
+cp /mnt/c/Users/magma/.ssh/id_ed25519 ~/.ssh/id_ed25519
+cp /mnt/c/Users/magma/.ssh/id_ed25519.pub ~/.ssh/id_ed25519.pub
+chmod 600 ~/.ssh/id_ed25519
 ```
 
-**If the Pi password is forgotten:**
-- Reset it on the Pi with `sudo passwd jake` (requires physical access)
-- Then re-run `ssh-copy-id` and `gh secret set` above
+### Updating the SSH key for Pi access
+
+The deploy workflow uses the SSH key at `~/.ssh/id_ed25519` in WSL2 to connect to the Pi via Tailscale.
+
+**If the key needs to be replaced:**
+```bash
+# Generate new key in WSL2
+wsl -d Ubuntu -- ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
+
+# Copy public key to Pi
+ssh-copy-id -i ~/.ssh/id_ed25519.pub jake@100.74.172.4
+```
 
 ### Workflows on GitHub Actions
 
@@ -739,9 +743,7 @@ ssh jake@100.74.172.4 "tail -50 ~/arcade/logs/check-services.log"
 - **Excludes**: Admin (8780, localhost-only), Private (8782, firewall-blocked)
 - **Reporting**: Posts to GitHub Discussion + Discord webhook on failure
 
-### Running the self-hosted runner
-
-`.github/workflows/generate-stubs.yml` — auto-generates stub HTML files for new archive pages.
+### Generate archive stubs
 
 - **Triggers**: Push to `main` when `scripts/archive-stubs.json` changes, manual
 - **Config**: `scripts/archive-stubs.json` — add entities to generate
@@ -779,12 +781,19 @@ ssh jake@100.74.172.4 "tail -50 ~/arcade/logs/check-services.log"
 
 ### Running the self-hosted runner
 
+The runner runs as a systemd service inside WSL2 on MC1 — no manual intervention needed.
+
+**Status check (from MC1):**
 ```bash
-cd ~/actions-runner
-./run.sh
+wsl -d Ubuntu -- sudo systemctl status actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux.service
 ```
 
-Runner must be running on Mac for `deploy-pi.yml` to execute. If Mac is off, pushes to `main` skip deployment (no error).
+**Restart (from MC1):**
+```bash
+wsl -d Ubuntu -- sudo systemctl restart actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux.service
+```
+
+**If MC1 is off:** pushes to `main` skip deployment (no error).
 
 ## Monitoring & Security
 
