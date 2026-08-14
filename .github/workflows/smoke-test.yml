@@ -24,6 +24,7 @@ jobs:
         run: npx playwright install chromium
 
       - name: Start local server
+        shell: bash
         run: |
           python3 -m http.server 8080 &
           sleep 1
@@ -31,6 +32,7 @@ jobs:
       - name: Run smoke tests
         id: tests
         working-directory: arcade/tests
+        shell: bash
         run: |
           node smoke-test.mjs 2>&1 | tee test-output.txt
           echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"

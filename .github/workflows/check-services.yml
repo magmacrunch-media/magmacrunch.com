@@ -12,7 +12,7 @@ jobs:
       - name: Check service health
         id: health
         run: |
-          PI=192.168.1.16
+          PI=100.74.172.4
           FAILED=""
           for entry in \
             "8765:SORRY" "8766:Cribbage" "8767:Stud" "8768:Chat" \
@@ -52,13 +52,13 @@ jobs:
           ## Quick diagnosis
 
           ```bash
-          ssh jake@192.168.1.16 "sudo systemctl status 'arcade-*' --no-pager"
+          ssh jake@100.74.172.4 "sudo systemctl status 'arcade-*' --no-pager"
           ```
 
           ## Restart a service
 
           ```bash
-          ssh jake@192.168.1.16 "sudo systemctl restart arcade-<name>"
+          ssh jake@100.74.172.4 "sudo systemctl restart arcade-<name>"
           ```
           EOF
 
@@ -86,11 +86,11 @@ jobs:
               "fields": [
                 {
                   "name": "Diagnose",
-                  "value": "\`\`\`bash\nssh jake@192.168.1.16 'sudo systemctl status arcade-* --no-pager'\n\`\`\`"
+                  "value": "\`\`\`bash\nssh jake@100.74.172.4 'sudo systemctl status arcade-* --no-pager'\n\`\`\`"
                 },
                 {
                   "name": "Restart all",
-                  "value": "\`\`\`bash\nssh jake@192.168.1.16 'sudo systemctl restart arcade-*'\n\`\`\`"
+                  "value": "\`\`\`bash\nssh jake@100.74.172.4 'sudo systemctl restart arcade-*'\n\`\`\`"
                 }
               ],
               "color": 16750848,

@@ -35,7 +35,7 @@ jobs:
             --exclude '__pycache__' \
             --exclude 'scores/*.json' \
             --exclude 'venv' \
-            arcade/ jake@192.168.1.16:~/arcade/
+            arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
         run: |
@@ -43,11 +43,11 @@ jobs:
             -e "ssh -o StrictHostKeyChecking=no" \
             --exclude '__pycache__' \
             --exclude '.venv' \
-            mcp-server/ jake@192.168.1.16:~/arcade/mcp-server/
+            mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
         run: |
           ssh -o StrictHostKeyChecking=no \
-            jake@192.168.1.16 "sudo systemctl restart 'arcade-*'"
+            jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
 
 
