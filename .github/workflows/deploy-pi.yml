@@ -25,26 +25,30 @@ jobs:
         shell: bash
         run: npm run build:adenosine
 
-      - uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.PI_SSH_KEY }}
+      - name: Setup SSH key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PI_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H 100.74.172.4 >> ~/.ssh/known_hosts 2>/dev/null
+          echo "SSH_KEY=$HOME/.ssh/deploy_key" >> "$GITHUB_ENV"
 
       - name: Deploy arcade/ to Pi
         shell: bash
         run: |
-          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
-          scp -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
+          ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
+          scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
         shell: bash
         run: |
-          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
-          scp -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
+          ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
+          scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
         shell: bash
         run: |
-          ssh -o StrictHostKeyChecking=no \
-            jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
+          ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
 
 
