@@ -16,28 +16,40 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        shell: bash
         run: |
-          npm config set script-shell "C:\Program Files\Git\bin\bash.exe"
+          npm config delete script-shell 2>/dev/null || true
           npm ci
 
       - name: Build adenosine bundles
-        shell: bash
         run: npm run build:adenosine
 
+      - uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.PI_SSH_KEY }}
+
       - name: Deploy arcade/ to Pi
-        shell: powershell
         run: |
-          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
-          scp -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude 'node_modules' \
+            --exclude '.git' \
+            --exclude '*.pyc' \
+            --exclude '__pycache__' \
+            --exclude 'scores/*.json' \
+            --exclude 'venv' \
+            arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
-        shell: powershell
         run: |
-          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
-          scp -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            --exclude '__pycache__' \
+            --exclude '.venv' \
+            mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
-        shell: powershell
         run: |
-          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
+          ssh -o StrictHostKeyChecking=no \
+            jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
+
+
