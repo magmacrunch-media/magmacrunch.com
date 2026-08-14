@@ -7,7 +7,7 @@ from pathlib import Path
 
 import requests
 from mcp.server.mcpserver import MCPServer
-from magmascript import PIClient, GHClient
+from magmascript import PIClient, MC1Client, GHClient
 
 # ---------------------------------------------------------------------------
 # Config
@@ -635,6 +635,66 @@ def deploy_to_pi(local_path: str, service: str = "") -> str:
         return f"Path not found: {local_path}"
     pi = PIClient()
     return pi.deploy(str(local), service)
+
+
+# ---------------------------------------------------------------------------
+# Tools — MC1 (Windows PC)
+# ---------------------------------------------------------------------------
+
+
+@mcp.tool()
+def check_mc1_services() -> str:
+    """Check status of services on MC1 (Windows PC)."""
+    mc1 = MC1Client()
+    services = mc1.services()
+    if not services:
+        return "MC1 service status:\n\n  (no services found)"
+    lines = ["MC1 service status:\n"]
+    for s in services:
+        icon = "✓" if s.ok else "✗"
+        lines.append(f"  {icon} {s.name}: {s.status}")
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_mc1_system_info() -> str:
+    """Get MC1 system info (uptime, memory, CPU, disk)."""
+    mc1 = MC1Client()
+    info = mc1.info()
+    lines = [
+        "MC1 system info:\n",
+        f"  Hostname: {info.hostname or '(unavailable)'}",
+        f"  Uptime: {info.uptime or '(unavailable)'}",
+        f"  Memory: {info.memory or '(unavailable)'}",
+        f"  CPU: {info.cpu_load or '(unavailable)'}",
+        f"  Disk: {info.disk_free or '(unavailable)'}",
+    ]
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def restart_mc1_service(service: str) -> str:
+    """Restart a service on MC1.
+
+    Args:
+        service: Windows service name (e.g. OllamaSvc)
+    """
+    mc1 = MC1Client()
+    return mc1.restart(service)
+
+
+@mcp.tool()
+def get_mc1_processes() -> str:
+    """Get top processes on MC1 by CPU usage."""
+    mc1 = MC1Client()
+    return mc1.processes()
+
+
+@mcp.tool()
+def reboot_mc1() -> str:
+    """Reboot MC1 (Windows PC)."""
+    mc1 = MC1Client()
+    return mc1.reboot()
 
 
 # ---------------------------------------------------------------------------
