@@ -12,6 +12,14 @@ import os
 import sys
 from pathlib import Path
 
+# ── Load .env file ──────────────────────────────────────────────────────────
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
 # ── Fix paths for Pi ────────────────────────────────────────────────────────
 
 PI_REPO = Path.home() / "website"
@@ -60,7 +68,7 @@ if __name__ == "__main__":
 
     mcp.run(
         transport="streamable-http",
-        host="127.0.0.1",
+        host="0.0.0.0",
         port=PORT,
         streamable_http_path="/mcp",
         stateless_http=True,
