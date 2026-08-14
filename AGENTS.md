@@ -555,8 +555,8 @@ See `archive/ARCHIVE_THEMING.md` for detailed theming patterns. Short version:
 
 ```bash
 # From Mac — copy files to Pi and run setup
-rsync -avz arcade/ jake@192.168.1.16:~/arcade/
-ssh jake@192.168.1.16 "sudo bash ~/arcade/scripts/setup-pi.sh"
+rsync -avz arcade/ jake@100.74.172.4:~/arcade/
+ssh jake@100.74.172.4 "sudo bash ~/arcade/scripts/setup-pi.sh"
 ```
 
 This installs systemd services for all servers + dashboard, enables auto-start on boot, and places a desktop shortcut.
@@ -572,8 +572,8 @@ This installs systemd services for all servers + dashboard, enables auto-start o
 
 Commands:
 ```bash
-ssh jake@192.168.1.16 "sudo systemctl restart arcade-admin"
-ssh jake@192.168.1.16 "journalctl -u arcade-admin -f"
+ssh jake@100.74.172.4 "sudo systemctl restart arcade-admin"
+ssh jake@100.74.172.4 "journalctl -u arcade-admin -f"
 ```
 
 ### Systemd services
@@ -614,19 +614,39 @@ journalctl -u arcade-chat -n 50
 
 `.github/workflows/deploy-pi.yml` — triggers on push to `main` or manual dispatch.
 
-- **Runner**: Self-hosted on Mac (`runs-on: self-hosted`)
+- **Runner**: Self-hosted on MC1 (`runs-on: self-hosted`)
 - **Action**: rsync `arcade/` → Pi, restart all `arcade-*` services
-- **Secrets**: `PI_SSH_KEY` (ed25519 private key for `jake@192.168.1.16`)
+- **Secrets**: `PI_SSH_KEY` (ed25519 private key for `jake@100.74.172.4`)
 - **Excludes**: `node_modules`, `.git`, `*.pyc`, `__pycache__`, `scores/*.json`
+- **Network**: Uses Tailscale IP (`100.74.172.4`) for Pi SSH — works from any network
+
+### MC1 Runner Setup
+
+MC1 (Windows PC) runs the self-hosted GitHub Actions runner:
+
+- **Service**: `actions.runner.magmacrunchmedia-magmacrunch.com.MC1-runner`
+- **Config**: `C:\actions-runner\`
+- **Start type**: Automatic (starts on boot)
+- **Labels**: `self-hosted`, `windows`
+
+**Workflows running on MC1:**
+- `deploy-pi.yml` — deploy to Pi
+- `check-services.yml` — TCP health check of Pi services
+- `smoke-test.yml` — Playwright smoke tests
+
+**Prerequisites installed on MC1:**
+- Git for Windows (includes Git Bash)
+- Node.js 24 LTS
+- Python 3.12
 
 ### Updating the PI_SSH_KEY secret
 
-The deploy workflow uses SSH key auth (`~/.ssh/id_ed25519`) to connect to the Pi.
+The deploy workflow uses SSH key auth to connect to the Pi via Tailscale.
 
 **Setup (one-time):**
 ```bash
-# Copy Mac's public key to Pi (enter Pi password once)
-ssh-copy-id -i ~/.ssh/id_ed25519.pub jake@192.168.1.16
+# Copy public key to Pi (enter Pi password once)
+ssh-copy-id -i ~/.ssh/id_ed25519.pub jake@100.74.172.4
 
 # Update the GitHub secret
 gh secret set PI_SSH_KEY -R magmacrunchmedia/magmacrunch.com < ~/.ssh/id_ed25519
@@ -696,8 +716,8 @@ crontab -l    # View all cron jobs
 
 **Viewing bot logs:**
 ```bash
-ssh jake@192.168.1.16 "tail -50 ~/arcade/logs/check-links.log"
-ssh jake@192.168.1.16 "tail -50 ~/arcade/logs/check-services.log"
+ssh jake@100.74.172.4 "tail -50 ~/arcade/logs/check-links.log"
+ssh jake@100.74.172.4 "tail -50 ~/arcade/logs/check-services.log"
 ```
 
 ### Broken link checker (Pi)
