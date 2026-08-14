@@ -417,46 +417,54 @@ ssh jake@192.168.1.16 "sudo systemctl restart arcade-counter"
 
 ## MCP server
 
-Remote MCP server that exposes magmacrunch.com data and Pi management to AI coding assistants. Runs as a systemd service on the Raspberry Pi, accessible via HTTPS.
+Remote MCP server that exposes magmacrunch.com data and Pi/MC1 management to AI coding assistants. Runs on MC1 (WSL2), accessible via HTTPS through Pi's nginx reverse proxy.
 
 ### Architecture
 
 ```
-opencode (Mac/Laptop) ──HTTPS──▶ nginx (Pi:443) ──▶ arcade-mcp (Pi:8785)
-     │                                    │                    │
-     └── MCP protocol (streamable-http)   └── API key auth    └── filesystem ──▶ archive/_cache/, arcade/admin/scores/
-                                                                                    SSH ──▶ Pi services (local)
+Internet ──HTTPS──> Pi (nginx:443) ──Tailscale──> MC1 (WSL2:8785) ──SSH──> Pi (game servers)
+                                        └─SSH──> MC1 (local services)
 ```
 
-- **Server** (`mcp-server/serve.py`) — HTTP wrapper around `magma-mcp.py`, runs on Pi port 8785
-- **Proxy** — nginx reverse proxy at `https://magmacrunch.duckdns.org/mcp`
+- **Server** (`mcp-server/serve.py`) — runs on MC1 WSL2, port 8785
+- **Proxy** — Pi nginx at `https://magmacrunch.duckdns.org/mcp` → MC1 via Tailscale
 - **Auth** — API key in `Authorization: Bearer <key>` header (validated by nginx)
 - **Config** (`opencode.json`) — opencode connects as `"type": "remote"`
-- **Service** (`arcade-mcp.service`) — systemd, auto-restarts, reads key from `~/arcade/.env`
+- **Service** — systemd on MC1 WSL2 (`mcp-server.service`) + Windows scheduled task for auto-start on boot
 
-### Setup (one-time)
+### Setup
 
+**MC1 (WSL2):**
 ```bash
-# On Pi — install deps
-~/arcade/venv/bin/pip install "mcp[cli]" requests
+# Clone repos
+cd ~
+git clone https://github.com/magmacrunchmedia/magmacrunch.com.git website
+git clone https://github.com/magmacrunchmedia/magmascript.git
 
-# Generate API key
-python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+# Create Python venv
+cd ~/website/mcp-server
+python3 -m venv venv
+source venv/bin/activate
+pip install "mcp[cli]>=1.0.0" "requests>=2.28.0"
+cd ~/magmascript && pip install -e .
 
-# Add to ~/arcade/.env
-echo 'MCP_API_KEY=<your-key>' >> ~/arcade/.env
+# Configure
+mkdir -p ~/.config/magmascript
+# Add config.toml with [pi], [mc1], [gh] sections
+# Add .env with MCP_API_KEY, GITHUB_PAT, DISCOGS_TOKEN
 
-# Copy nginx config
-sudo cp ~/arcade/nginx-magmacrunch.conf /etc/nginx/sites-available/magmacrunch
-sudo cp /etc/nginx/sites-available/magmacrunch /etc/nginx/sites-enabled/magmacrunch
+# Enable systemd service
+sudo systemctl enable mcp-server
+sudo systemctl start mcp-server
+```
+
+**Pi (nginx proxy):**
+```bash
+# nginx proxy_pass points to MC1 via Tailscale
+# In /etc/nginx/sites-available/magmacrunch:
+#   proxy_pass http://100.75.220.87:8785/mcp;
+#   proxy_set_header Host 100.75.220.87:8785;
 sudo nginx -t && sudo systemctl reload nginx
-
-# Enable MCP service
-sudo systemctl enable arcade-mcp
-sudo systemctl start arcade-mcp
-
-# On Mac — add to ~/.zshrc
-export MCP_API_KEY="<your-key>"
 ```
 
 ### Tools
@@ -474,22 +482,34 @@ export MCP_API_KEY="<your-key>"
 | | `get_service_logs` | Get recent logs for a service |
 | | `restart_pi_service` | Restart a service |
 | | `get_pi_system_info` | Get uptime, memory, CPU temp, load |
-| Deployment | `deploy_to_pi` | rsync files to the Pi and optionally restart a service |
+| | `deploy_to_pi` | rsync files to the Pi and optionally restart a service |
+| MC1 services | `check_mc1_services` | Check status of Windows services |
+| | `get_mc1_system_info` | Get uptime, memory, CPU, disk |
+| | `restart_mc1_service` | Restart a Windows service |
+| | `get_mc1_processes` | Get top processes by CPU usage |
+| | `reboot_mc1` | Reboot MC1 |
 | Discogs | `search_discogs` | Search Discogs for artists/labels/releases |
 | GitHub | `github_*` | Repository and workflow management |
 
 ### Service management
 
+**MC1 (WSL2):**
 ```bash
 # Status
-sudo systemctl status arcade-mcp
+wsl -d Ubuntu -u root -- systemctl status mcp-server
 
 # Restart
-sudo systemctl restart arcade-mcp
+wsl -d Ubuntu -u root -- systemctl restart mcp-server
 
 # Logs
-journalctl -u arcade-mcp -f
-journalctl -u arcade-mcp -n 50
+wsl -d Ubuntu -u root -- journalctl -u mcp-server -f
+wsl -d Ubuntu -u root -- journalctl -u mcp-server -n 50
+```
+
+**Pi (nginx):**
+```bash
+# Reload nginx after config changes
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 ### opencode.json config
@@ -511,10 +531,11 @@ journalctl -u arcade-mcp -n 50
 
 ### Troubleshooting
 
-- **401 Unauthorized** — check `MCP_API_KEY` in both `~/.zshrc` (Mac) and `~/arcade/.env` (Pi)
-- **421 Invalid Host** — nginx proxy header mismatch; check `proxy_set_header Host 127.0.0.1:8785` in nginx config
-- **502 Bad Gateway** — MCP server not running; check `sudo systemctl status arcade-mcp`
+- **401 Unauthorized** — check `MCP_API_KEY` in `~/.zshrc` (Mac) and `~/website/mcp-server/.env` (MC1)
+- **502 Bad Gateway** — MCP server not running on MC1; check `wsl -d Ubuntu -u root -- systemctl status mcp-server`
 - **Connection refused** — port 443 not forwarded from router; check router config
+- **MC1 unreachable** — check Tailscale status: `tailscale status | grep mc1`
+- **Pi fallback** — if MC1 is down, change nginx proxy_pass back to `http://127.0.0.1:8785/mcp` and reload nginx
 
 ### Legacy (local subprocess)
 
