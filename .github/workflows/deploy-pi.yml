@@ -17,7 +17,9 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: npm ci
+        run: |
+          npm config set script-shell "C:\Program Files\Git\bin\bash.exe"
+          npm ci
 
       - name: Build adenosine bundles
         shell: bash
