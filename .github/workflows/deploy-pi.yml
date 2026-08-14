@@ -28,11 +28,12 @@ jobs:
       - name: Setup SSH key
         shell: bash
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.PI_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H 100.74.172.4 >> ~/.ssh/known_hosts 2>/dev/null
-          echo "SSH_KEY=$HOME/.ssh/deploy_key" >> "$GITHUB_ENV"
+          SSH_DIR="$RUNNER_TEMP/.ssh"
+          mkdir -p "$SSH_DIR"
+          printf '%s' "${{ secrets.PI_SSH_KEY }}" > "$SSH_DIR/deploy_key"
+          chmod 600 "$SSH_DIR/deploy_key"
+          ssh-keyscan -H 100.74.172.4 >> "$SSH_DIR/known_hosts" 2>/dev/null
+          echo "SSH_KEY=$SSH_DIR/deploy_key" >> "$GITHUB_ENV"
 
       - name: Deploy arcade/ to Pi
         shell: bash
