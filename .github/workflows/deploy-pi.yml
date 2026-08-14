@@ -30,10 +30,14 @@ jobs:
         run: |
           SSH_DIR="$RUNNER_TEMP/.ssh"
           mkdir -p "$SSH_DIR"
-          printf '%s' "${{ secrets.PI_SSH_KEY }}" > "$SSH_DIR/deploy_key"
+          printf '%s' "${{ secrets.PI_SSH_KEY }}" | tr -d '\r' > "$SSH_DIR/deploy_key"
           chmod 600 "$SSH_DIR/deploy_key"
           ssh-keyscan -H 100.74.172.4 >> "$SSH_DIR/known_hosts" 2>/dev/null
           echo "SSH_KEY=$SSH_DIR/deploy_key" >> "$GITHUB_ENV"
+          echo "--- Key file preview ---"
+          head -1 "$SSH_DIR/deploy_key"
+          echo "--- Key file size ---"
+          wc -c "$SSH_DIR/deploy_key"
 
       - name: Deploy arcade/ to Pi
         shell: bash
