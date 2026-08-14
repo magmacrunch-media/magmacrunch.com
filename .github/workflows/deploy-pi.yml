@@ -26,18 +26,18 @@ jobs:
         run: npm run build:adenosine
 
       - name: Deploy arcade/ to Pi
-        shell: pwsh
+        shell: powershell
         run: |
           ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
           scp -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
-        shell: pwsh
+        shell: powershell
         run: |
           ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
           scp -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
-        shell: pwsh
+        shell: powershell
         run: |
           ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
