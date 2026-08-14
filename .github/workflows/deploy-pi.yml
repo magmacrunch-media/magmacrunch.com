@@ -32,24 +32,14 @@ jobs:
       - name: Deploy arcade/ to Pi
         shell: bash
         run: |
-          rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            --exclude 'node_modules' \
-            --exclude '.git' \
-            --exclude '*.pyc' \
-            --exclude '__pycache__' \
-            --exclude 'scores/*.json' \
-            --exclude 'venv' \
-            arcade/ jake@100.74.172.4:~/arcade/
+          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
+          scp -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
         shell: bash
         run: |
-          rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no" \
-            --exclude '__pycache__' \
-            --exclude '.venv' \
-            mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
+          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
+          scp -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
         shell: bash
