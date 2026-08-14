@@ -16,9 +16,11 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
+        shell: bash
         run: npm ci
 
       - name: Build adenosine bundles
+        shell: bash
         run: npm run build:adenosine
 
       - uses: webfactory/ssh-agent@v0.9.0
@@ -26,6 +28,7 @@ jobs:
           ssh-private-key: ${{ secrets.PI_SSH_KEY }}
 
       - name: Deploy arcade/ to Pi
+        shell: bash
         run: |
           rsync -avz --delete \
             -e "ssh -o StrictHostKeyChecking=no" \
@@ -38,6 +41,7 @@ jobs:
             arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
+        shell: bash
         run: |
           rsync -avz --delete \
             -e "ssh -o StrictHostKeyChecking=no" \
@@ -46,6 +50,7 @@ jobs:
             mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
+        shell: bash
         run: |
           ssh -o StrictHostKeyChecking=no \
             jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
