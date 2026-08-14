@@ -25,35 +25,19 @@ jobs:
         shell: bash
         run: npm run build:adenosine
 
-      - name: Setup SSH key
-        shell: bash
-        run: |
-          SSH_DIR="$RUNNER_TEMP/.ssh"
-          mkdir -p "$SSH_DIR"
-          printf '%s' "${{ secrets.PI_SSH_KEY }}" | tr -d '\r' > "$SSH_DIR/deploy_key"
-          chmod 600 "$SSH_DIR/deploy_key"
-          ssh-keyscan -H 100.74.172.4 >> "$SSH_DIR/known_hosts" 2>/dev/null
-          echo "SSH_KEY=$SSH_DIR/deploy_key" >> "$GITHUB_ENV"
-          echo "--- Key file preview ---"
-          head -1 "$SSH_DIR/deploy_key"
-          echo "--- Key file size ---"
-          wc -c "$SSH_DIR/deploy_key"
-
       - name: Deploy arcade/ to Pi
-        shell: bash
+        shell: pwsh
         run: |
-          ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
-          scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
+          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
+          scp -o StrictHostKeyChecking=no -r arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
-        shell: bash
+        shell: pwsh
         run: |
-          ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
-          scp -i "$SSH_KEY" -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
+          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "rm -rf ~/arcade/mcp-server/__pycache__ ~/arcade/mcp-server/.venv"
+          scp -o StrictHostKeyChecking=no -r mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
-        shell: bash
+        shell: pwsh
         run: |
-          ssh -i "$SSH_KEY" -o StrictHostKeyChecking=no jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
-
-
+          ssh -o StrictHostKeyChecking=no jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
