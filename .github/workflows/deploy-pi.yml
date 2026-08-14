@@ -23,14 +23,11 @@ jobs:
       - name: Build adenosine bundles
         run: npm run build:adenosine
 
-      - uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.PI_SSH_KEY }}
-
       - name: Deploy arcade/ to Pi
         run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
           rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no" \
+            -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519" \
             --exclude 'node_modules' \
             --exclude '.git' \
             --exclude '*.pyc' \
@@ -42,14 +39,14 @@ jobs:
       - name: Deploy mcp-server/ to Pi
         run: |
           rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no" \
+            -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519" \
             --exclude '__pycache__' \
             --exclude '.venv' \
             mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Restart Pi services
         run: |
-          ssh -o StrictHostKeyChecking=no \
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 \
             jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
 
 
