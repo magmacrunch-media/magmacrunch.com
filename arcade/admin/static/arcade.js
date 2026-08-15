@@ -39,7 +39,7 @@
     const chatRoomFilter = $('#chat-room-filter');
     const btnRefreshChat = $('#btn-refresh-chat');
     const btnClearChat = $('#btn-clear-chat');
-    const scoresGrid = $('#scores-grid');
+    const scoresGrid = $('#card-grid');
     const btnRefreshScores = $('#btn-refresh-scores');
     const btnResetScores = $('#btn-reset-scores');
     const sidebarRestartPi = $('#sidebar-restart-pi');

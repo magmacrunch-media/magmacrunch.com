@@ -2,8 +2,6 @@
    MAGMA//OPS — Dashboard Styles
    ═══════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap');
-
 :root {
     --black: #080808;
     --deep: #111118;
@@ -691,7 +689,7 @@ main {
 .log-viewer::-webkit-scrollbar-track { background: var(--deep); }
 .log-viewer::-webkit-scrollbar-thumb { background: var(--dim); }
 
-.log-welcome { color: var(--dim); font-style: italic; }
+.log-welcome { color: var(--dim); font-style: normal; }
 
 .log-line {
     white-space: pre-wrap;
@@ -760,26 +758,26 @@ main {
 
 /* ── Scores ─────────────────────────────────────────────────────────────── */
 
-.scores-section {
+.content-section {
     display: flex;
     flex-direction: column;
     min-height: 0;
 }
 
-.scores-header {
+.content-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
 }
 
-.scores-controls {
+.content-controls {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-.scores-grid {
+.card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 12px;
@@ -1975,6 +1973,45 @@ footer {
 
 .hidden { display: none !important; }
 
+:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--dim);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    line-height: 2;
+}
+
+.loading-pulse {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+/* ── Status Dot ──────────────────────────────────────────────────────────── */
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.status-dot.green { background: var(--green); box-shadow: 0 0 6px rgba(57,255,110,0.6); }
+.status-dot.red { background: var(--rose); box-shadow: 0 0 6px rgba(255,61,110,0.6); }
+.status-dot.gray { background: var(--dim); }
+.status-dot.yellow { background: var(--yellow); box-shadow: 0 0 6px rgba(255,224,58,0.6); }
+.status-dot.lg { width: 10px; height: 10px; }
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 
 @media (max-width: 768px) {
@@ -2023,8 +2060,8 @@ footer {
 
     .chat-viewer { min-height: 120px; max-height: 30vh; }
 
-    .scores-grid { grid-template-columns: 1fr; }
-    .scores-header { flex-direction: column; gap: 8px; align-items: stretch; }
+    .card-grid { grid-template-columns: 1fr; }
+    .content-header { flex-direction: column; gap: 8px; align-items: stretch; }
 
     .song-list-header { display: none; }
 
@@ -2123,7 +2160,6 @@ footer {
 .gh-sync-log {
     background: var(--black);
     border: 1px solid var(--border);
-    border-radius: 4px;
     padding: 10px;
     max-height: 200px;
     overflow-y: auto;
@@ -2493,7 +2529,6 @@ footer {
 .traffic-card {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 4px;
     padding: 12px;
 }
 

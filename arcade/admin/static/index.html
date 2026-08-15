@@ -150,15 +150,15 @@
                     </div>
                 </section>
 
-                <section class="scores-section">
-                    <div class="scores-header">
+                <section class="content-section">
+                    <div class="content-header">
                         <h2 class="section-title">HIGH SCORES</h2>
-                        <div class="scores-controls">
+                        <div class="content-controls">
                             <button id="btn-refresh-scores" class="btn btn-cyan btn-sm">REFRESH</button>
                             <button id="btn-reset-scores" class="btn btn-rose btn-sm">RESET ALL</button>
                         </div>
                     </div>
-                    <div id="scores-grid" class="scores-grid">
+                    <div id="card-grid" class="card-grid">
                         <div class="log-welcome">Click REFRESH to load high scores.</div>
                     </div>
                 </section>
@@ -247,9 +247,9 @@
                 </section>
 
                 <section class="mc1-section">
-                    <div class="scores-header">
+                    <div class="content-header">
                         <h2 class="section-title">WINDOWS SERVICES</h2>
-                        <div class="scores-controls">
+                        <div class="content-controls">
                             <button id="btn-refresh-mc1-services" class="btn btn-cyan btn-sm">REFRESH</button>
                         </div>
                     </div>
@@ -596,15 +596,15 @@
 
             <!-- ═══ BOTS TAB ═══════════════════════════════════════════════════ -->
             <div id="tab-bots" class="tab-panel hidden">
-                <section class="scores-section">
-                    <div class="scores-header">
+                <section class="content-section">
+                    <div class="content-header">
                         <h2 class="section-title">WORKFLOW BOTS</h2>
-                        <div class="scores-controls">
+                        <div class="content-controls">
                             <button id="btn-refresh-bots" class="btn btn-cyan btn-sm">REFRESH</button>
                         </div>
                     </div>
                     <p class="api-keys-note">GitHub Actions workflows. Configure GitHub token in the GITHUB tab.</p>
-                    <div id="bots-grid" class="scores-grid">
+                    <div id="bots-grid" class="card-grid">
                         <div class="log-welcome">Click REFRESH to load bot status.</div>
                     </div>
                 </section>
@@ -612,16 +612,16 @@
 
             <!-- ═══ PLAYS TAB ════════════════════════════════════════════════ -->
             <div id="tab-plays" class="tab-panel hidden">
-                <section class="scores-section">
-                    <div class="scores-header">
+                <section class="content-section">
+                    <div class="content-header">
                         <h2 class="section-title">PLAY COUNTS</h2>
-                        <div class="scores-controls">
+                        <div class="content-controls">
                             <button id="btn-refresh-plays" class="btn btn-cyan btn-sm">REFRESH</button>
                         </div>
                     </div>
                     <p class="api-keys-note">Last.fm global play counts. Configure API key in the SECURITY tab.</p>
                     <div id="plays-leaderboard" class="plays-leaderboard"></div>
-                    <div id="plays-grid" class="scores-grid">
+                    <div id="plays-grid" class="card-grid">
                         <div class="log-welcome">Click REFRESH to load play counts.</div>
                     </div>
                 </section>
@@ -629,10 +629,10 @@
 
             <!-- ═══ TRAFFIC TAB ═══════════════════════════════════════════════ -->
             <div id="tab-traffic" class="tab-panel hidden">
-                <section class="scores-section">
-                    <div class="scores-header">
+                <section class="content-section">
+                    <div class="content-header">
                         <h2 class="section-title">NGINX TRAFFIC</h2>
-                        <div class="scores-controls">
+                        <div class="content-controls">
                             <select id="traffic-lines" class="select-retro">
                                 <option value="500">LAST 500</option>
                                 <option value="1000" selected>LAST 1,000</option>
