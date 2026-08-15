@@ -42,15 +42,8 @@
     const scoresGrid = $('#scores-grid');
     const btnRefreshScores = $('#btn-refresh-scores');
     const btnResetScores = $('#btn-reset-scores');
-    const systemModal = $('#system-modal');
-    const btnSystemMenu = $('#btn-system-menu');
-    const closeSystemModal = $('#close-system-modal');
-    const modalUptime = $('#modal-uptime');
-    const modalTemp = $('#modal-temp');
-    const modalMemory = $('#modal-memory');
-    const modalLoad = $('#modal-load');
-    const modalRestartPi = $('#modal-restart-pi');
-    const modalPoweroffPi = $('#modal-poweroff-pi');
+    const sidebarRestartPi = $('#sidebar-restart-pi');
+    const sidebarRebootMc1 = $('#sidebar-reboot-mc1');
     const trafficLines = $('#traffic-lines');
     const trafficTotal = $('#traffic-total');
     const trafficGrid = $('#traffic-grid');
@@ -446,45 +439,25 @@
         });
     }
 
-    // ── System Modal ──────────────────────────────────────────────────────
+    // ── System Controls (sidebar) ─────────────────────────────────────────
 
-    function openSystemModal() {
-        const temp = $('#system-temp').textContent || '—';
-        const uptime = $('#system-uptime').textContent || '—';
-        const mem = $('#system-mem').textContent || '—';
-        const cpu = $('#system-cpu').textContent || '—';
-        modalTemp.textContent = temp;
-        modalUptime.textContent = uptime;
-        modalMemory.textContent = mem;
-        modalLoad.textContent = cpu;
-        systemModal.classList.remove('hidden');
+    if (sidebarRestartPi) {
+        sidebarRestartPi.addEventListener('click', () => {
+            window.OPS.confirm('RESTART PI', 'This will reboot the Raspberry Pi. All servers will restart automatically.', () => {
+                window.OPS.showRebootOverlay('REBOOTING PI');
+                window.OPS.send({ action: 'restart_pi', token: window.OPS.authToken });
+            });
+        });
     }
 
-    function closeSystemModalFn() {
-        systemModal.classList.add('hidden');
+    if (sidebarRebootMc1) {
+        sidebarRebootMc1.addEventListener('click', () => {
+            window.OPS.confirm('REBOOT MC1', 'This will reboot the Windows PC. It should come back automatically.', () => {
+                window.OPS.send({ action: 'mc1_reboot', token: window.OPS.authToken });
+                window.OPS.toast('Rebooting MC1...');
+            });
+        });
     }
-
-    btnSystemMenu.addEventListener('click', openSystemModal);
-    closeSystemModal.addEventListener('click', closeSystemModalFn);
-    systemModal.addEventListener('click', (e) => {
-        if (e.target === systemModal) closeSystemModalFn();
-    });
-
-    modalRestartPi.addEventListener('click', () => {
-        closeSystemModalFn();
-        window.OPS.confirm('RESTART PI', 'This will reboot the Raspberry Pi. All servers will restart automatically.', () => {
-            window.OPS.showRebootOverlay();
-            window.OPS.send({ action: 'restart_pi', token: window.OPS.authToken });
-        });
-    });
-
-    modalPoweroffPi.addEventListener('click', () => {
-        closeSystemModalFn();
-        window.OPS.confirm('POWER OFF', 'This will shut down the Raspberry Pi completely. You will need physical access to turn it back on.', () => {
-            window.OPS.showRebootOverlay();
-            window.OPS.send({ action: 'poweroff_pi', token: window.OPS.authToken });
-        });
-    });
 
     // ── Temperature Monitoring ────────────────────────────────────────────
 

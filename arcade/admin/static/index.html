@@ -35,53 +35,70 @@
     </div>
 
     <div id="app">
-        <header>
-            <div class="header-left">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button id="sidebar-toggle" class="sidebar-toggle" title="Toggle sidebar">&#9776;</button>
                 <h1 class="glitch" data-text="MAGMA//OPS">MAGMA//OPS</h1>
             </div>
-            <div class="header-right">
-                <span id="system-uptime" class="sys-stat"></span>
-                <span id="system-cpu" class="sys-stat"></span>
-                <span id="system-mem" class="sys-stat"></span>
-                <span id="system-temp" class="sys-stat"></span>
-                <button id="btn-system-menu" class="btn-system-menu" title="System Actions">&#9881;</button>
+            <div class="top-bar-status">
+                <div class="machine-status" data-machine="pi">
+                    <span class="machine-label">PI</span>
+                    <span id="pi-uptime" class="stat"></span>
+                    <span id="pi-temp" class="stat"></span>
+                    <span id="pi-mem" class="stat"></span>
+                </div>
+                <div class="machine-status" data-machine="mc1">
+                    <span class="machine-label">MC1</span>
+                    <span id="mc1-uptime" class="stat"></span>
+                    <span id="mc1-cpu" class="stat"></span>
+                    <span id="mc1-mem" class="stat"></span>
+                </div>
             </div>
         </header>
 
-        <nav class="nav-bar">
-            <div class="nav-group" data-group="systems">
-                <button class="nav-group-btn">SYSTEMS</button>
-                <div class="nav-dropdown">
-                    <button class="nav-item" data-tab="arcade">ARCADE</button>
-                    <button class="nav-item" data-tab="mc1">MC1</button>
-                    <button class="nav-item" data-tab="bots">BOTS</button>
+        <aside id="sidebar" class="sidebar expanded">
+            <nav class="sidebar-nav">
+                <div class="sidebar-group" data-group="systems">
+                    <button class="sidebar-group-btn">SYSTEMS</button>
+                    <div class="sidebar-items">
+                        <button class="sidebar-item" data-tab="arcade">ARCADE</button>
+                        <button class="sidebar-item" data-tab="mc1">MC1</button>
+                        <button class="sidebar-item" data-tab="bots">BOTS</button>
+                    </div>
                 </div>
-            </div>
-            <div class="nav-group" data-group="media">
-                <button class="nav-group-btn">MEDIA</button>
-                <div class="nav-dropdown">
-                    <button class="nav-item" data-tab="jukebox">JUKEBOX</button>
-                    <button class="nav-item" data-tab="tv">TV</button>
-                    <button class="nav-item" data-tab="favicon">FAVICON</button>
-                    <button class="nav-item" data-tab="themes">THEMES</button>
+                <div class="sidebar-group" data-group="media">
+                    <button class="sidebar-group-btn">MEDIA</button>
+                    <div class="sidebar-items">
+                        <button class="sidebar-item" data-tab="jukebox">JUKEBOX</button>
+                        <button class="sidebar-item" data-tab="tv">TV</button>
+                        <button class="sidebar-item" data-tab="favicon">FAVICON</button>
+                        <button class="sidebar-item" data-tab="themes">THEMES</button>
+                    </div>
                 </div>
-            </div>
-            <div class="nav-group" data-group="data">
-                <button class="nav-group-btn">DATA</button>
-                <div class="nav-dropdown">
-                    <button class="nav-item" data-tab="plays">PLAYS</button>
-                    <button class="nav-item" data-tab="traffic">TRAFFIC</button>
+                <div class="sidebar-group" data-group="data">
+                    <button class="sidebar-group-btn">DATA</button>
+                    <div class="sidebar-items">
+                        <button class="sidebar-item" data-tab="plays">PLAYS</button>
+                        <button class="sidebar-item" data-tab="traffic">TRAFFIC</button>
+                    </div>
                 </div>
-            </div>
-            <div class="nav-group" data-group="config">
-                <button class="nav-group-btn">CONFIG</button>
-                <div class="nav-dropdown">
-                    <button class="nav-item" data-tab="security">SECURITY</button>
-                    <button class="nav-item" data-tab="github">GITHUB</button>
-                    <button class="nav-item" data-tab="accounts">ACCOUNTS</button>
+                <div class="sidebar-group" data-group="config">
+                    <button class="sidebar-group-btn">CONFIG</button>
+                    <div class="sidebar-items">
+                        <button class="sidebar-item" data-tab="security">SECURITY</button>
+                        <button class="sidebar-item" data-tab="github">GITHUB</button>
+                        <button class="sidebar-item" data-tab="accounts">ACCOUNTS</button>
+                    </div>
                 </div>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="sidebar-restart-pi" class="sidebar-action btn-action-restart">RESTART PI</button>
+                <button id="sidebar-reboot-mc1" class="sidebar-action btn-action-reboot">REBOOT MC1</button>
+                <span class="sidebar-version">v5.0</span>
             </div>
-        </nav>
+        </aside>
+
+        <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
 
         <main>
             <!-- ═══ ARCADE TAB ═══════════════════════════════════════════════ -->
@@ -631,44 +648,6 @@
                 </section>
             </div>
         </main>
-
-        <footer>
-            <span class="footer-text">MAGMA//OPS v5.0 — MAGMACRUNCH OPERATIONS</span>
-        </footer>
-    </div>
-
-    <!-- System Modal -->
-    <div id="system-modal" class="modal hidden">
-        <div class="modal-content system-modal-content">
-            <div class="system-modal-header">
-                <h3 class="modal-title">SYSTEM CONTROLS</h3>
-                <button id="close-system-modal" class="btn-close-modal">&times;</button>
-            </div>
-            <div class="system-modal-body">
-                <div class="system-info-grid">
-                    <div class="system-info-item">
-                        <span class="system-info-label">UPTIME</span>
-                        <span id="modal-uptime" class="system-info-value">&mdash;</span>
-                    </div>
-                    <div class="system-info-item">
-                        <span class="system-info-label">CPU TEMP</span>
-                        <span id="modal-temp" class="system-info-value">&mdash;</span>
-                    </div>
-                    <div class="system-info-item">
-                        <span class="system-info-label">MEMORY</span>
-                        <span id="modal-memory" class="system-info-value">&mdash;</span>
-                    </div>
-                    <div class="system-info-item">
-                        <span class="system-info-label">LOAD</span>
-                        <span id="modal-load" class="system-info-value">&mdash;</span>
-                    </div>
-                </div>
-                <div class="system-actions">
-                    <button id="modal-restart-pi" class="btn btn-orange">RESTART PI</button>
-                    <button id="modal-poweroff-pi" class="btn btn-rose">POWER OFF</button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Confirmation Modal -->

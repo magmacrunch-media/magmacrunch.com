@@ -1,6 +1,6 @@
 /**
  * shared.js — MAGMA//OPS shared infrastructure
- * WebSocket, auth, toast, confirm, tab routing
+ * WebSocket, auth, toast, confirm, tab routing, sidebar
  */
 
 (function() {
@@ -43,6 +43,63 @@
 
     let pendingAction = null;
 
+    // ── Sidebar ───────────────────────────────────────────────────────────
+
+    const sidebar = $('#sidebar');
+    const sidebarToggle = $('#sidebar-toggle');
+    const sidebarBackdrop = $('#sidebar-backdrop');
+
+    // Restore sidebar state from localStorage
+    if (sidebar) {
+        const collapsed = localStorage.getItem('ops-sidebar-collapsed');
+        if (collapsed === 'true') {
+            sidebar.classList.add('collapsed');
+        }
+    }
+
+    // Toggle sidebar
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', () => {
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                sidebar.classList.toggle('open');
+                sidebarBackdrop.classList.toggle('hidden');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                localStorage.setItem('ops-sidebar-collapsed', sidebar.classList.contains('collapsed'));
+            }
+        });
+    }
+
+    // Close mobile sidebar on backdrop click
+    if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarBackdrop.classList.add('hidden');
+        });
+    }
+
+    // Sidebar group expand/collapse
+    document.addEventListener('click', (e) => {
+        const groupBtn = e.target.closest('.sidebar-group-btn');
+        if (groupBtn) {
+            const group = groupBtn.closest('.sidebar-group');
+            if (group) group.classList.toggle('open');
+            return;
+        }
+
+        // Sidebar item click — switch tab, close mobile sidebar
+        const item = e.target.closest('.sidebar-item');
+        if (item) {
+            switchTab(item.dataset.tab);
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
+                sidebarBackdrop.classList.add('hidden');
+            }
+            return;
+        }
+    });
+
     // ── WebSocket ─────────────────────────────────────────────────────────
 
     function connect() {
@@ -56,7 +113,6 @@
             console.log('[OPS] Connected');
             clearTimeout(reconnectTimer);
             hideRebootOverlay();
-            // Request immediately on connect (works with or without auth)
             requestStatus();
             requestSystemInfo();
             statusTimer = setInterval(() => {
@@ -136,14 +192,12 @@
     // ── System info (header stats) ────────────────────────────────────────
 
     function renderSystemInfo(info) {
-        const sysUptime = $('#system-uptime');
-        const sysCpu = $('#system-cpu');
-        const sysMem = $('#system-mem');
-        const sysTemp = $('#system-temp');
-        if (sysUptime) sysUptime.textContent = `UP: ${info.uptime || 'N/A'}`;
-        if (sysCpu) sysCpu.textContent = `CPU: ${info.cpu_load || 'N/A'}`;
-        if (sysMem) sysMem.textContent = `MEM: ${info.memory || 'N/A'}`;
-        if (sysTemp) sysTemp.textContent = `TEMP: ${info.cpu_temp || 'N/A'}°C`;
+        const piUptime = $('#pi-uptime');
+        const piTemp = $('#pi-temp');
+        const piMem = $('#pi-mem');
+        if (piUptime) piUptime.textContent = info.uptime || '—';
+        if (piTemp) piTemp.textContent = info.cpu_temp || '—';
+        if (piMem) piMem.textContent = info.memory || '—';
     }
 
     // ── Auth ──────────────────────────────────────────────────────────────
@@ -185,11 +239,11 @@
 
     let _rebootOverlay = null;
 
-    window.OPS.showRebootOverlay = function() {
+    window.OPS.showRebootOverlay = function(title) {
         if (_rebootOverlay) return;
         _rebootOverlay = document.createElement('div');
         _rebootOverlay.className = 'reboot-overlay';
-        _rebootOverlay.innerHTML = '<div class="spinner"></div><h2>REBOOTING PI</h2><p>This page will reconnect automatically.</p>';
+        _rebootOverlay.innerHTML = '<div class="spinner"></div><h2>' + (title || 'REBOOTING') + '</h2><p>This page will reconnect automatically.</p>';
         document.body.appendChild(_rebootOverlay);
     };
 
@@ -238,73 +292,35 @@
     function renderTabs() {
         const active = getActiveTab();
 
-        // Update nav items
-        $$('.nav-item').forEach(btn => {
+        // Update sidebar items
+        $$('.sidebar-item').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tab === active);
         });
 
         // Show/hide tab panels
         $$('.tab-panel').forEach(panel => {
-            panel.classList.toggle('hidden', panel.id !== `tab-${active}`);
+            panel.classList.toggle('hidden', panel.id !== 'tab-' + active);
         });
 
-        // Update group button active state
-        $$('.nav-group').forEach(group => {
-            const hasActive = group.querySelector('.nav-item[data-tab="' + active + '"]');
-            const groupBtn = group.querySelector('.nav-group-btn');
-            if (groupBtn) groupBtn.classList.toggle('active-group', !!hasActive);
+        // Expand the group containing the active tab
+        $$('.sidebar-group').forEach(group => {
+            const hasActive = group.querySelector('.sidebar-item[data-tab="' + active + '"]');
+            if (hasActive) group.classList.add('open');
         });
     }
 
-    // ── Dropdown nav handling ─────────────────────────────────────────────
-
-    document.addEventListener('click', (e) => {
-        // Group button click — toggle dropdown
-        const groupBtn = e.target.closest('.nav-group-btn');
-        if (groupBtn) {
-            const group = groupBtn.closest('.nav-group');
-            const wasOpen = group.classList.contains('open');
-            // Close all dropdowns
-            $$('.nav-group').forEach(g => g.classList.remove('open'));
-            // Toggle this one
-            if (!wasOpen) group.classList.add('open');
-            return;
-        }
-
-        // Menu item click — switch tab, close dropdown
-        const item = e.target.closest('.nav-item');
-        if (item) {
-            switchTab(item.dataset.tab);
-            $$('.nav-group').forEach(g => g.classList.remove('open'));
-            return;
-        }
-
-        // Click outside — close all dropdowns
-        if (!e.target.closest('.nav-group')) {
-            $$('.nav-group').forEach(g => g.classList.remove('open'));
-        }
-    });
-
     window.addEventListener('hashchange', renderTabs);
 
-    // Keyboard shortcuts: Alt+1 through Alt+4 for menu groups
+    // Keyboard shortcuts: Alt+1 through Alt+4 for sidebar groups
     document.addEventListener('keydown', (e) => {
         if (e.altKey && !e.ctrlKey && !e.metaKey) {
             var groups = ['systems', 'media', 'data', 'config'];
             var idx = parseInt(e.key) - 1;
             if (idx >= 0 && idx < groups.length) {
                 e.preventDefault();
-                var group = document.querySelector('.nav-group[data-group="' + groups[idx] + '"]');
-                if (group) {
-                    var wasOpen = group.classList.contains('open');
-                    $$('.nav-group').forEach(function(g) { g.classList.remove('open'); });
-                    if (!wasOpen) group.classList.add('open');
-                }
+                var group = document.querySelector('.sidebar-group[data-group="' + groups[idx] + '"]');
+                if (group) group.classList.toggle('open');
             }
-        }
-        // Escape closes dropdowns
-        if (e.key === 'Escape') {
-            $$('.nav-group').forEach(function(g) { g.classList.remove('open'); });
         }
     });
 
