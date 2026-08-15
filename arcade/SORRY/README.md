@@ -133,7 +133,7 @@ css/base.css          → loaded first; defines all CSS variables used by other 
 
 **Requirements:**
 - Python 3.8+
-- `pip install websockets` (or `pip install websockets --break-system-packages` on Raspberry Pi OS)
+- `pip install -r arcade/requirements.txt` (from the repo root — installs into shared arcade venv)
 
 **Start the server:**
 ```bash

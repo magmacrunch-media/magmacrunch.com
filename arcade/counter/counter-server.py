@@ -1,7 +1,7 @@
 """
 counter-server.py — Retro hit counter for magmacrunch.com
 Run with:  python counter-server.py [--port PORT]
-Requires:  pip install websockets
+Requires:  pip install -r arcade/requirements.txt
 
 Provides:
   - WebSocket endpoint for getting and incrementing total page load count

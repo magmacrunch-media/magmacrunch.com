@@ -1,7 +1,7 @@
 """
 scandinavian-stud/server.py — Multiplayer Scandinavian Stud (Sökö) server
 Run with:  python server.py
-Requires:  pip install websockets
+Requires:  pip install -r arcade/requirements.txt
 """
 
 import sys
