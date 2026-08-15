@@ -1,9 +1,6 @@
 // game.js — Cribbage game state machine | MagmaCrunch Media © 2026
 // Handles all game phases: deal, crib, pegging, scoring
 
-// Destructure AdCards constants for use in this file
-const { RANK_VALUES } = AdCards;
-
 class CribbageGame {
     constructor() {
         this.reset();

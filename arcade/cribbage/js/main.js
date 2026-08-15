@@ -1,9 +1,6 @@
 // main.js — Cribbage UI management | MagmaCrunch Media © 2026
 // Handles user interactions and updates the display
 
-// Destructure AdCards constants for use in this file
-const { SUIT_SYMBOLS, RANK_VALUES } = AdCards;
-
 document.addEventListener('DOMContentLoaded', async () => {
     // Initialize AdAudio (placeholder URLs — replace with actual audio files)
     try {
