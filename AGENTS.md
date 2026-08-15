@@ -369,6 +369,8 @@ Game (browser) ──WebSocket──▶ admin/server.py ──file I/O──▶ 
 | fifteen-puzzle | `fifteen-puzzle` | moves (ascending) | adenosine |
 | klotski | `klotski` | moves (ascending) | adenosine |
 | threes | `threes` | points | adenosine |
+| cribbage | `cribbage` | score | adenosine |
+| tarot | `tarot` | score | adenosine |
 | moonlight-drift | `moonlight-drift` | obstacles passed | legacy |
 | solitaire | `solitaire` | score | legacy |
 | scandinavian-stud | `scandinavian-stud` | score | legacy |
