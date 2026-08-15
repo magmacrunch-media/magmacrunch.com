@@ -57,11 +57,26 @@
     // ── Render system info ────────────────────────────────────────────────
 
     function renderMc1Info(msg) {
+        // Update header stats
+        var hdrUptime = document.getElementById('mc1-uptime');
+        var hdrCpu = document.getElementById('mc1-cpu');
+        var hdrMem = document.getElementById('mc1-mem');
+
         if (msg.error) {
             mc1InfoGrid.innerHTML = '<div class="log-welcome">ERROR: ' + window.OPS.escapeHtml(msg.error) + '</div>';
+            if (hdrUptime) hdrUptime.textContent = 'OFFLINE';
+            if (hdrCpu) hdrCpu.textContent = '';
+            if (hdrMem) hdrMem.textContent = '';
             return;
         }
         var info = msg.info;
+
+        // Update header
+        if (hdrUptime) hdrUptime.textContent = info.uptime || '—';
+        if (hdrCpu) hdrCpu.textContent = info.cpu_load || '—';
+        if (hdrMem) hdrMem.textContent = info.memory || '—';
+
+        // Update tab panel
         var items = [
             { label: 'HOSTNAME', value: info.hostname },
             { label: 'UPTIME', value: info.uptime },
