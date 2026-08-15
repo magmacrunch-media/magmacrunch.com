@@ -1,7 +1,7 @@
 """
 chat-server.py — Global arcade chat + room sub-chats + server status
 Run with:  python chat-server.py [--port PORT]
-Requires:  pip install websockets
+Requires:  pip install -r arcade/requirements.txt
 
 Provides:
   - Global chat room for arcade visitors

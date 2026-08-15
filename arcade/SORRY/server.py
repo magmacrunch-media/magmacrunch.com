@@ -1,7 +1,7 @@
 """
 WebSocket server — SORRY! multiplayer (shared framework version)
 Run with:  python server.py [--port PORT]
-Requires:  pip install websockets
+Requires:  pip install -r arcade/requirements.txt
 """
 
 import sys

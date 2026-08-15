@@ -57,11 +57,11 @@ if [[ ! -d "$VENV_DIR" ]]; then
     ok "Virtual environment created"
 fi
 
-# Install websockets if missing
-if ! sudo -u jake "$VENV_DIR/bin/python3" -c "import websockets" 2>/dev/null; then
-    warn "Installing websockets..."
-    sudo -u jake "$VENV_DIR/bin/pip" install websockets --quiet
-    ok "Websockets installed"
+# Install all dependencies from requirements.txt
+if [[ -f "$ARCADE_DIR/requirements.txt" ]]; then
+    warn "Installing Python dependencies from requirements.txt..."
+    sudo -u jake "$VENV_DIR/bin/pip" install -r "$ARCADE_DIR/requirements.txt" --quiet
+    ok "Python dependencies installed"
 fi
 
 # ── Install game server services ─────────────────────────────────────────────
@@ -104,12 +104,7 @@ echo -e "${CYAN}Installing MCP server...${NC}"
 
 MCP_DIR="$ARCADE_DIR/mcp-server"
 if [[ -f "$MCP_DIR/serve.py" ]]; then
-    # Install mcp[cli] into venv if not present
-    if ! sudo -u jake "$VENV_DIR/bin/python3" -c "import mcp" 2>/dev/null; then
-        warn "Installing mcp[cli]..."
-        sudo -u jake "$VENV_DIR/bin/pip" install "mcp[cli]" --quiet
-        ok "mcp[cli] installed"
-    fi
+    # Dependencies handled by requirements.txt above
 
     if [[ -f "$ARCADE_DIR/systemd/arcade-mcp.service" ]]; then
         cp "$ARCADE_DIR/systemd/arcade-mcp.service" /etc/systemd/system/
@@ -174,14 +169,11 @@ ok "Enabled generate-mcp-api-key.service"
 echo ""
 echo -e "${CYAN}Installing magmascript...${NC}"
 
-MAGMASCRIPT_WHEEL="/tmp/magmascript-*.whl"
-if ls $MAGMASCRIPT_WHEEL 1>/dev/null 2>&1; then
-    sudo -u jake "$VENV_DIR/bin/pip" install --upgrade $MAGMASCRIPT_WHEEL --quiet
+# magmascript installed via requirements.txt; create CLI symlink
+if [[ -f "$VENV_DIR/bin/magmascript" ]]; then
     mkdir -p /home/jake/bin
     ln -sf "$VENV_DIR/bin/magmascript" /home/jake/bin/magmascript
-    ok "magmascript installed"
-else
-    warn "magmascript wheel not found in /tmp — skipping (deploy workflow will install it)"
+    ok "magmascript CLI symlinked"
 fi
 
 # ── Install Node.js and lychee for cron bots ────────────────────────────────

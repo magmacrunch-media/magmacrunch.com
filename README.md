@@ -55,6 +55,8 @@ See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for ful
 pip install magmascript
 ```
 
+For the arcade Pi server, Python dependencies live in `arcade/requirements.txt` and are installed into a shared venv at `arcade/venv`.
+
 ### Quick reference
 
 ```bash

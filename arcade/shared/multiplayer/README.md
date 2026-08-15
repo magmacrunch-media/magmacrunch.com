@@ -168,8 +168,8 @@ server.run()
 ### Raspberry Pi (local network)
 
 ```bash
-cd /home/pi/arcade
-pip install websockets
+cd ~/arcade
+pip install -r requirements.txt  # shared arcade venv
 
 # Start game server
 python game/server.py --port XXXX

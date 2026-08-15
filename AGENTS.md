@@ -445,7 +445,7 @@ git clone https://github.com/magmacrunchmedia/magmascript.git
 cd ~/website/mcp-server
 python3 -m venv venv
 source venv/bin/activate
-pip install "mcp[cli]>=1.0.0" "requests>=2.28.0"
+pip install -r ~/website/mcp-server/requirements.txt
 cd ~/magmascript && pip install -e .
 
 # Configure
@@ -580,7 +580,20 @@ rsync -avz arcade/ jake@100.74.172.4:~/arcade/
 ssh jake@100.74.172.4 "sudo bash ~/arcade/scripts/setup-pi.sh"
 ```
 
-This installs systemd services for all servers + dashboard, enables auto-start on boot, and places a desktop shortcut.
+This installs systemd services for all servers + dashboard, enables auto-start on boot, and places a desktop shortcut. The venv is created automatically by `setup-pi.sh` and dependencies are installed from `arcade/requirements.txt`.
+
+### Venv recovery
+
+If the Pi venv is lost, recreate it:
+
+```bash
+ssh jake@100.74.172.4
+cd ~/arcade
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+sudo systemctl restart 'arcade-*'
+```
 
 ### Admin dashboard
 

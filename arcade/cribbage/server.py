@@ -1,7 +1,7 @@
 """
 cribbage/server.py — Multiplayer Cribbage server
 Run with:  python server.py
-Requires:  pip install websockets
+Requires:  pip install -r arcade/requirements.txt
 """
 
 import sys

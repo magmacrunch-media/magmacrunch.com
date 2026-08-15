@@ -35,11 +35,9 @@ fi
 # Activate venv
 source "$VENV_DIR/bin/activate"
 
-# Install websockets if missing
-if ! python3 -c "import websockets" 2>/dev/null; then
-    echo "Installing websockets..."
-    pip install websockets --quiet
-    echo "✓ Websockets installed."
+# Install all dependencies from requirements.txt
+if [[ -f "$SCRIPT_DIR/requirements.txt" ]]; then
+    pip install -r "$SCRIPT_DIR/requirements.txt" --quiet 2>/dev/null
 fi
 
 # ── Game servers ─────────────────────────────────────────────────────────────

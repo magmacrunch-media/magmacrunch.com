@@ -34,7 +34,20 @@ Pixel art games — vanilla HTML/CSS/JS, no frameworks, no build step.
 
 ---
 
-## shared patterns
+## Python server dependencies
+
+All Python game servers share a single venv at `arcade/venv`.
+Install dependencies:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+The Pi setup script (`scripts/setup-pi.sh`) handles this automatically.
+
+---
 
 - **config.js** — tuning constants separated from logic
 - **main.js** — entry point / game loop bootstrap
