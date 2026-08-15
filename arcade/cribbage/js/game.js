@@ -1,6 +1,9 @@
 // game.js — Cribbage game state machine | MagmaCrunch Media © 2026
 // Handles all game phases: deal, crib, pegging, scoring
 
+// Destructure AdCards constants for use in this file
+const { RANK_VALUES } = AdCards;
+
 class CribbageGame {
     constructor() {
         this.reset();
@@ -36,11 +39,15 @@ class CribbageGame {
 
     // ── Deal new hand ─────────────────────────────────────────
     deal() {
-        this.deck = this.createDeck();
-        this.shuffleDeck();
+        this.deck = new AdCards.Deck();
+        this.deck.shuffle();
 
-        this.playerHand = this.deck.splice(0, CARDS_PER_HAND);
-        this.aiHand = this.deck.splice(0, CARDS_PER_HAND);
+        this.playerHand = [];
+        this.aiHand = [];
+        for (let i = 0; i < CARDS_PER_HAND; i++) {
+            this.playerHand.push(this.deck.deal());
+            this.aiHand.push(this.deck.deal());
+        }
 
         // Set face up for player
         this.playerHand.forEach(c => c.faceUp = true);
@@ -55,24 +62,6 @@ class CribbageGame {
             playerHand: this.playerHand,
             aiHand: this.aiHand
         };
-    }
-
-    // ── Create and shuffle deck ───────────────────────────────
-    createDeck() {
-        const deck = [];
-        for (const suit of SUITS) {
-            for (const rank of RANKS) {
-                deck.push({ suit, rank, faceUp: false });
-            }
-        }
-        return deck;
-    }
-
-    shuffleDeck() {
-        for (let i = this.deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
-        }
     }
 
     // ── Select card for crib ──────────────────────────────────
@@ -172,7 +161,7 @@ class CribbageGame {
         }
 
         // Score the play
-        const scoreResult = CribbageHandEval.scorePeggingPlay(card, this.playedCards.slice(0, -1));
+        const scoreResult = AdCards.CribbageHandEval.scorePeggingPlay(card, this.playedCards.slice(0, -1));
 
         // Update score
         if (scoreResult.points > 0) {
@@ -234,19 +223,19 @@ class CribbageGame {
         // Non-dealer scores first
         const nonDealer = this.isPlayerDealer ? 'ai' : 'player';
         const nonDealerHand = this.isPlayerDealer ? this.aiHand : this.playerHand;
-        const nonDealerScore = CribbageHandEval.scoreHand(nonDealerHand, this.starter, false);
+        const nonDealerScore = AdCards.CribbageHandEval.scoreHand(nonDealerHand, this.starter, false);
         this.scores[nonDealer] += nonDealerScore.total;
         results.push({ player: nonDealer, hand: nonDealerHand, score: nonDealerScore });
 
         // Dealer scores next
         const dealer = this.isPlayerDealer ? 'player' : 'ai';
         const dealerHand = this.isPlayerDealer ? this.playerHand : this.aiHand;
-        const dealerScore = CribbageHandEval.scoreHand(dealerHand, this.starter, false);
+        const dealerScore = AdCards.CribbageHandEval.scoreHand(dealerHand, this.starter, false);
         this.scores[dealer] += dealerScore.total;
         results.push({ player: dealer, hand: dealerHand, score: dealerScore });
 
         // Crib scores last (dealer's)
-        const cribScore = CribbageHandEval.scoreHand(this.crib, this.starter, true);
+        const cribScore = AdCards.CribbageHandEval.scoreHand(this.crib, this.starter, true);
         this.scores[dealer] += cribScore.total;
         results.push({ player: 'crib', hand: this.crib, score: cribScore });
 

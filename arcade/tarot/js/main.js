@@ -1,7 +1,23 @@
 // main.js — French Tarot | MagmaCrunch Media © 2026
 // UI/DOM management, event handling, game flow
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize AdAudio (placeholder URLs — replace with actual audio files)
+    try {
+        await AdAudio.init({
+            music: { url: 'audio/background.ogg', volume: 0.3, fadeIn: 2.0 },
+            sfx: {
+                deal:  { url: 'audio/sfx/deal.ogg',  volume: 0.5, pool: 3 },
+                bid:   { url: 'audio/sfx/bid.ogg',   volume: 0.5, pool: 2 },
+                trick: { url: 'audio/sfx/trick.ogg',  volume: 0.5, pool: 2 },
+                win:   { url: 'audio/sfx/win.ogg',    volume: 0.6, pool: 1 },
+            },
+        });
+        AdAudio.handleVisibility({ pauseMusic: true });
+    } catch (e) {
+        console.warn('AdAudio init failed (audio files not yet added):', e.message);
+    }
+
     const game = new TarotGame();
 
     // ── DOM Elements ──────────────────────────────────────────
@@ -329,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── Round scoring ────────────────────────────────────────
-    function showRoundResult(result) {
+    async function showRoundResult(result) {
         const isGameOver = result.gameOver;
         const modalTitle = isGameOver ? 'GAME OVER' : 'ROUND RESULT';
 
@@ -368,6 +384,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `);
+
+        // Save score (metrics TBD — for now just round score + extras)
+        if (result.taker === 0) {
+            try {
+                const initials = prompt('Enter your initials (3 chars):') || 'AAA';
+                await scoreClient.save('tarot', initials.slice(0, 3).toUpperCase(), Math.round(result.totalScores[0]), {
+                    tricksWon: result.tricksWon || 0,
+                    oudlers: result.oudlers,
+                    contractMet: result.made
+                });
+            } catch (e) {
+                console.warn('Failed to save score:', e);
+            }
+        }
 
         // C4 fix: use addEventListener instead of inline onclick
         const btnContainer = modal.querySelector('.modal-buttons');

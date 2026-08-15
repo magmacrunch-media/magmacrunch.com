@@ -1,32 +1,5 @@
 // config.js — Cribbage | MagmaCrunch Media © 2026
-
-// ── Card configuration ───────────────────────────────────────
-const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];
-
-const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
-const SUIT_SYMBOLS = {
-    hearts:   '♥',
-    diamonds: '♦',
-    clubs:    '♣',
-    spades:   '♠'
-};
-
-const SUIT_COLORS = {
-    hearts:   'red',
-    diamonds: 'red',
-    clubs:    'black',
-    spades:   'black'
-};
-
-// Cribbage card values: A=1, 2-10 face value, J=11, Q=12, K=13
-// Used for counting to 31 during pegging and hand scoring
-const RANK_VALUES = {
-    'A': 1,
-    '2': 2,  '3': 3,  '4': 4,  '5': 5,
-    '6': 6,  '7': 7,  '8': 8,  '9': 9,
-    '10': 10, 'J': 11, 'Q': 12, 'K': 13
-};
+// Card constants (SUITS, RANKS, RANK_VALUES, SUIT_COLORS, SUIT_SYMBOLS) come from AdCards
 
 // ── Game configuration ───────────────────────────────────────
 const WINNING_SCORE = 121;

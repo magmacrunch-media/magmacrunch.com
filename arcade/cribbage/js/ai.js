@@ -1,6 +1,9 @@
 // ai.js — Cribbage AI opponent | MagmaCrunch Media © 2026
 // Card selection for crib and pegging strategy
 
+// Destructure AdCards constants for use in this file
+const { RANK_VALUES } = AdCards;
+
 const CribbageAI = {
 
     // ── Select 2 cards for the crib ───────────────────────────

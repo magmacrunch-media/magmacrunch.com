@@ -1,7 +1,26 @@
 // main.js — Cribbage UI management | MagmaCrunch Media © 2026
 // Handles user interactions and updates the display
 
-document.addEventListener('DOMContentLoaded', () => {
+// Destructure AdCards constants for use in this file
+const { SUIT_SYMBOLS, RANK_VALUES } = AdCards;
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize AdAudio (placeholder URLs — replace with actual audio files)
+    try {
+        await AdAudio.init({
+            music: { url: 'audio/background.ogg', volume: 0.3, fadeIn: 2.0 },
+            sfx: {
+                deal:    { url: 'audio/sfx/deal.ogg',    volume: 0.5, pool: 3 },
+                shuffle: { url: 'audio/sfx/shuffle.ogg',  volume: 0.4, pool: 2 },
+                score:   { url: 'audio/sfx/score.ogg',    volume: 0.5, pool: 2 },
+                win:     { url: 'audio/sfx/win.ogg',      volume: 0.6, pool: 1 },
+            },
+        });
+        AdAudio.handleVisibility({ pauseMusic: true });
+    } catch (e) {
+        console.warn('AdAudio init failed (audio files not yet added):', e.message);
+    }
+
     const game = new CribbageGame();
 
     // ── DOM Elements ────────────────────────────────────────────
@@ -99,26 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Create card element ─────────────────────────────────────
     function createCardElement(card, faceUp) {
-        const div = document.createElement('div');
-        div.className = `card ${faceUp ? 'face-up' : 'face-down'} ${card.suit}`;
-
-        if (faceUp) {
-            div.innerHTML = `
-                <div class="card-corner top-left">
-                    <span class="corner-rank">${card.rank}</span>
-                    <span class="corner-suit">${SUIT_SYMBOLS[card.suit]}</span>
-                </div>
-                <div class="card-center">${SUIT_SYMBOLS[card.suit]}</div>
-                <div class="card-corner bottom-right">
-                    <span class="corner-rank">${card.rank}</span>
-                    <span class="corner-suit">${SUIT_SYMBOLS[card.suit]}</span>
-                </div>
-            `;
-        } else {
-            div.innerHTML = `<div class="card-back">🂠</div>`;
-        }
-
-        return div;
+        card.faceUp = faceUp;
+        return card.getHTML();
     }
 
     // ── Handle card click ───────────────────────────────────────
@@ -367,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── Show game over ──────────────────────────────────────────
-    function showGameOver(winner) {
+    async function showGameOver(winner) {
         const isPlayerWin = winner === 'player';
         messageAreaEl.innerHTML = `
             <div class="game-over-message ${isPlayerWin ? 'win' : 'lose'}">
@@ -376,6 +377,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button id="playAgainBtn" class="action-btn">Play Again</button>
             </div>
         `;
+
+        // Save score (metrics TBD — for now just win/loss + final score)
+        if (isPlayerWin) {
+            try {
+                const initials = prompt('Enter your initials (3 chars):') || 'AAA';
+                await scoreClient.save('cribbage', initials.slice(0, 3).toUpperCase(), game.scores.player, {
+                    finalScore: game.scores.player
+                });
+            } catch (e) {
+                console.warn('Failed to save score:', e);
+            }
+        }
 
         document.getElementById('playAgainBtn').addEventListener('click', startGame);
     }
@@ -430,11 +443,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ── Show high scores ────────────────────────────────────────
-    function showHighScores() {
-        const modal = createModal('High Scores', `
-            <p>High scores coming soon!</p>
-        `);
+    async function showHighScores() {
+        const modal = createModal('High Scores', '<p>Loading scores...</p>');
         document.body.appendChild(modal);
+        
+        try {
+            const scores = await scoreClient.load('cribbage');
+            const modalContent = modal.querySelector('.modal');
+            if (scores.length === 0) {
+                modalContent.innerHTML = '<h2>High Scores</h2><p>No scores yet. Be the first!</p>';
+            } else {
+                const scoresHtml = scores.slice(0, 10).map((s, i) => 
+                    `<div class="score-row"><span class="score-rank">${i + 1}.</span><span class="score-name">${s.initials || 'AAA'}</span><span class="score-pts">${s.score}</span></div>`
+                ).join('');
+                modalContent.innerHTML = `<h2>High Scores</h2>${scoresHtml}`;
+            }
+        } catch (e) {
+            const modalContent = modal.querySelector('.modal');
+            modalContent.innerHTML = '<h2>High Scores</h2><p>Could not load scores.</p>';
+        }
     }
 
     // ── Show menu ───────────────────────────────────────────────
