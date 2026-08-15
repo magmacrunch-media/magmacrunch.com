@@ -132,7 +132,7 @@
             card.className = 'server-card ' + (svc.ok ? 'running' : 'stopped');
             card.innerHTML =
                 '<div class="card-header">' +
-                    '<span class="card-name">' + window.OPS.escapeHtml(svc.name) + '</span>' +
+                    '<span class="card-name" title="' + window.OPS.escapeHtml(svc.name) + '">' + window.OPS.escapeHtml(svc.name) + '</span>' +
                 '</div>' +
                 '<div class="card-details">' +
                     '<span class="card-status ' + (svc.ok ? 'online' : 'offline') + '">' +
