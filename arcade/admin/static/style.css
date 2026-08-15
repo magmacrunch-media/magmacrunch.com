@@ -779,7 +779,7 @@ main {
 
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 12px;
 }
 
@@ -928,10 +928,31 @@ main {
 
 /* ── Server Reference ─────────────────────────────────────────────────── */
 
+/* ── Server Reference (collapsible) ────────────────────────────────────── */
+
+.server-ref-details {
+    margin-top: 24px;
+}
+
+.server-ref-toggle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--tab-accent, var(--cyan));
+    cursor: pointer;
+    padding: 12px 0;
+    border-top: 1px solid var(--divider);
+    list-style: none;
+    display: block;
+    transition: color 0.15s;
+}
+
+.server-ref-toggle:hover { color: var(--white); }
+.server-ref-toggle::before { content: '▸ '; }
+.server-ref-details[open] .server-ref-toggle::before { content: '▾ '; }
+.server-ref-toggle::-webkit-details-marker { display: none; }
+
 .server-ref-section {
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
+    padding-top: 8px;
 }
 
 .server-ref-grid {
@@ -1944,7 +1965,7 @@ footer {
 
 .mc1-info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 12px;
 }
 
@@ -1962,11 +1983,6 @@ footer {
 .mc1-info-card:hover {
     border-color: var(--cyan);
     box-shadow: 0 0 12px rgba(0,245,255,0.15);
-}
-
-.mc1-actions {
-    display: flex;
-    gap: 12px;
 }
 
 /* ── Utility ─────────────────────────────────────────────────────────────── */
@@ -2514,8 +2530,8 @@ footer {
 .traffic-total {
     font-family: 'Press Start 2P', monospace;
     font-size: 12px;
-    color: var(--cyan);
-    text-shadow: 0 0 10px rgba(0, 245, 255, 0.4);
+    color: var(--tab-bright, var(--green));
+    text-shadow: 0 0 10px var(--tab-glow, rgba(57,255,110,0.4));
     margin-bottom: 16px;
     text-align: center;
 }
