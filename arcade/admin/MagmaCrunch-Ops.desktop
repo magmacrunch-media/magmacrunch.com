@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=MagmaCrunch Ops
 Comment=Arcade Server Dashboard
-Exec=chromium --new-window http://localhost:8780
+Exec=chromium --app=http://localhost:8780 --noerrdialogs --disable-infobars
 Icon=/home/jake/arcade/admin/icons/magma-ops.png
 Terminal=false
 Type=Application
