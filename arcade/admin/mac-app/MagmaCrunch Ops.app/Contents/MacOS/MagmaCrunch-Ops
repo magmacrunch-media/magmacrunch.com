@@ -1,16 +1,5 @@
 #!/bin/bash
-# Launch MAGMA//OPS in Chrome app mode
-# Tries Pi LAN IP first, falls back to Tailscale IP
-
-URLS=("http://192.168.1.16:8780" "http://100.74.172.4:8780")
-CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-
-for url in "${URLS[@]}"; do
-    if curl -s --connect-timeout 2 "$url" > /dev/null 2>&1; then
-        open -a "Google Chrome" --args --app="$url" --noerrdialogs --disable-infobars
-        exit 0
-    fi
-done
-
-# If neither URL responds, open anyway (user might be offline but can try later)
-open -a "Google Chrome" --args --app="${URLS[0]}" --noerrdialogs --disable-infobars
+exec /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+    --app=http://192.168.1.16:8780 \
+    --noerrdialogs \
+    --disable-infobars
