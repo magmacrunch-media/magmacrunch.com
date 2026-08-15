@@ -4,10 +4,10 @@
 
 :root {
     --black: #080808;
-    --deep: #111118;
-    --panel: #111118;
-    --border: #2a2a3a;
-    --divider: #222230;
+    --deep: #0D0604;
+    --panel: #140A06;
+    --border: #3D2018;
+    --divider: #2D1610;
     --rose: #ff3d6e;
     --yellow: #ffe03a;
     --cyan: #00f5ff;
@@ -15,8 +15,8 @@
     --orange: #ff7c1f;
     --purple: #c45fff;
     --white: #f0ead8;
-    --dim: #8a7a8a;
-    --slate: #8899aa;
+    --dim: #C8A898;
+    --slate: #A08878;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
