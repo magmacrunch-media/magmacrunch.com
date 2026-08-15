@@ -170,8 +170,13 @@
     <script>var MP_DEFAULT_SERVER = 'cribbage.magmacrunch.com';</script>
     <script src="../shared/multiplayer/protocol.js"></script>
     <script src="../shared/multiplayer/network.js"></script>
+    <!-- Adenosine packages -->
+    <script src="../shared/adenosine-cards.js"></script>
+    <script src="../shared/adenosine-score-client.js"></script>
+    <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+    <script src="../shared/adenosine-audio.js"></script>
+    <!-- Game scripts -->
     <script src="js/config.js"></script>
-    <script src="js/hand-eval.js"></script>
     <script src="js/cribbage-board.js"></script>
     <script src="js/ai.js"></script>
     <script src="js/game.js"></script>
