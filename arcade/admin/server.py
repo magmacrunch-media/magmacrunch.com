@@ -1570,10 +1570,28 @@ class AdminHTTPHandler(SimpleHTTPRequestHandler):
     """Serve static files from the admin/static directory.
     Also serves api-keys.json from the admin directory (public, no auth)."""
 
+    # Explicit MIME types for PWA-critical files
+    EXTRA_MIME_TYPES = {
+        '.js': 'text/javascript',
+        '.mjs': 'text/javascript',
+        '.json': 'application/json',
+        '.webmanifest': 'application/manifest+json',
+        '.woff2': 'font/woff2',
+        '.woff': 'font/woff',
+    }
+
     def __init__(self, *args, **kwargs):
         self._admin_dir = os.path.dirname(os.path.abspath(__file__))
         static_dir = os.path.join(self._admin_dir, "static")
         super().__init__(*args, directory=static_dir, **kwargs)
+
+    def guess_type(self, path):
+        # Check explicit overrides first
+        import mimetypes
+        _, ext = os.path.splitext(path)
+        if ext.lower() in self.EXTRA_MIME_TYPES:
+            return self.EXTRA_MIME_TYPES[ext.lower()]
+        return super().guess_type(path)
 
     def do_GET(self):
         # Serve api-keys.json from admin dir (not static dir)
