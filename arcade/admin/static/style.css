@@ -7,9 +7,9 @@
 :root {
     --black: #080808;
     --deep: #111118;
-    --panel: var(--panel);
-    --border: var(--border);
-    --divider: var(--divider);
+    --panel: #111118;
+    --border: #2a2a3a;
+    --divider: #222230;
     --rose: #ff3d6e;
     --yellow: #ffe03a;
     --cyan: #00f5ff;
@@ -169,9 +169,6 @@ h1.glitch::after {
 
 .nav-bar {
     display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
     border-bottom: 2px solid var(--divider);
     background: var(--black);
     flex-shrink: 0;
@@ -246,11 +243,6 @@ h1.glitch::after {
     background: rgba(255,255,255,0.05);
 }
 
-.nav-item.active {
-    color: var(--cyan);
-    text-shadow: 0 0 8px rgba(0,245,255,0.5);
-}
-
 /* Per-tab nav item colors */
 .nav-item[data-tab="arcade"] { color: var(--cyan); }
 .nav-item[data-tab="mc1"] { color: var(--cyan); }
@@ -264,6 +256,12 @@ h1.glitch::after {
 .nav-item[data-tab="security"] { color: var(--yellow); }
 .nav-item[data-tab="github"] { color: var(--slate); }
 .nav-item[data-tab="accounts"] { color: var(--green); }
+
+/* Active state — after per-tab colors so it wins the cascade */
+.nav-item.active {
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(0,245,255,0.5);
+}
 
 /* ── Main Content ────────────────────────────────────────────────────────── */
 
@@ -1967,13 +1965,8 @@ footer {
     .sys-stat { font-size: 7px; padding: 5px 8px; }
 
     .nav-bar {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
         padding: 0 8px;
-        scrollbar-width: none;
     }
-
-    .nav-bar::-webkit-scrollbar { display: none; }
 
     .nav-group-btn {
         padding: 10px 12px;
