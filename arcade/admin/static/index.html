@@ -48,18 +48,39 @@
             </div>
         </header>
 
-        <nav class="tab-bar">
-            <button class="ops-tab" data-tab="arcade">ARCADE</button>
-            <button class="ops-tab" data-tab="jukebox">JUKEBOX</button>
-            <button class="ops-tab" data-tab="themes">THEMES</button>
-            <button class="ops-tab" data-tab="accounts">ACCOUNTS</button>
-            <button class="ops-tab" data-tab="security">SECURITY</button>
-            <button class="ops-tab" data-tab="tv">TV</button>
-            <button class="ops-tab" data-tab="favicon">FAVICON</button>
-            <button class="ops-tab" data-tab="github">GITHUB</button>
-            <button class="ops-tab" data-tab="bots">BOTS</button>
-            <button class="ops-tab" data-tab="plays">PLAYS</button>
-            <button class="ops-tab" data-tab="traffic">TRAFFIC</button>
+        <nav class="nav-bar">
+            <div class="nav-group" data-group="systems">
+                <button class="nav-group-btn">SYSTEMS</button>
+                <div class="nav-dropdown">
+                    <button class="nav-item" data-tab="arcade">ARCADE</button>
+                    <button class="nav-item" data-tab="mc1">MC1</button>
+                    <button class="nav-item" data-tab="bots">BOTS</button>
+                </div>
+            </div>
+            <div class="nav-group" data-group="media">
+                <button class="nav-group-btn">MEDIA</button>
+                <div class="nav-dropdown">
+                    <button class="nav-item" data-tab="jukebox">JUKEBOX</button>
+                    <button class="nav-item" data-tab="tv">TV</button>
+                    <button class="nav-item" data-tab="favicon">FAVICON</button>
+                    <button class="nav-item" data-tab="themes">THEMES</button>
+                </div>
+            </div>
+            <div class="nav-group" data-group="data">
+                <button class="nav-group-btn">DATA</button>
+                <div class="nav-dropdown">
+                    <button class="nav-item" data-tab="plays">PLAYS</button>
+                    <button class="nav-item" data-tab="traffic">TRAFFIC</button>
+                </div>
+            </div>
+            <div class="nav-group" data-group="config">
+                <button class="nav-group-btn">CONFIG</button>
+                <div class="nav-dropdown">
+                    <button class="nav-item" data-tab="security">SECURITY</button>
+                    <button class="nav-item" data-tab="github">GITHUB</button>
+                    <button class="nav-item" data-tab="accounts">ACCOUNTS</button>
+                </div>
+            </div>
         </nav>
 
         <main>
@@ -195,6 +216,35 @@
                                 <div class="ref-line"><span class="ref-label">UPDATED</span> Jul 23 2026</div>
                             </div>
                         </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ═══ MC1 TAB ═══════════════════════════════════════════════════ -->
+            <div id="tab-mc1" class="tab-panel hidden">
+                <section class="mc1-section">
+                    <h2 class="section-title">SYSTEM INFO</h2>
+                    <div id="mc1-info-grid" class="mc1-info-grid">
+                        <div class="log-welcome">Connecting to MC1...</div>
+                    </div>
+                </section>
+
+                <section class="mc1-section">
+                    <div class="scores-header">
+                        <h2 class="section-title">WINDOWS SERVICES</h2>
+                        <div class="scores-controls">
+                            <button id="btn-refresh-mc1-services" class="btn btn-cyan btn-sm">REFRESH</button>
+                        </div>
+                    </div>
+                    <div id="mc1-services-grid" class="status-grid">
+                        <div class="log-welcome">Loading services...</div>
+                    </div>
+                </section>
+
+                <section class="mc1-section">
+                    <h2 class="section-title">ACTIONS</h2>
+                    <div class="mc1-actions">
+                        <button id="btn-mc1-reboot" class="btn btn-orange">REBOOT MC1</button>
                     </div>
                 </section>
             </div>
@@ -583,7 +633,7 @@
         </main>
 
         <footer>
-            <span class="footer-text">MAGMA//OPS v4.0 — MAGMACRUNCH OPERATIONS</span>
+            <span class="footer-text">MAGMA//OPS v5.0 — MAGMACRUNCH OPERATIONS</span>
         </footer>
     </div>
 
@@ -646,6 +696,7 @@
 
     <script src="shared.js"></script>
     <script src="arcade.js"></script>
+    <script src="mc1.js"></script>
     <script src="jukebox.js"></script>
     <script src="theme.js"></script>
     <script src="accounts.js"></script>

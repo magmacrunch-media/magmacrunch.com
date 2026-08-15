@@ -27,7 +27,7 @@ from threading import Thread
 
 import websockets
 
-from magmascript import GHClient, PIClient
+from magmascript import GHClient, MC1Client, PIClient
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -72,10 +72,11 @@ from magmascript.core.config import set_config as _set_magmascript_config, Confi
 
 _gh_client = None
 _pi_client = None
+_mc1_client = None
 
 def _init_gh_client():
     """Initialize GHClient with the admin dashboard's GitHub token."""
-    global _gh_client, _pi_client
+    global _gh_client, _pi_client, _mc1_client
     token = load_github_token()
     if token:
         cfg = _MagmascriptConfig()
@@ -83,6 +84,7 @@ def _init_gh_client():
         _set_magmascript_config(cfg)
     _gh_client = GHClient()
     _pi_client = PIClient(local=True)
+    _mc1_client = MC1Client()
 
 # ── Service definitions ──────────────────────────────────────────────────────
 
@@ -716,6 +718,78 @@ async def ws_handler(websocket):
                     "type": "pi_poweroff",
                     "result": result or "Shutting down..."
                 }))
+
+            # ── MC1 actions ──────────────────────────────────────────────
+
+            elif action == "mc1_info":
+                try:
+                    info = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _mc1_client.info()
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "mc1_info",
+                        "info": {
+                            "hostname": info.hostname,
+                            "uptime": info.uptime,
+                            "memory": info.memory,
+                            "cpu_load": info.cpu_load,
+                            "disk_free": info.disk_free,
+                        }
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "mc1_info",
+                        "error": str(e)
+                    }))
+
+            elif action == "mc1_services":
+                try:
+                    services = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _mc1_client.services()
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "mc1_services",
+                        "services": [{"name": s.name, "status": s.status, "ok": s.ok} for s in services]
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "mc1_services",
+                        "error": str(e)
+                    }))
+
+            elif action == "mc1_restart_service":
+                service_name = msg.get("service", "")
+                if service_name:
+                    try:
+                        result = await asyncio.get_event_loop().run_in_executor(
+                            _executor, lambda: _mc1_client.restart(service_name)
+                        )
+                        await websocket.send(json.dumps({
+                            "type": "mc1_restart_result",
+                            "service": service_name,
+                            "result": result
+                        }))
+                    except Exception as e:
+                        await websocket.send(json.dumps({
+                            "type": "mc1_restart_result",
+                            "service": service_name,
+                            "error": str(e)
+                        }))
+
+            elif action == "mc1_reboot":
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _mc1_client.reboot()
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "mc1_reboot",
+                        "result": result or "Rebooting MC1..."
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "mc1_reboot",
+                        "error": str(e)
+                    }))
 
             elif action == "chat_history":
                 # Connect to chat server and fetch history
