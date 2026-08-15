@@ -222,7 +222,7 @@
 
     // ── Tab routing ───────────────────────────────────────────────────────
 
-    const TABS = ['arcade', 'jukebox', 'themes', 'accounts', 'security', 'tv', 'favicon', 'github', 'bots', 'plays', 'traffic'];
+    const TABS = ['arcade', 'mc1', 'bots', 'jukebox', 'tv', 'favicon', 'themes', 'plays', 'traffic', 'security', 'github', 'accounts'];
 
     function getActiveTab() {
         const hash = window.location.hash.replace('#', '');
@@ -238,8 +238,8 @@
     function renderTabs() {
         const active = getActiveTab();
 
-        // Update tab bar
-        $$('.ops-tab').forEach(btn => {
+        // Update nav items
+        $$('.nav-item').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tab === active);
         });
 
@@ -247,15 +247,66 @@
         $$('.tab-panel').forEach(panel => {
             panel.classList.toggle('hidden', panel.id !== `tab-${active}`);
         });
+
+        // Update group button active state
+        $$('.nav-group').forEach(group => {
+            const hasActive = group.querySelector('.nav-item[data-tab="' + active + '"]');
+            const groupBtn = group.querySelector('.nav-group-btn');
+            if (groupBtn) groupBtn.classList.toggle('active-group', !!hasActive);
+        });
     }
 
-    // Tab bar click handling
+    // ── Dropdown nav handling ─────────────────────────────────────────────
+
     document.addEventListener('click', (e) => {
-        const tab = e.target.closest('.ops-tab');
-        if (tab) switchTab(tab.dataset.tab);
+        // Group button click — toggle dropdown
+        const groupBtn = e.target.closest('.nav-group-btn');
+        if (groupBtn) {
+            const group = groupBtn.closest('.nav-group');
+            const wasOpen = group.classList.contains('open');
+            // Close all dropdowns
+            $$('.nav-group').forEach(g => g.classList.remove('open'));
+            // Toggle this one
+            if (!wasOpen) group.classList.add('open');
+            return;
+        }
+
+        // Menu item click — switch tab, close dropdown
+        const item = e.target.closest('.nav-item');
+        if (item) {
+            switchTab(item.dataset.tab);
+            $$('.nav-group').forEach(g => g.classList.remove('open'));
+            return;
+        }
+
+        // Click outside — close all dropdowns
+        if (!e.target.closest('.nav-group')) {
+            $$('.nav-group').forEach(g => g.classList.remove('open'));
+        }
     });
 
     window.addEventListener('hashchange', renderTabs);
+
+    // Keyboard shortcuts: Alt+1 through Alt+4 for menu groups
+    document.addEventListener('keydown', (e) => {
+        if (e.altKey && !e.ctrlKey && !e.metaKey) {
+            var groups = ['systems', 'media', 'data', 'config'];
+            var idx = parseInt(e.key) - 1;
+            if (idx >= 0 && idx < groups.length) {
+                e.preventDefault();
+                var group = document.querySelector('.nav-group[data-group="' + groups[idx] + '"]');
+                if (group) {
+                    var wasOpen = group.classList.contains('open');
+                    $$('.nav-group').forEach(function(g) { g.classList.remove('open'); });
+                    if (!wasOpen) group.classList.add('open');
+                }
+            }
+        }
+        // Escape closes dropdowns
+        if (e.key === 'Escape') {
+            $$('.nav-group').forEach(function(g) { g.classList.remove('open'); });
+        }
+    });
 
     // ── Escape HTML ───────────────────────────────────────────────────────
 
@@ -269,5 +320,10 @@
 
     renderTabs();
     connect();
+
+    // Service worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(function() {});
+    }
 
 })();
