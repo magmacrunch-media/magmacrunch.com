@@ -1,5 +1,6 @@
 // config.js — Cribbage | MagmaCrunch Media © 2026
-// Card constants (SUITS, RANKS, RANK_VALUES, SUIT_COLORS, SUIT_SYMBOLS) come from AdCards
+// Card constants (SUIT_SYMBOLS, RANK_VALUES) come from AdCards
+const { SUIT_SYMBOLS, RANK_VALUES } = AdCards;
 
 // ── Game configuration ───────────────────────────────────────
 const WINNING_SCORE = 121;
