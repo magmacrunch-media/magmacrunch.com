@@ -123,7 +123,9 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 [adenosine](https://github.com/magmacrunchmedia/adenosine) is the game engine used by arcade games.
 - **adenosine-rpg.js** — game loop, input, state (used by tetris)
 - **adenosine-puzzle.js** — puzzle framework (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
-- **adenosine-score-client.js** — high score client (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
+- **adenosine-score-client.js** — high score client (used by 2^N, george-boole, fifteen-puzzle, klotski, threes, cribbage, tarot)
+- **adenosine-cards.js** — card deck, rendering, cribbage hand eval (used by cribbage, solitaire, scandinavian-stud, solitaire_THLD)
+- **adenosine-audio.js** — Web Audio API music + SFX (used by george-boole, moonlight-drift, cribbage, tarot)
 
 ### Loading in a game page
 
@@ -136,6 +138,12 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 <script src="../shared/adenosine-score-client.js"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
 <script src="../shared/adenosine-puzzle.js"></script>
+
+<!-- Card games (cribbage, solitaire, scandinavian-stud, solitaire_THLD) -->
+<script src="../shared/adenosine-cards.js"></script>
+<script src="../shared/adenosine-score-client.js"></script>
+<script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+<script src="../shared/adenosine-audio.js"></script>
 ```
 
 ### Available globals
@@ -143,6 +151,8 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 - `AdRPG` — game loop, input, state (`createGameLoop`, `initInput`, `keys`, `keysPressed`)
 - `AdPuzzle` — puzzle framework (`createGame`, `createUI`, `createScoring`, `createRenderer`, `createInput`)
 - `AdScore` — high score client (`ScoreClient`)
+- `AdCards` — card deck, rendering, cribbage hand eval (`Card`, `Deck`, `CribbageHandEval`)
+- `AdAudio` — Web Audio API music + SFX (`init`, `playMusic`, `playSfx`)
 
 ### Integration pattern
 
