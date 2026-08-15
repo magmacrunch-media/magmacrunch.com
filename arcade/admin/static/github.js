@@ -200,7 +200,9 @@
     statusText.textContent = 'CHECKING...';
 
     // Check for saved token on server (wait for WS connection)
+    var origOnConnect = window.OPS.onConnect;
     window.OPS.onConnect = function() {
+        if (origOnConnect) origOnConnect();
         window.OPS.send({
             action: 'github_config_load',
             token: window.OPS.authToken,
