@@ -157,6 +157,33 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 Adenosine packages ship both ESM (for npm) and IIFE (for `<script>` tags). IIFE files live in
 `arcade/shared/adenosine-*.js`. Build from the adenosine repo: `npm run build` produces `dist/index.global.js`.
 
+### Repository
+
+[adenosine](https://github.com/magmacrunchmedia/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.
+
+**Cloned on both machines:**
+- Mac: `~/adenosine`
+- MC1: `~/adenosine` (WSL2: `/home/magma/adenosine`)
+
+**Sync:** Same as magmacrunch.com — GitHub is the source of truth. Always `git pull` before editing, commit/push frequently.
+
+**Build from repo:**
+```bash
+cd ~/adenosine
+npm install
+npm run build        # builds all packages
+# IIFE bundles land in packages/*/dist/index.global.js
+```
+
+**Build from website repo (npm packages):**
+```bash
+cd ~/website
+npm ci
+npm run build:adenosine   # copies IIFE bundles to arcade/shared/
+```
+
+**Two extra files not in npm:** `arcade/shared/adenosine-cards.js` and `arcade/shared/adenosine-audio.js` are built from the adenosine repo and committed manually (not part of the npm build script).
+
 ## Distributed music
 
 Release data lives in `music/distributed-music/releases.js` as a `window.RELEASES` array.
