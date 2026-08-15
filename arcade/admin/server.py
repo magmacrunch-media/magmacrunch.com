@@ -107,6 +107,13 @@ VALID_UNITS = {svc["unit"] for svc in SERVICES} | {"arcade-admin"}
 def valid_unit(unit):
     return unit in VALID_UNITS
 
+def _format_memory(mem):
+    """Swap memory format from 'Total/Used' to 'Used/Total'."""
+    if '/' in mem:
+        parts = mem.split('/')
+        return parts[1].strip() + ' / ' + parts[0].strip()
+    return mem
+
 # ── Score storage ────────────────────────────────────────────────────────────
 
 SCORES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "scores")
@@ -695,7 +702,7 @@ async def ws_handler(websocket):
                     "info": {
                         "uptime": info.uptime,
                         "hostname": info.hostname,
-                        "memory": info.memory,
+                        "memory": _format_memory(info.memory),
                         "cpu_temp": info.cpu_temp,
                         "cpu_load": info.cpu_load,
                     }
@@ -731,7 +738,7 @@ async def ws_handler(websocket):
                         "info": {
                             "hostname": info.hostname,
                             "uptime": info.uptime,
-                            "memory": info.memory,
+                            "memory": _format_memory(info.memory),
                             "cpu_load": info.cpu_load,
                             "disk_free": info.disk_free,
                         }
