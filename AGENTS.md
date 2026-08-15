@@ -432,6 +432,11 @@ Internet ──HTTPS──> Pi (nginx:443) ──Tailscale──> MC1 (WSL2:8785
 - **Config** (`opencode.json`) — opencode connects as `"type": "remote"`
 - **Service** — systemd on MC1 WSL2 (`mcp-server.service`) + Windows scheduled task for auto-start on boot
 
+### SSH access
+
+Windows host: `ssh magma@100.75.220.87`
+WSL2 commands: `wsl -d Ubuntu -u root -- <command>`
+
 ### Setup
 
 **MC1 (WSL2):**
@@ -495,13 +500,12 @@ sudo nginx -t && sudo systemctl reload nginx
 
 **MC1 (WSL2):**
 ```bash
-# Status
+# SSH into MC1 first
+ssh magma@100.75.220.87
+
+# Then run WSL2 commands:
 wsl -d Ubuntu -u root -- systemctl status mcp-server
-
-# Restart
 wsl -d Ubuntu -u root -- systemctl restart mcp-server
-
-# Logs
 wsl -d Ubuntu -u root -- journalctl -u mcp-server -f
 wsl -d Ubuntu -u root -- journalctl -u mcp-server -n 50
 ```
@@ -532,7 +536,7 @@ sudo nginx -t && sudo systemctl reload nginx
 ### Troubleshooting
 
 - **401 Unauthorized** — check `MCP_API_KEY` in `~/.zshrc` (Mac) and `~/website/mcp-server/.env` (MC1)
-- **502 Bad Gateway** — MCP server not running on MC1; check `wsl -d Ubuntu -u root -- systemctl status mcp-server`
+- **502 Bad Gateway** — MCP server not running on MC1; SSH in (`ssh magma@100.75.220.87`) then check `wsl -d Ubuntu -u root -- systemctl status mcp-server`
 - **Connection refused** — port 443 not forwarded from router; check router config
 - **MC1 unreachable** — check Tailscale status: `tailscale status | grep mc1`
 - **Pi fallback** — if MC1 is down, change nginx proxy_pass back to `http://127.0.0.1:8785/mcp` and reload nginx
@@ -658,6 +662,7 @@ journalctl -u arcade-chat -n 50
 
 MC1 (Windows PC) runs the self-hosted GitHub Actions runner inside WSL2 Ubuntu:
 
+- **SSH**: `ssh magma@100.75.220.87` (Windows host)
 - **Service**: `actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux`
 - **Config**: `~/actions-runner` (WSL2 Ubuntu: `wsl -d Ubuntu`)
 - **Start type**: enabled (auto-starts on boot via systemd)
@@ -819,11 +824,13 @@ The runner runs as a systemd service inside WSL2 on MC1 — no manual interventi
 
 **Status check (from MC1):**
 ```bash
+ssh magma@100.75.220.87
 wsl -d Ubuntu -- sudo systemctl status actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux.service
 ```
 
 **Restart (from MC1):**
 ```bash
+ssh magma@100.75.220.87
 wsl -d Ubuntu -- sudo systemctl restart actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux.service
 ```
 
