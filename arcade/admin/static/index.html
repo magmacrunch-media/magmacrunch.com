@@ -163,9 +163,10 @@
                     </div>
                 </section>
 
-                <!-- Server Reference -->
-                <section class="server-ref-section">
-                    <h2 class="section-title">SERVER REFERENCE</h2>
+                <!-- Server Reference (collapsible) -->
+                <details class="server-ref-details">
+                    <summary class="server-ref-toggle">SERVER REFERENCE</summary>
+                    <section class="server-ref-section">
                     <div class="server-ref-grid">
                         <div class="server-ref-card">
                             <h3 class="server-ref-label">PORT MAP</h3>
@@ -235,12 +236,18 @@
                         </div>
                     </div>
                 </section>
+                </details>
             </div>
 
             <!-- ═══ MC1 TAB ═══════════════════════════════════════════════════ -->
             <div id="tab-mc1" class="tab-panel hidden">
                 <section class="mc1-section">
-                    <h2 class="section-title">SYSTEM INFO</h2>
+                    <div class="content-header">
+                        <h2 class="section-title">SYSTEM INFO</h2>
+                        <div class="content-controls">
+                            <button id="btn-mc1-reboot" class="btn btn-orange btn-sm">REBOOT MC1</button>
+                        </div>
+                    </div>
                     <div id="mc1-info-grid" class="mc1-info-grid">
                         <div class="log-welcome">Connecting to MC1...</div>
                     </div>
@@ -255,13 +262,6 @@
                     </div>
                     <div id="mc1-services-grid" class="status-grid">
                         <div class="log-welcome">Loading services...</div>
-                    </div>
-                </section>
-
-                <section class="mc1-section">
-                    <h2 class="section-title">ACTIONS</h2>
-                    <div class="mc1-actions">
-                        <button id="btn-mc1-reboot" class="btn btn-orange">REBOOT MC1</button>
                     </div>
                 </section>
             </div>

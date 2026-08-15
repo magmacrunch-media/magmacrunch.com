@@ -160,14 +160,16 @@
     });
 
     btnSyncAll.addEventListener('click', function() {
-        btnSyncAll.disabled = true;
-        btnSyncAll.textContent = 'SYNCING...';
-        window.OPS.send({
-            action: 'github_sync_all',
-            message: getCommitMessage(),
-            token: window.OPS.authToken,
+        window.OPS.confirm('SYNC ALL TO GITHUB', 'This will push all local changes (jukebox, TV, themes, scores) to production.', function() {
+            btnSyncAll.disabled = true;
+            btnSyncAll.textContent = 'SYNCING...';
+            window.OPS.send({
+                action: 'github_sync_all',
+                message: getCommitMessage(),
+                token: window.OPS.authToken,
+            });
+            log('Syncing all changes...');
         });
-        log('Syncing all changes...');
     });
 
     btnBackupMB.addEventListener('click', function() {
