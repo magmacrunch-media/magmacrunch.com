@@ -128,6 +128,7 @@ CONF_FILE="/home/jake/arcade/mcp-api-key.conf"
 KEY=$(grep "^MCP_API_KEY=" "$ENV_FILE" 2>/dev/null | cut -d= -f2)
 if [ -n "$KEY" ]; then
     echo "set \$mcp_api_key \"$KEY\";" > "$CONF_FILE"
+    chown jake:jake "$CONF_FILE"
 else
     echo "Warning: MCP_API_KEY not found in $ENV_FILE" >&2
 fi

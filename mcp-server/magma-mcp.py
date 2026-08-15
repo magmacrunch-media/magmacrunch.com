@@ -1440,6 +1440,102 @@ def export_rights_catalog() -> str:
 
 
 # ---------------------------------------------------------------------------
+# Tools — corrections (anti-hallucination)
+# ---------------------------------------------------------------------------
+
+CORRECTIONS_DIR = PROJECT_ROOT / "archive" / "_corrections"
+
+
+@mcp.tool()
+def submit_correction(entity_type: str, entity_key: str, field: str,
+                      incorrect_value: str, correct_value: str, source: str = "") -> str:
+    """Submit a correction for false information the model generated.
+    
+    Args:
+        entity_type: artists, places, works, collectives, contributors, labels
+        entity_key: UUID or slug of the entity
+        field: The field that was wrong (e.g. "name", "area", "date", "description")
+        incorrect_value: What the model incorrectly stated
+        correct_value: The correct information
+        source: Where the correct info came from (e.g. "verified by user", "MusicBrainz API")
+    """
+    CORRECTIONS_DIR.mkdir(parents=True, exist_ok=True)
+    correction_file = CORRECTIONS_DIR / f"{entity_type}_{entity_key}.json"
+    
+    corrections = []
+    if correction_file.exists():
+        try:
+            corrections = json.loads(correction_file.read_text())
+        except Exception:
+            corrections = []
+    
+    corrections.append({
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "field": field,
+        "incorrect": incorrect_value,
+        "correct": correct_value,
+        "source": source,
+    })
+    
+    correction_file.write_text(json.dumps(corrections, indent=2))
+    return f"Correction recorded for {entity_type}/{entity_key}: {field}"
+
+
+@mcp.tool()
+def get_corrections(entity_type: str, entity_key: str) -> str:
+    """Get all recorded corrections for an entity to avoid repeating mistakes.
+    
+    Args:
+        entity_type: artists, places, works, collectives, contributors, labels
+        entity_key: UUID or slug of the entity
+    """
+    correction_file = CORRECTIONS_DIR / f"{entity_type}_{entity_key}.json"
+    if not correction_file.exists():
+        return f"No corrections recorded for {entity_type}/{entity_key}"
+    
+    try:
+        corrections = json.loads(correction_file.read_text())
+    except Exception:
+        return f"Error reading corrections for {entity_type}/{entity_key}"
+    
+    lines = [f"Corrections for {entity_type}/{entity_key} ({len(corrections)} total):\n"]
+    for c in corrections:
+        lines.append(f"  [{c.get('timestamp', 'unknown')}] {c.get('field', 'unknown')}:")
+        lines.append(f"    WRONG:  {c.get('incorrect', 'unknown')}")
+        lines.append(f"    CORRECT: {c.get('correct', 'unknown')}")
+        if c.get('source'):
+            lines.append(f"    Source: {c['source']}")
+        lines.append("")
+    
+    return "\n".join(lines)
+
+
+@mcp.tool()
+def get_known_errors(entity_type: str, entity_key: str) -> str:
+    """MUST be called before making any claims about an entity. Returns known errors to avoid repeating past hallucinations.
+    
+    Args:
+        entity_type: artists, places, works, collectives, contributors, labels
+        entity_key: UUID or slug of the entity
+    """
+    correction_file = CORRECTIONS_DIR / f"{entity_type}_{entity_key}.json"
+    if not correction_file.exists():
+        return "No known errors for this entity."
+    
+    try:
+        corrections = json.loads(correction_file.read_text())
+    except Exception:
+        return "Error reading corrections."
+    
+    lines = [f"KNOWN ERRORS to avoid (from {len(corrections)} past corrections):\n"]
+    for c in corrections:
+        lines.append(f"- DO NOT say \"{c.get('incorrect', 'unknown')}\" about {c.get('field', 'unknown')}")
+        lines.append(f"  The correct value is: \"{c.get('correct', 'unknown')}\"")
+    
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
