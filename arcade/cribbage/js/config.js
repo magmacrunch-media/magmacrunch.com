@@ -1,4 +1,7 @@
 // config.js — Cribbage | MagmaCrunch Media © 2026
+// Needed by AdCards.Deck internally (IIFE build references these as globals)
+const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];
+const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 // Card constants (SUIT_SYMBOLS, RANK_VALUES) come from AdCards
 const { SUIT_SYMBOLS, RANK_VALUES } = AdCards;
 
