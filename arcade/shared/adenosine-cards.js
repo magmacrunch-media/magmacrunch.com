@@ -33,11 +33,11 @@ var AdCards = (() => {
     HAND_POINTS: () => HAND_POINTS,
     HAND_RANKS: () => HAND_RANKS,
     HandEvaluator: () => HandEvaluator,
-    RANKS: () => RANKS2,
-    RANK_VALUES: () => RANK_VALUES2,
-    SUITS: () => SUITS2,
-    SUIT_COLORS: () => SUIT_COLORS2,
-    SUIT_SYMBOLS: () => SUIT_SYMBOLS2,
+    RANKS: () => RANKS,
+    RANK_VALUES: () => RANK_VALUES,
+    SUITS: () => SUITS,
+    SUIT_COLORS: () => SUIT_COLORS,
+    SUIT_SYMBOLS: () => SUIT_SYMBOLS,
     breakIntoStacks: () => breakIntoStacks,
     cornerHTML: () => cornerHTML,
     cornerPipSVG: () => cornerPipSVG,
@@ -991,6 +991,37 @@ var AdCards = (() => {
     return layouts[rank] || "";
   }
 
+  // src/constants.js
+  var SUITS = ["hearts", "diamonds", "clubs", "spades"];
+  var RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+  var SUIT_SYMBOLS = {
+    hearts: "\u2665",
+    diamonds: "\u2666",
+    clubs: "\u2663",
+    spades: "\u2660"
+  };
+  var SUIT_COLORS = {
+    hearts: "#cc0000",
+    diamonds: "#cc0000",
+    clubs: "#111111",
+    spades: "#111111"
+  };
+  var RANK_VALUES = {
+    A: 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    J: 11,
+    Q: 12,
+    K: 13
+  };
+
   // src/deck.js
   var _cardBackIdCounter = 0;
   function getCardBackSVG() {
@@ -1328,37 +1359,6 @@ var AdCards = (() => {
       legend.appendChild(item);
     });
   }
-
-  // src/constants.js
-  var SUITS2 = ["hearts", "diamonds", "clubs", "spades"];
-  var RANKS2 = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-  var SUIT_SYMBOLS2 = {
-    hearts: "\u2665",
-    diamonds: "\u2666",
-    clubs: "\u2663",
-    spades: "\u2660"
-  };
-  var SUIT_COLORS2 = {
-    hearts: "#cc0000",
-    diamonds: "#cc0000",
-    clubs: "#111111",
-    spades: "#111111"
-  };
-  var RANK_VALUES2 = {
-    A: 1,
-    "2": 2,
-    "3": 3,
-    "4": 4,
-    "5": 5,
-    "6": 6,
-    "7": 7,
-    "8": 8,
-    "9": 9,
-    "10": 10,
-    J: 11,
-    Q: 12,
-    K: 13
-  };
 
   // src/hand-eval.js
   var HAND_RANKS = {
