@@ -141,13 +141,6 @@
       "source": "arcade/cribbage/index.html"
     }
   ],
-  "Arcade — crystal-mirror-maze": [
-    {
-      "name": "mc-back-color",
-      "value": "rgba(180, 140, 255, 0.5)",
-      "source": "arcade/crystal-mirror-maze/index.html"
-    }
-  ],
   "Arcade — fifteen-puzzle": [
     {
       "name": "mc-back-color",
