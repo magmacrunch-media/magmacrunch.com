@@ -22,3 +22,4 @@ drafts/
 arcade/shared/adenosine-rpg.js
 arcade/shared/adenosine-score-client.js
 arcade/shared/adenosine-puzzle.js
+mcp-server/.env
