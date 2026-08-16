@@ -741,6 +741,10 @@ async def ws_handler(websocket):
                             "memory": _format_memory(info.memory),
                             "cpu_load": info.cpu_load,
                             "disk_free": info.disk_free,
+                            "disk_free_gb": info.disk_free_gb,
+                            "cpu_name": info.cpu_name,
+                            "cpu_cores": info.cpu_cores,
+                            "os_version": info.os_version,
                         }
                     }))
                 except Exception as e:

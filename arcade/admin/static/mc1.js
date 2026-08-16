@@ -61,12 +61,14 @@
         var hdrUptime = document.getElementById('mc1-uptime');
         var hdrCpu = document.getElementById('mc1-cpu');
         var hdrMem = document.getElementById('mc1-mem');
+        var hdrDisk = document.getElementById('mc1-disk');
 
         if (msg.error) {
             mc1InfoGrid.innerHTML = '<div class="log-welcome">ERROR: ' + window.OPS.escapeHtml(msg.error) + '</div>';
             if (hdrUptime) hdrUptime.textContent = 'OFFLINE';
             if (hdrCpu) hdrCpu.textContent = '';
             if (hdrMem) hdrMem.textContent = '';
+            if (hdrDisk) hdrDisk.textContent = '';
             return;
         }
         var info = msg.info;
@@ -75,14 +77,17 @@
         if (hdrUptime) hdrUptime.textContent = info.uptime || '—';
         if (hdrCpu) hdrCpu.textContent = info.cpu_load || '—';
         if (hdrMem) hdrMem.textContent = info.memory || '—';
+        if (hdrDisk) hdrDisk.textContent = info.disk_free || '—';
 
         // Update tab panel
         var items = [
             { label: 'HOSTNAME', value: info.hostname },
             { label: 'UPTIME', value: info.uptime },
-            { label: 'CPU', value: info.cpu_load },
+            { label: 'CPU', value: (info.cpu_name || '—') + (info.cpu_cores ? ' (' + info.cpu_cores + ' cores)' : '') },
+            { label: 'CPU LOAD', value: info.cpu_load },
             { label: 'MEMORY', value: info.memory },
-            { label: 'DISK', value: info.disk_free }
+            { label: 'DISK', value: info.disk_free + (info.disk_free_gb ? ' (' + info.disk_free_gb + ')' : '') },
+            { label: 'OS', value: info.os_version }
         ];
 
         mc1InfoGrid.innerHTML = '';
