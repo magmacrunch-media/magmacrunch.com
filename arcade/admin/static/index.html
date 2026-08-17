@@ -246,11 +246,28 @@
                     <div class="content-header">
                         <h2 class="section-title">SYSTEM INFO</h2>
                         <div class="content-controls">
+                            <button id="btn-mc1-wol" class="btn btn-green btn-sm">WAKE ON LAN</button>
                             <button id="btn-mc1-reboot" class="btn btn-orange btn-sm">REBOOT MC1</button>
                         </div>
                     </div>
                     <div id="mc1-info-grid" class="mc1-info-grid">
                         <div class="log-welcome">Connecting to MC1...</div>
+                    </div>
+                </section>
+
+                <section class="mc1-section">
+                    <div class="content-header">
+                        <h2 class="section-title">POWER MANAGEMENT</h2>
+                        <div class="content-controls">
+                            <button id="btn-refresh-power" class="btn btn-cyan btn-sm">REFRESH</button>
+                        </div>
+                    </div>
+                    <div id="mc1-power-grid" class="mc1-info-grid">
+                        <div class="log-welcome">Loading power settings...</div>
+                    </div>
+                    <div class="action-bar">
+                        <button id="btn-power-always-on" class="btn btn-green btn-sm">ALWAYS-ON MODE</button>
+                        <button id="btn-power-sleep" class="btn btn-purple btn-sm">SLEEP MODE</button>
                     </div>
                 </section>
 

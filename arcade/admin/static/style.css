@@ -634,6 +634,12 @@ main {
 
 .btn-xs { font-size: 6px; padding: 4px 8px; }
 
+.btn-active { 
+    background: currentColor; 
+    color: var(--black); 
+    box-shadow: 0 0 15px currentColor;
+}
+
 .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
 /* ── Log Section ─────────────────────────────────────────────────────────── */
