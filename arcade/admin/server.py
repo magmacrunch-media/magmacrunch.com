@@ -802,6 +802,58 @@ async def ws_handler(websocket):
                         "error": str(e)
                     }))
 
+            elif action == "mc1_wol":
+                mac_address = msg.get("mac", "A0:AD:9F:A4:72:97")
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _mc1_client.wake_on_lan(mac_address)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "mc1_wol",
+                        "result": result
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "mc1_wol",
+                        "error": str(e)
+                    }))
+
+            elif action == "mc1_power_settings":
+                try:
+                    settings = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _mc1_client.get_power_settings()
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "mc1_power_settings",
+                        "settings": {
+                            "sleep_timeout_ac": settings.sleep_timeout_ac,
+                            "hibernate_timeout_ac": settings.hibernate_timeout_ac,
+                            "power_mode": settings.power_mode,
+                            "hibernate_enabled": settings.hibernate_enabled,
+                        }
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "mc1_power_settings",
+                        "error": str(e)
+                    }))
+
+            elif action == "mc1_set_power_mode":
+                mode = msg.get("mode", "sleep")
+                try:
+                    result = await asyncio.get_event_loop().run_in_executor(
+                        _executor, lambda: _mc1_client.set_power_mode(mode)
+                    )
+                    await websocket.send(json.dumps({
+                        "type": "mc1_set_power_mode",
+                        "result": result
+                    }))
+                except Exception as e:
+                    await websocket.send(json.dumps({
+                        "type": "mc1_set_power_mode",
+                        "error": str(e)
+                    }))
+
             elif action == "chat_history":
                 # Connect to chat server and fetch history
                 try:

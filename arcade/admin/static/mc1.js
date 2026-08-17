@@ -12,8 +12,13 @@
 
     var mc1InfoGrid = $('#mc1-info-grid');
     var mc1ServicesGrid = $('#mc1-services-grid');
+    var mc1PowerGrid = $('#mc1-power-grid');
     var btnRefreshServices = $('#btn-refresh-mc1-services');
     var btnReboot = $('#btn-mc1-reboot');
+    var btnWol = $('#btn-mc1-wol');
+    var btnRefreshPower = $('#btn-refresh-power');
+    var btnPowerAlwaysOn = $('#btn-power-always-on');
+    var btnPowerSleep = $('#btn-power-sleep');
 
     // ── Message handler ───────────────────────────────────────────────────
 
@@ -34,6 +39,16 @@
             case 'mc1_reboot':
                 window.OPS.toast(msg.result || msg.error || 'Rebooting MC1...');
                 break;
+            case 'mc1_wol':
+                window.OPS.toast(msg.result || msg.error || 'WoL packet sent');
+                break;
+            case 'mc1_power_settings':
+                renderPowerSettings(msg);
+                break;
+            case 'mc1_set_power_mode':
+                window.OPS.toast(msg.result || msg.error || 'Power mode updated');
+                requestPowerSettings();
+                break;
         }
     };
 
@@ -42,6 +57,7 @@
         if (origOnConnect) origOnConnect();
         requestMc1Info();
         requestMc1Services();
+        requestPowerSettings();
     };
 
     // ── Actions ───────────────────────────────────────────────────────────
@@ -52,6 +68,10 @@
 
     function requestMc1Services() {
         window.OPS.send({ action: 'mc1_services', token: window.OPS.authToken });
+    }
+
+    function requestPowerSettings() {
+        window.OPS.send({ action: 'mc1_power_settings', token: window.OPS.authToken });
     }
 
     // ── Render system info ────────────────────────────────────────────────
@@ -99,6 +119,44 @@
                 '<span class="system-info-value">' + window.OPS.escapeHtml(item.value || '—') + '</span>';
             mc1InfoGrid.appendChild(card);
         });
+    }
+
+    // ── Render power settings ─────────────────────────────────────────────
+
+    function renderPowerSettings(msg) {
+        if (msg.error) {
+            mc1PowerGrid.innerHTML = '<div class="log-welcome">ERROR: ' + window.OPS.escapeHtml(msg.error) + '</div>';
+            return;
+        }
+        var settings = msg.settings;
+
+        var items = [
+            { label: 'POWER MODE', value: settings.power_mode === 'always-on' ? 'ALWAYS-ON' : 'SLEEP' },
+            { label: 'SLEEP TIMEOUT', value: settings.sleep_timeout_ac === 0 ? 'NEVER' : settings.sleep_timeout_ac + ' min' },
+            { label: 'HIBERNATE TIMEOUT', value: settings.hibernate_timeout_ac === 0 ? 'NEVER' : settings.hibernate_timeout_ac + ' min' },
+            { label: 'HIBERNATE', value: settings.hibernate_enabled ? 'ENABLED' : 'DISABLED' }
+        ];
+
+        mc1PowerGrid.innerHTML = '';
+        items.forEach(function(item) {
+            var card = document.createElement('div');
+            card.className = 'mc1-info-card';
+            card.innerHTML =
+                '<span class="system-info-label">' + item.label + '</span>' +
+                '<span class="system-info-value">' + window.OPS.escapeHtml(item.value) + '</span>';
+            mc1PowerGrid.appendChild(card);
+        });
+
+        // Update button states
+        if (btnPowerAlwaysOn && btnPowerSleep) {
+            if (settings.power_mode === 'always-on') {
+                btnPowerAlwaysOn.classList.add('btn-active');
+                btnPowerSleep.classList.remove('btn-active');
+            } else {
+                btnPowerAlwaysOn.classList.remove('btn-active');
+                btnPowerSleep.classList.add('btn-active');
+            }
+        }
     }
 
     // ── Render services ───────────────────────────────────────────────────
@@ -176,6 +234,34 @@
         btnReboot.addEventListener('click', function() {
             window.OPS.confirm('REBOOT MC1', 'This will reboot the Windows PC. It should come back automatically.', function() {
                 window.OPS.send({ action: 'mc1_reboot', token: window.OPS.authToken });
+            });
+        });
+    }
+
+    if (btnWol) {
+        btnWol.addEventListener('click', function() {
+            window.OPS.confirm('WAKE ON LAN', 'Send a Wake-on-LAN magic packet to MC1? This will wake it from sleep/hibernate.', function() {
+                window.OPS.send({ action: 'mc1_wol', token: window.OPS.authToken });
+            });
+        });
+    }
+
+    if (btnRefreshPower) {
+        btnRefreshPower.addEventListener('click', requestPowerSettings);
+    }
+
+    if (btnPowerAlwaysOn) {
+        btnPowerAlwaysOn.addEventListener('click', function() {
+            window.OPS.confirm('SET ALWAYS-ON MODE', 'MC1 will never sleep or hibernate. Use this when running local LLMs.', function() {
+                window.OPS.send({ action: 'mc1_set_power_mode', mode: 'always-on', token: window.OPS.authToken });
+            });
+        });
+    }
+
+    if (btnPowerSleep) {
+        btnPowerSleep.addEventListener('click', function() {
+            window.OPS.confirm('SET SLEEP MODE', 'MC1 will sleep after 30 minutes of inactivity. You can wake it with Wake-on-LAN.', function() {
+                window.OPS.send({ action: 'mc1_set_power_mode', mode: 'sleep', token: window.OPS.authToken });
             });
         });
     }
