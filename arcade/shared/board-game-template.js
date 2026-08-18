@@ -126,21 +126,49 @@ window.BoardGameTemplate = (function () {
         html += '  <div class="message-area">\n';
         html += '    <div id="gameMessage" class="game-message">Select a piece to move</div>\n';
         html += '  </div>\n\n';
+        // In-game chat panel, shown only during a multiplayer match. checkers and
+        // backgammon toggle its display; an unguarded reference to it used to abort
+        // startLocalGame() before the board was ever drawn.
+        html += '  <div id="gameChat" class="game-chat" style="display: none;"></div>\n\n';
         html += '  <div class="game-controls">\n' + controlsHtml + '  </div>\n';
         html += '</div>\n';
 
         // Lobby overlay (multiplayer)
+        // The union of what chess, checkers and backgammon drive — they are the
+        // only consumers of this template, and each reads a slightly different
+        // subset. Nesting keeps both conventions working: checkers/backgammon
+        // show and hide the #lobbyRoomCode wrapper and write the code straight
+        // into #roomCodeDisplay, while chess hides #roomCodeDisplay and writes
+        // #roomCodeValue. Neither game runs on the other's page, so the overlap
+        // is harmless.
+        // The inline display:none is load-bearing. The stylesheet hides
+        // .modal-overlay with opacity/visibility and reveals it via .active, but
+        // for markup inserted with insertAdjacentHTML that class alone does not
+        // take effect — the element stays at opacity 0. Toggling display when the
+        // lobby opens forces the recalculation that lets .active apply, so every
+        // game must set display as well as the class.
         html += '<div id="lobbyOverlay" class="modal-overlay" style="display: none;">\n';
         html += '  <div class="modal-content lobby-content">\n';
         html += '    <div class="modal-titlebar"><span>ONLINE LOBBY</span><button id="closeLobby" class="modal-close">✕</button></div>\n';
         html += '    <div class="modal-body">\n';
         html += '      <div id="lobbyStatus" class="lobby-status">Connecting...</div>\n';
-        html += '      <div id="roomCodeDisplay" class="room-code-display" style="display: none;"><span class="room-code-label">ROOM</span><span id="roomCodeValue" class="room-code-value">----</span></div>\n';
-        html += '      <div class="lobby-players"><div class="lobby-players-header">PLAYERS</div><div id="lobbyPlayerList" class="lobby-player-list"></div></div>\n';
+        html += '      <div id="lobbyRoomCode" class="lobby-room-code" style="display: none; text-align: center;">\n';
+        html += '        <div id="roomCodeDisplay" class="room-code-display"><span class="room-code-label">ROOM</span><span id="roomCodeValue" class="room-code-value">----</span></div>\n';
+        html += '      </div>\n';
+        html += '      <div id="lobbyPlayers" class="lobby-players"><div class="lobby-players-header">PLAYERS</div><div id="lobbyPlayerList" class="lobby-player-list"></div></div>\n';
+        html += '      <div class="lobby-join">\n';
+        html += '        <input id="roomCodeInput" class="room-code-input" type="text" maxlength="8" placeholder="ROOM CODE" autocomplete="off">\n';
+        html += '        <button id="lobbyJoinBtn" class="start-btn">JOIN</button>\n';
+        html += '      </div>\n';
+        html += '      <div id="lobbyTimeControl" style="display: none;"></div>\n';
+        html += '      <div id="lobbyStartArea" class="lobby-actions" style="display: none;">\n';
+        html += '        <button id="lobbyStartBtn" class="start-btn primary">START GAME</button>\n';
+        html += '      </div>\n';
         html += '      <div class="lobby-actions">\n';
         html += '        <button id="startMultiplayerBtn" class="start-btn primary" style="display: none;">START GAME</button>\n';
         html += '        <button id="spectateBtn" class="start-btn">SPECTATE</button>\n';
         html += '        <button id="leaveLobbyBtn" class="start-btn">LEAVE</button>\n';
+        html += '        <button id="lobbyBackBtn" class="start-btn">BACK</button>\n';
         html += '      </div>\n';
         html += '    </div>\n';
         html += '  </div>\n';
