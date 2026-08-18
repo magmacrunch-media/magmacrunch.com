@@ -53,9 +53,7 @@ var MP = {
 
   connect: function(server) {
     var addr = server || MP._resolveServer();
-    var isLocal = addr.match(/^(localhost|127\.0\.0\.1|192\.168\.|10\.|172\.)/);
-    var scheme  = isLocal ? 'ws://' : 'wss://';
-    var url = addr.startsWith('ws') ? addr : scheme + addr;
+    var url = addr.startsWith('ws') ? addr : MP._scheme(addr) + addr;
 
     MP._socket = new WebSocket(url);
 
@@ -84,10 +82,45 @@ var MP = {
     });
   },
 
+  // Hosts the ?server= override is allowed to name. Without this a crafted link
+  // can point a visitor's game socket, and the name they play under, at any
+  // host the attacker chooses.
+  _allowlist: [
+    'magmacrunch.duckdns.org',
+    'magmacrunch.com',
+    'localhost',
+    '127.0.0.1',
+    '192.168.1.16'
+  ],
+
+  _hostOf: function(addr) {
+    return String(addr).replace(/^wss?:\/\//, '').split('/')[0].split(':')[0];
+  },
+
+  _isAllowed: function(addr) {
+    var host = MP._hostOf(addr);
+    // Private ranges stay open so LAN play and dev servers keep working.
+    if (/^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(host)) return true;
+    return MP._allowlist.indexOf(host) !== -1;
+  },
+
+  // A ws: socket opened from an https: page is blocked as mixed content, so the
+  // scheme has to follow the page rather than the address. Loopback and LAN
+  // addresses have no certificate and stay on plain ws:.
+  _scheme: function(addr) {
+    if (/^(localhost|127\.0\.0\.1|192\.168\.|10\.|172\.)/.test(addr)) return 'ws://';
+    try {
+      return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    } catch(e) { return 'ws://'; }
+  },
+
   _resolveServer: function() {
     try {
       var param = new URLSearchParams(window.location.search).get('server');
-      if (param && param.trim()) return param.trim();
+      if (param && param.trim()) {
+        if (MP._isAllowed(param.trim())) return param.trim();
+        console.warn('[MP] ignoring ?server= override for non-allowlisted host: ' + MP._hostOf(param));
+      }
     } catch(e) {}
     if (typeof MP_DEFAULT_SERVER !== 'undefined') return MP_DEFAULT_SERVER;
     var h = window.location.hostname;
