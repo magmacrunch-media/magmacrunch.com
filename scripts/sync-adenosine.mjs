@@ -26,7 +26,15 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SHARED = join(ROOT, 'arcade', 'shared');
 
 /** Package short name -> the arcade/shared/ filename games load. */
-const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio'];
+const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio', 'chat', 'multiplayer'];
+
+/**
+ * Extra files a package ships beside its bundle. adenosine-chat's SharedWorker
+ * must sit next to the bundle that loads it: the widget resolves the worker as
+ * a sibling of its own <script src>, and a SharedWorker cannot be bundled in
+ * (it is a separate execution context loaded by URL).
+ */
+const EXTRA_ASSETS = { chat: ['chat-worker.js'] };
 
 /**
  * Hand-written scripts in arcade/shared/ that are not generated from npm but
@@ -98,6 +106,19 @@ for (const pkg of PACKAGES) {
     stale.push(`  @magmacrunch/adenosine-${pkg}: lockfile ${locked}, installed ${version}`);
   }
   console.log(`  ${changed ? 'updated' : 'unchanged'}  adenosine-${pkg}.js  v${version}  ?v=${hash}`);
+
+  for (const asset of EXTRA_ASSETS[pkg] ?? []) {
+    const from = join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'dist', asset);
+    if (!existsSync(from)) {
+      missing.push(`@magmacrunch/adenosine-${pkg} is missing dist/${asset}`);
+      continue;
+    }
+    const bytes = readFileSync(from);
+    const dest = join(SHARED, asset);
+    const assetChanged = !existsSync(dest) || !readFileSync(dest).equals(bytes);
+    if (assetChanged) writeFileSync(dest, bytes);
+    console.log(`  ${assetChanged ? 'updated' : 'unchanged'}  ${asset}  (asset of adenosine-${pkg})`);
+  }
 }
 
 for (const name of LOCAL_SHARED) {
