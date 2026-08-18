@@ -4,6 +4,35 @@
 
 Open `index.html` directly in browser. No build server, no package manager, no tests.
 
+## Git identity — read before committing
+
+**Commit and push as `magmacrunchmedia`. Never add an AI attribution trailer.**
+
+Two GitHub accounts are authenticated on this Mac — `magmacrunchmedia` and
+a separate work account — and `git` here uses `gh` as its credential helper
+(`credential.helper = !gh auth git-credential`). That means pushes go out as
+whichever account `gh` currently has *active*, not as whatever `user.name` says.
+Switching accounts for something unrelated silently changes who your next push
+comes from.
+
+Check before every push, and abort if it is not `magmacrunchmedia`:
+
+```bash
+gh auth status                 # look for "Active account: true"
+gh auth switch --user magmacrunchmedia
+```
+
+Commit author should be `magmacrunchmedia <magmacrunchmedia@gmail.com>` (already
+set repo-locally here, and globally for `~/adenosine`).
+
+**No AI attribution.** Do not append `Co-Authored-By: Claude …`, "Generated with
+…", or any similar trailer to commit messages, PR bodies or release notes. These
+are Jake's own published projects under his own name and npm account. Both repo
+histories were rewritten once to strip these — do not reintroduce them. If your
+tooling adds such a line by default, remove it before committing.
+
+The same applies in `~/adenosine`, which has no agent-guidance file of its own.
+
 ## magmascript
 
 [magmascript](https://github.com/magmacrunchmedia/magmascript) is the primary CLI tool for managing this site. Key commands:
