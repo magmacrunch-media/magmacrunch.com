@@ -548,6 +548,21 @@ async def stream_logs(websocket, service_filter="all"):
 
 # ── WebSocket handler ────────────────────────────────────────────────────────
 
+async def _send_reply(websocket, msg, payload):
+    """Send a reply, echoing the request's _id back when it carried one.
+
+    ScoreClient tags every request with an _id and resolves the pending promise
+    only when a reply carries that _id back. Without the echo each request sits
+    until its 5s timeout and is treated as failed — so a score that the server
+    has already stored gets re-queued client-side and re-sent on every
+    reconnect, accumulating duplicates. Clients that match on "type" instead
+    (the admin dashboard) are unaffected: the extra key is additive.
+    """
+    if isinstance(msg, dict) and "_id" in msg:
+        payload = {**payload, "_id": msg["_id"]}
+    await websocket.send(json.dumps(payload))
+
+
 async def ws_handler(websocket):
     """Handle WebSocket connections."""
     stream_task = None
@@ -881,15 +896,19 @@ async def ws_handler(websocket):
                         data = await asyncio.get_event_loop().run_in_executor(
                             _executor, lambda: load_game_scores(game_id)
                         )
-                        await websocket.send(json.dumps({
+                        await _send_reply(websocket, msg, {
                             "type": "scores",
                             "game": game_id,
                             "scores": data.get("scores", [])
-                        }))
+                        })
                     except Exception as e:
-                        await websocket.send(json.dumps({
+                        await _send_reply(websocket, msg, {
                             "type": "error", "action": "score_load", "error": str(e)
-                        }))
+                        })
+                else:
+                    await _send_reply(websocket, msg, {
+                        "type": "error", "action": "score_load", "error": "missing game"
+                    })
 
             elif action == "score_save":
                 game_id = _sanitize_game_id(msg.get("game", ""))
@@ -905,15 +924,19 @@ async def ws_handler(websocket):
                             asyncio.ensure_future(asyncio.get_event_loop().run_in_executor(
                                 _executor, lambda: _notify_discord_high_score(game_id, name, score_val, extra)
                             ))
-                        await websocket.send(json.dumps({
+                        await _send_reply(websocket, msg, {
                             "type": "score_saved",
                             "game": game_id,
                             "rank": rank
-                        }))
+                        })
                     except Exception as e:
-                        await websocket.send(json.dumps({
+                        await _send_reply(websocket, msg, {
                             "type": "error", "action": "score_save", "error": str(e)
-                        }))
+                        })
+                else:
+                    await _send_reply(websocket, msg, {
+                        "type": "error", "action": "score_save", "error": "missing game, name or score"
+                    })
 
             elif action == "scores_all":
                 def _load_all():
@@ -928,14 +951,14 @@ async def ws_handler(websocket):
                     all_scores = await asyncio.get_event_loop().run_in_executor(
                         _executor, _load_all
                     )
-                    await websocket.send(json.dumps({
+                    await _send_reply(websocket, msg, {
                         "type": "scores_all",
                         "games": all_scores
-                    }))
+                    })
                 except Exception as e:
-                    await websocket.send(json.dumps({
+                    await _send_reply(websocket, msg, {
                         "type": "error", "action": "scores_all", "error": str(e)
-                    }))
+                    })
 
             elif action == "score_reset":
                 game_id = _sanitize_game_id(msg.get("game", ""))
@@ -952,15 +975,19 @@ async def ws_handler(websocket):
                         await asyncio.get_event_loop().run_in_executor(
                             _executor, _reset_with_backup
                         )
-                        await websocket.send(json.dumps({
+                        await _send_reply(websocket, msg, {
                             "type": "score_reset",
                             "game": game_id,
                             "ok": True
-                        }))
+                        })
                     except Exception as e:
-                        await websocket.send(json.dumps({
+                        await _send_reply(websocket, msg, {
                             "type": "error", "action": "score_reset", "error": str(e)
-                        }))
+                        })
+                else:
+                    await _send_reply(websocket, msg, {
+                        "type": "error", "action": "score_reset", "error": "missing game"
+                    })
 
             elif action == "plays_load":
                 def _load_plays():
