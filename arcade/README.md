@@ -1,6 +1,11 @@
 # magmacrunch arcade
 
-Pixel art games — vanilla HTML/CSS/JS, no frameworks, no build step.
+Pixel art games — vanilla HTML/CSS/JS, no frameworks, no bundler.
+
+Shared game-engine code lives in the [adenosine](https://github.com/magmacrunchmedia/adenosine)
+packages, loaded as plain `<script>` tags that expose globals (`AdRPG`, `AdPuzzle`,
+`AdCards`, `AdScore`, `AdAudio`). The bundles in `arcade/shared/adenosine-*.js` are
+generated from npm dependencies — see [adenosine packages](#adenosine-packages) below.
 
 ---
 
@@ -15,7 +20,6 @@ Pixel art games — vanilla HTML/CSS/JS, no frameworks, no build step.
 | chess | board game (multiplayer) | complete |
 | chinese-checkers | board game (multiplayer) | complete |
 | cribbage | card game (multiplayer) | complete |
-| crystal-mirror-maze | exploration | under construction |
 | fifteen-puzzle | tile puzzle | complete |
 | george-boole | logic puzzle | complete |
 | klotski | tile puzzle | complete |
@@ -56,31 +60,35 @@ The Pi setup script (`scripts/setup-pi.sh`) handles this automatically.
 - **fonts** — Press Start 2P, VT323, Orbitron via Google Fonts CDN
 - **canvas pixel art** — low-res draw, CSS `image-rendering: pixelated`
 
-### card rendering pipeline (shared by card games)
+### adenosine packages
 
-```
-arcade/shared/cards/
-├── deck.js           # Card class, Deck class, card back SVG
-├── face-cards.js     # 12 pixel-art SVG face cards (J/Q/K × 4 suits)
-├── number-cards.js   # Number card HTML generators (A-10)
-└── cards.css         # Card shell, corners, pips
-```
+The engine ships as five IIFE bundles in `arcade/shared/`, each generated from an
+npm dependency by `npm run build:adenosine` (`scripts/sync-adenosine.mjs`):
 
-Each game provides its own `config.js` (SUITS, RANKS, RANK_VALUES, etc.) — the shared pipeline reads these as globals.
+| bundle | global | provides |
+|--------|--------|----------|
+| `adenosine-rpg.js` | `AdRPG` | game loop, input, canvas, camera, collision, entities |
+| `adenosine-puzzle.js` | `AdPuzzle` | grid engine, input, rendering, scoring, UI |
+| `adenosine-cards.js` | `AdCards` | deck, pixel-art SVG cards, chips, hand evaluators |
+| `adenosine-score-client.js` | `AdScore` | high-score client (backend + localStorage) |
+| `adenosine-audio.js` | `AdAudio` | music and pooled sound effects |
 
-Used by: solitaire, solitaire_THLD, scandinavian-stud, cribbage
+The script also stamps a content-hash `?v=` on every arcade `<script>` tag that
+loads a bundle, so a rebuilt bundle can't be served from a stale browser cache.
+**Re-run it after any dependency change**, and commit the result — GitHub Pages
+serves this repo's branch directly, so the bundles are committed on purpose.
 
-### poker chip rendering (shared by poker games)
+Card constants (`SUITS`, `RANKS`, `SUIT_SYMBOLS`, `SUIT_COLORS`, `RANK_VALUES`)
+come from `AdCards`; see `arcade/cribbage/js/config.js` for the pattern. Chips come
+from `AdCards.ChipAnim`. Only the stylesheets remain local:
+`arcade/shared/cards/cards.css` and `arcade/shared/chips/chip-animation.css`.
 
-```
-arcade/shared/chips/
-├── chip-animation.js   # Canvas-based chip stack rendering
-└── chip-animation.css  # Chip display styling
-```
+Card games: solitaire, solitaire_THLD, scandinavian-stud, cribbage, tarot.
+Puzzle games: 2^N, george-boole, fifteen-puzzle, klotski, threes.
 
-Each game defines CSS variables (`--black`, `--font-pixel`, etc.) for theming. The `ChipAnim.init(displayId, legendId)` call configures DOM element IDs.
-
-Used by: solitaire_THLD, scandinavian-stud, cribbage
+Source repo: `~/adenosine` (the canonical working copy). Packages are published to
+npm as `@magmacrunch/adenosine-*`; the website consumes them as dependencies, so
+never hand-edit the files in `arcade/shared/adenosine-*.js`.
 
 ### arcade chat system
 

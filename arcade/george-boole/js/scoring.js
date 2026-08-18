@@ -3,23 +3,16 @@
 let allScores = [];
 let isUpdating = false; // Prevent concurrent updates
 
-// Migrate old scores without difficulty field
+// Migrate old scores without difficulty field.
+// In-memory only: this runs on every load, so the display is always correct.
+// It deliberately does not write mc_scores_george-boole — scoreClient owns that
+// key, and writing it here would make this a second, competing writer.
+// NOTE: entries stored on the backend that predate the difficulty field are not
+// repaired by this; that needs a one-off admin fix, not a client-side write.
 function migrateOldScores() {
-    let migrated = false;
-    allScores = allScores.map(score => {
-        if (!score.difficulty) {
-            migrated = true;
-            return {
-                ...score,
-                difficulty: '11' // Assign to classic 2048 mode
-            };
-        }
-        return score;
-    });
-    
-    if (migrated) {
-        saveScores(); // Save the migrated data
-    }
+    allScores = allScores.map(score =>
+        score.difficulty ? score : { ...score, difficulty: '11' } // classic 2048 mode
+    );
 }
 
 // Load scores from MAGMA//OPS backend (with localStorage fallback)
@@ -30,15 +23,6 @@ async function loadScores() {
     } catch (error) {
         console.error('Error loading scores:', error);
         allScores = [];
-    }
-}
-
-// Save scores via MAGMA//OPS backend (with localStorage fallback)
-async function saveScores() {
-    try {
-        localStorage.setItem('mc_scores_george-boole', JSON.stringify(allScores));
-    } catch (error) {
-        console.error('Error saving scores:', error);
     }
 }
 

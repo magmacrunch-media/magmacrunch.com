@@ -407,12 +407,14 @@ async function loadScores() {
   } catch(e) { console.error('Score load failed', e); }
 }
 
-async function saveScore(initials, sc, lv) {
+// Updates the on-screen table only. scoreClient.save() owns persistence to
+// mc_scores_tetris and the backend — writing the key here too would truncate
+// the engine's top-100 list to these 10 entries.
+function addScoreToTable(initials, sc, lv) {
   const entry = { initials: initials.toUpperCase().slice(0,3), score: sc, level: lv };
   localScores.push(entry);
   localScores.sort((a,b) => b.score - a.score);
   localScores = localScores.slice(0, 10);
-  localStorage.setItem('mc_scores_tetris', JSON.stringify(localScores));
 }
 
 function renderScores() {
@@ -481,8 +483,8 @@ function setupListeners() {
   });
   wire('btn-submit', async () => {
     const initials = document.getElementById('initials-input').value.trim() || 'AAA';
-    await saveScore(initials, score, level);
-    scoreClient.save('tetris', initials, score, { level });
+    addScoreToTable(initials, score, level);
+    await scoreClient.save('tetris', initials, score, { level });
     hideModal('modal-gameover');
     renderScores();
     showModal('modal-scores');

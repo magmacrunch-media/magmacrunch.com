@@ -115,9 +115,11 @@ const indexHtml = `<!DOCTYPE html>
         </div>
     </div>
 
-    <!-- Score Client -->
-    <script src="../shared/score-client.js"></script>
-    <script>const scoreClient = ScoreClient.auto();</script>
+    <!-- Adenosine packages. Add others as needed (adenosine-cards.js,
+         adenosine-puzzle.js, adenosine-rpg.js, adenosine-audio.js).
+         Run \`npm run build:adenosine\` to sync bundles and stamp cache-busters. -->
+    <script src="../shared/adenosine-score-client.js"></script>
+    <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
 
     <!-- Game Scripts -->
     <script src="js/config.js"></script>
