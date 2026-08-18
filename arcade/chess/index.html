@@ -183,7 +183,8 @@
          still come first, since these bind to the DOM it creates. -->
     <script src="../shared/adenosine-multiplayer.js?v=21dadc4b"></script>
     <script>const { MP, MSG, MP_PALETTE } = AdMP;</script>
-    <script>var MP_DEFAULT_SERVER = 'ws://magmacrunch.duckdns.org:8769';</script>
+    <script src="../shared/mp-server.js?v=f66f285b"></script>
+    <script>var MP_DEFAULT_SERVER = mpServerFor('chess', 8769);</script>
     <script src="js/config.js"></script>
     <script src="js/board.js"></script>
     <script src="js/ai.js"></script>
