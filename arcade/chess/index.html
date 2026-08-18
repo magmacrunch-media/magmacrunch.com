@@ -132,7 +132,6 @@
             { id: 'settingsBtn', label: 'SETTINGS' },
             { id: 'menuBtn', label: 'MENU' }
         ],
-        mpServer: 'ws://localhost:8769',
         gameOverMsg: 'Checkmate!',
         instructions: '<h3>Chess Rules</h3>' +
             '<p>Chess is a classic two-player strategy board game. The goal is to checkmate your opponent\'s king.</p>' +
@@ -159,11 +158,7 @@
             '<h4>Game Design & Development</h4><p>Jake A. McCoy</p>' +
             '<h4>Publisher</h4><p><strong>magmacrunch media</strong></p>' +
             '<h4>Built With</h4><p>Vanilla HTML, CSS & JavaScript · Press Start 2P font · Neon retro aesthetic</p>' +
-            '<h4>About</h4><p>Classic chess with a neon arcade twist. Play against the AI opponent with configurable difficulty and time controls!</p>',
-        scripts: [
-            'js/config.js', 'js/board.js', 'js/ai.js',
-            'js/game.js', 'js/multiplayer.js', 'js/main.js'
-        ]
+            '<h4>About</h4><p>Classic chess with a neon arcade twist. Play against the AI opponent with configurable difficulty and time controls!</p>'
     });
 
     // Inject chess-specific extras into game-layout
@@ -181,6 +176,24 @@
         }
     })();
     </script>
+
+    <!-- Game scripts. These are static on purpose: BoardGameTemplate.render()
+         builds markup only — scripts it injected via insertAdjacentHTML never
+         executed, which is why this game did not run at all. render() must
+         still come first, since these bind to the DOM it creates. -->
+    <script src="../shared/adenosine-multiplayer.js?v=21dadc4b"></script>
+    <script>const { MP, MSG, MP_PALETTE } = AdMP;</script>
+    <script>var MP_DEFAULT_SERVER = 'ws://magmacrunch.duckdns.org:8769';</script>
+    <script src="js/config.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/multiplayer.js"></script>
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="../shared/chat-widget.css">
+    <script src="../shared/adenosine-chat.js?v=64b96c03"></script>
+    <script>const { ChatWidget } = AdChat;</script>
+    <script>ChatWidget.connect();</script>
 
 </body>
 </html>

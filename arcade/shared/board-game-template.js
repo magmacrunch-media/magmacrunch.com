@@ -9,6 +9,14 @@
    Usage in game's index.html:
      <script src="../shared/board-game-template.js"></script>
      <script>BoardGameTemplate.render({ title: 'CHESS', ... })</script>
+     ...then the game's own <script> tags, statically, after this block.
+
+   render() builds MARKUP ONLY. It used to emit the page's <script> tags too,
+   but it injects with insertAdjacentHTML, and the HTML spec says <script>
+   elements inserted that way never execute — so every script it "loaded" was
+   silently inert and chess, checkers and backgammon never ran at all. Script
+   tags now live in each page's static HTML, which is also how every other
+   arcade game loads and lets sync-adenosine.mjs stamp their cache-busters.
    ═══════════════════════════════════════════════ */
 
 window.BoardGameTemplate = (function () {
@@ -35,8 +43,6 @@ window.BoardGameTemplate = (function () {
      *   credits     — HTML string for credits modal body
      *   gameOverTitle — default "YOU WIN!"
      *   gameOverMsg  — default "Congratulations!"
-     *   mpServer    — WebSocket server URL
-     *   scripts     — array of script src paths (loaded after shared deps)
      *   extraHead   — extra CSS/JS links in <head>
      */
     function render(cfg) {
@@ -52,8 +58,6 @@ window.BoardGameTemplate = (function () {
             { id: 'newGameBtn', label: 'NEW GAME' },
             { id: 'menuBtn', label: 'MENU' }
         ];
-        var mpServer = cfg.mpServer || '';
-        var scripts = cfg.scripts || [];
 
         // ── Start buttons ──
         var btnsHtml = '';
@@ -175,18 +179,6 @@ window.BoardGameTemplate = (function () {
         html += '  </div>\n';
         html += '</div>\n\n';
 
-        // Scripts
-        if (mpServer) {
-            html += '<script>var MP_DEFAULT_SERVER = \'' + esc(mpServer) + '\';</script>\n';
-        }
-        html += '<script src="../shared/multiplayer/protocol.js"></script>\n';
-        html += '<script src="../shared/multiplayer/network.js"></script>\n';
-        for (var s = 0; s < scripts.length; s++) {
-            html += '<script src="' + esc(scripts[s]) + '"></script>\n';
-        }
-        html += '<link rel="stylesheet" href="../shared/chat-widget.css">\n';
-        html += '<script src="../shared/chat-widget.js"></script>\n';
-        html += '<script>ChatWidget.connect();</script>\n';
 
         // Inject into container
         var container = document.querySelector('.container');
