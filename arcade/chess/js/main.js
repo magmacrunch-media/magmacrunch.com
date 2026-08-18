@@ -182,10 +182,6 @@ var UI = (function() {
 
     // ── Lobby ────────────────────────────────────────────────────────────────
     function openLobby() {
-        // display must be toggled too, not just the class: for the lobby markup
-        // BoardGameTemplate inserts with insertAdjacentHTML, .active alone leaves
-        // the overlay at opacity 0. checkers and backgammon already do this.
-        elements.lobbyOverlay.style.display = 'flex';
         elements.lobbyOverlay.classList.add('active');
         elements.lobbyStatus.textContent = 'Connecting...';
         elements.roomCodeDisplay.style.display = 'none';
@@ -197,7 +193,6 @@ var UI = (function() {
 
     function closeLobby() {
         elements.lobbyOverlay.classList.remove('active');
-        elements.lobbyOverlay.style.display = 'none';
         Multiplayer.quit();
     }
 
@@ -335,7 +330,6 @@ var UI = (function() {
 
     function onMultiplayerGameStart(state, mySide) {
         elements.lobbyOverlay.classList.remove('active');
-        elements.lobbyOverlay.style.display = 'none';
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
         elements.chatPanel.style.display = 'flex';

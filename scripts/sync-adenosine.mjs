@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Sync adenosine IIFE bundles from node_modules into arcade/shared/, then stamp
- * every arcade <script> tag that loads one with a content-hash cache-buster.
+ * every arcade <script> tag that loads one with a content-hash cache-buster,
+ * plus every game-local .js/.css an arcade page references.
  *
  * Run via `npm run build:adenosine`. Idempotent: re-running with no dependency
  * change rewrites nothing.
@@ -178,7 +179,54 @@ for (const file of htmlFiles(join(ROOT, 'arcade'))) {
   }
 }
 
+// ── 3. Stamp ?v=<hash> on every game-local script and stylesheet ─────────────
+
+// Pass 2 keys its lookup on a bare filename, which only works because every
+// shared bundle has a name unique across the repo. Game-local assets do not:
+// arcade/<game>/js/main.js exists a dozen times over with different bytes. So
+// this pass resolves each reference against the directory of the HTML file that
+// makes it and hashes whatever is actually there.
+//
+// Without this a stale main.js can silently keep running after a fix ships —
+// which is exactly how chess's multiplayer lobby appeared broken for a whole
+// commit after it had already been fixed.
+//
+// The shared bundles pass 2 just stamped are matched here too. That is harmless
+// and self-consistent: both passes hash the same bytes, so the stamp pass 3
+// writes is the one pass 2 already wrote.
+
+// Any <script src> or <link href>. The value is split on '?' below rather than
+// matched here, so an existing query is replaced rather than appended to.
+const LOCAL_ASSET = /(<(?:script|link)\b[^>]*?\b(?:src|href)=["'])([^"']+)(["'])/g;
+
+/** Absolute, protocol-relative, root-relative and data: URLs are not ours. */
+function isExternal(path) {
+  return /^(?:[a-z][a-z0-9+.-]*:|\/)/i.test(path);
+}
+
+let localFilesTouched = 0;
+let localTagsStamped = 0;
+
+for (const file of htmlFiles(join(ROOT, 'arcade'))) {
+  const before = readFileSync(file, 'utf8');
+  const dir = dirname(file);
+  const after = before.replace(LOCAL_ASSET, (whole, open, value, close) => {
+    const path = value.split('?')[0];
+    if (isExternal(path) || !/\.(?:js|css)$/i.test(path)) return whole;
+    const resolved = join(dir, path);
+    if (!existsSync(resolved)) return whole; // typo or generated later: leave it
+    localTagsStamped++;
+    return `${open}${path}?v=${shortHash(readFileSync(resolved))}${close}`;
+  });
+  if (after !== before) {
+    writeFileSync(file, after);
+    localFilesTouched++;
+    console.log(`  stamped   ${file.slice(ROOT.length + 1)}  (game-local assets)`);
+  }
+}
+
 console.log(
-  `\n${hashes.size} bundle(s) synced; ${tagsStamped} script tag(s) checked across ` +
-    `arcade/, ${filesTouched} file(s) rewritten.`,
+  `\n${hashes.size} bundle(s) synced; ${tagsStamped} bundle tag(s) and ` +
+    `${localTagsStamped} game-local tag(s) checked across arcade/; ` +
+    `${filesTouched + localFilesTouched} file(s) rewritten.`,
 );

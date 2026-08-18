@@ -144,7 +144,6 @@ var UI = (function() {
     // ── Lobby ────────────────────────────────────────────────────────────────
     function openLobby() {
         elements.startScreen.style.display = 'none';
-        elements.lobbyOverlay.style.display = 'flex';
         elements.lobbyOverlay.classList.add('active');
         elements.lobbyStatus.textContent = 'Connecting...';
         elements.lobbyPlayers.style.display = 'none';
@@ -159,7 +158,6 @@ var UI = (function() {
     function closeLobby() {
         Multiplayer.quit();
         elements.lobbyOverlay.classList.remove('active');
-        elements.lobbyOverlay.style.display = 'none';
         elements.startScreen.style.display = 'flex';
     }
 
@@ -217,7 +215,6 @@ var UI = (function() {
 
     function onMultiplayerGameStart(state, side) {
         elements.lobbyOverlay.classList.remove('active');
-        elements.lobbyOverlay.style.display = 'none';
         elements.startScreen.style.display = 'none';
         elements.gameScreen.style.display = 'flex';
         elements.gameChat.style.display = 'flex';

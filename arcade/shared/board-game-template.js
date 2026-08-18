@@ -141,13 +141,9 @@ window.BoardGameTemplate = (function () {
         // into #roomCodeDisplay, while chess hides #roomCodeDisplay and writes
         // #roomCodeValue. Neither game runs on the other's page, so the overlap
         // is harmless.
-        // The inline display:none is load-bearing. The stylesheet hides
-        // .modal-overlay with opacity/visibility and reveals it via .active, but
-        // for markup inserted with insertAdjacentHTML that class alone does not
-        // take effect — the element stays at opacity 0. Toggling display when the
-        // lobby opens forces the recalculation that lets .active apply, so every
-        // game must set display as well as the class.
-        html += '<div id="lobbyOverlay" class="modal-overlay" style="display: none;">\n';
+        // Visibility is driven by the .active class alone, exactly like the
+        // instructions, credits and game-over modals below.
+        html += '<div id="lobbyOverlay" class="modal-overlay">\n';
         html += '  <div class="modal-content lobby-content">\n';
         html += '    <div class="modal-titlebar"><span>ONLINE LOBBY</span><button id="closeLobby" class="modal-close">✕</button></div>\n';
         html += '    <div class="modal-body">\n';
