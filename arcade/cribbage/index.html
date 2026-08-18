@@ -172,8 +172,9 @@
     <script src="../shared/multiplayer/network.js"></script>
     <!-- Adenosine packages -->
     <script src="../shared/adenosine-cards.js?v=5de7c17d"></script>
-    <script src="../shared/adenosine-score-client.js?v=35803e70"></script>
-    <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+    <script src="../shared/adenosine-score-client.js?v=0b75053f"></script>
+    <script src="../shared/score-server.js"></script>
+    <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
     <!-- Game scripts -->
     <script src="js/config.js?v=4"></script>
     <script src="js/cribbage-board.js?v=2"></script>

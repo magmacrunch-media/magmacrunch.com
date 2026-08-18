@@ -28,6 +28,7 @@ var AdScore = (() => {
   var LS_PREFIX = "mc_scores_";
   var RECONNECT_DELAY = 3e3;
   var REQUEST_TIMEOUT = 5e3;
+  var DEFAULT_PORT = 8781;
   var ScoreClient = class {
     ws = null;
     _url = "";
@@ -183,11 +184,25 @@ var AdScore = (() => {
     /**
      * Auto-detect the admin server from window.location.
      * Falls back to 'ws://localhost:8781'.
+     *
+     * The scheme follows the page protocol: an HTTPS page gets `wss:`, because
+     * browsers block a `ws:` connection from a secure page as mixed content
+     * before it reaches the network. Pass `secure` to override that, or `url`
+     * to bypass the whole construction.
      */
     auto(opts) {
-      const hostname = opts?.hostname ?? (typeof window !== "undefined" && window.location?.hostname) ?? "localhost";
-      const port = opts?.port ?? 8781;
-      this.connect(`ws://${hostname}:${port}`);
+      if (opts?.url) {
+        this.connect(opts.url);
+        return this;
+      }
+      const loc = typeof window !== "undefined" ? window.location : void 0;
+      const hostname = opts?.hostname ?? (loc?.hostname || "localhost");
+      const port = opts?.port === void 0 ? DEFAULT_PORT : opts.port;
+      const secure = opts?.secure ?? loc?.protocol === "https:";
+      const scheme = secure ? "wss" : "ws";
+      let path = opts?.path ?? "";
+      if (path && !path.startsWith("/")) path = "/" + path;
+      this.connect(`${scheme}://${hostname}${port == null ? "" : ":" + port}${path}`);
       return this;
     }
     /**
