@@ -199,10 +199,11 @@
 <script src="../animations/server.js"></script>
 
 <link rel="stylesheet" href="shared/chat-widget.css">
-<script src="shared/chat-widget.js"></script>
+<script src="shared/adenosine-chat.js?v=64b96c03"></script>
+<script>const { ChatWidget } = AdChat;</script>
 <script>
 // ─────────────────────────────────────────────────────────
-// SERVER STATUS + GLOBAL CHAT (using shared/chat-widget.js)
+// SERVER STATUS + GLOBAL CHAT (using adenosine-chat)
 // ─────────────────────────────────────────────────────────
 (function() {
     // ── Server Status ──────────────────────────────────────
@@ -244,7 +245,7 @@
     // Check status every 30 seconds
     setInterval(checkStatus, 30000);
 
-    // ── Connect chat using shared/chat-widget.js ──────────
+    // ── Connect chat using adenosine-chat ──────────
     ChatWidget.connect();
 })();
 </script>

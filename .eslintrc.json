@@ -8,11 +8,21 @@
         "sourceType": "script"
     },
     "rules": {
-        "no-unused-vars": ["warn", { "args": "none" }],
+        "no-unused-vars": [
+            "warn",
+            {
+                "args": "none"
+            }
+        ],
         "no-undef": "error",
         "no-redeclare": "warn",
         "no-duplicate-case": "error",
-        "no-empty": ["warn", { "allowEmptyCatch": true }],
+        "no-empty": [
+            "warn",
+            {
+                "allowEmptyCatch": true
+            }
+        ],
         "no-unreachable": "error",
         "no-constant-condition": "warn",
         "no-extra-semi": "error",
@@ -20,7 +30,10 @@
         "no-shadow-restricted-names": "error",
         "use-isnan": "error",
         "valid-typeof": "error",
-        "eqeqeq": ["warn", "smart"],
+        "eqeqeq": [
+            "warn",
+            "smart"
+        ],
         "no-caller": "error",
         "no-eval": "warn",
         "no-implied-eval": "warn",
@@ -49,7 +62,6 @@
         "__ENTITY_MAP": "writable",
         "MathJax": "writable",
         "module": "readonly",
-
         "AdRPG": "readonly",
         "AdPuzzle": "readonly",
         "AdCards": "readonly",
@@ -58,12 +70,17 @@
         "AdMP": "readonly",
         "AdChat": "readonly",
         "scoreClient": "readonly",
-
         "SUITS": "readonly",
         "RANKS": "readonly",
         "SUIT_SYMBOLS": "readonly",
         "SUIT_COLORS": "readonly",
         "RANK_VALUES": "readonly",
-        "MagmaCards": "readonly"
+        "MagmaCards": "readonly",
+        "ChatWidget": "readonly",
+        "MP": "readonly",
+        "MSG": "readonly",
+        "MP_PALETTE": "readonly",
+        "MP_DEFAULT_SERVER": "readonly",
+        "MC_SCORE_OPTS": "readonly"
     }
 }

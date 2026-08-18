@@ -1,7 +1,7 @@
 {
   "name": "magmacrunch-website",
   "private": true,
-  "description": "magmacrunch media \u2014 dev tooling only, no build step",
+  "description": "magmacrunch media — dev tooling only, no build step",
   "scripts": {
     "lint": "eslint nav.js assets/*.js templates/*.js",
     "lint:fix": "eslint --fix nav.js assets/*.js templates/*.js",
@@ -16,6 +16,8 @@
   "dependencies": {
     "@magmacrunch/adenosine-audio": "^0.2.1",
     "@magmacrunch/adenosine-cards": "^0.2.1",
+    "@magmacrunch/adenosine-chat": "^0.3.0",
+    "@magmacrunch/adenosine-multiplayer": "^0.2.2",
     "@magmacrunch/adenosine-puzzle": "^0.2.0",
     "@magmacrunch/adenosine-rpg": "^0.2.0",
     "@magmacrunch/adenosine-score-client": "^0.2.0"
