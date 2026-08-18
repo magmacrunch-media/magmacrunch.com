@@ -173,6 +173,16 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 <script src="../shared/adenosine-cards.js"></script>
 <script src="../shared/adenosine-score-client.js"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+
+<!-- Audio games (george-boole, moonlight-drift) -->
+<script src="../shared/adenosine-audio.js"></script>
+
+<!-- Multiplayer board games (SORRY, backgammon, checkers, chess, cribbage, etc.) -->
+<script src="../shared/adenosine-multiplayer.js"></script>
+
+<!-- Chat widget (nearly every game page) -->
+<script src="../shared/adenosine-chat.js"></script>
+<script>const { ChatWidget } = AdChat;</script>
 ```
 
 Every one of these `src` values carries a `?v=<hash>` cache-buster in the real
@@ -187,6 +197,8 @@ in a game that actually plays audio (currently george-boole and moonlight-drift)
 - `AdScore` — high score client (`ScoreClient`)
 - `AdCards` — card deck, rendering, cribbage hand eval (`Card`, `Deck`, `CribbageHandEval`)
 - `AdAudio` — Web Audio API music + SFX (`init`, `playMusic`, `playSfx`)
+- `AdChat` — floating real-time chat widget (`ChatWidget.connect()`, `.setName()`, `.setColor()`, `.joinRoom()`)
+- `AdMP` — multiplayer WebSocket client (`MP`, `MSG`, `MP_PALETTE`, `BoardGameTemplate`)
 
 ### Integration pattern
 
@@ -198,7 +210,7 @@ in a game that actually plays audio (currently george-boole and moonlight-drift)
 
 ### IIFE builds
 
-Adenosine packages ship both ESM (for npm) and IIFE (for `<script>` tags). All five
+Adenosine packages ship both ESM (for npm) and IIFE (for `<script>` tags). All seven
 bundles in `arcade/shared/adenosine-*.js` are generated — **never hand-edit them**.
 
 `npm run build:adenosine` runs `scripts/sync-adenosine.mjs`, which:
@@ -247,7 +259,7 @@ npm run build:adenosine         # re-copies bundles and re-stamps cache-busters
 git add arcade/shared/adenosine-*.js arcade/**/index.html
 ```
 
-All five packages the website uses are npm dependencies — there is no longer any
+All seven packages the website uses are npm dependencies — there is no longer any
 manually built or hand-copied bundle.
 
 ## Distributed music

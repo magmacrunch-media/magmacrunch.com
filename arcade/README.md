@@ -4,7 +4,7 @@ Pixel art games — vanilla HTML/CSS/JS, no frameworks, no bundler.
 
 Shared game-engine code lives in the [adenosine](https://github.com/magmacrunchmedia/adenosine)
 packages, loaded as plain `<script>` tags that expose globals (`AdRPG`, `AdPuzzle`,
-`AdCards`, `AdScore`, `AdAudio`). The bundles in `arcade/shared/adenosine-*.js` are
+`AdCards`, `AdScore`, `AdAudio`, `AdChat`, `AdMP`). The bundles in `arcade/shared/adenosine-*.js` are
 generated from npm dependencies — see [adenosine packages](#adenosine-packages) below.
 
 ---
@@ -62,7 +62,7 @@ The Pi setup script (`scripts/setup-pi.sh`) handles this automatically.
 
 ### adenosine packages
 
-The engine ships as five IIFE bundles in `arcade/shared/`, each generated from an
+The engine ships as seven IIFE bundles in `arcade/shared/`, each generated from an
 npm dependency by `npm run build:adenosine` (`scripts/sync-adenosine.mjs`):
 
 | bundle | global | provides |
@@ -72,6 +72,8 @@ npm dependency by `npm run build:adenosine` (`scripts/sync-adenosine.mjs`):
 | `adenosine-cards.js` | `AdCards` | deck, pixel-art SVG cards, chips, hand evaluators |
 | `adenosine-score-client.js` | `AdScore` | high-score client (backend + localStorage) |
 | `adenosine-audio.js` | `AdAudio` | music and pooled sound effects |
+| `adenosine-chat.js` | `AdChat` | floating real-time chat widget (SharedWorker-backed) |
+| `adenosine-multiplayer.js` | `AdMP` | multiplayer WebSocket client with lobby, board game template |
 
 The script also stamps a content-hash `?v=` on every arcade `<script>` tag that
 loads a bundle, so a rebuilt bundle can't be served from a stale browser cache.
