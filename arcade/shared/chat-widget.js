@@ -23,13 +23,53 @@ var ChatWidget = (function() {
 
     // ── Config ──────────────────────────────────────────────────────────
 
+    // An https: page may only open wss: sockets — a ws: URL is blocked as mixed
+    // content before it ever reaches the network.
+    var WS_SCHEME = (function() {
+        try {
+            return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        } catch(e) { return 'ws://'; }
+    })();
+
+    // Hosts the ?server= override is allowed to name. The widget replays saved
+    // credentials as soon as the socket opens, so an unrestricted override lets
+    // a crafted link hand those to any host the visitor can reach.
+    var SERVER_ALLOWLIST = [
+        'magmacrunch.duckdns.org',
+        'magmacrunch.com',
+        'localhost',
+        '127.0.0.1',
+        '192.168.1.16'
+    ];
+
+    function hostOf(addr) {
+        return String(addr).replace(/^wss?:\/\//, '').split('/')[0].split(':')[0];
+    }
+
+    function isAllowedServer(addr) {
+        var host = hostOf(addr);
+        for (var i = 0; i < SERVER_ALLOWLIST.length; i++) {
+            if (host === SERVER_ALLOWLIST[i]) return true;
+        }
+        return false;
+    }
+
     var CHAT_SERVER = (function() {
         try {
             var param = new URLSearchParams(window.location.search).get('server');
-            if (param) return 'ws://' + param;
+            if (param && isAllowedServer(param)) {
+                return /^wss?:\/\//.test(param) ? param : WS_SCHEME + param;
+            }
+            if (param) {
+                console.warn('[ChatWidget] ignoring ?server= override for non-allowlisted host: ' + hostOf(param));
+            }
         } catch(e) {}
         var h = window.location.hostname;
         if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8768';
+        // Port 8768 carries no TLS of its own. From an https: page the socket has
+        // to go through nginx on the Pi, which terminates TLS on 443 and proxies
+        // / → 127.0.0.1:8768.
+        if (WS_SCHEME === 'wss://') return 'wss://magmacrunch.duckdns.org';
         return 'ws://magmacrunch.duckdns.org:8768';
     })();
 
