@@ -155,7 +155,8 @@
 <script src="../shared/adenosine-score-client.js?v=0b75053f"></script>
 <script src="../shared/score-server.js?v=9acd988c"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
-<script>var MP_DEFAULT_SERVER = 'scandinavian-stud.magmacrunch.com';</script>
+<script src="../shared/mp-server.js?v=f66f285b"></script>
+<script>var MP_DEFAULT_SERVER = mpServerFor('stud', 8767);</script>
 <script src="../shared/adenosine-multiplayer.js?v=21dadc4b"></script>
 <script>const { MP, MSG, MP_PALETTE } = AdMP;</script>
 <script src="../shared/adenosine-chat.js?v=64b96c03"></script>
