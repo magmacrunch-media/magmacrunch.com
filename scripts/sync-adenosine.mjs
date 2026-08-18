@@ -28,6 +28,13 @@ const SHARED = join(ROOT, 'arcade', 'shared');
 /** Package short name -> the arcade/shared/ filename games load. */
 const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio'];
 
+/**
+ * Hand-written scripts in arcade/shared/ that are not generated from npm but
+ * still need busting. score-server.js decides which host receives high scores,
+ * so a stale copy sends them nowhere — the exact failure the stamps prevent.
+ */
+const LOCAL_SHARED = ['score-server.js'];
+
 const HASH_LEN = 8;
 
 function shortHash(buf) {
@@ -52,6 +59,17 @@ mkdirSync(SHARED, { recursive: true });
 /** short name -> content hash of the bundle now in arcade/shared/ */
 const hashes = new Map();
 const missing = [];
+const stale = [];
+
+/** The version package-lock.json pins for a workspace dependency, if any. */
+function lockedVersion(pkg) {
+  try {
+    const lock = JSON.parse(readFileSync(join(ROOT, 'package-lock.json'), 'utf8'));
+    return lock.packages?.[`node_modules/@magmacrunch/adenosine-${pkg}`]?.version ?? null;
+  } catch {
+    return null;
+  }
+}
 
 for (const pkg of PACKAGES) {
   const src = join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'dist', 'index.global.js');
@@ -70,7 +88,27 @@ for (const pkg of PACKAGES) {
   const version = JSON.parse(
     readFileSync(join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'package.json'), 'utf8'),
   ).version;
+
+  // Guard against a stale node_modules silently *downgrading* a bundle. If the
+  // lockfile has moved on (e.g. after pulling a branch that bumped a dep) and
+  // npm ci has not been run, copying from node_modules would overwrite the
+  // committed bundle with an older build — losing whatever the newer one fixed.
+  const locked = lockedVersion(pkg);
+  if (locked && locked !== version) {
+    stale.push(`  @magmacrunch/adenosine-${pkg}: lockfile ${locked}, installed ${version}`);
+  }
   console.log(`  ${changed ? 'updated' : 'unchanged'}  adenosine-${pkg}.js  v${version}  ?v=${hash}`);
+}
+
+for (const name of LOCAL_SHARED) {
+  const file = join(SHARED, name);
+  if (!existsSync(file)) {
+    missing.push(`arcade/shared/${name} (expected to exist; it is not generated)`);
+    continue;
+  }
+  const hash = shortHash(readFileSync(file));
+  hashes.set(name, hash);
+  console.log(`  local     ${name}  ?v=${hash}`);
 }
 
 if (missing.length) {
@@ -78,11 +116,24 @@ if (missing.length) {
   process.exit(1);
 }
 
+if (stale.length) {
+  console.error(
+    `\nnode_modules does not match package-lock.json:\n${stale.join('\n')}\n\n` +
+      'Run `npm ci` and re-run this script. Continuing would copy the installed\n' +
+      'build over the committed bundle, downgrading it.',
+  );
+  process.exit(1);
+}
+
 // ── 2. Stamp ?v=<hash> on every arcade script tag that loads a bundle ────────
 
 // Matches: src="<any path>adenosine-<pkg>.js" with an optional existing query.
+const NAMES = [
+  ...PACKAGES.map((p) => `adenosine-${p}\\.js`),
+  ...LOCAL_SHARED.map((n) => n.replace('.', '\\.')),
+];
 const TAG = new RegExp(
-  `(src=["'])([^"']*adenosine-(${PACKAGES.join('|')})\\.js)(\\?[^"']*)?(["'])`,
+  `(src=["'])([^"']*/(${NAMES.join('|')}))(\\?[^"']*)?(["'])`,
   'g',
 );
 
@@ -91,9 +142,13 @@ let tagsStamped = 0;
 
 for (const file of htmlFiles(join(ROOT, 'arcade'))) {
   const before = readFileSync(file, 'utf8');
-  const after = before.replace(TAG, (_m, open, path, pkg, _query, close) => {
+  const after = before.replace(TAG, (_m, open, path, file, _query, close) => {
+    // `file` is the bare filename: adenosine-<pkg>.js, or a LOCAL_SHARED name.
+    const key = file.startsWith('adenosine-') ? file.slice('adenosine-'.length, -3) : file;
+    const hash = hashes.get(key);
+    if (!hash) return _m; // unknown script: leave it exactly as it was
     tagsStamped++;
-    return `${open}${path}?v=${hashes.get(pkg)}${close}`;
+    return `${open}${path}?v=${hash}${close}`;
   });
   if (after !== before) {
     writeFileSync(file, after);
