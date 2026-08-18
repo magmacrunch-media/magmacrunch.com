@@ -22,19 +22,11 @@ var UI = (function() {
         Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
     }
 
-    // Elements the current BoardGameTemplate markup does not render. This game's
-    // JS predates it and still expects an older lobby/chat layout (lobbyJoinBtn,
-    // lobbyBackBtn, lobbyStartBtn, roomCodeInput, gameChat …) where the template
-    // now emits lobbyCreateRoom / lobbyJoinRoom / lobbyStartGame. The mismatch
-    // went unnoticed because these scripts never executed at all.
-    //
-    // Substituting a detached node for exactly those ids keeps single-player
-    // working — an unguarded `elements.gameChat.style` was aborting
-    // startLocalGame() before it ever reached renderBoard(). Multiplayer for this
-    // game stays unwired until the lobby markup and this file are reconciled.
-    var UNRENDERED = ['roomCodeInput', 'lobbyJoinBtn', 'lobbyBackBtn', 'lobbyPlayers',
-                      'lobbyRoomCode', 'lobbyStartArea', 'lobbyStartBtn', 'gameChat',
-                      'diceArea'];
+    // Ids this game reads that BoardGameTemplate still does not emit. The lobby
+    // ids it used to be missing are now part of the template; these remaining
+    // ones are vestigial, cached but never written to. el() substitutes a
+    // detached node for them and warns about anything unexpected.
+    var UNRENDERED = [];
 
     function el(id) {
         var found = document.getElementById(id);
