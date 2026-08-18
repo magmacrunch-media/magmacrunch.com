@@ -313,8 +313,6 @@ var AdMP = (() => {
         { id: "newGameBtn", label: "NEW GAME" },
         { id: "menuBtn", label: "MENU" }
       ];
-      var mpServer = cfg.mpServer || "";
-      var scripts = cfg.scripts || [];
       var btnsHtml = "";
       for (var i = 0; i < buttons.length; i++) {
         var b = buttons[i];
@@ -407,17 +405,6 @@ var AdMP = (() => {
       html += "    </div>\n";
       html += "  </div>\n";
       html += "</div>\n\n";
-      if (mpServer) {
-        html += "<script>var MP_DEFAULT_SERVER = '" + esc(mpServer) + "';</script>\n";
-      }
-      html += '<script src="../shared/multiplayer/protocol.js"></script>\n';
-      html += '<script src="../shared/multiplayer/network.js"></script>\n';
-      for (var s = 0; s < scripts.length; s++) {
-        html += '<script src="' + esc(scripts[s]) + '"></script>\n';
-      }
-      html += '<link rel="stylesheet" href="../shared/chat-widget.css">\n';
-      html += '<script src="../shared/chat-widget.js"></script>\n';
-      html += "<script>ChatWidget.connect();</script>\n";
       var container = document.querySelector(".container");
       if (container) {
         container.insertAdjacentHTML("beforeend", html);
