@@ -2,21 +2,10 @@
 // UI/DOM management, event handling, game flow
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize AdAudio (placeholder URLs — replace with actual audio files)
-    try {
-        await AdAudio.init({
-            music: { url: 'audio/background.ogg', volume: 0.3, fadeIn: 2.0 },
-            sfx: {
-                deal:  { url: 'audio/sfx/deal.ogg',  volume: 0.5, pool: 3 },
-                bid:   { url: 'audio/sfx/bid.ogg',   volume: 0.5, pool: 2 },
-                trick: { url: 'audio/sfx/trick.ogg',  volume: 0.5, pool: 2 },
-                win:   { url: 'audio/sfx/win.ogg',    volume: 0.6, pool: 1 },
-            },
-        });
-        AdAudio.handleVisibility({ pauseMusic: true });
-    } catch (e) {
-        console.warn('AdAudio init failed (audio files not yet added):', e.message);
-    }
+    // No audio yet. To add it: create arcade/tarot/audio/, load
+    // ../shared/adenosine-audio.js in index.html, then AdAudio.init(...) here
+    // and call playMusic/playSfx from the game. See arcade/george-boole for a
+    // working example.
 
     const game = new TarotGame();
 

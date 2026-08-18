@@ -125,7 +125,7 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 - **adenosine-puzzle.js** — puzzle framework (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
 - **adenosine-score-client.js** — high score client (used by 2^N, george-boole, fifteen-puzzle, klotski, threes, cribbage, tarot)
 - **adenosine-cards.js** — card deck, rendering, cribbage hand eval (used by cribbage, solitaire, scandinavian-stud, solitaire_THLD)
-- **adenosine-audio.js** — Web Audio API music + SFX (used by george-boole, moonlight-drift, cribbage, tarot)
+- **adenosine-audio.js** — Web Audio API music + SFX (used by george-boole, moonlight-drift)
 
 ### Loading in a game page
 
@@ -140,11 +140,16 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 <script src="../shared/adenosine-puzzle.js"></script>
 
 <!-- Card games (cribbage, solitaire, scandinavian-stud, solitaire_THLD) -->
+<!-- adenosine-cards.js must precede js/config.js, which reads its constants -->
 <script src="../shared/adenosine-cards.js"></script>
 <script src="../shared/adenosine-score-client.js"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
-<script src="../shared/adenosine-audio.js"></script>
 ```
+
+Every one of these `src` values carries a `?v=<hash>` cache-buster in the real
+pages, applied automatically by `npm run build:adenosine` — write the tag without
+one and the script will stamp it on the next run. Only load `adenosine-audio.js`
+in a game that actually plays audio (currently george-boole and moonlight-drift).
 
 ### Available globals
 
@@ -164,35 +169,54 @@ Hidden/commented-out previews (crystal maze, pay2play) are preserved as comments
 
 ### IIFE builds
 
-Adenosine packages ship both ESM (for npm) and IIFE (for `<script>` tags). IIFE files live in
-`arcade/shared/adenosine-*.js`. Build from the adenosine repo: `npm run build` produces `dist/index.global.js`.
+Adenosine packages ship both ESM (for npm) and IIFE (for `<script>` tags). All five
+bundles in `arcade/shared/adenosine-*.js` are generated — **never hand-edit them**.
+
+`npm run build:adenosine` runs `scripts/sync-adenosine.mjs`, which:
+1. copies each `node_modules/@magmacrunch/adenosine-*/dist/index.global.js` into
+   `arcade/shared/adenosine-<pkg>.js`;
+2. stamps a content-hash `?v=` on every arcade `<script>` tag that loads one.
+
+The hash is derived from the bundle bytes rather than the package version, because
+a bundle has already been rebuilt with a fix under an unchanged version number
+(commit `632b856`) — a version stamp would not have busted that stale cache.
+
+The bundles are **committed on purpose**, despite being generated: GitHub Pages
+serves this repo's branch directly (there is no Pages build workflow), so an
+untracked bundle would 404 on magmacrunch.com. The Pi instead gets them from
+`deploy-pi.yml`, which runs this script after `npm ci`. Re-run it and commit the
+result after any dependency change.
 
 ### Repository
 
 [adenosine](https://github.com/magmacrunchmedia/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.
 
-**Cloned on both machines:**
+**The canonical working copy on this Mac is `~/adenosine`.** Two stale clones also
+exist — `~/Documents/adenosine` and `~/Documents/game_dev/adenosine` (the latter
+predates the `audio` package entirely). Do not edit those; the same one-line cards
+fix was once authored twice because of them. Delete them when convenient.
+
 - Mac: `~/adenosine`
 - MC1: `~/adenosine` (WSL2: `/home/magma/adenosine`)
 
 **Sync:** Same as magmacrunch.com — GitHub is the source of truth. Always `git pull` before editing, commit/push frequently.
 
-**Build from repo:**
+**Changing the engine, end to end:**
 ```bash
 cd ~/adenosine
 npm install
-npm run build        # builds all packages
-# IIFE bundles land in packages/*/dist/index.global.js
+npm test && npm run typecheck   # both must exit 0
+npm run build                   # IIFE bundles land in packages/*/dist/index.global.js
+# bump the changed package's version, then publish (GitHub release triggers publish.yml)
+
+cd ~/Documents/website
+npm install                     # or `npm ci` in CI
+npm run build:adenosine         # re-copies bundles and re-stamps cache-busters
+git add arcade/shared/adenosine-*.js arcade/**/index.html
 ```
 
-**Build from website repo (npm packages):**
-```bash
-cd ~/website
-npm ci
-npm run build:adenosine   # copies IIFE bundles to arcade/shared/
-```
-
-**Two extra files not in npm:** `arcade/shared/adenosine-cards.js` and `arcade/shared/adenosine-audio.js` are built from the adenosine repo and committed manually (not part of the npm build script).
+All five packages the website uses are npm dependencies — there is no longer any
+manually built or hand-copied bundle.
 
 ## Distributed music
 

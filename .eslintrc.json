@@ -49,6 +49,16 @@
         "__ENTITY_MAP": "writable",
         "MathJax": "writable",
         "module": "readonly",
+
+        "AdRPG": "readonly",
+        "AdPuzzle": "readonly",
+        "AdCards": "readonly",
+        "AdScore": "readonly",
+        "AdAudio": "readonly",
+        "AdMP": "readonly",
+        "AdChat": "readonly",
+        "scoreClient": "readonly",
+
         "SUITS": "readonly",
         "RANKS": "readonly",
         "SUIT_SYMBOLS": "readonly",

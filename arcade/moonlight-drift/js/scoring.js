@@ -90,14 +90,6 @@ async function loadScores() {
     }
 }
 
-async function saveScores() {
-    try {
-        localStorage.setItem('mc_scores_moonlight-drift', JSON.stringify(sessionScores));
-    } catch (error) {
-        console.error('Error saving scores:', error);
-    }
-}
-
 function updateScoreboard() {
     scoreListDisplay.innerHTML = '';
     
@@ -308,11 +300,12 @@ function submitInitials(onComplete) {
     submittingInitials = true;
     
     const initials = initialsInput.value.trim() || 'AAA';
+    // sessionScores is the on-screen list only (isNew drives the highlight);
+    // scoreClient owns persistence to mc_scores_moonlight-drift and the backend.
     sessionScores.push({ initials: initials, score: lastScore, isNew: true });
     sessionScores.sort((a, b) => b.score - a.score);
     sessionScores = sessionScores.slice(0, 10);
     scoreClient.save('moonlight-drift', initials, lastScore);
-    saveScores();
     updateScoreboard();
     initialsPromptDiv.style.display = 'none';
     initialsInput.value = '';

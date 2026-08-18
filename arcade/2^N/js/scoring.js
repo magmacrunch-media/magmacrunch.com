@@ -2,7 +2,6 @@
 
 let allScores = [];
 let isUpdating = false;
-const puzzleScoring = AdPuzzle.createScoring('2n');
 
 // Load scores from MAGMA//OPS backend (with localStorage fallback)
 async function loadScores() {
@@ -11,15 +10,6 @@ async function loadScores() {
     } catch (error) {
         console.error('Error loading scores:', error);
         allScores = [];
-    }
-}
-
-// Save scores via MAGMA//OPS backend (with localStorage fallback)
-async function saveScores() {
-    try {
-        localStorage.setItem('mc_scores_2n', JSON.stringify(allScores));
-    } catch (error) {
-        console.error('Error saving scores:', error);
     }
 }
 

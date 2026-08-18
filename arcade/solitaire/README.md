@@ -30,16 +30,14 @@ solitaire/
     └── main.js             # Entry point, instantiates Solitaire
 ```
 
-**Shared card rendering pipeline** (used by solitaire, solitaire_THLD, scandinavian-stud):
-```
-arcade/shared/cards/
-├── deck.js             # Card class, Deck class, getCardBackSVG()
-├── face-cards.js       # Pixel-art SVG face cards (J/Q/K × 4 suits)
-├── number-cards.js     # Number card (2–10) and Ace HTML generators
-└── cards.css           # Card shell, corners, pips, face card wrappers
-```
+**Card rendering** comes from the adenosine engine — `arcade/shared/adenosine-cards.js`,
+which exposes the global `AdCards` (`Card`, `Deck`, `getCardBackSVG()`, face-card and
+number-card SVG generators, plus `SUITS`/`RANKS`/`SUIT_SYMBOLS`/`SUIT_COLORS`/`RANK_VALUES`).
+Only the stylesheet is still local: `arcade/shared/cards/cards.css`.
 
-> **Script load order matters:** `config.js` → `../shared/cards/deck.js` → `../shared/cards/face-cards.js` → `../shared/cards/number-cards.js` → `game.js` → `main.js`
+> **Script load order matters:** `../shared/adenosine-cards.js` → `js/config.js` →
+> `js/game.js` → `js/main.js`. The engine bundle must load *before* `config.js`,
+> which reads its constants from `AdCards`.
 
 ---
 
@@ -100,31 +98,33 @@ Score cannot go below 0.
 
 ## Architecture
 
-### Card Rendering Pipeline (shared across card games)
+### Card Rendering Pipeline
 
-```
-arcade/shared/cards/
-├── config.js          SUITS, RANKS, SUIT_COLORS, RANK_VALUES (per-game, not shared)
-├── face-cards.js      FC_CORNERS() + FACE_CARD_SVG lookup (12 pixel-art SVGs)
-├── number-cards.js    cornerHTML() + getSuitLayout() + Unicode pips
-├── deck.js            Card.getHTML() → dispatches to face-cards / number-cards / getCardBackSVG()
-└── cards.css          Card shell, corners, pips, face card wrappers
-```
+Card rendering lives in the adenosine engine, loaded as
+`../shared/adenosine-cards.js` (global `AdCards`):
 
-### Corner Label Config (face-cards.js)
+| `AdCards` export | Role |
+|---|---|
+| `SUITS`, `RANKS`, `SUIT_SYMBOLS`, `SUIT_COLORS`, `RANK_VALUES` | Deck constants |
+| `FACE_CARD_SVG`, `FC_PIP_ART`, `FC_CORNERS` | 12 pixel-art face card SVGs |
+| `getNumberCardHTML` | Number card (2–10) and Ace HTML |
+| `Card`, `Deck`, `getCardBackSVG` | Card/deck logic and the card back |
 
-Adjust these constants at the top of `../shared/cards/face-cards.js` to tune face card corner labels:
+`arcade/shared/cards/cards.css` (card shell, corners, pips) is the only piece still
+in this repo.
 
-```javascript
-const FC_RANK_SIZE  = 10;    // rank letter font size (SVG units)
-const FC_PIP_SIZE   = 9;     // suit glyph font size (SVG units)
-const FC_RANK_Y     = 11;    // rank baseline position
-const FC_GLYPH_Y    = 21;    // suit glyph baseline (increase = move down)
-```
+### Tuning card artwork
 
-### Volcano Badge (deck.js)
+The rendering constants — face card corner labels (`FC_RANK_SIZE`, `FC_PIP_SIZE`,
+`FC_RANK_Y`, `FC_GLYPH_Y`) and the volcano badge geometry on the card back — now
+live in the engine, not here:
 
-The card back badge is centered at (32, 44) in the 64×88 SVG viewBox. The dark panel is `x=15, y=29, width=34, height=30`. To shift the volcano vertically, add/subtract from all `y` and `y1`/`y2` values in the badge section of `../shared/cards/deck.js`.
+- `~/adenosine/packages/cards/src/face-cards.js`
+- `~/adenosine/packages/cards/src/deck.js`
+
+Edit there, `npm run build` in that repo, publish, then `npm run build:adenosine`
+in this one. **Do not hand-edit `arcade/shared/adenosine-cards.js`** — it is
+generated and will be overwritten.
 
 ### Solitaire Class (game.js)
 

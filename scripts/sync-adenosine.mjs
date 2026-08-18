@@ -1,0 +1,108 @@
+#!/usr/bin/env node
+/**
+ * Sync adenosine IIFE bundles from node_modules into arcade/shared/, then stamp
+ * every arcade <script> tag that loads one with a content-hash cache-buster.
+ *
+ * Run via `npm run build:adenosine`. Idempotent: re-running with no dependency
+ * change rewrites nothing.
+ *
+ * Why a content hash rather than the package version: adenosine-cards has
+ * already been rebuilt with a real bug fix under an unchanged version number
+ * (website commit 632b856), so a version stamp would not have busted the stale
+ * copy in visitors' caches. The hash is derived from the bytes actually served,
+ * so it cannot drift from them.
+ *
+ * All five bundles stay tracked in git on purpose: GitHub Pages serves this
+ * repo's branch directly (no Pages build workflow), so an untracked bundle
+ * would 404 on magmacrunch.com. The Pi gets them from this script instead.
+ */
+
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const SHARED = join(ROOT, 'arcade', 'shared');
+
+/** Package short name -> the arcade/shared/ filename games load. */
+const PACKAGES = ['rpg', 'score-client', 'puzzle', 'cards', 'audio'];
+
+const HASH_LEN = 8;
+
+function shortHash(buf) {
+  return createHash('sha256').update(buf).digest('hex').slice(0, HASH_LEN);
+}
+
+/** Recursively collect every .html file under a directory. */
+function htmlFiles(dir, out = []) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
+    const p = join(dir, entry.name);
+    if (entry.isDirectory()) htmlFiles(p, out);
+    else if (/\.html?$/.test(entry.name)) out.push(p);
+  }
+  return out;
+}
+
+// ── 1. Copy bundles out of node_modules ──────────────────────────────────────
+
+mkdirSync(SHARED, { recursive: true });
+
+/** short name -> content hash of the bundle now in arcade/shared/ */
+const hashes = new Map();
+const missing = [];
+
+for (const pkg of PACKAGES) {
+  const src = join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'dist', 'index.global.js');
+  if (!existsSync(src)) {
+    missing.push(`@magmacrunch/adenosine-${pkg}`);
+    continue;
+  }
+  const bytes = readFileSync(src);
+  const dest = join(SHARED, `adenosine-${pkg}.js`);
+  const changed = !existsSync(dest) || !readFileSync(dest).equals(bytes);
+  if (changed) writeFileSync(dest, bytes);
+
+  const hash = shortHash(bytes);
+  hashes.set(pkg, hash);
+
+  const version = JSON.parse(
+    readFileSync(join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'package.json'), 'utf8'),
+  ).version;
+  console.log(`  ${changed ? 'updated' : 'unchanged'}  adenosine-${pkg}.js  v${version}  ?v=${hash}`);
+}
+
+if (missing.length) {
+  console.error(`\nMissing dependencies — run \`npm install\` first:\n  ${missing.join('\n  ')}`);
+  process.exit(1);
+}
+
+// ── 2. Stamp ?v=<hash> on every arcade script tag that loads a bundle ────────
+
+// Matches: src="<any path>adenosine-<pkg>.js" with an optional existing query.
+const TAG = new RegExp(
+  `(src=["'])([^"']*adenosine-(${PACKAGES.join('|')})\\.js)(\\?[^"']*)?(["'])`,
+  'g',
+);
+
+let filesTouched = 0;
+let tagsStamped = 0;
+
+for (const file of htmlFiles(join(ROOT, 'arcade'))) {
+  const before = readFileSync(file, 'utf8');
+  const after = before.replace(TAG, (_m, open, path, pkg, _query, close) => {
+    tagsStamped++;
+    return `${open}${path}?v=${hashes.get(pkg)}${close}`;
+  });
+  if (after !== before) {
+    writeFileSync(file, after);
+    filesTouched++;
+    console.log(`  stamped   ${file.slice(ROOT.length + 1)}`);
+  }
+}
+
+console.log(
+  `\n${hashes.size} bundle(s) synced; ${tagsStamped} script tag(s) checked across ` +
+    `arcade/, ${filesTouched} file(s) rewritten.`,
+);
