@@ -20,59 +20,88 @@ var UI = (function() {
         Multiplayer.setOnGameEnd(onMultiplayerGameEnd);
     }
 
+    // Elements the current BoardGameTemplate markup does not render. This game's
+    // JS predates it and still expects an older lobby/chat layout (lobbyJoinBtn,
+    // lobbyBackBtn, lobbyStartBtn, roomCodeInput, gameChat …) where the template
+    // now emits lobbyCreateRoom / lobbyJoinRoom / lobbyStartGame. The mismatch
+    // went unnoticed because these scripts never executed at all.
+    //
+    // Substituting a detached node for exactly those ids keeps single-player
+    // working — an unguarded `elements.gameChat.style` was aborting
+    // startLocalGame() before it ever reached renderBoard(). Multiplayer for this
+    // game stays unwired until the lobby markup and this file are reconciled.
+    var UNRENDERED = ['playerPieces', 'aiPieces', 'roomCodeInput', 'lobbyJoinBtn', 'lobbyBackBtn', 'lobbyPlayers', 'lobbyRoomCode', 'lobbyStartArea', 'lobbyStartBtn', 'gameChat'];
+
+    function el(id) {
+        var found = document.getElementById(id);
+        if (found) return found;
+        if (UNRENDERED.indexOf(id) === -1) console.warn('[UI] missing element: ' + id);
+        return document.createElement('div');
+    }
+
     function cacheElements() {
-        elements.startScreen = document.getElementById('startScreen');
-        elements.gameScreen = document.getElementById('gameScreen');
-        elements.startGameBtn = document.getElementById('startGameBtn');
-        elements.onlineBtn = document.getElementById('onlineBtn');
-        elements.boardContainer = document.getElementById('boardContainer');
-        elements.message = document.getElementById('gameMessage');
-        elements.turnIndicator = document.getElementById('turnIndicator');
-        elements.playerPieces = document.getElementById('playerPieces');
-        elements.aiPieces = document.getElementById('aiPieces');
-        elements.instructionsModal = document.getElementById('instructionsModal');
-        elements.closeInstructions = document.getElementById('closeInstructions');
-        elements.closeInstructionsBtn = document.getElementById('closeInstructionsBtn');
-        elements.creditsModal = document.getElementById('creditsModal');
-        elements.closeCredits = document.getElementById('closeCredits');
-        elements.closeCreditsBtn = document.getElementById('closeCreditsBtn');
-        elements.gameOverModal = document.getElementById('gameOverModal');
-        elements.gameOverTitle = document.getElementById('gameOverTitle');
-        elements.gameOverMessage = document.getElementById('gameOverMessage');
-        elements.playAgainBtn = document.getElementById('playAgainBtn');
-        elements.newGameBtn = document.getElementById('newGameBtn');
-        elements.menuBtn = document.getElementById('menuBtn');
-        elements.helpBtn = document.getElementById('helpBtn');
-        elements.creditsBtn = document.getElementById('creditsBtn');
-        elements.lobbyOverlay = document.getElementById('lobbyOverlay');
-        elements.lobbyStatus = document.getElementById('lobbyStatus');
-        elements.lobbyRoomInput = document.getElementById('roomCodeInput');
-        elements.lobbyJoinBtn = document.getElementById('lobbyJoinBtn');
-        elements.lobbyBackBtn = document.getElementById('lobbyBackBtn');
-        elements.lobbyPlayers = document.getElementById('lobbyPlayers');
-        elements.lobbyPlayerList = document.getElementById('lobbyPlayerList');
-        elements.lobbyRoomCode = document.getElementById('lobbyRoomCode');
-        elements.roomCodeDisplay = document.getElementById('roomCodeDisplay');
-        elements.lobbyStartArea = document.getElementById('lobbyStartArea');
-        elements.lobbyStartBtn = document.getElementById('lobbyStartBtn');
-        elements.gameChat = document.getElementById('gameChat');
+        elements.startScreen = el('startScreen');
+        elements.gameScreen = el('gameScreen');
+        elements.startGameBtn = el('startGameBtn');
+        elements.onlineBtn = el('onlineBtn');
+        elements.boardContainer = el('boardContainer');
+        elements.message = el('gameMessage');
+        elements.turnIndicator = el('turnIndicator');
+        elements.playerPieces = el('playerPieces');
+        elements.aiPieces = el('aiPieces');
+        elements.instructionsModal = el('instructionsModal');
+        elements.closeInstructions = el('closeInstructions');
+        elements.closeInstructionsBtn = el('closeInstructionsBtn');
+        elements.creditsModal = el('creditsModal');
+        elements.closeCredits = el('closeCredits');
+        elements.closeCreditsBtn = el('closeCreditsBtn');
+        elements.gameOverModal = el('gameOverModal');
+        elements.gameOverTitle = el('gameOverTitle');
+        elements.gameOverMessage = el('gameOverMessage');
+        elements.playAgainBtn = el('playAgainBtn');
+        elements.newGameBtn = el('newGameBtn');
+        elements.menuBtn = el('menuBtn');
+        elements.helpBtn = el('helpBtn');
+        elements.creditsBtn = el('creditsBtn');
+        elements.lobbyOverlay = el('lobbyOverlay');
+        elements.lobbyStatus = el('lobbyStatus');
+        elements.lobbyRoomInput = el('roomCodeInput');
+        elements.lobbyJoinBtn = el('lobbyJoinBtn');
+        elements.lobbyBackBtn = el('lobbyBackBtn');
+        elements.lobbyPlayers = el('lobbyPlayers');
+        elements.lobbyPlayerList = el('lobbyPlayerList');
+        elements.lobbyRoomCode = el('lobbyRoomCode');
+        elements.roomCodeDisplay = el('roomCodeDisplay');
+        elements.lobbyStartArea = el('lobbyStartArea');
+        elements.lobbyStartBtn = el('lobbyStartBtn');
+        elements.gameChat = el('gameChat');
+    }
+
+    // Bind only if the element exists. The lobby markup these games were written
+    // against no longer matches what BoardGameTemplate emits (they expect
+    // lobbyJoinBtn / lobbyBackBtn / lobbyStartBtn / roomCodeInput; the template
+    // renders lobbyCreateRoom / lobbyJoinRoom / lobbyStartGame). Unguarded, the
+    // first missing element threw and aborted init() before the board rendered —
+    // which nobody noticed, because these scripts never executed at all.
+    function on(el, evt, fn) {
+        if (el) el.addEventListener(evt, fn);
     }
 
     function setupEventListeners() {
-        elements.startGameBtn.addEventListener('click', startLocalGame);
-        elements.onlineBtn.addEventListener('click', openLobby);
-        elements.newGameBtn.addEventListener('click', startLocalGame);
-        elements.menuBtn.addEventListener('click', showMenu);
-        elements.helpBtn.addEventListener('click', showInstructions);
-        elements.creditsBtn.addEventListener('click', showCredits);
-        elements.closeInstructions.addEventListener('click', hideInstructions);
-        elements.closeInstructionsBtn.addEventListener('click', hideInstructions);
-        elements.closeCredits.addEventListener('click', hideCredits);
-        elements.closeCreditsBtn.addEventListener('click', hideCredits);
-        elements.playAgainBtn.addEventListener('click', isMultiplayer ? openLobby : startLocalGame);
-        elements.lobbyJoinBtn.addEventListener('click', joinLobby);
-        elements.lobbyBackBtn.addEventListener('click', closeLobby);
-        elements.lobbyStartBtn.addEventListener('click', function() {
+        on(elements.startGameBtn, 'click', startLocalGame);
+        on(elements.onlineBtn, 'click', openLobby);
+        on(elements.newGameBtn, 'click', startLocalGame);
+        on(elements.menuBtn, 'click', showMenu);
+        on(elements.helpBtn, 'click', showInstructions);
+        on(elements.creditsBtn, 'click', showCredits);
+        on(elements.closeInstructions, 'click', hideInstructions);
+        on(elements.closeInstructionsBtn, 'click', hideInstructions);
+        on(elements.closeCredits, 'click', hideCredits);
+        on(elements.closeCreditsBtn, 'click', hideCredits);
+        on(elements.playAgainBtn, 'click', isMultiplayer ? openLobby : startLocalGame);
+        on(elements.lobbyJoinBtn, 'click', joinLobby);
+        on(elements.lobbyBackBtn, 'click', closeLobby);
+        on(elements.lobbyStartBtn, 'click', function() {
             Multiplayer.startGame();
         });
 
