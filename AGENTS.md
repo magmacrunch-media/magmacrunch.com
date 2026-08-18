@@ -191,10 +191,13 @@ result after any dependency change.
 
 [adenosine](https://github.com/magmacrunchmedia/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.
 
-**The canonical working copy on this Mac is `~/adenosine`.** Two stale clones also
-exist — `~/Documents/adenosine` and `~/Documents/game_dev/adenosine` (the latter
-predates the `audio` package entirely). Do not edit those; the same one-line cards
-fix was once authored twice because of them. Delete them when convenient.
+**There is exactly one working copy on this Mac: `~/adenosine`. Keep it that way.**
+Two stale clones used to sit under `~/Documents/` and were deleted on 2026-08-18.
+While they existed the same one-line `deck.js` import fix got authored twice,
+independently, in two different clones (`096e888` and `cb1a040`), and work was
+repeatedly started against a copy that was 15 commits behind and missing the
+`audio` package outright. If you need a second checkout for some reason, use a
+git worktree rather than a second clone.
 
 - Mac: `~/adenosine`
 - MC1: `~/adenosine` (WSL2: `/home/magma/adenosine`)
