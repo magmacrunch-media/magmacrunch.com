@@ -4,29 +4,12 @@
 // No external API keys needed
 
 // ── Card configuration ───────────────────────────────────────
-const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];
-const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
-const SUIT_SYMBOLS = {
-    hearts:   '♥',
-    diamonds: '♦',
-    clubs:    '♣',
-    spades:   '♠'
-};
-
-const SUIT_COLORS = {
-    hearts:   'red',
-    diamonds: 'red',
-    clubs:    'black',
-    spades:   'black'
-};
-
-const RANK_VALUES = {
-    'A': 14,
-    '2': 2,  '3': 3,  '4': 4,  '5': 5,
-    '6': 6,  '7': 7,  '8': 8,  '9': 9,
-    '10': 10, 'J': 11, 'Q': 12, 'K': 13
-};
+// Suit symbols come from the engine (identical values). SUITS, RANKS,
+// SUIT_COLORS and RANK_VALUES used to be declared here but nothing read them —
+// AdCards carries its own copies for rendering, and js/hand-eval.js has its own
+// rank ordering. Note that AdCards is ace-low (RANK_VALUES.A === 1), so do NOT
+// reach for AdCards.RANK_VALUES here without checking: Sökö is ace-high.
+const { SUIT_SYMBOLS } = AdCards;
 
 const RANK_DISPLAY = {
     'A': 'A', '2': '2', '3': '3', '4': '4', '5': '5',

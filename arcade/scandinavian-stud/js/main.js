@@ -434,14 +434,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function saveHighScores() {
-        try {
-            localStorage.setItem('mc_scores_scandinavian-stud', JSON.stringify(highScores));
-        } catch (e) {
-            console.error('Error saving high scores:', e);
-        }
-    }
-
     loadHighScores();
 
     // ══════════════════════════════════════════════════════════════════════

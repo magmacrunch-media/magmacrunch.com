@@ -3,58 +3,16 @@
 // ── Score backend is now handled by ScoreClient (MAGMA//OPS dashboard) ──
 // No external API keys needed
 
-// ── Card configuration ───────────────────────────────────────
-const SUITS = ['hearts', 'diamonds', 'clubs', 'spades'];
-const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-
-const SUIT_SYMBOLS = {
-    hearts:   '♥',
-    diamonds: '♦',
-    clubs:    '♣',
-    spades:   '♠'
-};
-
-const SUIT_COLORS = {
-    hearts:   'red',
-    diamonds: 'red',
-    clubs:    'black',
-    spades:   'black'
-};
-
-const RANK_VALUES = {
-    'A': 14,
-    '2': 2,  '3': 3,  '4': 4,  '5': 5,
-    '6': 6,  '7': 7,  '8': 8,  '9': 9,
-    '10': 10, 'J': 11, 'Q': 12, 'K': 13
-};
-
-// ── Hand rankings (higher = better) ─────────────────────────
-const HAND_RANKS = {
-    'Royal Flush':    9,
-    'Straight Flush': 8,
-    'Four of a Kind': 7,
-    'Full House':     6,
-    'Flush':          5,
-    'Straight':       4,
-    'Three of a Kind':3,
-    'Two Pair':       2,
-    'One Pair':       1,
-    'High Card':      0
-};
-
-// Point values for hand resolution
-const HAND_POINTS = {
-    'Royal Flush':    1000,
-    'Straight Flush': 500,
-    'Four of a Kind': 250,
-    'Full House':     150,
-    'Flush':          100,
-    'Straight':       75,
-    'Three of a Kind':50,
-    'Two Pair':       25,
-    'One Pair':       10,
-    'High Card':      0
-};
+// ── Cards and hand evaluation ────────────────────────────────
+// All of it now comes from AdCards (../shared/adenosine-cards.js):
+//   - AdCards.HandEvaluator replaces the old js/hand-eval.js. Verified
+//     behaviourally identical over 20,000 random 2-7 card hands.
+//   - AdCards.HAND_RANKS and AdCards.HAND_POINTS hold the values that used to be
+//     declared here; they match exactly.
+//   - Card constants (SUITS, RANKS, SUIT_SYMBOLS, SUIT_COLORS, RANK_VALUES) were
+//     declared here but read by nothing; AdCards carries its own for rendering.
+// Careful: AdCards.RANK_VALUES is ace-LOW (A === 1) while this game is ace-high.
+// The evaluator is unaffected — it reads `value` off the card objects it is given.
 
 // ── Chip configuration ───────────────────────────────────────
 const STARTING_CHIPS     = 500;   // Chip stack at session start

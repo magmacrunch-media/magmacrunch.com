@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const state     = new GameState();
     const dealer    = new Dealer(state);
-    const evaluator = new HandEvaluator();
+    const evaluator = new AdCards.HandEvaluator();
     const dome      = new Dome(state, evaluator);
     const betting   = new Betting(state);
     const scoring   = new Scoring(state);
