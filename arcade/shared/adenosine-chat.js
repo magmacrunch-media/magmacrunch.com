@@ -18,13 +18,13 @@ var AdChat = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // src/index.js
+  // src/index.ts
   var index_exports = {};
   __export(index_exports, {
     ChatWidget: () => ChatWidget
   });
 
-  // src/chat-widget.js
+  // src/chat-widget.ts
   var ChatWidget = (function() {
     "use strict";
     var WS_SCHEME = (function() {
@@ -71,27 +71,30 @@ var AdChat = (() => {
     function resolveWorkerUrl(explicit) {
       if (explicit) return explicit;
       if (OWN_SCRIPT_SRC) return OWN_SCRIPT_SRC.replace(/[^/]*$/, "chat-worker.js");
-      var scripts = typeof document !== "undefined" ? document.getElementsByTagName("script") : [];
-      for (var i = scripts.length - 1; i >= 0; i--) {
-        var src = scripts[i].src;
+      var scripts = typeof document !== "undefined" ? Array.from(document.getElementsByTagName("script")) : [];
+      for (let i = scripts.length - 1; i >= 0; i--) {
+        const src = scripts[i].src;
         if (src && /(chat-widget|adenosine-chat|index\.global)\.js(\?|$)/.test(src)) {
           return src.replace(/[^/]*$/, "chat-worker.js");
         }
       }
       return window.location.href.replace(/[^/]*$/, "chat-worker.js");
     }
-    var sock = null;
-    var worker = null;
-    var usingWorker = false;
-    var currentRoom = null;
-    var myName = null;
-    var myColor = null;
-    var typingTimeout = null;
-    var typingHideTimer = null;
-    var unreadCount = 0;
-    var isExpanded = false;
-    var activeTab = "global";
-    var widgetEl = null;
+    let sock = null;
+    let worker = null;
+    let usingWorker = false;
+    let currentRoom = null;
+    let myName = null;
+    let myColor = null;
+    let typingTimeout = null;
+    let typingHideTimer = null;
+    let unreadCount = 0;
+    let isExpanded = false;
+    let activeTab = "global";
+    let widgetEl = null;
+    function el(id) {
+      return document.getElementById(id);
+    }
     function getSessionToken() {
       try {
         var token = localStorage.getItem("arcade_chat_session");
@@ -172,7 +175,7 @@ var AdChat = (() => {
       var bar = document.getElementById("acwBar");
       if (bar) {
         bar.addEventListener("click", function(e) {
-          if (e.target.closest(".acw-badge")) return;
+          if (e.target?.closest(".acw-badge")) return;
           toggle();
         });
       }
@@ -224,10 +227,10 @@ var AdChat = (() => {
           sendToServer({ type: "set_color", color: null });
         });
       }
-      var tabs = widgetEl.querySelectorAll(".acw-tab");
-      tabs.forEach(function(tab) {
-        tab.addEventListener("click", function() {
-          switchTab(this.dataset.tab);
+      const tabs = widgetEl.querySelectorAll(".acw-tab");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          switchTab(tab.dataset["tab"] ?? "global");
         });
       });
       document.addEventListener("click", function(e) {
@@ -276,7 +279,7 @@ var AdChat = (() => {
       if (!badge) return;
       if (unreadCount > 0) {
         badge.style.display = "";
-        badge.textContent = unreadCount > 99 ? "99+" : unreadCount;
+        badge.textContent = unreadCount > 99 ? "99+" : String(unreadCount);
       } else {
         badge.style.display = "none";
       }
@@ -330,8 +333,8 @@ var AdChat = (() => {
     }
     function sendSavedCredentials() {
       var token = getSessionToken();
-      var nameMsg = { type: "set_name", name: myName || "Player" };
-      if (token) nameMsg.session_token = token;
+      const nameMsg = { type: "set_name", name: myName || "Player" };
+      if (token) nameMsg["session_token"] = token;
       sendToServer(nameMsg);
       if (myColor) sendToServer({ type: "set_color", color: myColor });
     }
@@ -387,8 +390,8 @@ var AdChat = (() => {
     function handleMessage(msg) {
       switch (msg.type) {
         case "history":
-          if (msg.messages) {
-            msg.messages.forEach(function(m) {
+          if (Array.isArray(msg["messages"])) {
+            msg["messages"].forEach((m) => {
               addMessage("global", m);
             });
           }
@@ -398,8 +401,8 @@ var AdChat = (() => {
           addUnread();
           break;
         case "room_history":
-          if (msg.messages) {
-            msg.messages.forEach(function(m) {
+          if (Array.isArray(msg["messages"])) {
+            msg["messages"].forEach((m) => {
               addMessage("room", m);
             });
           }
@@ -408,17 +411,18 @@ var AdChat = (() => {
           addMessage("room", msg);
           break;
         case "name_assigned":
-          myName = msg.name;
-          localStorage.setItem("arcade_username", msg.name);
+          myName = field(msg, "name");
+          localStorage.setItem("arcade_username", field(msg, "name"));
           updateNameDisplay();
           break;
         case "user_list":
-          updateOnlineList(msg.users);
-          updateOnlineCount(msg.count);
+          const users = Array.isArray(msg["users"]) ? msg["users"] : [];
+          updateOnlineList(users);
+          updateOnlineCount(typeof msg["count"] === "number" ? msg["count"] : users.length);
           if (myName) {
-            for (var i = 0; i < msg.users.length; i++) {
-              if (msg.users[i].name === myName) {
-                myColor = msg.users[i].color;
+            for (const u of users) {
+              if (u.name === myName) {
+                myColor = u.color ?? null;
                 updateColorDisplay();
                 break;
               }
@@ -426,10 +430,10 @@ var AdChat = (() => {
           }
           break;
         case "typing":
-          showTyping(msg.from, msg.room);
+          showTyping(field(msg, "from"), field(msg, "room"));
           break;
         case "global_users":
-          updateOnlineCount(msg.count);
+          updateOnlineCount(typeof msg["count"] === "number" ? msg["count"] : 0);
           break;
         case "status":
           break;
@@ -440,13 +444,13 @@ var AdChat = (() => {
       sendToServer({ type: "join_room", room: roomCode });
       if (myName) {
         var token = getSessionToken();
-        var nameMsg = { type: "set_name", name: myName };
-        if (token) nameMsg.session_token = token;
+        const nameMsg = { type: "set_name", name: myName };
+        if (token) nameMsg["session_token"] = token;
         sendToServer(nameMsg);
       }
       var headerTitle = document.getElementById("chatHeaderTitle");
       if (headerTitle) headerTitle.textContent = "// ROOM " + roomCode + " //";
-      var roomTab = widgetEl.querySelector('[data-tab="room"]');
+      const roomTab = widgetEl.querySelector('[data-tab="room"]');
       if (roomTab) roomTab.style.display = "";
       switchTab("global");
     }
@@ -463,17 +467,18 @@ var AdChat = (() => {
       if (!input) return;
       var connected = usingWorker && worker || sock && sock.readyState === WebSocket.OPEN;
       if (!connected) return;
-      var text = input.value.trim();
+      const text = input.value.trim();
       if (!text) return;
       var name = myName || "Player";
       var token = getSessionToken();
-      var nameMsg = { type: "set_name", name };
-      if (token) nameMsg.session_token = token;
+      const nameMsg = { type: "set_name", name };
+      if (token) nameMsg["session_token"] = token;
       sendToServer(nameMsg);
       var msg = { type: "chat", text };
-      if (currentRoom) msg.room = currentRoom;
+      if (currentRoom) msg["room"] = currentRoom;
       sendToServer(msg);
       addMessage(currentRoom ? "room" : "global", {
+        type: "chat",
         from: name,
         text,
         color: myColor || "#39ff6e"
@@ -487,8 +492,8 @@ var AdChat = (() => {
       myName = name;
       localStorage.setItem("arcade_username", name);
       var token = getSessionToken();
-      var nameMsg = { type: "set_name", name };
-      if (token) nameMsg.session_token = token;
+      const nameMsg = { type: "set_name", name };
+      if (token) nameMsg["session_token"] = token;
       sendToServer(nameMsg);
       updateNameDisplay();
     }
@@ -557,9 +562,9 @@ var AdChat = (() => {
       activeTab = tab;
       var messages = document.getElementById("chatMessagesGlobal");
       var online = document.getElementById("chatOnline");
-      var tabs = widgetEl.querySelectorAll(".acw-tab");
+      const tabs = widgetEl.querySelectorAll(".acw-tab");
       tabs.forEach(function(t) {
-        t.classList.toggle("active", t.dataset.tab === tab);
+        t.classList.toggle("active", t.dataset["tab"] === tab);
       });
       if (tab === "global") {
         if (messages) messages.style.display = "";
@@ -569,13 +574,13 @@ var AdChat = (() => {
         if (online) online.style.display = "";
       }
     }
-    function addMessage(target, msg) {
+    function addMessage(_target, msg) {
       var container = document.getElementById("chatMessagesGlobal");
       if (!container) return;
       var div = document.createElement("div");
       div.className = "acw-msg";
-      if (msg.from === "system") div.className += " system";
-      div.innerHTML = '<span class="chat-name" style="color:' + escapeHtml(msg.color || "#ff2e9c") + '">' + escapeHtml(msg.from) + ":</span> " + escapeHtml(msg.text);
+      if (field(msg, "from") === "system") div.className += " system";
+      div.innerHTML = '<span class="chat-name" style="color:' + escapeHtml(field(msg, "color") || "#ff2e9c") + '">' + escapeHtml(field(msg, "from")) + ":</span> " + escapeHtml(field(msg, "text"));
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
     }
@@ -587,33 +592,37 @@ var AdChat = (() => {
         users.forEach(function(u) {
           var div = document.createElement("div");
           div.className = "acw-online-user";
-          div.innerHTML = '<span class="acw-online-dot" style="background:' + escapeHtml(u.color) + '"></span><span class="acw-online-name">' + escapeHtml(u.name) + '</span><span class="acw-online-status">' + escapeHtml(u.game || (u.rooms && u.rooms.length ? "In Room" : "Online")) + "</span>";
+          div.innerHTML = '<span class="acw-online-dot" style="background:' + escapeHtml(u.color ?? "") + '"></span><span class="acw-online-name">' + escapeHtml(u.name) + '</span><span class="acw-online-status">' + escapeHtml(u.game || (u.rooms && u.rooms.length ? "In Room" : "Online")) + "</span>";
           list.appendChild(div);
         });
       }
     }
     function updateOnlineCount(count) {
-      var el = document.getElementById("acwOnlineCount");
-      if (el) el.textContent = count;
+      var el2 = document.getElementById("acwOnlineCount");
+      if (el2) el2.textContent = String(count);
     }
     function showTyping(name, room) {
-      var el = document.getElementById("chatTyping");
-      if (!el) return;
-      el.textContent = name + " is typing...";
-      el.style.display = "block";
+      var el2 = document.getElementById("chatTyping");
+      if (!el2) return;
+      el2.textContent = name + " is typing...";
+      el2.style.display = "block";
       if (typingHideTimer) clearTimeout(typingHideTimer);
       typingHideTimer = setTimeout(function() {
-        el.style.display = "none";
+        el2.style.display = "none";
       }, 3e3);
     }
     function handleTyping() {
       if (typingTimeout) return;
       var msg = { type: "typing" };
-      if (currentRoom) msg.room = currentRoom;
+      if (currentRoom) msg["room"] = currentRoom;
       sendToServer(msg);
       typingTimeout = setTimeout(function() {
         typingTimeout = null;
       }, 2e3);
+    }
+    function field(msg, key) {
+      const v = msg[key];
+      return typeof v === "string" ? v : "";
     }
     function escapeHtml(text) {
       var div = document.createElement("div");
