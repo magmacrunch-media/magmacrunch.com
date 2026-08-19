@@ -18,7 +18,7 @@ var AdCards = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // src/index.js
+  // src/index.ts
   var index_exports = {};
   __export(index_exports, {
     CRIBBAGE_SCORE: () => CRIBBAGE_SCORE,
@@ -42,7 +42,7 @@ var AdCards = (() => {
     cornerHTML: () => cornerHTML,
     cornerPipSVG: () => cornerPipSVG,
     drawChip: () => drawChip,
-    getAceHTML: () => getAceHTML2,
+    getAceHTML: () => getAceHTML,
     getCardBackSVG: () => getCardBackSVG,
     getNumberCardHTML: () => getNumberCardHTML,
     getSuitLayout: () => getSuitLayout,
@@ -50,7 +50,7 @@ var AdCards = (() => {
     renderStack: () => renderStack
   });
 
-  // src/face-cards.js
+  // src/face-cards.ts
   var FC_RANK_SIZE = 8;
   var FC_PIP_SIZE = 7;
   var FC_LARGE_PIP_SIZE = 14;
@@ -833,7 +833,7 @@ var AdCards = (() => {
     `
   };
 
-  // src/number-cards.js
+  // src/number-cards.ts
   var SUIT_CHAR = { hearts: "\u2665", diamonds: "\u2666", clubs: "\u2663", spades: "\u2660" };
   function pipColor(suit) {
     return suit === "hearts" || suit === "diamonds" ? "#cc0000" : "#111111";
@@ -880,7 +880,7 @@ var AdCards = (() => {
             <rect x="2" y="7" width="4" height="1" fill="${color}"/>
           </svg>`
     };
-    return shapes[suit] || "";
+    return shapes[suit] ?? "";
   }
   function cornerHTML(rank, suit, color) {
     const s = SUIT_CHAR[suit];
@@ -894,7 +894,7 @@ var AdCards = (() => {
             <div class="corner-suit" style="color:${color}">${s}</div>
         </div>`;
   }
-  function getAceHTML2(suit, rank) {
+  function getAceHTML(suit, rank) {
     const color = pipColor(suit);
     return `
         ${cornerHTML("A", suit, color)}
@@ -988,10 +988,10 @@ var AdCards = (() => {
                 <div class="suit-row">${pr(suit, color)}${pr(suit, color)}</div>
             </div>`
     };
-    return layouts[rank] || "";
+    return layouts[rank] ?? "";
   }
 
-  // src/constants.js
+  // src/constants.ts
   var SUITS = ["hearts", "diamonds", "clubs", "spades"];
   var RANKS = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
   var SUIT_SYMBOLS = {
@@ -1022,7 +1022,7 @@ var AdCards = (() => {
     K: 13
   };
 
-  // src/deck.js
+  // src/deck.ts
   var _cardBackIdCounter = 0;
   function getCardBackSVG() {
     const id = _cardBackIdCounter++;
@@ -1112,6 +1112,11 @@ var AdCards = (() => {
     </svg>`;
   }
   var Card = class {
+    suit;
+    rank;
+    faceUp;
+    color;
+    value;
     constructor(suit, rank) {
       this.suit = suit;
       this.rank = rank;
@@ -1168,6 +1173,7 @@ var AdCards = (() => {
     }
   };
   var Deck = class {
+    cards;
     constructor() {
       this.cards = [];
       this.createDeck();
@@ -1191,7 +1197,7 @@ var AdCards = (() => {
     }
   };
 
-  // src/chip-animation.js
+  // src/chip-animation.ts
   var DENOMS = [
     { value: 500, face: "#7744cc", edge: "#3d1a77", mid: "#ffffff", dark: "#1a0044", label: "500", name: "Purple" },
     { value: 100, face: "#444444", edge: "#111111", mid: "#aaaaaa", dark: "#000000", label: "100", name: "Black" },
@@ -1360,7 +1366,7 @@ var AdCards = (() => {
     });
   }
 
-  // src/hand-eval.js
+  // src/hand-eval.ts
   var HAND_RANKS = {
     "Royal Flush": 9,
     "Straight Flush": 8,
@@ -1401,7 +1407,7 @@ var AdCards = (() => {
           best = result;
         }
       }
-      return best;
+      return best ?? this._emptyResult();
     }
     _evaluateFive(cards) {
       const sorted = [...cards].sort((a, b) => b.value - a.value);
@@ -1409,7 +1415,9 @@ var AdCards = (() => {
       const isStraight = this._isStraight(sorted);
       const counts = this._getValueCounts(cards);
       const countVals = Object.values(counts).sort((a, b) => b - a);
-      let name, rank, tiebreakers;
+      let name;
+      let rank;
+      let tiebreakers;
       if (isFlush && isStraight && sorted[0].value === 14 && sorted[1].value === 13) {
         name = "Royal Flush";
         rank = HAND_RANKS["Royal Flush"];
@@ -1418,11 +1426,11 @@ var AdCards = (() => {
         name = "Straight Flush";
         rank = HAND_RANKS["Straight Flush"];
         tiebreakers = [this._straightHighCard(sorted)];
-      } else if (countVals[0] === 4) {
+      } else if ((countVals[0] ?? 0) === 4) {
         name = "Four of a Kind";
         rank = HAND_RANKS["Four of a Kind"];
         tiebreakers = this._tiebreakByCount(counts, [4, 1]);
-      } else if (countVals[0] === 3 && countVals[1] === 2) {
+      } else if ((countVals[0] ?? 0) === 3 && (countVals[1] ?? 0) === 2) {
         name = "Full House";
         rank = HAND_RANKS["Full House"];
         tiebreakers = this._tiebreakByCount(counts, [3, 2]);
@@ -1434,15 +1442,15 @@ var AdCards = (() => {
         name = "Straight";
         rank = HAND_RANKS["Straight"];
         tiebreakers = [this._straightHighCard(sorted)];
-      } else if (countVals[0] === 3) {
+      } else if ((countVals[0] ?? 0) === 3) {
         name = "Three of a Kind";
         rank = HAND_RANKS["Three of a Kind"];
         tiebreakers = this._tiebreakByCount(counts, [3, 1, 1]);
-      } else if (countVals[0] === 2 && countVals[1] === 2) {
+      } else if ((countVals[0] ?? 0) === 2 && (countVals[1] ?? 0) === 2) {
         name = "Two Pair";
         rank = HAND_RANKS["Two Pair"];
         tiebreakers = this._tiebreakByCount(counts, [2, 2, 1]);
-      } else if (countVals[0] === 2) {
+      } else if ((countVals[0] ?? 0) === 2) {
         name = "One Pair";
         rank = HAND_RANKS["One Pair"];
         tiebreakers = this._tiebreakByCount(counts, [2, 1, 1, 1]);
@@ -1465,11 +1473,11 @@ var AdCards = (() => {
       const counts = this._getValueCounts(cards);
       const countVals = Object.values(counts).sort((a, b) => b - a);
       let name = "High Card";
-      if (countVals[0] === 2 && countVals[1] === 2) name = "Two Pair";
-      else if (countVals[0] === 3 && countVals[1] === 2) name = "Full House";
-      else if (countVals[0] === 4) name = "Four of a Kind";
-      else if (countVals[0] === 3) name = "Three of a Kind";
-      else if (countVals[0] === 2) name = "One Pair";
+      if ((countVals[0] ?? 0) === 2 && (countVals[1] ?? 0) === 2) name = "Two Pair";
+      else if ((countVals[0] ?? 0) === 3 && (countVals[1] ?? 0) === 2) name = "Full House";
+      else if ((countVals[0] ?? 0) === 4) name = "Four of a Kind";
+      else if ((countVals[0] ?? 0) === 3) name = "Three of a Kind";
+      else if ((countVals[0] ?? 0) === 2) name = "One Pair";
       return {
         name,
         rank: HAND_RANKS[name],
@@ -1534,8 +1542,8 @@ var AdCards = (() => {
     _tiebreakByCount(counts, pattern) {
       const groups = {};
       Object.entries(counts).forEach(([val, cnt]) => {
-        if (!groups[cnt]) groups[cnt] = [];
-        groups[cnt].push(parseInt(val));
+        const c = Number(cnt);
+        (groups[c] ??= []).push(parseInt(val, 10));
       });
       Object.values(groups).forEach((g) => g.sort((a, b) => b - a));
       const result = [];
@@ -1582,8 +1590,8 @@ var AdCards = (() => {
           const counts = this._getValueCounts(sortedCards);
           const triple = Object.entries(counts).find(([, v]) => v === 3);
           const pair = Object.entries(counts).find(([, v]) => v === 2);
-          const rankName = (r) => sortedCards.find((c) => c.value === parseInt(r)).rank;
-          return `Full House \u2014 ${rankName(triple[0])}s full of ${rankName(pair[0])}s`;
+          const rankName = (r) => sortedCards.find((c) => c.value === parseInt(r, 10))?.rank ?? r;
+          return triple && pair ? `Full House \u2014 ${rankName(triple[0])}s full of ${rankName(pair[0])}s` : "Full House";
         }
         case "Flush":
           return `Flush \u2014 ${top.rank} high (${top.suit})`;
@@ -1593,13 +1601,13 @@ var AdCards = (() => {
           return `Three ${top.rank}s`;
         case "Two Pair": {
           const counts = this._getValueCounts(sortedCards);
-          const pairs = Object.entries(counts).filter(([, v]) => v === 2).map(([k]) => sortedCards.find((c) => c.value === parseInt(k)).rank).join("s and ");
+          const pairs = Object.entries(counts).filter(([, v]) => v === 2).map(([k]) => sortedCards.find((c) => c.value === parseInt(k, 10))?.rank ?? k).join("s and ");
           return `Two Pair \u2014 ${pairs}s`;
         }
         case "One Pair": {
           const counts = this._getValueCounts(sortedCards);
           const pair = Object.entries(counts).find(([, v]) => v === 2);
-          const pairRank = sortedCards.find((c) => c.value === parseInt(pair[0])).rank;
+          const pairRank = pair ? sortedCards.find((c) => c.value === parseInt(pair[0], 10))?.rank ?? pair[0] : "";
           return `Pair of ${pairRank}s`;
         }
         case "High Card":
@@ -1610,7 +1618,7 @@ var AdCards = (() => {
     }
   };
 
-  // src/cribbage-hand-eval.js
+  // src/cribbage-hand-eval.ts
   var CRIBBAGE_SCORE = {
     FIFTEEN: 2,
     PAIR: 2,
@@ -1626,7 +1634,7 @@ var AdCards = (() => {
   function cribbageValue(rank) {
     if (rank === "A") return 1;
     if (rank === "J" || rank === "Q" || rank === "K") return 10;
-    return parseInt(rank);
+    return parseInt(rank, 10);
   }
   var CribbageHandEval = {
     countFifteens(cards) {
@@ -1646,11 +1654,11 @@ var AdCards = (() => {
     countPairs(cards) {
       const rankCounts = {};
       for (const card of cards) {
-        rankCounts[card.rank] = (rankCounts[card.rank] || 0) + 1;
+        rankCounts[card.rank] = (rankCounts[card.rank] ?? 0) + 1;
       }
       let points = 0;
       for (const rank in rankCounts) {
-        const count = rankCounts[rank];
+        const count = rankCounts[rank] ?? 0;
         if (count === 2) points += CRIBBAGE_SCORE.PAIR;
         else if (count === 3) points += CRIBBAGE_SCORE.THREE_OF_KIND;
         else if (count === 4) points += CRIBBAGE_SCORE.FOUR_OF_KIND;
@@ -1679,7 +1687,7 @@ var AdCards = (() => {
               const runLength = end - start + 1;
               let multiplier = 1;
               for (let k = start; k <= end; k++) {
-                multiplier *= valueCounts[uniqueValues[k]];
+                multiplier *= valueCounts[uniqueValues[k]] ?? 1;
               }
               totalPoints += runLength * multiplier;
             }
@@ -1691,7 +1699,7 @@ var AdCards = (() => {
     },
     countFlush(hand, starter, isCrib) {
       if (!starter) return 0;
-      const handSuit = hand[0].suit;
+      const handSuit = hand[0]?.suit;
       const isHandFlush = hand.every((c) => c.suit === handSuit);
       if (!isHandFlush) return 0;
       if (starter.suit === handSuit) return CRIBBAGE_SCORE.FLUSH_5;
@@ -1734,11 +1742,11 @@ var AdCards = (() => {
       }
       if (playedCards.length >= 1) {
         const lastCard = playedCards[playedCards.length - 1];
-        if (card.rank === lastCard.rank) {
-          if (playedCards.length >= 3 && playedCards[playedCards.length - 2].rank === card.rank && playedCards[playedCards.length - 3].rank === card.rank) {
+        if (lastCard && card.rank === lastCard.rank) {
+          if (playedCards.length >= 3 && playedCards[playedCards.length - 2]?.rank === card.rank && playedCards[playedCards.length - 3]?.rank === card.rank) {
             points += CRIBBAGE_SCORE.FOUR_OF_KIND;
             descriptions.push("Four of a kind!");
-          } else if (playedCards.length >= 2 && playedCards[playedCards.length - 2].rank === card.rank) {
+          } else if (playedCards.length >= 2 && playedCards[playedCards.length - 2]?.rank === card.rank) {
             points += CRIBBAGE_SCORE.THREE_OF_KIND;
             descriptions.push("Three of a kind!");
           } else {
