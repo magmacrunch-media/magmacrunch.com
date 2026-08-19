@@ -37,13 +37,14 @@ var AdChat = (() => {
     function hostOf(addr) {
       return String(addr).replace(/^wss?:\/\//, "").split("/")[0].split(":")[0];
     }
-    function isAllowedServer(addr, extra) {
+    function isAllowedServer(addr, extra, configured) {
       var host = hostOf(addr);
       var allowed = ["localhost", "127.0.0.1"];
       try {
         if (window.location.hostname) allowed.push(window.location.hostname);
       } catch (e) {
       }
+      if (configured) allowed.push(hostOf(configured));
       if (extra) allowed = allowed.concat(extra);
       for (var i = 0; i < allowed.length; i++) {
         if (host === allowed[i]) return true;
@@ -57,7 +58,7 @@ var AdChat = (() => {
       };
       try {
         var param = new URLSearchParams(window.location.search).get("server");
-        if (param && isAllowedServer(param, opts && opts.allowlist)) {
+        if (param && isAllowedServer(param, opts && opts.allowlist, opts && opts.server)) {
           return withScheme(param);
         }
         if (param) {

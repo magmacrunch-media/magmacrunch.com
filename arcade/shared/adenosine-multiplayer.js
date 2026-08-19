@@ -191,6 +191,8 @@ var AdMP = (() => {
         if (window.location.hostname) own.push(window.location.hostname);
       } catch {
       }
+      const configured = MP._config.defaultServer ?? (typeof MP_DEFAULT_SERVER !== "undefined" ? MP_DEFAULT_SERVER : void 0);
+      if (configured) own.push(MP._hostOf(configured));
       return [...own, ...extra];
     },
     // RFC1918. Note 172 is only private from 172.16 to 172.31 — a bare /^172\./
