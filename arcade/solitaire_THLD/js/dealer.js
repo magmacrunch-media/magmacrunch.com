@@ -10,13 +10,9 @@ const { Deck } = AdCards;
 // straight at all, and a pair of aces lost to a pair of twos. Every card this
 // dealer hands out gets restamped ace-high.
 //
-// AdCards.POKER_RANK_VALUES ships in adenosine-cards > 0.5.0; the local table
-// is the fallback until arcade/shared adopts that release, and can be dropped
-// once it has.
-const POKER_VALUES = AdCards.POKER_RANK_VALUES ?? {
-    A: 14, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
-    '8': 8, '9': 9, '10': 10, J: 11, Q: 12, K: 13,
-};
+// Shipped by adenosine-cards since 0.7.0. Kept as a named local so the restamp
+// below reads the same as Sökö's, which has the identical problem.
+const POKER_VALUES = AdCards.POKER_RANK_VALUES;
 
 class Dealer {
     constructor(state) {
