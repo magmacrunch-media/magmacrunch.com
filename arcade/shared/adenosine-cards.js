@@ -37,6 +37,7 @@ var AdCards = (() => {
     RANK_VALUES: () => RANK_VALUES,
     SUITS: () => SUITS,
     SUIT_COLORS: () => SUIT_COLORS,
+    SUIT_COLOR_NAMES: () => SUIT_COLOR_NAMES,
     SUIT_SYMBOLS: () => SUIT_SYMBOLS,
     breakIntoStacks: () => breakIntoStacks,
     cornerHTML: () => cornerHTML,
@@ -838,6 +839,9 @@ var AdCards = (() => {
   function pipColor(suit) {
     return suit === "hearts" || suit === "diamonds" ? "#cc0000" : "#111111";
   }
+  function colorAttr(color) {
+    return color ? ` style="color:${color}"` : "";
+  }
   function cornerPipSVG(suit, color) {
     const shapes = {
       hearts: `<svg viewBox="0 0 8 7" xmlns="http://www.w3.org/2000/svg" style="shape-rendering:crispEdges;display:block;">
@@ -884,38 +888,37 @@ var AdCards = (() => {
   }
   function cornerHTML(rank, suit, color) {
     const s = SUIT_CHAR[suit];
+    const c = colorAttr(color);
     return `
         <div class="card-corner top-left">
-            <div class="corner-rank" style="color:${color}">${rank}</div>
-            <div class="corner-suit" style="color:${color}">${s}</div>
+            <div class="corner-rank"${c}>${rank}</div>
+            <div class="corner-suit"${c}>${s}</div>
         </div>
         <div class="card-corner bottom-right">
-            <div class="corner-rank" style="color:${color}">${rank}</div>
-            <div class="corner-suit" style="color:${color}">${s}</div>
+            <div class="corner-rank"${c}>${rank}</div>
+            <div class="corner-suit"${c}>${s}</div>
         </div>`;
   }
   function getAceHTML(suit, rank) {
-    const color = pipColor(suit);
     return `
-        ${cornerHTML("A", suit, color)}
+        ${cornerHTML("A", suit)}
         <div class="card-suit-center single">
-            <div class="pip-ace" style="color:${color}">${SUIT_CHAR[suit]}</div>
+            <div class="pip-ace">${SUIT_CHAR[suit]}</div>
         </div>`;
   }
   function getNumberCardHTML(suit, rank) {
-    const color = pipColor(suit);
-    const layout = getSuitLayout(rank, suit, color);
+    const layout = getSuitLayout(rank, suit);
     return `
-        ${cornerHTML(rank, suit, color)}
+        ${cornerHTML(rank, suit)}
         <div class="card-suit-center" data-rank="${rank}">
             ${layout}
         </div>`;
   }
   function pu(suit, color) {
-    return `<span class="pip" style="color:${color}">${SUIT_CHAR[suit]}</span>`;
+    return `<span class="pip"${colorAttr(color)}>${SUIT_CHAR[suit]}</span>`;
   }
   function pr(suit, color) {
-    return `<span class="pip rotated" style="color:${color}">${SUIT_CHAR[suit]}</span>`;
+    return `<span class="pip rotated"${colorAttr(color)}>${SUIT_CHAR[suit]}</span>`;
   }
   function getSuitLayout(rank, suit, color) {
     const layouts = {
@@ -1005,6 +1008,12 @@ var AdCards = (() => {
     diamonds: "#cc0000",
     clubs: "#111111",
     spades: "#111111"
+  };
+  var SUIT_COLOR_NAMES = {
+    hearts: "red",
+    diamonds: "red",
+    clubs: "black",
+    spades: "black"
   };
   var RANK_VALUES = {
     A: 1,
@@ -1115,13 +1124,17 @@ var AdCards = (() => {
     suit;
     rank;
     faceUp;
+    /** Ink colour as a hex value, for canvas and SVG fills. */
     color;
+    /** Ink colour as the name the stylesheet keys on: 'red' or 'black'. */
+    colorName;
     value;
     constructor(suit, rank) {
       this.suit = suit;
       this.rank = rank;
       this.faceUp = false;
       this.color = SUIT_COLORS[suit];
+      this.colorName = SUIT_COLOR_NAMES[suit];
       this.value = RANK_VALUES[rank];
     }
     flip() {
@@ -1133,7 +1146,7 @@ var AdCards = (() => {
       card.dataset.suit = this.suit;
       card.dataset.rank = this.rank;
       if (this.faceUp) {
-        card.classList.add("face-up", this.color);
+        card.classList.add("face-up", this.colorName);
         if (this.rank === "J" || this.rank === "Q" || this.rank === "K") {
           const key = `${this.rank.toLowerCase()}-${this.suit}`;
           const svgFn = FACE_CARD_SVG[key];

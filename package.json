@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@magmacrunch/adenosine-audio": "^0.2.1",
-    "@magmacrunch/adenosine-cards": "^0.4.0",
+    "@magmacrunch/adenosine-cards": "^0.5.0",
     "@magmacrunch/adenosine-chat": "^0.3.1",
     "@magmacrunch/adenosine-multiplayer": "^0.3.1",
     "@magmacrunch/adenosine-puzzle": "^0.2.0",
