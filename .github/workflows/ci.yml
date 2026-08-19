@@ -64,3 +64,38 @@ jobs:
             echo "=== Running $test_file ==="
             node "$test_file" || exit 1
           done
+
+  # Clicks MULTIPLAYER on the games whose lobby opens client-side and asserts the
+  # overlay actually becomes visible. A dead lobby button used to pass every check
+  # here, because the page still loaded and logged nothing.
+  lobby-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install test dependencies
+        working-directory: arcade/tests
+        run: npm ci
+
+      - name: Install Playwright chromium
+        working-directory: arcade/tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Serve the repo
+        run: |
+          python3 -m http.server 8080 &
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:8080/ >/dev/null && exit 0
+            sleep 1
+          done
+          echo "server did not come up"; exit 1
+
+      - name: Check multiplayer lobbies
+        working-directory: arcade/tests
+        env:
+          BASE_URL: http://localhost:8080
+        run: node smoke-test.mjs --lobby-only
