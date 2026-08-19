@@ -9,11 +9,11 @@
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
     gap: 8px;
-    background: #1a0a2a;
-    border: 3px solid #00f5ff;
+    background: var(--apz-bg-panel, #1a0a2a);
+    border: 3px solid var(--apz-accent, #00f5ff);
     border-radius: 8px;
     padding: 8px;
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--apz-accent, #00f5ff) 30%, transparent);
 }
 
 /* ── Tiles ──────────────────────────────────────────────────────────────────── */
@@ -25,8 +25,8 @@
     font-size: 24px;
     font-weight: bold;
     border-radius: 6px;
-    background: #2a1a3a;
-    color: #f0ead8;
+    background: var(--apz-border, #2a1a3a);
+    color: var(--apz-text, #f0ead8);
     transition: transform 0.1s ease, box-shadow 0.1s ease;
     user-select: none;
     -webkit-user-select: none;
@@ -120,13 +120,13 @@
 
 .game-over-title {
     font-size: 24px;
-    color: #ff2d78;
-    text-shadow: 0 0 15px rgba(255, 45, 120, 0.6);
+    color: var(--apz-accent-alt, #ff2d78);
+    text-shadow: 0 0 15px color-mix(in srgb, var(--apz-accent-alt, #ff2d78) 60%, transparent);
     margin-bottom: 20px;
 }
 
 .game-over-score {
     font-size: 12px;
-    color: #f0ead8;
+    color: var(--apz-text, #f0ead8);
     margin-bottom: 20px;
 }
