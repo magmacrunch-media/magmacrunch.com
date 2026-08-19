@@ -27,14 +27,14 @@
 
 /* ── Modal Content ──────────────────────────────────────────────────────────── */
 .modal-content {
-    background: linear-gradient(135deg, #1a0a2a, #0d0820);
-    border: 2px solid #00f5ff;
+    background: linear-gradient(135deg, var(--apz-bg-panel, #1a0a2a), #0d0820);
+    border: 2px solid var(--apz-accent, #00f5ff);
     border-radius: 8px;
     max-width: 500px;
     width: 90%;
     max-height: 80vh;
     overflow-y: auto;
-    box-shadow: 0 0 30px rgba(0, 245, 255, 0.3);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--apz-accent, #00f5ff) 30%, transparent);
     animation: modalSlideIn 0.3s ease-out;
 }
 
@@ -45,7 +45,7 @@
 
 /* ── Modal Title Bar ────────────────────────────────────────────────────────── */
 .modal-titlebar {
-    background: linear-gradient(90deg, #00f5ff, #ff2d78);
+    background: linear-gradient(90deg, var(--apz-accent, #00f5ff), var(--apz-accent-alt, #ff2d78));
     padding: 10px 15px;
     display: flex;
     justify-content: space-between;
@@ -55,14 +55,14 @@
 
 .modal-titlebar span {
     font-size: 10px;
-    color: #0a0612;
+    color: var(--apz-bg, #0a0612);
     font-weight: bold;
 }
 
 .modal-close {
     background: none;
     border: none;
-    color: #0a0612;
+    color: var(--apz-bg, #0a0612);
     font-size: 14px;
     cursor: pointer;
     padding: 0 5px;
@@ -81,13 +81,13 @@
 
 .modal-body h3 {
     font-size: 12px;
-    color: #00f5ff;
+    color: var(--apz-accent, #00f5ff);
     margin-bottom: 15px;
 }
 
 .modal-body p {
     font-size: 9px;
-    color: #f0ead8;
+    color: var(--apz-text, #f0ead8);
     line-height: 1.8;
     margin-bottom: 10px;
 }
@@ -97,38 +97,38 @@
     padding: 15px 20px;
     display: flex;
     justify-content: center;
-    border-top: 1px solid #2a1a3a;
+    border-top: 1px solid var(--apz-border, #2a1a3a);
 }
 
 /* ── Buttons ────────────────────────────────────────────────────────────────── */
 .btn {
-    background: linear-gradient(180deg, #00f5ff, #0088aa);
+    background: linear-gradient(180deg, var(--apz-accent, #00f5ff), #0088aa);
     border: none;
-    color: #0a0612;
+    color: var(--apz-bg, #0a0612);
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
     padding: 12px 24px;
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.15s ease;
-    box-shadow: 0 2px 8px rgba(0, 245, 255, 0.3);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--apz-accent, #00f5ff) 30%, transparent);
 }
 
 .btn:hover {
-    background: linear-gradient(180deg, #33ffff, #00bbdd);
-    box-shadow: 0 4px 12px rgba(0, 245, 255, 0.5);
+    background: linear-gradient(180deg, var(--apz-accent-bright, #33ffff), #00bbdd);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--apz-accent, #00f5ff) 50%, transparent);
     transform: translateY(-1px);
 }
 
 .btn:active {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(0, 245, 255, 0.3);
+    box-shadow: 0 2px 4px color-mix(in srgb, var(--apz-accent, #00f5ff) 30%, transparent);
 }
 
 .btn-secondary {
     background: transparent;
-    border: 2px solid #00f5ff;
-    color: #00f5ff;
+    border: 2px solid var(--apz-accent, #00f5ff);
+    color: var(--apz-accent, #00f5ff);
 }
 
 .btn-secondary:hover {
@@ -136,13 +136,13 @@
 }
 
 .btn-danger {
-    background: linear-gradient(180deg, #ff2d78, #aa1155);
-    box-shadow: 0 2px 8px rgba(255, 45, 120, 0.3);
+    background: linear-gradient(180deg, var(--apz-accent-alt, #ff2d78), var(--apz-accent-alt-dark, #aa1155));
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--apz-accent-alt, #ff2d78) 30%, transparent);
 }
 
 .btn-danger:hover {
-    background: linear-gradient(180deg, #ff5a99, #cc2266);
-    box-shadow: 0 4px 12px rgba(255, 45, 120, 0.5);
+    background: linear-gradient(180deg, var(--apz-accent-alt-hover, #ff5a99), var(--apz-accent-alt-dim, #cc2266));
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--apz-accent-alt, #ff2d78) 50%, transparent);
 }
 
 /* ── Custom Dropdown ────────────────────────────────────────────────────────── */
@@ -152,13 +152,13 @@
 }
 
 .dropdown-selected {
-    background: #1a0a2a;
-    border: 2px solid #00f5ff;
+    background: var(--apz-bg-panel, #1a0a2a);
+    border: 2px solid var(--apz-accent, #00f5ff);
     border-radius: 4px;
     padding: 10px 15px;
     font-family: 'Press Start 2P', monospace;
     font-size: 10px;
-    color: #f0ead8;
+    color: var(--apz-text, #f0ead8);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -169,11 +169,11 @@
 .dropdown-selected::after {
     content: '▼';
     font-size: 8px;
-    color: #8a7fa8;
+    color: var(--apz-text-dim, #8a7fa8);
 }
 
 .dropdown-selected:hover {
-    border-color: #33ffff;
+    border-color: var(--apz-accent-bright, #33ffff);
 }
 
 .dropdown-options {
@@ -181,8 +181,8 @@
     top: 100%;
     left: 0;
     right: 0;
-    background: #1a0a2a;
-    border: 2px solid #00f5ff;
+    background: var(--apz-bg-panel, #1a0a2a);
+    border: 2px solid var(--apz-accent, #00f5ff);
     border-top: none;
     border-radius: 0 0 4px 4px;
     max-height: 0;
@@ -200,7 +200,7 @@
     padding: 10px 15px;
     font-family: 'Press Start 2P', monospace;
     font-size: 9px;
-    color: #f0ead8;
+    color: var(--apz-text, #f0ead8);
     cursor: pointer;
     transition: background 0.15s;
 }
@@ -210,14 +210,14 @@
 }
 
 .dropdown-option.selected {
-    background: rgba(0, 245, 255, 0.3);
-    color: #00f5ff;
+    background: color-mix(in srgb, var(--apz-accent, #00f5ff) 30%, transparent);
+    color: var(--apz-accent, #00f5ff);
 }
 
 /* ── Score Display ──────────────────────────────────────────────────────────── */
 .score-box {
-    background: #1a0a2a;
-    border: 2px solid #00f5ff;
+    background: var(--apz-bg-panel, #1a0a2a);
+    border: 2px solid var(--apz-accent, #00f5ff);
     border-radius: 4px;
     padding: 8px 16px;
     text-align: center;
@@ -225,14 +225,14 @@
 
 .score-label {
     font-size: 8px;
-    color: #8a7fa8;
+    color: var(--apz-text-dim, #8a7fa8);
     margin-bottom: 4px;
 }
 
 .score-value {
     font-size: 16px;
-    color: #00f5ff;
-    text-shadow: 0 0 8px rgba(0, 245, 255, 0.5);
+    color: var(--apz-accent, #00f5ff);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--apz-accent, #00f5ff) 50%, transparent);
 }
 
 /* ── Controls ───────────────────────────────────────────────────────────────── */
@@ -245,8 +245,8 @@
 
 .control-btn {
     background: transparent;
-    border: 1px solid #8a7fa8;
-    color: #8a7fa8;
+    border: 1px solid var(--apz-text-dim, #8a7fa8);
+    color: var(--apz-text-dim, #8a7fa8);
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
     padding: 8px 12px;
@@ -256,6 +256,6 @@
 }
 
 .control-btn:hover {
-    border-color: #00f5ff;
-    color: #00f5ff;
+    border-color: var(--apz-accent, #00f5ff);
+    color: var(--apz-accent, #00f5ff);
 }

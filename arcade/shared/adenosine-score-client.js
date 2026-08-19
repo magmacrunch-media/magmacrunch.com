@@ -25,7 +25,7 @@ var AdScore = (() => {
   });
 
   // src/score-client.ts
-  var LS_PREFIX = "mc_scores_";
+  var LS_PREFIX = "adenosine_scores_";
   var RECONNECT_DELAY = 3e3;
   var REQUEST_TIMEOUT = 5e3;
   var DEFAULT_PORT = 8781;
