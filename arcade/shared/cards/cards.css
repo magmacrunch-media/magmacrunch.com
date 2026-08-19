@@ -50,8 +50,10 @@
     background: var(--card-face-bg);
     z-index: 2;
 }
-.card.face-up.red { color: var(--fc-red); }
-.card.face-up.black { color: #111111; }
+/* Card text inherits from here — the pip and corner markup carries no colour of
+   its own, so these two rules are the single source of a card's ink colour. */
+.card.face-up.red { color: var(--fc-red, #cc0000); }
+.card.face-up.black { color: var(--fc-black, #111111); }
 
 /* ── Face-down card — inline SVG pixel art back ───────────── */
 .card.face-down {
