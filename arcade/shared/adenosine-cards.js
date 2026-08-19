@@ -118,60 +118,60 @@ var AdCards = (() => {
     "j-clubs": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("J", "clubs", "var(--fc-black)")}
-              <rect x="50" y="6" width="4" height="38" fill="var(--fc-gold)"/>
-              <rect x="52" y="10" width="4" height="6" fill="var(--fc-black)"/>
-              <rect x="48" y="18" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="26" y="6" width="16" height="4" fill="var(--fc-blue)"/>
-              <rect x="30" y="6" width="2" height="4" fill="var(--fc-red)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-red)"/>
-              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin)"/>
-              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="28" width="14" height="12" fill="var(--fc-black)"/>
-              <rect x="14" y="32" width="4" height="4" fill="var(--fc-blue)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue)"/>
-              <rect x="28" y="30" width="8" height="8" fill="var(--fc-red)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-black)"/>
-              <rect x="46" y="26" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold)"/>
+              ${FC_CORNERS("J", "clubs", "var(--fc-black, #111111)")}
+              <rect x="50" y="6" width="4" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="52" y="10" width="4" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="48" y="18" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="26" y="6" width="16" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="30" y="6" width="2" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="28" width="14" height="12" fill="var(--fc-black, #111111)"/>
+              <rect x="14" y="32" width="4" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="28" y="30" width="8" height="8" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-black, #111111)"/>
+              <rect x="46" y="26" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("J", "clubs", "var(--fc-black)")}
-              <rect x="50" y="6" width="4" height="38" fill="var(--fc-gold)"/>
-              <rect x="52" y="10" width="4" height="6" fill="var(--fc-black)"/>
-              <rect x="48" y="18" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="26" y="6" width="16" height="4" fill="var(--fc-blue)"/>
-              <rect x="30" y="6" width="2" height="4" fill="var(--fc-red)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-red)"/>
-              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin)"/>
-              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="28" width="14" height="12" fill="var(--fc-black)"/>
-              <rect x="14" y="32" width="4" height="4" fill="var(--fc-blue)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue)"/>
-              <rect x="28" y="30" width="8" height="8" fill="var(--fc-red)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-black)"/>
-              <rect x="46" y="26" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold)"/>
+              ${FC_CORNERS("J", "clubs", "var(--fc-black, #111111)")}
+              <rect x="50" y="6" width="4" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="52" y="10" width="4" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="48" y="18" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="26" y="6" width="16" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="30" y="6" width="2" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="28" width="14" height="12" fill="var(--fc-black, #111111)"/>
+              <rect x="14" y="32" width="4" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="28" y="30" width="8" height="8" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-black, #111111)"/>
+              <rect x="46" y="26" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
           </g>
         </svg>
     `,
@@ -179,68 +179,68 @@ var AdCards = (() => {
     "j-diamonds": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("J", "diamonds", "var(--fc-red)")}
-              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold)"/>
-              <rect x="48" y="8" width="4" height="8" fill="var(--fc-steel)"/>
-              <rect x="46" y="10" width="2" height="4" fill="var(--fc-steel)"/>
-              <rect x="54" y="10" width="2" height="4" fill="var(--fc-steel)"/>
-              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="30" y="6" width="2" height="4" fill="var(--fc-blue)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-blue)"/>
-              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold)"/>
-              <rect x="44" y="18" width="4" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin)"/>
-              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="28" width="14" height="12" fill="var(--fc-gold)"/>
-              <rect x="14" y="32" width="4" height="4" fill="var(--fc-red)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red)"/>
-              <rect x="28" y="28" width="8" height="12" fill="var(--fc-blue)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-gold)"/>
-              <rect x="42" y="32" width="4" height="4" fill="var(--fc-red)"/>
-              <rect x="48" y="28" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-blue)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-blue)"/>
+              ${FC_CORNERS("J", "diamonds", "var(--fc-red, #cc0000)")}
+              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="8" width="4" height="8" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="46" y="10" width="2" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="54" y="10" width="2" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="6" width="2" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="44" y="18" width="4" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="28" width="14" height="12" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="32" width="4" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="28" width="8" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="32" width="4" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="48" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-blue, #1a3a8a)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("J", "diamonds", "var(--fc-red)")}
-              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold)"/>
-              <rect x="48" y="8" width="4" height="8" fill="var(--fc-steel)"/>
-              <rect x="46" y="10" width="2" height="4" fill="var(--fc-steel)"/>
-              <rect x="54" y="10" width="2" height="4" fill="var(--fc-steel)"/>
-              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="30" y="6" width="2" height="4" fill="var(--fc-blue)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-blue)"/>
-              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold)"/>
-              <rect x="44" y="18" width="4" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin)"/>
-              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="28" width="14" height="12" fill="var(--fc-gold)"/>
-              <rect x="14" y="32" width="4" height="4" fill="var(--fc-red)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red)"/>
-              <rect x="28" y="28" width="8" height="12" fill="var(--fc-blue)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-gold)"/>
-              <rect x="42" y="32" width="4" height="4" fill="var(--fc-red)"/>
-              <rect x="48" y="28" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-blue)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-blue)"/>
+              ${FC_CORNERS("J", "diamonds", "var(--fc-red, #cc0000)")}
+              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="8" width="4" height="8" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="46" y="10" width="2" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="54" y="10" width="2" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="6" width="2" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="12" width="4" height="10" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="44" y="18" width="4" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="28" width="14" height="12" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="32" width="4" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="28" width="8" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="32" width="4" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="48" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-blue, #1a3a8a)"/>
           </g>
         </svg>
     `,
@@ -248,60 +248,60 @@ var AdCards = (() => {
     "j-hearts": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("J", "hearts", "var(--fc-red)")}
-              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold)"/>
-              <rect x="46" y="10" width="6" height="12" fill="var(--fc-steel)"/>
-              <rect x="44" y="12" width="2" height="8" fill="var(--fc-steel)"/>
-              <rect x="22" y="10" width="22" height="2" fill="var(--fc-black)"/>
-              <rect x="24" y="6" width="18" height="4" fill="var(--fc-red)"/>
-              <rect x="28" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="12" width="10" height="14" fill="var(--fc-gold)"/>
-              <rect x="42" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="10" height="14" fill="var(--fc-skin)"/>
-              <rect x="24" y="18" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="28" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="22" y="24" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="28" y="26" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="14" y="24" width="6" height="4" fill="var(--fc-gold)"/>
-              <rect x="16" y="28" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="10" y="34" width="14" height="6" fill="var(--fc-red)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue)"/>
-              <rect x="28" y="32" width="8" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-red)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold)"/>
+              ${FC_CORNERS("J", "hearts", "var(--fc-red, #cc0000)")}
+              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="46" y="10" width="6" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="44" y="12" width="2" height="8" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="22" y="10" width="22" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="6" width="18" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="12" width="10" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="10" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="24" y="18" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="28" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="22" y="24" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="28" y="26" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="14" y="24" width="6" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="16" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="34" width="14" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="28" y="32" width="8" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-red, #cc0000)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("J", "hearts", "var(--fc-red)")}
-              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold)"/>
-              <rect x="46" y="10" width="6" height="12" fill="var(--fc-steel)"/>
-              <rect x="44" y="12" width="2" height="8" fill="var(--fc-steel)"/>
-              <rect x="22" y="10" width="22" height="2" fill="var(--fc-black)"/>
-              <rect x="24" y="6" width="18" height="4" fill="var(--fc-red)"/>
-              <rect x="28" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="12" width="10" height="14" fill="var(--fc-gold)"/>
-              <rect x="42" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="10" height="14" fill="var(--fc-skin)"/>
-              <rect x="24" y="18" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="28" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="22" y="24" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="28" y="26" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="14" y="24" width="6" height="4" fill="var(--fc-gold)"/>
-              <rect x="16" y="28" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="10" y="34" width="14" height="6" fill="var(--fc-red)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue)"/>
-              <rect x="28" y="32" width="8" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-red)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold)"/>
+              ${FC_CORNERS("J", "hearts", "var(--fc-red, #cc0000)")}
+              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="46" y="10" width="6" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="44" y="12" width="2" height="8" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="22" y="10" width="22" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="6" width="18" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="12" width="10" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="10" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="24" y="18" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="28" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="22" y="24" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="28" y="26" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="14" y="24" width="6" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="16" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="34" width="14" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="28" y="32" width="8" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-red, #cc0000)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
           </g>
         </svg>
     `,
@@ -309,74 +309,74 @@ var AdCards = (() => {
     "j-spades": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("J", "spades", "var(--fc-black)")}
-              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold)"/>
-              <rect x="50" y="6" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="50" y="8" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="54" y="8" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="50" y="12" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="50" y="14" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="54" y="14" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="50" y="18" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="30" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin)"/>
-              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="28" width="14" height="12" fill="var(--fc-blue)"/>
-              <rect x="14" y="32" width="2" height="2" fill="var(--fc-card-bg)"/>
-              <rect x="18" y="36" width="2" height="2" fill="var(--fc-card-bg)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red)"/>
-              <rect x="24" y="32" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-blue)"/>
-              <rect x="44" y="28" width="6" height="6" fill="var(--fc-card-bg)"/>
-              <rect x="48" y="30" width="6" height="4" fill="var(--fc-skin)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-red)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-red)"/>
+              ${FC_CORNERS("J", "spades", "var(--fc-black, #111111)")}
+              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="6" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="8" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="54" y="8" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="12" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="14" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="54" y="14" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="18" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="28" width="14" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="14" y="32" width="2" height="2" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="18" y="36" width="2" height="2" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="32" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="44" y="28" width="6" height="6" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="48" y="30" width="6" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-red, #cc0000)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("J", "spades", "var(--fc-black)")}
-              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold)"/>
-              <rect x="50" y="6" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="50" y="8" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="54" y="8" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="50" y="12" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="50" y="14" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="54" y="14" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="50" y="18" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red)"/>
-              <rect x="30" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin)"/>
-              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="28" width="14" height="12" fill="var(--fc-blue)"/>
-              <rect x="14" y="32" width="2" height="2" fill="var(--fc-card-bg)"/>
-              <rect x="18" y="36" width="2" height="2" fill="var(--fc-card-bg)"/>
-              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red)"/>
-              <rect x="24" y="32" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="28" width="10" height="12" fill="var(--fc-blue)"/>
-              <rect x="44" y="28" width="6" height="6" fill="var(--fc-card-bg)"/>
-              <rect x="48" y="30" width="6" height="4" fill="var(--fc-skin)"/>
-              <rect x="10" y="40" width="14" height="4" fill="var(--fc-red)"/>
-              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="40" y="40" width="14" height="4" fill="var(--fc-red)"/>
+              ${FC_CORNERS("J", "spades", "var(--fc-black, #111111)")}
+              <rect x="52" y="6" width="2" height="38" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="6" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="8" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="54" y="8" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="12" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="14" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="54" y="14" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="50" y="18" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="10" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="26" y="6" width="16" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="6" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="20" y="12" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="22" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="12" width="16" height="14" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="42" y="18" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="14" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="16" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="26" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="28" width="14" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="14" y="32" width="2" height="2" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="18" y="36" width="2" height="2" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="24" y="28" width="16" height="12" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="32" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="28" width="10" height="12" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="44" y="28" width="6" height="6" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="48" y="30" width="6" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="10" y="40" width="14" height="4" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="40" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="40" width="14" height="4" fill="var(--fc-red, #cc0000)"/>
           </g>
         </svg>
     `,
@@ -384,56 +384,56 @@ var AdCards = (() => {
     "q-clubs": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("Q", "clubs", "var(--fc-black)")}
-              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel)"/>
-              <rect x="14" y="20" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="16" y="22" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="36" y="10" width="8" height="20" fill="var(--fc-black)"/>
-              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-steel)"/>
-              <rect x="22" y="28" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="30" width="16" height="14" fill="var(--fc-gold)"/>
-              <rect x="12" y="34" width="8" height="6" fill="var(--fc-red)"/>
-              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="14" height="14" fill="var(--fc-gold)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-red)"/>
-              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "clubs", "var(--fc-black, #111111)")}
+              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="14" y="20" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="16" y="22" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="10" width="8" height="20" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="22" y="28" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="30" width="16" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="12" y="34" width="8" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="14" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("Q", "clubs", "var(--fc-black)")}
-              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel)"/>
-              <rect x="14" y="20" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="16" y="22" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="36" y="10" width="8" height="20" fill="var(--fc-black)"/>
-              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-steel)"/>
-              <rect x="22" y="28" width="20" height="2" fill="var(--fc-black)"/>
-              <rect x="10" y="30" width="16" height="14" fill="var(--fc-gold)"/>
-              <rect x="12" y="34" width="8" height="6" fill="var(--fc-red)"/>
-              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="14" height="14" fill="var(--fc-gold)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-red)"/>
-              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "clubs", "var(--fc-black, #111111)")}
+              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="14" y="20" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="16" y="22" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="10" width="8" height="20" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="22" y="28" width="20" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="10" y="30" width="16" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="12" y="34" width="8" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="14" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `,
@@ -441,56 +441,56 @@ var AdCards = (() => {
     "q-diamonds": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("Q", "diamonds", "var(--fc-red)")}
-              <rect x="18" y="24" width="2" height="12" fill="var(--fc-steel)"/>
-              <rect x="16" y="20" width="6" height="6" fill="var(--fc-blue)"/>
-              <rect x="18" y="22" width="2" height="2" fill="var(--fc-gold)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="36" y="10" width="8" height="20" fill="var(--fc-blue)"/>
-              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="20" height="2" fill="var(--fc-red)"/>
-              <rect x="12" y="30" width="14" height="14" fill="var(--fc-blue)"/>
-              <rect x="14" y="34" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="14" height="14" fill="var(--fc-blue)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="20" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "diamonds", "var(--fc-red, #cc0000)")}
+              <rect x="18" y="24" width="2" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="16" y="20" width="6" height="6" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="18" y="22" width="2" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="36" y="10" width="8" height="20" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="20" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="30" width="14" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="14" y="34" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="14" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="20" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("Q", "diamonds", "var(--fc-red)")}
-              <rect x="18" y="24" width="2" height="12" fill="var(--fc-steel)"/>
-              <rect x="16" y="20" width="6" height="6" fill="var(--fc-blue)"/>
-              <rect x="18" y="22" width="2" height="2" fill="var(--fc-gold)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="36" y="10" width="8" height="20" fill="var(--fc-blue)"/>
-              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="20" height="2" fill="var(--fc-red)"/>
-              <rect x="12" y="30" width="14" height="14" fill="var(--fc-blue)"/>
-              <rect x="14" y="34" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="14" height="14" fill="var(--fc-blue)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="20" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "diamonds", "var(--fc-red, #cc0000)")}
+              <rect x="18" y="24" width="2" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="16" y="20" width="6" height="6" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="18" y="22" width="2" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="36" y="10" width="8" height="20" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="14" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="20" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="30" width="14" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="14" y="34" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="14" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="20" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `,
@@ -498,56 +498,56 @@ var AdCards = (() => {
     "q-hearts": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("Q", "hearts", "var(--fc-red)")}
-              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel)"/>
-              <rect x="14" y="20" width="6" height="6" fill="var(--fc-red)"/>
-              <rect x="16" y="22" width="2" height="2" fill="var(--fc-gold)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="36" y="10" width="8" height="20" fill="var(--fc-gold)"/>
-              <rect x="36" y="14" width="4" height="16" fill="var(--fc-red)"/>
-              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="20" height="2" fill="var(--fc-blue)"/>
-              <rect x="10" y="30" width="16" height="14" fill="var(--fc-red)"/>
-              <rect x="12" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="30" width="12" height="14" fill="var(--fc-blue)"/>
-              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "hearts", "var(--fc-red, #cc0000)")}
+              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="14" y="20" width="6" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="16" y="22" width="2" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="36" y="10" width="8" height="20" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="14" width="4" height="16" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="20" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="10" y="30" width="16" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="30" width="12" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("Q", "hearts", "var(--fc-red)")}
-              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel)"/>
-              <rect x="14" y="20" width="6" height="6" fill="var(--fc-red)"/>
-              <rect x="16" y="22" width="2" height="2" fill="var(--fc-gold)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="36" y="10" width="8" height="20" fill="var(--fc-gold)"/>
-              <rect x="36" y="14" width="4" height="16" fill="var(--fc-red)"/>
-              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="20" height="2" fill="var(--fc-blue)"/>
-              <rect x="10" y="30" width="16" height="14" fill="var(--fc-red)"/>
-              <rect x="12" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="26" y="30" width="12" height="14" fill="var(--fc-blue)"/>
-              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "hearts", "var(--fc-red, #cc0000)")}
+              <rect x="16" y="24" width="2" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="14" y="20" width="6" height="6" fill="var(--fc-red, #cc0000)"/>
+              <rect x="16" y="22" width="2" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="30" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="36" y="10" width="8" height="20" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="36" y="14" width="4" height="16" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="26" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="24" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="20" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="10" y="30" width="16" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="30" width="12" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="30" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="18" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `,
@@ -555,56 +555,56 @@ var AdCards = (() => {
     "q-spades": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("Q", "spades", "var(--fc-black)")}
-              <rect x="50" y="8" width="2" height="22" fill="var(--fc-gold)"/>
-              <rect x="48" y="4" width="6" height="6" fill="var(--fc-blue)"/>
-              <rect x="50" y="4" width="2" height="2" fill="var(--fc-gold)"/>
-              <rect x="22" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="28" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="20" y="10" width="8" height="20" fill="var(--fc-black)"/>
-              <rect x="24" y="14" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="28" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="38" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red)"/>
-              <rect x="12" y="30" width="16" height="14" fill="var(--fc-blue)"/>
-              <rect x="16" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="28" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="32" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="40" y="30" width="12" height="14" fill="var(--fc-blue)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="48" y="26" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "spades", "var(--fc-black, #111111)")}
+              <rect x="50" y="8" width="2" height="22" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="4" width="6" height="6" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="50" y="4" width="2" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="20" y="10" width="8" height="20" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="14" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="28" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="38" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="30" width="16" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="16" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="28" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="32" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="30" width="12" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="26" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("Q", "spades", "var(--fc-black)")}
-              <rect x="50" y="8" width="2" height="22" fill="var(--fc-gold)"/>
-              <rect x="48" y="4" width="6" height="6" fill="var(--fc-blue)"/>
-              <rect x="50" y="4" width="2" height="2" fill="var(--fc-gold)"/>
-              <rect x="22" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="28" y="2" width="4" height="4" fill="var(--fc-gold)"/>
-              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="20" y="10" width="8" height="20" fill="var(--fc-black)"/>
-              <rect x="24" y="14" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="28" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="38" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="22" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red)"/>
-              <rect x="12" y="30" width="16" height="14" fill="var(--fc-blue)"/>
-              <rect x="16" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="28" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="32" y="30" width="4" height="14" fill="var(--fc-gold)"/>
-              <rect x="40" y="30" width="12" height="14" fill="var(--fc-blue)"/>
-              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold)"/>
-              <rect x="48" y="26" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("Q", "spades", "var(--fc-black, #111111)")}
+              <rect x="50" y="8" width="2" height="22" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="4" width="6" height="6" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="50" y="4" width="2" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="2" width="4" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="20" y="10" width="8" height="20" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="14" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="28" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="32" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="38" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="22" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="30" width="16" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="16" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="28" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="32" y="30" width="4" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="40" y="30" width="12" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="42" y="34" width="8" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="26" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `,
@@ -612,62 +612,62 @@ var AdCards = (() => {
     "k-clubs": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("K", "clubs", "var(--fc-black)")}
-              <rect x="48" y="4" width="4" height="26" fill="var(--fc-steel)"/>
-              <rect x="50" y="4" width="2" height="26" fill="var(--fc-art-bg)"/>
-              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold)"/>
-              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black)"/>
-              <rect x="12" y="24" width="8" height="8" fill="var(--fc-gold)"/>
-              <rect x="16" y="20" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="14" y="22" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="14" y="28" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="34" y="4" width="4" height="2" fill="var(--fc-blue)"/>
-              <rect x="22" y="10" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="28" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-blue)"/>
-              <rect x="10" y="30" width="14" height="14" fill="var(--fc-gold)"/>
-              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="24" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="28" y="30" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="12" height="14" fill="var(--fc-blue)"/>
-              <rect x="40" y="34" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("K", "clubs", "var(--fc-black, #111111)")}
+              <rect x="48" y="4" width="4" height="26" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="50" y="4" width="2" height="26" fill="var(--fc-art-bg, #fffef5)"/>
+              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="12" y="24" width="8" height="8" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="16" y="20" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="22" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="28" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="34" y="4" width="4" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="22" y="10" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="28" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="10" y="30" width="14" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="30" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="12" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="40" y="34" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("K", "clubs", "var(--fc-black)")}
-              <rect x="48" y="4" width="4" height="26" fill="var(--fc-steel)"/>
-              <rect x="50" y="4" width="2" height="26" fill="var(--fc-art-bg)"/>
-              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold)"/>
-              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black)"/>
-              <rect x="12" y="24" width="8" height="8" fill="var(--fc-gold)"/>
-              <rect x="16" y="20" width="2" height="4" fill="var(--fc-gold)"/>
-              <rect x="14" y="22" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="14" y="28" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="34" y="4" width="4" height="2" fill="var(--fc-blue)"/>
-              <rect x="22" y="10" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="28" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="20" y="26" width="24" height="4" fill="var(--fc-blue)"/>
-              <rect x="10" y="30" width="14" height="14" fill="var(--fc-gold)"/>
-              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="24" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="28" y="30" width="6" height="14" fill="var(--fc-gold)"/>
-              <rect x="38" y="30" width="12" height="14" fill="var(--fc-blue)"/>
-              <rect x="40" y="34" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("K", "clubs", "var(--fc-black, #111111)")}
+              <rect x="48" y="4" width="4" height="26" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="50" y="4" width="2" height="26" fill="var(--fc-art-bg, #fffef5)"/>
+              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="12" y="24" width="8" height="8" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="16" y="20" width="2" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="22" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="28" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="6" width="16" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="34" y="4" width="4" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="22" y="10" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="28" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="20" y="26" width="24" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="10" y="30" width="14" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="28" y="30" width="6" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="38" y="30" width="12" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="40" y="34" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `,
@@ -675,50 +675,50 @@ var AdCards = (() => {
     "k-diamonds": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("K", "diamonds", "var(--fc-red)")}
-              <rect x="46" y="4" width="2" height="36" fill="var(--fc-gold)"/>
-              <rect x="48" y="8" width="6" height="12" fill="var(--fc-steel)"/>
-              <rect x="54" y="6" width="2" height="16" fill="var(--fc-steel)"/>
-              <rect x="50" y="10" width="2" height="8" fill="var(--fc-art-bg)"/>
-              <rect x="24" y="6" width="14" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="34" y="10" width="8" height="16" fill="var(--fc-steel)"/>
-              <rect x="22" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="20" y="14" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="24" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="20" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red)"/>
-              <rect x="12" y="30" width="18" height="14" fill="var(--fc-blue)"/>
-              <rect x="16" y="34" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="30" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="34" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="44" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("K", "diamonds", "var(--fc-red, #cc0000)")}
+              <rect x="46" y="4" width="2" height="36" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="8" width="6" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="54" y="6" width="2" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="50" y="10" width="2" height="8" fill="var(--fc-art-bg, #fffef5)"/>
+              <rect x="24" y="6" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="34" y="10" width="8" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="22" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="20" y="14" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="24" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="20" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="30" width="18" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="16" y="34" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="30" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="34" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="44" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("K", "diamonds", "var(--fc-red)")}
-              <rect x="46" y="4" width="2" height="36" fill="var(--fc-gold)"/>
-              <rect x="48" y="8" width="6" height="12" fill="var(--fc-steel)"/>
-              <rect x="54" y="6" width="2" height="16" fill="var(--fc-steel)"/>
-              <rect x="50" y="10" width="2" height="8" fill="var(--fc-art-bg)"/>
-              <rect x="24" y="6" width="14" height="4" fill="var(--fc-gold)"/>
-              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="34" y="10" width="8" height="16" fill="var(--fc-steel)"/>
-              <rect x="22" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="20" y="14" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="24" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="20" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold)"/>
-              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red)"/>
-              <rect x="12" y="30" width="18" height="14" fill="var(--fc-blue)"/>
-              <rect x="16" y="34" width="6" height="6" fill="var(--fc-gold)"/>
-              <rect x="30" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="34" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="44" y="28" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("K", "diamonds", "var(--fc-red, #cc0000)")}
+              <rect x="46" y="4" width="2" height="36" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="8" width="6" height="12" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="54" y="6" width="2" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="50" y="10" width="2" height="8" fill="var(--fc-art-bg, #fffef5)"/>
+              <rect x="24" y="6" width="14" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="4" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="34" y="4" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="34" y="10" width="8" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="22" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="20" y="14" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="24" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="20" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="18" y="26" width="26" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="28" width="18" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="12" y="30" width="18" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="16" y="34" width="6" height="6" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="30" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="34" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="44" y="28" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `,
@@ -726,48 +726,48 @@ var AdCards = (() => {
     "k-hearts": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("K", "hearts", "var(--fc-red)")}
-              <rect x="22" y="12" width="22" height="4" fill="var(--fc-steel)"/>
-              <rect x="40" y="10" width="10" height="2" fill="var(--fc-gold)"/>
-              <rect x="44" y="4" width="2" height="6" fill="var(--fc-black)"/>
-              <rect x="42" y="2" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="26" y="6" width="12" height="4" fill="var(--fc-gold)"/>
-              <rect x="28" y="4" width="8" height="2" fill="var(--fc-red)"/>
-              <rect x="24" y="10" width="2" height="16" fill="var(--fc-steel)"/>
-              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="26" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="42" y="6" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="14" y="26" width="30" height="4" fill="var(--fc-gold)"/>
-              <rect x="12" y="30" width="16" height="14" fill="var(--fc-red)"/>
-              <rect x="16" y="32" width="8" height="8" fill="var(--fc-black)"/>
-              <rect x="28" y="30" width="16" height="14" fill="var(--fc-blue)"/>
-              <rect x="32" y="32" width="8" height="8" fill="var(--fc-gold)"/>
+              ${FC_CORNERS("K", "hearts", "var(--fc-red, #cc0000)")}
+              <rect x="22" y="12" width="22" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="40" y="10" width="10" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="44" y="4" width="2" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="42" y="2" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="6" width="12" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="28" y="4" width="8" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="10" width="2" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="26" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="42" y="6" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="14" y="26" width="30" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="12" y="30" width="16" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="16" y="32" width="8" height="8" fill="var(--fc-black, #111111)"/>
+              <rect x="28" y="30" width="16" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="32" y="32" width="8" height="8" fill="var(--fc-gold, #d4a017)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("K", "hearts", "var(--fc-red)")}
-              <rect x="22" y="12" width="22" height="4" fill="var(--fc-steel)"/>
-              <rect x="40" y="10" width="10" height="2" fill="var(--fc-gold)"/>
-              <rect x="44" y="4" width="2" height="6" fill="var(--fc-black)"/>
-              <rect x="42" y="2" width="6" height="2" fill="var(--fc-gold)"/>
-              <rect x="26" y="6" width="12" height="4" fill="var(--fc-gold)"/>
-              <rect x="28" y="4" width="8" height="2" fill="var(--fc-red)"/>
-              <rect x="24" y="10" width="2" height="16" fill="var(--fc-steel)"/>
-              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel)"/>
-              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue)"/>
-              <rect x="26" y="22" width="6" height="2" fill="var(--fc-black)"/>
-              <rect x="42" y="6" width="6" height="6" fill="var(--fc-skin)"/>
-              <rect x="14" y="26" width="30" height="4" fill="var(--fc-gold)"/>
-              <rect x="12" y="30" width="16" height="14" fill="var(--fc-red)"/>
-              <rect x="16" y="32" width="8" height="8" fill="var(--fc-black)"/>
-              <rect x="28" y="30" width="16" height="14" fill="var(--fc-blue)"/>
-              <rect x="32" y="32" width="8" height="8" fill="var(--fc-gold)"/>
+              ${FC_CORNERS("K", "hearts", "var(--fc-red, #cc0000)")}
+              <rect x="22" y="12" width="22" height="4" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="40" y="10" width="10" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="44" y="4" width="2" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="42" y="2" width="6" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="26" y="6" width="12" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="28" y="4" width="8" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="24" y="10" width="2" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="38" y="10" width="4" height="16" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="28" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="34" y="14" width="2" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="26" y="22" width="6" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="42" y="6" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="14" y="26" width="30" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="12" y="30" width="16" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="16" y="32" width="8" height="8" fill="var(--fc-black, #111111)"/>
+              <rect x="28" y="30" width="16" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="32" y="32" width="8" height="8" fill="var(--fc-gold, #d4a017)"/>
           </g>
         </svg>
     `,
@@ -775,62 +775,62 @@ var AdCards = (() => {
     "k-spades": () => `
         <svg width="100%" height="100%" viewBox="0 0 64 88"
              xmlns="http://www.w3.org/2000/svg" style="display:block; shape-rendering:crispEdges; position:absolute; top:0; left:0;">
-          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg)"/>
+          <rect x="0" y="0" width="64" height="88" fill="var(--fc-art-bg, #fffef5)"/>
           <g>
-              ${FC_CORNERS("K", "spades", "var(--fc-black)")}
-              <rect x="48" y="4" width="6" height="26" fill="var(--fc-steel)"/>
-              <rect x="50" y="4" width="2" height="26" fill="var(--fc-card-bg)"/>
-              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold)"/>
-              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black)"/>
-              <rect x="46" y="38" width="8" height="2" fill="var(--fc-gold)"/>
-              <rect x="22" y="6" width="18" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="4" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="30" y="4" width="4" height="2" fill="var(--fc-blue)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="10" width="6" height="18" fill="var(--fc-steel)"/>
-              <rect x="38" y="10" width="6" height="18" fill="var(--fc-steel)"/>
-              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="30" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="34" y="16" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="34" y="22" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="12" y="26" width="32" height="4" fill="var(--fc-blue)"/>
-              <rect x="16" y="28" width="24" height="2" fill="var(--fc-gold)"/>
-              <rect x="10" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="24" y="30" width="14" height="14" fill="var(--fc-gold)"/>
-              <rect x="28" y="30" width="6" height="14" fill="var(--fc-blue)"/>
-              <rect x="38" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="40" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("K", "spades", "var(--fc-black, #111111)")}
+              <rect x="48" y="4" width="6" height="26" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="50" y="4" width="2" height="26" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="46" y="38" width="8" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="6" width="18" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="4" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="4" width="4" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="10" width="6" height="18" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="38" y="10" width="6" height="18" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="30" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="34" y="16" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="22" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="12" y="26" width="32" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="16" y="28" width="24" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="10" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="30" width="14" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="28" y="30" width="6" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
           <g transform="rotate(180 32 44)">
-              ${FC_CORNERS("K", "spades", "var(--fc-black)")}
-              <rect x="48" y="4" width="6" height="26" fill="var(--fc-steel)"/>
-              <rect x="50" y="4" width="2" height="26" fill="var(--fc-card-bg)"/>
-              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold)"/>
-              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black)"/>
-              <rect x="46" y="38" width="8" height="2" fill="var(--fc-gold)"/>
-              <rect x="22" y="6" width="18" height="4" fill="var(--fc-gold)"/>
-              <rect x="24" y="4" width="4" height="2" fill="var(--fc-red)"/>
-              <rect x="30" y="4" width="4" height="2" fill="var(--fc-blue)"/>
-              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red)"/>
-              <rect x="20" y="10" width="6" height="18" fill="var(--fc-steel)"/>
-              <rect x="38" y="10" width="6" height="18" fill="var(--fc-steel)"/>
-              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin)"/>
-              <rect x="30" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="36" y="14" width="2" height="2" fill="var(--fc-black)"/>
-              <rect x="34" y="16" width="2" height="4" fill="var(--fc-skin)"/>
-              <rect x="34" y="22" width="4" height="2" fill="var(--fc-black)"/>
-              <rect x="12" y="26" width="32" height="4" fill="var(--fc-blue)"/>
-              <rect x="16" y="28" width="24" height="2" fill="var(--fc-gold)"/>
-              <rect x="10" y="30" width="14" height="14" fill="var(--fc-red)"/>
-              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="24" y="30" width="14" height="14" fill="var(--fc-gold)"/>
-              <rect x="28" y="30" width="6" height="14" fill="var(--fc-blue)"/>
-              <rect x="38" y="30" width="12" height="14" fill="var(--fc-red)"/>
-              <rect x="40" y="34" width="6" height="6" fill="var(--fc-black)"/>
-              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin)"/>
+              ${FC_CORNERS("K", "spades", "var(--fc-black, #111111)")}
+              <rect x="48" y="4" width="6" height="26" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="50" y="4" width="2" height="26" fill="var(--fc-card-bg, #fffef5)"/>
+              <rect x="46" y="30" width="10" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="48" y="32" width="4" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="46" y="38" width="8" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="22" y="6" width="18" height="4" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="24" y="4" width="4" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="30" y="4" width="4" height="2" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="36" y="4" width="2" height="2" fill="var(--fc-red, #cc0000)"/>
+              <rect x="20" y="10" width="6" height="18" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="38" y="10" width="6" height="18" fill="var(--fc-steel, #8899aa)"/>
+              <rect x="26" y="10" width="12" height="16" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="30" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="36" y="14" width="2" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="34" y="16" width="2" height="4" fill="var(--fc-skin, #f5cba7)"/>
+              <rect x="34" y="22" width="4" height="2" fill="var(--fc-black, #111111)"/>
+              <rect x="12" y="26" width="32" height="4" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="16" y="28" width="24" height="2" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="10" y="30" width="14" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="14" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="24" y="30" width="14" height="14" fill="var(--fc-gold, #d4a017)"/>
+              <rect x="28" y="30" width="6" height="14" fill="var(--fc-blue, #1a3a8a)"/>
+              <rect x="38" y="30" width="12" height="14" fill="var(--fc-red, #cc0000)"/>
+              <rect x="40" y="34" width="6" height="6" fill="var(--fc-black, #111111)"/>
+              <rect x="46" y="34" width="6" height="6" fill="var(--fc-skin, #f5cba7)"/>
           </g>
         </svg>
     `

@@ -37,7 +37,7 @@
 
 /* Selection highlight — gold pixel border */
 .card.selected {
-    outline: 3px solid var(--retro-gold);
+    outline: 3px solid var(--retro-gold, #ffd700);
     outline-offset: -1px;
     box-shadow: 0 0 0 1px #000,
                 0 0 12px rgba(255, 215, 0, 0.7),
@@ -47,7 +47,7 @@
 
 /* ── Face-up card ─────────────────────────────────────────── */
 .card.face-up {
-    background: var(--card-face-bg);
+    background: var(--card-face-bg, #fffef5);
     z-index: 2;
 }
 /* Card text inherits from here — the pip and corner markup carries no colour of
@@ -57,7 +57,7 @@
 
 /* ── Face-down card — inline SVG pixel art back ───────────── */
 .card.face-down {
-    background: var(--card-back-bg);
+    background: var(--card-back-bg, #1a3a8a);
     cursor: default;
     overflow: hidden;
 }
@@ -195,14 +195,14 @@
 /* ── Stock reset button ───────────────────────────────────── */
 .reset-stock {
     background: #0d0028;
-    color: var(--cyan);
+    color: var(--cyan, #00e5ff);
     font-family: 'Orbitron', sans-serif;
     font-size: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 2px solid var(--cyan-dim);
-    text-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan-glow);
+    border: 2px solid var(--cyan-dim, #0099bb);
+    text-shadow: 0 0 10px var(--cyan, #00e5ff), 0 0 20px var(--cyan-glow, rgba(0, 229, 255, 0.3));
     box-shadow: 0 0 10px rgba(0,229,255,0.2), 2px 2px 0 #000;
     cursor: pointer;
     border-radius: 4px;
@@ -210,8 +210,8 @@
 .reset-stock:hover {
     background: #001830;
     color: #fff;
-    border-color: var(--cyan);
-    text-shadow: 0 0 16px var(--cyan), 0 0 40px var(--cyan-glow);
+    border-color: var(--cyan, #00e5ff);
+    text-shadow: 0 0 16px var(--cyan, #00e5ff), 0 0 40px var(--cyan-glow, rgba(0, 229, 255, 0.3));
     box-shadow: 0 0 20px rgba(0,229,255,0.4), 2px 2px 0 #000;
 }
 

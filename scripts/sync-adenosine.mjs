@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Sync adenosine IIFE bundles from node_modules into arcade/shared/, then stamp
+ * Sync adenosine IIFE bundles and stylesheets from node_modules into arcade/,
+ * then stamp
  * every arcade <script> tag that loads one with a content-hash cache-buster,
  * plus every game-local .js/.css an arcade page references.
  *
@@ -43,6 +44,36 @@ const EXTRA_ASSETS = { chat: ['chat-worker.js'] };
  * so a stale copy sends them nowhere — the exact failure the stamps prevent.
  */
 const LOCAL_SHARED = ['score-server.js', 'mp-server.js', 'chat-server.js'];
+
+/**
+ * Stylesheets a package ships, and where in arcade/ the pages already load them
+ * from. Paths are relative to the repo root and deliberately point at the
+ * existing locations, so no page markup has to change.
+ *
+ * These used to be hand-maintained copies rather than synced ones, and that is
+ * how two bugs survived: the published cards.css referenced six custom
+ * properties it never defined, and the face-card SVG another eight, so cards
+ * rendered transparent and kings painted solid black for everyone outside this
+ * repo. Nothing here noticed, because the arcade loaded its own copy and the
+ * published file had no consumer at all.
+ *
+ * Syncing them closes that gap: the stylesheet people install is the one
+ * production runs, so it cannot break for them while looking fine for us.
+ */
+const PACKAGE_CSS = {
+  cards: [
+    ['cards.css', 'arcade/shared/cards/cards.css'],
+    ['chip-animation.css', 'arcade/shared/chips/chip-animation.css'],
+  ],
+  multiplayer: [['lobby.css', 'arcade/shared/multiplayer/lobby.css']],
+  chat: [['chat-widget.css', 'arcade/shared/chat-widget.css']],
+  puzzle: [
+    ['puzzle-base.css', 'arcade/puzzle-framework/css/puzzle-base.css'],
+    ['puzzle-grid.css', 'arcade/puzzle-framework/css/puzzle-grid.css'],
+    ['puzzle-modals.css', 'arcade/puzzle-framework/css/puzzle-modals.css'],
+    ['puzzle-responsive.css', 'arcade/puzzle-framework/css/puzzle-responsive.css'],
+  ],
+};
 
 const HASH_LEN = 8;
 
@@ -119,6 +150,23 @@ for (const pkg of PACKAGES) {
     const assetChanged = !existsSync(dest) || !readFileSync(dest).equals(bytes);
     if (assetChanged) writeFileSync(dest, bytes);
     console.log(`  ${assetChanged ? 'updated' : 'unchanged'}  ${asset}  (asset of adenosine-${pkg})`);
+  }
+
+  // Stylesheets. The game-local stamping pass below re-hashes any .css an arcade
+  // page references, so these pick up a fresh ?v= automatically once their bytes
+  // change — no separate bookkeeping needed.
+  for (const [shipped, target] of PACKAGE_CSS[pkg] ?? []) {
+    const from = join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, shipped);
+    if (!existsSync(from)) {
+      missing.push(`@magmacrunch/adenosine-${pkg} is missing ${shipped}`);
+      continue;
+    }
+    const bytes = readFileSync(from);
+    const dest = join(ROOT, target);
+    mkdirSync(dirname(dest), { recursive: true });
+    const cssChanged = !existsSync(dest) || !readFileSync(dest).equals(bytes);
+    if (cssChanged) writeFileSync(dest, bytes);
+    console.log(`  ${cssChanged ? 'updated' : 'unchanged'}  ${target.replace('arcade/', '')}  (css of adenosine-${pkg})`);
   }
 }
 

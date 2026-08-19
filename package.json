@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@magmacrunch/adenosine-audio": "^0.2.2",
-    "@magmacrunch/adenosine-cards": "^0.7.0",
-    "@magmacrunch/adenosine-chat": "^0.4.1",
-    "@magmacrunch/adenosine-multiplayer": "^0.4.1",
-    "@magmacrunch/adenosine-puzzle": "^0.2.2",
+    "@magmacrunch/adenosine-cards": "^0.7.3",
+    "@magmacrunch/adenosine-chat": "^0.4.2",
+    "@magmacrunch/adenosine-multiplayer": "^0.4.3",
+    "@magmacrunch/adenosine-puzzle": "^0.2.4",
     "@magmacrunch/adenosine-rpg": "^0.2.1",
     "@magmacrunch/adenosine-score-client": "^0.2.3"
   },

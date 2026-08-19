@@ -103,10 +103,10 @@ var AdChat = (() => {
     }
     function getSessionToken() {
       try {
-        var token = localStorage.getItem("arcade_chat_session");
+        var token = localStorage.getItem("adenosine_chat_session");
         if (!token) {
           token = Math.random().toString(36).substring(2) + Date.now().toString(36);
-          localStorage.setItem("arcade_chat_session", token);
+          localStorage.setItem("adenosine_chat_session", token);
         }
         return token;
       } catch (e) {
@@ -161,17 +161,17 @@ var AdChat = (() => {
       ].join("\n");
       document.body.appendChild(w);
       widgetEl = w;
-      var savedState = localStorage.getItem("acw_expanded");
+      var savedState = localStorage.getItem("adenosine_expanded");
       if (savedState === "true") {
         expand();
       } else {
         minimize();
       }
-      var savedName = localStorage.getItem("arcade_username");
+      var savedName = localStorage.getItem("adenosine_username");
       if (savedName) {
         myName = savedName;
       }
-      var savedColor = localStorage.getItem("arcade_color");
+      var savedColor = localStorage.getItem("adenosine_color");
       if (savedColor) {
         myColor = savedColor;
       }
@@ -228,7 +228,7 @@ var AdChat = (() => {
       if (resetBtn) {
         resetBtn.addEventListener("click", function() {
           myColor = null;
-          localStorage.removeItem("arcade_color");
+          localStorage.removeItem("adenosine_color");
           updateColorDisplay();
           sendToServer({ type: "set_color", color: null });
         });
@@ -260,7 +260,7 @@ var AdChat = (() => {
       isExpanded = true;
       widgetEl.classList.remove("minimized");
       widgetEl.classList.add("expanded");
-      localStorage.setItem("acw_expanded", "true");
+      localStorage.setItem("adenosine_expanded", "true");
       unreadCount = 0;
       updateBadge();
       var input = document.getElementById("chatInput");
@@ -273,7 +273,7 @@ var AdChat = (() => {
       isExpanded = false;
       widgetEl.classList.remove("expanded");
       widgetEl.classList.add("minimized");
-      localStorage.setItem("acw_expanded", "false");
+      localStorage.setItem("adenosine_expanded", "false");
     }
     function addUnread() {
       if (isExpanded) return;
@@ -419,7 +419,7 @@ var AdChat = (() => {
           break;
         case "name_assigned":
           myName = field(msg, "name");
-          localStorage.setItem("arcade_username", field(msg, "name"));
+          localStorage.setItem("adenosine_username", field(msg, "name"));
           updateNameDisplay();
           break;
         case "user_list":
@@ -497,7 +497,7 @@ var AdChat = (() => {
       var connected = usingWorker && worker || sock && sock.readyState === WebSocket.OPEN;
       if (!connected) return;
       myName = name;
-      localStorage.setItem("arcade_username", name);
+      localStorage.setItem("adenosine_username", name);
       var token = getSessionToken();
       const nameMsg = { type: "set_name", name };
       if (token) nameMsg["session_token"] = token;
@@ -541,7 +541,7 @@ var AdChat = (() => {
     }
     function setColor(color) {
       myColor = color;
-      localStorage.setItem("arcade_color", color);
+      localStorage.setItem("adenosine_color", color);
       sendToServer({ type: "set_color", color });
       updateColorDisplay();
       var popup = document.getElementById("colorPickerPopup");
