@@ -11,8 +11,10 @@
 //     declared here; they match exactly.
 //   - Card constants (SUITS, RANKS, SUIT_SYMBOLS, SUIT_COLORS, RANK_VALUES) were
 //     declared here but read by nothing; AdCards carries its own for rendering.
-// Careful: AdCards.RANK_VALUES is ace-LOW (A === 1) while this game is ace-high.
-// The evaluator is unaffected — it reads `value` off the card objects it is given.
+// AdCards.RANK_VALUES is ace-LOW (A === 1) while this game is ace-high, and the
+// evaluator reads `value` off the card objects it is given without rewriting it.
+// Dealer._draw() restamps every dealt card ace-high, which is what makes aces
+// score correctly here — see js/dealer.js.
 
 // ── Chip configuration ───────────────────────────────────────
 const STARTING_CHIPS     = 500;   // Chip stack at session start

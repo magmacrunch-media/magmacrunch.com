@@ -2,9 +2,37 @@
 // Manages the deck and deals cards through each street of a Hold'Em hand
 const { Deck } = AdCards;
 
+// Poker is ace-high, but Deck stamps the ace-low AdCards.RANK_VALUES (A === 1)
+// on every card it builds, and HandEvaluator reads `value` off the cards it is
+// handed without ever rewriting it. Dealing straight from the deck therefore
+// scored aces as the LOWEST card in the deck: a royal flush graded as an
+// ordinary flush (100 pts instead of 1000), broadway did not register as a
+// straight at all, and a pair of aces lost to a pair of twos. Every card this
+// dealer hands out gets restamped ace-high.
+//
+// AdCards.POKER_RANK_VALUES ships in adenosine-cards > 0.5.0; the local table
+// is the fallback until arcade/shared adopts that release, and can be dropped
+// once it has.
+const POKER_VALUES = AdCards.POKER_RANK_VALUES ?? {
+    A: 14, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7,
+    '8': 8, '9': 9, '10': 10, J: 11, Q: 12, K: 13,
+};
+
 class Dealer {
     constructor(state) {
         this.state = state;
+    }
+
+    // ── Drawing ──────────────────────────────────────────────
+    // Every card that reaches the player or the board comes through here, so
+    // the ace-high restamp cannot be forgotten at one of the four streets.
+    // Burn cards are never evaluated and are dealt straight off the deck.
+
+    _draw() {
+        const card = this.state.deck.deal();
+        card.value = POKER_VALUES[card.rank];
+        card.faceUp = true;
+        return card;
     }
 
     // ── New round setup ──────────────────────────────────────
@@ -37,9 +65,7 @@ class Dealer {
 
         // Deal 2 face-up hole cards to the player
         for (let i = 0; i < 2; i++) {
-            const card = this.state.deck.deal();
-            card.faceUp = true;
-            this.state.holeCards.push(card);
+            this.state.holeCards.push(this._draw());
         }
 
         this.state.phase = 'betting';
@@ -57,9 +83,7 @@ class Dealer {
 
         // Deal 3 face-up community cards
         for (let i = 0; i < 3; i++) {
-            const card = this.state.deck.deal();
-            card.faceUp = true;
-            this.state.communityCards.push(card);
+            this.state.communityCards.push(this._draw());
         }
 
         this.state.phase = 'flop';
@@ -75,9 +99,7 @@ class Dealer {
         // Burn one card
         this.state.deck.deal();
 
-        const card = this.state.deck.deal();
-        card.faceUp = true;
-        this.state.communityCards.push(card);
+        this.state.communityCards.push(this._draw());
 
         this.state.phase = 'turn';
         return true;
@@ -92,9 +114,7 @@ class Dealer {
         // Burn one card
         this.state.deck.deal();
 
-        const card = this.state.deck.deal();
-        card.faceUp = true;
-        this.state.communityCards.push(card);
+        this.state.communityCards.push(this._draw());
 
         this.state.phase = 'river';
         return true;
