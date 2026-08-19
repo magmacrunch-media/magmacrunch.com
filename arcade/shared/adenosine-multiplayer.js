@@ -18,7 +18,7 @@ var AdMP = (() => {
   };
   var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-  // src/index.js
+  // src/index.ts
   var index_exports = {};
   __export(index_exports, {
     BoardGameTemplate: () => BoardGameTemplate,
@@ -27,7 +27,7 @@ var AdMP = (() => {
     MSG: () => MSG
   });
 
-  // src/protocol.js
+  // src/protocol.ts
   var MSG = {
     // ── Client → Server ──────────────────────────────────────────────────────
     JOIN: "join",
@@ -67,42 +67,46 @@ var AdMP = (() => {
     "#7b68ee"
   ];
 
-  // src/network.js
+  // src/network.ts
+  function str(msg, key) {
+    const v = msg[key];
+    return typeof v === "string" ? v : "";
+  }
   var MP = {
     // ── Callbacks (assign before calling connect) ────────────────────────────
-    onConnected: function() {
+    onConnected() {
     },
-    onDisconnected: function() {
+    onDisconnected() {
     },
-    onRejected: function(reason) {
+    onRejected(_reason) {
     },
-    onWelcome: function(data) {
+    onWelcome(_data) {
     },
-    onSpectatorWelcome: function(data) {
+    onSpectatorWelcome(_data) {
     },
-    onLobbyUpdate: function(data) {
+    onLobbyUpdate(_data) {
     },
-    onLobbySnapshot: function(data) {
+    onLobbySnapshot(_data) {
     },
-    onGameStarted: function(data) {
+    onGameStarted(_data) {
     },
-    onGameState: function(state) {
+    onGameState(_state) {
     },
-    onGameAction: function(action) {
+    onGameAction(_action) {
     },
-    onChatMessage: function(from, text, color) {
+    onChatMessage(_from, _text, _color) {
     },
-    onSystemMessage: function(text) {
+    onSystemMessage(_text) {
     },
-    onPlayerJoined: function(data) {
+    onPlayerJoined(_data) {
     },
-    onPlayerQuit: function(data) {
+    onPlayerQuit(_data) {
     },
-    onRoomCreated: function(code) {
+    onRoomCreated(_code) {
     },
-    onRoomJoined: function(code) {
+    onRoomJoined(_code) {
     },
-    onError: function(text) {
+    onError(_text) {
     },
     // ── State ────────────────────────────────────────────────────────────────
     _socket: null,
@@ -112,33 +116,33 @@ var AdMP = (() => {
     _isHost: false,
     _isSpectator: false,
     // ── Getters ──────────────────────────────────────────────────────────────
-    getMyName: function() {
+    getMyName() {
       return MP._myName;
     },
-    getMyColor: function() {
+    getMyColor() {
       return MP._myColor;
     },
-    getRoomCode: function() {
+    getRoomCode() {
       return MP._roomCode;
     },
-    amIHost: function() {
+    amIHost() {
       return MP._isHost;
     },
-    isSpectator: function() {
+    isSpectator() {
       return MP._isSpectator;
     },
-    isConnected: function() {
-      return MP._socket && MP._socket.readyState === WebSocket.OPEN;
+    isConnected() {
+      return MP._socket !== null && MP._socket.readyState === WebSocket.OPEN;
     },
     // ── Connect ──────────────────────────────────────────────────────────────
-    connect: function(server) {
-      var addr = server || MP._resolveServer();
-      var url = addr.startsWith("ws") ? addr : MP._scheme(addr) + addr;
+    connect(server) {
+      const addr = server || MP._resolveServer();
+      const url = addr.startsWith("ws") ? addr : MP._scheme(addr) + addr;
       MP._socket = new WebSocket(url);
-      MP._socket.addEventListener("open", function() {
+      MP._socket.addEventListener("open", () => {
         MP.onConnected();
       });
-      MP._socket.addEventListener("close", function() {
+      MP._socket.addEventListener("close", () => {
         MP._myName = null;
         MP._myColor = null;
         MP._roomCode = null;
@@ -146,14 +150,14 @@ var AdMP = (() => {
         MP._isSpectator = false;
         MP.onDisconnected();
       });
-      MP._socket.addEventListener("error", function() {
+      MP._socket.addEventListener("error", () => {
         MP.onError("Connection error \u2014 is the server running?");
       });
-      MP._socket.addEventListener("message", function(e) {
-        var msg;
+      MP._socket.addEventListener("message", (e) => {
+        let msg;
         try {
-          msg = JSON.parse(e.data);
-        } catch (err) {
+          msg = JSON.parse(String(e.data));
+        } catch {
           console.error("[MP] Bad JSON:", e.data);
           return;
         }
@@ -170,100 +174,104 @@ var AdMP = (() => {
       "127.0.0.1",
       "192.168.1.16"
     ],
-    _hostOf: function(addr) {
+    // RFC1918. Note 172 is only private from 172.16 to 172.31 — a bare /^172\./
+    // also swallows public addresses such as 172.217.14.5.
+    _PRIVATE: /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/,
+    _hostOf(addr) {
       return String(addr).replace(/^wss?:\/\//, "").split("/")[0].split(":")[0];
     },
-    _isAllowed: function(addr) {
-      var host = MP._hostOf(addr);
-      if (/^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/.test(host)) return true;
+    _isAllowed(addr) {
+      const host = MP._hostOf(addr);
+      if (MP._PRIVATE.test(host)) return true;
       return MP._allowlist.indexOf(host) !== -1;
     },
     // A ws: socket opened from an https: page is blocked as mixed content, so the
     // scheme has to follow the page rather than the address. Loopback and LAN
     // addresses have no certificate and stay on plain ws:.
-    _scheme: function(addr) {
-      if (/^(localhost|127\.0\.0\.1|192\.168\.|10\.|172\.)/.test(addr)) return "ws://";
+    _scheme(addr) {
+      const host = MP._hostOf(addr);
+      if (host === "localhost" || host === "127.0.0.1" || MP._PRIVATE.test(host)) return "ws://";
       try {
         return window.location.protocol === "https:" ? "wss://" : "ws://";
-      } catch (e) {
+      } catch {
         return "ws://";
       }
     },
-    _resolveServer: function() {
+    _resolveServer() {
       try {
-        var param = new URLSearchParams(window.location.search).get("server");
+        const param = new URLSearchParams(window.location.search).get("server");
         if (param && param.trim()) {
           if (MP._isAllowed(param.trim())) return param.trim();
           console.warn("[MP] ignoring ?server= override for non-allowlisted host: " + MP._hostOf(param));
         }
-      } catch (e) {
+      } catch {
       }
       if (typeof MP_DEFAULT_SERVER !== "undefined") return MP_DEFAULT_SERVER;
-      var h = window.location.hostname;
+      const h = window.location.hostname;
       if (h === "localhost" || h === "127.0.0.1") return "192.168.1.16:8765";
       return "magmacrunch.duckdns.org:8765";
     },
     // ── Senders ──────────────────────────────────────────────────────────────
-    _send: function(obj) {
+    _send(obj) {
       if (MP.isConnected()) MP._socket.send(JSON.stringify(obj));
       else console.warn("[MP] Not connected, cannot send:", obj);
     },
-    join: function(name, color, room) {
+    join(name, color, room) {
       MP._myName = name;
       MP._send({ type: "join", name, color, room: room || null });
     },
-    createRoom: function(name, color, roomCode) {
+    createRoom(name, color, roomCode) {
       MP._myName = name;
       MP._send({ type: "create_room", name, color, room: roomCode });
     },
-    joinRoom: function(name, color, roomCode) {
+    joinRoom(name, color, roomCode) {
       MP._myName = name;
       MP._send({ type: "join_room", name, color, room: roomCode });
     },
-    spectate: function(name, room) {
+    spectate(name, room) {
       MP._isSpectator = true;
       MP._myName = name;
       MP._send({ type: "spectate", name, room: room || null });
     },
-    startGame: function() {
+    startGame() {
       MP._send({ type: "start_game" });
     },
-    sendAction: function(action) {
+    sendAction(action) {
       MP._send({ type: "game_action", action });
     },
-    sendChat: function(text) {
+    sendChat(text) {
       MP._send({ type: "chat", text });
     },
-    quit: function() {
+    quit() {
       MP._send({ type: "quit" });
       MP._myName = null;
       MP._roomCode = null;
     },
     // ── Message Handler ──────────────────────────────────────────────────────
-    _handle: function(msg) {
+    _handle(msg) {
       switch (msg.type) {
         case "lobby_snapshot":
           MP.onLobbySnapshot(msg);
           break;
         case "welcome":
-          MP._myName = msg.playerName;
-          MP._roomCode = msg.room;
-          MP._isHost = msg.isHost;
-          MP._myColor = msg.chosenColor;
+          MP._myName = str(msg, "playerName");
+          MP._roomCode = str(msg, "room");
+          MP._isHost = msg["isHost"] === true;
+          MP._myColor = str(msg, "chosenColor");
           MP._isSpectator = false;
           MP.onWelcome(msg);
-          MP.onRoomJoined(msg.room);
+          MP.onRoomJoined(str(msg, "room"));
           break;
         case "spectator_welcome":
-          MP._myName = msg.playerName;
-          MP._roomCode = msg.room;
+          MP._myName = str(msg, "playerName");
+          MP._roomCode = str(msg, "room");
           MP._isSpectator = true;
           MP._isHost = false;
           MP.onSpectatorWelcome(msg);
-          MP.onRoomJoined(msg.room);
+          MP.onRoomJoined(str(msg, "room"));
           break;
         case "rejected":
-          MP.onRejected(msg.reason);
+          MP.onRejected(str(msg, "reason"));
           break;
         case "lobby_update":
           MP.onLobbyUpdate(msg);
@@ -272,16 +280,16 @@ var AdMP = (() => {
           MP.onGameStarted(msg);
           break;
         case "game_state":
-          MP.onGameState(msg.state);
+          MP.onGameState(msg["state"]);
           break;
         case "game_action":
-          MP.onGameAction(msg.action);
+          MP.onGameAction(msg["action"]);
           break;
         case "chat":
-          MP.onChatMessage(msg.from, msg.text, msg.color || "");
+          MP.onChatMessage(str(msg, "from"), str(msg, "text"), str(msg, "color"));
           break;
         case "system":
-          MP.onSystemMessage(msg.text);
+          MP.onSystemMessage(str(msg, "text"));
           break;
         case "player_quit":
           MP.onPlayerQuit(msg);
@@ -292,7 +300,7 @@ var AdMP = (() => {
     }
   };
 
-  // src/board-game-template.js
+  // src/board-game-template.ts
   var BoardGameTemplate = (function() {
     "use strict";
     function esc(s) {
@@ -314,19 +322,17 @@ var AdMP = (() => {
         { id: "menuBtn", label: "MENU" }
       ];
       var btnsHtml = "";
-      for (var i = 0; i < buttons.length; i++) {
-        var b = buttons[i];
-        var cls = "start-btn" + (b.cls ? " " + b.cls : "");
-        var icon = b.icon ? b.icon + "&nbsp;&nbsp;" : "";
+      for (const b of buttons) {
+        const cls = "start-btn" + (b.cls ? " " + b.cls : "");
+        const icon = b.icon ? b.icon + "&nbsp;&nbsp;" : "";
         btnsHtml += '<button id="' + esc(b.id) + '" class="' + cls + '">' + icon + esc(b.label) + "</button>\n";
       }
       var footerHtml = "";
-      for (var j = 0; j < footer.length; j++) {
-        footerHtml += "<p>" + esc(footer[j]) + "</p>\n";
+      for (const line of footer) {
+        footerHtml += "<p>" + esc(line) + "</p>\n";
       }
       var controlsHtml = "";
-      for (var k = 0; k < gameControls.length; k++) {
-        var c = gameControls[k];
+      for (const c of gameControls) {
         controlsHtml += '<button id="' + esc(c.id) + '" class="control-btn">' + esc(c.label) + "</button>\n";
       }
       var gameBody = cfg.gameBody || "";
