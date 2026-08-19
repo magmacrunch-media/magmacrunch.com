@@ -33,6 +33,7 @@ var AdCards = (() => {
     HAND_POINTS: () => HAND_POINTS,
     HAND_RANKS: () => HAND_RANKS,
     HandEvaluator: () => HandEvaluator,
+    POKER_RANK_VALUES: () => POKER_RANK_VALUES,
     RANKS: () => RANKS,
     RANK_VALUES: () => RANK_VALUES,
     SUITS: () => SUITS,
@@ -48,6 +49,7 @@ var AdCards = (() => {
     getNumberCardHTML: () => getNumberCardHTML,
     getSuitLayout: () => getSuitLayout,
     pipColor: () => pipColor,
+    pokerValue: () => pokerValue,
     renderStack: () => renderStack
   });
 
@@ -1030,6 +1032,13 @@ var AdCards = (() => {
     Q: 12,
     K: 13
   };
+  var POKER_RANK_VALUES = {
+    ...RANK_VALUES,
+    A: 14
+  };
+  function pokerValue(rank) {
+    return POKER_RANK_VALUES[rank];
+  }
 
   // src/deck.ts
   var _cardBackIdCounter = 0;
@@ -1545,6 +1554,15 @@ var AdCards = (() => {
       if (values[4] === 14 && values[0] === 2 && values[3] === 5) return 5;
       return sortedCards[0].value;
     }
+    /**
+     * The rank to label a straight with. Mirrors `_straightHighCard`: in the
+     * wheel (A-2-3-4-5) the ace plays low, so the hand is five high even though
+     * the ace sorts to the front.
+     */
+    _straightRankName(sortedCards) {
+      const high = this._straightHighCard(sortedCards);
+      return sortedCards.find((c) => c.value === high)?.rank ?? sortedCards[0].rank;
+    }
     _getValueCounts(cards) {
       const counts = {};
       cards.forEach((c) => {
@@ -1596,7 +1614,7 @@ var AdCards = (() => {
         case "Royal Flush":
           return `Royal Flush \u2014 ${top.suit}`;
         case "Straight Flush":
-          return `Straight Flush \u2014 ${top.rank} high`;
+          return `Straight Flush \u2014 ${this._straightRankName(sortedCards)} high`;
         case "Four of a Kind":
           return `Four ${top.rank}s`;
         case "Full House": {
@@ -1609,7 +1627,7 @@ var AdCards = (() => {
         case "Flush":
           return `Flush \u2014 ${top.rank} high (${top.suit})`;
         case "Straight":
-          return `Straight \u2014 ${top.rank} high`;
+          return `Straight \u2014 ${this._straightRankName(sortedCards)} high`;
         case "Three of a Kind":
           return `Three ${top.rank}s`;
         case "Two Pair": {

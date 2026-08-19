@@ -2,6 +2,17 @@
 // Core game logic: dealing, betting, AI, showdown
 const { Deck } = AdCards;
 
+// Sökö's own js/hand-eval.js is ace-high — it tests `values[4] === 14` and
+// filters aces out to spot the wheel. AdCards.Deck stamps the ace-low
+// RANK_VALUES (A=1), because cribbage counts an ace as 1 for fifteens and
+// solitaire builds its foundations from the ace up. Handing those cards to this
+// evaluator unchanged graded a royal flush as a plain flush, missed A-K-Q-J-10
+// entirely, and ranked a pair of aces below a pair of twos.
+//
+// Every card reaching a player comes through _draw(), so the restamp cannot be
+// forgotten at one of the five deal points.
+const POKER_VALUES = AdCards.POKER_RANK_VALUES;
+
 class SokoGame {
     constructor() {
         this.deck = null;
@@ -65,13 +76,24 @@ class SokoGame {
 
         // Deal hole card (face down) to each player
         this.players.forEach(p => {
-            const card = this.deck.deal();
-            card.faceUp = p.isHuman;
-            p.cards.push(card);
+            p.cards.push(this._draw(p.isHuman));
         });
 
         // Deal first face-up card
         this._dealNextStreet();
+    }
+
+    // ── Drawing ──────────────────────────────────────────────
+
+    /**
+     * Take one card off the deck and restamp it ace-high for poker.
+     * See POKER_VALUES above for why this is necessary.
+     */
+    _draw(faceUp) {
+        const card = this.deck.deal();
+        card.value = POKER_VALUES[card.rank];
+        card.faceUp = faceUp;
+        return card;
     }
 
     // ── Deal next street ─────────────────────────────────────
@@ -83,9 +105,7 @@ class SokoGame {
 
         this.players.forEach(p => {
             if (!p.folded) {
-                const card = this.deck.deal();
-                card.faceUp = true;
-                p.cards.push(card);
+                p.cards.push(this._draw(true));
             }
         });
 
