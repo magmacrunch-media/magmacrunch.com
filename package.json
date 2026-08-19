@@ -14,13 +14,13 @@
     "build:adenosine": "node scripts/sync-adenosine.mjs"
   },
   "dependencies": {
-    "@magmacrunch/adenosine-audio": "^0.2.1",
+    "@magmacrunch/adenosine-audio": "^0.2.2",
     "@magmacrunch/adenosine-cards": "^0.5.0",
-    "@magmacrunch/adenosine-chat": "^0.3.1",
-    "@magmacrunch/adenosine-multiplayer": "^0.3.1",
-    "@magmacrunch/adenosine-puzzle": "^0.2.0",
-    "@magmacrunch/adenosine-rpg": "^0.2.0",
-    "@magmacrunch/adenosine-score-client": "^0.2.0"
+    "@magmacrunch/adenosine-chat": "^0.4.0",
+    "@magmacrunch/adenosine-multiplayer": "^0.4.0",
+    "@magmacrunch/adenosine-puzzle": "^0.2.2",
+    "@magmacrunch/adenosine-rpg": "^0.2.1",
+    "@magmacrunch/adenosine-score-client": "^0.2.3"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.62",

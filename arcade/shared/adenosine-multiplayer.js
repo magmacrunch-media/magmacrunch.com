@@ -164,16 +164,35 @@ var AdMP = (() => {
         MP._handle(msg);
       });
     },
+    // Deployment wiring from configure(). Empty by default: an install that
+    // configures nothing talks to its own origin and nowhere else.
+    _config: {},
+    /**
+     * Declare where this deployment's game server lives.
+     *
+     * Call before connect(). Both fields are optional and merge over whatever a
+     * previous call set, so a page can name its server without restating the
+     * allowlist.
+     */
+    configure(cfg) {
+      MP._config = { ...MP._config, ...cfg };
+    },
     // Hosts the ?server= override is allowed to name. Without this a crafted link
     // can point a visitor's game socket, and the name they play under, at any
     // host the attacker chooses.
-    _allowlist: [
-      "magmacrunch.duckdns.org",
-      "magmacrunch.com",
-      "localhost",
-      "127.0.0.1",
-      "192.168.1.16"
-    ],
+    //
+    // The page's own origin is always allowed; anything else a deployment needs
+    // it declares through configure({ allowlist }). Hardcoding one deployment's
+    // hosts here would hand every other install a socket pointed at a stranger.
+    _allowlist() {
+      const extra = MP._config.allowlist ?? [];
+      const own = ["localhost", "127.0.0.1"];
+      try {
+        if (window.location.hostname) own.push(window.location.hostname);
+      } catch {
+      }
+      return [...own, ...extra];
+    },
     // RFC1918. Note 172 is only private from 172.16 to 172.31 — a bare /^172\./
     // also swallows public addresses such as 172.217.14.5.
     _PRIVATE: /^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/,
@@ -183,7 +202,7 @@ var AdMP = (() => {
     _isAllowed(addr) {
       const host = MP._hostOf(addr);
       if (MP._PRIVATE.test(host)) return true;
-      return MP._allowlist.indexOf(host) !== -1;
+      return MP._allowlist().indexOf(host) !== -1;
     },
     // A ws: socket opened from an https: page is blocked as mixed content, so the
     // scheme has to follow the page rather than the address. Loopback and LAN
@@ -206,10 +225,13 @@ var AdMP = (() => {
         }
       } catch {
       }
+      if (MP._config.defaultServer) return MP._config.defaultServer;
       if (typeof MP_DEFAULT_SERVER !== "undefined") return MP_DEFAULT_SERVER;
-      const h = window.location.hostname;
-      if (h === "localhost" || h === "127.0.0.1") return "192.168.1.16:8765";
-      return "magmacrunch.duckdns.org:8765";
+      try {
+        return window.location.host;
+      } catch {
+        return "localhost";
+      }
     },
     // ── Senders ──────────────────────────────────────────────────────────────
     _send(obj) {
@@ -338,7 +360,7 @@ var AdMP = (() => {
       var gameBody = cfg.gameBody || "";
       var extraStats = cfg.gameHeader || "";
       var instructions = cfg.instructions || "<h3>Rules</h3><p>Game instructions go here.</p>";
-      var credits = cfg.credits || "<h3>" + esc(title) + "</h3><h4>Game Design & Development</h4><p>Jake A. McCoy</p><h4>Publisher</h4><p><strong>magmacrunch media</strong></p>";
+      var credits = cfg.credits || "<h3>" + esc(title) + "</h3>";
       var html = "";
       html += '<div id="startScreen" class="start-screen">\n';
       html += '  <div class="start-content">\n';

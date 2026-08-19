@@ -119,17 +119,23 @@ const indexHtml = `<!DOCTYPE html>
          adenosine-puzzle.js, adenosine-rpg.js, adenosine-audio.js).
          Run \`npm run build:adenosine\` to sync bundles and stamp cache-busters. -->
     <script src="../shared/adenosine-score-client.js"></script>
-    <script>const scoreClient = new AdScore.ScoreClient().auto();</script>
+    <script src="../shared/score-server.js"></script>
+    <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
 
     <!-- Game Scripts -->
     <script src="js/config.js"></script>
     <script src="js/game.js"></script>
     <script src="js/main.js"></script>
 
-    <!-- Chat Widget -->
+    <!-- Chat Widget. The packages default to the origin serving the page, which
+         is right for anyone else using adenosine and wrong here — magmacrunch.com
+         is a GitHub Pages CNAME and cannot reach the Pi. The *-server.js shims
+         hold that knowledge; see their headers. -->
     <link rel="stylesheet" href="../shared/chat-widget.css">
-    <script src="../shared/chat-widget.js"></script>
-    <script>ChatWidget.connect();</script>
+    <script src="../shared/adenosine-chat.js"></script>
+    <script src="../shared/chat-server.js"></script>
+    <script>const { ChatWidget } = AdChat;</script>
+    <script>ChatWidget.connect(MC_CHAT_OPTS);</script>
 </body>
 </html>`;
 
