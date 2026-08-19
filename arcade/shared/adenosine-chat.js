@@ -34,39 +34,44 @@ var AdChat = (() => {
         return "ws://";
       }
     })();
-    var SERVER_ALLOWLIST = [
-      "magmacrunch.duckdns.org",
-      "magmacrunch.com",
-      "localhost",
-      "127.0.0.1",
-      "192.168.1.16"
-    ];
     function hostOf(addr) {
       return String(addr).replace(/^wss?:\/\//, "").split("/")[0].split(":")[0];
     }
-    function isAllowedServer(addr) {
+    function isAllowedServer(addr, extra) {
       var host = hostOf(addr);
-      for (var i = 0; i < SERVER_ALLOWLIST.length; i++) {
-        if (host === SERVER_ALLOWLIST[i]) return true;
+      var allowed = ["localhost", "127.0.0.1"];
+      try {
+        if (window.location.hostname) allowed.push(window.location.hostname);
+      } catch (e) {
+      }
+      if (extra) allowed = allowed.concat(extra);
+      for (var i = 0; i < allowed.length; i++) {
+        if (host === allowed[i]) return true;
       }
       return false;
     }
-    var CHAT_SERVER = (function() {
+    var chatServer = null;
+    function resolveChatServer(opts) {
+      var withScheme = function(addr) {
+        return /^wss?:\/\//.test(addr) ? addr : WS_SCHEME + addr;
+      };
       try {
         var param = new URLSearchParams(window.location.search).get("server");
-        if (param && isAllowedServer(param)) {
-          return /^wss?:\/\//.test(param) ? param : WS_SCHEME + param;
+        if (param && isAllowedServer(param, opts && opts.allowlist)) {
+          return withScheme(param);
         }
         if (param) {
           console.warn("[ChatWidget] ignoring ?server= override for non-allowlisted host: " + hostOf(param));
         }
       } catch (e) {
       }
-      var h = window.location.hostname;
-      if (h === "localhost" || h === "127.0.0.1") return "ws://192.168.1.16:8768";
-      if (WS_SCHEME === "wss://") return "wss://magmacrunch.duckdns.org";
-      return "ws://magmacrunch.duckdns.org:8768";
-    })();
+      if (opts && opts.server) return withScheme(opts.server);
+      try {
+        return WS_SCHEME + window.location.host;
+      } catch (e) {
+        return "ws://localhost";
+      }
+    }
     var OWN_SCRIPT_SRC = typeof document !== "undefined" && document.currentScript && document.currentScript.src || null;
     function resolveWorkerUrl(explicit) {
       if (explicit) return explicit;
@@ -285,6 +290,7 @@ var AdChat = (() => {
       }
     }
     function connect(opts) {
+      chatServer = resolveChatServer(opts);
       createWidget();
       if (typeof SharedWorker !== "undefined" && !worker) {
         try {
@@ -294,7 +300,7 @@ var AdChat = (() => {
             handleWorkerMessage(e.data);
           };
           worker.port.start();
-          worker.port.postMessage(JSON.stringify({ _worker: "connect", url: CHAT_SERVER }));
+          worker.port.postMessage(JSON.stringify({ _worker: "connect", url: chatServer }));
           window.addEventListener("pagehide", function() {
             try {
               worker.port.postMessage(JSON.stringify({ _worker: "disconnect" }));
@@ -311,7 +317,7 @@ var AdChat = (() => {
     }
     function connectDirect() {
       if (sock) return;
-      sock = new WebSocket(CHAT_SERVER);
+      sock = new WebSocket(chatServer || resolveChatServer());
       sock.onopen = function() {
         widgetEl.classList.remove("disconnected");
         sendSavedCredentials();

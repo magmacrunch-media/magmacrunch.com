@@ -221,7 +221,7 @@ var UI = (function() {
         hideGameOver();
         isMultiplayer = true;
         applyServerState(state);
-        ChatWidget.connect();
+        ChatWidget.connect(MC_CHAT_OPTS);
     }
 
     function onMultiplayerGameEnd(won, winnerName, winnerSide) {

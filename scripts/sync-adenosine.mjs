@@ -42,7 +42,7 @@ const EXTRA_ASSETS = { chat: ['chat-worker.js'] };
  * still need busting. score-server.js decides which host receives high scores,
  * so a stale copy sends them nowhere — the exact failure the stamps prevent.
  */
-const LOCAL_SHARED = ['score-server.js', 'mp-server.js'];
+const LOCAL_SHARED = ['score-server.js', 'mp-server.js', 'chat-server.js'];
 
 const HASH_LEN = 8;
 

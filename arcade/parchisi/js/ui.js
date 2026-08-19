@@ -400,7 +400,7 @@ var UI = (function() {
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'flex';
         }
-        ChatWidget.connect();
+        ChatWidget.connect(MC_CHAT_OPTS);
     }
 
     function showDice(dice) {

@@ -652,7 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'flex';
         }
-        ChatWidget.connect();
+        ChatWidget.connect(MC_CHAT_OPTS);
 
         // Initialize game state from server
         if (data.state) {

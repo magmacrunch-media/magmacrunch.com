@@ -734,7 +734,7 @@ function showGameView() {
   if (document.getElementById('gameChat')) {
     document.getElementById('gameChat').style.display = 'flex';
   }
-  ChatWidget.connect();
+  ChatWidget.connect(MC_CHAT_OPTS);
 
   // Re-calculate board scale now that the game view is visible and has real
   // layout dimensions — offsetWidth was 0 while display:none.
