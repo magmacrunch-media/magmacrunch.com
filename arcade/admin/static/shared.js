@@ -17,6 +17,8 @@
         send: send,
         onMessage: null,   // set by tab modules to receive messages
         onConnect: null,   // called when WS connects (for initial data loads)
+        liteMode: false,   // true when server runs with --lite
+        allowedTabs: null, // array of tab IDs allowed in current mode
     };
 
     // ── State ─────────────────────────────────────────────────────────────
@@ -115,6 +117,7 @@
             hideRebootOverlay();
             requestStatus();
             requestSystemInfo();
+            send({ action: 'get_mode', token: window.OPS.authToken });
             statusTimer = setInterval(() => {
                 if (window.OPS.authToken) requestStatus();
             }, 10000);
@@ -182,6 +185,12 @@
 
             case 'system_info':
                 renderSystemInfo(msg.info);
+                break;
+
+            case 'mode':
+                window.OPS.liteMode = msg.lite;
+                window.OPS.allowedTabs = msg.tabs;
+                applyMode();
                 break;
         }
 
@@ -276,15 +285,15 @@
 
     // ── Tab routing ───────────────────────────────────────────────────────
 
-    const TABS = ['arcade', 'mc1', 'bots', 'jukebox', 'tv', 'favicon', 'themes', 'plays', 'traffic', 'security', 'github', 'accounts'];
+    let TABS = ['arcade', 'mc1', 'bots', 'jukebox', 'tv', 'favicon', 'themes', 'plays', 'traffic', 'security', 'github', 'accounts'];
 
     function getActiveTab() {
         const hash = window.location.hash.replace('#', '');
-        return TABS.includes(hash) ? hash : 'arcade';
+        return TABS.includes(hash) ? hash : TABS[0];
     }
 
     function switchTab(tabId) {
-        if (!TABS.includes(tabId)) tabId = 'arcade';
+        if (!TABS.includes(tabId)) tabId = TABS[0];
         window.location.hash = tabId;
         renderTabs();
     }
@@ -307,6 +316,35 @@
             const hasActive = group.querySelector('.sidebar-item[data-tab="' + active + '"]');
             if (hasActive) group.classList.add('open');
         });
+    }
+
+    function applyMode() {
+        if (window.OPS.allowedTabs) {
+            TABS = window.OPS.allowedTabs;
+        }
+        // Hide/show sidebar items based on allowed tabs
+        $$('.sidebar-item').forEach(btn => {
+            var tab = btn.dataset.tab;
+            btn.classList.toggle('hidden', !TABS.includes(tab));
+        });
+        if (window.OPS.liteMode) {
+            document.body.classList.add('lite');
+            // Hide sidebar groups not relevant to lite mode
+            $$('.sidebar-group[data-group="media"], .sidebar-group[data-group="config"]').forEach(g => {
+                g.classList.add('hidden');
+            });
+            // Hide sidebar power buttons that are redundant (power controls are in the Status tab)
+            var restartPi = $('#sidebar-restart-pi');
+            var rebootMc1 = $('#sidebar-reboot-mc1');
+            if (restartPi) restartPi.classList.add('hidden');
+            if (rebootMc1) rebootMc1.classList.add('hidden');
+        }
+        // Ensure current hash is a valid tab
+        var hash = window.location.hash.replace('#', '');
+        if (!TABS.includes(hash)) {
+            window.location.hash = TABS[0];
+        }
+        renderTabs();
     }
 
     window.addEventListener('hashchange', renderTabs);

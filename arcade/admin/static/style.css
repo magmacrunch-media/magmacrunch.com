@@ -467,6 +467,7 @@ main {
 #tab-bots    { --tab-bright: #ff7c1f; --tab-accent: #d46518; --tab-mid: #8a4210; --tab-dim: #502808; --tab-glow: rgba(255,124,31,0.25); --tab-glow-strong: rgba(255,124,31,0.5); --tab-bg: rgba(255,124,31,0.06); }
 #tab-plays   { --tab-bright: #6e9fff; --tab-accent: #5580d4; --tab-mid: #3a5a8a; --tab-dim: #223550; --tab-glow: rgba(110,159,255,0.25); --tab-glow-strong: rgba(110,159,255,0.5); --tab-bg: rgba(110,159,255,0.06); }
 #tab-traffic { --tab-bright: #39ff6e; --tab-accent: #2dd45a; --tab-mid: #1e8a3a; --tab-dim: #115022; --tab-glow: rgba(57,255,110,0.25); --tab-glow-strong: rgba(57,255,110,0.5); --tab-bg: rgba(57,255,110,0.06); }
+#tab-status  { --tab-bright: #ffe03a; --tab-accent: #d4b82e; --tab-mid: #8a7a1e; --tab-dim: #504812; --tab-glow: rgba(255,224,58,0.25); --tab-glow-strong: rgba(255,224,58,0.5); --tab-bg: rgba(255,224,58,0.06); }
 
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -1978,7 +1979,7 @@ footer {
 .mc1-info-card {
     background: var(--deep);
     border: 2px solid var(--border);
-    border-left: 3px solid var(--cyan);
+    border-left: 3px solid var(--tab-accent, var(--cyan));
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -1987,8 +1988,8 @@ footer {
 }
 
 .mc1-info-card:hover {
-    border-color: var(--cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.15);
+    border-color: var(--tab-accent, var(--cyan));
+    box-shadow: 0 0 12px var(--tab-glow, rgba(0,245,255,0.15));
 }
 
 /* ── Utility ─────────────────────────────────────────────────────────────── */
@@ -2597,4 +2598,14 @@ footer {
 .traffic-label {
     flex: 1;
     word-break: break-all;
+}
+
+/* ── Lite mode ──────────────────────────────────────────────────────────── */
+
+body.lite .sidebar-group.hidden {
+    display: none;
+}
+
+body.lite .sidebar-action.hidden {
+    display: none;
 }

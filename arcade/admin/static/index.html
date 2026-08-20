@@ -62,6 +62,7 @@
                 <div class="sidebar-group" data-group="systems">
                     <button class="sidebar-group-btn">SYSTEMS</button>
                     <div class="sidebar-items">
+                        <button class="sidebar-item" data-tab="status">STATUS</button>
                         <button class="sidebar-item" data-tab="arcade">ARCADE</button>
                         <button class="sidebar-item" data-tab="mc1">MC1</button>
                         <button class="sidebar-item" data-tab="bots">BOTS</button>
@@ -102,6 +103,35 @@
         <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
 
         <main>
+            <!-- ═══ STATUS TAB (LITE) ══════════════════════════════════════════ -->
+            <div id="tab-status" class="tab-panel hidden">
+                <section class="status-section">
+                    <h2 class="section-title">PI SERVICES</h2>
+                    <div id="status-pi-grid" class="status-grid"></div>
+                </section>
+
+                <section class="status-section">
+                    <div class="content-header">
+                        <h2 class="section-title">MC1 SYSTEM</h2>
+                        <div class="content-controls">
+                            <button id="btn-status-mc1-refresh" class="btn btn-cyan btn-sm">REFRESH</button>
+                        </div>
+                    </div>
+                    <div id="status-mc1-grid" class="mc1-info-grid">
+                        <div class="log-welcome">Connecting to MC1...</div>
+                    </div>
+                </section>
+
+                <section class="status-section">
+                    <h2 class="section-title">POWER CONTROLS</h2>
+                    <div class="action-bar">
+                        <button id="btn-status-restart-pi" class="btn btn-orange btn-sm">RESTART PI</button>
+                        <button id="btn-status-reboot-mc1" class="btn btn-orange btn-sm">REBOOT MC1</button>
+                        <button id="btn-status-wol-mc1" class="btn btn-green btn-sm">WAKE MC1 (WoL)</button>
+                    </div>
+                </section>
+            </div>
+
             <!-- ═══ ARCADE TAB ═══════════════════════════════════════════════ -->
             <div id="tab-arcade" class="tab-panel">
                 <section class="status-section">
@@ -692,6 +722,7 @@
     </div>
 
     <script src="shared.js?v=a4b41f18"></script>
+    <script src="status.js?v=1"></script>
     <script src="arcade.js?v=cfb7b176"></script>
     <script src="mc1.js?v=966a316a"></script>
     <script src="jukebox.js?v=6fa608a3"></script>

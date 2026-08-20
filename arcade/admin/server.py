@@ -39,6 +39,7 @@ DEFAULT_CONFIG = {
 }
 
 CONFIG = {}
+LITE_MODE = False
 
 # ── GitHub token (stored separately, never in config.json) ──────────────────
 
@@ -74,17 +75,18 @@ _gh_client = None
 _pi_client = None
 _mc1_client = None
 
-def _init_gh_client():
-    """Initialize GHClient with the admin dashboard's GitHub token."""
+def _init_clients():
+    """Initialize magmascript clients. In lite mode, skip GitHub client."""
     global _gh_client, _pi_client, _mc1_client
-    token = load_github_token()
-    if token:
-        cfg = _MagmascriptConfig()
-        cfg.gh.token = token
-        _set_magmascript_config(cfg)
-    _gh_client = GHClient()
     _pi_client = PIClient(local=True)
     _mc1_client = MC1Client()
+    if not LITE_MODE:
+        token = load_github_token()
+        if token:
+            cfg = _MagmascriptConfig()
+            cfg.gh.token = token
+            _set_magmascript_config(cfg)
+        _gh_client = GHClient()
 
 # ── Service definitions ──────────────────────────────────────────────────────
 
@@ -103,6 +105,10 @@ SERVICES = [
 ]
 
 VALID_UNITS = {svc["unit"] for svc in SERVICES} | {"arcade-admin"}
+
+LITE_TABS = ["status", "bots", "plays", "traffic", "accounts"]
+FULL_TABS = ["arcade", "mc1", "bots", "jukebox", "tv", "favicon", "themes",
+             "plays", "traffic", "security", "github", "accounts"]
 
 def valid_unit(unit):
     return unit in VALID_UNITS
@@ -599,6 +605,26 @@ async def ws_handler(websocket):
                             "type": "auth_required"
                         }))
                         continue
+
+            if action == "get_mode":
+                await websocket.send(json.dumps({
+                    "type": "mode",
+                    "lite": LITE_MODE,
+                    "tabs": LITE_TABS if LITE_MODE else FULL_TABS
+                }))
+                continue
+
+            # In lite mode, reject actions that aren't supported
+            if LITE_MODE and action not in ("get_mode", "status", "system_info",
+                                            "restart_pi", "poweroff_pi",
+                                            "mc1_info", "mc1_reboot", "mc1_wol",
+                                            "bots_list", "plays_load", "nginx_traffic",
+                                            "login"):
+                await websocket.send(json.dumps({
+                    "type": "error",
+                    "error": f"Action '{action}' not available in lite mode"
+                }))
+                continue
 
             if action == "status":
                 services = await asyncio.get_event_loop().run_in_executor(
@@ -1703,7 +1729,12 @@ class AdminHTTPHandler(SimpleHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description="MagmaCrunch Arcade Dashboard")
     parser.add_argument("--config", default="config.json", help="Config file path")
+    parser.add_argument("--lite", action="store_true",
+                        help="Lite mode: monitoring only, no editors or heavy actions")
     args = parser.parse_args()
+
+    global LITE_MODE
+    LITE_MODE = args.lite
 
     # Load config
     global CONFIG
@@ -1725,8 +1756,9 @@ def main():
     bind = CONFIG.get("bind", "0.0.0.0")
 
     # Initialize magmascript clients
-    _init_gh_client()
+    _init_clients()
 
+    mode_label = "LITE" if LITE_MODE else "FULL"
     print(f"")
     print(f"  ╔══════════════════════════════════════════════╗")
     print(f"  ║     MAGMACRUNCH OPERATIONS — Dashboard       ║")
@@ -1734,6 +1766,7 @@ def main():
     print(f"")
     print(f"  Dashboard:  http://localhost:{port}")
     print(f"  WebSocket:  ws://localhost:{port}")
+    print(f"  Mode:       {mode_label}")
     print(f"  Auth:       {'enabled' if CONFIG.get('auth') else 'disabled'}")
     print(f"")
 
