@@ -64,3 +64,62 @@ jobs:
             echo "=== Running $test_file ==="
             node "$test_file" || exit 1
           done
+
+  # Clicks MULTIPLAYER on the games whose lobby opens client-side and asserts the
+  # overlay actually becomes visible. A dead lobby button used to pass every check
+  # here, because the page still loaded and logged nothing.
+  lobby-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install test dependencies
+        working-directory: arcade/tests
+        run: npm ci
+
+      - name: Install Playwright chromium
+        working-directory: arcade/tests
+        run: npx playwright install --with-deps chromium
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install server dependencies
+        run: pip install -r requirements.txt
+
+      - name: Serve the repo
+        run: |
+          python3 -m http.server 8080 &
+          for _ in $(seq 1 30); do
+            curl -sf http://localhost:8080/ >/dev/null && exit 0
+            sleep 1
+          done
+          echo "static server did not come up"; exit 1
+
+      # aggravation, parchisi and SORRY only reveal their lobby once a join
+      # round-trips, so their lobby check needs a real server. The test loads
+      # them with ?server=localhost:<port>; without these it would skip them.
+      - name: Start game servers
+        run: |
+          python3 arcade/aggravation/server.py --port 8774 &
+          python3 arcade/parchisi/server.py --port 8773 &
+          python3 arcade/SORRY/server.py --port 8765 &
+          for port in 8774 8773 8765; do
+            for _ in $(seq 1 30); do
+              python3 -c "import socket,sys; s=socket.create_connection(('127.0.0.1', $port), 1); s.close()" 2>/dev/null && break
+              sleep 1
+            done
+            python3 -c "import socket,sys; s=socket.create_connection(('127.0.0.1', $port), 1); s.close()" \
+              || { echo "game server on $port did not come up"; exit 1; }
+          done
+
+      - name: Check multiplayer lobbies
+        working-directory: arcade/tests
+        env:
+          BASE_URL: http://localhost:8080
+        run: node smoke-test.mjs --lobby-only
