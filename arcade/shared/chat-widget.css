@@ -1,3 +1,14 @@
+/*
+ * Floating chat widget.
+ *
+ * Colours are custom properties with fallbacks, so this stylesheet stands alone
+ * and can be rethemed by overriding a property on any ancestor. Values derived
+ * from the accent — glows, hover tints — use color-mix() against the same
+ * property, so a single override carries through instead of leaving a pink glow
+ * around a blue widget. See the Theming section of README.md.
+ *
+ * color-mix() needs Chrome 111 / Safari 16.2 / Firefox 113 (all 2023).
+ */
 /* ═══════════════════════════════════════════════
    Arcade Chat Widget — Floating bottom-right chat
    ═══════════════════════════════════════════════ */
@@ -10,7 +21,7 @@
     right: 20px;
     z-index: 9999;
     font-family: 'Courier Prime', monospace;
-    color: #f0ead8;
+    color: var(--acw-cream, #f0ead8);
     width: 48px;
 }
 
@@ -28,19 +39,19 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    background: #1a1028;
-    border: 2px solid #ff2e9c;
+    background: var(--acw-bg, #1a1028);
+    border: 2px solid var(--acw-accent, #ff2e9c);
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 0 16px rgba(255, 46, 156, 0.3);
+    box-shadow: 0 0 16px color-mix(in srgb, var(--acw-accent, #ff2e9c) 30%, transparent);
     transition: transform 0.15s, box-shadow 0.15s, border-radius 0.2s, border-color 0.2s;
     user-select: none;
 }
 
 .acw-bar:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 24px rgba(255, 46, 156, 0.5);
-    border-color: #ff5ab5;
+    box-shadow: 0 0 24px color-mix(in srgb, var(--acw-accent, #ff2e9c) 50%, transparent);
+    border-color: var(--acw-accent-hover, #ff5ab5);
 }
 
 .acw.expanded .acw-bar {
@@ -53,7 +64,7 @@
 .acw-icon {
     width: 20px;
     height: 16px;
-    background: #ff2e9c;
+    background: var(--acw-accent, #ff2e9c);
     border-radius: 4px;
     position: relative;
     flex-shrink: 0;
@@ -66,9 +77,9 @@
     left: 4px;
     width: 0;
     height: 0;
-    border-left: 5px solid #ff2e9c;
+    border-left: 5px solid var(--acw-accent, #ff2e9c);
     border-right: 5px solid transparent;
-    border-top: 5px solid #ff2e9c;
+    border-top: 5px solid var(--acw-accent, #ff2e9c);
     border-bottom: 5px solid transparent;
 }
 
@@ -77,10 +88,10 @@
 .acw-online-count {
     font-family: 'Press Start 2P', monospace;
     font-size: 6px;
-    color: #39ff6e;
+    color: var(--acw-online, #39ff6e);
     margin-top: 6px;
     line-height: 1;
-    text-shadow: 0 0 4px rgba(57, 255, 110, 0.4);
+    text-shadow: 0 0 4px color-mix(in srgb, var(--acw-online, #39ff6e) 40%, transparent);
 }
 
 /* ── Badge (unread overlay) ─────────────────────────────────────────── */
@@ -89,8 +100,8 @@
     position: absolute;
     top: -4px;
     right: -4px;
-    background: #ff2e9c;
-    color: #0a0612;
+    background: var(--acw-accent, #ff2e9c);
+    color: var(--acw-ink-on-accent, #0a0612);
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     min-width: 14px;
@@ -112,8 +123,8 @@
 /* ── Expanded Header ────────────────────────────────────────────────── */
 
 .acw-header {
-    background: #ff2e9c;
-    color: #0a0612;
+    background: var(--acw-accent, #ff2e9c);
+    color: var(--acw-ink-on-accent, #0a0612);
     font-family: 'Press Start 2P', monospace;
     font-size: 8px;
     letter-spacing: 0.1em;
@@ -125,9 +136,9 @@
     opacity: 0;
     overflow: hidden;
     padding: 0 12px;
-    border-left: 2px solid #ff2e9c;
-    border-right: 2px solid #ff2e9c;
-    border-bottom: 2px solid #ff2e9c;
+    border-left: 2px solid var(--acw-accent, #ff2e9c);
+    border-right: 2px solid var(--acw-accent, #ff2e9c);
+    border-bottom: 2px solid var(--acw-accent, #ff2e9c);
     border-top: none;
     transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }
@@ -153,7 +164,7 @@
 .acw-minimize {
     background: none;
     border: none;
-    color: #0a0612;
+    color: var(--acw-ink-on-accent, #0a0612);
     font-size: 14px;
     cursor: pointer;
     padding: 0 4px;
@@ -167,8 +178,8 @@
 /* ── Expanded Window ───────────────────────────────────────────────── */
 
 .acw-window {
-    background: #150b29;
-    border: 2px solid #3a2d5c;
+    background: var(--acw-bg-panel, #150b29);
+    border: 2px solid var(--acw-border, #3a2d5c);
     border-top: none;
     border-radius: 0 0 12px 12px;
     overflow: hidden;
@@ -194,7 +205,7 @@
 
 .acw-name-row {
     padding: 6px 12px;
-    border-bottom: 1px solid #3a2d5c;
+    border-bottom: 1px solid var(--acw-border, #3a2d5c);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -203,7 +214,7 @@
 
 .acw-my-name {
     font-size: 14px;
-    color: #39ff6e;
+    color: var(--acw-online, #39ff6e);
     font-family: 'Courier Prime', monospace;
 }
 
@@ -214,7 +225,7 @@
     cursor: pointer;
     font-size: 14px;
     padding: 2px;
-    color: #8a7fa8;
+    color: var(--acw-text-dim, #8a7fa8);
 }
 
 .acw-edit-name:hover,
@@ -225,9 +236,9 @@
 /* ── Name Input ────────────────────────────────────────────────────── */
 
 .acw-name-input {
-    background: #0a0612;
-    border: 1px solid #39ff6e;
-    color: #f0f8ff;
+    background: var(--acw-ink-on-accent, #0a0612);
+    border: 1px solid var(--acw-online, #39ff6e);
+    color: var(--acw-text, #f0f8ff);
     font-family: 'Courier Prime', monospace;
     font-size: 16px;
     padding: 6px 8px;
@@ -242,8 +253,8 @@
 .acw-color-popup {
     position: absolute;
     right: 12px;
-    background: #150b29;
-    border: 1px solid #3a2d5c;
+    background: var(--acw-bg-panel, #150b29);
+    border: 1px solid var(--acw-border, #3a2d5c);
     border-radius: 4px;
     padding: 8px;
     z-index: 100;
@@ -270,20 +281,20 @@
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: #8a7fa8;
+    color: var(--acw-text-dim, #8a7fa8);
 }
 
 .acw-color-preview {
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    border: 1px solid #3a2d5c;
+    border: 1px solid var(--acw-border, #3a2d5c);
 }
 
 .acw-color-reset-btn {
     background: none;
-    border: 1px solid #3a2d5c;
-    color: #8a7fa8;
+    border: 1px solid var(--acw-border, #3a2d5c);
+    color: var(--acw-text-dim, #8a7fa8);
     font-size: 10px;
     padding: 2px 6px;
     border-radius: 3px;
@@ -292,15 +303,15 @@
 }
 
 .acw-color-reset-btn:hover {
-    border-color: #ff2e9c;
-    color: #ff2e9c;
+    border-color: var(--acw-accent, #ff2e9c);
+    color: var(--acw-accent, #ff2e9c);
 }
 
 /* ── Tabs ──────────────────────────────────────────────────────────── */
 
 .acw-tabs {
     display: flex;
-    border-bottom: 1px solid #3a2d5c;
+    border-bottom: 1px solid var(--acw-border, #3a2d5c);
     flex-shrink: 0;
 }
 
@@ -308,7 +319,7 @@
     flex: 1;
     background: none;
     border: none;
-    color: #5a5a6a;
+    color: var(--acw-text-muted, #5a5a6a);
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     padding: 8px;
@@ -318,13 +329,13 @@
 }
 
 .acw-tab:hover {
-    color: #8a7fa8;
+    color: var(--acw-text-dim, #8a7fa8);
 }
 
 .acw-tab.active {
-    color: #ff2e9c;
-    background: rgba(255, 46, 156, 0.1);
-    border-bottom: 2px solid #ff2e9c;
+    color: var(--acw-accent, #ff2e9c);
+    background: color-mix(in srgb, var(--acw-accent, #ff2e9c) 10%, transparent);
+    border-bottom: 2px solid var(--acw-accent, #ff2e9c);
 }
 
 /* ── Messages ──────────────────────────────────────────────────────── */
@@ -336,7 +347,7 @@
     min-height: 120px;
     max-height: 280px;
     scrollbar-width: thin;
-    scrollbar-color: #3a2d5c transparent;
+    scrollbar-color: var(--acw-border, #3a2d5c) transparent;
 }
 
 .acw-messages::-webkit-scrollbar {
@@ -348,19 +359,19 @@
 }
 
 .acw-messages::-webkit-scrollbar-thumb {
-    background: #3a2d5c;
+    background: var(--acw-border, #3a2d5c);
     border-radius: 3px;
 }
 
 .acw-msg {
     font-size: 16px;
-    color: #8a7fa8;
+    color: var(--acw-text-dim, #8a7fa8);
     margin-bottom: 4px;
     line-height: 1.4;
 }
 
 .acw-msg.system {
-    color: #5a5a6a;
+    color: var(--acw-text-muted, #5a5a6a);
     font-style: italic;
     font-size: 14px;
 }
@@ -397,12 +408,12 @@
 .acw-online-name {
     font-family: 'Courier Prime', monospace;
     font-size: 14px;
-    color: #f0f8ff;
+    color: var(--acw-text, #f0f8ff);
 }
 
 .acw-online-status {
     font-size: 12px;
-    color: #5a5a6a;
+    color: var(--acw-text-muted, #5a5a6a);
     margin-left: auto;
 }
 
@@ -410,7 +421,7 @@
 
 .acw-typing {
     font-size: 12px;
-    color: #5a5a6a;
+    color: var(--acw-text-muted, #5a5a6a);
     padding: 4px 12px;
     font-style: italic;
     flex-shrink: 0;
@@ -420,57 +431,57 @@
 
 .acw-input {
     display: flex;
-    border-top: 1px solid #3a2d5c;
+    border-top: 1px solid var(--acw-border, #3a2d5c);
     flex-shrink: 0;
 }
 
 .acw-input input {
     flex: 1;
-    background: #0a0612;
+    background: var(--acw-ink-on-accent, #0a0612);
     border: none;
     padding: 10px 12px;
-    color: #f0f8ff;
+    color: var(--acw-text, #f0f8ff);
     font-family: 'Courier Prime', monospace;
     font-size: 16px;
     outline: none;
 }
 
 .acw-input input::placeholder {
-    color: #5a5a6a;
+    color: var(--acw-text-muted, #5a5a6a);
 }
 
 .acw-input input:focus {
-    background: #0f0a1a;
+    background: var(--acw-bg-input, #0f0a1a);
 }
 
 .acw-input button {
-    background: #ff2e9c;
+    background: var(--acw-accent, #ff2e9c);
     border: none;
     padding: 10px 16px;
-    color: #0a0612;
+    color: var(--acw-ink-on-accent, #0a0612);
     font-size: 14px;
     cursor: pointer;
     transition: background 0.15s;
 }
 
 .acw-input button:hover {
-    background: #ff5ab5;
+    background: var(--acw-accent-hover, #ff5ab5);
 }
 
 /* ── Disconnected State ────────────────────────────────────────────── */
 
 .acw.disconnected .acw-bar {
-    border-color: #5a5a6a;
+    border-color: var(--acw-text-muted, #5a5a6a);
     opacity: 0.7;
 }
 
 .acw.disconnected .acw-icon {
-    background: #5a5a6a;
+    background: var(--acw-text-muted, #5a5a6a);
 }
 
 .acw.disconnected .acw-icon::after {
-    border-left-color: #5a5a6a;
-    border-top-color: #5a5a6a;
+    border-left-color: var(--acw-text-muted, #5a5a6a);
+    border-top-color: var(--acw-text-muted, #5a5a6a);
 }
 
 /* ── Mobile ────────────────────────────────────────────────────────── */

@@ -13,8 +13,8 @@
 /* ── Body ───────────────────────────────────────────────────────────────────── */
 body {
     font-family: 'Press Start 2P', monospace;
-    background: #0a0612;
-    color: #f0ead8;
+    background: var(--apz-bg, #0a0612);
+    color: var(--apz-text, #f0ead8);
     min-height: 100vh;
     overflow-x: hidden;
 }
@@ -44,7 +44,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #0a0612;
+    background: var(--apz-bg, #0a0612);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,8 +61,8 @@ body {
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid #1a0a2a;
-    border-top: 3px solid #00f5ff;
+    border: 3px solid var(--apz-bg-panel, #1a0a2a);
+    border-top: 3px solid var(--apz-accent, #00f5ff);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -75,7 +75,7 @@ body {
 .loading-text {
     margin-top: 16px;
     font-size: 10px;
-    color: #8a7fa8;
+    color: var(--apz-text-dim, #8a7fa8);
 }
 
 /* ── Container ──────────────────────────────────────────────────────────────── */

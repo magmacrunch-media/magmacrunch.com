@@ -119,8 +119,8 @@ The rendering constants — face card corner labels (`FC_RANK_SIZE`, `FC_PIP_SIZ
 `FC_RANK_Y`, `FC_GLYPH_Y`) and the volcano badge geometry on the card back — now
 live in the engine, not here:
 
-- `~/adenosine/packages/cards/src/face-cards.js`
-- `~/adenosine/packages/cards/src/deck.js`
+- `~/Documents/game_dev/adenosine/packages/cards/src/face-cards.ts`
+- `~/Documents/game_dev/adenosine/packages/cards/src/deck.ts`
 
 Edit there, `npm run build` in that repo, publish, then `npm run build:adenosine`
 in this one. **Do not hand-edit `arcade/shared/adenosine-cards.js`** — it is
