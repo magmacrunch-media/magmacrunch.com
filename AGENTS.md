@@ -23,7 +23,7 @@ gh auth switch --user magmacrunchmedia
 ```
 
 Commit author should be `magmacrunchmedia <magmacrunchmedia@gmail.com>` (already
-set repo-locally here, and globally for `~/adenosine`).
+set repo-locally here, and globally for `~/Documents/game_dev/adenosine`).
 
 **No AI attribution.** Do not append `Co-Authored-By: Claude …`, "Generated with
 …", or any similar trailer to commit messages, PR bodies or release notes. These
@@ -31,7 +31,7 @@ are Jake's own published projects under his own name and npm account. Both repo
 histories were rewritten once to strip these — do not reintroduce them. If your
 tooling adds such a line by default, remove it before committing.
 
-The same applies in `~/adenosine`, which has no agent-guidance file of its own.
+The same applies in `~/Documents/game_dev/adenosine`, which has no agent-guidance file of its own.
 
 ## magmascript
 
@@ -232,22 +232,23 @@ result after any dependency change.
 
 [adenosine](https://github.com/magmacrunchmedia/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.
 
-**There is exactly one working copy on this Mac: `~/adenosine`. Keep it that way.**
-Two stale clones used to sit under `~/Documents/` and were deleted on 2026-08-18.
-While they existed the same one-line `deck.js` import fix got authored twice,
-independently, in two different clones (`096e888` and `cb1a040`), and work was
-repeatedly started against a copy that was 15 commits behind and missing the
-`audio` package outright. If you need a second checkout for some reason, use a
-git worktree rather than a second clone.
+**There is exactly one working copy on this Mac: `~/Documents/game_dev/adenosine`.
+Keep it that way.** The number is what matters, not the location — the repo moved
+here from `~/adenosine` on 2026-08-19, and two stale clones were deleted on
+2026-08-18. While those existed the same one-line `deck.js` import fix got
+authored twice, independently, in two different clones (`096e888` and `cb1a040`),
+and work was repeatedly started against a copy that was 15 commits behind and
+missing the `audio` package outright. If you need a second checkout for some
+reason, use a git worktree rather than a second clone.
 
-- Mac: `~/adenosine`
-- MC1: `~/adenosine` (WSL2: `/home/magma/adenosine`)
+- Mac: `~/Documents/game_dev/adenosine`
+- MC1: `~/adenosine` (WSL2: `/home/magma/adenosine`) — unverified since the Mac move
 
 **Sync:** Same as magmacrunch.com — GitHub is the source of truth. Always `git pull` before editing, commit/push frequently.
 
 **Changing the engine, end to end:**
 ```bash
-cd ~/adenosine
+cd ~/Documents/game_dev/adenosine
 npm install
 npm test && npm run typecheck   # both must exit 0
 npm run build                   # IIFE bundles land in packages/*/dist/index.global.js

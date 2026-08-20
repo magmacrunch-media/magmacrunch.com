@@ -82,13 +82,26 @@ serves this repo's branch directly, so the bundles are committed on purpose.
 
 Card constants (`SUITS`, `RANKS`, `SUIT_SYMBOLS`, `SUIT_COLORS`, `RANK_VALUES`)
 come from `AdCards`; see `arcade/cribbage/js/config.js` for the pattern. Chips come
-from `AdCards.ChipAnim`. Only the stylesheets remain local:
-`arcade/shared/cards/cards.css` and `arcade/shared/chips/chip-animation.css`.
+from `AdCards.ChipAnim`. **The stylesheets are generated too** — as of
+2026-08-19 `sync-adenosine.mjs` copies all eight shipped ones out of
+`node_modules`, so they are no more hand-editable than the bundles:
+
+| synced to | from |
+|---|---|
+| `arcade/shared/cards/cards.css` | `adenosine-cards` |
+| `arcade/shared/chips/chip-animation.css` | `adenosine-cards` |
+| `arcade/shared/multiplayer/lobby.css` | `adenosine-multiplayer` |
+| `arcade/shared/chat-widget.css` | `adenosine-chat` |
+| `arcade/puzzle-framework/css/puzzle-{base,grid,modals,responsive}.css` | `adenosine-puzzle` |
+
+Edit the copy in the adenosine repo, publish, then re-run `npm run
+build:adenosine` here. An edit made directly to any of the files above survives
+until the next sync and is then silently overwritten.
 
 Card games: solitaire, solitaire_THLD, scandinavian-stud, cribbage, tarot.
 Puzzle games: 2^N, george-boole, fifteen-puzzle, klotski, threes.
 
-Source repo: `~/adenosine` (the canonical working copy). Packages are published to
+Source repo: `~/Documents/game_dev/adenosine` (the canonical working copy). Packages are published to
 npm as `@magmacrunch/adenosine-*`; the website consumes them as dependencies, so
 never hand-edit the files in `arcade/shared/adenosine-*.js`.
 
