@@ -195,6 +195,61 @@ if (stale.length) {
   process.exit(1);
 }
 
+// ── 1b. Sync playground from adenosine repo ─────────────────────────────────
+
+const ADENOSINE_REPO = process.env.ADENOSINE_REPO || resolve(ROOT, '..', 'game_dev', 'adenosine');
+const PLAYGROUND_SRC = join(ADENOSINE_REPO, 'playground');
+const PLAYGROUND_DEST = join(ROOT, 'tools', 'playground');
+
+if (existsSync(PLAYGROUND_SRC)) {
+  console.log('\nplayground:');
+
+  // Top-level files
+  for (const name of ['index.html', 'app.js', 'style.css']) {
+    const src = join(PLAYGROUND_SRC, name);
+    const dest = join(PLAYGROUND_DEST, name);
+    if (!existsSync(src)) { console.log(`  skipped    ${name} (not in adenosine repo)`); continue; }
+    let bytes = readFileSync(src);
+    // Strip CDN/Local source toggle — only CDN mode works on the website
+    if (name === 'index.html') {
+      bytes = Buffer.from(bytes.toString('utf8')
+        .replace(/<div class="source-toggle">[\s\S]*?<\/div>\n\s*/g, ''));
+    }
+    if (name === 'app.js') {
+      bytes = Buffer.from(bytes.toString('utf8')
+        .replace(/let state = \{ package: "rpg", example: "rpg-basic", mode: "cdn" \};/,
+                 'let state = { package: "rpg", example: "rpg-basic" };')
+        .replace(/if \(state\.mode === "local"\) return `[^`]*`;\n\s*return/g, 'return')
+        .replace(/document\.querySelectorAll\('input\[name="source"\]'\)[\s\S]*?\n\n/g, ''));
+    }
+    if (name === 'style.css') {
+      bytes = Buffer.from(bytes.toString('utf8')
+        .replace(/\/\* ── Source toggle ──[\s\S]*?(?=\n\/\* ── About modal)/, '')
+        .replace(/\n?\.source-toggle[^\{]*\{[^}]*\}\n?/g, ''));
+    }
+    const changed = !existsSync(dest) || !readFileSync(dest).equals(bytes);
+    if (changed) { mkdirSync(PLAYGROUND_DEST, { recursive: true }); writeFileSync(dest, bytes); }
+    console.log(`  ${changed ? 'updated' : 'unchanged'}  ${name}`);
+  }
+
+  // examples/ directory
+  const examplesSrc = join(PLAYGROUND_SRC, 'examples');
+  if (existsSync(examplesSrc)) {
+    const examplesDest = join(PLAYGROUND_DEST, 'examples');
+    mkdirSync(examplesDest, { recursive: true });
+    for (const name of readdirSync(examplesSrc).filter(f => f.endsWith('.js'))) {
+      const src = join(examplesSrc, name);
+      const dest = join(examplesDest, name);
+      const bytes = readFileSync(src);
+      const changed = !existsSync(dest) || !readFileSync(dest).equals(bytes);
+      if (changed) writeFileSync(dest, bytes);
+      console.log(`  ${changed ? 'updated' : 'unchanged'}  examples/${name}`);
+    }
+  }
+} else {
+  console.log(`\nskipped playground (adenosine repo not found at ${PLAYGROUND_SRC})`);
+}
+
 // ── 2. Stamp ?v=<hash> on every arcade script tag that loads a bundle ────────
 
 // Matches: src="<any path>adenosine-<pkg>.js" with an optional existing query.
@@ -276,5 +331,6 @@ for (const file of htmlFiles(join(ROOT, 'arcade'))) {
 console.log(
   `\n${hashes.size} bundle(s) synced; ${tagsStamped} bundle tag(s) and ` +
     `${localTagsStamped} game-local tag(s) checked across arcade/; ` +
-    `${filesTouched + localFilesTouched} file(s) rewritten.`,
+    `${filesTouched + localFilesTouched} file(s) rewritten.` +
+    (existsSync(PLAYGROUND_SRC) ? ' Playground synced.' : ''),
 );
