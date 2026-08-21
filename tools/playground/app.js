@@ -16,7 +16,7 @@ const PACKAGES = {
 };
 
 const EXAMPLES = {
-  rpg:          ["rpg-basic","rpg-camera"],
+  rpg:          ["rpg-basic","rpg-camera","rpg-npcs","rpg-enemies","rpg-inventory","rpg-health","rpg-transitions","rpg-events"],
   puzzle:       ["puzzle-15","puzzle-2048"],
   cards:        ["cards-deal","cards-poker"],
   audio:        ["audio-tone"],
