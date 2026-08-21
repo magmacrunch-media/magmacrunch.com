@@ -1,9 +1,9 @@
-// rpg-camera: Camera following the player with arrow key movement
+// rpg-camera: Smooth movement with engine input + camera following
 var canvas = document.getElementById('c');
 AdRPG.initCanvas(canvas);
 
-// Larger map to demonstrate camera scrolling
 var MAP_W = 20, MAP_H = 15;
+var TILE = 32;
 var map = [];
 for (var y = 0; y < MAP_H; y++) {
   var row = [];
@@ -12,7 +12,6 @@ for (var y = 0; y < MAP_H; y++) {
   }
   map.push(row);
 }
-// Scatter some walls
 map[5][5] = 2; map[5][6] = 2; map[6][5] = 2;
 map[8][10] = 2; map[9][10] = 2; map[10][10] = 2;
 
@@ -21,28 +20,23 @@ AdRPG.setMap(map);
 AdRPG.player.x = 10;
 AdRPG.player.y = 7;
 
-var TILE = 32;
-var keys = {};
-window.addEventListener('keydown', function (e) { keys[e.key] = true; });
-window.addEventListener('keyup',   function (e) { keys[e.key] = false; });
+var input = AdRPG.initInput();
 
-console.log('Arrow keys to move. Camera follows the player.');
+console.log('WASD or arrows to move. Smooth movement with wall sliding.');
 
 var loop = AdRPG.createGameLoop({
   update: function () {
-    var p = AdRPG.player;
-    var dx = 0, dy = 0;
-    if (keys['ArrowLeft'])  dx = -1;
-    if (keys['ArrowRight']) dx =  1;
-    if (keys['ArrowUp'])    dy = -1;
-    if (keys['ArrowDown'])  dy =  1;
-    if (dx || dy) {
-      var nx = p.x + dx, ny = p.y + dy;
-      if (!AdRPG.isSolid(nx, ny, { map: map, solidTiles: [2] })) {
-        p.x = nx; p.y = ny;
-      }
-    }
-    AdRPG.updateCamera({ target: p, tileSize: TILE, mapWidth: MAP_W, mapHeight: MAP_H });
+    AdRPG.handleMovement(AdRPG.player, {
+      speed: 0.4,
+      collisionOpts: { map: map, solidTiles: [2] },
+    });
+    AdRPG.updateCamera({
+      target: AdRPG.player,
+      tileSize: TILE,
+      mapWidth: MAP_W,
+      mapHeight: MAP_H,
+      smoothing: 0.3,
+    });
   },
   render: function () {
     AdRPG.renderWorld({
@@ -59,6 +53,9 @@ var loop = AdRPG.createGameLoop({
           var p = AdRPG.player;
           ctx.fillStyle = '#ff6ec7';
           ctx.fillRect(p.x * TILE + 4, p.y * TILE + 4, TILE - 8, TILE - 8);
+          ctx.fillStyle = '#fff';
+          ctx.font = '10px monospace';
+          ctx.fillText(p.direction, p.x * TILE + 4, p.y * TILE - 4);
         },
       }],
     });
