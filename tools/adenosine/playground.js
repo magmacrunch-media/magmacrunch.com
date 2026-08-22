@@ -262,20 +262,6 @@ document.querySelectorAll('input[name="source"]').forEach(r => {
   });
 }
 
-/* ── About modal ─────────────────────────────────────── */
-
-{
-  const aboutBtn = document.getElementById("about-btn");
-  const aboutModal = document.getElementById("about-modal");
-  const modalClose = aboutModal.querySelector(".modal-close");
-
-  aboutBtn.addEventListener("click", () => aboutModal.showModal());
-  modalClose.addEventListener("click", () => aboutModal.close());
-  aboutModal.addEventListener("click", (e) => {
-    if (e.target === aboutModal) aboutModal.close();
-  });
-}
-
 /* ── Init ────────────────────────────────────────────── */
 
 populateExamples("rpg");
