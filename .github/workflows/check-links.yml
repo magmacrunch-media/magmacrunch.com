@@ -47,24 +47,20 @@ jobs:
 
       - name: Create issue on broken links
         if: steps.lychee.outputs.exit_code != 0
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            let body = 'No details available.';
-            try {
-              body = fs.readFileSync('./lychee/out.md', 'utf8');
-            } catch (e) {
-              console.log('Could not read lychee output:', e.message);
-            }
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY="No details available."
+          if [ -f ./lychee/out.md ]; then
+            BODY=$(cat ./lychee/out.md)
+          fi
+          gh issue create \
+            --title "Broken links detected (${{ github.ref_name }})" \
+            --body "$BODY
 
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.name,
-              title: `Broken links detected (${{ github.ref_name }})`,
-              body: body + '\n\n---\n*Created by check-links workflow*',
-              labels: ['automated issue', 'broken-links']
-            });
+---
+*Created by check-links workflow*" \
+            --label "automated issue,broken-links"
 
       - name: Fail on broken links
         if: steps.lychee.outputs.exit_code != 0
