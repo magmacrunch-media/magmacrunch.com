@@ -28,9 +28,9 @@ jobs:
 
       - name: Deploy arcade/ to Pi
         run: |
-          ssh -o StrictHostKeyChecking=no -i /c/Users/magma/.ssh/id_ed25519 jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
           rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -i /c/Users/magma/.ssh/id_ed25519" \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519" \
             --exclude 'node_modules' \
             --exclude '.git' \
             --exclude '*.pyc' \
@@ -42,17 +42,17 @@ jobs:
       - name: Deploy mcp-server/ to Pi
         run: |
           rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -i /c/Users/magma/.ssh/id_ed25519" \
+            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519" \
             --exclude '__pycache__' \
             --exclude '.venv' \
             mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Recreate Pi venv and install dependencies
         run: |
-          ssh -o StrictHostKeyChecking=no -i /c/Users/magma/.ssh/id_ed25519 jake@100.74.172.4 \
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 jake@100.74.172.4 \
             "python3 -m venv ~/arcade/venv && ~/arcade/venv/bin/pip install -r ~/arcade/requirements.txt"
 
       - name: Restart Pi services
         run: |
-          ssh -o StrictHostKeyChecking=no -i /c/Users/magma/.ssh/id_ed25519 \
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 \
             jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
