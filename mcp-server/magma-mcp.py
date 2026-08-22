@@ -1443,7 +1443,17 @@ def export_rights_catalog() -> str:
 # Tools — corrections (anti-hallucination)
 # ---------------------------------------------------------------------------
 
-CORRECTIONS_DIR = PROJECT_ROOT / "archive" / "_corrections"
+# Corrections live in the historian-tui repo, not this one: they are personal
+# knowledge curation rather than website content, and that repo is versioned
+# with a remote so the correction history is backed up. Nothing on the website
+# reads this data — only these MCP tools and the historian TUI do.
+# Override with MAGMA_CORRECTIONS_DIR if the historian-tui checkout moves.
+CORRECTIONS_DIR = Path(
+    os.environ.get(
+        "MAGMA_CORRECTIONS_DIR",
+        Path.home() / "historian-tui" / "data" / "corrections",
+    )
+)
 
 
 @mcp.tool()
