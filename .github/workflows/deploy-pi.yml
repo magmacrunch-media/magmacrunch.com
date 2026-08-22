@@ -16,14 +16,17 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
+        shell: bash
         run: |
           npm config delete script-shell 2>/dev/null || true
           npm ci
 
       - name: Build adenosine bundles
+        shell: bash
         run: npm run build:adenosine
 
       - name: Deploy arcade/ to Pi
+        shell: bash
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
           rsync -avz --delete \
@@ -37,6 +40,7 @@ jobs:
             arcade/ jake@100.74.172.4:~/arcade/
 
       - name: Deploy mcp-server/ to Pi
+        shell: bash
         run: |
           rsync -avz --delete \
             -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519" \
@@ -45,11 +49,13 @@ jobs:
             mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
 
       - name: Recreate Pi venv and install dependencies
+        shell: bash
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 jake@100.74.172.4 \
             "python3 -m venv ~/arcade/venv && ~/arcade/venv/bin/pip install -r ~/arcade/requirements.txt"
 
       - name: Restart Pi services
+        shell: bash
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519 \
             jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
