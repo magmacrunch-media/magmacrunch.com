@@ -51,7 +51,12 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const body = fs.readFileSync('./lychee/out.md', 'utf8');
+            let body = 'No details available.';
+            try {
+              body = fs.readFileSync('./lychee/out.md', 'utf8');
+            } catch (e) {
+              console.log('Could not read lychee output:', e.message);
+            }
 
             await github.rest.issues.create({
               owner: context.repo.owner,
