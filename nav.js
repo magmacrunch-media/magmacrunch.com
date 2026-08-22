@@ -41,10 +41,8 @@ window.NAV_CONFIG = {
             { href: 'press/lyrics/', label: 'lyrics' }
         ]},
         { label: 'tools', href: 'tools/', items: [
-            { href: 'tools/album-art-maker/', label: 'album art' },
-            { href: 'tools/media-search/', label: 'media search' },
-            { href: 'tools/pixel-process/', label: 'pixel process' },
-            { href: 'tools/magnolia/', label: 'magnolia api' }
+            { href: 'tools/utilities/', label: 'creative utilities' },
+            { href: 'tools/dev/', label: 'developer tools' }
         ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]

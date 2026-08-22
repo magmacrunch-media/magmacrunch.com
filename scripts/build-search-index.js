@@ -98,7 +98,9 @@ function parseMainPages() {
     { file: 'press/scientific/index.html', title: 'Scientific Journal', desc: 'Academic writing and physics' },
     { file: 'press/experimental/index.html', title: 'Experimental Journal', desc: 'Experimental and literary writing' },
     { file: 'press/lyrics/index.html', title: 'Lyrics', desc: 'Song lyrics by artist' },
-    { file: 'tools/index.html', title: 'Tools Hub', desc: 'Creative web tools' },
+    { file: 'tools/index.html', title: 'Tools Hub', desc: 'Software — creative utilities & developer tools' },
+    { file: 'tools/utilities/index.html', title: 'Creative Utilities', desc: 'Browser-based tools for art, media & image processing' },
+    { file: 'tools/dev/index.html', title: 'Developer Tools', desc: 'Game engines, scripting language & C API reference' },
   ];
 
   for (const p of pages) {

@@ -213,8 +213,22 @@
     "t": "tools",
     "c": "page",
     "u": "/tools/index.html",
-    "d": "Creative web tools",
-    "b": "tools — magmacrunch media home › tools root@magma:~$ █ --> // tools // creative utilities · free to use ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
+    "d": "Software — creative utilities & developer tools",
+    "b": "tools — magmacrunch media home › tools // tools // software · creative utilities & developer tools CREATIVE UTILITIES browser-based tools for art, media & image processing ▶ DEVELOPER TOOLS game engines, scripting language & C API reference ▶"
+  },
+  {
+    "t": "creative utilities",
+    "c": "page",
+    "u": "/tools/utilities/index.html",
+    "d": "Browser-based tools for art, media & image processing",
+    "b": "creative utilities — tools — magmacrunch media home › tools › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
+  },
+  {
+    "t": "developer tools",
+    "c": "page",
+    "u": "/tools/dev/index.html",
+    "d": "Game engines, scripting language & C API reference",
+    "b": "developer tools — tools — magmacrunch media home › tools › developer tools // developer tools // game engines, scripting language & C API reference ADENOSINE game engine collection for the magmacrunch web arcade ▶ MAGMASCRIPT python-inspired mini language · playground, language reference, domain bridge ▶ MAGNOLIA//API C API reference for magnolia · wii homebrew game engine · 105 functions across 12 modules ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -886,7 +900,7 @@
     "c": "artist",
     "u": "/archive/by-artist/thld/about.html",
     "d": "Thld — About",
-    "b": "THLD — about — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // ABOUT ← back events games links music videos photography recordings releases works \"We are a Venn Diagram of brothers and physics grad school classmates from New Hampshire, New York and Wisconsin.\" THLD was active from October 2015 to May 2016, playing four local shows in Iowa City. With neither the time nor budget for studio recording, material home-recorded during sessions in The Tuna Can was used to produce a series of albums around 2018–2019, originally released on Bandcamp. The band's name — ..."
+    "b": "THLD — about — magmacrunch media archive › by artist › thld // texas hold'em lava dome, et al. // ABOUT ← back events games links music videos photography recordings releases works \"We are a Venn Diagram of brothers and physics grad school classmates from New Hampshire, New York and Wisconsin.\" THLD was active from October 2015 to May 2016, playing four local shows in Iowa City. With neither the time nor budget for studio recording, material home-recorded during sessions in The Tuna Can was used to produce a series of albums around 2018–2019, originally released on Bandcamp. ▶ stream / downloa..."
   },
   {
     "t": "THLD",
