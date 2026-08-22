@@ -43,7 +43,8 @@ window.NAV_CONFIG = {
         { label: 'tools', href: 'tools/', items: [
             { href: 'tools/album-art-maker/', label: 'album art' },
             { href: 'tools/media-search/', label: 'media search' },
-            { href: 'tools/pixel-process/', label: 'pixel process' }
+            { href: 'tools/pixel-process/', label: 'pixel process' },
+            { href: 'tools/magnolia/', label: 'magnolia api' }
         ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]
