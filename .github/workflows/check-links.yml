@@ -50,16 +50,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BODY="No details available."
           if [ -f ./lychee/out.md ]; then
-            BODY=$(cat ./lychee/out.md)
+            cp ./lychee/out.md /tmp/issue-body.md
+          else
+            echo "No details available." > /tmp/issue-body.md
           fi
+          echo "" >> /tmp/issue-body.md
+          echo "---" >> /tmp/issue-body.md
+          echo "*Created by check-links workflow*" >> /tmp/issue-body.md
           gh issue create \
             --title "Broken links detected (${{ github.ref_name }})" \
-            --body "$BODY
-
----
-*Created by check-links workflow*" \
+            --body-file /tmp/issue-body.md \
             --label "automated issue,broken-links"
 
       - name: Fail on broken links
