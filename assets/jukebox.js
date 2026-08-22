@@ -270,7 +270,7 @@
         if (widgetEl && !widgetEl.isConnected) widgetEl = null;
         if (document.body.classList.contains('no-jukebox')) return;
 
-        const jukeboxHref = new URL('music/jukebox/index.html', location.origin).pathname;
+        const jukeboxHref = new URL('music/jukebox/', location.origin).pathname;
 
         widgetEl = document.createElement('div');
         widgetEl.className = 'mcj minimized';
