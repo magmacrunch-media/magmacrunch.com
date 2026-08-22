@@ -1,8 +1,8 @@
         :root {
             --nav-accent: #00FFFF;
             --nav-glow: rgba(0,255,255,0.4);
-            --nav-brand: #00FFFF;
-            --nav-brand-glow: rgba(0,255,255,0.7);
+            --nav-brand: #C45FFF;
+            --nav-brand-glow: rgba(196,95,255,0.7);
         }
 
         /* ── CYAN TERMINAL PALETTE ── */
