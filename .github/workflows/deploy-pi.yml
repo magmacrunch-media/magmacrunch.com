@@ -28,24 +28,24 @@ jobs:
 
       - name: Deploy arcade/ to Pi
         run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
-          rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519" \
-            --exclude 'node_modules' \
-            --exclude '.git' \
-            --exclude '*.pyc' \
-            --exclude '__pycache__' \
-            --exclude 'scores/*.json' \
-            --exclude 'venv' \
-            arcade/ jake@100.74.172.4:~/arcade/
+          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519"
+          $SSH_CMD jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
+          tar czf - \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='*.pyc' \
+            --exclude='__pycache__' \
+            --exclude='scores/*.json' \
+            --exclude='venv' \
+            arcade/ | $SSH_CMD jake@100.74.172.4 "cd ~ && tar xzf -"
 
       - name: Deploy mcp-server/ to Pi
         run: |
-          rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519" \
-            --exclude '__pycache__' \
-            --exclude '.venv' \
-            mcp-server/ jake@100.74.172.4:~/arcade/mcp-server/
+          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519"
+          tar czf - \
+            --exclude='__pycache__' \
+            --exclude='.venv' \
+            mcp-server/ | $SSH_CMD jake@100.74.172.4 "cd ~/arcade && tar xzf -"
 
       - name: Recreate Pi venv and install dependencies
         run: |
