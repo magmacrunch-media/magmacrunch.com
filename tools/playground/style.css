@@ -73,6 +73,23 @@ header h1 code { color: #ff6ec7; }
   background: #2563eb;
 }
 
+/* ── Nav link ─────────────────────────────────────────── */
+
+.nav-link {
+  font: 12px/1 'Courier Prime', monospace;
+  color: #9d99b5; text-decoration: none;
+  padding: .35rem .6rem;
+  border: 1px solid #33304a; border-radius: 6px;
+}
+.nav-link:hover {
+  color: #7cc7ff; border-color: #7cc7ff;
+}
+
+/* ── Source toggle ─────────────────────────────────────── */
+
+.source-toggle {
+  display: flex; gap: 0;
+}
 
 /* ── About modal ──────────────────────────────────────── */
 
@@ -189,6 +206,20 @@ dialog[open] {
   padding-top: .75rem;
   border-top: 1px solid #33304a;
 }
+.source-toggle label {
+  font: 11px/1 'Courier Prime', monospace;
+  padding: .35rem .6rem;
+  background: #282a36; color: #9d99b5;
+  border: 1px solid #33304a; cursor: pointer;
+}
+.source-toggle label:first-child { border-radius: 6px 0 0 6px; }
+.source-toggle label:last-child  { border-radius: 0 6px 6px 0; }
+.source-toggle input { display: none; }
+.source-toggle input:checked + span { color: #e8e6f0; }
+.source-toggle label:has(input:checked) {
+  background: #3b82f6; color: #fff; border-color: #3b82f6;
+}
+
 /* ── Tool nav ─────────────────────────────────────────── */
 
 .tool-nav {

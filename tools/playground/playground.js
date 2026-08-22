@@ -41,7 +41,7 @@ const statusReady  = document.getElementById("status-ready");
 
 /* ── State ───────────────────────────────────────────── */
 
-let state = { package: "rpg", example: "rpg-basic" };
+let state = { package: "rpg", example: "rpg-basic", mode: "cdn" };
 let originalCode = "";
 let loadedScript = null;
 let loadedCssLinks = [];
@@ -84,6 +84,7 @@ async function loadExample(pkg, name) {
 
 function bundleURL(pkg) {
   const meta = PACKAGES[pkg];
+  if (state.mode === "local") return `../packages/${pkg}/dist/index.global.js`;
   return `https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-${pkg}@${meta.version}/dist/index.global.js`;
 }
 
@@ -100,6 +101,7 @@ function loadBundle(pkg) {
 /* ── CSS loading ─────────────────────────────────────── */
 
 function cssURL(pkg, file) {
+  if (state.mode === "local") return `../packages/${pkg}/${file}`;
   return `https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-${pkg}@${PACKAGES[pkg].version}/${file}`;
 }
 
@@ -221,6 +223,14 @@ exampleSelect.addEventListener("change", () => {
 
 runBtn.addEventListener("click", run);
 resetBtn.addEventListener("click", reset);
+
+document.querySelectorAll('input[name="source"]').forEach(r => {
+  r.addEventListener("change", (e) => {
+    state.mode = e.target.value;
+    loadBundle(state.package);
+    loadCSS(state.package);
+  });
+});
 
 /* ── Split pane drag ─────────────────────────────────── */
 
