@@ -57,48 +57,74 @@
             opacity: 0.8;
         }
 
-        .grid-wrap {
-            width: min(900px, 95vw);
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
+        .spinbox {
+            width: min(500px, 95vw);
+            display: flex;
+            flex-direction: column;
         }
-        .card {
-            border: 2px solid var(--ctb-dark);
+        .spinbox-search {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: var(--ctb-pale);
             background: var(--ctb-darkest);
-            padding: 16px;
-            text-decoration: none;
+            border: 2px solid var(--ctb-dark);
+            padding: 12px 14px;
+            letter-spacing: 0.08em;
+            outline: none;
             transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .card:hover {
-            border-color: var(--ctb-cyan);
-            box-shadow: 0 0 16px rgba(127,216,232,0.3);
+        .spinbox-search::placeholder {
+            color: var(--ctb-mid-dark);
         }
-        .card-title {
+        .spinbox-search:focus {
+            border-color: var(--ctb-cyan);
+            box-shadow: 0 0 12px rgba(127,216,232,0.25);
+        }
+        .spinbox-scroll {
+            max-height: 380px;
+            overflow-y: auto;
+            border: 2px solid var(--ctb-dark);
+            border-top: none;
+        }
+        .spinbox-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .spinbox-scroll::-webkit-scrollbar-track {
+            background: var(--ctb-darkest);
+        }
+        .spinbox-scroll::-webkit-scrollbar-thumb {
+            background: var(--ctb-mid-dark);
+            border-radius: 3px;
+        }
+        .spinbox-scroll::-webkit-scrollbar-thumb:hover {
+            background: var(--ctb-cyan);
+        }
+        .list-item {
+            display: block;
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
             color: var(--ctb-pale);
             letter-spacing: 0.08em;
+            text-decoration: none;
+            padding: 14px 14px;
+            border-bottom: 1px solid var(--ctb-dark);
+            transition: color 0.15s, background 0.15s;
         }
-        .card-sub {
-            font-family: 'Courier Prime', monospace;
-            font-size: 12px;
-            color: var(--ctb-muted);
-            margin-top: 6px;
+        .list-item:last-child {
+            border-bottom: none;
         }
-        .card-soon {
-            border: 2px dashed #1e1e2e;
-            background: var(--deep);
-            padding: 16px;
-            opacity: 0.5;
+        .list-item:hover {
+            color: var(--ctb-cyan);
+            background: rgba(127,216,232,0.04);
         }
-        .card-soon .card-sub {
+        .no-results {
             font-family: 'Press Start 2P', monospace;
-            font-size: 6px;
-            color: var(--dim);
+            font-size: 7px;
+            color: var(--ctb-mid-dark);
+            padding: 20px 14px;
             letter-spacing: 0.1em;
-            text-transform: uppercase;
-            margin-top: 8px;
+            text-align: center;
+            display: none;
         }
 
         .note {
@@ -131,83 +157,26 @@
         credits and contributions pulled from MusicBrainz — who played what, where, and when.
     </p>
 
-    <div class="grid-wrap">
-
-        <a href="ellis-grey/" class="card">
-            <div class="card-title">ELLIS GREY</div>
-            <div class="card-sub">electric bass</div>
-        </a>
-
-        <a href="david-hayes/" class="card">
-            <div class="card-title">DAVID HAYES</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
-        <a href="chuck-job/" class="card">
-            <div class="card-title">CHUCK J'OB</div>
-            <div class="card-sub">lead vocals</div>
-        </a>
-
-        <a href="rho-k/" class="card">
-            <div class="card-title">RHO K.</div>
-            <div class="card-sub">guitar · vocals</div>
-        </a>
-
-        <a href="jake-mccoy/" class="card">
-            <div class="card-title">JAKE A. MCCOY</div>
-            <div class="card-sub">drums · bass · guitar · keys · vocals</div>
-        </a>
-
-        <a href="james-mccoy/" class="card">
-            <div class="card-title">JAMES R. MCCOY</div>
-            <div class="card-sub">bass · piano · violin · melodica · cello</div>
-        </a>
-
-        <a href="jon-mccoy/" class="card">
-            <div class="card-title">JON MCCOY</div>
-            <div class="card-sub">guitar · bass · keys · vocals</div>
-        </a>
-
-        <a href="stephen-mcmillan/" class="card">
-            <div class="card-title">STEPHEN MCMILLAN</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
-        <a href="ben-nikitas/" class="card">
-            <div class="card-title">BEN NIKITAS</div>
-            <div class="card-sub">bass · vocals</div>
-        </a>
-
-        <a href="d-rob-robinson/" class="card">
-            <div class="card-title">D-ROB ROBINSON</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
-        <a href="cp-rutledge/" class="card">
-            <div class="card-title">C.P. RUTLEDGE</div>
-            <div class="card-sub">guitar · violin · vocals</div>
-        </a>
-
-        <a href="alex-s/" class="card">
-            <div class="card-title">ALEX S.</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
-        <a href="jake-thomas/" class="card">
-            <div class="card-title">JAKE THOMAS</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
-        <a href="rob-tomer/" class="card">
-            <div class="card-title">ROB TOMER</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
-        <a href="judah-unmuth-yockey/" class="card">
-            <div class="card-title">JUDAH UNMUTH-YOCKEY</div>
-            <div class="card-sub">MusicBrainz</div>
-        </a>
-
+    <div class="spinbox">
+        <input type="text" class="spinbox-search" placeholder="filter contributors..." id="contrib-search">
+        <div class="spinbox-scroll" id="contrib-list">
+            <a href="ellis-grey/" class="list-item">> ELLIS GREY</a>
+            <a href="david-hayes/" class="list-item">> DAVID HAYES</a>
+            <a href="chuck-job/" class="list-item">> CHUCK J'OB</a>
+            <a href="rho-k/" class="list-item">> RHO K.</a>
+            <a href="jake-mccoy/" class="list-item">> JAKE A. MCCOY</a>
+            <a href="james-mccoy/" class="list-item">> JAMES R. MCCOY</a>
+            <a href="jon-mccoy/" class="list-item">> JON MCCOY</a>
+            <a href="stephen-mcmillan/" class="list-item">> STEPHEN MCMILLAN</a>
+            <a href="ben-nikitas/" class="list-item">> BEN NIKITAS</a>
+            <a href="d-rob-robinson/" class="list-item">> D-ROB ROBINSON</a>
+            <a href="cp-rutledge/" class="list-item">> C.P. RUTLEDGE</a>
+            <a href="alex-s/" class="list-item">> ALEX S.</a>
+            <a href="jake-thomas/" class="list-item">> JAKE THOMAS</a>
+            <a href="rob-tomer/" class="list-item">> ROB TOMER</a>
+            <a href="judah-unmuth-yockey/" class="list-item">> JUDAH UNMUTH-YOCKEY</a>
+            <div class="no-results" id="no-results">no matches</div>
+        </div>
     </div>
 
     <p class="note">
@@ -221,6 +190,23 @@
 </footer>
 
 <script src="../../nav.js"></script>
+<script>
+(function() {
+    const input = document.getElementById('contrib-search');
+    const items = document.querySelectorAll('#contrib-list .list-item');
+    const noResults = document.getElementById('no-results');
+    input.addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        let visible = 0;
+        items.forEach(function(item) {
+            const match = item.textContent.toLowerCase().includes(q);
+            item.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        noResults.style.display = visible ? 'none' : 'block';
+    });
+})();
+</script>
 
 </body>
 </html>
