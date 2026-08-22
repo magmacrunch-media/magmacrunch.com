@@ -1087,20 +1087,4 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   render();
-
-  const aboutBtn = document.getElementById("about-btn");
-  const aboutModal = document.getElementById("about-modal");
-  const modalClose = aboutModal ? aboutModal.querySelector(".modal-close") : null;
-
-  if (aboutBtn && aboutModal) {
-    aboutBtn.addEventListener("click", () => aboutModal.showModal());
-  }
-  if (modalClose && aboutModal) {
-    modalClose.addEventListener("click", () => aboutModal.close());
-  }
-  if (aboutModal) {
-    aboutModal.addEventListener("click", (e) => {
-      if (e.target === aboutModal) aboutModal.close();
-    });
-  }
 });
