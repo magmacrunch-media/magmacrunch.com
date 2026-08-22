@@ -28,7 +28,16 @@ jobs:
         id: check
         run: |
           magmascript archive check-format --json > /tmp/check-result.json || true
-          COUNT=$(python3 -c "import json; print(json.load(open('/tmp/check-result.json'))['count'])")
+          COUNT=$(python3 -c "
+          import json
+          d = json.load(open('/tmp/check-result.json'))
+          if isinstance(d, list):
+              print(len(d))
+          elif isinstance(d, dict):
+              print(d.get('count', 0))
+          else:
+              print(0)
+          ")
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
       - name: Build issue body
@@ -43,7 +52,13 @@ jobs:
           WARNINGS=$(python3 -c "
           import json
           d = json.load(open('/tmp/check-result.json'))
-          lines = ['WARN  ' + w['file'] + ':' + str(w['line']) + '\n      ' + w['msg'] for w in d['warnings']]
+          if isinstance(d, list):
+              warnings = d
+          elif isinstance(d, dict):
+              warnings = d.get('warnings', [])
+          else:
+              warnings = []
+          lines = ['WARN  ' + w['file'] + ':' + str(w['line']) + '\n      ' + w['msg'] for w in warnings]
           print('\n\n'.join(lines))
           ")
 

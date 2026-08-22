@@ -121,7 +121,17 @@ async function backupPerson(entity) {
     indent++;
 
     log('  fetching person + credits…');
-    const data = await fetchTMDB(`person/${entity.id}?append_to_response=credits&language=en-US`);
+    let data;
+    try {
+        data = await fetchTMDB(`person/${entity.id}?append_to_response=credits&language=en-US`);
+    } catch (err) {
+        if (err.message && err.message.includes('HTTP 404')) {
+            log(`  ⚠ skipped — person not found on TMDB (404)`);
+            indent--;
+            return;
+        }
+        throw err;
+    }
 
     const cache = {
         fetchedAt: new Date().toISOString(),
@@ -173,7 +183,7 @@ async function main() {
     if (SKIP_EXISTING) console.log('[SKIP EXISTING — already-cached entities will be skipped]\n');
 
     const start = Date.now();
-    let completed = 0, skipped = 0;
+    let completed = 0, skipped = 0, failed = 0;
     const total = TMDB_PERSONS.length;
 
     for (const entity of TMDB_PERSONS) {
@@ -184,15 +194,21 @@ async function main() {
             continue;
         }
         log(`[${completed + 1}/${total}]`);
-        await backupPerson(entity);
-        completed++;
+        try {
+            await backupPerson(entity);
+            completed++;
+        } catch (err) {
+            log(`  ✗ failed — ${err.message}`);
+            failed++;
+        }
     }
 
     const elapsed = ((Date.now() - start) / 1000).toFixed(0);
     const min = Math.floor(elapsed / 60);
     const sec = elapsed % 60;
-    console.log(`\nDone! ${completed - skipped} persons backed up, ${skipped} skipped in ${min}m ${sec}s`);
+    console.log(`\nDone! ${completed - skipped - failed} persons backed up, ${skipped} skipped, ${failed} failed in ${min}m ${sec}s`);
     if (DRY_RUN) console.log('(dry run — no files were written)');
+    if (failed > 0) process.exit(1);
 }
 
 main().catch(err => {
