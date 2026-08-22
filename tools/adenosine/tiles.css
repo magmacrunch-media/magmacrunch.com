@@ -26,14 +26,27 @@ header h1 {
 }
 header h1 code { color: #ff6ec7; }
 
-.back-link {
-  font: 12px/1 'Courier Prime', monospace;
-  color: #9d99b5; text-decoration: none;
-  padding: .3rem .6rem;
-  border: 1px solid #33304a; border-radius: 6px;
-  margin-left: auto;
+.tool-nav {
+  padding: .4rem 1.25rem;
+  border-bottom: 1px solid #33304a;
+  background: #1c1b26;
+  flex-shrink: 0;
 }
-.back-link:hover { color: #7cc7ff; border-color: #7cc7ff; }
+.tool-nav .back-link {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #9d99b5;
+  background: #282a36;
+  padding: 6px 10px;
+  border: 1px solid #33304a;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tool-nav .back-link:hover {
+  color: #e8e6f0;
+  border-color: #7cc7ff;
+}
 
 /* ── Main layout ──────────────────────────────────────── */
 

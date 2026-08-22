@@ -115,7 +115,8 @@
       padding: 0 1.5rem;
     }
 
-    .packages h2 {
+    .packages h2,
+    .about h2 {
       font-family: 'Press Start 2P', monospace;
       font-size: 10px; font-weight: 400;
       color: #ff6ec7;
@@ -123,21 +124,110 @@
       letter-spacing: 0.05em;
     }
 
-    .pkg-list {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: .4rem .75rem;
+    .pkg-table {
       font-size: 12px;
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
-    .pkg-list .pkg-name {
+    .pkg-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr auto;
+      gap: 0 .75rem;
+      padding: .5rem .75rem;
+      align-items: center;
+    }
+
+    .pkg-row + .pkg-row {
+      border-top: 1px solid #2a2940;
+    }
+
+    .pkg-header {
+      background: #1c1b26;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pkg-header span { pointer-events: none; }
+
+    .pkg-row a {
       color: #7cc7ff;
       text-decoration: none;
     }
-    .pkg-list .pkg-name:hover { text-decoration: underline; }
+    .pkg-row a:hover { text-decoration: underline; }
 
-    .pkg-list .pkg-desc {
+    .pkg-row span {
       color: #9d99b5;
+    }
+
+    /* ── About ─────────────────────────────────────────── */
+
+    .about {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+    }
+
+    .about h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px; font-weight: 400;
+      color: #e8e6f0;
+      margin: 1.5rem 0 .5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .about p { margin-bottom: .5rem; }
+
+    .about pre {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .6rem .75rem;
+      overflow-x: auto;
+      margin-bottom: .5rem;
+    }
+
+    .about code {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: #7cc7ff;
+    }
+
+    .about-label {
+      color: #666;
+      font-size: 11px;
+      margin-bottom: .25rem;
+    }
+
+    .about-links {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .about-links a {
+      color: #7cc7ff;
+      text-decoration: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: .4rem .6rem;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      transition: border-color .15s;
+    }
+    .about-links a:hover { border-color: #7cc7ff; }
+
+    .about-license {
+      color: #555;
+      font-size: 11px;
+      margin-top: 1rem;
     }
 
     /* ── Footer ────────────────────────────────────────── */
@@ -156,8 +246,11 @@
     }
 
     @media (max-width: 480px) {
-      .pkg-list { grid-template-columns: 1fr; }
       .tools { grid-template-columns: 1fr; }
+      .pkg-row { grid-template-columns: 1fr; gap: .15rem 0; }
+      .pkg-header span:not(:first-child) { display: none; }
+      .pkg-row span { display: none; }
+      .pkg-row a:last-child { font-size: 10px; }
     }
 
     /* ── Override style.css conflicts ─────────────────── */
@@ -237,22 +330,38 @@
 
   <div class="packages">
     <h2>packages</h2>
-    <div class="pkg-list">
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-rpg" class="pkg-name">rpg</a>
-      <span class="pkg-desc">2D tile-based RPG engine</span>
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-puzzle" class="pkg-name">puzzle</a>
-      <span class="pkg-desc">Sliding tile puzzle framework</span>
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-cards" class="pkg-name">cards</a>
-      <span class="pkg-desc">Card deck, pixel-art SVG, chips</span>
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-audio" class="pkg-name">audio</a>
-      <span class="pkg-desc">Web Audio music + SFX engine</span>
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-score-client" class="pkg-name">score-client</a>
-      <span class="pkg-desc">WebSocket high-score client</span>
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-multiplayer" class="pkg-name">multiplayer</a>
-      <span class="pkg-desc">Multiplayer WebSocket client</span>
-      <a href="https://www.npmjs.com/package/@magmacrunch/adenosine-chat" class="pkg-name">chat</a>
-      <span class="pkg-desc">Real-time chat widget</span>
+    <div class="pkg-table">
+      <div class="pkg-row pkg-header">
+        <span>Package</span><span>Description</span><span>Links</span>
+      </div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/rpg">rpg</a><span>2D tile-based RPG engine</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-rpg">npm</a></div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/puzzle">puzzle</a><span>Sliding tile puzzle framework</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-puzzle">npm</a></div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/cards">cards</a><span>Card deck, pixel-art SVG, chips</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-cards">npm</a></div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/audio">audio</a><span>Web Audio music + SFX engine</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-audio">npm</a></div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/score-client">score-client</a><span>WebSocket high-score client</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-score-client">npm</a></div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/multiplayer">multiplayer</a><span>Multiplayer WebSocket client</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-multiplayer">npm</a></div>
+      <div class="pkg-row"><a href="https://github.com/magmacrunchmedia/adenosine/tree/main/packages/chat">chat</a><span>Real-time chat widget</span><a href="https://www.npmjs.com/package/@magmacrunch/adenosine-chat">npm</a></div>
     </div>
+  </div>
+
+  <div class="about">
+    <h2>about</h2>
+    <p>A collection of lightweight web game engines by <a href="https://magmacrunch.com">magmacrunch media</a>. 
+      TypeScript and JavaScript, zero runtime dependencies, built for browsers. Powering the <a href="https://magmacrunch.com/arcade/">magmacrunch web arcade</a> since 2026.</p>
+
+    <h3>install</h3>
+    <p class="about-label">CDN — no build step:</p>
+    <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-rpg@0.2/dist/index.global.js"&gt;&lt;/script&gt;</code></pre>
+    <p class="about-label">npm:</p>
+    <pre><code>npm install @magmacrunch/adenosine-rpg</code></pre>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunchmedia/adenosine" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.npmjs.com/org/magmacrunch" target="_blank" rel="noopener">npm</a>
+      <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
+    </div>
+
+    <p class="about-license">Apache-2.0 · Copyright 2026 magmacrunch media</p>
   </div>
 
   <footer>
