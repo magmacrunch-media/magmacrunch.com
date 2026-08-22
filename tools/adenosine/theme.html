@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>adenosine theme customizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><code>adenosine</code> theme customizer</h1>
+    <div class="controls">
+      <select id="pkg-select">
+        <option value="cards">cards</option>
+        <option value="puzzle">puzzle</option>
+        <option value="chat">chat</option>
+        <option value="multiplayer">multiplayer</option>
+      </select>
+    </div>
+  </header>
+
+  <nav class="tool-nav">
+    <a href="index.html" class="back-link">&larr; adenosine tools</a>
+  </nav>
+
+  <main>
+    <div id="preview-panel">
+      <div id="preview-content"></div>
+    </div>
+    <div id="sidebar">
+      <section>
+        <h2>Theme Variables</h2>
+        <div id="variables"></div>
+      </section>
+      <section>
+        <h2>Actions</h2>
+        <div class="action-row">
+          <button id="export-btn" class="primary">Export CSS</button>
+          <button id="reset-btn">Reset</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="export-panel">
+    <div class="export-header">
+      <span>CSS Override</span>
+      <button id="copy-btn" title="Copy to clipboard">Copy</button>
+    </div>
+    <textarea id="export-output" readonly rows="8"></textarea>
+  </div>
+
+  <script type="module" src="theme.js"></script>
+</body>
+</html>
