@@ -38,22 +38,15 @@ lint-game: ## Lint a specific game: make lint-game GAME=chess
 .PHONY: test test-py test-js check
 test: lint test-js ## Run lint + JS tests (fast)
 
+# Both delegate to scripts/run-tests.mjs so there is one implementation of
+# "find the suites and run them" rather than one here and another in
+# package.json. The copy that used to live here called python3 directly, which
+# on Windows is the Microsoft Store stub; the runner probes for one that works.
 test-py: ## Run Python pytest suites
-	@failures=0; \
-	for dir in $$(find arcade -name 'test_*.py' -exec dirname {} \; | sort -u); do \
-		echo "=== $$dir ==="; \
-		(cd "$$dir" && python3 -m pytest -v --tb=short) || failures=$$((failures + 1)); \
-	done; \
-	if [ "$$failures" -gt 0 ]; then \
-		echo "\n$$failures test suite(s) had failures"; \
-		exit 1; \
-	fi
+	node scripts/run-tests.mjs py
 
 test-js: ## Run Node.js test files
-	@for f in $$(find arcade -name 'test-*.js' -path '*/tests/*'); do \
-		echo "=== $$f ==="; \
-		node "$$f" || exit 1; \
-	done
+	node scripts/run-tests.mjs js
 
 check: lint test-py test-js ## Run all checks (lint + Python + JS)
 
