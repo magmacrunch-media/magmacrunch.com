@@ -463,10 +463,34 @@ broken widget. Dropping that call is a pending change in the adenosine repo.
 
 ### Service list
 
-Ports, directories and nginx paths live in `arcade/shared/services.json`.
-`chat-server.py` (status panel), `start-all.sh` and `scripts/bot-check-services.sh`
-all read it. Adding a game means an entry there, a unit in `arcade/systemd/`, and
-a `location` block in `scripts/nginx-magmacrunch.conf`.
+Ports, directories, icons and nginx paths live in `arcade/shared/services.json`.
+`chat-server.py` (status panel), `start-all.sh`, `scripts/bot-check-services.sh`
+and `admin/server.py` (dashboard cards, and the allowlist of units it will
+restart) all read it. Adding a game means an entry there, a unit in
+`arcade/systemd/`, and a `location` block in `scripts/nginx-magmacrunch.conf`.
+
+The manifest has two arrays and the difference is load-bearing:
+
+- `services` — started by `start-all.sh` and TCP-probed by the health bot every
+  30 minutes. An entry here is also an alert path, and it must take `--port`.
+- `dashboard_only` — units that exist on the Pi but are neither started nor
+  probed. Only `admin/server.py` reads it. `arcade-private` (8782) sits here
+  because `private/server.py` reads its port from `config.json` rather than
+  `--port`, and because 8782 is not proxied by nginx and nothing has confirmed
+  the unit is enabled — probing it would invent a "service down" alert.
+
+`arcade-admin` is in neither array. It is the dashboard's own process, so
+`admin/server.py` hardcodes it into `VALID_UNITS`: restartable by name, never
+drawn as a card.
+
+`VALID_UNITS` is what the dashboard hands to `systemctl restart`, so
+`admin/server.py` parses the manifest once at import and validates every field
+before trusting it — unit names must match `arcade-<slug>`, and `name`/`icon` are
+rejected if they contain HTML metacharacters, because `static/arcade.js` and
+`static/status.js` put both into `innerHTML` unescaped. A manifest it cannot
+validate raises, so the unit fails to start with the reason in the journal rather
+than coming up with a half-built allowlist. `arcade/shared/tests/test_services.py`
+covers all of this.
 
 ### Deploying chat-server.py
 
@@ -813,6 +837,7 @@ The name/port/path mapping is `arcade/shared/services.json`; this table mirrors 
 | `arcade-parchisi` | 8773 |
 | `arcade-aggravation` | 8774 |
 | `arcade-counter` | 8783 |
+| `arcade-private` | 8782 |
 | `arcade-admin` | 8780 |
 
 Quick commands:
