@@ -65,9 +65,11 @@ jobs:
             node "$test_file" || exit 1
           done
 
-  # Clicks MULTIPLAYER on the games whose lobby opens client-side and asserts the
-  # overlay actually becomes visible. A dead lobby button used to pass every check
-  # here, because the page still loaded and logged nothing.
+  # The checks that need a live server behind them. Clicks MULTIPLAYER on the
+  # games whose lobby opens client-side and asserts the overlay actually becomes
+  # visible, and confirms the chat widget gets a name back from chat-server.py.
+  # A dead lobby button, and a chat widget that never connects, both used to pass
+  # every check here because the page still loaded and logged nothing.
   lobby-smoke:
     runs-on: ubuntu-latest
     steps:
@@ -104,12 +106,18 @@ jobs:
       # aggravation, parchisi and SORRY only reveal their lobby once a join
       # round-trips, so their lobby check needs a real server. The test loads
       # them with ?server=localhost:<port>; without these it would skip them.
+      #
+      # chat-server.py is here for the same reason: the chat check asserts the
+      # widget got a name back from the server, which no amount of page loading
+      # produces on its own. Without it the check skips rather than fails, so a
+      # missing server here would quietly cost the coverage.
       - name: Start game servers
         run: |
           python3 arcade/aggravation/server.py --port 8774 &
           python3 arcade/parchisi/server.py --port 8773 &
           python3 arcade/SORRY/server.py --port 8765 &
-          for port in 8774 8773 8765; do
+          python3 arcade/chat-server.py --port 8768 &
+          for port in 8774 8773 8765 8768; do
             for _ in $(seq 1 30); do
               python3 -c "import socket,sys; s=socket.create_connection(('127.0.0.1', $port), 1); s.close()" 2>/dev/null && break
               sleep 1
