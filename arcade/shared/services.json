@@ -162,7 +162,7 @@
       "dir": "counter",
       "exec": "counter-server.py",
       "port": 8783,
-      "path": null,
+      "path": "/counter",
       "unit": "arcade-counter",
       "icon": "🔢"
     }
