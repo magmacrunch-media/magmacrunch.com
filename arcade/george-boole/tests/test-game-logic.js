@@ -33,79 +33,83 @@ function applyGate(gate, value1, value2, maxValue) {
     return result;
 }
 
+// A zero result means the tile is gone. Drop the cells rather than writing a
+// literal 0 back, which the zero-stripped row would treat as a number operand.
+function writeResult(cells, i, count, result) {
+    if (result === 0) {
+        cells.splice(i, count);
+    } else {
+        cells.splice(i, count, result);
+    }
+}
+
+// Mirrors Game2048.moveLeft() row processing: one mutable array, re-scanned
+// from the same index after every operation, so a result can feed the next one.
 function advanceRow(row, maxValue) {
-    // Simplified version of moveLeft row processing
     // Returns { mergedRow, mergeOccurred }
     const size = row.length;
-    
-    // Strip zeros
-    let filtered = row.filter(v => v !== 0);
-    
-    let result = [];
-    let i = 0;
+
+    // Strip zeros — 0 is the empty sentinel, never a tile
+    const cells = row.filter(v => v !== 0);
+
     let mergeOccurred = false;
-    
-    while (i < filtered.length) {
-        const current = filtered[i];
-        
+    let i = 0;
+
+    while (i < cells.length) {
         // NOT + NOT = cancellation
-        if (current === -4 && i + 1 < filtered.length && filtered[i + 1] === -4) {
-            i += 2; // Both disappear
+        if (cells[i] === -4 && cells[i + 1] === -4) {
+            cells.splice(i, 2);
             mergeOccurred = true;
             continue;
         }
-        
+
+        // NOT + NOT cancels behind a number too, so a chain resolves in one step
+        if (!isGate(cells[i]) && cells[i + 1] === -4 && cells[i + 2] === -4) {
+            cells.splice(i + 1, 2);
+            mergeOccurred = true;
+            continue;
+        }
+
         // NOT + number (unary NOT)
-        if (current === -4 && i + 1 < filtered.length && !isGate(filtered[i + 1])) {
-            const num = filtered[i + 1];
-            const notResult = (~num) & maxValue;
-            result.push(notResult === 0 ? 0 : notResult);
-            i += 2;
+        if (cells[i] === -4 && i + 1 < cells.length && !isGate(cells[i + 1])) {
+            writeResult(cells, i, 2, applyGate(-4, cells[i + 1], null, maxValue));
             mergeOccurred = true;
             continue;
         }
-        
+
         // number + NOT (reversed NOT)
-        if (!isGate(current) && i + 1 < filtered.length && filtered[i + 1] === -4) {
-            const num = current;
-            const notResult = (~num) & maxValue;
-            result.push(notResult === 0 ? 0 : notResult);
-            i += 2;
+        if (!isGate(cells[i]) && cells[i + 1] === -4) {
+            writeResult(cells, i, 2, applyGate(-4, cells[i], null, maxValue));
             mergeOccurred = true;
             continue;
         }
-        
+
         // number + gate + number (binary gate sandwich)
-        if (!isGate(current) && i + 2 < filtered.length && 
-            isGate(filtered[i + 1]) && filtered[i + 1] !== -4 && !isGate(filtered[i + 2])) {
-            const gate = filtered[i + 1];
-            const rightNum = filtered[i + 2];
-            const gateResult = applyGate(gate, current, rightNum, maxValue);
-            result.push(gateResult);
-            i += 3;
+        if (!isGate(cells[i]) && i + 2 < cells.length &&
+            isGate(cells[i + 1]) && cells[i + 1] !== -4 && !isGate(cells[i + 2])) {
+            writeResult(cells, i, 3, applyGate(cells[i + 1], cells[i], cells[i + 2], maxValue));
             mergeOccurred = true;
             continue;
         }
-        
+
         // Same values merge (idempotent: A+A=A)
-        if (i + 1 < filtered.length && current === filtered[i + 1] && !isGate(current)) {
-            result.push(current);
-            i += 2;
+        if (i + 1 < cells.length && !isGate(cells[i]) && cells[i] === cells[i + 1]) {
+            cells.splice(i + 1, 1);
             mergeOccurred = true;
+            i++;
             continue;
         }
-        
+
         // No merge
-        result.push(current);
         i++;
     }
-    
+
     // Pad to original size
-    while (result.length < size) {
-        result.push(0);
+    while (cells.length < size) {
+        cells.push(0);
     }
-    
-    return { mergedRow: result.slice(0, size), mergeOccurred };
+
+    return { mergedRow: cells.slice(0, size), mergeOccurred };
 }
 
 // ── Tests ────────────────────────────────────────────────────────────────────
@@ -234,6 +238,24 @@ assertEqual(advanceRow([1, -4, 0, 0], 3).mergedRow, [2, 0, 0, 0], '1 NOT = 2');
 assertEqual(advanceRow([-4, -4, 0, 0], 3).mergedRow, [0, 0, 0, 0], 'NOT NOT cancels');
 assertEqual(advanceRow([-4, -4, 1, 0], 3).mergedRow, [1, 0, 0, 0], 'NOT NOT then 1');
 console.log(`  ${passed} passed\n`);
+
+// ── advanceRow: Zero results clear the tile ──────────────────────────────
+
+console.log('advanceRow zero results:');
+// A 0 left in the row would be re-scanned as an operand by the next gate
+assertEqual(advanceRow([7, -4, -2, 4], 7).mergedRow, [-2, 4, 0, 0], 'NOT 7 clears, OR and 4 survive');
+assertEqual(advanceRow([7, -4, -3, 4], 7).mergedRow, [-3, 4, 0, 0], 'NOT 7 clears, AND and 4 survive');
+assertEqual(advanceRow([6, -4, -2, 4], 7).mergedRow, [5, 0, 0, 0], 'no overflow: NOT 6 = 1, 1 OR 4 = 5');
+console.log(`  ${passed} passed
+`);
+
+// ── advanceRow: NOT chains ────────────────────────────────────────────
+
+console.log('advanceRow NOT chains:');
+assertEqual(advanceRow([3, -4, -4, 0], 3).mergedRow, [3, 0, 0, 0], 'NOT NOT cancels behind a number');
+assertEqual(advanceRow([114, -4, -4, -4], 127).mergedRow, [13, 0, 0, 0], 'triple NOT resolves once');
+console.log(`  ${passed} passed
+`);
 
 // ── advanceRow: Edge cases ───────────────────────────────────────────────────
 
