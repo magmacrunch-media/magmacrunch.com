@@ -287,6 +287,21 @@ def _plain_response(status, reason):
     return Response(status, reason, Headers([("Content-Length", "0")]), b"")
 
 
+def reset_limiters():
+    """
+    Forget every client the limiters have seen.
+
+    For tests. `ip_limiter` and `connection_history` are process-wide and
+    deliberately outlive connections — that is the whole point of keying on the
+    address rather than the socket — so without a reset between cases a suite
+    poisons itself: the tenth connection from 127.0.0.1 gets a 429 that belongs
+    to an earlier test. Exposed as a function so tests do not reach into
+    RateLimiter._windows.
+    """
+    ip_limiter._windows.clear()
+    connection_history.clear()
+
+
 async def limiter_janitor(interval=300):
     """
     Expire limiter state for clients that have gone away.
