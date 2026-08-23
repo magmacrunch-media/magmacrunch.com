@@ -193,18 +193,30 @@ class TestHandshake:
 class TestPerIpLimits:
     def test_the_chat_cap_is_not_reset_by_a_new_socket(self):
         """
-        The point of the whole limiter change. Nine messages down nine separate
-        sockets: a per-connection limiter would deliver all nine.
+        The point of the whole limiter change: a per-connection limiter hands a
+        fresh budget to every new socket.
+
+        Spends the cap on one socket and then opens a second, rather than counting
+        how many of N reconnects land. N real connections can outlast the ten-second
+        window, which would make the count a race rather than a fact.
         """
         async def go(url):
-            for i in range(9):
-                async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws:
-                    await join(ws, f"Flood{i}")
-                    await ws.send(json.dumps({"type": "chat", "text": f"spam-{i}"}))
-                    await asyncio.sleep(0.02)
-            return sum(1 for m in chat.messages if m["text"].startswith("spam-"))
-        delivered = serve(go, max_connections=100)
-        assert delivered <= 5, f"{delivered} of 9 landed; the cap is per socket again"
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Flooder")
+                for i in range(5):
+                    await a.send(json.dumps({"type": "chat", "text": f"spam-{i}"}))
+                await settle(lambda: len(chat.messages) >= 5)
+
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as b:
+                await join(b, "Flooder2")
+                await b.send(json.dumps({"type": "chat", "text": "spam-after-reconnect"}))
+                await asyncio.sleep(0.3)
+            return [m["text"] for m in chat.messages]
+        landed = serve(go, max_connections=100)
+        assert "spam-after-reconnect" not in landed, (
+            "a fresh socket was handed a fresh budget; the cap is per socket again"
+        )
+        assert len([t for t in landed if t.startswith("spam-")]) == 5
 
 
 # ── get_history ───────────────────────────────────────────────────────────────
