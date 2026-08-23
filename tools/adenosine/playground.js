@@ -90,6 +90,7 @@ function bundleURL(pkg) {
 
 function loadBundle(pkg) {
   if (loadedScript) { loadedScript.remove(); loadedScript = null; }
+  statusReady.innerHTML = '<span class="dot loading"></span>loading…';
   const script = document.createElement("script");
   script.src = bundleURL(pkg);
   script.onload  = () => setStatusDot(true);

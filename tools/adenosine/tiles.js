@@ -10,6 +10,7 @@ let grid = [], rows = 0, cols = 0;
 let selectedId = 1, tool = 'paint';
 let solidTiles = new Set(), tileColors = [...DEFAULT_COLORS];
 let undoStack = [], redoStack = [], painting = false;
+let hoverCell = null;
 
 const canvas = document.getElementById('grid-canvas');
 const ctx = canvas.getContext('2d');
@@ -28,11 +29,15 @@ let previewLoop = null;
 
 function initGrid(r, c, preserve) {
   const prev = grid;
+  const dpr = window.devicePixelRatio || 1;
   rows = r; cols = c;
   grid = Array.from({ length: r }, (_, y) =>
     Array.from({ length: c }, (_, x) => (preserve && prev[y] && prev[y][x]) || 0));
-  canvas.width = c * CELL;
-  canvas.height = r * CELL;
+  canvas.width = c * CELL * dpr;
+  canvas.height = r * CELL * dpr;
+  canvas.style.width = c * CELL + 'px';
+  canvas.style.height = r * CELL + 'px';
+  ctx.scale(dpr, dpr);
   render();
 }
 
@@ -58,7 +63,12 @@ function redo() {
   const s = redoStack.pop();
   undoStack.push(JSON.parse(JSON.stringify({ grid, solidTiles: [...solidTiles] })));
   grid = s.grid; solidTiles = new Set(s.solidTiles);
-  canvas.width = cols * CELL; canvas.height = rows * CELL;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = cols * CELL * dpr;
+  canvas.height = rows * CELL * dpr;
+  canvas.style.width = cols * CELL + 'px';
+  canvas.style.height = rows * CELL + 'px';
+  ctx.scale(dpr, dpr);
   render(); updateSolidChecks();
 }
 
@@ -72,7 +82,8 @@ function isLight(hex) {
 }
 
 function render() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const dpr = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const id = grid[y][x], px = x * CELL, py = y * CELL;
@@ -85,6 +96,12 @@ function render() {
         ctx.fillText(String(id), px + CELL / 2, py + CELL / 2);
       }
     }
+  }
+  if (hoverCell && !painting) {
+    const px = hoverCell.x * CELL, py = hoverCell.y * CELL;
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(px + 1, py + 1, CELL - 2, CELL - 2);
   }
 }
 
@@ -119,13 +136,20 @@ canvas.addEventListener('mousedown', (e) => {
 });
 
 canvas.addEventListener('mousemove', (e) => {
-  if (!painting) return;
   const c = cellAt(e);
-  if (tool === 'paint' || tool === 'erase') applyTool(c.x, c.y);
+  if (!hoverCell || hoverCell.x !== c.x || hoverCell.y !== c.y) {
+    hoverCell = c;
+    render();
+  }
+  if (painting && (tool === 'paint' || tool === 'erase')) applyTool(c.x, c.y);
 });
 
 canvas.addEventListener('mouseup', () => painting = false);
-canvas.addEventListener('mouseleave', () => painting = false);
+canvas.addEventListener('mouseleave', () => {
+  painting = false;
+  hoverCell = null;
+  render();
+});
 
 canvas.addEventListener('contextmenu', (e) => {
   e.preventDefault(); const c = cellAt(e);

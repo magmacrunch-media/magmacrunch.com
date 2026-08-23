@@ -349,6 +349,11 @@ function renderPickers() {
       colorWrap.style.background = colorInput.value;
       setVar(v.name, colorInput.value);
       updateExport();
+      const panel = document.getElementById('export-panel');
+      if (panel.classList.contains('collapsed') && exportOutput.value) {
+        panel.classList.remove('collapsed');
+        document.getElementById('export-toggle').textContent = '▾ CSS Override';
+      }
     });
 
     colorWrap.appendChild(colorInput);
@@ -363,6 +368,11 @@ function renderPickers() {
 
 function updateExport() {
   const vars = VARS[currentPkg];
+  const changed = vars.filter(v => values[v.name] !== v.default);
+  if (changed.length === 0) {
+    exportOutput.value = '';
+    return;
+  }
   let css = ':root {\n';
   for (const v of vars) {
     if (values[v.name] !== v.default) {
@@ -400,6 +410,13 @@ document.getElementById('copy-btn').addEventListener('click', () => {
     btn.textContent = 'Copied!';
     setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
   });
+});
+
+document.getElementById('export-toggle').addEventListener('click', () => {
+  const panel = document.getElementById('export-panel');
+  panel.classList.toggle('collapsed');
+  document.getElementById('export-toggle').textContent =
+    panel.classList.contains('collapsed') ? '▸ CSS Override' : '▾ CSS Override';
 });
 
 switchPackage('cards');
