@@ -1,9 +1,15 @@
-/* ── RESET ── */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ═══════════════════════════════════════════════
+   pixel process — app styles
+
+   Chrome (reset, header, glitch title, tool nav, workspace, footer) comes
+   from tools/shell/app-shell.css, linked ahead of this file.
+
+   This app does NOT load tools/shell/dropdown.css. Its option list is
+   position:fixed and toggles display rather than animating max-height,
+   because it has to escape a clipping panel — a different widget that
+   happens to share the class names. It does use the shared dropdown.js,
+   which detects the fixed positioning and places the list itself.
+   ═══════════════════════════════════════════════ */
 
 /* ── PALETTE — warm analog video ── */
 :root {
@@ -17,111 +23,32 @@
     --amber:    #d4a030;
     --rose:     #e85535;
     --panel-w:  240px;
+
+    /* ── SHELL OVERRIDES ── */
+    --scanline:      rgba(180,140,80,0.04);
+    --title-color:   var(--accent);
+    --title-glow:    0 0 12px rgba(255,140,66,0.3);
+    --glitch-tint-1: rgba(255,140,66,0.25);
+    --glitch-tint-2: rgba(212,160,48,0.25);
+    --chrome-tint-1: rgba(255,140,66,0.3);
+    --chrome-tint-2: rgba(212,160,48,0.3);
+    --stat-font:     'VT323', monospace;
+    --stat-size:     14px;
+    --backlink-glow: rgba(255,140,66,0.3);
+    --backlink-hover-border: var(--accent);
 }
 
-/* ── BASE ── */
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
+/* The canvas tools suppress text selection; media-search does not, which is
+   why the shell leaves it to each app. */
 body {
-    font-family: 'Press Start 2P', monospace;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 8px;
-    display: flex;
-    flex-direction: column;
     user-select: none;
     -webkit-user-select: none;
-    background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(180,140,80,0.04) 2px, rgba(180,140,80,0.04) 4px
-    );
 }
 
-/* ── HEADER ── */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-.header-left { display: flex; align-items: center; gap: 16px; }
-
-h1.glitch {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 16px;
-    color: var(--accent);
-    position: relative;
-    text-shadow: 0 0 12px rgba(255,140,66,0.3);
-}
-
-h1.glitch::before,
-h1.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0.8;
-}
-
-h1.glitch::before {
-    animation: glitch-1 2s infinite linear alternate-reverse;
-    clip-path: inset(0 0 65% 0);
-    color: rgba(255,140,66,0.25);
-}
-
-h1.glitch::after {
-    animation: glitch-2 2s infinite linear alternate-reverse;
-    clip-path: inset(65% 0 0 0);
-    color: rgba(212,160,48,0.25);
-}
-
-@keyframes glitch-1 {
-    0%, 95% { transform: translate(0); }
-    96% { transform: translate(-2px, 1px); }
-    97% { transform: translate(2px, -1px); }
-    98% { transform: translate(-1px, 2px); }
-    99% { transform: translate(1px, -2px); }
-    100% { transform: translate(0); }
-}
-
-@keyframes glitch-2 {
-    0%, 95% { transform: translate(0); }
-    96% { transform: translate(2px, -1px); }
-    97% { transform: translate(-2px, 1px); }
-    98% { transform: translate(1px, -2px); }
-    99% { transform: translate(-1px, 2px); }
-    100% { transform: translate(0); }
-}
-
-.header-right {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
+/* The shell's .sys-stat chip is Press Start 2P; this app's is VT323 and
+   needs the extra tracking. */
 .sys-stat {
-    font-family: 'VT323', monospace;
-    font-size: 14px;
-    color: var(--dim);
-    background: var(--surface);
-    padding: 6px 10px;
-    border: 1px solid var(--border);
     letter-spacing: 0.05em;
-}
-
-/* ── WORKSPACE LAYOUT ── */
-.workspace {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
 }
 
 /* ── PANELS ── */
@@ -678,20 +605,12 @@ h1.glitch::after {
 }
 
 /* ── FOOTER ── */
+/* padding, border and .footer-text come from the shell; this app paints
+   over the body scanlines and tracks its letter-spacing. */
 footer {
-    padding: 12px 24px;
-    border-top: 1px solid var(--border);
     background: var(--bg);
-    flex-shrink: 0;
 }
 
 .footer-text {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--dim);
     letter-spacing: 0.1em;
-}
-
-.footer-text span {
-    color: var(--accent);
 }

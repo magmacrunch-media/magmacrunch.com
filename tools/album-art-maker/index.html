@@ -5,99 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>album art maker — magmacrunch media</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Press Start 2P and Courier Prime are self-hosted by the shell.
+         The rest are the font picker's options, which are not. -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=3">
-    <style>
-        .tool-nav {
-            padding: 8px 24px;
-            border-bottom: 1px solid var(--border);
-            background: var(--bg);
-            flex-shrink: 0;
-        }
-        .tool-nav .back-link {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 7px;
-            color: var(--dim);
-            background: var(--surface);
-            padding: 6px 10px;
-            border: 1px solid var(--border);
-            text-decoration: none;
-            letter-spacing: 0.1em;
-            transition: color 0.15s, border-color 0.15s, text-shadow 0.15s;
-        }
-        .tool-nav .back-link:hover {
-            color: var(--text);
-            border-color: var(--dim);
-            text-shadow: 0 0 6px rgba(240,234,216,0.3);
-        }
-
-        /* Chrome glitch effect */
-        .chrome {
-            position: relative;
-            display: inline-block;
-        }
-        .chrome::before,
-        .chrome::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0.8;
-            pointer-events: none;
-        }
-        .chrome::before {
-            animation: chrome-glitch-1 3s infinite linear alternate-reverse;
-            clip-path: inset(0 0 50% 0);
-            color: rgba(160,160,176,0.35);
-        }
-        .chrome::after {
-            animation: chrome-glitch-2 3s infinite linear alternate-reverse;
-            clip-path: inset(50% 0 0 0);
-            color: rgba(160,160,176,0.35);
-        }
-        @keyframes chrome-glitch-1 {
-            0%, 92% { transform: translate(0); }
-            93% { transform: translate(-1px, 0); }
-            94% { transform: translate(1px, 0); }
-            95% { transform: translate(0); }
-        }
-        @keyframes chrome-glitch-2 {
-            0%, 94% { transform: translate(0); }
-            95% { transform: translate(1px, 0); }
-            96% { transform: translate(-1px, 0); }
-            97% { transform: translate(0); }
-        }
-
-        /* Diamond icon chrome */
-        .shape-btn .chrome {
-            font-size: 16px;
-            line-height: 1;
-        }
-        .shape-btn .chrome::before,
-        .shape-btn .chrome::after {
-            font-size: 16px;
-            line-height: 1;
-        }
-
-        @media (min-width: 769px) {
-            .mobile-notice { display: none; }
-        }
-        .mobile-notice {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 8px;
-            text-align: center;
-            padding: 16px 20px;
-            margin: 12px auto;
-            max-width: 500px;
-            border: 2px solid var(--cyan);
-            border-radius: 4px;
-            background: rgba(0,245,255,0.05);
-            color: var(--cyan);
-            line-height: 2;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shell/app-shell.css?v=1">
+    <link rel="stylesheet" href="../shell/dropdown.css?v=1">
+    <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
     <div class="mobile-notice">
@@ -116,7 +31,7 @@
     </header>
 
     <nav class="tool-nav">
-        <a href="../utilities/" class="back-link"><span class="chrome" data-text="← UTILITIES">← creative utilities</span></a>
+        <a href="../utilities/" class="back-link chip"><span class="chrome" data-text="← UTILITIES">← creative utilities</span></a>
     </nav>
 
     <div class="workspace">
@@ -454,6 +369,7 @@
         <span class="footer-text">ALBUM//ART v1.7 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
     </footer>
 
+    <script src="../shell/dropdown.js?v=1"></script>
     <script src="js/history.js"></script>
     <script src="js/color.js"></script>
     <script src="js/canvas.js"></script>

@@ -212,43 +212,16 @@
     });
 
     // ── Dropdown Setup Helper ──
+    // Implementation is shared with album-art-maker and media-search:
+    // tools/shell/dropdown.js. It reads the computed position of
+    // .dropdown-options and places the list itself when it is fixed, which
+    // is what this app's escape-the-panel positioning needs. markActive is
+    // off because these are action menus, not value pickers.
+    // The shared setup attaches its own outside-click close, so the global
+    // close-all listener that used to live here is gone.
     function setupDropdown(dropdown, callback) {
-        var selected = dropdown.querySelector('.dropdown-selected');
-        var options = dropdown.querySelector('.dropdown-options');
-        var optionEls = dropdown.querySelectorAll('.dropdown-option');
-
-        selected.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.querySelectorAll('.custom-dropdown.open').forEach(function(d) {
-                if (d !== dropdown) d.classList.remove('open');
-            });
-
-            // Position dropdown below trigger button
-            var rect = selected.getBoundingClientRect();
-            options.style.top = rect.bottom + 'px';
-            options.style.left = rect.left + 'px';
-            options.style.width = rect.width + 'px';
-
-            dropdown.classList.toggle('open');
-        });
-
-        for (var i = 0; i < optionEls.length; i++) {
-            optionEls[i].addEventListener('click', function(e) {
-                e.stopPropagation();
-                var value = this.dataset.value;
-                selected.querySelector('span:first-child').textContent = this.textContent;
-                dropdown.classList.remove('open');
-                if (callback) callback(value);
-            });
-        }
+        RetroDropdown.setup(dropdown, callback, { markActive: false });
     }
-
-    // Close dropdowns on outside click
-    document.addEventListener('click', function() {
-        document.querySelectorAll('.custom-dropdown.open').forEach(function(d) {
-            d.classList.remove('open');
-        });
-    });
 
     // ── Color Input Sync Helper ──
     function syncColorInputs(colorInput, hexInput) {

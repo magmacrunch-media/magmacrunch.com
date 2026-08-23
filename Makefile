@@ -21,13 +21,13 @@ help: ## Show available commands
 
 .PHONY: lint lint-fix lint-all lint-game
 lint: ## Run ESLint on shared JS
-	npx eslint nav.js assets/*.js templates/*.js arcade/shared/*.js
+	npx eslint nav.js assets/*.js templates/*.js tools/shell/*.js arcade/shared/*.js
 
 lint-fix: ## Auto-fix ESLint issues
-	npx eslint --fix nav.js assets/*.js templates/*.js arcade/shared/*.js
+	npx eslint --fix nav.js assets/*.js templates/*.js tools/shell/*.js arcade/shared/*.js
 
 lint-all: ## Run ESLint on ALL JS (many game-specific warnings expected)
-	npx eslint nav.js assets/*.js templates/*.js arcade/shared/*.js "arcade/**/js/*.js" --no-error-on-unmatched-pattern
+	npx eslint nav.js assets/*.js templates/*.js tools/shell/*.js arcade/shared/*.js "arcade/**/js/*.js" --no-error-on-unmatched-pattern
 
 lint-game: ## Lint a specific game: make lint-game GAME=chess
 	@if [ -z "$(GAME)" ]; then echo "Usage: make lint-game GAME=chess"; exit 1; fi
