@@ -1,0 +1,137 @@
+{
+  "_note": [
+    "Every long-running arcade service, in one place.",
+    "",
+    "This list used to be written out longhand in four files, and they had drifted:",
+    "chat-server.py's status panel knew nothing about Chess or Aggravation,",
+    "start-all.sh never started Aggravation at all, and only the health bot had",
+    "the full set. Consumers now read this file instead of keeping their own copy:",
+    "",
+    "  arcade/chat-server.py            — status panel (entries with kind 'game')",
+    "  arcade/start-all.sh              — launches every entry locally",
+    "  arcade/scripts/bot-check-services.sh — probes every entry's port",
+    "",
+    "arcade/scripts/nginx-magmacrunch.conf still spells out its own proxy blocks",
+    "(each needs a full stanza), but 'path' here is the name<->port mapping it",
+    "must agree with.",
+    "",
+    "Not listed: admin (8780/8781), private, and mcp (8785). They take no --port",
+    "argument and are not started by start-all.sh; their units live in",
+    "arcade/admin/systemd and arcade/private/systemd.",
+    "",
+    "Adding a game: add an entry here, a systemd unit in arcade/systemd/, and a",
+    "location block in the nginx conf."
+  ],
+  "services": [
+    {
+      "id": "sorry",
+      "name": "SORRY",
+      "kind": "game",
+      "dir": "SORRY",
+      "exec": "server.py",
+      "port": 8765,
+      "path": "/sorry",
+      "unit": "arcade-sorry"
+    },
+    {
+      "id": "cribbage",
+      "name": "Cribbage",
+      "kind": "game",
+      "dir": "cribbage",
+      "exec": "server.py",
+      "port": 8766,
+      "path": "/cribbage",
+      "unit": "arcade-cribbage"
+    },
+    {
+      "id": "stud",
+      "name": "Scandinavian Stud",
+      "kind": "game",
+      "dir": "scandinavian-stud",
+      "exec": "server.py",
+      "port": 8767,
+      "path": "/stud",
+      "unit": "arcade-stud"
+    },
+    {
+      "id": "chat",
+      "name": "Chat",
+      "kind": "chat",
+      "dir": ".",
+      "exec": "chat-server.py",
+      "port": 8768,
+      "path": "/",
+      "unit": "arcade-chat"
+    },
+    {
+      "id": "chess",
+      "name": "Chess",
+      "kind": "game",
+      "dir": "chess",
+      "exec": "server.py",
+      "port": 8769,
+      "path": "/chess",
+      "unit": "arcade-chess"
+    },
+    {
+      "id": "checkers",
+      "name": "Checkers",
+      "kind": "game",
+      "dir": "checkers",
+      "exec": "server.py",
+      "port": 8770,
+      "path": "/checkers",
+      "unit": "arcade-checkers"
+    },
+    {
+      "id": "backgammon",
+      "name": "Backgammon",
+      "kind": "game",
+      "dir": "backgammon",
+      "exec": "server.py",
+      "port": 8771,
+      "path": "/backgammon",
+      "unit": "arcade-backgammon"
+    },
+    {
+      "id": "chinese-checkers",
+      "name": "Chinese Checkers",
+      "kind": "game",
+      "dir": "chinese-checkers",
+      "exec": "server.py",
+      "port": 8772,
+      "path": "/chinese-checkers",
+      "unit": "arcade-chinese-checkers"
+    },
+    {
+      "id": "parchisi",
+      "name": "Parchisi",
+      "kind": "game",
+      "dir": "parchisi",
+      "exec": "server.py",
+      "port": 8773,
+      "path": "/parchisi",
+      "unit": "arcade-parchisi"
+    },
+    {
+      "id": "aggravation",
+      "name": "Aggravation",
+      "kind": "game",
+      "dir": "aggravation",
+      "exec": "server.py",
+      "port": 8774,
+      "path": "/aggravation",
+      "unit": "arcade-aggravation"
+    },
+    {
+      "id": "counter",
+      "name": "Counter",
+      "kind": "service",
+      "dir": "counter",
+      "exec": "counter-server.py",
+      "port": 8783,
+      "path": null,
+      "unit": "arcade-counter"
+    }
+  ]
+}

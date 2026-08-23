@@ -896,16 +896,35 @@ async def ws_handler(websocket):
                     }))
 
             elif action == "chat_history":
-                # Connect to chat server and fetch history
+                # Connect to chat server and fetch history.
+                #
+                # get_history returns every game room's private sub-chat, so the
+                # chat server now requires a shared secret for it. Both units read
+                # the same ARCADE_ADMIN_TOKEN; without it the rooms come back empty.
                 try:
-                    async with websockets.connect(f"ws://localhost:8768") as chat_ws:
-                        await chat_ws.send(json.dumps({"type": "get_history"}))
-                        # Receive history responses
-                        for _ in range(2):  # history + room_histories
-                            resp = await asyncio.wait_for(chat_ws.recv(), timeout=5)
+                    async with websockets.connect("ws://localhost:8768") as chat_ws:
+                        await chat_ws.send(json.dumps({
+                            "type": "get_history",
+                            "token": os.environ.get("ARCADE_ADMIN_TOKEN", ""),
+                        }))
+                        # The chat server pushes `history` and `status` unprompted
+                        # the moment the socket opens, so the next two frames are
+                        # not the two this asked for — reading exactly two used to
+                        # consume the greeting and return the room histories never.
+                        wanted = {"history", "room_histories"}
+                        deadline = time.monotonic() + 5
+                        while wanted:
+                            remaining = deadline - time.monotonic()
+                            if remaining <= 0:
+                                break
+                            resp = await asyncio.wait_for(chat_ws.recv(), timeout=remaining)
                             data = json.loads(resp)
+                            kind = data.get("type")
+                            if kind not in wanted:
+                                continue
+                            wanted.discard(kind)
                             await websocket.send(json.dumps({
-                                "type": data.get("type", "chat_history"),
+                                "type": kind,
                                 "messages": data.get("messages", []),
                                 "rooms": data.get("rooms", {})
                             }))

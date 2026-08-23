@@ -7,6 +7,20 @@ Type=simple
 User=jake
 WorkingDirectory=/home/jake/arcade/admin
 ExecStart=/home/jake/arcade/venv/bin/python3 server.py
+# ARCADE_ADMIN_TOKEN gates the chat server's get_history dump, which returns
+# every game room's private sub-chat. The chat server refuses the request without
+# it and the dashboard's chat panel shows no rooms, so both units read the same
+# file. Create it on the Pi:
+#
+#   umask 077 && openssl rand -hex 32 | sed "s/^/ARCADE_ADMIN_TOKEN=/" > /home/jake/arcade-secrets.env
+#
+# Kept beside ~/arcade rather than inside it on purpose: deploy-pi.yml rsyncs
+# arcade/ with --delete, so a secret stored under ~/arcade would be erased on
+# the next push to main.
+#
+# The leading '-' makes the file optional: a missing one leaves the chat panel
+# empty rather than refusing to start the service.
+EnvironmentFile=-/home/jake/arcade-secrets.env
 Restart=always
 RestartSec=5
 
