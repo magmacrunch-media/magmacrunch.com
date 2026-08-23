@@ -125,17 +125,22 @@ Page B ──postMessage──┘
 ```
 
 - **SharedWorker** (`chat-worker.js`) — holds a single WebSocket connection. Pages communicate via `postMessage`. Caches history, user_list, and status for newly connecting pages. Auto-reconnects with backoff if the WebSocket drops.
-- **Widget** (`chat-widget.js`) — creates floating chat UI, sends messages through the SharedWorker. Falls back to direct WebSocket if SharedWorker is unavailable. Public API: `ChatWidget.connect(MC_CHAT_OPTS)`, `.disconnect()`, `.joinRoom()`, `.leaveRoom()`, `.setName()`, `.setColor()`.
-- **Session tokens** — client generates a token stored in `sessionStorage`, sends with every `set_name`. Server tracks recently disconnected users (30s window) and restores name/color on reconnect.
-- **Server** (`chat-server.py`) — global chat, room sub-chats, typing indicators, server status pings. Delays `user_info` creation until `set_name` arrives (no anonymous flicker). Health check returns 426 for non-WebSocket HTTP requests.
+- **Widget** (`adenosine-chat.js`) — creates floating chat UI, sends messages through the SharedWorker. Falls back to direct WebSocket if SharedWorker is unavailable. Public API: `ChatWidget.connect(MC_CHAT_OPTS)`, `.disconnect()`, `.joinRoom()`, `.leaveRoom()`, `.setName()`, `.setColor()`.
+- **Session tokens** — client generates a token stored in `localStorage`, sends with every `set_name`. Server tracks recently disconnected users (30s window) and restores name, color, and room membership on reconnect.
+- **Server** (`chat-server.py`) — global chat, room sub-chats, typing indicators, server status pings. Delays `user_info` creation until `set_name` arrives (no anonymous flicker). Shares its handshake gate and rate limiting with the game servers (`shared/multiplayer/server_base.py`): 426 for non-WebSocket HTTP, 403 for a cross-origin browser, 429 for a connection flood.
+- **Which servers it reports on** — `shared/services.json`, the same list `start-all.sh`, `scripts/bot-check-services.sh` and `admin/server.py` read.
 - **Logging** — connections/disconnections with IP, rate limit hits, high connection rate warnings. View via `journalctl -u arcade-chat` or admin dashboard LOGS tab.
 
 **Usage (in any game page):**
 ```html
 <link rel="stylesheet" href="../shared/chat-widget.css">
-<script src="../shared/chat-widget.js"></script>
-<script>ChatWidget.connect();</script>
+<script src="../shared/adenosine-chat.js"></script>
+<script src="../shared/chat-server.js"></script>
+<script>AdChat.ChatWidget.connect(MC_CHAT_OPTS);</script>
 ```
+
+`chat-server.js` is what decides which host to dial, and its `allowlist` is a
+security control — do not resolve the chat host anywhere else.
 
 ---
 

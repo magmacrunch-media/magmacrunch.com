@@ -1,9 +1,9 @@
 #!/bin/bash
-# start-all.sh — Launch all magmacrunch arcade game servers
+# start-all.sh — Launch all magmacrunch arcade servers
 # Place in ~/arcade/ and run: chmod +x start-all.sh
 #
 # Usage:
-#   ./start-all.sh        Start all game servers
+#   ./start-all.sh        Start all servers listed in shared/services.json
 #   ./start-all.sh --setup Install 'arcade' alias in ~/.bashrc
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -40,25 +40,29 @@ if [[ -f "$SCRIPT_DIR/requirements.txt" ]]; then
     pip install -r "$SCRIPT_DIR/requirements.txt" --quiet 2>/dev/null
 fi
 
-# ── Game servers ─────────────────────────────────────────────────────────────
-# Format: "directory:port:name"
-# Add new games here as you create them
+# ── Services ─────────────────────────────────────────────────────────────────
+# Read from shared/services.json rather than keeping a copy of the list here.
+# The copy that used to live in this file had gone stale — it never started
+# Aggravation, which has had a systemd unit and an nginx route for a while — so
+# a local run of the arcade did not match what the Pi actually serves.
+#
+# Add a game there, not here.
 
-GAMES=(
-    "SORRY:8765:SORRY"
-    "cribbage:8766:Cribbage"
-    "scandinavian-stud:8767:Scandinavian Stud"
-    "chess:8769:Chess"
-    "checkers:8770:Checkers"
-    "backgammon:8771:Backgammon"
-    "chinese-checkers:8772:Chinese Checkers"
-    "parchisi:8773:Parchisi"
-    # Add more games below:
-)
+SERVICES_JSON="$SCRIPT_DIR/shared/services.json"
 
-# ── Chat server (special case) ───────────────────────────────────────────────
-CHAT_SERVER="chat-server.py"
-CHAT_PORT=8768
+if [[ ! -f "$SERVICES_JSON" ]]; then
+    echo "Missing $SERVICES_JSON — cannot tell which servers to start." >&2
+    exit 1
+fi
+
+read_services() {
+    python3 - "$SERVICES_JSON" <<'PY'
+import json, sys
+with open(sys.argv[1], encoding='utf-8') as fh:
+    for svc in json.load(fh)['services']:
+        print('\t'.join([svc['dir'], svc['exec'], str(svc['port']), svc['name']]))
+PY
+}
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'
@@ -94,33 +98,25 @@ echo ""
 HOSTNAME=$(hostname)
 LOCAL_IP=$(ifconfig 2>/dev/null | grep -o 'inet [0-9.]*' | grep -v '127.0.0.1' | head -1 | awk '{print $2}')
 
-# ── Start each game server ──────────────────────────────────────────────────
-for game in "${GAMES[@]}"; do
-    IFS=':' read -r dir port name <<< "$game"
-    
-    if [[ -d "$SCRIPT_DIR/$dir" ]]; then
+# ── Start each server ───────────────────────────────────────────────────────
+while IFS=$'\t' read -r dir entry port name; do
+    [[ -z "$port" ]] && continue
+    target="$SCRIPT_DIR/$dir"
+
+    if [[ -f "$target/$entry" ]]; then
         echo -e "${GREEN}Starting ${name} server on port ${port}...${NC}"
-        cd "$SCRIPT_DIR/$dir"
-        python3 server.py --port "$port" &
+        cd "$target"
+        python3 "$entry" --port "$port" &
         PIDS+=($!)
         echo -e "  → ws://${HOSTNAME}.local:${port}"
         [[ -n "$LOCAL_IP" ]] && echo -e "  → ws://${LOCAL_IP}:${port}"
         echo ""
     else
-        echo -e "${YELLOW}⚠ Directory not found: $dir — skipping ${name}${NC}"
+        echo -e "${YELLOW}⚠ Not found: $dir/$entry — skipping ${name}${NC}"
     fi
-done
+done < <(read_services)
 
-# ── Start chat server ────────────────────────────────────────────────────────
-if [[ -f "$SCRIPT_DIR/$CHAT_SERVER" ]]; then
-    echo -e "${GREEN}Starting Chat server on port ${CHAT_PORT}...${NC}"
-    cd "$SCRIPT_DIR"
-    python3 "$CHAT_SERVER" --port "$CHAT_PORT" &
-    PIDS+=($!)
-    echo -e "  → ws://${HOSTNAME}.local:${CHAT_PORT}"
-    [[ -n "$LOCAL_IP" ]] && echo -e "  → ws://${LOCAL_IP}:${CHAT_PORT}"
-    echo ""
-fi
+cd "$SCRIPT_DIR"
 
 # ── Summary ──────────────────────────────────────────────────────────────────
 echo -e "${CYAN}────────────────────────────────────────────────${NC}"

@@ -12,13 +12,20 @@ PI=127.0.0.1
 FAILED=""
 HEALTHY=""
 
-for entry in \
-    "8765:SORRY" "8766:Cribbage" "8767:Stud" "8768:Chat" \
-    "8769:Chess" "8770:Checkers" "8771:Backgammon" \
-    "8772:ChineseCheckers" "8773:Parchisi" "8774:Aggravation" \
-    "8783:Counter"; do
-    PORT="${entry%%:*}"
-    NAME="${entry##*:}"
+# Ports come from arcade/shared/services.json, the same file chat-server.py and
+# start-all.sh read. This script keeping its own copy is how it ended up as the
+# only one of the three that knew about all eleven services.
+SERVICES_JSON="$SCRIPT_DIR/../shared/services.json"
+
+if [ ! -f "$SERVICES_JSON" ]; then
+    echo "Missing $SERVICES_JSON — cannot tell which ports to probe" >&2
+    exit 1
+fi
+
+# Names are squashed to one word: they are accumulated into $FAILED as a
+# space-separated list, and the Discord payload splits on spaces.
+while IFS=$'\t' read -r PORT NAME; do
+    [ -z "$PORT" ] && continue
     if nc -z -w2 "$PI" "$PORT" 2>/dev/null; then
         HEALTHY="$HEALTHY $NAME"
         echo "  ✓ $NAME (:$PORT)"
@@ -26,7 +33,12 @@ for entry in \
         FAILED="$FAILED $NAME"
         echo "  ✗ $NAME (:$PORT)"
     fi
-done
+done < <(node -e '
+    const path = process.argv[1];
+    for (const s of require(path).services) {
+        console.log(s.port + "\t" + s.name.replace(/ /g, ""));
+    }
+' "$SERVICES_JSON")
 
 if [ -n "$FAILED" ]; then
     echo "Down services:$FAILED"
