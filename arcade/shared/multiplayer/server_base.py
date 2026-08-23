@@ -25,8 +25,11 @@ import asyncio
 import json
 import logging
 import random
+import re
 import string
 import time
+from urllib.parse import urlsplit
+
 import websockets
 
 
@@ -137,7 +140,7 @@ class Room:
 # ── Rate Limiter ──────────────────────────────────────────────────────────────
 
 class RateLimiter:
-    """Per-connection sliding window rate limiter."""
+    """Sliding window rate limiter, keyed by whatever the caller passes."""
 
     def __init__(self):
         self._windows = {}  # key -> (window_start, count)
@@ -154,22 +157,196 @@ class RateLimiter:
         self._windows[key] = (window_start, count + 1)
         return True
 
+    def prune(self, older_than=300):
+        """Drop windows nothing has touched recently, so departed clients expire."""
+        now = time.monotonic()
+        stale = [k for k, (start, _) in self._windows.items() if now - start > older_than]
+        for key in stale:
+            del self._windows[key]
+
+
+# One limiter for the whole process, keyed by (ip, action).
+#
+# Every handler used to build its own RateLimiter per connection, which meant the
+# caps it enforced cost a spammer exactly one extra socket to clear: drop the
+# connection, redial, and the window starts empty. Keying on the client address
+# instead makes the budget follow the client rather than the socket.
+ip_limiter = RateLimiter()
+
+
+# ── Client identity ───────────────────────────────────────────────────────────
+
+LOOPBACK = ("127.0.0.1", "::1", "::ffff:127.0.0.1")
+
+
+def client_ip(connection, request=None):
+    """
+    The real client address behind nginx, or "unknown".
+
+    Public traffic reaches these servers through nginx on the Pi, so the TCP peer
+    is always 127.0.0.1 and every visitor on magmacrunch.com shares one rate-limit
+    bucket. nginx sets X-Real-IP from $remote_addr, which *overwrites* whatever the
+    client sent, so the value is trustworthy — but only when it came from nginx,
+    which is why the header is read only for a loopback peer. A LAN client talking
+    to the port directly can set the header itself, and is not believed.
+
+    Deliberately not X-Forwarded-For: nginx builds that one with
+    proxy_add_x_forwarded_for, which *appends* to the client's own value, so its
+    left-hand entries are attacker-controlled.
+
+    `request` is for calls from process_request, where connection.request is not
+    populated yet.
+    """
+    try:
+        peer = connection.remote_address[0] if connection.remote_address else None
+    except (AttributeError, IndexError, TypeError):
+        peer = None
+    if peer in LOOPBACK:
+        req = request if request is not None else getattr(connection, "request", None)
+        real = req.headers.get("X-Real-IP") if req is not None else None
+        if real:
+            return real.strip()
+    return peer or "unknown"
+
+
+# ── Origin check ──────────────────────────────────────────────────────────────
+
+PUBLIC_ORIGINS = ("https://magmacrunch.com", "https://www.magmacrunch.com")
+
+# Hosts served from the same box as these servers: loopback, LAN, Tailscale's
+# 100.64/10 CGNAT block, *.local. This is the same classification the client makes
+# in arcade/shared/chat-server.js when it picks which host to dial; the two have to
+# agree or local development stops connecting.
+_DEV_HOST_RE = re.compile(
+    r"^(?:localhost|127\.\d+\.\d+\.\d+|::1"
+    r"|10\.\d+\.\d+\.\d+"
+    r"|192\.168\.\d+\.\d+"
+    r"|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+"
+    r"|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.\d+\.\d+"
+    r"|[\w-]+\.local)$"
+)
+
+
+def origin_allowed(request, extra=()):
+    """
+    True if the handshake's Origin may open a socket.
+
+    Browsers attach Origin to every WebSocket handshake, and nothing here checked
+    it, so any page on the internet could open a socket to the arcade and post as a
+    visitor. A *missing* Origin is allowed on purpose: non-browser clients — the
+    health bots, the admin dashboard, the tests — do not send one, and they are not
+    the traffic this closes off. Origin "null" (a file:// page, a sandboxed iframe)
+    is refused, so local development has to be served over http rather than opened
+    off disk.
+    """
+    try:
+        origin = request.headers.get("Origin")
+    except AttributeError:
+        return True
+    if not origin:
+        return True
+    if origin in PUBLIC_ORIGINS or origin in tuple(extra):
+        return True
+    try:
+        parsed = urlsplit(origin)
+    except ValueError:
+        return False
+    if parsed.scheme not in ("http", "https"):
+        return False
+    return bool(_DEV_HOST_RE.match(parsed.hostname or ""))
+
 
 # ── Connection Rate Tracking ──────────────────────────────────────────────────
 
 connection_history = {}  # ip -> [timestamps]
 
 def check_connection_rate(ip, max_count=10, window=60):
-    """Track connections per IP. Log warning if exceeding threshold."""
+    """
+    Track connections per IP. Return False once the IP is over the limit.
+
+    Callers must honour the return value. Both this and the chat server used to
+    discard it, so the limit logged loudly on every flood and then let all of it
+    through.
+    """
     now = time.time()
-    timestamps = connection_history.get(ip, [])
-    timestamps = [t for t in timestamps if now - t < window]
+    timestamps = [t for t in connection_history.get(ip, []) if now - t < window]
     if len(timestamps) >= max_count:
+        connection_history[ip] = timestamps
         logger.warning("High connection rate: %s (%d in %ds)", ip, len(timestamps), window)
         return False
     timestamps.append(now)
     connection_history[ip] = timestamps
     return True
+
+
+# ── Handshake gate ────────────────────────────────────────────────────────────
+
+def _plain_response(status, reason):
+    from websockets.http11 import Response
+    from websockets.datastructures import Headers
+    return Response(status, reason, Headers([("Content-Length", "0")]), b"")
+
+
+async def limiter_janitor(interval=300):
+    """
+    Expire limiter state for clients that have gone away.
+
+    `ip_limiter` and `connection_history` are keyed by client address and live for
+    the life of the process, so without this a long-running server accumulates one
+    entry per address it has ever seen.
+    """
+    while True:
+        await asyncio.sleep(interval)
+        ip_limiter.prune(interval)
+        now = time.time()
+        stale = [
+            ip for ip, stamps in connection_history.items()
+            if not stamps or now - stamps[-1] > interval
+        ]
+        for ip in stale:
+            del connection_history[ip]
+
+
+def make_reject_request(max_connections=10, window=60, extra_origins=()):
+    """
+    Build a `process_request` hook that refuses bad handshakes before they connect.
+
+    The hook returns a Response to reject, or None to let websockets carry on with
+    the upgrade. Rejecting here rather than inside the handler means a flooding
+    client never gets far enough to allocate room or player state, and a
+    cross-origin page never reaches the message loop at all.
+
+    Plain HTTP still gets 426 — nginx and the service health bot
+    (scripts/bot-check-services.sh) both rely on the port answering.
+
+    `max_connections` is per client address per `window` seconds. A game server
+    sees one connection per player per session, so the default is tight. The chat
+    server raises it: browsers without SharedWorker support (Safari, notably) open
+    a fresh socket on every page navigation, and someone browsing the arcade
+    should not be locked out for clicking through games.
+    """
+    from websockets.http11 import Response
+    from websockets.datastructures import Headers
+
+    async def _gate(connection, request):
+        if request.headers.get("Upgrade", "").lower() != "websocket":
+            return Response(426, "Upgrade Required", Headers([("Upgrade", "websocket")]), b"")
+
+        if not origin_allowed(request, extra_origins):
+            logger.warning("Rejected origin: %s", request.headers.get("Origin"))
+            return _plain_response(403, "Forbidden")
+
+        ip = client_ip(connection, request)
+        if not check_connection_rate(ip, max_connections, window):
+            return _plain_response(429, "Too Many Requests")
+
+        return None
+
+    return _gate
+
+
+# The default gate, used by every GameServer.
+reject_request = make_reject_request()
 
 
 # ── Game Server ──────────────────────────────────────────────────────────────
@@ -212,21 +389,21 @@ class GameServer:
 
     async def handler(self, websocket):
         """Main connection handler."""
-        ip = websocket.remote_address[0] if websocket.remote_address else "unknown"
-        check_connection_rate(ip)
+        # reject_request already gated the handshake on origin and connection
+        # rate; ip is what the per-action limits below are keyed on.
+        ip = client_ip(websocket)
         room = None
         player_name = None
-        limiter = RateLimiter()
-        logger.info("Connect: %s", websocket.remote_address)
+        logger.info("Connect: %s", ip)
 
         try:
             # Send lobby snapshot immediately
             await self._send_lobby_snapshot(websocket)
 
             async for raw in websocket:
-                # Global flood protection: 20 msgs/sec per connection
-                if not limiter.check("global", 20, 1):
-                    logger.warning("Rate limited: global from %s", websocket.remote_address)
+                # Global flood protection: 20 msgs/sec per IP
+                if not ip_limiter.check((ip, "global"), 20, 1):
+                    logger.warning("Rate limited: global from %s", ip)
                     continue
 
                 try:
@@ -252,16 +429,16 @@ class GameServer:
                     await self._handle_start_game(websocket, room)
 
                 elif msg_type == "chat":
-                    if limiter.check("chat", 5, 10):
+                    if ip_limiter.check((ip, "chat"), 5, 10):
                         await self._handle_chat(websocket, room, msg)
                     else:
-                        logger.warning("Rate limited: chat from %s", websocket.remote_address)
+                        logger.warning("Rate limited: chat from %s", ip)
 
                 elif msg_type == "game_action":
-                    if limiter.check("game_action", 2, 3):
+                    if ip_limiter.check((ip, "game_action"), 2, 3):
                         await self._handle_game_action(websocket, room, msg)
                     else:
-                        logger.warning("Rate limited: game_action from %s", websocket.remote_address)
+                        logger.warning("Rate limited: game_action from %s", ip)
 
                 elif msg_type == "quit":
                     await self._handle_quit(websocket, room)
@@ -271,7 +448,7 @@ class GameServer:
         except websockets.ConnectionClosed:
             pass
         finally:
-            logger.info("Disconnect: %s", websocket.remote_address)
+            logger.info("Disconnect: %s", ip)
             if room and player_name:
                 await self._on_disconnect(websocket, room)
 
@@ -574,18 +751,11 @@ class GameServer:
         """Start the server."""
         logger.info("[%s] Starting WebSocket server on port %d", self.game_name, self.port)
 
-        async def _health_check(connection, request):
-            """Return 426 for plain HTTP requests, allow WebSocket upgrades."""
-            from websockets.http11 import Response
-            from websockets.datastructures import Headers
-            if request.headers.get("Upgrade", "").lower() == "websocket":
-                return None
-            return Response(426, "Upgrade Required", Headers([("Upgrade", "websocket")]), b"")
-
         async def _run():
+            asyncio.create_task(limiter_janitor())
             async with websockets.serve(
                 self.handler, "0.0.0.0", self.port,
-                process_request=_health_check,
+                process_request=reject_request,
                 ping_interval=None,
             ):
                 await asyncio.Future()  # run forever

@@ -213,18 +213,18 @@
 
     function checkStatus() {
         try {
-            var chatHost = (function() {
-                try {
-                    var param = new URLSearchParams(window.location.search).get('server');
-                    if (param) return param;
-                } catch(e) {}
-                var h = window.location.hostname;
-                if (h === 'localhost' || h === '127.0.0.1') return '192.168.1.16:8768';
-                return 'magmacrunch.duckdns.org';
-            })();
+            // MC_CHAT_OPTS (shared/chat-server.js) is the one place that decides
+            // which host is the chat backend. This block used to re-derive it: a
+            // second copy of the LAN/dev/public rules to keep in step, which had
+            // already drifted (it answered 'magmacrunch.duckdns.org' for a LAN
+            // page, and forced https: onto a plain-http dev server). It also
+            // honoured ?server= with no allowlist — the exact control
+            // chat-server.js applies so a crafted link cannot aim the page at
+            // someone else's host.
+            var chatUrl = window.location.protocol + '//' + MC_CHAT_OPTS.server;
             var controller = new AbortController();
             var timeout = setTimeout(function() { controller.abort(); }, 5000);
-            fetch('https://' + chatHost, { mode: 'no-cors', signal: controller.signal })
+            fetch(chatUrl, { mode: 'no-cors', signal: controller.signal })
                 .then(function() {
                     clearTimeout(timeout);
                     statusDot.className = 'mp-status-dot online';
