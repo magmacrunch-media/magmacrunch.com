@@ -1,0 +1,26 @@
+# Line endings.
+#
+# Deliberately narrow: only the files the Raspberry Pi actually executes are
+# pinned. Everything else is left to each clone's core.autocrlf, so a Windows
+# checkout keeps CRLF where CRLF is harmless and no mass renormalisation is
+# forced on a working tree.
+#
+# These types are pinned because CRLF breaks them outright on Linux rather than
+# merely looking untidy:
+#
+#   *.sh        a trailing \r on the shebang gives "bad interpreter: /bin/bash^M"
+#   *.py        same, for the server scripts systemd starts
+#   *.service   systemd reads the \r as part of the value
+#   *.yml       a workflow's `run:` block is handed to a Linux shell verbatim
+#   *.conf      nginx config, deployed to the Pi
+#
+# The committed tree is already LF throughout; this keeps it that way when a
+# commit is made from a clone that does not normalise, which is how CRLF would
+# otherwise reach deploy-pi.yml.
+
+*.sh        text eol=lf
+*.py        text eol=lf
+*.service   text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.conf      text eol=lf
