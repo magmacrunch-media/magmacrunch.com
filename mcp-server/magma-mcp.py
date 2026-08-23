@@ -1447,13 +1447,28 @@ def export_rights_catalog() -> str:
 # knowledge curation rather than website content, and that repo is versioned
 # with a remote so the correction history is backed up. Nothing on the website
 # reads this data — only these MCP tools and the historian TUI do.
-# Override with MAGMA_CORRECTIONS_DIR if the historian-tui checkout moves.
-CORRECTIONS_DIR = Path(
-    os.environ.get(
-        "MAGMA_CORRECTIONS_DIR",
-        Path.home() / "historian-tui" / "data" / "corrections",
-    )
-)
+#
+# The canonical historian-tui checkout is on the WINDOWS side, because that is
+# what the desktop shortcut launches and where Ollama runs natively. This MCP
+# server runs under WSL2, so it reaches that checkout through /mnt/c. The WSL
+# fallback below is only for a Linux-only setup.
+# Override with MAGMA_CORRECTIONS_DIR if the checkout moves.
+def _default_corrections_dir() -> Path:
+    override = os.environ.get("MAGMA_CORRECTIONS_DIR")
+    if override:
+        return Path(override)
+    for candidate in (
+        # canonical, moved 2026-08-23 into OneDrive/Documents alongside the
+        # rest of the repos - was directly under C:\Users\magma\historian-tui
+        Path("/mnt/c/Users/magma/OneDrive/Documents/historian-tui/data/corrections"),
+        Path.home() / "historian-tui" / "data" / "corrections",     # WSL fallback
+    ):
+        if candidate.is_dir():
+            return candidate
+    return Path.home() / "historian-tui" / "data" / "corrections"
+
+
+CORRECTIONS_DIR = _default_corrections_dir()
 
 
 @mcp.tool()
@@ -1537,11 +1552,23 @@ def get_known_errors(entity_type: str, entity_key: str) -> str:
     except Exception:
         return "Error reading corrections."
     
-    lines = [f"KNOWN ERRORS to avoid (from {len(corrections)} past corrections):\n"]
+    # Entries with no `incorrect` value are ADDITIONS, not corrections - nothing
+    # was wrong, the user simply taught something new. Rendering those as
+    # 'DO NOT say ""' fed a nonsense instruction to the model.
+    lines = [f"VERIFIED KNOWLEDGE for {entity_type}/{entity_key} "
+             f"({len(corrections)} recorded):\n"]
     for c in corrections:
-        lines.append(f"- DO NOT say \"{c.get('incorrect', 'unknown')}\" about {c.get('field', 'unknown')}")
-        lines.append(f"  The correct value is: \"{c.get('correct', 'unknown')}\"")
-    
+        field = c.get("field") or "information"
+        wrong = (c.get("incorrect") or "").strip()
+        right = c.get("correct") or "unknown"
+        fact = (c.get("fact") or "").strip()
+        if wrong:
+            lines.append(f"- {field} is NOT \"{wrong}\" - it is \"{right}\"")
+        else:
+            lines.append(f"- {field}: \"{right}\"")
+        if fact and fact.rstrip(".") != right.strip().rstrip("."):
+            lines.append(f"    {fact}")
+
     return "\n".join(lines)
 
 
