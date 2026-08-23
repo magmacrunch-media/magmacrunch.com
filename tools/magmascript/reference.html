@@ -191,9 +191,12 @@
 <span class="kw">flag</span> = <span class="kw">true</span>
 <span class="kw">nothing</span> = <span class="kw">none</span></code></pre>
 
+    <p style="font-size:11px;color:#9d99b5;margin-top:.5rem;">Values print with MagmaScript spelling: <code>none</code> not <code>None</code>, <code>true</code>/<code>false</code> not <code>True</code>/<code>False</code>.</p>
+
     <h2>string interpolation</h2>
-<pre><code>print(f<span class="str">"Hello, {name} v{version}!"</span>)
-print(f<span class="str">"{2 + 2} = 4"</span>)</code></pre>
+    <p style="font-size:11px;color:#9d99b5;margin-bottom:.5rem;">Only <code>f"..."</code> interpolates. Plain strings treat <code>{</code> as a literal character.</p>
+<pre><code>print(f<span class="str">"Hello, {name} v{version}!"</span>)  <span class="cmt">// interpolated</span>
+print(<span class="str">"use {braces} safely"</span>)         <span class="cmt">// plain — {braces} printed literally</span></code></pre>
   </div>
 
   <div class="ref-section">
@@ -258,7 +261,12 @@ print(scores[<span class="str">"Tetris"</span>])
 
 <span class="cmt">// list comprehensions</span>
 evens = [x <span class="kw">for</span> x <span class="kw">in</span> numbers <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]
-doubled = [x * <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> numbers]</code></pre>
+doubled = [x * <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> numbers]
+
+<span class="cmt">// index assignment</span>
+numbers[<span class="num">0</span>] = <span class="num">99</span>
+scores[<span class="str">"Pong"</span>] = <span class="num">100</span>
+numbers[<span class="num">0</span>] += <span class="num">10</span></code></pre>
 
     <h2>multi-assignment</h2>
 <pre><code>a, b = <span class="num">1</span>, <span class="num">2</span>
@@ -275,6 +283,11 @@ a, b = [<span class="num">1</span>, <span class="num">2</span>]  <span class="cm
 
 <span class="kw">if</span> <span class="str">"key"</span> <span class="kw">in</span> {<span class="str">"name"</span>: <span class="str">"Jake"</span>} { ... }
 <span class="kw">if</span> <span class="num">5</span> <span class="kw">not in</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>] { ... }</code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>truthiness</h2>
+    <p style="font-size:12px;color:#9d99b5;margin-bottom:.5rem;">Falsy values: <code>none</code>, <code>false</code>, <code>0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>. Everything else is truthy.</p>
   </div>
 
   <div class="ref-section">
