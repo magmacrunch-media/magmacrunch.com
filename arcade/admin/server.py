@@ -89,20 +89,90 @@ def _init_clients():
         _gh_client = GHClient()
 
 # ── Service definitions ──────────────────────────────────────────────────────
+# The list lives in arcade/shared/services.json, the same manifest that
+# chat-server.py, start-all.sh and scripts/bot-check-services.sh read. This file
+# used to keep a fifth handwritten copy of it, and that copy had already drifted:
+# it had never heard of Counter (:8783), so the dashboard could neither show nor
+# restart a service the health bot has been probing all along.
+#
+# Two arrays are read, and they mean different things:
+#
+#   services        started by start-all.sh and probed by the health bot
+#   dashboard_only  units that exist on the Pi but are neither started nor
+#                   probed — today just arcade-private, for the reasons the
+#                   manifest's own note spells out
+#
+# arcade-admin stays hardcoded below rather than moving into the manifest. It is
+# this process: restartable by name so the dashboard can restart itself, but
+# never drawn as a card, which is exactly how it behaved before.
+#
+# VALID_UNITS is a security control — the allowlist of systemd units this server
+# will hand to `systemctl restart` — so the manifest is parsed once, here at
+# import, and nothing in it is trusted before it is checked:
+#
+#   * unit names must look like arcade-<slug>, so a mangled manifest cannot
+#     name a unit outside the arcade's own namespace
+#   * names and icons are rejected if they carry HTML metacharacters, because
+#     static/arcade.js and static/status.js put both into innerHTML unescaped
+#   * anything unparseable raises, so the unit fails to start with the reason in
+#     the journal instead of coming up with a half-built allowlist
+#
+# Reading the file moves no trust boundary: deploy-pi.yml ships services.json in
+# the same tarball as this file, so whoever can write one can already write the
+# other.
 
-SERVICES = [
-    {"name": "SORRY!", "unit": "arcade-sorry", "port": 8765, "icon": "🎲"},
-    {"name": "Cribbage", "unit": "arcade-cribbage", "port": 8766, "icon": "🃏"},
-    {"name": "Scandinavian Stud", "unit": "arcade-stud", "port": 8767, "icon": "🂡"},
-    {"name": "Chat", "unit": "arcade-chat", "port": 8768, "icon": "💬"},
-    {"name": "Chess", "unit": "arcade-chess", "port": 8769, "icon": "♟"},
-    {"name": "Checkers", "unit": "arcade-checkers", "port": 8770, "icon": "⬛"},
-    {"name": "Backgammon", "unit": "arcade-backgammon", "port": 8771, "icon": "🎯"},
-    {"name": "Chinese Checkers", "unit": "arcade-chinese-checkers", "port": 8772, "icon": "✳"},
-    {"name": "Parchisi", "unit": "arcade-parchisi", "port": 8773, "icon": "🎲"},
-    {"name": "Aggravation", "unit": "arcade-aggravation", "port": 8774, "icon": "😤"},
-    {"name": "Private Auth", "unit": "arcade-private", "port": 8782, "icon": "🔒"},
-]
+SERVICES_PATH = os.path.join(ADMIN_DIR, "..", "shared", "services.json")
+
+_UNIT_RE = re.compile(r"^arcade-[a-z0-9][a-z0-9-]{0,39}$")
+_HTML_METACHARS = re.compile(r"[<>&\"']")
+
+
+def _load_services(path=SERVICES_PATH):
+    """[{name, unit, port, icon}] for every unit the dashboard may manage.
+
+    Only those four fields are kept: they are what the frontend renders, and
+    dir/exec/path are start-all.sh's business, not the dashboard's.
+    """
+    with open(path, encoding="utf-8") as fh:
+        manifest = json.load(fh)
+
+    entries = list(manifest["services"]) + list(manifest.get("dashboard_only", []))
+    services = []
+    seen = set()
+
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise ValueError(f"{path}: expected a service object, got {entry!r}")
+
+        unit = entry.get("unit")
+        if not isinstance(unit, str) or not _UNIT_RE.match(unit):
+            raise ValueError(f"{path}: bad unit name {unit!r}")
+        if unit in seen:
+            raise ValueError(f"{path}: duplicate unit {unit!r}")
+        seen.add(unit)
+
+        port = entry.get("port")
+        if isinstance(port, bool) or not isinstance(port, int) or not 1 <= port <= 65535:
+            raise ValueError(f"{path}: bad port {port!r} for {unit}")
+
+        text = {}
+        for field in ("name", "icon"):
+            value = entry.get(field)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{path}: missing {field} for {unit}")
+            if _HTML_METACHARS.search(value):
+                raise ValueError(f"{path}: unsafe {field} {value!r} for {unit}")
+            text[field] = value
+
+        services.append({"name": text["name"], "unit": unit,
+                         "port": port, "icon": text["icon"]})
+
+    if not services:
+        raise ValueError(f"{path}: no services listed")
+    return services
+
+
+SERVICES = _load_services()
 
 VALID_UNITS = {svc["unit"] for svc in SERVICES} | {"arcade-admin"}
 

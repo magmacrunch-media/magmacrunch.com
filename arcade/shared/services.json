@@ -2,25 +2,47 @@
   "_note": [
     "Every long-running arcade service, in one place.",
     "",
-    "This list used to be written out longhand in four files, and they had drifted:",
+    "This list used to be written out longhand in five files, and they had drifted:",
     "chat-server.py's status panel knew nothing about Chess or Aggravation,",
-    "start-all.sh never started Aggravation at all, and only the health bot had",
-    "the full set. Consumers now read this file instead of keeping their own copy:",
+    "start-all.sh never started Aggravation at all, admin/server.py had never",
+    "heard of Counter, and only the health bot had the full set. Consumers now",
+    "read this file instead of keeping their own copy:",
     "",
     "  arcade/chat-server.py            — status panel (entries with kind 'game')",
-    "  arcade/start-all.sh              — launches every entry locally",
-    "  arcade/scripts/bot-check-services.sh — probes every entry's port",
+    "  arcade/start-all.sh              — launches every 'services' entry locally",
+    "  arcade/scripts/bot-check-services.sh — probes every 'services' entry's port",
+    "  arcade/admin/server.py           — dashboard cards, and the allowlist of",
+    "                                     systemd units it will restart",
     "",
     "arcade/scripts/nginx-magmacrunch.conf still spells out its own proxy blocks",
     "(each needs a full stanza), but 'path' here is the name<->port mapping it",
     "must agree with.",
     "",
-    "Not listed: admin (8780/8781), private, and mcp (8785). They take no --port",
-    "argument and are not started by start-all.sh; their units live in",
-    "arcade/admin/systemd and arcade/private/systemd.",
+    "TWO ARRAYS, and the difference matters:",
     "",
-    "Adding a game: add an entry here, a systemd unit in arcade/systemd/, and a",
-    "location block in the nginx conf."
+    "'services' is the startable, probeable set. Everything in it takes a --port",
+    "argument, gets launched by start-all.sh, and gets a TCP probe from the health",
+    "bot every 30 minutes — so an entry here is also an alert path. Adding a game:",
+    "add an entry here, an 'icon', a systemd unit in arcade/systemd/, and a",
+    "location block in the nginx conf.",
+    "",
+    "'dashboard_only' is for units that exist on the Pi but are neither started",
+    "nor probed. Only admin/server.py reads it. arcade-private is here rather than",
+    "in 'services' for two reasons, both of which have to be fixed before it could",
+    "move: private/server.py takes no --port (it reads config.json), so start-all's",
+    "'python3 <exec> --port <port>' would fail argparse and never start it; and",
+    "8782 is not proxied by nginx and nothing has confirmed the unit is enabled, so",
+    "probing it would create a fresh 'service down' alert that nobody asked for.",
+    "Entries here carry no 'dir'/'exec' on purpose — there is nothing to launch.",
+    "",
+    "Not listed at all: admin itself (8780/8781) and mcp (8785). arcade-admin is a",
+    "unit the dashboard may restart, but it is hardcoded in admin/server.py, not",
+    "read from here — it is the dashboard's own process and is never drawn as a",
+    "card. Their units live in arcade/admin/systemd and mcp-server/.",
+    "",
+    "'name' and 'icon' are rendered by the dashboard. admin/server.py rejects the",
+    "whole manifest if either contains HTML metacharacters, because its frontend",
+    "drops both straight into innerHTML."
   ],
   "services": [
     {
@@ -31,7 +53,8 @@
       "exec": "server.py",
       "port": 8765,
       "path": "/sorry",
-      "unit": "arcade-sorry"
+      "unit": "arcade-sorry",
+      "icon": "🎲"
     },
     {
       "id": "cribbage",
@@ -41,7 +64,8 @@
       "exec": "server.py",
       "port": 8766,
       "path": "/cribbage",
-      "unit": "arcade-cribbage"
+      "unit": "arcade-cribbage",
+      "icon": "🃏"
     },
     {
       "id": "stud",
@@ -51,7 +75,8 @@
       "exec": "server.py",
       "port": 8767,
       "path": "/stud",
-      "unit": "arcade-stud"
+      "unit": "arcade-stud",
+      "icon": "🂡"
     },
     {
       "id": "chat",
@@ -61,7 +86,8 @@
       "exec": "chat-server.py",
       "port": 8768,
       "path": "/",
-      "unit": "arcade-chat"
+      "unit": "arcade-chat",
+      "icon": "💬"
     },
     {
       "id": "chess",
@@ -71,7 +97,8 @@
       "exec": "server.py",
       "port": 8769,
       "path": "/chess",
-      "unit": "arcade-chess"
+      "unit": "arcade-chess",
+      "icon": "♟"
     },
     {
       "id": "checkers",
@@ -81,7 +108,8 @@
       "exec": "server.py",
       "port": 8770,
       "path": "/checkers",
-      "unit": "arcade-checkers"
+      "unit": "arcade-checkers",
+      "icon": "⬛"
     },
     {
       "id": "backgammon",
@@ -91,7 +119,8 @@
       "exec": "server.py",
       "port": 8771,
       "path": "/backgammon",
-      "unit": "arcade-backgammon"
+      "unit": "arcade-backgammon",
+      "icon": "🎯"
     },
     {
       "id": "chinese-checkers",
@@ -101,7 +130,8 @@
       "exec": "server.py",
       "port": 8772,
       "path": "/chinese-checkers",
-      "unit": "arcade-chinese-checkers"
+      "unit": "arcade-chinese-checkers",
+      "icon": "✳"
     },
     {
       "id": "parchisi",
@@ -111,7 +141,8 @@
       "exec": "server.py",
       "port": 8773,
       "path": "/parchisi",
-      "unit": "arcade-parchisi"
+      "unit": "arcade-parchisi",
+      "icon": "🎲"
     },
     {
       "id": "aggravation",
@@ -121,7 +152,8 @@
       "exec": "server.py",
       "port": 8774,
       "path": "/aggravation",
-      "unit": "arcade-aggravation"
+      "unit": "arcade-aggravation",
+      "icon": "😤"
     },
     {
       "id": "counter",
@@ -131,7 +163,19 @@
       "exec": "counter-server.py",
       "port": 8783,
       "path": null,
-      "unit": "arcade-counter"
+      "unit": "arcade-counter",
+      "icon": "🔢"
+    }
+  ],
+  "dashboard_only": [
+    {
+      "id": "private",
+      "name": "Private Auth",
+      "kind": "service",
+      "port": 8782,
+      "path": null,
+      "unit": "arcade-private",
+      "icon": "🔒"
     }
   ]
 }
