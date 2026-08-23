@@ -247,3 +247,45 @@
     letter-spacing: 1px;
     text-shadow: 2px 2px 0px #006699;
 }
+
+/* =============================================
+   IN-GAME NOTIFICATION
+   ============================================= */
+
+/* Overflow, new personal best and Gauntlet promotion all announce themselves
+   here. game.js sets display, opacity, transform, transition and background
+   inline — the background is what distinguishes the three — so this rule
+   supplies only placement and type. */
+.game-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    display: none;
+    opacity: 0;
+    padding: 18px 26px;
+    max-width: 90vw;
+    text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 12px;
+    line-height: 1.6;
+    letter-spacing: 2px;
+    color: #ffffff;
+    text-shadow: 2px 2px 0px #000000;
+    border: 4px solid #0f0f1e;
+    box-shadow:
+        0 0 0 4px #00ffff,
+        0 0 40px rgba(0, 0, 0, 0.85);
+    /* Above the modal layer (2100): an overflow that triggers a Gauntlet
+       promotion must not end up behind the modal it triggered. */
+    z-index: 2200;
+    pointer-events: none;
+}
+
+@media (max-width: 600px) {
+    .game-notification {
+        font-size: 9px;
+        padding: 14px 18px;
+        letter-spacing: 1px;
+    }
+}
