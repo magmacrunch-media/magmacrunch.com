@@ -48,7 +48,7 @@ const GAMES = [
   { name: 'solitaire_THLD', path: 'solitaire_THLD' },
   { name: 'SORRY', path: 'SORRY', lobby: { dismiss: '#title-overlay', name: '#name-input', open: '#join-btn', overlay: '#lobby-overlay', port: 8765, joined: '#player-list' } },
   { name: 'tarot', path: 'tarot' },
-  { name: 'tetris', path: 'tetris' },
+  { name: 'tetris', path: 'tetris', chat: true },
   { name: 'threes', path: 'threes' },
   { name: 'very-long-boards', path: 'very-long-boards' },
 ];
@@ -57,6 +57,21 @@ const BOT_NAME = 'SmokeBot';
 
 /** Any game with a lobby the suite knows how to reach. */
 const hasLobby = (g) => Boolean(g.lobby);
+
+/**
+ * `chat: true` runs the floating chat widget check on that page. Declared on one
+ * game rather than all 24 that load the widget: it is the same widget and the
+ * same backend everywhere, so checking it once is the honest amount of coverage
+ * and 24 sockets to the chat server is not.
+ *
+ * It sits on a game with no `lobby` on purpose. Both adenosine-multiplayer and
+ * adenosine-chat read the same `?server=` parameter, so a page carrying both
+ * checks could only point one of them at a local server.
+ */
+const hasChat = (g) => Boolean(g.chat);
+
+/** Where chat-server.py listens. Mirrors arcade/shared/services.json. */
+const CHAT_PORT = 8768;
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 const TIMEOUT = 15000;
@@ -73,6 +88,12 @@ const TRANSITION_SETTLE_MS = 400;
 
 /** A server-backed join has to cross a socket before the lobby paints. */
 const JOIN_SETTLE_MS = 3000;
+
+/**
+ * The chat widget connects through a SharedWorker, so its first frames cross a
+ * worker boundary as well as a socket.
+ */
+const CHAT_SETTLE_MS = 8000;
 
 /**
  * Is a game server listening? Server-backed lobby checks are skipped rather
@@ -195,13 +216,52 @@ async function checkLobby(page, game) {
   return [];
 }
 
-async function testGame(page, game, lobbyServerUp) {
+/**
+ * Confirm the chat widget actually reached chat-server.py.
+ *
+ * Asserting the widget exists would pass on a widget that never connects — the
+ * same hole the `joined` selector closes for lobbies. So this waits for state
+ * that only a round-trip can produce: #chatMyName is empty until the server
+ * answers set_name with name_assigned, and the online count stays at 0 until a
+ * user_list arrives.
+ */
+async function checkChat(page) {
+  const errors = [];
+
+  if (await page.locator('#arcadeChatWidget').count() === 0) {
+    return ['chat: #arcadeChatWidget never mounted'];
+  }
+
+  try {
+    await page.waitForFunction(() => {
+      const el = document.getElementById('chatMyName');
+      return el && el.textContent.trim().length > 0;
+    }, { timeout: CHAT_SETTLE_MS });
+  } catch {
+    errors.push('chat: no name was assigned, so set_name never reached the server');
+  }
+
+  try {
+    await page.waitForFunction(() => {
+      const el = document.getElementById('acwOnlineCount');
+      return el && Number(el.textContent) > 0;
+    }, { timeout: CHAT_SETTLE_MS });
+  } catch {
+    errors.push('chat: online count stayed at 0, so no user_list arrived');
+  }
+
+  return errors;
+}
+
+async function testGame(page, game, lobbyServerUp, chatServerUp) {
   // Point the game at the local server.py instead of its baked-in default,
   // which is the Pi either way — magmacrunch.duckdns.org, or 192.168.1.16 via
   // mpServerFor(). Without this a "passing" run could be talking to production.
   const query = game.lobby && game.lobby.port && lobbyServerUp
     ? `?server=localhost:${game.lobby.port}`
-    : '';
+    : hasChat(game) && chatServerUp
+      ? `?server=localhost:${CHAT_PORT}`
+      : '';
   const url = `${BASE_URL}/arcade/${game.path}/${query}`;
   const errors = [];
   const warnings = [];
@@ -234,6 +294,11 @@ async function testGame(page, game, lobbyServerUp) {
       errors.push(...await checkLobby(page, game));
     }
 
+    const runChat = hasChat(game) && chatServerUp;
+    if (runChat) {
+      errors.push(...await checkChat(page));
+    }
+
     return {
       name: game.name,
       path: game.path,
@@ -244,6 +309,8 @@ async function testGame(page, game, lobbyServerUp) {
       warnings,
       lobbyChecked: runLobby,
       lobbySkipped: hasLobby(game) && !runLobby,
+      chatChecked: runChat,
+      chatSkipped: hasChat(game) && !runChat,
       elements: { hasCanvas, hasGameBoard, hasNav },
     };
   } catch (err) {
@@ -280,8 +347,8 @@ function formatMarkdown(results) {
     md += `**${failed.length} game(s) failed** out of ${results.length} tested.\n\n`;
   }
 
-  md += `| Game | Status | Lobby | Load Time | Errors |\n`;
-  md += `|------|--------|-------|-----------|--------|\n`;
+  md += `| Game | Status | Lobby | Chat | Load Time | Errors |\n`;
+  md += `|------|--------|-------|------|-----------|--------|\n`;
 
   for (const r of results) {
     const icon = r.status === 'pass' ? '✅' : '❌';
@@ -290,7 +357,10 @@ function formatMarkdown(results) {
     let lobby = '—';
     if (r.lobbyChecked) lobby = 'checked';
     else if (r.lobbySkipped) lobby = "skipped (no server)";
-    md += `| ${r.name} | ${icon} ${r.status} | ${lobby} | ${time} | ${errs} |\n`;
+    let chat = '—';
+    if (r.chatChecked) chat = 'checked';
+    else if (r.chatSkipped) chat = 'skipped (no server)';
+    md += `| ${r.name} | ${icon} ${r.status} | ${lobby} | ${chat} | ${time} | ${errs} |\n`;
   }
 
   if (failed.length > 0) {
@@ -316,14 +386,21 @@ function formatMarkdown(results) {
 }
 
 async function main() {
-  const games = LOBBY_ONLY ? GAMES.filter(hasLobby) : GAMES;
+  // --lobby-only means "only the checks that need a server", which the chat
+  // check does too.
+  const games = LOBBY_ONLY ? GAMES.filter((g) => hasLobby(g) || hasChat(g)) : GAMES;
 
   // One probe per distinct port, before the browser starts.
   const ports = [...new Set(GAMES.filter((g) => g.lobby && g.lobby.port).map((g) => g.lobby.port))];
+  if (GAMES.some(hasChat)) ports.push(CHAT_PORT);
   const serverUp = new Map(await Promise.all(ports.map(async (p) => [p, await portOpen(p)])));
 
   const noun = LOBBY_ONLY ? 'multiplayer lobbies' : 'games';
   console.log(`Testing ${games.length} ${noun} against ${BASE_URL}...\n`);
+
+  if (GAMES.some(hasChat) && !serverUp.get(CHAT_PORT)) {
+    console.log(`  (chat check skipped, no chat-server.py on ${CHAT_PORT})\n`);
+  }
 
   const down = GAMES.filter((g) => g.lobby && g.lobby.port && !serverUp.get(g.lobby.port));
   if (down.length > 0) {
@@ -341,7 +418,10 @@ async function main() {
     process.stdout.write(`  ${game.name}...`);
 
     const lobbyServerUp = Boolean(game.lobby && game.lobby.port && serverUp.get(game.lobby.port));
-    const result = await testGame(page, game, lobbyServerUp);
+    // Passed explicitly rather than smuggled through lobbyServerUp, which is
+    // a per-game boolean, not the probe map.
+    const chatServerUp = Boolean(hasChat(game) && serverUp.get(CHAT_PORT));
+    const result = await testGame(page, game, lobbyServerUp, chatServerUp);
 
     if (result.status === 'fail') {
       const screenshotPath = await saveScreenshot(page, game);
