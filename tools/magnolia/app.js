@@ -169,6 +169,18 @@ const MODULES = [
         signature: "void sprite_draw_scaled_tinted(const Sprite *s, float x, float y, float scale, u32 tint)",
         description: "Scaled + tinted.",
         example: "sprite_draw_scaled_tinted(&player, x, y, 2.0, tint);"
+      },
+      {
+        name: "sprite_draw_scaled_xy",
+        signature: "void sprite_draw_scaled_xy(const Sprite *s, float x, float y, float sx, float sy)",
+        description: "Per-axis scaling for non-square framebuffer pixels (16:9, PAL). Origin still lands on (x, y).",
+        example: "sprite_draw_scaled_xy(&player, x, y, 1.0, 0.75);"
+      },
+      {
+        name: "sprite_draw_scaled_xy_tinted",
+        signature: "void sprite_draw_scaled_xy_tinted(const Sprite *s, float x, float y, float sx, float sy, u32 tint)",
+        description: "Per-axis scaling + tint.",
+        example: "sprite_draw_scaled_xy_tinted(&player, x, y, 1.0, 0.75, tint);"
       }
     ]
   },
