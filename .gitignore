@@ -29,3 +29,6 @@ opencode.json
 
 # AI tool artifacts
 .aider*
+
+# Historian-tui corrections data (lives in its own repo)
+archive/_corrections.*
