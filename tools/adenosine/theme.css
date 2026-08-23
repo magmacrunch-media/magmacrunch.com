@@ -1,0 +1,117 @@
+/* theme.css — adenosine theme customizer styles */
+
+/* ── Layout ──────────────────────────────────────────── */
+
+#sidebar {
+  width: 320px; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  background: #1c1b26;
+  border-left: 1px solid #33304a;
+  overflow-y: auto;
+}
+
+#sidebar section {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #1e1d28;
+}
+
+#sidebar h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px; color: #9d99b5;
+  margin-bottom: .5rem; letter-spacing: 0.05em;
+}
+
+.action-row {
+  display: flex; gap: .5rem;
+}
+
+#export-panel {
+  border-top: 1px solid #33304a;
+  background: #1c1b26;
+  flex-shrink: 0;
+}
+
+.export-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .4rem 1rem;
+  border-bottom: 1px solid #1e1d28;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px; color: #9d99b5;
+}
+
+#export-output {
+  width: 100%; border: none; outline: none; resize: none;
+  background: #14141b; color: #7cc7ff;
+  font: 12px/1.5 'Courier Prime', monospace;
+  padding: .5rem 1rem;
+}
+
+/* ── Pickers ─────────────────────────────────────────── */
+
+.picker-row {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .3rem 0; border-bottom: 1px solid #1e1d28;
+}
+
+.picker-label { font-size: 11px; color: #e8e6f0; flex: 1; }
+.picker-var { font-size: 10px; color: #9d99b5; font-family: 'Courier Prime', monospace; }
+
+.picker-color {
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 1px solid #33304a; position: relative; overflow: hidden;
+  cursor: pointer; flex-shrink: 0;
+}
+
+.picker-color input {
+  position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px);
+  opacity: 0; cursor: pointer;
+}
+
+/* ── Preview panel ───────────────────────────────────── */
+
+#preview-panel {
+  flex: 1; min-width: 0; overflow: auto;
+  display: flex; align-items: center; justify-content: center;
+  background: #14141b;
+}
+
+#preview-content {
+  width: 100%; min-height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── Puzzle preview — override grid sizing for customizer */
+
+.theme-preview-puzzle .game-board {
+  width: 320px !important;
+  height: 320px !important;
+}
+
+/* ── Chat preview — override fixed positioning for embed */
+
+.theme-preview-chat .acw {
+  position: relative !important;
+  bottom: auto !important;
+  right: auto !important;
+}
+
+/* ── Multiplayer preview — override overlay positioning */
+
+.theme-preview-mp .lobby-overlay {
+  position: relative !important;
+  background: transparent !important;
+}
+
+/* ── Status dot ──────────────────────────────────────── */
+
+.dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 50%; margin-right: .3rem;
+  vertical-align: middle;
+}
+
+.dot.ok  { background: #6ee7a8; }
+.dot.err { background: #ff6b6b; }
+.dot.loading { background: #9d99b5; animation: pulse 1s infinite; }
+
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
