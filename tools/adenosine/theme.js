@@ -16,17 +16,9 @@ const VARS = {
     { name: '--chip-text',       default: '#ffe03a',  label: 'Chip count text' },
   ],
   puzzle: [
-    { name: '--apz-bg',             default: '#0a0612',  label: 'Page background' },
-    { name: '--apz-text',           default: '#f0ead8',  label: 'Body text' },
-    { name: '--apz-bg-panel',       default: '#1a0a2a',  label: 'Panel background' },
-    { name: '--apz-accent',         default: '#00f5ff',  label: 'Primary accent' },
-    { name: '--apz-accent-bright',  default: '#33ffff',  label: 'Bright accent' },
-    { name: '--apz-accent-alt',     default: '#ff2d78',  label: 'Secondary accent' },
-    { name: '--apz-accent-alt-dark',default: '#aa1155',  label: 'Dark secondary' },
-    { name: '--apz-accent-alt-hover', default: '#ff5a99', label: 'Hover secondary' },
-    { name: '--apz-accent-alt-dim', default: '#cc2266',  label: 'Dim secondary' },
-    { name: '--apz-text-dim',       default: '#8a7fa8',  label: 'Dimmed text' },
-    { name: '--apz-border',         default: '#2a1a3a',  label: 'Border color' },
+    { name: '--apz-bg-panel',       default: '#1a0a2a',  label: 'Board background' },
+    { name: '--apz-accent',         default: '#00f5ff',  label: 'Board border & glow' },
+    { name: '--apz-text',           default: '#f0ead8',  label: 'Tile text color' },
   ],
   chat: [
     { name: '--acw-bg',            default: '#1a1028',  label: 'Button background' },
@@ -53,28 +45,19 @@ const VARS = {
   ],
 };
 
-const PKG_CSS = {
-  cards:        '../packages/cards/cards.css',
-  puzzle:       '../packages/puzzle/puzzle-base.css',
-  chat:         '../packages/chat/chat-widget.css',
-  multiplayer:  '../packages/multiplayer/lobby.css',
+const PKG_META = {
+  cards:       { version: '0.7.4', global: 'AdCards',   css: ['cards.css', 'chip-animation.css'] },
+  puzzle:      { version: '0.2.5', global: 'AdPuzzle',  css: ['puzzle-base.css', 'puzzle-grid.css', 'puzzle-modals.css', 'puzzle-responsive.css'] },
+  chat:        { version: '0.4.3', global: 'AdChat',    css: ['chat-widget.css'] },
+  multiplayer: { version: '0.4.4', global: 'AdMP',      css: ['lobby.css'] },
 };
 
-const PKG_GLOBAL = {
-  cards: 'AdCards', puzzle: 'AdPuzzle', chat: 'AdChat', multiplayer: 'AdMP',
-};
-
-const PKG_BUNDLE = {
-  cards:        '../packages/cards/dist/index.global.js',
-  puzzle:       '../packages/puzzle/dist/index.global.js',
-  chat:         '../packages/chat/dist/index.global.js',
-  multiplayer:  '../packages/multiplayer/dist/index.global.js',
-};
+const CDN = 'https://cdn.jsdelivr.net/npm/@magmacrunch';
 
 // State
 let currentPkg = 'cards';
 let values = {};
-let loadedCssLink = null;
+let loadedCssLinks = [];
 let loadedScript = null;
 
 // DOM
@@ -82,6 +65,7 @@ const pkgSelect     = document.getElementById('pkg-select');
 const variablesEl   = document.getElementById('variables');
 const previewContent= document.getElementById('preview-content');
 const exportOutput  = document.getElementById('export-output');
+const statusDot     = document.getElementById('status-dot');
 
 // ── Variables ─────────────────────────────────────────
 
@@ -107,26 +91,40 @@ function resetVars() {
 
 // ── Loaders ───────────────────────────────────────────
 
+function clearCss() {
+  for (const link of loadedCssLinks) link.remove();
+  loadedCssLinks = [];
+}
+
 function loadCSS(pkg) {
-  if (loadedCssLink) { loadedCssLink.remove(); loadedCssLink = null; }
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = PKG_CSS[pkg];
-  document.head.appendChild(link);
-  loadedCssLink = link;
+  clearCss();
+  const meta = PKG_META[pkg];
+  for (const file of meta.css) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `${CDN}/adenosine-${pkg}@${meta.version}/${file}`;
+    document.head.appendChild(link);
+    loadedCssLinks.push(link);
+  }
 }
 
 function loadBundle(pkg) {
   return new Promise((resolve) => {
     if (loadedScript) { loadedScript.remove(); loadedScript = null; }
-    if (window[PKG_GLOBAL[pkg]]) { resolve(); return; }
+    const meta = PKG_META[pkg];
+    if (window[meta.global]) { setStatus(true); resolve(); return; }
     const s = document.createElement('script');
-    s.src = PKG_BUNDLE[pkg];
-    s.onload = () => resolve();
-    s.onerror = () => resolve();
+    s.src = `${CDN}/adenosine-${pkg}@${meta.version}/dist/index.global.js`;
+    s.onload = () => { setStatus(true); resolve(); };
+    s.onerror = () => { setStatus(false); resolve(); };
     document.body.appendChild(s);
     loadedScript = s;
   });
+}
+
+function setStatus(ok) {
+  if (!statusDot) return;
+  statusDot.className = ok ? 'dot ok' : 'dot err';
 }
 
 // ── Preview renderers ─────────────────────────────────
@@ -164,17 +162,17 @@ function renderPuzzlePreview() {
   const el = document.createElement('div');
   el.className = 'theme-preview-puzzle';
   el.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.5rem;';
+
   const board = document.createElement('div');
-  board.className = 'apz-board';
-  board.style.cssText = 'display:grid;grid-template-columns:repeat(4,64px);gap:6px;';
+  board.className = 'game-board';
+  board.style.cssText = 'width:320px;height:320px;';
+
   const nums = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0];
   for (const n of nums) {
     const tile = document.createElement('div');
     tile.className = 'tile' + (n === 0 ? ' tile-empty' : '');
-    tile.setAttribute('data-value', n || '');
+    if (n) tile.setAttribute('data-value', n);
     tile.textContent = n || '';
-    tile.style.cssText = 'width:64px;height:64px;display:flex;align-items:center;justify-content:center;'
-      + 'border-radius:8px;font-size:16px;font-weight:bold;';
     board.appendChild(tile);
   }
   el.appendChild(board);
@@ -187,13 +185,32 @@ function renderChatPreview() {
   el.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.5rem;';
 
   const widget = document.createElement('div');
-  widget.id = 'arcadeChatWidget';
-  widget.style.cssText = 'width:280px;min-height:200px;position:relative;';
-  el.appendChild(widget);
+  widget.className = 'acw expanded';
+  widget.style.cssText = 'position:relative;width:280px;bottom:auto;right:auto;';
 
-  if (typeof window.AdChat !== 'undefined') {
-    try { AdChat.ChatWidget.connect({ server: 'preview.example.com', allowlist: ['preview.example.com'] }); } catch {}
-  }
+  widget.innerHTML = `
+    <div class="acw-bar">
+      <div class="acw-icon"></div>
+      <span class="acw-online-count" style="color:var(--acw-online,#39ff6e);">3</span>
+    </div>
+    <div class="acw-header">
+      <span class="acw-header-title">LOBBY CHAT</span>
+      <button class="acw-minimize" style="background:none;border:none;color:var(--acw-cream,#f0ead8);cursor:pointer;font-size:14px;">&#x2212;</button>
+    </div>
+    <div class="acw-window">
+      <div class="acw-messages">
+        <div class="acw-msg"><span class="chat-name" style="color:var(--acw-accent,#ff2e9c);">Jake:</span> <span style="color:var(--acw-text-dim,#8a7fa8);">hey anyone up for cribbage?</span></div>
+        <div class="acw-msg"><span class="chat-name" style="color:var(--acw-online,#39ff6e);">Bot:</span> <span style="color:var(--acw-text-dim,#8a7fa8);">I'm always ready</span></div>
+        <div class="acw-msg system" style="color:var(--acw-text-muted,#5a5a6a);font-style:italic;">Mike joined the room</div>
+        <div class="acw-msg"><span class="chat-name" style="color:var(--acw-accent-hover,#ff5ab5);">Mike:</span> <span style="color:var(--acw-text-dim,#8a7fa8);">let's go</span></div>
+      </div>
+      <div class="acw-input">
+        <input type="text" placeholder="Type a message..." style="background:var(--acw-bg-input,#0f0a1a);color:var(--acw-text,#f0f8ff);border:1px solid var(--acw-border,#3a2d5c);border-radius:6px;padding:6px 10px;font-size:12px;font-family:'Courier Prime',monospace;width:100%;">
+        <button style="background:var(--acw-accent,#ff2e9c);color:var(--acw-ink-on-accent,#0a0612);border:none;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:11px;font-family:'Courier Prime',monospace;">Send</button>
+      </div>
+    </div>
+  `;
+  el.appendChild(widget);
   return el;
 }
 
@@ -203,25 +220,35 @@ function renderMultiplayerPreview() {
   el.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1.5rem;';
 
   const lobby = document.createElement('div');
-  lobby.className = 'mp-lobby';
-  lobby.style.cssText = 'width:320px;border:2px solid var(--accent,#00f5ff);border-radius:12px;'
-    + 'background:var(--bg-mid,#1a2a44);padding:1rem;color:var(--cream,#f0ead8);font-family:"Courier Prime",monospace;';
+  lobby.className = 'lobby-overlay';
+  lobby.style.cssText = 'position:relative;background:transparent;';
+
   lobby.innerHTML = `
-    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--accent,#00f5ff);margin-bottom:.75rem;text-align:center;">GAME LOBBY</div>
-    <div style="font-size:12px;color:var(--cream,#f0ead8);margin-bottom:.5rem;">Room: <span style="color:var(--accent,#00f5ff);font-weight:bold;">ABCD</span></div>
-    <div style="border-top:1px solid var(--border,#1a2a44);padding-top:.5rem;margin-top:.5rem;">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
-        <span style="width:10px;height:10px;border-radius:50%;background:#39ff6e;display:inline-block;"></span>
-        <span style="font-size:12px;">Player 1</span>
-        <span style="font-size:9px;color:var(--gold,#ffe03a);font-family:'Press Start 2P',monospace;">HOST</span>
+    <div class="lobby-panel">
+      <div class="lobby-title">GAME LOBBY</div>
+      <div class="lobby-room-code">
+        <div class="lobby-room-label">ROOM CODE</div>
+        <div class="lobby-room-value">ABCD</div>
       </div>
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;">
-        <span style="width:10px;height:10px;border-radius:50%;background:#ff2e9c;display:inline-block;"></span>
-        <span style="font-size:12px;">Player 2</span>
+      <div class="lobby-players">
+        <div class="lobby-players-title">PLAYERS</div>
+        <div class="lobby-player">
+          <span class="lobby-player-color" style="background:#39ff6e;"></span>
+          <span class="lobby-player-name">Jake</span>
+          <span class="lobby-player-host">HOST</span>
+        </div>
+        <div class="lobby-player">
+          <span class="lobby-player-color" style="background:var(--accent,#00f5ff);"></span>
+          <span class="lobby-player-name">Mike</span>
+        </div>
+        <div class="lobby-player">
+          <span class="lobby-player-color" style="background:var(--gold,#ffe03a);"></span>
+          <span class="lobby-player-name">Waiting...</span>
+        </div>
       </div>
-    </div>
-    <div style="margin-top:.75rem;text-align:center;">
-      <span style="font-size:11px;color:var(--gold,#ffe03a);">Waiting for players...</span>
+      <div class="lobby-buttons">
+        <button style="background:var(--accent,#00f5ff);color:var(--bg-dark,#060e1a);border:none;border-radius:8px;padding:10px 24px;font-family:'Press Start 2P',monospace;font-size:10px;cursor:pointer;">START GAME</button>
+      </div>
     </div>
   `;
   el.appendChild(lobby);
@@ -238,23 +265,18 @@ const PREVIEW_RENDERERS = {
 // ── Apply theme ───────────────────────────────────────
 
 function applyTheme() {
-  // Remove old preview
   previewContent.innerHTML = '';
   const wrapper = document.createElement('div');
   wrapper.style.cssText = 'display:flex;align-items:center;justify-content:center;min-height:100%;';
   previewContent.appendChild(wrapper);
 
-  // Set all variables on the wrapper
   for (const [name, value] of Object.entries(values)) {
     wrapper.style.setProperty(name, value);
   }
   wrapper.style.setProperty('color-scheme', 'dark');
 
-  // Render preview
   const render = PREVIEW_RENDERERS[currentPkg];
-  if (render) {
-    wrapper.appendChild(render());
-  }
+  if (render) wrapper.appendChild(render());
 }
 
 // ── Pickers ───────────────────────────────────────────
@@ -314,6 +336,7 @@ function updateExport() {
 async function switchPackage(pkg) {
   currentPkg = pkg;
   values = { ...getDefaults(pkg) };
+  setStatus(null);
   loadCSS(pkg);
   await loadBundle(pkg);
   renderPickers();
@@ -337,9 +360,50 @@ document.getElementById('copy-btn').addEventListener('click', () => {
   });
 });
 
-// Add picker styles
+// ── Styles ────────────────────────────────────────────
+
 const style = document.createElement('style');
 style.textContent = `
+  /* Layout */
+  #sidebar {
+    width: 320px; flex-shrink: 0;
+    display: flex; flex-direction: column;
+    background: #1c1b26;
+    border-left: 1px solid #33304a;
+    overflow-y: auto;
+  }
+  #sidebar section {
+    padding: .75rem 1rem;
+    border-bottom: 1px solid #1e1d28;
+  }
+  #sidebar h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px; color: #9d99b5;
+    margin-bottom: .5rem; letter-spacing: 0.05em;
+  }
+  .action-row {
+    display: flex; gap: .5rem;
+  }
+  #export-panel {
+    border-top: 1px solid #33304a;
+    background: #1c1b26;
+    flex-shrink: 0;
+  }
+  .export-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .4rem 1rem;
+    border-bottom: 1px solid #1e1d28;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px; color: #9d99b5;
+  }
+  #export-output {
+    width: 100%; border: none; outline: none; resize: none;
+    background: #14141b; color: #7cc7ff;
+    font: 12px/1.5 'Courier Prime', monospace;
+    padding: .5rem 1rem;
+  }
+
+  /* Pickers */
   .picker-row {
     display: flex; align-items: center; gap: .5rem;
     padding: .3rem 0; border-bottom: 1px solid #1e1d28;
@@ -355,6 +419,8 @@ style.textContent = `
     position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px);
     opacity: 0; cursor: pointer;
   }
+
+  /* Preview panel */
   #preview-panel {
     flex: 1; min-width: 0; overflow: auto;
     display: flex; align-items: center; justify-content: center;
@@ -364,6 +430,36 @@ style.textContent = `
     width: 100%; min-height: 100%;
     display: flex; align-items: center; justify-content: center;
   }
+
+  /* Puzzle preview — override grid sizing for customizer */
+  .theme-preview-puzzle .game-board {
+    width: 320px !important;
+    height: 320px !important;
+  }
+
+  /* Chat preview — override fixed positioning for embed */
+  .theme-preview-chat .acw {
+    position: relative !important;
+    bottom: auto !important;
+    right: auto !important;
+  }
+
+  /* Multiplayer preview — override overlay positioning */
+  .theme-preview-mp .lobby-overlay {
+    position: relative !important;
+    background: transparent !important;
+  }
+
+  /* Status dot */
+  .dot {
+    display: inline-block; width: 8px; height: 8px;
+    border-radius: 50%; margin-right: .3rem;
+    vertical-align: middle;
+  }
+  .dot.ok  { background: #6ee7a8; }
+  .dot.err { background: #ff6b6b; }
+  .dot.loading { background: #9d99b5; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 `;
 document.head.appendChild(style);
 
