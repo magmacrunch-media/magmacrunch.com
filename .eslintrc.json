@@ -81,6 +81,7 @@
         "MSG": "readonly",
         "MP_PALETTE": "readonly",
         "MP_DEFAULT_SERVER": "readonly",
-        "MC_SCORE_OPTS": "readonly"
+        "MC_SCORE_OPTS": "readonly",
+        "RetroDropdown": "readonly"
     }
 }

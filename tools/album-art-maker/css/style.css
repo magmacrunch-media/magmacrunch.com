@@ -1,9 +1,10 @@
-/* ── RESET ── */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ═══════════════════════════════════════════════
+   album art maker — app styles
+
+   Chrome (reset, header, glitch title, tool nav, workspace, footer) comes
+   from tools/shell/app-shell.css; the dropdown from tools/shell/dropdown.css.
+   Both are linked ahead of this file. Only tokens are overridden here.
+   ═══════════════════════════════════════════════ */
 
 /* ── PALETTE ── */
 :root {
@@ -18,108 +19,18 @@
     --panel-w:   240px;
 }
 
-/* ── BASE ── */
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
+/* Shell defaults already match this app, so there is nothing to override.
+   The canvas tools suppress text selection; media-search does not, which is
+   why the shell leaves it to each app. */
 body {
-    font-family: 'Press Start 2P', monospace;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 8px;
-    display: flex;
-    flex-direction: column;
     user-select: none;
     -webkit-user-select: none;
-    background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px
-    );
 }
 
-/* ── HEADER ── */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-.header-left { display: flex; align-items: center; gap: 16px; }
-
-h1.glitch {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 16px;
-    color: var(--text);
-    position: relative;
-}
-
-h1.glitch::before,
-h1.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0.8;
-}
-
-h1.glitch::before {
-    animation: glitch-1 2s infinite linear alternate-reverse;
-    clip-path: inset(0 0 65% 0);
-    color: rgba(160,160,176,0.3);
-}
-
-h1.glitch::after {
-    animation: glitch-2 2s infinite linear alternate-reverse;
-    clip-path: inset(65% 0 0 0);
-    color: rgba(160,160,176,0.3);
-}
-
-@keyframes glitch-1 {
-    0%, 95% { transform: translate(0); }
-    96% { transform: translate(-2px, 1px); }
-    97% { transform: translate(2px, -1px); }
-    98% { transform: translate(-1px, 2px); }
-    99% { transform: translate(1px, -2px); }
-    100% { transform: translate(0); }
-}
-
-@keyframes glitch-2 {
-    0%, 95% { transform: translate(0); }
-    96% { transform: translate(2px, -1px); }
-    97% { transform: translate(-2px, 1px); }
-    98% { transform: translate(1px, -2px); }
-    99% { transform: translate(-1px, 2px); }
-    100% { transform: translate(0); }
-}
-
-.header-right {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.sys-stat {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: var(--dim);
-    background: var(--surface);
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-}
-
-/* ── WORKSPACE LAYOUT ── */
+/* The shell's .workspace has no min-height; this app needs its flex children
+   able to shrink below their content. */
 .workspace {
-    display: flex;
-    flex: 1;
     min-height: 0;
-    overflow: hidden;
 }
 
 /* ── PANELS ── */
@@ -628,100 +539,6 @@ h1.glitch::after {
 .prop-select:focus { border-color: var(--accent); }
 .prop-select option { background: var(--surface); color: var(--text); font-family: inherit; }
 
-/* ── CUSTOM RETRO DROPDOWN ── */
-.custom-dropdown {
-    position: relative;
-    width: 100%;
-    user-select: none;
-}
-
-.dropdown-selected {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    color: var(--text);
-    padding: 8px 10px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.15s;
-}
-
-.dropdown-selected:hover {
-    border-color: var(--accent);
-    box-shadow: 0 0 10px rgba(160,160,176,0.2);
-}
-
-.custom-dropdown.open .dropdown-selected {
-    border-color: var(--accent);
-    box-shadow: 0 0 12px rgba(160,160,176,0.3);
-}
-
-.dropdown-arrow {
-    color: var(--accent);
-    font-size: 8px;
-    transition: transform 0.2s;
-}
-
-.custom-dropdown.open .dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-.dropdown-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--surface);
-    border: 2px solid var(--accent);
-    border-top: none;
-    margin-top: -2px;
-    max-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: max-height 0.25s ease-out;
-    z-index: 50;
-}
-
-.custom-dropdown.open .dropdown-options {
-    max-height: 240px;
-}
-
-.dropdown-option {
-    padding: 7px 10px;
-    cursor: pointer;
-    transition: all 0.1s;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--dim);
-    white-space: nowrap;
-}
-
-.dropdown-option:last-child {
-    border-bottom: none;
-}
-
-.dropdown-option:hover {
-    background: rgba(160,160,176,0.1);
-    border-left: 3px solid var(--accent);
-    color: var(--text);
-    padding-left: 7px;
-}
-
-.dropdown-option.active {
-    color: var(--accent);
-    border-left: 3px solid var(--accent);
-    padding-left: 7px;
-    background: rgba(160,160,176,0.06);
-}
-
-.dropdown-options::-webkit-scrollbar { width: 4px; }
-.dropdown-options::-webkit-scrollbar-track { background: transparent; }
-.dropdown-options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
 /* ── ACTION BUTTONS ── */
 .action-btns {
     display: flex;
@@ -763,20 +580,10 @@ h1.glitch::after {
 }
 
 /* ── FOOTER ── */
+/* padding, border and .footer-text come from the shell. */
 footer {
-    padding: 12px 24px;
-    border-top: 1px solid var(--border);
     text-align: center;
-    flex-shrink: 0;
 }
-
-.footer-text {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--dim);
-}
-
-.footer-text span { color: var(--accent); }
 
 /* ── SCROLLBAR ── */
 .panel::-webkit-scrollbar { width: 6px; }
@@ -796,3 +603,17 @@ body.tool-circle #mainCanvas,
 body.tool-line #mainCanvas { cursor: crosshair; }
 body.tool-text #mainCanvas { cursor: text; }
 body.dragging #mainCanvas { cursor: grabbing; }
+
+/* ── CHROME GLITCH, SHAPE BUTTON SIZE ──
+   The .chrome effect itself lives in the shell; only the icon sizing is
+   specific to this app's shape buttons. */
+.shape-btn .chrome {
+    font-size: 16px;
+    line-height: 1;
+}
+
+.shape-btn .chrome::before,
+.shape-btn .chrome::after {
+    font-size: 16px;
+    line-height: 1;
+}
