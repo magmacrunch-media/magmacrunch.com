@@ -426,7 +426,7 @@ window.CanvasRenderer = (function () {
         // corner handles
         ctx.setLineDash([]);
         ctx.fillStyle = '#a0a0b0';
-        const hs = 8;
+        const hs = 10;
         const corners = [
             [bounds.x - pad, bounds.y - pad],
             [bounds.x + bounds.w + pad, bounds.y - pad],
@@ -450,7 +450,7 @@ window.CanvasRenderer = (function () {
         ctx.stroke();
         ctx.fillStyle = '#a0a0b0';
         ctx.beginPath();
-        ctx.arc(rotX, rotCircleY, 7, 0, Math.PI * 2);
+        ctx.arc(rotX, rotCircleY, 9, 0, Math.PI * 2);
         ctx.fill();
 
         // dimensions label

@@ -376,7 +376,7 @@ window.Tools = (function () {
             const bounds = CanvasRenderer.getElementBounds(el);
 
             // add some padding for easier selection
-            const pad = 2;
+            const pad = 6;
             if (
                 x >= bounds.x - pad &&
                 x <= bounds.x + bounds.w + pad &&
@@ -392,11 +392,12 @@ window.Tools = (function () {
     function getHandlePositions(el) {
         const bounds = CanvasRenderer.getElementBounds(el);
         const { x, y, w, h } = bounds;
+        const pad = 6;
         return [
-            { id: 'tl', x: x,       y: y,       cursor: 'nw-resize' },
-            { id: 'tr', x: x + w,   y: y,       cursor: 'ne-resize' },
-            { id: 'bl', x: x,       y: y + h,   cursor: 'sw-resize' },
-            { id: 'br', x: x + w,   y: y + h,   cursor: 'se-resize' },
+            { id: 'tl', x: x - pad,     y: y - pad,     cursor: 'nw-resize' },
+            { id: 'tr', x: x + w + pad, y: y - pad,     cursor: 'ne-resize' },
+            { id: 'bl', x: x - pad,     y: y + h + pad, cursor: 'sw-resize' },
+            { id: 'br', x: x + w + pad, y: y + h + pad, cursor: 'se-resize' },
         ];
     }
 
@@ -405,7 +406,7 @@ window.Tools = (function () {
         const pad = 6;
         return {
             x: bounds.x + bounds.w / 2,
-            y: bounds.y - pad - 20,
+            y: bounds.y - pad - 24,
         };
     }
 
@@ -415,12 +416,12 @@ window.Tools = (function () {
         // check rotation handle first
         const rot = getRotationHandlePos(el);
         const rotDist = Math.sqrt((x - rot.x) ** 2 + (y - rot.y) ** 2);
-        if (rotDist <= 10) {
+        if (rotDist <= 12) {
             return { id: 'rotate', x: rot.x, y: rot.y, cursor: 'grab' };
         }
 
         const handles = getHandlePositions(el);
-        const hs = 8; // larger hit area than visual size for easier grabbing
+        const hs = 12;
         for (const handle of handles) {
             if (
                 x >= handle.x - hs &&

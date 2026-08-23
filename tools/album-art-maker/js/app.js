@@ -263,6 +263,8 @@
                     h: h,
                     src: src,
                     aspectRatio: w / h,
+                    origW: w,
+                    origH: h,
                     rotation: 0,
                     opacity: 100,
                 };
@@ -337,11 +339,26 @@
         } else if (action === 'move') {
             History.push(elements);
             updateStats();
+            if (selectedElement && selectedElement.type === 'image') {
+                if (!selectedElement.origW) {
+                    selectedElement.origW = selectedElement.w;
+                    selectedElement.origH = selectedElement.h;
+                }
+                const scale = Math.round((selectedElement.w / selectedElement.origW) * 100);
+                document.getElementById('imageScale').value = Math.min(500, Math.max(10, scale));
+                document.getElementById('imageScaleVal').textContent = scale + '%';
+                document.getElementById('imageDims').textContent = Math.round(selectedElement.w) + ' × ' + Math.round(selectedElement.h);
+            }
         }
     }
 
     function updatePropsFromElement(el) {
         if (!el) return;
+        // backfill origW/origH for images created before this property existed
+        if (el.type === 'image' && !el.origW) {
+            el.origW = el.w;
+            el.origH = el.h;
+        }
         if (el.fill && el.fill !== 'none') {
             document.getElementById('fillColor').value = el.fill;
             document.getElementById('fillHex').value = el.fill;
@@ -396,6 +413,14 @@
         const op = el.opacity != null ? el.opacity : 100;
         document.getElementById('opacity').value = op;
         document.getElementById('opacityVal').textContent = op + '%';
+
+        // image scale
+        if (el.type === 'image' && el.origW) {
+            const scale = Math.round((el.w / el.origW) * 100);
+            document.getElementById('imageScale').value = Math.min(500, Math.max(10, scale));
+            document.getElementById('imageScaleVal').textContent = scale + '%';
+            document.getElementById('imageDims').textContent = Math.round(el.w) + ' × ' + Math.round(el.h);
+        }
     }
 
     // ── COLOR CONTROLS ──
@@ -599,6 +624,26 @@
     });
     document.getElementById('opacity').addEventListener('change', () => {
         if (selectedElement) History.push(elements);
+    });
+
+    // ── IMAGE SCALE CONTROL ──
+    document.getElementById('imageScale').addEventListener('input', (e) => {
+        const val = parseInt(e.target.value);
+        document.getElementById('imageScaleVal').textContent = val + '%';
+        if (selectedElement && selectedElement.type === 'image') {
+            if (!selectedElement.origW) {
+                selectedElement.origW = selectedElement.w;
+                selectedElement.origH = selectedElement.h;
+            }
+            const scale = val / 100;
+            selectedElement.w = selectedElement.origW * scale;
+            selectedElement.h = selectedElement.origH * scale;
+            document.getElementById('imageDims').textContent = Math.round(selectedElement.w) + ' × ' + Math.round(selectedElement.h);
+            CanvasRenderer.render(elements);
+        }
+    });
+    document.getElementById('imageScale').addEventListener('change', () => {
+        if (selectedElement && selectedElement.type === 'image') History.push(elements);
     });
 
     // ── Z-ORDER CONTROL ──
@@ -816,6 +861,7 @@
         const tool = Tools.getTool();
         const isTextTool = tool === 'text';
         const isTextElement = selectedElement && selectedElement.type === 'text';
+        const isImageElement = selectedElement && selectedElement.type === 'image';
         const isWaveTool = WAVE_TYPES.includes(tool);
         const isWaveElement = selectedElement && WAVE_TYPES.includes(selectedElement.type);
         const isStepTool = tool === 'step' || (selectedElement && selectedElement.type === 'step');
@@ -831,6 +877,7 @@
         document.getElementById('dutyGroup').hidden = !isPulseTool;
         document.getElementById('opacityGroup').hidden = !selectedElement;
         document.getElementById('zorderGroup').hidden = !selectedElement;
+        document.getElementById('imageScaleGroup').hidden = !isImageElement;
     }
 
     // observe tool changes
