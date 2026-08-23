@@ -316,6 +316,69 @@ try {
 }
 console.log(`  ${passed} passed\n`);
 
+// ── Zero results and NOT chains ──────────────────────────────────────
+
+console.log('Zero results and NOT chains:');
+try {
+    // A gate result of 0 clears the tile. It must leave nothing behind: the row
+    // is built with zeros stripped, so a literal 0 would be re-scanned as an
+    // operand and eat the tiles to its right.
+    const only = (cells) => [cells, [0,0,0,0], [0,0,0,0], [0,0,0,0]];
+
+    // 3-bit: NOT 7 = 0, the overflow move (+21). The gate and the 4 both survive.
+    let game = new Game2048('3', 'test');
+    game.board = only([7, -4, -2, 4]);
+    game.score = 0;
+    game.moveLeft();
+    assertEqual(game.board[0], [-2, 4, 0, 0], 'overflow leaves the OR gate and the 4');
+    assertEqual(game.score, 21, 'overflow scores 21, not 25');
+
+    game = new Game2048('3', 'test');
+    game.board = only([7, -4, -3, 4]);
+    game.score = 0;
+    game.moveLeft();
+    assertEqual(game.board[0], [-3, 4, 0, 0], 'overflow does not destroy the 4 via AND');
+    assertEqual(game.score, 21, 'overflow scores 21');
+
+    // Same shape without an overflow: a real two-step resolution, unchanged.
+    game = new Game2048('3', 'test');
+    game.board = only([6, -4, -2, 4]);
+    game.score = 0;
+    game.moveLeft();
+    assertEqual(game.board[0], [5, 0, 0, 0], 'NOT 6 = 1, then 1 OR 4 = 5');
+    assertEqual(game.score, 6, 'two-step resolution scores 1 + 5');
+
+    // A binary gate cancelling to zero also leaves nothing.
+    game = new Game2048('3', 'test');
+    game.board = only([1, -3, 2, 0]);
+    game.score = 0;
+    game.moveLeft();
+    assertEqual(game.board[0], [0, 0, 0, 0], '1 AND 2 = 0 clears the row');
+
+    // A NOT chain resolves once, and is billed once.
+    game = new Game2048('7', 'test');
+    game.board = only([114, -4, -4, -4]);
+    game.score = 0;
+    game.moveLeft();
+    assertEqual(game.board[0], [13, 0, 0, 0], 'triple NOT of 114 is 13');
+    assertEqual(game.score, 13, 'the chain scores the one operation it performed');
+    assertEqual(game.highestValueEver, 13, 'no intermediate 114 in highestValueEver');
+
+    // The documented cancellation fires with a number to the left of the pair.
+    game = new Game2048('3', 'test');
+    game.board = only([3, -4, -4, 0]);
+    game.score = 0;
+    const cancelled = game.moveLeft();
+    assert(cancelled === true, 'NOT NOT cancellation counts as a merge');
+    assertEqual(game.board[0], [3, 0, 0, 0], 'the pair cancels and leaves the 3');
+    assertEqual(game.score, 0, 'an identity operation scores nothing');
+} catch(e) {
+    console.error(`  FAIL: ${e.message}`);
+    failed++;
+}
+console.log(`  ${passed} passed
+`);
+
 // ── Summary ──────────────────────────────────────────────────────────────────
 
 console.log(`\n=== Results: ${passed} passed, ${failed} failed ===`);

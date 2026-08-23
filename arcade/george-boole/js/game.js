@@ -459,9 +459,21 @@ class Game2048 {
                     const result = this.applyGate(-4, num, null);
                     const wasEarned = this._pendingEarnedUpgrade;
                     const wasPB = this._pendingPersonalBest;
-                    row.splice(j, 2, result);
-                    earnedRow.splice(j, 2, wasEarned);
-                    pbRow.splice(j, 2, wasPB);
+                    this._writeGateResult(row, earnedRow, pbRow, j, 2, result, wasEarned, wasPB);
+                    mergeOccurred = true;
+                    continue;
+                }
+                
+                // A ¬¬ pair cancels even with a number to its left. Without this,
+                // [number][¬] below matches first and the chain resolves one step
+                // at a time — scoring every intermediate and leaving
+                // highestValueEver on a value that never rested on the board.
+                if (!this.isGate(row[j]) &&
+                    row[j + 1] === -4 &&
+                    row[j + 2] === -4) {
+                    row.splice(j + 1, 2);
+                    earnedRow.splice(j + 1, 2);
+                    pbRow.splice(j + 1, 2);
                     mergeOccurred = true;
                     continue;
                 }
@@ -476,9 +488,7 @@ class Game2048 {
                     const result = this.applyGate(-4, num, null);
                     const wasEarned = this._pendingEarnedUpgrade;
                     const wasPB = this._pendingPersonalBest;
-                    row.splice(j, 2, result);
-                    earnedRow.splice(j, 2, wasEarned);
-                    pbRow.splice(j, 2, wasPB);
+                    this._writeGateResult(row, earnedRow, pbRow, j, 2, result, wasEarned, wasPB);
                     mergeOccurred = true;
                     continue;
                 }
@@ -497,9 +507,7 @@ class Game2048 {
                     const result = this.applyGate(gate, leftNum, rightNum);
                     const wasEarned = this._pendingEarnedUpgrade;
                     const wasPB = this._pendingPersonalBest;
-                    row.splice(j, 3, result);
-                    earnedRow.splice(j, 3, wasEarned);
-                    pbRow.splice(j, 3, wasPB);
+                    this._writeGateResult(row, earnedRow, pbRow, j, 3, result, wasEarned, wasPB);
                     mergeOccurred = true;
                     
                 } else if (j < row.length - 1 && 
@@ -957,6 +965,23 @@ class Game2048 {
     // this.board[i] hasn't been written back yet during row processing.
     _triggerGauntletEarned() {
         this._pendingEarnedUpgrade = true;
+    }
+
+    // Write a gate result back over `count` cells of the row and its two parallel
+    // flag arrays. A zero result means the tile is gone — an overflow, NOT maxValue,
+    // or an AND/XOR that cancelled. Drop the cells rather than leaving a literal 0:
+    // the row is built with zeros stripped, so a 0 left in place is re-scanned as
+    // a number operand by the next [number][gate][number] match.
+    _writeGateResult(row, earnedRow, pbRow, j, count, result, wasEarned, wasPB) {
+        if (result === 0) {
+            row.splice(j, count);
+            earnedRow.splice(j, count);
+            pbRow.splice(j, count);
+        } else {
+            row.splice(j, count, result);
+            earnedRow.splice(j, count, wasEarned);
+            pbRow.splice(j, count, wasPB);
+        }
     }
     
     // Get minimum value worth celebrating with height bonus
