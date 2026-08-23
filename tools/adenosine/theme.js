@@ -138,6 +138,12 @@ function renderCardsPreview() {
         display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 1.5rem;
       }
       .theme-preview-cards .hand { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+      .theme-preview-cards .chip-row { display: flex; gap: 16px; align-items: flex-end; justify-content: center;
+        padding: 10px 16px; background: var(--chip-bg, #0a0a0a);
+        border: 2px inset #333; border-radius: 4px; }
+      .theme-preview-cards .chip-col { display: flex; flex-direction: column; align-items: center; }
+      .theme-preview-cards .chip-label { font-family: 'Press Start 2P', monospace; font-size: 7px;
+        color: var(--chip-text, #ffe03a); margin-bottom: 4px; text-shadow: 1px 1px 0 #000; }
     </style>
   `;
 
@@ -146,12 +152,37 @@ function renderCardsPreview() {
     hand.className = 'hand';
     const deck = new AdCards.Deck();
     deck.shuffle();
-    for (let i = 0; i < 5; i++) {
+
+    for (let i = 0; i < 4; i++) {
       const card = deck.deal();
       card.faceUp = true;
-      hand.appendChild(card.getHTML());
+      const cardEl = card.getHTML();
+      if (i === 0) cardEl.classList.add('selected');
+      hand.appendChild(cardEl);
     }
+    const backCard = deck.deal();
+    backCard.faceUp = false;
+    hand.appendChild(backCard.getHTML());
     el.appendChild(hand);
+
+    const chipRow = document.createElement('div');
+    chipRow.className = 'chip-row';
+    const denoms = [AdCards.DENOMS[0], AdCards.DENOMS[2], AdCards.DENOMS[4]];
+    const counts = [5, 3, 1];
+    denoms.forEach((d, i) => {
+      const col = document.createElement('div');
+      col.className = 'chip-col';
+      const label = document.createElement('div');
+      label.className = 'chip-label';
+      label.textContent = `${counts[i]}× $${d.value}`;
+      col.appendChild(label);
+      const canvas = document.createElement('canvas');
+      canvas.style.imageRendering = 'pixelated';
+      AdCards.renderStack(canvas, d, counts[i]);
+      col.appendChild(canvas);
+      chipRow.appendChild(col);
+    });
+    el.appendChild(chipRow);
   } else {
     el.innerHTML += '<p style="color:#9d99b5;font-size:12px;">Loading cards package...</p>';
   }
@@ -244,6 +275,17 @@ function renderMultiplayerPreview() {
         <div class="lobby-player">
           <span class="lobby-player-color" style="background:var(--gold,#ffe03a);"></span>
           <span class="lobby-player-name">Waiting...</span>
+        </div>
+      </div>
+      <div class="lobby-chat">
+        <div class="lobby-chat-messages">
+          <div class="lobby-chat-msg"><span class="chat-name" style="color:var(--accent,#00f5ff);">Jake:</span> ready when you are</div>
+          <div class="lobby-chat-msg system">Mike joined the room</div>
+          <div class="lobby-chat-msg"><span class="chat-name" style="color:var(--gold,#ffe03a);">Mike:</span> let's go</div>
+        </div>
+        <div class="lobby-chat-input">
+          <input type="text" placeholder="Type a message...">
+          <button>SEND</button>
         </div>
       </div>
       <div class="lobby-buttons">
