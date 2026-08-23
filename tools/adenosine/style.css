@@ -141,11 +141,17 @@ main {
 }
 
 #divider {
-  width: 4px; cursor: col-resize;
+  width: 8px; cursor: col-resize;
   background: #33304a;
   flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
 }
 #divider:hover { background: #7cc7ff; }
+.divider-grip {
+  font-size: 14px; color: #555; line-height: 1;
+  pointer-events: none;
+}
+#divider:hover .divider-grip { color: #14141b; }
 
 #output-panel {
   flex: 1; min-width: 0; overflow: auto;
@@ -224,7 +230,7 @@ footer .dot.err { background: #ff6b6b; }
 @media (max-width: 768px) {
   main { flex-direction: column; }
   #divider {
-    width: auto; height: 4px; cursor: row-resize;
+    width: auto; height: 8px; cursor: row-resize;
   }
   header { flex-wrap: wrap; }
 }

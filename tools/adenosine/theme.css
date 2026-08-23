@@ -46,6 +46,17 @@
   padding: .5rem 1rem;
 }
 
+#export-output::placeholder { color: #5a5a6a; }
+
+#export-panel.collapsed #export-output { display: none; }
+
+.export-toggle-btn, #export-toggle {
+  background: none; border: none; color: #9d99b5;
+  font-family: 'Press Start 2P', monospace; font-size: 8px;
+  cursor: pointer; padding: 0; letter-spacing: 0.05em;
+}
+.export-toggle-btn:hover, #export-toggle:hover { color: #e8e6f0; }
+
 /* ── Pickers ─────────────────────────────────────────── */
 
 .picker-row {
