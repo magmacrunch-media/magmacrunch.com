@@ -169,6 +169,18 @@ const MODULES = [
         signature: "void sprite_draw_scaled_tinted(const Sprite *s, float x, float y, float scale, u32 tint)",
         description: "Scaled + tinted.",
         example: "sprite_draw_scaled_tinted(&player, x, y, 2.0, tint);"
+      },
+      {
+        name: "sprite_draw_scaled_xy",
+        signature: "void sprite_draw_scaled_xy(const Sprite *s, float x, float y, float sx, float sy)",
+        description: "Per-axis scaling for non-square framebuffer pixels (16:9, PAL). Origin still lands on (x, y).",
+        example: "sprite_draw_scaled_xy(&player, x, y, 1.0, 0.75);"
+      },
+      {
+        name: "sprite_draw_scaled_xy_tinted",
+        signature: "void sprite_draw_scaled_xy_tinted(const Sprite *s, float x, float y, float sx, float sy, u32 tint)",
+        description: "Per-axis scaling + tint.",
+        example: "sprite_draw_scaled_xy_tinted(&player, x, y, 1.0, 0.75, tint);"
       }
     ]
   },
@@ -561,6 +573,12 @@ const MODULES = [
         signature: "const ScoreEntry *scoring_get_entry(int index)",
         description: "Read-only pointer to the entry at index, or NULL if out of range.",
         example: "const ScoreEntry *e = scoring_get_entry(0);\nif (e) printf(\"%s: %d\", e->initials, e->score);"
+      },
+      {
+        name: "scoring_persisted",
+        signature: "int scoring_persisted(void)",
+        description: "Whether the last save reached the card. An emulated SD card can report itself mounted and still refuse every write, so a leaderboard that resets on every power cycle looks exactly like one nobody ever qualified for. The counterpart to prefs_persisted().",
+        example: 'if (!scoring_persisted())\n    ui_draw_centered_text(400, "SCORES NOT SAVING", 12, WARN);'
       }
     ]
   },
@@ -909,6 +927,30 @@ const MODULES = [
         signature: "int ui_draw_text_wrapped(int design_x, int design_y, int design_w, const char *text, unsigned int design_size, u32 color, int line_spacing)",
         description: "Word-wrapped paragraph text inside a design-space column. Returns the Y just past the last line drawn.",
         example: 'int next_y = ui_draw_text_wrapped(100, 200, 440,\n    "Welcome to the game!", 12, COLOR_WHITE, 4);'
+      },
+      {
+        name: "ui_set_shadow_color",
+        signature: "void ui_set_shadow_color(u32 color)",
+        description: "Colour of the drop shadow under every string this module draws. Defaults to black, which is right for light text on a dark background and wrong under a dark glyph on a pale panel — there it turns the letter into a smudge. Set once at startup, like the overscan.",
+        example: 'ui_set_shadow_color(RGBA(60, 0, 0, 255));  /* warm, for a pale card face */'
+      },
+      {
+        name: "ui_get_shadow_color",
+        signature: "u32 ui_get_shadow_color(void)",
+        description: "The current shadow colour. Useful for saving and restoring it around one oddly-coloured panel rather than changing it globally.",
+        example: 'u32 saved = ui_get_shadow_color();\nui_set_shadow_color(panel_bg);\nui_draw_text_centered_in(x, y, w, h, "A", 24, fg);\nui_set_shadow_color(saved);'
+      },
+      {
+        name: "ui_set_border_color",
+        signature: "void ui_set_border_color(u32 color)",
+        description: "Colour of ui_draw_border(). Defaults to cyan, which reads as another program's chrome on a game with its own palette.",
+        example: 'ui_set_border_color(RGBA(107, 0, 0, 255));  /* lava, not cyan */'
+      },
+      {
+        name: "ui_get_border_color",
+        signature: "u32 ui_get_border_color(void)",
+        description: "The current border colour.",
+        example: "u32 border = ui_get_border_color();"
       }
     ]
   }

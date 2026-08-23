@@ -23,42 +23,11 @@
     let isLoading = false;
 
     // ── Custom dropdowns ──────────────────────────────────────────────────
-
-    function setupRetroDropdown(containerId, onSelect) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        const selected = container.querySelector('.dropdown-selected');
-        const options = container.querySelectorAll('.dropdown-option');
-
-        selected.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.custom-dropdown.open').forEach(d => {
-                if (d !== container) d.classList.remove('open');
-            });
-            container.classList.toggle('open');
-        });
-
-        options.forEach(opt => {
-            opt.addEventListener('click', () => {
-                selected.querySelector('span:first-child').textContent = opt.textContent;
-                options.forEach(o => o.classList.remove('active'));
-                opt.classList.add('active');
-                container.classList.remove('open');
-                if (onSelect) onSelect(opt.dataset.value);
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!container.contains(e.target)) container.classList.remove('open');
-        });
-    }
-
-    function getDropdownValue(containerId) {
-        const container = document.getElementById(containerId);
-        if (!container) return 'all';
-        const active = container.querySelector('.dropdown-option.active');
-        return active ? active.dataset.value : 'all';
-    }
+    // Implementation is shared with album-art-maker and pixel-process:
+    // tools/shell/dropdown.js. This app defaults a missing selection to
+    // 'all', which its filter payload depends on.
+    const setupRetroDropdown = (id, onSelect) => RetroDropdown.setup(id, onSelect);
+    const getDropdownValue = (id) => RetroDropdown.getValue(id, 'all');
 
     // ── Source toggles ────────────────────────────────────────────────────
 

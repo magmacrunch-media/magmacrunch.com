@@ -3,9 +3,9 @@
   "private": true,
   "description": "magmacrunch media — dev tooling only, no build step",
   "scripts": {
-    "lint": "eslint nav.js assets/*.js templates/*.js",
-    "lint:fix": "eslint --fix nav.js assets/*.js templates/*.js",
-    "lint:all": "eslint nav.js assets/*.js templates/*.js 'arcade/**/js/*.js'",
+    "lint": "eslint nav.js assets/*.js templates/*.js tools/shell/*.js",
+    "lint:fix": "eslint --fix nav.js assets/*.js templates/*.js tools/shell/*.js",
+    "lint:all": "eslint nav.js assets/*.js templates/*.js tools/shell/*.js 'arcade/**/js/*.js'",
     "test:py": "node scripts/run-tests.mjs py",
     "test:js": "node scripts/run-tests.mjs js",
     "test": "npm run lint && npm run test:js",

@@ -1,5 +1,12 @@
-/* -- RESET -- */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+/* ═══════════════════════════════════════════════
+   magnolia — api reference styles
+
+   Chrome (reset, header, glitch title, tool nav, footer) comes from
+   tools/shell/app-shell.css, linked ahead of this file. Only tokens are
+   overridden here, plus the two @keyframes below: this page uses a smoother
+   glitch curve than the shell's, and redefining them here wins because this
+   stylesheet loads second.
+   ═══════════════════════════════════════════════ */
 
 /* -- PALETTE -- */
 :root {
@@ -13,62 +20,28 @@
     --accent2: #00c4cc;
     --bright: #7df9ff;
     --orange: #ff7c1f;
+
+    /* -- SHELL OVERRIDES -- */
+    --scanline:      rgba(0,200,200,0.03);
+    --title-size:    14px;
+    --title-color:   var(--accent);
+    --title-glow:    0 0 12px rgba(0,245,255,0.3);
+    --glitch-speed:  3s;
+    --glitch-tint-1: rgba(0,245,255,0.25);
+    --glitch-tint-2: rgba(0,245,255,0.25);
+    --footer-pad:    10px 24px;
+    --backlink-color: var(--accent);
+    --backlink-hover: #ffffff;
+    --backlink-glow:  var(--accent);
 }
 
-html, body { height: 100%; overflow: hidden; }
-
 body {
-    font-family: 'Press Start 2P', monospace;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 8px;
-    display: flex;
-    flex-direction: column;
     user-select: none;
     -webkit-user-select: none;
-    background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,200,200,0.03) 2px, rgba(0,200,200,0.03) 4px
-    );
 }
 
 a { color: var(--accent); }
 
-/* -- HEADER -- */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-.header-left { display: flex; align-items: center; gap: 16px; }
-
-h1.glitch {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
-    color: var(--accent);
-    position: relative;
-    text-shadow: 0 0 12px rgba(0,245,255,0.3);
-}
-h1.glitch::before, h1.glitch::after {
-    content: attr(data-text);
-    position: absolute; left: 0; top: 0; opacity: 0.8;
-}
-h1.glitch::before {
-    animation: glitch-1 3s infinite linear alternate-reverse;
-    clip-path: inset(0 0 65% 0);
-    color: rgba(0,245,255,0.25);
-}
-h1.glitch::after {
-    animation: glitch-2 3s infinite linear alternate-reverse;
-    clip-path: inset(65% 0 0 0);
-    color: rgba(0,245,255,0.25);
-}
 @keyframes glitch-1 {
     0%   { transform: translate(0); }
     20%  { transform: translate(-2px, 1px); }
@@ -85,35 +58,12 @@ h1.glitch::after {
     80%  { transform: translate(-1px, -2px); }
     100% { transform: translate(0); }
 }
-
-.header-right { display: flex; align-items: center; gap: 12px; }
-
 .header-stat {
     font-family: 'Courier Prime', monospace;
     font-size: 10px;
     color: var(--dim);
 }
 .header-stat span { color: var(--accent); }
-
-/* -- TOOL NAV -- */
-.tool-nav {
-    padding: 8px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    flex-shrink: 0;
-}
-.tool-nav .back-link {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    transition: color 0.15s, text-shadow 0.15s;
-}
-.tool-nav .back-link:hover {
-    color: #ffffff;
-    text-shadow: 0 0 8px var(--accent);
-}
 
 /* -- MAIN -- */
 main {
@@ -439,14 +389,12 @@ main {
 }
 
 /* -- FOOTER -- */
+/* padding, border and flex-shrink come from the shell. */
 footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 24px;
-    border-top: 1px solid var(--border);
     background: var(--bg);
-    flex-shrink: 0;
 }
 footer .footer-left {
     font-family: 'Courier Prime', monospace;

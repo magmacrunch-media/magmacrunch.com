@@ -1,9 +1,13 @@
-/* ── Reset ── */
-*, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* ═══════════════════════════════════════════════
+   media//search — app styles
+
+   Chrome (reset, header, glitch title, tool nav, workspace, footer) comes
+   from tools/shell/app-shell.css; the dropdown from tools/shell/dropdown.css.
+   Both are linked ahead of this file. Only tokens are overridden here.
+
+   Unlike the canvas tools this app does NOT set user-select: none — the
+   whole point is copyable results — which is why the shell leaves it out.
+   ═══════════════════════════════════════════════ */
 
 .hidden { display: none !important; }
 
@@ -23,6 +27,27 @@
     --orange:    #ff7c1f;
     --purple:    #c45fff;
     --panel-w:   220px;
+
+    /* ── SHELL OVERRIDES ── */
+    --title-size:    14px;
+    --glitch-tint-1: rgba(196,95,255,0.4);   /* purple */
+    --glitch-tint-2: rgba(0,245,255,0.4);    /* cyan */
+    --chrome-tint-1: rgba(196,95,255,0.45);
+    --chrome-tint-2: rgba(0,245,255,0.45);
+    --footer-pad:    10px 24px;
+    --backlink-color: var(--purple);
+    --backlink-hover: #ffffff;
+    --backlink-glow:  var(--purple);
+
+    /* ── DROPDOWN OVERRIDES ── */
+    --dd-border-w:   1px;
+    --dd-accent:     var(--cyan);
+    --dd-glow:       rgba(0,245,255,0.15);
+    --dd-glow-open:  rgba(0,245,255,0.2);
+    --dd-tint:       rgba(0,245,255,0.08);
+    --dd-tint-soft:  rgba(0,245,255,0.05);
+    --dd-font-size:  7px;
+    --dd-arrow:      var(--dim);
 }
 
 /* Source badge colors — shifted from main palette for visual distinction */
@@ -32,107 +57,6 @@
 .src-met-museum { --src-color: #f5c542; }
 .src-smithsonian { --src-color: #f4845f; }
 .src-archive  { --src-color: #e8637a; }
-
-/* ── BASE ── */
-html, body {
-    height: 100%;
-    overflow: hidden;
-}
-
-body {
-    font-family: 'Press Start 2P', monospace;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 8px;
-    display: flex;
-    flex-direction: column;
-    background-image: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,0,0,0.12) 2px, rgba(0,0,0,0.12) 4px
-    );
-}
-
-/* ── HEADER ── */
-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    flex-shrink: 0;
-    z-index: 10;
-}
-
-.header-left { display: flex; align-items: center; gap: 16px; }
-
-h1.glitch {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 14px;
-    color: var(--text);
-    position: relative;
-}
-
-h1.glitch::before,
-h1.glitch::after {
-    content: attr(data-text);
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0.8;
-}
-
-h1.glitch::before {
-    animation: glitch-1 2s infinite linear alternate-reverse;
-    clip-path: inset(0 0 65% 0);
-    color: rgba(196,95,255,0.4);
-}
-
-h1.glitch::after {
-    animation: glitch-2 2s infinite linear alternate-reverse;
-    clip-path: inset(65% 0 0 0);
-    color: rgba(0,245,255,0.4);
-}
-
-@keyframes glitch-1 {
-    0%, 95% { transform: translate(0); }
-    96% { transform: translate(-2px, 1px); }
-    97% { transform: translate(2px, -1px); }
-    98% { transform: translate(-1px, 2px); }
-    99% { transform: translate(1px, -2px); }
-    100% { transform: translate(0); }
-}
-
-@keyframes glitch-2 {
-    0%, 95% { transform: translate(0); }
-    96% { transform: translate(2px, -1px); }
-    97% { transform: translate(-2px, 1px); }
-    98% { transform: translate(1px, -2px); }
-    99% { transform: translate(-1px, 2px); }
-    100% { transform: translate(0); }
-}
-
-.header-right {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.sys-stat {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    color: var(--dim);
-    background: var(--surface);
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-}
-
-/* ── WORKSPACE ── */
-.workspace {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-}
 
 /* ── PANEL ── */
 .panel {
@@ -218,100 +142,6 @@ h1.glitch::after {
     outline: none;
     border-color: var(--cyan);
 }
-
-/* ── Custom Dropdown ── */
-.custom-dropdown {
-    position: relative;
-    width: 100%;
-    user-select: none;
-}
-
-.dropdown-selected {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 8px 10px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: all 0.15s;
-}
-
-.dropdown-selected:hover {
-    border-color: var(--cyan);
-    box-shadow: 0 0 10px rgba(0,245,255,0.15);
-}
-
-.custom-dropdown.open .dropdown-selected {
-    border-color: var(--cyan);
-    box-shadow: 0 0 12px rgba(0,245,255,0.2);
-}
-
-.dropdown-arrow {
-    color: var(--dim);
-    font-size: 8px;
-    transition: transform 0.2s;
-}
-
-.custom-dropdown.open .dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-.dropdown-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--surface);
-    border: 1px solid var(--cyan);
-    border-top: none;
-    margin-top: -1px;
-    max-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    transition: max-height 0.25s ease-out;
-    z-index: 50;
-}
-
-.custom-dropdown.open .dropdown-options {
-    max-height: 240px;
-}
-
-.dropdown-option {
-    padding: 7px 10px;
-    cursor: pointer;
-    transition: all 0.1s;
-    border-bottom: 1px solid var(--border);
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--dim);
-    white-space: nowrap;
-}
-
-.dropdown-option:last-child {
-    border-bottom: none;
-}
-
-.dropdown-option:hover {
-    background: rgba(0,245,255,0.08);
-    border-left: 3px solid var(--cyan);
-    color: var(--text);
-    padding-left: 7px;
-}
-
-.dropdown-option.active {
-    color: var(--cyan);
-    border-left: 3px solid var(--cyan);
-    padding-left: 7px;
-    background: rgba(0,245,255,0.05);
-}
-
-.dropdown-options::-webkit-scrollbar { width: 4px; }
-.dropdown-options::-webkit-scrollbar-track { background: transparent; }
-.dropdown-options::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
 /* ── CENTER ── */
 .center-area {
@@ -683,19 +513,10 @@ h1.glitch::after {
 }
 
 /* ── Footer ── */
+/* border and .footer-text come from the shell. */
 footer {
-    padding: 10px 24px;
-    border-top: 1px solid var(--border);
     text-align: center;
-    flex-shrink: 0;
 }
-
-.footer-text {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    color: var(--dim);
-}
-
 /* ── Responsive ── */
 @media (max-width: 768px) {
     .workspace { flex-direction: column; }

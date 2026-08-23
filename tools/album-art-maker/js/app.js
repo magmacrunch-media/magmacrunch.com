@@ -6,54 +6,12 @@
     const canvas = document.getElementById('mainCanvas');
 
     // ── RETRO DROPDOWN HELPER ──
-    function getDropdownValue(containerId) {
-        const el = document.querySelector('#' + containerId + ' .dropdown-option.active');
-        return el ? el.dataset.value : null;
-    }
-
-    function setDropdownValue(containerId, value) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        const options = container.querySelectorAll('.dropdown-option');
-        options.forEach(o => {
-            o.classList.toggle('active', o.dataset.value === value);
-        });
-        const selected = container.querySelector('.dropdown-selected span:first-child');
-        if (selected) {
-            const active = container.querySelector('.dropdown-option.active');
-            if (active) selected.textContent = active.textContent;
-        }
-    }
-
-    function setupRetroDropdown(containerId, onSelect) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        const selected = container.querySelector('.dropdown-selected');
-        const options = container.querySelectorAll('.dropdown-option');
-
-        selected.addEventListener('click', (e) => {
-            e.stopPropagation();
-            // close all other dropdowns
-            document.querySelectorAll('.custom-dropdown.open').forEach(d => {
-                if (d !== container) d.classList.remove('open');
-            });
-            container.classList.toggle('open');
-        });
-
-        options.forEach(opt => {
-            opt.addEventListener('click', () => {
-                selected.querySelector('span:first-child').textContent = opt.textContent;
-                options.forEach(o => o.classList.remove('active'));
-                opt.classList.add('active');
-                container.classList.remove('open');
-                if (onSelect) onSelect(opt.dataset.value);
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!container.contains(e.target)) container.classList.remove('open');
-        });
-    }
+    // Implementation is shared with media-search and pixel-process:
+    // tools/shell/dropdown.js. getValue's default stays null here, which the
+    // `|| 'Press Start 2P'` fallback at the font call site relies on.
+    const getDropdownValue = (id) => RetroDropdown.getValue(id);
+    const setDropdownValue = (id, value) => RetroDropdown.setValue(id, value);
+    const setupRetroDropdown = (id, onSelect) => RetroDropdown.setup(id, onSelect);
 
     // ── SELECTED ELEMENT SYNC ──
     // After undo/redo, selectedElement may point to a detached object.
