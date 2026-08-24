@@ -71,6 +71,7 @@ jobs:
         run: |
           cat > discord-payload.json << ENDOFJSON
           {
+            "flags": 4096,
             "embeds": [{
               "title": "Broken Links Detected",
               "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
