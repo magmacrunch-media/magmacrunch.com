@@ -3,12 +3,16 @@ name: Sync magmascript playground
 # Keeps tools/magmascript/app.js (the browser playground's embedded interpreter)
 # in step with the published magmascript package. The embedded copy drifts every
 # time the language changes; this reinstalls the latest release and regenerates
-# the block. Runs weekly, or on demand after a magmascript release.
+# the block. The magmascript release workflow dispatches this the moment a
+# version lands on PyPI; the weekly schedule is a backstop in case that
+# dispatch ever fails.
 
 on:
   schedule:
     - cron: "17 8 * * 1"   # Mondays 08:17 UTC (offset from other scheduled jobs)
   workflow_dispatch:
+  repository_dispatch:
+    types: [magmascript-release]
 
 permissions:
   contents: write
@@ -23,8 +27,17 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install latest magmascript
-        run: pip install --upgrade magmascript
+      # A release dispatch names the version it just published — pin to it so a
+      # stale PyPI CDN edge fails the job loudly instead of silently embedding
+      # the previous release. Scheduled and manual runs take whatever is latest.
+      - name: Install magmascript
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          if [ -n "$VERSION" ]; then
+            pip install "magmascript==${VERSION}"
+          else
+            pip install --upgrade magmascript
+          fi
 
       - name: Regenerate the embedded interpreter
         run: python scripts/sync-playground.py
