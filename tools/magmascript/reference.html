@@ -396,6 +396,45 @@ print(result.exit_code)</code></pre>
     </table>
   </div>
 
+  <div class="ref-section">
+    <h2>asthenosphere — the memory tier</h2>
+    <p style="font-size:11px;color:#9d99b5;margin-bottom:.5rem;">Explicit memory below the dynamic language: fixed-width ints that wrap like C, a real byte arena, and structs with visible layout. <code>floorplan</code> is the only new keyword — the rest are builtins.</p>
+<pre><code><span class="cmt">// fixed-width ints: i8 i16 i32 i64  u8 u16 u32 u64  f32 f64</span>
+n = <span class="fn">u8</span>(<span class="num">255</span>)
+n = n + <span class="num">1</span>              <span class="cmt">// wraps to 0, and says so (spooked)</span>
+<span class="fn">i32</span>(<span class="num">-7</span>) / <span class="fn">i32</span>(<span class="num">2</span>)      <span class="cmt">// -3: truncates toward zero, like C</span>
+<span class="fn">i32</span>(<span class="num">1</span>) + <span class="fn">u8</span>(<span class="num">1</span>)       <span class="cmt">// error: no promotion — use osmosis(x, i32)</span>
+
+<span class="cmt">// the arena: garrison claims bytes, scorch frees them</span>
+p = <span class="fn">garrison</span>(<span class="num">16</span>)
+p.<span class="fn">poke</span>(i32, <span class="num">10</span>)         <span class="cmt">// write; p.peek(i32) reads back</span>
+p[<span class="num">8</span>] = <span class="num">72</span>              <span class="cmt">// raw byte access</span>
+<span class="fn">bathysphere</span>(p)          <span class="cmt">// annotated hex dump</span>
+<span class="fn">scorch</span>(p)
+
+<span class="cmt">// floorplans: structs with C layout</span>
+<span class="kw">floorplan</span> <span class="fn">Point</span> {
+    x: i32
+    y: i32
+    label: u8[<span class="num">16</span>]
+}
+<span class="fn">layout</span>(Point)             <span class="cmt">// prints the field table, padding included</span>
+pt = <span class="fn">garrison</span>(Point)
+pt.x = <span class="fn">i32</span>(<span class="num">10</span>)
+<span class="fn">scorch</span>(pt)
+
+<span class="cmt">// a pine field points at another floorplan — linked lists work</span>
+<span class="kw">floorplan</span> <span class="fn">Node</span> {
+    value: i32
+    next: pine[Node]
+}
+
+<span class="cmt">// faults, all caught by try / haunter:</span>
+<span class="cmt">//   quicksand           — reading ground you already scorched</span>
+<span class="cmt">//   area does not exist — reading outside a block</span>
+<span class="cmt">//   ancient weeds       — anything never scorched, reported at exit</span></code></pre>
+  </div>
+
 </div>
 
 <footer>
