@@ -64,6 +64,7 @@ jobs:
         run: |
           cat > discord-payload.json << ENDOFJSON
           {
+            "flags": 4096,
             "embeds": [{
               "title": "Deploy to Pi Failed",
               "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
