@@ -64,6 +64,28 @@ jobs:
             --body-file /tmp/issue-body.md \
             --label "automated issue,broken-links"
 
+      - name: Post to Discord
+        if: steps.lychee.outputs.exit_code != 0
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          cat > discord-payload.json << ENDOFJSON
+          {
+            "embeds": [{
+              "title": "Broken Links Detected",
+              "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "description": "Link checker found broken links in \`${{ github.ref_name }}\`.\n\nA GitHub issue has been created with the full report.",
+              "color": 16750848,
+              "footer": {
+                "text": "Check Links · ${{ github.repository }}"
+              }
+            }]
+          }
+          ENDOFJSON
+          curl -s -H "Content-Type: application/json" \
+               -d @discord-payload.json \
+               "$DISCORD_WEBHOOK_URL"
+
       - name: Fail on broken links
         if: steps.lychee.outputs.exit_code != 0
         run: exit 1
