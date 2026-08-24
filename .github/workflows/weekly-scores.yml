@@ -1,6 +1,8 @@
 name: Weekly High Scores
 
 on:
+  schedule:
+    - cron: "0 12 * * 0"
   workflow_dispatch:
 
 jobs:
@@ -27,4 +29,9 @@ jobs:
         if: env.DISCORD_WEBHOOK_URL != ''
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-        run: magmascript scores report --post-discord
+        run: |
+          PAYLOAD=$(magmascript scores report --discord)
+          echo "$PAYLOAD" | jq '{flags: 4096, embeds: .embeds}' > discord-payload.json
+          curl -s -H "Content-Type: application/json" \
+               -d @discord-payload.json \
+               "$DISCORD_WEBHOOK_URL"
