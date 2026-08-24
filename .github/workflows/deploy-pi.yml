@@ -56,3 +56,35 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 \
             jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
+
+      - name: Post to Discord
+        if: failure()
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          cat > discord-payload.json << ENDOFJSON
+          {
+            "embeds": [{
+              "title": "Deploy to Pi Failed",
+              "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "description": "Workflow run \`${{ github.run_id }}\` failed on push to \`${{ github.ref_name }}\`.",
+              "fields": [
+                {
+                  "name": "Commit",
+                  "value": "`${{ github.sha }}` — ${{ github.event.head_commit.message }}"
+                },
+                {
+                  "name": "Diagnose",
+                  "value": "\`\`\`bash\nssh jake@100.74.172.4 'sudo systemctl status arcade-* --no-pager'\n\`\`\`"
+                }
+              ],
+              "color": 16711680,
+              "footer": {
+                "text": "Deploy to Pi · ${{ github.repository }}"
+              }
+            }]
+          }
+          ENDOFJSON
+          curl -s -H "Content-Type: application/json" \
+               -d @discord-payload.json \
+               "$DISCORD_WEBHOOK_URL"
