@@ -292,7 +292,7 @@
     <h1>texastoast</h1>
     <p class="tagline">Python RPG engine with I2C hardware abstraction for magmacrunch game systems</p>
     <div class="badges">
-      <span class="badge">v0.3.0</span>
+      <span class="badge">v0.5.0</span>
       <span class="badge">Apache-2.0</span>
       <span class="badge">Python 3.10+</span>
     </div>
@@ -323,32 +323,48 @@
         <span>JSON save/load, per-tile solidity, sub-stepped AABB collision that slides along walls</span>
       </div>
       <div class="feat-item">
+        <strong>Scenes</strong>
+        <span>Push a pause scene and the world freezes by construction &mdash; no paused flag, no dispatch chain</span>
+      </div>
+      <div class="feat-item">
         <strong>Camera</strong>
         <span>Smooth follow, clamped to map bounds, framerate-independent smoothing</span>
       </div>
       <div class="feat-item">
         <strong>Entities</strong>
-        <span>Pixels-per-second speed with normalized diagonals</span>
+        <span>Pixels-per-second speed with normalized diagonals, plus a group that drives updates and sorts by feet line</span>
       </div>
       <div class="feat-item">
         <strong>UI Widgets</strong>
-        <span>Typewriter dialogue, menus, HUD stat bars &mdash; all frame-driven</span>
+        <span>Typewriter dialogue, menus, HUD stat bars &mdash; all frame-driven, all themeable from one object</span>
       </div>
       <div class="feat-item">
         <strong>Input Abstraction</strong>
         <span>NES-style buttons behind one InputState snapshot; keyboard or hardware</span>
       </div>
       <div class="feat-item">
+        <strong>Player Seats</strong>
+        <span>Join by button press, hotplug handling, and a returning controller reclaims its own seat</span>
+      </div>
+      <div class="feat-item">
+        <strong>Audio</strong>
+        <span>Degrades from a real mixer to the platform player to silence &mdash; a machine with no audio runs the same game</span>
+      </div>
+      <div class="feat-item">
         <strong>I2C Hardware</strong>
         <span>Magma Hub controllers over I2C on Raspberry Pi, with keyboard fallback</span>
+      </div>
+      <div class="feat-item">
+        <strong>Hardware Dev Kit</strong>
+        <span>A bus-level simulator, a live controller bench, and session record/replay &mdash; build for the hardware without owning it</span>
       </div>
       <div class="feat-item">
         <strong>magmascript Binding</strong>
         <span>Registers as the tt domain, so .mgs scripts drive the engine directly</span>
       </div>
       <div class="feat-item">
-        <strong>Tile Editor</strong>
-        <span>A tkinter map editor ships with the repo</span>
+        <strong>Tools</strong>
+        <span>A tkinter map editor ships with the repo; the controller bench installs as texastoast-bench</span>
       </div>
     </div>
   </div>
@@ -359,12 +375,17 @@
       inspired by <a href="../adenosine/">adenosine</a> and built for the same kind of small RPGs &mdash;
       but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi.
       Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it is absent.</p>
+    <p>It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against
+      imaginary controllers, a live test bench for bringing real ones up, and session record/replay
+      that turns a captured session into a regression test. You can build for the Magma Hub before
+      the Magma Hub exists.</p>
 
     <h3>install</h3>
     <p class="about-label">pip:</p>
     <pre><code>pip install texastoast</code></pre>
     <p style="font-size:11px;color:#555;margin-top:.25rem;">
-      optional extras: <code>[sprites]</code> for Pillow sprite sheets, <code>[hardware]</code> for I2C
+      optional extras: <code>[sprites]</code> for Pillow sprite sheets, <code>[hardware]</code> for I2C,
+      <code>[audio]</code> for a real sound mixer
     </p>
 
     <h3>quick start</h3>
@@ -389,6 +410,37 @@ def render():
 game.set_update(update)
 game.set_render(render)
 game.start()</code></pre>
+
+    <h3>scenes</h3>
+    <p>Once a game has more than one screen, hand the loop to a scene stack. Pushing a
+      scene freezes the ones below it, so a pause menu needs no <code>paused</code> flag
+      and no early-return chain &mdash; the modality <em>is</em> the stack.</p>
+    <pre><code>from texastoast import SceneStack
+
+stack = SceneStack()
+
+class PauseScene:
+    render_below = True          # the frozen world stays visible underneath
+
+    def on_enter(self):  menu.show(["Resume", "Quit"], on_cancel=stack.pop)
+    def on_exit(self):   menu.hide()
+    def update(self, dt): pass
+    def render(self):    menu.render()
+
+class WorldScene:
+    def update(self, dt): ...
+    def render(self):     ...
+    def handle_key(self, event):
+        if event.keysym == "Escape":
+            stack.push(PauseScene())    # world freezes; no flag exists
+
+stack.push(WorldScene())
+game.set_update(stack.update)
+game.set_render(stack.render)
+game.bind_key("&lt;Key&gt;", stack.dispatch_key)</code></pre>
+    <p style="font-size:11px;color:#555;margin-top:.25rem;">
+      A scene is anything with <code>update(dt)</code> and <code>render()</code> &mdash; there is no base class to subclass.
+    </p>
 
     <h3>magmascript binding</h3>
     <p>texastoast registers itself as the <code>texastoast</code> domain (aliased <code>tt</code>),
