@@ -221,7 +221,7 @@
     "c": "page",
     "u": "/ware/utilities/index.html",
     "d": "Browser-based tools for art, media & image processing",
-    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
+    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶ SPRITE//FORGE game sprite editor · animation, onion skin, PNG sheet export ▶"
   },
   {
     "t": "developer tools",
@@ -1909,5 +1909,12 @@
     "u": "/ware/pixel-process/",
     "d": "Creative web tool",
     "b": "pixel process — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. PIXEL//PROCESS 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT &#9662; WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR COLOR A COLOR B WORK SIZE W H PRESETS &#9662; 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG DROP IMAGE drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image..."
+  },
+  {
+    "t": "sprite forge",
+    "c": "tool",
+    "u": "/ware/sprite-forge/",
+    "d": "Creative web tool",
+    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32&times;32 1 FRAME &minus; 16&times; + &#9638; GRID &#8651; MIRROR &#9678; ONION 32 &times; 32 animation sheet &mdash; click a frame to edit it EXPORT OUTPUT COPY TOOLS &#9998; &#9003; &#9632; &#9585; &#9645; &#9711; &#9906; &#8982; COLOR #000000 + ADD RAMP FRAMES &larr; 1 / 1 &rarr; ADD DUP DEL playback &#9654; fps 4&times; TRANSFORM &#8644; FLIP &#8645; FLIP &#8635; 90&deg; shift (arrow keys) &#9664; &#9650; &#9660; &#9654; CANVAS w &tim..."
   }
 ]

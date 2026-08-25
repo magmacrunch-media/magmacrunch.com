@@ -259,7 +259,7 @@ function parsePress() {
 
 // ── Ware ───────────────────────────────────────────────────
 function parseWare() {
-  const toolDirs = ['album-art-maker', 'media-search', 'pixel-process'];
+  const toolDirs = ['album-art-maker', 'media-search', 'pixel-process', 'sprite-forge'];
   for (const tool of toolDirs) {
     const indexFile = path.join(ROOT, 'ware', tool, 'index.html');
     if (!fs.existsSync(indexFile)) continue;
