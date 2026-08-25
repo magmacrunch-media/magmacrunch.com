@@ -222,8 +222,9 @@ footer .dot {
   display: inline-block; width: 8px; height: 8px;
   border-radius: 50%; margin-right: .25rem;
 }
-footer .dot.ok  { background: #6ee7a8; }
-footer .dot.err { background: #ff6b6b; }
+footer .dot.ok      { background: #6ee7a8; }
+footer .dot.err     { background: #ff6b6b; }
+footer .dot.loading { background: #9d99b5; }
 
 /* ── Mobile ───────────────────────────────────────────── */
 

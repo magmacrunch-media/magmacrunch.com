@@ -225,6 +225,9 @@ exampleSelect.addEventListener("change", () => {
 runBtn.addEventListener("click", run);
 resetBtn.addEventListener("click", reset);
 
+// No source toggle on the site: there is no packages/ sibling to load from, so
+// the markup is not shipped here and this matches nothing. Kept so this file
+// stays a small diff away from the standalone copy in the adenosine repo.
 document.querySelectorAll('input[name="source"]').forEach(r => {
   r.addEventListener("change", (e) => {
     state.mode = e.target.value;

@@ -1,0 +1,57 @@
+name: Sync adenosine playground
+
+# Keeps ware/adenosine/{playground,theme,tiles}.js pinned to the published
+# adenosine packages. Unlike the magmascript and texastoast playgrounds these
+# embed nothing — they load each package from jsDelivr at runtime, off a version
+# written into the source by hand. A release bumps none of them, so the site
+# keeps serving the previous build to every visitor, with no error, because the
+# old version is still on the CDN and still works. The adenosine release
+# workflow dispatches this the moment the versions land on npm; the weekly
+# schedule is a backstop in case that dispatch ever fails.
+
+on:
+  schedule:
+    - cron: "41 8 * * 1"   # Mondays 08:41 UTC (offset from other scheduled jobs)
+  workflow_dispatch:
+  repository_dispatch:
+    types: [adenosine-release]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # A release dispatch names the seven versions it just published — pin to
+      # them so a stale npm edge fails the job loudly instead of silently
+      # leaving the previous release in place. Scheduled and manual runs take
+      # whatever is latest. Either way the script confirms every version
+      # resolves on npm before writing.
+      - name: Repin the tools
+        env:
+          ADENOSINE_VERSIONS: ${{ toJSON(github.event.client_payload.versions) }}
+        run: |
+          # toJSON of a missing payload yields "null", which is not a version map.
+          if [ "$ADENOSINE_VERSIONS" = "null" ]; then
+            unset ADENOSINE_VERSIONS
+          fi
+          node scripts/sync-adenosine-pins.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ware/adenosine/playground.js ware/adenosine/theme.js ware/adenosine/tiles.js
+          if git diff --cached --quiet; then
+            echo "Tools already pinned to the published versions."
+          else
+            git commit -m "chore(ware): repin adenosine tools to the published packages"
+            git push
+          fi
