@@ -307,7 +307,7 @@
     <a href="reference.html" class="tool-card">
       <div class="icon">&#128214;</div>
       <h2>API Reference</h2>
-      <p>Game, entities, tile maps, camera, input, and the UI widgets &mdash; plus the magmascript domain table.</p>
+      <p>Game, entities, tile maps, camera, input, and the UI widgets, plus the magmascript domain table.</p>
     </a>
   </div>
 
@@ -324,7 +324,7 @@
       </div>
       <div class="feat-item">
         <strong>Scenes</strong>
-        <span>Push a pause scene and the world freezes by construction &mdash; no paused flag, no dispatch chain</span>
+        <span>Push a pause scene and the world freezes by construction, no paused flag, no dispatch chain</span>
       </div>
       <div class="feat-item">
         <strong>Camera</strong>
@@ -336,7 +336,7 @@
       </div>
       <div class="feat-item">
         <strong>UI Widgets</strong>
-        <span>Typewriter dialogue, menus, HUD stat bars &mdash; all frame-driven, all themeable from one object</span>
+        <span>Typewriter dialogue, menus, HUD stat bars, all frame-driven, all themeable from one object</span>
       </div>
       <div class="feat-item">
         <strong>Input Abstraction</strong>
@@ -348,7 +348,7 @@
       </div>
       <div class="feat-item">
         <strong>Audio</strong>
-        <span>Degrades from a real mixer to the platform player to silence &mdash; a machine with no audio runs the same game</span>
+        <span>Degrades from a real mixer to the platform player to silence; a machine with no audio runs the same game</span>
       </div>
       <div class="feat-item">
         <strong>I2C Hardware</strong>
@@ -356,7 +356,7 @@
       </div>
       <div class="feat-item">
         <strong>Hardware Dev Kit</strong>
-        <span>A bus-level simulator, a live controller bench, and session record/replay &mdash; build for the hardware without owning it</span>
+        <span>A bus-level simulator, a live controller bench, and session record/replay, build for the hardware without owning it</span>
       </div>
       <div class="feat-item">
         <strong>magmascript Binding</strong>
@@ -372,7 +372,7 @@
   <div class="about">
     <h2>about</h2>
     <p>A tkinter-based 2D game engine by <a href="https://magmacrunch.com">magmacrunch media</a>,
-      inspired by <a href="../adenosine/">adenosine</a> and built for the same kind of small RPGs &mdash;
+      inspired by <a href="../adenosine/">adenosine</a> and built for the same kind of small RPGs,
       but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi.
       Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it is absent.</p>
     <p>It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against
@@ -414,7 +414,7 @@ game.start()</code></pre>
     <h3>scenes</h3>
     <p>Once a game has more than one screen, hand the loop to a scene stack. Pushing a
       scene freezes the ones below it, so a pause menu needs no <code>paused</code> flag
-      and no early-return chain &mdash; the modality <em>is</em> the stack.</p>
+      and no early-return chain, the modality <em>is</em> the stack.</p>
     <pre><code>from texastoast import SceneStack
 
 stack = SceneStack()
@@ -439,7 +439,7 @@ game.set_update(stack.update)
 game.set_render(stack.render)
 game.bind_key("&lt;Key&gt;", stack.dispatch_key)</code></pre>
     <p style="font-size:11px;color:#555;margin-top:.25rem;">
-      A scene is anything with <code>update(dt)</code> and <code>render()</code> &mdash; there is no base class to subclass.
+      A scene is anything with <code>update(dt)</code> and <code>render()</code>, there is no base class to subclass.
     </p>
 
     <h3>magmascript binding</h3>
