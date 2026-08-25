@@ -216,7 +216,7 @@
 
   <div class="page-head">
     <h1>API reference</h1>
-    <p>texastoast v0.5.0 — every public class, with the signatures the engine actually ships.
+    <p>texastoast v0.5.0, every public class, with the signatures the engine actually ships.
       Try any of it in the <a href="playground.html">playground</a>.</p>
     <div class="toc">
       <a href="#install">install</a>
@@ -242,7 +242,7 @@
 pip install "texastoast[sprites]"    # Pillow, for sprite sheets
 pip install "texastoast[hardware]"   # smbus2, for I2C on Raspberry Pi
 pip install "texastoast[audio]"      # pygame-ce, for a real sound mixer</code></pre>
-    <p>No extra is required — keyboard-only games work with none of them, and both the
+    <p>No extra is required; keyboard-only games work with none of them, and both the
       hardware and audio layers degrade rather than fail when their extra is absent.
       Everything below is re-exported from the top-level package:</p>
     <pre><code>from texastoast import (
@@ -307,10 +307,10 @@ pip install "texastoast[audio]"      # pygame-ce, for a real sound mixer</code><
     <h3>GameLoop</h3>
     <p><code>Game</code> builds one for you; you rarely construct it directly.</p>
     <ul>
-      <li><code>.fps</code> — measured frame rate, updated once a second.</li>
-      <li><code>.frame_count</code> — frames since the last measurement.</li>
-      <li><code>.error</code> — the exception that stopped the loop, if one did.</li>
-      <li><code>start()</code> / <code>stop()</code> — the loop reschedules itself via <code>after()</code>.</li>
+      <li><code>.fps</code>, measured frame rate, updated once a second.</li>
+      <li><code>.frame_count</code>, frames since the last measurement.</li>
+      <li><code>.error</code>, the exception that stopped the loop, if one did.</li>
+      <li><code>start()</code> / <code>stop()</code>, the loop reschedules itself via <code>after()</code>.</li>
     </ul>
     <div class="note">Two behaviours worth knowing: <code>dt</code> is clamped to
       <code>MAX_DT = 0.1</code> so a background tab or a slow frame cannot explode your physics,
@@ -341,7 +341,7 @@ pip install "texastoast[audio]"      # pygame-ce, for a real sound mixer</code><
 
     update_below = True          # the scene underneath keeps updating
     render_below = True          # the scene underneath keeps rendering</code></pre>
-    <div class="note"><code>Scene</code> is a <code>typing.Protocol</code> for type checking only —
+    <div class="note"><code>Scene</code> is a <code>typing.Protocol</code> for type checking only;
       at runtime a plain class, or even a <code>SimpleNamespace</code>, works.</div>
 
     <h3>SceneStack</h3>
@@ -359,14 +359,14 @@ stack.dispatch_key(event)  # -&gt; bool; top scene only
 stack.top                  # the current top scene, or None
 stack.scenes               # bottom-to-top snapshot
 len(stack), bool(stack), scene in stack</code></pre>
-    <p>Wire it yourself — the stack is a system, not a framework:</p>
+    <p>Wire it yourself, the stack is a system, not a framework:</p>
     <pre><code>game.set_update(stack.update)
 game.set_render(stack.render)
 game.bind_key("&lt;Key&gt;", stack.dispatch_key)</code></pre>
     <div class="note">Every stack operation is <strong>deferred</strong> to the start of the next
       <code>update()</code>. One rule, two payoffs: a scene can pop itself mid-update without
-      corrupting the frame, and an op issued from a key event — which tkinter delivers between
-      frames — lands before that frame renders, so Escape shows the pause menu the same frame.</div>
+      corrupting the frame, and an op issued from a key event, which tkinter delivers between
+      frames, lands before that frame renders, so Escape shows the pause menu the same frame.</div>
   </section>
 
   <!-- ── World ───────────────────────────────────────── -->
@@ -398,19 +398,19 @@ TileMap.from_file(path, tile_size=None, solid_tiles=None)</code></pre>
       <table>
         <tr><th>member</th><th>description</th></tr>
         <tr><td><code>.x</code> / <code>.y</code></td><td class="desc">Top-left position in world pixels.</td></tr>
-        <tr><td><code>.center_x</code> / <code>.center_y</code></td><td class="desc">Center point — what you hand the camera.</td></tr>
+        <tr><td><code>.center_x</code> / <code>.center_y</code></td><td class="desc">Center point, what you hand the camera.</td></tr>
         <tr><td><code>.speed</code></td><td class="desc">Pixels per <em>second</em>, not per frame.</td></tr>
         <tr><td><code>.aabb</code></td><td class="desc">The entity's bounding box.</td></tr>
         <tr><td><code>move(dx, dy, dt, tilemap=None)</code></td><td class="desc">Move by a direction vector. With a tilemap, collision is sub-stepped: the entity slides along walls and stops flush against them. Diagonals are normalized.</td></tr>
         <tr><td><code>collides_with(other)</code></td><td class="desc">AABB overlap test against another entity.</td></tr>
-        <tr><td><code>.alive</code></td><td class="desc">Set <code>False</code> inside the entity's own <code>update()</code> and an <code>EntityGroup</code> culls it after the pass — no back-reference to the group needed. New in 0.5.0.</td></tr>
+        <tr><td><code>.alive</code></td><td class="desc">Set <code>False</code> inside the entity's own <code>update()</code> and an <code>EntityGroup</code> culls it after the pass, no back-reference to the group needed. New in 0.5.0.</td></tr>
       </table>
     </div>
 
     <h3>EntityGroup</h3>
     <p>The update loop, plus tags and painter's-order iteration. Membership is duck-typed:
       anything with <code>update(dt)</code> qualifies, so timers and particles fit without
-      inheriting from <code>Entity</code>. The group never draws — rendering stays yours.
+      inheriting from <code>Entity</code>. The group never draws; rendering stays yours.
       New in 0.5.0.</p>
     <pre><code>entities = EntityGroup()
 player = entities.add(Entity(x=60, y=60), "player")   # returns the entity
@@ -424,7 +424,7 @@ entities.sorted_by_y()               # by feet line (y + height)
 entities.clear()
 len(entities), iter(entities), npc in entities</code></pre>
     <div class="note">Adds and removes during <code>update()</code> are deferred until the pass ends.
-      Mutating the member list mid-iteration skips the removed entity's neighbour — the classic
+      Mutating the member list mid-iteration skips the removed entity's neighbour, the classic
       first bug of every entity system.</div>
   </section>
 
@@ -438,7 +438,7 @@ len(entities), iter(entities), npc in entities</code></pre>
       <table>
         <tr><th>member</th><th>description</th></tr>
         <tr><td><code>.camera</code></td><td class="desc">The <code>Camera</code> this renderer draws through.</td></tr>
-        <tr><td><code>clear()</code></td><td class="desc">Erase the canvas — call it first in every <code>render()</code>.</td></tr>
+        <tr><td><code>clear()</code></td><td class="desc">Erase the canvas; call it first in every <code>render()</code>.</td></tr>
         <tr><td><code>draw_tilemap(tilemap, tile_colors, skip_tiles=None)</code></td><td class="desc">Draw the visible region only. Tile ids absent from <code>tile_colors</code> stay transparent.</td></tr>
         <tr><td><code>draw_rect(x, y, w, h, color, tag="")</code></td><td class="desc">A world-space rectangle.</td></tr>
         <tr><td><code>draw_image(x, y, image, anchor="nw", tag="")</code></td><td class="desc">A world-space image.</td></tr>
@@ -455,18 +455,18 @@ camera.follow(target_x, target_y, map_width=0, map_height=0, dt=dt)</code></pre>
       constant and integrated over <code>dt</code>, so the camera lags by the same distance at
       any frame rate.</p>
     <div class="note"><strong>Changed in 0.5.0:</strong> <code>dt</code> is required.
-      Omitting it raises <code>TypeError</code> (it warned throughout 0.4.x) — the no-<code>dt</code>
+      Omitting it raises <code>TypeError</code> (it warned throughout 0.4.x). The no-<code>dt</code>
       path applied smoothing once per frame, so the camera converged twice as fast at 60 fps as at 30.
       <code>dt</code> stays last in the signature, so correct 0.4.x calls still work unchanged.</div>
     <ul>
-      <li><code>set_position(x, y)</code> — snap, no smoothing.</li>
+      <li><code>set_position(x, y)</code>, snap, no smoothing.</li>
       <li><code>world_to_screen(wx, wy)</code> / <code>screen_to_world(sx, sy)</code></li>
-      <li><code>is_visible(x, y, w, h)</code> — cull test.</li>
+      <li><code>is_visible(x, y, w, h)</code>, cull test.</li>
     </ul>
 
     <h3>SpriteSheet</h3>
     <p>Crops frames out of a sprite sheet image. Requires the <code>[sprites]</code> extra (Pillow).</p>
-    <div class="note">Not available in the browser playground — sprites and image drawing need a desktop Python install.</div>
+    <div class="note">Not available in the browser playground; sprites and image drawing need a desktop Python install.</div>
   </section>
 
   <!-- ── Input ───────────────────────────────────────── -->
@@ -486,14 +486,14 @@ state = keyboard.poll()      # a copy, so you can diff against last frame</code>
       <table>
         <tr><th>keys</th><th>button</th></tr>
         <tr><td>Arrows / WASD</td><td class="desc">up, down, left, right</td></tr>
-        <tr><td>Z, Enter</td><td class="desc">a — talk, confirm</td></tr>
-        <tr><td>X, Backspace</td><td class="desc">b — cancel</td></tr>
-        <tr><td>Escape, P</td><td class="desc">start — pause</td></tr>
+        <tr><td>Z, Enter</td><td class="desc">a, talk, confirm</td></tr>
+        <tr><td>X, Backspace</td><td class="desc">b, cancel</td></tr>
+        <tr><td>Escape, P</td><td class="desc">start, pause</td></tr>
         <tr><td>Shift</td><td class="desc">select</td></tr>
       </table>
     </div>
     <p>Also <code>is_pressed(button)</code> and <code>destroy()</code>, which removes every binding
-      it installed — pair it with <code>game.on_close(keyboard.destroy)</code>.</p>
+      it installed; pair it with <code>game.on_close(keyboard.destroy)</code>.</p>
 
     <h3>MagmaHubInput &amp; CompositeInput</h3>
     <p><code>MagmaHubInput</code> reads a Magma Hub controller over I2C.
@@ -538,13 +538,13 @@ def update(dt):
         <tr><td><code>player.index</code></td><td class="desc">Seat number, 0-based.</td></tr>
         <tr><td><code>player.joined</code></td><td class="desc">A source has claimed this seat.</td></tr>
         <tr><td><code>player.active</code></td><td class="desc">Joined <em>and</em> currently connected.</td></tr>
-        <tr><td><code>player.poll()</code></td><td class="desc">The seat's <code>InputState</code> — <strong>idle</strong> while inactive, never the buttons held at the moment of disconnect.</td></tr>
+        <tr><td><code>player.poll()</code></td><td class="desc">The seat's <code>InputState</code>, <strong>idle</strong> while inactive, never the buttons held at the moment of disconnect.</td></tr>
         <tr><td><code>manager.players</code></td><td class="desc">Every seat, joined or not.</td></tr>
         <tr><td><code>manager.joined_players</code></td><td class="desc">Only the claimed ones.</td></tr>
         <tr><td><code>manager.release(player)</code></td><td class="desc">Manual drop-out; the source returns to the pool.</td></tr>
       </table>
     </div>
-    <div class="note">Joining is edge-triggered — a <em>fresh</em> press claims one seat, so holding
+    <div class="note">Joining is edge-triggered; a <em>fresh</em> press claims one seat, so holding
       the button through a join screen does not claim four. When a controller disconnects its seat
       goes inactive and polls idle; when it answers again the <em>same</em> seat reactivates, because
       a bounced cable must not reshuffle who is P1 and who is P2.</div>
@@ -560,10 +560,10 @@ def update(dt):
     <pre><code>DialogueBox(canvas, width=640, height=480, box_height=100,
             padding=12, font=("Courier", 12), speed=0.03)</code></pre>
     <ul>
-      <li><code>show(text, speaker="", on_complete=None)</code> — start the typewriter.</li>
-      <li><code>update(dt)</code> — advance it; call from <code>update()</code>.</li>
-      <li><code>dismiss()</code> — finish the line, or close the box if already finished.</li>
-      <li><code>.active</code>, <code>.waiting</code>, <code>.displayed</code> — state and the text so far.</li>
+      <li><code>show(text, speaker="", on_complete=None)</code>, start the typewriter.</li>
+      <li><code>update(dt)</code>, advance it; call from <code>update()</code>.</li>
+      <li><code>dismiss()</code>, finish the line, or close the box if already finished.</li>
+      <li><code>.active</code>, <code>.waiting</code>, <code>.displayed</code>, state and the text so far.</li>
     </ul>
 
     <h3>Menu</h3>
@@ -572,8 +572,8 @@ def update(dt):
      disabled_color="#555555", item_padding=8)
 menu.show(items, on_select=None, on_cancel=None, title="", selected=0)</code></pre>
     <ul>
-      <li><code>move_up()</code> / <code>move_down()</code> — skip disabled entries automatically.</li>
-      <li><code>confirm()</code> / <code>cancel()</code> — fire the callbacks.</li>
+      <li><code>move_up()</code> / <code>move_down()</code>, skip disabled entries automatically.</li>
+      <li><code>confirm()</code> / <code>cancel()</code>, fire the callbacks.</li>
       <li><code>set_enabled(index, enabled)</code>, <code>hide()</code>, <code>.active</code>, <code>.selected_index</code>.</li>
     </ul>
 
@@ -603,7 +603,7 @@ ocean.font(10, "bold")   # -&gt; ("Courier", 10, "bold") in the theme's family</
       <code>selection_fill</code>, <code>bar_fill</code>, <code>bar_outline</code>, <code>font_family</code>.</p>
     <div class="note"><code>DEFAULT_THEME</code> carries exactly the pre-0.5.0 hardcoded values, so a
       game that never mentions themes renders identically. Explicit style kwargs still beat the
-      theme. Layout metrics are deliberately not theme fields — layout is not theme.</div>
+      theme. Layout metrics are deliberately not theme fields; layout is not theme.</div>
   </section>
 
   <!-- ── Audio ───────────────────────────────────────── -->
@@ -627,13 +627,13 @@ mixer.backend_name                 # which tier won</code></pre>
       <table>
         <tr><th>backend</th><th>gets you</th></tr>
         <tr><td><code>pygame</code></td><td class="desc">Real mixing, seamless loops, per-channel volume. Needs the <code>[audio]</code> extra.</td></tr>
-        <tr><td><code>winsound</code></td><td class="desc">Windows built-in. One sound at a time — SFX-grade.</td></tr>
+        <tr><td><code>winsound</code></td><td class="desc">Windows built-in. One sound at a time, SFX-grade.</td></tr>
         <tr><td><code>aplay</code> / <code>afplay</code></td><td class="desc">Linux/Pi and macOS command players. A process per sound; loops respawn with an audible seam.</td></tr>
         <tr><td><code>null</code></td><td class="desc">Every call is a silent no-op.</td></tr>
       </table>
     </div>
     <div class="note"><strong>WAV is the guaranteed format on every tier.</strong> A missing file logs a
-      warning at <code>load</code> and plays as silence — an absent asset must not kill the game.
+      warning at <code>load</code> and plays as silence; an absent asset must not kill the game.
       Inject a fake backend with <code>Mixer(backend=...)</code> to test audio without a device.</div>
   </section>
 
@@ -644,12 +644,12 @@ mixer.backend_name                 # which tier won</code></pre>
       and real hardware; on any other machine the classes import fine and simply report nothing
       connected, which is what lets <code>CompositeInput</code> fall back to the keyboard.</p>
     <ul>
-      <li><code>I2CBus</code> — a thin smbus2 wrapper. <code>probe(addr)</code> checks one address;
+      <li><code>I2CBus</code>, a thin smbus2 wrapper. <code>probe(addr)</code> checks one address;
         <code>backend=</code> injects a simulator.</li>
-      <li><code>MagmaHub</code> — the controller hub on the bus. <code>scan_buses()</code> probes only
+      <li><code>MagmaHub</code>, the controller hub on the bus. <code>scan_buses()</code> probes only
         the four candidate addresses; <code>stats</code> reports poll counts and latency.</li>
-      <li><code>ControllerState</code> — one controller's raw button state.</li>
-      <li><code>HubPoller</code> — polls a hub on a daemon thread and duck-types its read surface,
+      <li><code>ControllerState</code>, one controller's raw button state.</li>
+      <li><code>HubPoller</code>, polls a hub on a daemon thread and duck-types its read surface,
         so <code>poll()</code> never blocks a frame on a loose wire.</li>
     </ul>
   </section>
@@ -658,8 +658,8 @@ mixer.backend_name                 # which tier won</code></pre>
   <section id="devkit">
     <h2>hardware dev kit</h2>
     <p>You should not need the hardware to build for the hardware. <code>SimBus</code> implements the
-      smbus2 surface that <code>I2CBus</code> calls, so injecting it runs the <em>real</em> stack —
-      protocol handshake, hub, <code>ControllerState</code> parsing, input adapters — against
+      smbus2 surface that <code>I2CBus</code> calls, so injecting it runs the <em>real</em> stack,
+      protocol handshake, hub, <code>ControllerState</code> parsing, input adapters, against
       imaginary controllers. New in 0.4.0.</p>
     <pre><code>from texastoast import simulated_hub
 from texastoast.i2c.protocol import BTN_A
@@ -676,7 +676,7 @@ sim.reconnect_hub(0x08)</code></pre>
       select-write raises, exactly as the Pico firmware refuses it. A lenient fake would keep
       passing even if the engine stopped sending the handshake.</p>
     <h3>texastoast-bench</h3>
-    <p>A console script installed with the package — live per-controller button state, raw protocol
+    <p>A console script installed with the package, live per-controller button state, raw protocol
       bytes, connection status, poll latency and read-error rates.</p>
     <pre><code>texastoast-bench            # scan for hubs; simulator mode if none answer
 texastoast-bench --sim      # force the simulator (keyboard drives controller 0)
@@ -689,30 +689,30 @@ texastoast-bench --record session.ttrec</code></pre>
   <section id="mgs">
     <h2>magmascript binding</h2>
     <p>Installing texastoast alongside magmascript 3.2+ registers the engine as the
-      <code>texastoast</code> domain, aliased <code>tt</code>. Neither package depends on the other —
+      <code>texastoast</code> domain, aliased <code>tt</code>. Neither package depends on the other;
       discovery is through an entry point.</p>
 
     <div class="table-wrap">
       <table>
         <tr><th>call</th><th>returns</th></tr>
-        <tr><td><code>tt.game(opts)</code></td><td class="desc"><code>Game</code> — keys: title, width, height, fps, max_consecutive_errors</td></tr>
+        <tr><td><code>tt.game(opts)</code></td><td class="desc"><code>Game</code>, keys: title, width, height, fps, max_consecutive_errors</td></tr>
         <tr><td><code>tt.renderer(game, w, h)</code></td><td class="desc"><code>CanvasRenderer</code></td></tr>
         <tr><td><code>tt.keyboard(game)</code></td><td class="desc"><code>KeyboardInput</code></td></tr>
         <tr><td><code>tt.tilemap(grid, tile_size, solid)</code></td><td class="desc"><code>TileMap</code></td></tr>
-        <tr><td><code>tt.entity(opts)</code></td><td class="desc"><code>Entity</code> — keys: x, y, width, height, speed</td></tr>
-        <tr><td><code>tt.dialogue(game, opts)</code></td><td class="desc"><code>DialogueBox</code> — keys: width, height, box_height, padding, speed, theme</td></tr>
-        <tr><td><code>tt.menu(game, opts)</code></td><td class="desc"><code>Menu</code> — keys: width, height, selected_color, normal_color, disabled_color, item_padding, theme</td></tr>
-        <tr><td><code>tt.hud(game, opts)</code></td><td class="desc"><code>HUD</code> — keys: width, height, padding, theme</td></tr>
-        <tr><td><code>tt.scenes()</code></td><td class="desc"><code>SceneStack</code> — wire <code>g.set_update(s.update)</code> yourself</td></tr>
+        <tr><td><code>tt.entity(opts)</code></td><td class="desc"><code>Entity</code>, keys: x, y, width, height, speed</td></tr>
+        <tr><td><code>tt.dialogue(game, opts)</code></td><td class="desc"><code>DialogueBox</code>, keys: width, height, box_height, padding, speed, theme</td></tr>
+        <tr><td><code>tt.menu(game, opts)</code></td><td class="desc"><code>Menu</code>, keys: width, height, selected_color, normal_color, disabled_color, item_padding, theme</td></tr>
+        <tr><td><code>tt.hud(game, opts)</code></td><td class="desc"><code>HUD</code>, keys: width, height, padding, theme</td></tr>
+        <tr><td><code>tt.scenes()</code></td><td class="desc"><code>SceneStack</code>, wire <code>g.set_update(s.update)</code> yourself</td></tr>
         <tr><td><code>tt.entities()</code></td><td class="desc"><code>EntityGroup</code></td></tr>
-        <tr><td><code>tt.theme(opts)</code></td><td class="desc"><code>Theme</code> — any of the 12 theme fields; omitted ones keep the defaults</td></tr>
-        <tr><td><code>tt.sprite_sheet(path, fw, fh)</code></td><td class="desc"><code>SpriteSheet</code> — frames via <code>get_frame(g.root, col, row)</code></td></tr>
-        <tr><td><code>tt.mixer()</code></td><td class="desc"><code>Mixer</code> — wire <code>g.on_close(m.close)</code></td></tr>
-        <tr><td><code>tt.players(opts)</code></td><td class="desc"><code>PlayerManager</code> — keys: max_players, join_buttons</td></tr>
+        <tr><td><code>tt.theme(opts)</code></td><td class="desc"><code>Theme</code>, any of the 12 theme fields; omitted ones keep the defaults</td></tr>
+        <tr><td><code>tt.sprite_sheet(path, fw, fh)</code></td><td class="desc"><code>SpriteSheet</code>, frames via <code>get_frame(g.root, col, row)</code></td></tr>
+        <tr><td><code>tt.mixer()</code></td><td class="desc"><code>Mixer</code>, wire <code>g.on_close(m.close)</code></td></tr>
+        <tr><td><code>tt.players(opts)</code></td><td class="desc"><code>PlayerManager</code>, keys: max_players, join_buttons</td></tr>
         <tr><td><code>tt.hub(opts)</code> / <code>tt.hubs(opts)</code></td><td class="desc">A <code>MagmaHub</code>, or every hub found by a scan</td></tr>
-        <tr><td><code>tt.sim_hub(opts)</code></td><td class="desc">A simulated hub — the <code>SimBus</code> rides along as <code>h.sim</code></td></tr>
+        <tr><td><code>tt.sim_hub(opts)</code></td><td class="desc">A simulated hub, the <code>SimBus</code> rides along as <code>h.sim</code></td></tr>
         <tr><td><code>tt.hub_input(hub, i)</code> / <code>tt.composite(kb, pad)</code></td><td class="desc">The input adapters</td></tr>
-        <tr><td><code>tt.poller(hub, opts)</code></td><td class="desc"><code>HubPoller</code> — wire <code>g.on_close(p.stop)</code></td></tr>
+        <tr><td><code>tt.poller(hub, opts)</code></td><td class="desc"><code>HubPoller</code>, wire <code>g.on_close(p.stop)</code></td></tr>
         <tr><td><code>tt.recorder(src, path)</code> / <code>tt.replay(path, opts)</code></td><td class="desc">Record and replay a session</td></tr>
         <tr><td><code>tt.version()</code></td><td class="desc">The installed version string.</td></tr>
       </table>
@@ -733,7 +733,7 @@ update = fn(dt) {
 
     <div class="note">Two deliberate differences from the Python API: options arrive as a
       <strong>dict</strong> rather than keyword arguments, because MagmaScript has no keyword-argument
-      syntax — and an unknown key raises rather than silently defaulting, since a typo is otherwise
+      syntax, and an unknown key raises rather than silently defaulting, since a typo is otherwise
       invisible. Engine objects are returned <strong>bare</strong>, so <code>player.x</code> in a script is
       the same attribute as in Python and <code>player.speed = 220</code> writes through.</div>
   </section>

@@ -397,8 +397,8 @@ print(result.exit_code)</code></pre>
   </div>
 
   <div class="ref-section">
-    <h2>asthenosphere — the memory tier</h2>
-    <p style="font-size:11px;color:#9d99b5;margin-bottom:.5rem;">Explicit memory below the dynamic language: fixed-width ints that wrap like C, a real byte arena, and structs with visible layout. <code>floorplan</code> is the only new keyword — the rest are builtins.</p>
+    <h2>asthenosphere, the memory tier</h2>
+    <p style="font-size:11px;color:#9d99b5;margin-bottom:.5rem;">Explicit memory below the dynamic language: fixed-width ints that wrap like C, a real byte arena, and structs with visible layout. <code>floorplan</code> is the only new keyword, the rest are builtins.</p>
 <pre><code><span class="cmt">// fixed-width ints: i8 i16 i32 i64  u8 u16 u32 u64  f32 f64</span>
 n = <span class="fn">u8</span>(<span class="num">255</span>)
 n = n + <span class="num">1</span>              <span class="cmt">// wraps to 0, and says so (spooked)</span>
