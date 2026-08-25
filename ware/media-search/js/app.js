@@ -24,7 +24,7 @@
 
     // ── Custom dropdowns ──────────────────────────────────────────────────
     // Implementation is shared with album-art-maker and pixel-process:
-    // tools/shell/dropdown.js. This app defaults a missing selection to
+    // ware/shell/dropdown.js. This app defaults a missing selection to
     // 'all', which its filter payload depends on.
     const setupRetroDropdown = (id, onSelect) => RetroDropdown.setup(id, onSelect);
     const getDropdownValue = (id) => RetroDropdown.getValue(id, 'all');

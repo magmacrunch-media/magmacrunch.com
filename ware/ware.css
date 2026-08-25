@@ -165,7 +165,7 @@
             text-shadow: 0 0 8px rgba(0,255,255,0.6);
         }
 
-        /* ── CATEGORY GRID (tools root) ── */
+        /* ── CATEGORY GRID (ware root) ── */
         .category-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);

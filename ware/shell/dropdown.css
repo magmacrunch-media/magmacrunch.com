@@ -1,9 +1,9 @@
 /* ═══════════════════════════════════════════════
    magmacrunch media — retro dropdown
-   tools/shell/dropdown.css
+   ware/shell/dropdown.css
 
    The absolute-positioned, max-height-transition dropdown used by
-   album-art-maker and media-search. Pair it with tools/shell/dropdown.js.
+   album-art-maker and media-search. Pair it with ware/shell/dropdown.js.
 
    pixel-process deliberately does NOT load this. Its options are
    position:fixed and toggle display rather than animating max-height,

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>magmascript language reference — magmacrunch media</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font: 14px/1.6 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #14141b;
+      background-image: none !important;
+      color: #e8e6f0;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    .tool-nav {
+      position: static;
+      margin-top: 0;
+      padding: 8px 24px;
+      border: none;
+      border-bottom: 1px solid #33304a;
+      background: #14141b;
+      box-shadow: none;
+      flex-shrink: 0;
+    }
+    .tool-nav .back-link {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      background: #1c1b26;
+      padding: 6px 10px;
+      border: 1px solid #33304a;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tool-nav .back-link:hover {
+      color: #e8e6f0;
+      border-color: #7cc7ff;
+    }
+    nav { box-shadow: none; }
+
+    a { color: #7cc7ff; }
+
+    .ref-content {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+
+    .ref-content h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 400;
+      color: #ff3d3d;
+      text-shadow: 2px 2px 0 #33304a;
+      margin-bottom: .5rem;
+    }
+
+    .ref-content .subtitle {
+      font-size: 12px;
+      color: #9d99b5;
+      margin-bottom: 2rem;
+    }
+
+    .ref-section {
+      margin-bottom: 2rem;
+    }
+
+    .ref-section h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px; font-weight: 400;
+      color: #ff3d3d;
+      letter-spacing: 0.05em;
+      margin-bottom: .6rem;
+      padding-bottom: .4rem;
+      border-bottom: 1px solid #33304a;
+    }
+
+    .ref-section p {
+      font-size: 12px;
+      color: #9d99b5;
+      margin-bottom: .5rem;
+    }
+
+    pre {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .6rem .75rem;
+      overflow-x: auto;
+      margin-bottom: .75rem;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    code {
+      font-family: 'Courier Prime', monospace;
+      color: #7cc7ff;
+    }
+
+    pre code {
+      color: #e8e6f0;
+    }
+
+    .kw { color: #ff3d3d; }
+    .fn { color: #7cc7ff; }
+    .str { color: #a8e6a1; }
+    .cmt { color: #555; font-style: italic; }
+    .num { color: #f5c542; }
+
+    table {
+      width: 100%;
+      font-size: 12px;
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: .75rem;
+    }
+
+    th {
+      background: #1c1b26;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      text-align: left;
+      padding: .5rem .75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border-bottom: 1px solid #33304a;
+    }
+
+    td {
+      padding: .4rem .75rem;
+      border-bottom: 1px solid #2a2940;
+      vertical-align: top;
+    }
+
+    td code {
+      font-size: 11px;
+    }
+
+    td:last-child {
+      color: #9d99b5;
+      font-size: 11px;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      text-align: center;
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      color: #9d99b5;
+      border-top: 1px solid #33304a;
+    }
+    footer span { color: #7cc7ff; }
+
+    @media (max-width: 480px) {
+      .ref-content { padding: 1.5rem 1rem; }
+      table { font-size: 11px; }
+      td, th { padding: .35rem .5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="tool-nav">
+  <a href="index.html" class="back-link">&larr; magmascript</a>
+</nav>
+
+<div class="ref-content">
+  <h1>language reference</h1>
+  <p class="subtitle">syntax cheat sheet for .mgs scripts</p>
+
+  <div class="ref-section">
+    <h2>variables</h2>
+<pre><code><span class="kw">name</span> = <span class="str">"MagmaCrunch"</span>
+<span class="kw">version</span> = <span class="num">2</span>
+<span class="kw">pi</span> = <span class="num">3.14159</span>
+<span class="kw">flag</span> = <span class="kw">true</span>
+<span class="kw">nothing</span> = <span class="kw">none</span></code></pre>
+
+    <p style="font-size:11px;color:#9d99b5;margin-top:.5rem;">Values print with MagmaScript spelling: <code>none</code> not <code>None</code>, <code>true</code>/<code>false</code> not <code>True</code>/<code>False</code>.</p>
+
+    <h2>string interpolation</h2>
+    <p style="font-size:11px;color:#9d99b5;margin-bottom:.5rem;">Only <code>f"..."</code> interpolates. Plain strings treat <code>{</code> as a literal character.</p>
+<pre><code>print(f<span class="str">"Hello, {name} v{version}!"</span>)  <span class="cmt">// interpolated</span>
+print(<span class="str">"use {braces} safely"</span>)         <span class="cmt">// plain — {braces} printed literally</span></code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>functions</h2>
+<pre><code><span class="cmt">// named</span>
+<span class="kw">fn</span> <span class="fn">greet</span>(name) {
+    <span class="kw">return</span> f<span class="str">"Hello, {name}!"</span>
+}
+
+<span class="cmt">// anonymous</span>
+double = <span class="kw">fn</span>(x) { x * <span class="num">2</span> }
+
+<span class="cmt">// arrow</span>
+triple = x <span class="kw">-&gt;</span> x * <span class="num">3</span>
+
+<span class="cmt">// default parameters</span>
+<span class="kw">fn</span> <span class="fn">greet</span>(name, greeting=<span class="str">"hello"</span>) {
+    <span class="kw">return</span> f<span class="str">"{greeting}, {name}!"</span>
+}
+greet(<span class="str">"Jake"</span>)           <span class="cmt">// "hello, Jake!"</span>
+greet(<span class="str">"Jake"</span>, <span class="str">"hey"</span>)    <span class="cmt">// "hey, Jake!"</span></code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>control flow</h2>
+<pre><code><span class="kw">if</span> x &gt; <span class="num">10</span> {
+    print(<span class="str">"big"</span>)
+} <span class="kw">else if</span> x &gt; <span class="num">5</span> {
+    print(<span class="str">"medium"</span>)
+} <span class="kw">else</span> {
+    print(<span class="str">"small"</span>)
+}
+
+<span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">5</span>) {
+    print(i)
+}
+
+<span class="kw">for</span> item <span class="kw">in</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>] {
+    print(item)
+}
+
+<span class="kw">while</span> x &gt; <span class="num">0</span> {
+    x = x - <span class="num">1</span>
+}
+
+<span class="kw">break</span>     <span class="cmt">// exit loop early</span>
+<span class="kw">continue</span>  <span class="cmt">// skip to next iteration</span>
+<span class="kw">return</span>    <span class="cmt">// exit function</span></code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>data structures</h2>
+<pre><code><span class="cmt">// lists</span>
+numbers = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>]
+first = numbers[<span class="num">0</span>]
+sliced = numbers[<span class="num">1</span>:<span class="num">3</span>]     <span class="cmt">// [2, 3]</span>
+reversed = numbers[::<span class="num">-1</span>]  <span class="cmt">// [5, 4, 3, 2, 1]</span>
+
+<span class="cmt">// dicts</span>
+scores = {<span class="str">"Pong"</span>: <span class="num">12</span>, <span class="str">"Tetris"</span>: <span class="num">45</span>}
+print(scores[<span class="str">"Tetris"</span>])
+
+<span class="cmt">// list comprehensions</span>
+evens = [x <span class="kw">for</span> x <span class="kw">in</span> numbers <span class="kw">if</span> x % <span class="num">2</span> == <span class="num">0</span>]
+doubled = [x * <span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> numbers]
+
+<span class="cmt">// index assignment</span>
+numbers[<span class="num">0</span>] = <span class="num">99</span>
+scores[<span class="str">"Pong"</span>] = <span class="num">100</span>
+numbers[<span class="num">0</span>] += <span class="num">10</span></code></pre>
+
+    <h2>multi-assignment</h2>
+<pre><code>a, b = <span class="num">1</span>, <span class="num">2</span>
+x, y, z = <span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>
+a, b = [<span class="num">1</span>, <span class="num">2</span>]  <span class="cmt">// list unpacking</span></code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>operators</h2>
+<pre><code><span class="cmt">// arithmetic:    +  -  *  /  %</span>
+<span class="cmt">// comparison:    ==  !=  &lt;  &gt;  &lt;=  &gt;=</span>
+<span class="cmt">// logical:       and  or  not</span>
+<span class="cmt">// membership:    in, not in</span>
+
+<span class="kw">if</span> <span class="str">"key"</span> <span class="kw">in</span> {<span class="str">"name"</span>: <span class="str">"Jake"</span>} { ... }
+<span class="kw">if</span> <span class="num">5</span> <span class="kw">not in</span> [<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>] { ... }</code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>truthiness</h2>
+    <p style="font-size:12px;color:#9d99b5;margin-bottom:.5rem;">Falsy values: <code>none</code>, <code>false</code>, <code>0</code>, <code>""</code>, <code>[]</code>, <code>{}</code>. Everything else is truthy.</p>
+  </div>
+
+  <div class="ref-section">
+    <h2>classes</h2>
+<pre><code><span class="kw">class</span> <span class="fn">Dog</span> {
+    <span class="kw">fn</span> <span class="fn">init</span>(name) {
+        self.name = name
+    }
+
+    <span class="kw">fn</span> <span class="fn">bark</span>(self) {
+        <span class="kw">return</span> self.name + <span class="str">" says woof!"</span>
+    }
+}
+
+rex = Dog(<span class="str">"Rex"</span>)
+print(rex.bark())  <span class="cmt">// "Rex says woof!"</span></code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>error handling</h2>
+<pre><code><span class="kw">try</span> {
+    result = risky_operation()
+} <span class="kw">haunter</span> (e) {
+    print(f<span class="str">"Error: {e.message}"</span>)
+}
+
+<span class="kw">throw</span> <span class="fn">fire toad</span>(<span class="str">"something went wrong"</span>)</code></pre>
+
+    <p><strong>error vocabulary:</strong></p>
+    <table>
+      <tr><th>Keyword</th><th>Description</th></tr>
+      <tr><td><code>haunter</code></td><td>syntax / parse errors</td></tr>
+      <tr><td><code>fire toad</code></td><td>runtime errors</td></tr>
+      <tr><td><code>devastate</code></td><td>undefined variable errors</td></tr>
+      <tr><td><code>contemplate</code></td><td>type errors</td></tr>
+      <tr><td><code>spooked</code></td><td>warnings (non-fatal, stderr)</td></tr>
+    </table>
+  </div>
+
+  <div class="ref-section">
+    <h2>import system</h2>
+<pre><code><span class="cmt">// import a module</span>
+<span class="kw">intent</span> <span class="str">"utils.mgs"</span>
+result = utils.greet(<span class="str">"World"</span>)
+
+<span class="cmt">// import with alias</span>
+<span class="kw">intent</span> <span class="str">"utils.mgs"</span> <span class="kw">as</span> u
+result = u.greet(<span class="str">"World"</span>)
+
+<span class="cmt">// import specific names</span>
+<span class="kw">intent</span> { greet, farewell } <span class="kw">from</span> <span class="str">"utils.mgs"</span>
+result = greet(<span class="str">"World"</span>)</code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>file I/O, HTTP, shell</h2>
+<pre><code><span class="cmt">// file I/O</span>
+content = <span class="fn">quarry</span>(<span class="str">"data.txt"</span>)        <span class="cmt">// read</span>
+<span class="fn">litho</span>(<span class="str">"output.txt"</span>, <span class="str">"hello"</span>)     <span class="cmt">// write</span>
+
+<span class="cmt">// HTTP requests</span>
+response = http.<span class="fn">get</span>(<span class="str">"https://api.example.com/data"</span>)
+print(response.status)
+print(response.json)
+
+<span class="cmt">// shell commands</span>
+result = <span class="fn">exec</span>(<span class="str">"ls -la"</span>)
+print(result.stdout)
+print(result.exit_code)</code></pre>
+  </div>
+
+  <div class="ref-section">
+    <h2>built-in functions</h2>
+    <table>
+      <tr><th>Function</th><th>Description</th></tr>
+      <tr><td><code>print(...)</code></td><td>print to stdout</td></tr>
+      <tr><td><code>echo(...)</code></td><td>print to stdout (alias)</td></tr>
+      <tr><td><code>len(x)</code></td><td>length of string, list, or dict</td></tr>
+      <tr><td><code>type(x)</code></td><td>type name as string</td></tr>
+      <tr><td><code>range(n)</code></td><td>generate integer ranges</td></tr>
+      <tr><td><code>str(x)</code> / <code>int(x)</code> / <code>float(x)</code></td><td>type conversions</td></tr>
+      <tr><td><code>abs(x)</code> / <code>min(...)</code> / <code>max(...)</code> / <code>sum(...)</code></td><td>math utilities</td></tr>
+      <tr><td><code>keys(d)</code> / <code>values(d)</code></td><td>dict operations</td></tr>
+      <tr><td><code>args()</code></td><td>get script arguments from CLI</td></tr>
+      <tr><td><code>quarry(path)</code></td><td>read file contents</td></tr>
+      <tr><td><code>litho(path, content)</code></td><td>write content to file</td></tr>
+      <tr><td><code>exec(command)</code></td><td>execute shell command</td></tr>
+    </table>
+  </div>
+
+  <div class="ref-section">
+    <h2>string methods</h2>
+    <table>
+      <tr><th>Method</th><th>Description</th></tr>
+      <tr><td><code>s.split(sep)</code></td><td>split string by separator</td></tr>
+      <tr><td><code>s.join(list)</code></td><td>join list with string separator</td></tr>
+      <tr><td><code>s.upper()</code> / <code>s.lower()</code></td><td>case conversion</td></tr>
+      <tr><td><code>s.contains(sub)</code></td><td>check if substring exists</td></tr>
+      <tr><td><code>s.replace(old, new)</code></td><td>replace substring</td></tr>
+      <tr><td><code>s.length()</code></td><td>get string length</td></tr>
+      <tr><td><code>s.startswith(prefix)</code></td><td>check prefix</td></tr>
+      <tr><td><code>s.endswith(suffix)</code></td><td>check suffix</td></tr>
+      <tr><td><code>s.strip()</code></td><td>remove leading/trailing whitespace</td></tr>
+      <tr><td><code>s.match(pattern)</code></td><td>regex match, return groups</td></tr>
+      <tr><td><code>s.findall(pattern)</code></td><td>find all regex matches</td></tr>
+    </table>
+  </div>
+
+  <div class="ref-section">
+    <h2>asthenosphere — the memory tier</h2>
+    <p style="font-size:11px;color:#9d99b5;margin-bottom:.5rem;">Explicit memory below the dynamic language: fixed-width ints that wrap like C, a real byte arena, and structs with visible layout. <code>floorplan</code> is the only new keyword — the rest are builtins.</p>
+<pre><code><span class="cmt">// fixed-width ints: i8 i16 i32 i64  u8 u16 u32 u64  f32 f64</span>
+n = <span class="fn">u8</span>(<span class="num">255</span>)
+n = n + <span class="num">1</span>              <span class="cmt">// wraps to 0, and says so (spooked)</span>
+<span class="fn">i32</span>(<span class="num">-7</span>) / <span class="fn">i32</span>(<span class="num">2</span>)      <span class="cmt">// -3: truncates toward zero, like C</span>
+<span class="fn">i32</span>(<span class="num">1</span>) + <span class="fn">u8</span>(<span class="num">1</span>)       <span class="cmt">// error: no promotion — use osmosis(x, i32)</span>
+
+<span class="cmt">// the arena: garrison claims bytes, scorch frees them</span>
+p = <span class="fn">garrison</span>(<span class="num">16</span>)
+p.<span class="fn">poke</span>(i32, <span class="num">10</span>)         <span class="cmt">// write; p.peek(i32) reads back</span>
+p[<span class="num">8</span>] = <span class="num">72</span>              <span class="cmt">// raw byte access</span>
+<span class="fn">bathysphere</span>(p)          <span class="cmt">// annotated hex dump</span>
+<span class="fn">scorch</span>(p)
+
+<span class="cmt">// floorplans: structs with C layout</span>
+<span class="kw">floorplan</span> <span class="fn">Point</span> {
+    x: i32
+    y: i32
+    label: u8[<span class="num">16</span>]
+}
+<span class="fn">layout</span>(Point)             <span class="cmt">// prints the field table, padding included</span>
+pt = <span class="fn">garrison</span>(Point)
+pt.x = <span class="fn">i32</span>(<span class="num">10</span>)
+<span class="fn">scorch</span>(pt)
+
+<span class="cmt">// a pine field points at another floorplan — linked lists work</span>
+<span class="kw">floorplan</span> <span class="fn">Node</span> {
+    value: i32
+    next: pine[Node]
+}
+
+<span class="cmt">// faults, all caught by try / haunter:</span>
+<span class="cmt">//   quicksand           — reading ground you already scorched</span>
+<span class="cmt">//   area does not exist — reading outside a block</span>
+<span class="cmt">//   ancient weeds       — anything never scorched, reported at exit</span></code></pre>
+  </div>
+
+</div>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+</body>
+</html>

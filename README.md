@@ -24,7 +24,7 @@ Live site: [magmacrunch.com](https://magmacrunch.com)
 ├── mcp-server/       MCP server — exposes project data + Pi management to AI assistants
 ├── scripts/          backup, build, and automation utilities
 ├── templates/        JS templates for archive pages
-├── tools/            browser utilities (album art, media search, pixel process)
+├── ware/             browser utilities (album art, media search, pixel process)
 ├── og/               generated OG preview images (1200x630 PNGs)
 └── visual/           gallery pages (collage, photography, music videos, TV)
 ```

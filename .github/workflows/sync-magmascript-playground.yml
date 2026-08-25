@@ -1,6 +1,6 @@
 name: Sync magmascript playground
 
-# Keeps tools/magmascript/app.js (the browser playground's embedded interpreter)
+# Keeps ware/magmascript/app.js (the browser playground's embedded interpreter)
 # in step with the published magmascript package. The embedded copy drifts every
 # time the language changes; this reinstalls the latest release and regenerates
 # the block. The magmascript release workflow dispatches this the moment a
@@ -46,7 +46,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tools/magmascript/app.js
+          git add ware/magmascript/app.js
           if git diff --cached --quiet; then
             echo "Playground already up to date."
           else

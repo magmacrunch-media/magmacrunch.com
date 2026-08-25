@@ -199,7 +199,7 @@ if (stale.length) {
 
 const ADENOSINE_REPO = process.env.ADENOSINE_REPO || resolve(ROOT, '..', 'game_dev', 'adenosine');
 const PLAYGROUND_SRC = join(ADENOSINE_REPO, 'playground');
-const PLAYGROUND_DEST = join(ROOT, 'tools', 'playground');
+const PLAYGROUND_DEST = join(ROOT, 'ware', 'playground');
 
 if (existsSync(PLAYGROUND_SRC)) {
   console.log('\nplayground:');

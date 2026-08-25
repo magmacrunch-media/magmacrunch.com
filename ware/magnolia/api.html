@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>magnolia api — magmacrunch media</title>
+    <meta property="og:title" content="magnolia api — magmacrunch media">
+    <meta property="og:description" content="C API reference for the magnolia Wii homebrew game engine">
+    <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <!-- Press Start 2P and Courier Prime are self-hosted by the shell. -->
+    <link rel="stylesheet" href="../shell/app-shell.css?v=1">
+    <link rel="stylesheet" href="magnolia.css?v=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <h1 class="glitch" data-text="magnolia api">magnolia api</h1>
+        <span class="header-stat">v<span>0.3.0</span></span>
+    </div>
+    <div class="header-right">
+        <span class="header-stat">133 functions · 12 modules</span>
+    </div>
+</header>
+
+<nav class="tool-nav">
+    <a href="index.html" class="back-link">&larr; magnolia</a>
+</nav>
+
+<main>
+    <div class="search-row">
+        <input type="text" id="search-input" class="search-input" placeholder="$ grep -i function name...">
+        <button id="search-clear" class="search-clear">CLEAR</button>
+    </div>
+
+    <div class="module-tabs">
+        <button class="module-tab active" data-module="all">All</button>
+        <button class="module-tab" data-module="core">core</button>
+        <button class="module-tab" data-module="renderer">renderer</button>
+        <button class="module-tab" data-module="sprite">sprite</button>
+        <button class="module-tab" data-module="input">input</button>
+        <button class="module-tab" data-module="clock">clock</button>
+        <button class="module-tab" data-module="audio">audio</button>
+        <button class="module-tab" data-module="scoring">scoring</button>
+        <button class="module-tab" data-module="prefs">prefs</button>
+        <button class="module-tab" data-module="gamestate">gamestate</button>
+        <button class="module-tab" data-module="menu">menu</button>
+        <button class="module-tab" data-module="theme">theme</button>
+        <button class="module-tab" data-module="ui_utils">ui_utils</button>
+    </div>
+
+    <div class="stats-bar">
+        <span class="stat-count" id="stats">loading...</span>
+        <span class="stat-sep">|</span>
+        <span>12 modules</span>
+    </div>
+
+    <div id="api-modules"></div>
+</main>
+
+<footer>
+    <div class="footer-left">source: github.com/magmacrunchmedia/magnolia · Apache-2.0</div>
+    <div class="footer-right"><span>magmacrunch</span> media</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/c.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
-   magmacrunch media — tools app shell
-   tools/shell/app-shell.css
+   magmacrunch media — ware app shell
+   ware/shell/app-shell.css
 
    The chrome shared by the standalone "workstation" tools:
    album-art-maker, media-search, pixel-process, magnolia/api.html.
@@ -14,12 +14,12 @@
    Panels, dropdowns and form controls are deliberately NOT here. The apps
    draw them differently enough (1px vs 2px borders, 7px vs 9px labels,
    fixed vs absolute dropdown positioning) that tokenising them would cost
-   more than it saved. See tools/shell/README.md.
+   more than it saved. See ware/shell/README.md.
    ═══════════════════════════════════════════════ */
 
 /* ── FONTS (self-hosted, the same files style.css uses) ──
    These are why the tool pages no longer need a Google Fonts round trip.
-   url() resolves against this stylesheet, so paths are from tools/shell/. */
+   url() resolves against this stylesheet, so paths are from ware/shell/. */
 @font-face {
     font-family: 'Press Start 2P';
     src: url('../../fonts/PressStart2P-Regular.woff2') format('woff2'),
@@ -210,7 +210,7 @@ h1.glitch::after {
     97% { transform: translate(0); }
 }
 
-/* ── TOOL NAV (back to the tools index) ── */
+/* ── TOOL NAV (back to the ware index) ── */
 .tool-nav {
     padding: 8px 24px;
     border-bottom: 1px solid var(--border);

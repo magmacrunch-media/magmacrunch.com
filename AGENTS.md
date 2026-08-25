@@ -96,8 +96,26 @@ Set `MAGMACRUNCH_ROOT=/path/to/magmacrunch.com` for commands that access local f
 ├── mcp-server/        # MCP server — exposes project data + Pi management to AI assistants
 ├── scripts/           # backup-musicbrainz.mjs
 ├── templates/         # JS template scripts for archive pages
+├── ware/              # browser utilities + dev tools (was tools/ — see below)
+├── tools/             # redirect shims only — see below
 └── visual/            # gallery pages (collage, photography/, music-videos, teevee/tv)
 ```
+
+## The tools/ → ware/ rename (2026-08-24)
+
+The section formerly at `/tools/` is now `/ware/`. `tools/` still exists but holds
+**nothing but 18 meta-refresh redirect stubs**, one per old entry point, each
+pointing at its `/ware/` equivalent with a `rel="canonical"` and `noindex`.
+
+GitHub Pages serves this repo's branch directly, so there is no server-side
+redirect layer — stub pages are the only mechanism available. Do not add real
+content under `tools/`, and do not link to it. Once the old URLs stop drawing
+traffic the whole directory can be deleted in one commit.
+
+The two playground sync workflows (`sync-magmascript-playground.yml`,
+`sync-texastoast-playground.yml`) `git add` a hardcoded path — they were updated
+to `ware/` in the same commit. If you ever move the section again, they move too
+or the next upstream release dispatch commits nothing.
 
 ## Key conventions
 
@@ -133,7 +151,7 @@ Pages extract inline CSS to separate files:
 - `music/distributed-music/styles.css` — distributed music
 - `music/jukebox/styles.css` — jukebox
 - `press/press.css` — press index
-- `tools/tools.css` — tools index
+- `ware/ware.css` — ware index
 
 ## Game card previews
 

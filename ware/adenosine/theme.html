@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>adenosine theme customizer — magmacrunch media</title>
+  <meta property="og:title" content="adenosine theme customizer — magmacrunch media">
+  <meta property="og:description" content="customize CSS themes for adenosine game engine packages">
+  <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="../../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+  <header>
+    <h1><code>adenosine</code> theme customizer</h1>
+    <div class="controls">
+      <select id="pkg-select">
+        <option value="cards">cards</option>
+        <option value="puzzle">puzzle</option>
+        <option value="chat">chat</option>
+        <option value="multiplayer">multiplayer</option>
+      </select>
+      <span id="status-dot" class="dot loading"></span>
+    </div>
+  </header>
+
+  <nav id="auto-nav" data-depth="../../../"></nav>
+
+  <nav class="tool-nav">
+    <a href="./" class="back-link">&larr; adenosine</a>
+  </nav>
+
+  <main>
+    <div id="preview-panel">
+      <div id="preview-content"></div>
+    </div>
+    <div id="sidebar">
+      <section>
+        <h2>Theme Variables</h2>
+        <div id="variables"></div>
+      </section>
+      <section>
+        <h2>Actions</h2>
+        <div class="action-row">
+          <button id="export-btn" class="primary">Export CSS</button>
+          <button id="reset-btn">Reset</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="export-panel" class="collapsed">
+    <div class="export-header">
+      <button id="export-toggle">▸ CSS Override</button>
+      <button id="copy-btn" title="Copy to clipboard">Copy</button>
+    </div>
+    <textarea id="export-output" readonly rows="8" placeholder="No changes yet — adjust a color to generate CSS"></textarea>
+  </div>
+
+  <script type="module" src="theme.js"></script>
+  <script src="../../../nav.js"></script>
+</body>
+</html>

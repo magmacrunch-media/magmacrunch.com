@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>adenosine tile map editor — magmacrunch media</title>
+  <meta property="og:title" content="adenosine tile map editor — magmacrunch media">
+  <meta property="og:description" content="pixel art tile map editor for adenosine RPG games">
+  <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="../../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><code>adenosine</code> tile map editor</h1>
+  </header>
+
+  <nav id="auto-nav" data-depth="../../../"></nav>
+
+  <nav class="tool-nav">
+    <a href="./" class="back-link">&larr; adenosine</a>
+  </nav>
+
+  <main>
+    <div id="canvas-panel">
+      <canvas id="grid-canvas"></canvas>
+    </div>
+
+    <div id="sidebar">
+      <section>
+        <h2>Tile Palette</h2>
+        <div id="palette"></div>
+      </section>
+
+      <section>
+        <h2>Grid Size</h2>
+        <div class="row">
+          <label>
+            <span class="label-text">cols</span>
+            <input type="number" id="grid-cols" value="10" min="3" max="100">
+          </label>
+          <span class="separator">&times;</span>
+          <label>
+            <span class="label-text">rows</span>
+            <input type="number" id="grid-rows" value="8" min="3" max="100">
+          </label>
+          <button id="resize-btn">Resize</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Solid Tiles</h2>
+        <div id="solid-tiles"></div>
+      </section>
+
+      <section>
+        <h2>Tools</h2>
+        <div id="tools" class="tool-row">
+          <button class="tool-btn active" data-tool="paint" title="Paint (left click)">&#9998; Paint</button>
+          <button class="tool-btn" data-tool="fill" title="Flood fill">&#9632; Fill</button>
+          <button class="tool-btn" data-tool="pick" title="Pick tile (alt+click)">&#9906; Pick</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Actions</h2>
+        <div class="action-row">
+          <button id="export-btn">Export</button>
+          <button id="import-btn">Import</button>
+          <button id="clear-btn">Clear</button>
+          <button id="preview-btn" class="primary">Preview RPG</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="export-panel">
+    <div class="export-header">
+      <span>Export Output</span>
+      <button id="copy-btn" title="Copy to clipboard">Copy</button>
+    </div>
+    <textarea id="export-output" readonly rows="6"></textarea>
+  </div>
+
+  <div id="preview-panel" class="hidden">
+    <div class="preview-header">
+      <span>RPG Preview</span>
+      <button id="close-preview-btn">&times;</button>
+    </div>
+    <div id="preview-content"></div>
+  </div>
+
+  <dialog id="import-modal">
+    <div class="modal-header">
+      <h2>Import Map</h2>
+      <button class="modal-close">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Paste a <code>number[][]</code> array or a JSON object with <code>map</code> and <code>solidTiles</code>.</p>
+      <textarea id="import-input" rows="10" placeholder='[[2,2,2],[2,0,2],[2,2,2]]'></textarea>
+      <div class="modal-actions">
+        <button id="import-cancel">Cancel</button>
+        <button id="import-confirm" class="primary">Import</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" src="tiles.js"></script>
+  <script src="../../../nav.js"></script>
+</body>
+</html>

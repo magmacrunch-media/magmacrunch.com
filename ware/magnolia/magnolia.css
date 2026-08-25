@@ -2,7 +2,7 @@
    magnolia — api reference styles
 
    Chrome (reset, header, glitch title, tool nav, footer) comes from
-   tools/shell/app-shell.css, linked ahead of this file. Only tokens are
+   ware/shell/app-shell.css, linked ahead of this file. Only tokens are
    overridden here, plus the two @keyframes below: this page uses a smoother
    glitch curve than the shell's, and redefining them here wins because this
    stylesheet loads second.

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>media//search — magmacrunch media</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <!-- Press Start 2P and Courier Prime are self-hosted by the shell. -->
+    <link rel="stylesheet" href="../shell/app-shell.css?v=1">
+    <link rel="stylesheet" href="../shell/dropdown.css?v=1">
+    <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <h1 class="glitch" data-text="MEDIA//SEARCH">MEDIA//SEARCH</h1>
+        </div>
+        <div class="header-right">
+            <span class="sys-stat" id="resultCount">0 RESULTS</span>
+        </div>
+    </header>
+
+    <nav class="tool-nav">
+        <a href="../utilities/" class="back-link"><span class="chrome" data-text="← UTILITIES">← creative utilities</span></a>
+    </nav>
+
+    <div class="workspace">
+        <!-- LEFT PANEL: Filters -->
+        <aside class="panel filters-panel">
+            <div class="panel-label">SOURCES</div>
+            <div id="sourceToggles" class="source-toggles"></div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">TYPE</div>
+            <div class="custom-dropdown" id="filterTypeDropdown">
+                <div class="dropdown-selected">
+                    <span>ALL</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="all">ALL</div>
+                    <div class="dropdown-option" data-value="image">PHOTOS</div>
+                    <div class="dropdown-option" data-value="illustration">ILLUSTRATIONS</div>
+                    <div class="dropdown-option" data-value="video">VIDEO</div>
+                    <div class="dropdown-option" data-value="audio">AUDIO</div>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">LICENSE</div>
+            <div class="custom-dropdown" id="filterLicenseDropdown">
+                <div class="dropdown-selected">
+                    <span>ALL</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="all">ALL</div>
+                    <div class="dropdown-option" data-value="pd">PUBLIC DOMAIN</div>
+                    <div class="dropdown-option" data-value="cc0">CC0</div>
+                    <div class="dropdown-option" data-value="free">NO ATTRIBUTION</div>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">ORIENTATION</div>
+            <div class="custom-dropdown" id="filterOrientationDropdown">
+                <div class="dropdown-selected">
+                    <span>ALL</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option active" data-value="all">ALL</div>
+                    <div class="dropdown-option" data-value="horizontal">HORIZONTAL</div>
+                    <div class="dropdown-option" data-value="vertical">VERTICAL</div>
+                    <div class="dropdown-option" data-value="square">SQUARE</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER: Search + Results -->
+        <div class="center-area">
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="SEARCH FREE IMAGES, VIDEO, AUDIO..." autocomplete="off">
+                <button id="btnClear" class="btn btn-yellow">CLEAR</button>
+                <button id="btnSearch" class="btn btn-rose">GO</button>
+            </div>
+
+            <div class="results-scroll">
+                <div id="resultsGrid" class="results-grid">
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">&#9670;</div>
+                        <div class="empty-text">SEARCH ACROSS FREE MEDIA SOURCES</div>
+                        <div class="empty-sub">Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loadingBar" class="loading-bar hidden">
+                <div class="loading-spinner"></div>
+                <span>SEARCHING...</span>
+            </div>
+
+            <button id="btnLoadMore" class="btn btn-cyan load-more-btn hidden">LOAD MORE</button>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox hidden">
+        <div class="lightbox-header">
+            <div class="lightbox-nav">
+                <button id="lbPrev" class="lb-nav-btn" title="Previous">&larr;</button>
+                <button id="lbNext" class="lb-nav-btn" title="Next">&rarr;</button>
+            </div>
+            <span id="lbCounter" class="lb-counter"></span>
+            <button id="lbClose" class="lb-close">&times;</button>
+        </div>
+        <div class="lightbox-body" id="lightboxBody"></div>
+        <div class="lightbox-footer">
+            <div class="lightbox-info">
+                <div id="lbTitle" class="lb-title"></div>
+                <div id="lbMeta" class="lb-meta"></div>
+            </div>
+            <div class="lightbox-actions">
+                <a id="lbOpenTab" class="btn btn-cyan btn-sm" href="#" target="_blank" rel="noopener">OPEN IN TAB</a>
+                <a id="lbDownload" class="btn btn-green btn-sm" href="#" download>DOWNLOAD</a>
+                <button id="lbCopyUrl" class="btn btn-yellow btn-sm">COPY URL</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span class="footer-text">MEDIA//SEARCH v1.1 &mdash; MAGMACRUNCH MEDIA</span>
+    </footer>
+
+    <script src="../shell/dropdown.js?v=1"></script>
+    <script src="js/cache.js"></script>
+    <script src="js/providers/openverse.js"></script>
+    <script src="js/providers/pexels.js"></script>
+    <script src="js/providers/pixabay.js"></script>
+    <script src="js/providers/met-museum.js"></script>
+    <script src="js/providers/smithsonian.js"></script>
+    <script src="js/providers/internet-archive.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/lightbox.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

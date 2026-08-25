@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Sync the texastoast playground's embedded engine to the installed package.
 
-tools/texastoast/app.js embeds a copy of texastoast/** so the playground can
+ware/texastoast/app.js embeds a copy of texastoast/** so the playground can
 run the engine in the browser under Pyodide (against the fake tkinter in
-tools/texastoast/tt_tk_shim.py). That copy drifts every time the engine
+ware/texastoast/tt_tk_shim.py). That copy drifts every time the engine
 changes, and a playground running a stale engine is worse than none — it
 demonstrates behaviour the installed package no longer has.
 
@@ -26,7 +26,7 @@ import json
 import sys
 from pathlib import Path
 
-APP_JS = Path(__file__).resolve().parent.parent / "tools" / "texastoast" / "app.js"
+APP_JS = Path(__file__).resolve().parent.parent / "ware" / "texastoast" / "app.js"
 
 BEGIN = "// BEGIN GENERATED TEXASTOAST FILES"
 END = "// END GENERATED TEXASTOAST FILES"

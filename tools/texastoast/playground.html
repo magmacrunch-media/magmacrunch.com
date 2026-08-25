@@ -1,92 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>texastoast playground</title>
-  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>moved — magmacrunch media</title>
+<link rel="canonical" href="https://magmacrunch.com/ware/texastoast/playground.html">
+<meta name="robots" content="noindex">
+<meta http-equiv="refresh" content="0; url=../../ware/texastoast/playground.html">
 </head>
-<body>
-  <header>
-    <h1><code>texastoast</code> playground</h1>
-    <div class="controls">
-      <select id="example-select"></select>
-      <button id="run" class="primary" title="Ctrl+Enter">&#9654; Run</button>
-      <button id="stop" title="Stop the running game">&#9632; Stop</button>
-      <button id="reset" title="Reset editor to example default">Reset</button>
-      <button id="about-btn" title="About texastoast">About</button>
-    </div>
-  </header>
-
-  <div id="loading-bar" class="loading-bar"></div>
-
-  <nav class="tool-nav">
-    <a href="./" class="back-link">&larr; texastoast</a>
-  </nav>
-
-  <main>
-    <div id="editor-panel"></div>
-    <div id="divider"></div>
-    <div id="output-panel">
-      <div id="game-stage">
-        <div id="game-title"></div>
-        <canvas id="game-canvas" tabindex="0" width="320" height="240"></canvas>
-        <div id="focus-hint" class="hidden">click the canvas to send keys to the game</div>
-      </div>
-      <div id="console-log"></div>
-    </div>
-  </main>
-
-  <footer>
-    <span id="status-interp">loading...</span>
-    <span id="status-example">example: &mdash;</span>
-    <span id="status-ready"><span class="dot loading"></span>initializing</span>
-  </footer>
-
-  <dialog id="about-modal">
-    <div class="modal-header">
-      <h2><code>texastoast</code></h2>
-      <button class="modal-close">&times;</button>
-    </div>
-    <div class="modal-body">
-      <p>A tkinter-based 2D RPG engine in Python, with optional I2C support for Raspberry Pi hardware. This playground runs the real package under Pyodide, with a browser stand-in for tkinter drawing to a canvas.</p>
-
-      <h3>Controls</h3>
-      <ul style="padding-left:1.25rem;margin:0 0 .75rem;">
-        <li>Arrow keys or WASD &mdash; move</li>
-        <li>Z or Enter &mdash; A button (talk, confirm)</li>
-        <li>X or Backspace &mdash; B button (cancel)</li>
-        <li>Escape or P &mdash; start (pause menu)</li>
-        <li>Shift &mdash; select</li>
-      </ul>
-      <p style="font-size:11px;color:#9d99b5;">Click the game canvas first so it receives your keypresses.</p>
-
-      <h3>Install</h3>
-      <p class="modal-label">pip:</p>
-      <pre><code>pip install texastoast</code></pre>
-
-      <h3>Browser limitations</h3>
-      <ul style="padding-left:1.25rem;margin:0 0 .75rem;">
-        <li>Sprites need Pillow &mdash; <code>SpriteSheet</code> and image drawing are desktop-only</li>
-        <li>I2C hardware input is unavailable; keyboard only</li>
-        <li>Errors inside the game loop print to the console strip rather than raising</li>
-      </ul>
-
-      <h3>Links</h3>
-      <div class="modal-links">
-        <a href="https://github.com/magmacrunchmedia/texastoast" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://pypi.org/project/texastoast/" target="_blank" rel="noopener">PyPI</a>
-        <a href="reference.html">API reference</a>
-      </div>
-
-      <p class="modal-license">Apache-2.0 &middot; Copyright 2026 magmacrunch media</p>
-    </div>
-  </dialog>
-
-  <script type="module" src="app.js"></script>
-</body>
+<body><p>this page moved to <a href="../../ware/texastoast/playground.html">/ware/texastoast/playground.html</a></p></body>
 </html>

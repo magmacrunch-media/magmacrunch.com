@@ -40,9 +40,9 @@ window.NAV_CONFIG = {
             { href: 'press/experimental/', label: 'experimental' },
             { href: 'press/lyrics/', label: 'lyrics' }
         ]},
-        { label: 'tools', href: 'tools/', items: [
-            { href: 'tools/utilities/', label: 'creative utilities' },
-            { href: 'tools/dev/', label: 'developer tools' }
+        { label: 'ware', href: 'ware/', items: [
+            { href: 'ware/utilities/', label: 'creative utilities' },
+            { href: 'ware/dev/', label: 'developer tools' }
         ]},
         { label: 'guestbook', href: 'home/guestbook.html' }
     ]
@@ -403,7 +403,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
     ];
 
     /* ── EXCLUDED PATHS: full page load ── */
-    const EXCLUDE_PATHS = ['/arcade/', '/by-contributor/', '/by-label/', '/tools/'];
+    const EXCLUDE_PATHS = ['/arcade/', '/by-contributor/', '/by-label/', '/ware/'];
 
     /* ── HELPERS ── */
     function abs(href, base) {

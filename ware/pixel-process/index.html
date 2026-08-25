@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pixel process — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <!-- Press Start 2P and Courier Prime are self-hosted by the shell.
+         VT323 powers the .sys-stat chips and the rest are font-picker
+         options; none of those four are self-hosted. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen:wght@400;700&family=DotGothic16&family=Pixelify+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shell/app-shell.css?v=1">
+    <link rel="stylesheet" href="css/style.css?v=3">
+</head>
+<body>
+    <div class="mobile-notice">
+        This tool is best experienced on a desktop or laptop.<br>
+        Please visit on a wider screen for the full workspace.
+    </div>
+
+    <header>
+        <div class="header-left">
+            <h1 class="glitch" data-text="PIXEL//PROCESS">PIXEL//PROCESS</h1>
+        </div>
+        <div class="header-right">
+            <span class="sys-stat" id="resStat">256×256</span>
+            <span class="sys-stat" id="chainStat">0 EFFECTS</span>
+        </div>
+    </header>
+
+    <nav class="tool-nav">
+        <a href="../utilities/" class="back-link chip"><span class="chrome" data-text="← UTILITIES">← creative utilities</span></a>
+    </nav>
+
+    <div class="workspace">
+        <!-- LEFT PANEL: Input & Sources -->
+        <aside class="panel input-panel">
+            <div class="panel-label">INPUT</div>
+
+            <button class="action-btn" id="uploadBtn">UPLOAD IMAGE</button>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">SOURCES</div>
+            <p class="panel-hint">generators replace the input image</p>
+
+            <div class="custom-dropdown" id="generatorDropdown">
+                <div class="dropdown-selected">
+                    <span>SELECT</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option" data-value="white-noise">WHITE NOISE</div>
+                    <div class="dropdown-option" data-value="perlin-noise">PERLIN NOISE</div>
+                    <div class="dropdown-option" data-value="h-gradient">H GRADIENT</div>
+                    <div class="dropdown-option" data-value="v-gradient">V GRADIENT</div>
+                    <div class="dropdown-option" data-value="radial-gradient">RADIAL GRADIENT</div>
+                    <div class="dropdown-option" data-value="color-bars">COLOR BARS</div>
+                    <div class="dropdown-option" data-value="checkerboard">CHECKERBOARD</div>
+                    <div class="dropdown-option" data-value="solid-color">SOLID COLOR</div>
+                </div>
+            </div>
+
+            <div class="prop-group" id="solidColorGroup" hidden>
+                <label class="prop-label">COLOR</label>
+                <div class="color-row">
+                    <input type="color" id="genColor" value="#ff8c42" class="color-input">
+                    <input type="text" id="genHex" class="color-hex-input" value="#ff8c42" maxlength="7">
+                </div>
+            </div>
+
+            <div class="prop-group" id="gradColorGroup" hidden>
+                <label class="prop-label">COLOR A</label>
+                <div class="color-row">
+                    <input type="color" id="gradColorA" value="#ff8c42" class="color-input">
+                    <input type="text" id="gradHexA" class="color-hex-input" value="#ff8c42" maxlength="7">
+                </div>
+                <label class="prop-label">COLOR B</label>
+                <div class="color-row">
+                    <input type="color" id="gradColorB" value="#d4a030" class="color-input">
+                    <input type="text" id="gradHexB" class="color-hex-input" value="#d4a030" maxlength="7">
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label">WORK SIZE</div>
+            <div class="size-row">
+                <span class="size-label">W</span>
+                <input type="number" id="sizeW" class="size-input" value="256" min="16" max="2048">
+                <span class="size-label">H</span>
+                <input type="number" id="sizeH" class="size-input" value="256" min="16" max="2048">
+            </div>
+            <div class="custom-dropdown" id="presetDropdown">
+                <div class="dropdown-selected">
+                    <span>PRESETS</span>
+                    <span class="dropdown-arrow">&#9662;</span>
+                </div>
+                <div class="dropdown-options">
+                    <div class="dropdown-option" data-value="128x128">128 × 128</div>
+                    <div class="dropdown-option" data-value="256x256">256 × 256</div>
+                    <div class="dropdown-option" data-value="512x512">512 × 512</div>
+                    <div class="dropdown-option" data-value="640x480">640 × 480</div>
+                    <div class="dropdown-option" data-value="800x600">800 × 600</div>
+                    <div class="dropdown-option" data-value="1024x768">1024 × 768</div>
+                </div>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="prop-group">
+                <label class="prop-label">FILE NAME</label>
+                <input type="text" id="fileName" class="file-input" value="pixel-process">
+            </div>
+            <button class="export-btn" id="exportBtn">EXPORT PNG</button>
+        </aside>
+
+        <!-- CENTER: Display Canvas -->
+        <div class="center-area">
+            <div class="canvas-wrap" id="canvasWrap">
+                <canvas id="displayCanvas"></canvas>
+                <div class="drop-overlay" id="dropOverlay">
+                    <span>DROP IMAGE</span>
+                </div>
+            </div>
+            <div class="canvas-hint">drag &amp; drop · ctrl+v paste · upload image · add effects →</div>
+        </div>
+
+        <!-- RIGHT PANEL: Signal Chain -->
+        <aside class="panel chain-panel">
+            <div class="panel-label">SIGNAL CHAIN</div>
+            <p class="panel-hint">effects process the source image</p>
+
+            <div class="chain-list" id="chainList">
+                <!-- effect cards rendered by JS -->
+            </div>
+
+            <div class="add-effect-wrap">
+                <div class="custom-dropdown" id="addEffectDropdown">
+                    <div class="dropdown-selected add-btn">
+                        <span>+ ADD EFFECT</span>
+                        <span class="dropdown-arrow">&#9662;</span>
+                    </div>
+                    <div class="dropdown-options">
+                        <div class="dropdown-option" data-value="channel-shift">CHANNEL SHIFT</div>
+                        <div class="dropdown-option" data-value="channel-swap">CHANNEL SWAP</div>
+                        <div class="dropdown-option" data-value="invert">INVERT</div>
+                        <div class="dropdown-option" data-value="posterize">POSTERIZE</div>
+                        <div class="dropdown-option" data-value="threshold">THRESHOLD</div>
+                        <div class="dropdown-option" data-value="pixel-sort">PIXEL SORT</div>
+                        <div class="dropdown-option" data-value="row-displace">ROW DISPLACE</div>
+                        <div class="dropdown-option" data-value="wave-distort">WAVE DISTORTION</div>
+                        <div class="dropdown-option" data-value="block-corrupt">BLOCK CORRUPT</div>
+                        <div class="dropdown-option" data-value="dead-pixels">DEAD PIXELS</div>
+                        <div class="dropdown-option" data-value="fft-filter">FFT FILTER</div>
+                        <div class="dropdown-option" data-value="feedback">FEEDBACK ECHO</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <footer>
+        <span class="footer-text">PIXEL//PROCESS v1.1 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+    </footer>
+
+    <script src="../shell/dropdown.js?v=1"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/chain.js"></script>
+    <script src="js/generators.js"></script>
+    <script src="js/effects/channels.js"></script>
+    <script src="js/effects/sort.js"></script>
+    <script src="js/effects/displace.js"></script>
+    <script src="js/effects/corrupt.js"></script>
+    <script src="js/effects/fft.js"></script>
+    <script src="js/effects/feedback.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

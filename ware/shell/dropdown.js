@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════
     magmacrunch media — retro dropdown
-    tools/shell/dropdown.js
+    ware/shell/dropdown.js
 
     One implementation of the click-to-open option list used by
     album-art-maker, media-search and pixel-process. The first two had a
@@ -15,7 +15,7 @@
         computes to position:fixed, so the absolute-positioned callers are
         untouched
 
-    Pair with tools/shell/dropdown.css (album-art-maker, media-search).
+    Pair with ware/shell/dropdown.css (album-art-maker, media-search).
     pixel-process keeps its own stylesheet — see the note in dropdown.css.
 
     Exposes window.RetroDropdown = { setup, getValue, setValue }.

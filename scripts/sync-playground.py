@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Sync the magmascript playground's embedded interpreter to the installed package.
 
-tools/magmascript/app.js embeds a copy of magmascript/lang/** so the playground
+ware/magmascript/app.js embeds a copy of magmascript/lang/** so the playground
 can run .mgs code in the browser under Pyodide. That copy drifts every time the
 language changes — it once fell a whole major version behind (no Asthenosphere)
 while the page still advertised it.
@@ -25,7 +25,7 @@ import json
 import sys
 from pathlib import Path
 
-APP_JS = Path(__file__).resolve().parent.parent / "tools" / "magmascript" / "app.js"
+APP_JS = Path(__file__).resolve().parent.parent / "ware" / "magmascript" / "app.js"
 
 BEGIN = "// BEGIN GENERATED LANG FILES"
 END = "// END GENERATED LANG FILES"

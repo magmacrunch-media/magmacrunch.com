@@ -1,4 +1,4 @@
-# tools/shell
+# ware/shell
 
 Shared chrome for the standalone tool apps — the ones that do **not** load the
 site's `style.css` and `nav.js` because they run full-bleed, `overflow: hidden`,
@@ -10,8 +10,8 @@ with their own header and footer.
 | `dropdown.css` | album-art-maker, media-search |
 | `dropdown.js` | album-art-maker, media-search, pixel-process |
 
-Site pages (`tools/index.html`, `tools/dev/`, `tools/utilities/`,
-`tools/magnolia/index.html`) are not part of this — they use `style.css` and
+Site pages (`ware/index.html`, `ware/dev/`, `ware/utilities/`,
+`ware/magnolia/index.html`) are not part of this — they use `style.css` and
 `nav.js` like the rest of magmacrunch.com.
 
 ## The rule: the shell defines tokens, apps override tokens
@@ -72,7 +72,7 @@ rather than value pickers, so a sticky highlight would be misleading.
 ## Cache busting is manual here
 
 `scripts/sync-adenosine.mjs` stamps content-hash `?v=` on `arcade/**` only.
-Nothing stamps `tools/`. When you change a file in this directory, **bump the
+Nothing stamps `ware/`. When you change a file in this directory, **bump the
 `?v=` on every page that links it** — a stale shared file breaks four pages at
 once instead of one.
 

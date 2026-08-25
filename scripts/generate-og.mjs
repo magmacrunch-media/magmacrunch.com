@@ -39,7 +39,7 @@ const PAGES = [
   { id: 'archive', title: 'ARCHIVE', subtitle: 'artists / places / labels / contributors', color: '#39FF6E' },
   { id: 'visual', title: 'VISUAL', subtitle: 'collage / photography / music videos / TV', color: '#FFE03A' },
   { id: 'press', title: 'PRESS', subtitle: 'journals / lyrics / press', color: '#FF7C1F' },
-  { id: 'tools', title: 'TOOLS', subtitle: 'browser utilities', color: '#00F5FF' },
+  { id: 'ware', title: 'WARE', subtitle: 'browser utilities', color: '#00F5FF' },
   { id: 'about', title: 'ABOUT', subtitle: 'magmacrunch media', color: '#FF3D6E' },
   { id: 'guestbook', title: 'GUESTBOOK', subtitle: 'sign the guestbook', color: '#39FF6E' },
 ]

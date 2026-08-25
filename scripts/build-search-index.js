@@ -98,9 +98,9 @@ function parseMainPages() {
     { file: 'press/scientific/index.html', title: 'Scientific Journal', desc: 'Academic writing and physics' },
     { file: 'press/experimental/index.html', title: 'Experimental Journal', desc: 'Experimental and literary writing' },
     { file: 'press/lyrics/index.html', title: 'Lyrics', desc: 'Song lyrics by artist' },
-    { file: 'tools/index.html', title: 'Tools Hub', desc: 'Software — creative utilities & developer tools' },
-    { file: 'tools/utilities/index.html', title: 'Creative Utilities', desc: 'Browser-based tools for art, media & image processing' },
-    { file: 'tools/dev/index.html', title: 'Developer Tools', desc: 'Game engines, scripting language & C API reference' },
+    { file: 'ware/index.html', title: 'Ware Hub', desc: 'Software — creative utilities & developer tools' },
+    { file: 'ware/utilities/index.html', title: 'Creative Utilities', desc: 'Browser-based tools for art, media & image processing' },
+    { file: 'ware/dev/index.html', title: 'Developer Tools', desc: 'Game engines, scripting language & C API reference' },
   ];
 
   for (const p of pages) {
@@ -257,16 +257,16 @@ function parsePress() {
   }
 }
 
-// ── Tools ──────────────────────────────────────────────────
-function parseTools() {
+// ── Ware ───────────────────────────────────────────────────
+function parseWare() {
   const toolDirs = ['album-art-maker', 'media-search', 'pixel-process'];
   for (const tool of toolDirs) {
-    const indexFile = path.join(ROOT, 'tools', tool, 'index.html');
+    const indexFile = path.join(ROOT, 'ware', tool, 'index.html');
     if (!fs.existsSync(indexFile)) continue;
     const html = fs.readFileSync(indexFile, 'utf8');
     const title = extractTitle(html) || prettyName(tool);
     const body = extractBodyText(html);
-    addItem(title, 'tool', `tools/${tool}/`, 'Creative web tool', body);
+    addItem(title, 'tool', `ware/${tool}/`, 'Creative web tool', body);
   }
 }
 
@@ -356,7 +356,7 @@ parseArchiveSection('by-label');
 parseArchiveSection('by-contributor');
 parseArcadeGames();
 parsePress();
-parseTools();
+parseWare();
 parseMusicBrainzCache();
 
 // Deduplicate by URL (keep first occurrence)

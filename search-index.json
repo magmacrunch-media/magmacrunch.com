@@ -210,25 +210,25 @@
     "b": "lyrics — press — magmacrunch media home › press › lyrics // lyrics // // artists // jon mccoy artist songs · 4 pieces ▶ c.p. rutledge artist songs · 2 pieces ▶ sex van floor plan artist songs · 1 piece ▶ texas hold'em lava dome artist songs · 1 piece ▶"
   },
   {
-    "t": "tools",
+    "t": "ware",
     "c": "page",
-    "u": "/tools/index.html",
+    "u": "/ware/index.html",
     "d": "Software — creative utilities & developer tools",
-    "b": "tools — magmacrunch media home › tools // tools // software · creative utilities & developer tools CREATIVE UTILITIES browser-based tools for art, media & image processing ▶ DEVELOPER TOOLS game engines, scripting language & C API reference ▶"
+    "b": "ware — magmacrunch media home › ware // ware // software · creative utilities & developer tools CREATIVE UTILITIES browser-based tools for art, media & image processing ▶ DEVELOPER TOOLS game engines, scripting language & C API reference ▶"
   },
   {
     "t": "creative utilities",
     "c": "page",
-    "u": "/tools/utilities/index.html",
+    "u": "/ware/utilities/index.html",
     "d": "Browser-based tools for art, media & image processing",
-    "b": "creative utilities — tools — magmacrunch media home › tools › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
+    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶"
   },
   {
     "t": "developer tools",
     "c": "page",
-    "u": "/tools/dev/index.html",
+    "u": "/ware/dev/index.html",
     "d": "Game engines, scripting language & C API reference",
-    "b": "developer tools — tools — magmacrunch media home › tools › developer tools // developer tools // game engines, scripting language & C API reference ADENOSINE game engine collection for the magmacrunch web arcade ▶ MAGMASCRIPT python-inspired mini language · playground, language reference, domain bridge ▶ TEXASTOAST python RPG engine · browser playground, API reference, I2C hardware bridge ▶ MAGNOLIA//API C API reference for magnolia · wii homebrew game engine · 105 functions across 12 modules ▶"
+    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language & C API reference ADENOSINE game engine collection for the magmacrunch web arcade ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -1892,21 +1892,21 @@
   {
     "t": "album art maker",
     "c": "tool",
-    "u": "/tools/album-art-maker/",
+    "u": "/ware/album-art-maker/",
     "d": "Creative web tool",
     "b": "album art maker — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. ALBUM//ART 1024×1024 0 ELEMENTS UNDO REDO DELETE CLEAR ALL CANVAS 1024 &#9662; 512 1024 2048 4096 BG &#9658; SELECT T TEXT &#9634; IMAGE RECT &#9662; FREQUENCY 5 WAVE MODE FILLED OPEN REFERENCE UPLOAD IMAGE &times; click to sample color BASIC &#9645; RECT &#9675; CIRCLE &#9585; LINE &#9653; TRI &#11043; PENTA &#11044; HEXA &#9671; DIAMOND &#9733; STAR &#10148; ARROW &#9711; R. RECT WAVES &#8767; SINE &#8861; SQUARE &#8894; SAWTOOTH &#8895; TRI WAVE &#..."
   },
   {
     "t": "media//search",
     "c": "tool",
-    "u": "/tools/media-search/",
+    "u": "/ware/media-search/",
     "d": "Creative web tool",
     "b": "media//search — magmacrunch media MEDIA//SEARCH 0 RESULTS SOURCES TYPE ALL &#9662; ALL PHOTOS ILLUSTRATIONS VIDEO AUDIO LICENSE ALL &#9662; ALL PUBLIC DOMAIN CC0 NO ATTRIBUTION ORIENTATION ALL &#9662; ALL HORIZONTAL VERTICAL SQUARE CLEAR GO &#9670; SEARCH ACROSS FREE MEDIA SOURCES Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive SEARCHING... LOAD MORE &larr; &rarr; &times; OPEN IN TAB DOWNLOAD COPY URL"
   },
   {
     "t": "pixel process",
     "c": "tool",
-    "u": "/tools/pixel-process/",
+    "u": "/ware/pixel-process/",
     "d": "Creative web tool",
     "b": "pixel process — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. PIXEL//PROCESS 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT &#9662; WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR COLOR A COLOR B WORK SIZE W H PRESETS &#9662; 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG DROP IMAGE drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image..."
   }

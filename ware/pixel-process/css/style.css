@@ -2,9 +2,9 @@
    pixel process — app styles
 
    Chrome (reset, header, glitch title, tool nav, workspace, footer) comes
-   from tools/shell/app-shell.css, linked ahead of this file.
+   from ware/shell/app-shell.css, linked ahead of this file.
 
-   This app does NOT load tools/shell/dropdown.css. Its option list is
+   This app does NOT load ware/shell/dropdown.css. Its option list is
    position:fixed and toggles display rather than animating max-height,
    because it has to escape a clipping panel — a different widget that
    happens to share the class names. It does use the shared dropdown.js,

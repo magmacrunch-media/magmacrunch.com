@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>magmascript — magmacrunch media</title>
+  <meta property="og:title" content="magmascript — magmacrunch media">
+  <meta property="og:description" content="a Python-inspired mini language for magmacrunch infrastructure">
+  <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="../../style.css">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font: 14px/1.6 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #14141b; color: #e8e6f0;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Hero ──────────────────────────────────────────── */
+
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1.5rem 2.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 400;
+      color: #ff3d3d;
+      text-shadow:
+        3px 3px 0 #33304a,
+        6px 6px 0 #1c1b26;
+      letter-spacing: 0.08em;
+      margin-bottom: .75rem;
+    }
+
+    .hero .tagline {
+      font-size: 13px;
+      color: #9d99b5;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Tool cards ────────────────────────────────────── */
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .tool-card {
+      display: block;
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .15s, transform .15s;
+    }
+    .tool-card:hover {
+      border-color: #7cc7ff;
+      transform: translateY(-2px);
+    }
+
+    .tool-card .icon {
+      font-size: 24px;
+      margin-bottom: .5rem;
+    }
+
+    .tool-card h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px; font-weight: 400;
+      color: #e8e6f0;
+      margin-bottom: .4rem;
+    }
+
+    .tool-card p {
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.5;
+    }
+
+    /* ── Features ──────────────────────────────────────── */
+
+    .features {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .features h2,
+    .about h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px; font-weight: 400;
+      color: #ff3d3d;
+      margin-bottom: .75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+    }
+
+    .feat-item {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      padding: .6rem .75rem;
+      font-size: 12px;
+    }
+
+    .feat-item strong {
+      color: #7cc7ff;
+      display: block;
+      margin-bottom: .15rem;
+      font-size: 11px;
+    }
+
+    .feat-item span {
+      color: #9d99b5;
+      font-size: 11px;
+    }
+
+    /* ── About ─────────────────────────────────────────── */
+
+    .about {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+    }
+
+    .about h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px; font-weight: 400;
+      color: #e8e6f0;
+      margin: 1.5rem 0 .5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .about p { margin-bottom: .5rem; }
+
+    .about pre {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .6rem .75rem;
+      overflow-x: auto;
+      margin-bottom: .5rem;
+    }
+
+    .about code {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: #7cc7ff;
+    }
+
+    .about-label {
+      color: #666;
+      font-size: 11px;
+      margin-bottom: .25rem;
+    }
+
+    .about-links {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .about-links a {
+      color: #7cc7ff;
+      text-decoration: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: .4rem .6rem;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      transition: border-color .15s;
+    }
+    .about-links a:hover { border-color: #7cc7ff; }
+
+    .about-license {
+      color: #555;
+      font-size: 11px;
+      margin-top: 1rem;
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 12px;
+      color: #9d99b5;
+      border-top: 1px solid #33304a;
+    }
+
+    footer span {
+      color: #7cc7ff;
+    }
+
+    @media (max-width: 480px) {
+      .tools { grid-template-columns: 1fr; }
+      .feat-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Override style.css conflicts ─────────────────── */
+    .tool-nav {
+      margin-top: 48px;
+      padding: 8px 24px;
+      border-bottom: 1px solid #33304a;
+      background: #14141b;
+      flex-shrink: 0;
+    }
+    .tool-nav .back-link {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      background: #1c1b26;
+      padding: 6px 10px;
+      border: 1px solid #33304a;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tool-nav .back-link:hover {
+      color: #e8e6f0;
+      border-color: #7cc7ff;
+    }
+    body {
+      background: #14141b;
+      background-image: none;
+      color: #e8e6f0;
+    }
+    a { color: #7cc7ff; }
+    footer {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      border-top: 1px solid #33304a;
+    }
+    footer span { color: #7cc7ff; }
+  </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<div class="tool-nav">
+    <a href="../dev/" class="back-link">&larr; developer tools</a>
+</div>
+
+  <div class="hero">
+    <h1>magmascript</h1>
+    <p class="tagline">a Python-inspired mini language for magmacrunch infrastructure</p>
+  </div>
+
+  <div class="tools">
+    <a href="playground.html" class="tool-card">
+      <div class="icon">&#9654;</div>
+      <h2>Playground</h2>
+      <p>Write and run .mgs scripts in-browser with Pyodide. 13 examples, syntax highlighting, console output.</p>
+    </a>
+    <a href="reference.html" class="tool-card">
+      <div class="icon">&#128214;</div>
+      <h2>Language Reference</h2>
+      <p>Syntax cheat sheet: variables, functions, classes, control flow, built-in functions, and string methods.</p>
+    </a>
+  </div>
+
+  <div class="features">
+    <h2>features</h2>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <strong>Variables &amp; F-Strings</strong>
+        <span>Dynamic typing, f"interpolation {expressions}"</span>
+      </div>
+      <div class="feat-item">
+        <strong>Functions &amp; Closures</strong>
+        <span>fn, arrow functions, default params, closures</span>
+      </div>
+      <div class="feat-item">
+        <strong>Lists &amp; Dicts</strong>
+        <span>Slicing [1:3], [::-1], comprehensions</span>
+      </div>
+      <div class="feat-item">
+        <strong>Classes</strong>
+        <span>Methods, constructors, self, inheritance-ready</span>
+      </div>
+      <div class="feat-item">
+        <strong>Error Handling</strong>
+        <span>try/haunter, throw fire toad, spooked warnings</span>
+      </div>
+      <div class="feat-item">
+        <strong>Import System</strong>
+        <span>intent "module.mgs", named imports, aliases</span>
+      </div>
+      <div class="feat-item">
+        <strong>Asthenosphere</strong>
+        <span>Memory tier: fixed-width ints, arena, floorplans, faults</span>
+      </div>
+      <div class="feat-item">
+        <strong>Domain Bridge</strong>
+        <span>11 built-in clients: mcp, pi, mc1, gh, media, scores</span>
+      </div>
+      <div class="feat-item">
+        <strong>CLI &amp; REPL</strong>
+        <span>Run scripts, interactive REPL with tab completion</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <h2>about</h2>
+    <p>A Python-inspired mini scripting language by <a href="https://magmacrunch.com">magmacrunch media</a>.
+      Write <code>.mgs</code> scripts that combine general-purpose programming with infrastructure automation via the domain bridge.
+      Tree-walk interpreter, no compilation step, runs in your terminal or browser.</p>
+
+    <h3>install</h3>
+    <p class="about-label">pip:</p>
+    <pre><code>pip install magmascript</code></pre>
+    <p style="font-size:11px;color:#555;margin-top:.25rem;">v3.0.0 — the Asthenosphere release</p>
+
+    <h3>quick start</h3>
+    <pre><code>magmascript run script.mgs
+magmascript repl</code></pre>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunchmedia/magmascript" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://pypi.org/project/magmascript/" target="_blank" rel="noopener">PyPI</a>
+      <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
+    </div>
+
+    <p class="about-license">MIT · Copyright 2026 magmacrunch media</p>
+  </div>
+
+  <footer>
+      &copy; 2026 <span>magmacrunch media</span>
+  </footer>
+
+  <script src="../../nav.js"></script>
+</body>
+</html>

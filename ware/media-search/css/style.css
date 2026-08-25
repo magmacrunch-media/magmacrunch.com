@@ -2,7 +2,7 @@
    media//search — app styles
 
    Chrome (reset, header, glitch title, tool nav, workspace, footer) comes
-   from tools/shell/app-shell.css; the dropdown from tools/shell/dropdown.css.
+   from ware/shell/app-shell.css; the dropdown from ware/shell/dropdown.css.
    Both are linked ahead of this file. Only tokens are overridden here.
 
    Unlike the canvas tools this app does NOT set user-select: none — the

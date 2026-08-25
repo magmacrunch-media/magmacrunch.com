@@ -1,6 +1,6 @@
 name: Sync texastoast playground
 
-# Keeps tools/texastoast/app.js (the browser playground's embedded engine) in
+# Keeps ware/texastoast/app.js (the browser playground's embedded engine) in
 # step with the published texastoast package. The embedded copy drifts every
 # time the engine changes, and a playground demonstrating behaviour the
 # installed package no longer has is worse than none; this reinstalls the
@@ -35,7 +35,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tools/texastoast/app.js
+          git add ware/texastoast/app.js
           if git diff --cached --quiet; then
             echo "Playground already up to date."
           else

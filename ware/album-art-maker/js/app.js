@@ -7,7 +7,7 @@
 
     // ── RETRO DROPDOWN HELPER ──
     // Implementation is shared with media-search and pixel-process:
-    // tools/shell/dropdown.js. getValue's default stays null here, which the
+    // ware/shell/dropdown.js. getValue's default stays null here, which the
     // `|| 'Press Start 2P'` fallback at the font call site relies on.
     const getDropdownValue = (id) => RetroDropdown.getValue(id);
     const setDropdownValue = (id, value) => RetroDropdown.setValue(id, value);

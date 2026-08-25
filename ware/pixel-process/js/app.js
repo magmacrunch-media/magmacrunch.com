@@ -213,7 +213,7 @@
 
     // ── Dropdown Setup Helper ──
     // Implementation is shared with album-art-maker and media-search:
-    // tools/shell/dropdown.js. It reads the computed position of
+    // ware/shell/dropdown.js. It reads the computed position of
     // .dropdown-options and places the list itself when it is fixed, which
     // is what this app's escape-the-panel positioning needs. markActive is
     // off because these are action menus, not value pickers.
