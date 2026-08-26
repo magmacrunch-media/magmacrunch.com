@@ -80,7 +80,7 @@
             <div class="panel-divider"></div>
 
             <div class="tool-grid">
-                <button class="tool-btn active" data-tool="select" title="Select / Move (V)">
+                <button class="tool-btn active" data-tool="select" title="Select / Move (V) — Esc or click outside to deselect">
                     <span class="tool-icon">&#9658;</span>
                     <span class="tool-name">SELECT</span>
                 </button>
@@ -282,6 +282,12 @@
             </div>
 
             <div class="prop-group" id="imageScaleGroup" hidden>
+                <label class="prop-label">FIT TO CANVAS</label>
+                <div class="action-btns">
+                    <button class="action-btn" id="imageCoverBtn" title="Fill the whole canvas, cropping the overflow">&#9632; COVER</button>
+                    <button class="action-btn" id="imageContainBtn" title="Fit the whole image inside the canvas">&#9633; FIT</button>
+                </div>
+
                 <label class="prop-label">SCALE</label>
                 <div class="range-row">
                     <input type="range" id="imageScale" min="10" max="500" value="100" class="range-input">
@@ -382,7 +388,7 @@
     </div>
 
     <footer>
-        <span class="footer-text">ALBUM//ART v1.7 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+        <span class="footer-text">ALBUM//ART v1.8 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
     </footer>
 
     <script src="../shell/toast.js?v=d87a2776"></script>
@@ -392,6 +398,6 @@
     <script src="js/canvas.js?v=b9359e4b"></script>
     <script src="js/tools.js?v=bd1b67a7"></script>
     <script src="js/clipart.js?v=a7d338a6"></script>
-    <script src="js/app.js?v=9bd7d00c"></script>
+    <script src="js/app.js?v=ccc444f2"></script>
 </body>
 </html>

@@ -303,6 +303,22 @@
         }
     });
 
+    /* Clicking the dark surround deselects, the same as clicking bare canvas.
+       The guard on e.target matters: this fires for clicks anywhere inside
+       .center-area, and without it a click that landed on the canvas would
+       deselect immediately after Tools had just selected something. */
+    const centerArea = document.querySelector('.center-area');
+    if (centerArea) {
+        centerArea.addEventListener('mousedown', (e) => {
+            if (e.target !== centerArea) return;
+            if (!selectedElement) return;
+            selectedElement = null;
+            CanvasRenderer.setSelectedId(null);
+            CanvasRenderer.render(elements);
+            updatePropsVisibility();
+        });
+    }
+
     // ── DOUBLE CLICK TO EDIT TEXT (select mode only) ──
     canvas.addEventListener('dblclick', (e) => {
         if (Tools.getTool() !== 'select') return;
@@ -650,6 +666,61 @@
         if (selectedElement && selectedElement.type === 'image') History.push(elements);
     });
 
+    /* ── FIT TO CANVAS ──
+       The common album layout is one photo filling the square with text over
+       it, and getting there by hand meant dragging a corner handle past the
+       canvas edge — where the handle is no longer on screen to grab — and then
+       nudging the image back to centre. COVER does it in one click.
+
+       COVER scales the short side to the canvas and lets the long side hang
+       off both edges equally; the canvas clips it, which is the crop. CONTAIN
+       scales the long side to fit so the whole image is visible. Both centre
+       the result, and both keep the aspect ratio — a non-square photo cannot
+       fill a square without either cropping or letterboxing, so the choice is
+       which one you want rather than something to be solved.
+
+       Aspect comes from el.aspectRatio, recorded at import. Falling back to
+       the live w/h keeps this working for an element that predates it. */
+    function fitImageToCanvas(mode) {
+        if (!selectedElement || selectedElement.type !== 'image') return;
+
+        const size = CanvasRenderer.getCanvasSize();
+        const aspect = selectedElement.aspectRatio
+            || (selectedElement.h ? selectedElement.w / selectedElement.h : 1);
+
+        /* Treat the image as aspect wide by 1 tall and pick the scale that
+           takes it to the canvas. Cover needs both sides to reach `size`, so
+           it takes the larger factor and the other side overhangs; contain
+           needs both to stay within, so it takes the smaller. */
+        const fitW = size / aspect;
+        const fitH = size;
+        const scale = mode === 'cover' ? Math.max(fitW, fitH) : Math.min(fitW, fitH);
+
+        const w = aspect * scale;
+        const h = scale;
+
+        selectedElement.w = w;
+        selectedElement.h = h;
+        selectedElement.x = (size - w) / 2;
+        selectedElement.y = (size - h) / 2;
+
+        // Re-base the scale slider so 100% now means "as fitted", otherwise the
+        // next nudge of it would snap the image back to its import size.
+        selectedElement.origW = w;
+        selectedElement.origH = h;
+        document.getElementById('imageScale').value = 100;
+        document.getElementById('imageScaleVal').textContent = '100%';
+        document.getElementById('imageDims').textContent =
+            Math.round(w) + ' × ' + Math.round(h);
+
+        History.push(elements);
+        CanvasRenderer.render(elements);
+        Toast.show(mode === 'cover' ? 'IMAGE COVERS CANVAS' : 'IMAGE FIT TO CANVAS');
+    }
+
+    document.getElementById('imageCoverBtn').addEventListener('click', () => fitImageToCanvas('cover'));
+    document.getElementById('imageContainBtn').addEventListener('click', () => fitImageToCanvas('contain'));
+
     // ── Z-ORDER CONTROL ──
     document.getElementById('bringForwardBtn').addEventListener('click', () => {
         if (!selectedElement) return;
@@ -764,6 +835,20 @@
     document.addEventListener('keydown', (e) => {
         // skip if typing in an input
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
+        /* Escape deselects. Clicking bare canvas deselects too, but hitTest
+           works on bounding boxes, so an element covering the canvas — which
+           is the normal case the moment you use COVER — leaves nowhere bare to
+           click and no way back out. This is the escape hatch that was
+           missing. The text modal handles its own Escape and closes before
+           this sees it. */
+        if (e.key === 'Escape' && selectedElement) {
+            selectedElement = null;
+            CanvasRenderer.setSelectedId(null);
+            CanvasRenderer.render(elements);
+            updatePropsVisibility();
+            return;
+        }
 
         // Ctrl+Z / Ctrl+Shift+Z
         if (e.ctrlKey || e.metaKey) {
