@@ -281,21 +281,42 @@ body {
     overflow: hidden;
 }
 
+/* Generates no box of its own, so the canvas becomes the flex item of
+   .center-area directly and its percentage max-* resolve against the space
+   that actually exists.
+
+   This wrapper used to be an inline-block with auto height sitting between
+   the two. A percentage max-height against an auto-height parent is
+   unresolvable, so the canvas could not be sized from its container and was
+   pinned to `calc(100vh - 80px)` instead — a guess at the surrounding chrome
+   that was 35px short of the real 115px (55 header + 33 footer + 20/20
+   .center-area padding). The canvas stayed square but .center-area clips with
+   overflow: hidden, so 17.5px was cut off the top *and* bottom at any window
+   height where the height constraint binds — 640x640 drawn, 640x605 visible at
+   1280x720. It read as a canvas that was not square, and anything placed near
+   the top or bottom edge was invisible while editing but present on export.
+
+   The wrapper holds nothing but the canvas (verified — no JS touches
+   #canvasWrap), so the shadow moves to the canvas, where it also hugs the
+   artwork properly instead of a box that no longer matches it.
+
+   Do not give this a box back without re-checking the clipping: the sibling
+   pattern in pixel-process works only because *its* .canvas-wrap sits in a
+   column flex container and gets a definite height from `flex: 1`. Here
+   .center-area is a row, so the same rules leave the height auto again. */
 .canvas-wrap {
-    position: relative;
-    display: inline-block;
-    line-height: 0;
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    display: contents;
 }
 
 #mainCanvas {
     max-width: 100%;
-    max-height: calc(100vh - 80px);
+    max-height: 100%;
     width: auto;
     height: auto;
     cursor: crosshair;
     image-rendering: auto;
     display: block;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
 }
 
 /* ── TEXT MODAL ── */
