@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
-    <link rel="stylesheet" href="css/style.css?v=8b52fd29">
+    <link rel="stylesheet" href="css/style.css?v=f12b8685">
 </head>
 <body>
     <div class="mobile-notice">
@@ -89,6 +89,22 @@
                     <button id="add-color-btn" title="Add current color as a swatch">+ ADD</button>
                     <button id="ramp-btn" title="Add a 4-shade hue-shifted ramp of the current color">RAMP</button>
                 </div>
+                <div class="sub-label">replace everywhere</div>
+                <div class="row">
+                    <input type="color" id="replace-color" value="#ffffff" title="New color">
+                    <button id="replace-btn" title="Replace the selected color across every frame">REPLACE</button>
+                </div>
+                <div class="hint">swaps the selected swatch for this color in
+                    every frame; one undo step.</div>
+            </details>
+
+            <details class="side-section" data-section="character" open>
+                <summary>CHARACTER</summary>
+                <div class="action-row">
+                    <button id="template-btn" class="primary" title="Start from a character template (T)">TEMPLATES&hellip;</button>
+                </div>
+                <div class="sub-label">slots</div>
+                <div id="slot-list"></div>
             </details>
 
             <details class="side-section" data-section="frames" open>
@@ -183,6 +199,21 @@
         <span class="footer-text">SPRITE//FORGE v1.0 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
     </footer>
 
+    <dialog id="template-modal">
+        <div class="modal-header">
+            <h2>CHARACTER TEMPLATES</h2>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Start from a drawn character and make it yours. Loading replaces
+                every frame, the size and the palette; one Ctrl+Z puts it all back.</p>
+            <div class="tpl-grid" id="tpl-grid"></div>
+            <div class="modal-actions">
+                <button id="template-cancel">CANCEL</button>
+            </div>
+        </div>
+    </dialog>
+
     <dialog id="import-modal">
         <div class="modal-header">
             <h2>IMPORT PNG SHEET</h2>
@@ -211,6 +242,7 @@
         </div>
     </dialog>
 
-    <script src="js/app.js?v=6dcd5f85"></script>
+    <script src="js/templates.js?v=8b0fa24d"></script>
+    <script src="js/app.js?v=9ac4e2c2"></script>
 </body>
 </html>

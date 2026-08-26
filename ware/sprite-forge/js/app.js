@@ -38,6 +38,10 @@ let lastPos = null;             // previous pencil/erase position, for stroke in
 let shapeStart = null, shapeEnd = null;
 let anim = { playing: false, fps: 8, scale: 4, index: 0, timer: null };
 let frameCache = [];            // 1:1 offscreen canvas per frame, for previews
+// Set when a character template is loaded: { id, slots: {name: baseHex},
+// steps: {name: [shadeSteps]} }. Slot identity is not stored per pixel, so this
+// is how a recolour knows which hexes belong to which part of the character.
+let activeTemplate = null;
 
 const canvas = document.getElementById('frame-canvas');
 const ctx = canvas.getContext('2d');
@@ -84,8 +88,14 @@ function updateFrameLabel() {
 
 // ── Undo / Redo ─────────────────────────────────────────
 
+// Carries the palette as well as the pixels: recolouring changes both together,
+// and an undo that restored one without the other would leave the swatches
+// describing art that is no longer there.
 function currentState() {
-  return JSON.parse(JSON.stringify({ frames, frameIndex, origin, frameW, frameH }));
+  return JSON.parse(JSON.stringify({
+    frames, frameIndex, origin, frameW, frameH,
+    palette, selectedSwatch, selectedColor, activeTemplate,
+  }));
 }
 
 function pushUndo(state) {
@@ -104,9 +114,12 @@ function commitStroke() { if (pendingSnap) { pushUndo(pendingSnap); pendingSnap 
 function restore(s) {
   frames = s.frames; frameIndex = s.frameIndex; origin = s.origin;
   frameW = s.frameW; frameH = s.frameH;
+  palette = s.palette; selectedSwatch = s.selectedSwatch; selectedColor = s.selectedColor;
+  activeTemplate = s.activeTemplate;
   wInput.value = frameW; hInput.value = frameH;
   frameCache = [];
   syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
+  renderPalette(); updatePaletteActive(); renderSlots();
 }
 
 function undo() {
@@ -543,19 +556,51 @@ function hslToHex(h, s, l) {
     .map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
 }
 
+// One shade of a colour, as a step on a pixel-art ramp: shadows shift hue toward
+// blue and gain saturation, highlights shift toward yellow and lose it. Step 0
+// returns the base verbatim rather than round-tripping through HSL — that round
+// trip loses a bit to float error, and #f0c090 coming back as #f0c08f would
+// silently break every exact-string hex lookup in the editor.
+function shadeHex(base, step) {
+  if (!step) return base;
+  const [h, s, l] = hexToHsl(base);
+  const dl = 0.11 * step;
+  return hslToHex(
+    h - 8 * step,
+    step < 0 ? Math.min(1, s + 0.04 * -step) : Math.max(0, s - 0.04 * step),
+    Math.max(0.06, Math.min(0.94, l + dl)),
+  );
+}
+
 document.getElementById('ramp-btn').addEventListener('click', () => {
-  // pixel-art style ramp: shadows shift hue toward blue, highlights toward yellow
-  const [h, s, l] = hexToHsl(selectedColor);
-  const shades = [
-    hslToHex(h + 16, Math.min(1, s + 0.08), Math.max(0.06, l - 0.22)),
-    hslToHex(h + 8, s, Math.max(0.06, l - 0.11)),
-    hslToHex(h - 8, s, Math.min(0.94, l + 0.11)),
-    hslToHex(h - 16, Math.max(0, s - 0.08), Math.min(0.94, l + 0.22)),
-  ];
+  const shades = [-2, -1, 1, 2].map(step => shadeHex(selectedColor, step));
   for (const c of shades)
     if (palette.length < MAX_SWATCHES && !palette.includes(c)) palette.push(c);
   renderPalette(); updatePaletteActive();
 });
+
+// ── Recolour ────────────────────────────────────────────
+
+// Rewrites a set of colours across every frame and the palette in one pass and
+// one undo step, so a slot recolour that touches several shades is still a
+// single Ctrl+Z. Returns whether anything actually changed.
+function applyColorMap(map) {
+  const pairs = Object.entries(map).filter(([from, to]) => from !== to);
+  if (!pairs.length) return false;
+  const lookup = Object.fromEntries(pairs);
+
+  const hits = frames.some(f => f.some(row => row.some(px => px && lookup[px])));
+  const inPalette = palette.some(c => lookup[c]);
+  if (!hits && !inPalette) return false;
+
+  snapshot();
+  frames = frames.map(f => f.map(row => row.map(px => (px && lookup[px]) || px)));
+  palette = palette.map(c => lookup[c] || c);
+  selectedColor = lookup[selectedColor] || selectedColor;
+  frameCache = [];
+  render(); renderSheet(); renderPalette(); updatePaletteActive(); updateColorChip();
+  return true;
+}
 
 // ── Tool buttons + toggles ──────────────────────────────
 
@@ -701,6 +746,160 @@ document.getElementById('copy-btn').addEventListener('click', async () => {
   } catch {}
 });
 
+// ── Character templates ─────────────────────────────────
+
+const templateModal = document.getElementById('template-modal');
+const tplGrid = document.getElementById('tpl-grid');
+const slotList = document.getElementById('slot-list');
+
+// Replaces every frame, the size and the palette — the same wholesale swap the
+// PNG import performs, so it follows that routine's order and is one undo step.
+function loadTemplate(tpl) {
+  const dec = CharacterTemplates.decode(tpl, shadeHex);
+  snapshot();
+  frameW = dec.w; frameH = dec.h;
+  wInput.value = frameW; hInput.value = frameH;
+  frames = dec.frames.slice(0, MAX_FRAMES);
+  palette = dec.palette.slice(0, MAX_SWATCHES);
+  selectedSwatch = 0; selectedColor = palette[0];
+  frameIndex = 0; frameCache = [];
+  origin = { x: Math.min(dec.origin.x, frameW), y: Math.min(dec.origin.y, frameH) };
+  activeTemplate = { id: tpl.id, label: tpl.label, slots: dec.slots, steps: dec.steps };
+  exportOutput.value = `// ${tpl.label} — ${frames.length} frame${frames.length === 1 ? '' : 's'} of ${frameW}×${frameH}, origin (${origin.x}, ${origin.y})`;
+  syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
+  renderPalette(); updatePaletteActive(); renderSlots();
+  templateModal.close();
+}
+
+function loadBlank() {
+  snapshot();
+  frameW = 32; frameH = 32;
+  wInput.value = frameW; hInput.value = frameH;
+  frames = [blankFrame()];
+  palette = [...DEFAULT_COLORS];
+  selectedSwatch = 0; selectedColor = palette[0];
+  frameIndex = 0; frameCache = [];
+  origin = { x: 0, y: 0 };
+  activeTemplate = null;
+  exportOutput.value = '';
+  syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
+  renderPalette(); updatePaletteActive(); renderSlots();
+  templateModal.close();
+}
+
+// frameToImageData closes over the global frameW/frameH, and a template carries
+// its own size, so thumbnails need their own tiny renderer.
+function thumbCanvas(pixels, w, h) {
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const img = new ImageData(w, h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const hex = pixels[y][x];
+      if (!hex) continue;
+      const [r, g, b] = hexToRgb(hex), i = (y * w + x) * 4;
+      img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b; img.data[i + 3] = 255;
+    }
+  }
+  c.getContext('2d').putImageData(img, 0, 0);
+  c.className = 'tpl-thumb';
+  return c;
+}
+
+function tplCard(label, blurb, thumb, onPick) {
+  const btn = document.createElement('button');
+  btn.className = 'tpl-card';
+  if (thumb) btn.appendChild(thumb);
+  else {
+    const empty = document.createElement('div');
+    empty.className = 'tpl-thumb tpl-thumb-blank';
+    btn.appendChild(empty);
+  }
+  const name = document.createElement('span');
+  name.className = 'tpl-name'; name.textContent = label;
+  const sub = document.createElement('span');
+  sub.className = 'tpl-blurb'; sub.textContent = blurb;
+  btn.append(name, sub);
+  btn.addEventListener('click', onPick);
+  return btn;
+}
+
+function renderTemplateGrid() {
+  tplGrid.innerHTML = '';
+  tplGrid.appendChild(tplCard('BLANK', 'empty · 32×32', null, loadBlank));
+  if (!window.CharacterTemplates) return;
+  for (const tpl of CharacterTemplates.list()) {
+    const errs = CharacterTemplates.validate(tpl, shadeHex);
+    if (errs.length) { console.error(`template "${tpl.id}":`, errs); continue; }
+    const dec = CharacterTemplates.decode(tpl, shadeHex);
+    tplGrid.appendChild(tplCard(tpl.label, tpl.blurb,
+      thumbCanvas(dec.frames[0], dec.w, dec.h), () => loadTemplate(tpl)));
+  }
+}
+
+// Slot swatches: recolouring one rewrites every shade it uses across all frames.
+function renderSlots() {
+  slotList.innerHTML = '';
+  if (!activeTemplate) {
+    const hint = document.createElement('div');
+    hint.className = 'hint';
+    hint.textContent = 'Load a template to recolor its parts by name.';
+    slotList.appendChild(hint);
+    return;
+  }
+  for (const [name, base] of Object.entries(activeTemplate.slots)) {
+    const row = document.createElement('label');
+    row.className = 'slot-row';
+    const sw = document.createElement('span');
+    sw.className = 'slot-swatch';
+    sw.style.backgroundColor = base;
+    const input = document.createElement('input');
+    input.type = 'color'; input.value = base;
+    input.addEventListener('input', (e) => {
+      sw.style.backgroundColor = e.target.value;
+    });
+    input.addEventListener('change', (e) => recolorSlot(name, e.target.value.toLowerCase()));
+    const label = document.createElement('span');
+    label.className = 'slot-name'; label.textContent = name;
+    sw.appendChild(input);
+    row.append(sw, label);
+    slotList.appendChild(row);
+  }
+  const hint = document.createElement('div');
+  hint.className = 'hint';
+  hint.textContent = 'Recolors every pixel of that shade, including any you painted in the same color.';
+  slotList.appendChild(hint);
+}
+
+function recolorSlot(name, newBase) {
+  if (!activeTemplate) return;
+  const oldBase = activeTemplate.slots[name];
+  if (!oldBase || oldBase === newBase) return;
+  const map = {};
+  for (const step of activeTemplate.steps[name] || [0])
+    map[shadeHex(oldBase, step).toLowerCase()] = shadeHex(newBase, step).toLowerCase();
+  // applyColorMap snapshots before it writes, so the slot must still hold the
+  // old base at that moment — record the new one only once the pixels are
+  // actually changed, or undo restores old pixels beside a new swatch.
+  if (applyColorMap(map)) activeTemplate.slots[name] = newBase;
+  renderSlots();
+}
+
+document.getElementById('template-btn').addEventListener('click', () => {
+  renderTemplateGrid();
+  templateModal.showModal();
+});
+document.getElementById('template-cancel').addEventListener('click', () => templateModal.close());
+templateModal.querySelector('.modal-close').addEventListener('click', () => templateModal.close());
+templateModal.addEventListener('click', (e) => { if (e.target === templateModal) templateModal.close(); });
+
+// ── Replace colour ──────────────────────────────────────
+
+document.getElementById('replace-btn').addEventListener('click', () => {
+  const to = document.getElementById('replace-color').value.toLowerCase();
+  applyColorMap({ [selectedColor]: to });
+});
+
 // ── Import ──────────────────────────────────────────────
 
 document.getElementById('import-btn').addEventListener('click', () => {
@@ -754,6 +953,9 @@ document.getElementById('import-confirm').addEventListener('click', () => {
       renderPalette(); updatePaletteActive();
     }
     frameIndex = 0; frameCache = [];
+    // The imported pixels are not the template's any more, so slot identity is
+    // gone; keeping it would let a recolour rewrite unrelated colours.
+    activeTemplate = null; renderSlots();
     origin.x = Math.min(origin.x, w); origin.y = Math.min(origin.y, h);
     const truncated = (img.naturalWidth % w) || (img.naturalHeight % h)
       ? ` (image not evenly divisible by ${w}×${h} — trailing pixels dropped)` : '';
@@ -778,7 +980,8 @@ document.getElementById('clear-btn').addEventListener('click', () => {
 // ── Keyboard shortcuts ──────────────────────────────────
 
 document.addEventListener('keydown', (e) => {
-  if ((e.target.matches && e.target.matches('input, textarea')) || importModal.open) return;
+  if ((e.target.matches && e.target.matches('input, textarea'))
+      || importModal.open || templateModal.open) return;
   const m = e.metaKey || e.ctrlKey;
   if (m && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return; }
   if (m && e.key === 'z' && e.shiftKey)  { e.preventDefault(); redo(); return; }
@@ -786,6 +989,7 @@ document.addEventListener('keydown', (e) => {
   if (m) return;
   const tools = { b: 'pencil', e: 'erase', g: 'fill', l: 'line', u: 'rect', c: 'ellipse', i: 'pick', o: 'origin' };
   if (tools[e.key]) { tool = tools[e.key]; updateToolActive(); }
+  else if (e.key === 't') document.getElementById('template-btn').click();
   else if (e.key === 'm') setMirror(!mirrorX);
   else if (e.key === 'n') setOnion(!onionSkin);
   else if (e.key === 'd') setGrid(!gridOn);
@@ -886,3 +1090,4 @@ renderPalette();
 updateToolActive();
 updateFrameLabel();
 syncOriginInputs();
+renderSlots();

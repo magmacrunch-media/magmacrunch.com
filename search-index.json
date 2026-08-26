@@ -1915,6 +1915,6 @@
     "c": "tool",
     "u": "/ware/sprite-forge/",
     "d": "Creative web tool",
-    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32&times;32 1 FRAME &minus; 16&times; + &#9638; GRID &#8651; MIRROR &#9678; ONION 32 &times; 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY TOOLS &#9998; &#9003; &#9632; &#9585; &#9645; &#9711; &#9906; &#8982; COLOR #000000 + ADD RAMP FRAMES &larr; 1 / 1 &rarr; ADD DUP DEL playback &#9654; fps 4&times; TRANSFORM &#8644; FLIP &#8645; FLIP &#8635; 90&deg; shift (arrow keys) &#9664; &#9650; &#9660; &#9654; CANVAS w &times; h R..."
+    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32&times;32 1 FRAME &minus; 16&times; + &#9638; GRID &#8651; MIRROR &#9678; ONION 32 &times; 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY TOOLS &#9998; &#9003; &#9632; &#9585; &#9645; &#9711; &#9906; &#8982; COLOR #000000 + ADD RAMP replace everywhere REPLACE swaps the selected swatch for this color in every frame; one undo step. CHARACTER TEMPLATES&hellip; slots FRAMES &larr; 1 / 1 &rarr; ADD DUP DEL playback &#9654; fps..."
   }
 ]

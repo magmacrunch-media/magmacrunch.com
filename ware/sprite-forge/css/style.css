@@ -486,6 +486,91 @@ input[type="file"]::file-selector-button:hover { border-color: var(--dim); }
 
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
+/* ── TEMPLATE PICKER ── */
+
+.tpl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.tpl-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.tpl-card:hover { border-color: var(--cyan); }
+
+.tpl-thumb {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+    background: repeating-conic-gradient(#15151d 0% 25%, #1d1d28 0% 50%) 0 0 / 10px 10px;
+    border: 1px solid var(--border);
+}
+
+.tpl-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.tpl-blurb {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--dim);
+}
+
+/* ── SLOTS ── */
+
+.slot-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.slot-swatch {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.slot-row:hover .slot-swatch { border-color: var(--cyan); }
+
+.slot-swatch input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.slot-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+}
+
+#replace-color {
+    width: 34px;
+    height: 26px;
+    padding: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+}
+
 /* ── MOBILE ── */
 
 @media (max-width: 768px) {
