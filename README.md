@@ -189,5 +189,7 @@ Discord/social media to re-fetch. Each page's `og:image` URL is in its `<head>`.
 - `npm run test:py` — Python tests for multiplayer game servers
 - `npm run og` — regenerate OG preview images for social media
 - `./arcade/start-all.sh` — launch all game servers locally
-- Arcade games are self-contained — own CSS/JS, no shared state
+- Arcade games are self-contained — own CSS/JS, no shared state. Three exceptions:
+  `moonlight-drift`, `george-boole` and `solitaire_THLD` are generated copies of
+  games that live in their own repos — see `arcade/README.md`
 - See [magmascript](https://github.com/magmacrunchmedia/magmascript#readme) for site management commands

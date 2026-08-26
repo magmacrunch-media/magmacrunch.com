@@ -13,7 +13,7 @@
  * remove a game that is still authored in this repo.
  */
 
-import { cpSync, existsSync, rmSync } from 'node:fs';
+import { cpSync, existsSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -44,4 +44,34 @@ if (!existsSync(join(src, 'index.html'))) {
 
 rmSync(dest, { recursive: true, force: true });
 cpSync(src, dest, { recursive: true });
-console.log(`arcade/${game}/ regenerated from ${GAMES[game]}/web/`);
+
+// The banner is written here rather than kept in the game repo's web/ folder so
+// that it cannot be missing: it is produced by the same step that makes the
+// copy, so a folder that exists always carries the warning that it is a copy.
+// Anyone who opens this directory is one file away from learning that editing
+// it is pointless, which the game's own README cannot tell them -- from inside
+// the mirror, the mirror looks like the source.
+const repo = GAMES[game];
+writeFileSync(
+  join(dest, 'GENERATED.md'),
+  `# Generated — do not edit here
+
+Every file in \`arcade/${game}/\` is a copy. The source of truth is the
+[\`${repo}\`](https://github.com/magmacrunchmedia/${repo}) repository, in its
+\`web/\` folder, checked out beside this one.
+
+Edits made here are **silently destroyed** the next time anyone runs:
+
+\`\`\`
+make sync-${repo}
+\`\`\`
+
+which deletes this folder and recopies it. To change the browser game, edit
+\`../../../${repo}/web/\`, run that target, and commit the result here.
+
+That repository also holds the game's Wii port, so a rules change can be made
+once and carried to both versions.
+`,
+);
+
+console.log(`arcade/${game}/ regenerated from ${repo}/web/`);

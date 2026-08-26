@@ -7,6 +7,20 @@ packages, loaded as plain `<script>` tags that expose globals (`AdRPG`, `AdPuzzl
 `AdCards`, `AdScore`, `AdAudio`, `AdChat`, `AdMP`). The bundles in `arcade/shared/adenosine-*.js` are
 generated from npm dependencies — see [adenosine packages](#adenosine-packages) below.
 
+**Three of the games below are not authored here.** A game with more than one
+version — a browser build and a Nintendo Wii port — lives in its own repo
+holding both, and the folder here is a generated copy of that repo's `web/`:
+
+| Folder | Source repo | Regenerate with |
+|---|---|---|
+| `moonlight-drift/` | [moonlight-drift](https://github.com/magmacrunchmedia/moonlight-drift) | `make sync-moonlight-drift` |
+| `george-boole/` | [george-boole](https://github.com/magmacrunchmedia/george-boole) | `make sync-george-boole` |
+| `solitaire_THLD/` | [texas-holdem-lava-dome](https://github.com/magmacrunchmedia/texas-holdem-lava-dome) | `make sync-texas-holdem-lava-dome` |
+
+Those targets delete the folder and recopy it, so **edits made here are lost**.
+Change the game in its own repo, sync, and commit the result. The historical
+`solitaire_THLD` name is kept because it is the live URL.
+
 ---
 
 ## games

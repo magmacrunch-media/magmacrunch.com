@@ -125,6 +125,27 @@ Runner internals, Python interpreter selection, and what each suite covers: `doc
 3. Follow the pixel art conventions - use canvas at low res, scale with CSS
 4. Add link to `arcade/index.html` nav
 
+### Three arcade folders are generated — never edit them here
+
+`arcade/moonlight-drift/`, `arcade/george-boole/` and `arcade/solitaire_THLD/`
+are copies. Each game now lives in its own repo holding both its browser and
+Wii versions, and the folder here is produced from that repo's `web/` by
+`make sync-<repo>`, which **deletes the folder and recopies it**. Anything
+edited here is destroyed the next time anyone syncs, with no warning and no
+conflict.
+
+| Folder here | Source repo | Target |
+|---|---|---|
+| `arcade/moonlight-drift/` | `moonlight-drift` | `make sync-moonlight-drift` |
+| `arcade/george-boole/` | `george-boole` | `make sync-george-boole` |
+| `arcade/solitaire_THLD/` | `texas-holdem-lava-dome` | `make sync-texas-holdem-lava-dome` |
+
+To change one of those games: edit `../<repo>/web/`, run its target here, commit
+the result. Each folder also carries a `GENERATED.md` saying the same thing, so
+the rule is visible from inside the copy as well as from here.
+
+Every other game under `arcade/` is authored in this repo as normal.
+
 ## Deep operational docs — read on demand:
 
 - `docs/ops/git-identity.md` — full Mac/Windows credential-helper rules; the Mac `gh auth` check before every push

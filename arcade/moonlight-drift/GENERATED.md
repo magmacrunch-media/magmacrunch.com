@@ -1,0 +1,17 @@
+# Generated — do not edit here
+
+Every file in `arcade/moonlight-drift/` is a copy. The source of truth is the
+[`moonlight-drift`](https://github.com/magmacrunchmedia/moonlight-drift) repository, in its
+`web/` folder, checked out beside this one.
+
+Edits made here are **silently destroyed** the next time anyone runs:
+
+```
+make sync-moonlight-drift
+```
+
+which deletes this folder and recopies it. To change the browser game, edit
+`../../../moonlight-drift/web/`, run that target, and commit the result here.
+
+That repository also holds the game's Wii port, so a rules change can be made
+once and carried to both versions.
