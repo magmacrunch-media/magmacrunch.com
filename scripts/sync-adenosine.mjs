@@ -78,7 +78,21 @@ const PACKAGE_CSS = {
 const HASH_LEN = 8;
 
 function shortHash(buf) {
-  return createHash('sha256').update(buf).digest('hex').slice(0, HASH_LEN);
+  // Hash the bytes the site serves, not the bytes this particular checkout
+  // happens to hold. Pages serves the committed blobs, which are LF; a Windows
+  // working tree holds the same files as CRLF, so hashing them as-is stamps a
+  // value no visitor's copy can ever produce -- the stamp stops identifying the
+  // thing it exists to identify, and every build flips it back and forth
+  // depending on which machine ran last. Normalising first makes the stamp
+  // identical everywhere and equal to the one already committed, so this fix
+  // rewrites nothing on a Linux checkout.
+  //
+  // The NUL sniff is git's own text=auto heuristic: never strip \r out of a
+  // binary, where it is data rather than a line ending.
+  const bytes = buf.includes(0)
+    ? buf
+    : Buffer.from(buf.toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
+  return createHash('sha256').update(bytes).digest('hex').slice(0, HASH_LEN);
 }
 
 /** Recursively collect every .html file under a directory. */

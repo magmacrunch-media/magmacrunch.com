@@ -85,16 +85,27 @@ backup-mb: ## Run MusicBrainz cache backup
 # These games live in their own repo (web/ + wii/ + ...) checked out beside
 # this one; the folder under arcade/ is generated from that repo's web/.
 # Edit the game repo, sync, commit the result here.
+#
+# Each target restamps afterwards, and that is not optional. The ?v= stamps in
+# a game's index.html are content hashes of the very files the sync just
+# replaced, so a copied-in index.html carries whatever stamps were current in
+# the game repo rather than ones derived from the bytes now on disk here. Left
+# alone they drift from what is served, which is the one thing the stamps exist
+# to prevent. build:adenosine recomputes them from the files themselves and
+# rewrites nothing when they already agree.
 
 .PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from ../moonlight-drift/web/
 	node scripts/sync-game.mjs moonlight-drift
+	npm run --silent build:adenosine
 
 sync-george-boole: ## Regenerate arcade/george-boole/ from ../george-boole/web/
 	node scripts/sync-game.mjs george-boole
+	npm run --silent build:adenosine
 
 sync-texas-holdem-lava-dome: ## Regenerate arcade/solitaire_THLD/ from ../texas-holdem-lava-dome/web/
 	node scripts/sync-game.mjs solitaire_THLD
+	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────
 
