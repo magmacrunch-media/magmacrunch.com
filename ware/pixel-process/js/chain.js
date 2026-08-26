@@ -136,8 +136,27 @@
         return registry;
     }
 
+    /* Seeded PRNG (mulberry32), shared by the effects that take a `seed`
+       parameter — corrupt and displace each carried an identical copy.
+       It lives on Chain because every effect file already depends on Chain
+       and this file loads ahead of all of them.
+
+       Do not "improve" the arithmetic: a saved seed has to keep producing
+       the same image, so any change here silently rewrites every result a
+       user has bookmarked. */
+    function rng(seed) {
+        var s = seed | 0;
+        return function() {
+            s = s + 0x6D2B79F5 | 0;
+            var t = Math.imul(s ^ s >>> 15, 1 | s);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+
     window.Chain = {
         register: register,
+        rng: rng,
         addEffect: addEffect,
         removeEffect: removeEffect,
         toggleEffect: toggleEffect,

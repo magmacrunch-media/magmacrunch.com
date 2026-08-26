@@ -48,8 +48,8 @@ commands that access local files.
 │   ├── arcade.css     # arcade index page styles + game card grid
 │   ├── gamecard-previews.js  # tile illustrations for each collection
 │   ├── shared/        # shared code: adenosine engine, score-client, chat, cards
-│   │   ├── adenosine-rpg.js        # @adenosine/rpg IIFE build
-│   │   ├── adenosine-score-client.js # @adenosine/score-client IIFE build
+│   │   ├── adenosine-rpg.js        # @magmacrunch/adenosine-rpg IIFE build
+│   │   ├── adenosine-score-client.js # @magmacrunch/adenosine-score-client IIFE build
 │   │   ├── score-client.js          # legacy score client (still used by some games)
 │   │   └── ...
 │   ├── pay2play/      # pay2play slot machine (CSS, JS, prizes)

@@ -3,7 +3,7 @@
  * Sync adenosine IIFE bundles and stylesheets from node_modules into arcade/,
  * then stamp
  * every arcade <script> tag that loads one with a content-hash cache-buster,
- * plus every game-local .js/.css an arcade page references.
+ * plus every page-local .js/.css an arcade/ or ware/ page references.
  *
  * Run via `npm run build:adenosine`. Idempotent: re-running with no dependency
  * change rewrites nothing.
@@ -282,10 +282,10 @@ for (const file of htmlFiles(join(ROOT, 'arcade'))) {
   }
 }
 
-// ── 3. Stamp ?v=<hash> on every game-local script and stylesheet ─────────────
+// ── 3. Stamp ?v=<hash> on every page-local script and stylesheet ─────────────
 
 // Pass 2 keys its lookup on a bare filename, which only works because every
-// shared bundle has a name unique across the repo. Game-local assets do not:
+// shared bundle has a name unique across the repo. Page-local assets do not:
 // arcade/<game>/js/main.js exists a dozen times over with different bytes. So
 // this pass resolves each reference against the directory of the HTML file that
 // makes it and hashes whatever is actually there.
@@ -307,10 +307,21 @@ function isExternal(path) {
   return /^(?:[a-z][a-z0-9+.-]*:|\/)/i.test(path);
 }
 
+// ware/ is stamped by this pass too. Its shared chrome — ware/shell/*.css and
+// dropdown.js — is loaded by five pages at once, so a stale copy breaks all
+// five rather than one, and nothing else in the repo busts it. The section used
+// to carry hand-written `?v=1` markers that never changed; those are now
+// content hashes like everywhere else.
+//
+// Pass 2 stays arcade-only on purpose: it keys on the bare filenames of the
+// adenosine bundles in arcade/shared/, and ware/adenosine loads its copies from
+// jsDelivr instead, which isExternal() correctly skips.
+const STAMP_ROOTS = ['arcade', 'ware'];
+
 let localFilesTouched = 0;
 let localTagsStamped = 0;
 
-for (const file of htmlFiles(join(ROOT, 'arcade'))) {
+for (const file of STAMP_ROOTS.flatMap((d) => htmlFiles(join(ROOT, d)))) {
   const before = readFileSync(file, 'utf8');
   const dir = dirname(file);
   const after = before.replace(LOCAL_ASSET, (whole, open, value, close) => {
@@ -324,13 +335,13 @@ for (const file of htmlFiles(join(ROOT, 'arcade'))) {
   if (after !== before) {
     writeFileSync(file, after);
     localFilesTouched++;
-    console.log(`  stamped   ${file.slice(ROOT.length + 1)}  (game-local assets)`);
+    console.log(`  stamped   ${file.slice(ROOT.length + 1)}  (page-local assets)`);
   }
 }
 
 console.log(
   `\n${hashes.size} bundle(s) synced; ${tagsStamped} bundle tag(s) and ` +
-    `${localTagsStamped} game-local tag(s) checked across arcade/; ` +
+    `${localTagsStamped} page-local tag(s) checked across ${STAMP_ROOTS.map((d) => `${d}/`).join(' and ')}; ` +
     `${filesTouched + localFilesTouched} file(s) rewritten.` +
     (existsSync(PLAYGROUND_SRC) ? ' Playground synced.' : ''),
 );

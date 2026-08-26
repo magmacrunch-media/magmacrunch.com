@@ -3,7 +3,11 @@
    ware/shell/app-shell.css
 
    The chrome shared by the standalone "workstation" tools:
-   album-art-maker, media-search, pixel-process, magnolia/api.html.
+   album-art-maker, media-search, pixel-process, sprite-forge,
+   magnolia/api.html.
+
+   THE APP MUST DEFINE: --bg, --surface, --border, --text, --dim, --accent.
+   This file reads all six and defines none of them. See ware/shell/README.md.
 
    THE RULE: this file defines tokens, apps override tokens.
    Every value that differs between the apps is a custom property with a
@@ -17,29 +21,10 @@
    more than it saved. See ware/shell/README.md.
    ═══════════════════════════════════════════════ */
 
-/* ── FONTS (self-hosted, the same files style.css uses) ──
-   These are why the tool pages no longer need a Google Fonts round trip.
-   url() resolves against this stylesheet, so paths are from ware/shell/. */
-@font-face {
-    font-family: 'Press Start 2P';
-    src: url('../../fonts/PressStart2P-Regular.woff2') format('woff2'),
-         url('../../fonts/PressStart2P-Regular.ttf') format('truetype');
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Courier Prime';
-    font-weight: 400;
-    src: url('../../fonts/CourierPrime-Regular.woff2') format('woff2');
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Courier Prime';
-    font-weight: 700;
-    src: url('../../fonts/CourierPrime-Bold.woff2') format('woff2');
-    font-display: swap;
-}
+/* ── FONTS ──
+   The @font-face blocks moved to ware/shell/fonts.css, which every app links
+   ahead of this file. They are the only part of the shell with a path out to
+   the repo, so keeping them separate leaves this file portable. */
 
 /* ── SHELL TOKENS ──
    Defaults reproduce album-art-maker, the most neutral of the four.

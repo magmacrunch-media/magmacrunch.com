@@ -117,8 +117,29 @@
         return (text || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
+    /* ── Toast ──
+       Lives here rather than in app.js because lightbox.js needs it too and
+       loads first; ui.js precedes both. The stacking offset matters — two
+       toasts at once (a copy result landing on top of an API-key warning)
+       used to draw exactly on top of each other from lightbox.js's copy. */
+    let toastCount = 0;
+
+    function showToast(msg) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        toast.style.bottom = (20 + toastCount * 40) + 'px';
+        document.body.appendChild(toast);
+        toastCount++;
+        setTimeout(() => {
+            toast.remove();
+            toastCount = Math.max(0, toastCount - 1);
+        }, 2500);
+    }
+
     window.UI = {
         renderResults,
+        showToast,
         showLoading,
         hideLoading,
         showLoadMore,

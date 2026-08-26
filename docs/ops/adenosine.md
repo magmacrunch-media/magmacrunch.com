@@ -82,6 +82,49 @@ untracked bundle would 404 on magmacrunch.com. The Pi instead gets them from
 `deploy-pi.yml`, which runs this script after `npm ci`. Re-run it and commit the
 result after any dependency change.
 
+### Package naming
+
+The rule for everything published, not just adenosine:
+
+- **npm default scope is `@magmacrunch/*`.** A product earns its own scope only
+  once it ships three or more packages people install independently. Adenosine
+  qualifies at seven; a single-package project never does. This keeps org and
+  token administration at one org no matter how many projects get added.
+- **PyPI has no scopes**, so Python projects publish bare product names —
+  `magmascript`, `texastoast` — and prefer extras (`texastoast[sprites]`) over
+  splitting into several packages.
+
+`@magmacrunch` is an npm **organization**, converted from the personal user
+account of the same name. The scope string did not change in the conversion, so
+nothing in this repo references it differently than before. Publishing is done
+by CI from a granular access token scoped to `@magmacrunch` with **no**
+organization permission — a token in Actions secrets should not be able to
+restructure the org.
+
+Under this rule `ware/shell` would publish as `@magmacrunch/ware-shell` if it is
+ever packaged, **not** under an adenosine name — it is tool chrome, and no
+arcade game loads it. See `ware/shell/README.md`; it is deliberately not a
+package today.
+
+**`@adenosine` is not available on npm — do not spend time on it again.**
+Renaming `@magmacrunch/adenosine-*` to a shorter `@adenosine/*` was considered
+and is closed: npm reports the name as taken. Package search shows nothing,
+which is misleading — npm user names and org names share one namespace and
+neither appears in package search, so an account registered with nothing
+published still blocks the scope. There is no unscoped `adenosine` package and
+no packages in the scope; the block is an account.
+
+Nothing is lost by this. The rename was optional branding worth cashing in only
+if adenosine found outside adopters, and `@magmacrunch/adenosine-*` costs
+nothing to keep.
+
+Related, in case it comes up: npm has no concept of linking or nesting
+organizations. Separate orgs are independent, connected only by sharing an owner
+account and by `repository`/`homepage`/`author` metadata. Grouping *within* a
+scope is done with teams (`npm team create @magmacrunch:…`), not extra orgs — so
+`@magmacrunch` plus teams is the structure, and a second org would have given
+less connection rather than more.
+
 ### Repository
 
 [adenosine](https://github.com/magmacrunchmedia/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.

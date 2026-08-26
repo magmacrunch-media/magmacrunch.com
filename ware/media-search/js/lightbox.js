@@ -4,6 +4,11 @@
 (function() {
     'use strict';
 
+    /* Shared with app.js. This file used to carry its own copy that skipped
+       the stacking offset, so a copy result drew directly on top of any toast
+       already showing. ui.js loads ahead of this file. */
+    const showToast = UI.showToast;
+
     const lightbox = document.getElementById('lightbox');
     const lightboxBody = document.getElementById('lightboxBody');
     const lbTitle = document.getElementById('lbTitle');
@@ -160,14 +165,6 @@
         const ok = document.execCommand('copy');
         document.body.removeChild(ta);
         showToast(ok ? 'URL COPIED' : 'COPY FAILED');
-    }
-
-    function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2500);
     }
 
     window.Lightbox = { open, close };

@@ -11,7 +11,7 @@
             // Copy source
             for (var i = 0; i < src.length; i++) dst[i] = src[i];
 
-            var rng = mulberry32(p.seed * 12345 + 67890);
+            var rng = Chain.rng(p.seed * 12345 + 67890);
             var blocks = p.count;
             var bs = Math.max(2, Math.min(p.blockSize, w, h));
 
@@ -53,7 +53,7 @@
         fn: function(src, dst, p, w, h) {
             for (var i = 0; i < src.length; i++) dst[i] = src[i];
 
-            var rng = mulberry32(p.seed * 54321 + 13579);
+            var rng = Chain.rng(p.seed * 54321 + 13579);
             var total = w * h;
             var deadCount = Math.floor(total * p.density / 1000);
 
@@ -74,16 +74,5 @@
             }
         }
     });
-
-    // Seeded PRNG (mulberry32)
-    function mulberry32(seed) {
-        var s = seed | 0;
-        return function() {
-            s = s + 0x6D2B79F5 | 0;
-            var t = Math.imul(s ^ s >>> 15, 1 | s);
-            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-            return ((t ^ t >>> 14) >>> 0) / 4294967296;
-        };
-    }
 
 })();

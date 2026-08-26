@@ -1,0 +1,46 @@
+/* ═══════════════════════════════════════════════
+   magmacrunch media — ware app shell fonts
+   ware/shell/fonts.css
+
+   The self-hosted @font-face blocks for the standalone tool apps. These are
+   why the tool pages no longer need a Google Fonts round trip for their two
+   core faces.
+
+   THIS FILE IS THE ONE PLACE THE SHELL TOUCHES THE FILESYSTEM OUTSIDE ITS
+   OWN DIRECTORY. url() resolves against the stylesheet that contains it, so
+   '../../fonts/' only works while this file sits exactly two levels below
+   the repo root. That is fine on magmacrunch.com and false everywhere else.
+
+   It lives apart from app-shell.css so that a consumer outside this repo — a
+   bundled desktop build, another project — swaps one small file instead of
+   editing the shell. Everything else in ware/shell/ is path-independent.
+
+   A CSS custom property cannot be used to abstract this: var() does not
+   interpolate inside url(), so `url('var(--font-path)/x.woff2')` fetches a
+   file literally named "var(--font-path)". Splitting the file is the
+   mechanism that actually exists.
+
+   Load it before app-shell.css. Apps that want different faces link their
+   own copy instead of this one.
+   ═══════════════════════════════════════════════ */
+
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('../../fonts/PressStart2P-Regular.woff2') format('woff2'),
+         url('../../fonts/PressStart2P-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Courier Prime';
+    font-weight: 400;
+    src: url('../../fonts/CourierPrime-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Courier Prime';
+    font-weight: 700;
+    src: url('../../fonts/CourierPrime-Bold.woff2') format('woff2');
+    font-display: swap;
+}

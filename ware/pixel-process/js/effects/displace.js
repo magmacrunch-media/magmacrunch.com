@@ -3,16 +3,6 @@
 (function() {
     'use strict';
 
-    function mulberry32(seed) {
-        var s = seed | 0;
-        return function() {
-            s = s + 0x6D2B79F5 | 0;
-            var t = Math.imul(s ^ s >>> 15, 1 | s);
-            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-            return ((t ^ t >>> 14) >>> 0) / 4294967296;
-        };
-    }
-
     // ROW DISPLACE
     Chain.register('row-displace', {
         name: 'ROW DISPLACE',
@@ -24,7 +14,7 @@
             var freq = p.frequency;
 
             // Seeded PRNG for random pattern
-            var rng = mulberry32(p.seed * 98765 + 43210);
+            var rng = Chain.rng(p.seed * 98765 + 43210);
 
             if (p.axis === 0) {
                 // Displace rows horizontally

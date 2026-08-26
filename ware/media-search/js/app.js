@@ -29,6 +29,11 @@
     const setupRetroDropdown = (id, onSelect) => RetroDropdown.setup(id, onSelect);
     const getDropdownValue = (id) => RetroDropdown.getValue(id, 'all');
 
+    // Toast lives in ui.js so lightbox.js shares one stacking counter with it.
+    // Aliased up here, not beside its old call sites, because those sit above
+    // it in the file and a `const` would still be in its dead zone there.
+    const showToast = UI.showToast;
+
     // ── Source toggles ────────────────────────────────────────────────────
 
     const PROVIDERS = [
@@ -182,23 +187,6 @@
         const results = UI.getResults();
         Lightbox.open(index, results);
     });
-
-    // ── Toast ─────────────────────────────────────────────────────────────
-
-    let toastCount = 0;
-
-    function showToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = msg;
-        toast.style.bottom = (20 + toastCount * 40) + 'px';
-        document.body.appendChild(toast);
-        toastCount++;
-        setTimeout(() => {
-            toast.remove();
-            toastCount = Math.max(0, toastCount - 1);
-        }, 2500);
-    }
 
     // ── Init ──────────────────────────────────────────────────────────────
 
