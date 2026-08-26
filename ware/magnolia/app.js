@@ -101,12 +101,17 @@ const MODULES = [
   },
   {
     name: "sprite",
-    description: "Texture loading and origin-based drawing",
+    description: "Textures, sprite sheets and origin-based drawing",
     types: [
       {
         name: "Sprite",
         definition: "typedef struct {\n    GRRLIB_texImg *tex;\n    int origin_x;\n    int origin_y;\n} Sprite;",
         description: "Texture with an origin point. Sprites draw with their origin at the given screen position."
+      },
+      {
+        name: "SpriteSheet",
+        definition: "typedef struct {\n    Sprite base;\n    int frame_w, frame_h;\n    int cols, rows;\n    int count;\n} SpriteSheet;",
+      description: "A uniform grid of frames in one texture, counted left-to-right then top-to-bottom. The origin is the frame's, not the sheet's. This is the format SPRITE//FORGE exports and all three MagmaCrunch engines read."
       }
     ],
     functions: [
@@ -181,17 +186,75 @@ const MODULES = [
         signature: "void sprite_draw_scaled_xy_tinted(const Sprite *s, float x, float y, float sx, float sy, u32 tint)",
         description: "Per-axis scaling + tint.",
         example: "sprite_draw_scaled_xy_tinted(&player, x, y, 1.0, 0.75, tint);"
+      },
+      {
+        name: "sprite_draw_ex",
+        signature: "void sprite_draw_ex(const Sprite *s, float x, float y, float sx, float sy, int flip_h, u32 tint)",
+        description: "Scaled, tinted and optionally mirrored. Mirroring reflects the sprite about its own origin, so an anchor point does not move when a character turns around.",
+        example: "sprite_draw_ex(&player, x, y, 1.0, 1.0, facing_left, tint);"
+      },
+      {
+        name: "sprite_sheet_load",
+        signature: "int sprite_sheet_load(SpriteSheet *s, const char *path, int frame_w, int frame_h, int origin_x, int origin_y)",
+        description: "Load a sheet from an SD file, stating the cell size and the per-frame origin. Frame sizes that do not divide the image leave the sheet empty rather than drawing the plausible part of a mis-exported asset.",
+        example: 'SpriteSheet fighter;\nsprite_sheet_load(&fighter, "sprites/fighter.png",\n                  64, 96, 32, 96);'
+      },
+      {
+        name: "sprite_sheet_load_mem",
+        signature: "int sprite_sheet_load_mem(SpriteSheet *s, const void *data, int frame_w, int frame_h, int origin_x, int origin_y)",
+        description: "Same, from a sheet embedded in the binary.",
+        example: "sprite_sheet_load_mem(&fighter, fighter_png, 64, 96, 32, 96);"
+      },
+      {
+        name: "sprite_sheet_free",
+        signature: "void sprite_sheet_free(SpriteSheet *s)",
+        description: "Frees the texture and empties the sheet.",
+        example: "sprite_sheet_free(&fighter);"
+      },
+      {
+        name: "sprite_sheet_valid",
+        signature: "int sprite_sheet_valid(const SpriteSheet *s)",
+        description: "Whether the sheet loaded and has at least one frame.",
+        example: "if (!sprite_sheet_valid(&fighter))\n    show_missing_asset_warning();"
+      },
+      {
+        name: "sprite_sheet_count",
+        signature: "int sprite_sheet_count(const SpriteSheet *s)",
+        description: "How many frames the sheet holds (cols x rows), or 0 if it failed to load.",
+        example: "int frames = sprite_sheet_count(&fighter);"
+      },
+      {
+        name: "sprite_sheet_draw",
+        signature: "void sprite_sheet_draw(const SpriteSheet *s, int frame, float x, float y)",
+        description: "Places the frame's origin at (x, y). A frame index outside the sheet draws nothing \u2014 an animation running off the end of its strip is a bug worth seeing, not one worth hiding behind a wrapped frame.",
+        example: "sprite_sheet_draw(&fighter, anim_frame, x, y);"
+      },
+      {
+        name: "sprite_sheet_draw_ex",
+        signature: "void sprite_sheet_draw_ex(const SpriteSheet *s, int frame, float x, float y, float sx, float sy, int flip_h, u32 tint)",
+        description: "Scaled, mirrored and tinted. Do not reach for GRRLIB_BMFX_FlipH() instead: that builds a mirrored copy of the texture pixel by pixel, which is fine once at load time and ruinous once per frame per character.",
+        example: "sprite_sheet_draw_ex(&fighter, anim_frame, x, y,\n                     1.0, 1.0, facing_left, WHITE);"
       }
     ]
   },
   {
     name: "input",
-    description: "Wiimote input (held sideways)",
+    description: "Up to four Wiimotes (held sideways)",
     types: [
       {
         name: "InputDir",
         definition: "typedef enum {\n    INPUT_DIR_UP,\n    INPUT_DIR_DOWN,\n    INPUT_DIR_LEFT,\n    INPUT_DIR_RIGHT,\n    INPUT_DIR_COUNT\n} InputDir;",
         description: "Direction enum for auto-repeat queries."
+      },
+      {
+        name: "InputButton",
+        definition: "typedef enum {\n    INPUT_BTN_A,\n    INPUT_BTN_B,\n    INPUT_BTN_1,\n    INPUT_BTN_2,\n    INPUT_BTN_PLUS,\n    INPUT_BTN_MINUS,\n    INPUT_BTN_HOME,\n    INPUT_BTN_UP,\n    INPUT_BTN_DOWN,\n    INPUT_BTN_LEFT,\n    INPUT_BTN_RIGHT,\n    INPUT_BTN_COUNT\n} InputButton;",
+      description: "Every button the engine reports, as an index into a player's frame."
+      },
+      {
+        name: "InputPad",
+        definition: "typedef struct {\n    unsigned short held;\n    unsigned short pressed;\n    unsigned short released;\n} InputPad;",
+      description: "One player's frame, a bit per InputButton. Copyable, so a game can keep past frames \u2014 which is what an input buffer is made of."
       }
     ],
     functions: [
@@ -204,8 +267,50 @@ const MODULES = [
       {
         name: "input_scan",
         signature: "int input_scan(void)",
-        description: "Scans input once per frame. Must be called before querying edges/held.",
+        description: "Samples every connected controller. Call once per frame, before querying anything: the hold counters behind the auto-repeat advance here.",
         example: "input_scan();\nif (input_a_pressed()) fire();"
+      },
+      {
+        name: "input_player_count",
+        signature: "int input_player_count(void)",
+        description: "How many controllers reported in on the last scan.",
+        example: "if (input_player_count() < 2)\n    draw_waiting_for_player_two();"
+      },
+      {
+        name: "input_connected",
+        signature: "int input_connected(int player)",
+        description: "Whether a particular controller reported in. One that is off reads as all-buttons-up rather than as a stuck frame.",
+        example: "if (!input_connected(1)) pause_match();"
+      },
+      {
+        name: "input_pressed",
+        signature: "int input_pressed(int player, InputButton b)",
+        description: "The frame a button went down, for the given player. Out-of-range players and buttons read as not-pressed rather than reading off the end of the array.",
+        example: "if (input_pressed(1, INPUT_BTN_A))\n    fighter_attack(&p2);"
+      },
+      {
+        name: "input_held",
+        signature: "int input_held(int player, InputButton b)",
+        description: "Whether a button is currently down. What blocking, walking and charging are made of.",
+        example: "if (input_held(p, INPUT_BTN_B))\n    fighter_block(&f);"
+      },
+      {
+        name: "input_released",
+        signature: "int input_released(int player, InputButton b)",
+        description: "The frame a button came up. Charge moves and hold-to-aim need this; nothing before could report it.",
+        example: "if (input_released(p, INPUT_BTN_A))\n    fire_charged_shot(&f);"
+      },
+      {
+        name: "input_snapshot",
+        signature: "const InputPad *input_snapshot(int player)",
+        description: "A player's whole frame as a value, or NULL for an out-of-range player. Valid until the next input_scan(), so copy it to keep it. Recognising patterns across kept frames \u2014 a quarter-circle, a buffer window \u2014 stays with the game.",
+        example: "buffer[head] = *input_snapshot(p);\nhead = (head + 1) % BUFFER_FRAMES;"
+      },
+      {
+        name: "input_dir_button",
+        signature: "InputButton input_dir_button(InputDir dir)",
+        description: "The button belonging to a direction, so code holding an InputDir can reach the bitmask without a lookup table of its own.",
+        example: "InputButton b = input_dir_button(INPUT_DIR_LEFT);\nif (input_held(p, b)) walk_left(&f);"
       },
       {
         name: "input_a_pressed",
@@ -282,8 +387,14 @@ const MODULES = [
       {
         name: "input_dir_repeat",
         signature: "int input_dir_repeat(InputDir dir)",
-        description: "Fires on the frame the direction is first pressed, then repeatedly after delay. For scrolling menus and initials editors.",
+        description: "Fires on the frame the direction is first pressed, then repeatedly after delay. For scrolling menus and initials editors. Player one; see input_dir_repeat_for().",
         example: "if (input_dir_repeat(INPUT_DIR_LEFT))\n    scroll_list(-1);"
+      },
+      {
+        name: "input_dir_repeat_for",
+        signature: "int input_dir_repeat_for(int player, InputDir dir)",
+        description: "Auto-repeat for a given player. Counted per player, so one player holding a direction cannot step another's cursor.",
+        example: "if (input_dir_repeat_for(1, INPUT_DIR_DOWN))\n    roster_move(&p2_pick, 1);"
       },
       {
         name: "input_set_repeat",
@@ -295,7 +406,7 @@ const MODULES = [
   },
   {
     name: "clock",
-    description: "Frame timing and easing functions",
+    description: "Frame timing, optional fixed timestep, easing",
     types: [],
     functions: [
       {
@@ -327,6 +438,30 @@ const MODULES = [
         signature: "void clock_reset(void)",
         description: "Resets all counters to zero.",
         example: "clock_reset();"
+      },
+      {
+        name: "clock_set_fixed_hz",
+        signature: "void clock_set_fixed_hz(int hz)",
+        description: "Turn on a fixed logic step at the given rate; 0, the default, turns it off. clock_dt() is real elapsed time and is right for anything continuous \u2014 a fade, a slide. It is wrong for rules written in frames, which stop meaning anything when the delta varies with SD reads.",
+        example: "clock_set_fixed_hz(60);"
+      },
+      {
+        name: "clock_fixed_hz",
+        signature: "int clock_fixed_hz(void)",
+        description: "The fixed step rate, or 0 when off.",
+        example: "if (clock_fixed_hz()) draw_frame_counter();"
+      },
+      {
+        name: "clock_fixed_dt",
+        signature: "float clock_fixed_dt(void)",
+        description: "Seconds in one step, or 0 when off. This is what a fixed-step game integrates with \u2014 not clock_dt(), which is however long the frame really took.",
+        example: "world_step(clock_fixed_dt());"
+      },
+      {
+        name: "clock_fixed_steps",
+        signature: "int clock_fixed_steps(void)",
+        description: "How many logic steps this frame owes. A frame owing more than TIMESTEP_MAX_STEPS was a stall, and its backlog is dropped rather than repaid as a burst of speed once a load finishes.",
+        example: "for (int i = 0; i < clock_fixed_steps(); i++)\n    world_step(clock_fixed_dt());\nworld_draw();"
       },
       {
         name: "ease_out_quad",
