@@ -31,12 +31,12 @@
     function loadImageFile(file) {
         var reader = new FileReader();
         reader.onerror = function() {
-            alert('Failed to read file.');
+            Toast.show('COULD NOT READ FILE');
         };
         reader.onload = function(ev) {
             var img = new Image();
             img.onerror = function() {
-                alert('Failed to load image.');
+                Toast.show('COULD NOT LOAD IMAGE');
             };
             img.onload = function() {
                 // Auto-size: fit image into MAX_WORK_SIZE while preserving aspect ratio

@@ -22,6 +22,11 @@ jobs:
       - name: Lint JavaScript
         run: npm run lint
 
+      # app-shell.css reads six custom properties and defines none, so a page
+      # that forgets one silently drops those declarations and still deploys.
+      - name: Check ware shell token contract
+        run: npm run check:shell
+
   test-python:
     runs-on: ubuntu-latest
     steps:

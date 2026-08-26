@@ -741,9 +741,10 @@ document.getElementById('export-btn').addEventListener('click', () => {
 document.getElementById('copy-btn').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(exportOutput.value);
-    const btn = document.getElementById('copy-btn'), orig = btn.textContent;
-    btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = orig, 1200);
-  } catch {}
+    Toast.show('COPIED');
+  } catch {
+    Toast.show('COULD NOT COPY');
+  }
 });
 
 // ── Character templates ─────────────────────────────────
@@ -910,9 +911,14 @@ document.getElementById('import-cancel').addEventListener('click', () => importM
 importModal.querySelector('.modal-close').addEventListener('click', () => importModal.close());
 importModal.addEventListener('click', (e) => { if (e.target === importModal) importModal.close(); });
 
+// The toast carries the message and the border says which field it is about —
+// the import form has two, so "smaller than one 32×32 frame" needs to point at
+// the size input rather than the file. A title alone only appears on hover,
+// which is no use to anyone whose pointer has left the dialog.
 function importError(el, msg) {
   el.style.borderColor = '#e53935'; el.title = msg;
-  setTimeout(() => el.style.borderColor = '', 1500);
+  Toast.show(msg.toUpperCase());
+  setTimeout(() => { el.style.borderColor = ''; el.title = ''; }, 1500);
 }
 
 document.getElementById('import-confirm').addEventListener('click', () => {

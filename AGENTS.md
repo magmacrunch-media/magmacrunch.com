@@ -7,7 +7,15 @@ Deep operational docs live in `docs/ops/` — see the index at the bottom.
 
 ## Dev approach
 
-Open `index.html` directly in browser. No build server, no package manager, no tests.
+Open `index.html` directly in browser — no build server, and nothing is compiled;
+the deployed artifact is the git tree, so anything generated must be committed.
+
+There *is* npm and there *are* tests, despite what this line used to say:
+`npm ci` installs seven adenosine runtime deps, `npm test` runs lint plus the JS
+suite, `npm run check` adds the Python tests and the ware shell token contract,
+and `ci.yml` runs four jobs including a Playwright arcade smoke test.
+`npm run build:adenosine` syncs bundles out of `node_modules/` and stamps cache
+busters — a copy step, not a compile step.
 
 ## Git identity — read before committing
 

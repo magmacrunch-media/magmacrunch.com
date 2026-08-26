@@ -9,10 +9,11 @@
     "test:py": "node scripts/run-tests.mjs py",
     "test:js": "node scripts/run-tests.mjs js",
     "test": "npm run lint && npm run test:js",
-    "check": "npm run lint && npm run test:py && npm run test:js",
+    "check": "npm run lint && npm run check:shell && npm run test:py && npm run test:js",
     "build-search": "node scripts/build-search-index.js",
     "og": "node scripts/generate-og.mjs",
-    "build:adenosine": "node scripts/sync-adenosine.mjs"
+    "build:adenosine": "node scripts/sync-adenosine.mjs",
+    "check:shell": "node scripts/check-shell-tokens.mjs"
   },
   "dependencies": {
     "@magmacrunch/adenosine-audio": "^0.2.4",

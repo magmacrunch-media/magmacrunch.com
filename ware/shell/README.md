@@ -10,8 +10,8 @@ with their own header and footer.
 | `app-shell.css` | album-art-maker, media-search, pixel-process, sprite-forge, magnolia/api.html |
 | `dropdown.css` | album-art-maker, media-search |
 | `dropdown.js` | album-art-maker, media-search, pixel-process |
-| `toast.css` | album-art-maker, media-search |
-| `toast.js` | album-art-maker, media-search |
+| `toast.css` | album-art-maker, media-search, pixel-process, sprite-forge |
+| `toast.js` | album-art-maker, media-search, pixel-process, sprite-forge |
 
 Site pages (`ware/index.html`, `ware/dev/`, `ware/utilities/`,
 `ware/magnolia/index.html`) are not part of this — they use `style.css` and
@@ -68,6 +68,13 @@ invalid `var()` and silently loses that colour:
 
 All five apps already define all six, at the top of their own stylesheet under
 a `/* ── PALETTE ── */` banner. Copy that block when starting a new app.
+
+`npm run check:shell` (`scripts/check-shell-tokens.mjs`) enforces this, and runs
+in CI beside the lint job. It derives the list from `app-shell.css` rather than
+hardcoding it, so a seventh token added to the shell is picked up without
+touching the check. Nothing fails today — it is there because an unmet contract
+here is invisible: the declaration is dropped, the page still renders, and the
+only symptom is a colour quietly missing.
 
 Note `--panel` is *not* on this list. Every app happens to define one, but the
 shell never reads it — panels are deliberately app-owned (see below).
@@ -164,3 +171,40 @@ album-art-maker and pixel-process still load a trimmed Google Fonts link on top
 of this: their font pickers offer VT323, Silkscreen, DotGothic16 and Pixelify
 Sans, and pixel-process also sets VT323 on its `.sys-stat` chips. Those four are
 not self-hosted.
+
+## Why this is not an npm package
+
+It has come up, and the answer for now is no. Recorded here so it does not get
+re-litigated from scratch.
+
+**There is one consumer.** Five pages, all in this repo. The obvious candidates
+for a second — `ware/adenosine/`, `ware/texastoast/`, `adenosine/tools/` — are a
+different visual system, not merely differently coloured: they hardcode literal
+hex and define no custom properties at all, so they are structurally
+incompatible with the "app defines six tokens, shell reads them" contract above.
+Not one of the six values matches either (`--bg` is `#080808` here and `#14141b`
+there). Adopting the shell would be a restyle, not an install.
+
+**`fonts.css` cannot travel.** `url()` resolves against the stylesheet, and
+`var()` does not interpolate into `url()` — the two facts that already forced
+that file to be split out. Installed under `node_modules/` or served from a CDN,
+its four font URLs resolve off the package path and 404, and because
+`font-display: swap` has already painted the fallback, the failure is silent:
+`monospace` at 7px, no error anywhere. Fixing it means shipping the woff2 files
+inside the package so `url('./fonts/…')` is self-relative — 42 KB woff2-only,
+or 157 KB if the legacy `.ttf` comes too.
+
+**This ecosystem has already paid for the CDN-pin pattern.** The adenosine
+packages are consumed here by hand-typed jsDelivr versions — thirty-five of
+them, which drifted invisibly because nothing could see them. Recovering cost
+`check-cdn-pins.mjs`, an npm-availability polling loop in `publish.yml`, a
+cross-repo PAT, a dispatch listener, a weekly cron backstop and a
+pin-rewriting script — and the first version of the check failed silently too,
+skipping the one file whose spelling it did not match. Publishing the shell buys
+that machinery a second time, for one consumer that currently needs none of it.
+
+Revisit when all three are true: a second repo has a real page that wants this
+chrome; the engine-playground family has adopted custom properties; and the
+fonts ship inside the package. Until then the shell is a vendored library with a
+documented contract and a check that enforces it, which is most of what
+packaging would have bought.
