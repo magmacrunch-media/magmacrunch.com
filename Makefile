@@ -86,9 +86,12 @@ backup-mb: ## Run MusicBrainz cache backup
 # this one; the folder under arcade/ is generated from that repo's web/.
 # Edit the game repo, sync, commit the result here.
 
-.PHONY: sync-moonlight-drift
+.PHONY: sync-moonlight-drift sync-george-boole
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from ../moonlight-drift/web/
 	node scripts/sync-game.mjs moonlight-drift
+
+sync-george-boole: ## Regenerate arcade/george-boole/ from ../george-boole/web/
+	node scripts/sync-game.mjs george-boole
 
 # ── Build ─────────────────────────────────────
 

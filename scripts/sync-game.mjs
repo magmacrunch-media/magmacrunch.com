@@ -21,6 +21,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 /** Game folder name -> repo checkout expected beside this one. */
 const GAMES = {
+  'george-boole': 'george-boole',
   'moonlight-drift': 'moonlight-drift',
 };
 
