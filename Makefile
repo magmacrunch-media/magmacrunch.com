@@ -81,6 +81,15 @@ backup: ## Sync to private backup repo
 backup-mb: ## Run MusicBrainz cache backup
 	node scripts/backup-musicbrainz.mjs --skip-existing
 
+# ── Multi-version games ───────────────────────
+# These games live in their own repo (web/ + wii/ + ...) checked out beside
+# this one; the folder under arcade/ is generated from that repo's web/.
+# Edit the game repo, sync, commit the result here.
+
+.PHONY: sync-moonlight-drift
+sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from ../moonlight-drift/web/
+	node scripts/sync-game.mjs moonlight-drift
+
 # ── Build ─────────────────────────────────────
 
 .PHONY: search-index optimize-images
