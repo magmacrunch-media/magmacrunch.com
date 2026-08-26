@@ -23,6 +23,8 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const GAMES = {
   'george-boole': 'george-boole',
   'moonlight-drift': 'moonlight-drift',
+  // Historical arcade folder name, kept because it is the live URL.
+  'solitaire_THLD': 'texas-holdem-lava-dome',
 };
 
 const game = process.argv[2];
