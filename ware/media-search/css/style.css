@@ -487,29 +487,10 @@
 }
 
 /* ── Toast ── */
-.toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Press Start 2P', monospace;
-    font-size: 8px;
-    padding: 10px 20px;
-    background: var(--surface);
-    border: 1px solid var(--green);
-    color: var(--green);
-    z-index: 3000;
-    animation: toastIn 0.3s ease, toastOut 0.3s ease 2s forwards;
-}
-
-@keyframes toastIn {
-    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-@keyframes toastOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+/* .toast now comes from ware/shell/toast.css, shared with album//art.
+   Only the accent is this app's. */
+:root {
+    --toast-accent: var(--green);
 }
 
 /* ── Footer ── */

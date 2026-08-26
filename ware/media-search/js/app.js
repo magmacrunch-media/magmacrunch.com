@@ -29,10 +29,10 @@
     const setupRetroDropdown = (id, onSelect) => RetroDropdown.setup(id, onSelect);
     const getDropdownValue = (id) => RetroDropdown.getValue(id, 'all');
 
-    // Toast lives in ui.js so lightbox.js shares one stacking counter with it.
+    // Toast is shell chrome (ware/shell/toast.js), shared with album//art.
     // Aliased up here, not beside its old call sites, because those sit above
     // it in the file and a `const` would still be in its dead zone there.
-    const showToast = UI.showToast;
+    const showToast = Toast.show;
 
     // ── Source toggles ────────────────────────────────────────────────────
 
@@ -65,7 +65,23 @@
         return Array.from(checked).map(cb => cb.dataset.source);
     }
 
-    // ── API key loading ───────────────────────────────────────────────────
+    /* ── API key loading ──────────────────────────────────────────────────
+       api-keys.json IS PUBLIC. It is committed to the repo and served by
+       GitHub Pages, so anything in it is readable by anyone who opens
+       devtools or browses the repo — this is not a leak to be patched, it is
+       what a static site with a client-side fetch necessarily means.
+
+       That is a deliberate choice, not an oversight. Pexels and Pixabay keys
+       are free and per-account, and neither provider supports restricting a
+       key by referrer, so the alternatives were to make visitors paste their
+       own key or to drop both sources. Keeping them public keeps the tool
+       working for everyone who lands on it, at the cost of a rate limit
+       anyone can burn.
+
+       So: never put a key here that can do anything but read a free public
+       search API. No key that can write, spend, or reach another service.
+       If the quota starts getting drained, rotate — do not go looking for a
+       way to hide the file, because there isn't one. */
 
     let _apiKeys = null;
     let _apiKeysLoaded = false;

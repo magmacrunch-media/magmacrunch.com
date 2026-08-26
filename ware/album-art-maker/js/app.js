@@ -235,11 +235,11 @@
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onerror = () => alert('Failed to read file.');
+        reader.onerror = () => Toast.show('COULD NOT READ FILE');
         reader.onload = (ev) => {
             const src = ev.target.result;
             const img = new Image();
-            img.onerror = () => alert('Failed to load image.');
+            img.onerror = () => Toast.show('COULD NOT LOAD IMAGE');
             img.onload = () => {
                 // scale to ~40% of canvas, maintaining aspect ratio
                 const size = CanvasRenderer.getCanvasSize();
@@ -254,6 +254,10 @@
                     h = maxDim;
                 }
 
+                // The bytes go to the renderer's store; the element carries
+                // only the ref. Elements get deep-cloned on every undo push
+                // and every ctrl+C, so a data URL here is copied wholesale
+                // each time — see the note in canvas.js.
                 const el = {
                     id: Tools.nextId(),
                     type: 'image',
@@ -261,7 +265,7 @@
                     y: (size - h) / 2,
                     w: w,
                     h: h,
-                    src: src,
+                    src: CanvasRenderer.registerImage(src),
                     aspectRatio: w / h,
                     origW: w,
                     origH: h,

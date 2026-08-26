@@ -4,10 +4,10 @@
 (function() {
     'use strict';
 
-    /* Shared with app.js. This file used to carry its own copy that skipped
-       the stacking offset, so a copy result drew directly on top of any toast
-       already showing. ui.js loads ahead of this file. */
-    const showToast = UI.showToast;
+    /* Shell chrome (ware/shell/toast.js), shared with app.js. This file used
+       to carry its own copy that skipped the stacking offset, so a copy result
+       drew directly on top of any toast already showing. */
+    const showToast = Toast.show;
 
     const lightbox = document.getElementById('lightbox');
     const lightboxBody = document.getElementById('lightboxBody');

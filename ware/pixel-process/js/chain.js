@@ -6,6 +6,7 @@
     var effects = [];
     var _nextId = 0;
     var _rafId = 0;
+    var lastFailures = [];   // effect names that threw on the most recent render
 
     // Effect registry: maps type string to { name, fn, defaults }
     var registry = {};
@@ -80,20 +81,39 @@
 
     // Process source through all enabled effects in order
     // sourceImageData is NOT copied — caller must provide a fresh copy
+    /* A throwing effect used to take the whole render with it: the exception
+       escaped renderImmediate, Canvas.display never ran so the image froze on
+       the previous frame, and updateStat never ran so the counter kept
+       reporting the old chain. The result was an app that looked wedged with
+       nothing said about why, and every later render threw again at the same
+       effect.
+
+       An effect that fails is now skipped and flagged instead. The chain
+       carries on with the pixels it already had, which is what the user can
+       still work with, and the failure is surfaced rather than swallowed. */
     function process(sourceImageData, w, h) {
         if (!sourceImageData) return null;
 
         var current = sourceImageData;
+        var failed = [];
 
         for (var i = 0; i < effects.length; i++) {
             var e = effects[i];
             if (!e.enabled) continue;
 
             var out = new ImageData(w, h);
-            e.fn(current.data, out.data, e.params, w, h);
-            current = out;
+            try {
+                e.fn(current.data, out.data, e.params, w, h);
+                current = out;
+            } catch (err) {
+                // Keep `current` as it was: `out` is half-written and would
+                // put torn pixels through the rest of the chain.
+                failed.push(e.name || e.id || 'effect ' + (i + 1));
+                console.error('pixel-process: effect failed, skipping', e, err);
+            }
         }
 
+        lastFailures = failed;
         return current;
     }
 
@@ -128,8 +148,17 @@
         for (var i = 0; i < effects.length; i++) {
             if (effects[i].enabled) enabledCount++;
         }
-        document.getElementById('chainStat').textContent =
-            enabledCount + ' EFFECT' + (enabledCount !== 1 ? 'S' : '');
+        var stat = document.getElementById('chainStat');
+        stat.textContent = enabledCount + ' EFFECT' + (enabledCount !== 1 ? 'S' : '');
+
+        // Say so in the chrome when an effect is being skipped, otherwise the
+        // count claims work the render did not actually do.
+        if (lastFailures.length) {
+            stat.textContent += ' · ' + lastFailures.length + ' FAILED';
+            stat.title = 'Skipped: ' + lastFailures.join(', ');
+        } else {
+            stat.title = '';
+        }
     }
 
     function getRegistry() {

@@ -16,8 +16,31 @@
         }
     }
 
+    /* getCache already tolerated unreadable storage; this end did not, and a
+       throw here escapes Cache.set into the middle of a search. localStorage
+       is ~5 MB and an entry holds whole result pages, so the quota is
+       reachable well before CACHE_MAX entries — and Safari's private mode
+       throws on the first write regardless.
+
+       Dropping the oldest entries and retrying keeps the cache useful; giving
+       up entirely just means no caching, which is survivable. Nothing here is
+       worth failing a search over. */
     function setCache(cache) {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+        try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+            return true;
+        } catch {
+            const byAge = Object.keys(cache).sort((a, b) => cache[a].ts - cache[b].ts);
+            for (const key of byAge) {
+                delete cache[key];
+                try {
+                    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+                    return true;
+                } catch { /* still too big — keep dropping */ }
+            }
+            try { localStorage.removeItem(CACHE_KEY); } catch { /* nothing more to try */ }
+            return false;
+        }
     }
 
     function makeKey(query, sources, filters) {

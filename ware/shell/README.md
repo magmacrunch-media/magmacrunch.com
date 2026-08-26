@@ -10,6 +10,8 @@ with their own header and footer.
 | `app-shell.css` | album-art-maker, media-search, pixel-process, sprite-forge, magnolia/api.html |
 | `dropdown.css` | album-art-maker, media-search |
 | `dropdown.js` | album-art-maker, media-search, pixel-process |
+| `toast.css` | album-art-maker, media-search |
+| `toast.js` | album-art-maker, media-search |
 
 Site pages (`ware/index.html`, `ware/dev/`, `ware/utilities/`,
 `ware/magnolia/index.html`) are not part of this — they use `style.css` and
@@ -40,6 +42,11 @@ nav colour variables.
 
 `dropdown.css` tokens: `--dd-border-w`, `--dd-accent`, `--dd-glow`,
 `--dd-glow-open`, `--dd-tint`, `--dd-tint-soft`, `--dd-font-size`, `--dd-arrow`.
+
+`toast.css` tokens: `--toast-accent`, `--toast-bg`, `--toast-hold`.
+media-search overrides `--toast-accent` to its `--green`; album-art-maker takes
+the default. `--toast-hold` is the on-screen time before the fade — change it
+and `LIFETIME_MS` in `toast.js` has to move with it.
 
 Defaults reproduce album-art-maker, so an app that overrides nothing still
 looks right.
@@ -78,12 +85,14 @@ in indirection than it saved in lines.
 There is no `util.js` here either, and that was a deliberate call rather than an
 oversight. Three helpers looked like candidates:
 
-- **`showToast`** — two copies inside media-search (`js/app.js`, `js/lightbox.js`)
-  that differed: only one applied the stacking offset, so a copy result drew on
-  top of any toast already showing. Merged to the stacking version, but into
-  media-search's own `js/ui.js`, not here — `.toast` is styled only in
-  media-search's stylesheet, and hosting the JS here would split one widget
-  across the shell boundary, the same coupling the panels were kept out to avoid.
+- **`showToast`** — two copies inside media-search (`js/app.js`,
+  `js/lightbox.js`) that differed: only one applied the stacking offset, so a
+  copy result drew on top of any toast already showing. First merged into
+  media-search's own `js/ui.js`, since `.toast` was styled only there and
+  splitting a widget across the shell boundary is the coupling the panels were
+  kept out to avoid. It moved here once album-art-maker needed one too — at
+  which point both halves could come together and the test was satisfied
+  honestly: two apps actually render it. See `toast.js`/`toast.css`.
 - **`mulberry32`** — two byte-identical copies inside pixel-process
   (`js/effects/corrupt.js`, `js/effects/displace.js`). Merged to `Chain.rng`,
   which every effect file already depends on. It is seeded-PRNG maths, not

@@ -29,7 +29,7 @@ window.ColorManager = (function () {
         if (!file) return;
 
         const img = new Image();
-        img.onerror = () => alert('Failed to load reference image.');
+        img.onerror = () => Toast.show('COULD NOT LOAD REFERENCE IMAGE');
         img.onload = function () {
             refImage = img;
             refCanvas.width = img.width;
