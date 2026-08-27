@@ -5,9 +5,14 @@ name: Sync adenosine playground
 # embed nothing — they load each package from jsDelivr at runtime, off a version
 # written into the source by hand. A release bumps none of them, so the site
 # keeps serving the previous build to every visitor, with no error, because the
-# old version is still on the CDN and still works. The adenosine release
-# workflow dispatches this the moment the versions land on npm; the weekly
-# schedule is a backstop in case that dispatch ever fails.
+# old version is still on the CDN and still works.
+#
+# The weekly schedule is the normal path. Unlike the magmascript and texastoast
+# syncs, no release workflow dispatches this — that would mean a cross-repo PAT
+# living on the adenosine repo, and the cost of keeping one more token alive is
+# not worth shortening a lag nobody can see. Run it by hand from the Actions tab
+# after a release to skip the wait. The repository_dispatch trigger stays wired
+# so a sender can be added later without touching this file.
 
 on:
   schedule:
