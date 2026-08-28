@@ -42,6 +42,7 @@ Pages extract inline CSS to separate files:
 - `music/jukebox/styles.css` — jukebox
 - `press/press.css` — press index
 - `ware/ware.css` — ware index
+- `ware/hologram/hologram.css` — hologram modules reference (on the `ware/shell` chrome)
 
 ## Game card previews
 

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>hologram — magmacrunch media</title>
+  <meta property="og:title" content="hologram — magmacrunch media">
+  <meta property="og:description" content="optics-first 3D game engine: a spectral ray tracer where light obeys physics">
+  <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="../../style.css?v=0130e777">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font: 14px/1.6 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #14141b; color: #e8e6f0;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Hero ──────────────────────────────────────────── */
+
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1.5rem 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      margin-bottom: .75rem;
+      /* Solid fallback first: a browser without background-clip:text keeps
+         this and never paints transparent glyphs. */
+      color: #c45fff;
+      background: linear-gradient(90deg,
+        #7a5cff 0%, #2f6bff 17%, #00f5ff 33%,
+        #39ff6e 50%, #ffe03a 67%, #ff7c1f 83%, #ff3d6e 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      /* text-shadow would draw behind transparent glyphs and show through the
+         gradient, so the pixel shadow is a drop-shadow filter instead. */
+      filter: drop-shadow(3px 3px 0 #1c1b26);
+    }
+
+    .hero .tagline {
+      font-size: 13px;
+      color: #9d99b5;
+      margin-bottom: 1.25rem;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: .5rem;
+    }
+
+    .badge {
+      font: 8px/1 'Press Start 2P', monospace;
+      color: #9d99b5;
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 4px;
+      padding: .45rem .55rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Spectral rule ─────────────────────────────────── */
+
+    .spectral-rule {
+      height: 2px;
+      border: 0;
+      max-width: 600px;
+      margin: 2.5rem auto;
+      background: linear-gradient(90deg,
+        #7a5cff 0%, #2f6bff 17%, #00f5ff 33%,
+        #39ff6e 50%, #ffe03a 67%, #ff7c1f 83%, #ff3d6e 100%);
+      opacity: .55;
+    }
+    .spectral-rule.wide { max-width: 940px; }
+
+    /* ── Tool cards ────────────────────────────────────── */
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .tool-card {
+      display: block;
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color .15s, transform .15s;
+    }
+    .tool-card:hover {
+      border-color: #c45fff;
+      transform: translateY(-2px);
+    }
+
+    .tool-card .icon {
+      font-size: 24px;
+      margin-bottom: .5rem;
+    }
+
+    .tool-card h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px; font-weight: 400;
+      color: #e8e6f0;
+      margin-bottom: .4rem;
+    }
+
+    .tool-card p {
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.5;
+    }
+
+    /* ── Section headings ──────────────────────────────── */
+
+    .gallery h2,
+    .oracle h2,
+    .features h2,
+    .examples h2,
+    .about h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px; font-weight: 400;
+      color: #c45fff;
+      margin-bottom: .75rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Optics gallery ────────────────────────────────── */
+
+    .gallery {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .gallery > p.lede {
+      font-size: 12px;
+      color: #9d99b5;
+      margin-bottom: 1.5rem;
+      max-width: 46em;
+    }
+
+    .shots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .shot {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+      /* Rendered 3D frames, not pixel art: leave the browser to filter them. */
+      image-rendering: auto;
+      border-bottom: 1px solid #33304a;
+    }
+
+    .shot .shot-body { padding: 1rem 1.1rem 1.15rem; }
+
+    .shot h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px; font-weight: 400;
+      color: #7cc7ff;
+      margin-bottom: .5rem;
+      letter-spacing: 0.05em;
+      line-height: 1.5;
+    }
+
+    .shot p {
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.55;
+    }
+
+    /* ── The oracle ────────────────────────────────────── */
+
+    .oracle {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+    }
+
+    .oracle p { margin-bottom: .6rem; }
+
+    .oracle figure {
+      margin: 1rem 0;
+      border: 1px solid #33304a;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #1c1b26;
+    }
+
+    .oracle figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      image-rendering: auto;
+    }
+
+    .oracle figcaption {
+      font-size: 11px;
+      color: #666;
+      padding: .55rem .75rem;
+      border-top: 1px solid #33304a;
+    }
+
+    .oracle code, .examples code {
+      font-family: 'Courier Prime', monospace;
+      color: #7cc7ff;
+    }
+
+    /* ── Features ──────────────────────────────────────── */
+
+    .features {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+    }
+
+    .feat-item {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      padding: .6rem .75rem;
+      font-size: 12px;
+    }
+
+    .feat-item strong {
+      color: #7cc7ff;
+      display: block;
+      margin-bottom: .15rem;
+      font-size: 11px;
+    }
+
+    .feat-item span {
+      color: #9d99b5;
+      font-size: 11px;
+    }
+
+    /* ── Examples ──────────────────────────────────────── */
+
+    .examples {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .ex-table {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .ex-row {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: .75rem;
+      padding: .5rem .75rem;
+      font-size: 11px;
+      border-bottom: 1px solid #2a2940;
+    }
+    .ex-row:last-child { border-bottom: 0; }
+
+    .ex-row.ex-header {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #c45fff;
+      letter-spacing: 0.05em;
+    }
+
+    .ex-row .ex-name { color: #7cc7ff; }
+    .ex-row span:last-child { color: #9d99b5; }
+    .ex-row.slice .ex-name { color: #ffe03a; }
+
+    .examples figure {
+      margin: 1rem 0 .75rem;
+      border: 1px solid #33304a;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #1c1b26;
+    }
+    .examples figure img {
+      display: block; width: 100%; height: auto; image-rendering: auto;
+    }
+    .examples figcaption {
+      font-size: 11px; color: #666;
+      padding: .55rem .75rem;
+      border-top: 1px solid #33304a;
+    }
+
+    .examples p {
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+      margin-bottom: .5rem;
+    }
+
+    /* ── About ─────────────────────────────────────────── */
+
+    .about {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+    }
+
+    .about h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px; font-weight: 400;
+      color: #e8e6f0;
+      margin: 1.5rem 0 .5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .about p { margin-bottom: .5rem; }
+
+    .about pre {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .6rem .75rem;
+      overflow-x: auto;
+      margin-bottom: .5rem;
+    }
+
+    .about code {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: #7cc7ff;
+    }
+
+    .about-label {
+      color: #666;
+      font-size: 11px;
+      margin-bottom: .25rem;
+    }
+
+    .about-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .about-links a {
+      color: #7cc7ff;
+      text-decoration: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: .4rem .6rem;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      transition: border-color .15s;
+    }
+    .about-links a:hover { border-color: #c45fff; }
+
+    .about-license {
+      color: #555;
+      font-size: 11px;
+      margin-top: 1rem;
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 12px;
+      color: #9d99b5;
+      border-top: 1px solid #33304a;
+    }
+
+    footer span {
+      color: #7cc7ff;
+    }
+
+    /* Every section is a flex item of body, and `margin: 0 auto` on a flex item
+       suppresses the stretch that would otherwise size it to the container.
+       Without a definite width the section falls back to fit-content, which on
+       a phone is driven by the widest code block and pushes the whole page
+       sideways. A definite width plus min-width:0 keeps the page at the
+       viewport and leaves the pre blocks to scroll in their own overflow box. */
+    .hero, .tools, .gallery, .oracle, .features, .examples, .about,
+    .spectral-rule { width: 100%; min-width: 0; }
+
+    @media (max-width: 760px) {
+      .shots { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .tools { grid-template-columns: 1fr; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .ex-row { grid-template-columns: 1fr; gap: .15rem; }
+    }
+
+    /* ── Override style.css conflicts ─────────────────── */
+    .tool-nav {
+      margin-top: 48px;
+      padding: 8px 24px;
+      border-bottom: 1px solid #33304a;
+      background: #14141b;
+      flex-shrink: 0;
+    }
+    .tool-nav .back-link {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      background: #1c1b26;
+      padding: 6px 10px;
+      border: 1px solid #33304a;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tool-nav .back-link:hover {
+      color: #e8e6f0;
+      border-color: #c45fff;
+    }
+    body {
+      background: #14141b;
+      background-image: none;
+      color: #e8e6f0;
+    }
+    a { color: #7cc7ff; }
+    footer {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      border-top: 1px solid #33304a;
+    }
+    footer span { color: #7cc7ff; }
+  </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<div class="tool-nav">
+    <a href="../dev/" class="back-link">&larr; developer tools</a>
+</div>
+
+  <div class="hero">
+    <h1>hologram</h1>
+    <p class="tagline">an optics-first 3D game engine: a spectral ray tracer where light obeys physics</p>
+    <div class="badges">
+      <span class="badge">v0.1.0</span>
+      <span class="badge">PolyForm Noncommercial</span>
+      <span class="badge">C99 + HLSL</span>
+    </div>
+  </div>
+
+  <div class="tools">
+    <a href="reference.html" class="tool-card">
+      <div class="icon">&#128218;</div>
+      <h2>Modules Reference</h2>
+      <p>The public C API across twelve modules. Structs, constants and every function the umbrella header exposes.</p>
+    </a>
+    <a href="https://github.com/magmacrunchmedia/hologram/wiki" class="tool-card" target="_blank" rel="noopener">
+      <div class="icon">&#128214;</div>
+      <h2>Wiki</h2>
+      <p>The full reference, including the shader constraints that shape how the GPU walk is written.</p>
+    </a>
+  </div>
+
+  <hr class="spectral-rule wide">
+
+  <div class="gallery">
+    <h2>what it does that other engines don't</h2>
+    <p class="lede">Every effect below is computed from the physics rather than approximated by a
+      shader trick, and every one is pinned by a host test against its closed-form answer.</p>
+
+    <div class="shots">
+
+      <div class="shot">
+        <img src="img/m3-mirrors.png" width="640" height="480" loading="lazy"
+             alt="Two facing mirror walls repeating a chrome sphere and red spheres into an infinite corridor above a checker floor">
+        <div class="shot-body">
+          <h3>recursive mirrors</h3>
+          <p>Facing mirrors produce a true infinite corridor, to any depth, at any viewing angle.
+            Screen-space reflection structurally cannot draw this frame: it can only reflect what
+            is already on screen. Here the rays really bounce, up to sixteen times.</p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/m4-glass.png" width="640" height="480" loading="lazy"
+             alt="A clear glass ball lens holding an inverted image of the checker floor behind it">
+        <div class="shot-body">
+          <h3>glass by the Fresnel equations</h3>
+          <p>The real pair, s and p computed separately, not Schlick's fit. Refraction, total
+            internal reflection, and reflectance that climbs toward grazing incidence because
+            physics says so and not because a parameter does. The checker floor hanging upside
+            down inside the ball lens is the classic proof that the refraction is real.</p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/m5-spectral.png" width="640" height="480" loading="lazy"
+             alt="Two glass balls in front of a white stripe, the larger tearing the stripe edge into an orange and cyan fringe">
+        <div class="shot-body">
+          <h3>spectral light</h3>
+          <p>Twelve wavelengths per pixel, each refracting at its own Cauchy n(lambda), folded to
+            sRGB through the CIE 1931 colour matching functions. Crown glass fringes gently. Flint
+            tears the same white edge into a spectrum about five times wider, which is exactly why
+            camera lenses pair the two.</p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/m6-polarization.png" width="640" height="480" loading="lazy"
+             alt="Two dark windows on a white wall, one showing a grey square and the other a deep blue square">
+        <div class="shot-body">
+          <h3>polarization</h3>
+          <p>Every ray carries a Stokes vector and every interface applies a Mueller matrix.
+            Crossed polarizers go black. A third pane at 45 degrees between them brings back
+            exactly one eighth. A waveplate writes interference colour because its retardance
+            runs as 1/lambda.</p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/m8-furnace.png" width="640" height="480" loading="lazy"
+             alt="The inside of a paraboloid dish flaring to white as the whole aperture reflects the sun at once">
+        <div class="shot-body">
+          <h3>curved mirrors, quoted as optics quotes them</h3>
+          <p>Apex, axis, vertex radius of curvature, conic constant, rim. Stand at a paraboloid's
+            focus and every zone of the dish reflects your eye into the sun, so the whole aperture
+            flashes at once: a solar furnace, seen from the inside.</p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/m9-gratings.png" width="640" height="480" loading="lazy"
+             alt="Two ruled panels diffracting sunlight, the right one carrying a full rainbow band">
+        <div class="shot-body">
+          <h3>diffraction gratings</h3>
+          <p>The conical, off-plane vector form. The groove component of the direction is
+            conserved, the dispersion component picks up m&#183;lambda/d, and m = 0 falls out as
+            exact specular. Orders sweep across a ruled panel as you walk, the way a CD tilts its
+            colours.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="spectral-rule">
+
+  <div class="oracle">
+    <h2>the oracle</h2>
+    <p><code>source/cpu_trace.c</code> is a complete second tracer in plain C, and
+      <code>shaders/trace.hlsl</code> is its statement-for-statement twin. The C version is allowed
+      to be slow and obliged to be right: every optical law lands there first, held by host tests
+      to closed-form answers. Then <code>holo_oracle_diff()</code> reads the presented GPU frame
+      back and compares it to a CPU render of the same camera.</p>
+
+    <figure>
+      <img src="img/m1-oracle.png" width="640" height="480" loading="lazy"
+           alt="The CPU reference tracer's first picture: spheres on a checker floor under a gradient sky">
+      <figcaption>The oracle's first picture, rendered by the plain C tracer.</figcaption>
+    </figure>
+
+    <p>That diff is the engine's central correctness mechanism. A change that lands in one tracer
+      and not the other stops being a mystery and becomes a failing exit code. The bar is a mean
+      error under 1/255 with fewer than 0.75% of pixels off by more than 8/255, and the whole
+      example suite currently sits between 0.02 and 0.12 mean.</p>
+
+    <p>The host tests assert physics rather than pixels: 236 checks across 7 suites covering
+      Snell's angles into n=1.5 glass, the 41.81 degree critical angle, 4% reflectance at normal
+      incidence, a vanishing p-component at Brewster's angle, Malus's law at five angles, the
+      three-polarizer paradox to the exact eighth, BK7's Abbe number computing to its catalogue 64,
+      a paraboloid focusing every zone at R/2, an ellipsoid imaging focus onto focus, Littrow
+      retroreflection, and the conical invariant.</p>
+  </div>
+
+  <hr class="spectral-rule">
+
+  <div class="features">
+    <h2>modules</h2>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <strong>linalg</strong>
+        <span>Vectors, and the optics that is vector arithmetic: reflection, Snell refraction, Fresnel, the grating equation</span>
+      </div>
+      <div class="feat-item">
+        <strong>polar</strong>
+        <span>Stokes rows, Mueller matrices, Fresnel amplitudes with the TIR phase</span>
+      </div>
+      <div class="feat-item">
+        <strong>spectrum</strong>
+        <span>Wavelength samples, Cauchy dispersion, CIE colour matching</span>
+      </div>
+      <div class="feat-item">
+        <strong>geometry</strong>
+        <span>Rays against spheres, planes, rectangles and conic dishes</span>
+      </div>
+      <div class="feat-item">
+        <strong>camera</strong>
+        <span>The camera as a ray generator</span>
+      </div>
+      <div class="feat-item">
+        <strong>cpu_trace</strong>
+        <span>The reference tracer, the oracle</span>
+      </div>
+      <div class="feat-item">
+        <strong>gpu_scene</strong>
+        <span>The scene as the shader's uniform block</span>
+      </div>
+      <div class="feat-item">
+        <strong>collision</strong>
+        <span>Capsule-vs-walls walking with gravity</span>
+      </div>
+      <div class="feat-item">
+        <strong>timestep</strong>
+        <span>Fixed-step accumulator, ported from magnolia</span>
+      </div>
+      <div class="feat-item">
+        <strong>display</strong>
+        <span>The only file that talks to sokol: window, device, quad, uniforms, frame readback</span>
+      </div>
+      <div class="feat-item">
+        <strong>input</strong>
+        <span>Keys held and mouse look, folded per frame</span>
+      </div>
+      <div class="feat-item">
+        <strong>oracle</strong>
+        <span>The GPU-vs-CPU frame diff</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="spectral-rule">
+
+  <div class="examples">
+    <h2>the examples</h2>
+    <p>Each milestone left a runnable demo behind.</p>
+
+    <div class="ex-table">
+      <div class="ex-row ex-header"><span>Example</span><span>What it shows</span></div>
+      <div class="ex-row"><span class="ex-name">m0_window</span><span>A window, a fullscreen quad, uniforms arriving every frame.</span></div>
+      <div class="ex-row"><span class="ex-name">m1_cpu</span><span>The CPU tracer's first picture, written to a PPM.</span></div>
+      <div class="ex-row"><span class="ex-name">m2_gpu</span><span>The same scene traced on the GPU, held to the oracle.</span></div>
+      <div class="ex-row"><span class="ex-name">m3_mirrors</span><span>Facing mirror walls, a chrome sphere, a polished floor, all recursing.</span></div>
+      <div class="ex-row"><span class="ex-name">m4_glass</span><span>A ball lens holding the checker floor upside down inside it.</span></div>
+      <div class="ex-row"><span class="ex-name">m5_spectral</span><span>Crown and flint glass in front of one white stripe.</span></div>
+      <div class="ex-row"><span class="ex-name">m6_polarization</span><span>The three-polarizer paradox, and a waveplate's interference colour.</span></div>
+      <div class="ex-row slice"><span class="ex-name">m7_room</span><span>The vertical slice: a room of mirrors, glass, a polarizer and a flint ball that you walk through in first person.</span></div>
+      <div class="ex-row"><span class="ex-name">m8_furnace</span><span>A paraboloid with its focus at eye height on the path. Walk into it.</span></div>
+      <div class="ex-row"><span class="ex-name">m9_spectrum</span><span>Two ruled gratings throwing the sun's orders back at you.</span></div>
+    </div>
+
+    <figure>
+      <img src="img/m7-room.png" width="640" height="480" loading="lazy"
+           alt="The walkable room: mirrored side walls, a large refracting ball, pink spheres and warm beige walls">
+      <figcaption>m7_room, the vertical slice. This is the frame Crystal Mirror Maze gets rebuilt on.</figcaption>
+    </figure>
+
+    <p><code>m7_room</code>, <code>m8_furnace</code> and <code>m9_spectrum</code> are interactive:
+      click to capture the mouse, <code>WASD</code> to walk, <code>Space</code> to jump,
+      <code>T</code> to toggle spectral tracing, <code>Escape</code> to release the mouse.</p>
+
+    <p>Every GPU example also accepts <code>--diff</code>, which renders the same frame through the
+      CPU tracer and compares. The exit code is the verdict.</p>
+  </div>
+
+  <hr class="spectral-rule">
+
+  <div class="about">
+    <h2>about</h2>
+    <p>An optics-first 3D game engine by <a href="https://magmacrunch.com">magmacrunch media</a>.
+      The games it exists for, starting with Crystal Mirror Maze, are built entirely from analytic
+      primitives (planes, rectangles, spheres, conics) and rendered at low resolution by design.
+      Closed-form intersections at 640x480 are exactly the workload a fullscreen-shader ray tracer
+      can afford in real time, and a tracer is the only renderer in which curved mirrors,
+      refraction, dispersion and polarization come out correct rather than faked.</p>
+
+    <p>C99 engine, HLSL shader, on <a href="https://github.com/floooh/sokol" target="_blank" rel="noopener">sokol</a>
+      for the window, GPU device and swapchain. The tracing runs on the GPU as a fullscreen-quad
+      fragment shader over a scene of analytic primitives delivered in one uniform block, on a
+      fixed-timestep simulation ported from <a href="../magnolia/">magnolia</a>. Games compile the
+      engine's sources directly, magnolia-style: there is no library build and no package registry,
+      and a game is three callbacks and a scene.</p>
+
+    <h3>building</h3>
+    <p class="about-label">Requires Visual Studio. No other dependencies, since sokol is vendored.</p>
+    <pre><code>build.bat          # builds every example into build\
+build.bat test     # builds and runs the host tests</code></pre>
+    <p>Run the examples from the repository root. They read <code>shaders\trace.hlsl</code> at
+      startup, so you can edit the tracer and relaunch without recompiling.</p>
+
+    <h3>a scene is a literal</h3>
+    <p class="about-label">One sphere from the vertical slice, verbatim:</p>
+    <pre><code>{ .center = { 0.0f, 1.0f, -2.0f }, .radius = 1.0f,
+  .albedo = { 1, 1, 1 }, .transmit = 1.0f,
+  .ior = 1.62f, .disperse = 0.02f },</code></pre>
+
+    <h3>not in the engine, by design</h3>
+    <p>No editor, no ECS, no general physics engine, no mesh import, no skinned animation, no GUI
+      toolkit, and there will never be triangles. Neither target game needs any of them, and each
+      would cost more than it returns. Scenes are built in code from primitives, and collision is a
+      capsule against axis-aligned walls.</p>
+
+    <h3>the name</h3>
+    <p>Named after the Dag Henderson track "hologram of a dream", published by magmacrunch music.</p>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunchmedia/hologram" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/magmacrunchmedia/hologram/wiki" target="_blank" rel="noopener">Wiki</a>
+      <a href="reference.html">Reference</a>
+    </div>
+
+    <p class="about-license">PolyForm Noncommercial 1.0.0 &#183; Copyright 2026 magmacrunch media.
+      Any noncommercial purpose is permitted, and commercial use is reserved to magmacrunch media.
+      This differs deliberately from magmacrunch's Apache-2.0 2D engines: those are infrastructure
+      for anyone, while hologram is the optics engine under magmacrunch's own games. Vendored sokol
+      headers, by Andre Weissflog, keep their zlib licence.</p>
+  </div>
+
+  <footer>
+      &copy; 2026 <span>magmacrunch media</span>
+  </footer>
+
+  <script src="../../nav.js?v=92c30bc3"></script>
+</body>
+</html>

@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hologram reference — magmacrunch media</title>
+    <meta property="og:title" content="hologram reference — magmacrunch media">
+    <meta property="og:description" content="the public C API of the hologram spectral ray tracer, across twelve modules">
+    <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <!-- Press Start 2P and Courier Prime are self-hosted by the shell. -->
+    <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
+    <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
+    <link rel="stylesheet" href="hologram.css">
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <h1 class="glitch" data-text="hologram reference">hologram reference</h1>
+        <span class="header-stat">v<span>0.1.0</span></span>
+    </div>
+    <div class="header-right">
+        <span class="header-stat">53 functions · 12 modules</span>
+    </div>
+</header>
+
+<nav class="tool-nav">
+    <a href="index.html" class="back-link">&larr; hologram</a>
+</nav>
+
+<main>
+    <div class="search-row">
+        <input type="text" id="search-input" class="search-input" placeholder="$ grep -i function name...">
+        <button id="search-clear" class="search-clear">CLEAR</button>
+    </div>
+
+    <div class="module-tabs">
+        <button class="module-tab active" data-module="all">All</button>
+        <button class="module-tab" data-module="linalg">linalg</button>
+        <button class="module-tab" data-module="geometry">geometry</button>
+        <button class="module-tab" data-module="camera">camera</button>
+        <button class="module-tab" data-module="spectrum">spectrum</button>
+        <button class="module-tab" data-module="polar">polar</button>
+        <button class="module-tab" data-module="cpu_trace">cpu_trace</button>
+        <button class="module-tab" data-module="gpu_scene">gpu_scene</button>
+        <button class="module-tab" data-module="display">display</button>
+        <button class="module-tab" data-module="input">input</button>
+        <button class="module-tab" data-module="collision">collision</button>
+        <button class="module-tab" data-module="oracle">oracle</button>
+        <button class="module-tab" data-module="timestep">timestep</button>
+    </div>
+
+    <div class="stats-bar">
+        <span class="stat-count" id="stats">53 functions shown</span>
+        <span class="stat-sep">|</span>
+        <span>hologram.h is an index of the public modules. Internal seams, split out so their arithmetic can be host tested, are deliberately not listed.</span>
+    </div>
+
+    <div id="modules">
+
+        <!-- ── linalg ─────────────────────────────────────── -->
+        <section class="module-section" data-module="linalg">
+            <div class="module-header">
+                <h2>linalg</h2>
+                <span class="module-file">source/linalg.h</span>
+                <span class="module-count">14 functions</span>
+            </div>
+            <p class="module-desc">Vectors, and the optics that is really just vector arithmetic. Pure
+                functions over floats, and float rather than double deliberately, so the CPU oracle
+                computes in the same precision the GPU will and an image diff between them measures
+                the tracing rather than the word size.</p>
+            <p class="module-desc">Conventions, engine-wide: direction vectors are unit length unless
+                a comment says otherwise, surface normals point out of the surface against the
+                arriving ray, and hv3_refract's eta is n_from / n_to with the incoming direction
+                pointing into the surface the way a traced ray does.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre>typedef struct {
+    float x, y, z;
+} HoloV3;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">HoloV3 <b>hv3</b>(float x, float y, float z);</code>
+                <p class="fn-desc">A vector from three components.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_add</b>(HoloV3 a, HoloV3 b);</code>
+                <p class="fn-desc">Component-wise sum.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_sub</b>(HoloV3 a, HoloV3 b);</code>
+                <p class="fn-desc">Component-wise difference.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_mul</b>(HoloV3 a, HoloV3 b);</code>
+                <p class="fn-desc">Component-wise product, which is how colours multiply.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_scale</b>(HoloV3 a, float s);</code>
+                <p class="fn-desc">Every component times s.</p></div>
+            <div class="fn"><code class="sig">float <b>hv3_dot</b>(HoloV3 a, HoloV3 b);</code>
+                <p class="fn-desc">Dot product.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_cross</b>(HoloV3 a, HoloV3 b);</code>
+                <p class="fn-desc">Cross product.</p></div>
+            <div class="fn"><code class="sig">float <b>hv3_len</b>(HoloV3 a);</code>
+                <p class="fn-desc">Euclidean length.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_norm</b>(HoloV3 a);</code>
+                <p class="fn-desc">The unit vector along a, or a itself if its length is about zero.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_lerp</b>(HoloV3 a, HoloV3 b, float t);</code>
+                <p class="fn-desc">Linear interpolation from a to b.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>hv3_reflect</b>(HoloV3 d, HoloV3 n);</code>
+                <p class="fn-desc">Mirror reflection. d arrives at a surface with normal n and the
+                    result leaves it: r = d - 2(d.n)n, with |r| = |d|.</p></div>
+            <div class="fn"><code class="sig">int <b>hv3_refract</b>(HoloV3 d, HoloV3 n, float eta, HoloV3 *out);</code>
+                <p class="fn-desc">Snell's law. d arrives unit and pointing into the surface, n is the
+                    normal on d's side (n.d &lt; 0), eta is n_from / n_to. Writes the unit transmitted
+                    direction and returns 1, or returns 0 on total internal reflection, when Snell has
+                    no answer and the caller must reflect instead.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_grating_order</b>(HoloV3 d, HoloV3 n, HoloV3 groove,
+                    float m_lambda_over_d, HoloV3 *out);</code>
+                <p class="fn-desc">The grating equation in its conical, off-plane vector form.
+                    m_lambda_over_d carries the order, the wavelength and the period in one number.
+                    The component of the direction along the grooves is conserved (the conical
+                    invariant), the component along the dispersion direction picks up m&#183;lambda/d, and
+                    the normal component rebalances to keep the result unit. m = 0 is exactly specular
+                    reflection. Returns 0 when the order is evanescent and nothing propagates.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_fresnel</b>(float cos_i, float n1, float n2, float *rs, float *rp);</code>
+                <p class="fn-desc">The Fresnel equations, the real ones rather than Schlick's fit.
+                    cos_i is the positive cosine of the incidence angle, n1 the index the light arrives
+                    in and n2 the one it meets. Writes the s- and p-polarized power reflectances; past
+                    the critical angle both are 1. Unpolarized light reflects (rs + rp) / 2, and keeping
+                    the two separate is what lets a Stokes vector ride through the same interface.</p></div>
+        </section>
+
+        <!-- ── geometry ───────────────────────────────────── -->
+        <section class="module-section" data-module="geometry">
+            <div class="module-header">
+                <h2>geometry</h2>
+                <span class="module-file">source/geometry.h</span>
+                <span class="module-count">5 functions</span>
+            </div>
+            <p class="module-desc">Rays against analytic surfaces. hologram has no triangles: every
+                surface in a scene is one of these closed-form shapes, which is why the tracer can
+                afford to be real time and why every intersection can be tested against algebra
+                instead of against a mesh.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES AND CONSTANTS</span>
+<pre><span class="c">/* No hit below this t: a ray leaving a surface must not immediately
+   find the surface it left through float error. */</span>
+#define HOLO_T_MIN 1e-3f
+
+typedef struct {
+    HoloV3 origin;
+    HoloV3 dir;      <span class="c">/* unit */</span>
+} HoloRay;
+
+typedef struct {
+    float  t;        <span class="c">/* distance along the ray, &gt; HOLO_T_MIN */</span>
+    HoloV3 point;
+    HoloV3 normal;   <span class="c">/* unit, out of the surface on the arriving side */</span>
+} HoloHit;</pre>
+            </div>
+
+            <p class="module-desc">Each intersection routine returns 1 and fills *hit on the nearest
+                intersection past HOLO_T_MIN, or returns 0 and leaves *hit alone.</p>
+
+            <div class="fn"><code class="sig">int <b>holo_ray_sphere</b>(HoloRay r, HoloV3 center, float radius, HoloHit *hit);</code>
+                <p class="fn-desc">A ray against a sphere.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_ray_plane</b>(HoloRay r, HoloV3 point, HoloV3 normal, HoloHit *hit);</code>
+                <p class="fn-desc">A ray against an infinite plane.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_ray_rect</b>(HoloRay r, HoloV3 corner, HoloV3 edge_u, HoloV3 edge_v,
+                    HoloHit *hit);</code>
+                <p class="fn-desc">A finite parallelogram: a corner plus two edge vectors whose lengths
+                    are the panel's size. This is what a mirror is made of.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_ray_dish</b>(HoloRay r, HoloV3 apex, HoloV3 axis,
+                    float curv_r, float conic_k, float rim, HoloHit *hit);</code>
+                <p class="fn-desc">A cap of a conic of revolution, in the language optical design quotes
+                    them: apex point, unit axis pointing out of the bowl, vertex radius of curvature R,
+                    conic constant K (0 a sphere, -1 a paraboloid, -e&#178; an ellipsoid, below -1 a
+                    hyperboloid), clipped at rim radius. A paraboloid focuses parallel light at R/2
+                    above the apex because this intersection and its normal say so, and the tests hold
+                    both to that.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_basis</b>(HoloV3 axis, HoloV3 *u, HoloV3 *v);</code>
+                <p class="fn-desc">An orthonormal basis around a unit axis, deterministic so the CPU and
+                    the GPU build the same one.</p></div>
+        </section>
+
+        <!-- ── camera ─────────────────────────────────────── -->
+        <section class="module-section" data-module="camera">
+            <div class="module-header">
+                <h2>camera</h2>
+                <span class="module-file">source/camera.h</span>
+                <span class="module-count">2 functions</span>
+            </div>
+            <p class="module-desc">The camera is a ray generator: give it a pixel, get the ray that pixel
+                sees along. Nothing here draws. The CPU oracle and the GPU shader both generate rays this
+                way, which is what makes their images comparable.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre>typedef struct {
+    HoloV3 pos;
+    HoloV3 forward, right, up;   <span class="c">/* orthonormal basis, right-handed */</span>
+    float  tan_half_fov;         <span class="c">/* vertical */</span>
+    float  aspect;               <span class="c">/* width / height */</span>
+} HoloCamera;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">HoloCamera <b>holo_camera_make</b>(HoloV3 pos, HoloV3 target, HoloV3 up_hint,
+                    float fov_deg, float aspect);</code>
+                <p class="fn-desc">A pinhole camera at pos looking at target. fov_deg is the vertical
+                    field of view, and up_hint only breaks the roll ambiguity, so hv3(0,1,0) is the
+                    usual answer and it need not be orthogonal to the view.</p></div>
+            <div class="fn"><code class="sig">HoloRay <b>holo_camera_ray</b>(const HoloCamera *cam, float u, float v);</code>
+                <p class="fn-desc">The ray through (u, v) on the image, both in [0,1): u runs left to
+                    right and v top to bottom, matching the display's uv. Sample pixel centres as
+                    ((x + 0.5) / w, (y + 0.5) / h).</p></div>
+        </section>
+
+        <!-- ── spectrum ───────────────────────────────────── -->
+        <section class="module-section" data-module="spectrum">
+            <div class="module-header">
+                <h2>spectrum</h2>
+                <span class="module-file">source/spectrum.h</span>
+                <span class="module-count">4 functions</span>
+            </div>
+            <p class="module-desc">Wavelengths, and the two ends of a spectral render: how a material
+                responds at one wavelength, and how a pile of single-wavelength intensities becomes an
+                sRGB pixel. The tracer samples twelve fixed wavelengths across the visible band, fixed
+                rather than random because the CPU and the GPU must trace exactly the same rays for the
+                oracle diff to mean anything.</p>
+            <p class="module-desc">Each sample traces the whole scene with n(lambda) in the glass. The
+                results are weighted by the CIE 1931 colour matching functions, in the
+                Wyman-Sloan-Shirley analytic fits, and mapped to sRGB, normalized so a flat spectrum
+                lands on exact white: hue structure from the human eye, white point from the engine.</p>
+
+            <div class="types">
+                <span class="types-label">CONSTANTS</span>
+<pre>#define HOLO_WAVELENGTHS 12</pre>
+            </div>
+
+            <div class="fn"><code class="sig">float <b>holo_lambda</b>(int i);</code>
+                <p class="fn-desc">Sample i's wavelength in micrometers, evenly spaced from 0.42 to 0.68.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>holo_spectral_weight</b>(int i);</code>
+                <p class="fn-desc">The CIE-derived sRGB weight of sample i, so that sum(I_i &#183; weight_i)
+                    is the pixel. The weights sum to exactly (1,1,1) across i.</p></div>
+            <div class="fn"><code class="sig">float <b>holo_albedo_at</b>(HoloV3 rgb, float lambda_um);</code>
+                <p class="fn-desc">A material's, or the sky's, reflectance at one wavelength, read from
+                    its RGB colour through three smooth bands. Neutral colours are exact. That round trip
+                    is not colorimetry, so a red albedo will not survive to the exact same red, but the
+                    physics being showcased does not pass through it at all.</p></div>
+            <div class="fn"><code class="sig">float <b>holo_ior_at</b>(float ior_d, float cauchy_b, float lambda_um);</code>
+                <p class="fn-desc">Cauchy dispersion: the index at lambda for a glass quoted as ior at the
+                    sodium D line (0.5893 um) with coefficient B in um&#178;, so n(D) == ior for every B and
+                    B = 0 is achromatic glass. BK7 is roughly ior 1.5168 with B 0.0042; dense flints run
+                    several times that.</p></div>
+        </section>
+
+        <!-- ── polar ──────────────────────────────────────── -->
+        <section class="module-section" data-module="polar">
+            <div class="module-header">
+                <h2>polar</h2>
+                <span class="module-file">source/polar.h</span>
+                <span class="module-count">7 functions</span>
+            </div>
+            <p class="module-desc">Polarization: Stokes vectors, Mueller matrices, and the trick that makes
+                them affordable. Every source in hologram is unpolarized, so a camera path never needs the
+                full 4x4 Mueller product, only its first row. Each spectral ray carries that row and a
+                reference frame, and every optical element updates the row in place as srow' = srow &#183; M.
+                When the path reaches a source of intensity S, the camera sees S &#183; srow.i.</p>
+            <p class="module-desc">Crossed polarizers extinguish because the product of their matrices has
+                a zero corner, not because anything special-cases them. The tests pin the observables:
+                Malus's law, the three-polarizer paradox, Brewster's polarizing angle, the quarter- and
+                half-wave plates, and the TIR phase a Fresnel rhomb is cut to exploit.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre>typedef struct {
+    float i, q, u, v;
+} HoloSRow;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">HoloSRow <b>holo_srow_start</b>(void);</code>
+                <p class="fn-desc">The camera's own row: measure intensity, no analyzer.</p></div>
+            <div class="fn"><code class="sig">HoloSRow <b>holo_srow_rotate</b>(HoloSRow s, float c2, float s2);</code>
+                <p class="fn-desc">srow &#183; R(theta), with theta given as its double angle (cos2t, sin2t).
+                    Rotations use double angles computed from dot products, so there is no atan in the
+                    hot path.</p></div>
+            <div class="fn"><code class="sig">HoloSRow <b>holo_srow_mueller</b>(HoloSRow s, float a, float b, float c, float d);</code>
+                <p class="fn-desc">srow &#183; M for the interface template [a b 0 0; b a 0 0; 0 0 c d;
+                    0 0 -d c]. Fresnel reflection and refraction, retarders and mirrors are all this shape
+                    in their own basis.</p></div>
+            <div class="fn"><code class="sig">HoloSRow <b>holo_srow_polarizer</b>(HoloSRow s);</code>
+                <p class="fn-desc">srow &#183; M for an ideal linear polarizer along the frame.</p></div>
+            <div class="fn"><code class="sig">HoloSRow <b>holo_srow_scale</b>(HoloSRow s, float k);</code>
+                <p class="fn-desc">Every component times k.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_frame_rot</b>(HoloV3 frame, HoloV3 target, HoloV3 dir,
+                    float *c2, float *s2);</code>
+                <p class="fn-desc">The double angle rotating frame onto target about dir. All three are
+                    unit, and the frames are perpendicular to dir.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_fresnel_amp</b>(float cos_i, float n1, float n2,
+                    float *rs, float *rp, float *ts, float *tp,
+                    float *f, float *delta);</code>
+                <p class="fn-desc">Fresnel amplitude coefficients, which holo_fresnel squares. Below the
+                    critical angle: real rs and tp amplitudes, *f the power-projection factor
+                    (n2&#183;cos_t)/(n1&#183;cos_i) so that f&#183;ts&#183;ts = 1 - rs&#183;rs, and *delta = 0. Past it: returns 1,
+                    rs and rp are 1 in magnitude, and *delta is the TIR phase difference delta_p -
+                    delta_s, the number a Fresnel rhomb is cut to.</p></div>
+        </section>
+
+        <!-- ── cpu_trace ──────────────────────────────────── -->
+        <section class="module-section" data-module="cpu_trace">
+            <div class="module-header">
+                <h2>cpu_trace</h2>
+                <span class="module-file">source/cpu_trace.h</span>
+                <span class="module-count">5 functions</span>
+            </div>
+            <p class="module-desc">The CPU reference tracer, hologram's oracle. Every optical behaviour
+                lands here first, in plain testable C, before it lands in a shader. GPU frames are then
+                diffed against images this file renders. It is allowed to be slow and obliged to be
+                right.</p>
+            <p class="module-desc">A material is three shares that sum to at most 1: mirror (metallic
+                reflection, tinted by albedo, because silver is a colour too), transmit (glass), and the
+                matte remainder (Lambert). Glass brings its own reflection, since the Fresnel equations
+                split the transmit share between refraction and an untinted dielectric reflection angle
+                by angle. A sphere's glass is a volume, so rays bend in and out and can be trapped by
+                TIR; a rect's is a thin pane, one Fresnel interface, a window rather than a prism.</p>
+
+            <div class="types">
+                <span class="types-label">CONSTANTS</span>
+<pre>#define HOLO_MAX_SPHERES 8
+#define HOLO_MAX_RECTS   8
+#define HOLO_MAX_DISHES  4
+
+<span class="c">/* Reflections deeper than this add nothing. */</span>
+#define HOLO_MAX_BOUNCE 16
+
+<span class="c">/* Glass splits light, so the walk keeps a small stack of pending
+   rays. The caps bound the work per pixel and make branch-dropping
+   deterministic: the CPU and the GPU drop the exact same branches,
+   which the oracle diff depends on. */</span>
+#define HOLO_MAX_RAYS 32
+#define HOLO_STACK    16
+#define HOLO_MIN_TP   0.002f
+
+<span class="c">/* The fraction of the sun a shadowed point still shows. A stand-in
+   until bounced light exists to fill shadows honestly. */</span>
+#define HOLO_AMBIENT 0.1f
+
+<span class="c">/* A rect can be an ideal optical filter instead of glass. */</span>
+#define HOLO_FILTER_NONE 0
+#define HOLO_POLARIZER   1
+#define HOLO_WAVEPLATE   2
+
+<span class="c">/* m = -1, 0, +1, +2: both first orders for the symmetric spectra,
+   the second for order overlap, and the zeroth is specular. */</span>
+#define HOLO_GRATING_ORDERS 4
+extern const int holo_grating_m[HOLO_GRATING_ORDERS];</pre>
+            </div>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre>typedef struct {
+    HoloV3 center;
+    float  radius;
+    HoloV3 albedo;
+    float  mirror;
+    float  transmit;
+    float  ior;        <span class="c">/* at the sodium D line */</span>
+    float  disperse;   <span class="c">/* Cauchy B in um^2; 0 = achromatic */</span>
+} HoloSphere;
+
+typedef struct {
+    HoloV3 corner;
+    HoloV3 edge_u, edge_v;   <span class="c">/* lengths are the panel's size */</span>
+    HoloV3 albedo;
+    float  mirror, transmit, ior, disperse;
+    int    filter;           <span class="c">/* NONE / POLARIZER / WAVEPLATE */</span>
+    float  filter_angle;     <span class="c">/* radians from edge_u toward edge_v */</span>
+    float  retard;           <span class="c">/* waveplate retardance at the D line */</span>
+    float  grating_period;   <span class="c">/* um; 1.2 is 833 lines/mm */</span>
+    float  grating_angle;
+    float  order_w[HOLO_GRATING_ORDERS];
+} HoloRect;
+
+typedef struct {
+    HoloV3 apex;
+    HoloV3 axis;       <span class="c">/* unit, out of the bowl */</span>
+    float  curv_r;     <span class="c">/* vertex radius of curvature */</span>
+    float  conic_k;    <span class="c">/* 0 sphere, -1 paraboloid, &lt;-1 hyperboloid */</span>
+    float  rim;
+    HoloV3 albedo;
+    float  mirror;
+} HoloDish;
+
+typedef struct {
+    HoloSphere spheres[HOLO_MAX_SPHERES];  int sphere_count;
+    HoloRect   rects[HOLO_MAX_RECTS];      int rect_count;
+    HoloDish   dishes[HOLO_MAX_DISHES];    int dish_count;
+
+    int    has_floor;
+    float  floor_y;
+    HoloV3 floor_a, floor_b;    <span class="c">/* 1m checker */</span>
+    float  floor_mirror;
+
+    HoloV3 sun_dir;             <span class="c">/* unit, scene toward the sun */</span>
+    HoloV3 horizon, zenith;     <span class="c">/* the sky */</span>
+
+    <span class="c">/* The sun as a visible disk. This is what makes focusing
+       visible: a mirror that sends your eye-ray into the sun
+       shows you the sun, and at a paraboloid's focus every
+       point of the dish does. */</span>
+    float  sun_disk_cos;
+    float  sun_disk_intensity;
+} HoloScene;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">HoloV3 <b>holo_trace_ray</b>(const HoloScene *scene, HoloRay ray);</code>
+                <p class="fn-desc">The colour a single ray sees, mirror bounces included. RGB light, so
+                    glass refracts at its D-line index and dispersion is invisible.</p></div>
+            <div class="fn"><code class="sig">float <b>holo_trace_lambda</b>(const HoloScene *scene, HoloRay ray, float lambda_um);</code>
+                <p class="fn-desc">The intensity a single ray sees at one wavelength: albedos read through
+                    holo_albedo_at, glass refracting at n(lambda). The walk, its caps and its culls are
+                    the same as holo_trace_ray's, and one wavelength at a time is the only difference.</p></div>
+            <div class="fn"><code class="sig">HoloV3 <b>holo_trace_ray_spectral</b>(const HoloScene *scene, HoloRay ray);</code>
+                <p class="fn-desc">The colour a single ray sees spectrally: HOLO_WAVELENGTHS traces of
+                    holo_trace_lambda, folded through the CIE weights. Where no dispersive glass is struck
+                    this agrees with holo_trace_ray on neutral scenes; where it is, wavelengths part ways
+                    and fringes are real.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_trace_image</b>(const HoloScene *scene, const HoloCamera *cam,
+                    int w, int h, float *rgb);</code>
+                <p class="fn-desc">Render the whole frame into rgb (w&#183;h&#183;3 floats, rows top-down, linear and
+                    roughly 0 to 1). Tone mapping is the caller's problem, as it will be the swapchain's on
+                    the GPU.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_trace_image_spectral</b>(const HoloScene *scene, const HoloCamera *cam,
+                    int w, int h, float *rgb);</code>
+                <p class="fn-desc">The same frame rendered through holo_trace_ray_spectral.</p></div>
+        </section>
+
+        <!-- ── gpu_scene ──────────────────────────────────── -->
+        <section class="module-section" data-module="gpu_scene">
+            <div class="module-header">
+                <h2>gpu_scene</h2>
+                <span class="module-file">source/gpu_scene.h</span>
+                <span class="module-count">1 function</span>
+            </div>
+            <p class="module-desc">The scene as the shader sees it: one uniform block, float4 by float4.
+                HoloGpuScene and the cbuffer in shaders/trace.hlsl are the same layout written in two
+                languages, and they must change together. The oracle diff is what catches them drifting
+                apart. Fields pack HLSL-style, so every float3 is followed by a float that rides in its
+                fourth lane.</p>
+            <p class="module-desc">Two constraints show through this struct. A grating rect repurposes the
+                glass and albedo lanes it never uses, because the shader cannot afford two more
+                dynamically indexed arrays: fxc's indexable register file tops out and silently aliases
+                the overflow into other arrays. And up to two gratings live in scalar, non-array fields
+                the shader reads statically, for the same reason. More than two gratings render as matte
+                black on the GPU, though the CPU has no such limit.</p>
+
+            <div class="fn"><code class="sig">void <b>holo_gpu_scene_fill</b>(HoloGpuScene *gpu, const HoloScene *scene,
+                    const HoloCamera *cam, int spectral);</code>
+                <p class="fn-desc">Write scene and camera into the block. The camera's aspect is not
+                    carried: the shader derives it from the framebuffer size in its uniforms, so the image
+                    stays right when the window is resized. spectral chooses the shader's path, with 0
+                    tracing RGB and 1 tracing per wavelength.</p></div>
+        </section>
+
+        <!-- ── display ────────────────────────────────────── -->
+        <section class="module-section" data-module="display">
+            <div class="module-header">
+                <h2>display</h2>
+                <span class="module-file">source/display.h</span>
+                <span class="module-count">4 functions</span>
+            </div>
+            <p class="module-desc">The window, the GPU device, and the surface the tracer renders through.
+                This is the only file that talks to sokol. hologram draws every frame the same way: one
+                fullscreen quad, one fragment shader, uniforms describing the scene and the camera. The
+                design resolution follows the games at 640x480, scaled to whatever the window really is,
+                and the shader letterboxes from the real pixel size.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre><span class="c">/* Keep 16-byte aligned the way constant buffers want; grow it
+   only from the end. */</span>
+typedef struct {
+    float width;    <span class="c">/* framebuffer size in pixels */</span>
+    float height;
+    float time;     <span class="c">/* seconds since the window opened */</span>
+    float _pad;
+} HoloDisplayUniforms;
+
+typedef struct {
+    const char *title;
+    int         width;       <span class="c">/* 0 -&gt; 640x480 */</span>
+    int         height;
+    const char *fs_source;   <span class="c">/* fragment shader for the quad */</span>
+
+    <span class="c">/* A game's own uniform block, uploaded every frame. It must
+       START with a HoloDisplayUniforms. */</span>
+    void *uniforms;
+    int   uniforms_size;
+
+    void (*before_frame)(void);   <span class="c">/* run the simulation, write the camera */</span>
+    void (*after_frame)(void);    <span class="c">/* read pixels back, count frames, quit */</span>
+    void (*event_cb)(const struct sapp_event *ev);
+} HoloDisplayDesc;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">struct sapp_desc <b>holo_display_app</b>(const HoloDisplayDesc *desc);</code>
+                <p class="fn-desc">Fill in sokol's sapp_desc from ours. sokol owns main(), so a game's entry
+                    point is sokol_main() returning holo_display_app(&amp;desc), and the callbacks then run
+                    inside the frame loop.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_display_frame</b>(void);</code>
+                <p class="fn-desc">The frame body: upload uniforms, draw the quad, present. Called by the
+                    internal frame callback, and exposed for games that add their own.</p></div>
+            <div class="fn"><code class="sig">float <b>holo_display_time</b>(void);</code>
+                <p class="fn-desc">Seconds since init, as the uniforms will report it.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_display_read_frame</b>(unsigned char *rgba, int w, int h);</code>
+                <p class="fn-desc">Copy the frame most recently drawn into rgba (w&#183;h&#183;4 bytes, rows
+                    top-down), which must match the real framebuffer size. Returns 1, or 0 where the
+                    backend cannot read back, and only D3D11 answers today. This exists for the oracle,
+                    whose image diff needs the GPU's actual pixels.</p></div>
+        </section>
+
+        <!-- ── input ──────────────────────────────────────── -->
+        <section class="module-section" data-module="input">
+            <div class="module-header">
+                <h2>input</h2>
+                <span class="module-file">source/input.h</span>
+                <span class="module-count">3 functions</span>
+            </div>
+            <p class="module-desc">Keyboard and mouse, folded to what a first-person game asks each frame:
+                which keys are held, and how far the mouse moved since it was last asked. The event decode
+                is sokol's; this module is the bookkeeping in between, plus mouse capture, so a click looks
+                and Escape lets go.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre>typedef struct {
+    unsigned char held[512];    <span class="c">/* indexed by sapp_keycode */</span>
+    float mouse_dx, mouse_dy;   <span class="c">/* holo_input_look consumes */</span>
+} HoloInput;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">void <b>holo_input_event</b>(HoloInput *in, const struct sapp_event *ev);</code>
+                <p class="fn-desc">Feed every event from the display's event callback through this. It
+                    handles capture itself: left click locks the mouse for looking, Escape unlocks.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_input_held</b>(const HoloInput *in, int keycode);</code>
+                <p class="fn-desc">Is this sapp_keycode held right now?</p></div>
+            <div class="fn"><code class="sig">void <b>holo_input_look</b>(HoloInput *in, float *dx, float *dy);</code>
+                <p class="fn-desc">The mouse movement since the last call, then zero, so call it once per
+                    frame. Returns nothing while the mouse is not captured.</p></div>
+        </section>
+
+        <!-- ── collision ──────────────────────────────────── -->
+        <section class="module-section" data-module="collision">
+            <div class="module-header">
+                <h2>collision</h2>
+                <span class="module-file">source/collision.h</span>
+                <span class="module-count">1 function</span>
+            </div>
+            <p class="module-desc">Walking: the only physics a mirror maze needs. A walker is a vertical
+                capsule reduced to what matters, a horizontal radius and a height, moving through a floor
+                plane and a set of axis-aligned boxes. Movement resolves one axis at a time, which is what
+                makes walking into a wall at an angle slide along it instead of sticking: the blocked axis
+                clamps and the free axis keeps its velocity.</p>
+            <p class="module-desc">Boxes are expanded by the radius, so the walker is a point against
+                rounded rooms. There are no rigid bodies, no impulses and no broadphase: rooms have a dozen
+                walls, and Crystal Mirror Maze's player needs exactly this and gravity.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES AND CONSTANTS</span>
+<pre>#define HOLO_MAX_WALLS 16
+
+typedef struct {
+    HoloV3 min, max;
+} HoloAabb;
+
+typedef struct {
+    HoloV3 pos;        <span class="c">/* the feet */</span>
+    HoloV3 vel;
+    int    grounded;
+} HoloWalker;
+
+typedef struct {
+    float radius;      <span class="c">/* horizontal capsule radius */</span>
+    float height;      <span class="c">/* feet to crown; eyes sit somewhat below */</span>
+    float gravity;     <span class="c">/* positive; pulls -y */</span>
+    float floor_y;
+    HoloAabb walls[HOLO_MAX_WALLS];
+    int wall_count;
+} HoloWalkWorld;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">void <b>holo_walk_step</b>(HoloWalker *w, const HoloWalkWorld *world, float dt);</code>
+                <p class="fn-desc">One simulation step: apply gravity, move each axis, resolve against the
+                    walls and the floor, update grounded. vel.x and vel.z are the caller's to set each step,
+                    since walking is kinematic, while vel.y belongs to gravity and jumps.</p></div>
+        </section>
+
+        <!-- ── oracle ─────────────────────────────────────── -->
+        <section class="module-section" data-module="oracle">
+            <div class="module-header">
+                <h2>oracle</h2>
+                <span class="module-file">source/oracle.h</span>
+                <span class="module-count">1 function</span>
+            </div>
+            <p class="module-desc">Holding the GPU to the CPU reference tracer. holo_oracle_diff reads the
+                frame most recently presented, renders the same frame through cpu_trace.c, and compares.
+                Call it from a display after_frame callback, a few frames in.</p>
+            <p class="module-desc">The two images are float twins rather than bit twins, since drivers
+                reassociate math, so the bar is a mean error under 1/255 and under 0.75% of pixels off by
+                more than 8/255. The outliers are razor edges: silhouettes, and glass at the critical
+                angle, where a grazing ray resolves differently on each side.</p>
+
+            <div class="types">
+                <span class="types-label">TYPES</span>
+<pre>typedef struct {
+    double mean;          <span class="c">/* mean abs error, in 1/255 levels */</span>
+    int    max;           <span class="c">/* worst single channel, in 1/255 levels */</span>
+    double outlier_pct;   <span class="c">/* % of pixels with any channel off by &gt; 8 */</span>
+    int    width, height;
+} HoloOracleStats;</pre>
+            </div>
+
+            <div class="fn"><code class="sig">int <b>holo_oracle_diff</b>(const HoloScene *scene, const HoloCamera *cam,
+                    int spectral, HoloOracleStats *stats);</code>
+                <p class="fn-desc">Returns 1 when the GPU frame matches the oracle within the bars above,
+                    and 0 when it does not or the backend cannot read pixels back. The camera must be built
+                    with the real framebuffer aspect, and spectral must say which path the GPU rendered so
+                    the CPU renders the same one.</p></div>
+        </section>
+
+        <!-- ── timestep ───────────────────────────────────── -->
+        <section class="module-section" data-module="timestep">
+            <div class="module-header">
+                <h2>timestep</h2>
+                <span class="module-file">source/timestep.h</span>
+                <span class="module-count">6 functions</span>
+            </div>
+            <p class="module-desc">The fixed-step accumulator, ported verbatim from magnolia. Everything
+                here is arithmetic, which is why it is a separate file: the counting is the part that
+                decides whether a game runs at the same speed on a stalled frame as on a clean one, and
+                counting mixed into calls to the clock is untestable.</p>
+            <p class="module-desc">A frame that owed more steps than TIMESTEP_MAX_STEPS was a stall rather
+                than a slow frame. The remaining backlog is dropped rather than replayed: catching up on
+                two seconds of hitstun by running two seconds of it at once is not catching up, it is
+                teleporting, and it is what makes a game speed up after a load.</p>
+
+            <div class="types">
+                <span class="types-label">CONSTANTS</span>
+<pre>#define TIMESTEP_MAX_STEPS 16</pre>
+            </div>
+
+            <div class="fn"><code class="sig">void <b>timestep_set_hz</b>(int hz);</code>
+                <p class="fn-desc">Set the fixed rate. hz &lt;= 0 turns fixed stepping off, which is the
+                    default, so a game that never asks for it is unaffected.</p></div>
+            <div class="fn"><code class="sig">int <b>timestep_hz</b>(void);</code>
+                <p class="fn-desc">The rate currently set.</p></div>
+            <div class="fn"><code class="sig">float <b>timestep_dt</b>(void);</code>
+                <p class="fn-desc">Seconds in one step, or 0 when disabled. This is the number a fixed-step
+                    game should be integrating with, not however long the frame really took.</p></div>
+            <div class="fn"><code class="sig">void <b>timestep_advance</b>(float dt);</code>
+                <p class="fn-desc">Add a frame's real elapsed time and work out how many steps it owes.
+                    Called once per frame; a test calls it directly.</p></div>
+            <div class="fn"><code class="sig">int <b>timestep_steps</b>(void);</code>
+                <p class="fn-desc">Steps owed by the frame most recently advanced.</p></div>
+            <div class="fn"><code class="sig">void <b>timestep_reset</b>(void);</code>
+                <p class="fn-desc">Forget the accumulated remainder and the step count, leaving the rate
+                    alone. Time before a reset should not owe steps after it.</p></div>
+        </section>
+
+        <p class="no-results" id="no-results" hidden>No function matches that.</p>
+
+    </div>
+</main>
+
+<footer>
+    <div class="footer-left">source: github.com/magmacrunchmedia/hologram · PolyForm Noncommercial 1.0.0</div>
+    <div class="footer-right"><span>magmacrunch</span> media</div>
+</footer>
+
+<script src="reference.js"></script>
+</body>
+</html>
