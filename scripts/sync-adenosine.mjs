@@ -296,7 +296,50 @@ for (const file of htmlFiles(join(ROOT, 'arcade'))) {
   }
 }
 
-// ── 3. Stamp ?v=<hash> on every page-local script and stylesheet ─────────────
+// ── 3. Stamp the assets nav.js injects at runtime ────────────────────────────
+
+// nav.js loads assets/search.css and assets/search.js by building the paths as
+// JS strings (`root + 'assets/search.js'`) rather than writing tags, so the tag
+// pass below never saw them and they were the only site assets carrying no
+// content hash at all.
+//
+// That mattered because search.js holds INDEX_VERSION, the cache-buster for
+// search-index.json. Bumping it only took effect once the browser re-fetched
+// search.js, which it did on its own 600s timer, independent of the nav.js that
+// loads it. So after a deploy the two could disagree about which index was
+// current and search kept answering from the old one. It self-healed within ten
+// minutes, which made it look like nothing had happened rather than like a
+// stale cache.
+//
+// Runs before the tag pass so that pass hashes nav.js's final bytes; otherwise
+// the stamp written into the pages that carry `nav.js?v=` would name the
+// version from before this rewrite.
+const NAV_JS = join(ROOT, 'nav.js');
+
+// Only the two assignments that build a URL — `link.href = root + '...'` and
+// `script.src = root + '...'`. Deliberately NOT every quoted occurrence of the
+// path: nav.js also lists 'assets/search.css' in GLOBAL_CSS_PATTERNS, which is
+// matched with href.includes() to decide what survives an SPA navigation.
+// Stamping that entry turns a substring test into an exact-version test, so a
+// page still running a cached nav.js would fail to match its own stylesheet and
+// strip it mid-navigation.
+const NAV_INJECTED =
+  /((?:link\.href|script\.src)\s*=\s*root\s*\+\s*(['"]))(assets\/search\.(?:js|css))(?:\?v=[0-9a-f]+)?\2/g;
+
+{
+  const before = readFileSync(NAV_JS, 'utf8');
+  const after = before.replace(NAV_INJECTED, (whole, lead, quote, assetPath) => {
+    const resolved = join(ROOT, assetPath);
+    if (!existsSync(resolved)) return whole; // renamed or removed: leave it
+    return `${lead}${assetPath}?v=${shortHash(readFileSync(resolved))}${quote}`;
+  });
+  if (after !== before) {
+    writeFileSync(NAV_JS, after);
+    console.log('  stamped   nav.js  (runtime-injected search assets)');
+  }
+}
+
+// ── 4. Stamp ?v=<hash> on every page-local script and stylesheet ─────────────
 
 // Pass 2 keys its lookup on a bare filename, which only works because every
 // shared bundle has a name unique across the repo. Page-local assets do not:

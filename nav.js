@@ -309,7 +309,7 @@ window.NAV_CONFIG = {
     if (!document.querySelector('link[href*="search.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = root + 'assets/search.css';
+        link.href = root + 'assets/search.css?v=ccac4dfb';
         cssReady = new Promise((resolve) => {
             link.addEventListener('load', resolve, { once: true });
             link.addEventListener('error', resolve, { once: true });
@@ -324,7 +324,7 @@ window.NAV_CONFIG = {
     if (!document.querySelector('script[src*="search.js"]')) {
         cssReady.then(() => {
             const script = document.createElement('script');
-            script.src = root + 'assets/search.js';
+            script.src = root + 'assets/search.js?v=ef6072c0';
             document.body.appendChild(script);
         });
     }
