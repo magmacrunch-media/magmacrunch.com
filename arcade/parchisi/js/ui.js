@@ -276,19 +276,26 @@ var UI = (function() {
 
     function handleStartGame() { Network.startGame(); }
 
-    function escapeHtml(text) {
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
     function updateLobby(msg) {
         if (msg.playersInfo) {
-            els.lobbyPlayers.innerHTML = msg.playersInfo.map(function(p) {
-                var dot = '<span class="player-dot" style="background:' + escapeHtml(p.color) + '"></span>';
-                var host = p.isHost ? ' <span class="host-badge">' + I18n.t('hostBadge') + '</span>' : '';
-                return '<div class="lobby-player">' + dot + ' ' + escapeHtml(p.name) + host + '</div>';
-            }).join('');
+            els.lobbyPlayers.innerHTML = '';
+            msg.playersInfo.forEach(function(p) {
+                var row = document.createElement('div');
+                row.className = 'lobby-player';
+                var dot = document.createElement('span');
+                dot.className = 'player-dot';
+                dot.style.background = p.color;
+                row.appendChild(dot);
+                row.appendChild(document.createTextNode(' ' + p.name));
+                if (p.isHost) {
+                    var host = document.createElement('span');
+                    host.className = 'host-badge';
+                    host.textContent = I18n.t('hostBadge');
+                    row.appendChild(document.createTextNode(' '));
+                    row.appendChild(host);
+                }
+                els.lobbyPlayers.appendChild(row);
+            });
         }
         var count = msg.playerCount || 0;
         var max = msg.maxPlayers || 4;
