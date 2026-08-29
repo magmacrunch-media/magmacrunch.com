@@ -133,6 +133,20 @@ def write_bundle(files: dict[str, str], version: str) -> bool:
     return True
 
 
+def bundle_digest() -> str:
+    """Hash the bundle's *content*, with newlines normalised.
+
+    Not the raw bytes on disk. This repo has no .gitattributes pinning the
+    checkout, so git hands you CRLF on Windows and LF on Linux for the same
+    committed blob. Hashing bytes would therefore produce a different stamp
+    depending on which machine ran the sync, and the two would overwrite each
+    other forever — the Windows run re-stamping what CI just committed, and
+    back again on the next release.
+    """
+    text = BUNDLE.read_text(encoding="utf-8").replace("\r\n", "\n")
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+
+
 def stamp_consumers(digest: str) -> list[Path]:
     """Point every consumer's import at ?v=<digest>. Returns the ones changed."""
     changed: list[Path] = []
@@ -175,7 +189,7 @@ def main() -> int:
     version = getattr(magmascript, "__version__", "?")
     bundle_changed = write_bundle(files, version)
 
-    digest = hashlib.sha256(BUNDLE.read_bytes()).hexdigest()[:8]
+    digest = bundle_digest()
     stamped = stamp_consumers(digest)
 
     if not bundle_changed and not stamped:
