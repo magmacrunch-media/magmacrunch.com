@@ -1,7 +1,7 @@
 name: Sync magmascript playground
 
-# Keeps ware/magmascript/app.js (the browser playground's embedded interpreter)
-# in step with the published magmascript package. The embedded copy drifts every
+# Keeps ware/shared/mgs-lang-bundle.js (the interpreter the browser playgrounds
+# embed) in step with the published magmascript package. The embedded copy drifts every
 # time the language changes; this reinstalls the latest release and regenerates
 # the block. The magmascript release workflow dispatches this the moment a
 # version lands on PyPI; the weekly schedule is a backstop in case that
@@ -46,7 +46,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ware/magmascript/app.js
+          # Mirrors sync-playground.py, which tolerates an absent consumer.
+          for f in ware/shared/mgs-lang-bundle.js ware/magmascript/app.js ware/crunch-c/app.js; do
+            [ -f "$f" ] && git add "$f"
+          done
           if git diff --cached --quiet; then
             echo "Playground already up to date."
           else
