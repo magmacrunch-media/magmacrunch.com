@@ -27,9 +27,20 @@
  *
  * ── Scope ──
  *
- * Only src=/href= attributes in HTML, pointing at a local .js or .css. `?v=` in
- * a JS string is usually a YouTube video id, which this must never read as a
- * cache-buster.
+ * src=, href= and poster= in HTML, and url() in CSS, pointing at a local
+ * script, stylesheet, image, media file or font. A stylesheet's url() resolves
+ * against the stylesheet rather than the page, which is its own way to go
+ * unnoticed.
+ *
+ * Page-to-page .html links are deliberately out of scope: the check-links
+ * workflow already follows those, and it knows about redirects and the
+ * generated archive stubs, which this does not.
+ *
+ * Two kinds of match are stepped over rather than resolved. A `?v=` in a JS
+ * string is usually a YouTube video id, never a cache-buster. And the archive
+ * gallery pages build markup inside template literals, so a src can read
+ * `${thumbUrl}` or `about:blank` — references to no fixed path, which this must
+ * not guess at. isUnresolvable() holds both rules.
  *
  * Stamps that are not 8 hex are a different convention — a hand-bumped serial,
  * `?v=11` — and cannot be verified against content. Those are counted and named
@@ -44,8 +55,11 @@
  * 134fb53 deleted both, two 404s per page load, invisible to a check that
  * skipped the serial and never looked at the plain tag beside it.
  *
- * So existence is asserted for every local .js and .css, stamped or not, and
- * the hash comparison is the extra step for the ones that carry a real digest.
+ * So existence is asserted for every local asset a page or stylesheet loads,
+ * stamped or not, and the hash comparison is the extra step for the ones that
+ * carry a real digest. Widening that from scripts to images immediately found
+ * three more: a deleted gallery photo still set as a CSS background, and two
+ * <img> tags on a placeholder that was never committed at all.
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -60,14 +74,14 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 // what the src/href-plus-extension pattern below exists to step over.
 const SKIP_DIRS = new Set(['node_modules', 'wiki', 'wiki-old-backup', 'drafts']);
 
-/** Every .html under a directory, skipping dotfiles and untracked trees. */
-function htmlFiles(dir, out = []) {
+/** Every file with one of `exts` under a directory, skipping untracked trees. */
+function filesUnder(dir, exts, out = []) {
   if (!existsSync(dir)) return out;
   for (const entry of readdirSync(dir)) {
     if (entry.startsWith('.') || SKIP_DIRS.has(entry)) continue;
     const path = join(dir, entry);
-    if (statSync(path).isDirectory()) htmlFiles(path, out);
-    else if (entry.endsWith('.html')) out.push(path);
+    if (statSync(path).isDirectory()) filesUnder(path, exts, out);
+    else if (exts.some(x => entry.endsWith(x))) out.push(path);
   }
   return out;
 }
@@ -92,8 +106,21 @@ if (process.argv[2] === '--digest') {
   process.exit(0);
 }
 
-// src="..." or href="...", ending in .js or .css, with an optional query.
-const REF_RE = /(?:src|href)\s*=\s*["']([^"']+?\.(?:js|css))(\?[^"']*)?["']/gi;
+// What a page can load and be visibly wrong without: code, styling, and the
+// media that occupies layout. Page-to-page .html links are deliberately absent
+// — those belong to the check-links workflow, which follows redirects and knows
+// about the generated archive stubs.
+const ASSET_EXT = 'js|css|jpg|jpeg|png|gif|svg|webp|avif|ico|bmp' +
+                  '|mp4|webm|mov|mp3|wav|ogg|oga|m4a' +
+                  '|woff|woff2|ttf|otf|eot';
+
+// src=, href= or poster=, pointing at one of those, with an optional query.
+const HTML_REF_RE = new RegExp(
+  `(?:src|href|poster)\\s*=\\s*["']([^"']+?\\.(?:${ASSET_EXT}))(\\?[^"']*)?["']`, 'gi');
+
+// url(...) inside a stylesheet — quoted or bare.
+const CSS_REF_RE = new RegExp(
+  `url\\(\\s*(['"]?)([^'")]+?\\.(?:${ASSET_EXT}))(\\?[^'")]*)?\\1\\s*\\)`, 'gi');
 
 // Written by a running service rather than committed, so absent from a fresh
 // clone and from CI without that being a fault. arcade/admin/server.py renders
@@ -104,45 +131,67 @@ const REF_RE = /(?:src|href)\s*=\s*["']([^"']+?\.(?:js|css))(\?[^"']*)?["']/gi;
 // consumer that copes with its absence.
 const GENERATED = new Set(['visual/tv/channels.js']);
 
+/**
+ * A reference this script cannot resolve to one fixed path, and must not guess
+ * at. `${...}` is a JS template literal inside an inline <script> — the archive
+ * pages build gallery markup that way — and a scheme like data:, blob: or
+ * about: never names a file in the tree.
+ */
+const isUnresolvable = (href) =>
+  href.includes('${') || href.includes('{{') ||
+  /^(?:[a-z][a-z0-9+.-]*:)/i.test(href) && !href.startsWith('/');
+
 let checked = 0;   // stamped with a real digest, and compared against the file
 let present = 0;   // resolved to a file that exists, stamped or not
 const stale = [];
 const missing = [];
 const unverifiable = [];
 
-for (const page of htmlFiles(ROOT)) {
-  const html = readFileSync(page, 'utf8');
+/** Resolve one reference found in `source`, and record what is wrong with it. */
+function inspect(href, query, source) {
+  if (isUnresolvable(href)) return;
+  if (/^(?:https?:)?\/\//.test(href)) return;              // someone else's asset
 
-  for (const [, href, query] of html.matchAll(REF_RE)) {
-    if (/^(?:https?:)?\/\//.test(href)) continue;          // someone else's asset
+  const target = href.startsWith('/')
+    ? join(ROOT, href)
+    : join(dirname(source), href);
 
-    const target = href.startsWith('/')
-      ? join(ROOT, href)
-      : join(dirname(page), href);
+  if (GENERATED.has(rel(target))) return;
 
-    if (GENERATED.has(rel(target))) continue;
-
-    if (!existsSync(target)) {
-      missing.push(`${rel(page)} -> ${href}`);
-      continue;
-    }
-
-    present++;
-
-    const stamp = query?.match(/^\?v=([^&]*)$/)?.[1];
-    if (stamp === undefined) continue;                     // unstamped, but present
-
-    if (!/^[0-9a-f]{8}$/.test(stamp)) {
-      unverifiable.push(`${rel(page)} -> ${href}?v=${stamp}`);
-      continue;
-    }
-
-    checked++;
-    const actual = digest(target);
-    if (actual !== stamp) {
-      stale.push({ page: rel(page), href, stamp, actual });
-    }
+  if (!existsSync(target)) {
+    missing.push(`${rel(source)} -> ${href}`);
+    return;
   }
+
+  present++;
+
+  const stamp = query?.match(/^\?v=([^&]*)$/)?.[1];
+  if (stamp === undefined) return;                         // unstamped, but present
+
+  if (!/^[0-9a-f]{8}$/.test(stamp)) {
+    unverifiable.push(`${rel(source)} -> ${href}?v=${stamp}`);
+    return;
+  }
+
+  checked++;
+  const actual = digest(target);
+  if (actual !== stamp) {
+    stale.push({ page: rel(source), href, stamp, actual });
+  }
+}
+
+for (const page of filesUnder(ROOT, ['.html'])) {
+  const html = readFileSync(page, 'utf8');
+  for (const [, href, query] of html.matchAll(HTML_REF_RE)) inspect(href, query, page);
+}
+
+// A stylesheet's url() resolves against the stylesheet, not the page that
+// loaded it — which is how archive/by-artist/thld/thld-about.css kept pointing
+// at a photo deleted three weeks earlier without any page looking wrong enough
+// to notice.
+for (const sheet of filesUnder(ROOT, ['.css'])) {
+  const css = readFileSync(sheet, 'utf8');
+  for (const [, , href, query] of css.matchAll(CSS_REF_RE)) inspect(href, query, sheet);
 }
 
 if (checked === 0) {
