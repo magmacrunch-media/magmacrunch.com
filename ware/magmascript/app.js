@@ -5,14 +5,13 @@
 // Loads magmascript/lang/ source directly into Pyodide's FS,
 // stubs out domain modules, and provides a CodeMirror 6 editor.
 
-import { LANG_FILE_CONTENTS } from "../shared/mgs-lang-bundle.js?v=3ba74fc8";
+import { createMgsRuntime } from "../shared/mgs-runtime.js";
 
 (async () => {
   // ----------------------------------------------------------
   // Constants
   // ----------------------------------------------------------
 
-  const PYODIDE_CDN = "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/pyodide.js";
   const EXAMPLES = [
     "hello",
     "fibonacci",
@@ -30,8 +29,6 @@ import { LANG_FILE_CONTENTS } from "../shared/mgs-lang-bundle.js?v=3ba74fc8";
     "asthenosphere",
   ];
 
-  // Derived from the generated object above.
-  const LANG_FILES = Object.keys(LANG_FILE_CONTENTS);
 
   // ----------------------------------------------------------
   // DOM references
@@ -55,7 +52,7 @@ import { LANG_FILE_CONTENTS } from "../shared/mgs-lang-bundle.js?v=3ba74fc8";
   // State
   // ----------------------------------------------------------
 
-  let pyodide = null;
+  let runtime = null;
   let editorView = null;
   let originalCode = "";
 
@@ -152,186 +149,16 @@ import { LANG_FILE_CONTENTS } from "../shared/mgs-lang-bundle.js?v=3ba74fc8";
   }
 
   // ----------------------------------------------------------
-  // Pyodide bootstrap (sequential, step-by-step)
+  // Interpreter (shared with ware/crunch-c)
   // ----------------------------------------------------------
 
   async function initPyodide() {
-    // Step 1: Load the Pyodide script from CDN
-    logInit("Loading Pyodide runtime...");
     setStatus('<span class="dot loading"></span>loading');
-
-    const script = document.createElement("script");
-    script.src = PYODIDE_CDN;
-    document.head.appendChild(script);
-    await new Promise((resolve, reject) => {
-      script.onload = resolve;
-      script.onerror = () => reject(new Error("Failed to load Pyodide CDN script"));
-    });
-    logInit("Pyodide script loaded");
-
-    // Step 2: Initialize Pyodide WASM runtime
-    logInit("Initializing WASM runtime (this may take a moment)...");
-    const loadFn = window.loadPyodide;
-    if (typeof loadFn !== "function") {
-      throw new Error(
-        "loadPyodide not found on window. Pyodide script may not have loaded correctly."
-      );
-    }
-    pyodide = await loadFn({
-      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.25.1/full/",
-    });
-    logInit("WASM runtime ready");
-
-    // Step 3: Set up filesystem directories
-    logInit("Creating filesystem...");
-    const fs = pyodide.FS;
-
-    // Create all directories explicitly
-    const dirs = [
-      "/home/pyodide/magmascript",
-      "/home/pyodide/magmascript/lang",
-      "/home/pyodide/magmascript/core",
-      // Subpackage dirs (lang/astheno/...) come from the embedded paths, so a
-      // new subpackage needs no edit here.
-      ...LANG_FILES.filter((n) => n.includes("/")).map(
-        (n) => `/home/pyodide/magmascript/lang/${n.slice(0, n.lastIndexOf("/"))}`
-      ),
-    ];
-    for (const dir of dirs) {
-      if (!fs.analyzePath(dir).exists) {
-        fs.mkdirTree(dir);
-      }
-    }
-    logInit("Directories created");
-
-    // Step 4: Write embedded lang source files
-    for (const name of LANG_FILES) {
-      const content = LANG_FILE_CONTENTS[name];
-      fs.writeFile(`/home/pyodide/magmascript/lang/${name}`, content);
-    }
-    logInit(`All ${LANG_FILES.length} lang files installed`);
-
-    // Step 5: Install stub modules (core/registry, core/config)
-    logInit("Installing stub modules...");
-
-    fs.writeFile("/home/pyodide/magmascript/core/__init__.py", "");
-
-    fs.writeFile(
-      "/home/pyodide/magmascript/core/registry.py",
-      `REGISTRY = {}
-def register_domain(name, module):
-    REGISTRY[name] = module
-def get_domain(name):
-    return REGISTRY.get(name)
-def list_domains():
-    return list(REGISTRY.keys())
-`
-    );
-
-    fs.writeFile(
-      "/home/pyodide/magmascript/core/config.py",
-      `from dataclasses import dataclass, field
-
-@dataclass
-class Config:
-    pass
-
-def get_config():
-    return Config()
-`
-    );
-
-    // Custom package init — only imports lang, skips domain clients
-    fs.writeFile(
-      "/home/pyodide/magmascript/__init__.py",
-      `from magmascript import lang
-`
-    );
-
-    logInit("Stub modules installed");
-
-    // Step 6: Add to sys.path and test Python import
-    logInit("Configuring Python path...");
-    pyodide.runPython(`
-import sys
-sys.path.insert(0, '/home/pyodide')
-`);
-
-    logInit("Testing Python imports...");
-    try {
-      pyodide.runPython(`
-from magmascript.lang.tokens import TokenType, Token, KEYWORDS
-from magmascript.lang.lexer import Lexer
-from magmascript.lang.parser import Parser
-from magmascript.lang.interpreter import Interpreter
-print(f"Import OK: Lexer={Lexer.__name__}, Parser={Parser.__name__}, Interpreter={Interpreter.__name__}")
-`);
-    } catch (e) {
-      throw new Error(`Python import failed: ${e.message}`);
-    }
-    logInit("Python imports verified");
-
-    // Step 7: Install the runner function
-    logInit("Installing runner...");
-    pyodide.runPython(RUNNER_CODE);
-    logInit("Runner installed");
-
-    // Done
+    runtime = await createMgsRuntime(logInit);
     setLoading(false);
     statusInterp.innerHTML = '<span class="dot ok"></span>Pyodide';
     setStatus('<span class="dot ok"></span>Ready');
   }
-
-  // ----------------------------------------------------------
-  // Runner code (executed inside Pyodide)
-  // ----------------------------------------------------------
-
-  // Mirrors what the CLI does in cli.py: run hypnagogia's threshold check,
-  // execute, then report leaks. Three details matter and the old runner got
-  // all three wrong:
-  //
-  //   1. Warnings go to stderr, not stdout. Every "spooked:" line — integer
-  //      overflow, the leak report — was being written straight through to a
-  //      console nobody reads. Capture stderr too.
-  //   2. report_leaks() is explicitly "call at program exit" and nothing here
-  //      was calling it, so "ancient weeds" never appeared at all.
-  //   3. On error the old runner returned only str(e), discarding both the
-  //      output printed before the fault and the error's own formatting.
-  //      e.format() carries the prefix, line, column and a caret.
-  //
-  // Returns JSON so the three streams stay distinguishable in the UI.
-  const RUNNER_CODE = `
-import io
-import json
-import sys
-from magmascript.lang.lexer import Lexer
-from magmascript.lang.parser import Parser
-from magmascript.lang.interpreter import Interpreter
-from magmascript.lang.hypnagogia import inspect as _hypnagogia
-
-def _run(code):
-    old_stdout, old_stderr = sys.stdout, sys.stderr
-    sys.stdout = out_buf = io.StringIO()
-    sys.stderr = err_buf = io.StringIO()
-    error = None
-    try:
-        tokens = Lexer(code).tokenize()
-        tree = Parser(tokens, source=code).parse()
-        interpreter = Interpreter(source=code)
-        for finding in _hypnagogia(tree, set(interpreter.globals.variables)):
-            print("spooked: " + finding.render(None), file=sys.stderr)
-        interpreter.run(tree)
-        interpreter.report_leaks()
-    except Exception as e:
-        error = e.format() if hasattr(e, "format") else str(e)
-    finally:
-        sys.stdout, sys.stderr = old_stdout, old_stderr
-    return json.dumps({
-        "out": out_buf.getvalue(),
-        "warn": err_buf.getvalue(),
-        "error": error,
-    })
-`;
 
   // ----------------------------------------------------------
   // Output rendering
@@ -371,7 +198,7 @@ def _run(code):
   // ----------------------------------------------------------
 
   function runCode() {
-    if (!pyodide) {
+    if (!runtime) {
       logError("Interpreter not ready — still loading");
       return;
     }
@@ -386,8 +213,7 @@ def _run(code):
     logInit("Running...");
 
     try {
-      pyodide.globals.set("__code", code);
-      const result = JSON.parse(pyodide.runPython("_run(__code)"));
+      const result = runtime.run(code);
       renderResult(result);
       logInit(result.error ? "Done (with errors)" : "Done");
     } catch (err) {

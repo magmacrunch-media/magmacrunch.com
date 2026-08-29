@@ -39,11 +39,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 BUNDLE = ROOT / "ware" / "shared" / "mgs-lang-bundle.js"
 
-# Every page that imports the bundle. Each must contain an import whose
-# specifier ends in mgs-lang-bundle.js, optionally already carrying a ?v= stamp.
+# Everything that imports the bundle. Each must contain an import whose
+# specifier ends in mgs-lang-bundle.js, optionally already carrying a ?v=
+# stamp. Today that is only the shared runtime — the playground pages import
+# the runtime, not the bundle — but the list stays plural so adding a direct
+# consumer needs no other change.
 CONSUMERS = (
-    ROOT / "ware" / "magmascript" / "app.js",
-    ROOT / "ware" / "crunch-c" / "app.js",
+    ROOT / "ware" / "shared" / "mgs-runtime.js",
 )
 
 BEGIN = "// BEGIN GENERATED LANG FILES"
