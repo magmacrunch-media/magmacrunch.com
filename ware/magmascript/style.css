@@ -267,6 +267,24 @@ main {
   word-break: break-word;
 }
 
+/* One run paints up to three streams: what the program printed, the
+   "spooked:" warnings it raised on stderr (overflow, ancient weeds), and the
+   fault that stopped it. Colours match the console-line palette below. */
+.out-stdout,
+.out-warn,
+.out-error {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.out-stdout { color: #e8e6f0; }
+.out-warn   { color: #e5c07b; }
+.out-error  { color: #ff6b6b; }
+
+.out-warn,
+.out-error { margin-top: .75rem; }
+
+.out-empty { color: #9d99b5; }
+
 #console-log {
   border-top: 1px solid #33304a;
   padding: .5rem 1rem;

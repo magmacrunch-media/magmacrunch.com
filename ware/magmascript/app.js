@@ -286,30 +286,85 @@ print(f"Import OK: Lexer={Lexer.__name__}, Parser={Parser.__name__}, Interpreter
   // Runner code (executed inside Pyodide)
   // ----------------------------------------------------------
 
+  // Mirrors what the CLI does in cli.py: run hypnagogia's threshold check,
+  // execute, then report leaks. Three details matter and the old runner got
+  // all three wrong:
+  //
+  //   1. Warnings go to stderr, not stdout. Every "spooked:" line — integer
+  //      overflow, the leak report — was being written straight through to a
+  //      console nobody reads. Capture stderr too.
+  //   2. report_leaks() is explicitly "call at program exit" and nothing here
+  //      was calling it, so "ancient weeds" never appeared at all.
+  //   3. On error the old runner returned only str(e), discarding both the
+  //      output printed before the fault and the error's own formatting.
+  //      e.format() carries the prefix, line, column and a caret.
+  //
+  // Returns JSON so the three streams stay distinguishable in the UI.
   const RUNNER_CODE = `
 import io
+import json
 import sys
 from magmascript.lang.lexer import Lexer
 from magmascript.lang.parser import Parser
 from magmascript.lang.interpreter import Interpreter
+from magmascript.lang.hypnagogia import inspect as _hypnagogia
 
 def _run(code):
-    old_stdout = sys.stdout
-    sys.stdout = buffer = io.StringIO()
+    old_stdout, old_stderr = sys.stdout, sys.stderr
+    sys.stdout = out_buf = io.StringIO()
+    sys.stderr = err_buf = io.StringIO()
+    error = None
     try:
-        lexer = Lexer(code)
-        tokens = lexer.tokenize()
-        parser = Parser(tokens, code)
-        tree = parser.parse()
+        tokens = Lexer(code).tokenize()
+        tree = Parser(tokens, source=code).parse()
         interpreter = Interpreter(source=code)
+        for finding in _hypnagogia(tree, set(interpreter.globals.variables)):
+            print("spooked: " + finding.render(None), file=sys.stderr)
         interpreter.run(tree)
-        return buffer.getvalue()
+        interpreter.report_leaks()
     except Exception as e:
-        sys.stdout = old_stdout
-        return str(e)
+        error = e.format() if hasattr(e, "format") else str(e)
     finally:
-        sys.stdout = old_stdout
+        sys.stdout, sys.stderr = old_stdout, old_stderr
+    return json.dumps({
+        "out": out_buf.getvalue(),
+        "warn": err_buf.getvalue(),
+        "error": error,
+    })
 `;
+
+  // ----------------------------------------------------------
+  // Output rendering
+  // ----------------------------------------------------------
+
+  /**
+   * Paint one run's three streams into the output pane. Built from text nodes
+   * rather than innerHTML — program output is arbitrary text and must never be
+   * parsed as markup.
+   */
+  function renderResult(result) {
+    outputContent.textContent = "";
+
+    const section = (text, className) => {
+      if (!text) return false;
+      const el = document.createElement("div");
+      el.className = className;
+      el.textContent = text.trimEnd();
+      outputContent.appendChild(el);
+      return true;
+    };
+
+    let painted = section(result.out, "out-stdout");
+    painted = section(result.warn, "out-warn") || painted;
+    painted = section(result.error, "out-error") || painted;
+
+    if (!painted) {
+      const el = document.createElement("div");
+      el.className = "out-empty";
+      el.textContent = "(no output)";
+      outputContent.appendChild(el);
+    }
+  }
 
   // ----------------------------------------------------------
   // Code execution
@@ -332,9 +387,9 @@ def _run(code):
 
     try {
       pyodide.globals.set("__code", code);
-      const output = pyodide.runPython("_run(__code)");
-      outputContent.textContent = output || "(no output)";
-      logInit("Done");
+      const result = JSON.parse(pyodide.runPython("_run(__code)"));
+      renderResult(result);
+      logInit(result.error ? "Done (with errors)" : "Done");
     } catch (err) {
       outputContent.textContent = "";
       logError(`Error: ${err.message}`);
