@@ -142,8 +142,18 @@ def markdown(text: str) -> str:
         if stripped.startswith("- "):
             flush_para()
             items = []
-            while i < len(lines) and lines[i].strip().startswith("- "):
-                items.append(lines[i].strip()[2:])
+            while i < len(lines):
+                current = lines[i]
+                if current.strip().startswith("- "):
+                    items.append(current.strip()[2:])
+                elif items and current.strip() and current[:1].isspace():
+                    # A wrapped bullet: fold the continuation into the item it
+                    # belongs to, the way numbered task items are folded in
+                    # paragraphs(). Without this a bullet that runs past one
+                    # line breaks out of the <ul> and becomes a stray <p>.
+                    items[-1] += " " + current.strip()
+                else:
+                    break
                 i += 1
             out.append(
                 "<ul>" + "".join(f"<li>{_inline(x)}</li>" for x in items) + "</ul>"
