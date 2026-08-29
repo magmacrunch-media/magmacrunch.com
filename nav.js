@@ -457,7 +457,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         // sub-page layout; dropping them here would leave the still-visible old
         // content unstyled for the length of the stylesheet fetch — the page
         // title falls back to the archive default and the breadcrumb jumps to
-        // the top-left corner. The caller removes these via dropStale() only
+        // the top-left corner. The caller removes these via commit() only
         // once the new sheets are live and the new content is in the DOM.
         const stale = [];
         document.querySelectorAll('link[' + SPA + ']').forEach(el => {
@@ -468,53 +468,74 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         // Template-injected <style> tags from the outgoing page (no data-spa).
         document.querySelectorAll('head style:not([' + SPA + '])').forEach(e => stale.push(e));
 
-        // Add new page-specific CSS — appended after the outgoing sheets, so
-        // during the brief overlap the incoming rules win on source order.
+        // Add new page-specific CSS. Each sheet goes in with a non-matching
+        // media so the browser downloads it (and still fires load) WITHOUT
+        // applying it: the outgoing page is on screen for the whole `ready`
+        // await, and incoming rules must not touch it. assets/archive.css is
+        // the clearest offender — it styles bare `main`, so injecting it live
+        // strips the index's 80px top padding and jumps the grid upward before
+        // the content has swapped. commit() flips them on.
+        const pending = [];
+        const addSheet = (href, spa) => {
+            if (document.querySelector('link[href="' + href + '"]')) return;
+            const c = document.createElement('link');
+            c.rel = 'stylesheet';
+            c.href = href;
+            c.media = 'print';
+            if (spa) c.setAttribute(SPA, '');
+            pending.push(c);
+            loadPromises.push(new Promise(resolve => {
+                c.addEventListener('load', resolve, { once: true });
+                c.addEventListener('error', resolve, { once: true });
+                // Guard: a sheet that somehow fires neither event must not wedge
+                // navigation behind an unresolved promise.
+                setTimeout(resolve, 3000);
+            }));
+            document.head.appendChild(c);
+        };
         doc.querySelectorAll('link[rel="stylesheet"]').forEach(el => {
             const raw = el.getAttribute('href');
             if (!raw) return;
             const a = abs(raw, baseURL);
-            if (isGlobal(a)) {
-                if (!document.querySelector('link[href="' + a + '"]')) {
-                    const c = document.createElement('link');
-                    c.rel = 'stylesheet';
-                    c.href = a;
-                    loadPromises.push(new Promise(resolve => {
-                        c.addEventListener('load', resolve, { once: true });
-                        c.addEventListener('error', resolve, { once: true });
-                    }));
-                    document.head.appendChild(c);
-                }
-            } else {
-                if (!document.querySelector('link[href="' + a + '"]')) {
-                    const c = document.createElement('link');
-                    c.rel = 'stylesheet';
-                    c.href = a;
-                    c.setAttribute(SPA, '');
-                    loadPromises.push(new Promise(resolve => {
-                        c.addEventListener('load', resolve, { once: true });
-                        c.addEventListener('error', resolve, { once: true });
-                    }));
-                    document.head.appendChild(c);
-                }
-            }
+            addSheet(a, !isGlobal(a));
         });
 
-        // Add new inline styles
+        // Clone the incoming page's inline <style> blocks but DON'T append them
+        // yet. Unlike stylesheets they need no load time, so there is nothing to
+        // wait on — and appending them here would apply the incoming rules to
+        // the outgoing page's still-visible DOM for the whole length of the
+        // `ready` await. Most inline blocks on this site style bare `main`,
+        // `.card`, `.breadcrumb` and `.page-title` rather than scoping to a body
+        // class, so the old content visibly reflows before it is swapped: going
+        // from an artist page to the by-artist index, `main` jumps from
+        // `padding: 0` to `padding: 80px 20px 60px` and grows 140px taller.
+        // They are appended in commit() instead, after the incoming link sheets,
+        // so head order matches a cold page load and inline still wins.
+        const inlineStyles = [];
         doc.querySelectorAll('style').forEach(el => {
             const c = el.cloneNode(true);
             c.setAttribute(SPA, '');
-            document.head.appendChild(c);
+            inlineStyles.push(c);
         });
 
         // `ready` resolves once every newly-added stylesheet has loaded (or
         // failed), so callers can wait for CSS to be ready before swapping in
-        // content that depends on it. `dropStale` tears down the outgoing
-        // page's CSS and must be called synchronously alongside the content
-        // swap, so the browser never paints an unstyled in-between state.
+        // content that depends on it. `commit` installs the incoming inline
+        // styles and tears down the outgoing page's CSS; it must be called
+        // synchronously alongside the content swap, so the browser never paints
+        // an unstyled in-between state — nor the outgoing content under the
+        // incoming page's rules.
         return {
             ready: Promise.all(loadPromises),
-            dropStale: () => stale.forEach(el => el.remove()),
+            commit: () => {
+                // Order matters only in that all three are synchronous: the
+                // sheets switch on, the inline styles land after them (as on a
+                // cold load, so inline still wins), and only then does the
+                // outgoing page's CSS go. No frame is painted in between.
+                pending.forEach(el => el.removeAttribute('media'));
+                inlineStyles.forEach(el => document.head.appendChild(el));
+                stale.forEach(el => el.remove());
+            },
         };
     }
 
@@ -674,10 +695,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             const curFooter = document.querySelector('footer');
 
             // ── COMMIT ──────────────────────────────────────────────────
-            // Body class, content and the old-CSS teardown all happen in one
-            // synchronous block. No await in here, so the browser cannot paint
-            // a half-swapped page: the outgoing content is never shown with the
-            // incoming body class, and never shown with its own CSS removed.
+            // Body class, content, the incoming inline styles and the old-CSS
+            // teardown all happen in one synchronous block. No await in here, so
+            // the browser cannot paint a half-swapped page: the outgoing content
+            // is never shown with the incoming body class, never shown with its
+            // own CSS removed, and never shown under the incoming page's rules.
             document.body.className = doc.body.className;
 
             // Sync <meta name="referrer"> from incoming page so referrer
@@ -690,7 +712,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
             if (newMain) mainEl.innerHTML = newMain.innerHTML;
             if (newFooter && curFooter) curFooter.innerHTML = newFooter.innerHTML;
-            css.dropStale();
+            css.commit();
             // ────────────────────────────────────────────────────────────
 
             // Hide chat widget on non-arcade pages
