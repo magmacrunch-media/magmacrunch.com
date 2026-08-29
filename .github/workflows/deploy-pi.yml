@@ -18,6 +18,35 @@ jobs:
         with:
           node-version: 20
 
+      # The key used to be read from /c/Users/magma/.ssh/id_ed25519. The runner
+      # service runs as NT AUTHORITY\NETWORK SERVICE, which is on the ACL of
+      # neither the key nor any directory above it -- it cannot even traverse to
+      # the file. Every run of this workflow since it was written has died on
+      # "Load key: Permission denied", which reads like a path problem and is
+      # not one. Take the key from a secret instead: written at run time, owned
+      # by whatever account the runner happens to be, gone when the job ends.
+      - name: Write the deploy key
+        env:
+          PI_SSH_KEY: ${{ secrets.PI_SSH_KEY }}
+        run: |
+          if [ -z "$PI_SSH_KEY" ]; then
+            echo "The PI_SSH_KEY secret is unset or empty."
+            echo "Set it with:"
+            echo "  gh secret set PI_SSH_KEY --repo ${{ github.repository }} < /path/to/private_key"
+            exit 1
+          fi
+          TMP=$(cygpath -u "$RUNNER_TEMP")
+          mkdir -p "$TMP/.ssh"
+          KEY="$TMP/.ssh/pi_deploy_key"
+          # Strip CR: a secret pasted from Windows carries CRLF, and ssh rejects
+          # the key rather than saying why.
+          printf '%s\n' "$PI_SSH_KEY" | tr -d '\r' > "$KEY"
+          # ssh refuses a private key other accounts can read. chmod from Git
+          # Bash does not touch the Windows ACL, so set it properly: drop
+          # inherited entries, grant read to this account alone.
+          icacls "$(cygpath -w "$KEY")" /inheritance:r /grant:r "$(whoami):(R)" >/dev/null
+          echo "SSH_KEY=$KEY" >> "$GITHUB_ENV"
+
       - name: Install dependencies
         run: |
           npm config delete script-shell 2>/dev/null || true
@@ -28,7 +57,7 @@ jobs:
 
       - name: Deploy arcade/ to Pi
         run: |
-          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519"
+          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY"
           $SSH_CMD jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
           tar czf - \
             --exclude='node_modules' \
@@ -41,7 +70,7 @@ jobs:
 
       - name: Deploy mcp-server/ to Pi
         run: |
-          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519"
+          SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY"
           tar czf - \
             --exclude='__pycache__' \
             --exclude='.venv' \
@@ -49,13 +78,18 @@ jobs:
 
       - name: Recreate Pi venv and install dependencies
         run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 jake@100.74.172.4 \
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "$SSH_KEY" jake@100.74.172.4 \
             "python3 -m venv ~/arcade/venv && ~/arcade/venv/bin/pip install -r ~/arcade/requirements.txt"
 
       - name: Restart Pi services
         run: |
-          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /c/Users/magma/.ssh/id_ed25519 \
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i "$SSH_KEY" \
             jake@100.74.172.4 "sudo systemctl restart 'arcade-*'"
+
+      # Runs even when a deploy step fails, so the key never outlives the job.
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "${SSH_KEY:-}" || true
 
       - name: Post to Discord
         if: failure()
