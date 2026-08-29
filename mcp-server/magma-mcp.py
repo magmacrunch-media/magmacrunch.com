@@ -1458,8 +1458,12 @@ def _default_corrections_dir() -> Path:
     if override:
         return Path(override)
     for candidate in (
-        # canonical, moved 2026-08-23 into OneDrive/Documents alongside the
-        # rest of the repos - was directly under C:\Users\magma\historian-tui
+        # canonical, moved 2026-08-26 out of OneDrive to C:\magma\dev - OneDrive
+        # was syncing the repos (.git included) against a full 5 GB quota.
+        # Earlier homes: OneDrive/Documents (2026-08-23), and before that
+        # directly under C:\Users\magma\historian-tui
+        Path("/mnt/c/magma/dev/historian-tui/data/corrections"),
+        # previous home, kept so an un-migrated checkout still resolves
         Path("/mnt/c/Users/magma/OneDrive/Documents/historian-tui/data/corrections"),
         Path.home() / "historian-tui" / "data" / "corrections",     # WSL fallback
     ):
