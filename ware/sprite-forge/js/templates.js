@@ -132,7 +132,237 @@ window.CharacterTemplates = (function () {
         ],
     };
 
-    const TEMPLATES = [RPG_HERO, PLATFORMER_KID];
+    // ── DAG (transatlantic_colleague) ── 16×24, origin (8,24) = feet.
+    //
+    // Replaces the code-drawn character in scripts/draw_dag/draw_dag.gml, whose
+    // head was draw_circle(..., 4) — a perfect 8px ball on a 25px body, flat
+    // filled, unoutlined, with draw_line_width limbs and circle hands. That is
+    // the South Park construction, and it is why he read as one.
+    //
+    // What fixes it here:
+    //   1. Shoulders (10) wider than the head (8), so the skull stops leading.
+    //   2. A hard 1px outline round the whole silhouette.
+    //   3. Row widths that change down the figure — 6·8·8·8·8·6 head, a 4px
+    //      neck pinch at the scarf, 10 shoulders, 12 across the arms, 6 waist.
+    //
+    // The torso is held to 6px with the arms outboard of it. Filling the full
+    // 16 reads as a refrigerator: at this size the empty columns either side of
+    // the body are what make it a figure, and the gap between arm and coat is
+    // what stops the arms disappearing into it.
+    //
+    // The scarf was tried at full width, narrowed, and cut. Cutting it lost the
+    // only thing identifying the character, and the 2px neck that replaced it
+    // read as a goatee rather than as a neck. Narrowed won.
+    //
+    // Colours are seeded from what draw_dag.gml already used, so this is a
+    // redraw of the same character rather than a new one: coat (52,73,94),
+    // scarf (149,165,166), hair (93,64,55), skin (244,213,181). The buttons are
+    // the one deliberate change — draw_dag painted them the same grey as the
+    // scarf, which reads as noise; brass gives one warm accent against the
+    // olive drab of the room.
+
+    const DAG_SLOTS = {
+        line:   '#1c2733',
+        skin:   '#f4d5b5',
+        hair:   '#5d4037',
+        coat:   '#34495e',
+        scarf:  '#95a5a6',
+        button: '#c9b458',
+        trouser: '#293845',
+        boots:   '#18222c',
+    };
+
+    const DAG_KEY = {
+        '.': null,
+        'K': ['line', 0],
+        's': ['skin', 0],
+        'd': ['skin', -1],
+        'h': ['hair', 0],
+        'c': ['coat', 0],
+        'C': ['coat', -1],
+        'f': ['scarf', 0],
+        'F': ['scarf', -1],
+        'n': ['button', 0],
+        'b': ['trouser', 0],
+        'B': ['boots', 0],
+    };
+
+    const BLANK = '................';
+
+    // ── Upper bodies ── 17 rows each: 8 of head and scarf, 9 of torso. Drawn
+    // once per facing and reused across every frame of that facing, so a change
+    // to the face cannot drift between the idle and the walk.
+
+    const DAG_UP_DOWN = [            // facing down (front)
+        '.....KKKKKK.....',
+        '....KhhhhhhK....',
+        '....KhsssshK....',
+        '....KsKssKsK....',
+        '....KssssssK....',
+        '.....KsddsK.....',
+        '......KFFK......',
+        '.....KFFFFK.....',
+        '...KccccccccK...',
+        '..KcKccccccKcK..',
+        '..KcKcnccncKcK..',
+        '..KcKccccccKcK..',
+        '..KsKccccccKsK..',
+        '...KKccccccKK...',
+        '....KCCCCCCK....',
+        '....KCCCCCCK....',
+        '....KKKKKKKK....',
+    ];
+
+    const DAG_UP_UP = [              // facing up (back) — no face, no buttons
+        '.....KKKKKK.....',
+        '....KhhhhhhK....',
+        '....KhhhhhhK....',
+        '....KhhhhhhK....',
+        '....KhhhhhhK....',
+        '.....KhhhhK.....',
+        '......KFFK......',
+        '.....KFFFFK.....',
+        '...KccccccccK...',
+        '..KcKccccccKcK..',
+        '..KcKccccccKcK..',
+        '..KcKccccccKcK..',
+        '..KsKccccccKsK..',
+        '...KKccccccKK...',
+        '....KCCCCCCK....',
+        '....KCCCCCCK....',
+        '....KKKKKKKK....',
+    ];
+
+    const DAG_UP_LEFT = [            // facing left — one eye, one arm, narrower
+        '....KKKKKK......',
+        '...KhhhhhhK.....',
+        '...KsssshhK.....',
+        '...KsKsshhK.....',
+        '..KsssshhK......',
+        '...KsdhhK.......',
+        '.....KFFK.......',
+        '....KFFFFK......',
+        '...KccccccK.....',
+        '..KcKccccKcK....',
+        '..KcKccccKcK....',
+        '..KcKccccKcK....',
+        '..KsKccccKsK....',
+        '...KKccccKK.....',
+        '....KCCCCK......',
+        '....KCCCCK......',
+        '....KKKKKK......',
+    ];
+
+    // ── Leg blocks ── 6 rows when the body is at rest, 7 when it has bobbed up
+    // a pixel and the legs have stretched to meet the floor. Feet always end on
+    // row 23, because row 23 is the origin and the origin is the floor.
+
+    const LEGS_STAND = [
+        '....KbbKKbbK....',
+        '....KbbKKbbK....',
+        '....KbbKKbbK....',
+        '....KbbKKbbK....',
+        '...KBBBKKBBBK...',
+        '...KKKKKKKKKK...',
+    ];
+    const LEGS_STAND_TALL = ['....KbbKKbbK....', ...LEGS_STAND];
+
+    // Front and back contact poses: one foot planted, the other lifted a pixel.
+    // A vertical offset, never a horizontal splay — spreading the feet sideways
+    // on a front view reads as a jumping jack, not a stride.
+    const LEGS_STEP_L = [
+        '....KbbKKbbK....',
+        '....KbbKKbbK....',
+        '....KbbKKBBK....',
+        '....KbbKKKKK....',
+        '...KBBBK........',
+        '...KKKKK........',
+    ];
+    const LEGS_STEP_R = [
+        '....KbbKKbbK....',
+        '....KbbKKbbK....',
+        '....KBBKKbbK....',
+        '....KKKKKbbK....',
+        '........KBBBK...',
+        '........KKKKK...',
+    ];
+
+    // Side view: here the stride *is* horizontal, but kept to 9px against a 6px
+    // torso. Wider than about 1.5x the body and it stops reading as walking.
+    const LEGS_SIDE = [
+        '....KbbKbbK.....',
+        '....KbbKbbK.....',
+        '....KbbKbbK.....',
+        '....KbbKbbK.....',
+        '...KBBBKBBBK....',
+        '...KKKKKKKKK....',
+    ];
+    const LEGS_SIDE_TALL = ['....KbbKbbK.....', ...LEGS_SIDE];
+    const LEGS_SIDE_STEP_A = [
+        '....KbbKbbK.....',
+        '....KbbKbbK.....',
+        '...KbbKKbbK.....',
+        '..KbbK.KBBK.....',
+        '..KBBK.KKKK.....',
+        '..KKKK..........',
+    ];
+    const LEGS_SIDE_STEP_B = [
+        '....KbbKbbK.....',
+        '....KbbKbbK.....',
+        '...KbbKKbbK.....',
+        '..KBBK.KbbK.....',
+        '..KKKK.KBBK.....',
+        '.......KKKK.....',
+    ];
+
+    // rest() sits the figure on the floor; bob() lifts the body a pixel and
+    // lengthens the legs to compensate. Frames 0 and 2 of a walk are the bobbed
+    // passing poses, 1 and 3 the planted contact poses — the same ordering
+    // draw_dag.gml used, which matters because obj_dag still drives image_index
+    // from its own anim_frame accumulator.
+    const rest = (upper, legs) => [BLANK, ...upper, ...legs];
+    const bob  = (upper, legs) => [...upper, ...legs];
+
+    const dagSprite = (id, label, blurb, frames) => ({
+        id, label, blurb, w: 16, h: 24, origin: [8, 24],
+        slots: { ...DAG_SLOTS }, key: { ...DAG_KEY }, frames,
+    });
+
+    const DAG_IDLE_DOWN = dagSprite('dag-idle-down', 'DAG IDLE DOWN', '16×24 · 2 frames', [
+        rest(DAG_UP_DOWN, LEGS_STAND),
+        bob(DAG_UP_DOWN, LEGS_STAND_TALL),
+    ]);
+    const DAG_IDLE_UP = dagSprite('dag-idle-up', 'DAG IDLE UP', '16×24 · 2 frames', [
+        rest(DAG_UP_UP, LEGS_STAND),
+        bob(DAG_UP_UP, LEGS_STAND_TALL),
+    ]);
+    const DAG_IDLE_LEFT = dagSprite('dag-idle-left', 'DAG IDLE LEFT', '16×24 · 2 frames', [
+        rest(DAG_UP_LEFT, LEGS_SIDE),
+        bob(DAG_UP_LEFT, LEGS_SIDE_TALL),
+    ]);
+
+    const DAG_WALK_DOWN = dagSprite('dag-walk-down', 'DAG WALK DOWN', '16×24 · 4 frames', [
+        bob(DAG_UP_DOWN, LEGS_STAND_TALL),
+        rest(DAG_UP_DOWN, LEGS_STEP_L),
+        bob(DAG_UP_DOWN, LEGS_STAND_TALL),
+        rest(DAG_UP_DOWN, LEGS_STEP_R),
+    ]);
+    const DAG_WALK_UP = dagSprite('dag-walk-up', 'DAG WALK UP', '16×24 · 4 frames', [
+        bob(DAG_UP_UP, LEGS_STAND_TALL),
+        rest(DAG_UP_UP, LEGS_STEP_L),
+        bob(DAG_UP_UP, LEGS_STAND_TALL),
+        rest(DAG_UP_UP, LEGS_STEP_R),
+    ]);
+    const DAG_WALK_LEFT = dagSprite('dag-walk-left', 'DAG WALK LEFT', '16×24 · 4 frames', [
+        bob(DAG_UP_LEFT, LEGS_SIDE_TALL),
+        rest(DAG_UP_LEFT, LEGS_SIDE_STEP_A),
+        bob(DAG_UP_LEFT, LEGS_SIDE_TALL),
+        rest(DAG_UP_LEFT, LEGS_SIDE_STEP_B),
+    ]);
+
+    const TEMPLATES = [RPG_HERO, PLATFORMER_KID,
+        DAG_IDLE_DOWN, DAG_IDLE_UP, DAG_IDLE_LEFT,
+        DAG_WALK_DOWN, DAG_WALK_UP, DAG_WALK_LEFT];
 
     /** Returns a list of problems; empty means the template is well formed. */
     function validate(tpl, shade) {
