@@ -607,10 +607,12 @@
     <p>That diff is the engine's central correctness mechanism. A change that lands in one tracer
       and not the others stops being a mystery and becomes a failing exit code. The bar is a mean
       error under 1/255 with fewer than 0.75% of pixels off by more than 8/255, and all eight
-      examples pass on both proven paths: the HLSL tracer runs 0.019 to 0.118 mean under D3D11, and
-      the GLSL one 0.027 to 0.251 under WebGL2. The outlier percentages track each other almost
-      exactly, which is the number worth reading, since it says both tracers take the same branches
-      and cull the same rays.</p>
+      examples pass on every proven path: the HLSL tracer runs 0.019 to 0.118 mean under D3D11, the
+      GLSL one 0.027 to 0.251 under WebGL2 and 0.0001 to 0.080 natively on Linux, where Mesa's
+      software rasteriser does the arithmetic the way the C oracle does and the agreement tightens
+      to four decimal places. The outlier percentages track each other almost exactly, which is the
+      number worth reading, since it says every tracer takes the same branches and culls the same
+      rays.</p>
 
     <p>The host tests assert physics rather than pixels: 382 checks across 8 suites covering
       Snell's angles into n=1.5 glass, the 41.81 degree critical angle, 4% reflectance at normal
@@ -699,7 +701,7 @@
     <figure>
       <img src="img/m7-room.png" width="640" height="480" loading="lazy"
            alt="The walkable room: mirrored side walls, a large refracting ball, pink spheres and warm beige walls">
-      <figcaption>m7_room, the vertical slice. This is the frame Crystal Mirror Maze gets rebuilt on.</figcaption>
+      <figcaption>m7_room, the vertical slice. Crystal Mirror Maze is now being built on this frame.</figcaption>
     </figure>
 
     <p><code>m7_room</code>, <code>m8_furnace</code> and <code>m9_spectrum</code> are interactive:
@@ -723,17 +725,21 @@
 
     <p>C99 engine and one tracer in three dialects, HLSL for D3D11, GLSL for GL and GLES3/WebGL2, MSL
       for Metal, on <a href="https://github.com/floooh/sokol" target="_blank" rel="noopener">sokol</a>
-      for the window, GPU device and swapchain. Only the D3D11 path has shipped: the GLSL tracer is
-      oracle-green under WebGL2, and the Metal one has not yet met a Metal device. The tracing runs on
+      for the window, GPU device and swapchain. Windows ships and Linux is proven: all eight examples
+      pass the oracle natively on GL as well as under D3D11, and the unmodified Windows binary also
+      passes under Wine given Microsoft's <code>d3dcompiler_47.dll</code> beside it. The Metal
+      dialect is written and type-checked, and has not yet met a Metal device. The tracing runs on
       the GPU as a fullscreen-quad fragment shader over a scene of analytic primitives delivered in one
       uniform block, on a fixed-timestep simulation ported from <a href="../magnolia/">magnolia</a>.
       Games compile the engine's sources directly, magnolia-style: there is no library build and no
       package registry, and a game is three callbacks and a scene.</p>
 
     <h3>building</h3>
-    <p class="about-label">Requires Visual Studio. No other dependencies, since sokol is vendored.</p>
-    <pre><code>build.bat          # builds every example into build\
-build.bat test     # builds and runs the host tests</code></pre>
+    <p class="about-label">Requires Visual Studio on Windows, or any C compiler on Linux. No other
+      dependencies, since sokol is vendored.</p>
+    <pre><code>build.bat          # Windows: every example into build\
+build.bat test     # builds and runs the host tests
+./build.sh test    # the same, on Linux or macOS</code></pre>
     <p>Run the examples from the repository root. They read <code>shaders\trace.hlsl</code> at
       startup, so you can edit the tracer and relaunch without recompiling.</p>
 
