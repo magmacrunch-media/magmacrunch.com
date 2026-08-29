@@ -14,8 +14,10 @@
             --nav-accent:   #9a3818;
             --nav-glow:     rgba(154,56,24,0.4);
         }
+        /* Neutral near-black ground — same family as every artist subpage
+           (--jt-bg #0a0a0c, --svfp-bg #0a0a14, --ds-bg #080a0e, --woah-bg #0e0c10). */
         body.ctb-page {
-            --ctb-void:     #2b0d00;
+            --ctb-void:     #0a0a0c;
             --ctb-darkest:  #461400;
             --ctb-dark:     #6c2009;
             --ctb-mid-dark: #9a3818;
@@ -25,7 +27,9 @@
             --ctb-cyan:     #dd6f4e;
             --ctb-light:    #ff9d7d;
             --ctb-pale:     #ffc4aa;
-            background:     #2b0d00;
+            background:     #0a0a0c;
+
+            --ground:       #0a0a0c;
         }
         main {
             flex: 1;
@@ -51,10 +55,13 @@
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
-            color: #dd6f4e;
-            text-shadow: 0 0 16px rgba(221,111,78,0.6);
             margin-bottom: 8px;
             letter-spacing: 0.1em;
+        }
+        /* contributor-theme.css hard-codes a cyan halo here; override at matching specificity */
+        body.ctb-page .page-title {
+            color: #dd6f4e;
+            text-shadow: 0 0 16px rgba(221,111,78,0.6);
         }
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
@@ -69,38 +76,72 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
         }
+
+        /* ── Per-artist card themes ────────────────────────────────────────────
+           Each tile carries the signature color of the artist it opens. Values
+           are lifted from that artist's own <prefix>-shared.css (named in the
+           comment). Retuning an artist means editing one hex.
+           Prefix is t- (not c-) so check-archive-format.js is unaffected. */
+        .card    { --accent: #9a3818; --ink: #ffc4aa; }  /* fallback                              */
+        .t-asp   { --accent: #a84828; --ink: #f0e0c8; }  /* --asp-brick       / --asp-cream       */
+        .t-bbc   { --accent: #78a8c8; --ink: #d0e4f0; }  /* --bbc-sky         / --bbc-sky-pale    */
+        .t-cpr   { --accent: #9030b0; --ink: #f5e8c0; }  /* --cpr-purple      / --cpr-cream       */
+        .t-dh    { --accent: #789060; --ink: #f8d888; }  /* --dh-leaf         / --dh-gold         */
+        .t-ddt   { --accent: #d4a820; --ink: #e8d098; }  /* --ddt-gold        / --ddt-heading     */
+        .t-ds    { --accent: #4060a0; --ink: #f0d080; }  /* --ds-brand        / --ds-heading      */
+        .t-4b    { --accent: #52b044; --ink: #e8ddb0; }  /* --4b-leaf         / --4b-heading      */
+        .t-fldc  { --accent: #d8d040; --ink: #f0f8f0; }  /* --fldc-arc-yellow / --fldc-arc-white  */
+        .t-jm    { --accent: #b89898; --ink: #d0d8e0; }  /* --jm-rose         / --jm-ice          */
+        .t-jt    { --accent: #ff7a30; --ink: #f8f0e4; }  /* --jt-blaze        / --jt-offwhite     */
+        .t-svfp  { --accent: #d946ef; --ink: #f5d0ff; }  /* --svfp-accent     / --svfp-body       */
+        .t-thld  { --accent: #c94b1a; --ink: #f0c060; }  /* --thld-accent     / --thld-highlight  */
+        .t-vb    { --accent: #f5a030; --ink: #f0ead8; }  /* --vb-amber        / --vb-body         */
+        .t-woah  { --accent: #ff9ec4; --ink: #fadce8; }  /* --woah-pop-pink   / --woah-light-pink */
+
         .card {
-            border: 2px solid #9a3818;
-            background: #2b0d00;
+            border: 2px solid;
             padding: 16px;
             text-decoration: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .card:hover {
-            border-color: #dd6f4e;
-            box-shadow: 0 0 16px rgba(221,111,78,0.3);
+        /* body.ctb-page prefix required — contributor-theme.css targets
+           `body.ctb-page .card` and outranks a bare `.card`. Each color-mix is
+           preceded by a plain fallback for engines that discard it. */
+        body.ctb-page .card {
+            background:   #141014;
+            background:   color-mix(in srgb, var(--accent) 9%,  var(--ground));
+            border-color: #3a3238;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--ground));
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        body.ctb-page .card:hover,
+        body.ctb-page .card:focus-visible {
+            background:   color-mix(in srgb, var(--accent) 16%, var(--ground));
+            border-color: var(--accent);
+            box-shadow:   0 0 18px -2px var(--accent);
+            box-shadow:   0 0 18px -2px color-mix(in srgb, var(--accent) 45%, transparent);
+            outline: none;
         }
         .card-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: #ffc4aa;
             letter-spacing: 0.08em;
         }
+        body.ctb-page .card .card-title { color: var(--ink); }
+
+        /* Unbuilt artists read as absent, not as a fifteenth theme */
         .card-soon {
-            border: 2px dashed #9a3818;
-            background: #2b0d00;
+            border: 2px dashed;
             padding: 16px;
-            opacity: 0.5;
         }
-        .card-soon .card-sub {
+        body.ctb-page .card-soon { border-color: #2a2a30; background: #0d0d10; }
+        body.ctb-page .card-soon .card-title { color: #6a6a72; }
+        body.ctb-page .card-soon .card-sub {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: #dba185;
+            color: #55555c;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
-
-        
     </style>
 </head>
 <body class="ctb-page">
@@ -117,20 +158,20 @@
     <p class="page-subtitle">the magmacrunch archive</p>
 
     <div class="grid-wrap">
-        <a href="audio-sound-paper-et-al/" class="card"><div class="card-title">Audio Sound Paper, et al.</div></a>
-        <a href="bottle-boys-collective/" class="card"><div class="card-title">Bottle Boys Collective</div></a>
-        <a href="c-p-rutledge/" class="card"><div class="card-title">C.P. Rutledge</div></a>
-        <a href="dag-henderson/" class="card"><div class="card-title">Dag Henderson</div></a>
-        <a href="ddt-llc/" class="card"><div class="card-title">DDT LLC</div></a>
-        <a href="dino-spumoni/" class="card"><div class="card-title">Dino Spumoni</div></a>
-        <a href="four-bs/" class="card"><div class="card-title">Four B's</div></a>
-        <a href="fruity-loops-debauchery-collective/" class="card"><div class="card-title">Fruity Loops Debauchery Bros.</div></a>
-        <a href="jon-mccoy/" class="card"><div class="card-title">Jon McCoy</div></a>
-        <a href="juanito-thompson/" class="card"><div class="card-title">Juanito Thompson</div></a>
-        <a href="svfp/" class="card"><div class="card-title">Sex Van Floor Plan</div></a>
-        <a href="thld/" class="card"><div class="card-title">Texas Hold'Em Lava Dome, et al.</div></a>
-        <a href="vinny-bobarino/" class="card"><div class="card-title">Vinny Bobarino, et al.</div></a>
-        <a href="woah/" class="card"><div class="card-title">Woah.</div></a>
+        <a href="audio-sound-paper-et-al/" class="card t-asp"><div class="card-title">Audio Sound Paper, et al.</div></a>
+        <a href="bottle-boys-collective/" class="card t-bbc"><div class="card-title">Bottle Boys Collective</div></a>
+        <a href="c-p-rutledge/" class="card t-cpr"><div class="card-title">C.P. Rutledge</div></a>
+        <a href="dag-henderson/" class="card t-dh"><div class="card-title">Dag Henderson</div></a>
+        <a href="ddt-llc/" class="card t-ddt"><div class="card-title">DDT LLC</div></a>
+        <a href="dino-spumoni/" class="card t-ds"><div class="card-title">Dino Spumoni</div></a>
+        <a href="four-bs/" class="card t-4b"><div class="card-title">Four B's</div></a>
+        <a href="fruity-loops-debauchery-collective/" class="card t-fldc"><div class="card-title">Fruity Loops Debauchery Bros.</div></a>
+        <a href="jon-mccoy/" class="card t-jm"><div class="card-title">Jon McCoy</div></a>
+        <a href="juanito-thompson/" class="card t-jt"><div class="card-title">Juanito Thompson</div></a>
+        <a href="svfp/" class="card t-svfp"><div class="card-title">Sex Van Floor Plan</div></a>
+        <a href="thld/" class="card t-thld"><div class="card-title">Texas Hold'Em Lava Dome, et al.</div></a>
+        <a href="vinny-bobarino/" class="card t-vb"><div class="card-title">Vinny Bobarino, et al.</div></a>
+        <a href="woah/" class="card t-woah"><div class="card-title">Woah.</div></a>
         <div class="card-soon"><div class="card-title">Alien Hunting</div><div class="card-sub">coming soon</div></div>
         <div class="card-soon"><div class="card-title">The Evergreen Drive</div><div class="card-sub">coming soon</div></div>
     </div>
