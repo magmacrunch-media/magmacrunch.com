@@ -40,13 +40,15 @@
             : { x, y };
 
         modalTextInput.value = existingElement ? existingElement.text : '';
-        setDropdownValue('modalFontSelectDropdown', existingElement
+        const font = existingElement
             ? existingElement.font
-            : (getDropdownValue('fontSelectDropdown') || 'Press Start 2P'));
+            : (getDropdownValue('fontSelectDropdown') || 'Press Start 2P');
+        setDropdownValue('modalFontSelectDropdown', font);
         modalFontSize.value = existingElement
             ? existingElement.fontSize
             : (parseInt(document.getElementById('fontSize').value) || 48);
         modalFontSizeVal.textContent = modalFontSize.value;
+        updateModalTextareaFont(font);
 
         textModal.hidden = false;
         modalTextInput.focus();
@@ -56,6 +58,10 @@
         textModal.hidden = true;
         modalTextInput.value = '';
         modalTarget = null;
+    }
+
+    function updateModalTextareaFont(font) {
+        modalTextInput.style.fontFamily = '"' + font + '", sans-serif';
     }
 
     function commitTextModal() {
@@ -778,7 +784,9 @@
         updateStats();
     });
 
-    setupRetroDropdown('modalFontSelectDropdown', null);
+    setupRetroDropdown('modalFontSelectDropdown', (val) => {
+        updateModalTextareaFont(val);
+    });
 
     // ── ACTION BUTTONS ──
     document.getElementById('undoBtn').addEventListener('click', () => {
