@@ -14,8 +14,11 @@
             --nav-accent:   #9a1879;
             --nav-glow:     rgba(154,24,121,0.4);
         }
+        /* Neutral near-black ground — same family as every place subpage
+           (--mh-bg #0c0d0f, --ih-bg #0c0e10, --fm-bg #0c0810, --tm-bg #0c0f0d)
+           and identical to the by-artist index. */
         body.ctb-page {
-            --ctb-void:     #2b0021;
+            --ctb-void:     #0a0a0c;
             --ctb-darkest:  #46002f;
             --ctb-dark:     #6c0950;
             --ctb-mid-dark: #9a1879;
@@ -25,7 +28,9 @@
             --ctb-cyan:     #dd4ec0;
             --ctb-light:    #ff7dd0;
             --ctb-pale:     #ffaae0;
-            background:     #2b0021;
+            background:     #0a0a0c;
+
+            --ground:       #0a0a0c;
         }
         main {
             flex: 1;
@@ -51,10 +56,13 @@
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
-            color: #dd4ec0;
-            text-shadow: 0 0 16px rgba(221,78,192,0.6);
             margin-bottom: 8px;
             letter-spacing: 0.1em;
+        }
+        /* contributor-theme.css hard-codes a cyan halo here; override at matching specificity */
+        body.ctb-page .page-title {
+            color: #dd4ec0;
+            text-shadow: 0 0 16px rgba(221,78,192,0.6);
         }
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
@@ -69,39 +77,67 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 16px;
         }
+
+        /* ── Per-place card themes ─────────────────────────────────────────────
+           Each tile carries the signature color of the place it opens, taken
+           from the theme that place's own <prefix>-shared.css declares in its
+           header comment. Retuning a place means editing one hex.
+           Prefix is t- (not c-) so check-archive-format.js is unaffected. */
+        .card    { --accent: #9a1879; --ink: #ffaae0; }  /* fallback                              */
+        .t-cg    { --accent: #8878a8; --ink: #f0e8d8; }  /* --cg-heading      / --cg-text-bright  */
+        .t-fm    { --accent: #4080f0; --ink: #f8e8d8; }  /* --fm-cobalt       / --fm-cream        */
+        .t-gs    { --accent: #c07838; --ink: #f8f4e8; }  /* --gs-accent       / --gs-heading      */
+        .t-ih    { --accent: #7090b8; --ink: #dce8f0; }  /* --ih-brand        / --ih-cream        */
+        .t-mg    { --accent: #a02858; --ink: #e0c0d0; }  /* --mg-brand        / --mg-text-body    */
+        .t-mh    { --accent: #c87878; --ink: #f0c8c0; }  /* --mh-coral        / --mh-pale         */
+        .t-tc    { --accent: #c8a040; --ink: #f5f0e0; }  /* --tc-gold         / --tc-offwhite     */
+        .t-tm    { --accent: #8a9878; --ink: #d4d8c8; }  /* --tm-leaf         / --tm-cream        */
+
         .card {
-            border: 2px solid #9a1879;
-            background: #2b0021;
+            border: 2px solid;
             padding: 16px;
             text-decoration: none;
-            transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .card:hover {
-            border-color: #dd4ec0;
-            box-shadow: 0 0 16px rgba(221,78,192,0.3);
+        /* body.ctb-page prefix required — contributor-theme.css targets
+           `body.ctb-page .card` and outranks a bare `.card`. Each color-mix is
+           preceded by a plain fallback for engines that discard it. */
+        body.ctb-page .card {
+            background:   #141014;
+            background:   color-mix(in srgb, var(--accent) 9%,  var(--ground));
+            border-color: #3a3238;
+            border-color: color-mix(in srgb, var(--accent) 55%, var(--ground));
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        body.ctb-page .card:hover,
+        body.ctb-page .card:focus-visible {
+            background:   color-mix(in srgb, var(--accent) 16%, var(--ground));
+            border-color: var(--accent);
+            box-shadow:   0 0 18px -2px var(--accent);
+            box-shadow:   0 0 18px -2px color-mix(in srgb, var(--accent) 45%, transparent);
+            outline: none;
         }
         .card-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: #ffaae0;
             letter-spacing: 0.08em;
             margin-bottom: 6px;
         }
+        body.ctb-page .card .card-title { color: var(--ink); }
+
+        /* Unbuilt places read as absent, not as a ninth theme */
         .card-soon {
-            border: 2px dashed #9a1879;
-            background: #2b0021;
+            border: 2px dashed;
             padding: 16px;
-            opacity: 0.5;
         }
-        .card-soon .card-sub {
+        body.ctb-page .card-soon { border-color: #2a2a30; background: #0d0d10; }
+        body.ctb-page .card-soon .card-title { color: #6a6a72; }
+        body.ctb-page .card-soon .card-sub {
             font-family: 'Press Start 2P', monospace;
             font-size: 6px;
-            color: #db85bd;
+            color: #55555c;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
-
-        
     </style>
 </head>
 <body class="ctb-page">
@@ -118,14 +154,14 @@
     <p class="page-subtitle">the magmacrunch archive</p>
 
     <div class="grid-wrap">
-        <a href="college-green-apt/" class="card"><div class="card-title">College Green Apt.</div></a>
-        <a href="frogwood-manor/" class="card"><div class="card-title">Frogwood Manor</div></a>
-        <a href="green-street-apt/" class="card"><div class="card-title">Green Street Apt.</div></a>
-        <a href="irvin-house/" class="card"><div class="card-title">Irvin House</div></a>
-        <a href="marvin-gardens-g12/" class="card"><div class="card-title">Marvin Gardens G12</div></a>
-        <a href="melrose-house/" class="card"><div class="card-title">Melrose House</div></a>
-        <a href="the-tuna-can/" class="card"><div class="card-title">The Tuna Can</div></a>
-        <a href="twin-maples/" class="card"><div class="card-title">Twin Maples</div></a>
+        <a href="college-green-apt/" class="card t-cg"><div class="card-title">College Green Apt.</div></a>
+        <a href="frogwood-manor/" class="card t-fm"><div class="card-title">Frogwood Manor</div></a>
+        <a href="green-street-apt/" class="card t-gs"><div class="card-title">Green Street Apt.</div></a>
+        <a href="irvin-house/" class="card t-ih"><div class="card-title">Irvin House</div></a>
+        <a href="marvin-gardens-g12/" class="card t-mg"><div class="card-title">Marvin Gardens G12</div></a>
+        <a href="melrose-house/" class="card t-mh"><div class="card-title">Melrose House</div></a>
+        <a href="the-tuna-can/" class="card t-tc"><div class="card-title">The Tuna Can</div></a>
+        <a href="twin-maples/" class="card t-tm"><div class="card-title">Twin Maples</div></a>
         <div class="card-soon"><div class="card-title">Riverside Estate</div><div class="card-sub">coming soon</div></div>
         <div class="card-soon"><div class="card-title">Spirit Castle</div><div class="card-sub">coming soon</div></div>
         <div class="card-soon"><div class="card-title">The Toadstool</div><div class="card-sub">coming soon</div></div>
