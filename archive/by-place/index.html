@@ -55,27 +55,36 @@
             margin-bottom: 16px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #db85bd; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #dd4ec0; }
-        .breadcrumb .sep { margin: 0 8px; color: #dd4ec0; opacity: 0.7; }
-        .breadcrumb .current { color: #dd4ec0; }
+        .breadcrumb a { text-decoration: none; transition: color 0.15s; }
+        .breadcrumb .sep { margin: 0 8px; opacity: 0.7; }
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
             margin-bottom: 8px;
             letter-spacing: 0.1em;
         }
-        /* contributor-theme.css hard-codes a cyan halo here; override at matching specificity */
-        body.ctb-page .page-title {
-            color: #dd4ec0;
-            text-shadow: 0 0 16px rgba(221,78,192,0.6);
-        }
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #db85bd;
             margin-bottom: 32px;
             letter-spacing: 0.12em;
+        }
+        /* ── Neutral page chrome ───────────────────────────────────────────────
+           The magenta that used to live here sat close to Frogwood's pink and
+           Marvin Gardens' burgundy, so the title read as a ninth tile. Bone
+           greys instead — the grid carries all the color. Matches by-artist.
+           These need the body.ctb-page prefix: contributor-theme.css styles the
+           breadcrumb, subtitle and title at that specificity (and hard-codes a
+           cyan halo on the title) and outranks bare rules. */
+        body.ctb-page .breadcrumb,
+        body.ctb-page .breadcrumb a,
+        body.ctb-page .page-subtitle       { color: #8a8580; }
+        body.ctb-page .breadcrumb a:hover,
+        body.ctb-page .breadcrumb .sep,
+        body.ctb-page .breadcrumb .current { color: #c8c4bc; }
+        body.ctb-page .page-title {
+            color: #c8c4bc;
+            text-shadow: 0 0 16px rgba(200,196,188,0.3);
         }
         .grid-wrap {
             width: min(900px, 95vw);
@@ -85,19 +94,20 @@
         }
 
         /* ── Per-place card themes ─────────────────────────────────────────────
-           Each tile carries the signature color of the place it opens, taken
-           from the theme that place's own <prefix>-shared.css declares in its
-           header comment. Retuning a place means editing one hex.
+           Each tile carries three colors drawn from that place's own
+           <prefix>-shared.css, matching the theme its header comment names:
+           --accent drives the border, tint and hover glow, and all three fill
+           the segmented bar along the card's bottom edge. --ink is the title.
            Prefix is t- (not c-) so check-archive-format.js is unaffected. */
-        .card    { --accent: #9a1879; --ink: #ffaae0; }  /* fallback                              */
-        .t-cg    { --accent: #8878a8; --ink: #f0e8d8; }  /* --cg-heading      / --cg-text-bright  */
-        .t-fm    { --accent: #4080f0; --ink: #f8e8d8; }  /* --fm-cobalt       / --fm-cream        */
-        .t-gs    { --accent: #c07838; --ink: #f8f4e8; }  /* --gs-accent       / --gs-heading      */
-        .t-ih    { --accent: #7090b8; --ink: #dce8f0; }  /* --ih-brand        / --ih-cream        */
-        .t-mg    { --accent: #a02858; --ink: #e0c0d0; }  /* --mg-brand        / --mg-text-body    */
-        .t-mh    { --accent: #c87878; --ink: #f0c8c0; }  /* --mh-coral        / --mh-pale         */
-        .t-tc    { --accent: #c8a040; --ink: #f5f0e0; }  /* --tc-gold         / --tc-offwhite     */
-        .t-tm    { --accent: #8a9878; --ink: #d4d8c8; }  /* --tm-leaf         / --tm-cream        */
+        .card    { --accent:#9a1879; --a2:#b01b8c; --a3:#dd4ec0; --ink:#ffaae0; } /* fallback */
+        .t-cg    { --accent:#8878a8; --a2:#607850; --a3:#c07838; --ink:#f0e8d8; } /* dusty violet · green · warm  */
+        .t-fm    { --accent:#4080f0; --a2:#a030c8; --a3:#f040a0; --ink:#f8e8d8; } /* cobalt · violet · pink       */
+        .t-gs    { --accent:#c07838; --a2:#7888a8; --a3:#607850; --ink:#f8f4e8; } /* copper · slate · green       */
+        .t-ih    { --accent:#7090b8; --a2:#a86848; --a3:#608850; --ink:#dce8f0; } /* steel · terracotta · green   */
+        .t-mg    { --accent:#a02858; --a2:#7848a0; --a3:#c87830; --ink:#e0c0d0; } /* burgundy · violet · amber    */
+        .t-mh    { --accent:#c87878; --a2:#6878a0; --a3:#7ab8a0; --ink:#f0c8c0; } /* dusty rose · slate · sage    */
+        .t-tc    { --accent:#c8a040; --a2:#a83840; --a3:#507840; --ink:#f5f0e0; } /* gold · red · green           */
+        .t-tm    { --accent:#8a9878; --a2:#c07848; --a3:#7ab0c0; --ink:#d4d8c8; } /* leaf · warm · cool blue      */
 
         .card {
             border: 2px solid;
@@ -108,15 +118,26 @@
            `body.ctb-page .card` and outranks a bare `.card`. Each color-mix is
            preceded by a plain fallback for engines that discard it. */
         body.ctb-page .card {
-            background:   #141014;
-            background:   color-mix(in srgb, var(--accent) 9%,  var(--ground));
+            background-color: #141014;
+            background-color: color-mix(in srgb, var(--accent) 9%, var(--ground));
+            /* three-segment bar along the bottom edge — plain vars, so it still
+               renders where color-mix does not */
+            background-image: linear-gradient(90deg,
+                var(--accent) 0 33.334%,
+                var(--a2)     33.334% 66.667%,
+                var(--a3)     66.667% 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 4px;
+            background-position: left bottom;
             border-color: #3a3238;
             border-color: color-mix(in srgb, var(--accent) 55%, var(--ground));
-            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s,
+                        background-color 0.15s, background-size 0.15s;
         }
         body.ctb-page .card:hover,
         body.ctb-page .card:focus-visible {
-            background:   color-mix(in srgb, var(--accent) 16%, var(--ground));
+            background-color: color-mix(in srgb, var(--accent) 16%, var(--ground));
+            background-size: 100% 7px;
             border-color: var(--accent);
             box-shadow:   0 0 18px -2px var(--accent);
             box-shadow:   0 0 18px -2px color-mix(in srgb, var(--accent) 45%, transparent);

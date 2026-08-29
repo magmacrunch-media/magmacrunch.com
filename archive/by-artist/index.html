@@ -54,27 +54,36 @@
             margin-bottom: 16px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: #dba185; text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: #dd6f4e; }
-        .breadcrumb .sep { margin: 0 8px; color: #dd6f4e; opacity: 0.7; }
-        .breadcrumb .current { color: #dd6f4e; }
+        .breadcrumb a { text-decoration: none; transition: color 0.15s; }
+        .breadcrumb .sep { margin: 0 8px; opacity: 0.7; }
         .page-title {
             font-family: 'Press Start 2P', monospace;
             font-size: 16px;
             margin-bottom: 8px;
             letter-spacing: 0.1em;
         }
-        /* contributor-theme.css hard-codes a cyan halo here; override at matching specificity */
-        body.ctb-page .page-title {
-            color: #dd6f4e;
-            text-shadow: 0 0 16px rgba(221,111,78,0.6);
-        }
         .page-subtitle {
             font-family: 'Press Start 2P', monospace;
             font-size: 7px;
-            color: #dba185;
             margin-bottom: 32px;
             letter-spacing: 0.12em;
+        }
+        /* ── Neutral page chrome ───────────────────────────────────────────────
+           The magma rust that used to live here sat in the same family as THLD's
+           #c94b1a, Juanito's blaze and Vinny's amber, so the title read as a
+           fifteenth tile. Bone greys instead — the grid carries all the color.
+           These need the body.ctb-page prefix: contributor-theme.css styles the
+           breadcrumb, subtitle and title at that specificity (and hard-codes a
+           cyan halo on the title) and outranks bare rules. */
+        body.ctb-page .breadcrumb,
+        body.ctb-page .breadcrumb a,
+        body.ctb-page .page-subtitle       { color: #8a8580; }
+        body.ctb-page .breadcrumb a:hover,
+        body.ctb-page .breadcrumb .sep,
+        body.ctb-page .breadcrumb .current { color: #c8c4bc; }
+        body.ctb-page .page-title {
+            color: #c8c4bc;
+            text-shadow: 0 0 16px rgba(200,196,188,0.3);
         }
         .grid-wrap {
             width: min(900px, 95vw);
@@ -84,25 +93,28 @@
         }
 
         /* ── Per-artist card themes ────────────────────────────────────────────
-           Each tile carries the signature color of the artist it opens. Values
-           are lifted from that artist's own <prefix>-shared.css (named in the
-           comment). Retuning an artist means editing one hex.
+           Each tile carries three colors drawn from that artist's own
+           <prefix>-shared.css: --accent drives the border, tint and hover glow,
+           and all three fill the segmented bar along the card's bottom edge.
+           Three is what separates artists who share a primary hue — C.P.
+           Rutledge and SVFP both own a purple, but only one of them is a
+           primary-colors palette. --ink is the title.
            Prefix is t- (not c-) so check-archive-format.js is unaffected. */
-        .card    { --accent: #9a3818; --ink: #ffc4aa; }  /* fallback                              */
-        .t-asp   { --accent: #a84828; --ink: #f0e0c8; }  /* --asp-brick       / --asp-cream       */
-        .t-bbc   { --accent: #78a8c8; --ink: #d0e4f0; }  /* --bbc-sky         / --bbc-sky-pale    */
-        .t-cpr   { --accent: #9030b0; --ink: #f5e8c0; }  /* --cpr-purple      / --cpr-cream       */
-        .t-dh    { --accent: #789060; --ink: #f8d888; }  /* --dh-leaf         / --dh-gold         */
-        .t-ddt   { --accent: #d4a820; --ink: #e8d098; }  /* --ddt-gold        / --ddt-heading     */
-        .t-ds    { --accent: #4060a0; --ink: #f0d080; }  /* --ds-brand        / --ds-heading      */
-        .t-4b    { --accent: #52b044; --ink: #e8ddb0; }  /* --4b-leaf         / --4b-heading      */
-        .t-fldc  { --accent: #d8d040; --ink: #f0f8f0; }  /* --fldc-arc-yellow / --fldc-arc-white  */
-        .t-jm    { --accent: #b89898; --ink: #d0d8e0; }  /* --jm-rose         / --jm-ice          */
-        .t-jt    { --accent: #ff7a30; --ink: #f8f0e4; }  /* --jt-blaze        / --jt-offwhite     */
-        .t-svfp  { --accent: #d946ef; --ink: #f5d0ff; }  /* --svfp-accent     / --svfp-body       */
-        .t-thld  { --accent: #c94b1a; --ink: #f0c060; }  /* --thld-accent     / --thld-highlight  */
-        .t-vb    { --accent: #f5a030; --ink: #f0ead8; }  /* --vb-amber        / --vb-body         */
-        .t-woah  { --accent: #ff9ec4; --ink: #fadce8; }  /* --woah-pop-pink   / --woah-light-pink */
+        .card    { --accent:#9a3818; --a2:#b0421b; --a3:#dd6f4e; --ink:#ffc4aa; } /* fallback */
+        .t-asp   { --accent:#a84828; --a2:#c89030; --a3:#485878; --ink:#f0e0c8; } /* brick · amber · night blue   */
+        .t-bbc   { --accent:#78a8c8; --a2:#c07848; --a3:#507840; --ink:#d0e4f0; } /* sky · warm · green           */
+        .t-cpr   { --accent:#f05a5a; --a2:#f5c020; --a3:#68c8f0; --ink:#f5e8c0; } /* red · yellow · blue          */
+        .t-dh    { --accent:#789060; --a2:#f0c060; --a3:#7848a8; --ink:#f8d888; } /* leaf · amber · violet        */
+        .t-ddt   { --accent:#d4a820; --a2:#c04030; --a3:#607858; --ink:#e8d098; } /* gold · cta red · nature      */
+        .t-ds    { --accent:#4060a0; --a2:#d4782a; --a3:#40a888; --ink:#f0d080; } /* blue · cta orange · teal     */
+        .t-4b    { --accent:#52b044; --a2:#f0a830; --a3:#1e60b0; --ink:#e8ddb0; } /* leaf · amber · blue          */
+        .t-fldc  { --accent:#d8d040; --a2:#d06020; --a3:#3060b0; --ink:#f0f8f0; } /* arc yellow · orange · blue   */
+        .t-jm    { --accent:#b89898; --a2:#7a9080; --a3:#6070a0; --ink:#d0d8e0; } /* rose · sage · blue grey      */
+        .t-jt    { --accent:#ff7a30; --a2:#39ff84; --a3:#f5c842; --ink:#f8f0e4; } /* blaze · neon green · gold    */
+        .t-svfp  { --accent:#d946ef; --a2:#e03070; --a3:#30b0b0; --ink:#f5d0ff; } /* magenta · rose · teal        */
+        .t-thld  { --accent:#c94b1a; --a2:#f0c060; --a3:#5a7840; --ink:#f8e4c0; } /* burnt · highlight · olive    */
+        .t-vb    { --accent:#f5a030; --a2:#e84838; --a3:#5a8a6a; --ink:#f0ead8; } /* amber · party red · nature   */
+        .t-woah  { --accent:#ff9ec4; --a2:#90b878; --a3:#7888b0; --ink:#fadce8; } /* pop pink · sage · coastal    */
 
         .card {
             border: 2px solid;
@@ -113,15 +125,26 @@
            `body.ctb-page .card` and outranks a bare `.card`. Each color-mix is
            preceded by a plain fallback for engines that discard it. */
         body.ctb-page .card {
-            background:   #141014;
-            background:   color-mix(in srgb, var(--accent) 9%,  var(--ground));
+            background-color: #141014;
+            background-color: color-mix(in srgb, var(--accent) 9%, var(--ground));
+            /* three-segment bar along the bottom edge — plain vars, so it still
+               renders where color-mix does not */
+            background-image: linear-gradient(90deg,
+                var(--accent) 0 33.334%,
+                var(--a2)     33.334% 66.667%,
+                var(--a3)     66.667% 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 4px;
+            background-position: left bottom;
             border-color: #3a3238;
             border-color: color-mix(in srgb, var(--accent) 55%, var(--ground));
-            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s,
+                        background-color 0.15s, background-size 0.15s;
         }
         body.ctb-page .card:hover,
         body.ctb-page .card:focus-visible {
-            background:   color-mix(in srgb, var(--accent) 16%, var(--ground));
+            background-color: color-mix(in srgb, var(--accent) 16%, var(--ground));
+            background-size: 100% 7px;
             border-color: var(--accent);
             box-shadow:   0 0 18px -2px var(--accent);
             box-shadow:   0 0 18px -2px color-mix(in srgb, var(--accent) 45%, transparent);
@@ -131,6 +154,7 @@
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
             letter-spacing: 0.08em;
+            margin-bottom: 6px;   /* keeps "coming soon" off the title, as on by-place */
         }
         body.ctb-page .card .card-title { color: var(--ink); }
 
