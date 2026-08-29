@@ -55,9 +55,9 @@ def clean_state():
     """
     def wipe():
         reset_limiters()
-        for store in (chat.connected_clients, chat.user_info, chat.rooms,
-                      chat.room_messages, chat.typing_debounce,
-                      chat.recently_disconnected, chat.server_statuses):
+        for store in (chat.connected_clients, chat.sessions, chat.socket_session,
+                      chat.rooms, chat.room_messages, chat.typing_debounce,
+                      chat.server_statuses):
             store.clear()
         chat.messages.clear()
     wipe()
@@ -360,7 +360,7 @@ class TestReconnect:
             ws1 = await websockets.connect(url, additional_headers=OK_ORIGIN)
             await join(ws1, "Rejoiner", token="tok", room="ZZ99")
             await ws1.close()
-            assert await settle(lambda: "tok" in chat.recently_disconnected), "session never stored"
+            assert await settle(lambda: not chat.sessions["tok"]["sockets"]), "session never went offline"
 
             async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws2:
                 await greet(ws2)
@@ -380,7 +380,7 @@ class TestReconnect:
             ws1 = await websockets.connect(url, additional_headers=OK_ORIGIN)
             await join(ws1, "Rejoiner", token="tok", room="ZZ99")
             await ws1.close()
-            await settle(lambda: "tok" in chat.recently_disconnected)
+            await settle(lambda: not chat.sessions["tok"]["sockets"])
 
             async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws2:
                 await greet(ws2)
@@ -394,6 +394,116 @@ class TestReconnect:
                     return hit, [f.get("type") for f in seen]
         hit, types = serve(go)
         assert hit is not None and hit["text"] == "still here", types
+
+
+# ── One user per session ──────────────────────────────────────────────────────
+
+class TestOneUserPerSession:
+    """
+    The roster counts people, not sockets.
+
+    Identity used to be keyed on the websocket, so every path that gave one
+    person two sockets put two entries in the list — and because an unnamed
+    client falls through to generate_name(), the extras showed up as PlayerNN.
+    Two paths did that routinely: a second tab (the widget falls back to a
+    socket per page without SharedWorker, while the session token lives in
+    localStorage and is therefore shared), and a reconnect that lands before
+    the server has noticed the old socket died.
+    """
+
+    async def _roster(self, ws):
+        hit, seen = await until(ws, {"user_list"})
+        return hit, [f.get("type") for f in seen]
+
+    def test_two_tabs_sharing_a_session_are_one_user(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as tab1:
+                await join(tab1, "Tabby", token="tok")
+                await frames(tab1, 4, timeout=0.3)          # drain its own joins
+                async with websockets.connect(url, additional_headers=OK_ORIGIN) as tab2:
+                    await greet(tab2)
+                    await tab2.send(json.dumps({"type": "set_name", "name": "Tabby",
+                                                "session_token": "tok"}))
+                    return await self._roster(tab1)
+        hit, types = serve(go)
+        assert hit is not None, types
+        assert hit["count"] == 1, f"second tab became its own user: {hit['users']}"
+        assert [u["name"] for u in hit["users"]] == ["Tabby"], hit["users"]
+
+    def test_a_reconnect_before_the_old_socket_is_reaped_leaves_no_ghost(self):
+        """
+        The half-open case: the client redials in seconds, the server may take
+        ~40s to notice the dead socket. The token was only ever looked up in
+        recently_disconnected — which the finally block had not written yet —
+        so the reconnect minted a fresh PlayerNN beside the still-listed ghost.
+        """
+        async def go(url):
+            stale = await websockets.connect(url, additional_headers=OK_ORIGIN)
+            await join(stale, "Blipper", token="tok")
+            await frames(stale, 4, timeout=0.3)
+            # stale is deliberately left open: the server has not reaped it.
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as fresh:
+                await greet(fresh)
+                await fresh.send(json.dumps({"type": "set_name", "name": "Blipper",
+                                             "session_token": "tok"}))
+                hit, _ = await until(fresh, {"name_assigned"})
+                roster, types = await self._roster(stale)
+                await stale.close()
+                return hit["name"], roster, types
+        name, roster, types = serve(go)
+        assert roster is not None, types
+        assert roster["count"] == 1, f"ghost left behind: {roster['users']}"
+        assert name == "Blipper", f"reconnect was renamed to {name!r}"
+
+    def test_closing_one_tab_leaves_the_person_online(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as witness:
+                await join(witness, "Witness", token="wtok")
+                tab1 = await websockets.connect(url, additional_headers=OK_ORIGIN)
+                await join(tab1, "Tabby", token="tok")
+                tab2 = await websockets.connect(url, additional_headers=OK_ORIGIN)
+                await join(tab2, "Tabby", token="tok")
+                await frames(witness, 6, timeout=0.3)
+                await tab2.close()
+                roster, types = await self._roster(witness)
+                await tab1.close()
+                return roster, types
+        roster, types = serve(go)
+        assert roster is not None, types
+        assert sorted(u["name"] for u in roster["users"]) == ["Tabby", "Witness"], roster["users"]
+
+    def test_the_person_goes_offline_when_the_last_socket_closes(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as witness:
+                await join(witness, "Witness", token="wtok")
+                tab1 = await websockets.connect(url, additional_headers=OK_ORIGIN)
+                await join(tab1, "Tabby", token="tok")
+                tab2 = await websockets.connect(url, additional_headers=OK_ORIGIN)
+                await join(tab2, "Tabby", token="tok")
+                await tab2.close()
+                await tab1.close()
+                await frames(witness, 8, timeout=0.4)
+                await witness.send(json.dumps({"type": "set_name", "name": "Witness",
+                                               "session_token": "wtok"}))
+                hit, _ = await until(witness, {"user_list"})
+                return hit
+        roster = serve(go)
+        assert [u["name"] for u in roster["users"]] == ["Witness"], roster["users"]
+
+    def test_two_tabs_in_one_room_are_one_member(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as tab1:
+                await join(tab1, "Tabby", token="tok", room="RM77")
+                await frames(tab1, 4, timeout=0.3)
+                async with websockets.connect(url, additional_headers=OK_ORIGIN) as tab2:
+                    await greet(tab2)
+                    await tab2.send(json.dumps({"type": "set_name", "name": "Tabby",
+                                                "session_token": "tok"}))
+                    hit, seen = await until(tab1, {"room_users"})
+                    return hit, [f.get("type") for f in seen]
+        hit, types = serve(go)
+        assert hit is not None, types
+        assert hit["count"] == 1, f"one person counted twice in the room: {hit['users']}"
 
 
 # ── Names ─────────────────────────────────────────────────────────────────────

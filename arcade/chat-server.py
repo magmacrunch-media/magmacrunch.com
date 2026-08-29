@@ -46,9 +46,23 @@ logger = logging.getLogger("chat")
 
 MAX_GLOBAL_MESSAGES = 100
 MAX_ROOM_MESSAGES = 50
-SESSION_TIMEOUT = 30  # seconds to remember a disconnected user's session
 STATUS_INTERVAL = 10  # seconds between game-server status sweeps
 SEND_TIMEOUT = 5      # seconds to wait on one client before giving up on it
+
+# How long a silent socket is given before it is declared dead. Stated rather
+# than left to the library default so the relationship below is visible.
+PING_INTERVAL = 20
+PING_TIMEOUT = 20
+
+# Seconds to remember a disconnected session so a returning socket can reclaim
+# its name, color and rooms.
+#
+# Must comfortably exceed PING_INTERVAL + PING_TIMEOUT. A half-open socket is
+# not reaped until the ping times out, and until then the session is still
+# online and its timer has not started — so a window shorter than detection
+# could expire before the disconnect it exists to cover was even noticed. This
+# was 30, i.e. shorter than the 40s worst case.
+SESSION_TIMEOUT = 90
 
 # New sockets per client address per minute. Higher than the game servers' 10:
 # the widget normally holds one SharedWorker-backed socket across the whole
@@ -93,12 +107,28 @@ GAME_SERVERS = load_game_servers()
 
 connected_clients = set()       # all WebSocket connections
 messages = []                   # global chat history (last MAX_GLOBAL_MESSAGES)
-user_info = {}                  # websocket -> { name, color, rooms: set() }
-rooms = {}                      # room_code -> set(websocket)
+
+# Identity is the session, not the socket. One person can hold several sockets
+# at once — the widget falls back to a socket per page without SharedWorker, and
+# the session token lives in localStorage, so every tab presents the same token —
+# and a reconnect after a network blip arrives while the dead socket is still
+# live server-side, because that is only reaped when the ping times out.
+#
+# Keying on the websocket made the roster count sockets instead of people: each
+# of those paths produced a second entry, and since an unnamed client falls
+# through to generate_name() the extras appeared as PlayerNN.
+#
+# A session with no sockets is a disconnected one, kept until SESSION_TIMEOUT
+# passes so a returning socket can reclaim its name, color and rooms.
+sessions = {}                   # token -> { name, color, rooms:set(), sockets:set(), last_seen }
+socket_session = {}             # websocket -> token
+
+rooms = {}                      # room_code -> set(websocket), the fan-out set
 room_messages = {}              # room_code -> [messages] (last MAX_ROOM_MESSAGES)
-typing_debounce = {}            # websocket -> last typing send time
-recently_disconnected = {}      # session_token -> { name, color, rooms, timestamp }
+typing_debounce = {}            # token -> last typing send time
 server_statuses = {}            # display name -> bool, refreshed by status_broadcaster
+
+_anon_counter = 0
 
 # Color palette for chat users
 PALETTE = [
@@ -122,24 +152,79 @@ def generate_name():
     return f"Player{random.randint(10, 99)}"
 
 
-def get_unique_name(desired, exclude_ws=None):
+def anon_token():
+    """
+    A private session id for a client that sent none.
+
+    Never leaves the server: such a client cannot resume anyway, so this only
+    exists so every socket has exactly one session to belong to. The real widget
+    always sends a token (adenosine-chat.js keeps one in localStorage).
+    """
+    global _anon_counter
+    _anon_counter += 1
+    return f"\x00anon:{_anon_counter}"
+
+
+def session_of(websocket):
+    """The session this socket belongs to, or None before set_name."""
+    token = socket_session.get(websocket)
+    return sessions.get(token) if token else None
+
+
+def get_unique_name(desired, exclude_token=None):
     """
     Return `desired`, or `desired` plus a random number if someone else has it.
 
-    `exclude_ws` is the connection asking, so renaming yourself to the name you
-    already hold is not treated as a collision. The old version compared against
-    `ws != None`, which is true for every entry, so it never excluded anybody.
+    `exclude_token` is the session asking, so renaming yourself to the name you
+    already hold is not treated as a collision — and neither is a second tab of
+    your own session presenting the name you are already using. An earlier
+    version compared against `ws != None`, which is true for every entry, so it
+    never excluded anybody.
+
+    Only sessions that still hold a socket count: a name should not stay
+    reserved for the SESSION_TIMEOUT window after its owner has gone.
     """
     if not desired:
         desired = generate_name()
     taken = any(
         info['name'] == desired
-        for ws, info in user_info.items()
-        if ws is not exclude_ws
+        for token, info in sessions.items()
+        if token != exclude_token and info['sockets']
     )
     if taken:
         return f"{desired}{random.randint(1, 99)}"
     return desired
+
+
+def attach_socket(token, websocket):
+    """
+    Put a socket into a session, and into every room that session is in.
+
+    `rooms` holds sockets because it is the fan-out set, so a session's rooms
+    must gain the new socket or a second tab would never receive room traffic —
+    and a reconnecting one would silently stop, which is the bug the room-restore
+    path was written to fix in the first place.
+    """
+    info = sessions[token]
+    info['sockets'].add(websocket)
+    socket_session[websocket] = token
+    for room in info['rooms']:
+        rooms.setdefault(room, set()).add(websocket)
+
+
+def detach_socket(websocket):
+    """Remove a socket from its session and from every room fan-out set."""
+    token = socket_session.pop(websocket, None)
+    info = sessions.get(token) if token else None
+    if info is None:
+        return None, None
+    info['sockets'].discard(websocket)
+    for room in info['rooms']:
+        if room in rooms:
+            rooms[room].discard(websocket)
+    if not info['sockets']:
+        info['last_seen'] = time.time()
+    return token, info
 
 
 def drop_room(room_code):
@@ -221,14 +306,21 @@ async def broadcast_to_room(room_code, msg, exclude=None):
 
 
 async def broadcast_room_users(room_code):
-    """Send updated user list to all room members."""
-    users = []
+    """
+    Send updated member list to all room members — one entry per person.
+
+    Deduplicated by session: `rooms` holds every socket of every member, so a
+    member with two tabs open appears in it twice.
+    """
+    seen = {}
     for ws in rooms.get(room_code, set()):
-        info = user_info.get(ws, {})
-        users.append({
-            'name': info.get('name', '?'),
-            'color': info.get('color', '#fff')
-        })
+        token = socket_session.get(ws)
+        if token and token in sessions:
+            seen[token] = sessions[token]
+    users = [
+        {'name': info['name'], 'color': info['color']}
+        for info in seen.values()
+    ]
     await broadcast_to_room(room_code, {
         'type': 'room_users',
         'room': room_code,
@@ -238,22 +330,22 @@ async def broadcast_room_users(room_code):
 
 
 async def broadcast_user_list():
-    """Send the full online user list to all connected clients."""
+    """
+    Send the online user list to all connected clients — one entry per person.
+
+    Iterates sessions rather than sockets, so the count is people. Sessions with
+    no sockets are the recently disconnected, waiting out SESSION_TIMEOUT in case
+    they come back; they are not online and are skipped.
+    """
     users = []
-    for ws in connected_clients:
-        if ws not in user_info:
-            continue  # Skip clients that haven't set their name yet
-        info = user_info[ws]
-        user_rooms = list(info.get('rooms', set()))
-        game = None
-        if user_rooms:
-            for room_code in user_rooms:
-                if room_code in rooms:
-                    game = 'In Game'
-                    break
+    for info in sessions.values():
+        if not info['sockets']:
+            continue
+        user_rooms = list(info['rooms'])
+        game = 'In Game' if any(code in rooms for code in user_rooms) else None
         users.append({
-            'name': info.get('name', '?'),
-            'color': info.get('color', '#fff'),
+            'name': info['name'],
+            'color': info['color'],
             'rooms': user_rooms,
             'game': game,
         })
@@ -275,15 +367,38 @@ async def broadcast_global_users():
 # ── Room membership ─────────────────────────────────────────────────────────
 
 def join_room_state(websocket, room):
-    """Add a connection to a room. False if the room code is not acceptable."""
+    """
+    Put a session in a room. False if the room code is not acceptable.
+
+    Every socket of the session joins the fan-out set, not just the one that
+    asked: rooms belong to people, so a member's other tabs must see the room's
+    traffic too.
+    """
+    info = session_of(websocket)
+    if info is None:
+        return False
     if not ROOM_CODE_RE.match(room):
         return False
     if room not in rooms and len(rooms) >= MAX_ROOMS:
         logger.warning("Room limit reached (%d); refused %s", MAX_ROOMS, room)
         return False
-    rooms.setdefault(room, set()).add(websocket)
-    user_info[websocket]['rooms'].add(room)
+    info['rooms'].add(room)
+    bucket = rooms.setdefault(room, set())
+    bucket.update(info['sockets'])
+    bucket.add(websocket)
     return True
+
+
+def leave_room_state(websocket, room):
+    """Take a session out of a room, all of its sockets with it."""
+    info = session_of(websocket)
+    if info is None:
+        return
+    info['rooms'].discard(room)
+    if room in rooms:
+        for ws in info['sockets']:
+            rooms[room].discard(ws)
+        rooms[room].discard(websocket)
 
 
 # ── Handler ──────────────────────────────────────────────────────────────────
@@ -331,53 +446,58 @@ async def handler(websocket):
                     logger.warning("Rate limited: set_name from %s", ip)
                     continue
                 new_name = msg.get('name', '')[:20]
-                session_token = msg.get('session_token')
+                token = (msg.get('session_token')
+                         or socket_session.get(websocket)
+                         or anon_token())
+                info = sessions.get(token)
 
-                # Check if this session was recently disconnected — restore state
-                if session_token and session_token in recently_disconnected:
-                    restored = recently_disconnected.pop(session_token)
-                    user_info[websocket] = {
-                        'name': get_unique_name(restored['name'], websocket),
-                        'color': restored['color'],
-                        'rooms': set(),
-                        'session_token': session_token
-                    }
-                    # Put them back in the rooms they were in. The saved room list
-                    # was written on disconnect and then thrown away here, so a
-                    # player whose socket blipped mid-game silently stopped
-                    # receiving their game's sub-chat while the widget still
-                    # believed it was in the room. No room_history is replayed:
-                    # the widget never cleared the pane, so resending it would
-                    # duplicate every message already on screen.
-                    for room in restored.get('rooms', []):
-                        if join_room_state(websocket, room):
-                            await broadcast_room_users(room)
-                    await websocket.send(json.dumps({
-                        'type': 'name_assigned',
-                        'name': user_info[websocket]['name']
-                    }))
-                    await broadcast_user_list()
-                elif websocket not in user_info:
-                    # First time user — create entry now
-                    user_info[websocket] = {
-                        'name': get_unique_name(new_name, websocket),
+                if info is None:
+                    # A session this server has not seen, or one already swept.
+                    sessions[token] = {
+                        'name': get_unique_name(new_name, token),
                         'color': get_next_color(),
                         'rooms': set(),
-                        'session_token': session_token or None
+                        'sockets': set(),
+                        'last_seen': time.time(),
                     }
+                    attach_socket(token, websocket)
                     await websocket.send(json.dumps({
                         'type': 'name_assigned',
-                        'name': user_info[websocket]['name']
+                        'name': sessions[token]['name']
                     }))
                     await broadcast_user_list()
-                else:
-                    # Existing user updating name
-                    user_info[websocket]['name'] = get_unique_name(new_name, websocket)
-                    if session_token:
-                        user_info[websocket]['session_token'] = session_token
+
+                elif websocket not in info['sockets']:
+                    # Another socket for a session that already exists: a second
+                    # tab, or a reconnect. Either way it is the same person, so
+                    # the session keeps its name, color and rooms and simply
+                    # gains a socket — no second roster entry, and no race with
+                    # whether the old socket has been reaped yet.
+                    #
+                    # attach_socket puts it back in the session's rooms. That
+                    # matters for a reconnect: the room list used to be dropped
+                    # on restore, so a player whose socket blipped mid-game
+                    # stopped receiving their game's sub-chat while the widget
+                    # still believed it was in the room. No room_history is
+                    # replayed — the widget never cleared the pane, so resending
+                    # it would duplicate every message already on screen.
+                    attach_socket(token, websocket)
                     await websocket.send(json.dumps({
                         'type': 'name_assigned',
-                        'name': user_info[websocket]['name']
+                        'name': info['name']
+                    }))
+                    for room in info['rooms']:
+                        await broadcast_room_users(room)
+                    # Unconditional: the roster's contents may not have changed,
+                    # but the arriving socket has never received one.
+                    await broadcast_user_list()
+
+                else:
+                    # Existing socket renaming itself.
+                    info['name'] = get_unique_name(new_name, token)
+                    await websocket.send(json.dumps({
+                        'type': 'name_assigned',
+                        'name': info['name']
                     }))
                     await broadcast_user_list()
 
@@ -385,15 +505,16 @@ async def handler(websocket):
                 if not ip_limiter.check((ip, "set_color"), 10, 10):
                     logger.warning("Rate limited: set_color from %s", ip)
                     continue
-                if websocket not in user_info:
+                info = session_of(websocket)
+                if info is None:
                     continue
                 new_color = msg.get('color', '#fff')
                 if new_color.startswith('#') and len(new_color) == 7:
-                    user_info[websocket]['color'] = new_color
+                    info['color'] = new_color
                     await broadcast_user_list()
 
             elif msg_type == 'join_room':
-                if websocket not in user_info:
+                if session_of(websocket) is None:
                     continue
                 room = msg.get('room', '').upper()
                 if not join_room_state(websocket, room):
@@ -409,12 +530,11 @@ async def handler(websocket):
                 await broadcast_user_list()
 
             elif msg_type == 'leave_room':
-                if websocket not in user_info:
+                if session_of(websocket) is None:
                     continue
                 room = msg.get('room', '').upper()
-                user_info[websocket]['rooms'].discard(room)
+                leave_room_state(websocket, room)
                 if room in rooms:
-                    rooms[room].discard(websocket)
                     if rooms[room]:
                         await broadcast_room_users(room)
                     else:
@@ -425,15 +545,16 @@ async def handler(websocket):
                 if not ip_limiter.check((ip, "chat_say"), 5, 10):
                     logger.warning("Rate limited: chat from %s", ip)
                     continue
-                if websocket not in user_info:
+                info = session_of(websocket)
+                if info is None:
                     continue
                 # Normalised the same way join_room does, so a client that
                 # sends the code back in a different case still lands in the room
                 # it actually joined.
                 room = (msg.get('room') or '').upper() or None
                 text = msg.get('text', '')[:200]
-                name = user_info[websocket]['name']
-                color = user_info[websocket]['color']
+                name = info['name']
+                color = info['color']
 
                 chat_msg = {
                     'type': 'room_chat' if room else 'chat',
@@ -448,7 +569,7 @@ async def handler(websocket):
                     # Posting to a room you are not in is not a thing the widget
                     # does, and allowing it let anyone with a room code write into
                     # a game's private sub-chat without ever appearing in it.
-                    if room not in user_info[websocket]['rooms']:
+                    if room not in info['rooms']:
                         continue
                     room_messages.setdefault(room, []).append(chat_msg)
                     if len(room_messages[room]) > MAX_ROOM_MESSAGES:
@@ -461,18 +582,22 @@ async def handler(websocket):
                     await broadcast(chat_msg, exclude=websocket)
 
             elif msg_type == 'typing':
-                if websocket not in user_info:
+                info = session_of(websocket)
+                if info is None:
                     continue
                 room = (msg.get('room') or '').upper() or None
                 now = time.time()
-                last = typing_debounce.get(websocket, 0)
+                # Debounced per person, not per socket: someone with two tabs
+                # open should not be able to emit twice the typing traffic.
+                token = socket_session[websocket]
+                last = typing_debounce.get(token, 0)
                 if now - last < 2:
                     continue
-                typing_debounce[websocket] = now
+                typing_debounce[token] = now
 
                 typing_msg = {
                     'type': 'typing',
-                    'from': user_info[websocket]['name'],
+                    'from': info['name'],
                     'room': room
                 }
                 if room:
@@ -514,27 +639,26 @@ async def handler(websocket):
         pass
     finally:
         logger.info("Disconnect: %s", ip)
-        # Store session for potential reconnection
-        info = user_info.get(websocket, {})
-        session_token = info.get('session_token')
-        if session_token:
-            recently_disconnected[session_token] = {
-                'name': info.get('name', ''),
-                'color': info.get('color', '#fff'),
-                'rooms': list(info.get('rooms', set())),
-                'timestamp': time.time()
-            }
-        # Cleanup: leave all rooms, remove from global
-        for room in list(info.get('rooms', set())):
-            if room in rooms:
-                rooms[room].discard(websocket)
+        connected_clients.discard(websocket)
+        # detach_socket drops this socket from the session and from every room
+        # fan-out set, and stamps last_seen if it was the session's last. The
+        # session itself stays — holding the name, color and room list — until
+        # session_cleanup sweeps it, so a reconnect inside SESSION_TIMEOUT
+        # reclaims all of it. Nothing is copied into a parallel store, which is
+        # what let the old code lose the room list on restore.
+        token, info = detach_socket(websocket)
+        if info is not None:
+            gone = not info['sockets']
+            for room in list(info['rooms']):
+                if room not in rooms:
+                    continue
                 if rooms[room]:
                     await broadcast_room_users(room)
-                else:
+                elif gone:
+                    # Empty, and its last member has no sockets left anywhere.
                     drop_room(room)
-        connected_clients.discard(websocket)
-        user_info.pop(websocket, None)
-        typing_debounce.pop(websocket, None)
+            if gone:
+                typing_debounce.pop(token, None)
         await broadcast_user_list()
 
 
@@ -553,16 +677,25 @@ async def status_broadcaster():
 # ── Session Cleanup ─────────────────────────────────────────────────────────
 
 async def session_cleanup():
-    """Periodically purge expired session tokens."""
+    """
+    Forget sessions that have held no socket for longer than SESSION_TIMEOUT.
+
+    A session with sockets is online and is never swept, however old it is —
+    `last_seen` is only stamped when the last socket goes.
+    """
     while True:
         await asyncio.sleep(10)
         now = time.time()
         expired = [
-            token for token, info in recently_disconnected.items()
-            if now - info['timestamp'] > SESSION_TIMEOUT
+            token for token, info in sessions.items()
+            if not info['sockets'] and now - info['last_seen'] > SESSION_TIMEOUT
         ]
         for token in expired:
-            del recently_disconnected[token]
+            for room in sessions[token]['rooms']:
+                if room in rooms and not rooms[room]:
+                    drop_room(room)
+            del sessions[token]
+            typing_debounce.pop(token, None)
 
 
 # ── Main ────────────────────────────────────────────────────────────────────
@@ -584,7 +717,9 @@ async def main(port):
     # Start WebSocket server. The handshake gate is shared with the game servers:
     # 426 for plain HTTP, 403 for a cross-origin browser, 429 for a flood.
     gate = make_reject_request(max_connections=MAX_CONNECTIONS_PER_MINUTE)
-    async with websockets.serve(handler, '0.0.0.0', port, process_request=gate):
+    async with websockets.serve(handler, '0.0.0.0', port, process_request=gate,
+                                ping_interval=PING_INTERVAL,
+                                ping_timeout=PING_TIMEOUT):
         logger.info("[Chat] Chat server ready on ws://localhost:%d", port)
         await asyncio.Future()  # Run forever
 
