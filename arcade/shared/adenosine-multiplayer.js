@@ -328,9 +328,7 @@ var AdMP = (() => {
   var BoardGameTemplate = (function() {
     "use strict";
     function esc(s) {
-      var d = document.createElement("div");
-      d.textContent = s;
-      return d.innerHTML;
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
     function render(cfg) {
       var title = cfg.title || "GAME";
@@ -349,7 +347,7 @@ var AdMP = (() => {
       for (const b of buttons) {
         const cls = "start-btn" + (b.cls ? " " + b.cls : "");
         const icon = b.icon ? b.icon + "&nbsp;&nbsp;" : "";
-        btnsHtml += '<button id="' + esc(b.id) + '" class="' + cls + '">' + icon + esc(b.label) + "</button>\n";
+        btnsHtml += '<button id="' + esc(b.id) + '" class="' + esc(cls) + '">' + icon + esc(b.label) + "</button>\n";
       }
       var footerHtml = "";
       for (const line of footer) {
