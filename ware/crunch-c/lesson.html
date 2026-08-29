@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>crunch-c course</title>
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1><code>crunch-c</code></h1>
+    <div class="controls">
+      <select id="lesson-select" aria-label="Choose a lesson"></select>
+      <button id="run" class="primary" title="Ctrl+Enter">&#9654; Run</button>
+      <button id="reset" title="Reset the editor to the lesson's starting code">Reset</button>
+      <button id="solution" title="Load the worked solution">Solution</button>
+    </div>
+  </header>
+
+  <div id="loading-bar" class="loading-bar"></div>
+
+  <nav class="tool-nav">
+    <a href="./" class="back-link">&larr; crunch-c</a>
+    <span id="breadcrumb" class="breadcrumb"></span>
+  </nav>
+
+  <main>
+    <section id="lesson-panel" aria-label="Lesson">
+      <article id="lesson-content"></article>
+    </section>
+
+    <div id="divider" role="separator" aria-orientation="vertical"></div>
+
+    <section id="work-panel" aria-label="Editor and output">
+      <div id="editor-panel"></div>
+      <div id="output-panel">
+        <div id="output-content">
+          <div class="empty-state">
+            <span>Loading the interpreter&hellip;</span>
+            <code>the first run takes a few seconds</code>
+          </div>
+        </div>
+        <div id="console-log"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <button id="prev" class="navbtn">&larr; prev</button>
+    <span id="position">&mdash;</span>
+    <button id="next" class="navbtn">next &rarr;</button>
+    <span class="spacer"></span>
+    <span id="status-ready"><span class="dot loading"></span>initializing</span>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

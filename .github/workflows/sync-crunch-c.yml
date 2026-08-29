@@ -1,0 +1,54 @@
+name: Sync crunch-c lessons
+
+# Keeps ware/crunch-c/lessons.js (the course content the lesson page reads) in
+# step with the crunch-c repository. The lessons are generated from that repo's
+# .mgs exercises, module READMEs and solutions — nothing is hand-copied here,
+# so an edit there only reaches the site when this runs.
+#
+# crunch-c dispatches this on every push to main that touches a lesson; the
+# weekly schedule is a backstop in case that dispatch ever fails, which is how
+# the magmascript playground sync is arranged for the same reason.
+
+on:
+  schedule:
+    - cron: "41 8 * * 2"   # Tuesdays 08:41 UTC (offset from the other jobs)
+  workflow_dispatch:
+  repository_dispatch:
+    types: [crunch-c-update]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Checkout crunch-c
+        uses: actions/checkout@v4
+        with:
+          repository: magmacrunchmedia/crunch-c
+          path: crunch-c
+          ref: ${{ github.event.client_payload.sha || 'main' }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Regenerate the lesson data
+        env:
+          CRUNCH_C_ROOT: ${{ github.workspace }}/crunch-c
+        run: python scripts/sync-crunch-c.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ware/crunch-c/lessons.js
+          if git diff --cached --quiet; then
+            echo "Lessons already up to date."
+          else
+            git commit -m "chore(crunch-c): sync lessons from the course repo"
+            git push
+          fi

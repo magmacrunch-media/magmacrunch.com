@@ -1,0 +1,310 @@
+/* crunch-c lesson view.
+   Palette and chrome match ware/magmascript/ so the two read as a set; the
+   layout differs because this page carries prose beside the editor. */
+
+:root { color-scheme: dark; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font: 14px/1.5 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: #14141b; color: #e8e6f0;
+  display: flex; flex-direction: column;
+  height: 100vh; overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+header {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .6rem 1.25rem;
+  border-bottom: 1px solid #33304a;
+  background: #1c1b26;
+  flex-shrink: 0;
+}
+
+header h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px; font-weight: 400; white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+header h1 code { color: #ff6b6b; }
+
+.controls {
+  display: flex; align-items: center; gap: .6rem;
+  flex-wrap: wrap; margin-left: auto;
+}
+
+.controls select {
+  font: 12px/1 'Courier Prime', monospace;
+  color: #e8e6f0;
+  background: #282a36;
+  border: 1px solid #33304a; border-radius: 6px;
+  padding: .35rem 1.8rem .35rem .6rem;
+  cursor: pointer;
+  max-width: 46vw;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239d99b5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .6rem center;
+}
+.controls select:hover { border-color: #7cc7ff; }
+.controls select:focus {
+  outline: none; border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.controls button {
+  font: 12px/1 'Courier Prime', monospace;
+  background: #282a36; color: #e8e6f0;
+  border: 1px solid #33304a; border-radius: 6px;
+  padding: .35rem .6rem; cursor: pointer;
+}
+.controls button:hover:not(:disabled) { border-color: #7cc7ff; }
+.controls button.primary {
+  background: #3b82f6; border-color: #3b82f6; color: #fff;
+}
+.controls button.primary:hover:not(:disabled) { background: #2563eb; }
+.controls button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── Loading indicator ──────────────────────────────────── */
+
+.loading-bar {
+  height: 2px; flex-shrink: 0;
+  background: linear-gradient(90deg, #3b82f6, #ff6b6b, #3b82f6);
+  background-size: 200% 100%;
+  animation: loading-slide 1.5s ease-in-out infinite;
+}
+.loading-bar.hidden { display: none; }
+
+@keyframes loading-slide {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Tool nav ───────────────────────────────────────────── */
+
+.tool-nav {
+  display: flex; align-items: center; gap: .9rem;
+  padding: .4rem 1.25rem;
+  border-bottom: 1px solid #33304a;
+  background: #1c1b26;
+  flex-shrink: 0;
+}
+.tool-nav .back-link {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #9d99b5;
+  background: #282a36;
+  padding: 6px 10px;
+  border: 1px solid #33304a;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  transition: color .15s, border-color .15s;
+}
+.tool-nav .back-link:hover { color: #e8e6f0; border-color: #7cc7ff; }
+
+.breadcrumb { font-size: 11px; color: #9d99b5; }
+
+/* ── Layout ─────────────────────────────────────────────── */
+
+main {
+  display: grid;
+  grid-template-columns: 44% 4px 1fr;
+  flex: 1; min-height: 0;
+}
+
+#lesson-panel {
+  overflow: auto;
+  background: #1a1922;
+  border-right: 1px solid #33304a;
+  min-width: 0;
+}
+
+#divider {
+  cursor: col-resize;
+  background: #33304a;
+}
+#divider:hover { background: #7cc7ff; }
+
+#work-panel {
+  display: flex; flex-direction: column;
+  min-width: 0; min-height: 0;
+}
+
+#editor-panel {
+  flex: 1 1 55%;
+  min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+#output-panel {
+  flex: 1 1 45%;
+  min-height: 0;
+  display: flex; flex-direction: column;
+  border-top: 1px solid #33304a;
+  background: #14141b;
+}
+
+/* ── Lesson prose ───────────────────────────────────────── */
+
+#lesson-content { padding: 1.5rem 1.5rem 3rem; }
+
+.lesson-kicker {
+  font-size: 11px; color: #9d99b5;
+  text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: .5rem;
+}
+
+.lesson-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 15px; font-weight: 400; line-height: 1.5;
+  color: #ff6b6b;
+  margin-bottom: 1.5rem;
+}
+
+.lesson-section { margin-bottom: 1.75rem; }
+
+.lesson-section h3 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px; font-weight: 400;
+  color: #7cc7ff;
+  letter-spacing: .08em;
+  margin-bottom: .85rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid #33304a;
+}
+
+.lesson-section p { margin-bottom: .85rem; color: #c9c6da; }
+
+.lesson-section ol,
+.lesson-section ul { margin: 0 0 .85rem 1.25rem; color: #c9c6da; }
+.lesson-section li { margin-bottom: .45rem; }
+
+.lesson-section code {
+  color: #7cc7ff;
+  background: #14141b;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.lesson-section pre {
+  background: #14141b;
+  border: 1px solid #33304a;
+  border-left: 3px solid #3b82f6;
+  padding: .75rem .9rem;
+  margin-bottom: .85rem;
+  overflow-x: auto;
+  font-size: 13px;
+}
+.lesson-section pre code {
+  background: none; padding: 0; color: #c9c6da;
+}
+
+/* ── Editor ─────────────────────────────────────────────── */
+
+#editor-panel .cm-editor { flex: 1; overflow: auto; }
+#editor-panel .cm-editor .cm-scroller { overflow: auto; }
+#editor-panel .cm-editor .cm-content {
+  font-family: 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+}
+
+/* ── Output ─────────────────────────────────────────────── */
+
+#output-content {
+  flex: 1; padding: 1rem; overflow: auto;
+  font-size: 13px;
+}
+
+/* Three streams: what the program printed, the "spooked:" warnings it raised
+   on stderr, and the fault that stopped it. In this course the warnings are
+   often the whole lesson, so they are painted as their own block. */
+.out-stdout,
+.out-warn,
+.out-error {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.out-stdout { color: #e8e6f0; }
+.out-warn   { color: #e5c07b; }
+.out-error  { color: #ff6b6b; }
+
+.out-warn,
+.out-error { margin-top: .75rem; }
+
+.out-empty { color: #9d99b5; }
+
+#console-log {
+  border-top: 1px solid #33304a;
+  padding: .4rem 1rem;
+  max-height: 22vh; overflow: auto;
+  font-size: 12px;
+  background: #1c1b26;
+  flex-shrink: 0;
+}
+.console-line {
+  padding: .1rem 0;
+  white-space: pre-wrap; word-break: break-all;
+}
+.console-line.log { color: #9d99b5; }
+.console-line.error { color: #ff6b6b; }
+
+.empty-state {
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: .5rem;
+  height: 100%;
+  color: #9d99b5; font-size: 12px;
+}
+.empty-state code { font-size: 11px; color: #7cc7ff; }
+
+/* ── Footer ─────────────────────────────────────────────── */
+
+footer {
+  display: flex; align-items: center; gap: .9rem;
+  padding: .5rem 1.25rem;
+  border-top: 1px solid #33304a;
+  background: #1c1b26;
+  font-size: 11px; color: #9d99b5;
+  flex-shrink: 0;
+}
+
+.navbtn {
+  font: 11px/1 'Courier Prime', monospace;
+  background: #282a36; color: #e8e6f0;
+  border: 1px solid #33304a; border-radius: 6px;
+  padding: .35rem .7rem; cursor: pointer;
+}
+.navbtn:hover:not(:disabled) { border-color: #7cc7ff; }
+.navbtn:disabled { opacity: .35; cursor: not-allowed; }
+
+footer .spacer { flex: 1; }
+
+.dot {
+  display: inline-block;
+  width: 7px; height: 7px; border-radius: 50%;
+  margin-right: .4rem;
+  background: #9d99b5;
+}
+.dot.ok { background: #6ee7a0; }
+.dot.err { background: #ff6b6b; }
+.dot.loading { background: #e5c07b; }
+
+/* ── Narrow screens ─────────────────────────────────────── */
+
+@media (max-width: 780px) {
+  body { height: auto; overflow: auto; }
+  main {
+    display: flex; flex-direction: column;
+    height: auto;
+  }
+  #lesson-panel {
+    border-right: none;
+    border-bottom: 1px solid #33304a;
+    overflow: visible;
+  }
+  #divider { display: none; }
+  #editor-panel { min-height: 45vh; }
+  #output-panel { min-height: 35vh; }
+  .controls select { max-width: 100%; }
+}

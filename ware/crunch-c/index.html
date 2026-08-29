@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>crunch-c — magmacrunch media</title>
+  <meta property="og:title" content="crunch-c — magmacrunch media">
+  <meta property="og:description" content="learn C memory management without segfaults">
+  <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="landing.css">
+</head>
+<body>
+
+<nav class="tool-nav">
+  <a href="../dev/" class="back-link">&larr; developer tools</a>
+</nav>
+
+<main>
+
+  <div class="hero">
+    <h1>crunch-c</h1>
+    <p class="tagline">learn C memory management without segfaults</p>
+    <p class="blurb">
+      Every memory error is caught and explained. No segfaults. No undefined
+      behavior. Just C's behavior, narrated.
+    </p>
+    <a href="lesson.html" class="cta">&#9654; Start the course</a>
+  </div>
+
+  <section class="section">
+    <h2>What you'll learn</h2>
+    <div class="modules" id="module-grid">
+      <p class="loading">Loading modules&hellip;</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>How it works</h2>
+    <p>
+      In C, memory mistakes cause segfaults, crashes and security
+      vulnerabilities. Here the same mistakes are caught and named:
+    </p>
+    <pre class="sample"><span class="s-err">quicksand at line 5, column 9</span>
+    |
+  5 | val = p.peek(i32)
+    |         ^
+this ground was scorched at line 4 (garrisoned at line 1)</pre>
+    <p>
+      You learn what C does, and why it is dangerous, without the danger. The
+      lessons run in your browser &mdash; the real interpreter, compiled to
+      WebAssembly, with nothing to install.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Run it locally</h2>
+    <p>The course is a git repository. To work through it in your own editor:</p>
+    <pre class="sample">pip install magmascript
+git clone https://github.com/magmacrunchmedia/crunch-c.git
+cd crunch-c
+magmascript 01-types/01-widths.mgs</pre>
+    <p>
+      Every exercise has a worked answer under <code>solutions/</code>. The
+      ones that teach a fault end by triggering it, so they exit non-zero on
+      purpose.
+    </p>
+    <div class="links">
+      <a href="https://github.com/magmacrunchmedia/crunch-c" rel="noopener">GitHub</a>
+      <a href="../magmascript/">magmascript</a>
+      <a href="../magmascript/reference.html">language reference</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  &copy; 2026 <span>magmacrunch media</span> &middot; Apache-2.0
+</footer>
+
+<script type="module">
+  import { MODULES } from "./lessons.js";
+
+  const grid = document.getElementById("module-grid");
+  grid.textContent = "";
+
+  for (const module of MODULES) {
+    const card = document.createElement("a");
+    card.className = "module-card";
+    card.href = `lesson.html?m=${encodeURIComponent(module.slug)}`;
+
+    const num = document.createElement("span");
+    num.className = "m-num";
+    num.textContent = module.number;
+
+    const title = document.createElement("span");
+    title.className = "m-title";
+    // The README title reads "Module 03: Memory Faults"; the number is
+    // already its own element, so drop the prefix rather than repeat it.
+    title.textContent = module.title.replace(/^Module\s+\d+:\s*/i, "");
+
+    const count = document.createElement("span");
+    count.className = "m-count";
+    count.textContent = `${module.count} ${module.count === 1 ? "exercise" : "exercises"}`;
+
+    card.append(num, title, count);
+    grid.appendChild(card);
+  }
+</script>
+
+</body>
+</html>
