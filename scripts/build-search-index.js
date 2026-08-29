@@ -18,6 +18,61 @@ function addItem(title, category, url, description, body) {
   index.push({ t: title, c: category, u: '/' + url, d: description || '', b: body || '' });
 }
 
+// ── Entity Decoding ────────────────────────────────────────
+// Pages here are hand-authored HTML and lean on entities for punctuation and
+// glyphs. Decoding only the big five left the rest in the index as literal
+// source: a card reading "spectral ray tracer · C" was indexed as
+// "spectral ray tracer &middot; C" — ugly in results, and unsearchable, since
+// nobody types "&middot;".
+//
+// Not an exhaustive HTML5 table. There is no entity library here and no build
+// step to add one, so this covers the named entities these pages actually use;
+// anything written numerically is handled generically below.
+const NAMED_ENTITIES = {
+  nbsp: ' ', copy: '©', reg: '®', trade: '™', deg: '°', sect: '§', para: '¶',
+  middot: '·', bull: '•', hellip: '…', mdash: '—', ndash: '–', dagger: '†',
+  lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”',
+  laquo: '«', raquo: '»', lsaquo: '‹', rsaquo: '›',
+  larr: '←', rarr: '→', uarr: '↑', darr: '↓', harr: '↔',
+  nearr: '↗', nwarr: '↖', searr: '↘', swarr: '↙',
+  times: '×', divide: '÷', plusmn: '±', minus: '−', frac12: '½', frac14: '¼',
+  sup1: '¹', sup2: '²', sup3: '³', micro: 'µ', permil: '‰',
+  not: '¬', and: '∧', or: '∨', oplus: '⊕', otimes: '⊗', ne: '≠', le: '≤',
+  ge: '≥', asymp: '≈', equiv: '≡', prop: '∝', infin: '∞', radic: '√',
+  sum: '∑', prod: '∏', int: '∫', part: '∂', nabla: '∇', empty: '∅',
+  isin: '∈', notin: '∉', cap: '∩', cup: '∪', forall: '∀', exist: '∃',
+  there4: '∴', alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', lambda: 'λ',
+  mu: 'μ', pi: 'π', sigma: 'σ', tau: 'τ', phi: 'φ', omega: 'ω',
+  hearts: '♥', diams: '♦', clubs: '♣', spades: '♠', starf: '★',
+  lt: '<', gt: '>', quot: '"', apos: "'",
+  // `amp` is deliberately absent — see the last step of decodeEntities.
+};
+
+function codePointOr(code, original) {
+  // Reject out-of-range values and lone surrogates rather than emitting a
+  // broken character that then has to survive a JSON round-trip.
+  if (!Number.isInteger(code) || code < 0 || code > 0x10ffff) return original;
+  if (code >= 0xd800 && code <= 0xdfff) return original;
+  return String.fromCodePoint(code);
+}
+
+function decodeEntities(text) {
+  return text
+    // Numeric forms first. fromCodePoint, not fromCharCode, so astral
+    // characters survive — these pages use &#128214; among others.
+    .replace(/&#(\d{1,7});/g, (m, dec) => codePointOr(Number(dec), m))
+    .replace(/&#x([0-9a-f]{1,6});/gi, (m, hex) => codePointOr(parseInt(hex, 16), m))
+    // Named forms. An unknown name is left exactly as written rather than
+    // dropped, so a gap in the table shows up instead of losing text.
+    .replace(/&([a-z][a-z0-9]*);/gi, (m, name) =>
+      Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, name.toLowerCase())
+        ? NAMED_ENTITIES[name.toLowerCase()]
+        : m)
+    // &amp; last, always. Decoding it first would turn a page's literal
+    // "&amp;lt;" into "<" instead of the "&lt;" the reader actually sees.
+    .replace(/&amp;/g, '&');
+}
+
 // ── Body Text Extraction ───────────────────────────────────
 function extractBodyText(html, maxLength = 600) {
   let text = html;
@@ -25,9 +80,10 @@ function extractBodyText(html, maxLength = 600) {
   text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
   text = text.replace(/<nav[\s\S]*?<\/nav>/gi, '');
   text = text.replace(/<footer[\s\S]*?<\/footer>/gi, '');
+  // Tags before entities: decoding first could introduce a '<' that the tag
+  // strip would then eat, along with everything up to the next '>'.
   text = text.replace(/<[^>]+>/g, ' ');
-  text = text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ');
+  text = decodeEntities(text);
   text = text.replace(/\s+/g, ' ').trim();
   if (text.length > maxLength) text = text.slice(0, maxLength) + '...';
   return text;
@@ -37,7 +93,7 @@ function extractBodyText(html, maxLength = 600) {
 function extractTitle(html) {
   const m = html.match(/<title>([^<]+)<\/title>/);
   if (!m) return null;
-  return m[1].split('—')[0].split('–')[0].trim();
+  return decodeEntities(m[1]).split('—')[0].split('–')[0].trim();
 }
 
 // ── Helper: format a slug as a readable name ───────────────
@@ -120,7 +176,7 @@ function parseDistributedMusic() {
   let match;
   while ((match = cardRegex.exec(html)) !== null) {
     const [, , id, title, , artistName, desc] = match;
-    const cleanDesc = desc.replace(/\s+/g, ' ').trim();
+    const cleanDesc = decodeEntities(desc).replace(/\s+/g, ' ').trim();
     addItem(`${title}`, 'music', `music/distributed-music/#${id}`, `${artistName} — ${cleanDesc}`);
   }
 }

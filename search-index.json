@@ -46,21 +46,21 @@
     "c": "page",
     "u": "/music/physical-media/index.html",
     "d": "CDs, tapes, and floppy disks",
-    "b": "physical media — magmacrunch media home &rsaquo; music &rsaquo; physical media // physical media // physical & obscure media series // formats // 3.5\" FLOPPY DISK active est. july 2025 &#9654; CD soon coming soon TAPE soon coming soon"
+    "b": "physical media — magmacrunch media home › music › physical media // physical media // physical & obscure media series // formats // 3.5\" FLOPPY DISK active est. july 2025 ▶ CD soon coming soon TAPE soon coming soon"
   },
   {
     "t": "cd",
     "c": "page",
     "u": "/music/physical-media/cd/index.html",
     "d": "CD releases catalog",
-    "b": "cd — magmacrunch media home &rsaquo; music &rsaquo; physical media &rsaquo; cd // cd // coming soon cd releases are in development. check back later. &larr; back to physical media"
+    "b": "cd — magmacrunch media home › music › physical media › cd // cd // coming soon cd releases are in development. check back later. ← back to physical media"
   },
   {
     "t": "tape",
     "c": "page",
     "u": "/music/physical-media/tape/index.html",
     "d": "Cassette tape releases",
-    "b": "tape — magmacrunch media home &rsaquo; music &rsaquo; physical media &rsaquo; tape // tape // coming soon tape releases are in development. check back later. &larr; back to physical media"
+    "b": "tape — magmacrunch media home › music › physical media › tape // tape // coming soon tape releases are in development. check back later. ← back to physical media"
   },
   {
     "t": "floppy disk",
@@ -102,7 +102,7 @@
     "c": "page",
     "u": "/visual/tv/index.html",
     "d": "Television-style content",
-    "b": "TV — magmacrunch media home › visual › TV ROTATE YOUR DEVICE landscape mode recommended VIEW ANYWAY &#10005; MAGMACRUNCH CABLE CHANNEL GUIDE CH -- ▼ CH− POWER ▲ CH+ &#9654; PLAY GUIDE GUIDE MagmaCrunch TV ↑ ↓ random channel &middot; ← → random channel &middot; G guide &middot; space play / pause"
+    "b": "TV — magmacrunch media home › visual › TV ROTATE YOUR DEVICE landscape mode recommended VIEW ANYWAY ✕ MAGMACRUNCH CABLE CHANNEL GUIDE CH -- ▼ CH− POWER ▲ CH+ ▶ PLAY GUIDE GUIDE MagmaCrunch TV ↑ ↓ random channel · ← → random channel · G guide · space play / pause"
   },
   {
     "t": "archive",
@@ -130,7 +130,7 @@
     "c": "page",
     "u": "/archive/by-label/index.html",
     "d": "Browse by label",
-    "b": "by label — magmacrunch archive home &rsaquo; archive &rsaquo; by label // by label // labels, publishers, and creative agencies associated with magmacrunch. MAGMACRUNCH MEDIA record label MAGMACRUNCH MUSIC publisher THE SLOP COLLECTIVE creative agency MAGMACRUNCH ARCADE game label data sourced from MusicBrainz. contributions may be incomplete."
+    "b": "by label — magmacrunch archive home › archive › by label // by label // labels, publishers, and creative agencies associated with magmacrunch. MAGMACRUNCH MEDIA record label MAGMACRUNCH MUSIC publisher THE SLOP COLLECTIVE creative agency MAGMACRUNCH ARCADE game label data sourced from MusicBrainz. contributions may be incomplete."
   },
   {
     "t": "by contributor",
@@ -165,7 +165,7 @@
     "c": "page",
     "u": "/arcade/card-games/index.html",
     "d": "Solitaire, cribbage, poker",
-    "b": "card games — arcade — magmacrunch media home › arcade › card games ##### ##### # # ## ##### ##### # # ## # # ###### #### # # # # # # # # # # ## ## # # # # # # # # # # #### # # # ## # ##### #### # ###### ##### # # # # ###### # # # # # # # # # # # # # # # # # # # # # ##### # # # # ##### ##### # # # # ###### #### // deal 'em up // KLONDIKE SOLITAIRE classic card game. draw 3. timed scoring. top 10 leaderboard. ▶ PLAY _ CRIBBAGE &#127185; the classic card game. first to 121 points wins. pegging, hands, and the crib. ▶ PLAY _ SÖKÖ scandinavian stud. five card poker with a finnish twist. four-card s..."
+    "b": "card games — arcade — magmacrunch media home › arcade › card games ##### ##### # # ## ##### ##### # # ## # # ###### #### # # # # # # # # # # ## ## # # # # # # # # # # #### # # # ## # ##### #### # ###### ##### # # # # ###### # # # # # # # # # # # # # # # # # # # # # ##### # # # # ##### ##### # # # # ###### #### // deal 'em up // KLONDIKE SOLITAIRE classic card game. draw 3. timed scoring. top 10 leaderboard. ▶ PLAY _ CRIBBAGE 🃑 the classic card game. first to 121 points wins. pegging, hands, and the crib. ▶ PLAY _ SÖKÖ scandinavian stud. five card poker with a finnish twist. four-card straight..."
   },
   {
     "t": "puzzles",
@@ -228,7 +228,7 @@
     "c": "page",
     "u": "/ware/dev/index.html",
     "d": "Game engines, scripting language & C API reference",
-    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, C API reference & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults &middot; 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine &middot; spectral ray tracer &middot; C ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
+    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, C API reference & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -1474,35 +1474,35 @@
     "c": "label",
     "u": "/archive/by-label/magmacrunch-arcade/index.html",
     "d": "label archive — recordings, works, events, releases",
-    "b": "magmacrunch arcade — magmacrunch archive home &rsaquo; archive &rsaquo; by label &rsaquo; magmacrunch arcade MAGMACRUNCH ARCADE loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "magmacrunch arcade — magmacrunch archive home › archive › by label › magmacrunch arcade MAGMACRUNCH ARCADE loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "magmacrunch media",
     "c": "label",
     "u": "/archive/by-label/magmacrunch-media/index.html",
     "d": "label archive — recordings, works, events, releases",
-    "b": "magmacrunch media — magmacrunch archive home &rsaquo; archive &rsaquo; by label &rsaquo; magmacrunch media MAGMACRUNCH MEDIA loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "magmacrunch media — magmacrunch archive home › archive › by label › magmacrunch media MAGMACRUNCH MEDIA loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "magmacrunch music",
     "c": "label",
     "u": "/archive/by-label/magmacrunch-music/index.html",
     "d": "label archive — recordings, works, events, releases",
-    "b": "magmacrunch music — magmacrunch archive home &rsaquo; archive &rsaquo; by label &rsaquo; magmacrunch music MAGMACRUNCH MUSIC loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "magmacrunch music — magmacrunch archive home › archive › by label › magmacrunch music MAGMACRUNCH MUSIC loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "The Slop Collective",
     "c": "label",
     "u": "/archive/by-label/the-slop-collective/index.html",
     "d": "label archive — recordings, works, events, releases",
-    "b": "The Slop Collective — magmacrunch archive home &rsaquo; archive &rsaquo; by label &rsaquo; the slop collective THE SLOP COLLECTIVE loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "The Slop Collective — magmacrunch archive home › archive › by label › the slop collective THE SLOP COLLECTIVE loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "Alex S.",
     "c": "contributor",
     "u": "/archive/by-contributor/alex-s/index.html",
     "d": "contributor archive — recordings, works, events, releases",
-    "b": "Alex S. — magmacrunch archive home › archive › by contributor › ALEX S. ALEX S. loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "Alex S. — magmacrunch archive home › archive › by contributor › ALEX S. ALEX S. loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "Ben Nikitas",
@@ -1516,7 +1516,7 @@
     "c": "contributor",
     "u": "/archive/by-contributor/chuck-job/index.html",
     "d": "contributor archive — recordings, works, events, releases",
-    "b": "Chuck J'OB — magmacrunch archive home › archive › by contributor › CHUCK J'OB CHUCK J'OB loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "Chuck J'OB — magmacrunch archive home › archive › by contributor › CHUCK J'OB CHUCK J'OB loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "C.P. Rutledge",
@@ -1558,7 +1558,7 @@
     "c": "contributor",
     "u": "/archive/by-contributor/jake-thomas/index.html",
     "d": "contributor archive — recordings, works, events, releases",
-    "b": "Jake Thomas — magmacrunch archive home › archive › by contributor › JAKE THOMAS JAKE THOMAS loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "Jake Thomas — magmacrunch archive home › archive › by contributor › JAKE THOMAS JAKE THOMAS loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "James R. McCoy",
@@ -1586,7 +1586,7 @@
     "c": "contributor",
     "u": "/archive/by-contributor/rho-k/index.html",
     "d": "contributor archive — recordings, works, events, releases",
-    "b": "Rho K. — magmacrunch archive home › archive › by contributor › RHO K. RHO K. loading from MusicBrainz VIEW ON MUSICBRAINZ &nearr;"
+    "b": "Rho K. — magmacrunch archive home › archive › by contributor › RHO K. RHO K. loading from MusicBrainz VIEW ON MUSICBRAINZ ↗"
   },
   {
     "t": "Rob Tomer",
@@ -1894,27 +1894,27 @@
     "c": "tool",
     "u": "/ware/album-art-maker/",
     "d": "Creative web tool",
-    "b": "album art maker — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. ALBUM//ART 1024×1024 0 ELEMENTS UNDO REDO DELETE CLEAR ALL CANVAS 1024 &#9662; 512 1024 2048 4096 BG &#9658; SELECT T TEXT &#9634; IMAGE RECT &#9662; FREQUENCY 5 WAVE MODE FILLED OPEN REFERENCE UPLOAD IMAGE &times; click to sample color BASIC &#9645; RECT &#9675; CIRCLE &#9585; LINE &#9653; TRI &#11043; PENTA &#11044; HEXA &#9671; DIAMOND &#9733; STAR &#10148; ARROW &#9711; R. RECT WAVES &#8767; SINE &#8861; SQUARE &#8894; SAWTOOTH &#8895; TRI WAVE &#..."
+    "b": "album art maker — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. ALBUM//ART 1024×1024 0 ELEMENTS UNDO REDO DELETE CLEAR ALL CANVAS 1024 ▾ 512 1024 2048 4096 BG ► SELECT T TEXT ▢ IMAGE RECT ▾ FREQUENCY 5 WAVE MODE FILLED OPEN REFERENCE UPLOAD IMAGE × click to sample color BASIC ▭ RECT ○ CIRCLE ╱ LINE ▵ TRI ⬣ PENTA ⬤ HEXA ◇ DIAMOND ★ STAR ➤ ARROW ◯ R. RECT WAVES ∿ SINE ⊝ SQUARE ⊾ SAWTOOTH ⊿ TRI WAVE ∖ STEP ⊟ PULSE CLIP ART PROPERTIES FILL ‒ STROKE ‒ STROKE WIDTH 4 ROTATION − + 0° STEPS 5 DUTY CYCLE 20% OPACITY 100% F..."
   },
   {
     "t": "media//search",
     "c": "tool",
     "u": "/ware/media-search/",
     "d": "Creative web tool",
-    "b": "media//search — magmacrunch media MEDIA//SEARCH 0 RESULTS SOURCES TYPE ALL &#9662; ALL PHOTOS ILLUSTRATIONS VIDEO AUDIO LICENSE ALL &#9662; ALL PUBLIC DOMAIN CC0 NO ATTRIBUTION ORIENTATION ALL &#9662; ALL HORIZONTAL VERTICAL SQUARE CLEAR GO &#9670; SEARCH ACROSS FREE MEDIA SOURCES Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive SEARCHING... LOAD MORE &larr; &rarr; &times; OPEN IN TAB DOWNLOAD COPY URL"
+    "b": "media//search — magmacrunch media MEDIA//SEARCH 0 RESULTS SOURCES TYPE ALL ▾ ALL PHOTOS ILLUSTRATIONS VIDEO AUDIO LICENSE ALL ▾ ALL PUBLIC DOMAIN CC0 NO ATTRIBUTION ORIENTATION ALL ▾ ALL HORIZONTAL VERTICAL SQUARE CLEAR GO ◆ SEARCH ACROSS FREE MEDIA SOURCES Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive SEARCHING... LOAD MORE ← → × OPEN IN TAB DOWNLOAD COPY URL"
   },
   {
     "t": "pixel process",
     "c": "tool",
     "u": "/ware/pixel-process/",
     "d": "Creative web tool",
-    "b": "pixel process — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. PIXEL//PROCESS 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT &#9662; WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR COLOR A COLOR B WORK SIZE W H PRESETS &#9662; 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG DROP IMAGE drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image..."
+    "b": "pixel process — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. PIXEL//PROCESS 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT ▾ WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR COLOR A COLOR B WORK SIZE W H PRESETS ▾ 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG DROP IMAGE drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image + ADD EFFEC..."
   },
   {
     "t": "sprite forge",
     "c": "tool",
     "u": "/ware/sprite-forge/",
     "d": "Creative web tool",
-    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32&times;32 1 FRAME &minus; 16&times; + &#9638; GRID &#8651; MIRROR &#9678; ONION 32 &times; 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY TOOLS &#9998; &#9003; &#9632; &#9585; &#9645; &#9711; &#9906; &#8982; COLOR #000000 + ADD RAMP replace everywhere REPLACE swaps the selected swatch for this color in every frame; one undo step. CHARACTER TEMPLATES&hellip; slots FRAMES &larr; 1 / 1 &rarr; ADD DUP DEL playback &#9654; fps..."
+    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ▦ GRID ⇋ MIRROR ◎ ONION 32 × 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY TOOLS ✎ ⌫ ■ ╱ ▭ ◯ ⚲ ⌖ COLOR #000000 + ADD RAMP replace everywhere REPLACE swaps the selected swatch for this color in every frame; one undo step. CHARACTER TEMPLATES… slots FRAMES ← 1 / 1 → ADD DUP DEL playback ▶ fps 4× TRANSFORM ⇄ FLIP ⇅ FLIP ↻ 90° shift (arrow keys) ◀ ▲ ▼ ▶ CANVAS w × h RESIZE presets 8² 16² 32² 64² origin ox..."
   }
 ]
