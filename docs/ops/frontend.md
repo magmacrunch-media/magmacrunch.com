@@ -1,4 +1,4 @@
-# Frontend page details — the tools/-to-ware/ rename, extracted animations, page-specific CSS, game card previews, nav and page theming, color palette, OG images.
+# Frontend page details — the tools/-to-ware/ rename, the shared MagmaScript runtime, the crunch-c course, extracted animations, page-specific CSS, game card previews, nav and page theming, color palette, OG images.
 
 ## The tools/ → ware/ rename (2026-08-24)
 
@@ -11,10 +11,55 @@ redirect layer — stub pages are the only mechanism available. Do not add real
 content under `tools/`, and do not link to it. Once the old URLs stop drawing
 traffic the whole directory can be deleted in one commit.
 
-The two playground sync workflows (`sync-magmascript-playground.yml`,
-`sync-texastoast-playground.yml`) `git add` a hardcoded path — they were updated
-to `ware/` in the same commit. If you ever move the section again, they move too
-or the next upstream release dispatch commits nothing.
+The three sync workflows (`sync-magmascript-playground.yml`,
+`sync-texastoast-playground.yml`, `sync-crunch-c.yml`) `git add` a hardcoded
+path — the first two were updated to `ware/` in the same commit. If you ever
+move the section again, they move too or the next upstream dispatch commits
+nothing.
+
+## The shared MagmaScript runtime (2026-08-29)
+
+Two pages run .mgs in the browser: `ware/magmascript/` (the language
+playground) and `ware/crunch-c/` (the C-memory course). They share two
+shared files rather than each carrying a copy:
+
+| File | What it is |
+|---|---|
+| `ware/shared/mgs-lang-bundle.js` | The `magmascript/lang/**` sources embedded as strings. **Generated** by `scripts/sync-playground.py`; do not hand-edit. ~180KB. |
+| `ware/shared/mgs-runtime.js` | Boots Pyodide, writes those sources into its FS, stubs the domain modules, exposes `createMgsRuntime()` → `run(code)`. Hand-written. |
+
+`sync-playground.py` rewrites the bundle and re-stamps the `?v=` on the
+runtime's import of it. That stamp is load-bearing: a bare ES module import
+carries no cache-buster, so without it a returning visitor keeps the previous
+release's interpreter. Never hand-write that `?v=`.
+
+`run(code)` returns `{out, warn, error}`. Keep the three separate — `warn`
+carries the `spooked:` lines (overflow wraps, the `ancient weeds` leak report)
+which magmascript writes to **stderr**, and for crunch-c those warnings are
+frequently the entire lesson. Folding them into stdout, or dropping stderr as
+the original runner did, silently breaks whole exercises.
+
+## The crunch-c course (2026-08-29)
+
+`ware/crunch-c/` is a course, not a playground: one `lesson.html` serves all 18
+lessons at `?m=<module>&e=<exercise>`.
+
+`ware/crunch-c/lessons.js` is **generated** by `scripts/sync-crunch-c.py` from
+the [crunch-c](https://github.com/magmacrunchmedia/crunch-c) repo — the `.mgs`
+exercises, the module READMEs and `solutions/`. Do not hand-edit it; edit the
+lesson in crunch-c and re-run the script. It resolves the source from
+`$CRUNCH_C_ROOT`, else `../crunch-c`.
+
+Markdown is converted to HTML *in that script*, because the site has no build
+step and no runtime deps. The converter handles only what the READMEs actually
+use — headings, tables, fenced code, inline code, bold, links, bullet lists. If
+a README starts using something new, extend the converter; do not add a
+Markdown library.
+
+crunch-c dispatches `sync-crunch-c.yml` on every lesson change. That needs a
+`WEBSITE_DISPATCH_TOKEN` secret **in the crunch-c repo** with `contents: write`
+here, the same secret shape magmascript's release workflow uses. The Tuesday
+cron is the backstop if the dispatch fails or the secret is missing.
 
 ## Extracted animations
 

@@ -80,6 +80,9 @@ commands that access local files.
 ├── scripts/           # backup-musicbrainz.mjs
 ├── templates/         # JS template scripts for archive pages
 ├── ware/              # browser utilities + dev tools (was tools/ — see below)
+│   ├── shared/        # mgs-lang-bundle.js (generated) + mgs-runtime.js — the
+│   │                  #   in-browser MagmaScript interpreter, shared by two pages
+│   └── crunch-c/      # C-memory course; lessons.js is generated from the crunch-c repo
 ├── tools/             # redirect shims only — see below
 └── visual/            # gallery pages (collage, photography/, music-videos, teevee/tv)
 ```
@@ -93,6 +96,7 @@ commands that access local files.
 - **Config via `window.*_CONFIG`**: Archive pages define config objects inline, templates read them
 - **Collective templates**: Multi-artist groups use `window.COLLECTIVE_CONFIG` with `ids[]` array. Templates: `collective_recordings.js`, `collective_releases.js`, `collective_works.js`
 - **Generated bundles**: `arcade/shared/adenosine-*.js` and the chat widget files are synced from npm by `npm run build:adenosine` — never hand-edit them (see `docs/ops/adenosine.md`)
+- **Generated ware files**: `ware/shared/mgs-lang-bundle.js` (from the installed magmascript, by `scripts/sync-playground.py`) and `ware/crunch-c/lessons.js` (from the crunch-c repo, by `scripts/sync-crunch-c.py`) are generated and committed — never hand-edit either. Edit the upstream source and re-run the script (see `docs/ops/frontend.md`)
 - **`tools/` holds redirect stubs only**: the section moved to `ware/` — do not add content or links under `tools/` (see `docs/ops/frontend.md`)
 - **Serve local dev over http** when testing chat/multiplayer: a `file://` page sends `Origin: null`, which the handshake gate refuses
 
@@ -158,7 +162,7 @@ Every other game under `arcade/` is authored in this repo as normal.
 
 - `docs/ops/git-identity.md` — full Mac/Windows credential-helper rules; the Mac `gh auth` check before every push
 - `docs/ops/magmascript.md` — full magmascript command reference
-- `docs/ops/frontend.md` — tools/→ware/ rename, extracted animations, page-specific CSS, game card previews, nav/page theming, color palette, OG images
+- `docs/ops/frontend.md` — tools/→ware/ rename, the shared MagmaScript runtime and the crunch-c course, extracted animations, page-specific CSS, game card previews, nav/page theming, color palette, OG images
 - `docs/ops/adenosine.md` — adenosine engine: script loading patterns, globals, IIFE build/sync pipeline, repo workflow
 - `docs/ops/archive-music.md` — distributed-music releases, jukebox, MusicBrainz cache, adding archive pages
 - `docs/ops/testing.md` — test runner internals, Python interpreter probing, suite coverage map
