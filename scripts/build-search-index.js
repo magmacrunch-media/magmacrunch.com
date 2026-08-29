@@ -96,6 +96,18 @@ function extractTitle(html) {
   return decodeEntities(m[1]).split('—')[0].split('–')[0].trim();
 }
 
+// ── Helper: extract a page's own description ───────────────
+// Prefer og:description, fall back to the plain meta description. Reading it
+// from the page keeps the index honest: the hardcoded desc for the dev
+// section sat here going stale while the page itself was edited.
+function extractMetaDescription(html) {
+  const og = html.match(/<meta\s+property="og:description"\s+content="([^"]*)"/i);
+  if (og) return decodeEntities(og[1]).trim();
+  const meta = html.match(/<meta\s+name="description"\s+content="([^"]*)"/i);
+  if (meta) return decodeEntities(meta[1]).trim();
+  return null;
+}
+
 // ── Helper: format a slug as a readable name ───────────────
 function prettyName(slug) {
   return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -165,7 +177,11 @@ function parseMainPages() {
     const html = fs.readFileSync(filePath, 'utf8');
     const title = extractTitle(html) || p.title;
     const body = extractBodyText(html);
-    addItem(title, 'page', p.file, p.desc, body);
+    // The page's own description wins over the one listed below. Those are
+    // easy to forget when a page is reworded — the dev section's sat stale
+    // here while the page, its og:description and its card were all updated.
+    const desc = extractMetaDescription(html) || p.desc;
+    addItem(title, 'page', p.file, desc, body);
   }
 }
 
@@ -314,15 +330,52 @@ function parsePress() {
 }
 
 // ── Ware ───────────────────────────────────────────────────
+// Section pages (already covered by PAGES) and asset directories with no
+// index.html of their own. Everything else under ware/ is a tool.
+const WARE_NON_TOOLS = new Set(['dev', 'utilities', 'shared', 'shell']);
+
+// The two section pages carry a curated one-line description per tool. The
+// four creative utilities have no meta description of their own, so without
+// this they would all index as a generic label.
+function wareCardDescriptions() {
+  const descs = {};
+  for (const section of ['utilities', 'dev']) {
+    const file = path.join(ROOT, 'ware', section, 'index.html');
+    if (!fs.existsSync(file)) continue;
+    const html = fs.readFileSync(file, 'utf8');
+    const card = /href="\.\.\/([a-z0-9-]+)\/"[\s\S]{0,400}?tc-desc">([^<]*)</g;
+    let m;
+    while ((m = card.exec(html)) !== null) {
+      descs[m[1]] = decodeEntities(m[2]).replace(/\s+/g, ' ').trim();
+    }
+  }
+  return descs;
+}
+
 function parseWare() {
-  const toolDirs = ['album-art-maker', 'media-search', 'pixel-process', 'sprite-forge'];
+  // Discovered from disk, not listed by hand. The hand-written list here only
+  // ever named the four creative utilities, so every developer tool —
+  // adenosine, crunch-c, hologram, magmascript, magnolia, texastoast — was
+  // absent from search entirely. Searching "crunch-c" found the section page
+  // that happens to mention it, and nothing you could click through to.
+  const wareRoot = path.join(ROOT, 'ware');
+  const cardDescs = wareCardDescriptions();
+  const toolDirs = fs.readdirSync(wareRoot, { withFileTypes: true })
+    .filter(e => e.isDirectory() && !WARE_NON_TOOLS.has(e.name))
+    .map(e => e.name)
+    .sort();
+
   for (const tool of toolDirs) {
-    const indexFile = path.join(ROOT, 'ware', tool, 'index.html');
+    const indexFile = path.join(wareRoot, tool, 'index.html');
     if (!fs.existsSync(indexFile)) continue;
     const html = fs.readFileSync(indexFile, 'utf8');
     const title = extractTitle(html) || prettyName(tool);
     const body = extractBodyText(html);
-    addItem(title, 'tool', `ware/${tool}/`, 'Creative web tool', body);
+    // The page's own og:description, so this cannot drift from what the page
+    // says. The previous hardcoded "Creative web tool" would have been wrong
+    // for every dev tool anyway.
+    const desc = extractMetaDescription(html) || cardDescs[tool] || 'Web tool';
+    addItem(title, 'tool', `ware/${tool}/`, desc, body);
   }
 }
 

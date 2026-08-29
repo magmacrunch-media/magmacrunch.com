@@ -8,7 +8,7 @@
 
     /* ── CONFIG ── */
     const MAX_RESULTS = 12;
-    const INDEX_VERSION = 5;
+    const INDEX_VERSION = 6;
 
     /* Compute root path for search-index.json */
     function getRoot() {

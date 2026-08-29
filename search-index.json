@@ -3,28 +3,28 @@
     "t": "magmacrunch media",
     "c": "page",
     "u": "/index.html",
-    "d": "magmacrunch media homepage",
+    "d": "music, visual art, archives, arcade games, and more",
     "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise"
   },
   {
     "t": "about",
     "c": "page",
     "u": "/home/about.html",
-    "d": "About magmacrunch media",
+    "d": "magmacrunch media",
     "b": "about — magmacrunch media home › about music collective & independent record label ✦ no-budget music videos ✦ archive ✦ music publishing ✦ video games ✦ press ✦ web tools ✦ photography ✦ collage // about // __ __ /\\ \\ /\\ \\ __ ___ ___ __ __ ___ ___ __ ___ _ __ __ __ ___ ___\\ \\ \\___ ___ ___ __ \\_\\ \\/\\_\\ __ /' __` __`\\ /'__`\\ /'_ `\\ /' __` __`\\ /'__`\\ /'___\\/\\`'__\\/\\ \\/\\ \\ /' _ `\\ /'___\\ \\ _ `\\ /' __` __`\\ /'__`\\ /'_` \\/\\ \\ /'__`\\ /\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\L\\ \\/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\__/\\ \\ \\/ \\ \\ \\_\\ \\/\\ \\/\\ \\/\\ \\__/\\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\/\\ __//\\ \\L\\ \\ \\ \\/\\ \\L\\.\\_ \\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ \\____ \\..."
   },
   {
     "t": "guestbook",
     "c": "page",
     "u": "/home/guestbook.html",
-    "d": "Sign the guestbook",
+    "d": "sign the guestbook",
     "b": "guestbook — magmacrunch media home › guestbook // guestbook // say hi ✦ leave a note ✦ you were here __ (`/\\ `=\\/\\ __...--~~~~~-._ _.-~~~~~--...__ `=\\/\\ \\ / \\\\ `=\\/ V \\\\ //_\\___--~~~~~~-._ | _.-~~~~~~--...__\\\\ // ) (..----~~~~._\\ | /_.~~~~----.....__\\\\ ===( INK )==========\\\\|//==================== __ejm\\___/________dwb`---`____________________________________________ [ send ] // entries // loading entries..."
   },
   {
     "t": "music",
     "c": "page",
     "u": "/music/index.html",
-    "d": "Music landing page",
+    "d": "distributed music / jukebox / physical media",
     "b": "music — magmacrunch media home › music // music // jukebox local streaming · choose a song ▶ on streaming services distributed via LANDR · all major platforms ▶ music videos no-budget video productions · YouTube ▶ physical media floppy disk · CD · tapes in the works ▶ more releases coming soon ✦ tape production also in the works -->"
   },
   {
@@ -80,7 +80,7 @@
     "t": "visual",
     "c": "page",
     "u": "/visual/index.html",
-    "d": "Visual art landing page",
+    "d": "collage / photography / music videos / TV",
     "b": "visual — magmacrunch media home › visual // visual // '. _ .' -= (~) =- .' # '. TV video broadcast · flip through channels ▶ collage cut & paste · magazine clips ▶ photography digital · film · scans ▶ ___,-----.___ ,--' `--. / \\ / \\ | | | | | |~~~~~~~~~| | | \\ / | | \\ / | \\ \\ / / \\ | | / \\ | | / \\ | | / \\ | | / \\____|___| ___/ )___,-----'___( )___,-----'___( )___,-----'___( )___,-----'___( \\_____________/ \\___/"
   },
   {
@@ -108,7 +108,7 @@
     "t": "archive",
     "c": "page",
     "u": "/archive/index.html",
-    "d": "MusicBrainz archive",
+    "d": "artists / places / labels / contributors",
     "b": "archive — magmacrunch media home › archive // archive // database of artists, places, contributors, & labels the magmacrunch archive --> EMERAC // DB_ACCESS :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \\/\\/ [- |_ ( () |\\/| [- ~|~ () ~|~ |-| [- /\\ /? ( |-| | \\/ [- _\\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:. by artist musicians and projects from the scene by place rehearsal spaces and recording locations by contributor credits and contributions by label labels, publishers, and creative agencies some artists listed may have no releases — or released elsewhere."
   },
   {
@@ -143,7 +143,7 @@
     "t": "arcade",
     "c": "page",
     "u": "/arcade/index.html",
-    "d": "Pixel games and multiplayer",
+    "d": "20+ pixel art games — board, card, puzzle, action",
     "b": "arcade — magmacrunch media home › arcade | | | | . . .,---.| ,---.,---.,-.-.,---. |--- ,---. |--- |---.,---. | | ||---'| | | || | ||---' | | | | | ||---' `-'-'`---'`---'`---'`---'` ' '`---' `---'`---' `---'` '`---' /$$ | $$ /$$$$$$/$$$$ /$$$$$$ /$$$$$$ /$$$$$$/$$$$ /$$$$$$ /$$$$$$$ /$$$$$$ /$$ /$$ /$$$$$$$ /$$$$$$$| $$$$$$$ | $$_ $$_ $$ |____ $$ /$$__ $$| $$_ $$_ $$ |____ $$ /$$_____/ /$$__ $$| $$ | $$| $$__ $$ /$$_____/| $$__ $$ | $$ \\ $$ \\ $$ /$$$$$$$| $$ \\ $$| $$ \\ $$ \\ $$ /$$$$$$$| $$ | $$ \\__/| $$ | $$| $$ \\ $$| $$ | $$ \\ $$ | $$ | $$ | $$ /$$__ $$| $$ | $$| $$ | $$ | $$ /$$__ $$| $$ | $$..."
   },
   {
@@ -185,7 +185,7 @@
     "t": "press",
     "c": "page",
     "u": "/press/index.html",
-    "d": "Journals and writing",
+    "d": "journals / lyrics / press",
     "b": "press — magmacrunch media home › press // press // magmacrunch press --> a diy publishing house for essays, poetry, fiction, and experimental writing // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to magmarunchmedia@mgmail.com include your name (or pseudonym) and a short bio if you want -->"
   },
   {
@@ -213,21 +213,21 @@
     "t": "ware",
     "c": "page",
     "u": "/ware/index.html",
-    "d": "Software — creative utilities & developer tools",
+    "d": "software · creative utilities & developer tools",
     "b": "ware — magmacrunch media home › ware // ware // software · creative utilities & developer tools CREATIVE UTILITIES browser-based tools for art, media & image processing ▶ DEVELOPER TOOLS game engines, scripting language, C API reference & memory course ▶"
   },
   {
     "t": "creative utilities",
     "c": "page",
     "u": "/ware/utilities/index.html",
-    "d": "Browser-based tools for art, media & image processing",
+    "d": "browser-based tools for art, media & image processing",
     "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶ SPRITE//FORGE game sprite editor · animation, onion skin, PNG sheet export ▶"
   },
   {
     "t": "developer tools",
     "c": "page",
     "u": "/ware/dev/index.html",
-    "d": "Game engines, scripting language & C API reference",
+    "d": "game engines, scripting language, C API reference & memory course",
     "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, C API reference & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
   },
   {
@@ -1890,31 +1890,73 @@
     "b": "redirecting... — press — magmacrunch media redirecting to press ..."
   },
   {
+    "t": "adenosine",
+    "c": "tool",
+    "u": "/ware/adenosine/",
+    "d": "lightweight web game engines · try every package live",
+    "b": "adenosine — magmacrunch media ← developer tools adenosine lightweight game engines by magmacrunch media ▶ Playground Try every package live. Code editor with syntax highlighting, pre-loaded examples, and console output. ▢ Tile Map Editor Draw tile maps for the RPG engine. Paint, fill, export JSON, preview with AdRPG. ✎ Theme Customizer Customize CSS colors for cards, puzzle, chat, and multiplayer packages. packages Package Description Links rpg 2D tile-based RPG engine npm puzzle Sliding tile puzzle framework npm cards Card deck, pixel-art SVG, chips npm audio Web Audio music + SFX engine npm ..."
+  },
+  {
     "t": "album art maker",
     "c": "tool",
     "u": "/ware/album-art-maker/",
-    "d": "Creative web tool",
+    "d": "pixel art editor for album covers · text, shapes, images",
     "b": "album art maker — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. ALBUM//ART 1024×1024 0 ELEMENTS UNDO REDO DELETE CLEAR ALL CANVAS 1024 ▾ 512 1024 2048 4096 BG ► SELECT T TEXT ▢ IMAGE RECT ▾ FREQUENCY 5 WAVE MODE FILLED OPEN REFERENCE UPLOAD IMAGE × click to sample color BASIC ▭ RECT ○ CIRCLE ╱ LINE ▵ TRI ⬣ PENTA ⬤ HEXA ◇ DIAMOND ★ STAR ➤ ARROW ◯ R. RECT WAVES ∿ SINE ⊝ SQUARE ⊾ SAWTOOTH ⊿ TRI WAVE ∖ STEP ⊟ PULSE CLIP ART PROPERTIES FILL ‒ STROKE ‒ STROKE WIDTH 4 ROTATION − + 0° STEPS 5 DUTY CYCLE 20% OPACITY 100% F..."
+  },
+  {
+    "t": "crunch-c",
+    "c": "tool",
+    "u": "/ware/crunch-c/",
+    "d": "learn C memory management without segfaults",
+    "b": "crunch-c — magmacrunch media crunch-c learn C memory management without segfaults Every memory error is caught and explained. No segfaults. No undefined behavior. Just C's behavior, narrated. ▶ Start the course What you'll learn Loading modules… How it works In C, memory mistakes cause segfaults, crashes and security vulnerabilities. Here the same mistakes are caught and named: quicksand at line 5, column 9 | 5 | val = p.peek(i32) | ^ this ground was scorched at line 4 (garrisoned at line 1) You learn what C does, and why it is dangerous, without the danger. The lessons run in your browser — t..."
+  },
+  {
+    "t": "hologram",
+    "c": "tool",
+    "u": "/ware/hologram/",
+    "d": "optics-first 3D game engine: a spectral ray tracer where light obeys physics",
+    "b": "hologram — magmacrunch media ← developer tools hologram an optics-first 3D game engine: a spectral ray tracer where light obeys physics v0.1.0 PolyForm Noncommercial C99 + HLSL/GLSL/MSL 📚 Modules Reference The public C API across twelve modules. Structs, constants and every function the umbrella header exposes. 📖 Wiki The full reference, including the shader constraints that shape how the GPU walk is written. what it does that other engines don't Every effect below is computed from the physics rather than approximated by a shader trick, and every one is pinned by a host test against its clos..."
+  },
+  {
+    "t": "magmascript",
+    "c": "tool",
+    "u": "/ware/magmascript/",
+    "d": "a Python-inspired mini language for magmacrunch infrastructure",
+    "b": "magmascript — magmacrunch media ← developer tools magmascript a Python-inspired mini language for magmacrunch infrastructure ▶ Playground Write and run .mgs scripts in-browser with Pyodide. 14 examples, syntax highlighting, console output. 📖 Language Reference Syntax cheat sheet: variables, functions, classes, control flow, built-in functions, and string methods. features Variables & F-Strings Dynamic typing, f\"interpolation {expressions}\" Functions & Closures fn, arrow functions, default params, closures Lists & Dicts Slicing [1:3], [::-1], comprehensions Classes Methods, constructors, self,..."
+  },
+  {
+    "t": "magnolia",
+    "c": "tool",
+    "u": "/ware/magnolia/",
+    "d": "lightweight C engine for Wii homebrew score-attack games",
+    "b": "magnolia — magmacrunch media ← developer tools magnolia lightweight C engine for Wii homebrew games 📚 API Reference 153 functions across 12 modules. Interactive search, module tabs, code examples with syntax highlighting. 🛠 Scaffold Generate a new game project with the magnolia engine pre-configured. coming soon modules core Engine init, SD mount, asset paths renderer Video, font, frame presentation sprite Textures, sprite sheets, mirroring, origin-based drawing input Up to four Wiimotes: press, hold, release, snapshots audio PCM16 SFX and music playback scoring High-score tables with SD JSO..."
   },
   {
     "t": "media//search",
     "c": "tool",
     "u": "/ware/media-search/",
-    "d": "Creative web tool",
+    "d": "free media aggregator · CC-licensed images, video & audio",
     "b": "media//search — magmacrunch media MEDIA//SEARCH 0 RESULTS SOURCES TYPE ALL ▾ ALL PHOTOS ILLUSTRATIONS VIDEO AUDIO LICENSE ALL ▾ ALL PUBLIC DOMAIN CC0 NO ATTRIBUTION ORIENTATION ALL ▾ ALL HORIZONTAL VERTICAL SQUARE CLEAR GO ◆ SEARCH ACROSS FREE MEDIA SOURCES Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive SEARCHING... LOAD MORE ← → × OPEN IN TAB DOWNLOAD COPY URL"
   },
   {
     "t": "pixel process",
     "c": "tool",
     "u": "/ware/pixel-process/",
-    "d": "Creative web tool",
+    "d": "circuit-bent image processor · channel shift, pixel sort, FFT filter",
     "b": "pixel process — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. PIXEL//PROCESS 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT ▾ WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR COLOR A COLOR B WORK SIZE W H PRESETS ▾ 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG DROP IMAGE drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image + ADD EFFEC..."
   },
   {
     "t": "sprite forge",
     "c": "tool",
     "u": "/ware/sprite-forge/",
-    "d": "Creative web tool",
+    "d": "game sprite editor · animation, onion skin, PNG sheet export",
     "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ▦ GRID ⇋ MIRROR ◎ ONION 32 × 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY TOOLS ✎ ⌫ ■ ╱ ▭ ◯ ⚲ ⌖ COLOR #000000 + ADD RAMP replace everywhere REPLACE swaps the selected swatch for this color in every frame; one undo step. CHARACTER TEMPLATES… slots FRAMES ← 1 / 1 → ADD DUP DEL playback ▶ fps 4× TRANSFORM ⇄ FLIP ⇅ FLIP ↻ 90° shift (arrow keys) ◀ ▲ ▼ ▶ CANVAS w × h RESIZE presets 8² 16² 32² 64² origin ox..."
+  },
+  {
+    "t": "texastoast",
+    "c": "tool",
+    "u": "/ware/texastoast/",
+    "d": "Python RPG engine with I2C hardware abstraction for magmacrunch game systems",
+    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ ▶ Playground Run the real engine in your browser under Pyodide. Four examples, playable with the keyboard, no install required. 📖 API Reference Game, entities, tile maps, camera, input, and the UI widgets, plus the magmascript domain table. features Game Loop Frame-rate independent, dt-clamped, gives up on a broken frame instead of spinning Tile Maps JSON save/load, per-tile solidity, sub-stepped AABB collision that slides alon..."
   }
 ]
