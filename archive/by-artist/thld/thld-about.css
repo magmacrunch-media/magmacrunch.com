@@ -72,9 +72,6 @@ body.thld-page.thld-about-page .ascii-logo-wrap {
     justify-content: center;
     position: relative;
     overflow: hidden;
-    background-image: url('../../../assets/photos/evan-street-porch1.jpg');
-    background-size: cover;
-    background-position: center 8%;
     padding: 28px 20px;
 }
 body.thld-page.thld-about-page .ascii-logo-wrap::before {
