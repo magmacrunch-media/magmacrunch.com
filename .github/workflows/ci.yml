@@ -27,6 +27,13 @@ jobs:
       - name: Check ware shell token contract
         run: npm run check:shell
 
+      # Every ?v= stamp is the first 8 hex of its file's sha256. A stamp left
+      # behind by an edit means visitors keep the cached old file forever, which
+      # deploys green and shows no symptom but the fix not arriving. Three had
+      # already drifted when this was added.
+      - name: Check asset cache-busters
+        run: npm run check:cachebust
+
   test-python:
     runs-on: ubuntu-latest
     steps:
