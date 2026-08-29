@@ -25,7 +25,7 @@
         <span class="header-stat">v<span>0.1.0</span></span>
     </div>
     <div class="header-right">
-        <span class="header-stat">53 functions · 12 modules</span>
+        <span class="header-stat">58 functions · 12 modules</span>
     </div>
 </header>
 
@@ -56,7 +56,7 @@
     </div>
 
     <div class="stats-bar">
-        <span class="stat-count" id="stats">53 functions shown</span>
+        <span class="stat-count" id="stats">58 functions shown</span>
         <span class="stat-sep">|</span>
         <span>hologram.h is an index of the public modules. Internal seams, split out so their arithmetic can be host tested, are deliberately not listed.</span>
     </div>
@@ -135,7 +135,7 @@
             <div class="module-header">
                 <h2>geometry</h2>
                 <span class="module-file">source/geometry.h</span>
-                <span class="module-count">5 functions</span>
+                <span class="module-count">7 functions</span>
             </div>
             <p class="module-desc">Rays against analytic surfaces. hologram has no triangles: every
                 surface in a scene is one of these closed-form shapes, which is why the tracer can
@@ -171,6 +171,19 @@ typedef struct {
                     HoloHit *hit);</code>
                 <p class="fn-desc">A finite parallelogram: a corner plus two edge vectors whose lengths
                     are the panel's size. This is what a mirror is made of.</p></div>
+            <div class="fn"><code class="sig">void <b>holo_rect_basis</b>(HoloV3 edge_u, HoloV3 edge_v,
+                    HoloV3 *normal, HoloV3 *solve_u, HoloV3 *solve_v);</code>
+                <p class="fn-desc">Everything about a rectangle that does not depend on the ray: the
+                    unit normal, and the two vectors that turn a point on the plane into affine u and v
+                    with one dot product each. holo_ray_rect recomputes these on every call, which means
+                    every ray against every panel: a cross, a normalize and five dot products of work
+                    that only depends on the panel. A renderer with more than a couple of mirrors wants
+                    them hoisted, so gpu_scene.c computes them once and ships them in the uniform block.
+                    solve_u and solve_v are the Gram solve folded flat: where the long form computes ru,
+                    rv and det and divides, u is just dot(rel, solve_u).</p></div>
+            <div class="fn"><code class="sig">int <b>holo_ray_rect_pre</b>(HoloRay r, HoloV3 corner, HoloV3 normal,
+                    HoloV3 solve_u, HoloV3 solve_v, HoloHit *hit);</code>
+                <p class="fn-desc">holo_ray_rect against a panel whose basis is already in hand.</p></div>
             <div class="fn"><code class="sig">int <b>holo_ray_dish</b>(HoloRay r, HoloV3 apex, HoloV3 axis,
                     float curv_r, float conic_k, float rim, HoloHit *hit);</code>
                 <p class="fn-desc">A cap of a conic of revolution, in the language optical design quotes
@@ -444,10 +457,12 @@ typedef struct {
                 <span class="module-count">1 function</span>
             </div>
             <p class="module-desc">The scene as the shader sees it: one uniform block, float4 by float4.
-                HoloGpuScene and the cbuffer in shaders/trace.hlsl are the same layout written in two
-                languages, and they must change together. The oracle diff is what catches them drifting
-                apart. Fields pack HLSL-style, so every float3 is followed by a float that rides in its
-                fourth lane.</p>
+                HoloGpuScene and the uniform block in each of the three shader dialects are the same
+                layout written four times over, and they must change together. The oracle diff is what
+                catches them drifting apart, and test_gpu_layout holds the GLSL tracer's hand-written slot
+                map to offsetof so reordering the struct fails a test rather than quietly making the GPU
+                read the camera out of the sun. Fields pack HLSL-style, so every float3 is followed by a
+                float that rides in its fourth lane.</p>
             <p class="module-desc">Two constraints show through this struct. A grating rect repurposes the
                 glass and albedo lanes it never uses, because the shader cannot afford two more
                 dynamically indexed arrays: fxc's indexable register file tops out and silently aliases
@@ -468,13 +483,17 @@ typedef struct {
             <div class="module-header">
                 <h2>display</h2>
                 <span class="module-file">source/display.h</span>
-                <span class="module-count">4 functions</span>
+                <span class="module-count">6 functions</span>
             </div>
             <p class="module-desc">The window, the GPU device, and the surface the tracer renders through.
                 This is the only file that talks to sokol. hologram draws every frame the same way: one
                 fullscreen quad, one fragment shader, uniforms describing the scene and the camera. The
                 design resolution follows the games at 640x480, scaled to whatever the window really is,
                 and the shader letterboxes from the real pixel size.</p>
+            <p class="module-desc">There is one tracer written in three dialects, one file each: HLSL for
+                D3D11, GLSL for GL and GLES3/WebGL2, MSL for Metal. The file is read from disk at startup
+                rather than compiled in, so the tracer can be edited and an example relaunched without
+                recompiling, and a game ships the file for its backend beside the binary.</p>
 
             <div class="types">
                 <span class="types-label">TYPES</span>
@@ -504,6 +523,13 @@ typedef struct {
 } HoloDisplayDesc;</pre>
             </div>
 
+            <div class="fn"><code class="sig">const char *<b>holo_shader_path</b>(void);</code>
+                <p class="fn-desc">The tracer's source file for the backend this build targets.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_load_shader</b>(char *buf, int buf_size);</code>
+                <p class="fn-desc">Read that file into buf, NUL-terminated. Returns 1, or 0 after printing
+                    why: no such file, whose usual cause is being run from somewhere other than the
+                    repository root, or a file too large for buf. The second is worth catching, because a
+                    silently truncated shader fails much later as an unexplained compile error.</p></div>
             <div class="fn"><code class="sig">struct sapp_desc <b>holo_display_app</b>(const HoloDisplayDesc *desc);</code>
                 <p class="fn-desc">Fill in sokol's sapp_desc from ours. sokol owns main(), so a game's entry
                     point is sokol_main() returning holo_display_app(&amp;desc), and the callbacks then run
@@ -516,8 +542,9 @@ typedef struct {
             <div class="fn"><code class="sig">int <b>holo_display_read_frame</b>(unsigned char *rgba, int w, int h);</code>
                 <p class="fn-desc">Copy the frame most recently drawn into rgba (w&#183;h&#183;4 bytes, rows
                     top-down), which must match the real framebuffer size. Returns 1, or 0 where the
-                    backend cannot read back, and only D3D11 answers today. This exists for the oracle,
-                    whose image diff needs the GPU's actual pixels.</p></div>
+                    backend cannot read back. D3D11, GL/GLES3 and Metal each have an implementation, but
+                    only the D3D11 one has actually run; the other two are written and unproven. This
+                    exists for the oracle, whose image diff needs the GPU's actual pixels.</p></div>
         </section>
 
         <!-- ── input ──────────────────────────────────────── -->
@@ -601,7 +628,7 @@ typedef struct {
             <div class="module-header">
                 <h2>oracle</h2>
                 <span class="module-file">source/oracle.h</span>
-                <span class="module-count">1 function</span>
+                <span class="module-count">2 functions</span>
             </div>
             <p class="module-desc">Holding the GPU to the CPU reference tracer. holo_oracle_diff reads the
                 frame most recently presented, renders the same frame through cpu_trace.c, and compares.
@@ -627,6 +654,19 @@ typedef struct {
                     and 0 when it does not or the backend cannot read pixels back. The camera must be built
                     with the real framebuffer aspect, and spectral must say which path the GPU rendered so
                     the CPU renders the same one.</p></div>
+            <div class="fn"><code class="sig">int <b>holo_oracle_dump</b>(const HoloScene *scene, const HoloCamera *cam,
+                    int spectral, const void *gpu_scene, int gpu_scene_size,
+                    const char *name);</code>
+                <p class="fn-desc">Write out what a tracer outside this process needs in order to be held
+                    to the same oracle: the uniform block exactly as the shader receives it, and the CPU's
+                    frame encoded the way holo_oracle_diff encodes it before comparing. This exists because
+                    a readback needs the backend it runs on, so the GL and Metal tracers cannot always be
+                    run where they are written. tools/gldiff renders shaders/trace.glsl in a WebGL2 context
+                    and compares against these two files, which is how the GLSL tracer is held to the
+                    oracle from a machine with no GL toolchain at all. Writes build/&lt;name&gt;_params.bin
+                    (the raw block) and build/&lt;name&gt;_ref.bin (two int32 of width and height, then
+                    width&#183;height&#183;3 encoded bytes), both in native byte order. Returns 0 if either file
+                    cannot be written.</p></div>
         </section>
 
         <!-- ── timestep ───────────────────────────────────── -->

@@ -489,7 +489,7 @@
     <div class="badges">
       <span class="badge">v0.1.0</span>
       <span class="badge">PolyForm Noncommercial</span>
-      <span class="badge">C99 + HLSL</span>
+      <span class="badge">C99 + HLSL/GLSL/MSL</span>
     </div>
   </div>
 
@@ -592,8 +592,8 @@
 
   <div class="oracle">
     <h2>the oracle</h2>
-    <p><code>source/cpu_trace.c</code> is a complete second tracer in plain C, and
-      <code>shaders/trace.hlsl</code> is its statement-for-statement twin. The C version is allowed
+    <p><code>source/cpu_trace.c</code> is a complete second tracer in plain C, and the three shaders
+      under <code>shaders/</code> are its statement-for-statement twins. The C version is allowed
       to be slow and obliged to be right: every optical law lands there first, held by host tests
       to closed-form answers. Then <code>holo_oracle_diff()</code> reads the presented GPU frame
       back and compares it to a CPU render of the same camera.</p>
@@ -605,11 +605,14 @@
     </figure>
 
     <p>That diff is the engine's central correctness mechanism. A change that lands in one tracer
-      and not the other stops being a mystery and becomes a failing exit code. The bar is a mean
-      error under 1/255 with fewer than 0.75% of pixels off by more than 8/255, and the whole
-      example suite currently sits between 0.02 and 0.12 mean.</p>
+      and not the others stops being a mystery and becomes a failing exit code. The bar is a mean
+      error under 1/255 with fewer than 0.75% of pixels off by more than 8/255, and all eight
+      examples pass on both proven paths: the HLSL tracer runs 0.019 to 0.118 mean under D3D11, and
+      the GLSL one 0.027 to 0.251 under WebGL2. The outlier percentages track each other almost
+      exactly, which is the number worth reading, since it says both tracers take the same branches
+      and cull the same rays.</p>
 
-    <p>The host tests assert physics rather than pixels: 236 checks across 7 suites covering
+    <p>The host tests assert physics rather than pixels: 382 checks across 8 suites covering
       Snell's angles into n=1.5 glass, the 41.81 degree critical angle, 4% reflectance at normal
       incidence, a vanishing p-component at Brewster's angle, Malus's law at five angles, the
       three-polarizer paradox to the exact eighth, BK7's Abbe number computing to its catalogue 64,
@@ -668,7 +671,7 @@
       </div>
       <div class="feat-item">
         <strong>oracle</strong>
-        <span>The GPU-vs-CPU frame diff</span>
+        <span>The GPU-vs-CPU frame diff, and the dump that holds an out-of-process tracer to it</span>
       </div>
     </div>
   </div>
@@ -718,12 +721,14 @@
       can afford in real time, and a tracer is the only renderer in which curved mirrors,
       refraction, dispersion and polarization come out correct rather than faked.</p>
 
-    <p>C99 engine, HLSL shader, on <a href="https://github.com/floooh/sokol" target="_blank" rel="noopener">sokol</a>
-      for the window, GPU device and swapchain. The tracing runs on the GPU as a fullscreen-quad
-      fragment shader over a scene of analytic primitives delivered in one uniform block, on a
-      fixed-timestep simulation ported from <a href="../magnolia/">magnolia</a>. Games compile the
-      engine's sources directly, magnolia-style: there is no library build and no package registry,
-      and a game is three callbacks and a scene.</p>
+    <p>C99 engine and one tracer in three dialects, HLSL for D3D11, GLSL for GL and GLES3/WebGL2, MSL
+      for Metal, on <a href="https://github.com/floooh/sokol" target="_blank" rel="noopener">sokol</a>
+      for the window, GPU device and swapchain. Only the D3D11 path has shipped: the GLSL tracer is
+      oracle-green under WebGL2, and the Metal one has not yet met a Metal device. The tracing runs on
+      the GPU as a fullscreen-quad fragment shader over a scene of analytic primitives delivered in one
+      uniform block, on a fixed-timestep simulation ported from <a href="../magnolia/">magnolia</a>.
+      Games compile the engine's sources directly, magnolia-style: there is no library build and no
+      package registry, and a game is three callbacks and a scene.</p>
 
     <h3>building</h3>
     <p class="about-label">Requires Visual Studio. No other dependencies, since sokol is vendored.</p>
