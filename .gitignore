@@ -4,6 +4,7 @@ Thumbs.db
 *~
 .vscode/
 .idea/
+.vs/
 node_modules/
 arcade/private/config.json
 arcade/admin/config.json
