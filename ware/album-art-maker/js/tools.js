@@ -116,9 +116,10 @@ window.Tools = (function () {
         }
 
         if (activeTool === 'text') {
-            // check if clicking on an existing element first
+            // only intercept clicks on existing text elements (to edit them);
+            // clicking on images/shapes or empty canvas places new text
             const hit = hitTest(pos.x, pos.y, elements);
-            if (hit) {
+            if (hit && hit.type === 'text') {
                 if (onToolChange) onToolChange('select');
                 isDragging = true;
                 dragPending = true;
@@ -130,7 +131,6 @@ window.Tools = (function () {
                 if (onElementMoved) onElementMoved('select', hit);
                 return;
             }
-            // no existing element — place new text
             if (onTextEdit) onTextEdit(pos.x, pos.y);
             return;
         }
