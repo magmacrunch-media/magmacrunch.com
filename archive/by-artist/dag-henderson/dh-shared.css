@@ -132,7 +132,6 @@ body.dh-page .nav-card.c-links:hover {
 
 body.dh-page .nav-card::after { display: none; }
 
-body.dh-page .photo-lightbox { display: none; }
 
 body.dh-page footer { color: var(--dh-body); }
 body.dh-page footer span { color: var(--dh-leaf); }
