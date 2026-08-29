@@ -30,6 +30,12 @@
             --ctb-pale:     #ffaae0;
             background:     #0a0a0c;
 
+            /* contributor-theme.css hard-codes these two on body.ctb-page, which
+               outranks the :root block above — without repeating them here the
+               nav brand glows cyan and the nav bar casts a teal shadow. */
+            --nav-brand-glow: rgba(221,78,192,0.7);
+            --nav-glow:       rgba(154,24,121,0.4);
+
             --ground:       #0a0a0c;
         }
         main {
