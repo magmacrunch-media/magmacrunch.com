@@ -206,12 +206,6 @@
         lobbyOverlay.style.display = 'none';
     }
 
-    function escapeHtml(text) {
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
     // ── Multiplayer Handlers ─────────────────────────────────────────────────
     function handleMultiplayerUpdate(update) {
         switch (update.type) {
@@ -230,7 +224,11 @@
                 update.players.forEach(function(player) {
                     var div = document.createElement('div');
                     div.className = 'lobby-player';
-                    div.innerHTML = '<span class="player-dot" style="background:' + escapeHtml(player.color) + '"></span> ' + escapeHtml(player.name) + (player.isHost ? ' (host)' : '');
+                    var dot = document.createElement('span');
+                    dot.className = 'player-dot';
+                    dot.style.background = player.color;
+                    div.appendChild(dot);
+                    div.appendChild(document.createTextNode(' ' + player.name + (player.isHost ? ' (host)' : '')));
                     lobbyPlayerList.appendChild(div);
                 });
 

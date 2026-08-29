@@ -230,16 +230,14 @@ var UI = (function() {
         if (!elements.chatMessages) return;
         var div = document.createElement('div');
         div.className = 'chat-msg';
-        div.innerHTML = '<span class="chat-name" style="color:' + (color || '#ff2e9c') + '">' +
-            escapeHtml(from) + ':</span> ' + escapeHtml(text);
+        var nameEl = document.createElement('span');
+        nameEl.className = 'chat-name';
+        nameEl.style.color = color || '#ff2e9c';
+        nameEl.textContent = from + ':';
+        div.appendChild(nameEl);
+        div.appendChild(document.createTextNode(' ' + text));
         elements.chatMessages.appendChild(div);
         elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-    }
-
-    function escapeHtml(text) {
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
     }
 
     // ── Multiplayer State Handlers ───────────────────────────────────────────
@@ -321,9 +319,21 @@ var UI = (function() {
             var p = players[i];
             var div = document.createElement('div');
             div.className = 'lobby-player';
-            var hostBadge = p.isHost ? ' <span class="host-badge">HOST</span>' : '';
-            div.innerHTML = '<span class="player-dot" style="background:' + escapeHtml(p.color) + '"></span>' +
-                '<span class="player-name">' + escapeHtml(p.name) + '</span>' + hostBadge;
+            var dot = document.createElement('span');
+            dot.className = 'player-dot';
+            dot.style.background = p.color;
+            var nameEl = document.createElement('span');
+            nameEl.className = 'player-name';
+            nameEl.textContent = p.name;
+            div.appendChild(dot);
+            div.appendChild(nameEl);
+            if (p.isHost) {
+                var hostBadge = document.createElement('span');
+                hostBadge.className = 'host-badge';
+                hostBadge.textContent = 'HOST';
+                div.appendChild(document.createTextNode(' '));
+                div.appendChild(hostBadge);
+            }
             elements.lobbyPlayerList.appendChild(div);
         }
     }

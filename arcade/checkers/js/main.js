@@ -159,12 +159,6 @@ var UI = (function() {
         Multiplayer.joinRoom(playerName, roomCode);
     }
 
-    function escapeHtml(text) {
-        var div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
     // ── Multiplayer Callbacks ────────────────────────────────────────────────
     function onMultiplayerStateUpdate(update) {
         if (update.type === 'snapshot') {
@@ -183,7 +177,11 @@ var UI = (function() {
             update.players.forEach(function(p) {
                 var div = document.createElement('div');
                 div.className = 'lobby-player';
-                div.innerHTML = '<span class="lobby-player-dot" style="background:' + escapeHtml(p.color) + '"></span>' + escapeHtml(p.name) + (p.isHost ? ' (host)' : '');
+                var dot = document.createElement('span');
+                dot.className = 'lobby-player-dot';
+                dot.style.background = p.color;
+                div.appendChild(dot);
+                div.appendChild(document.createTextNode(p.name + (p.isHost ? ' (host)' : '')));
                 elements.lobbyPlayerList.appendChild(div);
             });
             // Show Start button only for host when 2 players

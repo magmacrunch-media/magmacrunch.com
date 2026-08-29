@@ -313,11 +313,21 @@
         const color = msg.color || '#f0ead8';
         const text = msg.text || '';
 
-        div.innerHTML = `
-            <span class="chat-time">${time}</span>
-            <span class="chat-name" style="color:${color}">${name}:</span>
-            <span class="chat-text">${window.OPS.escapeHtml(text)}</span>
-        `;
+        const timeEl = document.createElement('span');
+        timeEl.className = 'chat-time';
+        timeEl.textContent = time;
+        const nameEl = document.createElement('span');
+        nameEl.className = 'chat-name';
+        nameEl.style.color = color;
+        nameEl.textContent = name + ':';
+        const textEl = document.createElement('span');
+        textEl.className = 'chat-text';
+        textEl.textContent = text;
+        div.appendChild(timeEl);
+        div.appendChild(document.createTextNode(' '));
+        div.appendChild(nameEl);
+        div.appendChild(document.createTextNode(' '));
+        div.appendChild(textEl);
 
         chatViewer.appendChild(div);
         chatViewer.scrollTop = chatViewer.scrollHeight;

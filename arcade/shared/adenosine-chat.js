@@ -587,7 +587,12 @@ var AdChat = (() => {
       var div = document.createElement("div");
       div.className = "acw-msg";
       if (field(msg, "from") === "system") div.className += " system";
-      div.innerHTML = '<span class="chat-name" style="color:' + escapeHtml(field(msg, "color") || "#ff2e9c") + '">' + escapeHtml(field(msg, "from")) + ":</span> " + escapeHtml(field(msg, "text"));
+      var nameEl = document.createElement("span");
+      nameEl.className = "chat-name";
+      nameEl.style.color = field(msg, "color") || "#ff2e9c";
+      nameEl.textContent = field(msg, "from") + ":";
+      div.appendChild(nameEl);
+      div.appendChild(document.createTextNode(" " + field(msg, "text")));
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
     }
@@ -599,7 +604,18 @@ var AdChat = (() => {
         users.forEach(function(u) {
           var div = document.createElement("div");
           div.className = "acw-online-user";
-          div.innerHTML = '<span class="acw-online-dot" style="background:' + escapeHtml(u.color ?? "") + '"></span><span class="acw-online-name">' + escapeHtml(u.name) + '</span><span class="acw-online-status">' + escapeHtml(u.game || (u.rooms && u.rooms.length ? "In Room" : "Online")) + "</span>";
+          var dot = document.createElement("span");
+          dot.className = "acw-online-dot";
+          dot.style.background = u.color ?? "";
+          var nameEl = document.createElement("span");
+          nameEl.className = "acw-online-name";
+          nameEl.textContent = u.name;
+          var statusEl = document.createElement("span");
+          statusEl.className = "acw-online-status";
+          statusEl.textContent = u.game || (u.rooms && u.rooms.length ? "In Room" : "Online");
+          div.appendChild(dot);
+          div.appendChild(nameEl);
+          div.appendChild(statusEl);
           list.appendChild(div);
         });
       }
@@ -630,11 +646,6 @@ var AdChat = (() => {
     function field(msg, key) {
       const v = msg[key];
       return typeof v === "string" ? v : "";
-    }
-    function escapeHtml(text) {
-      var div = document.createElement("div");
-      div.textContent = text;
-      return div.innerHTML;
     }
     function hslToHex(h, s, l) {
       s /= 100;
