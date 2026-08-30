@@ -1,11 +1,45 @@
-// app.js — SPRITE//FORGE
+// editor.js — SPRITE//FORGE, the DOM layer.
 //
 // Pixel-art sprite editor. Exports a uniform-grid PNG sheet: frames in a
 // single row, so a frame's index and its column are the same number. That is
 // the format magnolia reads out of a game's sprites/ directory and the one
 // texastoast's SpriteSheet(path, w, h) slices, so one sheet feeds both.
 //
-// No dependencies, no build step — a classic script, like the other ware apps.
+// Everything that only transforms data now lives in core/ — colour and the
+// shade ramp, shape rasterisation and flood fill, and the sheet codec. This
+// file owns the canvas, the widgets and the mutable editor state, and nothing
+// else. core/ never reaches back into it.
+//
+// No dependencies, no build step — classic scripts, like the other ware apps.
+// Deliberately not ES modules: the website is buildless and busts caches by
+// stamping ?v=<hash> onto <script src> tags, and an import specifier inside a
+// .js file is invisible to that stamper, so a core/ fix would sit behind stale
+// caches with no way to force a refresh.
+
+// ── core bridge ─────────────────────────────────────────
+// Bound once, by the name the call sites already used, so extracting them cost
+// no churn at the ~14 places that call them.
+const { shadeHex } = window.SpriteForge.color;
+const { bresenham, shapePixels } = window.SpriteForge.draw;
+const { framesToSheet, sheetToFrames } = window.SpriteForge.sheet;
+
+// The two ui/ modules that load after this one, read at call time and never
+// captured: they do not exist yet while this file is being evaluated. Both are
+// the project rather than the sprite — sprites-ui holds every sprite that is
+// not on the canvas, project-ui owns the dialogs — and a recolour or a theme is
+// a project's business. Absent in a build without them, and every caller here
+// falls back to doing its own half alone.
+const spritesUI = () => window.SpriteForge.spritesUI;
+const projectUI = () => window.SpriteForge.projectUI;
+
+// The two that lost their globals. core/ takes the grid and its size as
+// arguments; these re-supply the editor's current ones so the call sites read
+// exactly as before.
+const frameToImageData = (f, w, h) =>
+  window.SpriteForge.sheet.frameToImageData(f, w ?? frameW, h ?? frameH);
+const floodFill = (x, y, from, to) =>
+  window.SpriteForge.draw.floodFill(frame(), x, y, from, to);
+
 const DEFAULT_COLORS = [
   '#7cb342', '#5d4037', '#e53935', '#1e88e5',
   '#fdd835', '#8e24aa', '#00897b', '#ff6ec7',
@@ -18,6 +52,8 @@ const SHAPE_TOOLS = new Set(['line', 'rect', 'ellipse']);
 const ANIM_SCALES = [1, 2, 4, 8];
 const SECTION_KEY = 'sprite-forge-sections';
 const VIEW_KEY = 'sprite-forge-view';
+// Breathing room so a fitted sprite is not flush against the stage's edges.
+const FIT_MARGIN = 16;
 const SIDEBAR_MIN = 200, SIDEBAR_MAX = 420;
 const TOOL_META = {
   pencil: ['Pencil', 'B'], erase: ['Erase', 'E'], fill: ['Fill', 'G'], line: ['Line', 'L'],
@@ -32,8 +68,11 @@ let palette = [...DEFAULT_COLORS];
 let selectedColor = palette[0], selectedSwatch = 0;
 let tool = 'pencil';
 let zoom = 16;
-let mirrorX = false, onionSkin = false, gridOn = true;
-let undoStack = [], redoStack = [], painting = false, pendingSnap = null;
+// The sprite size the zoom was last fitted for, so a fit happens on open and
+// on resize but not on every repaint. null until the stage has a height.
+let fittedFor = null;
+let mirrorX = false, onionSkin = false, gridOn = true, dockOn = true;
+let painting = false;
 let lastPos = null;             // previous pencil/erase position, for stroke interpolation
 let shapeStart = null, shapeEnd = null;
 let anim = { playing: false, fps: 8, scale: 4, index: 0, timer: null };
@@ -60,6 +99,9 @@ const zoomLabel = document.getElementById('zoom-label');
 const frameLabel = document.getElementById('frame-label');
 const toolReadout = document.getElementById('tool-readout');
 const canvasDims = document.getElementById('canvas-dims');
+const canvasStage = document.getElementById('canvas-stage');
+const dock = document.getElementById('dock');
+const dockToggle = document.getElementById('dock-toggle');
 const dimStat = document.getElementById('dimStat');
 const frameStat = document.getElementById('frameStat');
 const sidebar = document.getElementById('sidebar');
@@ -98,47 +140,73 @@ function currentState() {
   }));
 }
 
-function pushUndo(state) {
-  undoStack.push(state);
-  if (undoStack.length > 100) undoStack.shift();
-  redoStack.length = 0;
-}
-
-function snapshot() { pushUndo(currentState()); }
-
-// Strokes snapshot once on mousedown and commit only if a pixel changed,
-// so Ctrl+Z undoes the whole stroke and no-op clicks don't pollute the stack.
-function beginStroke() { pendingSnap = currentState(); }
-function commitStroke() { if (pendingSnap) { pushUndo(pendingSnap); pendingSnap = null; } }
-
 function restore(s) {
   frames = s.frames; frameIndex = s.frameIndex; origin = s.origin;
   frameW = s.frameW; frameH = s.frameH;
   palette = s.palette; selectedSwatch = s.selectedSwatch; selectedColor = s.selectedColor;
   activeTemplate = s.activeTemplate;
+  if (s.sprites && spritesUI()) spritesUI().restoreAll(s.sprites);
   wInput.value = frameW; hInput.value = frameH;
   frameCache = [];
   syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
   renderPalette(); updatePaletteActive(); renderSlots();
 }
 
-function undo() {
-  if (!undoStack.length) return;
-  const s = undoStack.pop();
-  redoStack.push(currentState());
-  restore(s);
+// The stack itself is the kit's (kit/history.js). What stays here is what only
+// this app knows: what a state IS, how to put one back, and the one case where
+// the state being left has to carry more than a plain snapshot.
+const history = MagmaKit.history.create({
+  cap: 100,
+  snapshot: currentState,
+  restore,
+  // The state being left has to carry the sprite list whenever the state being
+  // entered does, or undoing a recolour would strand redo with no way back to
+  // it.
+  leaving: (s) => {
+    const now = currentState();
+    const su = spritesUI();
+    if (s.sprites && su) now.sprites = su.capture();
+    return now;
+  },
+});
+
+function snapshot() { history.push(); }
+
+// A recolour reaches every sprite, so its undo entry has to carry every sprite.
+// Only these entries do: a stroke changes one sprite and snapshotting the rest
+// on every mousedown would put the whole project on the stack a hundred times
+// over. The cost is paid by the operations that earn it.
+function snapshotProject() {
+  const s = currentState();
+  const su = spritesUI();
+  if (su) s.sprites = su.capture();
+  history.push(s);
 }
 
-function redo() {
-  if (!redoStack.length) return;
-  const s = redoStack.pop();
-  undoStack.push(currentState());
-  restore(s);
-}
+// Strokes snapshot once on mousedown and commit only if a pixel changed, so
+// Ctrl+Z undoes the whole stroke and no-op clicks don't pollute the stack.
+const beginStroke = () => history.beginStroke();
+const commitStroke = () => history.commitStroke();
+
+const undo = () => history.undo();
+const redo = () => history.redo();
 
 // ── Canvas rendering ────────────────────────────────────
 
 function sizeCanvas() {
+  // Shrink to fit the first time a given sprite size is drawn, and only ever
+  // downward. Opening a 128x128 project at the default 16x asked for a 2048px
+  // canvas in a 900px stage; growing to fit instead would fight anyone who has
+  // zoomed in on purpose, and zooming in past the window is how you draw a
+  // pixel. setZoom leaves the size alone, so manual zoom survives.
+  const size = `${frameW}x${frameH}`;
+  if (size !== fittedFor) {
+    const best = bestFitZoom();
+    if (best !== null) {
+      if (best < zoom) { zoom = best; zoomLabel.innerHTML = `${zoom}&times;`; }
+      fittedFor = size;
+    }
+  }
   canvas.width = frameW * zoom;
   canvas.height = frameH * zoom;
   canvasDims.innerHTML = `${frameW} &times; ${frameH}`;
@@ -208,24 +276,7 @@ function render() {
 
 // ── Frame previews (sheet strip + animation) ────────────
 
-function hexToRgb(hex, cache = hexToRgb.cache || (hexToRgb.cache = {})) {
-  return cache[hex] || (cache[hex] = [
-    parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16),
-  ]);
-}
 
-function frameToImageData(f) {
-  const img = new ImageData(frameW, frameH);
-  for (let y = 0; y < frameH; y++) {
-    for (let x = 0; x < frameW; x++) {
-      const c = f[y][x];
-      if (!c) continue;
-      const [r, g, b] = hexToRgb(c), i = (y * frameW + x) * 4;
-      img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b; img.data[i + 3] = 255;
-    }
-  }
-  return img;
-}
 
 function cachedFrame(i) {
   if (!frameCache[i]) {
@@ -381,76 +432,27 @@ canvas.addEventListener('mouseup', () => {
     shapeStart = null; shapeEnd = null;
     render(); if (changed) renderSheet();
   }
-  painting = false; lastPos = null; pendingSnap = null;
+  painting = false; lastPos = null; history.cancelStroke();
 });
 
 canvas.addEventListener('mouseleave', () => {
   if (shapeStart) { shapeStart = null; shapeEnd = null; render(); }
-  painting = false; lastPos = null; pendingSnap = null;
+  painting = false; lastPos = null; history.cancelStroke();
 });
 
 canvas.addEventListener('contextmenu', (e) => {
   e.preventDefault(); const c = pixelAt(e);
   beginStroke();
   if (writePixel(frame(), c.x, c.y, null)) { render(); renderSheet(); }
-  pendingSnap = null;
+  history.cancelStroke();
 });
 
 // ── Shape + line plotting ───────────────────────────────
 
-function bresenham(x0, y0, x1, y1) {
-  const pts = [];
-  const dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
-  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
-  let err = dx - dy, x = x0, y = y0;
-  for (;;) {
-    pts.push([x, y]);
-    if (x === x1 && y === y1) break;
-    const e2 = 2 * err;
-    if (e2 > -dy) { err -= dy; x += sx; }
-    if (e2 < dx) { err += dx; y += sy; }
-  }
-  return pts;
-}
 
-function shapePixels(kind, x0, y0, x1, y1) {
-  if (kind === 'line') return bresenham(x0, y0, x1, y1);
-  const xa = Math.min(x0, x1), xb = Math.max(x0, x1);
-  const ya = Math.min(y0, y1), yb = Math.max(y0, y1);
-  const pts = [];
-  if (kind === 'rect') {
-    for (let x = xa; x <= xb; x++) pts.push([x, ya], [x, yb]);
-    for (let y = ya + 1; y < yb; y++) pts.push([xa, y], [xb, y]);
-    return pts;
-  }
-  // ellipse outline inscribed in the drag box; plot from both axes to avoid gaps
-  const rx = (xb - xa) / 2, ry = (yb - ya) / 2;
-  const cx = (xa + xb) / 2, cy = (ya + yb) / 2;
-  if (rx < 0.5 || ry < 0.5) return bresenham(x0, y0, x1, y1);
-  for (let x = xa; x <= xb; x++) {
-    const dy = ry * Math.sqrt(Math.max(0, 1 - ((x - cx) / rx) ** 2));
-    pts.push([x, Math.round(cy - dy)], [x, Math.round(cy + dy)]);
-  }
-  for (let y = ya; y <= yb; y++) {
-    const dx = rx * Math.sqrt(Math.max(0, 1 - ((y - cy) / ry) ** 2));
-    pts.push([Math.round(cx - dx), y], [Math.round(cx + dx), y]);
-  }
-  return pts;
-}
 
 // ── Flood fill ──────────────────────────────────────────
 
-function floodFill(x, y, from, to) {
-  if (from === to) return;
-  const f = frame(), stack = [[x, y]];
-  while (stack.length) {
-    const [cx, cy] = stack.pop();
-    if (cx < 0 || cx >= frameW || cy < 0 || cy >= frameH) continue;
-    if (f[cy][cx] !== from) continue;
-    f[cy][cx] = to;
-    stack.push([cx + 1, cy], [cx - 1, cy], [cx, cy + 1], [cx, cy - 1]);
-  }
-}
 
 // ── Frame ops ───────────────────────────────────────────
 
@@ -496,16 +498,20 @@ function renderPalette() {
     const ci = document.createElement('input');
     ci.type = 'color'; ci.value = palette[i];
     ci.addEventListener('input', (e) => {
-      e.stopPropagation(); palette[idx] = e.target.value;
+      palette[idx] = e.target.value;
       div.style.backgroundColor = e.target.value;
       if (idx === selectedSwatch) { selectedColor = e.target.value; updateColorChip(); }
     });
-    ci.addEventListener('click', (e) => e.stopPropagation());
+    // Click chooses the colour to draw with; double-click opens the picker to
+    // change what the swatch is. They were the same gesture and the picker won
+    // every time, so the palette could be edited but not used.
+    div.title = 'Click to draw with this colour — double-click to change it';
     div.addEventListener('click', () => {
       selectedSwatch = idx; selectedColor = palette[idx];
       if (!['pencil', 'fill', 'line', 'rect', 'ellipse'].includes(tool)) { tool = 'pencil'; updateToolActive(); }
       updatePaletteActive(); updateColorChip();
     });
+    div.addEventListener('dblclick', () => ci.click());
     div.style.backgroundColor = palette[i];
     div.appendChild(ci); paletteEl.appendChild(div);
   }
@@ -529,48 +535,8 @@ document.getElementById('add-color-btn').addEventListener('click', () => {
 
 // ── Shade ramp ──────────────────────────────────────────
 
-function hexToHsl(hex) {
-  const [r, g, b] = hexToRgb(hex).map(v => v / 255);
-  const max = Math.max(r, g, b), min = Math.min(r, g, b), l = (max + min) / 2;
-  if (max === min) return [0, 0, l];
-  const d = max - min;
-  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-  let h;
-  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-  else if (max === g) h = ((b - r) / d + 2) / 6;
-  else h = ((r - g) / d + 4) / 6;
-  return [h * 360, s, l];
-}
 
-function hslToHex(h, s, l) {
-  h = ((h % 360) + 360) % 360 / 360;
-  const q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
-  const f = (t) => {
-    t = ((t % 1) + 1) % 1;
-    if (t < 1 / 6) return p + (q - p) * 6 * t;
-    if (t < 1 / 2) return q;
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-    return p;
-  };
-  return '#' + [f(h + 1 / 3), f(h), f(h - 1 / 3)]
-    .map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
-}
 
-// One shade of a colour, as a step on a pixel-art ramp: shadows shift hue toward
-// blue and gain saturation, highlights shift toward yellow and lose it. Step 0
-// returns the base verbatim rather than round-tripping through HSL — that round
-// trip loses a bit to float error, and #f0c090 coming back as #f0c08f would
-// silently break every exact-string hex lookup in the editor.
-function shadeHex(base, step) {
-  if (!step) return base;
-  const [h, s, l] = hexToHsl(base);
-  const dl = 0.11 * step;
-  return hslToHex(
-    h - 8 * step,
-    step < 0 ? Math.min(1, s + 0.04 * -step) : Math.max(0, s - 0.04 * step),
-    Math.max(0.06, Math.min(0.94, l + dl)),
-  );
-}
 
 document.getElementById('ramp-btn').addEventListener('click', () => {
   const shades = [-2, -1, 1, 2].map(step => shadeHex(selectedColor, step));
@@ -581,24 +547,41 @@ document.getElementById('ramp-btn').addEventListener('click', () => {
 
 // ── Recolour ────────────────────────────────────────────
 
-// Rewrites a set of colours across every frame and the palette in one pass and
-// one undo step, so a slot recolour that touches several shades is still a
-// single Ctrl+Z. Returns whether anything actually changed.
+// Rewrites a set of colours across the whole project and the palette in one
+// pass and one undo step, so a slot recolour that touches several shades is
+// still a single Ctrl+Z. Returns whether anything actually changed.
+//
+// Every sprite, not just the one on screen. The palette is the project's — one
+// set of swatches across every sprite is the point of the format's shared key —
+// so a REPLACE that stopped at the live sprite would leave the others drawn in
+// a colour the palette no longer has, and the project carrying both.
+//
+// It does not ask, the way applying a theme does, because this is a tool aimed
+// at one colour and used over and over while drawing, and a dialog every time
+// would be unusable. It does not need to: the undo entry carries the other
+// sprites, so Ctrl+Z takes all of it back.
 function applyColorMap(map) {
   const pairs = Object.entries(map).filter(([from, to]) => from !== to);
   if (!pairs.length) return false;
   const lookup = Object.fromEntries(pairs);
+  const su = spritesUI();
 
   const hits = frames.some(f => f.some(row => row.some(px => px && lookup[px])));
   const inPalette = palette.some(c => lookup[c]);
-  if (!hits && !inPalette) return false;
+  // Asked as well, because the colour may live only in a sprite that is not on
+  // screen: picking it off this canvas is not the one way to select it.
+  const elsewhere = !!su && su.usesAny(lookup);
+  if (!hits && !inPalette && !elsewhere) return false;
 
-  snapshot();
+  snapshotProject();
   frames = frames.map(f => f.map(row => row.map(px => (px && lookup[px]) || px)));
   palette = palette.map(c => lookup[c] || c);
   selectedColor = lookup[selectedColor] || selectedColor;
   frameCache = [];
+  const others = su ? su.remapAll(lookup) : 0;
   render(); renderSheet(); renderPalette(); updatePaletteActive(); updateColorChip();
+  // Said only when it reached past the canvas, where the change is not visible.
+  if (others) Toast.show(`REPLACED IN ${others + 1} SPRITES`);
   return true;
 }
 
@@ -624,9 +607,12 @@ function setMirror(v) { mirrorX = v; mirrorToggle.classList.toggle('active', v);
 function setOnion(v) { onionSkin = v; onionToggle.classList.toggle('active', v); render(); saveViewPrefs(); }
 function setGrid(v) { gridOn = v; gridToggle.classList.toggle('active', v); render(); saveViewPrefs(); }
 
+function setDock(v) { dockOn = v; dock.hidden = !v; dockToggle.classList.toggle('active', v); saveViewPrefs(); }
+
 mirrorToggle.addEventListener('click', () => setMirror(!mirrorX));
 onionToggle.addEventListener('click', () => setOnion(!onionSkin));
 gridToggle.addEventListener('click', () => setGrid(!gridOn));
+dockToggle.addEventListener('click', () => setDock(!dockOn));
 
 // ── Frame size ──────────────────────────────────────────
 
@@ -718,22 +704,91 @@ function setZoom(z) {
   sizeCanvas(); render(); saveViewPrefs();
 }
 
+/**
+ * The biggest step that fits the sprite in the stage, or null if the stage has
+ * not been laid out yet — at first paint it has no height, and a fit computed
+ * against zero would pin every sprite to 2x.
+ */
+function bestFitZoom() {
+  const availW = canvasStage.clientWidth - FIT_MARGIN;
+  const availH = canvasStage.clientHeight - FIT_MARGIN;
+  if (availW <= 0 || availH <= 0) return null;
+  return [...ZOOM_STEPS].reverse()
+    .find(s => frameW * s <= availW && frameH * s <= availH) ?? ZOOM_STEPS[0];
+}
+
+function fitToWindow() {
+  const best = bestFitZoom();
+  if (best !== null) setZoom(best);
+}
+
+document.getElementById('zoom-fit').addEventListener('click', fitToWindow);
+
 // ── Export ──────────────────────────────────────────────
 
-document.getElementById('export-btn').addEventListener('click', () => {
-  const sheet = document.createElement('canvas');
-  sheet.width = frameW * frames.length; sheet.height = frameH;
-  const sctx = sheet.getContext('2d');
-  frames.forEach((f, i) => sctx.putImageData(frameToImageData(f), i * frameW, 0));
+/**
+ * Save the sheet, by whichever route the build has.
+ *
+ * The browser has exactly one: an <a download>, which lands the file in the
+ * downloads folder with no say in the matter. The desktop has a Save dialog
+ * and a real write, and fs.savePng existed for this from the day the bridge
+ * was written — it just had no caller until now.
+ *
+ * @returns the path written, or null if the dialog was cancelled.
+ */
+async function saveSheet(canvas, name) {
+  const f = window.SpriteForge.fs;
+  if (!f) {
+    const a = document.createElement('a');
+    a.download = name; a.href = canvas.toDataURL('image/png'); a.click();
+    return name;
+  }
+  const path = await f.savePng(name);
+  if (!path) return null;
+  await f.writeBytes(path.endsWith('.png') ? path : path + '.png', await window.SpriteForge.png.bytes(canvas));
+  return path;
+}
+
+/**
+ * The load call for every engine, from the one place that knows them.
+ *
+ * This panel used to hardcode two of the three, and the two it kept were not
+ * the interesting ones: adenosine, whose call is the only one that carries
+ * originX and originY as arguments, was the one missing. core/targets has held
+ * a descriptor per engine all along, so read them from there and the list
+ * cannot drift from the exporter again.
+ */
+function loadSnippets(file) {
+  const T = window.SpriteForge.targets.engines;
+  const out = [];
+  for (const { id, label } of T.kinds()) {
+    out.push(`// ${label}`);
+    out.push(`//   ${T.ENGINES[id].snippet({
+      file, w: frameW, h: frameH, ox: origin.x, oy: origin.y,
+    })}`);
+  }
+  return out;
+}
+
+document.getElementById('export-btn').addEventListener('click', async () => {
+  const sheet = framesToSheet(frames, frameW, frameH);
   const name = `sprite_${frameW}x${frameH}.png`;
-  const a = document.createElement('a');
-  a.download = name; a.href = sheet.toDataURL('image/png'); a.click();
+
   exportOutput.value = [
     `// sprite//forge — ${frames.length} frame${frames.length === 1 ? '' : 's'}, ${frameW}×${frameH}, sheet ${sheet.width}×${sheet.height}`,
     `// origin: (${origin.x}, ${origin.y})   (not stored in the PNG — pass it at load time)`,
-    `// texastoast:  SpriteSheet('${name}', ${frameW}, ${frameH})   frame i = (i, 0)`,
-    `// magnolia:    sprite_load(&s, "${name}", ${origin.x}, ${origin.y});`,
+    `//`,
+    ...loadSnippets(name),
   ].join('\n');
+
+  try {
+    const path = await saveSheet(sheet, name);
+    if (path) Toast.show('EXPORTED');
+  } catch (e) {
+    // Never say exported when nothing reached the disk.
+    Toast.show('COULD NOT EXPORT');
+    console.error('export failed:', e);
+  }
 });
 
 // ── Copy ────────────────────────────────────────────────
@@ -788,21 +843,12 @@ function loadBlank() {
   templateModal.close();
 }
 
-// frameToImageData closes over the global frameW/frameH, and a template carries
-// its own size, so thumbnails need their own tiny renderer.
+// A template carries its own size rather than the editor's, which is why this
+// passes w/h explicitly instead of letting frameToImageData default them.
 function thumbCanvas(pixels, w, h) {
   const c = document.createElement('canvas');
   c.width = w; c.height = h;
-  const img = new ImageData(w, h);
-  for (let y = 0; y < h; y++) {
-    for (let x = 0; x < w; x++) {
-      const hex = pixels[y][x];
-      if (!hex) continue;
-      const [r, g, b] = hexToRgb(hex), i = (y * w + x) * 4;
-      img.data[i] = r; img.data[i + 1] = g; img.data[i + 2] = b; img.data[i + 3] = 255;
-    }
-  }
-  c.getContext('2d').putImageData(img, 0, 0);
+  c.getContext('2d').putImageData(frameToImageData(pixels, w, h), 0, 0);
   c.className = 'tpl-thumb';
   return c;
 }
@@ -886,13 +932,14 @@ function recolorSlot(name, newBase) {
   renderSlots();
 }
 
+// The three ways out — the ×, CANCEL, and a click on the backdrop — are the
+// kit's (kit/modal.js). Four copies of that wiring used to live in this app.
+const templateUI = MagmaKit.modal.wire(templateModal, { closers: ['template-cancel'] });
+
 document.getElementById('template-btn').addEventListener('click', () => {
   renderTemplateGrid();
-  templateModal.showModal();
+  templateUI.open();
 });
-document.getElementById('template-cancel').addEventListener('click', () => templateModal.close());
-templateModal.querySelector('.modal-close').addEventListener('click', () => templateModal.close());
-templateModal.addEventListener('click', (e) => { if (e.target === templateModal) templateModal.close(); });
 
 // ── Replace colour ──────────────────────────────────────
 
@@ -903,13 +950,12 @@ document.getElementById('replace-btn').addEventListener('click', () => {
 
 // ── Import ──────────────────────────────────────────────
 
+const importUI = MagmaKit.modal.wire(importModal, { closers: ['import-cancel'] });
+
 document.getElementById('import-btn').addEventListener('click', () => {
   importFile.value = ''; importW.value = frameW; importH.value = frameH;
-  importModal.showModal();
+  importUI.open();
 });
-document.getElementById('import-cancel').addEventListener('click', () => importModal.close());
-importModal.querySelector('.modal-close').addEventListener('click', () => importModal.close());
-importModal.addEventListener('click', (e) => { if (e.target === importModal) importModal.close(); });
 
 // The toast carries the message and the border says which field it is about —
 // the import form has two, so "smaller than one 32×32 frame" needs to point at
@@ -930,32 +976,21 @@ document.getElementById('import-confirm').addEventListener('click', () => {
   const img = new Image();
   img.onload = () => {
     URL.revokeObjectURL(url);
-    const cols = Math.floor(img.naturalWidth / w), rowsN = Math.floor(img.naturalHeight / h);
-    if (!cols || !rowsN) { importError(importW, `Image is smaller than one ${w}×${h} frame`); return; }
     const src = document.createElement('canvas');
     src.width = img.naturalWidth; src.height = img.naturalHeight;
     const sctx = src.getContext('2d');
     sctx.drawImage(img, 0, 0);
+
+    const sliced = sheetToFrames(sctx, img.naturalWidth, img.naturalHeight,
+      w, h, MAX_FRAMES, MAX_SWATCHES);
+    if (!sliced) { importError(importW, `Image is smaller than one ${w}×${h} frame`); return; }
+
     snapshot();
     frameW = w; frameH = h;
     wInput.value = w; hInput.value = h;
-    frames = []; const counts = {};
-    for (let row = 0; row < rowsN && frames.length < MAX_FRAMES; row++) {
-      for (let col = 0; col < cols && frames.length < MAX_FRAMES; col++) {
-        const d = sctx.getImageData(col * w, row * h, w, h).data;
-        const f = Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => {
-          const i = (y * w + x) * 4;
-          if (d[i + 3] < 128) return null;
-          const hex = '#' + [d[i], d[i + 1], d[i + 2]].map(v => v.toString(16).padStart(2, '0')).join('');
-          counts[hex] = (counts[hex] || 0) + 1;
-          return hex;
-        }));
-        frames.push(f);
-      }
-    }
-    const harvested = Object.keys(counts).sort((a, b) => counts[b] - counts[a]).slice(0, MAX_SWATCHES);
-    if (harvested.length) {
-      palette = harvested; selectedSwatch = 0; selectedColor = palette[0];
+    frames = sliced.frames;
+    if (sliced.palette.length) {
+      palette = sliced.palette; selectedSwatch = 0; selectedColor = palette[0];
       renderPalette(); updatePaletteActive();
     }
     frameIndex = 0; frameCache = [];
@@ -963,9 +998,16 @@ document.getElementById('import-confirm').addEventListener('click', () => {
     // gone; keeping it would let a recolour rewrite unrelated colours.
     activeTemplate = null; renderSlots();
     origin.x = Math.min(origin.x, w); origin.y = Math.min(origin.y, h);
-    const truncated = (img.naturalWidth % w) || (img.naturalHeight % h)
+    const truncated = sliced.truncated
       ? ` (image not evenly divisible by ${w}×${h} — trailing pixels dropped)` : '';
-    exportOutput.value = `// imported ${frames.length} frame${frames.length === 1 ? '' : 's'} of ${w}×${h} from ${file.name}${truncated}`;
+    // sheet.js snaps the colours it could not keep onto the nearest one it
+    // did, so this is a change to the pixels the user is now looking at and
+    // has to be said out loud rather than left in the export header. A
+    // full-colour photograph loses hundreds of colours here.
+    const snapped = sliced.colors > sliced.palette.length
+      ? ` (${sliced.colors} colours reduced to ${sliced.palette.length})` : '';
+    if (snapped) Toast.show(`${sliced.colors} COLOURS SNAPPED TO ${sliced.palette.length}`);
+    exportOutput.value = `// imported ${frames.length} frame${frames.length === 1 ? '' : 's'} of ${w}×${h} from ${file.name}${snapped}${truncated}`;
     syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
     importModal.close();
   };
@@ -985,51 +1027,200 @@ document.getElementById('clear-btn').addEventListener('click', () => {
 
 // ── Keyboard shortcuts ──────────────────────────────────
 
+// What each action does. The names come from core/keybindings.js, which is the
+// one table the whole app parses keys through; the menu reaches several of
+// these by the same names through its own data-action strings.
+const KEY_ACTIONS = {
+  'edit:undo': () => undo(),
+  'edit:redo': () => redo(),
+
+  'tool:pencil': () => setTool('pencil'),
+  'tool:erase': () => setTool('erase'),
+  'tool:fill': () => setTool('fill'),
+  'tool:line': () => setTool('line'),
+  'tool:rect': () => setTool('rect'),
+  'tool:ellipse': () => setTool('ellipse'),
+  'tool:pick': () => setTool('pick'),
+  'tool:origin': () => setTool('origin'),
+
+  'view:zoom-fit': () => fitToWindow(),
+  'view:grid': () => setGrid(!gridOn),
+  'view:mirror': () => setMirror(!mirrorX),
+  'view:onion': () => setOnion(!onionSkin),
+  'view:dock': () => setDock(!dockOn),
+  'view:zoom-out': () => setZoom([...ZOOM_STEPS].reverse().find(s => s < zoom) ?? zoom),
+  'view:zoom-in': () => setZoom(ZOOM_STEPS.find(s => s > zoom) ?? zoom),
+
+  'frame:prev': () => stepFrame(-1),
+  'frame:next': () => stepFrame(1),
+  'anim:play': () => setPlaying(!anim.playing),
+
+  'transform:flip-h': () => document.getElementById('flip-h').click(),
+  'transform:flip-v': () => document.getElementById('flip-v').click(),
+  'transform:rot-90': () => document.getElementById('rot-90').click(),
+  'shift:left': () => shiftFrame(-1, 0),
+  'shift:right': () => shiftFrame(1, 0),
+  'shift:up': () => shiftFrame(0, -1),
+  'shift:down': () => shiftFrame(0, 1),
+
+  'file:templates': () => document.getElementById('template-btn').click(),
+};
+
+function setTool(name) { tool = name; updateToolActive(); }
+
+const KB = window.SpriteForge.keybindings;
+const KEYS = MagmaKit.keys.create(KB.BINDINGS);
+const EDITOR_ACTIONS = Object.keys(KEY_ACTIONS);
+
 document.addEventListener('keydown', (e) => {
-  if ((e.target.matches && e.target.matches('input, textarea'))
-      || importModal.open || templateModal.open) return;
-  const m = e.metaKey || e.ctrlKey;
-  if (m && e.key === 'z' && !e.shiftKey) { e.preventDefault(); undo(); return; }
-  if (m && e.key === 'z' && e.shiftKey)  { e.preventDefault(); redo(); return; }
-  if (m && e.key === 'y')                { e.preventDefault(); redo(); return; }
-  if (m) return;
-  const tools = { b: 'pencil', e: 'erase', g: 'fill', l: 'line', u: 'rect', c: 'ellipse', i: 'pick', o: 'origin' };
-  if (tools[e.key]) { tool = tools[e.key]; updateToolActive(); }
-  else if (e.key === 't') document.getElementById('template-btn').click();
-  else if (e.key === 'm') setMirror(!mirrorX);
-  else if (e.key === 'n') setOnion(!onionSkin);
-  else if (e.key === 'd') setGrid(!gridOn);
-  else if (e.key === 'h') document.getElementById('flip-h').click();
-  else if (e.key === 'v') document.getElementById('flip-v').click();
-  else if (e.key === 'r') document.getElementById('rot-90').click();
-  else if (e.key === ' ') { e.preventDefault(); setPlaying(!anim.playing); }
-  else if (e.key === 'ArrowLeft')  { e.preventDefault(); shiftFrame(-1, 0); }
-  else if (e.key === 'ArrowRight') { e.preventDefault(); shiftFrame(1, 0); }
-  else if (e.key === 'ArrowUp')    { e.preventDefault(); shiftFrame(0, -1); }
-  else if (e.key === 'ArrowDown')  { e.preventDefault(); shiftFrame(0, 1); }
-  else if (e.key === '[') stepFrame(-1);
-  else if (e.key === ']') stepFrame(1);
-  else if (e.key === '-') setZoom([...ZOOM_STEPS].reverse().find(s => s < zoom) ?? zoom);
-  else if (e.key === '=') setZoom(ZOOM_STEPS.find(s => s > zoom) ?? zoom);
+  // Any open dialog swallows the shortcuts, rather than the two named ones:
+  // the GameMaker sprite picker is a third, and there will be a fourth. The
+  // typing guard is the kit's, which counts a <select> as typing too — a
+  // letter there is type-ahead, not a tool change.
+  if (document.querySelector('dialog[open]')) return;
+  const action = KEYS.resolve(e, EDITOR_ACTIONS);
+  if (!action) return;
+  if (KB.prevents(action)) e.preventDefault();
+  KEY_ACTIONS[action]();
+});
+
+// ── Colour themes ───────────────────────────────────────
+//
+// A theme is a named list of colours: the set vendored from MAGMA//OPS in
+// core/ops-themes.js, plus any you save here. Loading one swaps the swatches
+// you draw *from* and leaves every placed pixel alone — recolouring what is
+// already drawn is what REPLACE and the template slots do.
+//
+// Yours live in localStorage rather than the .forge file, because a palette
+// you like is a fact about you and not about one sprite. The .forge file
+// carries its own palette regardless, so opening a project still restores the
+// colours it was drawn with.
+
+const THEME_KEY = 'spriteforge.themes';
+const PAL = window.SpriteForge.palettes;
+
+const themeSelect = document.getElementById('palette-theme');
+const themeName = document.getElementById('theme-name');
+const themeSave = document.getElementById('theme-save');
+const themeDelete = document.getElementById('theme-delete');
+
+// Filtered through core rather than trusted: this is read during init, and a
+// malformed entry here used to throw and take the rest of startup with it.
+const myThemes = () => PAL.sane(readPrefs(THEME_KEY));
+
+function renderThemes(selectId) {
+  if (!themeSelect) return;
+  themeSelect.innerHTML = '';
+
+  const first = document.createElement('option');
+  first.value = '';
+  first.textContent = 'choose a theme...';
+  themeSelect.append(first);
+
+  for (const group of PAL.bySection(myThemes())) {
+    const og = document.createElement('optgroup');
+    og.label = group.section.replace(/-/g, ' ');
+    for (const t of group.themes) {
+      const opt = document.createElement('option');
+      opt.value = t.id;
+      // The count is the useful number at a glance: a four-colour Game Boy
+      // theme and a twenty-seven colour Pop Art are different tools.
+      opt.textContent = `${t.name} (${t.colors.length})`;
+      og.append(opt);
+    }
+    themeSelect.append(og);
+  }
+  themeSelect.value = selectId || '';
+  syncThemeButtons();
+}
+
+function syncThemeButtons() {
+  const t = themeSelect ? PAL.find(themeSelect.value, myThemes()) : null;
+  if (themeDelete) themeDelete.disabled = !(t && t.custom);
+}
+
+async function applyTheme(id) {
+  const t = PAL.find(id, myThemes());
+  if (!t) return;
+  const colors = PAL.normalize(t.colors, MAX_SWATCHES);
+  // Nothing usable is not a palette. Assigning it would leave selectedColor
+  // undefined, and drawing would then write undefined into the frames and on
+  // into the .forge file.
+  if (!colors.length) { Toast.show('THAT THEME HAS NO USABLE COLOURS'); return; }
+
+  // A theme is the project's, not this sprite's, so recolouring is answered
+  // over in project-ui.js where the sprite list and the dialogs are. It comes
+  // back false when it did not recolour — declined, nothing drawn, or no
+  // project layer at all — and then this does what applying a theme has
+  // always done and swaps the swatches on their own. When it did recolour it
+  // has already put the new palette in through setSprite, and doing it again
+  // here would cost a second undo step for nothing.
+  const ui = projectUI();
+  const recoloured = ui && ui.retheme ? await ui.retheme(colors, t.name) : false;
+  if (!recoloured) {
+    snapshot();
+    palette = colors;
+    selectedSwatch = 0;
+    selectedColor = palette[0];
+    renderPalette(); updatePaletteActive(); updateColorChip();
+  }
+
+  // Only one vendored theme is bigger than the palette, but saying so beats
+  // handing over the first thirty-two of forty-nine without a word.
+  Toast.show(PAL.truncates(t, MAX_SWATCHES)
+    ? `${t.name} — first ${MAX_SWATCHES} of ${PAL.normalize(t.colors).length}`.toUpperCase()
+    : t.name.toUpperCase());
+}
+
+if (themeSelect) themeSelect.addEventListener('change', () => {
+  syncThemeButtons();
+  if (themeSelect.value) applyTheme(themeSelect.value);
+});
+
+if (themeSave) themeSave.addEventListener('click', () => {
+  try {
+    const theme = PAL.custom(themeName.value || 'untitled', palette);
+    // Saving over a name replaces it: list() lets the later one win, and
+    // storing both would leave a copy nothing can ever reach.
+    writePrefs(THEME_KEY, [...myThemes().filter(t => t.id !== theme.id), theme]);
+    themeName.value = '';
+    renderThemes(theme.id);
+    Toast.show('THEME SAVED');
+  } catch (e) {
+    Toast.show(String(e.message).toUpperCase());
+  }
+});
+
+if (themeDelete) themeDelete.addEventListener('click', () => {
+  const id = themeSelect.value;
+  const t = PAL.find(id, myThemes());
+  if (!t || !t.custom) return;
+  writePrefs(THEME_KEY, myThemes().filter(x => x.id !== id));
+  renderThemes('');
+  Toast.show('THEME DELETED');
 });
 
 // ── Sidebar sections ────────────────────────────────────
 
 const sections = [...document.querySelectorAll('#sidebar details[data-section]')];
 
-function readPrefs(key) {
-  try { return JSON.parse(localStorage.getItem(key)) || null; } catch { return null; }
-}
-
-function writePrefs(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
-}
+// localStorage with every failure swallowed — private mode throws on write, a
+// corrupt value throws on parse, and neither is a reason to stop working. From
+// the kit (kit/prefs.js).
+const readPrefs = MagmaKit.prefs.read;
+const writePrefs = MagmaKit.prefs.write;
 
 function loadSectionPrefs() {
   const prefs = readPrefs(SECTION_KEY);
   if (!prefs) return;
   for (const d of sections)
     if (d.dataset.section in prefs) d.open = !!prefs[d.dataset.section];
+  // A file written before the sidebar was an accordion can have every section
+  // open, which is the state this replaced. Keep the first and close the rest —
+  // skipping TARGETS when it is hidden, or the web build would restore a
+  // desktop session by opening the one section it does not show and closing
+  // everything it does.
+  closeOthers(sections.find(d => d.open && !d.hidden));
 }
 
 function saveSectionPrefs() {
@@ -1038,12 +1229,35 @@ function saveSectionPrefs() {
   writePrefs(SECTION_KEY, prefs);
 }
 
-sections.forEach(d => d.addEventListener('toggle', saveSectionPrefs));
+/**
+ * One section open at a time.
+ *
+ * The sections total about 1400px and the sidebar column is 600-960px, so
+ * "all of them open" was never a state that fit on a screen — it just meant
+ * everything below COLOR was reached by scrolling and easy to forget was
+ * there. Closing the others costs nothing that the summaries do not still
+ * show, and every tool has a single-key shortcut regardless of whether TOOLS
+ * is open.
+ */
+let switching = false;
+
+function closeOthers(keep) {
+  if (!keep) return;
+  switching = true;
+  for (const d of sections) if (d !== keep && d.open) d.open = false;
+  switching = false;
+}
+
+sections.forEach(d => d.addEventListener('toggle', () => {
+  if (switching) return;
+  if (d.open) closeOthers(d);
+  saveSectionPrefs();
+}));
 
 // ── View preferences ────────────────────────────────────
 
 function saveViewPrefs() {
-  writePrefs(VIEW_KEY, { zoom, gridOn, mirrorX, onionSkin, sidebarW: sidebar.offsetWidth });
+  writePrefs(VIEW_KEY, { zoom, gridOn, mirrorX, onionSkin, dockOn, sidebarW: sidebar.offsetWidth });
 }
 
 function loadViewPrefs() {
@@ -1053,11 +1267,14 @@ function loadViewPrefs() {
   if (typeof p.gridOn === 'boolean') gridOn = p.gridOn;
   if (typeof p.mirrorX === 'boolean') mirrorX = p.mirrorX;
   if (typeof p.onionSkin === 'boolean') onionSkin = p.onionSkin;
+  if (typeof p.dockOn === 'boolean') dockOn = p.dockOn;
   if (p.sidebarW) setSidebarWidth(p.sidebarW);
   zoomLabel.innerHTML = `${zoom}&times;`;
   gridToggle.classList.toggle('active', gridOn);
   mirrorToggle.classList.toggle('active', mirrorX);
   onionToggle.classList.toggle('active', onionSkin);
+  dock.hidden = !dockOn;
+  dockToggle.classList.toggle('active', dockOn);
 }
 
 // ── Sidebar resizing ────────────────────────────────────
@@ -1085,6 +1302,113 @@ resizer.addEventListener('mousedown', (e) => {
 
 resizer.addEventListener('dblclick', () => { setSidebarWidth(240); saveViewPrefs(); });
 
+// ── State accessor ──────────────────────────────────────
+//
+// The one door into the editor's mutable state, for the parts of the UI that
+// live in their own files — project-ui.js today, the sprite list and the export
+// targets next. Everything above still touches the globals directly; this is
+// not an attempt to encapsulate them, it is a single named seam so that new
+// code does not add a second way in.
+//
+// getSprite/setSprite speak the shape core/project.js uses, so a save is a read
+// and a load is a write, with no translation layer in between to drift.
+
+/** A sprite's own state into the editor. Everything here belongs to one
+ *  sprite; the palette and the template belong to the project and are not
+ *  touched. */
+function putSprite(sprite) {
+  frameW = sprite.w; frameH = sprite.h;
+  wInput.value = frameW; hInput.value = frameH;
+  frames = sprite.frames.map(f => f.map(row => [...row]));
+  frameIndex = 0; frameCache = [];
+  origin = { x: Math.min(sprite.origin.x, frameW), y: Math.min(sprite.origin.y, frameH) };
+  if (sprite.fps) { anim.fps = sprite.fps; animFpsInput.value = sprite.fps; }
+}
+
+function redrawEverything() {
+  syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
+  renderPalette(); updatePaletteActive(); renderSlots();
+}
+
+window.SpriteForge = window.SpriteForge || {};
+window.SpriteForge.editor = {
+  // How many swatches the palette has room for. Published because project-ui
+  // has to trim a loaded palette to fit and should not keep its own copy of a
+  // number that lives here.
+  MAX_SWATCHES,
+
+  /** The editor's contents as one project sprite. */
+  getSprite(name) {
+    return {
+      name: name || 'sprite',
+      w: frameW, h: frameH,
+      origin: { x: origin.x, y: origin.y },
+      fps: anim.fps,
+      frames: frames.map(f => f.map(row => [...row])),
+    };
+  },
+
+  getPalette() { return [...palette]; },
+  getTemplate() { return activeTemplate ? activeTemplate.id : null; },
+  getSlots() { return activeTemplate ? { ...activeTemplate.slots } : null; },
+
+  /**
+   * Replaces everything the editor is showing. Follows the same order as
+   * loadTemplate and the PNG import so it lands as one undo step, and so the
+   * three wholesale-replacement paths cannot drift apart.
+   */
+  setSprite(sprite, newPalette, slots, templateId) {
+    snapshot();
+    putSprite(sprite);
+    if (newPalette && newPalette.length) {
+      palette = newPalette.slice(0, MAX_SWATCHES);
+      selectedSwatch = 0; selectedColor = palette[0];
+    }
+    // Slot identity only survives when the file carried it. Inventing one would
+    // let a recolour rewrite colours that never belonged to that slot.
+    activeTemplate = slots ? { id: templateId, label: templateId || 'project', slots, steps: {} } : null;
+    redrawEverything();
+  },
+
+  /**
+   * Switch which sprite of the project is being edited.
+   *
+   * Not an undo step, and the history goes with it. The stack holds states of
+   * the sprite being left; replaying one of those into this sprite would not
+   * be an undo, it would be pasting another sprite's frames over yours. The
+   * palette, the slots and the template are the project's rather than the
+   * sprite's, so they stay exactly as they are.
+   */
+  swapSprite(sprite) {
+    history.clear();
+    putSprite(sprite);
+    redrawEverything();
+  },
+
+  /**
+   * Bumped on every change, so project-ui can tell dirty from saved.
+   *
+   * This is the dirty signal rather than the undo depth, because with more
+   * than one sprite the depth is no longer a property of the project:
+   * switching sprites clears the history, and an edit to the sprite you are
+   * not looking at still has to count as unsaved work. So it never goes down,
+   * and clear() above deliberately does not reset it.
+   *
+   * The cost is that undoing back to exactly the saved state no longer clears
+   * the dirty marker. Overstating unsaved work is the safe direction to be
+   * wrong in.
+   */
+  revision() { return history.revision(); },
+
+  // The Edit menu drives the same two functions Ctrl+Z and Ctrl+Y do. They go
+  // through this seam rather than the menu reaching for the module scope,
+  // which is the point of having one door. canUndo/canRedo are what let the
+  // menu grey its own items out instead of offering a no-op.
+  undo, redo,
+  canUndo() { return history.canUndo(); },
+  canRedo() { return history.canRedo(); },
+};
+
 // ── Init ────────────────────────────────────────────────
 loadSectionPrefs();
 loadViewPrefs();
@@ -1097,3 +1421,6 @@ updateToolActive();
 updateFrameLabel();
 syncOriginInputs();
 renderSlots();
+// Last, deliberately. The themes come from storage, and nothing that comes
+// from storage should sit upstream of the canvas being drawn.
+renderThemes();

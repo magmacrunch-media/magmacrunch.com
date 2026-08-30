@@ -1,0 +1,1039 @@
+/* ═══════════════════════════════════════════════
+   sprite forge — app styles
+
+   Chrome (reset, header, glitch title, tool nav, workspace, footer) comes
+   from ware/shell/app-shell.css, linked ahead of this file. Only tokens are
+   overridden here; everything below .workspace is this app's own.
+   ═══════════════════════════════════════════════ */
+
+/* ── PALETTE ── */
+:root {
+    --bg:        #080808;
+    --surface:   #111118;
+    --panel:     #15151d;
+    --border:    #2a2a3a;
+    --text:      #f0ead8;
+    --dim:       #6a6a7a;
+    --accent:    #a0a0b0;
+    --rose:      #ff3d6e;
+    --cyan:      #00f5ff;
+    --panel-w:   240px;
+
+    /* Sprite pixels sit on a checker, so the title carries the colour
+       instead of the workspace. */
+    --title-color:   var(--rose);
+    --title-glow:    0 0 8px rgba(255,61,110,0.4);
+    --glitch-tint-1: rgba(255,61,110,0.35);
+    --glitch-tint-2: rgba(0,245,255,0.35);
+    --chrome-tint-1: rgba(255,61,110,0.35);
+    --chrome-tint-2: rgba(0,245,255,0.35);
+}
+
+body {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ── WORKSPACE ── */
+
+/* Three rows: toolbar, stage, dock. The stage is the only one that gives, so
+   the dock stays on screen no matter how big the sprite is — which is the whole
+   point of it. It was a single scrolling column of siblings before, and a
+   128x128 sprite put the previews ~1700px below the fold. */
+#canvas-panel {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+#canvas-stage {
+    min-height: 0;
+    display: flex;
+    overflow: auto;
+}
+
+/* margin:auto rather than align-items/justify-content, which centre by
+   overflowing equally in both directions and put the top-left of an
+   oversized canvas out of reach of its own scrollbars. */
+#canvas-stage > #frame-canvas { margin: auto; }
+
+/* ── CANVAS TOOLBAR ── */
+
+#canvas-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 6px 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.tb-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+    margin: 0 2px;
+}
+
+.tb-stat,
+#zoom-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    padding: 0 4px;
+}
+
+#zoom-label { min-width: 36px; text-align: center; }
+
+/* ── CANVASES ── */
+
+#frame-canvas {
+    border: 1px solid var(--border);
+    cursor: crosshair;
+    image-rendering: pixelated;
+    flex-shrink: 0;
+}
+
+#anim-canvas,
+#sheet-canvas {
+    border: 1px solid var(--border);
+    image-rendering: pixelated;
+    flex-shrink: 0;
+    max-width: 100%;
+    background: repeating-conic-gradient(#15151d 0% 25%, #1d1d28 0% 50%) 0 0 / 12px 12px;
+}
+
+#sheet-canvas { cursor: pointer; }
+
+/* ── DOCK ── */
+
+#dock {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+}
+
+#dock[hidden] { display: none; }
+
+/* The previews are sized in pixels by the editor — a 128px sprite at 4x is a
+   512px canvas — so the dock caps how tall they are allowed to draw. The
+   backing store keeps its size; only the presentation shrinks, and the sheet's
+   click-to-select reads getBoundingClientRect, so hit testing follows. */
+#dock #anim-canvas,
+#dock #sheet-canvas {
+    max-height: 108px;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
+
+#dock #export-panel {
+    flex: 1;
+    min-width: 220px;
+}
+
+.preview-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.sheet-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+}
+
+/* ── SIDEBAR ── */
+
+#sidebar {
+    width: var(--panel-w);
+    flex-shrink: 0;
+    padding: 12px;
+    border-left: 1px solid var(--border);
+    background: var(--panel);
+    overflow-y: auto;
+}
+
+#sidebar-resizer {
+    width: 5px;
+    flex-shrink: 0;
+    cursor: col-resize;
+    background: var(--border);
+    transition: background 0.15s;
+}
+
+#sidebar-resizer:hover,
+#sidebar-resizer.dragging { background: var(--cyan); }
+
+body.resizing { cursor: col-resize; user-select: none; }
+
+/* ── COLLAPSIBLE SECTIONS ── */
+
+/* The palette, which sits outside the accordion. Same rhythm as a section, but
+   no summary and nothing to collapse — its label is a label, not a control. */
+.side-block {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.block-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--rose);
+    letter-spacing: 0.05em;
+    padding: 3px 0;
+    margin-bottom: 8px;
+}
+
+.side-section {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.side-section:last-child { border-bottom: none; margin-bottom: 0; }
+
+.side-section > summary {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--rose);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+}
+
+.side-section > summary::-webkit-details-marker { display: none; }
+.side-section > summary:hover { color: var(--text); }
+
+.side-section > summary::before {
+    content: '\25B8';
+    display: inline-block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--dim);
+    transition: transform 0.15s;
+}
+
+.side-section[open] > summary::before { transform: rotate(90deg); }
+.side-section[open] > summary { margin-bottom: 8px; }
+
+.sub-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    margin: 10px 0 5px;
+}
+
+/* ── BUTTONS ── */
+
+button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 8px;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+button:hover { border-color: var(--dim); color: var(--cyan); }
+
+button.primary {
+    background: var(--rose);
+    border-color: var(--rose);
+    color: #080808;
+}
+
+button.primary:hover { background: #ff6389; border-color: #ff6389; color: #080808; }
+
+.tool-btn.active {
+    background: var(--rose);
+    border-color: var(--rose);
+    color: #080808;
+}
+
+.tool-btn.toggle.active {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: #080808;
+}
+
+/* Icon buttons on a fixed grid — keeps rows even as counts change. */
+.tool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.tool-grid.three { grid-template-columns: repeat(3, 1fr); }
+
+.tool-grid button {
+    font-size: 12px;
+    padding: 8px 2px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.tool-grid.three button,
+.tool-grid .preset-btn { font-size: 7px; }
+
+.tool-row,
+.action-row { display: flex; flex-wrap: wrap; gap: 4px; }
+.action-row + .action-row { margin-top: 4px; }
+
+/* Names the icon-only tool that is currently active. */
+.tool-readout {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+}
+
+.tool-readout strong { color: var(--text); font-weight: 400; }
+
+kbd {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    background: var(--surface);
+    color: var(--cyan);
+    border: 1px solid var(--border);
+    padding: 2px 4px;
+}
+
+/* ── PALETTE ── */
+
+#palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+.swatch {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    position: relative;
+}
+
+.swatch:hover { border-color: var(--dim); }
+.swatch.active { border-color: var(--cyan); box-shadow: 0 0 0 1px var(--cyan); }
+
+/* The picker for a swatch, invisible and lying over it.
+   It must not be the click target. Covering the whole swatch meant every
+   click landed here and opened the OS colour picker, so a swatch could be
+   edited and never actually chosen — selecting a colour to draw with was
+   impossible. It stays in the layout rather than display:none because
+   opening the picker means click()ing this element, and a display:none
+   input cannot be clicked. */
+.swatch input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.color-chip-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+}
+
+#color-chip {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+/* ── FORM ROWS ── */
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.nav-row {
+    justify-content: space-between;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 4px 6px;
+}
+
+#frame-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+    min-width: 46px;
+    text-align: center;
+}
+
+.field { display: inline-flex; align-items: center; gap: 4px; }
+
+.label-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+}
+
+.separator { color: var(--dim); font-size: 11px; }
+
+input[type="number"] {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 4px;
+    width: 40px;
+    text-align: center;
+}
+
+input[type="number"]:focus { outline: none; border-color: var(--cyan); }
+
+.hint {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--dim);
+    margin-top: 6px;
+}
+
+/* Modal prose gets the same inline-code treatment the sidebar hints do —
+   a path named in a sentence should look like a path in both places. */
+.hint code,
+.modal-body code {
+    color: var(--cyan);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 1px 4px;
+}
+
+/* ── EXPORT PANEL ── */
+
+#export-panel {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+}
+
+.export-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--dim);
+}
+
+#export-output {
+    width: 100%;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text);
+    background: var(--bg);
+    border: none;
+    padding: 8px 10px;
+    resize: vertical;
+    min-height: 76px;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
+#export-output:focus { outline: none; }
+
+/* ── IMPORT MODAL ── */
+
+dialog {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 0;
+    max-width: 500px;
+    width: calc(100vw - 2rem);
+    max-height: 80vh;
+    overflow: auto;
+    margin: auto;
+}
+
+dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+
+/* ── Reference and Credits ────────────────────────────────
+   A keys-and-meaning list. The key column sizes to its widest row rather than
+   a guess, so Ctrl+Shift+S does not wrap while B leaves a gap. */
+.ref-grid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 6px 12px;
+    margin: 0 0 14px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.ref-grid dt { white-space: nowrap; }
+.ref-grid dd { margin: 0; color: var(--dim); }
+.ref-grid kbd + kbd { margin-left: 2px; }
+
+.credits-lede { color: var(--text) !important; line-height: 1.6; }
+.credits-lede strong { color: var(--cyan); font-weight: 400; }
+
+/* The web build's footer line is the way in to Credits there, the menu bar
+   being desktop-only. It has to keep looking like the text it replaced. */
+button.footer-text {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+button.footer-text:hover { color: var(--cyan); background: none; }
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    font-weight: 400;
+    color: var(--rose);
+}
+
+.modal-close {
+    font-size: 18px;
+    line-height: 1;
+    background: none;
+    border: none;
+    color: var(--dim);
+    padding: 0 4px;
+}
+
+.modal-close:hover { color: var(--cyan); }
+
+.modal-body { padding: 16px; }
+.modal-body p { margin: 0 0 12px; line-height: 1.6; color: var(--dim); }
+.modal-body .row { margin-bottom: 12px; }
+
+input[type="file"] {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--dim);
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+input[type="file"]::file-selector-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 7px 8px;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+input[type="file"]::file-selector-button:hover { border-color: var(--dim); }
+
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ── TEMPLATE PICKER ── */
+
+.tpl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.tpl-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+.tpl-card:hover { border-color: var(--cyan); }
+
+.tpl-thumb {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+    background: repeating-conic-gradient(#15151d 0% 25%, #1d1d28 0% 50%) 0 0 / 10px 10px;
+    border: 1px solid var(--border);
+}
+
+.tpl-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+.tpl-blurb {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    color: var(--dim);
+}
+
+/* ── SLOTS ── */
+
+.slot-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.slot-swatch {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.slot-row:hover .slot-swatch { border-color: var(--cyan); }
+
+.slot-swatch input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.slot-name {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+}
+
+#replace-color {
+    width: 34px;
+    height: 26px;
+    padding: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+}
+
+/* ── MOBILE ── */
+
+@media (max-width: 768px) {
+    .workspace { flex-direction: column; }
+    #sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); }
+    #sidebar-resizer { display: none; }
+
+    /* Stacked, the column has no fixed height to divide between three rows, so
+       the grid gives the stage zero and clips the canvas out of existence.
+       Below this width the page is a "use a wider screen" notice anyway, so it
+       goes back to flowing and scrolling as one column. */
+    #canvas-panel {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: auto;
+    }
+    /* flex:none, or the stage inherits min-height:0 from the desktop rule,
+       shrinks to a few pixels as a flex item, and clips the canvas anyway. */
+    #canvas-stage { overflow: visible; width: 100%; min-height: auto; flex: none; }
+    #dock { width: 100%; flex: none; }
+}
+
+/* ── Desktop build: drop the website's chrome ────────────
+   bridge.js puts `desktop` on <html> the moment it finds Tauri's IPC, before
+   the body paints. These rules override shell/app-shell.css, which is a byte
+   copy of magmacrunch.com's and must stay one — the site needs every rule here
+   and the desktop app needs none of them.
+
+   The back link points at ../utilities/, the site's index of tools. That path
+   does not exist inside the bundle, so on the desktop it is not merely
+   redundant chrome, it is a link that cannot resolve. The footer is a site
+   credit bar, and it also still reads v1.0; on the desktop the installer and
+   the Apps list are what carry the version and the publisher. */
+.desktop .tool-nav,
+.desktop footer {
+    display: none;
+}
+
+/* ── Desktop build: the header is a toolbar, not a hero ───
+   The shell's rule is that it defines tokens and the app overrides them, and
+   that the override belongs on :root because a body class does not reliably
+   beat a :root fallback. `desktop` is on <html>, which *is* :root, so
+   :root.desktop is that same override narrowed to the one build. */
+:root.desktop {
+    --title-size: 10px;
+    --title-glow: none;
+}
+
+/* A website leads with the wordmark because the visitor may not know what
+   they opened. An app does not have that problem — the title bar, the taskbar
+   and the Start Menu have all said SPRITE//FORGE before the window appears.
+   So the strip stops being a masthead and becomes what a tool actually needs
+   there: what file is open, and how big it is. */
+.desktop header {
+    padding: 8px 16px;
+}
+
+/* The glitch is two animated copies of the wordmark stacked behind it,
+   running for as long as the window is open. That reads as personality on a
+   landing page and as a distraction eight hours into drawing a sprite sheet.
+   Dropping the layers keeps the colour and the typeface — the app still looks
+   like itself, it just stops flickering at the user. */
+.desktop h1.glitch::before,
+.desktop h1.glitch::after {
+    content: none;
+}
+
+/* Moved, not duplicated: the sidebar copy goes when the header shows it. */
+.doc-name { display: none; }
+
+.desktop .doc-name {
+    display: inline-block;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--dim);
+    padding-left: 16px;
+    border-left: 1px solid var(--border);
+    max-width: 40ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ── Desktop build: the menu bar ──────────────────────────
+   Press Start 2P is the app's voice, but it is a display face — every glyph
+   occupies the same wide cell, so "Save As..." alone runs past 90px and a
+   File menu built from it reads as a wall. Courier Prime is the other face
+   the shell already carries, it is a text face, and it is what the sidebar
+   uses for filenames. The bar keeps Press Start 2P for its three titles,
+   where the width is the point, and the drop-downs are Courier Prime. */
+.menubar { display: none; }
+
+.desktop .menubar {
+    display: flex;
+    align-items: stretch;
+    align-self: stretch;
+    margin-left: 4px;
+}
+
+.desktop .menu { position: relative; display: flex; }
+
+.desktop .menu-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    background: none;
+    border: none;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: color 0.1s, background 0.1s;
+}
+
+.desktop .menu-title:hover { color: var(--text); background: var(--surface); }
+
+/* The open title takes the accent, and the drop below it is topped with the
+   same colour, so the two read as one shape rather than a button and a box
+   that happen to be near each other. */
+.desktop .menu.open .menu-title {
+    color: var(--bg);
+    background: var(--rose);
+}
+
+.desktop .menu-drop {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 40;
+    min-width: 248px;
+    padding: 5px 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--rose);
+    /* A hard offset shadow rather than a blurred one. Everything else here is
+       pixels with no antialiasing in sight, and a soft glow under the one
+       floating panel looks borrowed from a different program. It also keeps
+       the edge legible over the canvas checkerboard. */
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+.desktop .menu.open .menu-drop { display: block; }
+
+.desktop .menu-drop button {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 28px;
+    width: 100%;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.8rem;
+    /* Uppercase to match every other button in the app; the labels stay
+       readable in the markup. */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    background: none;
+    border: none;
+    border-left: 2px solid transparent;
+    padding: 5px 14px 5px 24px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.desktop .menu-drop button:hover:not(:disabled) {
+    background: var(--rose);
+    border-left-color: var(--cyan);
+    color: var(--bg);
+}
+
+/* Greyed rather than hidden: an Undo that vanishes when the stack is empty
+   moves Redo up under the cursor, and the menu changes shape as you use it. */
+.desktop .menu-drop button:disabled {
+    color: var(--dim);
+    cursor: default;
+}
+
+/* The shortcut hint. Dim, and it inherits the hover colour so it does not
+   stay grey on a rose row. */
+.desktop .menu-drop button i {
+    font-style: normal;
+    font-size: 0.7rem;
+    letter-spacing: 0;
+    color: var(--dim);
+    text-transform: none;
+}
+
+.desktop .menu-drop button:hover:not(:disabled) i { color: var(--bg); }
+
+/* The checkmark column is why the items are indented on the left: the tick
+   appears and disappears without the label moving. */
+.desktop .menu-drop button.checked::before {
+    content: '✓';
+    position: absolute;
+    left: 9px;
+    font-size: 0.8rem;
+}
+
+/* Inset, so the rule reads as a divider between groups rather than a line
+   cutting the whole panel in half. */
+.desktop .menu-drop hr {
+    height: 0;
+    margin: 5px 12px;
+    border: 0;
+    border-top: 1px solid var(--border);
+}
+
+/* ── TARGETS panel ────────────────────────────────────────
+   Desktop build only, like PROJECT above: targets-ui.js unhides the section
+   when a filesystem bridge is present. */
+.target-list { margin-bottom: 8px; }
+
+.target-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+/* The label is the folder's own name and the tooltip carries the full path,
+   because a sidebar this narrow will always lose to C:\ProgramData\... */
+.target-name {
+    flex: 1;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    padding: 0.3rem 0.4rem;
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 2px solid var(--accent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.target-row button { flex-shrink: 0; }
+.target-row .target-del { padding-left: 7px; padding-right: 7px; }
+
+/* The app's selects. Styled rather than left native because a Windows combo
+   box in the middle of this sidebar is the same mismatch a native menu bar
+   would have been across the top. */
+#target-kind,
+#palette-theme {
+    width: 100%;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.4rem;
+}
+
+#target-kind:focus,
+#palette-theme:focus { outline: 1px solid var(--accent); }
+
+/* ── Colour themes ────────────────────────────────────────
+   In the COLOR panel: a theme swaps the swatches you draw from. */
+#palette-theme optgroup {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    background: var(--bg);
+}
+
+#palette-theme option {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: var(--surface);
+}
+
+#theme-name {
+    flex: 1;
+    min-width: 0;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.4rem;
+}
+
+#theme-name:focus { outline: 1px solid var(--accent); }
+#theme-name::placeholder { color: var(--dim); }
+#theme-delete { padding-left: 7px; padding-right: 7px; }
+
+/* ── GameMaker sprite picker ──────────────────────────────
+   Opened from a TARGETS row. The list is every sprite in the .yyp, because
+   GameMaker keeps its own frame GUIDs and the slot has to already exist —
+   this is a choice among what is there, never a name to type. */
+.gm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 320px;
+    overflow-y: auto;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    padding: 4px;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.gm-sprite {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.82rem;
+    color: var(--text);
+    background: none;
+    border: none;
+    padding: 5px 8px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.gm-sprite:hover {
+    background: var(--rose);
+    color: var(--bg);
+}
+
+/* ── SPRITES panel ────────────────────────────────────────
+   Both builds. The row for the sprite being edited carries the accent, since
+   the canvas gives no other clue which of them you are looking at. */
+.sprite-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 6px;
+}
+
+.sprite-row {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: rgba(0, 0, 0, 0.25);
+    border: none;
+    border-left: 2px solid var(--border);
+    padding: 0.3rem 0.4rem;
+    text-align: left;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sprite-row:hover { color: var(--text); border-left-color: var(--dim); }
+
+.sprite-row.active {
+    color: var(--bg);
+    background: var(--rose);
+    border-left-color: var(--cyan);
+}
+
+#sprite-name {
+    flex: 1;
+    min-width: 0;
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.4rem;
+}
+
+#sprite-name:focus { outline: 1px solid var(--accent); }
+#sprite-name::placeholder { color: var(--dim); }

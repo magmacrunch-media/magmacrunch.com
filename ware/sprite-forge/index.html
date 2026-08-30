@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-app="SpriteForge">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sprite forge — magmacrunch media</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
-    <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
-    <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=f12b8685">
+    <link rel="stylesheet" href="../shell/fonts.css">
+    <link rel="stylesheet" href="../shell/app-shell.css">
+    <link rel="stylesheet" href="../shell/toast.css">
+    <link rel="stylesheet" href="style.css?v=586c42e4">
+    <!-- kit/ and bridge.js load here rather than with the other scripts at the
+         end of the body. bridge-core.js decides whether there is a filesystem
+         at all, and marks <html class="desktop"> when there is; doing that
+         after the body has painted flashes the website's back link on every
+         launch. They cannot be inline scripts either — the desktop build's CSP
+         is default-src 'self' with no script-src, so inline is blocked and only
+         files load. Nothing in them reads the DOM tree, so running before that
+         tree exists is safe.
+
+         kit/boot.js is FIRST, ahead of everything: it exists to report failures
+         in the modules that follow it, so it can depend on none of them. The
+         kit files are vendored from magma-kit — GENERATED, see app/kit/KIT.md;
+         edit them there and run `npm run sync-kit`. -->
+    <script src="kit/boot.js?v=3867389f"></script>
+    <script src="kit/bridge-core.js?v=8d9f0a24"></script>
+    <script src="kit/keys.js?v=a0ef34b7"></script>
+    <script src="kit/history.js?v=3611e784"></script>
+    <script src="kit/prefs.js?v=27328242"></script>
+    <script src="kit/modal.js?v=0549bda4"></script>
+    <script src="kit/dom.js?v=1d063261"></script>
+    <script src="kit/menu.js?v=cd5cd9a0"></script>
+    <script src="bridge.js?v=6a34f249"></script>
 </head>
 <body>
     <div class="mobile-notice">
@@ -19,6 +41,63 @@
     <header>
         <div class="header-left">
             <h1 class="glitch" data-text="SPRITE//FORGE">SPRITE//FORGE</h1>
+            <!-- Desktop only. Drawn in the page rather than by Windows: a
+                 native menu bar is OS-drawn, so it cannot take the app's
+                 typeface. Every item names an action and menu.js dispatches
+                 it; the View items proxy the toolbar buttons they name, so
+                 there is still one implementation of each toggle. -->
+            <nav class="menubar" id="menubar" aria-label="Main menu">
+                <div class="menu">
+                    <button class="menu-title" data-menu="file">FILE</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="project:new" title="Start an empty project">New<i>Ctrl+N</i></button>
+                        <button data-action="project:open" title="Open a .forge project">Open&hellip;<i>Ctrl+O</i></button>
+                        <hr>
+                        <button data-action="project:save" title="A .forge file holds every sprite, the shared palette and the origins. A PNG sheet holds only pixels.">Save<i>Ctrl+S</i></button>
+                        <button data-action="project:save-as" title="Save the project under a new name">Save As&hellip;<i>Ctrl+Shift+S</i></button>
+                        <hr>
+                        <!-- The other three ways content gets in and out. They
+                             were sidebar-only, which is the one place a person
+                             coming from any other editor does not look. -->
+                        <button data-action="file:templates">Templates&hellip;<i>T</i></button>
+                        <button data-action="file:import">Import PNG Sheet&hellip;</button>
+                        <button data-action="file:export">Export PNG Sheet&hellip;</button>
+                        <hr>
+                        <button data-action="app:quit">Exit<i>Alt+F4</i></button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <button class="menu-title" data-menu="edit">EDIT</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="edit:undo">Undo<i>Ctrl+Z</i></button>
+                        <button data-action="edit:redo">Redo<i>Ctrl+Shift+Z</i></button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <button class="menu-title" data-menu="view">VIEW</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="view:zoom-in">Zoom In<i>=</i></button>
+                        <button data-action="view:zoom-out">Zoom Out<i>&minus;</i></button>
+                        <button data-action="view:zoom-fit">Fit to Window<i>F</i></button>
+                        <hr>
+                        <button data-action="view:grid" data-toggles="grid-toggle">Pixel Grid<i>D</i></button>
+                        <button data-action="view:mirror" data-toggles="mirror-toggle">Mirror<i>M</i></button>
+                        <button data-action="view:onion" data-toggles="onion-toggle">Onion Skin<i>N</i></button>
+                        <button data-action="view:dock" data-toggles="dock-toggle">Preview Dock<i>P</i></button>
+                    </div>
+                </div>
+                <div class="menu">
+                    <button class="menu-title" data-menu="help">HELP</button>
+                    <div class="menu-drop" role="menu">
+                        <button data-action="help:reference">Reference&hellip;<i>F1</i></button>
+                        <button data-action="help:credits">Credits&hellip;</button>
+                    </div>
+                </div>
+            </nav>
+            <!-- Desktop only, and empty until project-ui.js fills it: the open
+                 file's name and dirty marker. CSS hides it in the browser,
+                 where there is no file to name. -->
+            <span class="doc-name" id="doc-name"></span>
         </div>
         <div class="header-right">
             <span class="sys-stat" id="dimStat">32&times;32</span>
@@ -36,15 +115,26 @@
                 <button id="zoom-out" title="Zoom out (-)">&minus;</button>
                 <span id="zoom-label">16&times;</span>
                 <button id="zoom-in" title="Zoom in (=)">+</button>
+                <button id="zoom-fit" class="tool-btn" title="Fit the sprite to the window (F)">&#8690; FIT</button>
                 <span class="tb-sep"></span>
                 <button id="grid-toggle" class="tool-btn toggle active" title="Toggle pixel grid (D)">&#9638; GRID</button>
                 <button id="mirror-toggle" class="tool-btn toggle" title="Mirror drawing across the vertical center (M)">&#8651; MIRROR</button>
                 <button id="onion-toggle" class="tool-btn toggle" title="Onion skin — ghost of the previous frame (N)">&#9678; ONION</button>
                 <span class="tb-sep"></span>
+                <button id="dock-toggle" class="tool-btn toggle active" title="Show the preview dock (P)">&#9707; PREVIEW</button>
+                <span class="tb-sep"></span>
                 <span id="canvas-dims" class="tb-stat">32 &times; 32</span>
             </div>
-            <canvas id="frame-canvas"></canvas>
-            <div class="preview-row">
+
+            <!-- The canvas scrolls inside the stage rather than growing the
+                 column. A 128x128 sprite at 16x is a 2048px canvas, and when
+                 it was a sibling of the previews it pushed them a screen and a
+                 half below the fold. -->
+            <div id="canvas-stage">
+                <canvas id="frame-canvas"></canvas>
+            </div>
+
+            <div id="dock">
                 <div class="preview-block">
                     <span class="sheet-label">animation</span>
                     <canvas id="anim-canvas"></canvas>
@@ -53,20 +143,72 @@
                     <span class="sheet-label">sheet; click a frame to edit it</span>
                     <canvas id="sheet-canvas"></canvas>
                 </div>
-            </div>
-            <div id="export-panel">
-                <div class="export-header">
-                    <span>EXPORT OUTPUT</span>
-                    <button id="copy-btn" title="Copy to clipboard">COPY</button>
+                <div id="export-panel">
+                    <div class="export-header">
+                        <span>EXPORT OUTPUT</span>
+                        <button id="copy-btn" title="Copy to clipboard">COPY</button>
+                    </div>
+                    <textarea id="export-output" readonly rows="4"></textarea>
                 </div>
-                <textarea id="export-output" readonly rows="5"></textarea>
             </div>
         </div>
 
         <div id="sidebar-resizer" title="Drag to resize the sidebar"></div>
 
         <aside id="sidebar" class="panel">
-            <details class="side-section" data-section="tools" open>
+            <!-- Outside the accordion, and first, so it never moves and is
+                 never the thing that got closed. Every tool has a single-key
+                 shortcut; a swatch has none, so the palette is the one panel
+                 that has to be reachable on every stroke. -->
+            <div class="side-block">
+                <div class="block-label">COLOR</div>
+                <div id="palette"></div>
+                <div class="color-chip-row">
+                    <div id="color-chip"></div>
+                    <span id="color-label">#000000</span>
+                    <button id="add-color-btn" title="Add current color as a swatch">+ ADD</button>
+                    <button id="ramp-btn" title="Add a 4-shade hue-shifted ramp of the current color">RAMP</button>
+                </div>
+            </div>
+
+<!-- Both builds: a sprite list needs no filesystem. -->
+            <details class="side-section" data-section="sprites" open>
+                <summary>SPRITES</summary>
+                <div id="sprite-list" class="sprite-list"></div>
+                <div class="row">
+                    <input type="text" id="sprite-name" placeholder="name this sprite" maxlength="40">
+                </div>
+                <div class="tool-grid three">
+                    <button id="sprite-add" title="Add a blank sprite at this size">ADD</button>
+                    <button id="sprite-dup" title="Duplicate this sprite">DUP</button>
+                    <button id="sprite-del" title="Delete this sprite">DEL</button>
+                </div>
+                <div class="hint">every sprite here shares one palette, so a
+                    character's facings cannot drift onto different browns. each
+                    exports as its own sheet, named by the name above.</div>
+            </details>
+
+            <!-- Desktop only, like PROJECT above: targets-ui.js unhides it when a
+                 filesystem bridge is present. The list itself lives in the OS
+                 config directory, never in the repo. -->
+            <details class="side-section" data-section="targets" hidden>
+                <summary>TARGETS</summary>
+                <div id="target-list" class="target-list"></div>
+                <div class="row">
+                    <label class="field">
+                        <span class="label-text">engine</span>
+                        <select id="target-kind"></select>
+                    </label>
+                </div>
+                <div class="action-row">
+                    <button id="target-add">ADD FOLDER&hellip;</button>
+                </div>
+                <div class="hint">the sheet lands in the engine's own directory
+                    under the folder you pick. the list of folders is yours, not
+                    the project's &mdash; it never leaves this machine.</div>
+            </details>
+
+            <details class="side-section" data-section="tools">
                 <summary>TOOLS</summary>
                 <div id="tools" class="tool-grid">
                     <button class="tool-btn active" data-tool="pencil" title="Pencil (B)">&#9998;</button>
@@ -81,25 +223,36 @@
                 <div id="tool-readout" class="tool-readout"></div>
             </details>
 
-            <details class="side-section" data-section="color" open>
-                <summary>COLOR</summary>
-                <div id="palette"></div>
-                <div class="color-chip-row">
-                    <div id="color-chip"></div>
-                    <span id="color-label">#000000</span>
-                    <button id="add-color-btn" title="Add current color as a swatch">+ ADD</button>
-                    <button id="ramp-btn" title="Add a 4-shade hue-shifted ramp of the current color">RAMP</button>
+            <!-- Themes and REPLACE are occasional; they were two thirds of a
+                 COLOR section that the palette has to be able to sit outside of.
+                 The two hints alone were 133px of the old 421. -->
+            <details class="side-section" data-section="theme">
+                <summary>THEME &amp; REPLACE</summary>
+                <div class="sub-label">theme</div>
+                <div class="row">
+                    <select id="palette-theme"></select>
                 </div>
+                <div class="row">
+                    <input type="text" id="theme-name" placeholder="name these swatches" maxlength="28">
+                    <button id="theme-save" title="Save the current swatches as a theme">SAVE</button>
+                    <button id="theme-delete" title="Delete the selected theme of yours">&times;</button>
+                </div>
+                <div class="hint">a theme offers to redraw every sprite in
+                    it, each colour moving to the nearest one it has; decline
+                    and it only replaces the swatches you draw <em>from</em>.
+                    yours are saved on this machine.</div>
+
                 <div class="sub-label">replace everywhere</div>
                 <div class="row">
                     <input type="color" id="replace-color" value="#ffffff" title="New color">
-                    <button id="replace-btn" title="Replace the selected color across every frame">REPLACE</button>
+                    <button id="replace-btn" title="Replace the selected color across every frame of every sprite">REPLACE</button>
                 </div>
                 <div class="hint">swaps the selected swatch for this color in
-                    every frame; one undo step.</div>
+                    every frame of every sprite &mdash; the palette is the
+                    project's. one undo step.</div>
             </details>
 
-            <details class="side-section" data-section="character" open>
+            <details class="side-section" data-section="character">
                 <summary>CHARACTER</summary>
                 <div class="action-row">
                     <button id="template-btn" class="primary" title="Start from a character template (T)">TEMPLATES&hellip;</button>
@@ -108,7 +261,7 @@
                 <div id="slot-list"></div>
             </details>
 
-            <details class="side-section" data-section="frames" open>
+            <details class="side-section" data-section="frames">
                 <summary>FRAMES</summary>
                 <div class="row nav-row">
                     <button id="frame-prev" title="Previous frame ([)">&larr;</button>
@@ -131,7 +284,7 @@
                 </div>
             </details>
 
-            <details class="side-section" data-section="transform" open>
+            <details class="side-section" data-section="transform">
                 <summary>TRANSFORM</summary>
                 <div class="tool-grid three">
                     <button id="flip-h" title="Flip horizontal (H)">&#8644; FLIP</button>
@@ -182,7 +335,7 @@
                 <div class="hint">passed to <code>sprite_load</code>, not stored in the PNG</div>
             </details>
 
-            <details class="side-section" data-section="export" open>
+            <details class="side-section" data-section="export">
                 <summary>EXPORT</summary>
                 <div class="action-row">
                     <button id="export-btn" class="primary">EXPORT PNG</button>
@@ -196,8 +349,11 @@
         </aside>
     </div>
 
+    <!-- Web build only — the desktop build hides the footer and reaches Credits
+         through the HELP menu instead. The version string lives here and
+         nowhere else in this file; the Credits modal reads it back out. -->
     <footer>
-        <span class="footer-text">SPRITE//FORGE v1.0 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
+        <button class="footer-text" id="credits-link">SPRITE//FORGE <span id="app-version">v0.3.0</span> &mdash; <span>MAGMACRUNCH MEDIA</span></button>
     </footer>
 
     <dialog id="template-modal">
@@ -243,8 +399,175 @@
         </div>
     </dialog>
 
-    <script src="../shell/toast.js?v=d87a2776"></script>
-    <script src="js/templates.js?v=f1d2300a"></script>
-    <script src="js/app.js?v=0c57d2f0"></script>
+    <!-- Desktop only in practice: it is opened from the TARGETS panel, which
+         only exists when there is a filesystem. -->
+    <dialog id="gm-modal">
+        <div class="modal-header">
+            <h2>GAMEMAKER SPRITE</h2>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Which sprite does this project overwrite? GameMaker keeps its own
+                frame GUIDs, so the slot has to exist already and declare the
+                same number of frames.</p>
+            <div class="gm-list" id="gm-list"></div>
+            <div class="modal-actions">
+                <button id="gm-cancel">CANCEL</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="reference-modal">
+        <div class="modal-header">
+            <h2>REFERENCE</h2>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="sub-label">tools</div>
+            <dl class="ref-grid">
+                <dt><kbd>B</kbd></dt><dd>Pencil</dd>
+                <dt><kbd>E</kbd></dt><dd>Erase &mdash; or right-click with any tool</dd>
+                <dt><kbd>G</kbd></dt><dd>Flood fill</dd>
+                <dt><kbd>L</kbd></dt><dd>Line</dd>
+                <dt><kbd>U</kbd></dt><dd>Rectangle</dd>
+                <dt><kbd>C</kbd></dt><dd>Ellipse</dd>
+                <dt><kbd>I</kbd></dt><dd>Pick a colour off the canvas &mdash; or alt-click</dd>
+                <dt><kbd>O</kbd></dt><dd>Set the origin</dd>
+            </dl>
+
+            <div class="sub-label">frames</div>
+            <dl class="ref-grid">
+                <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Previous / next frame</dd>
+                <dt><kbd>Space</kbd></dt><dd>Play / pause</dd>
+                <dt><kbd>&larr;&uarr;&darr;&rarr;</kbd></dt><dd>Nudge the drawing a pixel; it wraps at the edge</dd>
+                <dt><kbd>H</kbd> <kbd>V</kbd></dt><dd>Flip across the vertical / horizontal</dd>
+                <dt><kbd>R</kbd></dt><dd>Rotate 90&deg;, square frames only</dd>
+            </dl>
+
+            <div class="sub-label">view</div>
+            <dl class="ref-grid">
+                <dt><kbd>&minus;</kbd> <kbd>=</kbd></dt><dd>Zoom out / in</dd>
+                <dt><kbd>D</kbd></dt><dd>Pixel grid</dd>
+                <dt><kbd>M</kbd></dt><dd>Mirror across the vertical centre</dd>
+                <dt><kbd>N</kbd></dt><dd>Onion skin</dd>
+            </dl>
+
+            <div class="sub-label">project</div>
+            <dl class="ref-grid">
+                <dt><kbd>Ctrl</kbd><kbd>N</kbd></dt><dd>New</dd>
+                <dt><kbd>Ctrl</kbd><kbd>O</kbd></dt><dd>Open a .forge project</dd>
+                <dt><kbd>Ctrl</kbd><kbd>S</kbd></dt><dd>Save &mdash; add <kbd>Shift</kbd> for Save As</dd>
+                <dt><kbd>T</kbd></dt><dd>Character templates</dd>
+                <dt><kbd>Ctrl</kbd><kbd>Z</kbd></dt><dd>Undo &mdash; add <kbd>Shift</kbd> to redo</dd>
+            </dl>
+
+            <div class="sub-label">the origin</div>
+            <p>The point the game positions a sprite by &mdash; the feet, for
+                someone walking. It is kept in the .forge file and handed to the
+                loader at run time. It is never written into a PNG, so every
+                engine reading a sheet has to be told it separately.</p>
+
+            <div class="sub-label">the two files</div>
+            <p>A <strong>.forge</strong> file is the whole project: every sprite,
+                the one shared palette, the origins and the frame rates. It is
+                JSON, and deliberately readable in a diff. A <strong>PNG
+                sheet</strong> is only pixels &mdash; a uniform grid of
+                frame-width by frame-height cells, counted left to right, then
+                top to bottom.</p>
+
+            <div class="sub-label">one palette</div>
+            <p>Every sprite in a project draws from the same swatches, so a
+                character's eight facings cannot drift onto eight slightly
+                different browns. REPLACE and a theme both follow that palette
+                across every sprite. The .forge key names at most 89 colours; go
+                over and saving offers to merge the least-used into their
+                nearest neighbours.</p>
+
+            <div class="modal-actions">
+                <button id="reference-close">CLOSE</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="credits-modal">
+        <div class="modal-header">
+            <h2>CREDITS</h2>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="credits-lede">SPRITE//FORGE <span id="credits-version"></span><br>
+                A pixel-art sprite and animation editor by
+                <strong>magmacrunch media</strong>.</p>
+
+            <div class="sub-label">licence</div>
+            <p>PolyForm Noncommercial 1.0.0. Copyright 2026 magmacrunch media,
+                magmacrunch.com. Free to use for anything that is not a
+                commercial purpose; the full text ships beside the app.</p>
+
+            <div class="sub-label">typefaces</div>
+            <p>Press Start 2P, copyright 2012 The Press Start 2P Project Authors,
+                with Reserved Font Name &ldquo;Press Start 2P&rdquo;. Courier
+                Prime, copyright 2015 The Courier Prime Project Authors. Both
+                under the SIL Open Font License 1.1, whose text ships beside the
+                faces in <code>fonts/</code>. Self-hosted rather than fetched, so
+                the app looks the same offline.</p>
+
+            <div class="sub-label">colour themes</div>
+            <p>41 of the themes are vendored from MAGMA//OPS, where they dress
+                the ops dashboard rather than a sprite. Any theme you save is
+                yours and stays on this machine.</p>
+
+            <div class="sub-label">the sheet format</div>
+            <p>The uniform-grid PNG sheet is a shared contract, not this app's
+                to change: adenosine, magnolia, texastoast and the GameMaker
+                importer all read sprites the same way.</p>
+
+            <div class="modal-actions">
+                <button id="credits-close">CLOSE</button>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="../shell/toast.js"></script>
+    <!-- core/ first: editor.js binds its exports at load. Order matters within
+         core/ too — sheet.js reads SpriteForge.color at IIFE time. The ?v=
+         cache-buster stamps are added by the website sync, not kept here, so
+         local edits are never served stale. -->
+    <!-- first: bridge.js in <head> has already decided whether there is a
+         filesystem, and this turns that one boolean into the capability table
+         the ui/ files below ask. -->
+    <script src="core/tier.js?v=8edd96d5"></script>
+    <script src="core/color.js?v=7c3a8d1d"></script>
+    <script src="core/draw.js?v=6107b978"></script>
+    <script src="core/sheet.js?v=5b13d4e8"></script>
+    <script src="core/templates.js?v=1d3705e7"></script>
+    <script src="core/project.js?v=df56292e"></script>
+    <script src="core/targets/gamemaker.js?v=6f0a6c02"></script>
+    <script src="core/targets/engines.js?v=bb9f62ff"></script>
+    <!-- store reads engines.kinds() at load: an engine it has never heard
+         of is not a target anyone can add. -->
+    <script src="core/targets/store.js?v=eec21a01"></script>
+    <!-- data then the logic that reads it -->
+    <script src="core/ops-themes.js?v=9a9cae66"></script>
+    <script src="core/palettes.js?v=feb8f901"></script>
+    <!-- the one keyboard table; editor.js, project-ui.js and help-ui.js all
+         resolve through it -->
+    <script src="core/keybindings.js?v=9cf99cfd"></script>
+    <!-- before menu.js, which reads the hints it rewrites. On Windows this
+         file does nothing at all. -->
+    <script src="platform.js?v=f806408d"></script>
+    <!-- before editor.js, which encodes the sheet it exports -->
+    <script src="png.js?v=65978a7e"></script>
+    <script src="editor.js?v=8b10f9ca"></script>
+    <!-- after editor.js, and before project-ui.js which asks it for the list.
+         It seeds itself from the blank sprite the editor has already made. -->
+    <script src="sprites-ui.js?v=949bacd1"></script>
+    <!-- after editor.js: reads the state accessor it defines at the bottom -->
+    <script src="project-ui.js?v=e301cb94"></script>
+    <!-- after project-ui.js: exporting a target reads the current project -->
+    <script src="targets-ui.js?v=59dfed25"></script>
+    <!-- last: dispatches to both of the above -->
+    <script src="help-ui.js?v=b17f8632"></script>
+    <script src="menu.js?v=91dd7345"></script>
 </body>
 </html>

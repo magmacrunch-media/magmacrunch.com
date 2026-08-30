@@ -435,3 +435,8 @@ window.CharacterTemplates = (function () {
 
     return { list, get, decode, validate };
 })();
+
+// Namespace alias. This file predates core/ and keeps its own global so the
+// templates stay a drop-in for anything already loading them by that name.
+window.SpriteForge = window.SpriteForge || {};
+window.SpriteForge.templates = window.CharacterTemplates;
