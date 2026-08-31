@@ -370,7 +370,7 @@ function startPreview() {
 
   if (typeof window.AdRPG === 'undefined') {
     const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-rpg@0.2.3/dist/index.global.js';
+    s.src = 'https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-rpg@0.3.0/dist/index.global.js';
     s.onload = boot;
     s.onerror = () => { previewContent.innerHTML = '<div style="color:#ff6b6b;">Failed to load AdRPG.</div>'; };
     previewContent.appendChild(s);

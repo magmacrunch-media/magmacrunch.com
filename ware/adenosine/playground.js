@@ -6,13 +6,13 @@ import { oneDark } from "https://esm.sh/@codemirror/theme-one-dark@6";
 /* ── Package metadata ────────────────────────────────── */
 
 const PACKAGES = {
-  rpg:           { global: "AdRPG",     version: "0.2.3", css: [] },
-  puzzle:        { global: "AdPuzzle",  version: "0.2.5", css: ["puzzle-base.css","puzzle-grid.css","puzzle-modals.css","puzzle-responsive.css"] },
-  cards:         { global: "AdCards",   version: "0.7.4", css: ["cards.css","chip-animation.css"] },
-  audio:         { global: "AdAudio",   version: "0.2.4", css: [] },
-  "score-client":{ global: "AdScore",   version: "0.2.5", css: [] },
-  multiplayer:   { global: "AdMP",      version: "0.4.4", css: ["lobby.css"] },
-  chat:          { global: "AdChat",    version: "0.4.3", css: ["chat-widget.css"] },
+  rpg:           { global: "AdRPG",     version: "0.3.0", css: [] },
+  puzzle:        { global: "AdPuzzle",  version: "0.3.0", css: ["puzzle-base.css","puzzle-grid.css","puzzle-modals.css","puzzle-responsive.css"] },
+  cards:         { global: "AdCards",   version: "0.8.0", css: ["cards.css","chip-animation.css"] },
+  audio:         { global: "AdAudio",   version: "0.3.0", css: [] },
+  "score-client":{ global: "AdScore",   version: "0.3.0", css: [] },
+  multiplayer:   { global: "AdMP",      version: "0.5.0", css: ["lobby.css"] },
+  chat:          { global: "AdChat",    version: "0.5.0", css: ["chat-widget.css"] },
 };
 
 const EXAMPLES = {
