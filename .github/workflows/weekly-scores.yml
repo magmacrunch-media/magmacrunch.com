@@ -29,7 +29,7 @@ jobs:
           MCP_URL = "https://magmacrunch.duckdns.org/mcp"
           MCP_KEY = os.environ["MCP_API_KEY"]
           GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
-          REPO_OWNER = "magmacrunchmedia"
+          REPO_OWNER = "magmacrunch-media"
           REPO_NAME = "magmacrunch.com"
 
           def mcp_call(tool, args=None):

@@ -55,7 +55,7 @@
         {
             label: 'CODE & EMAIL',
             accounts: [
-                { platform: 'GitHub', handle: 'magmacrunchmedia', url: 'https://github.com/magmacrunchmedia' },
+                { platform: 'GitHub', handle: 'magmacrunchmedia', url: 'https://github.com/magmacrunch-media' },
                 { platform: 'OpenCode', handle: 'opencode.ai', url: 'https://opencode.ai/' },
                 { platform: 'Email (Press)', handle: 'press@magmacrunch.com', url: 'mailto:press@magmacrunch.com' },
                 { platform: 'Email (General)', handle: 'via website', url: 'https://magmacrunch.com/home/about.html' }
@@ -66,7 +66,7 @@
             accounts: [
                 { platform: 'DuckDNS', handle: 'magmacrunch.duckdns.org', url: 'https://www.duckdns.org/', notes: 'Dynamic DNS for Pi' },
                 { platform: 'Cloudflare', handle: 'magmacrunch.com', url: 'https://dash.cloudflare.com/', notes: 'DNS, CDN, email routing' },
-                { platform: 'GitHub Pages', handle: 'magmacrunchmedia.github.io', url: 'https://magmacrunchmedia.github.io/magmacrunch.com/', notes: 'Website hosting' },
+                { platform: 'GitHub Pages', handle: 'magmacrunch-media.github.io', url: 'https://magmacrunch-media.github.io/magmacrunch.com/', notes: 'Website hosting' },
                 { platform: 'Tailscale', handle: 'magmacrunchmedia@gmail.com', url: 'https://login.tailscale.com/', notes: 'Admin access VPN' },
                 { platform: 'Raspberry Pi', handle: '192.168.1.16 / 100.74.172.4', url: null, notes: 'Game servers, MAGMA//OPS' },
                 { platform: 'MAGMA//OPS', handle: 'port 8780', url: null, notes: 'Admin dashboard' },
