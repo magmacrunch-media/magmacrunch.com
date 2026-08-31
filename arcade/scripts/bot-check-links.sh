@@ -32,7 +32,7 @@ if [ "$EXIT_CODE" -ne 0 ]; then
     echo "Broken links found (exit code $EXIT_CODE)"
 
     # Check for existing open issue
-    EXISTING=$(gh_api GET "/repos/magmacrunchmedia/magmacrunch.com/issues?labels=broken-links&state=open&per_page=1" 2>/dev/null || echo "[]")
+    EXISTING=$(gh_api GET "/repos/magmacrunch-media/magmacrunch.com/issues?labels=broken-links&state=open&per_page=1" 2>/dev/null || echo "[]")
     ISSUE_NUMBER=$(echo "$EXISTING" | node -e "
         const d = require('fs').readFileSync('/dev/stdin','utf8');
         const a = JSON.parse(d);
@@ -54,16 +54,16 @@ if [ "$EXIT_CODE" -ne 0 ]; then
 
     if [ -n "$ISSUE_NUMBER" ]; then
         echo "Updating existing issue #$ISSUE_NUMBER"
-        gh_api PATCH "/repos/magmacrunchmedia/magmacrunch.com/issues/$ISSUE_NUMBER" "$PAYLOAD" > /dev/null
+        gh_api PATCH "/repos/magmacrunch-media/magmacrunch.com/issues/$ISSUE_NUMBER" "$PAYLOAD" > /dev/null
     else
         echo "Creating new issue"
-        gh_api POST "/repos/magmacrunchmedia/magmacrunch.com/issues" "$PAYLOAD" > /dev/null
+        gh_api POST "/repos/magmacrunch-media/magmacrunch.com/issues" "$PAYLOAD" > /dev/null
     fi
 else
     echo "No broken links found"
 
     # Close existing issue if present
-    EXISTING=$(gh_api GET "/repos/magmacrunchmedia/magmacrunch.com/issues?labels=broken-links&state=open&per_page=1" 2>/dev/null || echo "[]")
+    EXISTING=$(gh_api GET "/repos/magmacrunch-media/magmacrunch.com/issues?labels=broken-links&state=open&per_page=1" 2>/dev/null || echo "[]")
     ISSUE_NUMBER=$(echo "$EXISTING" | node -e "
         const d = require('fs').readFileSync('/dev/stdin','utf8');
         const a = JSON.parse(d);
@@ -72,7 +72,7 @@ else
 
     if [ -n "$ISSUE_NUMBER" ]; then
         echo "Closing issue #$ISSUE_NUMBER — all links clean"
-        gh_api PATCH "/repos/magmacrunchmedia/magmacrunch.com/issues/$ISSUE_NUMBER" '{"state":"closed"}' > /dev/null
+        gh_api PATCH "/repos/magmacrunch-media/magmacrunch.com/issues/$ISSUE_NUMBER" '{"state":"closed"}' > /dev/null
     fi
 fi
 

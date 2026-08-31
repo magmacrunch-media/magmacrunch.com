@@ -2,7 +2,7 @@
 
 How to add custom color schemes to archive pages (by-artist, by-place, by-contributor). For reference implementations, study the actual files — not this doc in isolation.
 
-**For detailed theming documentation, see [Archive Theming](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Archive-Theming) on the GitHub wiki.**
+**For detailed theming documentation, see [Archive Theming](https://github.com/magmacrunch-media/magmacrunch.com/wiki/Archive-Theming) on the GitHub wiki.**
 
 ---
 
@@ -427,4 +427,4 @@ Each page needs high-specificity body-class overrides to ensure `--section-accen
 | releases | `var(--jm-deep-warm)` | `jm-deep-warm` |
 | works | `var(--jm-deep-sage)` | `jm-deep-sage` |
 
-See [Archive Theming](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Archive-Theming) wiki page for full details.
+See [Archive Theming](https://github.com/magmacrunch-media/magmacrunch.com/wiki/Archive-Theming) wiki page for full details.

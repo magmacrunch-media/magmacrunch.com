@@ -51,7 +51,7 @@ if [ -n "$FAILED" ]; then
             query: 'mutation (\$input: CreateDiscussionInput!) { createDiscussion(input: \$input) { discussion { url } } }',
             variables: {
                 input: {
-                    repositoryId: '$(gh_api GET /repos/magmacrunchmedia/magmacrunch.com | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');console.log(JSON.parse(d).node_id)")',
+                    repositoryId: '$(gh_api GET /repos/magmacrunch-media/magmacrunch.com | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');console.log(JSON.parse(d).node_id)")',
                     title: 'Pi services down — $(date -u '+%Y-%m-%d %H:%M')',
                     body: $(printf '%s' "$REPORT" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');console.log(JSON.stringify(d))"),
                     categorySlug: 'service-health'

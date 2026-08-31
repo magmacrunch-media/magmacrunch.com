@@ -2,7 +2,7 @@
 
 ## magmascript
 
-[magmascript](https://github.com/magmacrunchmedia/magmascript) is the primary CLI tool for managing this site. Key commands:
+[magmascript](https://github.com/magmacrunch-media/magmascript) is the primary CLI tool for managing this site. Key commands:
 
 ```bash
 # Scores

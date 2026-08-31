@@ -25,7 +25,7 @@ jobs:
         env:
           BACKUP_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
         run: |
-          REPO_URL="https://x-access-token:${BACKUP_TOKEN}@github.com/magmacrunchmedia/magma-ops-backup.git"
+          REPO_URL="https://x-access-token:${BACKUP_TOKEN}@github.com/magmacrunch-media/magma-ops-backup.git"
           TMPDIR=$(mktemp -d)
 
           git init "$TMPDIR" -q

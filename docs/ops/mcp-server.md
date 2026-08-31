@@ -28,8 +28,8 @@ WSL2 commands: `wsl -d Ubuntu -u root -- <command>`
 ```bash
 # Clone repos
 cd ~
-git clone https://github.com/magmacrunchmedia/magmacrunch.com.git website
-git clone https://github.com/magmacrunchmedia/magmascript.git
+git clone https://github.com/magmacrunch-media/magmacrunch.com.git website
+git clone https://github.com/magmacrunch-media/magmascript.git
 
 # Create Python venv
 cd ~/website/mcp-server

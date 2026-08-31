@@ -2,7 +2,7 @@
 
 ## Adenosine game engine
 
-[adenosine](https://github.com/magmacrunchmedia/adenosine) is the game engine used by arcade games.
+[adenosine](https://github.com/magmacrunch-media/adenosine) is the game engine used by arcade games.
 - **adenosine-rpg.js** — game loop, input, state (used by tetris)
 - **adenosine-puzzle.js** — puzzle framework (used by 2^N, george-boole, fifteen-puzzle, klotski, threes)
 - **adenosine-score-client.js** — high score client (used by 2^N, george-boole, fifteen-puzzle, klotski, threes, cribbage, tarot)
@@ -127,7 +127,7 @@ less connection rather than more.
 
 ### Repository
 
-[adenosine](https://github.com/magmacrunchmedia/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.
+[adenosine](https://github.com/magmacrunch-media/adenosine) is a monorepo (`packages/*` workspaces) published to npm as `@magmacrunch/adenosine-*`.
 
 **There is exactly one working copy on this Mac: `~/Documents/game_dev/adenosine`.
 Keep it that way.** The number is what matters, not the location — the repo moved

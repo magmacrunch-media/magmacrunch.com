@@ -74,7 +74,7 @@ Open `index.html` directly in a browser. No build step, no server needed.
 
 **Do not commit or push until the GitHub account is switched to `magmacrunchmedia`.**
 
-The remote `origin` is currently set to `https://github.com/magmacrunchmedia/magmacrunch.com.git`, but the repository may not exist yet or authentication may not be configured.
+The remote `origin` is currently set to `https://github.com/magmacrunch-media/magmacrunch.com.git`, but the repository may not exist yet or authentication may not be configured.
 
 To check:
 ```bash

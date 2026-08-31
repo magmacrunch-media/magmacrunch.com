@@ -2,7 +2,7 @@
 
 This directory now holds **only the shared stylesheets** for sliding-tile puzzle
 games. The JavaScript that used to live in `puzzle-framework/js/` has moved to the
-[adenosine](https://github.com/magmacrunchmedia/adenosine) engine and is loaded as
+[adenosine](https://github.com/magmacrunch-media/adenosine) engine and is loaded as
 `arcade/shared/adenosine-puzzle.js`, which exposes the global `AdPuzzle`.
 
 ---
@@ -61,7 +61,7 @@ Only `moveLeft` needs implementing: `moveInDirection` rotates the grid, calls
 `moveLeft`, and rotates back to derive up/right/down.
 
 For the full API see
-[`packages/puzzle`](https://github.com/magmacrunchmedia/adenosine/tree/main/packages/puzzle).
+[`packages/puzzle`](https://github.com/magmacrunch-media/adenosine/tree/main/packages/puzzle).
 
 ---
 

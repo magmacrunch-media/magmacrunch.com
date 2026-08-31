@@ -39,7 +39,7 @@ if [ "$TEST_EXIT" -ne 0 ]; then
         }));
     ")
 
-    gh_api POST "/repos/magmacrunchmedia/magmacrunch.com/issues" "$PAYLOAD" > /dev/null
+    gh_api POST "/repos/magmacrunch-media/magmacrunch.com/issues" "$PAYLOAD" > /dev/null
 else
     echo "All smoke tests passed"
 fi

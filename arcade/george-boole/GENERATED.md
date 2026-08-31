@@ -1,7 +1,7 @@
 # Generated — do not edit here
 
 Every file in `arcade/george-boole/` is a copy. The source of truth is the
-[`george-boole`](https://github.com/magmacrunchmedia/george-boole) repository, in its
+[`george-boole`](https://github.com/magmacrunch-media/george-boole) repository, in its
 `web/` folder, checked out beside this one.
 
 Edits made here are **silently destroyed** the next time anyone runs:

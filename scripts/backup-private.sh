@@ -4,7 +4,7 @@
 
 set -e
 
-REPO_URL="https://github.com/magmacrunchmedia/magma-ops-backup.git"
+REPO_URL="https://github.com/magmacrunch-media/magma-ops-backup.git"
 SOURCE="$(cd "$(dirname "$0")/.." && pwd)"
 TMPDIR=$(mktemp -d)
 MSG="${1:-Backup $(date +%Y-%m-%d)}"

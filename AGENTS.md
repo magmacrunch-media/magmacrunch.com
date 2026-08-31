@@ -41,7 +41,7 @@ The same applies in `~/Documents/game_dev/adenosine`, which has no agent-guidanc
 
 ## magmascript
 
-[magmascript](https://github.com/magmacrunchmedia/magmascript) is the primary CLI
+[magmascript](https://github.com/magmacrunch-media/magmascript) is the primary CLI
 tool for managing this site (scores reports, archive checks, MusicBrainz backup,
 Last.fm play counts, search index, Pi management). Full command reference:
 `docs/ops/magmascript.md`. Set `MAGMACRUNCH_ROOT=/path/to/magmacrunch.com` for

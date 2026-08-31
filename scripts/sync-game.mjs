@@ -57,7 +57,7 @@ writeFileSync(
   `# Generated — do not edit here
 
 Every file in \`arcade/${game}/\` is a copy. The source of truth is the
-[\`${repo}\`](https://github.com/magmacrunchmedia/${repo}) repository, in its
+[\`${repo}\`](https://github.com/magmacrunch-media/${repo}) repository, in its
 \`web/\` folder, checked out beside this one.
 
 Edits made here are **silently destroyed** the next time anyone runs:

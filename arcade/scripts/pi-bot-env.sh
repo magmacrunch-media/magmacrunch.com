@@ -28,7 +28,7 @@ cd "$REPO_DIR"
 
 # Configure git remote with PAT for push access
 if [ -n "${GITHUB_PAT:-}" ]; then
-    git remote set-url origin "https://${GITHUB_PAT}@github.com/magmacrunchmedia/magmacrunch.com.git"
+    git remote set-url origin "https://${GITHUB_PAT}@github.com/magmacrunch-media/magmacrunch.com.git"
 fi
 
 git pull --quiet

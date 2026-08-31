@@ -1,7 +1,7 @@
 # Generated — do not edit here
 
 Every file in `arcade/solitaire_THLD/` is a copy. The source of truth is the
-[`texas-holdem-lava-dome`](https://github.com/magmacrunchmedia/texas-holdem-lava-dome) repository, in its
+[`texas-holdem-lava-dome`](https://github.com/magmacrunch-media/texas-holdem-lava-dome) repository, in its
 `web/` folder, checked out beside this one.
 
 Edits made here are **silently destroyed** the next time anyone runs:

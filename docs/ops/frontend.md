@@ -45,7 +45,7 @@ the original runner did, silently breaks whole exercises.
 lessons at `?m=<module>&e=<exercise>`.
 
 `ware/crunch-c/lessons.js` is **generated** by `scripts/sync-crunch-c.py` from
-the [crunch-c](https://github.com/magmacrunchmedia/crunch-c) repo — the `.mgs`
+the [crunch-c](https://github.com/magmacrunch-media/crunch-c) repo — the `.mgs`
 exercises, the module READMEs and `solutions/`. Do not hand-edit it; edit the
 lesson in crunch-c and re-run the script. It resolves the source from
 `$CRUNCH_C_ROOT`, else `../crunch-c`.

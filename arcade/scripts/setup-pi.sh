@@ -215,7 +215,7 @@ fi
 WEBSITE_DIR="/home/jake/website"
 if [[ ! -d "$WEBSITE_DIR/.git" ]]; then
     warn "Cloning website repo..."
-    sudo -u jake git clone --depth 1 https://github.com/magmacrunchmedia/magmacrunch.com.git "$WEBSITE_DIR"
+    sudo -u jake git clone --depth 1 https://github.com/magmacrunch-media/magmacrunch.com.git "$WEBSITE_DIR"
     sudo -u jake git config --global user.name "Pi Bot" --global user.email "pi@magmacrunch.com"
     ok "Website repo cloned"
 else

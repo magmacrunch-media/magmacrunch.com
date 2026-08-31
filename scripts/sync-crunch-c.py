@@ -4,7 +4,7 @@
 The course pages are data-driven: one lesson.html shell reads an array of
 lessons rather than eighteen hand-written pages. This script builds that array
 from the source of truth — the .mgs exercises, the module READMEs and the
-worked solutions in https://github.com/magmacrunchmedia/crunch-c.
+worked solutions in https://github.com/magmacrunch-media/crunch-c.
 
 Nothing here is hand-copied, so a lesson edited in crunch-c reaches the site by
 re-running this, which .github/workflows/sync-crunch-c.yml does on a dispatch

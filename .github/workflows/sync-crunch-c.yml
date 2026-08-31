@@ -28,7 +28,7 @@ jobs:
       - name: Checkout crunch-c
         uses: actions/checkout@v4
         with:
-          repository: magmacrunchmedia/crunch-c
+          repository: magmacrunch-media/crunch-c
           path: crunch-c
           ref: ${{ github.event.client_payload.sha || 'main' }}
 

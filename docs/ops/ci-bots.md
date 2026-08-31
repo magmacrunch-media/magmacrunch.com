@@ -17,7 +17,7 @@
 MC1 (Windows PC) runs the self-hosted GitHub Actions runner inside WSL2 Ubuntu:
 
 - **SSH**: `ssh magma@100.75.220.87` (Windows host)
-- **Service**: `actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux`
+- **Service**: `actions.runner.magmacrunch-media-magmacrunch.com.MC1-linux`
 - **Config**: `~/actions-runner` (WSL2 Ubuntu: `wsl -d Ubuntu`)
 - **Start type**: enabled (auto-starts on boot via systemd)
 - **Labels**: `self-hosted`, `linux`
@@ -179,13 +179,13 @@ The runner runs as a systemd service inside WSL2 on MC1 — no manual interventi
 **Status check (from MC1):**
 ```bash
 ssh magma@100.75.220.87
-wsl -d Ubuntu -- sudo systemctl status actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux.service
+wsl -d Ubuntu -- sudo systemctl status actions.runner.magmacrunch-media-magmacrunch.com.MC1-linux.service
 ```
 
 **Restart (from MC1):**
 ```bash
 ssh magma@100.75.220.87
-wsl -d Ubuntu -- sudo systemctl restart actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux.service
+wsl -d Ubuntu -- sudo systemctl restart actions.runner.magmacrunch-media-magmacrunch.com.MC1-linux.service
 ```
 
 **If MC1 is off:** pushes to `main` skip deployment (no error).

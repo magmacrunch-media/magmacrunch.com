@@ -2,7 +2,7 @@
 
 Pixel art games — vanilla HTML/CSS/JS, no frameworks, no bundler.
 
-Shared game-engine code lives in the [adenosine](https://github.com/magmacrunchmedia/adenosine)
+Shared game-engine code lives in the [adenosine](https://github.com/magmacrunch-media/adenosine)
 packages, loaded as plain `<script>` tags that expose globals (`AdRPG`, `AdPuzzle`,
 `AdCards`, `AdScore`, `AdAudio`, `AdChat`, `AdMP`). The bundles in `arcade/shared/adenosine-*.js` are
 generated from npm dependencies — see [adenosine packages](#adenosine-packages) below.
@@ -13,9 +13,9 @@ holding both, and the folder here is a generated copy of that repo's `web/`:
 
 | Folder | Source repo | Regenerate with |
 |---|---|---|
-| `moonlight-drift/` | [moonlight-drift](https://github.com/magmacrunchmedia/moonlight-drift) | `make sync-moonlight-drift` |
-| `george-boole/` | [george-boole](https://github.com/magmacrunchmedia/george-boole) | `make sync-george-boole` |
-| `solitaire_THLD/` | [texas-holdem-lava-dome](https://github.com/magmacrunchmedia/texas-holdem-lava-dome) | `make sync-texas-holdem-lava-dome` |
+| `moonlight-drift/` | [moonlight-drift](https://github.com/magmacrunch-media/moonlight-drift) | `make sync-moonlight-drift` |
+| `george-boole/` | [george-boole](https://github.com/magmacrunch-media/george-boole) | `make sync-george-boole` |
+| `solitaire_THLD/` | [texas-holdem-lava-dome](https://github.com/magmacrunch-media/texas-holdem-lava-dome) | `make sync-texas-holdem-lava-dome` |
 
 Those targets delete the folder and recopy it, so **edits made here are lost**.
 Change the game in its own repo, sync, and commit the result. The historical

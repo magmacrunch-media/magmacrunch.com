@@ -1,10 +1,10 @@
 # magmacrunch.com
 
-Personal website for magmacrunch media — music, art, archives, and arcade games. Static HTML/CSS/JS. [adenosine](https://github.com/magmacrunchmedia/adenosine) engine for game systems.
+Personal website for magmacrunch media — music, art, archives, and arcade games. Static HTML/CSS/JS. [adenosine](https://github.com/magmacrunch-media/adenosine) engine for game systems.
 
 Live site: [magmacrunch.com](https://magmacrunch.com)
 
-**Wiki**: [Full documentation](https://github.com/magmacrunchmedia/magmacrunch.com/wiki)
+**Wiki**: [Full documentation](https://github.com/magmacrunch-media/magmacrunch.com/wiki)
 
 ---
 
@@ -43,13 +43,13 @@ Live site: [magmacrunch.com](https://magmacrunch.com)
 - **cache bake** — MusicBrainz data inlined into pages for instant loading
 - **monitoring** — fail2ban auto-bans scanners, TRAFFIC tab shows nginx analytics, app-level connection logging
 
-See the [wiki](https://github.com/magmacrunchmedia/magmacrunch.com/wiki) for full documentation on all systems.
+See the [wiki](https://github.com/magmacrunch-media/magmacrunch.com/wiki) for full documentation on all systems.
 
 ---
 
 ## magmascript
 
-[magmascript](https://github.com/magmacrunchmedia/magmascript) is the primary CLI tool for managing this site. Install it with:
+[magmascript](https://github.com/magmacrunch-media/magmascript) is the primary CLI tool for managing this site. Install it with:
 
 ```bash
 pip install magmascript
@@ -89,7 +89,7 @@ magmascript gh workflows                     # workflow statuses
 magmascript gh sync                          # diff + commit data files
 ```
 
-See [magmascript README](https://github.com/magmacrunchmedia/magmascript#readme) for full documentation.
+See [magmascript README](https://github.com/magmacrunch-media/magmascript#readme) for full documentation.
 
 ---
 
@@ -114,7 +114,7 @@ See [magmascript README](https://github.com/magmacrunchmedia/magmascript#readme)
 | **Bot Status Report** | Check all bot statuses | Weekly | GitHub Actions |
 | **Theme Color Audit** | Scan CSS files, generate color preview | On CSS change | GitHub Actions |
 
-See [Bots wiki page](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/Bots) for details.
+See [Bots wiki page](https://github.com/magmacrunch-media/magmacrunch.com/wiki/Bots) for details.
 
 ---
 
@@ -153,7 +153,7 @@ The MCP server (`mcp-server/magma-mcp.py`) exposes project data to AI assistants
 **Bot management:**
 - `list_bots`, `get_bot_status`, `trigger_bot`, `get_bot_runs` — workflow management
 
-See [MCP Server wiki page](https://github.com/magmacrunchmedia/magmacrunch.com/wiki/MCP-Server) for details.
+See [MCP Server wiki page](https://github.com/magmacrunch-media/magmacrunch.com/wiki/MCP-Server) for details.
 
 ---
 
@@ -192,4 +192,4 @@ Discord/social media to re-fetch. Each page's `og:image` URL is in its `<head>`.
 - Arcade games are self-contained — own CSS/JS, no shared state. Three exceptions:
   `moonlight-drift`, `george-boole` and `solitaire_THLD` are generated copies of
   games that live in their own repos — see `arcade/README.md`
-- See [magmascript](https://github.com/magmacrunchmedia/magmascript#readme) for site management commands
+- See [magmascript](https://github.com/magmacrunch-media/magmascript#readme) for site management commands

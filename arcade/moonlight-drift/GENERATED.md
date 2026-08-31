@@ -1,7 +1,7 @@
 # Generated — do not edit here
 
 Every file in `arcade/moonlight-drift/` is a copy. The source of truth is the
-[`moonlight-drift`](https://github.com/magmacrunchmedia/moonlight-drift) repository, in its
+[`moonlight-drift`](https://github.com/magmacrunch-media/moonlight-drift) repository, in its
 `web/` folder, checked out beside this one.
 
 Edits made here are **silently destroyed** the next time anyone runs:

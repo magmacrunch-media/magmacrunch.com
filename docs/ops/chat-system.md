@@ -11,7 +11,7 @@ between games.
 `shared/chat-worker.js` and `shared/chat-widget.css` are synced from the
 `@magmacrunch/adenosine-chat` npm package by `npm run build:adenosine`; an edit
 made to any of them here survives until the next sync and is then silently
-overwritten. Change them in the [adenosine](https://github.com/magmacrunchmedia/adenosine)
+overwritten. Change them in the [adenosine](https://github.com/magmacrunch-media/adenosine)
 repo, publish, and re-sync. `shared/chat-server.js` is hand-written and lives here.
 
 ### Architecture

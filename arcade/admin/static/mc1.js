@@ -175,7 +175,7 @@
 
         // Key services to show first
         var KEY_SERVICES = [
-            'actions.runner.magmacrunchmedia-magmacrunch.com.MC1-linux',
+            'actions.runner.magmacrunch-media-magmacrunch.com.MC1-linux',
             'Tailscale',
             'OpenSSH'
         ];
