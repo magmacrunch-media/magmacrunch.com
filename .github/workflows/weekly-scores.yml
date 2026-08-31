@@ -23,7 +23,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 << 'PYEOF'
-          import json, os, sys, urllib.request, urllib.error
+          import json, os, re, sys, urllib.request, urllib.error
           from datetime import datetime, timezone
 
           MCP_URL = "https://magmacrunch.duckdns.org/mcp"
@@ -56,17 +56,18 @@ jobs:
           print("Scoreboards:", raw)
 
           # Parse scoreboards from the text output
+          # Format: "- Game Name (N entries) — Top: XXX with NNN"
+          # Game names can contain parens, e.g. "Solitaire (Threshold)"
           boards = []
+          board_re = re.compile(r'^(.+?)\s+\((\d+) entries\)\s+—\s+Top:\s+(\S+)')
           for line in raw.split("\n"):
               line = line.strip().lstrip("- ")
-              if not line or "entries" not in line:
+              m = board_re.match(line)
+              if not m:
                   continue
-              # Format: "Game Name (N entries) — Top: XXX with NNN"
-              parts = line.split(" (")
-              name = parts[0].strip()
+              name, count, top_player = m.group(1).strip(), int(m.group(2)), m.group(3)
               game_id = name.lower().replace(" ", "-").replace("^", "").replace("(", "").replace(")", "")
-              entry_count = int(parts[1].split(" ")[0]) if len(parts) > 1 else 0
-              boards.append({"name": name, "game_id": game_id, "entries": entry_count})
+              boards.append({"name": name, "game_id": game_id, "entries": count})
 
           boards.sort(key=lambda b: b["name"])
           print(f"Found {len(boards)} boards")
@@ -188,7 +189,7 @@ jobs:
           MCP_API_KEY: ${{ secrets.MCP_API_KEY }}
         run: |
           python3 << 'PYEOF'
-          import json, os, urllib.request
+          import json, os, re, urllib.request
 
           MCP_URL = "https://magmacrunch.duckdns.org/mcp"
           MCP_KEY = os.environ["MCP_API_KEY"]
@@ -220,12 +221,15 @@ jobs:
 
           medals = ["🥇", "🥈", "🥉"]
           fields = []
+          total = 0
+          board_re = re.compile(r'^(.+?)\s+\((\d+) entries\)')
           for line in raw.split("\n"):
               line = line.strip().lstrip("- ")
-              if not line or "entries" not in line:
+              m = board_re.match(line)
+              if not m:
                   continue
-              parts = line.split(" (")
-              name = parts[0].strip()
+              name, count = m.group(1).strip(), int(m.group(2))
+              total += count
               game_id = name.lower().replace(" ", "-").replace("^", "").replace("(", "").replace(")", "")
 
               res = mcp_call("get_scores", {"game": game_id})
@@ -250,7 +254,6 @@ jobs:
               value = "\n".join(value_lines) if value_lines else "*No scores yet*"
               fields.append({"name": name, "value": value, "inline": True})
 
-          total = sum(int(l.split("(")[1].split(" ")[0]) for l in raw.split("\n") if "entries" in l and "(" in l)
           embed = {
               "title": f"Weekly High Scores — {now}",
               "fields": fields,
