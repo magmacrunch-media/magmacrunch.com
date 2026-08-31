@@ -141,16 +141,22 @@ jobs:
 
           # Post to GitHub Discussion via GraphQL
           # Get repo node ID
-          gql = lambda q, v=None: json.loads(urllib.request.urlopen(urllib.request.Request(
-              "https://api.github.com/graphql",
-              data=json.dumps({"query": q, "variables": v}).encode(),
-              headers={"Authorization": f"Bearer {GITHUB_TOKEN}", "Content-Type": "application/json"},
-          )).read())
+          def gql(q, v=None):
+              req = urllib.request.Request(
+                  "https://api.github.com/graphql",
+                  data=json.dumps({"query": q, "variables": v}).encode(),
+                  headers={"Authorization": f"Bearer {GITHUB_TOKEN}", "Content-Type": "application/json"},
+              )
+              resp = json.loads(urllib.request.urlopen(req).read())
+              if "errors" in resp:
+                  print(f"GraphQL errors: {json.dumps(resp['errors'], indent=2)}", file=sys.stderr)
+                  sys.exit(1)
+              return resp
 
           repo = gql("""
               query($o: String!, $n: String!) {
                   repository(owner: $o, name: $n) {
-                      node_id
+                      id
                       discussionCategories(first: 20) { nodes { id slug } }
                   }
               }
@@ -172,7 +178,7 @@ jobs:
                   createDiscussion(input: $input) { discussion { url } }
               }
           """, {"input": {
-              "repositoryId": repo["node_id"],
+              "repositoryId": repo["id"],
               "title": f"Weekly High Scores — {date_str}",
               "body": markdown,
               "categoryId": cat_id,
