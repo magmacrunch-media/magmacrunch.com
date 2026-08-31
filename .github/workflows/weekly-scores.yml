@@ -17,21 +17,250 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install magmascript
-        run: pip install magmascript
-
-      - name: Generate and post to Discussion
-        run: magmascript scores report --post-discussion
+      - name: Generate and post high scores
         env:
-          MAGMA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MCP_API_KEY: ${{ secrets.MCP_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 << 'PYEOF'
+          import json, os, sys, urllib.request, urllib.error
+          from datetime import datetime, timezone
+
+          MCP_URL = "https://magmacrunch.duckdns.org/mcp"
+          MCP_KEY = os.environ["MCP_API_KEY"]
+          GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
+          REPO_OWNER = "magmacrunchmedia"
+          REPO_NAME = "magmacrunch.com"
+
+          def mcp_call(tool, args=None):
+              msg = {"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                     "params": {"name": tool, "arguments": args or {}}}
+              req = urllib.request.Request(
+                  MCP_URL,
+                  data=json.dumps(msg).encode(),
+                  headers={
+                      "Content-Type": "application/json",
+                      "Accept": "application/json, text/event-stream",
+                      "Authorization": f"Bearer {MCP_KEY}",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  for line in resp.read().decode().splitlines():
+                      if line.startswith("data: "):
+                          return json.loads(line[6:])["result"]
+              return None
+
+          # Get all scoreboards
+          result = mcp_call("list_scoreboards")
+          raw = result.get("structuredContent", {}).get("result", "")
+          print("Scoreboards:", raw)
+
+          # Parse scoreboards from the text output
+          boards = []
+          for line in raw.split("\n"):
+              line = line.strip().lstrip("- ")
+              if not line or "entries" not in line:
+                  continue
+              # Format: "Game Name (N entries) — Top: XXX with NNN"
+              parts = line.split(" (")
+              name = parts[0].strip()
+              game_id = name.lower().replace(" ", "-").replace("^", "").replace("(", "").replace(")", "")
+              entry_count = int(parts[1].split(" ")[0]) if len(parts) > 1 else 0
+              boards.append({"name": name, "game_id": game_id, "entries": entry_count})
+
+          boards.sort(key=lambda b: b["name"])
+          print(f"Found {len(boards)} boards")
+
+          # Get scores for each board
+          all_entries = {}
+          score_data = {}
+          for board in boards:
+              res = mcp_call("get_scores", {"game": board["game_id"]})
+              text = res.get("structuredContent", {}).get("result", "") if res else ""
+              score_data[board["game_id"]] = text
+              # Parse entries for player stats
+              for line in text.split("\n"):
+                  line = line.strip().lstrip("0123456789. ")
+                  if "—" in line:
+                      name = line.split("—")[0].strip()
+                      if name:
+                          all_entries.setdefault(name, []).append(board["game_id"])
+
+          # Build markdown report
+          now = datetime.now(timezone.utc).strftime("%B %d, %Y")
+          lines = [
+              f"# Weekly High Scores — {now}",
+              "",
+              "## Leaderboards",
+              "",
+          ]
+
+          medals = ["🥇", "🥈", "🥉"]
+          for board in boards:
+              text = score_data.get(board["game_id"], "")
+              lines.append(f"### {board['name']}")
+              lines.append("")
+              lines.append("| Rank | Player | Score |")
+              lines.append("|------|--------|-------|")
+              for line in text.split("\n"):
+                  line = line.strip()
+                  if not line or not line[0].isdigit():
+                      continue
+                  # Format: "  1. KC — 65486 (level 10)"
+                  try:
+                      parts = line.split(". ", 1)[1]
+                      player, rest = parts.split(" — ", 1)
+                      score_parts = rest.split(" (")
+                      score = score_parts[0]
+                      detail = f" ({score_parts[1]}" if len(score_parts) > 1 else ""
+                      rank_num = int(line.split(".")[0].strip())
+                      rank = medals[rank_num - 1] if rank_num <= 3 else str(rank_num)
+                      lines.append(f"| {rank} | {player} | {score}{detail} |")
+                  except (ValueError, IndexError):
+                      continue
+              lines.append("")
+
+          total_scores = sum(b["entries"] for b in boards)
+          lines.append("## Summary")
+          lines.append("")
+          lines.append(f"- **Total games**: {len(boards)}")
+          lines.append(f"- **Total scores**: {total_scores}")
+
+          if all_entries:
+              top_player = max(all_entries.items(), key=lambda x: len(x[1]))
+              game_word = "game" if len(top_player[1]) == 1 else "games"
+              lines.append(f"- **Most active player**: {top_player[0]} ({len(top_player[1])} scores across {len(set(top_player[1]))} {game_word})")
+              names = ", ".join(sorted(all_entries.keys()))
+              lines.append(f"- **Players**: {names}")
+
+          markdown = "\n".join(lines)
+          print("---REPORT---")
+          print(markdown)
+          print("---END---")
+
+          # Post to GitHub Discussion via GraphQL
+          # Get repo node ID
+          gql = lambda q, v=None: json.loads(urllib.request.urlopen(urllib.request.Request(
+              "https://api.github.com/graphql",
+              data=json.dumps({"query": q, "variables": v}).encode(),
+              headers={"Authorization": f"Bearer {GITHUB_TOKEN}", "Content-Type": "application/json"},
+          )).read())
+
+          repo = gql("""
+              query($o: String!, $n: String!) {
+                  repository(owner: $o, name: $n) {
+                      node_id
+                      discussionCategories(first: 20) { nodes { id slug } }
+                  }
+              }
+          """, {"o": REPO_OWNER, "n": REPO_NAME})["data"]["repository"]
+
+          cat_id = None
+          for cat in repo["discussionCategories"]["nodes"]:
+              if cat["slug"] == "high-scores":
+                  cat_id = cat["id"]
+                  break
+
+          if not cat_id:
+              print("Error: high-scores discussion category not found", file=sys.stderr)
+              sys.exit(1)
+
+          date_str = datetime.now().strftime("%Y-%m-%d")
+          result = gql("""
+              mutation($input: CreateDiscussionInput!) {
+                  createDiscussion(input: $input) { discussion { url } }
+              }
+          """, {"input": {
+              "repositoryId": repo["node_id"],
+              "title": f"Weekly High Scores — {date_str}",
+              "body": markdown,
+              "categoryId": cat_id,
+          }})
+
+          url = result["data"]["createDiscussion"]["discussion"]["url"]
+          print(f"Discussion created: {url}")
+          PYEOF
 
       - name: Post to Discord
         if: env.DISCORD_WEBHOOK_URL != ''
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          MCP_API_KEY: ${{ secrets.MCP_API_KEY }}
         run: |
-          PAYLOAD=$(magmascript scores report --discord)
-          echo "$PAYLOAD" | jq '{flags: 4096, embeds: .embeds}' > discord-payload.json
-          curl -s -H "Content-Type: application/json" \
-               -d @discord-payload.json \
-               "$DISCORD_WEBHOOK_URL"
+          python3 << 'PYEOF'
+          import json, os, urllib.request
+
+          MCP_URL = "https://magmacrunch.duckdns.org/mcp"
+          MCP_KEY = os.environ["MCP_API_KEY"]
+          WEBHOOK = os.environ["DISCORD_WEBHOOK_URL"]
+
+          def mcp_call(tool, args=None):
+              msg = {"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+                     "params": {"name": tool, "arguments": args or {}}}
+              req = urllib.request.Request(
+                  MCP_URL,
+                  data=json.dumps(msg).encode(),
+                  headers={
+                      "Content-Type": "application/json",
+                      "Accept": "application/json, text/event-stream",
+                      "Authorization": f"Bearer {MCP_KEY}",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as resp:
+                  for line in resp.read().decode().splitlines():
+                      if line.startswith("data: "):
+                          return json.loads(line[6:])["result"]
+              return None
+
+          from datetime import datetime, timezone
+          now = datetime.now(timezone.utc).strftime("%B %d, %Y")
+
+          result = mcp_call("list_scoreboards")
+          raw = result.get("structuredContent", {}).get("result", "")
+
+          medals = ["🥇", "🥈", "🥉"]
+          fields = []
+          for line in raw.split("\n"):
+              line = line.strip().lstrip("- ")
+              if not line or "entries" not in line:
+                  continue
+              parts = line.split(" (")
+              name = parts[0].strip()
+              game_id = name.lower().replace(" ", "-").replace("^", "").replace("(", "").replace(")", "")
+
+              res = mcp_call("get_scores", {"game": game_id})
+              score_text = res.get("structuredContent", {}).get("result", "") if res else ""
+
+              value_lines = []
+              for sline in score_text.split("\n"):
+                  sline = sline.strip()
+                  if not sline or not sline[0].isdigit():
+                      continue
+                  try:
+                      sp = sline.split(". ", 1)[1]
+                      player, rest = sp.split(" — ", 1)
+                      score_parts = rest.split(" (")
+                      score = score_parts[0]
+                      detail = f" L{score_parts[1].split()[-1].rstrip(')')}" if len(score_parts) > 1 else ""
+                      rank_num = int(sline.split(".")[0].strip())
+                      rank = medals[rank_num - 1] if rank_num <= 3 else f"{rank_num}."
+                      value_lines.append(f"{rank} **{player}** — {score}{detail}")
+                  except (ValueError, IndexError):
+                      continue
+              value = "\n".join(value_lines) if value_lines else "*No scores yet*"
+              fields.append({"name": name, "value": value, "inline": True})
+
+          total = sum(int(l.split("(")[1].split(" ")[0]) for l in raw.split("\n") if "entries" in l and "(" in l)
+          embed = {
+              "title": f"Weekly High Scores — {now}",
+              "fields": fields,
+              "footer": {"text": f"{len(fields)} games · {total} scores"},
+              "color": 0xFF3D6E,
+          }
+
+          payload = json.dumps({"flags": 4096, "embeds": [embed]}).encode()
+          req = urllib.request.Request(WEBHOOK, data=payload,
+              headers={"Content-Type": "application/json"})
+          resp = urllib.request.urlopen(req, timeout=10)
+          print(f"Discord response: {resp.status}")
+          PYEOF
