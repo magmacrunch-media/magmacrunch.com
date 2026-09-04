@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# Keep ?v= cache-buster stamps correct at commit time.
+#
+# A stamp is a function of the file it stamps, so the only way it goes wrong is
+# somebody editing an asset and not retyping the digest. That failure is silent
+# — the deploy succeeds, the page loads, and visitors keep the cached old file
+# — which is why check:cachebust exists at all. Running the fix here closes the
+# window before the commit is written, rather than after CI has gone red.
+#
+# Install with:  npm run hooks:install
+# Bypass with:   git commit --no-verify
+#
+# ── Why this is careful about `git add` ──
+#
+# The stamp usually does not live in the file you edited. Change app.js and the
+# stale stamp is in index.html, which you never staged. Staging it for you is
+# the whole point — a commit carrying the asset without the bump is precisely
+# the bug. But if that page also has unrelated edits you deliberately left
+# unstaged, `git add` would sweep them into the commit behind your back.
+#
+# So the hook stages a repaired file only when it had nothing unstaged to lose.
+# Anything else is reported and left alone, for you to resolve deliberately.
+
+set -e
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+command -v node >/dev/null 2>&1 || {
+	echo "pre-commit: node not found, skipping cache-buster fix" >&2
+	exit 0
+}
+
+# Files carrying unstaged changes *before* the fix runs. Staging one of these
+# later would commit more than the stamp.
+dirty_before=$(git diff --name-only)
+
+output=$(node scripts/check-cache-busters.mjs --fix 2>&1) || {
+	# A missing file, or any other hard failure, is not something --fix repairs.
+	echo "$output" >&2
+	echo "" >&2
+	echo "pre-commit: cache-buster check failed and could not be fixed automatically." >&2
+	echo "            Resolve the above, or commit with --no-verify to skip." >&2
+	exit 1
+}
+
+repaired=$(echo "$output" | sed -n 's/^FIXED  *//p')
+[ -n "$repaired" ] || exit 0
+
+echo "$output" | grep -E '^(FIXED|  *->)' || true
+
+held_back=""
+for file in $repaired; do
+	if echo "$dirty_before" | grep -qx "$file"; then
+		held_back="$held_back $file"
+	else
+		git add -- "$file"
+	fi
+done
+
+if [ -n "$held_back" ]; then
+	echo "" >&2
+	echo "pre-commit: these files already had unstaged changes, so their corrected" >&2
+	echo "            stamps were written but NOT staged — review and add them:" >&2
+	for file in $held_back; do echo "              $file" >&2; done
+	exit 1
+fi
+
+echo "pre-commit: stamps corrected and staged."
