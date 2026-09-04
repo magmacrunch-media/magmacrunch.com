@@ -34,11 +34,27 @@ if (!game || !GAMES[game]) {
   process.exit(1);
 }
 
-const src = join(ROOT, '..', GAMES[game], 'web');
+const repo = GAMES[game];
+
+// Where the game repo can be. Beside this one is the documented layout and what
+// a fresh clone gets; a wider tree instead groups repos by kind, putting the
+// games under games/ while this repo sits in web/ -- so both have to resolve, or
+// the browser version becomes undeployable the moment anyone reorganises. An
+// explicit GAME_SRC covers anywhere else, the way the Wii Makefile's MAGNOLIA=
+// override does for the engine.
+const candidates = process.env.GAME_SRC
+  ? [join(process.env.GAME_SRC, 'web')]
+  : [join(ROOT, '..', repo, 'web'), join(ROOT, '..', '..', 'games', repo, 'web')];
+
+const src = candidates.find((dir) => existsSync(join(dir, 'index.html')));
 const dest = join(ROOT, 'arcade', game);
 
-if (!existsSync(join(src, 'index.html'))) {
-  console.error(`No web version at ${src} — is the ${GAMES[game]} repo checked out beside this one?`);
+// This guard stands in front of the rmSync below, so an unresolved source costs
+// an error and never the deployed copy.
+if (!src) {
+  console.error(`No web version for ${repo}. Looked in:`);
+  for (const dir of candidates) console.error(`  ${dir}`);
+  console.error(`Is the ${repo} repo checked out? Set GAME_SRC=<path to it> to look elsewhere.`);
   process.exit(1);
 }
 
@@ -51,14 +67,13 @@ cpSync(src, dest, { recursive: true });
 // Anyone who opens this directory is one file away from learning that editing
 // it is pointless, which the game's own README cannot tell them -- from inside
 // the mirror, the mirror looks like the source.
-const repo = GAMES[game];
 writeFileSync(
   join(dest, 'GENERATED.md'),
   `# Generated — do not edit here
 
 Every file in \`arcade/${game}/\` is a copy. The source of truth is the
 [\`${repo}\`](https://github.com/magmacrunch-media/${repo}) repository, in its
-\`web/\` folder, checked out beside this one.
+\`web/\` folder.
 
 Edits made here are **silently destroyed** the next time anyone runs:
 
@@ -66,8 +81,10 @@ Edits made here are **silently destroyed** the next time anyone runs:
 make sync-${repo}
 \`\`\`
 
-which deletes this folder and recopies it. To change the browser game, edit
-\`../../../${repo}/web/\`, run that target, and commit the result here.
+which deletes this folder and recopies it. To change the browser game, edit that
+repository's \`web/\` folder, run that target, and commit the result here. The
+path is deliberately not spelled out: that repo resolves whether it is checked
+out beside this one or grouped under \`games/\` in a wider tree.
 
 That repository also holds the game's Wii port, so a rules change can be made
 once and carried to both versions.
