@@ -1950,7 +1950,7 @@
     "c": "tool",
     "u": "/ware/sprite-forge/",
     "d": "game sprite editor · animation, onion skin, PNG sheet export",
-    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ⇲ FIT ▦ GRID ⇋ MIRROR ◎ ONION ◫ PREVIEW 32 × 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY COLOR #000000 + ADD RAMP SPRITES ADD DUP DEL every sprite here shares one palette, so a character's facings cannot drift onto different browns. each exports as its own sheet, named by the name above. TARGETS engine ADD FOLDER… the sheet lands in the engine's own directory under the folder you pick. the list of f..."
+    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ⇲ FIT ▦ GRID ⇋ MIRROR ◎ ONION ◫ PREVIEW 32 × 32 animation sheet; click a frame to edit it surface ◀ ▶ EXPORT OUTPUT COPY COLOR #000000 + ADD RAMP SPRITES ADD DUP DEL every sprite here shares one palette, so a character's facings cannot drift onto different browns. each exports as its own sheet, named by the name above. TARGETS engine ADD FOLDER… the sheet lands in the engine's own directory under the folder you pick. t..."
   },
   {
     "t": "texastoast",
