@@ -1,0 +1,160 @@
+/* =====================================================================
+   makemecookies!x4 — layout.css
+   Page frame, header, HUD rail, canvas, buttons
+   ===================================================================== */
+
+#app {
+  position: relative;
+  z-index: 2;
+  width: min(980px, 97vw);
+  padding: 18px 10px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+header { text-align: center; }
+
+header h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(15px, 3.4vw, 26px);
+  color: var(--neon);
+  text-shadow: var(--glow-neon);
+  letter-spacing: 2px;
+  line-height: 1.5;
+}
+
+header .byline {
+  font-size: 10px;
+  color: var(--subtext);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.neon-stripe {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent, var(--sprinkle), var(--neon), var(--butter), transparent);
+  opacity: 0.75;
+}
+
+/* ── HUD rail ──────────────────────────────────────────────────────── */
+
+.hud {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hud-cell {
+  background: var(--panel-bg);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.hud-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--subtext);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.hud-value {
+  font-size: 22px;
+  color: var(--butter);
+  text-shadow: var(--glow-butter);
+  letter-spacing: 2px;
+}
+
+.hud-value.pink { color: var(--neon); text-shadow: var(--glow-neon); }
+.hud-value.urgent { color: #FF3B3B; text-shadow: 0 0 8px #FF3B3B; }
+
+#hud-rush {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #fff;
+  text-shadow: var(--glow-neon);
+  min-height: 14px;
+  letter-spacing: 2px;
+}
+
+/* ── Canvas ────────────────────────────────────────────────────────── */
+
+.stage {
+  position: relative;
+  border: 2px solid var(--border-bright);
+  box-shadow: 0 0 34px rgba(255,46,156,0.18);
+  line-height: 0;
+  max-width: 100%;
+}
+
+#line {
+  display: block;
+  width: min(960px, 96vw);
+  height: auto;
+  image-rendering: pixelated;
+  touch-action: manipulation;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────── */
+
+.controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 11px 16px;
+  background: transparent;
+  color: var(--frosting);
+  border: 1px solid var(--frosting);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.btn:hover {
+  background: var(--frosting);
+  color: var(--bg);
+  box-shadow: var(--glow-neon);
+}
+.btn.mint { color: var(--sprinkle); border-color: var(--sprinkle); }
+.btn.mint:hover { background: var(--sprinkle); color: var(--bg); box-shadow: var(--glow-sprinkle); }
+.btn.gold { color: var(--butter); border-color: var(--butter); }
+.btn.gold:hover { background: var(--butter); color: var(--bg); box-shadow: var(--glow-butter); }
+
+/* ── Key legend ────────────────────────────────────────────────────── */
+
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--subtext);
+  letter-spacing: 1px;
+}
+.legend b {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--dough);
+  margin-right: 5px;
+}
+
+@media (max-width: 640px) {
+  .hud-cell { min-width: 92px; padding: 6px 10px; }
+  .hud-value { font-size: 17px; }
+  .legend { font-size: 10px; gap: 9px; }
+}

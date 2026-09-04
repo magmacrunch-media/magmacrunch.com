@@ -40,6 +40,7 @@ const GAMES = [
   { name: 'fifteen-puzzle', path: 'fifteen-puzzle' },
   { name: 'george-boole', path: 'george-boole' },
   { name: 'klotski', path: 'klotski' },
+  { name: 'makemecookies', path: 'makemecookies' },
   { name: 'moonlight-drift', path: 'moonlight-drift' },
   { name: 'parchisi', path: 'parchisi', lobby: { name: '#nameInput', open: '#joinBtn', port: 8773, joined: '#roomCodeDisplay' } },
   { name: 'roderick-tron', path: 'roderick-tron' },

@@ -285,6 +285,20 @@
             </div>
         </a>
 
+        <a href="../makemecookies/" class="game-card" style="--card-color: #ff5fa2">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag card-tag-demo">NEW</span>
+                </div>
+                <div class="card-title">MAKEME<br>COOKIES!X4</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cCookies" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">one song, one shift. five stations. ship cookies.</div>
+                <div class="card-play">▶ PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
     </div>
 
 </main>
@@ -295,6 +309,45 @@
 
 <script src="../../nav.js?v=0e8bd5fb"></script>
 <script>
+// ── makemecookies!x4 preview ──
+(function() {
+    const c = document.getElementById('cCookies');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#180c18';
+    ctx.fillRect(0, 0, 72, 72);
+    // checkerboard floor
+    for (let x = 0; x < 72; x += 9) {
+        ctx.fillStyle = ((x / 9) | 0) % 2 ? '#34163a' : '#26122a';
+        ctx.fillRect(x, 56, 9, 16);
+    }
+    // oven, glowing
+    ctx.fillStyle = '#26122a';
+    ctx.fillRect(44, 22, 24, 30);
+    ctx.fillStyle = '#ffc93c';
+    ctx.fillRect(48, 28, 16, 18);
+    ctx.fillStyle = '#4b2e1e';
+    ctx.beginPath(); ctx.arc(56, 37, 5, 0, Math.PI * 2); ctx.fill();
+    // belt
+    ctx.fillStyle = '#5c4c64';
+    ctx.fillRect(2, 46, 44, 6);
+    ctx.strokeStyle = '#8e7b96';
+    ctx.lineWidth = 1;
+    for (let x = 4; x < 46; x += 7) {
+        ctx.beginPath(); ctx.moveTo(x, 52); ctx.lineTo(x + 3, 46); ctx.stroke();
+    }
+    // dough on the line
+    [10, 24, 38].forEach((x) => {
+        ctx.fillStyle = '#f2d8a7';
+        ctx.beginPath(); ctx.arc(x, 41, 5, 0, Math.PI * 2); ctx.fill();
+    });
+    // mixer bowl
+    ctx.strokeStyle = '#ff5fa2';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(12, 26, 9, 0, Math.PI); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(12, 12); ctx.lineTo(12, 28); ctx.stroke();
+})();
+
 // ── Moonlight drift preview ──
 (function() {
     const c = document.getElementById('cDrift');
