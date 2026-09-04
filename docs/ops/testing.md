@@ -28,6 +28,7 @@ all. Keep the runner in Node for that reason.
 | suite | covers |
 |---|---|
 | `arcade/<game>/tests/test_*.py` | game rules, in-process — no sockets |
+| `arcade/roderick-tron/tests/test-simulation.js` | the running game itself: frame-rate independence, terrain fairness, entity behaviour |
 | `arcade/shared/tests/test_services.py` | `services.json` and the dashboard's reader of it |
 | `arcade/shared/tests/test_server_base.py` | the handshake gate, `client_ip`, and the per-IP limiters |
 | `arcade/tests/test_chat_server.py` | `chat-server.py`'s protocol, over a real socket on an ephemeral port |
@@ -35,6 +36,29 @@ all. Keep the runner in Node for that reason.
 
 `chat-server.py` is loaded with `importlib` because the hyphen in its name is not
 a valid identifier — renaming it would break the systemd unit and the deploy.
+
+**Roderick Tron's suite runs the shipped files, not a copy of them.** `config.js`,
+`player.js`, `world.js`, `entities.js` and `renderer.js` are plain scripts that
+assign globals and touch no DOM outside their `draw()` methods, so the suite
+loads them into a `vm` context with a stubbed `Input`, a seeded `Math.random`
+and a recording no-op 2D context. Nothing there can drift from what the browser
+runs, which is the failure mode a hand-copied `advanceRow()` has.
+
+Two of its checks are worth knowing about before changing that game's tuning:
+
+- *dt invariance* runs the same ten seconds at 60, 120 and 30 frames per second
+  and asserts the three agree to within 0.05%. They cannot agree exactly —
+  scroll speed is a function of distance and distance is the integral of scroll
+  speed, so a coarser step samples that loop at different points. The bug it
+  replaced was a factor of two: `dt` was applied to gravity but not to the
+  position step, and not at all to the camera, so the game ran twice as fast on
+  a 120Hz display.
+- *every gap is clearable* flies each consecutive pair of rooftops with the real
+  `Player.update`, across every jump timing and every hold length, and asserts
+  both that something lands it and that the hold window is at least four frames
+  wide. Widening a gap or raising `SCROLL_MAX` past what a jump carries fails
+  here rather than in someone's run. It is the slow part — about ten seconds of
+  the suite's fourteen.
 
 The chat and `server_base` tests assert behaviour that survives a *reconnect*, not
 just return values. The bugs they exist for were a limiter that reset on a new

@@ -7,6 +7,7 @@ const Input = {
 
     init() {
         document.addEventListener('keydown', (e) => {
+            if (e.repeat) return;
             if (!this.keys[e.code]) {
                 this.justPressed[e.code] = true;
             }
@@ -17,6 +18,12 @@ const Input = {
         });
         document.addEventListener('keyup', (e) => {
             this.keys[e.code] = false;
+        });
+        // A tabbed-away window never sees the keyup, so the key would read as
+        // held forever and the next jump would be cut short on the first frame.
+        window.addEventListener('blur', () => {
+            this.keys = {};
+            this.justPressed = {};
         });
     },
 
@@ -36,6 +43,7 @@ const Input = {
         this.justPressed = {};
     },
 
-    jump()    { return this.wasPressed('Space') || this.wasPressed('ArrowUp'); },
-    shoot()   { return this.wasPressed('KeyZ'); },
+    jump()     { return this.wasPressed('Space') || this.wasPressed('ArrowUp'); },
+    jumpHeld() { return this.isDown('Space') || this.isDown('ArrowUp'); },
+    shoot()    { return this.wasPressed('KeyZ'); },
 };

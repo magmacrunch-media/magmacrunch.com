@@ -9,11 +9,14 @@
     align-items: center;
     justify-content: center;
     background: radial-gradient(ellipse at center bottom, #3a1830 0%, #1a1028 50%, #080808 100%);
-    transition: opacity 0.4s;
+    transition: opacity 0.4s, visibility 0s 0.4s;
 }
 
+/* visibility, not just opacity: a fully transparent overlay still sits on top
+   of the canvas and still takes the pointer. */
 .title-screen.hidden {
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
 }
 

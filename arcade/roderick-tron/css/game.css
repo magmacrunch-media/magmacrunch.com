@@ -10,18 +10,19 @@
     z-index: 1;
 }
 
+/* Renderer.fit() sets the pixel size on this element every resize so one game
+   pixel covers a whole number of screen pixels wherever there is room. */
 .game-container canvas {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
     max-width: 100vw;
     max-height: 100vh;
+    display: block;
 }
 
-/* HUD overlay */
+/* HUD overlay. Sits below the shared .mc-back link, which arcade-base.css
+   pins at top:12px — the score used to be printed underneath it. */
 .hud {
     position: fixed;
-    top: 12px;
+    top: 34px;
     left: 12px;
     right: 12px;
     display: flex;
@@ -81,4 +82,13 @@
     color: var(--gold);
     text-shadow: 0 0 6px rgba(0,0,0,0.8);
     letter-spacing: 0.1em;
+}
+
+.hud-combo {
+    font-size: 10px;
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
+    letter-spacing: 0.1em;
+    opacity: 0;
+    transition: opacity 0.15s;
 }

@@ -2,18 +2,7 @@
 // Roderick character: physics, sprite, lives
 
 function Player() {
-    this.x = CONFIG.PLAYER_X;
-    this.y = 100;
-    this.vy = 0;
-    this.grounded = false;
-    this.alive = true;
-    this.lives = CONFIG.MAX_LIVES;
-    this.invincible = 0;
-    this.shakeFrames = 0;
-    this.animFrame = 0;
-    this.animTimer = 0;
-    this.runFrame = 0;
-    this.isJumping = false;
+    this.reset();
 }
 
 Player.prototype.reset = function () {
@@ -25,61 +14,78 @@ Player.prototype.reset = function () {
     this.lives = CONFIG.MAX_LIVES;
     this.invincible = 0;
     this.shakeFrames = 0;
+    this.animTimer = 0;
     this.runFrame = 0;
     this.isJumping = false;
+    this.coyote = 0;        // frames of ground-jump grace left after leaving a roof
+    this.jumpBuffer = 0;    // frames a not-yet-usable jump press stays queued
 };
 
 Player.prototype.update = function (rooftops, cameraX, dt) {
-    // Jump
-    if (Input.jump() && this.grounded && this.alive) {
+    // ── Jump: coyote time + input buffering ───────────────
+    // Both are pure forgiveness — a jump pressed a few frames early (mid-fall,
+    // about to land) or a few frames late (just ran off the edge) still fires.
+    if (Input.jump()) this.jumpBuffer = CONFIG.JUMP_BUFFER_FRAMES;
+    if (this.jumpBuffer > 0) this.jumpBuffer -= dt;
+    if (this.coyote > 0) this.coyote -= dt;
+
+    if (this.jumpBuffer > 0 && this.coyote > 0 && this.alive) {
         this.vy = CONFIG.JUMP_FORCE;
         this.grounded = false;
         this.isJumping = true;
+        this.jumpBuffer = 0;
+        this.coyote = 0;
     }
 
-    // Variable jump: releasing jump key early cuts upward velocity proportionally
-    if (this.isJumping && !Input.isDown('Space') && !Input.isDown('ArrowUp') && this.vy < 0) {
-        this.vy *= 0.6;
+    // Variable jump: releasing jump early cuts the climb short.
+    if (this.isJumping && !Input.jumpHeld() && this.vy < 0) {
+        this.vy *= CONFIG.JUMP_CUT;
         this.isJumping = false;
     }
 
-    // Gravity
+    // ── Gravity + integration ─────────────────────────────
+    // Both the acceleration and the position step scale with dt. Applying it to
+    // only one of the two (as this used to) makes the fall rate depend on the
+    // monitor's refresh rate.
     this.vy += CONFIG.GRAVITY * dt;
     if (this.vy > CONFIG.MAX_FALL) this.vy = CONFIG.MAX_FALL;
 
-    // Sweep collision — track previous bottom for tunneling prevention
-    const prevY = this.y;
-    this.y += this.vy;
+    const prevBottom = this.y + CONFIG.PLAYER_H;
+    this.y += this.vy * dt;
     const playerBottom = this.y + CONFIG.PLAYER_H;
-    const prevBottom = prevY + CONFIG.PLAYER_H;
 
-    // Collision with rooftops
+    // ── Rooftop collision (swept, so a fast fall cannot tunnel) ──
+    const wasGrounded = this.grounded;
     this.grounded = false;
-    if (this.alive) {
+    if (this.alive && this.vy >= 0) {
         for (let i = 0; i < rooftops.length; i++) {
             const r = rooftops[i];
             const screenX = r.x - cameraX;
-            const playerLeft = this.x;
-            const playerRight = this.x + CONFIG.PLAYER_W;
-
-            if (playerRight > screenX && playerLeft < screenX + r.width) {
-                // Sweep check: was above roof last frame, now at or below it
-                if (prevBottom <= r.y && playerBottom >= r.y && this.vy >= 0) {
+            if (this.x + CONFIG.PLAYER_W > screenX && this.x < screenX + r.width) {
+                if (prevBottom <= r.y && playerBottom >= r.y) {
                     this.y = r.y - CONFIG.PLAYER_H;
                     this.vy = 0;
                     this.grounded = true;
                     this.isJumping = false;
+                    break;
                 }
             }
         }
     }
 
-    // Invincibility countdown
-    if (this.invincible > 0) this.invincible--;
+    if (this.grounded) {
+        this.coyote = CONFIG.COYOTE_FRAMES;
+    } else if (wasGrounded && this.vy >= 0) {
+        // Walked off an edge rather than jumping — start the coyote window.
+        this.coyote = Math.max(this.coyote, CONFIG.COYOTE_FRAMES);
+    }
 
-    // Run animation
+    // ── Timers ────────────────────────────────────────────
+    if (this.invincible > 0) this.invincible -= dt;
+    if (this.shakeFrames > 0) this.shakeFrames -= dt;
+
     if (this.grounded && this.alive) {
-        this.animTimer++;
+        this.animTimer += dt;
         if (this.animTimer >= 6) {
             this.animTimer = 0;
             this.runFrame = (this.runFrame + 1) % 2;
@@ -93,14 +99,14 @@ Player.prototype.loseLife = function () {
     this.shakeFrames = 10;
 };
 
-Player.prototype.respawn = function (roof) {
-    if (roof) {
-        this.y = roof.y - CONFIG.PLAYER_H;
-    } else {
-        this.y = CONFIG.ROOF_Y_BASE - CONFIG.PLAYER_H - 40;
-    }
+/** Drop back onto solid ground. `roofY` is the surface to stand on. */
+Player.prototype.respawn = function (roofY) {
+    this.y = roofY - CONFIG.PLAYER_H;
     this.vy = 0;
     this.grounded = true;
+    this.isJumping = false;
+    this.jumpBuffer = 0;
+    this.coyote = CONFIG.COYOTE_FRAMES;
 };
 
 Player.prototype.draw = function (ctx) {
