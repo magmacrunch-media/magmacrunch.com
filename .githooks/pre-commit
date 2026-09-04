@@ -46,25 +46,51 @@ output=$(node scripts/check-cache-busters.mjs --fix 2>&1) || {
 }
 
 repaired=$(echo "$output" | sed -n 's/^FIXED  *//p')
-[ -n "$repaired" ] || exit 0
 
-echo "$output" | grep -E '^(FIXED|  *->)' || true
+if [ -n "$repaired" ]; then
+	echo "$output" | grep -E '^(FIXED|  *->)' || true
 
-held_back=""
-for file in $repaired; do
-	if echo "$dirty_before" | grep -qx "$file"; then
-		held_back="$held_back $file"
-	else
-		git add -- "$file"
+	held_back=""
+	for file in $repaired; do
+		if echo "$dirty_before" | grep -qx "$file"; then
+			held_back="$held_back $file"
+		else
+			git add -- "$file"
+		fi
+	done
+
+	if [ -n "$held_back" ]; then
+		echo "" >&2
+		echo "pre-commit: these files already had unstaged changes, so their corrected" >&2
+		echo "            stamps were written but NOT staged — review and add them:" >&2
+		for file in $held_back; do echo "              $file" >&2; done
+		exit 1
 	fi
-done
 
-if [ -n "$held_back" ]; then
+	echo "pre-commit: stamps corrected and staged."
+fi
+
+# Having repaired nothing is not the same as being safe to commit. A corrected
+# stamp can already be sitting unstaged — written by the block above on an
+# earlier attempt, or edited by hand. The fix pass then finds nothing stale,
+# and without this the commit would sail through recording the asset and not
+# its bump: precisely the bug the hook exists to prevent, one retry later.
+#
+# The invariant is about the index, not the working tree. Any stamp that
+# differs between the two means the commit is about to record a number that
+# disagrees with the file on disk.
+straddled=$(git diff -U0 -- '*.html' '*.css' |
+	grep -E '^[+-].*\?v=[0-9a-f]{8}' |
+	head -20 || true)
+
+if [ -n "$straddled" ]; then
 	echo "" >&2
-	echo "pre-commit: these files already had unstaged changes, so their corrected" >&2
-	echo "            stamps were written but NOT staged — review and add them:" >&2
-	for file in $held_back; do echo "              $file" >&2; done
+	echo "pre-commit: a corrected ?v= stamp is in the working tree but not staged," >&2
+	echo "            so this commit would record the old one:" >&2
+	echo "$straddled" | sed 's/^/              /' >&2
+	echo "" >&2
+	echo "            Stage the file, or discard the change — then commit again." >&2
 	exit 1
 fi
 
-echo "pre-commit: stamps corrected and staged."
+exit 0
