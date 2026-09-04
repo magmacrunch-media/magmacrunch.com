@@ -229,8 +229,10 @@
                     <button id="target-add">ADD FOLDER&hellip;</button>
                 </div>
                 <div class="hint">the sheet lands in the engine's own directory
-                    under the folder you pick. the list of folders is yours, not
-                    the project's &mdash; it never leaves this machine.</div>
+                    under the folder you pick &mdash; godot takes C# source
+                    instead of a PNG, so nothing needs importing before the game
+                    will run. the list of folders is yours, not the project's
+                    &mdash; it never leaves this machine.</div>
             </details>
 
             <details class="side-section" data-section="tools">
@@ -584,7 +586,8 @@
     <script src="core/targets/engines.js?v=bb9f62ff"></script>
     <!-- store reads engines.kinds() at load: an engine it has never heard
          of is not a target anyone can add. -->
-    <script src="core/targets/store.js?v=eec21a01"></script>
+    <script src="core/targets/godot.js?v=5fc5991b"></script>
+    <script src="core/targets/store.js?v=b961c1c3"></script>
     <!-- data then the logic that reads it -->
     <script src="core/ops-themes.js?v=9a9cae66"></script>
     <script src="core/palettes.js?v=feb8f901"></script>
@@ -604,7 +607,7 @@
     <!-- after editor.js: reads the state accessor it defines at the bottom -->
     <script src="project-ui.js?v=cb84bd01"></script>
     <!-- after project-ui.js: exporting a target reads the current project -->
-    <script src="targets-ui.js?v=59dfed25"></script>
+    <script src="targets-ui.js?v=4508c36c"></script>
     <!-- last: dispatches to both of the above -->
     <script src="help-ui.js?v=b17f8632"></script>
     <script src="menu.js?v=91dd7345"></script>
