@@ -88,6 +88,11 @@
       "name": "card-color",
       "value": "#00f0ff",
       "source": "arcade/action/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#ff5fa2",
+      "source": "arcade/action/index.html"
     }
   ],
   "Arcade — board-games": [
@@ -160,6 +165,13 @@
       "name": "mc-back-color",
       "value": "rgba(255, 140, 0, 0.6)",
       "source": "arcade/klotski/index.html"
+    }
+  ],
+  "Arcade — makemecookies": [
+    {
+      "name": "mc-back-color",
+      "value": "#FF2E9C",
+      "source": "arcade/makemecookies/index.html"
     }
   ],
   "Arcade — moonlight-drift": [
