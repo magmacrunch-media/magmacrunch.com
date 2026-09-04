@@ -7,7 +7,13 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    # Pinned to the Windows runner, not bare `self-hosted`. Two runners answer
+    # that label now — MC1-runner (Windows) and MC1-linux — and the shell below
+    # is a Windows Git Bash path, so a job landing on the Linux one dies on every
+    # step with "Could not find a part of the path ...bin/C:/PROGRA~1/Git/bin".
+    # It failed as a coin flip rather than outright, which is why deploys went
+    # from green to intermittent the moment the second runner came online.
+    runs-on: [self-hosted, Windows]
     defaults:
       run:
         shell: "C:/PROGRA~1/Git/bin/bash.exe --noprofile --norc -e -o pipefail {0}"
