@@ -25,7 +25,7 @@
     "c": "page",
     "u": "/music/index.html",
     "d": "distributed music / jukebox / physical media",
-    "b": "music — magmacrunch media home › music // music // jukebox local streaming · choose a song ▶ on streaming services distributed via LANDR · all major platforms ▶ music videos no-budget video productions · YouTube ▶ physical media floppy disk · CD · tapes in the works ▶ more releases coming soon ✦ tape production also in the works -->"
+    "b": "music — magmacrunch media home › music // music // jukebox local streaming · choose a song ▶ on streaming services distributed via LANDR · all major platforms ▶ music videos no-budget video productions · YouTube ▶ physical media floppy disk · CD · tapes in the works ▶"
   },
   {
     "t": "distributed music",
@@ -39,7 +39,7 @@
     "c": "page",
     "u": "/music/jukebox/index.html",
     "d": "Audio jukebox player",
-    "b": "jukebox — magmacrunch media home › music › jukebox // jukebox // magmacrunch streaming --> // jukebox // INSERT COIN NOW PLAYING — select a song — 0:00 / 0:00 SONG SELECTIONS ◄ 1/1 ► PLAY STOP UP NEXT queue empty select • play • enjoy"
+    "b": "jukebox — magmacrunch media home › music › jukebox // jukebox // INSERT COIN NOW PLAYING — select a song — 0:00 / 0:00 SONG SELECTIONS ◄ 1/1 ► PLAY STOP UP NEXT queue empty select • play • enjoy"
   },
   {
     "t": "physical media",
@@ -67,7 +67,7 @@
     "c": "page",
     "u": "/music/physical-media/floppy-disk/index.html",
     "d": "Floppy disk releases",
-    "b": "floppy disk — music — magmacrunch media home › music › physical media › floppy disk // floppy disk // physical & obscure media series ✦ est. july 2025 --> a series of releases on 3.5″ floppy disk since 2025 // releases // pay2play (2025) sex van floor plan · 3.5″ floppy · jul 2025 ▶ iou a pack of american spirits (2026) sex van floor plan · 3.5″ floppy · jun 2026 ▶"
+    "b": "floppy disk — music — magmacrunch media home › music › physical media › floppy disk // floppy disk // a series of releases on 3.5″ floppy disk since 2025 // releases // pay2play (2025) sex van floor plan · 3.5″ floppy · jul 2025 ▶ iou a pack of american spirits (2026) sex van floor plan · 3.5″ floppy · jun 2026 ▶"
   },
   {
     "t": "music videos",
@@ -109,7 +109,7 @@
     "c": "page",
     "u": "/archive/index.html",
     "d": "artists / places / labels / contributors",
-    "b": "archive — magmacrunch media home › archive // archive // database of artists, places, contributors, & labels the magmacrunch archive --> EMERAC // DB_ACCESS :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \\/\\/ [- |_ ( () |\\/| [- ~|~ () ~|~ |-| [- /\\ /? ( |-| | \\/ [- _\\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:. by artist musicians and projects from the scene by place rehearsal spaces and recording locations by contributor credits and contributions by label labels, publishers, and creative agencies some artists listed may have no releases — or released elsewhere."
+    "b": "archive — magmacrunch media home › archive // archive // database of artists, places, contributors, & labels EMERAC // DB_ACCESS :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.: \\/\\/ [- |_ ( () |\\/| [- ~|~ () ~|~ |-| [- /\\ /? ( |-| | \\/ [- _\\~ :.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:.:. by artist musicians and projects from the scene by place rehearsal spaces and recording locations by contributor credits and contributions by label labels, publishers, and creative agencies some artists listed may have no releases — or released elsewhere."
   },
   {
     "t": "by artist",
@@ -186,7 +186,7 @@
     "c": "page",
     "u": "/press/index.html",
     "d": "journals / lyrics / press",
-    "b": "press — magmacrunch media home › press // press // magmacrunch press --> a diy publishing house for essays, poetry, fiction, and experimental writing // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to magmarunchmedia@mgmail.com include your name (or pseudonym) and a short bio if you want -->"
+    "b": "press — magmacrunch media home › press // press // a diy publishing house for essays, poetry, fiction, and experimental writing // journals // scientific journal science & technology · 2 pieces ▶ experimental journal experimental writing · 1 piece ▶ lyrics journal lyrics & songwriting · 8 pieces ▶ // submissions // send submissions to magmarunchmedia@mgmail.com"
   },
   {
     "t": "scientific",
@@ -227,8 +227,8 @@
     "t": "developer tools",
     "c": "page",
     "u": "/ware/dev/index.html",
-    "d": "game engines, scripting language, C API reference & memory course",
-    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, C API reference & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
+    "d": "game engines, scripting language, & memory course",
+    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -473,7 +473,7 @@
     "c": "artist",
     "u": "/archive/by-artist/dag-henderson/photography.html",
     "d": "Dag Henderson — Photography",
-    "b": "dag henderson — photography — magmacrunch media archive › by artist › dh // dag henderson // PHOTOGRAPHY ← back about links music videos recordings releases works // photos // add caption here ← drag to scroll → [ close ] ← prev next →"
+    "b": "dag henderson — photography — magmacrunch media archive › by artist › dh // dag henderson // PHOTOGRAPHY ← back about links music videos recordings releases works"
   },
   {
     "t": "dag henderson",
@@ -739,7 +739,7 @@
     "c": "artist",
     "u": "/archive/by-artist/jon-mccoy/photography.html",
     "d": "Jon Mccoy — Photography",
-    "b": "Jon McCoy — photography — magmacrunch media archive › by artist › jhm // Jon McCoy // PHOTOGRAPHY ← back about links music videos recordings releases works // photos // add caption here ← drag to scroll → [ close ] ← prev next →"
+    "b": "Jon McCoy — photography — magmacrunch media archive › by artist › jhm // Jon McCoy // PHOTOGRAPHY ← back about links music videos recordings releases works"
   },
   {
     "t": "Jon McCoy",
@@ -1950,7 +1950,7 @@
     "c": "tool",
     "u": "/ware/sprite-forge/",
     "d": "game sprite editor · animation, onion skin, PNG sheet export",
-    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ▦ GRID ⇋ MIRROR ◎ ONION 32 × 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY TOOLS ✎ ⌫ ■ ╱ ▭ ◯ ⚲ ⌖ COLOR #000000 + ADD RAMP replace everywhere REPLACE swaps the selected swatch for this color in every frame; one undo step. CHARACTER TEMPLATES… slots FRAMES ← 1 / 1 → ADD DUP DEL playback ▶ fps 4× TRANSFORM ⇄ FLIP ⇅ FLIP ↻ 90° shift (arrow keys) ◀ ▲ ▼ ▶ CANVAS w × h RESIZE presets 8² 16² 32² 64² origin ox..."
+    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ⇲ FIT ▦ GRID ⇋ MIRROR ◎ ONION ◫ PREVIEW 32 × 32 animation sheet; click a frame to edit it EXPORT OUTPUT COPY COLOR #000000 + ADD RAMP SPRITES ADD DUP DEL every sprite here shares one palette, so a character's facings cannot drift onto different browns. each exports as its own sheet, named by the name above. TARGETS engine ADD FOLDER… the sheet lands in the engine's own directory under the folder you pick. the list of f..."
   },
   {
     "t": "texastoast",

@@ -80,6 +80,10 @@ function extractBodyText(html, maxLength = 600) {
   text = text.replace(/<style[\s\S]*?<\/style>/gi, '');
   text = text.replace(/<nav[\s\S]*?<\/nav>/gi, '');
   text = text.replace(/<footer[\s\S]*?<\/footer>/gi, '');
+  // Comments before tags: /<[^>]+>/ stops at the first '>', so a comment
+  // containing one (a tag example, an arrow) is only half removed and the
+  // remainder leaks into the indexed body as visible text.
+  text = text.replace(/<!--[\s\S]*?-->/g, ' ');
   // Tags before entities: decoding first could introduce a '<' that the tag
   // strip would then eat, along with everything up to the next '>'.
   text = text.replace(/<[^>]+>/g, ' ');
