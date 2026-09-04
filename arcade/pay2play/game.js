@@ -374,7 +374,17 @@ const JACKPOT_PAYOUT = 10; // 10¢ jackpot (need 10 jackpots to break even — r
 const TWO_MATCH_PAYOUT = 2;
 const CONSOLATION = 0;
 
+const ATTENTION_DECAY = 2;     // attention lost per second once a result has landed
+const DECAY_GRACE_MS = 1200;   // a beat to enjoy a result before interest starts to slide
+const DECAY_DT_CAP = 0.25;     // largest frame delta honoured, in seconds (see decayTick)
+const FADE_NOTICE_FLOOR = 40;  // below this, a decline is not worth remarking on
+const ATTENTION_HIGH = 50;     // still hot when you walked away
+const DEBT_DEEP = 10;          // cents; roughly fifty spins of drift at this edge
+
 let coins = 0, attention = 0, spins = 0;
+let attentionMark = 0;         // attention at the last result, for judging a decline against
+let decayActive = false, decayLastFrame = 0, decayHoldUntil = 0;
+let fadingNoted = false, goneNoted = false;
 let isSpinning = false;
 let reelStates = [true,true,true];
 let reelIntervals = [null,null,null];
@@ -384,7 +394,9 @@ const MESSAGES = {
     allMatch: ["JACKPOT! Everyone's watching now...","You won! But what did you really win?","Triple match! The crowd goes wild!","Perfect! They love you right now.","Winner! Is this what you wanted?"],
     twoMatch: ["So close! Keep going...","Almost perfect! One more spin?","Not bad! They're interested...","Two out of three! That counts, right?","Getting there! Don't stop now..."],
     noMatch:  ["Nothing this time. Try again?","Keep playing... they're still watching.","No match. But you can do better.","Maybe next time...","Not quite. Pull again?"],
-    debt:     ["In debt, but who's counting?","You can always earn it back..."]
+    debt:     ["In debt, but who's counting?","You can always earn it back..."],
+    fading:   ["They're starting to look away...","You're losing them. Pull again?","The room is getting quieter..."],
+    gone:     ["Nobody's watching anymore.","The room emptied while you stood there.","Attention: zero. Was it worth it?"]
 };
 
 const reels      = [document.getElementById('reel1'),document.getElementById('reel2'),document.getElementById('reel3')];
@@ -393,6 +405,7 @@ const lever      = document.getElementById('lever');
 const messageEl  = document.getElementById('message');
 const coinsEl    = document.getElementById('coins');
 const attentionEl= document.getElementById('attention');
+const attentionBox= document.getElementById('attention-display');
 const spinsEl    = document.getElementById('spins');
 
 
@@ -414,12 +427,69 @@ function updateStats(){
     const val=Math.abs(coins);
     coinsEl.textContent = coins<0 ? `-${val}¢` : `${val}¢`;
     document.getElementById('coins-display').classList.toggle('negative', coins<0);
-    attentionEl.textContent = attention;
+    attentionEl.textContent = Math.floor(attention);
+    attentionBox.classList.toggle('draining', isDraining());
     spinsEl.textContent = spins;
 }
 
+// ═══════════════════════════════════════════════════════════
+// ATTENTION DECAY
+// ═══════════════════════════════════════════════════════════
+//
+// Attention used to only ever climb, which made it a scoreboard rather than a
+// stat: nothing was ever at stake in stopping. Now it drains in real time, so
+// playing costs money and standing still costs the thing you are playing for,
+// and the cash-out button has something to argue with. The clock runs during a
+// spin too — waiting on the reels is not a refuge.
+
+function isDraining(){
+    return decayActive && attention>0 && performance.now()>=decayHoldUntil;
+}
+
+function startDecay(){
+    if(decayActive) return;
+    decayActive=true; decayLastFrame=0;
+    requestAnimationFrame(decayTick);
+}
+
+function stopDecay(){ decayActive=false; }
+
+function decayTick(now){
+    if(!decayActive) return;
+    if(!decayLastFrame) decayLastFrame=now;
+    // Capped because a backgrounded tab stops firing rAF entirely: without this,
+    // the first frame back settles up the whole absence at once and clears the
+    // board. Being away is not the sin the game is about.
+    const dt=Math.min((now-decayLastFrame)/1000, DECAY_DT_CAP);
+    decayLastFrame=now;
+    if(now>=decayHoldUntil && attention>0){
+        const shown=Math.floor(attention);
+        attention=Math.max(0, attention-ATTENTION_DECAY*dt);
+        // Also fire on the landing at exactly zero: floor() reads 0 for everything
+        // below 1, so the last step down would otherwise change nothing visible
+        // and the room would empty without comment. The outer attention>0 guard
+        // means this can only be true on the one frame that reaches it.
+        if(Math.floor(attention)!==shown || attention===0){ updateStats(); noteFade(); }
+    }
+    requestAnimationFrame(decayTick);
+}
+
+// Said once per decline, not once per frame, and never over a live spin message.
+function noteFade(){
+    if(isSpinning) return;
+    if(attention<=0){
+        if(!goneNoted){ goneNoted=true; messageEl.textContent=getRandom(MESSAGES.gone); }
+        return;
+    }
+    if(!fadingNoted && attentionMark>=FADE_NOTICE_FLOOR && attention<attentionMark*0.5){
+        fadingNoted=true; messageEl.textContent=getRandom(MESSAGES.fading);
+    }
+}
+
+
 function pullLever(){
     if(isSpinning) return;
+    startDecay();
     coins -= SPIN_COST;
     updateStats();
     lever.classList.add('pulled');
@@ -457,6 +527,8 @@ function checkResults(){
     else if(r1===r2||r2===r3||r1===r3){ payout=TWO_MATCH_PAYOUT; attnGain=30; msgArr=MESSAGES.twoMatch; }
     else{                               payout=CONSOLATION;        attnGain=5;  msgArr=MESSAGES.noMatch; }
     coins+=payout; attention+=attnGain;
+    attentionMark=attention; decayHoldUntil=performance.now()+DECAY_GRACE_MS;
+    fadingNoted=false; goneNoted=false;
     let msg=getRandom(msgArr);
     if(payout>0) msg+=` +${payout}¢`;
     if(coins<0&&Math.random()<0.3) msg=getRandom(MESSAGES.debt);
@@ -469,26 +541,51 @@ function checkResults(){
 // END GAME / PRIZE
 // ═══════════════════════════════════════════════════════════
 
-function pickPrize(){
-    // 25% chance for the loss meme (prize 5), else random band member (0–4)
-    // Force loss if deeply in debt after many spins
-    if(spins>=50&&coins<-10) return 5;
-    return Math.random()<0.25 ? 5 : Math.floor(Math.random()*5);
+// The ending is the two numbers you finished on, read as four corners: the
+// attention you still had when you walked away, against what it cost you to
+// keep it. It used to be a coin flip, which meant the stats on the card were
+// decoration — you could play any way at all and get told the same thing.
+//
+// The two extremes are fixed art. Broke and adored is the song, so it gets the
+// song. Broke and ignored gets the loss meme, which is the joke landing on you
+// rather than for you. The two middling exits hand you a band member instead,
+// chosen by spin count so a different session shows a different face without
+// putting the ending itself back on a dice roll.
+
+function portrait(){ return 1 + (spins % 4); }   // CHUCK, RHO, ELI, JAKE
+
+function pickEnding(){
+    const hot  = attention >= ATTENTION_HIGH;
+    const deep = coins <= -DEBT_DEEP;
+    if(hot && deep) return {
+        prize: 0, title: 'PAY2PLAY',
+        message: 'You bought every second of it. They watched right up to the moment you stopped paying.'
+    };
+    if(hot) return {
+        prize: portrait(), title: 'CASHED OUT',
+        message: 'You stopped while they were still looking. Hardly anybody does.'
+    };
+    if(deep) return {
+        prize: 5, title: 'NOBODY WAS WATCHING',
+        message: 'You paid for the room and performed to it empty.'
+    };
+    return {
+        prize: portrait(), title: 'YOU BARELY PLAYED',
+        message: 'A few cents in, a few cents gone. Nobody noticed either way.'
+    };
 }
 
 function showPrize(){
+    stopDecay();
     document.getElementById('final-spins').textContent   = spins;
-    document.getElementById('final-attention').textContent = attention;
+    document.getElementById('final-attention').textContent = Math.floor(attention);
     const debtDollars = Math.abs(coins)/100;
     document.getElementById('final-debt').textContent = coins<0 ? `$${debtDollars.toFixed(2)}` : '$0.00';
 
-    const prizeIdx = pickPrize();
-    document.getElementById('prize-ascii-display').textContent = ASCII_PRIZES[prizeIdx];
-
-    // Custom message for loss meme
-    document.getElementById('end-message-text').textContent = prizeIdx===5
-        ? 'Is this loss? Keep playing...'
-        : 'The house always wins.';
+    const ending = pickEnding();
+    document.getElementById('prize-ascii-display').textContent = ASCII_PRIZES[ending.prize];
+    document.getElementById('end-title').textContent = ending.title;
+    document.getElementById('end-message-text').textContent = ending.message;
 
     document.getElementById('prize-modal').classList.add('active');
 }
@@ -504,6 +601,7 @@ document.getElementById('cash-out-btn').addEventListener('click',()=>{ if(!isSpi
 document.getElementById('prize-close-btn').addEventListener('click',()=>{
     document.getElementById('prize-modal').classList.remove('active');
     coins=0; attention=0; spins=0;
+    attentionMark=0; decayHoldUntil=0; fadingNoted=false; goneNoted=false;
     updateStats();
     messageEl.textContent='MAKE MORE MONEY GO OUT FOR THE WEEKEND';
     displaySymbol(reels[0],'lipstick');
@@ -537,4 +635,3 @@ window.addEventListener('resize', ()=>{
     drawOuterFrame();
     drawMachineFrame(false);
 });
-</script>
