@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="style.css?v=586c42e4">
+    <link rel="stylesheet" href="style.css?v=f97c433c">
     <!-- kit/ and bridge.js load here rather than with the other scripts at the
          end of the body. bridge-core.js decides whether there is a filesystem
          at all, and marks <html class="desktop"> when there is; doing that
@@ -142,6 +142,31 @@
                 <div class="preview-block">
                     <span class="sheet-label">sheet; click a frame to edit it</span>
                     <canvas id="sheet-canvas"></canvas>
+                </div>
+                <!-- The frame wrapped onto the surface it is bound for. A
+                     texture is the one sprite the canvas cannot show you: an
+                     engine's sphere unwrap puts u=0 on +Z, so a face drawn mid
+                     canvas comes out on the back of the head, and no zoom level
+                     hints at it. The layouts are core/mesh.js's. -->
+                <div class="preview-block" id="mesh-block">
+                    <span class="sheet-label" id="mesh-label">surface</span>
+                    <!-- Controls beside the canvas, not under it. The dock is a
+                         row of the height-constrained canvas panel, so vertical
+                         space here comes straight off the drawing area; there
+                         is horizontal room and the dock scrolls anyway. -->
+                    <div class="mesh-body">
+                        <canvas id="mesh-canvas" width="108" height="108"
+                                title="Drag to turn it. Double-click to face front."></canvas>
+                        <div class="mesh-controls">
+                            <select id="mesh-shape" title="Which surface this frame is going onto"></select>
+                            <div class="mesh-offset">
+                                <button id="mesh-u-down" title="Turn the image one texel around the shape. A view offset — it changes no pixels.">&#9664;</button>
+                                <input id="mesh-u" type="number" step="1"
+                                       title="Offset in texels. Type it: aiming a face at the front of a 64-wide sphere map is 32, and nudging there one texel at a time is not a workflow.">
+                                <button id="mesh-u-up" title="Turn the image one texel around the shape. A view offset — it changes no pixels.">&#9654;</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="export-panel">
                     <div class="export-header">
@@ -345,6 +370,18 @@
                 <div class="hint">uniform-grid PNG sheet; reads into
                     <code>magnolia</code>, <code>texastoast</code>, adenosine, and any
                     engine that slices a sheet by frame size.</div>
+
+                <!-- Both tiers. The desktop build writes a path and also has
+                     these in the File menu; the browser downloads the file and
+                     picks one back up, which needs no disk and no window. Here
+                     rather than menu-only because LITE has no menu bar. -->
+                <div class="sub-label">project file</div>
+                <div class="action-row">
+                    <button id="forge-save">SAVE .FORGE</button>
+                    <button id="forge-open">OPEN .FORGE</button>
+                </div>
+                <div class="hint">a <code>.forge</code> holds every sprite, the shared
+                    palette and the origins. A PNG holds only pixels.</div>
             </details>
         </aside>
     </div>
@@ -536,10 +573,11 @@
     <!-- first: bridge.js in <head> has already decided whether there is a
          filesystem, and this turns that one boolean into the capability table
          the ui/ files below ask. -->
-    <script src="core/tier.js?v=8edd96d5"></script>
+    <script src="core/tier.js?v=dc53965a"></script>
     <script src="core/color.js?v=7c3a8d1d"></script>
     <script src="core/draw.js?v=6107b978"></script>
     <script src="core/sheet.js?v=5b13d4e8"></script>
+    <script src="core/mesh.js?v=51b06a44"></script>
     <script src="core/templates.js?v=1d3705e7"></script>
     <script src="core/project.js?v=df56292e"></script>
     <script src="core/targets/gamemaker.js?v=6f0a6c02"></script>
@@ -558,12 +596,13 @@
     <script src="platform.js?v=f806408d"></script>
     <!-- before editor.js, which encodes the sheet it exports -->
     <script src="png.js?v=65978a7e"></script>
-    <script src="editor.js?v=8b10f9ca"></script>
+    <script src="editor.js?v=d6ca6cbc"></script>
     <!-- after editor.js, and before project-ui.js which asks it for the list.
          It seeds itself from the blank sprite the editor has already made. -->
     <script src="sprites-ui.js?v=949bacd1"></script>
+    <script src="mesh-ui.js?v=ff9a4882"></script>
     <!-- after editor.js: reads the state accessor it defines at the bottom -->
-    <script src="project-ui.js?v=e301cb94"></script>
+    <script src="project-ui.js?v=cb84bd01"></script>
     <!-- after project-ui.js: exporting a target reads the current project -->
     <script src="targets-ui.js?v=59dfed25"></script>
     <!-- last: dispatches to both of the above -->
