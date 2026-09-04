@@ -14,7 +14,9 @@
     "og": "node scripts/generate-og.mjs",
     "build:adenosine": "node scripts/sync-adenosine.mjs",
     "check:shell": "node scripts/check-shell-tokens.mjs",
-    "check:cachebust": "node scripts/check-cache-busters.mjs"
+    "check:cachebust": "node scripts/check-cache-busters.mjs",
+    "fix:cachebust": "node scripts/check-cache-busters.mjs --fix",
+    "hooks:install": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@magmacrunch/adenosine-audio": "^0.2.4",

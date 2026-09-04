@@ -13,6 +13,17 @@
  * app.js, and ware/texastoast/playground.html a stale app.js — all three
  * stranded by commits that edited the asset and left the stamp alone.
  *
+ * ── Fixing ──
+ *
+ * `npm run fix:cachebust` (this script with `--fix`) rewrites stale stamps in
+ * place, since the correct value is a function of the file and retyping it by
+ * hand is a transcription step with nothing to decide. It touches stale stamps
+ * only: unstamped references stay unstamped, and a missing file stays a hard
+ * failure. See the FIX comment further down for why the line is drawn there.
+ *
+ * .githooks/pre-commit runs it on every commit, so a stamp is normally repaired
+ * before it can reach CI at all. Install with `npm run hooks:install`.
+ *
  * ── Hash the normalised content, not the bytes on disk ──
  *
  * .gitattributes deliberately pins only the files the Pi executes (*.sh, *.py,
@@ -62,7 +73,7 @@
  * <img> tags on a placeholder that was never committed at all.
  */
 
-import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
@@ -141,6 +152,20 @@ const isUnresolvable = (href) =>
   href.includes('${') || href.includes('{{') ||
   /^(?:[a-z][a-z0-9+.-]*:)/i.test(href) && !href.startsWith('/');
 
+// `--fix` rewrites every stale stamp in place instead of reporting it. The
+// stamp is derived from the file, so a human retyping it is a transcription
+// step with nothing to decide — and the failure mode of forgetting is silent,
+// which is the whole reason this check exists. b8ee311 repinned the adenosine
+// tools and left three stamps behind; that repair was eight digests copied by
+// hand out of this script's own error message.
+//
+// Only stale stamps are touched. An unstamped reference is left unstamped —
+// adding stamps is a judgement about caching that belongs to whoever writes
+// the tag — and a missing file is still a hard failure, since the repair is
+// either deleting a tag or declaring a generator, neither of which is
+// mechanical.
+const FIX = process.argv.includes('--fix');
+
 let checked = 0;   // stamped with a real digest, and compared against the file
 let present = 0;   // resolved to a file that exists, stamped or not
 const stale = [];
@@ -194,6 +219,73 @@ for (const sheet of filesUnder(ROOT, ['.css'])) {
   for (const [, , href, query] of css.matchAll(CSS_REF_RE)) inspect(href, query, sheet);
 }
 
+/**
+ * Rewrite the stale stamps in one file.
+ *
+ * The replacement runs through the same regex that found them, so what gets
+ * edited is exactly what was matched — no second, looser search that could
+ * land on a `?v=` in prose or in an unrelated attribute. Within a match the
+ * reference is spliced by value rather than by index, and it appears once
+ * there as the quoted attribute value, so repeated hrefs on a page each get
+ * their own correct stamp.
+ *
+ * Written back as read. digest() normalises CRLF to LF to hash, which is right
+ * for hashing and would be wrong here: writing a normalised string back would
+ * silently convert a CRLF page to LF and bury a one-token change under a
+ * whole-file diff.
+ */
+function rewrite(source, entries) {
+  const re = source.endsWith('.css') ? CSS_REF_RE : HTML_REF_RE;
+  const wanted = new Map(entries.map(e => [e.href, e.actual]));
+  let changed = 0;
+
+  const after = readFileSync(source, 'utf8').replace(re, (match, ...groups) => {
+    // HTML captures (href, query); CSS captures (quote, href, query).
+    const [href, query] = re === CSS_REF_RE ? [groups[1], groups[2]] : [groups[0], groups[1]];
+    const actual = wanted.get(href);
+    if (actual === undefined) return match;
+
+    // Compare before counting: the same href can appear twice on a page, one
+    // occurrence stale and one already correct, and only the stale one is a
+    // change. stale[] holds one entry per match, so the counts line up.
+    const oldRef = href + (query ?? '');
+    const newRef = `${href}?v=${actual}`;
+    if (oldRef === newRef) return match;
+    changed++;
+    return match.replace(oldRef, newRef);
+  });
+
+  if (changed) writeFileSync(source, after);
+  return changed;
+}
+
+if (FIX && stale.length) {
+  const byFile = new Map();
+  for (const s of stale) {
+    if (!byFile.has(s.page)) byFile.set(s.page, []);
+    byFile.get(s.page).push(s);
+  }
+
+  let fixed = 0;
+  for (const [page, entries] of byFile) {
+    const n = rewrite(join(ROOT, page), entries);
+    fixed += n;
+    for (const e of entries) {
+      console.log(`FIXED    ${page}\n           -> ${e.href}  ${e.stamp} -> ${e.actual}`);
+    }
+    // A stale entry the rewrite could not land on means the two passes disagree
+    // about what they are looking at. Stop rather than report a repair that did
+    // not happen — the hook trusts this output to decide what to stage.
+    if (n !== entries.length) {
+      console.error(`\nFAIL — ${page}: rewrote ${n} of ${entries.length} stale stamp(s).`);
+      process.exit(1);
+    }
+  }
+
+  console.log(`\n${fixed} stale stamp(s) updated in ${byFile.size} file(s).`);
+  stale.length = 0;
+}
+
 if (checked === 0) {
   // A pass over nothing is not a pass. check-shell-tokens.mjs guards the same
   // way, having watched a sibling check go green on Windows by matching nothing.
@@ -231,7 +323,8 @@ if (missing.length || stale.length) {
       `\nA stale stamp means visitors keep the cached old file, so the change never\n` +
       `reaches them. Set each stamp to the file's normalised digest:\n\n` +
       stale.map(s => `  ${s.href}?v=${s.actual}   (in ${s.page})`).join('\n') +
-      `\n\nRecompute one with:  node scripts/check-cache-busters.mjs --digest <file>`
+      `\n\nFix all of them with:  npm run fix:cachebust` +
+      `\nRecompute one with:    node scripts/check-cache-busters.mjs --digest <file>`
     );
   }
 

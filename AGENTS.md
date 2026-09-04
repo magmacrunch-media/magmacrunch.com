@@ -108,6 +108,11 @@ npm run check     # lint + Python + JS
 npm run test:py   # pytest suites under arcade/
 npm run test:js   # node test-*.js under arcade/*/tests/
 ```
+Run `npm run hooks:install` once per clone. It points `core.hooksPath` at
+`.githooks/`, whose `pre-commit` repairs stale `?v=` cache-buster stamps and
+stages them with the asset that moved. Without it nothing breaks — `lint` in
+CI still fails on a stale stamp — you just find out later. Bypass a single
+commit with `git commit --no-verify`.
 
 Runner internals, Python interpreter selection, and what each suite covers: `docs/ops/testing.md`.
 

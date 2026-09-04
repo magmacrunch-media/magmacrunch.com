@@ -13,6 +13,7 @@
 #   *.service   systemd reads the \r as part of the value
 #   *.yml       a workflow's `run:` block is handed to a Linux shell verbatim
 #   *.conf      nginx config, deployed to the Pi
+#   .githooks/  git runs these through sh; they carry no .sh suffix to match
 #
 # The committed tree is already LF throughout; this keeps it that way when a
 # commit is made from a clone that does not normalise, which is how CRLF would
@@ -24,3 +25,4 @@
 *.yml       text eol=lf
 *.yaml      text eol=lf
 *.conf      text eol=lf
+.githooks/* text eol=lf
