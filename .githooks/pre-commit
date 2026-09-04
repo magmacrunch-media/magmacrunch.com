@@ -79,9 +79,25 @@ fi
 # The invariant is about the index, not the working tree. Any stamp that
 # differs between the two means the commit is about to record a number that
 # disagrees with the file on disk.
-straddled=$(git diff -U0 -- '*.html' '*.css' |
-	grep -E '^[+-].*\?v=[0-9a-f]{8}' |
-	head -20 || true)
+#
+# SCOPED TO WHAT THIS COMMIT RECORDS. Looking at every page in the tree made the
+# hook refuse commits it had no business refusing: a straddled stamp in a file
+# the commit does not touch cannot be recorded by it, so it is somebody else's
+# problem — and in a repo where more than one thing is in flight at once, there
+# is usually somebody else. `git diff --cached` is the right source because git
+# points the hook at the index it built for THIS commit, including the temporary
+# one it builds for a path-limited `git commit <paths>`.
+#
+# Word-split on whitespace, as the repaired loop above already does; no path in
+# this repo has a space in it.
+staged_pages=$(git diff --cached --name-only --diff-filter=ACMR -- '*.html' '*.css')
+
+straddled=''
+if [ -n "$staged_pages" ]; then
+	straddled=$(git diff -U0 -- $staged_pages |
+		grep -E '^[+-].*\?v=[0-9a-f]{8}' |
+		head -20 || true)
+fi
 
 if [ -n "$straddled" ]; then
 	echo "" >&2
