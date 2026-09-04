@@ -30,6 +30,11 @@ opencode.json
 
 # AI tool artifacts
 .aider*
+# Claude Code's per-repo state: launch.json, and worktrees/ when a session runs in
+# one. .git/info/exclude already covered the worktrees on this machine, but that
+# file is local and never leaves it, so a fresh clone had no protection and
+# `git add -A` would stage .claude/launch.json.
+.claude/
 
 # Historian-tui corrections data (lives in its own repo)
 archive/_corrections.*
