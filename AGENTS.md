@@ -311,6 +311,7 @@ Every other game under `arcade/` is authored in this repo as normal.
 - `docs/ops/archive-music.md` — distributed-music releases, jukebox, MusicBrainz cache, adding archive pages
 - `docs/ops/testing.md` — test runner internals, Python interpreter probing, suite coverage map
 - `docs/ops/chat-system.md` — arcade chat: SharedWorker architecture, handshake gate, rate limits, rooms, services.json, deploy
+- `docs/ops/chat-presence-widget-changes.md` — arcade chat presence: what the online count means, and the widget changes queued for adenosine
 - `docs/ops/scores-counter.md` — high-score system and site hit counter: architecture, game IDs, deploy
 - `docs/ops/mcp-server.md` — remote MCP server on MC1: setup, tools, service management, troubleshooting
 - `docs/ops/pi-deployment.md` — Raspberry Pi setup, venv recovery, admin dashboard, systemd services/ports

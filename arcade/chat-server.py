@@ -205,6 +205,22 @@ def attach_socket(token, websocket):
     and a reconnecting one would silently stop, which is the bug the room-restore
     path was written to fix in the first place.
     """
+    previous = socket_session.get(websocket)
+    if previous is not None and previous != token:
+        # This socket already belonged to another session, and the old code left
+        # it there: socket_session was overwritten, but the old session's
+        # `sockets` set kept the socket forever. That set is the only thing
+        # marking a session online, so the abandoned one never emptied, never
+        # had `last_seen` stamped, was never swept by session_cleanup, and stayed
+        # in the roster until the process restarted — an immortal phantom user.
+        #
+        # Reached by any socket that sends set_name twice under different tokens.
+        # The widget does that when localStorage is unreadable on the first
+        # connect and readable later: getSessionToken() returns null while
+        # storage throws, so the server invents an anon token, and the next
+        # set_name carries the real one.
+        detach_socket(websocket)
+
     info = sessions[token]
     info['sockets'].add(websocket)
     socket_session[websocket] = token
@@ -329,13 +345,19 @@ async def broadcast_room_users(room_code):
     })
 
 
-async def broadcast_user_list():
+def user_list_message():
     """
-    Send the online user list to all connected clients — one entry per person.
+    The online user list — one entry per person.
 
     Iterates sessions rather than sockets, so the count is people. Sessions with
     no sockets are the recently disconnected, waiting out SESSION_TIMEOUT in case
     they come back; they are not online and are skipped.
+
+    Built separately from the broadcast so a single arriving socket can be sent
+    the roster directly. Without that a new connection saw no `user_list` at all
+    until somebody else's set_name or disconnect happened to trigger one, and
+    the widget has nothing else to draw the online count from — so it kept
+    showing whatever number it last heard, indefinitely.
     """
     users = []
     for info in sessions.values():
@@ -349,19 +371,22 @@ async def broadcast_user_list():
             'rooms': user_rooms,
             'game': game,
         })
-    await broadcast({
+    return {
         'type': 'user_list',
         'users': users,
         'count': len(users)
-    })
+    }
 
 
-async def broadcast_global_users():
-    """Send total connected user count to all."""
-    await broadcast({
-        'type': 'global_users',
-        'count': len(connected_clients)
-    })
+async def broadcast_user_list():
+    """Send the online user list to all connected clients."""
+    await broadcast(user_list_message())
+
+
+# There is deliberately no global_users broadcast. It counted len(connected_clients)
+# — sockets, not people — and the widget feeds `global_users` into the same online
+# counter as `user_list`, so whichever arrived last won. It was never called; wiring
+# it up would reintroduce a count that double-counts anyone with two tabs open.
 
 
 # ── Room membership ─────────────────────────────────────────────────────────
@@ -421,6 +446,14 @@ async def handler(websocket):
 
         # Send current server statuses (cached; refreshed by status_broadcaster)
         await websocket.send(json.dumps(status_message()))
+
+        # Send the roster. The widget's own set_name normally provokes one a
+        # moment later, but not reliably: set_name is rate limited per IP and a
+        # refusal is silent, and the SharedWorker's cached user_list survives an
+        # automatic reconnect. Either way the count on screen would keep its
+        # stale value. This socket has asked for nothing yet, so it is not in
+        # the roster it is being sent.
+        await websocket.send(json.dumps(user_list_message()))
 
         # Main message loop
         async for raw in websocket:

@@ -62,6 +62,53 @@ game servers use. That module owns:
 - **`ip_limiter`** — one process-wide limiter keyed by `(ip, action)`. The old per-connection limiters reset on reconnect, which cost a spammer one extra socket.
 - **`make_reject_request(max_connections=...)`** — the `process_request` gate. Plain HTTP still gets 426, so the health bot keeps working. Games allow 10 new sockets per IP per minute; chat allows 30, because browsers without SharedWorker support open one per page navigation.
 
+### Presence: what "N online" counts
+
+The roster is people, not sockets. `user_list_message()` walks `sessions` and
+skips any with an empty `sockets` set, so a person with three tabs is one entry
+and a recently disconnected one is none.
+
+Three things make that number trustworthy, and each was a defect first:
+
+- **Every socket is sent `user_list` on connect**, alongside `history` and
+  `status`. It used to arrive only as a side effect of the widget's own
+  `set_name` — which is rate limited per IP and dropped *silently* when the
+  budget is spent. The widget draws its count from `user_list` and nothing else
+  and never resets it, so a socket that missed the frame displayed a stale
+  number for as long as the page stayed open. The arriving socket has no session
+  yet, so it is correctly absent from the roster it receives.
+- **`attach_socket` detaches the socket from its previous session first.**
+  Without that, a socket that sent `set_name` twice under different tokens was
+  left in both sessions' `sockets` sets. Only the second could ever be detached,
+  so the first stayed permanently online — never emptied, never stamped with
+  `last_seen`, never swept by `session_cleanup`. It survived the visitor, the
+  connection and every `SESSION_TIMEOUT`, and cleared only on restart. The
+  widget reaches this when `localStorage` is unreadable on the first connect
+  (`getSessionToken()` returns `null`, so the server invents an anon token) and
+  readable on a later `set_name`.
+- **There is no `global_users` broadcast.** It counted `len(connected_clients)`
+  — sockets — and the widget feeds it into the same counter as `user_list`, so
+  whichever landed last won. It was dead code; it is now a comment saying why
+  not to add it back.
+
+Two things the count still gets wrong, both fixable only in the widget
+(`adenosine-chat.js`, generated — see the note at the top of this file):
+
+- **A visitor who never opens the chat is counted.** `sendSavedCredentials()`
+  sends `set_name` with `name: myName || "Player"` on every connect, so merely
+  loading an arcade page registers a `PlayerNN`.
+- **Identity is per-origin.** The session token lives in `localStorage`, so the
+  same person on the LAN, on magmacrunch.com and on a phone is three people.
+  This is inherent to the storage, not a bug — but it is why the count looks
+  inflated when you are testing across your own devices.
+
+Keying identity on IP instead would be worse, not better: everything behind one
+NAT (a household, an office) would collapse into a single identity that inherits
+name, color *and* room membership, mobile CGNAT addresses are shared and rotate
+between towers, and IPv6 privacy extensions rotate daily. It is also the same
+credential-handoff shape the `?server=` allowlist exists to prevent — the widget
+replays saved credentials as soon as the socket opens.
+
 ### Room codes and history
 
 Room codes must match `^[A-Z0-9]{4,8}$` and there is a cap of 200 live rooms.

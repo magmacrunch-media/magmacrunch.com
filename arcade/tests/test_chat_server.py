@@ -80,8 +80,8 @@ def serve(coro, max_connections=chat.MAX_CONNECTIONS_PER_MINUTE):
 
 
 async def greet(ws):
-    """Consume the two frames the server pushes unprompted on connect."""
-    return [json.loads(await asyncio.wait_for(ws.recv(), 5)) for _ in range(2)]
+    """Consume the three frames the server pushes unprompted on connect."""
+    return [json.loads(await asyncio.wait_for(ws.recv(), 5)) for _ in range(3)]
 
 
 async def frames(ws, count, timeout=1.0):
@@ -139,11 +139,11 @@ async def join(ws, name, token=None, room=None):
 # ── Handshake gate ────────────────────────────────────────────────────────────
 
 class TestHandshake:
-    def test_an_allowed_origin_is_greeted_with_history_and_status(self):
+    def test_an_allowed_origin_is_greeted_with_history_status_and_roster(self):
         async def go(url):
             async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws:
                 return [f.get("type") for f in await greet(ws)]
-        assert serve(go) == ["history", "status"]
+        assert serve(go) == ["history", "status", "user_list"]
 
     def test_a_cross_origin_page_is_refused_before_the_handshake(self):
         async def go(url):
@@ -158,7 +158,7 @@ class TestHandshake:
         async def go(url):
             async with websockets.connect(url) as ws:
                 return [f.get("type") for f in await greet(ws)]
-        assert serve(go) == ["history", "status"]
+        assert serve(go) == ["history", "status", "user_list"]
 
     def test_plain_http_still_gets_426(self):
         """scripts/bot-check-services.sh probes the port; nginx needs it too."""
@@ -490,6 +490,30 @@ class TestOneUserPerSession:
         roster = serve(go)
         assert [u["name"] for u in roster["users"]] == ["Witness"], roster["users"]
 
+    def test_one_socket_changing_token_leaves_no_immortal_session(self):
+        """
+        A socket that named itself twice under different tokens used to be left
+        in both sessions' `sockets` sets. Only the second one could ever be
+        detached, so the first stayed "online" with a socket it did not own —
+        never emptied, so never stamped with last_seen, so never swept. It
+        outlived the connection, the visitor, and every SESSION_TIMEOUT.
+
+        The widget takes this path when localStorage is unreadable on the first
+        connect and readable afterwards.
+        """
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws:
+                await join(ws, "Drifter")                        # server invents a token
+                await ws.send(json.dumps({"type": "set_name", "name": "Drifter",
+                                          "session_token": "real"}))
+                await until(ws, {"name_assigned"})
+                during = chat.user_list_message()
+            await settle(lambda: not any(i["sockets"] for i in chat.sessions.values()))
+            return during, chat.user_list_message()
+        during, after = serve(go)
+        assert during["count"] == 1, f"the abandoned session is still online: {during['users']}"
+        assert after["count"] == 0, f"a phantom outlived the socket: {after['users']}"
+
     def test_two_tabs_in_one_room_are_one_member(self):
         async def go(url):
             async with websockets.connect(url, additional_headers=OK_ORIGIN) as tab1:
@@ -504,6 +528,65 @@ class TestOneUserPerSession:
         hit, types = serve(go)
         assert hit is not None, types
         assert hit["count"] == 1, f"one person counted twice in the room: {hit['users']}"
+
+
+# ── The greeting roster ───────────────────────────────────────────────────────
+
+class TestGreetingRoster:
+    """
+    A socket is told who is online the moment it connects.
+
+    It used to be sent `history` and `status` only. The roster arrived later or
+    not at all — normally as a side effect of its own set_name, which is rate
+    limited per IP and silently dropped when the budget is spent. The widget
+    draws its online count from `user_list` and from nothing else, and never
+    resets it, so a socket that missed the frame kept displaying whatever number
+    it had last heard, for as long as the page stayed open.
+    """
+
+    def test_a_new_socket_is_told_who_is_online_before_it_says_anything(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada")
+                async with websockets.connect(url, additional_headers=OK_ORIGIN) as b:
+                    return await greet(b)
+        history, status, roster = serve(go)
+        assert roster["type"] == "user_list"
+        assert roster["count"] == 1, roster
+        assert [u["name"] for u in roster["users"]] == ["Ada"], roster["users"]
+
+    def test_the_arriving_socket_is_not_in_the_roster_it_is_sent(self):
+        """It has no session until set_name, so it is nobody yet."""
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws:
+                return (await greet(ws))[2]
+        roster = serve(go)
+        assert roster["count"] == 0, roster
+        assert roster["users"] == []
+
+    def test_the_roster_still_arrives_when_set_name_is_rate_limited(self):
+        """
+        The path that produced the stale count in the wild: set_name is capped at
+        10 per 10s per address and a refusal is silent, so the roster that used to
+        ride along behind it never came.
+        """
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada", token="ada")
+                for i in range(12):                       # spend the set_name budget
+                    await a.send(json.dumps({"type": "set_name", "name": "Ada",
+                                             "session_token": "ada"}))
+                await asyncio.sleep(0.3)
+
+                async with websockets.connect(url, additional_headers=OK_ORIGIN) as b:
+                    roster = (await greet(b))[2]
+                    await b.send(json.dumps({"type": "set_name", "name": "Ghost",
+                                             "session_token": "ghost"}))
+                    late, _ = await until(b, {"name_assigned"}, timeout=0.5)
+                    return roster, late
+        roster, late = serve(go)
+        assert late is None, "set_name was not actually refused; the test proves nothing"
+        assert roster["type"] == "user_list" and roster["count"] == 1, roster
 
 
 # ── Names ─────────────────────────────────────────────────────────────────────
@@ -553,6 +636,6 @@ class TestStatus:
         async def go(url):
             chat.server_statuses.update({"Fake Game": True})
             async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws:
-                _, status = await greet(ws)
+                _, status, _ = await greet(ws)
                 return status["statuses"]
         assert serve(go) == {"Fake Game": True}
