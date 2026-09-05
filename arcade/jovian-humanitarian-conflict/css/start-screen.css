@@ -85,6 +85,12 @@
     color: var(--hostile);
 }
 
+/* The escort rule. Same warning colour the in-game link and countdown use, so
+   the key and the playfield agree about what "urgent" looks like. */
+.iff-mark.warn {
+    color: var(--hostile);
+}
+
 @keyframes squawk {
     0%, 20% { opacity: 1; }
     21%, 32% { opacity: 0.15; }

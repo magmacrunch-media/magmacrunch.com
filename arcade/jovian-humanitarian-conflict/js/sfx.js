@@ -183,6 +183,18 @@ const SFX = {
         this.tone(300, 0.34, 'triangle', 0.10, 120);
     },
 
+    /**
+     * A convoy has been marked and is now on a clock.
+     *
+     * Rising rather than falling, and distinct from ping(): the ping says a
+     * convoy exists, this says one is about to die unless you do something.
+     * The two get confused if they share a shape, so they share nothing.
+     */
+    lock() {
+        this.tone(520, 0.08, 'triangle', 0.11, 900);
+        this.tone(700, 0.10, 'triangle', 0.10, 1200, 0.09);
+    },
+
     /** The player taking a hit. */
     playerHit() {
         this.noise(0.22, 0.15, 1200);

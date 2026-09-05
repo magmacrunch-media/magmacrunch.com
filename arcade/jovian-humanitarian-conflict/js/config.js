@@ -87,7 +87,21 @@ const CONFIG = {
     // ── Guns ──────────────────────────────────────────────────────────
     SHOT_COOLDOWN: 9,
     SHOT_SPEED: 26,      // z units per frame, away from the camera
-    SHOT_RADIUS: 7,      // world-space hit radius at the target's depth
+    // Hit boxes are a BOX per sprite, not one radius for everything, and the
+    // margins deliberately favour the player in both directions:
+    //
+    //   a hostile is easier to hit than it looks   (+7 / +6)
+    //   a convoy is exactly as big as it looks     (+0)
+    //
+    // The first cut had this backwards. It tested one circular radius, 11 for a
+    // hostile and 15 for a convoy, so the thing you were aiming at was the
+    // smaller target and the thing that costs you the run was the larger one.
+    // Every near miss punished you twice: the hostile survived and the convoy
+    // behind it took the shot.
+    HOSTILE_HIT_MARGIN_W: 7,
+    HOSTILE_HIT_MARGIN_H: 6,
+    AID_HIT_MARGIN_W: 0,
+    AID_HIT_MARGIN_H: 0,
 
     // Shots do nothing beyond this depth. It sits well inside the window where
     // every identification channel is already legible, so there is no such
@@ -161,6 +175,12 @@ const CONFIG = {
     // How readily hostiles break off to attack a convoy rather than the player.
     HOSTILE_AGGRO_EARLY: 0.25,
     HOSTILE_AGGRO_LATE: 0.75,
+
+    // A hostile only locks a convoy it is actually near in depth. Without this
+    // a hostile at the far end of the rail could mark a convoy at the near end,
+    // and the line drawn between them crossed the whole screen pointing at
+    // something the player could not yet reach.
+    LOCK_MAX_DZ: 260,
 
     // A convoy under fire dies this many frames after a hostile locks it, which
     // is the window you have to kill the attacker.

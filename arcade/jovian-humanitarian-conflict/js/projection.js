@@ -69,18 +69,21 @@ const Project = {
     },
 
     /**
-     * Is a contact at (wx, wy, wz) within `radius` world units of the rail a
-     * shot fired from (shotX, shotY) travels along?
+     * Does a shot fired from (shotX, shotY) pass through the box a contact
+     * occupies at (wx, wy)?
      *
      * Shots run parallel to the z axis from the ship's plane, so this is a 2D
      * test in the z = 0 frame and does not involve the screen at all. Doing it
      * in world space is what keeps aiming honest at every depth: a target that
      * looks centred under the reticle is centred, rather than being easier to
      * hit up close because its sprite is bigger.
+     *
+     * A box rather than a radius because every sprite here is wider than it is
+     * tall. One circle sized to the width reaches far above and below a hull
+     * that is not there; sized to the height it misses the wingtips. Both were
+     * wrong in the same frame.
      */
-    onRail(shotX, shotY, wx, wy, radius) {
-        const dx = wx - shotX;
-        const dy = wy - shotY;
-        return dx * dx + dy * dy <= radius * radius;
+    inBox(shotX, shotY, wx, wy, halfW, halfH) {
+        return Math.abs(wx - shotX) <= halfW && Math.abs(wy - shotY) <= halfH;
     },
 };

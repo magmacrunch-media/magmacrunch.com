@@ -260,6 +260,14 @@
                     SFX.ping();
                     break;
 
+                // A convoy has been marked. Says so in words as well as with
+                // the link and the countdown entities.js draws, because this
+                // is the one rule players were not deducing on their own.
+                case 'aid-locked':
+                    SFX.lock();
+                    entities.addPopup(c.x, c.y, c.z, 'UNDER FIRE', CONFIG.COLORS.warn);
+                    break;
+
                 default:
                     break;
             }

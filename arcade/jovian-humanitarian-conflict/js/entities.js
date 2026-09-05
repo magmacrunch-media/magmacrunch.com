@@ -184,7 +184,8 @@ Entities.prototype.updateContacts = function (player, railSpeed, dt) {
             const target = this.nearestAid(c);
             if (target) {
                 c.x += Math.sign(target.x - c.x) * CONFIG.HOSTILE_DRIFT * 0.55 * dt;
-                if (Math.abs(target.x - c.x) < 28 && target.doomTimer <= 0) {
+                if (Math.abs(target.x - c.x) < 28 && target.doomTimer <= 0
+                    && Math.abs(target.z - c.z) < CONFIG.LOCK_MAX_DZ) {
                     target.doomTimer = CONFIG.AID_KILL_FRAMES;
                     target.lockedBy = c.id;
                     this.events.push({ type: 'aid-locked', contact: target });
@@ -278,7 +279,8 @@ Entities.prototype.updateShots = function (dt) {
         for (const c of this.contacts) {
             if (c.dead) continue;
             if (c.z < fromZ - HULL_Z || c.z > s.z + HULL_Z) continue;
-            if (!Project.onRail(s.x, s.y, c.x, c.y, CONFIG.SHOT_RADIUS + (c.kind === 'aid' ? 8 : 4))) continue;
+            const box = this.hitBox(c);
+            if (!Project.inBox(s.x, s.y, c.x, c.y, box.halfW, box.halfH)) continue;
             // Take the NEAREST candidate, not the first one in the array.
             // Array order is spawn order, so without this a convoy that
             // happened to spawn earlier would absorb a shot aimed at a hostile
@@ -308,6 +310,23 @@ Entities.prototype.updateShots = function (dt) {
     // Dead contacts are removed here as well as in updateContacts, so a kill
     // cannot be scored twice by a second shot arriving the same frame.
     this.contacts = this.contacts.filter(c => !c.dead);
+};
+
+/**
+ * The box a shot must pass through to hit this contact.
+ *
+ * One place, so collision and anything that wants to draw or assert it cannot
+ * disagree. The margins are in CONFIG and favour the player on both sides:
+ * generous on hostiles, honest on convoys.
+ */
+Entities.prototype.hitBox = function (c) {
+    const isAid = c.kind === 'aid';
+    return {
+        halfW: (isAid ? CONFIG.AID_W : CONFIG.HOSTILE_W) / 2
+             + (isAid ? CONFIG.AID_HIT_MARGIN_W : CONFIG.HOSTILE_HIT_MARGIN_W),
+        halfH: (isAid ? CONFIG.AID_H : CONFIG.HOSTILE_H) / 2
+             + (isAid ? CONFIG.AID_HIT_MARGIN_H : CONFIG.HOSTILE_HIT_MARGIN_H),
+    };
 };
 
 // ── Effects ───────────────────────────────────────────────────────────
@@ -388,6 +407,10 @@ Entities.prototype.draw = function (ctx, camX, camY, frame) {
     const ordered = this.contacts.slice().sort((a, b) => b.z - a.z);
     for (const c of ordered) this.drawContact(ctx, c, camX, camY, frame);
 
+    // Drawn over the contacts, because it is the most urgent thing on screen
+    // and must not end up behind a hull that happens to be nearer.
+    this.drawLocks(ctx, camX, camY, frame);
+
     this.drawShots(ctx, camX, camY);
     this.drawParticles(ctx, camX, camY);
     this.drawPopups(ctx, camX, camY);
@@ -454,6 +477,59 @@ Entities.prototype.drawContact = function (ctx, c, camX, camY, frame) {
         Renderer.glow(ctx, x, y - h / 2 - 4, 7, '255,255,255', 0.5);
         ctx.fillStyle = C.aidBeacon;
         ctx.fillRect(x - 1, Math.round(y - h / 2) - 5, 3, 3);
+    }
+};
+
+/**
+ * A convoy under attack, and the hostile doing it.
+ *
+ * Without this the escort rule was unplayable rather than merely hard. A
+ * flashing box appeared round a convoy and there was nothing to say what it
+ * meant, which of the several hostiles on screen had caused it, or how long
+ * was left. The rule was "kill the attacker", and the game showed you neither
+ * the attacker nor the clock.
+ *
+ * So: a line from the convoy to its attacker, a ring round the attacker, and a
+ * bar that empties as the convoy runs out of time. Between them they answer
+ * what, who and how long.
+ */
+Entities.prototype.drawLocks = function (ctx, camX, camY, frame) {
+    const C = CONFIG.COLORS;
+
+    for (const c of this.contacts) {
+        if (c.kind !== 'aid' || c.doomTimer <= 0) continue;
+        const attacker = this.contacts.find(h => h.id === c.lockedBy && !h.dead);
+        if (!attacker) continue;
+
+        const v = Project.point(c.x, c.y, c.z, camX, camY);
+        const a = Project.point(attacker.x, attacker.y, attacker.z, camX, camY);
+
+        // The link. Pulsed rather than solid so it reads as an alarm and does
+        // not compete with the rails behind it.
+        ctx.strokeStyle = C.warn;
+        ctx.globalAlpha = 0.45 + 0.35 * Math.sin(frame * 0.35);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.round(v.x), Math.round(v.y));
+        ctx.lineTo(Math.round(a.x), Math.round(a.y));
+        ctx.stroke();
+
+        // A ring on the attacker: this is the one to shoot.
+        const ar = Math.max(5, Math.round(CONFIG.HOSTILE_W * a.s * 0.8));
+        ctx.beginPath();
+        ctx.arc(Math.round(a.x), Math.round(a.y), ar, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        // How long the convoy has. Empties left to right.
+        const frac = Math.max(0, Math.min(1, c.doomTimer / CONFIG.AID_KILL_FRAMES));
+        const w = Math.max(8, Math.round(CONFIG.AID_W * v.s));
+        const bx = Math.round(v.x - w / 2);
+        const by = Math.round(v.y + (CONFIG.AID_H * v.s) / 2) + 4;
+        ctx.fillStyle = 'rgba(5,6,15,0.7)';
+        ctx.fillRect(bx, by, w, 3);
+        ctx.fillStyle = C.warn;
+        ctx.fillRect(bx, by, Math.round(w * frac), 3);
     }
 };
 

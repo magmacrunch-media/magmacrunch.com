@@ -435,8 +435,55 @@ console.log('\nprojection');
     ok(allAgree, 'the camera axis lands on the vanishing point at every depth');
 
     // Aiming is done in world space so it cannot get easier up close.
-    ok(P.onRail(0, 0, 6, 0, 10) && !P.onRail(0, 0, 14, 0, 10),
-        'onRail is a world-space radius test');
+    ok(P.inBox(0, 0, 6, 0, 10, 6) && !P.inBox(0, 0, 14, 0, 10, 6),
+        'inBox is a world-space box test, horizontally');
+    ok(P.inBox(0, 0, 0, 5, 10, 6) && !P.inBox(0, 0, 0, 9, 10, 6),
+        'and vertically');
+}
+
+// ── 4b. Hit boxes ─────────────────────────────────────────────────────────────
+
+console.log('');
+console.log('hit boxes — generous on hostiles, honest on convoys');
+{
+    const g = makeGame(61);
+    const C = g.CONFIG;
+    const hostile = { kind: 'hostile' };
+    const aid = { kind: 'aid' };
+    const hb = g.entities.hitBox(hostile);
+    const ab = g.entities.hitBox(aid);
+
+    // The point of the change. A hostile must be at least as easy to hit as a
+    // convoy, or every near miss punishes the player twice: the target lives
+    // and the thing that ends the run takes the shot instead.
+    ok(hb.halfW >= ab.halfW - 1e-9,
+        'a hostile is at least as wide a target as a convoy',
+        `hostile ${hb.halfW} vs convoy ${ab.halfW}`);
+    ok(hb.halfH >= ab.halfH - 1e-9,
+        'and at least as tall',
+        `hostile ${hb.halfH} vs convoy ${ab.halfH}`);
+
+    // A hostile's box is bigger than its sprite; a convoy's is not bigger than
+    // its sprite. Neither may be so large it swallows a deliberate miss.
+    ok(hb.halfW > C.HOSTILE_W / 2, 'the hostile box is more generous than its hull');
+    ok(ab.halfW <= C.AID_W / 2 + 1e-9,
+        'the convoy box never exceeds its hull',
+        `box ${ab.halfW} vs hull ${C.AID_W / 2}`);
+    ok(ab.halfH <= C.AID_H / 2 + 1e-9, 'in both directions');
+
+    // Collision actually uses it: a shot just outside a convoy's hull misses.
+    const t = makeGame(62);
+    t.entities.contacts.push({
+        id: 1, kind: 'aid', x: 0, y: 0, z: 200,
+        phase: 0, driftSeed: 1, aggro: false, doomTimer: 0, lockedBy: 0,
+        dead: false, pinged: true, age: 0,
+    });
+    t.entities.shots.push({ x: t.CONFIG.AID_W / 2 + 3, y: 0, z: 190 });
+    t.entities.updateShots(1);
+    const evs = t.entities.drainEvents().map(e => e.type);
+    ok(!evs.includes('friendly-fire'),
+        'a shot past the edge of a convoy does not clip it',
+        JSON.stringify(evs));
 }
 
 // ── 5. Spawning ───────────────────────────────────────────────────────────────
