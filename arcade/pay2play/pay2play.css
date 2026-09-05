@@ -44,8 +44,15 @@ body {
 .ascii-art {
     color: #ff00ff;
     text-align: center;
+    /* Built from space, U+2580, U+2584 and U+2588 only. The quadrant blocks
+       (U+2596 U+2599 U+259B U+259C) this art used to use are absent from the
+       default monospace font and fell back 1.7x too wide, which pulled every
+       row out of alignment. line-height must stay 1: each line carries two
+       pixel rows as half-blocks, so any leading opens a gap straight through
+       the letterforms. */
+    font-family: monospace;
     font-size: 8px;
-    line-height: 1.2;
+    line-height: 1;
     margin: 15px 0 15px;
     opacity: 0.7;
     text-shadow: 1px 1px 0 #00ffff;
