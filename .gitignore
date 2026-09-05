@@ -10,7 +10,12 @@ arcade/private/config.json
 arcade/admin/config.json
 arcade/admin/api-keys.json
 arcade/admin/github-token.json
-**/AGENTS.md
+# No AGENTS.md rule, deliberately. There was one -- `**/AGENTS.md`, added in
+# 3269467 to "hide AGENTS.md" -- and it never hid anything: .gitignore does not
+# untrack, so the root file stayed tracked, stayed deployed, and still answers
+# 200 at magmacrunch.com/AGENTS.md. This repo is public, so it reads on GitHub
+# either way. What the rule did do was make every *new* AGENTS.md invisible to
+# git, which is how arcade/SORRY/AGENTS.md went six weeks unnoticed.
 wiki/
 wiki-old-backup/
 archive/more/contributors.html
