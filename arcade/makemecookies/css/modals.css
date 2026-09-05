@@ -178,3 +178,46 @@
   border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
+
+/* ── Touch targets ──────────────────────────────────────────────────
+   The shared .btn is ~33px tall, under the 44px minimum, and these are the
+   ones you hit with a thumb at the end of a run: SUBMIT, ANOTHER SHIFT,
+   MAIN MENU, RESUME, CLOCK OUT, CLOSE. A modal floats over everything, so
+   the extra height costs the playfield nothing - unlike the in-page
+   controls, which have to share the vertical budget with the canvas. */
+@media (hover: none) and (pointer: coarse) {
+  .modal .btn {
+    min-height: 46px;
+    padding: 14px 18px;
+    font-size: 10px;
+  }
+
+  .initials-input {
+    min-height: 46px;
+    margin: 14px auto;
+  }
+
+  /* Taller controls can push a card past a short landscape viewport. Centring
+     with align-items would then clip the top beyond reach - the usual flexbox
+     trap - so switch to flex-start and let auto margins do the centring while
+     there is room, and scrolling take over when there is not. */
+  .modal-overlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 12px;
+  }
+  .modal { margin: auto; }
+}
+
+/* Bigger buttons push the game-over card from 393px to 446px, which no longer
+   fits a 360px landscape viewport. The scroll above keeps it reachable, but a
+   card you have to scroll to finish a run is worse than one that fits: trim
+   the chrome and widen it enough that all three buttons share one row. */
+@media (hover: none) and (pointer: coarse) and (max-height: 480px) {
+  .modal { padding: 16px 20px; max-width: 540px; }
+  .modal h2 { font-size: 14px; margin-bottom: 2px; }
+  .modal .modal-sub { margin-bottom: 10px; }
+  .final-big { font-size: 24px; margin-bottom: 4px; }
+  .initials-input { margin: 8px auto; min-height: 44px; }
+  .modal .btn { min-height: 44px; padding: 12px 14px; }
+}
