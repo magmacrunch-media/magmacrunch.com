@@ -23,7 +23,7 @@
     "@magmacrunch/adenosine-audio": "^0.2.4",
     "@magmacrunch/adenosine-cards": "^0.9.0",
     "@magmacrunch/adenosine-chat": "^0.4.4",
-    "@magmacrunch/adenosine-multiplayer": "^0.4.5",
+    "@magmacrunch/adenosine-multiplayer": "^0.5.1",
     "@magmacrunch/adenosine-puzzle": "^0.2.5",
     "@magmacrunch/adenosine-rpg": "^0.2.3",
     "@magmacrunch/adenosine-score-client": "^0.2.5"

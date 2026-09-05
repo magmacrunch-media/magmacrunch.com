@@ -2,14 +2,23 @@
 
 /* ── Lobby Overlay ──────────────────────────────────────────────────────── */
 
+/* `align-items: flex-start` plus `margin: auto` on the panel, rather than
+ * `align-items: center`: an auto margin centres the panel while it fits and
+ * yields to the scroll container when it does not. Centring it directly makes
+ * a panel taller than the viewport overflow in both directions, and the
+ * overflowing top is unreachable -- so on a short screen the lobby is clipped
+ * with no way to scroll to either end. */
 .lobby-overlay {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: color-mix(in srgb, var(--bg-dark, #060e1a) 95%, transparent);
     z-index: 9000;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 0;
 }
 
 .lobby-panel {
@@ -19,6 +28,8 @@
     padding: 30px;
     width: 90%;
     max-width: 500px;
+    margin: auto;
+    box-sizing: border-box;
     box-shadow: 0 0 40px color-mix(in srgb, var(--accent, #00f5ff) 15%, transparent);
 }
 
@@ -217,14 +228,22 @@
 
 /* ── Buttons ────────────────────────────────────────────────────────────── */
 
+/* A flex item's automatic minimum size is its content, so `flex: 1` alone
+ * cannot shrink a button past its own label. Four of them -- which is what a
+ * host in a room sees, once Start Game appears -- overrun the panel and push
+ * Leave off the edge. Wrapping two per row is the only arrangement that holds
+ * at 360px without shrinking the labels; `min-width: 0` lets a button that is
+ * still too wide shrink rather than overflow. */
 .lobby-buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 20px;
 }
 
 .lobby-btn {
-    flex: 1;
+    flex: 1 1 45%;
+    min-width: 0;
     font-family: var(--font-pixel, 'Press Start 2P', monospace);
     font-size: 11px;
     padding: 12px 16px;
