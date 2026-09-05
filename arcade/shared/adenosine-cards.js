@@ -901,7 +901,7 @@ var AdCards = (() => {
             <div class="corner-suit"${c}>${s}</div>
         </div>`;
   }
-  function getAceHTML(suit, rank) {
+  function getAceHTML(suit, _rank) {
     return `
         ${cornerHTML("A", suit)}
         <div class="card-suit-center single">
@@ -1307,7 +1307,7 @@ var AdCards = (() => {
     }
     return stacks;
   }
-  function renderChips(chips, animClass) {
+  function renderChips(chips) {
     const display = document.getElementById(_displayId);
     if (!display) return;
     display.innerHTML = "";
@@ -1662,12 +1662,36 @@ var AdCards = (() => {
     GO: 1,
     THIRTY_ONE: 2
   };
+  var CRIBBAGE_ORDER = {
+    A: 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    J: 11,
+    Q: 12,
+    K: 13
+  };
+  function cribbageOrder(rank) {
+    return CRIBBAGE_ORDER[rank] ?? 0;
+  }
   function cribbageValue(rank) {
-    if (rank === "A") return 1;
-    if (rank === "J" || rank === "Q" || rank === "K") return 10;
-    return parseInt(rank, 10);
+    return Math.min(cribbageOrder(rank), 10);
   }
   var CribbageHandEval = {
+    /** What a card counts toward fifteen and thirty-one -- J, Q and K are 10. */
+    value(rank) {
+      return cribbageValue(rank);
+    },
+    /** Where a card sits in a run -- A=1 through K=13, court cards distinct. */
+    order(rank) {
+      return cribbageOrder(rank);
+    },
     countFifteens(cards) {
       let count = 0;
       const n = cards.length;
@@ -1696,46 +1720,46 @@ var AdCards = (() => {
       }
       return points;
     },
+    /**
+     * Only the longest run in each consecutive block scores, once for every way
+     * duplicate ranks can build it -- so 2-3-4-5 is 4, not the 3 + 4 + 3 that
+     * paying each sub-run would give, and a double run of three is 6 (plus 2 for
+     * its pair, counted by `countPairs`).
+     */
     countRuns(cards) {
       if (cards.length < 3) return 0;
-      const valueCounts = {};
+      const orderCounts = {};
       for (const card of cards) {
-        const val = cribbageValue(card.rank);
-        valueCounts[val] = (valueCounts[val] || 0) + 1;
+        const ord = cribbageOrder(card.rank);
+        orderCounts[ord] = (orderCounts[ord] || 0) + 1;
       }
-      const uniqueValues = Object.keys(valueCounts).map(Number).sort((a, b) => a - b);
+      const uniqueOrders = Object.keys(orderCounts).map(Number).sort((a, b) => a - b);
       let totalPoints = 0;
       let i = 0;
-      while (i < uniqueValues.length) {
+      while (i < uniqueOrders.length) {
         let j = i;
-        while (j + 1 < uniqueValues.length && uniqueValues[j + 1] === uniqueValues[j] + 1) {
+        while (j + 1 < uniqueOrders.length && uniqueOrders[j + 1] === uniqueOrders[j] + 1) {
           j++;
         }
         const seqLength = j - i + 1;
         if (seqLength >= 3) {
-          for (let start = i; start <= j - 2; start++) {
-            for (let end = start + 2; end <= j; end++) {
-              const runLength = end - start + 1;
-              let multiplier = 1;
-              for (let k = start; k <= end; k++) {
-                multiplier *= valueCounts[uniqueValues[k]] ?? 1;
-              }
-              totalPoints += runLength * multiplier;
-            }
+          let ways = 1;
+          for (let k = i; k <= j; k++) {
+            ways *= orderCounts[uniqueOrders[k]] ?? 1;
           }
+          totalPoints += seqLength * ways;
         }
         i = j + 1;
       }
       return totalPoints;
     },
+    /** The starter never makes a four-card flush, and a crib flush must be five. */
     countFlush(hand, starter, isCrib) {
-      if (!starter) return 0;
+      if (hand.length < 4) return 0;
       const handSuit = hand[0]?.suit;
-      const isHandFlush = hand.every((c) => c.suit === handSuit);
-      if (!isHandFlush) return 0;
-      if (starter.suit === handSuit) return CRIBBAGE_SCORE.FLUSH_5;
-      if (isCrib) return 0;
-      return CRIBBAGE_SCORE.FLUSH_4;
+      if (!hand.every((c) => c.suit === handSuit)) return 0;
+      if (starter && starter.suit === handSuit) return CRIBBAGE_SCORE.FLUSH_5;
+      return isCrib ? 0 : CRIBBAGE_SCORE.FLUSH_4;
     },
     countNobs(hand, starter) {
       if (!starter) return 0;
@@ -1758,58 +1782,49 @@ var AdCards = (() => {
         breakdown: { fifteens, pairs, runs, flush, nobs }
       };
     },
+    /**
+     * Score laying `card` on top of `playedCards`, the series so far this go.
+     *
+     * Every category is counted: a card that makes thirty-one and completes a
+     * run scores both.
+     */
     scorePeggingPlay(card, playedCards) {
-      const count = playedCards.reduce((sum, c) => sum + cribbageValue(c.rank), 0) + cribbageValue(card.rank);
+      const sequence = [...playedCards, card];
+      const count = sequence.reduce((sum, c) => sum + cribbageValue(c.rank), 0);
       let points = 0;
       const descriptions = [];
-      if (count === 31) {
-        points += CRIBBAGE_SCORE.THIRTY_ONE;
-        descriptions.push("Thirty-one!");
-        return { points, description: descriptions.join(" + ") };
-      }
       if (count === 15) {
         points += CRIBBAGE_SCORE.FIFTEEN;
         descriptions.push("Fifteen!");
       }
-      if (playedCards.length >= 1) {
-        const lastCard = playedCards[playedCards.length - 1];
-        if (lastCard && card.rank === lastCard.rank) {
-          if (playedCards.length >= 3 && playedCards[playedCards.length - 2]?.rank === card.rank && playedCards[playedCards.length - 3]?.rank === card.rank) {
-            points += CRIBBAGE_SCORE.FOUR_OF_KIND;
-            descriptions.push("Four of a kind!");
-          } else if (playedCards.length >= 2 && playedCards[playedCards.length - 2]?.rank === card.rank) {
-            points += CRIBBAGE_SCORE.THREE_OF_KIND;
-            descriptions.push("Three of a kind!");
-          } else {
-            points += CRIBBAGE_SCORE.PAIR;
-            descriptions.push("Pair!");
-          }
+      if (count === 31) {
+        points += CRIBBAGE_SCORE.THIRTY_ONE;
+        descriptions.push("Thirty-one!");
+      }
+      let matching = 1;
+      for (let i = playedCards.length - 1; i >= 0 && playedCards[i].rank === card.rank; i--) {
+        matching++;
+      }
+      if (matching === 2) {
+        points += CRIBBAGE_SCORE.PAIR;
+        descriptions.push("Pair!");
+      } else if (matching === 3) {
+        points += CRIBBAGE_SCORE.THREE_OF_KIND;
+        descriptions.push("Pair royal!");
+      } else if (matching >= 4) {
+        points += CRIBBAGE_SCORE.FOUR_OF_KIND;
+        descriptions.push("Double pair royal!");
+      }
+      for (let length = sequence.length; length >= 3; length--) {
+        const tail = sequence.slice(-length).map((c) => cribbageOrder(c.rank)).sort((a, b) => a - b);
+        const consecutive = tail.every((ord, i) => i === 0 || ord === tail[i - 1] + 1);
+        if (consecutive) {
+          points += length;
+          descriptions.push(`Run of ${length}!`);
+          break;
         }
       }
-      if (playedCards.length >= 2) {
-        const allPlayed = [...playedCards, card];
-        let runLength = 0;
-        for (let len = Math.min(allPlayed.length, 7); len >= 3; len--) {
-          const lastN = allPlayed.slice(-len);
-          const values = lastN.map((c) => cribbageValue(c.rank)).sort((a, b) => a - b);
-          let isRun = true;
-          for (let i = 1; i < values.length; i++) {
-            if (values[i] !== values[i - 1] + 1) {
-              isRun = false;
-              break;
-            }
-          }
-          if (isRun) {
-            runLength = len;
-            break;
-          }
-        }
-        if (runLength >= 3) {
-          points += runLength;
-          descriptions.push(`Run of ${runLength}!`);
-        }
-      }
-      return { points, description: descriptions.join(" + ") || "" };
+      return { points, description: descriptions.join(" + ") };
     }
   };
   return __toCommonJS(index_exports);
