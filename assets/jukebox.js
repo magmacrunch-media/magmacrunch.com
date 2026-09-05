@@ -1,3 +1,12 @@
+// iOS has no Ogg Vorbis decoder, and every browser on iOS is WebKit, so Chrome
+// and Firefox there fail exactly as Safari does. An ogg-only page is not quieter
+// on an iPhone, it is silent - and silent without an error. Every track in
+// music/jukebox/songs/ exists as both .ogg and .mp3; pick the one this browser
+// can decode. See AGENTS.md, "Audio needs two formats".
+var AUDIO_EXT = document.createElement('audio')
+    .canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.mp3';
+var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
+
 /* ═══════════════════════════════════════════════
    magmacrunch media — retro jukebox mini-player
    assets/jukebox.js
@@ -96,7 +105,7 @@
 
         pendingSeek = (typeof seekTo === 'number' && seekTo > 0) ? seekTo : -1;
 
-        audio.src = new URL(track.file, location.origin).pathname;
+        audio.src = audioSrc(new URL(track.file, location.origin).pathname);
         audio.volume = muted ? 0 : volume;
 
         if (pendingSeek >= 0) {
