@@ -289,6 +289,40 @@ Runner internals, Python interpreter selection, and what each suite covers: `doc
 3. Follow the pixel art conventions - use canvas at low res, scale with CSS
 4. Add link to `arcade/index.html` nav
 
+### Audio needs two formats, or the game is silent on iOS
+
+Ship every clip as **both `.ogg` and `.mp3`**, and pick at load time:
+
+```js
+const AUDIO_EXT = document.createElement('audio')
+    .canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.mp3';
+const audioSrc = (path) => path.replace(/\.ogg$/, AUDIO_EXT);
+```
+
+iOS has no Ogg Vorbis decoder, and every browser on iOS is WebKit, so Chrome
+and Firefox there fail exactly as Safari does. An ogg-only game is not quieter
+on an iPhone, it is **silent** — and silent without an error, because a failed
+decode lands in the same do-nothing path that most loaders already swallow on
+purpose. `makemecookies`, `SORRY`, `george-boole` and `moonlight-drift` all
+shipped that way and it went unreported for as long as they existed.
+
+Transcode with `ffmpeg -i in.ogg -c:a libmp3lame -q:a 2 out.mp3`, and check the
+result against the source size rather than reaching for `-q:a 0`. george-boole's
+3:50 loop came from a ~93kbps Vorbis original: V0 inflated it from 2.7MB to
+4MB, which is the wrong trade for background music over mobile data, and V2
+brought it back to 2.86MB. Keep the `.ogg` — it stays the file almost everyone
+receives, and the mp3 is a second-generation transcode of it.
+
+Two things worth knowing before this looks broken:
+
+- `adenosine-audio` loops music through a decoded Web Audio buffer, and mp3
+  carries encoder delay and padding **inside** that buffer, so a looping track
+  seams slightly on iOS where the ogg does not. A faint seam beats silence, and
+  the alternative is a gapless format far too large to serve.
+- Whatever loads the audio should say so when it fails. Three separate
+  `.catch(() => {})` calls are why this survived: a blocked or undecodable track
+  reported nothing at all, to the player or to anyone testing.
+
 ### Four arcade folders are generated — never edit them here
 
 `arcade/moonlight-drift/`, `arcade/george-boole/`, `arcade/solitaire_THLD/` and
