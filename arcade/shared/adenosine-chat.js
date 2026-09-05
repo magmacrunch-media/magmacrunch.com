@@ -327,6 +327,7 @@ var AdChat = (() => {
       };
       sock.onclose = function() {
         widgetEl.classList.add("disconnected");
+        clearOnlinePresence();
         sock = null;
         setTimeout(connectDirect, 5e3);
       };
@@ -355,6 +356,7 @@ var AdChat = (() => {
       }
       if (msg._worker === "disconnect") {
         widgetEl.classList.add("disconnected");
+        clearOnlinePresence();
         return;
       }
       handleMessage(msg);
@@ -434,9 +436,6 @@ var AdChat = (() => {
           break;
         case "typing":
           showTyping(field(msg, "from"), field(msg, "room"));
-          break;
-        case "global_users":
-          updateOnlineCount(typeof msg["count"] === "number" ? msg["count"] : 0);
           break;
         case "status":
           break;
@@ -618,6 +617,11 @@ var AdChat = (() => {
     function updateOnlineCount(count) {
       var el = document.getElementById("acwOnlineCount");
       if (el) el.textContent = String(count);
+    }
+    function clearOnlinePresence() {
+      var el = document.getElementById("acwOnlineCount");
+      if (el) el.textContent = "\u2014";
+      updateOnlineList([]);
     }
     function showTyping(name, _room) {
       var el = document.getElementById("chatTyping");
