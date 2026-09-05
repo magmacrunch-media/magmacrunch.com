@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Full history: the Pi-bot section dates each bot by the last commit
+          # it made, and the default shallow clone has no such history to read.
+          fetch-depth: 0
 
       - name: Generate status report
         id: report
@@ -41,16 +45,35 @@ jobs:
             "Bot Status Report:bot-status.yml"
           )
 
-          # Pi-managed bots (run via crontab on Pi — see arcade/scripts/bot-*.sh)
+          # Pi-managed bots (crontab on the Pi — see arcade/scripts/bot-*.sh).
+          #
+          # These cannot be polled from here: the Pi answers only on Tailscale,
+          # and a GitHub-hosted runner has no route to it. So report the
+          # evidence that IS visible from the repo — the commit each bot makes
+          # when it succeeds — and say so plainly for the bots that leave no
+          # trace, rather than claiming they are healthy.
+          #
+          # This block previously printed "✓ active" for all eight bots
+          # unconditionally, checking nothing. It did that straight through a
+          # two-week outage (2026-08-22 → 2026-09-05) in which every Pi bot
+          # exited before doing any work, and reported them all healthy on
+          # 2026-08-24 and again on 2026-08-31.
+          #
+          # Format — name : the bot's own commit subject : stale after N days
+          # An empty subject means success leaves no trace in this repo.
+          #
+          # Keyed on the commit SUBJECT, not on the paths the bot writes: a
+          # human editing search-index.json makes a dead Search Index bot look
+          # fresh, whereas these subjects are written by nothing but the bot.
           PI_BOTS=(
-            "Link Checker (Pi)"
-            "Service Health (Pi)"
-            "Smoke Test (Pi)"
-            "MusicBrainz Backup (Pi)"
-            "TMDB Backup (Pi)"
-            "Play Counts (Pi)"
-            "Weekly Scores (Pi)"
-            "Search Index (Pi)"
+            "MusicBrainz Backup (Pi):Update MusicBrainz cache:8"
+            "TMDB Backup (Pi):Update TMDB cache:8"
+            "Play Counts (Pi):Update Last.fm play counts:8"
+            "Weekly Scores (Pi):Update score data:8"
+            "Search Index (Pi):Rebuild search index:2"
+            "Link Checker (Pi)::"
+            "Service Health (Pi)::"
+            "Smoke Test (Pi)::"
           )
 
           for entry in "${WORKFLOWS[@]}"; do
@@ -113,11 +136,50 @@ jobs:
           echo "" >> status-report.md
           echo "## Pi-Managed Bots" >> status-report.md
           echo "" >> status-report.md
-          echo "These run via cron on the Raspberry Pi (see \`arcade/scripts/bot-*.sh\`):" >> status-report.md
+          echo "These run via cron on the Raspberry Pi (see \`arcade/scripts/bot-*.sh\`)." >> status-report.md
+          echo "The Pi is not reachable from this runner, so each bot is dated by the" >> status-report.md
+          echo "last commit it made. A bot that leaves no artifact on success cannot be" >> status-report.md
+          echo "verified from here and is reported as such — not as healthy." >> status-report.md
           echo "" >> status-report.md
-          for bot in "${PI_BOTS[@]}"; do
-            echo "| $bot | ✓ active | cron |" >> status-report.md
+          echo "| Bot | Last Commit | Status | Trigger |" >> status-report.md
+          echo "|---|---|---|---|" >> status-report.md
+
+          NOW_TS=$(date +%s)
+          for entry in "${PI_BOTS[@]}"; do
+            NAME="${entry%%:*}"
+            REST="${entry#*:}"
+            SUBJECT="${REST%:*}"
+            MAX_AGE="${REST##*:}"
+
+            if [ -z "$SUBJECT" ]; then
+              echo "| $NAME | — | ? no signal | cron |" >> status-report.md
+              continue
+            fi
+
+            LAST=$(git log -1 --format=%cI --grep="^${SUBJECT}\$" 2>/dev/null || echo "")
+            if [ -z "$LAST" ]; then
+              echo "| $NAME | never | ✗ has never committed | cron |" >> status-report.md
+              PI_PROBLEM=1
+              continue
+            fi
+
+            LAST_TS=$(date -d "$LAST" +%s 2>/dev/null || echo 0)
+            AGE_D=$(( (NOW_TS - LAST_TS) / 86400 ))
+
+            if [ "$AGE_D" -gt "$MAX_AGE" ]; then
+              echo "| $NAME | ${AGE_D}d ago | ✗ STALE (expected < ${MAX_AGE}d) | cron |" >> status-report.md
+              PI_PROBLEM=1
+            else
+              echo "| $NAME | ${AGE_D}d ago | ✓ fresh | cron |" >> status-report.md
+            fi
           done
+
+          if [ "${PI_PROBLEM:-0}" = "1" ]; then
+            echo "" >> status-report.md
+            echo "> **A Pi bot is stale.** Check that the cron bots are still running:" >> status-report.md
+            echo "> \`ssh jake@100.74.172.4 'tail -30 ~/arcade/logs/services.log'\`" >> status-report.md
+            echo "> A bot that dies in \`pi-bot-env.sh\` produces no output at all." >> status-report.md
+          fi
 
           echo "" >> status-report.md
           echo "---" >> status-report.md
