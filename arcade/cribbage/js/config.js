@@ -8,15 +8,18 @@ const CARDS_PER_HAND = 6;    // Cards dealt to each player
 const CRIB_SIZE = 4;         // Cards in the crib (2 from each player)
 const MAX_PEG_COUNT = 31;    // Maximum count during pegging phase
 
-// ── Scoring values ───────────────────────────────────────────
-// Owned by scoring.js, which is also what the tests load.
-const SCORE = CribbageScore.SCORE;
+// ── Scoring ──────────────────────────────────────────────────
+// adenosine-cards 0.9.0 fixed the run scoring this game briefly kept its own
+// copy of, so the package is the scorer again.
+const CribbageEval = AdCards.CribbageHandEval;
+const SCORE = AdCards.CRIBBAGE_SCORE;
 
 // Cribbage counts every court card as ten. AdCards.RANK_VALUES is the ordinal
 // table (J=11, Q=12, K=13), which is right for ordering runs and wrong for
 // counting to fifteen and thirty-one — reaching for it by habit is how a King
-// ends up worth 13 toward the count, so the game asks scoring.js instead.
-const pegValue = CribbageScore.value;
+// ends up worth 13 toward the count. These two say which is which.
+const pegValue = CribbageEval.value;
+const runOrder = CribbageEval.order;
 
 // ── Game phases ──────────────────────────────────────────────
 const PHASE = {

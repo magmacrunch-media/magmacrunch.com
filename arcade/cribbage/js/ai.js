@@ -54,7 +54,7 @@ const CribbageAI = {
         }
 
         // Keep runs
-        const values = remaining.map(c => CribbageScore.order(c.rank)).sort((a, b) => a - b);
+        const values = remaining.map(c => runOrder(c.rank)).sort((a, b) => a - b);
         for (let i = 0; i < values.length - 2; i++) {
             if (values[i + 1] === values[i] + 1 && values[i + 2] === values[i] + 2) {
                 score += 3;
@@ -143,8 +143,8 @@ const CribbageAI = {
         // Check for run
         if (playedCards.length >= 2) {
             const lastN = playedCards.slice(-2).concat(card);
-            const sorted = [...lastN].sort((a, b) => CribbageScore.order(a.rank) - CribbageScore.order(b.rank));
-            const isRun = sorted.every((c, i) => i === 0 || CribbageScore.order(c.rank) === CribbageScore.order(sorted[i - 1].rank) + 1);
+            const sorted = [...lastN].sort((a, b) => runOrder(a.rank) - runOrder(b.rank));
+            const isRun = sorted.every((c, i) => i === 0 || runOrder(c.rank) === runOrder(sorted[i - 1].rank) + 1);
             if (isRun) score += lastN.length;
         }
 

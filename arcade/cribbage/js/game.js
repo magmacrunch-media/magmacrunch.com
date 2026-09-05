@@ -160,7 +160,7 @@ class CribbageGame {
         }
 
         // Score the play
-        const scoreResult = CribbageScore.scorePegging(card, this.playedCards.slice(0, -1));
+        const scoreResult = CribbageEval.scorePeggingPlay(card, this.playedCards.slice(0, -1));
 
         // Update score
         if (scoreResult.points > 0) {
@@ -259,7 +259,7 @@ class CribbageGame {
 
         const results = [];
         for (const { player, hand, isCrib } of show) {
-            const score = CribbageScore.scoreHand(hand, this.starter, isCrib);
+            const score = CribbageEval.scoreHand(hand, this.starter, isCrib);
             this.scores[player] += score.total;
             results.push({ player: isCrib ? 'crib' : player, hand, score });
             if (this.checkWinner()) break;
