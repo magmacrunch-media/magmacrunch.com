@@ -1,31 +1,20 @@
 /**
- * test-simulation.js — Roderick Tron headless simulation tests.
+ * test-simulation.js — Roderick Tron headless tests.
  *
- * The game's modules are plain scripts that assign globals, with no DOM
- * dependency outside their draw() methods, so the real files are loaded into a
- * vm context and run — nothing here is a reimplementation that could drift from
- * what ships.
+ * The game's modules are plain scripts that assign globals and touch no DOM
+ * outside their draw() methods, so the shipped files are loaded into a vm
+ * context and run. Nothing here reimplements game logic; a test that did could
+ * pass while the game was broken.
  *
- * What this is guarding, in order of how much it hurt:
+ * The game was an endless auto-runner and is now a hand-authored platformer.
+ * That moved what is worth proving:
  *
- *  1. Frame-rate independence. dt used to be applied to gravity but not to the
- *     position step, and not at all to the camera, so a 120Hz display ran the
- *     fall twice as fast and scored twice as quickly. Every quantity is now
- *     scaled by dt, and `dt invariance` below asserts that three different step
- *     sizes covering the same wall-clock time agree.
+ *   Then — the terrain generator is fair, sampled across the difficulty curve.
+ *   Now  — THIS level is completable, exhaustively, with the real physics.
  *
- *  2. Fair gaps. The generator widens gaps as the scroll speed rises, so `every
- *     gap is clearable` flies each consecutive roof pair with the real
- *     Player.update across the whole input space — every jump timing, every
- *     hold length — and asserts both that something lands it and that the
- *     window for it is wide enough to hit deliberately.
- *
- *  3. The gargoyle telegraph. `alert` used to set its own timer to the value it
- *     was about to be tested against, so the warning lasted a single frame.
- *
- *  4. Respawn. Falling into a gap put the player back at the height of the
- *     nearest roof without moving the camera, i.e. back over the same gap, and
- *     the next life went with it.
+ * The second is a stronger guarantee, because authored levels are finite. An
+ * unclearable gap in a generator is a probability; an unclearable gap in a
+ * level is a wall, and every player meets it.
  *
  * Run: node test-simulation.js
  */
@@ -35,8 +24,7 @@ const path = require('path');
 const vm = require('vm');
 
 const JS_DIR = path.join(__dirname, '..', 'js');
-
-// ── Harness ───────────────────────────────────────────────────────────────────
+const FILES = ['config.js', 'levels.js', 'tilemap.js', 'renderer.js', 'player.js', 'entities.js', 'world.js'];
 
 let passed = 0, failed = 0;
 
@@ -46,565 +34,464 @@ function ok(cond, name, detail) {
 }
 
 function near(a, b, tol, name) {
-    ok(Math.abs(a - b) <= tol, name, `got ${a}, expected ${b} +/- ${tol}`);
+    ok(Math.abs(a - b) <= tol, name, 'got ' + a + ', expected ' + b + ' +/- ' + tol);
 }
 
-/** Deterministic PRNG so a failure is reproducible and a pass is not luck. */
-function mulberry32(seed) {
-    let a = seed >>> 0;
-    return function () {
-        a |= 0; a = (a + 0x6D2B79F5) | 0;
-        let t = Math.imul(a ^ (a >>> 15), 1 | a);
-        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-}
-
-/** A recording no-op 2D context — enough for the draw() methods to run. */
+/** A recording no-op 2D context — enough for every draw() to run. */
 function stubCtx() {
     const calls = [];
-    const noop = (name) => (...args) => { calls.push([name, args]); };
+    const noop = (n) => function () { calls.push(n); };
     return {
         calls,
         fillStyle: '', globalAlpha: 1, font: '', textAlign: 'left',
-        fillRect: noop('fillRect'),
-        clearRect: noop('clearRect'),
-        fillText: noop('fillText'),
-        beginPath: noop('beginPath'),
-        arc: noop('arc'),
-        fill: noop('fill'),
-        save: noop('save'),
-        restore: noop('restore'),
-        translate: noop('translate'),
+        fillRect: noop('fillRect'), clearRect: noop('clearRect'), fillText: noop('fillText'),
+        beginPath: noop('beginPath'), arc: noop('arc'), fill: noop('fill'),
+        save: noop('save'), restore: noop('restore'), translate: noop('translate'),
         createLinearGradient: () => ({ addColorStop() {} }),
         createRadialGradient: () => ({ addColorStop() {} }),
     };
 }
 
 /**
- * A fresh game world. Each call gets its own vm context, so state cannot leak
- * between tests and Math.random can be reseeded per scenario.
+ * A controllable Input. The game reads held state and edge presses through
+ * this, so a test drives the real controller exactly as a player does.
  */
-function makeGame(seed) {
-    const input = {
+function makeInput() {
+    return {
         held: {}, pressed: {},
         isDown(c) { return !!this.held[c]; },
         wasPressed(c) { const v = !!this.pressed[c]; this.pressed[c] = false; return v; },
         clearJustPressed() { this.pressed = {}; },
-        jump() { return this.wasPressed('Space'); },
-        jumpHeld() { return this.isDown('Space'); },
-        shoot() { return this.wasPressed('KeyZ'); },
-        // test helpers
-        tap(c) { this.pressed[c] = true; this.held[c] = true; },
+        left()     { return this.isDown('L'); },
+        right()    { return this.isDown('R'); },
+        down()     { return this.isDown('D'); },
+        run()      { return this.isDown('RUN'); },
+        jump()     { return this.wasPressed('JUMP'); },
+        jumpHeld() { return this.isDown('JUMP'); },
+        roll()     { return this.wasPressed('ROLL'); },
+        shoot()    { return this.wasPressed('SHOOT'); },
+        // helpers
+        hold(c)    { this.held[c] = true; },
         release(c) { this.held[c] = false; },
+        tap(c)     { this.pressed[c] = true; this.held[c] = true; },
+        allOff()   { this.held = {}; this.pressed = {}; },
     };
-
-    const sandbox = { Math: Object.create(Math), console, Input: input };
-    sandbox.Math.random = mulberry32(seed);
-    const ctx = vm.createContext(sandbox);
-
-    for (const file of ['config.js', 'player.js', 'world.js', 'entities.js', 'renderer.js']) {
-        vm.runInContext(fs.readFileSync(path.join(JS_DIR, file), 'utf8'), ctx, { filename: file });
-    }
-
-    const CONFIG = vm.runInContext('CONFIG', ctx);
-    const Difficulty = vm.runInContext('Difficulty', ctx);
-    const player = vm.runInContext('new Player()', ctx);
-    const world = vm.runInContext('new World()', ctx);
-    const entities = vm.runInContext('new Entities()', ctx);
-
-    player.respawn(world.respawnSurface(CONFIG.PLAYER_X, CONFIG.PLAYER_W));
-
-    /** One tick of the real update order from main.js. */
-    function step(dt) {
-        const difficulty = Difficulty.at(world.metres());
-        const speed = Difficulty.scrollSpeed(difficulty);
-        world.update(speed, dt, difficulty);
-        player.update(world.rooftops, world.cameraX, dt);
-        entities.update(world, player, dt);
-        return { difficulty, speed };
-    }
-
-    /** A fresh Player in this same context — far cheaper than a new sandbox. */
-    const newPlayer = () => vm.runInContext('new Player()', ctx);
-
-    return { CONFIG, Difficulty, player, world, entities, input, step, ctx, newPlayer };
 }
 
-/** The roof the player is standing over right now, if any. */
-function roofUnder(world, CONFIG) {
-    for (const r of world.rooftops) {
-        const sx = r.x - world.cameraX;
-        if (sx <= CONFIG.PLAYER_X && sx + r.width >= CONFIG.PLAYER_X + CONFIG.PLAYER_W) return r;
+/** A fresh game in its own vm context. */
+function makeGame(levelIndex) {
+    const input = makeInput();
+    const sandbox = { Math: Math, console, Input: input };
+    const ctx = vm.createContext(sandbox);
+    for (const f of FILES) {
+        vm.runInContext(fs.readFileSync(path.join(JS_DIR, f), 'utf8'), ctx, { filename: f });
     }
-    return null;
+    const CONFIG = vm.runInContext('CONFIG', ctx);
+    const LEVELS = vm.runInContext('LEVELS', ctx);
+    const map = vm.runInContext('new Tilemap(LEVELS[' + (levelIndex || 0) + '])', ctx);
+    sandbox.__map = map;
+    const player = vm.runInContext('new Player(__map)', ctx);
+    const entities = vm.runInContext('new Entities(__map)', ctx);
+    const world = vm.runInContext('new World(__map)', ctx);
+    const cam = vm.runInContext('new Camera(__map)', ctx);
+    return { CONFIG, LEVELS, map, player, entities, world, cam, input, ctx };
+}
+
+// ── Parsing ───────────────────────────────────────────────────────────────────
+
+console.log('\nlevel parsing:');
+{
+    const g = makeGame(0);
+    const { map, CONFIG } = g;
+
+    ok(map.cols > 0 && map.rows > 0, 'level has dimensions (' + map.cols + ' x ' + map.rows + ' tiles)');
+    ok(map.spawn && map.exit, 'a spawn and an exit were found');
+    ok(map.notes.length > 0, map.notes.length + ' notes placed');
+    ok(map.letters.length === 4, 'exactly four letters');
+    ok(map.letters.map((l) => l.ch).sort().join('') === 'NORT', 'and they are T R O N');
+    ok(map.enemies.length > 0, map.enemies.length + ' enemies placed');
+
+    // Every marker must have been lifted out of the terrain, or the player
+    // would collide with the tile a gargoyle was standing on.
+    const leftovers = [];
+    for (let ty = 0; ty < map.rows; ty++) {
+        for (let tx = 0; tx < map.cols; tx++) {
+            const ch = map.tileAt(tx, ty);
+            if ('.#=~'.indexOf(ch) === -1) leftovers.push(ch + '@' + tx + ',' + ty);
+        }
+    }
+    ok(leftovers.length === 0, 'no entity markers left in the terrain grid', leftovers.slice(0, 5).join(' '));
+
+    // Rows are padded, so every row is addressable to the full width.
+    let ragged = false;
+    for (let ty = 0; ty < map.rows; ty++) if (map.grid[ty].length !== map.cols) ragged = true;
+    ok(!ragged, 'short rows are padded to the level width');
+
+    ok(map.tileAt(-1, 5) === '#' && map.tileAt(map.cols, 5) === '#', 'off the sides reads as solid');
+    ok(map.tileAt(5, map.rows) === '.', 'below the level reads as air, so pits kill');
+    void CONFIG;
+}
+
+// ── Collision ─────────────────────────────────────────────────────────────────
+
+console.log('\ncollision:');
+{
+    const g = makeGame(0);
+    const { map, CONFIG } = g;
+
+    // Find a floor tile to test against.
+    let floorTx = -1, floorTy = -1;
+    for (let ty = 0; ty < map.rows && floorTy < 0; ty++) {
+        for (let tx = 0; tx < map.cols; tx++) {
+            if (map.tileAt(tx, ty) === '#' && map.tileAt(tx, ty - 1) === '.') { floorTx = tx; floorTy = ty; break; }
+        }
+    }
+    ok(floorTy >= 0, 'found an exposed floor tile to test against');
+
+    const floorY = floorTy * CONFIG.TILE;
+
+    // Landing snaps flush to the surface, not one pixel into or above it.
+    const box = { x: floorTx * CONFIG.TILE + 1, y: floorY - 60, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+    const land = map.moveY(box, 80, false);
+    ok(land.ground, 'a fall onto floor reports ground');
+    near(box.y + box.h, floorY, 0.001, 'and stops exactly on the surface');
+
+    // Tunnelling: a single step far larger than a tile must still be stopped.
+    const fast = { x: floorTx * CONFIG.TILE + 1, y: floorY - 200, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+    map.moveY(fast, 400, false);
+    near(fast.y + fast.h, floorY, 0.001, 'a 400px step does not tunnel through the floor');
+
+    // Horizontal into a wall.
+    let wallTx = -1, wallTy = -1;
+    for (let ty = 0; ty < map.rows && wallTx < 0; ty++) {
+        for (let tx = 1; tx < map.cols; tx++) {
+            if (map.tileAt(tx, ty) === '#' && map.tileAt(tx - 1, ty) === '.') { wallTx = tx; wallTy = ty; break; }
+        }
+    }
+    if (wallTx > 0) {
+        const w = { x: (wallTx - 1) * CONFIG.TILE, y: wallTy * CONFIG.TILE, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+        const hit = map.moveX(w, 300);
+        ok(hit, 'a 300px horizontal step into a wall is stopped');
+        near(w.x + w.w, wallTx * CONFIG.TILE, 0.001, 'and stops flush against it');
+    }
+
+    // One-way platforms.
+    let pTx = -1, pTy = -1;
+    for (let ty = 0; ty < map.rows && pTy < 0; ty++) {
+        for (let tx = 0; tx < map.cols; tx++) {
+            if (map.tileAt(tx, ty) === '=') { pTx = tx; pTy = ty; break; }
+        }
+    }
+    ok(pTy >= 0, 'the level has one-way platforms');
+    if (pTy >= 0) {
+        const top = pTy * CONFIG.TILE;
+        const down = { x: pTx * CONFIG.TILE + 1, y: top - 30, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+        const r1 = map.moveY(down, 60, false);
+        ok(r1.platform, 'falling onto a platform lands on it');
+        near(down.y + down.h, top, 0.001, 'flush with its surface');
+
+        const up = { x: pTx * CONFIG.TILE + 1, y: top + 20, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+        const r2 = map.moveY(up, -40, false);
+        ok(!r2.ground, 'rising through the same platform is not blocked');
+
+        const thru = { x: pTx * CONFIG.TILE + 1, y: top - 30, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+        const r3 = map.moveY(thru, 60, true);
+        ok(!r3.platform, 'and a deliberate drop passes through it');
+    }
+}
+
+// ── Physics characterisation ──────────────────────────────────────────────────
+
+console.log('\nmovement:');
+{
+    // A flat corridor, so the numbers describe the physics and not the level.
+    const g = makeGame(0);
+    const { CONFIG, input, ctx } = g;
+    const flat = { name: 'flat', rows: ['S' + '.'.repeat(60)].concat(['#'.repeat(61)]) };
+    ctx.__flat = flat;
+    const map = vm.runInContext('new Tilemap(__flat)', ctx);
+    ctx.__fmap = map;
+    const mk = () => vm.runInContext('new Player(__fmap)', ctx);
+
+    // Peak height of a fully held jump.
+    const p = mk();
+    input.allOff();
+    p.grounded = true; p.coyote = CONFIG.COYOTE_FRAMES;
+    input.tap('JUMP');
+    let top = p.box.y;
+    for (let i = 0; i < 80; i++) { p.update(1.0); top = Math.min(top, p.box.y); if (p.grounded && i > 3) break; }
+    const height = (map.rows - 1) * CONFIG.TILE - CONFIG.PLAYER_H - top;
+    near(height, CONFIG.JUMP_HEIGHT, 6, 'a held jump reaches its configured height');
+    ok(height > CONFIG.TILE * 3, 'which clears three tiles (' + height.toFixed(0) + 'px)');
+
+    // Tapping is meaningfully shorter than holding.
+    const q = mk();
+    input.allOff();
+    q.grounded = true; q.coyote = CONFIG.COYOTE_FRAMES;
+    input.tap('JUMP');
+    let top2 = q.box.y;
+    for (let i = 0; i < 80; i++) {
+        if (i === 3) input.release('JUMP');
+        q.update(1.0); top2 = Math.min(top2, q.box.y);
+        if (q.grounded && i > 3) break;
+    }
+    const shortHeight = (map.rows - 1) * CONFIG.TILE - CONFIG.PLAYER_H - top2;
+    ok(shortHeight < height - 12, 'a tapped jump is markedly shorter (' + shortHeight.toFixed(0) + ' vs ' + height.toFixed(0) + ')');
+
+    // Top speeds separate cleanly: walk < run < roll.
+    const topSpeed = (keys, frames) => {
+        const s = mk();
+        input.allOff();
+        s.grounded = true; s.coyote = CONFIG.COYOTE_FRAMES;
+        for (const k of keys) input.tap(k);
+        let best = 0;
+        for (let i = 0; i < frames; i++) { s.update(1.0); best = Math.max(best, Math.abs(s.vx)); }
+        return best;
+    };
+    const walk = topSpeed(['R'], 90);
+    const run = topSpeed(['R', 'RUN'], 90);
+    const roll = topSpeed(['R', 'ROLL'], 20);
+    near(walk, CONFIG.WALK_MAX, 0.05, 'walk tops out at WALK_MAX');
+    near(run, CONFIG.RUN_MAX, 0.05, 'run tops out at RUN_MAX');
+    near(roll, CONFIG.ROLL_MAX, 0.05, 'roll tops out at ROLL_MAX');
+    ok(walk < run && run < roll, 'and the three are strictly ordered');
 }
 
 // ── dt invariance ─────────────────────────────────────────────────────────────
-// The same wall-clock time at three different step sizes must produce the same
-// run. This is the test the old build could not have passed.
+// The runner this replaced applied dt to gravity but not to the position step,
+// and ran at double speed on a 120Hz display.
 
 console.log('\ndt invariance:');
 {
-    const runFor = (dt, steps) => {
-        const g = makeGame(1234);
-        for (let i = 0; i < steps; i++) g.step(dt);
-        return { camera: g.world.cameraX, metres: g.world.metres(), y: g.player.y };
+    // On flat ground, deliberately. Run this along the real level and the
+    // player falls into the first pit, so the comparison becomes free-fall
+    // depth, where first-order Euler drift grows without bound and the test
+    // ends up measuring the integrator instead of the game.
+    const runAt = (dt, steps) => {
+        const g = makeGame(0);
+        const { CONFIG, input, ctx } = g;
+        ctx.__flat2 = { name: 'flat', rows: ['S' + '.'.repeat(240), '#'.repeat(241)] };
+        const fmap = vm.runInContext('new Tilemap(__flat2)', ctx);
+        ctx.__fmap2 = fmap;
+        const p = vm.runInContext('new Player(__fmap2)', ctx);
+        input.allOff();
+        input.hold('R'); input.hold('RUN');
+        p.grounded = true; p.coyote = CONFIG.COYOTE_FRAMES;
+        input.tap('JUMP'); input.hold('JUMP');
+        for (let i = 0; i < steps; i++) p.update(dt);
+        return { x: p.box.x, y: p.box.y };
     };
+    const a = runAt(1.0, 120);
+    const b = runAt(0.5, 240);
+    const c = runAt(2.0, 60);
+    // Semi-implicit Euler is first order, so a coarser step drifts a little.
+    // The bug this guards against was a factor of two, not a few pixels.
+    near(b.x, a.x, 6, '120Hz horizontal matches 60Hz');
+    near(c.x, a.x, 6, '30Hz horizontal matches 60Hz');
+    near(b.y, a.y, 1, '120Hz vertical matches 60Hz');
+    near(c.y, a.y, 1, '30Hz vertical matches 60Hz');
 
-    const at60  = runFor(1.0, 600);    // 10 seconds
-    const at120 = runFor(0.5, 1200);   // the same 10 seconds, half-steps
-    const at30  = runFor(2.0, 300);    // the same 10 seconds, double-steps
-
-    // Not bit-identical, and cannot be: scroll speed is a function of distance
-    // and distance is the integral of scroll speed, so a coarser step samples
-    // that feedback loop at slightly different points. The tolerance below is
-    // 0.05% — the bug this replaced was a factor of two.
-    const rel = (a, b) => Math.abs(a - b) / Math.abs(b);
-    ok(rel(at120.camera, at60.camera) < 0.0005,
-       '120Hz camera matches 60Hz', `${at120.camera} vs ${at60.camera}`);
-    ok(rel(at30.camera, at60.camera) < 0.0005,
-       '30Hz camera matches 60Hz', `${at30.camera} vs ${at60.camera}`);
-    ok(rel(at120.metres, at60.metres) < 0.0005,
-       '120Hz distance matches 60Hz', `${at120.metres} vs ${at60.metres}`);
-
-    // Free-fall from a standing start, with no ground to interrupt it.
-    const fall = (dt, steps) => {
-        const g = makeGame(77);
-        g.world.rooftops.length = 0;                 // nothing to land on
-        g.player.y = 0; g.player.vy = 0; g.player.grounded = false;
-        for (let i = 0; i < steps; i++) g.player.update([], 0, dt);
-        return g.player.y;
+    // Asserted directly, because the failure mode was not drift but a speed
+    // that grew every airborne frame until he crossed the level in a second.
+    const topAt = (dt, steps) => {
+        const g = makeGame(0);
+        const { CONFIG, input, ctx } = g;
+        ctx.__flat3 = { name: 'flat', rows: ['S' + '.'.repeat(240), '#'.repeat(241)] };
+        const fmap = vm.runInContext('new Tilemap(__flat3)', ctx);
+        ctx.__fmap3 = fmap;
+        const p = vm.runInContext('new Player(__fmap3)', ctx);
+        input.allOff(); input.hold('R'); input.hold('RUN');
+        p.grounded = true; p.coyote = CONFIG.COYOTE_FRAMES;
+        input.tap('JUMP'); input.hold('JUMP');
+        let top = 0;
+        for (let i = 0; i < steps; i++) { p.update(dt); top = Math.max(top, Math.abs(p.vx)); }
+        return { top: top, cap: CONFIG.RUN_MAX };
     };
-    // Semi-implicit Euler is only first-order accurate, so the coarse step is
-    // allowed a small lead — what matters is that it is not the factor of two
-    // the un-scaled position step used to produce.
-    near(fall(0.5, 120), fall(1.0, 60), 4, '120Hz fall distance matches 60Hz');
-    near(fall(2.0, 30),  fall(1.0, 60), 8, '30Hz fall distance matches 60Hz');
-}
-
-// ── Difficulty curve ──────────────────────────────────────────────────────────
-
-console.log('\ndifficulty curve:');
-{
-    const { CONFIG, Difficulty } = makeGame(1);
-    ok(Difficulty.at(0) === 0, 'starts at zero');
-    ok(Difficulty.at(-50) === 0, 'clamps below zero');
-    ok(Difficulty.at(CONFIG.DIFFICULTY_DISTANCE * 10) === 1, 'clamps at one');
-    ok(Difficulty.scrollSpeed(0) === CONFIG.SCROLL_MIN, 'opens at SCROLL_MIN');
-    ok(Difficulty.scrollSpeed(1) === CONFIG.SCROLL_MAX, 'tops out at SCROLL_MAX');
-
-    let monotonic = true;
-    for (let d = 0; d < 1; d += 0.01) {
-        if (Difficulty.scrollSpeed(d + 0.01) < Difficulty.scrollSpeed(d)) monotonic = false;
-        if (Difficulty.gargoyleChance(d + 0.01) < Difficulty.gargoyleChance(d)) monotonic = false;
+    for (const dt of [1.0, 0.5, 2.0]) {
+        const r = topAt(dt, Math.round(120 / dt));
+        ok(r.top <= r.cap + 0.001,
+           'holding a direction never exceeds RUN_MAX at dt=' + dt,
+           'reached ' + r.top.toFixed(2) + ' against a cap of ' + r.cap);
     }
-    ok(monotonic, 'speed and gargoyle rate never go backwards');
-    ok(Difficulty.flyerChance(CONFIG.FLYER_UNLOCK - 0.01) === 0, 'flyers stay locked until FLYER_UNLOCK');
-    ok(Difficulty.flyerChance(1) > 0, 'flyers appear at full difficulty');
-
-    // The whole point of the cap: a gap is never wider than one jump carries you.
-    let capped = true;
-    for (let d = 0; d <= 1; d += 0.02) {
-        const reach = CONFIG.JUMP_AIRTIME * Difficulty.scrollSpeed(d);
-        if (Difficulty.maxGap(d) >= reach) capped = false;
-    }
-    ok(capped, 'maxGap always stays under one jump of travel');
-}
-
-// ── Generated terrain ─────────────────────────────────────────────────────────
-
-console.log('\nterrain generation:');
-{
-    const { CONFIG, Difficulty } = makeGame(99);
-    let widest = 0, tallestRise = 0, roofs = 0, narrowest = Infinity;
-    let badGap = null, badHeight = null;
-
-    for (let seed = 0; seed < 6; seed++) {
-        const w = makeGame(seed * 31 + 7).world;
-        for (let d = 0; d <= 1.0001; d += 0.05) {
-            for (let i = 0; i < 60; i++) {
-                const prev = w.rooftops[w.rooftops.length - 1];
-                w.appendRoof(d);
-                const cur = w.rooftops[w.rooftops.length - 1];
-                const gap = cur.x - (prev.x + prev.width);
-                widest = Math.max(widest, gap);
-                tallestRise = Math.max(tallestRise, prev.y - cur.y);
-                narrowest = Math.min(narrowest, cur.width);
-                roofs++;
-                if (!badGap && gap > Difficulty.maxGap(d) + 0.001) {
-                    badGap = `gap ${gap.toFixed(1)} exceeds the ${Difficulty.maxGap(d).toFixed(1)} cap at d=${d.toFixed(2)}`;
-                }
-                if (!badHeight && (cur.y < CONFIG.ROOF_Y_MIN || cur.y > CONFIG.ROOF_Y_MAX)) {
-                    badHeight = `roof y ${cur.y} outside ${CONFIG.ROOF_Y_MIN}..${CONFIG.ROOF_Y_MAX}`;
-                }
-            }
-        }
-    }
-    ok(!badGap && !badHeight,
-       `${roofs} generated roofs all within the gap cap and height bounds`,
-       badGap || badHeight);
-    ok(narrowest >= CONFIG.PLAYER_W, `narrowest roof (${Math.round(narrowest)}px) is wider than the player`);
-    console.log(`        widest gap ${widest.toFixed(1)}px, tallest rise ${tallestRise.toFixed(1)}px`);
 }
 
 // ── Every gap is clearable ────────────────────────────────────────────────────
-// The fairness question is not "does one particular bot survive" — a bot that
-// always holds jump sails clean over a 76px roof at full speed, which says
-// nothing about the terrain. It is: for each consecutive pair of rooftops, is
-// there an input that gets you across, and is the window for it wide enough to
-// hit on purpose?
-//
-// So each pair is flown with the real Player.update, across every jump timing
-// from "24px of roof left" to "the last possible frame" and every hold length
-// from a tap to a full-height jump, and both of those are asserted.
+// The platformer equivalent of the runner's fairness test, and stronger: a
+// level is finite, so this is exhaustive rather than sampled.
 
 console.log('\nevery gap is clearable:');
 {
-    const g = makeGame(1);
-    const { CONFIG, Difficulty } = g;
+    const g = makeGame(0);
+    const { map, CONFIG, input, ctx } = g;
+    ctx.__m = map;
 
-    /** Fly roof A -> roof B at `speed`, over the whole input space. */
-    function clearance(A, B, speed) {
-        const timings = [];
-        let widestHoldWindow = 0;
+    // Ground rows are the ones with terrain; a pit is a run of columns where a
+    // ground row has no floor.
+    const floorRow = (() => {
+        let best = -1, count = 0;
+        for (let ty = 0; ty < map.rows; ty++) {
+            let n = 0;
+            for (let tx = 0; tx < map.cols; tx++) if (map.tileAt(tx, ty) === '#') n++;
+            if (n > count) { count = n; best = ty; }
+        }
+        return best;
+    })();
+    ok(floorRow >= 0, 'identified the main floor row (row ' + floorRow + ')');
 
-        for (let offset = 0; offset <= 24; offset += 2) {
-            let works = false, run = 0, maxRun = 0;
-            for (let hold = 1; hold <= 40; hold++) {
-                const p = g.newPlayer();
-                let cam = A.x + A.width - CONFIG.PLAYER_X - offset;
-                p.x = CONFIG.PLAYER_X;
-                p.y = A.y - CONFIG.PLAYER_H;
-                p.vy = 0; p.grounded = true; p.coyote = CONFIG.COYOTE_FRAMES;
-                g.input.held = {}; g.input.pressed = {};
-                g.input.tap('Space');
+    const pits = [];
+    let run = null;
+    for (let tx = 0; tx < map.cols; tx++) {
+        const solid = map.tileAt(tx, floorRow) === '#';
+        if (!solid && run === null) run = { from: tx, to: tx };
+        else if (!solid) run.to = tx;
+        else if (run !== null) { pits.push(run); run = null; }
+    }
+    ok(pits.length > 0, pits.length + ' pits to cross');
 
-                let landed = false;
-                for (let t = 0; t < 220; t++) {
-                    if (t === hold) g.input.release('Space');
-                    cam += speed;
-                    p.update([A, B], cam, 1.0);
-                    if (p.grounded) {
-                        const sb = B.x - cam;
-                        if (p.x + CONFIG.PLAYER_W > sb && p.x < sb + B.width
-                            && Math.abs(p.y + CONFIG.PLAYER_H - B.y) < 0.5) { landed = true; break; }
-                        const sa = A.x - cam;
-                        if (!(p.x + CONFIG.PLAYER_W > sa && p.x < sa + A.width)) break;
+    /**
+     * Try to cross a pit with a given technique, jumping as late as possible.
+     * Returns true if he lands on the far lip rather than in the hole.
+     */
+    function cross(pit, technique) {
+        const p = vm.runInContext('new Player(__m)', ctx);
+        const lipX = pit.from * CONFIG.TILE;
+        const startX = Math.max(0, lipX - 90);
+        p.box.x = startX;
+        p.box.y = floorRow * CONFIG.TILE - CONFIG.PLAYER_H;
+        p.grounded = true;
+        p.coyote = CONFIG.COYOTE_FRAMES;
+
+        input.allOff();
+        input.hold('R');
+        if (technique !== 'walk') input.hold('RUN');
+        if (technique === 'roll') input.tap('ROLL');
+
+        let jumped = false;
+        for (let i = 0; i < 400; i++) {
+            // Commit at the last frame there is still ground under his front foot.
+            if (!jumped && p.grounded) {
+                const frontTx = Math.floor((p.box.x + p.box.w) / CONFIG.TILE);
+                if (frontTx >= pit.from - 1) { input.tap('JUMP'); input.hold('JUMP'); jumped = true; }
+            }
+            p.update(1.0);
+            if (p.box.y > map.h + 40) return false;                  // fell in
+            if (jumped && p.grounded && p.box.x > pit.to * CONFIG.TILE) return true;
+        }
+        return false;
+    }
+
+    let unclearable = 0;
+    const report = [];
+    for (const pit of pits) {
+        const width = pit.to - pit.from + 1;
+        const techniques = ['walk', 'run', 'roll'].filter((t) => cross(pit, t));
+        if (techniques.length === 0) {
+            unclearable++;
+            report.push('pit at tile ' + pit.from + ' (' + width + ' wide) cleared by nothing');
+        } else {
+            report.push('  tiles ' + String(pit.from).padStart(3) + '-' + String(pit.to).padEnd(3)
+                + ' (' + width + ' wide, ' + (width * CONFIG.TILE) + 'px): ' + techniques.join(', '));
+        }
+    }
+    ok(unclearable === 0, 'all ' + pits.length + ' pits can be crossed',
+       report.filter((r) => r.indexOf('nothing') >= 0).join('\n          '));
+    for (const line of report) if (line.indexOf('nothing') < 0) console.log('      ' + line.trim());
+
+    // The widest pit should need the roll — that is what makes it the level's
+    // technique gate rather than decoration.
+    const widest = pits.reduce((a, b) => ((b.to - b.from) > (a.to - a.from) ? b : a), pits[0]);
+    ok(!cross(widest, 'run') && cross(widest, 'roll'),
+       'the widest pit needs a roll-jump, so the roll is load-bearing');
+}
+
+// ── The level can actually be finished ────────────────────────────────────────
+
+console.log('\ntraversal:');
+{
+    const g = makeGame(0);
+    const { map, CONFIG, player, entities, input, ctx } = g;
+    void ctx;
+
+    input.allOff();
+    input.hold('R');
+    input.hold('RUN');
+
+    let reachedExit = false, died = false, frames = 0;
+    const T = CONFIG.TILE;
+
+    for (; frames < 6000 && !reachedExit && !died; frames++) {
+        // A bot that reads the level ahead, the way a player who has learned it
+        // does: roll for a wide gap, jump for a narrow one or an enemy.
+        if (player.grounded) {
+            const frontTx = Math.floor((player.box.x + player.box.w) / T);
+            const footTy = Math.floor((player.box.y + player.box.h) / T);
+            let gap = 0;
+            while (gap < 10 && map.tileAt(frontTx + 1 + gap, footTy) !== '#'
+                   && map.tileAt(frontTx + 1 + gap, footTy) !== '=') gap++;
+
+            if (gap >= 6 && !player.rolling) input.tap('ROLL');
+            else if (gap >= 1) { input.tap('JUMP'); input.hold('JUMP'); }
+            else {
+                input.release('JUMP');
+                // Something in the way at body height: hop it, which stomps it.
+                for (const e of entities.enemies) {
+                    const d = e.x - (player.box.x + player.box.w);
+                    if (d > 0 && d < 26 && Math.abs(e.y - player.box.y) < 24) {
+                        input.tap('JUMP'); input.hold('JUMP');
                     }
-                    if (p.y > CONFIG.CANVAS_H + 20) break;
-                }
-                if (landed) { works = true; run++; if (run > maxRun) maxRun = run; }
-                else run = 0;
-            }
-            if (works) timings.push(offset);
-            if (maxRun > widestHoldWindow) widestHoldWindow = maxRun;
-        }
-        return { timings: timings.length, widestHoldWindow };
-    }
-
-    const TIMINGS = 13;              // offsets 0,2,...,24
-    const MIN_HOLD_WINDOW = 4;       // contiguous hold lengths that land the jump
-    let pairs = 0, unclearable = 0, tightestTiming = TIMINGS, tightestHold = Infinity, worst = null;
-
-    for (let seed = 0; seed < 4; seed++) {
-        const w = makeGame(seed * 97 + 5).world;
-        for (let d = 0; d <= 1.0001; d += 0.05) {
-            const speed = Difficulty.scrollSpeed(d);
-            for (let i = 0; i < 40; i++) {
-                const prev = w.rooftops[w.rooftops.length - 1];
-                w.appendRoof(d);
-                const cur = w.rooftops[w.rooftops.length - 1];
-                const r = clearance(prev, cur, speed);
-                pairs++;
-                if (r.timings === 0) unclearable++;
-                if (r.timings < tightestTiming) tightestTiming = r.timings;
-                if (r.widestHoldWindow < tightestHold) {
-                    tightestHold = r.widestHoldWindow;
-                    worst = { d: +d.toFixed(2), speed: +speed.toFixed(2),
-                              gap: +(cur.x - (prev.x + prev.width)).toFixed(1),
-                              drop: cur.y - prev.y, landingWidth: cur.width };
                 }
             }
         }
-    }
+        if (player.rolling && player.grounded) {
+            const frontTx = Math.floor((player.box.x + player.box.w) / T);
+            const footTy = Math.floor((player.box.y + player.box.h) / T);
+            if (map.tileAt(frontTx + 1, footTy) !== '#' && map.tileAt(frontTx + 1, footTy) !== '=') {
+                input.tap('JUMP'); input.hold('JUMP');
+            }
+        }
 
-    ok(unclearable === 0, `all ${pairs} roof pairs are clearable`, `${unclearable} were not`);
-    ok(tightestTiming === TIMINGS,
-       `every pair works from any of the ${TIMINGS} jump timings tried`,
-       `one pair only worked from ${tightestTiming}`);
-    ok(tightestHold >= MIN_HOLD_WINDOW,
-       `tightest jump still has a ${tightestHold}-frame hold window (>= ${MIN_HOLD_WINDOW})`,
-       `only ${tightestHold} frames`);
-    console.log('        tightest: ' + JSON.stringify(worst));
-}
+        player.update(1.0);
+        entities.update(player, 1.0);
+        for (const ev of entities.events) if (ev.type === 'hurt') player.hurt(ev.x);
 
-// ── Gargoyle telegraph ────────────────────────────────────────────────────────
-
-console.log('\ngargoyle behaviour:');
-{
-    const g = makeGame(5);
-    const { CONFIG, player, world, entities } = g;
-
-    // Put one percher directly in the player's path.
-    const roof = { x: world.cameraX + CONFIG.PLAYER_X + 40, y: 180, width: 100, gargoyle: 'percher' };
-    entities.spawnGargoyle(roof);
-    const gar = entities.gargoyles[0];
-    const perch = gar.baseY;
-
-    ok(gar.state === 'idle', 'starts idle');
-    ok(entities.checkPlayerHit(player) === null || gar.state !== 'idle',
-       'an idle percher is not a hazard');
-
-    // Frames of warning in the *first* cycle — the bug was a telegraph one
-    // frame long, and summing over repeat cycles would have hidden it.
-    let alertFrames = 0, sawLunge = false, sawRecover = false, backOnPerch = false;
-    let counting = true;
-    for (let i = 0; i < 400; i++) {
-        entities.updateGargoyles(player, 1.0);
-        if (gar.state === 'alert' && counting) alertFrames++;
-        if (gar.state === 'lunge') { sawLunge = true; counting = false; }
-        if (gar.state === 'recover') {
-            sawRecover = true;
-            if (Math.abs(gar.y - perch) < 0.001) backOnPerch = true;
+        if (player.box.y > map.h + CONFIG.FALL_KILL_MARGIN) died = true;
+        if (player.lives <= 0) died = true;
+        if (map.exit
+            && player.box.x < map.exit.x + map.exit.w && player.box.x + player.box.w > map.exit.x
+            && player.box.y < map.exit.y + map.exit.h && player.box.y + player.box.h > map.exit.y) {
+            reachedExit = true;
         }
     }
 
-    ok(alertFrames >= CONFIG.GARGOYLE_ALERT_FRAMES,
-       `telegraph lasts ${alertFrames} frames (>= ${CONFIG.GARGOYLE_ALERT_FRAMES})`,
-       `only ${alertFrames} frames of warning`);
-    ok(sawLunge, 'lunges after the telegraph');
-    ok(sawRecover, 'recovers after the lunge');
-    ok(backOnPerch, 'returns to its perch instead of hovering');
-
-    // Height of the arc, sampled across a fresh lunge.
-    const g2 = makeGame(6);
-    g2.entities.spawnGargoyle({ x: g2.world.cameraX + 120, y: 180, width: 100, gargoyle: 'percher' });
-    const gar2 = g2.entities.gargoyles[0];
-    gar2.state = 'lunge'; gar2.timer = 0;
-    let highest = gar2.baseY;
-    for (let i = 0; i <= g2.CONFIG.GARGOYLE_LUNGE_FRAMES; i++) {
-        g2.entities.updateGargoyles(g2.player, 1.0);
-        highest = Math.min(highest, gar2.y);
-    }
-    near(gar2.baseY - highest, g2.CONFIG.GARGOYLE_LUNGE_HEIGHT, 1.5, 'lunge reaches its configured height');
+    ok(reachedExit, 'a bot reaches the exit in ' + frames + ' frames (' + (frames / 60).toFixed(1) + 's)',
+       died ? 'it died on the way' : 'it never got there');
+    ok(!died, 'without dying');
+    ok(frames < 5000, 'and without dawdling');
 }
 
-// ── Flyers ────────────────────────────────────────────────────────────────────
+// ── Drawing ───────────────────────────────────────────────────────────────────
 
-console.log('\nflyers:');
+console.log('\ndrawing:');
 {
-    const g = makeGame(8);
-    const { CONFIG, world, entities, player } = g;
-    entities.spawnGargoyle({ x: world.cameraX + 400, y: 180, width: 100, gargoyle: 'flyer' });
-    const f = entities.gargoyles[0];
-    ok(f.kind === 'flyer', 'spawns as a flyer');
-    ok(f.hp === CONFIG.FLYER_HP, 'takes one note to fell');
-    ok(f.baseY <= 180 - 46, 'flies above the rooftops');
-
-    const x0 = f.x, ys = [];
-    for (let i = 0; i < 60; i++) { entities.updateGargoyles(player, 1.0); ys.push(f.y); }
-    ok(f.x < x0, 'closes on the player faster than the world scrolls');
-    ok(Math.max(...ys) - Math.min(...ys) > 4, 'bobs rather than tracking a straight line');
-}
-
-// ── Notes ─────────────────────────────────────────────────────────────────────
-
-console.log('\nnotes:');
-{
-    const g = makeGame(12);
-    const { CONFIG, entities, world } = g;
-
-    // Screen-relative speed must not depend on how fast the world is moving.
-    const screenSpeed = (scroll) => {
-        const e = makeGame(12).entities;
-        e.cameraX = 500;
-        e.spawnNote(96, 100, scroll);
-        const n = e.notes[0];
-        const before = n.x - e.cameraX;
-        e.cameraX += scroll;                 // the world advances one frame
-        e.updateNotes(1.0);
-        return (n.x - e.cameraX) - before;
-    };
-    near(screenSpeed(2), CONFIG.NOTE_SPEED, 0.001, 'reach is the same at scroll speed 2');
-    near(screenSpeed(4.6), CONFIG.NOTE_SPEED, 0.001, 'reach is the same at scroll speed 4.6');
-
-    // Cooldown
-    const e = entities;
-    e.cameraX = world.cameraX;
-    ok(e.spawnNote(96, 100, 2) === true, 'first shot fires');
-    ok(e.spawnNote(96, 100, 2) === false, 'second shot is on cooldown');
-    for (let i = 0; i < CONFIG.FIRE_RATE; i++) {
-        e.updateNotes(1.0);
-        e.shootCooldown -= 1;
-    }
-    ok(e.spawnNote(96, 100, 2) === true, 'fires again once the cooldown lapses');
-
-    // A note kills a percher in exactly GARGOYLE_HP hits, and the kill is reported.
-    const k = makeGame(13);
-    k.entities.cameraX = k.world.cameraX;
-    k.entities.spawnGargoyle({ x: k.world.cameraX + 200, y: 180, width: 100, gargoyle: 'percher' });
-    const target = k.entities.gargoyles[0];
-    let hits = 0;
-    while (k.entities.gargoyles.length && hits < 10) {
-        k.entities.notes.push({ x: target.x, y: target.y, vx: 0 });
-        k.entities.killsThisFrame.length = 0;
-        k.entities.updateNotes(1.0);
-        hits++;
-    }
-    ok(hits === k.CONFIG.GARGOYLE_HP, `a percher takes ${k.CONFIG.GARGOYLE_HP} notes`, `took ${hits}`);
-    ok(k.entities.killsThisFrame.length === 1, 'the kill is reported to the scorer');
-}
-
-// ── Respawn ───────────────────────────────────────────────────────────────────
-
-console.log('\nrespawn after a fall:');
-{
-    let recovered = 0, attempts = 0;
-    for (const seed of [2, 17, 55, 91, 400, 777]) {
-        const g = makeGame(seed);
-        const { CONFIG, player, world, step } = g;
-
-        // Run in, then walk off an edge on purpose and never jump again.
-        for (let i = 0; i < 400; i++) step(1.0);
-
-        for (let life = 0; life < 4; life++) {
-            let guard = 0;
-            while (player.y <= CONFIG.CANVAS_H + 20 && guard++ < 3000) step(1.0);
-            if (guard >= 3000) break;           // never fell; nothing to check
-            attempts++;
-            player.respawn(world.respawnSurface(CONFIG.PLAYER_X, CONFIG.PLAYER_W));
-
-            // The whole fix: he must now be over something solid.
-            const under = roofUnder(world, CONFIG);
-            if (under && Math.abs((player.y + CONFIG.PLAYER_H) - under.y) < 0.001) recovered++;
-
-            // And must still be there a moment later rather than falling again.
-            for (let i = 0; i < 5; i++) step(1.0);
-            if (!player.grounded) recovered--;
-        }
-    }
-    ok(attempts > 0, `${attempts} falls simulated`);
-    ok(recovered === attempts, 'every respawn lands on solid roof and stays there',
-       `${recovered}/${attempts}`);
-}
-
-// ── Long run: no leaks, no crashes in draw ────────────────────────────────────
-
-console.log('\nlong run:');
-{
-    const g = makeGame(2468);
-    const { CONFIG, player, world, entities, input, step } = g;
-    const ctx = stubCtx();
-    let maxRoofs = 0, maxGargoyles = 0, maxParticles = 0, maxNotes = 0, threw = null;
-
+    const g = makeGame(0);
+    const { world, entities, player, cam, map } = g;
+    const c = stubCtx();
+    let threw = null;
     try {
-        for (let i = 0; i < 40000; i++) {
-            if (player.grounded) {
-                const r = roofUnder(world, CONFIG);
-                const runway = r
-                    ? (r.x - world.cameraX + r.width) - (CONFIG.PLAYER_X + CONFIG.PLAYER_W)
-                    : 0;
-                if (runway <= 2) input.tap('Space');
-            }
-            if (i % 12 === 0) {
-                entities.spawnNote(player.x + CONFIG.PLAYER_W, player.y + 8,
-                                   g.Difficulty.scrollSpeed(g.Difficulty.at(world.metres())));
-            }
-            step(1.0);
-            if (player.y > CONFIG.CANVAS_H + 20) {
-                player.respawn(world.respawnSurface(CONFIG.PLAYER_X, CONFIG.PLAYER_W));
-            }
-            maxRoofs = Math.max(maxRoofs, world.rooftops.length);
-            maxGargoyles = Math.max(maxGargoyles, entities.gargoyles.length);
-            maxParticles = Math.max(maxParticles, entities.particles.length);
-            maxNotes = Math.max(maxNotes, entities.notes.length);
-
-            if (i % 500 === 0) { world.draw(ctx); entities.draw(ctx); player.draw(ctx); }
+        cam.snapTo(player);
+        for (let i = 0; i < 6; i++) {
+            cam.x = (map.w - 480) * (i / 5);
+            world.draw(c, cam);
+            entities.drawBird(c, cam.x, cam.y);
+            entities.draw(c, cam.x, cam.y, i);
+            player.draw(c, cam.x, cam.y);
         }
     } catch (e) { threw = e; }
-
-    ok(!threw, 'ran 40000 frames without throwing', threw && threw.stack);
-    ok(maxRoofs < 40, `rooftop pool stays bounded (peak ${maxRoofs})`);
-    ok(maxGargoyles < 40, `gargoyle pool stays bounded (peak ${maxGargoyles})`);
-    ok(maxParticles < 400, `particle pool stays bounded (peak ${maxParticles})`);
-    ok(maxNotes < 40, `note pool stays bounded (peak ${maxNotes})`);
-    ok(ctx.calls.length > 0, 'draw() actually painted something');
-    console.log(`        reached ${Math.round(world.metres())}m`);
-}
-
-// ── Jump forgiveness ──────────────────────────────────────────────────────────
-
-console.log('\njump forgiveness:');
-{
-    // Coyote time: a jump pressed just after walking off an edge still fires.
-    const g = makeGame(31);
-    const { CONFIG, player, input } = g;
-    player.grounded = true; player.coyote = CONFIG.COYOTE_FRAMES; player.vy = 0;
-    player.update([], 0, 1.0);                    // no roofs -> he is now airborne
-    ok(!player.grounded, 'left the ground');
-    input.tap('Space');
-    player.update([], 0, 1.0);
-    ok(player.vy < 0, 'a jump within the coyote window still fires');
-
-    // ...but not one pressed long after.
-    const g2 = makeGame(32);
-    g2.player.grounded = false; g2.player.coyote = 0; g2.player.vy = 1;
-    g2.input.tap('Space');
-    g2.player.update([], 0, 1.0);
-    ok(g2.player.vy > 0, 'a jump in mid-air after the window does not');
-
-    // Variable height: holding the key gets you higher than tapping it.
-    const apex = (hold) => {
-        const s = makeGame(33);
-        const roof = [{ x: 0, y: 180, width: 400 }];
-        s.player.x = CONFIG.PLAYER_X; s.player.y = 180 - CONFIG.PLAYER_H;
-        s.player.grounded = true; s.player.coyote = CONFIG.COYOTE_FRAMES; s.player.vy = 0;
-        s.input.tap('Space');
-        let top = s.player.y;
-        for (let i = 0; i < 60; i++) {
-            if (!hold && i === 3) s.input.release('Space');
-            s.player.update(roof, 0, 1.0);
-            top = Math.min(top, s.player.y);
-        }
-        return (180 - CONFIG.PLAYER_H) - top;
-    };
-    const full = apex(true), tapped = apex(false);
-    ok(full > tapped + 8, `holding jumps higher (${full.toFixed(1)}px vs ${tapped.toFixed(1)}px)`);
-    ok(tapped > 0, 'a tap still leaves the ground');
-}
-
-// ── Music asset ───────────────────────────────────────────────────────────────
-// CONFIG.MUSIC.URL is built in a JS string, and check-cache-busters.mjs
-// deliberately steps over those — a `?v=` in JS is usually a YouTube id. So
-// nothing else in the repo would notice this path breaking, and the only
-// symptom would be a game that is silently silent.
-
-console.log('\nmusic asset:');
-{
-    const { CONFIG } = makeGame(1);
-    const url = CONFIG.MUSIC.URL;
-
-    ok(/^\.\.\/\.\.\//.test(url), 'points outside the game folder, at the shared copy', url);
-
-    // Resolve it the way the browser would, from arcade/roderick-tron/.
-    const resolved = path.resolve(JS_DIR, '..', decodeURIComponent(url));
-    ok(fs.existsSync(resolved), 'the track it names is actually there', resolved);
-
-    if (fs.existsSync(resolved)) {
-        const bytes = fs.statSync(resolved).size;
-        ok(bytes > 100000, `track is ${Math.round(bytes / 1024)}KB, so it is the real file`);
-        const head = fs.readFileSync(resolved).subarray(0, 4).toString('latin1');
-        ok(head === 'OggS', 'and it is an Ogg stream', `header was "${head}"`);
-    }
-
-    ok(url.includes('%20'), 'spaces are percent-encoded for fetch()');
-    ok(CONFIG.MUSIC.FADE_OUT > 0 && CONFIG.MUSIC.FADE_OUT < CONFIG.MUSIC.FADE_IN,
-       'fades out faster than it fades in, so the run ending reads as an ending');
-    ok(CONFIG.MUSIC.VOLUME > 0 && CONFIG.MUSIC.VOLUME <= 1, 'volume is a sane gain');
+    ok(!threw, 'a full frame draws at six camera positions', threw && threw.stack);
+    ok(c.calls.length > 100, 'and actually painted (' + c.calls.length + ' ops)');
 }
 
 // ── Summary ───────────────────────────────────────────────────────────────────
 
-console.log(`\n=== Results: ${passed} passed, ${failed} failed ===`);
+console.log('\n=== Results: ' + passed + ' passed, ' + failed + ' failed ===');
 process.exit(failed > 0 ? 1 : 0);

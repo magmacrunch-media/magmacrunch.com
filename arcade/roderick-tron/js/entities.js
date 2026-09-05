@@ -1,195 +1,201 @@
 // entities.js — Roderick Tron | MagmaCrunch Media © 2026
-// Gargoyles, projectiles, particles
+// Enemies, projectiles, pickups, the companion, and the effects for all of it.
 //
-// Coordinates: gargoyles and notes are stored in WORLD space and converted to
-// screen space at draw and collision time. They used to be stored in screen
-// space and hand-scrolled by `x -= speed`, which worked only as long as the
-// camera moved at exactly that rate — respawning, which now jumps the camera
-// forward, would have torn them off their rooftops.
+// Everything here is in WORLD pixels and converted at draw time. The runner
+// this replaced kept entities in screen space and hand-scrolled them, which
+// only held while the camera moved at one fixed rate.
 
-function Entities() {
+function Entities(tilemap) {
+    this.map = tilemap;
     this.reset();
 }
 
 Entities.prototype.reset = function () {
-    this.gargoyles = [];
-    this.notes = [];
+    const map = this.map;
+    this.enemies = map.enemies.map(function (e) {
+        return {
+            kind: e.kind,
+            x: e.x, y: e.y,
+            homeY: e.y,
+            w: CONFIG.GARGOYLE_W, h: CONFIG.GARGOYLE_H,
+            dir: -1,
+            phase: (e.x * 0.07) % (Math.PI * 2),
+            hp: e.kind === 'statue' ? CONFIG.STATUE_HP
+                : e.kind === 'flyer' ? CONFIG.FLYER_HP
+                : CONFIG.GARGOYLE_HP,
+            flash: 0,
+            dead: false,
+        };
+    });
+    // Pickups live on the map, so a retry restores them by clearing the flags
+    // rather than by reparsing the level.
+    map.notes.forEach(function (n) { n.taken = false; });
+    map.letters.forEach(function (l) { l.taken = false; });
+
+    this.shots = [];
     this.particles = [];
     this.popups = [];
-    this.shootCooldown = 0;
-    this.cameraX = 0;
-    this.killsThisFrame = [];
+    this.bird = null;
+    this.events = [];
 };
 
-// ── Spawn note projectile ──────────────────────────────
-Entities.prototype.spawnNote = function (screenX, screenY, scrollSpeed) {
-    if (this.shootCooldown > 0) return false;
-    this.notes.push({
-        x: screenX + this.cameraX,
-        y: screenY,
-        // Notes travel at NOTE_SPEED relative to the *screen*, so they keep the
-        // same reach whatever the world is doing underneath them.
-        vx: CONFIG.NOTE_SPEED + scrollSpeed,
-    });
-    this.shootCooldown = CONFIG.FIRE_RATE;
-    return true;
-};
+// ── Projectiles ───────────────────────────────────────────
 
-// ── Spawn a gargoyle for a rooftop (world coordinates) ─
-Entities.prototype.spawnGargoyle = function (roof) {
-    if (roof.gargoyle === 'flyer') {
-        const baseY = Math.max(
-            CONFIG.FLYER_MIN_Y,
-            roof.y - 46 - Math.random() * 34
-        );
-        this.gargoyles.push({
-            kind: 'flyer',
-            x: roof.x + roof.width * 0.5,
-            y: baseY,
-            baseY: baseY,
-            phase: Math.random() * Math.PI * 2,
-            state: 'active',
-            timer: 0,
-            flash: 0,
-            hp: CONFIG.FLYER_HP,
-        });
-        return;
-    }
-
-    const x = roof.x + roof.width * 0.5 + (Math.random() - 0.5) * roof.width * 0.4;
-    const baseY = roof.y - CONFIG.GARGOYLE_H;
-    this.gargoyles.push({
-        kind: 'percher',
-        x: x,
-        y: baseY,
-        baseY: baseY,
-        state: 'idle',       // idle -> alert -> lunge -> recover -> idle
-        timer: 0,
-        flash: 0,
-        hp: CONFIG.GARGOYLE_HP,
+Entities.prototype.fire = function (player) {
+    this.shots.push({
+        x: player.box.x + (player.facing > 0 ? player.box.w : -CONFIG.NOTE_W),
+        y: player.box.y + 6,
+        vx: player.facing * CONFIG.NOTE_SPEED,
+        life: CONFIG.NOTE_LIFE,
     });
 };
 
-// ── Update all entities ────────────────────────────────
-Entities.prototype.update = function (world, player, dt) {
-    this.cameraX = world.cameraX;
-    this.killsThisFrame.length = 0;
+// ── Per-frame ─────────────────────────────────────────────
 
-    if (this.shootCooldown > 0) this.shootCooldown -= dt;
-
-    // Spawn gargoyles for rooftops that have come within reach.
-    const rooftops = world.rooftops;
-    for (let i = 0; i < rooftops.length; i++) {
-        const r = rooftops[i];
-        if (r.gargoyle && !r.gargoyleSpawned) {
-            const screenX = r.x - this.cameraX;
-            if (screenX < CONFIG.CANVAS_W + 220) {
-                this.spawnGargoyle(r);
-                r.gargoyleSpawned = true;
-            }
-        }
-    }
-
-    this.updateNotes(dt);
-    this.updateGargoyles(player, dt);
+Entities.prototype.update = function (player, dt) {
+    this.events.length = 0;
+    this.updateShots(dt);
+    this.updateEnemies(player, dt);
+    this.updatePickups(player);
+    this.updateBird(player, dt);
     this.updateParticles(dt);
     this.updatePopups(dt);
 };
 
-Entities.prototype.updateNotes = function (dt) {
-    for (let i = this.notes.length - 1; i >= 0; i--) {
-        const n = this.notes[i];
-        n.x += n.vx * dt;
-        if (n.x - this.cameraX > CONFIG.CANVAS_W + 20) {
-            this.notes.splice(i, 1);
+Entities.prototype.updateShots = function (dt) {
+    for (let i = this.shots.length - 1; i >= 0; i--) {
+        const s = this.shots[i];
+        s.x += s.vx * dt;
+        s.life -= dt;
+        // A note that hits masonry stops there rather than sailing through it.
+        if (s.life <= 0 || this.map.overlapsSolid(s.x, s.y, CONFIG.NOTE_W, CONFIG.NOTE_H)) {
+            this.spawnParticles(s.x, s.y, 3, CONFIG.COLORS.robotCyan, 10);
+            this.shots.splice(i, 1);
             continue;
         }
-
-        for (let j = this.gargoyles.length - 1; j >= 0; j--) {
-            const g = this.gargoyles[j];
-            if (g.state === 'dead') continue;
-            if (!this.rectsOverlap(n.x, n.y, CONFIG.NOTE_W, CONFIG.NOTE_H,
-                                   g.x, g.y, CONFIG.GARGOYLE_W, CONFIG.GARGOYLE_H)) continue;
-
-            g.hp--;
-            g.flash = 5;
-            this.notes.splice(i, 1);
-            const cx = g.x + CONFIG.GARGOYLE_W / 2;
-            const cy = g.y + CONFIG.GARGOYLE_H / 2;
-            if (g.hp <= 0) {
-                g.state = 'dead';
-                this.spawnDeathParticles(cx, cy);
-                this.killsThisFrame.push({ kind: g.kind, x: cx, y: cy });
-                this.gargoyles.splice(j, 1);
-            } else {
-                this.spawnHitParticles(cx, cy);
-                // A wounded percher is startled awake even if you were out of range.
-                if (g.kind === 'percher' && g.state === 'idle') {
-                    g.state = 'alert';
-                    g.timer = 0;
-                }
-            }
+        for (let j = 0; j < this.enemies.length; j++) {
+            const e = this.enemies[j];
+            if (e.dead) continue;
+            if (!overlap(s.x, s.y, CONFIG.NOTE_W, CONFIG.NOTE_H, e.x, e.y, e.w, e.h)) continue;
+            this.damage(e, 1);
+            this.shots.splice(i, 1);
             break;
         }
     }
 };
 
-Entities.prototype.updateGargoyles = function (player, dt) {
-    const playerCentre = player.x + CONFIG.PLAYER_W / 2;
-
-    for (let i = this.gargoyles.length - 1; i >= 0; i--) {
-        const g = this.gargoyles[i];
-        const screenX = g.x - this.cameraX;
-
-        if (screenX < -60) {
-            this.gargoyles.splice(i, 1);
-            continue;
-        }
-        if (g.flash > 0) g.flash -= dt;
-
-        if (g.kind === 'flyer') {
-            // Drifts leftward faster than the world scrolls, bobbing as it comes.
-            g.x -= CONFIG.FLYER_SPEED * dt;
-            g.phase += CONFIG.FLYER_BOB_RATE * dt;
-            g.y = g.baseY + Math.sin(g.phase) * CONFIG.FLYER_BOB_AMP;
-            g.timer += dt;
-            continue;
-        }
-
-        // ── Percher state machine ─────────────────────────
-        const dist = Math.abs((screenX + CONFIG.GARGOYLE_W / 2) - playerCentre);
-        g.timer += dt;
-
-        if (g.state === 'idle') {
-            // Only wakes for a player still approaching — one already past it
-            // would be lunged at from behind, which is unreadable.
-            if (dist < CONFIG.GARGOYLE_ALERT_DIST && screenX + CONFIG.GARGOYLE_W > player.x) {
-                g.state = 'alert';
-                g.timer = 0;   // the telegraph starts here; it used to start at
-                               // its own expiry, so the warning lasted one frame
-            }
-        } else if (g.state === 'alert') {
-            if (g.timer >= CONFIG.GARGOYLE_ALERT_FRAMES) {
-                g.state = 'lunge';
-                g.timer = 0;
-            }
-        } else if (g.state === 'lunge') {
-            // A single arc up and back down to the perch, rather than the old
-            // one-way rise that left gargoyles hovering in the sky forever.
-            const t = Math.min(1, g.timer / CONFIG.GARGOYLE_LUNGE_FRAMES);
-            g.y = g.baseY - Math.sin(t * Math.PI) * CONFIG.GARGOYLE_LUNGE_HEIGHT;
-            if (g.timer >= CONFIG.GARGOYLE_LUNGE_FRAMES) {
-                g.y = g.baseY;
-                g.state = 'recover';
-                g.timer = 0;
-            }
-        } else if (g.state === 'recover') {
-            if (g.timer >= CONFIG.GARGOYLE_RECOVER_FRAMES) {
-                g.state = 'idle';
-                g.timer = 0;
-            }
-        }
+Entities.prototype.damage = function (e, n) {
+    e.hp -= n;
+    e.flash = 6;
+    const cx = e.x + e.w / 2;
+    const cy = e.y + e.h / 2;
+    if (e.hp > 0) {
+        this.spawnParticles(cx, cy, 4, CONFIG.COLORS.robotCyan, 12);
+        return false;
     }
+    e.dead = true;
+    this.spawnParticles(cx, cy, 9, CONFIG.COLORS.particleStone, 22);
+    this.events.push({ type: 'kill', kind: e.kind, x: cx, y: cy });
+    return true;
+};
+
+Entities.prototype.updateEnemies = function (player, dt) {
+    const p = player.box;
+
+    for (let i = this.enemies.length - 1; i >= 0; i--) {
+        const e = this.enemies[i];
+        if (e.flash > 0) e.flash -= dt;
+        if (e.dead) { this.enemies.splice(i, 1); continue; }
+
+        if (e.kind === 'gargoyle') {
+            // Walks, and turns at a wall or a ledge. Checking for footing one
+            // step ahead is what keeps them on their own rooftop instead of
+            // marching off it within seconds of the level starting.
+            const step = e.dir * CONFIG.GARGOYLE_SPEED * dt;
+            const ahead = e.x + step + (e.dir > 0 ? e.w : -1);
+            if (this.map.overlapsSolid(e.x + step, e.y, e.w, e.h)
+                || !this.map.hasFooting(ahead, e.y, 1, e.h)) {
+                e.dir *= -1;
+            } else {
+                e.x += step;
+            }
+        } else if (e.kind === 'flyer') {
+            e.phase += CONFIG.FLYER_BOB_RATE * dt;
+            e.y = e.homeY + Math.sin(e.phase) * CONFIG.FLYER_BOB_AMP;
+            const step = e.dir * CONFIG.FLYER_SPEED * dt;
+            if (this.map.overlapsSolid(e.x + step, e.y, e.w, e.h)) e.dir *= -1;
+            else e.x += step;
+        }
+        // A statue does nothing. That is the point of it.
+
+        if (!player.alive || player.exiting) continue;
+
+        if (!overlap(p.x, p.y, p.w, p.h, e.x, e.y, e.w, e.h)) continue;
+
+        // ── Contact ───────────────────────────────────────
+        // A roll goes straight through anything soft.
+        if (player.rolling && e.kind !== 'statue') {
+            this.damage(e, 99);
+            continue;
+        }
+
+        // Coming down on it counts as a stomp. Requiring downward motion and
+        // feet above its middle is what stops a walk into the side of one from
+        // reading as a stomp.
+        const falling = player.vy > 0;
+        const above = p.y + p.h - player.vy <= e.y + e.h * 0.6;
+        if (falling && above) {
+            if (e.kind === 'statue') {
+                // Too heavy to flatten: you bounce, it does not care.
+                player.stompBounce();
+                this.spawnParticles(e.x + e.w / 2, e.y, 4, CONFIG.COLORS.particleStone, 10);
+                continue;
+            }
+            this.damage(e, 99);
+            player.stompBounce();
+            continue;
+        }
+
+        this.events.push({ type: 'hurt', x: e.x + e.w / 2 });
+    }
+};
+
+Entities.prototype.updatePickups = function (player) {
+    if (!player.alive) return;
+    const p = player.box;
+
+    for (let i = 0; i < this.map.notes.length; i++) {
+        const n = this.map.notes[i];
+        if (n.taken || !overlap(p.x, p.y, p.w, p.h, n.x, n.y, n.w, n.h)) continue;
+        n.taken = true;
+        this.spawnParticles(n.x + 4, n.y + 4, 3, CONFIG.COLORS.noteWhite, 12);
+        this.events.push({ type: 'note', x: n.x, y: n.y });
+    }
+
+    for (let i = 0; i < this.map.letters.length; i++) {
+        const l = this.map.letters[i];
+        if (l.taken || !overlap(p.x, p.y, p.w, p.h, l.x, l.y, l.w, l.h)) continue;
+        l.taken = true;
+        this.spawnParticles(l.x + 6, l.y + 6, 6, CONFIG.COLORS.letterGold, 20);
+        this.events.push({ type: 'letter', ch: l.ch, x: l.x, y: l.y });
+    }
+};
+
+/**
+ * The clockwork bird.
+ *
+ * It trails rather than tracks, so it reads as following him rather than being
+ * welded on, and it is drawn behind so it never hides the thing you are aiming.
+ */
+Entities.prototype.updateBird = function (player, dt) {
+    if (!player.hasBird) { this.bird = null; return; }
+    const tx = player.box.x - player.facing * 13;
+    const ty = player.box.y - 9;
+    if (!this.bird) { this.bird = { x: tx, y: ty, phase: 0 }; return; }
+    const k = Math.min(1, CONFIG.BIRD_FOLLOW_LAG * dt);
+    this.bird.x += (tx - this.bird.x) * k;
+    this.bird.y += (ty - this.bird.y) * k;
+    this.bird.phase += CONFIG.BIRD_BOB_RATE * dt;
 };
 
 Entities.prototype.updateParticles = function (dt) {
@@ -197,7 +203,7 @@ Entities.prototype.updateParticles = function (dt) {
         const p = this.particles[i];
         p.x += p.vx * dt;
         p.y += p.vy * dt;
-        p.vy += 0.15 * dt;
+        p.vy += 0.16 * dt;
         p.life -= dt;
         if (p.life <= 0) this.particles.splice(i, 1);
     }
@@ -206,197 +212,137 @@ Entities.prototype.updateParticles = function (dt) {
 Entities.prototype.updatePopups = function (dt) {
     for (let i = this.popups.length - 1; i >= 0; i--) {
         const p = this.popups[i];
-        p.y -= 0.35 * dt;
+        p.y -= 0.32 * dt;
         p.life -= dt;
         if (p.life <= 0) this.popups.splice(i, 1);
     }
 };
 
-Entities.prototype.addPopup = function (worldX, y, text, color) {
-    this.popups.push({ x: worldX, y: y, text: text, color: color, life: 42, max: 42 });
-};
-
-// ── Check if a gargoyle hits the player ────────────────
-Entities.prototype.checkPlayerHit = function (player) {
-    for (let i = 0; i < this.gargoyles.length; i++) {
-        const g = this.gargoyles[i];
-        if (g.state === 'dead') continue;
-        // Idle perchers are scenery — you can run straight over a sleeping one.
-        if (g.kind === 'percher' && g.state === 'idle') continue;
-        const screenX = g.x - this.cameraX;
-        if (this.rectsOverlap(player.x + 2, player.y + 2,
-                              CONFIG.PLAYER_W - 4, CONFIG.PLAYER_H - 4,
-                              screenX + 1, g.y + 1,
-                              CONFIG.GARGOYLE_W - 2, CONFIG.GARGOYLE_H - 2)) {
-            return g;
-        }
-    }
-    return null;
-};
-
-// ── Particle spawns ────────────────────────────────────
-Entities.prototype.spawnDeathParticles = function (x, y) {
-    for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
+Entities.prototype.spawnParticles = function (x, y, n, color, life) {
+    for (let i = 0; i < n; i++) {
         this.particles.push({
-            x: x,
-            y: y,
-            vx: (Math.random() - 0.5) * CONFIG.PARTICLE_SPEED * 2,
-            vy: (Math.random() - 1) * CONFIG.PARTICLE_SPEED,
-            life: CONFIG.PARTICLE_LIFE,
-            color: Math.random() > 0.5 ? CONFIG.COLORS.particleStone : CONFIG.COLORS.gargoyleDark,
+            x: x, y: y,
+            vx: (Math.random() - 0.5) * 3.2,
+            vy: (Math.random() - 1) * 2.4,
+            life: life, max: life, color: color,
         });
     }
 };
 
-Entities.prototype.spawnHitParticles = function (x, y) {
-    for (let i = 0; i < 4; i++) {
-        this.particles.push({
-            x: x,
-            y: y,
-            vx: (Math.random() - 0.5) * 3,
-            vy: (Math.random() - 1) * 2,
-            life: 12,
-            color: CONFIG.COLORS.robotCyan,
-        });
-    }
+Entities.prototype.addPopup = function (x, y, text, color) {
+    this.popups.push({ x: x, y: y, text: text, color: color, life: 44, max: 44 });
 };
 
-/** Player took a hit — sparks in screen space, converted to world on the way in. */
-Entities.prototype.spawnPlayerHitParticles = function (screenX, screenY) {
-    for (let i = 0; i < 8; i++) {
-        this.particles.push({
-            x: screenX + this.cameraX,
-            y: screenY,
-            vx: (Math.random() - 0.5) * 4,
-            vy: (Math.random() - 0.5) * 4,
-            life: 16,
-            color: CONFIG.COLORS.robotCyan,
-        });
-    }
-};
+// ── Drawing ───────────────────────────────────────────────
 
-// ── Collision helper ───────────────────────────────────
-Entities.prototype.rectsOverlap = function (x1, y1, w1, h1, x2, y2, w2, h2) {
-    return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
-};
-
-// ── Draw all entities ──────────────────────────────────
-Entities.prototype.draw = function (ctx) {
-    for (let i = 0; i < this.gargoyles.length; i++) {
-        this.drawGargoyle(ctx, this.gargoyles[i]);
-    }
-    for (let i = 0; i < this.notes.length; i++) {
-        this.drawNote(ctx, this.notes[i]);
-    }
+Entities.prototype.draw = function (ctx, camX, camY, frame) {
+    for (let i = 0; i < this.enemies.length; i++) this.drawEnemy(ctx, this.enemies[i], camX, camY);
+    for (let i = 0; i < this.shots.length; i++) this.drawShot(ctx, this.shots[i], camX, camY);
     for (let i = 0; i < this.particles.length; i++) {
-        this.drawParticle(ctx, this.particles[i]);
+        const p = this.particles[i];
+        ctx.globalAlpha = Math.max(0, Math.min(1, p.life / p.max));
+        ctx.fillStyle = p.color;
+        ctx.fillRect(Math.round(p.x - camX), Math.round(p.y - camY), 2, 2);
+        ctx.globalAlpha = 1;
     }
     for (let i = 0; i < this.popups.length; i++) {
-        this.drawPopup(ctx, this.popups[i]);
+        const p = this.popups[i];
+        ctx.globalAlpha = Math.max(0, Math.min(1, p.life / p.max));
+        ctx.fillStyle = p.color;
+        ctx.font = '6px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(p.text, Math.round(p.x - camX), Math.round(p.y - camY));
+        ctx.textAlign = 'left';
+        ctx.globalAlpha = 1;
     }
+    void frame;
 };
 
-Entities.prototype.drawGargoyle = function (ctx, g) {
-    const x = Math.round(g.x - this.cameraX);
-    const y = Math.round(g.y);
+Entities.prototype.drawBird = function (ctx, camX, camY) {
+    if (!this.bird) return;
+    const x = Math.round(this.bird.x - camX);
+    const y = Math.round(this.bird.y - camY + Math.sin(this.bird.phase) * CONFIG.BIRD_BOB_AMP);
     const C = CONFIG.COLORS;
-    const awake = g.kind === 'flyer' || g.state !== 'idle';
+    const flap = Math.sin(this.bird.phase * 3) > 0 ? 1 : -1;
+    ctx.fillStyle = C.birdBrass;
+    ctx.fillRect(x + 2, y + 2, 6, 4);
+    ctx.fillRect(x + 7, y + 1, 3, 3);
+    ctx.fillStyle = C.gargoyleDark;
+    ctx.fillRect(x + 9, y + 2, 2, 1);
+    ctx.fillStyle = C.birdBrass;
+    ctx.fillRect(x + 1, y + 2 - flap * 2, 5, 2);
+    ctx.fillStyle = C.robotCyan;
+    ctx.fillRect(x + 8, y + 2, 1, 1);
+};
 
-    if (g.kind === 'flyer') {
-        // Wings beat continuously — the silhouette is what reads at this size,
-        // so they taper away from the body in steps rather than being one long
-        // bar, which drew as a plank through the middle of the sprite.
-        const beat = Math.sin(g.phase * 4);
+Entities.prototype.drawEnemy = function (ctx, e, camX, camY) {
+    const x = Math.round(e.x - camX);
+    const y = Math.round(e.y - camY);
+    const C = CONFIG.COLORS;
+    const lit = e.flash > 0;
+
+    if (e.kind === 'flyer') {
+        const beat = Math.sin(e.phase * 4);
         const lift = Math.round(beat * 3);
         ctx.fillStyle = C.flyerWing;
         for (let s = 0; s < 3; s++) {
             const h = 5 - s;
             const dy = y + 3 - Math.round(lift * (s + 1) * 0.6);
-            ctx.fillRect(x - 1 - s * 3, dy, 3, h);       // joins the body at x+2
+            ctx.fillRect(x - 1 - s * 3, dy, 3, h);
             ctx.fillRect(x + 12 + s * 3, dy, 3, h);
         }
-    } else if (awake) {
-        const twitch = g.state === 'alert'
-            ? Math.round(Math.sin(g.timer * 0.7) * 1)
-            : Math.round(Math.sin(g.timer * 0.4) * 3);
-        ctx.fillStyle = C.gargoyleDark;
-        ctx.fillRect(x - 2 - twitch, y + 2, 4, 6);
-        ctx.fillRect(x + 12 + twitch, y + 2, 4, 6);
     }
 
-    // Body + head
-    ctx.fillStyle = g.flash > 0 ? '#ffffff' : C.gargoyleStone;
+    if (e.kind === 'statue') {
+        ctx.fillStyle = lit ? '#ffffff' : C.statueStone;
+        ctx.fillRect(x, y - 2, 14, 16);
+        ctx.fillStyle = C.gargoyleDark;
+        ctx.fillRect(x + 2, y + 1, 3, 3);
+        ctx.fillRect(x + 9, y + 1, 3, 3);
+        ctx.fillStyle = C.gargoyleEye;
+        ctx.fillRect(x + 3, y + 2, 1, 1);
+        ctx.fillRect(x + 10, y + 2, 1, 1);
+        ctx.fillStyle = C.gableStone;
+        ctx.fillRect(x, y + 12, 14, 2);
+        return;
+    }
+
+    ctx.fillStyle = lit ? '#ffffff' : C.gargoyleStone;
     ctx.fillRect(x + 2, y + 4, 10, 8);
     ctx.fillRect(x + 4, y + 1, 6, 5);
-    if (g.flash <= 0) {
-        // Shading, so a dormant one reads as carved stone rather than a pebble.
+    if (!lit) {
         ctx.fillStyle = '#4a4a5c';
         ctx.fillRect(x + 2, y + 10, 10, 2);
         ctx.fillRect(x + 3, y + 4, 1, 6);
     }
-
-    // Horns
     ctx.fillStyle = C.gargoyleDark;
     ctx.fillRect(x + 3, y, 2, 2);
     ctx.fillRect(x + 9, y, 2, 2);
-
-    // Eyes. The alert state pulses them: this is the whole telegraph, so it has
-    // to be the loudest thing on the sprite.
-    if (awake) {
-        // Kept to a 4px halo around each eye. A 6px pair overlapped into one
-        // block that covered the whole head, so an alert gargoyle read as a
-        // featureless pink blob rather than a stone creature with lit eyes.
-        const pulse = g.state === 'alert' && Math.floor(g.timer / 4) % 2 === 0;
-        ctx.fillStyle = 'rgba(255, 61, 110, ' + (pulse ? 0.4 : 0.2) + ')';
-        ctx.fillRect(x + 4, y + 1, 4, 4);
-        ctx.fillRect(x + 8, y + 1, 4, 4);
-        ctx.fillStyle = pulse ? '#ff8fae' : C.gargoyleEye;
-        ctx.fillRect(x + 5, y + 2, 2, 2);
-        ctx.fillRect(x + 9, y + 2, 2, 2);
-    } else {
-        ctx.fillStyle = C.gargoyleDark;
-        ctx.fillRect(x + 5, y + 2, 2, 2);
-        ctx.fillRect(x + 9, y + 2, 2, 2);
-    }
-
-    // Claws
-    ctx.fillStyle = C.gargoyleDark;
     ctx.fillRect(x + 1, y + 10, 2, 2);
     ctx.fillRect(x + 11, y + 10, 2, 2);
+
+    ctx.fillStyle = 'rgba(255, 61, 110, 0.25)';
+    ctx.fillRect(x + 4, y + 1, 4, 4);
+    ctx.fillRect(x + 8, y + 1, 4, 4);
+    ctx.fillStyle = C.gargoyleEye;
+    ctx.fillRect(x + 5, y + 2, 2, 2);
+    ctx.fillRect(x + 9, y + 2, 2, 2);
 };
 
-Entities.prototype.drawNote = function (ctx, n) {
-    const x = Math.round(n.x - this.cameraX);
-    const y = Math.round(n.y);
-    const C = CONFIG.COLORS;
-
-    // A soft glow, not the flat rectangle that used to sit behind the glyph as
-    // a visible blue box.
+Entities.prototype.drawShot = function (ctx, s, camX, camY) {
+    const x = Math.round(s.x - camX);
+    const y = Math.round(s.y - camY);
     Renderer.glow(ctx, x + 3, y + 4, 9, '0,245,255', 0.30);
-
-    // Eighth note: filled head, stem up the right, flag off the top.
-    ctx.fillStyle = C.noteWhite;
-    ctx.fillRect(x, y + 4, 4, 4);       // head
+    ctx.fillStyle = CONFIG.COLORS.noteWhite;
+    ctx.fillRect(x, y + 4, 4, 4);
     ctx.fillRect(x + 1, y + 3, 3, 1);
     ctx.fillRect(x, y + 8, 3, 1);
-    ctx.fillRect(x + 4, y, 1, 5);       // stem
-    ctx.fillRect(x + 5, y, 2, 1);       // flag
+    ctx.fillRect(x + 4, y, 1, 5);
+    ctx.fillRect(x + 5, y, 2, 1);
     ctx.fillRect(x + 5, y + 1, 1, 2);
 };
 
-Entities.prototype.drawParticle = function (ctx, p) {
-    ctx.globalAlpha = Math.max(0, Math.min(1, p.life / CONFIG.PARTICLE_LIFE));
-    ctx.fillStyle = p.color;
-    ctx.fillRect(Math.round(p.x - this.cameraX), Math.round(p.y), 2, 2);
-    ctx.globalAlpha = 1;
-};
-
-Entities.prototype.drawPopup = function (ctx, p) {
-    ctx.globalAlpha = Math.max(0, Math.min(1, p.life / p.max));
-    ctx.fillStyle = p.color;
-    ctx.font = '6px "Press Start 2P", monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(p.text, Math.round(p.x - this.cameraX), Math.round(p.y));
-    ctx.textAlign = 'left';
-    ctx.globalAlpha = 1;
-};
+/** AABB overlap, shared by every collision in this file. */
+function overlap(ax, ay, aw, ah, bx, by, bw, bh) {
+    return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
+}

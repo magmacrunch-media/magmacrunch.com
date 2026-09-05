@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
     <link rel="stylesheet" href="css/base.css?v=2c415a70">
-    <link rel="stylesheet" href="css/start-screen.css?v=7df00463">
-    <link rel="stylesheet" href="css/game.css?v=9365b0e9">
-    <link rel="stylesheet" href="css/modals.css?v=d677e624">
+    <link rel="stylesheet" href="css/start-screen.css?v=b9e12151">
+    <link rel="stylesheet" href="css/game.css?v=9af4b25a">
+    <link rel="stylesheet" href="css/modals.css?v=ed285048">
 </head>
 <body>
 <a href="../action/" class="mc-back">action games</a>
@@ -22,10 +22,12 @@
     <h1>RODERICK<br>TRON</h1>
     <p class="subtitle">rooftop requiem</p>
     <div class="controls-hint">
-        SPACE / ↑ &mdash; jump (hold to go higher)<br>
-        Z &mdash; fire a note<br>
+        &larr; &rarr; &mdash; walk &nbsp;&middot;&nbsp; SHIFT &mdash; run<br>
+        SPACE &mdash; jump (hold for height)<br>
+        X &mdash; roll &nbsp;&middot;&nbsp; Z &mdash; fire a note<br>
         M &mdash; music on / off
     </div>
+    <div class="controls-note">roll off a ledge, then jump, to clear the long gaps</div>
     <div class="start-prompt">PRESS SPACE</div>
     <p class="copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
 </div>
@@ -38,42 +40,39 @@
 <!-- HUD -->
 <div id="hud" class="hud">
     <div class="hud-left">
-        <div class="hud-score" id="scoreDisplay">0m</div>
+        <div class="hud-score" id="scoreDisplay">000000</div>
         <div class="hud-lives" id="livesDisplay"></div>
     </div>
     <div class="hud-right">
-        <div class="hud-speed" id="speedDisplay">♩ ♪</div>
-        <div class="hud-combo" id="comboDisplay"></div>
-        <div class="hud-music" id="musicDisplay">♪</div>
+        <div class="hud-letters" id="lettersDisplay"></div>
+        <div class="hud-counts">
+            <span class="hud-notes" id="notesDisplay">&#9834; 0</span>
+            <span class="hud-ammo" id="ammoDisplay">&#9833; 0</span>
+        </div>
+        <div class="hud-music" id="musicDisplay">&#9834;</div>
     </div>
 </div>
 
-<!-- Game Over Overlay -->
+<div id="banner" class="banner"></div>
+
+<!-- Level clear / game over -->
 <div id="gameOverOverlay" class="game-over-overlay">
     <div class="game-over-box">
-        <h2>FIN</h2>
-        <div class="final-score" id="finalScore">0m</div>
-        <div class="final-distance" id="finalDistance"></div>
-        <div class="high-scores" id="highScoresSection">
-            <h3>HIGH SCORES</h3>
-            <div id="highScoresList"></div>
-        </div>
-        <div class="initials-prompt" id="initialsPrompt" style="display:none;">
-            <label>ENTER INITIALS</label>
-            <input type="text" class="initials-input" id="initialsInput" maxlength="3" autocomplete="off">
-            <button class="initials-submit" id="initialsSubmit">OK</button>
-        </div>
-        <div class="prompt">PRESS SPACE TO RETRY</div>
+        <h2 id="overlayTitle">FIN</h2>
+        <div class="overlay-body" id="overlayBody"></div>
+        <div class="prompt" id="overlayPrompt">PRESS SPACE TO RETRY</div>
     </div>
 </div>
 
 <script src="../shared/adenosine-audio.js?v=d96fbb5f"></script>
-<script src="js/config.js?v=dc227645"></script>
-<script src="js/input.js?v=0aa4c644"></script>
-<script src="js/player.js?v=4cf03df8"></script>
-<script src="js/world.js?v=9c63a4ea"></script>
-<script src="js/entities.js?v=817bb481"></script>
+<script src="js/config.js?v=62332a54"></script>
+<script src="js/levels.js?v=d9a9646f"></script>
+<script src="js/tilemap.js?v=8a69bb8b"></script>
+<script src="js/input.js?v=721f602a"></script>
 <script src="js/renderer.js?v=135b92ef"></script>
-<script src="js/main.js?v=a5cb19bd"></script>
+<script src="js/player.js?v=465eeaf6"></script>
+<script src="js/entities.js?v=45f141c4"></script>
+<script src="js/world.js?v=2cc91d8c"></script>
+<script src="js/main.js?v=d68ffa07"></script>
 </body>
 </html>

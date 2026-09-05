@@ -110,3 +110,60 @@
     opacity: 0.45;
     text-decoration: line-through;
 }
+
+/* ── Platformer HUD ─────────────────────────────────────── */
+
+.hud-counts {
+    display: flex;
+    gap: 10px;
+    font-size: 8px;
+    color: var(--white);
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+}
+
+.hud-ammo { color: var(--cyan); }
+
+.hud-letters {
+    display: flex;
+    gap: 4px;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+}
+
+/* Uncollected letters stay legible but clearly unearned, so the row reads as
+   a checklist rather than as decoration. */
+.hud-letters .letter {
+    color: var(--dim);
+    opacity: 0.4;
+}
+
+.hud-letters .letter.got {
+    color: var(--gold);
+    opacity: 1;
+    text-shadow: 0 0 8px rgba(255, 224, 58, 0.7);
+}
+
+/* The companion sits in the life row: having it is one free hit. */
+.hud-bird {
+    width: 8px;
+    height: 8px;
+    background: #c8a24a;
+    box-shadow: 0 0 5px rgba(200, 162, 74, 0.7);
+    clip-path: polygon(0 50%, 60% 0, 100% 35%, 70% 100%);
+}
+
+/* ── Banner ─────────────────────────────────────────────── */
+
+.banner {
+    position: fixed;
+    top: 22%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--white);
+    text-shadow: 0 0 12px rgba(0, 245, 255, 0.6), 0 2px 0 rgba(0,0,0,0.8);
+    pointer-events: none;
+    z-index: 60;
+}

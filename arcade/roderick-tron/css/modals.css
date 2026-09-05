@@ -151,3 +151,18 @@
     background: var(--cyan);
     color: var(--bg);
 }
+
+/* ── Level-clear / game-over body ───────────────────────── */
+
+.overlay-body {
+    font-size: 9px;
+    color: var(--white);
+    line-height: 2;
+    margin-bottom: 20px;
+}
+
+.overlay-body .stat {
+    color: var(--gold);
+    font-size: 8px;
+    letter-spacing: 0.1em;
+}

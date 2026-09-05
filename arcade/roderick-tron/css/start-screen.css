@@ -66,3 +66,14 @@
     color: var(--dim);
     letter-spacing: 0.1em;
 }
+
+/* One line of technique under the control list — the roll-jump is the thing
+   the levels are built around and the one move nobody guesses. */
+.title-screen .controls-note {
+    font-size: 7px;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    margin-top: 10px;
+    opacity: 0.85;
+    text-align: center;
+}

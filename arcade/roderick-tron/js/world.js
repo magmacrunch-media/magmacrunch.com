@@ -1,379 +1,279 @@
 // world.js — Roderick Tron | MagmaCrunch Media © 2026
-// Rooftop generation, parallax background
+// Camera, parallax backdrop, and drawing the tilemap.
 
-function World() {
-    this.rooftops = [];
-    this.cameraX = 0;
-    this.bgOffset1 = 0;  // far parallax
-    this.bgOffset2 = 0;  // mid parallax
-    this.reset();
+/**
+ * A camera that leads the player and ignores small movements.
+ *
+ * The dead zone is what stops every hop shoving the view around; the lookahead
+ * is what buys reaction time at speed, by showing more of the direction being
+ * travelled than the one behind.
+ */
+function Camera(map) {
+    this.map = map;
+    this.x = 0;
+    this.y = 0;
 }
 
-World.prototype.reset = function () {
-    this.rooftops = [];
-    this.cameraX = 0;
-    this.bgOffset1 = 0;
-    this.bgOffset2 = 0;
-
-    // Opening run: a flat, gargoyle-free roof so the first jump is never a
-    // surprise, then normal generation from there.
-    this.rooftops.push(this.decorate({
-        x: -40,
-        y: CONFIG.ROOF_Y_BASE,
-        width: 260,
-        gargoyle: null,
-    }));
-    for (let i = 0; i < 8; i++) this.appendRoof(0);
+Camera.prototype.snapTo = function (player) {
+    this.x = player.box.x - CONFIG.CANVAS_W / 2;
+    this.y = player.box.y - CONFIG.CANVAS_H / 2;
+    this.clamp();
 };
 
-/** Distance travelled, in the metres shown on the HUD. */
-World.prototype.metres = function () {
-    return this.cameraX * CONFIG.METRES_PER_PX;
+Camera.prototype.update = function (player, dt) {
+    const px = player.box.x + player.box.w / 2 + player.facing * CONFIG.CAM_LOOKAHEAD;
+    const py = player.box.y + player.box.h / 2;
+
+    const wantX = px - CONFIG.CANVAS_W / 2;
+    const wantY = py - CONFIG.CANVAS_H / 2;
+
+    if (Math.abs(wantX - this.x) > CONFIG.CAM_DEADZONE_X) {
+        const target = wantX - Math.sign(wantX - this.x) * CONFIG.CAM_DEADZONE_X;
+        this.x += (target - this.x) * Math.min(1, CONFIG.CAM_LERP * dt);
+    }
+    if (Math.abs(wantY - this.y) > CONFIG.CAM_DEADZONE_Y) {
+        const target = wantY - Math.sign(wantY - this.y) * CONFIG.CAM_DEADZONE_Y;
+        this.y += (target - this.y) * Math.min(1, CONFIG.CAM_LERP * dt);
+    }
+    this.clamp();
 };
 
-// ── Generation ────────────────────────────────────────────
-
-/**
- * Static per-roof scenery. Decided once, at generation time, and stored on the
- * roof — deriving it from the array index (as this used to) makes every lamp and
- * chimney hop to a different building each time a roof scrolls off the left.
- */
-World.prototype.decorate = function (roof) {
-    roof.lamp = Math.random() < 0.35;
-    roof.lampX = 0.2 + Math.random() * 0.6;
-    roof.chimneys = [];
-    const n = Math.floor(Math.random() * 3);
-    for (let i = 0; i < n; i++) {
-        roof.chimneys.push({
-            at: 0.15 + Math.random() * 0.7,
-            h: 7 + Math.floor(Math.random() * 7),
-            pots: 1 + Math.floor(Math.random() * 2),
-        });
-    }
-    // Which of the facade's windows have a candle in them tonight.
-    // ~1 window in 3, rather than the coin flip a plain random bitmask gives.
-    roof.litWindows = 0;
-    for (let b = 0; b < 12; b++) {
-        if (Math.random() < 0.34) roof.litWindows |= (1 << b);
-    }
-    return roof;
+/** Never show past the edges of the level. */
+Camera.prototype.clamp = function () {
+    this.x = Math.max(0, Math.min(this.map.w - CONFIG.CANVAS_W, this.x));
+    this.y = Math.max(0, Math.min(this.map.h - CONFIG.CANVAS_H, this.y));
+    if (this.map.w < CONFIG.CANVAS_W) this.x = 0;
+    if (this.map.h < CONFIG.CANVAS_H) this.y = 0;
 };
 
-/** Append one roof after the current last one, at the given difficulty. */
-World.prototype.appendRoof = function (difficulty) {
-    const prev = this.rooftops[this.rooftops.length - 1];
-    const gap = CONFIG.ROOF_GAP_MIN
-        + Math.random() * (Difficulty.maxGap(difficulty) - CONFIG.ROOF_GAP_MIN);
-    const width = Difficulty.roofWidth(difficulty, Math.random());
+// ── World rendering ───────────────────────────────────────
 
-    // Height walks relative to the previous roof rather than jittering around a
-    // fixed baseline, which gives runs of ascending and descending rooftops.
-    const spread = Difficulty.heightVar(difficulty);
-    let y = prev.y + (Math.random() * 2 - 1) * spread * 0.5;
-    // Drift back toward the baseline so the skyline cannot wander into a corner.
-    y += (CONFIG.ROOF_Y_BASE - prev.y) * 0.18;
-    // A roof that sits too far above the previous one is unreachable: the climb
-    // eats the horizontal reach the gap already spent.
-    const maxRise = 40 - gap * 0.25;
-    y = Math.max(prev.y - maxRise, y);
-    y = Math.max(CONFIG.ROOF_Y_MIN, Math.min(CONFIG.ROOF_Y_MAX, y));
+function World(map) {
+    this.map = map;
+}
 
-    let gargoyle = null;
-    if (Math.random() < Difficulty.gargoyleChance(difficulty)) {
-        gargoyle = Math.random() < Difficulty.flyerChance(difficulty) ? 'flyer' : 'percher';
-    }
-
-    this.rooftops.push(this.decorate({
-        x: prev.x + prev.width + gap,
-        y: Math.round(y),
-        width: Math.round(width),
-        gargoyle: gargoyle,
-    }));
+World.prototype.draw = function (ctx, cam) {
+    this.drawSky(ctx);
+    this.drawMoon(ctx, cam);
+    this.drawFar(ctx, cam);
+    this.drawMid(ctx, cam);
+    this.drawHaze(ctx);
+    this.drawTiles(ctx, cam);
+    this.drawPickups(ctx, cam);
+    this.drawExit(ctx, cam);
 };
 
-World.prototype.update = function (speed, dt, difficulty) {
-    this.cameraX += speed * dt;
-    this.bgOffset1 += speed * 0.15 * dt;
-    this.bgOffset2 += speed * 0.4 * dt;
-
-    // Retire rooftops that scrolled off the left. Keep at least two so the
-    // generator always has a predecessor to measure from.
-    while (this.rooftops.length > 2
-           && this.rooftops[0].x + this.rooftops[0].width < this.cameraX - 60) {
-        this.rooftops.shift();
-    }
-
-    // Extend ahead of the camera.
-    while (this.rooftops[this.rooftops.length - 1].x
-           < this.cameraX + CONFIG.CANVAS_W + 260) {
-        this.appendRoof(difficulty);
-    }
-};
-
-/**
- * Find somewhere to put the player back after a fall.
- *
- * Returns the surface Y to stand on, scrolling the camera forward if — as is
- * usually the case, since you die by falling into a gap — nothing solid is
- * currently under PLAYER_X. The old version picked the roof whose *centre* was
- * nearest and dropped the player at that height without moving the camera, so a
- * respawn over a gap fell straight through and burned the next life too.
- */
-World.prototype.respawnSurface = function (playerX, playerW) {
-    const covers = (r) => {
-        const sx = r.x - this.cameraX;
-        return sx <= playerX && sx + r.width >= playerX + playerW;
-    };
-
-    for (let i = 0; i < this.rooftops.length; i++) {
-        if (covers(this.rooftops[i])) return this.rooftops[i].y;
-    }
-
-    // Nothing underfoot: jump the camera to the start of the next roof wide
-    // enough to stand on, leaving a small run-up before its far edge.
-    for (let i = 0; i < this.rooftops.length; i++) {
-        const r = this.rooftops[i];
-        if (r.x - this.cameraX + r.width < playerX + playerW) continue;   // behind us
-        if (r.width < playerW + 24) continue;                             // too narrow
-        this.cameraX = r.x - playerX + 6;
-        return r.y;
-    }
-
-    // Generation guarantees a roof ahead, so this is unreachable in practice.
-    return CONFIG.ROOF_Y_BASE;
-};
-
-World.prototype.screenX = function (worldX) {
-    return worldX - this.cameraX;
-};
-
-// ── Drawing ───────────────────────────────────────────────
-
-World.prototype.draw = function (ctx) {
+World.prototype.drawSky = function (ctx) {
     const C = CONFIG.COLORS;
-
-    // Sky gradient
-    const grad = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);
-    grad.addColorStop(0, C.sky);
-    grad.addColorStop(0.7, C.skyHorizon);
-    grad.addColorStop(1, C.canalBlue);
-    ctx.fillStyle = grad;
+    const g = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);
+    g.addColorStop(0, C.sky);
+    g.addColorStop(0.7, C.skyHorizon);
+    g.addColorStop(1, C.canalBlue);
+    ctx.fillStyle = g;
     ctx.fillRect(0, 0, CONFIG.CANVAS_W, CONFIG.CANVAS_H);
-
-    this.drawMoon(ctx);
-    this.drawFarBackground(ctx);
-    this.drawMidBackground(ctx);
-    this.drawRooftops(ctx);
 };
 
-World.prototype.drawMoon = function (ctx) {
-    // Parked in the far distance — drifts only barely.
-    const mx = 380 - (this.bgOffset1 * 0.04) % 600;
-    const my = 44;
+World.prototype.drawMoon = function (ctx, cam) {
+    const mx = 372 - cam.x * 0.03;
+    const my = 46 - cam.y * 0.05;
     Renderer.glow(ctx, mx, my, 30, '240,234,216', 0.10);
     ctx.fillStyle = '#d8d0bc';
-    ctx.beginPath();
-    ctx.arc(mx, my, 13, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(mx, my, 13, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = CONFIG.COLORS.sky;
-    ctx.beginPath();
-    ctx.arc(mx - 6, my - 4, 11, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(mx - 6, my - 4, 11, 0, Math.PI * 2); ctx.fill();
 };
 
-World.prototype.drawFarBackground = function (ctx) {
-    const offset = this.bgOffset1;
-
-    // Distant buildings / spires
-    ctx.fillStyle = '#1a1428';
-    for (let i = 0; i < 8; i++) {
-        const bx = Math.round(((i * 90) - (offset % (90 * 8))) - 90);
+World.prototype.drawFar = function (ctx, cam) {
+    const off = cam.x * 0.18;
+    const base = CONFIG.CANVAS_H - 20 + cam.y * 0.06;
+    ctx.fillStyle = '#161022';
+    for (let i = 0; i < 10; i++) {
+        const bx = Math.round(((i * 90) - (off % (90 * 10))) - 90);
         const bw = 30 + (i % 3) * 15;
         const bh = 40 + (i % 4) * 20;
-        ctx.fillRect(bx, CONFIG.CANVAS_H - bh - 20, bw, bh);
-
-        // Church spire
+        ctx.fillRect(bx, base - bh, bw, bh);
         if (i % 3 === 0) {
-            ctx.fillRect(bx + bw / 2 - 3, CONFIG.CANVAS_H - bh - 40, 6, 20);
-            ctx.fillRect(bx + bw / 2 - 1, CONFIG.CANVAS_H - bh - 48, 2, 8);
+            ctx.fillRect(bx + bw / 2 - 3, base - bh - 20, 6, 20);
+            ctx.fillRect(bx + bw / 2 - 1, base - bh - 28, 2, 8);
         }
     }
-
-    // Windmill silhouette (distant)
-    const windmillX = Math.round(200 - (offset % 600));
+    const wx = Math.round(200 - (off % 700));
     ctx.fillStyle = '#151020';
-    ctx.fillRect(windmillX, CONFIG.CANVAS_H - 80, 8, 40);
-    ctx.fillRect(windmillX - 15, CONFIG.CANVAS_H - 80, 38, 3);
-    ctx.fillRect(windmillX + 3, CONFIG.CANVAS_H - 95, 3, 33);
+    ctx.fillRect(wx, base - 60, 8, 40);
+    ctx.fillRect(wx - 15, base - 60, 38, 3);
+    ctx.fillRect(wx + 3, base - 75, 3, 33);
 };
 
-World.prototype.drawMidBackground = function (ctx) {
-    const offset = this.bgOffset2;
-
-    // Canal houses. The stepped gable (trapgevel) lives on this layer, where it
-    // is a silhouette against the sky and cannot be mistaken for something the
-    // player might land on.
-    for (let i = 0; i < 10; i++) {
-        const bx = Math.round(((i * 70) - (offset % (70 * 10))) - 70);
+World.prototype.drawMid = function (ctx, cam) {
+    const off = cam.x * 0.45;
+    const base = CONFIG.CANVAS_H - 10 + cam.y * 0.12;
+    for (let i = 0; i < 12; i++) {
+        const bx = Math.round(((i * 70) - (off % (70 * 12))) - 70);
         const bw = 40 + (i % 3) * 12;
         const bh = 50 + (i % 4) * 15;
-        const by = CONFIG.CANVAS_H - bh - 10;
+        const by = base - bh;
 
-        ctx.fillStyle = '#2a1818';
+        ctx.fillStyle = '#1c1016';
         ctx.fillRect(bx, by, bw, bh);
 
-        // Stepped gable: a solid staircase up to a peak, not a row of floating
-        // blocks. Each tread carries a stone coping, as the real ones do.
-        const steps = 4, tread = Math.max(3, Math.floor(bw / 8)), rise = 4;
-        for (let s = 0; s < steps; s++) {
+        // Stepped gable (trapgevel) — a silhouette on this layer, where it can
+        // never be mistaken for something to stand on.
+        const tread = Math.max(3, Math.floor(bw / 8));
+        for (let s = 0; s < 4; s++) {
             const w = bw - s * tread * 2;
             if (w <= 0) break;
-            const sx = bx + s * tread;
-            const sy = by - (s + 1) * rise;
-            ctx.fillStyle = '#3a2828';
-            ctx.fillRect(sx, sy, w, rise + 1);
-            ctx.fillStyle = '#4a3636';
-            ctx.fillRect(sx, sy, w, 1);
+            ctx.fillStyle = '#241519';
+            ctx.fillRect(bx + s * tread, by - (s + 1) * 4, w, 5);
+            ctx.fillStyle = '#2d1b20';
+            ctx.fillRect(bx + s * tread, by - (s + 1) * 4, w, 1);
         }
-
-        // Windows — a couple lit, the rest shuttered.
         for (let wy = 0; wy < 3; wy++) {
             for (let wx = 0; wx < 2; wx++) {
-                const lit = ((i * 7 + wy * 3 + wx) % 5) === 0;
-                ctx.fillStyle = lit ? 'rgba(255, 207, 106, 0.35)' : '#1a0a08';
+                const on = ((i * 7 + wy * 3 + wx) % 5) === 0;
+                ctx.fillStyle = on ? 'rgba(255, 207, 106, 0.22)' : '#140809';
                 ctx.fillRect(bx + 6 + wx * 16, by + 8 + wy * 14, 6, 8);
             }
         }
     }
 };
 
-World.prototype.drawRooftops = function (ctx) {
+/**
+ * The playfield itself.
+ *
+ * Only the tiles on screen are visited — a level is far wider than the view,
+ * and drawing all of it would scale with level length rather than screen size.
+ */
+/**
+ * Haze over the backdrop, under the playfield.
+ *
+ * Without it the canal houses read as geometry at the same depth as the
+ * rooftops — their gables sat at play-surface height and looked landable. A
+ * wash of the sky colour pushes them back where they belong.
+ */
+World.prototype.drawHaze = function (ctx) {
+    const g = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);
+    g.addColorStop(0, 'rgba(26, 16, 40, 0.0)');
+    g.addColorStop(0.55, 'rgba(26, 16, 40, 0.35)');
+    g.addColorStop(1, 'rgba(13, 42, 74, 0.55)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, CONFIG.CANVAS_W, CONFIG.CANVAS_H);
+};
+
+World.prototype.drawTiles = function (ctx, cam) {
     const C = CONFIG.COLORS;
+    const T = CONFIG.TILE;
+    const tx0 = Math.max(0, Math.floor(cam.x / T));
+    const ty0 = Math.max(0, Math.floor(cam.y / T));
+    const tx1 = Math.min(this.map.cols - 1, Math.floor((cam.x + CONFIG.CANVAS_W) / T));
+    const ty1 = Math.min(this.map.rows - 1, Math.floor((cam.y + CONFIG.CANVAS_H) / T));
 
-    for (let i = 0; i < this.rooftops.length; i++) {
-        const r = this.rooftops[i];
-        const sx = Math.round(r.x - this.cameraX);
-        const sy = r.y;
+    for (let ty = ty0; ty <= ty1; ty++) {
+        for (let tx = tx0; tx <= tx1; tx++) {
+            const ch = this.map.tileAt(tx, ty);
+            const x = Math.round(tx * T - cam.x);
+            const y = Math.round(ty * T - cam.y);
 
-        if (sx + r.width < -16 || sx > CONFIG.CANVAS_W + 16) continue;
+            if (ch === TILE_SOLID) {
+                // Tone varies per tile from a fixed hash, so the mass has
+                // grain without shimmering as the camera moves.
+                const v = ((tx * 73 + ty * 151) % 5) - 2;
+                ctx.fillStyle = v > 0 ? C.brickLit : v < 0 ? C.brickDark : C.brickRed;
+                ctx.fillRect(x, y, T, T);
+                ctx.fillStyle = C.brickRed;
+                ctx.fillRect(x, y + 2, T, T - 4);
 
-        // Building body below the roof surface
-        ctx.fillStyle = C.brickRed;
-        ctx.fillRect(sx, sy, r.width, CONFIG.CANVAS_H - sy);
-
-        // Brick texture
-        ctx.fillStyle = C.brickDark;
-        for (let by = sy + 6; by < CONFIG.CANVAS_H; by += 6) {
-            for (let bx = sx; bx < sx + r.width; bx += 10) {
-                ctx.fillRect(bx, by, 1, 1);
-                ctx.fillRect(bx + 5, by + 3, 1, 1);
-            }
-        }
-
-        // Facade windows, lit from a per-roof bitmask so they hold still.
-        const cols = Math.floor((r.width - 10) / 22);
-        for (let wy = 0; wy < 3; wy++) {
-            const wyTop = sy + 14 + wy * 20;
-            if (wyTop + 10 > CONFIG.CANVAS_H) break;
-            for (let wx = 0; wx < cols; wx++) {
-                const bit = (wy * 6 + wx) % 12;
-                const lit = (r.litWindows >> bit) & 1;
-                ctx.fillStyle = lit ? C.windowLit : '#2a0e0a';
-                ctx.fillRect(sx + 8 + wx * 22, wyTop, 7, 9);
-                if (lit) {
-                    ctx.fillStyle = 'rgba(255, 207, 106, 0.10)';
-                    ctx.fillRect(sx + 5 + wx * 22, wyTop - 3, 13, 15);
+                // Courses of brick. Derived from tile coordinates, so the
+                // pattern is fixed to the world and does not crawl as it scrolls.
+                ctx.fillStyle = C.brickDark;
+                for (let r = 0; r < T; r += 5) {
+                    const stagger = ((ty * T + r) / 5 + tx) % 2 === 0 ? 0 : 5;
+                    for (let c = stagger; c < T; c += 10) ctx.fillRect(x + c, y + r, 1, 1);
                 }
+
+                // A lit roof cap wherever this tile is exposed to the sky.
+                if (this.map.tileAt(tx, ty - 1) !== TILE_SOLID) {
+                    ctx.fillStyle = C.roofTile;
+                    ctx.fillRect(x, y, T, 4);
+                    ctx.fillStyle = C.roofTileDark;
+                    ctx.fillRect(x, y, T, 2);
+                    ctx.fillStyle = '#b05a38';
+                    ctx.fillRect(x, y + 4, T, 1);
+                    ctx.fillStyle = 'rgba(255, 200, 150, 0.10)';
+                    ctx.fillRect(x, y + 5, T, 2);
+                }
+
+                // A lit window, on a fixed one-in-seven of the buried tiles.
+                if (this.map.tileAt(tx, ty - 1) === TILE_SOLID && ((tx * 7 + ty * 13) % 7) === 0) {
+                    ctx.fillStyle = C.windowLit;
+                    ctx.fillRect(x + 5, y + 5, 6, 7);
+                    ctx.fillStyle = 'rgba(255, 207, 106, 0.10)';
+                    ctx.fillRect(x + 2, y + 2, 12, 13);
+                }
+            } else if (ch === TILE_PLATFORM) {
+                // Read as a plank walkway: solid on top, open underneath.
+                ctx.fillStyle = C.gableStone;
+                ctx.fillRect(x, y, T, 4);
+                ctx.fillStyle = C.gableWhite;
+                ctx.fillRect(x, y, T, 1);
+                ctx.fillStyle = C.brickDark;
+                ctx.fillRect(x + 2, y + 4, 2, 2);
+                ctx.fillRect(x + 12, y + 4, 2, 2);
+            } else if (ch === TILE_WATER) {
+                ctx.fillStyle = C.canalBlue;
+                ctx.fillRect(x, y, T, T);
+                ctx.fillStyle = 'rgba(122, 255, 200, 0.10)';
+                ctx.fillRect(x, y + 1, T, 1);
             }
-        }
-
-        // Roof surface — the line the player actually stands on.
-        ctx.fillStyle = C.roofTile;
-        ctx.fillRect(sx, sy - 3, r.width, 5);
-        ctx.fillStyle = C.roofTileDark;
-        ctx.fillRect(sx, sy - 3, r.width, 2);
-
-        // Low coping at each end. Kept to 3px: this is the top of the gable seen
-        // edge-on, and anything taller reads as an obstacle the player must clear
-        // and visually closes up the gaps.
-        ctx.fillStyle = C.gableWhite;
-        ctx.fillRect(sx, sy - 6, 5, 4);
-        ctx.fillRect(sx + r.width - 5, sy - 6, 5, 4);
-        ctx.fillStyle = C.gableStone;
-        ctx.fillRect(sx, sy - 2, 5, 4);
-        ctx.fillRect(sx + r.width - 5, sy - 2, 5, 4);
-
-        // Chimneys
-        for (let c = 0; c < r.chimneys.length; c++) {
-            const ch = r.chimneys[c];
-            const cx = Math.round(sx + r.width * ch.at);
-            ctx.fillStyle = C.brickDark;
-            ctx.fillRect(cx, sy - 3 - ch.h, 5, ch.h);
-            ctx.fillStyle = '#3a1410';
-            ctx.fillRect(cx, sy - 3 - ch.h, 1, ch.h);      // lit edge
-            ctx.fillStyle = C.gableStone;
-            ctx.fillRect(cx, sy - 4 - ch.h, 5, 2);
-            ctx.fillStyle = '#1a1018';
-            for (let p = 0; p < ch.pots; p++) {
-                ctx.fillRect(cx + 1 + p * 2, sy - 6 - ch.h, 1, 2);
-            }
-        }
-
-        // Gas lamp
-        if (r.lamp) {
-            const lx = Math.round(sx + r.width * r.lampX);
-            const ly = sy - 12;
-            ctx.fillStyle = '#2a2a33';
-            ctx.fillRect(lx - 1, ly, 2, 10);
-            ctx.fillStyle = C.gasLamp;
-            ctx.fillRect(lx - 2, ly - 4, 4, 5);
-            ctx.fillStyle = '#fff8d0';
-            ctx.fillRect(lx - 1, ly - 3, 2, 2);
-            Renderer.glow(ctx, lx, ly - 2, 16, '255,224,58', 0.22);
         }
     }
 };
 
-World.prototype.drawTitle = function (ctx, frame) {
+World.prototype.drawPickups = function (ctx, cam) {
     const C = CONFIG.COLORS;
 
-    const grad = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);
-    grad.addColorStop(0, C.sky);
-    grad.addColorStop(0.7, C.skyHorizon);
-    grad.addColorStop(1, C.canalBlue);
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, CONFIG.CANVAS_W, CONFIG.CANVAS_H);
-
-    const offset = frame * 0.3;
-    for (let i = 0; i < 10; i++) {
-        const bx = Math.round(((i * 70) - (offset % (70 * 10))) - 70);
-        const bw = 40 + (i % 3) * 12;
-        const bh = 50 + (i % 4) * 15;
-        const by = CONFIG.CANVAS_H - bh - 30;
-
-        ctx.fillStyle = '#2a1818';
-        ctx.fillRect(bx, by, bw, bh);
-
-        const steps = 4, tread = Math.max(3, Math.floor(bw / 8)), rise = 4;
-        for (let s = 0; s < steps; s++) {
-            const w = bw - s * tread * 2;
-            if (w <= 0) break;
-            ctx.fillStyle = '#3a2828';
-            ctx.fillRect(bx + s * tread, by - (s + 1) * rise, w, rise + 1);
-        }
+    for (let i = 0; i < this.map.notes.length; i++) {
+        const n = this.map.notes[i];
+        if (n.taken) continue;
+        const x = Math.round(n.x - cam.x);
+        const y = Math.round(n.y - cam.y);
+        if (x < -16 || x > CONFIG.CANVAS_W + 16) continue;
+        Renderer.glow(ctx, x + 3, y + 4, 8, '240,234,216', 0.22);
+        ctx.fillStyle = C.noteWhite;
+        ctx.fillRect(x, y + 4, 4, 4);
+        ctx.fillRect(x + 4, y, 1, 5);
+        ctx.fillRect(x + 5, y, 2, 1);
     }
 
-    for (let i = 0; i < 6; i++) {
-        const bx = i * 90 - 20;
-        const bw = 60 + (i % 2) * 20;
-        const by = CONFIG.CANVAS_H - 60;
-
-        ctx.fillStyle = C.brickRed;
-        ctx.fillRect(bx, by, bw, 60);
-        ctx.fillStyle = C.roofTile;
-        ctx.fillRect(bx, by - 3, bw, 5);
-        ctx.fillStyle = C.gableWhite;
-        ctx.fillRect(bx, by - 6, 5, 4);
-        ctx.fillRect(bx + bw - 5, by - 6, 5, 4);
+    for (let i = 0; i < this.map.letters.length; i++) {
+        const l = this.map.letters[i];
+        if (l.taken) continue;
+        const x = Math.round(l.x - cam.x);
+        const y = Math.round(l.y - cam.y);
+        if (x < -24 || x > CONFIG.CANVAS_W + 24) continue;
+        Renderer.glow(ctx, x + 6, y + 6, 14, '255,210,74', 0.28);
+        ctx.fillStyle = C.letterGold;
+        ctx.font = '10px "Press Start 2P", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(l.ch, x + 6, y + 10);
+        ctx.textAlign = 'left';
     }
+};
+
+World.prototype.drawExit = function (ctx, cam) {
+    const e = this.map.exit;
+    if (!e) return;
+    const x = Math.round(e.x - cam.x);
+    const y = Math.round(e.y - cam.y);
+    if (x < -40 || x > CONFIG.CANVAS_W + 40) return;
+
+    // A lit doorway in a gable end: the one warm thing on the screen.
+    Renderer.glow(ctx, x + 8, y + 16, 26, '122,255,200', 0.26);
+    ctx.fillStyle = '#1a1018';
+    ctx.fillRect(x, y, 16, 32);
+    ctx.fillStyle = CONFIG.COLORS.exitGlow;
+    ctx.fillRect(x + 3, y + 6, 10, 26);
+    ctx.fillStyle = '#0d1a16';
+    ctx.fillRect(x + 5, y + 10, 6, 22);
+    ctx.fillStyle = CONFIG.COLORS.gableStone;
+    ctx.fillRect(x - 1, y + 2, 18, 4);
 };

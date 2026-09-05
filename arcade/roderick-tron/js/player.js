@@ -1,179 +1,308 @@
 // player.js — Roderick Tron | MagmaCrunch Media © 2026
-// Roderick character: physics, sprite, lives
+// Roderick: momentum, roll, stomp, damage.
+//
+// Every per-frame quantity is multiplied by dt, which is 1.0 at 60fps. The
+// runner this replaced applied dt to gravity but not to the position step, and
+// ran at double speed on a 120Hz display; keeping the discipline is cheaper
+// than rediscovering that.
 
-function Player() {
-    this.reset();
+function Player(tilemap) {
+    this.map = tilemap;
+    this.reset(tilemap.spawn);
+    this.lives = CONFIG.MAX_LIVES;
+    this.notes = 0;
+    this.ammo = CONFIG.NOTE_AMMO_START;
 }
 
-Player.prototype.reset = function () {
-    this.x = CONFIG.PLAYER_X;
-    this.y = 100;
+Player.prototype.reset = function (spawn) {
+    this.box = { x: spawn.x, y: spawn.y, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+    this.vx = 0;
     this.vy = 0;
+    this.facing = 1;
     this.grounded = false;
-    this.alive = true;
-    this.lives = CONFIG.MAX_LIVES;
+    this.coyote = 0;
+    this.jumpBuffer = 0;
+    this.jumping = false;
+    this.rolling = false;
+    this.rollTimer = 0;
+    this.rollCooldown = 0;
     this.invincible = 0;
-    this.shakeFrames = 0;
+    this.shootCooldown = 0;
+    this.alive = true;
+    this.hasBird = true;
     this.animTimer = 0;
     this.runFrame = 0;
-    this.isJumping = false;
-    this.coyote = 0;        // frames of ground-jump grace left after leaving a roof
-    this.jumpBuffer = 0;    // frames a not-yet-usable jump press stays queued
+    this.shakeFrames = 0;
+    this.exiting = false;
 };
 
-Player.prototype.update = function (rooftops, cameraX, dt) {
-    // ── Jump: coyote time + input buffering ───────────────
-    // Both are pure forgiveness — a jump pressed a few frames early (mid-fall,
-    // about to land) or a few frames late (just ran off the edge) still fires.
-    if (Input.jump()) this.jumpBuffer = CONFIG.JUMP_BUFFER_FRAMES;
-    if (this.jumpBuffer > 0) this.jumpBuffer -= dt;
-    if (this.coyote > 0) this.coyote -= dt;
+/** Height depends on stance: rolling tucks him into a one-tile gap. */
+Player.prototype.targetHeight = function () {
+    return this.rolling ? CONFIG.ROLL_H : CONFIG.PLAYER_H;
+};
 
-    if (this.jumpBuffer > 0 && this.coyote > 0 && this.alive) {
+Player.prototype.update = function (dt) {
+    if (!this.alive) return;
+
+    const wantLeft = Input.left();
+    const wantRight = Input.right();
+    const running = Input.run();
+    let dir = (wantRight ? 1 : 0) - (wantLeft ? 1 : 0);
+
+    // ── Timers ────────────────────────────────────────────
+    if (this.coyote > 0) this.coyote -= dt;
+    if (this.jumpBuffer > 0) this.jumpBuffer -= dt;
+    if (this.rollCooldown > 0) this.rollCooldown -= dt;
+    if (this.invincible > 0) this.invincible -= dt;
+    if (this.shootCooldown > 0) this.shootCooldown -= dt;
+    if (this.shakeFrames > 0) this.shakeFrames -= dt;
+    if (Input.jump()) this.jumpBuffer = CONFIG.JUMP_BUFFER_FRAMES;
+
+    // ── Roll ──────────────────────────────────────────────
+    // Committal on purpose: it locks facing and steering for its duration, so
+    // the reward for the extra distance is that you had to mean it.
+    if (Input.roll() && !this.rolling && this.rollCooldown <= 0 && this.grounded) {
+        this.rolling = true;
+        this.rollTimer = CONFIG.ROLL_FRAMES;
+        if (dir !== 0) this.facing = dir;
+        this.vx = this.facing * CONFIG.ROLL_MAX;
+        this.headroomAdjust();
+    }
+
+    if (this.rolling) {
+        this.rollTimer -= dt;
+        dir = this.facing;                    // no steering mid-roll
+        // Ends on its own timer, or early if it runs out of ground to roll on
+        // and the player has not converted it into a jump.
+        if (this.rollTimer <= 0 && this.canStand()) {
+            this.rolling = false;
+            this.rollCooldown = CONFIG.ROLL_COOLDOWN;
+            this.headroomAdjust();
+        }
+    }
+
+    // ── Horizontal ────────────────────────────────────────
+    const maxSpeed = this.rolling ? CONFIG.ROLL_MAX
+        : running ? CONFIG.RUN_MAX
+        : CONFIG.WALK_MAX;
+    const accel = this.grounded ? CONFIG.ACCEL : CONFIG.AIR_ACCEL;
+
+    if (dir !== 0) {
+        if (!this.rolling) this.facing = dir;
+        // Turning bites harder than accelerating, which is what stops a
+        // direction change feeling like a slow drift through zero.
+        const turning = Math.sign(this.vx) !== 0 && Math.sign(this.vx) !== dir;
+        const a = accel * (turning ? CONFIG.TURN_BOOST : 1);
+        const next = this.vx + dir * a * dt;
+
+        if (Math.abs(next) < Math.abs(this.vx) || Math.abs(next) <= maxSpeed) {
+            // Slowing down, or still inside the cap.
+            this.vx = next;
+        } else if (Math.abs(this.vx) <= maxSpeed) {
+            this.vx = Math.sign(next) * maxSpeed;
+        } else {
+            // Already over the cap, which only a roll can do. Holding the
+            // stick must NOT add to it — an earlier version let it, and since
+            // AIR_ACCEL (0.17) is larger than AIR_FRICTION (0.06) a held
+            // direction accelerated without limit: 10.8px a frame against a
+            // 2.85 cap, straight through the level. Overspeed decays toward
+            // the cap and nothing pushes it back up.
+            // Bleeds on the ground only. In the air the speed a roll earned is
+            // kept for the whole arc, which is what makes a roll-jump a
+            // technique rather than a marginal gain.
+            const bleed = this.grounded ? CONFIG.FRICTION * dt : 0;
+            this.vx = Math.sign(this.vx) * Math.max(maxSpeed, Math.abs(this.vx) - bleed);
+        }
+    } else {
+        const f = (this.grounded ? CONFIG.FRICTION : CONFIG.AIR_FRICTION) * dt;
+        if (Math.abs(this.vx) <= f) this.vx = 0;
+        else this.vx -= Math.sign(this.vx) * f;
+    }
+
+    // ── Jump ──────────────────────────────────────────────
+    if (this.jumpBuffer > 0 && this.coyote > 0) {
         this.vy = CONFIG.JUMP_FORCE;
         this.grounded = false;
-        this.isJumping = true;
+        this.jumping = true;
         this.jumpBuffer = 0;
         this.coyote = 0;
+        // A roll converted into a jump keeps its speed: this is the long-gap
+        // technique the levels are built around.
+        if (this.rolling && this.canStand()) {
+            this.rolling = false;
+            this.rollCooldown = CONFIG.ROLL_COOLDOWN;
+            this.headroomAdjust();
+        }
     }
-
-    // Variable jump: releasing jump early cuts the climb short.
-    if (this.isJumping && !Input.jumpHeld() && this.vy < 0) {
+    if (this.jumping && !Input.jumpHeld() && this.vy < 0) {
         this.vy *= CONFIG.JUMP_CUT;
-        this.isJumping = false;
+        this.jumping = false;
     }
 
-    // ── Gravity + integration ─────────────────────────────
-    // Both the acceleration and the position step scale with dt. Applying it to
-    // only one of the two (as this used to) makes the fall rate depend on the
-    // monitor's refresh rate.
+    // ── Gravity and movement ──────────────────────────────
     this.vy += CONFIG.GRAVITY * dt;
     if (this.vy > CONFIG.MAX_FALL) this.vy = CONFIG.MAX_FALL;
 
-    const prevBottom = this.y + CONFIG.PLAYER_H;
-    this.y += this.vy * dt;
-    const playerBottom = this.y + CONFIG.PLAYER_H;
+    this.map.moveX(this.box, this.vx * dt);
 
-    // ── Rooftop collision (swept, so a fast fall cannot tunnel) ──
     const wasGrounded = this.grounded;
-    this.grounded = false;
-    if (this.alive && this.vy >= 0) {
-        for (let i = 0; i < rooftops.length; i++) {
-            const r = rooftops[i];
-            const screenX = r.x - cameraX;
-            if (this.x + CONFIG.PLAYER_W > screenX && this.x < screenX + r.width) {
-                if (prevBottom <= r.y && playerBottom >= r.y) {
-                    this.y = r.y - CONFIG.PLAYER_H;
-                    this.vy = 0;
-                    this.grounded = true;
-                    this.isJumping = false;
-                    break;
-                }
-            }
-        }
-    }
+    const dropping = Input.down() && Input.jump();
+    const land = this.map.moveY(this.box, this.vy * dt, dropping);
 
-    if (this.grounded) {
+    if (land.ground) {
+        this.vy = 0;
+        this.grounded = true;
+        this.jumping = false;
         this.coyote = CONFIG.COYOTE_FRAMES;
-    } else if (wasGrounded && this.vy >= 0) {
-        // Walked off an edge rather than jumping — start the coyote window.
-        this.coyote = Math.max(this.coyote, CONFIG.COYOTE_FRAMES);
+    } else {
+        if (land.ceiling) this.vy = 0;
+        this.grounded = false;
+        if (wasGrounded) this.coyote = Math.max(this.coyote, CONFIG.COYOTE_FRAMES);
     }
 
-    // ── Timers ────────────────────────────────────────────
-    if (this.invincible > 0) this.invincible -= dt;
-    if (this.shakeFrames > 0) this.shakeFrames -= dt;
-
-    if (this.grounded && this.alive) {
-        this.animTimer += dt;
-        if (this.animTimer >= 6) {
-            this.animTimer = 0;
-            this.runFrame = (this.runFrame + 1) % 2;
-        }
+    // Run cycle speed tracks actual speed, so the legs match the ground.
+    if (this.grounded && Math.abs(this.vx) > 0.1) {
+        this.animTimer += dt * (0.6 + Math.abs(this.vx) * 0.5);
+        if (this.animTimer >= 5) { this.animTimer = 0; this.runFrame = (this.runFrame + 1) % 4; }
+    } else if (this.grounded) {
+        this.runFrame = 0;
     }
 };
 
-Player.prototype.loseLife = function () {
-    this.lives--;
+/** Is there room to stand up out of a roll where he is? */
+Player.prototype.canStand = function () {
+    if (!this.rolling) return true;
+    const grow = CONFIG.PLAYER_H - CONFIG.ROLL_H;
+    return !this.map.overlapsSolid(this.box.x, this.box.y - grow, this.box.w, CONFIG.PLAYER_H);
+};
+
+/** Resize the body around its feet when the stance changes. */
+Player.prototype.headroomAdjust = function () {
+    const bottom = this.box.y + this.box.h;
+    this.box.h = this.targetHeight();
+    this.box.y = bottom - this.box.h;
+};
+
+/** A stomp landed: bounce, higher if the jump button is still down. */
+Player.prototype.stompBounce = function () {
+    this.vy = Input.jumpHeld() ? CONFIG.STOMP_BOUNCE_HELD : CONFIG.STOMP_BOUNCE;
+    this.grounded = false;
+    this.jumping = true;
+};
+
+/**
+ * Take a hit.
+ *
+ * The bird is the first thing spent — losing a companion is visible and
+ * recoverable where losing a life is neither. Returns 'bird', 'life' or null
+ * if the hit was refused because he is still flashing from the last one.
+ */
+Player.prototype.hurt = function (fromX) {
+    if (this.invincible > 0 || !this.alive) return null;
     this.invincible = CONFIG.INVINCIBLE_FRAMES;
     this.shakeFrames = 10;
+    const away = this.box.x + this.box.w / 2 < fromX ? -1 : 1;
+    this.vx = away * CONFIG.KNOCKBACK_X;
+    this.vy = CONFIG.KNOCKBACK_Y;
+    this.grounded = false;
+    if (this.rolling) {
+        this.rolling = false;
+        this.rollCooldown = CONFIG.ROLL_COOLDOWN;
+        this.headroomAdjust();
+    }
+    if (this.hasBird) { this.hasBird = false; return 'bird'; }
+    this.lives--;
+    return 'life';
 };
 
-/** Drop back onto solid ground. `roofY` is the surface to stand on. */
-Player.prototype.respawn = function (roofY) {
-    this.y = roofY - CONFIG.PLAYER_H;
-    this.vy = 0;
-    this.grounded = true;
-    this.isJumping = false;
-    this.jumpBuffer = 0;
-    this.coyote = CONFIG.COYOTE_FRAMES;
+Player.prototype.collect = function (n) {
+    this.notes += n;
+    this.ammo = Math.min(CONFIG.NOTE_AMMO_MAX, this.ammo + CONFIG.AMMO_PER_PICKUP);
+    if (this.notes >= CONFIG.NOTES_PER_LIFE) {
+        this.notes -= CONFIG.NOTES_PER_LIFE;
+        this.lives++;
+        return true;                   // caller announces the extra life
+    }
+    return false;
 };
 
-Player.prototype.draw = function (ctx) {
+Player.prototype.canShoot = function () {
+    return this.alive && this.ammo > 0 && this.shootCooldown <= 0 && !this.rolling;
+};
+
+Player.prototype.spendShot = function () {
+    this.ammo--;
+    this.shootCooldown = CONFIG.FIRE_RATE;
+};
+
+// ── Drawing ───────────────────────────────────────────────
+
+Player.prototype.draw = function (ctx, camX, camY) {
     if (!this.alive) return;
-
-    // Invincibility flash
     if (this.invincible > 0 && Math.floor(this.invincible / 4) % 2 === 0) return;
 
-    const x = Math.round(this.x);
-    const y = Math.round(this.y);
+    const x = Math.round(this.box.x - camX);
+    const y = Math.round(this.box.y - camY);
     const C = CONFIG.COLORS;
+    const f = this.facing;
 
-    // Body — frock coat (wider)
-    ctx.fillStyle = C.robotCoat;
-    ctx.fillRect(x + 2, y + 7, 12, 13);
-
-    // Coat tails (slight flare at bottom)
-    ctx.fillRect(x + 1, y + 16, 3, 5);
-    ctx.fillRect(x + 12, y + 16, 3, 5);
-
-    // Head (wider — 10px)
-    ctx.fillStyle = C.robotSteel;
-    ctx.fillRect(x + 3, y + 0, 10, 7);
-
-    // Ginger mutton chops
-    ctx.fillStyle = C.muttonChops;
-    ctx.fillRect(x + 2, y + 3, 2, 4);
-    ctx.fillRect(x + 12, y + 3, 2, 4);
-
-    // Glowing cyan eyes
-    ctx.fillStyle = C.robotCyan;
-    ctx.fillRect(x + 4, y + 2, 2, 2);
-    ctx.fillRect(x + 10, y + 2, 2, 2);
-
-    // Eye glow
-    ctx.fillStyle = 'rgba(0, 245, 255, 0.3)';
-    ctx.fillRect(x + 3, y + 1, 4, 4);
-    ctx.fillRect(x + 9, y + 1, 4, 4);
-
-    // Blue shoulder joints (mechanical accent)
-    ctx.fillStyle = '#3d6db5';
-    ctx.fillRect(x + 0, y + 9, 2, 2);
-    ctx.fillRect(x + 14, y + 9, 2, 2);
-
-    // Legs (wider — 4px)
-    ctx.fillStyle = C.robotSteel;
-    if (this.grounded) {
-        // Running animation — alternate legs
-        if (this.runFrame === 0) {
-            ctx.fillRect(x + 3, y + 20, 4, 4);
-            ctx.fillRect(x + 9, y + 21, 4, 3);
-        } else {
-            ctx.fillRect(x + 3, y + 21, 4, 3);
-            ctx.fillRect(x + 9, y + 20, 4, 4);
-        }
-    } else {
-        // Jump pose — legs tucked
-        ctx.fillRect(x + 3, y + 20, 4, 3);
-        ctx.fillRect(x + 9, y + 20, 4, 3);
+    if (this.rolling) {
+        // A tucked ball. The spin is read off world position, so it rolls at
+        // the speed it is actually travelling.
+        const spin = Math.floor(this.box.x / 4) % 4;
+        ctx.fillStyle = C.robotCoat;
+        ctx.fillRect(x, y, 14, 14);
+        ctx.fillStyle = C.robotSteel;
+        ctx.fillRect(x + 2, y + 2, 10, 10);
+        ctx.fillStyle = C.muttonChops;
+        ctx.fillRect(x + 4 + (spin % 2) * 4, y + 3 + Math.floor(spin / 2) * 5, 3, 3);
+        ctx.fillStyle = C.robotCyan;
+        ctx.fillRect(x + 5 + spin, y + 6, 2, 2);
+        return;
     }
 
-    // Boot accents
-    ctx.fillStyle = C.robotCyan;
-    ctx.fillRect(x + 4, y + 23, 1, 1);
-    ctx.fillRect(x + 11, y + 23, 1, 1);
+    // Coat
+    ctx.fillStyle = C.robotCoat;
+    ctx.fillRect(x + 1, y + 6, 12, 12);
+    ctx.fillRect(x + (f > 0 ? 0 : 11), y + 14, 3, 5);      // tail flares behind
 
-    // Cravat (white neckwear)
+    // Head
+    ctx.fillStyle = C.robotSteel;
+    ctx.fillRect(x + 2, y, 10, 7);
+
+    // Mutton chops
+    ctx.fillStyle = C.muttonChops;
+    ctx.fillRect(x + 1, y + 3, 2, 4);
+    ctx.fillRect(x + 11, y + 3, 2, 4);
+
+    // Eyes, offset toward the way he is facing
+    const ex = f > 0 ? 1 : -1;
+    ctx.fillStyle = 'rgba(0, 245, 255, 0.3)';
+    ctx.fillRect(x + 2 + ex, y + 1, 4, 4);
+    ctx.fillRect(x + 8 + ex, y + 1, 4, 4);
+    ctx.fillStyle = C.robotCyan;
+    ctx.fillRect(x + 3 + ex, y + 2, 2, 2);
+    ctx.fillRect(x + 9 + ex, y + 2, 2, 2);
+
+    // Cravat
     ctx.fillStyle = C.gableWhite;
-    ctx.fillRect(x + 6, y + 6, 4, 2);
+    ctx.fillRect(x + 5, y + 5, 4, 2);
+
+    // Legs
+    ctx.fillStyle = C.robotSteel;
+    if (!this.grounded) {
+        ctx.fillRect(x + 2, y + 18, 4, 4);
+        ctx.fillRect(x + 8, y + 17, 4, 4);
+    } else if (Math.abs(this.vx) > 0.1) {
+        const lift = [0, 2, 0, -1][this.runFrame];
+        ctx.fillRect(x + 2, y + 18 + lift, 4, 4 - lift);
+        ctx.fillRect(x + 8, y + 18 - lift, 4, 4 + lift);
+    } else {
+        ctx.fillRect(x + 2, y + 18, 4, 4);
+        ctx.fillRect(x + 8, y + 18, 4, 4);
+    }
+
+    ctx.fillStyle = C.robotCyan;
+    ctx.fillRect(x + 3, y + 21, 1, 1);
+    ctx.fillRect(x + 10, y + 21, 1, 1);
 };
