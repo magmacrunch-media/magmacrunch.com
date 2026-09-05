@@ -93,6 +93,11 @@
       "name": "card-color",
       "value": "#ff5fa2",
       "source": "arcade/action/index.html"
+    },
+    {
+      "name": "card-color",
+      "value": "#ffc247",
+      "source": "arcade/action/index.html"
     }
   ],
   "Arcade — board-games": [
