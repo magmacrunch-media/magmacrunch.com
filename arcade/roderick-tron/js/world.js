@@ -50,9 +50,11 @@ Camera.prototype.clamp = function () {
 
 function World(map) {
     this.map = map;
+    this.tick = 0;      // drives the rising specks in an updraft
 }
 
 World.prototype.draw = function (ctx, cam) {
+    this.tick++;
     this.drawSky(ctx);
     this.drawMoon(ctx, cam);
     this.drawFar(ctx, cam);
@@ -218,6 +220,25 @@ World.prototype.drawTiles = function (ctx, cam) {
                 ctx.fillStyle = C.brickDark;
                 ctx.fillRect(x + 2, y + 4, 2, 2);
                 ctx.fillRect(x + 12, y + 4, 2, 2);
+            } else if (ch === TILE_UPDRAFT) {
+                // Deliberately NOT a filled tile. Filling it drew a solid
+                // lighter column that reads as a tower you would walk into,
+                // which is the opposite of what it is. Edges and moving specks
+                // only, so the eye sees flow rather than substance.
+                ctx.fillStyle = 'rgba(255, 232, 180, 0.05)';
+                ctx.fillRect(x + 2, y, T - 4, T);
+                ctx.fillStyle = 'rgba(255, 236, 190, 0.13)';
+                ctx.fillRect(x + 1, y, 1, T);
+                ctx.fillRect(x + T - 2, y, 1, T);
+                for (let k = 0; k < 3; k++) {
+                    const seed = (tx * 31 + ty * 17 + k * 53);
+                    const sx = x + 3 + ((seed * 7) % (T - 6));
+                    // Rising: subtracting the tick makes the specks travel up,
+                    // wrapped into the tile so the column looks continuous.
+                    const sy = (((seed * 5) - this.tick * 1.9) % T + T) % T;
+                    ctx.fillStyle = 'rgba(255, 244, 214, ' + (0.30 + 0.3 * (k / 3)) + ')';
+                    ctx.fillRect(Math.round(sx), Math.round(y + sy), 1, 3);
+                }
             } else if (ch === TILE_WATER) {
                 ctx.fillStyle = C.canalBlue;
                 ctx.fillRect(x, y, T, T);

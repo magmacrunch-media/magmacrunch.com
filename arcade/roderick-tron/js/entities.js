@@ -37,6 +37,12 @@ Entities.prototype.reset = function () {
     this.popups = [];
     this.bird = null;
     this.events = [];
+    // A bell per marker, each swinging from its own phase so a row of them
+    // does not beat in unison.
+    this.bells = map.bells.map(function (b, i) {
+        return { x: b.x, y: b.y, w: CONFIG.BELL_W, h: CONFIG.BELL_H,
+                 phase: i * 0.9, cooldown: 0, holding: false };
+    });
 };
 
 // ── Projectiles ───────────────────────────────────────────
@@ -55,11 +61,56 @@ Entities.prototype.fire = function (player) {
 Entities.prototype.update = function (player, dt) {
     this.events.length = 0;
     this.updateShots(dt);
+    this.updateBells(player, dt);
     this.updateEnemies(player, dt);
     this.updatePickups(player);
     this.updateBird(player, dt);
     this.updateParticles(dt);
     this.updatePopups(dt);
+};
+
+/**
+ * The bell cannons.
+ *
+ * A bell catches you, swings through an arc overhead, and fires along whatever
+ * angle it is pointing when jump is pressed. Making the aim a moving thing
+ * rather than a fixed property is what lets the level file stay a grid of
+ * characters: there is no angle to encode, because the timing IS the aim.
+ */
+Entities.prototype.updateBells = function (player, dt) {
+    const from = CONFIG.BELL_SWING_FROM * Math.PI / 180;
+    const to = CONFIG.BELL_SWING_TO * Math.PI / 180;
+
+    for (let i = 0; i < this.bells.length; i++) {
+        const b = this.bells[i];
+        b.phase += CONFIG.BELL_SWING_RATE * dt;
+        // A sine rather than a sawtooth, so it eases at the extremes and hangs
+        // longest where the aim is most useful.
+        b.angle = from + (to - from) * (0.5 - 0.5 * Math.cos(b.phase));
+        if (b.cooldown > 0) b.cooldown -= dt;
+
+        if (player.captured === b) {
+            // The bell owns his position while it holds him.
+            player.box.x = b.x + (b.w - player.box.w) / 2;
+            player.box.y = b.y + (b.h - player.box.h) / 2;
+            b.holding = true;
+            if (Input.jump()) {
+                player.launch(b.angle);
+                b.cooldown = CONFIG.BELL_RECAPTURE;
+                b.holding = false;
+                this.events.push({ type: 'launch', x: b.x, y: b.y });
+            }
+            continue;
+        }
+        b.holding = false;
+
+        if (player.captured || !player.alive || player.exiting) continue;
+        if (b.cooldown > 0) continue;
+        if (!overlap(player.box.x, player.box.y, player.box.w, player.box.h, b.x, b.y, b.w, b.h)) continue;
+
+        player.capture(b);
+        this.events.push({ type: 'caught', x: b.x, y: b.y });
+    }
 };
 
 Entities.prototype.updateShots = function (dt) {
@@ -238,6 +289,7 @@ Entities.prototype.addPopup = function (x, y, text, color) {
 // ── Drawing ───────────────────────────────────────────────
 
 Entities.prototype.draw = function (ctx, camX, camY, frame) {
+    for (let i = 0; i < this.bells.length; i++) this.drawBell(ctx, this.bells[i], camX, camY);
     for (let i = 0; i < this.enemies.length; i++) this.drawEnemy(ctx, this.enemies[i], camX, camY);
     for (let i = 0; i < this.shots.length; i++) this.drawShot(ctx, this.shots[i], camX, camY);
     for (let i = 0; i < this.particles.length; i++) {
@@ -276,6 +328,60 @@ Entities.prototype.drawBird = function (ctx, camX, camY) {
     ctx.fillStyle = C.robotCyan;
     ctx.fillRect(x + 8, y + 2, 1, 1);
 };
+
+Entities.prototype.drawBell = function (ctx, b, camX, camY) {
+    const x = Math.round(b.x - camX);
+    const y = Math.round(b.y - camY);
+    const C = CONFIG.COLORS;
+    const cx = x + b.w / 2;
+    const cy = y + b.h / 2;
+
+    // The headstock it hangs from, so it reads as mounted rather than floating.
+    ctx.fillStyle = C.gableStone;
+    ctx.fillRect(x - 2, y - 6, b.w + 4, 3);
+    ctx.fillStyle = C.brickDark;
+    ctx.fillRect(x + 2, y - 3, 2, 4);
+    ctx.fillRect(x + b.w - 4, y - 3, 2, 4);
+
+    Renderer.glow(ctx, cx, cy, b.holding ? 22 : 14, '201,162,39', b.holding ? 0.34 : 0.18);
+    ctx.fillStyle = b.holding ? '#f0d060' : C.bellBrass;
+    ctx.fillRect(x + 4, y + 3, b.w - 8, b.h - 9);
+    ctx.fillRect(x + 2, y + b.h - 8, b.w - 4, 4);
+    ctx.fillStyle = C.bellShadow;
+    ctx.fillRect(x + 4, y + b.h - 4, b.w - 8, 2);
+    ctx.fillRect(x + b.w - 7, y + 4, 2, b.h - 10);
+    ctx.fillStyle = C.bellShadow;
+    ctx.fillRect(cx - 1, y + b.h - 4, 2, 3);          // clapper
+};
+
+/**
+ * The aim, as a line of sparks.
+ *
+ * Drawn AFTER the player, because a held player sits inside the bell and
+ * covered it — hiding the one thing that says when to press, at precisely the
+ * moment it is the only thing that matters.
+ */
+Entities.prototype.drawBellAims = function (ctx, camX, camY) {
+    for (let i = 0; i < this.bells.length; i++) {
+        const b = this.bells[i];
+        if (b.angle === undefined) continue;
+        const cx = Math.round(b.x - camX) + b.w / 2;
+        const cy = Math.round(b.y - camY) + b.h / 2;
+        const reach = b.holding ? CONFIG.BELL_AIM_LEN + 14 : CONFIG.BELL_AIM_LEN;
+        for (let d = 10; d <= reach; d += 5) {
+            const px = Math.round(cx + Math.cos(b.angle) * d);
+            const py = Math.round(cy + Math.sin(b.angle) * d);
+            if (b.holding) {
+                ctx.fillStyle = 'rgba(0, 245, 255, 0.35)';
+                ctx.fillRect(px - 2, py - 2, 4, 4);
+            }
+            ctx.fillStyle = b.holding ? C_CYAN : 'rgba(201, 162, 39, 0.55)';
+            ctx.fillRect(px - 1, py - 1, 2, 2);
+        }
+    }
+};
+
+const C_CYAN = '#00f5ff';
 
 Entities.prototype.drawEnemy = function (ctx, e, camX, camY) {
     const x = Math.round(e.x - camX);

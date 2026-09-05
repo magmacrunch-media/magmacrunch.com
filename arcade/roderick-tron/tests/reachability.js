@@ -95,16 +95,25 @@ function attempt(env, startX, startTy, plan) {
     p.coyote = CONFIG.COYOTE_FRAMES;
 
     input.allOff();
-    input.held[plan.dir > 0 ? 'R' : 'L'] = true;
+    const steer = () => {
+        input.held.L = false; input.held.R = false;
+        input.held[plan.dir > 0 ? 'R' : 'L'] = true;
+    };
+    // `ride` frames of no horizontal input first: that is how a player takes a
+    // chimney draught, and holding a direction crosses a two-tile column in
+    // eleven frames, long before it has lifted anybody.
+    if (!plan.ride) steer();
     if (plan.speed !== 'walk') input.held.RUN = true;
 
     const from = surfaceUnder(surfaces, p.box, CONFIG.TILE);
     const touched = [];
+    const bells = map.bells || [];
     let hitExit = false;
     let rolled = false;
     let jumped = false;
 
     for (let i = 0; i < 200; i++) {
+        if (plan.ride && i === plan.ride) steer();
         if (plan.speed === 'roll' && !rolled && i >= plan.runUp - 12 && p.grounded) {
             input.pressed.ROLL = true; input.held.ROLL = true; rolled = true;
         }
@@ -117,23 +126,80 @@ function attempt(env, startX, startTy, plan) {
         p.update(1.0);
 
         if (exit && overlaps(p.box, exit)) hitExit = true;
+
+        // A bell ends the attempt: it catches you, and where you go next is a
+        // question about the bell rather than about this jump.
+        for (let k = 0; k < bells.length; k++) {
+            const b = bells[k];
+            if (overlaps(p.box, { x: b.x, y: b.y, w: CONFIG.BELL_W, h: CONFIG.BELL_H })) {
+                return { to: -1, hitExit: hitExit, fell: false, touched: touched, bell: k };
+            }
+        }
         // Pickups are swept, not stood next to: the letter over the roll gap
         // is taken in mid-air, and only flying the arc can show that.
         for (let k = 0; k < env.pickups.length; k++) {
             if (touched.indexOf(k) < 0 && overlaps(p.box, env.pickups[k].item)) touched.push(k);
         }
         if (p.box.y > map.h + CONFIG.FALL_KILL_MARGIN) {
-            return { to: -1, hitExit: hitExit, fell: true, touched: touched };
+            return { to: -1, hitExit: hitExit, fell: true, touched: touched, bell: -1 };
         }
         // Settled somewhere new.
         if (p.grounded && i > plan.runUp + 2) {
             const to = surfaceUnder(surfaces, p.box, CONFIG.TILE);
             if (to >= 0 && (to !== from || i > plan.runUp + 20)) {
-                return { to: to, hitExit: hitExit, fell: false, touched: touched };
+                return { to: to, hitExit: hitExit, fell: false, touched: touched, bell: -1 };
             }
         }
     }
-    return { to: surfaceUnder(surfaces, p.box, CONFIG.TILE), hitExit: hitExit, fell: false, touched: touched };
+    return { to: surfaceUnder(surfaces, p.box, CONFIG.TILE), hitExit: hitExit, fell: false, touched: touched, bell: -1 };
+}
+
+/**
+ * Fly out of a bell at one angle.
+ *
+ * The bell's aim sweeps, so the player chooses the angle by choosing when to
+ * press. Sampling across the whole arc is therefore the honest question: is
+ * there ANY moment at which firing gets you somewhere useful?
+ */
+function fire(env, bellIndex, angle) {
+    const { CONFIG, input, newPlayer, map, surfaces, exit } = env;
+    const b = map.bells[bellIndex];
+    const p = newPlayer();
+    input.allOff();
+    p.box.x = b.x + (CONFIG.BELL_W - p.box.w) / 2;
+    p.box.y = b.y + (CONFIG.BELL_H - p.box.h) / 2;
+    p.launch(angle);
+
+    // Held forward, as a player steering the arc would.
+    input.held[p.vx >= 0 ? 'R' : 'L'] = true;
+    input.held.RUN = true;
+    input.held.JUMP = true;
+
+    const touched = [];
+    let hitExit = false;
+    for (let i = 0; i < 260; i++) {
+        p.update(1.0);
+        if (exit && overlaps(p.box, exit)) hitExit = true;
+        for (let k = 0; k < env.pickups.length; k++) {
+            if (touched.indexOf(k) < 0 && overlaps(p.box, env.pickups[k].item)) touched.push(k);
+        }
+        if (p.box.y > map.h + CONFIG.FALL_KILL_MARGIN) {
+            return { to: -1, hitExit: hitExit, fell: true, touched: touched };
+        }
+        if (p.grounded && i > 3) {
+            return { to: surfaceUnder(surfaces, p.box, CONFIG.TILE), hitExit, fell: false, touched };
+        }
+    }
+    return { to: -1, hitExit: hitExit, fell: false, touched: touched };
+}
+
+/** Angles the swing actually passes through, sampled evenly. */
+function swingAngles(CONFIG, n) {
+    const from = CONFIG.BELL_SWING_FROM * Math.PI / 180;
+    const to = CONFIG.BELL_SWING_TO * Math.PI / 180;
+    const out = [];
+    for (let i = 0; i < n; i++) out.push(from + (to - from) * (i / (n - 1)));
+    return out;
 }
 
 /**
@@ -150,6 +216,10 @@ function plans(dir, runUp) {
         { dir, speed: 'walk', hold: 30, runUp },
         { dir, speed: 'run',  hold: 30, runUp },
         { dir, speed: 'roll', hold: 30, runUp },
+        // Ride a draught up, then steer off the top. The two ride lengths are
+        // a short column and a tall one.
+        { dir, speed: 'walk', hold: 0, runUp, ride: 45 },
+        { dir, speed: 'walk', hold: 0, runUp, ride: 90 },
     ];
 }
 
@@ -196,6 +266,25 @@ function analyse(env) {
 
     reached.add(start);
     const queue = [start];
+    const bellsSeen = new Set();
+    const bells = map.bells || [];
+    const angles = swingAngles(CONFIG, 13);
+
+    /** Fire out of a bell at every angle its swing reaches. */
+    const expandBell = (k) => {
+        if (bellsSeen.has(k)) return;
+        bellsSeen.add(k);
+        for (const angle of angles) {
+            const r = fire(env, k, angle);
+            if (r.hitExit) exitReached = true;
+            if (!r.fell) for (const t of r.touched) collected.add(t);
+            if (r.to >= 0 && !reached.has(r.to)) {
+                reached.add(r.to);
+                edges.push(['bell' + k, r.to]);
+                queue.push(r.to);
+            }
+        }
+    };
 
     while (queue.length) {
         const id = queue.shift();
@@ -217,6 +306,7 @@ function analyse(env) {
                         // Only a survived attempt counts. Grabbing a letter on
                         // the way into a pit is not a way of getting it.
                         if (!r.fell) for (const k of r.touched) collected.add(k);
+                        if (r.bell >= 0) { edges.push([id, 'bell' + r.bell]); expandBell(r.bell); }
                         if (r.to >= 0 && !reached.has(r.to)) {
                             reached.add(r.to);
                             edges.push([id, r.to]);
@@ -241,4 +331,4 @@ function analyse(env) {
     return { start, reached, exitReached, surfaces, edges, unreachablePickups };
 }
 
-module.exports = { findSurfaces, surfaceUnder, analyse };
+module.exports = { findSurfaces, surfaceUnder, analyse, swingAngles };

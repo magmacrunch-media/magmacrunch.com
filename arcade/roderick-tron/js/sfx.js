@@ -50,6 +50,9 @@ const Sfx = {
         oneUp:    { type: 'square',   f0: 440, f1: 440, dur: 0.09, gain: 0.18 },
         exit:     { type: 'triangle', f0: 392, f1: 392, dur: 0.30, gain: 0.20 },
         note:     { type: 'triangle', f0: 440, f1: 440, dur: 0.13, gain: 0.15 },
+        caught:   { type: 'sine',     f0: 660, f1: 330, dur: 0.18, gain: 0.20 },
+        launch:   { type: 'square',   f0: 330, f1: 990, dur: 0.22, gain: 0.22 },
+        updraft:  { type: 'noise',    f0: 200, f1: 800, dur: 0.40, gain: 0.10 },
     },
 
     /** Little melodies, as scale-step offsets played in sequence. */

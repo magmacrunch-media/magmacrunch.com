@@ -34,6 +34,9 @@ Player.prototype.reset = function (spawn) {
     this.runFrame = 0;
     this.shakeFrames = 0;
     this.exiting = false;
+    // Set while a bell holds him. Normal physics is suspended: the bell owns
+    // his position until it fires.
+    this.captured = null;
 };
 
 /** Height depends on stance: rolling tucks him into a one-tile gap. */
@@ -43,6 +46,16 @@ Player.prototype.targetHeight = function () {
 
 Player.prototype.update = function (dt) {
     if (!this.alive) return;
+
+    // Held by a bell. Timers still run — invincibility should not pause while
+    // he waits for the swing — but nothing else does; the bell places him.
+    if (this.captured) {
+        if (this.invincible > 0) this.invincible -= dt;
+        if (this.shakeFrames > 0) this.shakeFrames -= dt;
+        this.vx = 0;
+        this.vy = 0;
+        return;
+    }
 
     const wantLeft = Input.left();
     const wantRight = Input.right();
@@ -145,6 +158,25 @@ Player.prototype.update = function (dt) {
     this.vy += CONFIG.GRAVITY * dt;
     if (this.vy > CONFIG.MAX_FALL) this.vy = CONFIG.MAX_FALL;
 
+    // Rising air off a chimney. Not a jump — a sustained climb, which is the
+    // only way a level reaches upward at all when a jump clears just 52px.
+    // Applied after gravity so it wins, and capped so it lifts rather than
+    // flings.
+    if (this.map.overlapsUpdraft(this.box.x, this.box.y, this.box.w, this.box.h)) {
+        this.vy = Math.max(this.vy - CONFIG.UPDRAFT_LIFT * dt, -CONFIG.UPDRAFT_MAX_RISE);
+        const centre = this.map.updraftCentre(this.box.x, this.box.y, this.box.w, this.box.h);
+        if (centre !== null) {
+            // Settles him toward the middle, so a column is a place you ride
+            // rather than one you keep sliding out of.
+            const mid = this.box.x + this.box.w / 2;
+            this.box.x += Math.sign(centre - mid)
+                * Math.min(Math.abs(centre - mid), CONFIG.UPDRAFT_DRIFT * dt);
+        }
+        this.inUpdraft = true;
+    } else {
+        this.inUpdraft = false;
+    }
+
     this.map.moveX(this.box, this.vx * dt);
 
     const wasGrounded = this.grounded;
@@ -185,6 +217,33 @@ Player.prototype.headroomAdjust = function () {
     const bottom = this.box.y + this.box.h;
     this.box.h = this.targetHeight();
     this.box.y = bottom - this.box.h;
+};
+
+/** Caught by a bell. It owns him until it fires. */
+Player.prototype.capture = function (bell) {
+    this.captured = bell;
+    this.vx = 0;
+    this.vy = 0;
+    this.grounded = false;
+    this.jumping = false;
+    if (this.rolling) {
+        this.rolling = false;
+        this.rollCooldown = CONFIG.ROLL_COOLDOWN;
+        this.headroomAdjust();
+    }
+};
+
+/** Fired out of a bell along `angle` radians. */
+Player.prototype.launch = function (angle) {
+    this.captured = null;
+    this.vx = Math.cos(angle) * CONFIG.BELL_LAUNCH;
+    this.vy = Math.sin(angle) * CONFIG.BELL_LAUNCH;
+    this.grounded = false;
+    this.coyote = 0;
+    // Counts as a jump in flight, so releasing the button still cuts the arc
+    // short and the launch stays steerable in the usual way.
+    this.jumping = true;
+    if (this.vx !== 0) this.facing = Math.sign(this.vx);
 };
 
 /** A stomp landed: bounce, higher if the jump button is still down. */

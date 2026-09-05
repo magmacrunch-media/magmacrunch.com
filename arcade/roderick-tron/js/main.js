@@ -133,7 +133,9 @@
         handleEvents();
 
         // Falling out of the level, or into the canal.
-        const belowFloor = player.box.y > map.h + CONFIG.FALL_KILL_MARGIN;
+        // A bell holds him above the level's own floor in some layouts, and a
+        // captured player is not falling by definition.
+        const belowFloor = !player.captured && player.box.y > map.h + CONFIG.FALL_KILL_MARGIN;
         const drowned = map.overlapsWater(player.box.x, player.box.y, player.box.w, player.box.h);
         if (belowFloor || drowned) return die();
 
@@ -165,6 +167,12 @@
                     score += 1000;
                     banner('T R O N  COMPLETE');
                 }
+            } else if (ev.type === 'caught') {
+                Sfx.play('caught');
+            } else if (ev.type === 'launch') {
+                Sfx.play('launch');
+                entities.spawnParticles(ev.x + CONFIG.BELL_W / 2, ev.y + CONFIG.BELL_H / 2,
+                                        7, CONFIG.COLORS.bellBrass, 18);
             } else if (ev.type === 'kill') {
                 score += CONFIG.KILL_POINTS;
                 entities.addPopup(ev.x, ev.y - 6, '+' + CONFIG.KILL_POINTS, CONFIG.COLORS.noteWhite);
@@ -272,6 +280,7 @@
         entities.drawBird(ctx, cam.x, cam.y);
         entities.draw(ctx, cam.x, cam.y, titleFrame);
         player.draw(ctx, cam.x, cam.y);
+        entities.drawBellAims(ctx, cam.x, cam.y);
 
         ctx.restore();
         Renderer.vignette(ctx);

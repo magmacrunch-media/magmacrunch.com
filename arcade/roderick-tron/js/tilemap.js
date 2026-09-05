@@ -5,10 +5,12 @@ const TILE_AIR = '.';
 const TILE_SOLID = '#';
 const TILE_PLATFORM = '=';
 const TILE_WATER = '~';
+const TILE_UPDRAFT = '^';
 
 function isSolidTile(ch) { return ch === TILE_SOLID; }
 function isPlatformTile(ch) { return ch === TILE_PLATFORM; }
 function isWaterTile(ch) { return ch === TILE_WATER; }
+function isUpdraftTile(ch) { return ch === TILE_UPDRAFT; }
 
 /**
  * A parsed level: a grid of terrain, plus the things that were sitting in it.
@@ -31,6 +33,7 @@ function Tilemap(def) {
     this.notes = [];
     this.letters = [];
     this.enemies = [];
+    this.bells = [];
 
     this.grid = [];
     for (let ty = 0; ty < this.rows; ty++) {
@@ -60,6 +63,11 @@ function Tilemap(def) {
                 this.enemies.push({ kind: 'gargoyle', x: px, y: py + CONFIG.TILE - CONFIG.GARGOYLE_H });
             } else if (ch === 'f') {
                 this.enemies.push({ kind: 'flyer', x: px, y: py });
+            } else if (ch === 'b') {
+                this.bells.push({
+                    x: px + (CONFIG.TILE - CONFIG.BELL_W) / 2,
+                    y: py + (CONFIG.TILE - CONFIG.BELL_H) / 2,
+                });
             } else if (ch === 's') {
                 this.enemies.push({ kind: 'statue', x: px, y: py + CONFIG.TILE - CONFIG.GARGOYLE_H });
             } else {
@@ -112,6 +120,22 @@ Tilemap.prototype.overlapsSolid = function (x, y, w, h) {
 
 Tilemap.prototype.overlapsWater = function (x, y, w, h) {
     return this.overlaps(x, y, w, h, isWaterTile);
+};
+
+/** Is any part of this box in rising air? Updraft tiles are not solid. */
+Tilemap.prototype.overlapsUpdraft = function (x, y, w, h) {
+    return this.overlaps(x, y, w, h, isUpdraftTile);
+};
+
+/** Horizontal centre of the updraft column this box is in, or null. */
+Tilemap.prototype.updraftCentre = function (x, y, w, h) {
+    const r = this.tileRange(x, y, w, h);
+    for (let ty = r[1]; ty <= r[3]; ty++) {
+        for (let tx = r[0]; tx <= r[2]; tx++) {
+            if (isUpdraftTile(this.tileAt(tx, ty))) return tx * CONFIG.TILE + CONFIG.TILE / 2;
+        }
+    }
+    return null;
 };
 
 /**

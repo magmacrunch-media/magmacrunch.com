@@ -55,6 +55,30 @@ const CONFIG = {
     ROLL_COOLDOWN: 14,
     ROLL_H: 14,               // shorter while rolling: fits a one-tile gap
 
+    // ── Bell cannon ───────────────────────────────────────
+    // The barrel cannon of this rooftop. It catches you, swings through an arc
+    // overhead, and fires along whatever angle it is pointing when you press
+    // jump — so the timing is the skill, and no extra level syntax is needed to
+    // encode an aim.
+    BELL_W: 20,
+    BELL_H: 20,
+    BELL_SWING_FROM: -155,      // degrees; -90 is straight up
+    BELL_SWING_TO: -25,
+    BELL_SWING_RATE: 0.030,     // radians of phase per frame
+    BELL_LAUNCH: 10.0,          // px/frame; at 45 degrees that flies v^2/g = 227px
+    BELL_RECAPTURE: 26,         // frames before the same bell can catch you again
+    BELL_AIM_LEN: 22,           // how far the aiming line is drawn
+
+    // ── Chimney updraft ───────────────────────────────────
+    // Warm air off a chimney. Not a jump: it is a sustained climb, which is how
+    // a level gets to reach upward at all when a jump only clears 52px.
+    // Must exceed GRAVITY, or the column pushes DOWN. At 0.42 against a
+    // gravity of 0.44 it did exactly that, by 0.02px a frame — a draught that
+    // looked right, read right in the level file, and lifted nobody.
+    UPDRAFT_LIFT: 0.98,
+    UPDRAFT_MAX_RISE: 2.6,      // terminal upward speed inside a column
+    UPDRAFT_DRIFT: 0.06,        // gentle sideways settling toward the centre
+
     // ── Combat ────────────────────────────────────────────
     NOTE_SPEED: 4.4,
     NOTE_W: 6,
@@ -150,5 +174,8 @@ const CONFIG = {
         hudText:      '#f0ead8',
         lifeHeart:    '#ff3d6e',
         exitGlow:     '#7affc8',
+        bellBrass:    '#c9a227',
+        bellShadow:   '#7a5f14',
+        updraft:      'rgba(255, 224, 160, 0.10)',
     },
 };
