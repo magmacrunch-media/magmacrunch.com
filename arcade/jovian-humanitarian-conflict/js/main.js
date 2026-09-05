@@ -46,6 +46,7 @@
         // player never asked for.
         Input.init();
         Input.initTouch(canvas);
+        SFX.init();
         bindUI();
         loadMutePreference();
         updateMusicDisplay();
@@ -131,11 +132,16 @@
         } catch (e) {
             musicMuted = false;
         }
+        SFX.setMuted(musicMuted);
     }
 
+    // One switch for the whole game. Muting the track and leaving the guns
+    // firing is not a state anybody wants, and a separate SFX toggle would be
+    // a second thing to find on a title screen that already has enough on it.
     function toggleMute() {
         musicMuted = !musicMuted;
         if (musicReady) AdAudio.setMusicMuted(musicMuted);
+        SFX.setMuted(musicMuted);
         try {
             localStorage.setItem('jovianMuted', musicMuted ? '1' : '0');
         } catch (e) { /* private mode; the run still works */ }
@@ -176,7 +182,10 @@
         const railSpeed = Difficulty.railSpeed(t);
 
         const fired = player.update(Input.axisX(), Input.axisY(), Input.firing(), dt);
-        if (fired) entities.fire(player);
+        if (fired) {
+            entities.fire(player);
+            SFX.shoot();
+        }
 
         world.update(player, railSpeed, dt);
         entities.update(player, railSpeed, t, dt);
@@ -200,6 +209,7 @@
             const c = e.contact;
             switch (e.type) {
                 case 'hostile-killed':
+                    SFX.explode();
                     kills++;
                     score += CONFIG.SCORE_HOSTILE * combo;
                     bumpCombo();
@@ -207,6 +217,7 @@
                     break;
 
                 case 'aid-escorted':
+                    SFX.escort();
                     escorted++;
                     score += CONFIG.SCORE_ESCORT;
                     bumpCombo();
@@ -214,6 +225,7 @@
                     break;
 
                 case 'aid-lost':
+                    SFX.lost();
                     lost++;
                     combo = 1;
                     comboTimer = 0;
@@ -222,6 +234,7 @@
                     break;
 
                 case 'friendly-fire':
+                    SFX.friendlyFire();
                     strikes++;
                     score += CONFIG.SCORE_FRIENDLY_FIRE;
                     combo = 1;
@@ -233,11 +246,18 @@
 
                 case 'player-hit':
                     if (player.takeHit()) {
+                        SFX.playerHit();
                         Renderer.addShake(7);
                         Renderer.addFlash(0.5, '255,255,255');
                         combo = 1;
                         comboTimer = 0;
                     }
+                    break;
+
+                // The transponder, heard. Carries information, so it fires
+                // even when nothing else about the contact has happened yet.
+                case 'aid-sighted':
+                    SFX.ping();
                     break;
 
                 default:

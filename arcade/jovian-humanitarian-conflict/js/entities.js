@@ -132,6 +132,10 @@ Entities.prototype.spawnWave = function (t, rand) {
             doomTimer: 0,
             lockedBy: 0,
             dead: false,
+            // Set once the convoy has announced itself audibly, so the ping
+            // fires exactly once per contact rather than every frame it is
+            // inside Z_PING.
+            pinged: false,
             // Frames alive, which is what the telegraph guarantee is measured in.
             age: 0,
         });
@@ -163,6 +167,14 @@ Entities.prototype.updateContacts = function (player, railSpeed, dt) {
 
         const drift = c.kind === 'aid' ? CONFIG.AID_DRIFT : CONFIG.HOSTILE_DRIFT;
         c.x += Math.cos(c.phase) * drift * dt;
+
+        // A convoy announces itself once, on the way in. main.js turns this
+        // into the transponder ping; the simulation only reports that the
+        // contact crossed the line, so this stays testable and audio-free.
+        if (c.kind === 'aid' && !c.pinged && c.z <= CONFIG.Z_PING) {
+            c.pinged = true;
+            this.events.push({ type: 'aid-sighted', contact: c });
+        }
 
         // An aggressive hostile slides toward the nearest convoy rather than
         // weaving, which is what makes escorting an active job: the convoy is

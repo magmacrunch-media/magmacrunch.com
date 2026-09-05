@@ -198,6 +198,75 @@ console.log('\nfairness — a convoy is identifiable before it can be shot');
         `scale ${g.Project.scaleAt(C.Z_SHAPE_READABLE).toFixed(3)}`);
 }
 
+// ── 1b. The audible transponder ────────────────────────────────────────────────
+
+console.log('');
+console.log('the ping — the transponder heard, not seen');
+{
+    const g = makeGame(7);
+    const C = g.CONFIG;
+
+    // It has to sound while the player still has every option, which means
+    // outside firing range with the whole reaction budget left.
+    ok(C.Z_PING > C.Z_FIRE_MAX,
+        'the ping sounds before a convoy can be shot',
+        `Z_PING=${C.Z_PING} Z_FIRE_MAX=${C.Z_FIRE_MAX}`);
+    const framesAfterPing = (C.Z_PING - C.Z_FIRE_MAX) / g.Difficulty.railSpeed(1);
+    ok(framesAfterPing >= C.REACTION_FRAMES,
+        'and leaves at least a reaction to act on it',
+        `${framesAfterPing.toFixed(1)} frames, need ${C.REACTION_FRAMES}`);
+
+    // Exactly once per convoy. Firing every frame inside Z_PING would turn an
+    // identification cue into a drone nobody hears.
+    const sim = makeGame(8);
+    sim.entities.contacts.push({
+        id: 1, kind: 'aid', x: 0, y: 0, z: sim.CONFIG.Z_FAR,
+        phase: 0, driftSeed: 1, aggro: false, doomTimer: 0, lockedBy: 0,
+        dead: false, pinged: false, age: 0,
+    });
+    let pings = 0, firstPingZ = null;
+    for (let i = 0; i < 400; i++) {
+        sim.entities.updateContacts(sim.player, 4, 1);
+        for (const ev of sim.entities.drainEvents()) {
+            if (ev.type === 'aid-sighted') { pings++; if (firstPingZ === null) firstPingZ = ev.contact.z; }
+        }
+    }
+    ok(pings === 1, 'a convoy pings exactly once', `pinged ${pings} times`);
+    ok(firstPingZ !== null && firstPingZ > sim.CONFIG.Z_FIRE_MAX,
+        'and it pings while still out of range',
+        `first ping at z=${firstPingZ === null ? 'never' : Math.round(firstPingZ)}`);
+
+    // Hostiles are silent, the same way they are dark.
+    const h = makeGame(9);
+    h.entities.contacts.push({
+        id: 1, kind: 'hostile', x: 0, y: 0, z: h.CONFIG.Z_FAR,
+        phase: 0, driftSeed: 1, aggro: false, doomTimer: 0, lockedBy: 0,
+        dead: false, pinged: false, age: 0,
+    });
+    let hostilePings = 0;
+    for (let i = 0; i < 400; i++) {
+        h.entities.updateContacts(h.player, 4, 1);
+        for (const ev of h.entities.drainEvents()) if (ev.type === 'aid-sighted') hostilePings++;
+    }
+    ok(hostilePings === 0, 'a hostile never pings', `pinged ${hostilePings} times`);
+
+    // Every convoy in a real run gets announced, none silently slips through.
+    const r = makeGame(10);
+    let spawnedAid = 0, sighted = 0;
+    const seen = new Set();
+    for (let f = 0; f < 3000; f++) {
+        const before = new Set(r.entities.contacts.map(c => c.id));
+        for (const ev of r.step(1, 0, 0, false)) if (ev.type === 'aid-sighted') sighted++;
+        for (const c of r.entities.contacts) {
+            if (c.kind === 'aid' && !before.has(c.id) && !seen.has(c.id)) { seen.add(c.id); spawnedAid++; }
+        }
+    }
+    ok(spawnedAid > 10, 'the run actually produced convoys to check', `${spawnedAid}`);
+    ok(sighted >= spawnedAid - 2,
+        'essentially every convoy announced itself',
+        `${sighted} pings for ${spawnedAid} convoys`);
+}
+
 // ── 2. Friendly-fire attribution ──────────────────────────────────────────────
 
 console.log('\nattribution — who killed the convoy');

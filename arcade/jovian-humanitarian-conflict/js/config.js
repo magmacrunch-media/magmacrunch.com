@@ -131,6 +131,12 @@ const CONFIG = {
     TELEGRAPH_MIN_FRAMES: 60,
     REACTION_FRAMES: 18,
 
+    // Depth at which an aid convoy's transponder is HEARD as well as seen
+    // (sfx.js ping()). Well outside Z_FIRE_MAX on purpose: the point of the
+    // sound is to tell you a convoy is inbound while you still have every
+    // option, including the option to stop shooting.
+    Z_PING: 900,
+
     // Silhouettes become readable around here; colour is the last channel and
     // never the only one.
     Z_SHAPE_READABLE: 410,
