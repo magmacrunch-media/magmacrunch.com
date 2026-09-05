@@ -1,3 +1,18 @@
+// iOS has no Ogg Vorbis decoder, and every browser on iOS is WebKit, so Chrome
+// and Firefox there fail exactly as Safari does. An ogg-only page is not quieter
+// on an iPhone, it is silent - and silent without an error. Every track in
+// music/jukebox/songs/ exists as both .ogg and .mp3; pick the one this browser
+// can decode. See AGENTS.md, "Audio needs two formats".
+var AUDIO_EXT = document.createElement('audio')
+    .canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.mp3';
+var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
+
+// Song URLs resolve against location.href, NOT location.origin. This page is
+// served from /music/jukebox/, and resolving 'songs/x.ogg' against the origin
+// drops that directory and asks for /songs/x.ogg - which does not exist, so
+// every track 404'd and the play button did nothing. assets/jukebox.js was
+// unaffected because it carries the full path from the site root.
+
 (function () {
   'use strict';
 
@@ -79,10 +94,10 @@
               startMcSaveInterval();
               updateMediaSession();
             }, { once: true });
-            player.src = new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
+            player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.href).pathname);
             player.load();
           } else {
-            player.src = new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
+            player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.href).pathname);
             player.play().catch(function () {});
             setPlayingState(true);
             syncToMiniPlayer();
@@ -90,7 +105,7 @@
             updateMediaSession();
           }
         } else {
-          player.src = new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.origin).pathname;
+          player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.href).pathname);
         }
       }
     } catch (e) {}
@@ -211,7 +226,7 @@
     var song = JUKEBOX_SONGS[index];
     renderNowPlaying();
     renderSongList();
-    player.src = new URL('songs/' + song.file, location.origin).pathname;
+    player.src = audioSrc(new URL('songs/' + song.file, location.href).pathname);
     player.play().catch(function () {});
     setPlayingState(true);
     syncToMiniPlayer();
@@ -276,7 +291,7 @@
         artist: song.artist,
         album: 'magmacrunch media',
         artwork: [
-          { src: '../../assets/logo.jpg', sizes: '180x180', type: 'image/jpeg' }
+          { src: '../../assets/logo.jpg', sizes: '512x512', type: 'image/jpeg' }
         ]
       });
     }

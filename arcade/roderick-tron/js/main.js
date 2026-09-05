@@ -93,9 +93,20 @@
     async function initAudio() {
         if (typeof AdAudio === 'undefined') return;
         try {
+            // iOS has no Ogg Vorbis decoder and every browser there is WebKit, so
+            // an ogg-only track is not quieter on an iPhone, it is silent. This
+            // game borrows its music from music/jukebox/songs/, which is why it
+            // was missed when makemecookies, SORRY, george-boole and
+            // moonlight-drift were fixed - the four that were checked all keep
+            // their audio in their own folder. Every jukebox track now exists as
+            // both .ogg and .mp3. See AGENTS.md, "Audio needs two formats".
+            const oggUrl = CONFIG.MUSIC.URL;
+            const oggOk = document.createElement('audio')
+                .canPlayType('audio/ogg; codecs="vorbis"') !== '';
+            const musicUrl = oggOk ? oggUrl : oggUrl.replace(/\.ogg$/, '.mp3');
             await AdAudio.init({
                 music: {
-                    url: CONFIG.MUSIC.URL,
+                    url: musicUrl,
                     volume: CONFIG.MUSIC.VOLUME,
                     fadeIn: CONFIG.MUSIC.FADE_IN,
                 },
