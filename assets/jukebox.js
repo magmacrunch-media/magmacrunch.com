@@ -219,7 +219,13 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
                 artist: track.artist,
                 album: 'magmacrunch media',
                 artwork: [
-                    { src: new URL('assets/logo.jpg', location.origin).pathname, sizes: '180x180', type: 'image/jpeg' }
+                    // 512, not the 180 this declared before the file existed at
+                    // all: MediaSession artwork lands on a phone lock screen,
+                    // where 180 is visibly soft. The mark has an alpha channel
+                    // and JPEG has none, so it is flattened onto the site
+                    // background (--black) rather than onto whatever the
+                    // encoder defaults to.
+                    { src: new URL('assets/logo.jpg', location.origin).pathname, sizes: '512x512', type: 'image/jpeg' }
                 ]
             });
         }

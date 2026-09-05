@@ -291,7 +291,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         artist: song.artist,
         album: 'magmacrunch media',
         artwork: [
-          { src: '../../assets/logo.jpg', sizes: '180x180', type: 'image/jpeg' }
+          { src: '../../assets/logo.jpg', sizes: '512x512', type: 'image/jpeg' }
         ]
       });
     }
