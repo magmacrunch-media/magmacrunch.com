@@ -20,10 +20,56 @@ let finished = false;
 // exposes no `ended` event and no playback position. A round that *is*
 // one play of a track needs all three, so the track is a plain <audio>
 // element and AdAudio is left for SFX.
-const music = new Audio('audio/makemecookies-x4.ogg');
+// iOS has no Ogg Vorbis decoder - and every browser on iOS is WebKit, so
+// Chrome and Firefox there fail identically. The .ogg that plays everywhere
+// else is simply silent on an iPhone. Offer the formats in preference order
+// and let the browser choose one it can actually decode. Ogg goes first not
+// because it is smaller - at V0 the mp3 is within 6KB of it - but because it
+// is the original encode; the mp3 is a second-generation transcode of it, so
+// anything that can decode Vorbis should get the better copy.
+const MUSIC_SOURCES = [
+  { url: 'audio/makemecookies-x4.ogg', type: 'audio/ogg; codecs="vorbis"' },
+  { url: 'audio/makemecookies-x4.mp3', type: 'audio/mpeg' },
+];
+
+function pickMusicSource() {
+  const probe = document.createElement('audio');
+  // canPlayType answers '', 'maybe' or 'probably'. Empty is a definite no;
+  // anything else is worth attempting.
+  return MUSIC_SOURCES.find((s) => probe.canPlayType(s.type) !== '') || null;
+}
+
+// Audio failing should never be silent in both senses. The shift clock falls
+// back to the wall clock and the game plays on, but the player is told why
+// there is no music instead of being left to wonder - which is exactly how
+// this went unnoticed on iOS until someone reported it.
+let audioProblem = null;
+function noteAudioProblem(why) {
+  if (audioProblem) return;          // first cause is the useful one
+  audioProblem = why;
+  console.warn('makemecookies audio:', why);
+  const el = document.getElementById('audio-warning');
+  if (el) { el.textContent = why; el.hidden = false; }
+}
+
+const chosenSource = pickMusicSource();
+// Deliberately not new Audio(''): an empty src resolves against the document
+// URL, so the browser would fetch this page and try to decode the HTML.
+const music = new Audio();
+if (chosenSource) music.src = chosenSource.url;
 music.loop = false;
 music.preload = 'auto';
-music.volume = 0.55;
+music.volume = 0.55;               // ignored on iOS, where volume is hardware
+
+if (!chosenSource) {
+  noteAudioProblem('This browser cannot play the music format. The shift still runs.');
+}
+
+music.addEventListener('error', () => {
+  const c = music.error && music.error.code;
+  noteAudioProblem('Music could not load' + (c ? ' (media error ' + c + ')' : '')
+    + '. The shift still runs.');
+});
 
 // Ogg carries no duration header, so the browser estimates one from bitrate
 // while the file is still streaming and corrects it once enough is buffered.
@@ -127,10 +173,15 @@ canvas.addEventListener('pointerdown', (e) => {
 function startShift() {
   // play() must be reached synchronously from the click, before any await,
   // or the autoplay policy refuses it.
-  music.currentTime = 0;
+  // Setting currentTime before any data has loaded throws on some browsers,
+  // and it would throw here before play() is ever reached.
+  try { music.currentTime = 0; } catch (e) { /* play() starts at 0 regardless */ }
   music.volume = 0.55;
   const p = music.play();
-  if (p && p.catch) p.catch(() => { /* wall-clock fallback covers it */ });
+  if (p && p.catch) {
+    p.catch((err) => noteAudioProblem('Music was blocked (' + err.name
+      + '). The shift still runs on its own clock.'));
+  }
 
   const keep = st.shiftMs;
   st = createShift();
