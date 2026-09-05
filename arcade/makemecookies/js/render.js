@@ -149,157 +149,126 @@ function drawShiftBar(ctx, st) {
 }
 
 // ── 1 · HOPPER ───────────────────────────────────────────────────────
+// Each station sits on the pixel grid at a fixed origin. Keeping these as
+// constants rather than deriving them per frame means a sprite never
+// half-steps between grid cells when a bay is resized.
+// The machines are drawn at a coarser grid than the things travelling
+// between them. At PIXEL they left the top third of every bay empty; at MACH
+// they fill it, and the items stay at PIXEL so a ball is never wider than
+// ITEM_GAP and two on the belt cannot visually overlap.
+const MACH = 5;
+const HOPPER_XY = [30, 118];
+const MIXER_XY  = [184, 148];
+const OVEN_XY   = [629, 154];
+const PACK_XY   = [804, 244];
 
 function drawHopper(ctx, st, b, now) {
-  const cx = b.x + b.w / 2;
+  const P = PIXEL;
+  const [ox, oy] = HOPPER_XY;
+  const box = HOPPER_BOX;
 
-  // Funnel.
-  ctx.beginPath();
-  ctx.moveTo(cx - 52, 120);
-  ctx.lineTo(cx + 52, 120);
-  ctx.lineTo(cx + 14, 232);
-  ctx.lineTo(cx - 14, 232);
-  ctx.closePath();
-  ctx.fillStyle = C.panel;
-  ctx.fill();
-  ctx.strokeStyle = C.steel;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  // Flour pips stack from the spout up.
-  for (let i = 0; i < st.hopper.units; i++) {
-    const t = i / HOPPER_MAX;
-    const y = 222 - i * 16;
-    const hw = 14 + t * 34;
-    ctx.fillStyle = C.dough;
-    rr(ctx, cx - hw / 2, y - 11, hw, 11, 2);
-    ctx.fill();
+  // Flour goes down first and the shell over the top of it, so the walls
+  // stay in front of the fill instead of being buried by it.
+  const filled = Math.round((st.hopper.units / HOPPER_MAX) * box.h);
+  for (let i = 0; i < filled; i++) {
+    ctx.fillStyle = i === filled - 1 ? PAL.D : PAL.d;
+    ctx.fillRect(ox + box.col * MACH, oy + (box.row + box.h - 1 - i) * MACH,
+                 box.w * MACH, MACH);
   }
+  sprite(ctx, SPR_HOPPER, ox, oy, MACH);
 
-  // Pour animation.
+  // A sack going in: a slug of flour falling through the open rim.
   if (now < st.hopper.lockUntil) {
-    ctx.fillStyle = 'rgba(242,216,167,0.55)';
-    ctx.fillRect(cx - 5, 96, 10, 26);
+    ctx.fillStyle = PAL.D;
+    ctx.fillRect(ox + 9 * MACH, oy - 7 * MACH, 8 * MACH, 7 * MACH);
   }
 
-  text(ctx, 'FLOUR', cx, 110, 8, C.steel);
-  if (st.hopper.units < HOPPER_PER_MIX) {
-    text(ctx, 'EMPTY', cx, 262, 9, C.danger);
-  } else if (st.hopper.units >= HOPPER_MAX - 1) {
-    text(ctx, 'FULL', cx, 262, 9, C.warn);
-  }
+  if (st.hopper.units < HOPPER_PER_MIX) text(ctx, 'EMPTY', b.x + b.w / 2, 272, 9, C.danger);
+  else if (st.hopper.units >= HOPPER_MAX - 1) text(ctx, 'FULL', b.x + b.w / 2, 272, 9, C.warn);
 }
 
 // ── 2 · MIXER ────────────────────────────────────────────────────────
 
 function drawMixer(ctx, st, b, now) {
-  const cx = b.x + b.w / 2, cy = 200, r = 46;
+  const P = PIXEL;
+  const [ox, oy] = MIXER_XY;
   const m = st.mixer;
 
-  // Bowl.
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI);
-  ctx.closePath();
-  ctx.fillStyle = C.panel;
-  ctx.fill();
-  ctx.strokeStyle = C.steel;
-  ctx.lineWidth = 3;
-  ctx.stroke();
+  sprite(ctx, SPR_MIXER, ox, oy, MACH);
 
-  // Dough.
   if (m.phase !== 'idle') {
     const tough = m.phase === 'over';
-    ctx.beginPath();
-    ctx.arc(cx, cy + 8, m.phase === 'mixing' ? 16 : 22, 0, Math.PI * 2);
-    ctx.fillStyle = tough ? '#C9A97B' : C.dough;
-    ctx.fill();
-    if (tough) text(ctx, 'TOUGH', cx, cy + 44, 8, C.danger);
-    else if (m.phase === 'ready') text(ctx, 'READY', cx, cy + 44, 8, C.ok);
+    const scale = m.phase === 'mixing' ? 4 : 5;
+    sprite(ctx, SPR_BALL, ox + 14 * MACH - 4 * scale, oy + 17 * MACH - 8 * scale,
+           scale, { X: tough ? PAL.T : PAL.D });
   }
 
-  // Paddle — only spins while it is actually mixing, so a glance tells you
-  // whether the machine is working or waiting on you.
-  const a = m.phase === 'mixing' ? now / 90 : Math.PI / 2;
-  ctx.save();
-  ctx.translate(cx, cy - 6);
-  ctx.rotate(a);
-  ctx.strokeStyle = C.steel;
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(0, -46);
-  ctx.lineTo(0, 24);
-  ctx.stroke();
-  ctx.restore();
+  // The whisk steps between four half-widths instead of rotating: a rotated
+  // line shimmers on a pixel grid, a stepping bar reads as spin.
+  const half = m.phase === 'mixing' ? WHISK_HALF[((now / 90) | 0) % 4] : 3;
+  ctx.fillStyle = PAL.H;
+  ctx.fillRect(ox + (14 - half) * MACH, oy + 9 * MACH, MACH, 6 * MACH);
+  ctx.fillRect(ox + (14 + half) * MACH, oy + 9 * MACH, MACH, 6 * MACH);
+  ctx.fillRect(ox + (14 - half) * MACH, oy + 15 * MACH, (half * 2 + 1) * MACH, MACH);
 
-  // Motor housing.
-  ctx.fillStyle = C.steelLo;
-  ctx.fillRect(cx - 26, 120, 52, 30);
-  text(ctx, 'MIX', cx, 141, 9, C.frosting);
+  if (m.phase === 'over') text(ctx, 'TOUGH', b.x + b.w / 2, 272, 9, C.danger);
+  else if (m.phase === 'ready') text(ctx, 'READY', b.x + b.w / 2, 272, 9, C.ok);
 }
 
 // ── 3 · CONVEYOR ─────────────────────────────────────────────────────
 
 function drawBelt(ctx, st, b, now) {
-  const y = BELT_Y, h = 22;
-  const x0 = BELT_X0 - 22, x1 = BELT_X1 + 22;
+  const P = PIXEL;
+  const y = BELT_Y;
+  const x0 = snap(BELT_X0 - 24), x1 = snap(BELT_X1 + 24);
+  const wCells = (x1 - x0) / P;
 
-  ctx.fillStyle = C.steelLo;
-  ctx.fillRect(x0, y, x1 - x0, h);
+  cells(ctx, x0, y, wCells, 1, PAL.H);
+  cells(ctx, x0, y + P, wCells, 3, PAL.S);
+  cells(ctx, x0, y + 4 * P, wCells, 1, PAL.s);
 
-  // Treads scroll at the belt's real speed, so a boost or a jam reads
-  // instantly without a label.
-  const T = st.__T || { beltPx: 46 };
-  const moving = now < st.belt.boostUntil ? T.beltPx * 2.2 : T.beltPx;
-  const phase = (now * moving / 1000) % 20;
-  ctx.strokeStyle = C.steel;
-  ctx.lineWidth = 2;
-  for (let x = x0 - 20 + phase; x < x1; x += 20) {
-    ctx.beginPath();
-    ctx.moveTo(x, y + h);
-    ctx.lineTo(x + 8, y);
-    ctx.stroke();
+  // Treads scroll in whole cells at the belt's real speed, so a boost or a
+  // jam is legible from the tread motion alone, with no label.
+  const T = st.__T || { beltPx: RAMP.beltPx[0] };
+  const spd = now < st.belt.boostUntil ? T.beltPx * 2.2 : T.beltPx;
+  const off = Math.floor(now * spd / 1000 / P) % 5;
+  ctx.fillStyle = PAL.s;
+  for (let c = off; c < wCells; c += 5) {
+    ctx.fillRect(x0 + c * P, y + P, P, 3 * P);
   }
 
-  // Rollers.
-  for (const rx of [x0, x1]) {
-    ctx.beginPath();
-    ctx.arc(rx, y + h / 2, h / 2 + 3, 0, Math.PI * 2);
-    ctx.fillStyle = C.steel;
-    ctx.fill();
+  for (const rx of [x0 - 2 * P, x1]) {
+    ctx.fillStyle = PAL.S;
+    ctx.fillRect(rx, y - P, 2 * P, 7 * P);
+    ctx.fillStyle = PAL.H;
+    ctx.fillRect(rx, y - P, 2 * P, P);
   }
 
-  // Dough on the line.
   for (const it of st.belt.items) {
-    ctx.beginPath();
-    ctx.arc(it.x, y - 11, 12, 0, Math.PI * 2);
-    ctx.fillStyle = it.quality === 'tough' ? '#C9A97B' : C.dough;
-    ctx.fill();
+    const ix = snap(it.x - 16), iy = y - 8 * P;
+    sprite(ctx, SPR_BALL, ix, iy, P, { X: it.quality === 'tough' ? PAL.T : PAL.D });
     if (it.sticky) {
-      ctx.strokeStyle = C.danger;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      text(ctx, '!', it.x, y - 26, 10, C.danger);
+      ctx.fillStyle = PAL.R;
+      ctx.fillRect(ix - P, iy - P, 10 * P, P);
+      ctx.fillRect(ix - P, iy + 8 * P, 10 * P, P);
+      ctx.fillRect(ix - P, iy, P, 8 * P);
+      ctx.fillRect(ix + 8 * P, iy, P, 8 * P);
+      text(ctx, '!', ix + 16, iy - 10, 10, C.danger);
     }
   }
 
-  // The most common stall in the game is the oven, not the belt: the lead ball
-  // parks at the mouth and the whole line backs up behind a closed door.
-  // Pressing 3 does nothing for that, so name the real blocker in the oven's
-  // own colour rather than letting it read as a jam (which is red, with a !).
+  // The most common stall is the oven, not the belt: the lead ball parks at
+  // the mouth and the line backs up behind a closed door. Pressing 3 does
+  // nothing for that, so name the real blocker — in the oven's gold, not the
+  // jam's red, so the two failure modes stay distinguishable.
   const head = st.belt.items[0];
   if (head && !head.sticky && head.x >= BELT_X1 - 1 && st.oven.phase !== 'empty') {
-    const pulse = 0.45 + 0.55 * Math.abs(Math.sin(now / 130));
-    ctx.save();
-    ctx.globalAlpha = pulse;
-    ctx.strokeStyle = C.butter;
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.arc(head.x, y - 11, 17, 0, Math.PI * 2);
-    ctx.stroke();
     const baking = st.oven.phase === 'baking';
+    ctx.save();
+    ctx.globalAlpha = 0.45 + 0.55 * Math.abs(Math.sin(now / 130));
     text(ctx, 'OVEN BUSY', BELT_X1 - 44, y - 44, 9, C.butter);
-    // Telling them to press 4 while it is still baking would be bad advice —
-    // that yields a raw cookie worth nothing. Only say it once pulling pays.
+    // Saying "press 4" during the bake would be bad advice: it yields a raw
+    // cookie worth nothing. Only say it once pulling actually pays.
     text(ctx, baking ? 'WAIT' : 'PRESS 4', BELT_X1 - 44, y - 30, 8,
          baking ? C.steel : C.butter);
     ctx.restore();
@@ -312,105 +281,67 @@ function drawBelt(ctx, st, b, now) {
 
 // ── 4 · OVEN ─────────────────────────────────────────────────────────
 
-const OVEN_GLOW = {
-  empty:   'rgba(0,0,0,0)',
-  baking:  'rgba(255,140,60,0.35)',
-  golden:  'rgba(255,201,60,0.75)',
-  burning: 'rgba(120,40,20,0.85)',
-  fire:    'rgba(255,60,20,0.95)',
-};
-
 function drawOven(ctx, st, b, now) {
-  const x = b.x + 8, y = 150, w = b.w - 16, h = 130;
+  const P = PIXEL;
+  const [ox, oy] = OVEN_XY;
   const o = st.oven;
 
-  ctx.fillStyle = C.panel;
-  ctx.fillRect(x, y, w, h);
-  ctx.strokeStyle = C.steel;
-  ctx.lineWidth = 3;
-  ctx.strokeRect(x, y, w, h);
-
-  // Door glow.
-  const dx = x + 14, dy = y + 26, dw = w - 28, dh = h - 52;
-  ctx.fillStyle = C.burnt;
-  ctx.fillRect(dx, dy, dw, dh);
-  ctx.fillStyle = OVEN_GLOW[o.phase];
-  ctx.fillRect(dx, dy, dw, dh);
-  ctx.strokeStyle = C.steelLo;
-  ctx.lineWidth = 2;
-  ctx.strokeRect(dx, dy, dw, dh);
-
-  if (o.phase !== 'empty' && o.phase !== 'fire') {
-    ctx.beginPath();
-    ctx.arc(dx + dw / 2, dy + dh / 2, 14, 0, Math.PI * 2);
-    ctx.fillStyle = o.phase === 'baking' ? C.dough
-      : o.phase === 'golden' ? C.butter : C.burnt;
-    ctx.fill();
-  }
+  sprite(ctx, SPR_OVEN, ox, oy, MACH, { W: OVEN_GLASS[o.phase] });
 
   if (o.phase === 'fire') {
-    ctx.font = '30px system-ui';
-    ctx.textAlign = 'center';
-    ctx.fillText('🔥', dx + dw / 2, dy + dh / 2 + 12);
-    const need = FIRE_TAPS - o.taps.filter((t) => now - t < FIRE_TAP_WINDOW).length;
-    text(ctx, 'MASH 4 x' + Math.max(1, need), x + w / 2, y + h + 10, 9, C.danger);
-  } else if (o.phase === 'burning') {
-    ctx.font = '20px system-ui';
-    ctx.textAlign = 'center';
-    ctx.fillText('💨', x + w / 2, y - 6);
-    text(ctx, 'BURNING', x + w / 2, y + h + 10, 9, C.danger);
-  } else if (o.phase === 'golden') {
-    text(ctx, 'PULL IT', x + w / 2, y + h + 10, 9, C.butter);
+    const f = SPR_FLAME[((now / 110) | 0) % 2];
+    for (const dx of [7, 14, 21]) {
+      sprite(ctx, f, ox + dx * MACH, oy + 8 * MACH, MACH);
+    }
+  } else if (o.phase !== 'empty') {
+    const col = o.phase === 'baking' ? PAL.D : o.phase === 'golden' ? PAL.G : PAL.B;
+    sprite(ctx, SPR_COOKIE, ox + 12 * MACH, oy + 6 * MACH, MACH, { X: col });
+    if (o.phase === 'burning') {
+      const drift = ((now / 160) | 0) % 3;
+      sprite(ctx, SPR_SMOKE, ox + (14 + drift) * MACH, oy - 4 * MACH, MACH);
+    }
   }
 
-  text(ctx, 'OVEN', x + w / 2, y + 18, 9, C.butter);
+  const capY = oy + spriteH(SPR_OVEN, MACH) + 14;
+  if (o.phase === 'fire') {
+    const need = FIRE_TAPS - o.taps.filter((t) => now - t < FIRE_TAP_WINDOW).length;
+    text(ctx, 'MASH 4 x' + Math.max(1, need), b.x + b.w / 2, capY, 9, C.danger);
+  } else if (o.phase === 'burning') {
+    text(ctx, 'BURNING', b.x + b.w / 2, capY, 9, C.danger);
+  } else if (o.phase === 'golden') {
+    text(ctx, 'PULL IT', b.x + b.w / 2, capY, 9, C.butter);
+  }
 }
 
 // ── 5 · PACKING ──────────────────────────────────────────────────────
 
+const TRAY_COLOR = { perfect: PAL.G, seconds: PAL.T, raw: PAL.D, burnt: PAL.B };
+
 function drawPack(ctx, st, b, now) {
-  const cx = b.x + b.w / 2;
+  const P = PIXEL;
+  const [ox, oy] = PACK_XY;
   const p = st.pack;
 
-  // Table.
-  ctx.fillStyle = C.steelLo;
-  ctx.fillRect(b.x + 10, 236, b.w - 20, 10);
+  sprite(ctx, SPR_TABLE, ox, oy, MACH);
 
-  // Tray.
-  for (let i = 0; i < p.tray.length; i++) {
-    const g = p.tray[i];
-    const px = b.x + 28 + (i % 2) * 44;
-    const py = 226 - ((i / 2) | 0) * 26;
-    ctx.beginPath();
-    ctx.arc(px, py, 12, 0, Math.PI * 2);
-    ctx.fillStyle = g === 'perfect' ? C.butter
-      : g === 'seconds' ? '#C9A97B'
-      : g === 'raw' ? C.dough : C.burnt;
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(0,0,0,0.35)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    if (g === 'perfect' || g === 'seconds') {
-      ctx.fillStyle = C.choc;
-      ctx.fillRect(px - 5, py - 3, 3, 3);
-      ctx.fillRect(px + 2, py + 1, 3, 3);
-      ctx.fillRect(px - 1, py + 5, 3, 3);
-    }
-  }
+  // Bottom row sits *on* the tabletop rather than hovering above it — a gap
+  // there read as cookies floating in mid-air.
+  p.tray.forEach((g, i) => {
+    sprite(ctx, SPR_COOKIE,
+           ox + 14 + (i % 2) * 60,
+           oy - 32 - (((i / 2) | 0) * 34),
+           P, { X: TRAY_COLOR[g] });
+  });
 
-  // Boxes leaving.
-  ctx.font = '22px system-ui';
-  ctx.textAlign = 'center';
   for (const f of p.flying) {
     ctx.save();
     ctx.globalAlpha = Math.max(0, 1 - f.t / 900);
-    ctx.fillText('📦', f.x + f.t * 0.13, 210 - f.t * 0.05);
+    sprite(ctx, SPR_BOX, snap(ox + 34 + f.t * 0.14), snap(oy - 44 - f.t * 0.05));
     ctx.restore();
   }
 
-  text(ctx, 'PACK', cx, 148, 9, C.neon);
-  if (p.tray.length >= TRAY_CAP) text(ctx, 'SHIP IT', cx, 262, 9, C.danger);
-  else if (p.tray.length) text(ctx, 'x' + BOX_MULT[p.tray.length], cx, 262, 9, C.butter);
+  if (p.tray.length >= TRAY_CAP) text(ctx, 'SHIP IT', b.x + b.w / 2, 272, 9, C.danger);
+  else if (p.tray.length) text(ctx, 'x' + BOX_MULT[p.tray.length], b.x + b.w / 2, 272, 9, C.butter);
 }
 
 // ── station chrome ───────────────────────────────────────────────────
@@ -465,10 +396,10 @@ function drawFx(ctx, st, now) {
     const a = Math.max(0, 1 - s.t / 1400);
     ctx.save();
     ctx.globalAlpha = a * 0.8;
-    ctx.fillStyle = C.dough;
-    ctx.beginPath();
-    ctx.ellipse(s.x, s.y + 8, 20 + s.t / 40, 5, 0, 0, Math.PI * 2);
-    ctx.fill();
+    // A sprite, not an ellipse: one smooth curve is enough to give the
+    // whole pixel grid away.
+    const sc = Math.round(3 + Math.min(2, s.t / 500));
+    sprite(ctx, SPR_SPLAT, snap(s.x - 5 * sc), snap(s.y + 4), sc, { X: PAL.D });
     ctx.restore();
   }
   for (const p of st.fx.pops) {
