@@ -125,6 +125,7 @@
         if (Input.shoot() && player.canShoot()) {
             player.spendShot();
             entities.fire(player);
+            Sfx.play('shoot');
             updateHud();
         }
 
@@ -148,14 +149,18 @@
 
             if (ev.type === 'note') {
                 score += CONFIG.NOTE_POINTS;
+                // Pitched, so a trail of pickups plays a rising phrase.
+                Sfx.play('note');
                 if (player.collect(1)) {
                     entities.addPopup(ev.x, ev.y, '1UP', CONFIG.COLORS.lifeHeart);
                     banner('EXTRA LIFE');
+                    Sfx.play('oneUp');
                 }
             } else if (ev.type === 'letter') {
                 collected[ev.ch] = true;
                 score += CONFIG.LETTER_POINTS;
                 entities.addPopup(ev.x, ev.y, ev.ch, CONFIG.COLORS.letterGold);
+                Sfx.play('letter');
                 if (LETTERS.every((c) => collected[c])) {
                     score += 1000;
                     banner('T R O N  COMPLETE');
@@ -166,11 +171,13 @@
             } else if (ev.type === 'hurt') {
                 const lost = player.hurt(ev.x);
                 if (lost === 'bird') {
+                    Sfx.play('birdLost');
                     banner('THE BIRD IS GONE');
                     flash(0.28, CONFIG.COLORS.birdBrass);
                     entities.spawnParticles(player.box.x + 7, player.box.y + 8, 8,
                                             CONFIG.COLORS.birdBrass, 24);
                 } else if (lost === 'life') {
+                    Sfx.play('hurt');
                     flash(0.34, CONFIG.COLORS.lifeHeart);
                     if (player.lives <= 0) return die();
                 }
@@ -184,6 +191,7 @@
         // A fall spends a life directly; there is no bird to spend on a pit.
         if (player.hasBird === false && player.lives > 0) player.lives--;
         else if (player.hasBird) { player.hasBird = false; player.lives--; }
+        Sfx.play('hurt');
         state = STATE.DYING;
         dyingTimer = 48;
         player.alive = false;
@@ -194,6 +202,7 @@
     function clearLevel() {
         player.exiting = true;
         score += CONFIG.EXIT_POINTS;
+        Sfx.play('exit');
         state = STATE.CLEARED;
         stopMusic();
         const got = LETTERS.filter((c) => collected[c]).length;
@@ -231,6 +240,7 @@
         state = STATE.PLAYING;
         lastTime = 0;
         Input.clearJustPressed();     // the Space that got here must not also jump
+        Sfx.resetRun();               // each level's phrases start from the bottom
         overlay.classList.remove('active');
         titleScreen.classList.add('hidden');
         hud.classList.add('active');
@@ -387,12 +397,14 @@
     function loadMutePreference() {
         try { musicMuted = localStorage.getItem(MUTE_KEY) === '1'; }
         catch (e) { musicMuted = false; }
+        Sfx.setMuted(musicMuted);
         updateMusicDisplay();
     }
 
     function toggleMute() {
         musicMuted = !musicMuted;
         if (musicReady) AdAudio.setMusicMuted(musicMuted);
+        Sfx.setMuted(musicMuted);
         try { localStorage.setItem(MUTE_KEY, musicMuted ? '1' : '0'); }
         catch (e) { /* private browsing */ }
         updateMusicDisplay();

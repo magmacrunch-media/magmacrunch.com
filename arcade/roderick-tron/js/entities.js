@@ -149,10 +149,12 @@ Entities.prototype.updateEnemies = function (player, dt) {
                 // Too heavy to flatten: you bounce, it does not care.
                 player.stompBounce();
                 this.spawnParticles(e.x + e.w / 2, e.y, 4, CONFIG.COLORS.particleStone, 10);
+                Sfx.play('land');           // it shrugs the stomp off
                 continue;
             }
             this.damage(e, 99);
             player.stompBounce();
+            Sfx.play('stomp');
             continue;
         }
 

@@ -67,6 +67,7 @@ Player.prototype.update = function (dt) {
         if (dir !== 0) this.facing = dir;
         this.vx = this.facing * CONFIG.ROLL_MAX;
         this.headroomAdjust();
+        Sfx.play('roll');
     }
 
     if (this.rolling) {
@@ -126,6 +127,7 @@ Player.prototype.update = function (dt) {
         this.jumping = true;
         this.jumpBuffer = 0;
         this.coyote = 0;
+        Sfx.play('jump');
         // A roll converted into a jump keeps its speed: this is the long-gap
         // technique the levels are built around.
         if (this.rolling && this.canStand()) {
@@ -150,6 +152,8 @@ Player.prototype.update = function (dt) {
     const land = this.map.moveY(this.box, this.vy * dt, dropping);
 
     if (land.ground) {
+        // Only a real fall thumps; resting on the ground re-lands every frame.
+        if (!wasGrounded && this.vy > 1.5) Sfx.play('land');
         this.vy = 0;
         this.grounded = true;
         this.jumping = false;

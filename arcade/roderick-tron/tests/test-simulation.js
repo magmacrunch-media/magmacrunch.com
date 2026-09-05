@@ -24,7 +24,7 @@ const path = require('path');
 const vm = require('vm');
 
 const JS_DIR = path.join(__dirname, '..', 'js');
-const FILES = ['config.js', 'levels.js', 'tilemap.js', 'renderer.js', 'player.js', 'entities.js', 'world.js'];
+const FILES = ['config.js', 'levels.js', 'tilemap.js', 'sfx.js', 'renderer.js', 'player.js', 'entities.js', 'world.js'];
 
 let passed = 0, failed = 0;
 
@@ -94,7 +94,8 @@ function makeGame(levelIndex) {
     const entities = vm.runInContext('new Entities(__map)', ctx);
     const world = vm.runInContext('new World(__map)', ctx);
     const cam = vm.runInContext('new Camera(__map)', ctx);
-    return { CONFIG, LEVELS, map, player, entities, world, cam, input, ctx };
+    const Sfx = vm.runInContext('Sfx', ctx);
+    return { CONFIG, LEVELS, map, player, entities, world, cam, input, ctx, Sfx };
 }
 
 // ── Parsing ───────────────────────────────────────────────────────────────────
@@ -489,6 +490,64 @@ console.log('\ndrawing:');
     } catch (e) { threw = e; }
     ok(!threw, 'a full frame draws at six camera positions', threw && threw.stack);
     ok(c.calls.length > 100, 'and actually painted (' + c.calls.length + ' ops)');
+}
+
+// ── Sound effects ──
+// Synthesised rather than sampled, so the decisions — which pitch, when a run
+// resets, what each voice is — are pure and testable with no audio hardware.
+
+console.log('\nsound effects:');
+{
+    const { Sfx } = makeGame(0);
+
+    // Nothing may throw where Web Audio does not exist, which is here and in
+    // any browser that refuses an AudioContext.
+    let threw = null;
+    try { for (const n of Object.keys(Sfx.VOICES)) Sfx.play(n, 0); } catch (e) { threw = e; }
+    ok(!threw, 'every voice plays without an AudioContext present', threw && threw.message);
+    ok(Sfx.play('jump', 0) === false, 'and reports that it produced nothing');
+    ok(Sfx.ensureCtx() === null, 'no context is conjured headlessly');
+
+    // Voice table sanity: a typo here is silence, which is hard to notice.
+    let bad = [];
+    for (const [name, v] of Object.entries(Sfx.VOICES)) {
+        if (!(v.dur > 0 && v.dur < 2)) bad.push(name + '.dur');
+        if (!(v.gain > 0 && v.gain <= 1)) bad.push(name + '.gain');
+        if (!(v.f0 >= 20 && v.f0 <= 20000)) bad.push(name + '.f0');
+        if (!(v.f1 >= 20 && v.f1 <= 20000)) bad.push(name + '.f1');
+        if (['sine','square','triangle','sawtooth','noise'].indexOf(v.type) < 0) bad.push(name + '.type');
+    }
+    ok(bad.length === 0, Object.keys(Sfx.VOICES).length + ' voices are all in range', bad.join(' '));
+
+    // Every arpeggio step must land on a real scale degree.
+    let offScale = [];
+    for (const [name, arp] of Object.entries(Sfx.ARPS)) {
+        for (const step of arp) if (step < 0 || step >= Sfx.SCALE.length) offScale.push(name + ':' + step);
+    }
+    ok(offScale.length === 0, 'every arpeggio step is on the scale', offScale.join(' '));
+
+    ok(Sfx.stepFrequency(-5) === Sfx.SCALE[0], 'pitch clamps at the bottom of the scale');
+    ok(Sfx.stepFrequency(999) === Sfx.SCALE[Sfx.SCALE.length - 1], 'and at the top');
+
+    // A run of pickups climbs; a pause starts a new phrase. Without the reset
+    // every trail after the first would play at the top of the scale.
+    Sfx.resetRun();
+    const climb = [];
+    for (let i = 0; i < 6; i++) climb.push(Sfx.advanceRun(1000 + i * 100));
+    ok(climb.join(',') === '0,1,2,3,4,5', 'a run of pickups walks up the scale', climb.join(','));
+
+    const after = Sfx.advanceRun(1000 + 5 * 100 + Sfx.RUN_RESET_MS + 1);
+    ok(after === 0, 'and a pause longer than RUN_RESET_MS starts again from the bottom');
+
+    Sfx.resetRun();
+    const capped = [];
+    for (let i = 0; i < Sfx.SCALE.length + 4; i++) capped.push(Sfx.advanceRun(2000 + i * 10));
+    ok(Math.max.apply(null, capped) === Sfx.SCALE.length - 1,
+       'a long run tops out at the scale rather than running off it');
+
+    Sfx.setMuted(true);
+    ok(Sfx.play('stomp', 0) === false, 'muted plays nothing');
+    Sfx.setMuted(false);
 }
 
 // ── Summary ───────────────────────────────────────────────────────────────────
