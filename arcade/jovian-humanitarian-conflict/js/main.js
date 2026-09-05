@@ -327,7 +327,7 @@
     function updateHud() {
         setText('scoreDisplay', score.toLocaleString());
         setText('escortDisplay', String(escorted));
-        setText('comboDisplay', combo > 1 ? 'x' + combo : '—');
+        setText('comboDisplay', 'x' + combo);
         renderLives();
         renderStrikes();
     }
@@ -455,7 +455,7 @@
             // score server, and the one place untrusted text meets the DOM is
             // not the place to save four lines.
             [String(i + 1), s.initials || '???', (s.score || 0).toLocaleString(),
-                s.escorted != null ? String(s.escorted) : '—'].forEach((text) => {
+                s.escorted != null ? String(s.escorted) : '0'].forEach((text) => {
                 const td = document.createElement('td');
                 td.textContent = text;
                 tr.appendChild(td);
