@@ -21,6 +21,17 @@ var reconnectTimer = null;
 var reconnectDelay = 1000;
 var messageQueue = [];
 
+/**
+ * Each page's own presence, keyed by port id.
+ *
+ * The aggregate is what the server hears, and it is 'here' if ANY page says
+ * so. This has to live here rather than in the page: one socket carries every
+ * tab, so a single hidden tab is not the same thing as an absent person, and
+ * only the worker can see all of them at once.
+ */
+var pagePresence = new Map();
+var publishedPresence = null;
+
 var cachedHistory = null;
 var cachedUserList = null;
 var cachedStatus = null;
@@ -49,6 +60,25 @@ function scheduleIdleCheck() {
     }, 3000);
 }
 
+// ── Presence ───────────────────────────────────────────────────────────────
+
+function aggregatePresence() {
+    var here = false;
+    pagePresence.forEach(function(state) {
+        if (state === 'here') here = true;
+    });
+    return here ? 'here' : 'away';
+}
+
+function publishPresence(force) {
+    if (!ws || ws.readyState !== WebSocket.OPEN) return;
+    if (pagePresence.size === 0) return;      // nothing to report yet
+    var state = aggregatePresence();
+    if (!force && state === publishedPresence) return;
+    publishedPresence = state;
+    try { ws.send(JSON.stringify({ type: 'presence', state: state })); } catch(e) {}
+}
+
 // ── WebSocket management ───────────────────────────────────────────────────
 
 function openSocket(url) {
@@ -72,6 +102,10 @@ function openSocket(url) {
             try { ws.send(q[i]); } catch(e) {}
         }
         broadcast({ _worker: 'connect' });
+        // A new socket is a new session as far as the server is concerned, so
+        // whatever it knew about who is at these pages is gone. Say it again.
+        publishedPresence = null;
+        publishPresence(true);
         try { ws.send(JSON.stringify({ type: 'get_history' })); } catch(e) {}
     };
 
@@ -125,6 +159,8 @@ function onConnect(port) {
 
     port.onmessageerror = function() {
         pages.delete(portId);
+        pagePresence.delete(portId);
+        publishPresence(false);
         closeSocketIfIdle();
     };
 
@@ -165,8 +201,15 @@ function handlePageMessage(msg, port) {
             }
             break;
 
+        case 'presence':
+            pagePresence.set(msg._portId, msg.state === 'away' ? 'away' : 'here');
+            publishPresence(false);
+            break;
+
         case 'disconnect':
             pages.delete(msg._portId);
+            pagePresence.delete(msg._portId);
+            publishPresence(false);
             closeSocketIfIdle();
             break;
 
