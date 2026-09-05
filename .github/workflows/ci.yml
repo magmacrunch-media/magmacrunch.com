@@ -205,3 +205,28 @@ jobs:
         env:
           BASE_URL: http://localhost:8080
         run: node smoke-test.mjs --lobby-only
+
+      # A failing game writes a full-page screenshot and a results.md naming what
+      # went wrong, and until now CI threw both away: they land in the runner's
+      # filesystem, nothing uploaded them, and the job ended. All a red run left
+      # was the one-line console output.
+      #
+      # That was masked for a while by arcade/tests/screenshots/ holding fourteen
+      # committed screenshots, so there was always *a* picture to look at — just
+      # never of the run that failed. Both paths are gitignored now, which is
+      # right, and makes this the only way the evidence survives.
+      #
+      # if: failure() rather than always(), since a green run writes no
+      # screenshot at all; if-no-files-found: ignore because the job can fail
+      # before the suite runs, when a server does not come up, and an upload
+      # warning would be noise on top of the real error.
+      - name: Keep the failure screenshots
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lobby-smoke-failure
+          path: |
+            arcade/tests/screenshots/
+            arcade/tests/results.md
+          if-no-files-found: ignore
+          retention-days: 14
