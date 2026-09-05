@@ -62,9 +62,44 @@
     let musicMuted = false;
     try { musicMuted = localStorage.getItem(MUTE_KEY) === '1'; } catch (e) { musicMuted = false; }
 
+    /**
+     * Choose a format this browser can actually decode.
+     * canPlayType answers '', 'maybe' or 'probably'. Empty is a definite no;
+     * anything else is worth attempting.
+     */
+    function pickMusicSource() {
+        const probe = document.createElement('audio');
+        return CONFIG.MUSIC.SOURCES.find((s) => probe.canPlayType(s.type) !== '') || null;
+    }
+
+    /**
+     * Audio failing must not itself be silent. The dive runs on the frame clock
+     * either way, but the player is told why there is no music rather than left
+     * to wonder - which is exactly how ogg-only playback went unnoticed on iOS
+     * across four games.
+     */
+    let audioProblem = null;
+    function noteAudioProblem(why) {
+        if (audioProblem) return;          // the first cause is the useful one
+        audioProblem = why;
+        console.warn('cave diving audio:', why);
+        const el = document.getElementById('audioWarning');
+        if (el) { el.textContent = why; el.hidden = false; }
+    }
+
     function initMusic() {
         try {
-            music = new Audio(CONFIG.MUSIC.URL);
+            const chosen = pickMusicSource();
+            if (!chosen) {
+                noteAudioProblem('no supported audio format - the dive runs silent');
+                music = null;
+                return;
+            }
+            // Deliberately not new Audio(''): an empty src resolves against the
+            // document URL, so the browser fetches this page and tries to
+            // decode the HTML.
+            music = new Audio();
+            music.src = chosen.url;
             music.loop = false;
             music.preload = 'auto';
             music.volume = musicMuted ? 0 : CONFIG.MUSIC.VOLUME;
@@ -80,8 +115,12 @@
             music.addEventListener('loadedmetadata', sync);
             music.addEventListener('durationchange', sync);
             music.addEventListener('ended', () => { if (state === STATE.PLAYING) endDive(true); });
-            music.addEventListener('error', () => { music = null; });
+            music.addEventListener('error', () => {
+                noteAudioProblem('the music file could not be loaded - the dive runs silent');
+                music = null;
+            });
         } catch (e) {
+            noteAudioProblem('audio is unavailable in this browser - the dive runs silent');
             music = null;
         }
     }
@@ -122,8 +161,13 @@
         hud.classList.remove('hidden');
 
         if (music) {
-            try { music.currentTime = 0; const p = music.play(); if (p) p.catch(() => {}); }
-            catch (e) { /* autoplay refused; the dive still runs on the frame clock */ }
+            try {
+                music.currentTime = 0;
+                const p = music.play();
+                if (p) p.catch(() => noteAudioProblem('the browser blocked playback - press M twice'));
+            } catch (e) {
+                noteAudioProblem('the browser blocked playback - the dive runs silent');
+            }
         }
     }
 

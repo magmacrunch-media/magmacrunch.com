@@ -15,9 +15,31 @@ const CONFIG = {
     // the browser reports a duration; see main.js syncDuration().
     DIVE_MS_FALLBACK: 161284,
 
+    // Two formats, or the game is silent on every iPhone and iPad. iOS has no
+    // Ogg Vorbis decoder and every browser there is WebKit, so Chrome and
+    // Firefox fail exactly as Safari does - and they fail without an error,
+    // into the same do-nothing path a missing file takes. makemecookies,
+    // SORRY, george-boole and moonlight-drift all shipped ogg-only and it went
+    // unreported for as long as they existed. See AGENTS.md.
+    //
+    // Ogg is offered first because it is the original encode; the mp3 is a
+    // second-generation transcode of it, so anything that can decode Vorbis
+    // should get the better copy.
+    //
+    // The mp3 is -q:a 4, not the -q:a 2 the note suggests as a starting point.
+    // This source is only ~132kbps Vorbis, and V2 inflated 2.67MB to 3.71MB -
+    // 39% more to carry over mobile data for a second-generation copy. V4 is
+    // 2.88MB, the same shape of trade george-boole settled on, with duration
+    // and both mean (-14.9dB) and max (-0.7dB) volume unchanged.
     MUSIC: {
-        URL: '../../music/jukebox/songs/' + encodeURIComponent(
-            'Juanito Thompson - Spooked - 03 cave diving (not even once).ogg'),
+        SOURCES: [
+            { url: '../../music/jukebox/songs/' + encodeURIComponent(
+                'Juanito Thompson - Spooked - 03 cave diving (not even once).ogg'),
+              type: 'audio/ogg; codecs="vorbis"' },
+            { url: '../../music/jukebox/songs/' + encodeURIComponent(
+                'Juanito Thompson - Spooked - 03 cave diving (not even once).mp3'),
+              type: 'audio/mpeg' },
+        ],
         VOLUME: 0.42,
         FADE_IN: 1.2,
     },
