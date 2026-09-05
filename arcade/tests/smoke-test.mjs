@@ -224,8 +224,27 @@ async function checkLobby(page, game) {
  * Asserting the widget exists would pass on a widget that never connects — the
  * same hole the `joined` selector closes for lobbies. So this waits for state
  * that only a round-trip can produce: #chatMyName is empty until the server
- * answers set_name with name_assigned, and the online count stays at 0 until a
- * user_list arrives.
+ * answers set_name with name_assigned, and the count on the bar stays at 0
+ * until a user_list counts this visitor.
+ *
+ * Both of those now need the visitor to do something first. adenosine-chat
+ * 0.6.0 stopped sending set_name on connect, so that merely loading an arcade
+ * page no longer puts a PlayerNN on the roster and the online count measures
+ * participants instead of page loads. A passive load is therefore *supposed* to
+ * produce no name and a count of 0 — the server sends a roster on connect and
+ * deliberately leaves the asking socket out of it — and this check spent a day
+ * red asserting the contract that release had just removed.
+ *
+ * So it sends a message first, which is the smallest thing that registers, and
+ * then makes the same two assertions. That also puts ensureRegistered() under
+ * test, which is the path every real participant now takes and the one 0.6.0
+ * moved the behaviour onto.
+ *
+ * What it deliberately does not assert is the other half of that change — that
+ * a passive visitor stays unregistered. From the DOM, "connected but not
+ * registered" and "not connected yet" are the same empty string, so the
+ * assertion would really be measuring how fast the socket came up.
+ * arcade/tests/test_chat_server.py is where the roster's contents belong.
  */
 async function checkChat(page) {
   const errors = [];
@@ -234,11 +253,38 @@ async function checkChat(page) {
     return ['chat: #arcadeChatWidget never mounted'];
   }
 
+  // The widget boots minimized unless localStorage says otherwise, and a fresh
+  // context says nothing, so the composer starts closed. Clicking the bar
+  // toggles, so this checks the state rather than clicking blind.
+  try {
+    if (await page.locator('#arcadeChatWidget.minimized').count() > 0) {
+      await page.locator('#acwBar').click({ timeout: 5000 });
+    }
+    await page.locator('#chatInput').waitFor({ state: 'visible', timeout: 5000 });
+  } catch (err) {
+    return [`chat: could not open the widget: ${err.message}`];
+  }
+
+  // send() returns silently until the socket is open, and there is nothing to
+  // wait on first: the widget dials through a SharedWorker, so the page cannot
+  // see the socket at all and exposes no connected flag. Retrying is what
+  // closes that race — every attempt before the socket is up does nothing
+  // whatsoever, and the first one after it registers. Polling rather than
+  // sleeping a guessed interval also means a fast connection is not paid for.
   try {
     await page.waitForFunction(() => {
-      const el = document.getElementById('chatMyName');
-      return el && el.textContent.trim().length > 0;
-    }, { timeout: CHAT_SETTLE_MS });
+      const name = document.getElementById('chatMyName');
+      if (name && name.textContent.trim().length > 0) return true;
+      const input = document.getElementById('chatInput');
+      const send = document.getElementById('chatSend');
+      // send() clears the field on success, so refilling each time is both the
+      // retry and the check that the last attempt went nowhere.
+      if (input && send) {
+        input.value = 'smoke test';
+        send.click();
+      }
+      return false;
+    }, { timeout: CHAT_SETTLE_MS, polling: 500 });
   } catch {
     errors.push('chat: no name was assigned, so set_name never reached the server');
   }
@@ -249,7 +295,7 @@ async function checkChat(page) {
       return el && Number(el.textContent) > 0;
     }, { timeout: CHAT_SETTLE_MS });
   } catch {
-    errors.push('chat: online count stayed at 0, so no user_list arrived');
+    errors.push('chat: online count stayed at 0, so the roster never counted this visitor');
   }
 
   return errors;
