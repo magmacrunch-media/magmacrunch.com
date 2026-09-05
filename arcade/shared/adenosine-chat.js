@@ -91,6 +91,10 @@ var AdChat = (() => {
     let usingWorker = false;
     let currentRoom = null;
     let myName = null;
+    let registered = false;
+    let publishedPresence = null;
+    let lastActivity = Date.now();
+    let presenceTimer = null;
     let myColor = null;
     let typingTimeout = null;
     let typingHideTimer = null;
@@ -172,6 +176,7 @@ var AdChat = (() => {
         myColor = savedColor;
       }
       wireEvents();
+      startPresenceWatch();
     }
     function wireEvents() {
       var bar = document.getElementById("acwBar");
@@ -335,12 +340,25 @@ var AdChat = (() => {
         sock.close();
       };
     }
-    function sendSavedCredentials() {
+    function registerName(name) {
       var token = getSessionToken();
-      const nameMsg = { type: "set_name", name: myName || "Player" };
+      const nameMsg = { type: "set_name", name };
       if (token) nameMsg["session_token"] = token;
       sendToServer(nameMsg);
+      registered = true;
+    }
+    function ensureRegistered() {
+      if (!myName) myName = "Player" + Math.floor(10 + Math.random() * 90);
+      if (!registered) registerName(myName);
+      return myName;
+    }
+    function sendSavedCredentials() {
+      registered = false;
+      publishedPresence = null;
+      if (!myName) return;
+      registerName(myName);
       if (myColor) sendToServer({ type: "set_color", color: myColor });
+      publishPresence();
     }
     function handleWorkerMessage(data) {
       var msg;
@@ -391,6 +409,9 @@ var AdChat = (() => {
       sock = null;
       myName = null;
       myColor = null;
+      registered = false;
+      publishedPresence = null;
+      stopPresenceWatch();
     }
     function handleMessage(msg) {
       switch (msg.type) {
@@ -441,15 +462,52 @@ var AdChat = (() => {
           break;
       }
     }
+    const IDLE_AFTER_MS = 10 * 60 * 1e3;
+    const PRESENCE_POLL_MS = 30 * 1e3;
+    function currentPresence() {
+      if (typeof document !== "undefined" && document.hidden) return "away";
+      if (Date.now() - lastActivity > IDLE_AFTER_MS) return "away";
+      return "here";
+    }
+    function publishPresence() {
+      if (!registered) return;
+      var state = currentPresence();
+      if (state === publishedPresence) return;
+      publishedPresence = state;
+      if (usingWorker && worker) {
+        try {
+          worker.port.postMessage(JSON.stringify({ _worker: "presence", state }));
+        } catch (e) {
+        }
+      } else {
+        sendToServer({ type: "presence", state });
+      }
+    }
+    function noteActivity() {
+      var now = Date.now();
+      if (now - lastActivity < 1e3) return;
+      lastActivity = now;
+      publishPresence();
+    }
+    function startPresenceWatch() {
+      if (presenceTimer || typeof document === "undefined") return;
+      document.addEventListener("visibilitychange", function() {
+        if (!document.hidden) lastActivity = Date.now();
+        publishPresence();
+      });
+      ["pointerdown", "keydown", "wheel", "touchstart", "mousemove"].forEach(function(ev) {
+        document.addEventListener(ev, noteActivity, { passive: true });
+      });
+      presenceTimer = setInterval(publishPresence, PRESENCE_POLL_MS);
+    }
+    function stopPresenceWatch() {
+      if (presenceTimer) clearInterval(presenceTimer);
+      presenceTimer = null;
+    }
     function joinRoom(roomCode) {
       currentRoom = roomCode;
+      ensureRegistered();
       sendToServer({ type: "join_room", room: roomCode });
-      if (myName) {
-        var token = getSessionToken();
-        const nameMsg = { type: "set_name", name: myName };
-        if (token) nameMsg["session_token"] = token;
-        sendToServer(nameMsg);
-      }
       var headerTitle = document.getElementById("chatHeaderTitle");
       if (headerTitle) headerTitle.textContent = "// ROOM " + roomCode + " //";
       const roomTab = widgetEl.querySelector('[data-tab="room"]');
@@ -471,11 +529,7 @@ var AdChat = (() => {
       if (!connected) return;
       const text = input.value.trim();
       if (!text) return;
-      var name = myName || "Player";
-      var token = getSessionToken();
-      const nameMsg = { type: "set_name", name };
-      if (token) nameMsg["session_token"] = token;
-      sendToServer(nameMsg);
+      var name = ensureRegistered();
       var msg = { type: "chat", text };
       if (currentRoom) msg["room"] = currentRoom;
       sendToServer(msg);
@@ -493,10 +547,8 @@ var AdChat = (() => {
       if (!connected) return;
       myName = name;
       localStorage.setItem("adenosine_username", name);
-      var token = getSessionToken();
-      const nameMsg = { type: "set_name", name };
-      if (token) nameMsg["session_token"] = token;
-      sendToServer(nameMsg);
+      registerName(name);
+      publishPresence();
       updateNameDisplay();
     }
     function startEditName() {
@@ -537,6 +589,7 @@ var AdChat = (() => {
     function setColor(color) {
       myColor = color;
       localStorage.setItem("adenosine_color", color);
+      ensureRegistered();
       sendToServer({ type: "set_color", color });
       updateColorDisplay();
       var popup = document.getElementById("colorPickerPopup");
@@ -597,7 +650,7 @@ var AdChat = (() => {
       if (users) {
         users.forEach(function(u) {
           var div = document.createElement("div");
-          div.className = "acw-online-user";
+          div.className = u.away ? "acw-online-user acw-away" : "acw-online-user";
           var dot = document.createElement("span");
           dot.className = "acw-online-dot";
           dot.style.background = u.color ?? "";
@@ -606,7 +659,7 @@ var AdChat = (() => {
           nameEl.textContent = u.name;
           var statusEl = document.createElement("span");
           statusEl.className = "acw-online-status";
-          statusEl.textContent = u.game || (u.rooms && u.rooms.length ? "In Room" : "Online");
+          statusEl.textContent = u.away ? "Away" : u.game || (u.rooms && u.rooms.length ? "In Room" : "Online");
           div.appendChild(dot);
           div.appendChild(nameEl);
           div.appendChild(statusEl);

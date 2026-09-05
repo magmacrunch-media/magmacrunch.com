@@ -417,6 +417,17 @@
     margin-left: auto;
 }
 
+/* Connected, but their page says nobody is at it. Still listed — they are in
+   the room and may come back — but dimmed, and left out of the header count. */
+.acw-online-user.acw-away .acw-online-name,
+.acw-online-user.acw-away .acw-online-status {
+    opacity: 0.45;
+}
+
+.acw-online-user.acw-away .acw-online-dot {
+    opacity: 0.3;
+}
+
 /* ── Typing Indicator ──────────────────────────────────────────────── */
 
 .acw-typing {
