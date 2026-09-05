@@ -71,6 +71,9 @@ var AdAudio = (() => {
   var musicMuted = false;
   var musicVolume = 0.3;
   var visibilityHandler = null;
+  var musicStartedAt = 0;
+  var musicOffset = 0;
+  var pausedByVisibility = false;
   async function loadMusic(url, opts) {
     musicVolume = opts?.volume ?? 0.3;
     const res = await fetch(url);
@@ -88,13 +91,16 @@ var AdAudio = (() => {
     musicSource.buffer = musicBuffer;
     musicSource.loop = true;
     musicSource.connect(musicGain);
-    musicSource.start(0);
+    musicOffset = musicBuffer.duration > 0 ? musicOffset % musicBuffer.duration : 0;
+    musicSource.start(0, musicOffset);
+    musicStartedAt = ctx2.currentTime;
     const target = musicMuted ? 0 : musicVolume;
     musicGain.gain.linearRampToValueAtTime(target, ctx2.currentTime + fadeIn);
     musicStarted = true;
   }
   function pauseMusic() {
     if (musicSource) {
+      musicOffset += getCtx().currentTime - musicStartedAt;
       musicSource.onended = null;
       musicSource.stop();
       musicSource = null;
@@ -103,6 +109,8 @@ var AdAudio = (() => {
   }
   function stopMusic() {
     pauseMusic();
+    musicOffset = 0;
+    pausedByVisibility = false;
     if (musicGain) {
       musicGain.disconnect();
       musicGain = null;
@@ -145,10 +153,15 @@ var AdAudio = (() => {
       document.removeEventListener("visibilitychange", visibilityHandler);
     }
     visibilityHandler = () => {
-      if (document.hidden && pause && musicStarted) {
-        pauseMusic();
-      } else if (!document.hidden && pause && musicBuffer) {
-        playMusic(0);
+      if (!pause) return;
+      if (document.hidden) {
+        if (musicStarted) {
+          pausedByVisibility = true;
+          pauseMusic();
+        }
+      } else if (pausedByVisibility) {
+        pausedByVisibility = false;
+        void playMusic(0);
       }
     };
     document.addEventListener("visibilitychange", visibilityHandler);
@@ -158,6 +171,9 @@ var AdAudio = (() => {
     musicBuffer = null;
     musicStarted = false;
     musicMuted = false;
+    musicOffset = 0;
+    musicStartedAt = 0;
+    pausedByVisibility = false;
     if (visibilityHandler) {
       document.removeEventListener("visibilitychange", visibilityHandler);
       visibilityHandler = null;

@@ -100,22 +100,14 @@
                     fadeIn: CONFIG.MUSIC.FADE_IN,
                 },
             });
-            // NOT AdAudio.handleVisibility(). Its pause path calls
-            // musicSource.stop() without recording a playhead, and its resume
-            // path calls playMusic(0) — which is start(0), the top of the
-            // track. Every tab-away and back therefore replays the opening
-            // bars, which on a 50s loop is very audible. Measured: returning to
-            // the tab starts a second buffer source at offset 0.
-            //
-            // Ducking the gain instead leaves the one source running, so the
-            // playhead keeps advancing and coming back is seamless. The fix
-            // belongs upstream in @magmacrunch/adenosine-audio; this file
-            // cannot carry it, since arcade/shared/adenosine-*.js is generated
-            // by npm run build:adenosine and hand edits are destroyed.
-            document.addEventListener('visibilitychange', () => {
-                if (!musicReady) return;
-                AdAudio.setMusicMuted(document.hidden || musicMuted, 0.2);
-            });
+            // Fixed upstream in adenosine-audio 0.3.1: the pause path now
+            // banks the playhead and the resume path only restores what it
+            // paused, so this no longer restarts the track from the top or
+            // starts music the player never asked for. stopMusic() clears the
+            // paused flag, so a run that ends while the tab is hidden does not
+            // come back playing.
+            AdAudio.handleVisibility({ pauseMusic: true });
+
             // Applied before playMusic(), which reads the muted flag to pick its
             // fade target — so a muted run starts silent rather than fading up
             // and being cut off.

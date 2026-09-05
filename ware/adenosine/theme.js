@@ -54,10 +54,10 @@ const VARS = {
 };
 
 const PKG_META = {
-  cards:       { version: '0.8.0', global: 'AdCards',   css: ['cards.css', 'chip-animation.css'] },
+  cards:       { version: '0.9.0', global: 'AdCards',   css: ['cards.css', 'chip-animation.css'] },
   puzzle:      { version: '0.3.0', global: 'AdPuzzle',  css: ['puzzle-base.css', 'puzzle-grid.css', 'puzzle-modals.css', 'puzzle-responsive.css'] },
   chat:        { version: '0.5.0', global: 'AdChat',    css: ['chat-widget.css'] },
-  multiplayer: { version: '0.5.0', global: 'AdMP',      css: ['lobby.css'] },
+  multiplayer: { version: '0.5.1', global: 'AdMP',      css: ['lobby.css'] },
 };
 
 const CDN = 'https://cdn.jsdelivr.net/npm/@magmacrunch';
