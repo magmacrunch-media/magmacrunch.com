@@ -142,7 +142,8 @@ window.checkObstacleCollisions = function(terrain) {
 
         if (!obs.nearMissed && Math.abs(player.x - ox) < obs.nearMissR && Math.abs(dz) < obs.nearMissR * 1.5) {
             obs.nearMissed = true;
-            player.score += CONFIG.NEAR_MISS_POINTS;
+            player.scoreRaw += CONFIG.NEAR_MISS_POINTS;
+            player.score = Math.floor(player.scoreRaw);
             playNearMissSound();
         }
     }

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
-    <link rel="stylesheet" href="css/style.css?v=05e3fada">
+    <link rel="stylesheet" href="css/style.css?v=ca156886">
 </head>
 <body>
     <a href="../action/" class="mc-back">action games</a>
@@ -31,26 +31,8 @@
         <!-- CHARACTER SELECT -->
         <div id="charSelect" class="overlay">
             <div class="cs-title">SELECT YOUR CARL</div>
-            <div class="cs-cards">
-                <div class="cs-card" data-char="office-carl">
-                    <canvas class="cs-preview" id="csOffice" width="64" height="80"></canvas>
-                    <div class="cs-name">OFFICE CARL</div>
-                    <div class="cs-desc">the everyman</div>
-                    <div class="cs-stats">SPD ████░ HAND ████░ CRV ████░</div>
-                </div>
-                <div class="cs-card" data-char="party-carl">
-                    <canvas class="cs-preview" id="csParty" width="64" height="80"></canvas>
-                    <div class="cs-name">PARTY CARL</div>
-                    <div class="cs-desc">the maniac</div>
-                    <div class="cs-stats">SPD █████ HAND ███░░ CRV ███░░</div>
-                </div>
-                <div class="cs-card" data-char="dark-carl">
-                    <canvas class="cs-preview" id="csDark" width="64" height="80"></canvas>
-                    <div class="cs-name">DARK CARL</div>
-                    <div class="cs-desc">the enigma</div>
-                    <div class="cs-stats">SPD █████ HAND ███░░ CRV ████░</div>
-                </div>
-            </div>
+            <!-- Built from CHARACTERS in js/config.js by renderCharCards(). -->
+            <div class="cs-cards" id="charCards"></div>
             <div class="cs-hint">← → TO SELECT &nbsp; ENTER TO PLAY</div>
         </div>
 
@@ -82,6 +64,18 @@
             <div class="go-score">SCORE: <span id="goScore">0</span></div>
             <div class="go-dist">DISTANCE: <span id="goDist">0</span>m</div>
             <div class="go-best">BEST: <span id="goBest">0</span></div>
+
+            <div class="go-leaderboard">
+                <div class="lb-title">TOP RIDERS</div>
+                <div id="goBoard" class="lb-list"></div>
+            </div>
+
+            <div id="goInitials" class="go-initials">
+                <label for="goInitialsInput">YOU RANKED — ENTER INITIALS</label>
+                <input id="goInitialsInput" maxlength="3" autocomplete="off"
+                       spellcheck="false" aria-label="Your initials, three letters">
+            </div>
+
             <div class="go-actions">
                 <div class="go-action" data-action="retry">
                     <span class="go-key">ENTER</span> RIDE AGAIN
@@ -100,19 +94,23 @@
     </div>
 
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="../shared/adenosine-score-client.js?v=55cabd6d"></script>
+    <script src="../shared/score-server.js?v=9acd988c"></script>
+    <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
     <script src="js/config.js?v=c8dcd0dd"></script>
     <script src="js/characters.js?v=e1349e81"></script>
     <script src="js/scene.js?v=af9d23d2"></script>
     <script src="js/terrain.js?v=574fe645"></script>
-    <script src="js/player.js?v=f2a6c520"></script>
-    <script src="js/obstacles.js?v=59e1823d"></script>
+    <script src="js/player.js?v=08434893"></script>
+    <script src="js/obstacles.js?v=3b855a89"></script>
     <script src="js/scenery.js?v=8f75d2c0"></script>
     <script src="js/particles.js?v=6f52f3b7"></script>
+    <script src="js/statbars.js?v=d9a8c412"></script>
     <script src="js/hud.js?v=a1dae853"></script>
     <script src="js/input.js?v=3ed920fe"></script>
-    <script src="js/audio.js?v=080f0b68"></script>
+    <script src="js/audio.js?v=1c6fdc48"></script>
     <script src="js/garage.js?v=a73e1665"></script>
-    <script src="js/main.js?v=5cf88221"></script>
+    <script src="js/main.js?v=57bb4ac1"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=4fb80289">
 <script src="../shared/adenosine-chat.js?v=00809240"></script>

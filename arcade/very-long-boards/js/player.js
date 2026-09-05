@@ -6,11 +6,27 @@
 window.player = {
     x: 0, speed: 0, lean: 0, targetLean: 0,
     distance: 0, score: 0, alive: true,
+
+    // Points are banked as a float and floored only for display. Awarding
+    // Math.floor(...) of a per-frame amount instead throws the remainder away
+    // sixty-plus times a second, which made the score depend on the refresh
+    // rate: the same ride paid ~180/s at 60 Hz and ~144/s at 144 Hz, and below
+    // about 0.34 speed on a fast monitor the per-frame award floored to zero
+    // and a slow start scored literally nothing.
+    scoreRaw: 0,
+
+    /** What the last trick actually paid, so the banner can report it. */
+    lastTrickScore: 0,
     invincible: false, invincibleTimer: 0,
     stability: 100, wobbling: false, wobblePhase: 0,
     bailing: false, bailTimer: 0,
     groundY: 0, kicked: false,
-    tricking: false, trickTimer: 0, trickCooldown: 0
+    tricking: false, trickTimer: 0, trickCooldown: 0,
+
+    // Derived each frame by updatePlayer and read by the audio mix. Kept here
+    // rather than recomputed by whoever needs them, so the speed the wheels are
+    // pitched by is exactly the speed the physics is clamping to.
+    maxSpeed: 1, braking: false
 };
 
 window.playerMesh = null;
@@ -129,6 +145,7 @@ window.resetPlayer = function() {
     player.targetLean = 0;
     player.distance = 0;
     player.score = 0;
+    player.scoreRaw = 0;
     player.alive = true;
     player.invincible = false;
     player.invincibleTimer = 0;
@@ -142,12 +159,15 @@ window.resetPlayer = function() {
     player.tricking = false;
     player.trickTimer = 0;
     player.trickCooldown = 0;
+    player.braking = false;
+    player.lastTrickScore = 0;
 };
 
 window.updatePlayer = function(input, terrain, dt) {
     const char = CHARACTERS[currentCharacter];
     const board = BOARDS[currentBoard] || BOARDS['standard'];
     const maxSpd = CONFIG.MAX_SPEED * char.speedMult * board.speedMult * 0.25;
+    player.maxSpeed = maxSpd;
     const handling = CONFIG.TURN_SPEED * char.handlingMult * board.handlingMult * 0.15;
     const stabMult = char.stabilityMult * board.stabilityMult;
     const dtScale = dt * 60;
@@ -164,6 +184,7 @@ window.updatePlayer = function(input, terrain, dt) {
         if (input.trick) {
             player.kicked = true;
             player.speed = 0.15;
+            playKickSound();
         }
         player.groundY = terrain ? terrain.hillAt(0) : 0;
         return null;
@@ -174,6 +195,7 @@ window.updatePlayer = function(input, terrain, dt) {
     player.speed += slopeAccel * dtScale;
     player.speed *= Math.pow(0.997, dtScale);
 
+    player.braking = Boolean(input.brake);
     if (input.brake) {
         player.speed *= Math.pow(0.97, dtScale);
     }
@@ -190,8 +212,10 @@ window.updatePlayer = function(input, terrain, dt) {
         player.tricking = true;
         player.trickTimer = 18;
         player.trickCooldown = 30;
-        const trickScore = Math.floor(CONFIG.TRICK_POINTS * char.trickMult * (1 + player.speed));
-        player.score += trickScore;
+        const trickScore = CONFIG.TRICK_POINTS * char.trickMult * (1 + player.speed);
+        player.scoreRaw += trickScore;
+        player.score = Math.floor(player.scoreRaw);
+        player.lastTrickScore = Math.floor(trickScore);
         return 'trick';
     }
 
@@ -229,7 +253,8 @@ window.updatePlayer = function(input, terrain, dt) {
 
     player.groundY = terrain ? terrain.hillAt(player.distance) : 0;
     player.distance += player.speed * dtScale;
-    player.score += Math.floor(player.speed * 3 * dtScale);
+    player.scoreRaw += player.speed * 3 * dtScale;
+    player.score = Math.floor(player.scoreRaw);
 
     if (player.invincible) {
         player.invincibleTimer -= dtScale;
@@ -276,10 +301,6 @@ window.updatePlayerMesh = function(terrain, frame) {
             playerMesh._armR.rotation.z = -0.2 - armSwing;
         }
     }
-};
-
-window.performTrick = function() {
-    return player.tricking;
 };
 
 window.updatePlayerColors = function(charKey) {

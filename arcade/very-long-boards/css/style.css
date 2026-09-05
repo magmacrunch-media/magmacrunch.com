@@ -141,10 +141,40 @@ body {
     margin-bottom: 8px;
 }
 
-.cs-stats {
-    font-size: 5px;
+/* ── Stat bars, shared by both select screens ──
+   Built by js/statbars.js from the multipliers in js/config.js. Stacked rows
+   rather than one 5px line: four stats on a 140px card is unreadable inline,
+   and the bar has to be comparable at a glance to be worth drawing. */
+.stat-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 8px;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    font-size: 6px;
+    line-height: 1;
+}
+
+.stat-label {
     color: #666;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+}
+
+.stat-bar {
+    color: #39ff6e;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+}
+
+.cs-card.selected .stat-bar,
+.bs-card.selected .stat-bar {
+    color: #ff2e9c;
 }
 
 .cs-hint {
@@ -202,10 +232,103 @@ body {
     margin-bottom: 8px;
 }
 
-.bs-stats {
-    font-size: 5px;
+
+/* ── Leaderboard ── */
+.go-leaderboard {
+    margin-top: 18px;
+    width: 220px;
+}
+
+.lb-title {
+    font-size: 8px;
+    color: #39ff6e;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-shadow: 0 0 8px rgba(57, 255, 110, 0.4);
+}
+
+.lb-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    /* Ten rows at 7px, so a full board never pushes the actions off screen. */
+    max-height: 132px;
+    overflow-y: auto;
+}
+
+.lb-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 7px;
+    color: #999;
+}
+
+.lb-rank {
+    width: 16px;
+    text-align: right;
     color: #666;
-    letter-spacing: 0.05em;
+}
+
+.lb-initials {
+    width: 32px;
+    letter-spacing: 0.1em;
+}
+
+.lb-score {
+    flex: 1;
+    text-align: right;
+    color: #ffe03a;
+}
+
+.lb-row.lb-new {
+    color: #ff2e9c;
+}
+
+.lb-row.lb-new .lb-score,
+.lb-row.lb-new .lb-rank {
+    color: #ff2e9c;
+}
+
+.lb-empty {
+    font-size: 7px;
+    color: #555;
+}
+
+/* ── Initials entry ── */
+/* Shown by adding .active rather than by setting an inline display, so the
+   stylesheet keeps ownership of the layout: an inline display:block here beat
+   the flex column and put the label beside the field. */
+.go-initials {
+    display: none;
+}
+
+.go-initials.active {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.go-initials label {
+    font-size: 7px;
+    color: #39ff6e;
+    letter-spacing: 0.08em;
+}
+
+.go-initials input {
+    font-family: inherit;
+    font-size: 14px;
+    width: 90px;
+    padding: 6px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #ffe03a;
+    background: #0a0612;
+    border: 2px solid #ff2e9c;
+    outline: none;
 }
 
 /* ── HUD ── */

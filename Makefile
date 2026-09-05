@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -105,6 +105,10 @@ sync-george-boole: ## Regenerate arcade/george-boole/ from the george-boole repo
 
 sync-texas-holdem-lava-dome: ## Regenerate arcade/solitaire_THLD/ from the texas-holdem-lava-dome repo's web/
 	node scripts/sync-game.mjs solitaire_THLD
+	npm run --silent build:adenosine
+
+sync-very-long-boards: ## Regenerate arcade/very-long-boards/ from the very-long-boards repo's web/
+	node scripts/sync-game.mjs very-long-boards
 	npm run --silent build:adenosine
 
 # ── Build ─────────────────────────────────────

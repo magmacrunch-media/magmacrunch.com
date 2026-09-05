@@ -40,9 +40,8 @@ function init() {
 
     initAudio();
     window.initHUD();
-    renderCharacterPreview('csOffice', 'office-carl');
-    renderCharacterPreview('csParty', 'party-carl');
-    renderCharacterPreview('csDark', 'dark-carl');
+    renderCharCards();
+    loadLeaderboard();
 
     scene.registerBeforeRender(gameLogic);
     sceneObj.engine.runRenderLoop(() => scene.render());
@@ -51,23 +50,38 @@ function init() {
 function showOverlay(el) { if (el) el.classList.add('active'); }
 function hideOverlay(el) { if (el) el.classList.remove('active'); }
 
+/**
+ * The road rolling past behind the menus. Title and character select show the
+ * same idle world; board select sits still because the garage covers it.
+ */
+function updateIdleWorld(dt) {
+    titleDist += 9 * dt;
+    terrain.update(titleDist);
+    playerMesh.position.y = terrain.hillAt(titleDist);
+    window.updateObstaclePositions(terrain, terrain.getScrollOffset());
+    window.updateSceneryPositions(terrain, terrain.getScrollOffset());
+    sceneObj.updateCamera(
+        playerMesh,
+        terrain.hillAt(titleDist + 5) - terrain.hillAt(titleDist),
+        terrain.curveAt(titleDist),
+    );
+    sceneObj.updateSky(playerMesh);
+}
+
 function gameLogic() {
     frame++;
     const dt = sceneObj.engine.getDeltaTime() / 1000;
     const inp = consumeInput();
     if (menuNavCooldown > 0) menuNavCooldown -= dt;
 
+    // The mix reads the game state rather than being told about it, so it runs
+    // outside the switch and covers every state including the ones that do
+    // nothing else.
+    window.updateAudioMix(gameState);
+
     switch (gameState) {
         case 'title':
-            titleDist += 9 * dt;
-            terrain.update(titleDist);
-            playerMesh.position.y = terrain.hillAt(titleDist);
-            window.updateObstaclePositions(terrain, terrain.getScrollOffset());
-            window.updateSceneryPositions(terrain, terrain.getScrollOffset());
-            const tSlope = terrain.hillAt(titleDist + 5) - terrain.hillAt(titleDist);
-            const tCurve = terrain.curveAt(titleDist);
-            sceneObj.updateCamera(playerMesh, tSlope, tCurve);
-            sceneObj.updateSky(playerMesh);
+            updateIdleWorld(dt);
             if (inp.enter) {
                 gameState = 'select';
                 hideOverlay(titleScreen);
@@ -78,15 +92,7 @@ function gameLogic() {
             break;
 
         case 'select':
-            titleDist += 9 * dt;
-            terrain.update(titleDist);
-            playerMesh.position.y = terrain.hillAt(titleDist);
-            window.updateObstaclePositions(terrain, terrain.getScrollOffset());
-            window.updateSceneryPositions(terrain, terrain.getScrollOffset());
-            const sSlope = terrain.hillAt(titleDist + 5) - terrain.hillAt(titleDist);
-            const sCurve = terrain.curveAt(titleDist);
-            sceneObj.updateCamera(playerMesh, sSlope, sCurve);
-            sceneObj.updateSky(playerMesh);
+            updateIdleWorld(dt);
             if (inp.left && menuNavCooldown <= 0) {
                 selectedCharIndex = (selectedCharIndex - 1 + charKeys.length) % charKeys.length;
                 currentCharacter = charKeys[selectedCharIndex];
@@ -108,6 +114,12 @@ function gameLogic() {
                 showOverlay(boardSelect);
                 renderBoardCards();
                 playSelectSound();
+            } else if (inp.escape) {
+                gameState = 'title';
+                hideGarage();
+                hideOverlay(charSelect);
+                showOverlay(titleScreen);
+                playBackSound();
             }
             break;
 
@@ -134,12 +146,16 @@ function gameLogic() {
                 hideOverlay(boardSelect);
                 showOverlay(charSelect);
                 gameState = 'select';
+                playBackSound();
             }
             break;
 
         case 'countdown': {
             player.groundY = terrain ? terrain.hillAt(player.distance) : 0;
-            terrain.update(player.speed);
+            // player.distance, not player.speed. Every other state scrolls the
+            // road by how far Carl has come; this one was passing his velocity,
+            // which only looked right because both are ~0 on the start line.
+            terrain.update(player.distance);
             window.updateObstaclePositions(terrain, terrain.getScrollOffset());
             window.updateSceneryPositions(terrain, terrain.getScrollOffset());
             window.updatePlayerMesh(terrain, frame);
@@ -165,6 +181,8 @@ function gameLogic() {
             if (inp.escape) {
                 gameState = 'paused';
                 showOverlay(pauseScreen);
+                window.silenceAudioBeds();
+                playBackSound();
                 break;
             }
 
@@ -209,12 +227,16 @@ function gameLogic() {
             if (inp.escape) {
                 gameState = 'playing';
                 hideOverlay(pauseScreen);
+                playSelectSound();
             }
             break;
 
         case 'gameover':
             terrain.update(player.distance);
             window.updatePlayerMesh(terrain, frame);
+            // While initials are being entered the keyboard belongs to the input
+            // field, or Enter would restart the run instead of submitting them.
+            if (isAwaitingInitials()) break;
             if (inp.enter) {
                 startCountdown();
             } else if (inp.tab) {
@@ -228,6 +250,7 @@ function gameLogic() {
 }
 
 function startCountdown() {
+    hideInitialsPrompt();
     window.resetPlayer();
     player.speed = 0.1;
     titleDist = 0;
@@ -252,6 +275,7 @@ function endGame(cause) {
     player.alive = false;
     gameState = 'gameover';
     hud.style.display = 'none';
+    window.silenceAudioBeds();
     showOverlay(gameOver);
     if (player.score > bestScore) {
         bestScore = player.score;
@@ -262,12 +286,170 @@ function endGame(cause) {
     document.getElementById('goBest').textContent = bestScore;
     const causeEl = document.getElementById('goCause');
     if (causeEl) causeEl.textContent = cause || 'SPLAT!';
-    playGameOverSound();
+
+    if (madeLeaderboard(player.score)) {
+        playHighScoreSound();
+        showInitialsPrompt(player.score);
+    } else {
+        playGameOverSound();
+    }
+}
+
+// ═══════════════════════════════════════════════
+//  LEADERBOARD
+//
+//  scoreClient is created in index.html and owns both the MAGMA//OPS backend
+//  and its localStorage fallback, so nothing here has to know which one answered
+//  — a run with the Pi unreachable still ranks, just locally. bestScore stays as
+//  it was: it is this browser's own record and is shown even when the board is
+//  empty or unreachable.
+// ═══════════════════════════════════════════════
+
+const LEADERBOARD_SIZE = 10;
+let leaderboard = [];
+let awaitingInitials = false;
+
+async function loadLeaderboard() {
+    try {
+        leaderboard = (await scoreClient.load('very-long-boards')) || [];
+    } catch (e) {
+        leaderboard = [];
+    }
+    renderLeaderboard();
+}
+
+function renderLeaderboard(highlightScore) {
+    const list = document.getElementById('goBoard');
+    if (!list) return;
+    list.innerHTML = '';
+
+    if (!leaderboard.length) {
+        const empty = document.createElement('div');
+        empty.className = 'lb-empty';
+        empty.textContent = 'NO SCORES YET';
+        list.appendChild(empty);
+        return;
+    }
+
+    let highlighted = false;
+    leaderboard.slice(0, LEADERBOARD_SIZE).forEach((entry, i) => {
+        const row = document.createElement('div');
+        row.className = 'lb-row';
+        // Highlight one row only: with a repeated score the first match is the
+        // one just inserted, since it sorted in ahead of the equal older entry.
+        if (!highlighted && highlightScore !== undefined && entry.score === highlightScore) {
+            row.classList.add('lb-new');
+            highlighted = true;
+        }
+        row.innerHTML =
+            '<span class="lb-rank">' + (i + 1) + '</span>' +
+            '<span class="lb-initials"></span>' +
+            '<span class="lb-score"></span>';
+        row.querySelector('.lb-initials').textContent = entry.initials || '???';
+        row.querySelector('.lb-score').textContent = entry.score;
+        list.appendChild(row);
+    });
+}
+
+/** A score ranks if the board has room or it beats the bottom of it. */
+function madeLeaderboard(score) {
+    if (score <= 0) return false;
+    if (leaderboard.length < LEADERBOARD_SIZE) return true;
+    return score > leaderboard[leaderboard.length - 1].score;
+}
+
+function isAwaitingInitials() { return awaitingInitials; }
+
+function showInitialsPrompt(score) {
+    const prompt = document.getElementById('goInitials');
+    const field = document.getElementById('goInitialsInput');
+    if (!prompt || !field) {
+        // No markup to type into: rank the score anyway rather than losing it.
+        submitInitials('AAA', score);
+        return;
+    }
+    awaitingInitials = true;
+    prompt.classList.add('active');
+    field.value = '';
+    field.disabled = false;
+    field.focus();
+    field.onkeydown = (e) => {
+        e.stopPropagation();
+        if (e.key === 'Enter') submitInitials(field.value, score);
+    };
+}
+
+function hideInitialsPrompt() {
+    const prompt = document.getElementById('goInitials');
+    if (prompt) prompt.classList.remove('active');
+    awaitingInitials = false;
+}
+
+function submitInitials(raw, score) {
+    if (!awaitingInitials && raw !== 'AAA') return;   // guard a double Enter
+    awaitingInitials = false;
+
+    const initials = (raw || '').trim().toUpperCase().slice(0, 3) || 'AAA';
+
+    // Insert locally first so the board on screen is right whether or not the
+    // backend is reachable; scoreClient owns the actual persistence.
+    leaderboard.push({ initials, score });
+    leaderboard.sort((a, b) => b.score - a.score);
+    leaderboard = leaderboard.slice(0, LEADERBOARD_SIZE);
+    try {
+        scoreClient.save('very-long-boards', initials, score);
+    } catch (e) {
+        // Already recorded on screen; a failed save is not worth interrupting.
+    }
+
+    hideInitialsPrompt();
+    renderLeaderboard(score);
 }
 
 function updateCharSelection() {
     document.querySelectorAll('.cs-card').forEach((card, i) => {
         card.classList.toggle('selected', i === selectedCharIndex);
+    });
+}
+
+/**
+ * Build the character cards from CHARACTERS, the way renderBoardCards builds
+ * the board cards from BOARDS. They used to be three hand-written blocks in
+ * index.html carrying hand-written stat bars, which is how the markup came to
+ * claim a CRV stat that exists nowhere in the config.
+ */
+function renderCharCards() {
+    const container = document.getElementById('charCards');
+    if (!container) return;
+    const all = charKeys.map((k) => CHARACTERS[k]);
+    container.innerHTML = '';
+
+    charKeys.forEach((key, i) => {
+        const ch = CHARACTERS[key];
+        const card = document.createElement('div');
+        card.className = 'cs-card' + (i === selectedCharIndex ? ' selected' : '');
+        card.dataset.char = key;
+
+        const preview = document.createElement('canvas');
+        preview.className = 'cs-preview';
+        preview.width = 64;
+        preview.height = 80;
+        const sprite = characterSprites[key];
+        if (sprite) sprite.draw(preview.getContext('2d'), 16, 10, 0, 0);
+
+        const name = document.createElement('div');
+        name.className = 'cs-name';
+        name.textContent = ch.name;
+
+        const desc = document.createElement('div');
+        desc.className = 'cs-desc';
+        desc.textContent = ch.desc;
+
+        card.appendChild(preview);
+        card.appendChild(name);
+        card.appendChild(desc);
+        card.appendChild(window.renderStatBars(ch, all, window.CHAR_STATS));
+        container.appendChild(card);
     });
 }
 
@@ -284,6 +466,7 @@ function hideGarage() {
 function renderBoardCards() {
     const container = document.getElementById('boardCards');
     if (!container) return;
+    const allBoards = boardKeys.map((k) => BOARDS[k]);
     container.innerHTML = '';
     boardKeys.forEach((key, i) => {
         const board = BOARDS[key];
@@ -305,17 +488,10 @@ function renderBoardCards() {
         desc.className = 'bs-desc';
         desc.textContent = board.desc;
 
-        const stats = document.createElement('div');
-        stats.className = 'bs-stats';
-        const spd = Math.min(10, Math.round(board.speedMult * 10));
-        const hand = Math.min(10, Math.round(board.handlingMult * 10));
-        const stab = Math.min(10, Math.round(board.stabilityMult * 10));
-        stats.textContent = `SPD ${'█'.repeat(spd)}${'░'.repeat(10-spd)} HAND ${'█'.repeat(hand)}${'░'.repeat(10-hand)} STAB ${'█'.repeat(stab)}${'░'.repeat(10-stab)}`;
-
         card.appendChild(preview);
         card.appendChild(name);
         card.appendChild(desc);
-        card.appendChild(stats);
+        card.appendChild(window.renderStatBars(board, allBoards, window.BOARD_STATS));
         container.appendChild(card);
     });
 }
@@ -324,15 +500,6 @@ function updateBoardSelection() {
     document.querySelectorAll('.bs-card').forEach((card, i) => {
         card.classList.toggle('selected', i === selectedBoardIndex);
     });
-}
-
-function renderCharacterPreview(canvasId, charKey) {
-    const pc = document.getElementById(canvasId);
-    if (!pc) return;
-    const pctx = pc.getContext('2d');
-    pctx.clearRect(0, 0, 64, 80);
-    const ch = characterSprites[charKey];
-    if (ch) ch.draw(pctx, 16, 10, 0, 0);
 }
 
 function renderCountdown(count) {
@@ -344,15 +511,24 @@ function renderCountdown(count) {
 }
 
 let trickTextTimer = 0;
+
+/**
+ * The banner is written once, when the trick lands, and then only held up.
+ * It used to recompute the figure every frame from the CURRENT speed, so the
+ * number on screen drifted away from the number actually banked as Carl slowed
+ * down through the landing — the award is made once, at the speed he had.
+ */
 function showTrickText() {
+    const el = document.getElementById('hudTrick');
+    if (el) el.textContent = 'TRICK! +' + player.lastTrickScore;
     trickTextTimer = 40;
 }
+
 function updateTrickText() {
     const el = document.getElementById('hudTrick');
     if (!el) return;
     if (trickTextTimer > 0) {
         trickTextTimer--;
-        el.textContent = 'TRICK! +' + Math.floor(CONFIG.TRICK_POINTS * CHARACTERS[currentCharacter].trickMult * (1 + player.speed));
         el.style.opacity = 1;
     } else {
         el.style.opacity = 0;
@@ -360,15 +536,11 @@ function updateTrickText() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
-document.addEventListener('keydown', (e) => {
-    if (e.code === 'Backquote' && gameState === 'playing') {
-        terrain.debugMode = !terrain.debugMode;
-    }
-});
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && gameState === 'playing') {
         gameState = 'paused';
         showOverlay(pauseScreen);
+        window.silenceAudioBeds();
     }
 });
 window.__pageCleanup = function() {

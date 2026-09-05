@@ -19,12 +19,32 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Game folder name -> repo checkout expected beside this one. */
+/**
+ * Game folder name -> repo checkout expected beside this one.
+ *
+ * OTHER closes the generated banner by saying what else that repo holds. It used to be one
+ * hardcoded sentence -- "also holds the game's Wii port, so a rules change can be made once
+ * and carried to both versions" -- which is true of three of these and wrong twice over for
+ * very-long-boards: its other version is a Godot desktop build, and the two are deliberately
+ * NOT ports, so carrying a change across is the thing that repo tells you not to do. A
+ * sentence true of most entries is the kind that goes stale silently, so it is per-game data.
+ */
+const WII_PORT =
+  "the game's Wii port, so a rules change can be made once and carried to both\n" +
+  "versions.";
+
 const GAMES = {
-  'george-boole': 'george-boole',
-  'moonlight-drift': 'moonlight-drift',
+  'george-boole': { repo: 'george-boole', other: WII_PORT },
+  'moonlight-drift': { repo: 'moonlight-drift', other: WII_PORT },
+  'very-long-boards': {
+    repo: 'very-long-boards',
+    other:
+      'a separate Godot desktop version. Those two are deliberately not ports of each\n' +
+      'other -- different scoring, different failure model -- so a change to this one is\n' +
+      'usually not owed to that one.',
+  },
   // Historical arcade folder name, kept because it is the live URL.
-  'solitaire_THLD': 'texas-holdem-lava-dome',
+  'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
 };
 
 const game = process.argv[2];
@@ -34,7 +54,7 @@ if (!game || !GAMES[game]) {
   process.exit(1);
 }
 
-const repo = GAMES[game];
+const { repo, other } = GAMES[game];
 
 // Where the game repo can be. Beside this one is the documented layout and what
 // a fresh clone gets; a wider tree instead groups repos by kind, putting the
@@ -86,8 +106,7 @@ repository's \`web/\` folder, run that target, and commit the result here. The
 path is deliberately not spelled out: that repo resolves whether it is checked
 out beside this one or grouped under \`games/\` in a wider tree.
 
-That repository also holds the game's Wii port, so a rules change can be made
-once and carried to both versions.
+That repository also holds ${other}
 `,
 );
 

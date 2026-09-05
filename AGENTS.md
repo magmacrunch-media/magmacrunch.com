@@ -281,24 +281,43 @@ Runner internals, Python interpreter selection, and what each suite covers: `doc
 3. Follow the pixel art conventions - use canvas at low res, scale with CSS
 4. Add link to `arcade/index.html` nav
 
-### Three arcade folders are generated — never edit them here
+### Four arcade folders are generated — never edit them here
 
-`arcade/moonlight-drift/`, `arcade/george-boole/` and `arcade/solitaire_THLD/`
-are copies. Each game now lives in its own repo holding both its browser and
-Wii versions, and the folder here is produced from that repo's `web/` by
-`make sync-<repo>`, which **deletes the folder and recopies it**. Anything
-edited here is destroyed the next time anyone syncs, with no warning and no
-conflict.
+`arcade/moonlight-drift/`, `arcade/george-boole/`, `arcade/solitaire_THLD/` and
+`arcade/very-long-boards/` are copies. Each game lives in its own repo holding
+more than one version of itself, and the folder here is produced from that
+repo's `web/` by `make sync-<repo>`, which **deletes the folder and recopies
+it**. Anything edited here is destroyed the next time anyone syncs, with no
+warning and no conflict.
 
-| Folder here | Source repo | Target |
-|---|---|---|
-| `arcade/moonlight-drift/` | `moonlight-drift` | `make sync-moonlight-drift` |
-| `arcade/george-boole/` | `george-boole` | `make sync-george-boole` |
-| `arcade/solitaire_THLD/` | `texas-holdem-lava-dome` | `make sync-texas-holdem-lava-dome` |
+| Folder here | Source repo | Target | Other version there |
+|---|---|---|---|
+| `arcade/moonlight-drift/` | `moonlight-drift` | `make sync-moonlight-drift` | Wii, terminal |
+| `arcade/george-boole/` | `george-boole` | `make sync-george-boole` | Wii, terminal |
+| `arcade/solitaire_THLD/` | `texas-holdem-lava-dome` | `make sync-texas-holdem-lava-dome` | Wii, terminal |
+| `arcade/very-long-boards/` | `very-long-boards` | `make sync-very-long-boards` | Godot desktop |
 
 To change one of those games: edit `../<repo>/web/`, run its target here, commit
 the result. Each folder also carries a `GENERATED.md` saying the same thing, so
 the rule is visible from inside the copy as well as from here.
+
+**`very-long-boards` is the odd one out and its commits should say so.** The
+other three carry ports of one game, so a rules change is expected in every
+version. Its Godot version is a *different game* — a timed course rather than an
+endless run for score — and that repo's `AGENTS.md` says plainly that a change to
+one is not owed to the other.
+
+#### Syncing reintroduces stale `?v=` stamps
+
+A sync copies the source repo's `index.html` verbatim, cache-buster stamps and
+all, and those stamps were computed against whatever that repo last saw. So
+`make sync-<game>` can leave `check:cachebust` failing on a game nobody touched:
+re-syncing `moonlight-drift` on 2026-09-05 reverted `adenosine-audio.js?v` from
+the stamp the hook had corrected here back to the game repo's older one.
+
+The fix belongs in the **source** repo's `web/index.html`, not in the copy —
+correcting it here only survives until the next sync. Run `check:cachebust`
+after any sync, and carry the digests it reports back upstream.
 
 Every other game under `arcade/` is authored in this repo as normal.
 
