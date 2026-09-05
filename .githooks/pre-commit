@@ -117,9 +117,31 @@ if [ -n "$repaired" ]; then
 	# file THIS commit records is this commit's problem.
 	recorded=$(git diff --cached --name-only)
 
+	# `git commit -- <paths>` runs the hook against a temporary index holding
+	# only those paths, and `git add` writes into THAT index — so staging a
+	# repaired page here does not merely help, it widens a commit that was
+	# deliberately scoped. That put another session's index.html into a
+	# cribbage commit, carrying a stamp for a main.js the commit did not
+	# include, which is exactly the mismatch check:cachebust fails CI over.
+	#
+	# So a scoped commit gets told about a stale page and left to deal with
+	# it; only a whole-index commit, where staging cannot widen anything the
+	# author did not already choose, still gets the repair staged for it.
+	path_limited=0
+	if [ "$(basename "${GIT_INDEX_FILE:-index}")" != "index" ]; then
+		path_limited=1
+	fi
+
 	held_back=""
 	foreign=""
 	for file in $repaired; do
+		if echo "$recorded" | grep -qx "$file"; then
+			: # part of this commit; handled by the branches below
+		elif [ "$path_limited" = 1 ]; then
+			case " $foreign " in *" $file "*) ;; *) foreign="$foreign $file" ;; esac
+			continue
+		fi
+
 		if ! echo "$dirty_before" | grep -qx "$file"; then
 			git add -- "$file"
 		elif echo "$recorded" | grep -qx "$file"; then
