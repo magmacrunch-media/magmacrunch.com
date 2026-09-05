@@ -18,8 +18,6 @@ arcade/admin/github-token.json
 # git, which is how arcade/SORRY/AGENTS.md went six weeks unnoticed.
 wiki/
 wiki-old-backup/
-archive/more/contributors.html
-archive/more/video.html
 mcp-server/.venv/
 __pycache__/
 drafts/

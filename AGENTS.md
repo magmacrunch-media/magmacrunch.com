@@ -238,6 +238,7 @@ commands that access local files.
 - **Generated bundles**: `arcade/shared/adenosine-*.js` and the chat widget files are synced from npm by `npm run build:adenosine` — never hand-edit them (see `docs/ops/adenosine.md`)
 - **Generated ware files**: `ware/shared/mgs-lang-bundle.js` (from the installed magmascript, by `scripts/sync-playground.py`) and `ware/crunch-c/lessons.js` (from the crunch-c repo, by `scripts/sync-crunch-c.py`) are generated and committed — never hand-edit either. Edit the upstream source and re-run the script (see `docs/ops/frontend.md`)
 - **`tools/` holds redirect stubs only**: the section moved to `ware/` — do not add content or links under `tools/` (see `docs/ops/frontend.md`)
+- **`archive/more/` holds redirect stubs only**: `contributors.html` and `video.html` were unlinked from the site and are now stubs to `/archive/`. The MusicBrainz series behind them still exist and are curated, so restoring either page is a real option — but it means relinking it, not just editing the stub
 - **Serve local dev over http** when testing chat/multiplayer: a `file://` page sends `Origin: null`, which the handshake gate refuses
 
 ## Testing
