@@ -15,6 +15,6 @@ repository's `web/` folder, run that target, and commit the result here. The
 path is deliberately not spelled out: that repo resolves whether it is checked
 out beside this one or grouped under `games/` in a wider tree.
 
-That repository also holds a separate Godot desktop version. Those two are deliberately not ports of each
-other -- different scoring, different failure model -- so a change to this one is
-usually not owed to that one.
+That repository also holds a separate Godot desktop version. Those two are
+deliberately not ports of each other -- different scoring, different failure
+model -- so a change to this one is usually not owed to that one.

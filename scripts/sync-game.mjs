@@ -30,8 +30,8 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
  * sentence true of most entries is the kind that goes stale silently, so it is per-game data.
  */
 const WII_PORT =
-  "the game's Wii port, so a rules change can be made once and carried to both\n" +
-  "versions.";
+  "the game's Wii port, so a rules change can be made\n" +
+  "once and carried to both versions.";
 
 const GAMES = {
   'george-boole': { repo: 'george-boole', other: WII_PORT },
@@ -39,9 +39,9 @@ const GAMES = {
   'very-long-boards': {
     repo: 'very-long-boards',
     other:
-      'a separate Godot desktop version. Those two are deliberately not ports of each\n' +
-      'other -- different scoring, different failure model -- so a change to this one is\n' +
-      'usually not owed to that one.',
+      'a separate Godot desktop version. Those two are\n' +
+      'deliberately not ports of each other -- different scoring, different failure\n' +
+      'model -- so a change to this one is usually not owed to that one.',
   },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
