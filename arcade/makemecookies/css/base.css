@@ -35,6 +35,7 @@ body {
   font-family: 'Share Tech Mono', 'Courier New', monospace;
   color: var(--text);
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;

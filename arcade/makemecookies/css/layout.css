@@ -236,7 +236,12 @@ header .byline {
      at 341px tall in a 375px viewport. aspect-ratio derives the width back. */
   #line {
     aspect-ratio: 960 / 420;
+    /* 100vh on a phone is the height with the URL bar hidden, so while the bar
+       is showing this overflows and puts the meters back under the fold - the
+       exact bug the height-sizing was meant to fix. dvh tracks the viewport
+       that is actually visible; the vh line stays as the fallback. */
     height: calc(100vh - 158px);
+    height: calc(100dvh - 158px);
     width: auto;
     max-width: 98vw;
   }
@@ -246,6 +251,16 @@ header .byline {
   .hud-label { font-size: 7px; margin-bottom: 2px; }
   .hud-value { font-size: 14px; }
   #hud-rush { font-size: 9px; min-height: 10px; }
+  /* The shared chat bubble is fixed bottom-right and in landscape it covered
+     24% of SHIP - the button pressed most, and pressed in a hurry. Simply
+     moving it to the other corner just moved the problem onto FLOUR, because
+     the touch row spans the full width and reaches both corners. So park it
+     bottom-left AND reserve that corner: the cost is ~3px per button, spread
+     across five, instead of a quarter of one of them being dead.
+     Scoped to this page - no other arcade game puts controls on the bottom
+     edge, so the widget is left alone everywhere else. */
+  #arcadeChatWidget { right: auto; left: 8px; bottom: 8px; }
+  .touchpad, .controls { padding-left: 64px; }
   .tp { min-height: 42px; padding: 4px 2px; gap: 1px; }
   .tp b { font-size: 10px; }
   .tp span { font-size: 8px; }
