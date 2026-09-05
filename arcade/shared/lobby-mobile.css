@@ -1,0 +1,45 @@
+/* lobby-mobile.css — shared multiplayer lobby fixes | MagmaCrunch Media © 2026
+ *
+ * Overrides for multiplayer/lobby.css, which is generated: sync-adenosine.mjs
+ * copies it out of @magmacrunch/adenosine-multiplayer, so editing it in place
+ * lasts until the next `npm run build:adenosine`. Load this after it. Every
+ * game with a lobby wants these, so it lives here rather than in one game's
+ * css/ — cribbage and scandinavian-stud both link it. Delete it once the
+ * package ships the fix.
+ *
+ * Two faults, both only reachable once you are host in a room — that is when
+ * Start Game appears and the button row goes from three to four — on a short
+ * screen. Which is why the lobby looks fine right up until you want out:
+ *
+ *   - .lobby-buttons is a nowrap flex row and .lobby-btn is `flex: 1`, whose
+ *     automatic minimum size is its content. Four buttons cannot shrink past
+ *     their labels, so the row overruns the panel. Measured at 360x640, Leave
+ *     ran from x=351 to x=445 in a 360px viewport: 85px off-screen, leaving a
+ *     9px sliver to aim at.
+ *
+ *   - .lobby-overlay centres a panel that has no max-height and no scroll, so
+ *     a panel taller than the viewport is clipped at both ends with no way to
+ *     reach either. The same state measured 646px against 640px.
+ */
+
+/* Centre the panel while it fits, scroll it when it does not. */
+.lobby-overlay {
+    align-items: flex-start;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px 0;
+}
+
+.lobby-panel {
+    margin: auto;
+}
+
+/* Wrap to two per row rather than squeezing four off the edge. */
+.lobby-buttons {
+    flex-wrap: wrap;
+}
+
+.lobby-btn {
+    flex: 1 1 45%;
+    min-width: 0;
+}
