@@ -38,6 +38,7 @@ var AdRPG = (() => {
     createInventory: () => createInventory,
     createItemRegistry: () => createItemRegistry,
     createSpriteRegistry: () => createSpriteRegistry,
+    createSpriteSheet: () => createSpriteSheet,
     createWorldItems: () => createWorldItems,
     ctx: () => ctx,
     currentMap: () => currentMap,
@@ -58,9 +59,13 @@ var AdRPG = (() => {
     isSolid: () => isSolid,
     keys: () => keys,
     keysPressed: () => keysPressed,
+    loadSpriteSheet: () => loadSpriteSheet,
+    loadSpriteSheets: () => loadSpriteSheets,
     map: () => map,
     player: () => player,
     renderWorld: () => renderWorld,
+    resetEngine: () => resetEngine,
+    resetInput: () => resetInput,
     setCurrentMap: () => setCurrentMap,
     setGameOver: () => setGameOver,
     setGamePaused: () => setGamePaused,
@@ -122,6 +127,24 @@ var AdRPG = (() => {
   var waterAnimCounter = 0;
   var campfireAnimFrame = 0;
   var campfireAnimCounter = 0;
+  function setAnimationFrame(val) {
+    animationFrame = val;
+  }
+  function setFrameCounter(val) {
+    frameCounter = val;
+  }
+  function setWaterAnimFrame(val) {
+    waterAnimFrame = val;
+  }
+  function setWaterAnimCounter(val) {
+    waterAnimCounter = val;
+  }
+  function setCampfireAnimFrame(val) {
+    campfireAnimFrame = val;
+  }
+  function setCampfireAnimCounter(val) {
+    campfireAnimCounter = val;
+  }
   var transitionCooldown = 0;
   function setTransitionCooldown(val) {
     transitionCooldown = val;
@@ -201,6 +224,13 @@ var AdRPG = (() => {
           listeners[event] = arr.filter((f) => f !== fn);
         }
       },
+      clear(event) {
+        if (event === void 0) {
+          for (const key of Object.keys(listeners)) delete listeners[key];
+        } else {
+          delete listeners[event];
+        }
+      },
       emit(event, ...args) {
         for (const fn of listeners[event] || []) {
           if (args.length > 0) {
@@ -219,6 +249,14 @@ var AdRPG = (() => {
   var keys = {};
   var keysPressed = {};
   var activeListeners = null;
+  function resetInput() {
+    if (activeListeners) {
+      activeListeners.destroy();
+    }
+    activeListeners = null;
+    for (const k of Object.keys(keys)) delete keys[k];
+    for (const k of Object.keys(keysPressed)) delete keysPressed[k];
+  }
   function initInput({ onPause, onInteract, bindings = DEFAULT_BINDINGS } = {}) {
     if (activeListeners) return activeListeners;
     const pauseKeys = new Set(bindings.pause.map((k) => k.toLowerCase()));
@@ -408,6 +446,88 @@ var AdRPG = (() => {
         }
       }
     };
+  }
+
+  // src/sprites.ts
+  function createSpriteSheet(image, { frameWidth, frameHeight, originX = 0, originY = 0 }) {
+    if (!(frameWidth > 0) || !(frameHeight > 0)) {
+      throw new Error(`createSpriteSheet: frame size must be positive, got ${frameWidth}\xD7${frameHeight}`);
+    }
+    const size = image;
+    const imgW = size.naturalWidth ?? size.width ?? 0;
+    const imgH = size.naturalHeight ?? size.height ?? 0;
+    const cols = Math.floor(imgW / frameWidth);
+    const rows = Math.floor(imgH / frameHeight);
+    const sheet = {
+      image,
+      frameWidth,
+      frameHeight,
+      cols,
+      rows,
+      frameCount: cols * rows,
+      originX,
+      originY,
+      drawCell(ctx2, col, row, x, y, opts = {}) {
+        const { scaleX = 1, scaleY = 1, flipX = false, flipY = false, alpha } = opts;
+        const dw = frameWidth * scaleX;
+        const dh = frameHeight * scaleY;
+        if (col < 0 || col >= cols || row < 0 || row >= rows) {
+          ctx2.fillStyle = "#ff00ff";
+          ctx2.fillRect(x - sheet.originX * scaleX, y - sheet.originY * scaleY, dw, dh);
+          return;
+        }
+        const sx = col * frameWidth;
+        const sy = row * frameHeight;
+        const ox = sheet.originX * scaleX;
+        const oy = sheet.originY * scaleY;
+        const needsTransform = flipX || flipY;
+        const needsAlpha = alpha !== void 0 && alpha !== 1;
+        if (!needsTransform && !needsAlpha) {
+          ctx2.drawImage(image, sx, sy, frameWidth, frameHeight, x - ox, y - oy, dw, dh);
+          return;
+        }
+        ctx2.save();
+        if (needsAlpha) ctx2.globalAlpha *= alpha;
+        if (needsTransform) {
+          ctx2.translate(x, y);
+          ctx2.scale(flipX ? -1 : 1, flipY ? -1 : 1);
+          ctx2.drawImage(image, sx, sy, frameWidth, frameHeight, -ox, -oy, dw, dh);
+        } else {
+          ctx2.drawImage(image, sx, sy, frameWidth, frameHeight, x - ox, y - oy, dw, dh);
+        }
+        ctx2.restore();
+      },
+      draw(ctx2, frame, x, y, opts) {
+        if (cols <= 0) {
+          sheet.drawCell(ctx2, -1, -1, x, y, opts);
+          return;
+        }
+        sheet.drawCell(ctx2, frame % cols, Math.floor(frame / cols), x, y, opts);
+      }
+    };
+    return sheet;
+  }
+  function loadSpriteSheet(src, opts) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(createSpriteSheet(img, opts));
+      img.onerror = () => reject(new Error(`loadSpriteSheet: failed to load "${src}"`));
+      img.src = src;
+    });
+  }
+  async function loadSpriteSheets(entries) {
+    const names = Object.keys(entries);
+    const sheets = await Promise.all(
+      names.map((name) => {
+        const [src, opts] = entries[name];
+        return loadSpriteSheet(src, opts);
+      })
+    );
+    const out = {};
+    names.forEach((name, i) => {
+      out[name] = sheets[i];
+    });
+    return out;
   }
 
   // src/inventory.ts
@@ -615,6 +735,37 @@ var AdRPG = (() => {
     player.y = y;
     lockPosition(facing, tileSize);
     engine.emit("map-changed", { mapName, map: mapData });
+  }
+
+  // src/reset.ts
+  function resetEngine() {
+    player.x = 0;
+    player.y = 0;
+    player.facingX = 0;
+    player.facingY = 1;
+    player.direction = "down";
+    player.isWalking = false;
+    player.wasMoving = false;
+    player.health = 100;
+    player.maxHealth = 100;
+    player.positionLocked = false;
+    setMap([]);
+    setCurrentMap("default");
+    setGameStarted(false);
+    setGamePaused(false);
+    setGameOver(false);
+    setTransitionCooldown(0);
+    setAnimationFrame(0);
+    setFrameCounter(0);
+    setWaterAnimFrame(0);
+    setWaterAnimCounter(0);
+    setCampfireAnimFrame(0);
+    setCampfireAnimCounter(0);
+    camera.x = 0;
+    camera.y = 0;
+    resetInput();
+    setOnGameOverCallback(null);
+    engine.clear();
   }
 
   // src/animation.ts

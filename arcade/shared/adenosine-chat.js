@@ -96,11 +96,7 @@ var AdChat = (() => {
     let typingHideTimer = null;
     let unreadCount = 0;
     let isExpanded = false;
-    let activeTab = "global";
     let widgetEl = null;
-    function el(id) {
-      return document.getElementById(id);
-    }
     function getSessionToken() {
       try {
         var token = localStorage.getItem("adenosine_chat_session");
@@ -566,7 +562,6 @@ var AdChat = (() => {
       }
     }
     function switchTab(tab) {
-      activeTab = tab;
       var messages = document.getElementById("chatMessagesGlobal");
       var online = document.getElementById("chatOnline");
       const tabs = widgetEl.querySelectorAll(".acw-tab");
@@ -621,17 +616,17 @@ var AdChat = (() => {
       }
     }
     function updateOnlineCount(count) {
-      var el2 = document.getElementById("acwOnlineCount");
-      if (el2) el2.textContent = String(count);
+      var el = document.getElementById("acwOnlineCount");
+      if (el) el.textContent = String(count);
     }
-    function showTyping(name, room) {
-      var el2 = document.getElementById("chatTyping");
-      if (!el2) return;
-      el2.textContent = name + " is typing...";
-      el2.style.display = "block";
+    function showTyping(name, _room) {
+      var el = document.getElementById("chatTyping");
+      if (!el) return;
+      el.textContent = name + " is typing...";
+      el.style.display = "block";
       if (typingHideTimer) clearTimeout(typingHideTimer);
       typingHideTimer = setTimeout(function() {
-        el2.style.display = "none";
+        el.style.display = "none";
       }, 3e3);
     }
     function handleTyping() {
