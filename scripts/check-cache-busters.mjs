@@ -24,17 +24,12 @@
  * .githooks/pre-commit runs it on every commit, so a stamp is normally repaired
  * before it can reach CI at all. Install with `npm run hooks:install`.
  *
- * ── Hash the normalised content, not the bytes on disk ──
+ * ── The rule itself lives in scripts/lib/cache-busters.mjs ──
  *
- * .gitattributes deliberately pins only the files the Pi executes (*.sh, *.py,
- * *.yml, *.conf) to LF. .js and .css are left to each clone's core.autocrlf, so
- * git hands you CRLF on Windows and LF on Linux for the same committed blob,
- * and the two hash differently. A checker that hashed raw bytes would pass on
- * Linux and fail on every Windows clone, for files that are perfectly correct.
- *
- * scripts/sync-playground.py:bundle_digest() learned this the same way and
- * normalises for the same reason. Both must agree, or a stamp written by one
- * fails the other.
+ * digest(), the reference patterns, and what counts as unresolvable are shared
+ * with check-game-stamps.mjs, which applies the same rule to the game repos the
+ * generated arcade folders are copied from. Why the digest normalises newlines
+ * before hashing is explained there.
  *
  * ── Scope ──
  *
@@ -76,14 +71,22 @@
 import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createHash } from 'node:crypto';
+
+import {
+  digest, HTML_REF_RE, CSS_REF_RE, isUnresolvable, isRemote, stampOf, isDigestStamp,
+} from './lib/cache-busters.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 // Only trees git does not track: node_modules, and the four .gitignore entries
 // that hold HTML. Everything deployed is checked, archive/ included — its ten
 // `?v=` hits are all YouTube watch URLs and one og:image, which is precisely
 // what the src/href-plus-extension pattern below exists to step over.
-const SKIP_DIRS = new Set(['node_modules', 'wiki', 'wiki-old-backup', 'drafts']);
+// game-repos/ is the last entry and the odd one: it exists only inside a CI
+// workspace, where check-game-stamps.mjs has the four game repos checked out
+// under it. Their pages load ../shared/*, which resolves only after a sync, so
+// walking into them here would report a wall of missing files for pages that
+// are perfectly correct where they actually live.
+const SKIP_DIRS = new Set(['node_modules', 'wiki', 'wiki-old-backup', 'drafts', 'game-repos']);
 
 /** Every file with one of `exts` under a directory, skipping untracked trees. */
 function filesUnder(dir, exts, out = []) {
@@ -96,12 +99,6 @@ function filesUnder(dir, exts, out = []) {
   }
   return out;
 }
-
-/** First 8 hex of sha256 over the content with newlines normalised to LF. */
-const digest = (file) => createHash('sha256')
-  .update(readFileSync(file, 'utf8').replace(/\r\n/g, '\n'))
-  .digest('hex')
-  .slice(0, 8);
 
 const rel = (p) => relative(ROOT, p).split('\\').join('/');
 
@@ -117,22 +114,6 @@ if (process.argv[2] === '--digest') {
   process.exit(0);
 }
 
-// What a page can load and be visibly wrong without: code, styling, and the
-// media that occupies layout. Page-to-page .html links are deliberately absent
-// — those belong to the check-links workflow, which follows redirects and knows
-// about the generated archive stubs.
-const ASSET_EXT = 'js|css|jpg|jpeg|png|gif|svg|webp|avif|ico|bmp' +
-                  '|mp4|webm|mov|mp3|wav|ogg|oga|m4a' +
-                  '|woff|woff2|ttf|otf|eot';
-
-// src=, href= or poster=, pointing at one of those, with an optional query.
-const HTML_REF_RE = new RegExp(
-  `(?:src|href|poster)\\s*=\\s*["']([^"']+?\\.(?:${ASSET_EXT}))(\\?[^"']*)?["']`, 'gi');
-
-// url(...) inside a stylesheet — quoted or bare.
-const CSS_REF_RE = new RegExp(
-  `url\\(\\s*(['"]?)([^'")]+?\\.(?:${ASSET_EXT}))(\\?[^'")]*)?\\1\\s*\\)`, 'gi');
-
 // Written by a running service rather than committed, so absent from a fresh
 // clone and from CI without that being a fault. arcade/admin/server.py renders
 // visual/tv/channels.js from tv-channels.json whenever the channel list is
@@ -141,16 +122,6 @@ const CSS_REF_RE = new RegExp(
 // Anything added here must have that shape: a generator in the tree, and a
 // consumer that copes with its absence.
 const GENERATED = new Set(['visual/tv/channels.js']);
-
-/**
- * A reference this script cannot resolve to one fixed path, and must not guess
- * at. `${...}` is a JS template literal inside an inline <script> — the archive
- * pages build gallery markup that way — and a scheme like data:, blob: or
- * about: never names a file in the tree.
- */
-const isUnresolvable = (href) =>
-  href.includes('${') || href.includes('{{') ||
-  /^(?:[a-z][a-z0-9+.-]*:)/i.test(href) && !href.startsWith('/');
 
 // `--fix` rewrites every stale stamp in place instead of reporting it. The
 // stamp is derived from the file, so a human retyping it is a transcription
@@ -175,7 +146,7 @@ const unverifiable = [];
 /** Resolve one reference found in `source`, and record what is wrong with it. */
 function inspect(href, query, source) {
   if (isUnresolvable(href)) return;
-  if (/^(?:https?:)?\/\//.test(href)) return;              // someone else's asset
+  if (isRemote(href)) return;                              // someone else's asset
 
   const target = href.startsWith('/')
     ? join(ROOT, href)
@@ -190,10 +161,10 @@ function inspect(href, query, source) {
 
   present++;
 
-  const stamp = query?.match(/^\?v=([^&]*)$/)?.[1];
+  const stamp = stampOf(query);
   if (stamp === undefined) return;                         // unstamped, but present
 
-  if (!/^[0-9a-f]{8}$/.test(stamp)) {
+  if (!isDigestStamp(stamp)) {
     unverifiable.push(`${rel(source)} -> ${href}?v=${stamp}`);
     return;
   }

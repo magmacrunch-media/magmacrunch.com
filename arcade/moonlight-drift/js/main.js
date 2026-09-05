@@ -8,13 +8,22 @@ const muteBtn = document.getElementById('muteBtn');
 // Web Audio API setup via adenosine-audio
 let musicStarted = false;
 
+// iOS has no Ogg Vorbis decoder, and every browser on iOS is WebKit, so Chrome
+// and Firefox there fail identically - the audio was simply silent on every
+// iPhone and iPad. Each clip now ships as .ogg and .mp3; pick whichever this
+// browser can actually decode. Ogg stays preferred where it works, since the
+// mp3 is a transcode of it.
+const AUDIO_EXT = document.createElement('audio')
+    .canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.mp3';
+const audioSrc = (path) => path.replace(/\.ogg$/, AUDIO_EXT);
+
 async function loadAudio() {
     await AdAudio.init({
-        music: { url: 'audio/moonlightdrift-gameloop.ogg', volume: 0.3, fadeIn: 2.0 },
+        music: { url: audioSrc('audio/moonlightdrift-gameloop.ogg'), volume: 0.3, fadeIn: 2.0 },
         sfx: {
-            crash:   { url: 'audio/crashsound.ogg', volume: 0.5 },
-            button1: { url: 'audio/buttonsound1.ogg', volume: 0.4 },
-            button2: { url: 'audio/buttonsound2.ogg', volume: 0.4 },
+            crash:   { url: audioSrc('audio/crashsound.ogg'), volume: 0.5 },
+            button1: { url: audioSrc('audio/buttonsound1.ogg'), volume: 0.4 },
+            button2: { url: audioSrc('audio/buttonsound2.ogg'), volume: 0.4 },
         },
     });
     AdAudio.handleVisibility({ pauseMusic: true });

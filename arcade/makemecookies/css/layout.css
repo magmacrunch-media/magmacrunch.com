@@ -266,3 +266,15 @@ header .byline {
   .tp span { font-size: 8px; }
   .controls .btn { padding: 7px 10px; font-size: 8px; }
 }
+
+/* Shown only when the music actually fails, which on iOS it always did. */
+#audio-warning {
+  max-width: 680px;
+  padding: 8px 14px;
+  border: 1px solid var(--butter);
+  background: rgba(255, 201, 60, 0.08);
+  color: var(--butter);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-align: center;
+}

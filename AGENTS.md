@@ -12,8 +12,9 @@ the deployed artifact is the git tree, so anything generated must be committed.
 
 There *is* npm and there *are* tests, despite what this line used to say:
 `npm ci` installs seven adenosine runtime deps, `npm test` runs lint plus the JS
-suite, `npm run check` adds the Python tests and the ware shell token contract,
-and `ci.yml` runs four jobs including a Playwright arcade smoke test.
+suite, `npm run check` adds the Python tests, the ware shell token contract and
+the game repos' cache-busters, and `ci.yml` runs five jobs including a Playwright
+arcade smoke test.
 `npm run build:adenosine` syncs bundles out of `node_modules/` and stamps cache
 busters — a copy step, not a compile step.
 
@@ -242,11 +243,18 @@ commands that access local files.
 ## Testing
 
 ```bash
-npm test          # lint + JS tests (fast)
-npm run check     # lint + Python + JS
-npm run test:py   # pytest suites under arcade/
-npm run test:js   # node test-*.js under arcade/*/tests/
+npm test               # lint + JS tests (fast)
+npm run check          # lint + Python + JS + both cache-buster checks
+npm run test:py        # pytest suites under arcade/
+npm run test:js        # node test-*.js under arcade/*/tests/
+npm run check:cachebust    # every ?v= on every page here
+npm run check:gamestamps   # every ?v= in the four game repos (see below)
 ```
+
+`check:gamestamps` needs those repos checked out; with none of them beside this
+one it says so and passes, rather than failing a clone that was never given
+them. CI sets `GAME_REPOS`, and with that set a missing repo is fatal instead —
+a check that quietly drops one is the failure it exists to catch.
 Run `npm run hooks:install` once per clone. It points `core.hooksPath` at
 `.githooks/`, whose `pre-commit` repairs stale `?v=` cache-buster stamps and
 stages them with the asset that moved. Without it nothing breaks — `lint` in
@@ -280,6 +288,40 @@ Runner internals, Python interpreter selection, and what each suite covers: `doc
 2. Include `index.html`, `js/` (game logic), `css/` (styles)
 3. Follow the pixel art conventions - use canvas at low res, scale with CSS
 4. Add link to `arcade/index.html` nav
+
+### Audio needs two formats, or the game is silent on iOS
+
+Ship every clip as **both `.ogg` and `.mp3`**, and pick at load time:
+
+```js
+const AUDIO_EXT = document.createElement('audio')
+    .canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.mp3';
+const audioSrc = (path) => path.replace(/\.ogg$/, AUDIO_EXT);
+```
+
+iOS has no Ogg Vorbis decoder, and every browser on iOS is WebKit, so Chrome
+and Firefox there fail exactly as Safari does. An ogg-only game is not quieter
+on an iPhone, it is **silent** — and silent without an error, because a failed
+decode lands in the same do-nothing path that most loaders already swallow on
+purpose. `makemecookies`, `SORRY`, `george-boole` and `moonlight-drift` all
+shipped that way and it went unreported for as long as they existed.
+
+Transcode with `ffmpeg -i in.ogg -c:a libmp3lame -q:a 2 out.mp3`, and check the
+result against the source size rather than reaching for `-q:a 0`. george-boole's
+3:50 loop came from a ~93kbps Vorbis original: V0 inflated it from 2.7MB to
+4MB, which is the wrong trade for background music over mobile data, and V2
+brought it back to 2.86MB. Keep the `.ogg` — it stays the file almost everyone
+receives, and the mp3 is a second-generation transcode of it.
+
+Two things worth knowing before this looks broken:
+
+- `adenosine-audio` loops music through a decoded Web Audio buffer, and mp3
+  carries encoder delay and padding **inside** that buffer, so a looping track
+  seams slightly on iOS where the ogg does not. A faint seam beats silence, and
+  the alternative is a gapless format far too large to serve.
+- Whatever loads the audio should say so when it fails. Three separate
+  `.catch(() => {})` calls are why this survived: a blocked or undecodable track
+  reported nothing at all, to the player or to anyone testing.
 
 ### Four arcade folders are generated — never edit them here
 
@@ -318,6 +360,32 @@ the stamp the hook had corrected here back to the game repo's older one.
 The fix belongs in the **source** repo's `web/index.html`, not in the copy —
 correcting it here only survives until the next sync. Run `check:cachebust`
 after any sync, and carry the digests it reports back upstream.
+
+`npm run check:gamestamps` checks those repos directly, and the `game-stamps` CI
+job runs it against fresh checkouts of all four. It resolves a reference in the
+game repo first and here only if it is not there, which splits the two ways a
+stamp rots: a game's own `css/` and `js/` go stale the ordinary way, when an edit
+forgets the bump, while `../shared/*` goes stale **with nothing in that repo
+touched at all**, because those files live here and are versioned here.
+
+That second kind is why the check runs in this repo rather than in the four. It
+is a commit *here* — taking a new adenosine bundle — that breaks them, and a
+check in a game repo would not run then, since nothing was pushed to it. It
+would fire whenever somebody next touched that game, and "nobody noticed" is the
+whole failure. Both kinds were real on 2026-09-05: seven stamps stale across the
+four repos, and then `adenosine-chat` 0.6.0 that same afternoon staled two more
+in three of them, between one commit and the next.
+
+When it fails, nothing here can fix it — the named repo needs its own commit.
+
+**CI covers three of the four.** `very-long-boards` is a private repo and a
+workflow's `GITHUB_TOKEN` reaches only the repo it runs in, so the job cannot
+check it out. That gap is declared in `ci.yml` as `GAME_REPOS_OPTIONAL` rather
+than tolerated: the check names the repo in its output on every run and says it
+is not covered, and an undeclared missing repo is still fatal. On the dev box,
+where all four are on disk, `npm run check` covers it like any other — so run
+that after syncing it. Restore the checkout step and drop the line once the repo
+is public or a token that can read it is available.
 
 Every other game under `arcade/` is authored in this repo as normal.
 

@@ -17,35 +17,9 @@ import { cpSync, existsSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { GAMES, webCandidates } from './games.mjs';
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-
-/**
- * Game folder name -> repo checkout expected beside this one.
- *
- * OTHER closes the generated banner by saying what else that repo holds. It used to be one
- * hardcoded sentence -- "also holds the game's Wii port, so a rules change can be made once
- * and carried to both versions" -- which is true of three of these and wrong twice over for
- * very-long-boards: its other version is a Godot desktop build, and the two are deliberately
- * NOT ports, so carrying a change across is the thing that repo tells you not to do. A
- * sentence true of most entries is the kind that goes stale silently, so it is per-game data.
- */
-const WII_PORT =
-  "the game's Wii port, so a rules change can be made\n" +
-  "once and carried to both versions.";
-
-const GAMES = {
-  'george-boole': { repo: 'george-boole', other: WII_PORT },
-  'moonlight-drift': { repo: 'moonlight-drift', other: WII_PORT },
-  'very-long-boards': {
-    repo: 'very-long-boards',
-    other:
-      'a separate Godot desktop version. Those two are\n' +
-      'deliberately not ports of each other -- different scoring, different failure\n' +
-      'model -- so a change to this one is usually not owed to that one.',
-  },
-  // Historical arcade folder name, kept because it is the live URL.
-  'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },
-};
 
 const game = process.argv[2];
 if (!game || !GAMES[game]) {
@@ -56,15 +30,12 @@ if (!game || !GAMES[game]) {
 
 const { repo, other } = GAMES[game];
 
-// Where the game repo can be. Beside this one is the documented layout and what
-// a fresh clone gets; a wider tree instead groups repos by kind, putting the
-// games under games/ while this repo sits in web/ -- so both have to resolve, or
-// the browser version becomes undeployable the moment anyone reorganises. An
-// explicit GAME_SRC covers anywhere else, the way the Wii Makefile's MAGNOLIA=
-// override does for the engine.
+// An explicit GAME_SRC covers anywhere the two documented layouts do not, the
+// way the Wii Makefile's MAGNOLIA= override does for the engine. It names one
+// game's checkout, so it replaces the candidate list rather than extending it.
 const candidates = process.env.GAME_SRC
   ? [join(process.env.GAME_SRC, 'web')]
-  : [join(ROOT, '..', repo, 'web'), join(ROOT, '..', '..', 'games', repo, 'web')];
+  : webCandidates(repo, ROOT);
 
 const src = candidates.find((dir) => existsSync(join(dir, 'index.html')));
 const dest = join(ROOT, 'arcade', game);

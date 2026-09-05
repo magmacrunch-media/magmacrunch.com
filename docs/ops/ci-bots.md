@@ -91,7 +91,10 @@ Scripts live in `arcade/scripts/` and are deployed to the Pi via rsync. Shared h
 - Playwright + Chromium (for smoke tests)
 - GitHub PAT with `repo` scope (for push + API access)
 
-**Environment file**: `~/arcade/.env` on the Pi:
+**Environment file**: `~/arcade-config/.env` on the Pi (mode `600`). Note this is
+*not* `~/arcade/.env` — `~/arcade/` is rsynced over by `deploy-pi.yml`, so a secret
+kept there would be destroyed on the next deploy. `pi-bot-env.sh` reads
+`~/arcade-config/.env`; only that path is live:
 ```
 GITHUB_PAT=ghp_...
 TMDB_API_KEY=...
@@ -110,6 +113,19 @@ DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
 ```bash
 crontab -l    # View all cron jobs
 ```
+
+Two entries in that crontab are *not* `bot-*.sh` scripts and are not deployed by
+rsync, so they do not appear anywhere in this repo:
+
+| Entry | Cron | What it is |
+|---|---|---|
+| `arcade/scripts/monitor-mc1-runner.py` | every 2 min | Pings MC1; appends to `~/arcade/logs/mc1-monitor.log`. Untracked — it exists only on the Pi, and the log has no rotation (~1 MB and growing). |
+| `magmacrunch-ops/status/status.py` | every minute | Feeds the MAGMA//OPS status server. Belongs to `magmacrunch-ops`, not this repo. |
+
+**A Pi bot that dies in `pi-bot-env.sh` writes nothing at all** — no log line, no
+alert. If a bot's log stops growing, look there first rather than at the bot.
+That file is sourced before any bot does work, so a failure in it takes down all
+eight at once; it deliberately no longer aborts on a failed `git` sync.
 
 **Viewing bot logs:**
 ```bash

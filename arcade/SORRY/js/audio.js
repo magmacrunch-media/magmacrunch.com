@@ -52,9 +52,19 @@ var SoundFX = (function () {
     } catch (e) { /* ignore */ }
   }
 
+  // ── Format ───────────────────────────────────────────────────────────────────
+  // iOS has no Ogg Vorbis decoder, and every browser on iOS is WebKit, so
+  // Chrome and Firefox there fail identically. Each sound ships as .ogg and
+  // .mp3 now; pick whichever this browser can decode. Without this the error
+  // handler above quietly nulled both sounds on every iPhone, which is exactly
+  // the kind of silent failure it was written to produce.
+  var _ext = document.createElement('audio')
+    .canPlayType('audio/ogg; codecs="vorbis"') ? '.ogg' : '.mp3';
+  function _src(path) { return path.replace(/\.ogg$/, _ext); }
+
   // ── Preload sounds ───────────────────────────────────────────────────────────
-  _load('card', 'sounds/card.ogg', 0.55);
-  _load('move', 'sounds/move.ogg', 0.65);
+  _load('card', _src('sounds/card.ogg'), 0.55);
+  _load('move', _src('sounds/move.ogg'), 0.65);
 
   // ── Public API ───────────────────────────────────────────────────────────────
   return {

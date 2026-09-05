@@ -15,6 +15,13 @@ REPO_DIR="$PI_HOME/website"
 LOG_DIR="$PI_HOME/arcade/logs"
 ENV_FILE="$PI_HOME/arcade-config/.env"
 
+# cron runs with PATH=/usr/local/bin:/usr/bin:/bin:/usr/games, which omits
+# ~/.local/bin — where pip installs magmascript. bot-rebuild-search-index.sh
+# died on "magmascript: command not found" every day while the same command
+# worked fine in an interactive shell.
+PATH="$PI_HOME/.local/bin:$PATH"
+export PATH
+
 mkdir -p "$LOG_DIR"
 
 # Load .env if it exists
@@ -31,7 +38,40 @@ if [ -n "${GITHUB_PAT:-}" ]; then
     git remote set-url origin "https://${GITHUB_PAT}@github.com/magmacrunch-media/magmacrunch.com.git"
 fi
 
-git pull --quiet
+# Sync to origin/main, but never let the state of this clone stop a bot.
+#
+# This was a bare `git pull`, and under `set -e` that single line was a
+# fleet-wide kill switch. When the clone diverged from origin (a force-push
+# upstream on 2026-07-25 left it 552 ahead / 718 behind), every pull died with
+#
+#     fatal: Need to specify how to reconcile divergent branches.
+#
+# and, because this file is sourced before any bot does its work, ALL EIGHT
+# Pi bots exited at this line before running. They stayed dead from
+# 2026-08-22 to 2026-09-05 — 276 consecutive silent failures of the service
+# health check alone — because nothing reports a bot that never started.
+#
+# A stale checkout degrades one bot's output; a failed sync must not silence
+# all of them. Fast-forward when we can, complain to the log when we cannot,
+# and run either way. Divergence is left for a human to resolve deliberately
+# rather than repaired unattended every thirty minutes.
+sync_repo() {
+    if ! git fetch --quiet origin main 2>/dev/null; then
+        echo "WARNING: git fetch failed — running against the current checkout." >&2
+        return 0
+    fi
+
+    if git merge --ff-only --quiet origin/main 2>/dev/null; then
+        return 0
+    fi
+
+    echo "WARNING: clone has diverged from origin/main and was NOT updated." >&2
+    echo "  ahead/behind: $(git rev-list --left-right --count HEAD...origin/main 2>/dev/null | tr '\t' '/')" >&2
+    echo "  this bot is running against a stale checkout; resolve on the Pi." >&2
+    return 0
+}
+
+sync_repo
 
 # GitHub helper — call GitHub REST API
 # Usage: gh_api GET /repos/owner/repo/issues
