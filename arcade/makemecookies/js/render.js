@@ -282,6 +282,29 @@ function drawBelt(ctx, st, b, now) {
     }
   }
 
+  // The most common stall in the game is the oven, not the belt: the lead ball
+  // parks at the mouth and the whole line backs up behind a closed door.
+  // Pressing 3 does nothing for that, so name the real blocker in the oven's
+  // own colour rather than letting it read as a jam (which is red, with a !).
+  const head = st.belt.items[0];
+  if (head && !head.sticky && head.x >= BELT_X1 - 1 && st.oven.phase !== 'empty') {
+    const pulse = 0.45 + 0.55 * Math.abs(Math.sin(now / 130));
+    ctx.save();
+    ctx.globalAlpha = pulse;
+    ctx.strokeStyle = C.butter;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(head.x, y - 11, 17, 0, Math.PI * 2);
+    ctx.stroke();
+    const baking = st.oven.phase === 'baking';
+    text(ctx, 'OVEN BUSY', BELT_X1 - 44, y - 44, 9, C.butter);
+    // Telling them to press 4 while it is still baking would be bad advice —
+    // that yields a raw cookie worth nothing. Only say it once pulling pays.
+    text(ctx, baking ? 'WAIT' : 'PRESS 4', BELT_X1 - 44, y - 30, 8,
+         baking ? C.steel : C.butter);
+    ctx.restore();
+  }
+
   if (now < st.belt.boostUntil) {
     text(ctx, '>> BOOST >>', (x0 + x1) / 2, y + 38, 9, C.sprinkle);
   }

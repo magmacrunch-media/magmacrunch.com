@@ -91,7 +91,9 @@ body::after {
   font-size: 9px;
   color: var(--subtext);
   text-decoration: none;
-  z-index: 6000;
+  /* No z-index here on purpose. arcade-base.css sets 10000, which clears the
+     title overlay (8000); overriding it to 6000 buried the link underneath the
+     title card and left no way back to the arcade without the browser button. */
   opacity: 0.65;
   transition: opacity 0.15s, color 0.15s;
 }
