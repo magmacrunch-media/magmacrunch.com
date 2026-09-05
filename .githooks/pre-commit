@@ -27,6 +27,65 @@ set -e
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
+# ── Whole-index commits in the shared checkout ──
+#
+# This runs BEFORE the cache-buster pass on purpose. That pass rewrites files,
+# and when a commit is going to be refused it should be refused without having
+# edited anything first — a blocked commit once left corrected stamps in another
+# session's in-progress pages as a side effect.
+#
+# The primary worktree is the shared one: it is where a second session lands by
+# default, and its index is the one two agents can both stage into. That is not
+# hypothetical. A `git add` of one session's paths came back showing the other
+# session's files too, already staged, and a bare `git commit` would have taken
+# both under the wrong message.
+#
+# Linked worktrees each have their OWN index, so they are not the hazard and are
+# not checked — their existence is simply the signal that this clone is being
+# used by more than one checkout, and that the primary tree is now shared ground.
+#
+# A path-limited `git commit <paths>` is safe by construction: git builds a
+# temporary index holding only those paths, so it cannot sweep up anything else.
+# Detected by the index git points us at not being the repo's real one, which is
+# more durable than matching git's temp-file name.
+if [ "$(git rev-parse --git-dir)" = "$(git rev-parse --git-common-dir)" ]; then
+	worktrees=$(git worktree list --porcelain | grep -c '^worktree ')
+
+	if [ "$worktrees" -gt 1 ] && [ "${MC_PRIMARY_COMMIT:-0}" != "1" ]; then
+		index_name=$(basename "${GIT_INDEX_FILE:-index}")
+
+		if [ "$index_name" = "index" ]; then
+			staged=$(git diff --cached --name-only)
+			count=$(printf '%s\n' "$staged" | grep -c . || true)
+
+			echo "" >&2
+			echo "pre-commit: refusing a whole-index commit in the primary worktree." >&2
+			echo "" >&2
+			echo "            This clone has $worktrees checkouts, so feature work belongs in a" >&2
+			echo "            worktree and the primary tree is shared ground. A bare commit" >&2
+			echo "            here records everything staged — including anything a second" >&2
+			echo "            session staged into the same index." >&2
+			echo "" >&2
+			echo "            Staged right now ($count file(s)):" >&2
+			printf '%s\n' "$staged" | head -20 | sed 's/^/              /' >&2
+			if [ "$count" -gt 20 ]; then
+				echo "              ... and $((count - 20)) more" >&2
+			fi
+			echo "" >&2
+			echo "            Scope it to your own paths — git builds a temporary index for" >&2
+			echo "            those, so nothing else can ride along:" >&2
+			echo "              git commit -- <paths>" >&2
+			echo "" >&2
+			echo "            Or, if the whole index is definitely yours:" >&2
+			echo "              MC_PRIMARY_COMMIT=1 git commit" >&2
+			echo "" >&2
+			echo "            Worktrees open:" >&2
+			git worktree list | sed 's/^/              /' >&2
+			exit 1
+		fi
+	fi
+fi
+
 command -v node >/dev/null 2>&1 || {
 	echo "pre-commit: node not found, skipping cache-buster fix" >&2
 	exit 0

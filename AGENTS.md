@@ -100,6 +100,45 @@ working rather than stripped of its tooling.
 Note the site deploys from `main`, so nothing on a worktree branch is live
 until it is merged and pushed.
 
+### The pre-commit gate
+
+Once a second checkout exists, `.githooks/pre-commit` refuses a **whole-index**
+commit in the primary worktree:
+
+```
+pre-commit: refusing a whole-index commit in the primary worktree.
+```
+
+The primary tree is where a second session lands by default, and its index is
+the one two agents can both stage into — a bare `git commit` there records
+whatever is staged, whoever staged it. Scoping the commit is the fix, because
+git builds a temporary index holding only those paths and nothing else can ride
+along:
+
+```bash
+git commit -- <paths>
+```
+
+`MC_PRIMARY_COMMIT=1 git commit` overrides it when the whole index really is
+yours. Prefer that to `--no-verify`, which also disables the cache-buster check.
+
+What it deliberately does **not** touch:
+
+- **A clone with one checkout.** The gate needs `git worktree list` to show more
+  than one, so ordinary solo work on `main` is unaffected. This matters — the
+  site deploys from `main` and small commits straight to it are normal here.
+- **Commits inside a linked worktree.** Those have their own index, are nobody
+  else's shared ground, and are the thing we want people doing.
+- **Merges, rebases, cherry-picks and reverts**, which do not run `pre-commit`.
+
+`git commit --amend` *is* refused, because it rewrites from the whole index and
+can sweep in exactly the same way. Scope it or use the override.
+
+The gate runs before the cache-buster pass, not after. That pass rewrites files,
+and a commit that is going to be refused should be refused without having edited
+anything first — a blocked commit once left corrected `?v=` stamps behind in
+another session's in-progress pages.
+
 ## magmascript
 
 [magmascript](https://github.com/magmacrunch-media/magmascript) is the primary CLI
