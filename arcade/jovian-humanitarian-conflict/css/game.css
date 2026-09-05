@@ -3,7 +3,12 @@
 
 .hud {
     position: fixed;
-    top: 0;
+    /* Clears the shared .mc-back link, which arcade-base.css fixes at top 12px
+       and which is NOT in this element's flow. At top 0 the HUD's leftmost
+       column sat straight under "magmacrunch arcade" on any viewport below
+       about 570px, because the row is centred and closes on the left edge as
+       it narrows. Roderick Tron reserves the same strip for the same reason. */
+    top: 30px;
     left: 0;
     right: 0;
     z-index: 40;
