@@ -369,6 +369,19 @@ function createCoinSprite(){
 // ═══════════════════════════════════════════════════════════
 
 const SYMBOLS = ['lipstick','telephone','coin','camera','brokenHeart','eye','heart','floppyDisk'];
+
+// Each reel runs a fixed strip rather than showing a fresh random symbol every
+// tick. That is what makes stopping a skill: the order repeats, so it can be
+// learned and timed. The three strips are different orderings of the same eight
+// symbols, so each reel has to be read on its own rather than inferred from the
+// one beside it. They are fixed rather than shuffled per spin for the same
+// reason — a strip that changes every time is just a slower dice roll.
+const REEL_STRIPS = [
+    ['lipstick','telephone','coin','camera','brokenHeart','eye','heart','floppyDisk'],
+    ['coin','heart','lipstick','floppyDisk','telephone','brokenHeart','camera','eye'],
+    ['eye','camera','floppyDisk','heart','coin','telephone','lipstick','brokenHeart'],
+];
+const REEL_TICK_MS = 120;  // how long each symbol is shown — the difficulty knob
 const SPIN_COST = 1;       // 1¢ per spin
 const JACKPOT_PAYOUT = 10; // 10¢ jackpot (need 10 jackpots to break even — rigged!)
 const TWO_MATCH_PAYOUT = 2;
@@ -389,6 +402,7 @@ let isSpinning = false;
 let reelStates = [true,true,true];
 let reelIntervals = [null,null,null];
 let reelResults = [null,null,null];
+let reelPos = [0,0,0];     // index into each reel's strip, i.e. what is on screen
 
 const MESSAGES = {
     allMatch: ["JACKPOT! Everyone's watching now...","You won! But what did you really win?","Triple match! The crowd goes wild!","Perfect! They love you right now.","Winner! Is this what you wanted?"],
@@ -501,19 +515,30 @@ function pullLever(){
 function startSpin(){
     isSpinning=true; spins++;
     reelStates=[true,true,true];
-    reelResults=[getRandom(SYMBOLS),getRandom(SYMBOLS),getRandom(SYMBOLS)];
-    messageEl.textContent='Spinning... Hit STOP for each reel!';
+    reelResults=[null,null,null];
+    messageEl.textContent='Time your stops. What you see is what you get.';
     reels.forEach((reel,i)=>{
         reel.classList.remove('stopped'); reel.classList.add('spinning');
         stopBtns[i].disabled=false;
-        reelIntervals[i]=setInterval(()=>{ displaySymbol(reel,getRandom(SYMBOLS)); },100);
+        // A random entry point per spin, so the strip cannot be played from memory
+        // alone — you have to read the reel that is actually in front of you.
+        reelPos[i]=Math.floor(Math.random()*REEL_STRIPS[i].length);
+        displaySymbol(reel,REEL_STRIPS[i][reelPos[i]]);
+        reelIntervals[i]=setInterval(()=>{
+            reelPos[i]=(reelPos[i]+1)%REEL_STRIPS[i].length;
+            displaySymbol(reel,REEL_STRIPS[i][reelPos[i]]);
+        },REEL_TICK_MS);
     });
 }
 
+// The result is read off the reel at the instant you stop it, not chosen when the
+// spin began. Nothing here reaches for the random number generator: the only thing
+// deciding the symbol is when the button went down.
 function stopReel(i){
     if(!reelStates[i]) return;
     reelStates[i]=false;
     clearInterval(reelIntervals[i]);
+    reelResults[i]=REEL_STRIPS[i][reelPos[i]];
     displaySymbol(reels[i],reelResults[i]);
     reels[i].classList.remove('spinning'); reels[i].classList.add('stopped');
     stopBtns[i].disabled=true;
