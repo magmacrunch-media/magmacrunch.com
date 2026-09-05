@@ -382,9 +382,12 @@ const REEL_STRIPS = [
     ['eye','camera','floppyDisk','heart','coin','telephone','lipstick','brokenHeart'],
 ];
 const REEL_TICK_MS = 120;  // how long each symbol is shown — the difficulty knob
+const SLIP_MAX = 2;        // positions the house may drag a reel past your press
+const HOUSE_SLIP_RATE = 0.8;  // how often it spends that slack when it can spoil a match
+const SLIP_STEP_MS = 70;   // how fast the coast reads on screen
 const SPIN_COST = 1;       // 1¢ per spin
 const JACKPOT_PAYOUT = 10; // 10¢ jackpot (need 10 jackpots to break even — rigged!)
-const TWO_MATCH_PAYOUT = 2;
+const TWO_MATCH_PAYOUT = 1;  // 2 handed a perfect player the whole stake back on two-matches alone
 const CONSOLATION = 0;
 
 const ATTENTION_DECAY = 2;     // attention lost per second once a result has landed
@@ -392,7 +395,7 @@ const DECAY_GRACE_MS = 1200;   // a beat to enjoy a result before interest start
 const DECAY_DT_CAP = 0.25;     // largest frame delta honoured, in seconds (see decayTick)
 const FADE_NOTICE_FLOOR = 40;  // below this, a decline is not worth remarking on
 const ATTENTION_HIGH = 50;     // still hot when you walked away
-const DEBT_DEEP = 10;          // cents; roughly fifty spins of drift at this edge
+const DEBT_DEEP = 30;          // cents; still roughly fifty spins, at the steeper post-slip edge
 
 let coins = 0, attention = 0, spins = 0;
 let attentionMark = 0;         // attention at the last result, for judging a decline against
@@ -531,15 +534,52 @@ function startSpin(){
     });
 }
 
+// The house may let a reel coast past where you stopped it, which is what real
+// skill-stop cabinets do and where its edge now comes from. Two rules keep this
+// from being the old lie in a better costume: it can only ever take a match away,
+// never hand one over, and it only acts when the symbol you actually stopped on
+// would have matched one already showing. So a mistimed press stays a loss that is
+// yours, the first reel of a spin always stops exactly where you put it, and every
+// win you do get is one you aimed at.
+function houseSlip(i, pos){
+    const showing = reelResults.filter(r => r !== null);
+    if(!showing.length) return pos;                       // nothing to spoil yet
+    const strip = REEL_STRIPS[i];
+    if(!showing.includes(strip[pos])) return pos;         // you did not land a match
+    if(Math.random() >= HOUSE_SLIP_RATE) return pos;      // it let this one through
+    for(let d=1; d<=SLIP_MAX; d++){
+        const p = (pos+d) % strip.length;
+        if(!showing.includes(strip[p])) return p;
+    }
+    return pos;                                           // nothing in reach spoils it
+}
+
+// Walk the reel through the slipped positions rather than swapping the symbol, so
+// the drag is visible as movement. Seeing your symbol pulled out from under you is
+// the point; a silent substitution just reads as a bug.
+function showSlip(i, from, to){
+    const strip = REEL_STRIPS[i];
+    let at = from;
+    const step = () => {
+        at = (at+1) % strip.length;
+        displaySymbol(reels[i], strip[at]);
+        if(at !== to) setTimeout(step, SLIP_STEP_MS);
+    };
+    if(from !== to) setTimeout(step, SLIP_STEP_MS);
+}
+
 // The result is read off the reel at the instant you stop it, not chosen when the
-// spin began. Nothing here reaches for the random number generator: the only thing
-// deciding the symbol is when the button went down.
+// spin began. Nothing here reaches for the random number generator except the
+// house's slip, and that can only subtract.
 function stopReel(i){
     if(!reelStates[i]) return;
     reelStates[i]=false;
     clearInterval(reelIntervals[i]);
+    const pressed = reelPos[i];
+    reelPos[i] = houseSlip(i, pressed);
     reelResults[i]=REEL_STRIPS[i][reelPos[i]];
-    displaySymbol(reels[i],reelResults[i]);
+    if(reelPos[i] !== pressed) showSlip(i, pressed, reelPos[i]);
+    else displaySymbol(reels[i],reelResults[i]);
     reels[i].classList.remove('spinning'); reels[i].classList.add('stopped');
     stopBtns[i].disabled=true;
     if(!reelStates[0]&&!reelStates[1]&&!reelStates[2]) setTimeout(()=>{ checkResults(); isSpinning=false; },300);
