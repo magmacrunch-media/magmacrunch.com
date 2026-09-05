@@ -100,6 +100,45 @@ working rather than stripped of its tooling.
 Note the site deploys from `main`, so nothing on a worktree branch is live
 until it is merged and pushed.
 
+### The SessionStart notice
+
+`scripts/session-start-worktree.mjs` runs when a session starts. From a linked
+worktree it prints nothing — that is the state we want. From the primary tree it
+names the branch, lists the registered worktrees, and says to run
+`npm run worktree -- new <branch>` before doing anything substantive. If files
+are already staged in the shared index it says so, loudly, because they may
+belong to another session.
+
+It exists because the gate above cannot see the case that actually costs work:
+the gate only fires when more than one checkout is registered, so several
+sessions all sitting in the primary tree trip nothing. This runs before any of
+them has staged anything, which is the last moment switching is still free.
+
+Its output is returned as `additionalContext`, so it reaches the model rather
+than only the screen. The agent is what forgets — the day the worktree tooling
+was written, the session that wrote it went on to run `npm install` in the
+primary tree anyway, and a concurrent commit swallowed the resulting
+`package.json` bump.
+
+It is advisory. It cannot change the session's directory, and blocking startup
+over a heuristic would be worse than the problem.
+
+**The wiring is not in the repo.** `.claude/` is gitignored, so
+`.claude/settings.json` is per-machine. The script is tracked; recreate the hook
+on any other clone with:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command",
+                     "command": "node scripts/session-start-worktree.mjs 2>/dev/null || true",
+                     "timeout": 10 } ] }
+    ]
+  }
+}
+```
+
 ### The pre-commit gate
 
 Once a second checkout exists, `.githooks/pre-commit` refuses a **whole-index**
