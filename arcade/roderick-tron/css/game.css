@@ -85,10 +85,28 @@
 }
 
 .hud-combo {
+    /* Reserve the line even when empty. Without this the element collapses to
+       zero height and the music indicator below it hops up and down every time
+       a streak starts or lapses. */
+    min-height: 12px;
     font-size: 10px;
     color: var(--cyan);
     text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
     letter-spacing: 0.1em;
     opacity: 0;
     transition: opacity 0.15s;
+}
+
+.hud-music {
+    font-size: 9px;
+    color: var(--gold);
+    text-shadow: 0 0 6px rgba(0,0,0,0.8);
+    letter-spacing: 0.1em;
+    transition: color 0.15s, opacity 0.15s;
+}
+
+.hud-music.muted {
+    color: var(--dim);
+    opacity: 0.45;
+    text-decoration: line-through;
 }

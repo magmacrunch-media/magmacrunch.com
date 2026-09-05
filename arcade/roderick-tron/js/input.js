@@ -46,4 +46,6 @@ const Input = {
     jump()     { return this.wasPressed('Space') || this.wasPressed('ArrowUp'); },
     jumpHeld() { return this.isDown('Space') || this.isDown('ArrowUp'); },
     shoot()    { return this.wasPressed('KeyZ'); },
+    // 'M' is handled by main.js's own listener, not here: it has to work on the
+    // title and game-over screens too, where the game loop is not updating.
 };

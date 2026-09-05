@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
     <link rel="stylesheet" href="css/base.css?v=2c415a70">
     <link rel="stylesheet" href="css/start-screen.css?v=7df00463">
-    <link rel="stylesheet" href="css/game.css?v=69772323">
+    <link rel="stylesheet" href="css/game.css?v=9365b0e9">
     <link rel="stylesheet" href="css/modals.css?v=d677e624">
 </head>
 <body>
@@ -23,7 +23,8 @@
     <p class="subtitle">rooftop requiem</p>
     <div class="controls-hint">
         SPACE / ↑ &mdash; jump (hold to go higher)<br>
-        Z &mdash; fire a note
+        Z &mdash; fire a note<br>
+        M &mdash; music on / off
     </div>
     <div class="start-prompt">PRESS SPACE</div>
     <p class="copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
@@ -43,6 +44,7 @@
     <div class="hud-right">
         <div class="hud-speed" id="speedDisplay">♩ ♪</div>
         <div class="hud-combo" id="comboDisplay"></div>
+        <div class="hud-music" id="musicDisplay">♪</div>
     </div>
 </div>
 
@@ -65,12 +67,13 @@
     </div>
 </div>
 
-<script src="js/config.js?v=96af430b"></script>
-<script src="js/input.js?v=74c953ef"></script>
+<script src="../shared/adenosine-audio.js?v=a750a5d1"></script>
+<script src="js/config.js?v=d13eb8b3"></script>
+<script src="js/input.js?v=0aa4c644"></script>
 <script src="js/player.js?v=4cf03df8"></script>
 <script src="js/world.js?v=9c63a4ea"></script>
 <script src="js/entities.js?v=817bb481"></script>
 <script src="js/renderer.js?v=135b92ef"></script>
-<script src="js/main.js?v=a097642b"></script>
+<script src="js/main.js?v=994ab622"></script>
 </body>
 </html>

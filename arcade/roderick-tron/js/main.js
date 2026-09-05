@@ -12,6 +12,7 @@
     const livesDisplay   = document.getElementById('livesDisplay');
     const speedDisplay   = document.getElementById('speedDisplay');
     const comboDisplay   = document.getElementById('comboDisplay');
+    const musicDisplay   = document.getElementById('musicDisplay');
     const gameOverOverlay = document.getElementById('gameOverOverlay');
     const finalScore     = document.getElementById('finalScore');
     const finalDistance  = document.getElementById('finalDistance');
@@ -44,6 +45,15 @@
 
     let player, world, entities;
 
+    // Music. Every one of these guards exists because the game must stay
+    // playable when the audio does not arrive: the shared module may not be on
+    // the page, a 937KB fetch may fail, and decodeAudioData may reject.
+    const MUTE_KEY = 'roderickTronMuted';
+    let musicReady = false;      // decoded and ready to start
+    let musicStarted = false;    // start() has run; the loop is playing
+    let musicWanted = false;     // a gesture asked for it, ready or not
+    let musicMuted = false;
+
     // ── Init ───────────────────────────────────────────────
     function init() {
         // Input.init() must register its keydown listener BEFORE bindUI() does.
@@ -60,11 +70,93 @@
         entities = new Entities();
         loadHighScores();
         renderHighScores();
+        loadMutePreference();
+        initAudio();          // deliberately not awaited — see initAudio()
         // A tab that was in the background hands back one enormous timestamp
         // gap. dt is capped anyway, but dropping the stale mark keeps even that
         // one frame honest.
         document.addEventListener('visibilitychange', () => { lastTime = 0; });
         requestAnimationFrame(gameLoop);
+    }
+
+    // ── Music ──────────────────────────────────────────────
+
+    /**
+     * Load and decode the track.
+     *
+     * Not awaited by init(): it fetches and decodes 937KB, and the title screen
+     * must be interactive immediately. Whoever presses SPACE first either finds
+     * the music ready or sets musicWanted, and startMusic() runs when the decode
+     * lands. A failure here leaves the game entirely playable in silence.
+     */
+    async function initAudio() {
+        if (typeof AdAudio === 'undefined') return;
+        try {
+            await AdAudio.init({
+                music: {
+                    url: CONFIG.MUSIC.URL,
+                    volume: CONFIG.MUSIC.VOLUME,
+                    fadeIn: CONFIG.MUSIC.FADE_IN,
+                },
+            });
+            AdAudio.handleVisibility({ pauseMusic: true });
+            // Applied before playMusic(), which reads the muted flag to pick its
+            // fade target — so a muted run starts silent rather than fading up
+            // and being cut off.
+            AdAudio.setMusicMuted(musicMuted, 0);
+            musicReady = true;
+            if (musicWanted) startMusic();
+        } catch (e) {
+            musicReady = false;
+        }
+    }
+
+    /**
+     * Begin the loop. Browsers will not start an AudioContext without a user
+     * gesture, so this is only ever called from a keypress.
+     */
+    function startMusic() {
+        musicWanted = true;
+        if (!musicReady || musicStarted) return;
+        musicStarted = true;
+        try {
+            AdAudio.playMusic();
+        } catch (e) {
+            musicStarted = false;
+        }
+    }
+
+    /** Pull the music down under the FIN panel, and back up on restart. */
+    function setMusicDucked(ducked) {
+        if (!musicReady) return;
+        AdAudio.setMusicVolume(
+            ducked ? CONFIG.MUSIC.DUCKED : CONFIG.MUSIC.VOLUME,
+            CONFIG.MUSIC.DUCK_RAMP
+        );
+    }
+
+    function loadMutePreference() {
+        try {
+            musicMuted = localStorage.getItem(MUTE_KEY) === '1';
+        } catch (e) {
+            musicMuted = false;   // private browsing
+        }
+        updateMusicDisplay();
+    }
+
+    function toggleMute() {
+        musicMuted = !musicMuted;
+        if (musicReady) AdAudio.setMusicMuted(musicMuted);
+        try {
+            localStorage.setItem(MUTE_KEY, musicMuted ? '1' : '0');
+        } catch (e) { /* best effort */ }
+        updateMusicDisplay();
+    }
+
+    function updateMusicDisplay() {
+        if (!musicDisplay) return;
+        musicDisplay.classList.toggle('muted', musicMuted);
+        musicDisplay.title = musicMuted ? 'music off (M)' : 'music on (M)';
     }
 
     // ── Game Loop ──────────────────────────────────────────
@@ -215,6 +307,7 @@
         state = STATE.GAME_OVER;
         player.alive = false;
         hud.classList.remove('active');
+        setMusicDucked(true);
 
         finalScore.textContent = score + 'm';
         finalDistance.textContent =
@@ -272,6 +365,7 @@
         // Stand him on the opening roof rather than dropping him in from y=100.
         player.respawn(world.respawnSurface(CONFIG.PLAYER_X, CONFIG.PLAYER_W));
 
+        setMusicDucked(false);
         gameOverOverlay.classList.remove('active');
         titleScreen.classList.add('hidden');
         hud.classList.add('active');
@@ -347,10 +441,21 @@
     // ── Input bindings ─────────────────────────────────────
     function bindUI() {
         document.addEventListener('keydown', (e) => {
-            if (e.code !== 'Space') return;
-            // Typing initials — let the field have the key.
+            // Typing initials — let the field have every key.
             if (document.activeElement === initialsInput) return;
+
+            // Mute lives here rather than in the game loop so it also works on
+            // the title and FIN screens, where update() is not running.
+            if (e.code === 'KeyM') {
+                e.preventDefault();
+                toggleMute();
+                return;
+            }
+
+            if (e.code !== 'Space') return;
             e.preventDefault();
+            // The gesture that starts a run is also the one that unlocks audio.
+            startMusic();
             if (state === STATE.TITLE) {
                 restartGame();
             } else if (state === STATE.GAME_OVER && newHighScoreIndex < 0) {

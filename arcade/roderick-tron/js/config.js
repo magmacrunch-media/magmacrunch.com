@@ -85,6 +85,22 @@ const CONFIG = {
     COMBO_MAX: 6,
     COMBO_WINDOW: 150,      // frames before a streak lapses
 
+    // Music
+    //
+    // Points at the jukebox's copy rather than a second one under this game.
+    // The two are byte-identical audio — same 224 Ogg pages, differing only in
+    // the bitstream serial a remux assigns — so a local copy would be 937KB of
+    // duplication. It does mean this game is not quite standalone, which is the
+    // one place it departs from the self-contained-game convention.
+    MUSIC: {
+        URL: '../../music/jukebox/songs/'
+             + encodeURIComponent('Jimmi - JIMMI - 04 Roderick Tron.ogg'),
+        VOLUME: 0.38,
+        DUCKED: 0.12,      // while the FIN panel is up
+        FADE_IN: 1.5,
+        DUCK_RAMP: 0.35,
+    },
+
     // Particles
     PARTICLE_COUNT: 8,
     PARTICLE_LIFE: 20,

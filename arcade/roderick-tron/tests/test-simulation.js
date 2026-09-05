@@ -574,6 +574,34 @@ console.log('\njump forgiveness:');
     ok(tapped > 0, 'a tap still leaves the ground');
 }
 
+// ── Music asset ───────────────────────────────────────────────────────────────
+// CONFIG.MUSIC.URL is built in a JS string, and check-cache-busters.mjs
+// deliberately steps over those — a `?v=` in JS is usually a YouTube id. So
+// nothing else in the repo would notice this path breaking, and the only
+// symptom would be a game that is silently silent.
+
+console.log('\nmusic asset:');
+{
+    const { CONFIG } = makeGame(1);
+    const url = CONFIG.MUSIC.URL;
+
+    ok(/^\.\.\/\.\.\//.test(url), 'points outside the game folder, at the shared copy', url);
+
+    // Resolve it the way the browser would, from arcade/roderick-tron/.
+    const resolved = path.resolve(JS_DIR, '..', decodeURIComponent(url));
+    ok(fs.existsSync(resolved), 'the track it names is actually there', resolved);
+
+    if (fs.existsSync(resolved)) {
+        const bytes = fs.statSync(resolved).size;
+        ok(bytes > 100000, `track is ${Math.round(bytes / 1024)}KB, so it is the real file`);
+        const head = fs.readFileSync(resolved).subarray(0, 4).toString('latin1');
+        ok(head === 'OggS', 'and it is an Ogg stream', `header was "${head}"`);
+    }
+
+    ok(url.includes('%20'), 'spaces are percent-encoded for fetch()');
+    ok(CONFIG.MUSIC.DUCKED < CONFIG.MUSIC.VOLUME, 'the ducked level is quieter than the normal one');
+}
+
 // ── Summary ───────────────────────────────────────────────────────────────────
 
 console.log(`\n=== Results: ${passed} passed, ${failed} failed ===`);
