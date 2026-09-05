@@ -486,6 +486,47 @@ console.log('hit boxes — generous on hostiles, honest on convoys');
         JSON.stringify(evs));
 }
 
+// ── 4c. The rescue window ─────────────────────────────────────────────────────
+
+console.log('');
+console.log('rescue window — long enough to win, short enough to matter');
+{
+    const g = makeGame(71);
+    const C = g.CONFIG;
+
+    // FLOOR, flown rather than assumed: put the ship in one corner of the rail
+    // and drive it to the opposite one with the real Player.update, then add
+    // the shot's flight, a reaction and a full gun cooldown. That is the
+    // longest a perfect player can take to answer a lock.
+    const p = g.player;
+    p.x = -C.SPAWN_X_RANGE;
+    p.y = C.SHIP_Y_MAX;
+    let cross = 0;
+    while ((p.x < C.SPAWN_X_RANGE - 2 || p.y > -C.CONTACT_Y_SPREAD + 2) && cross < 2000) {
+        p.update(1, -1, false, 1);
+        cross++;
+    }
+    const intercept = cross + C.Z_FIRE_MAX / C.SHOT_SPEED + C.REACTION_FRAMES + C.SHOT_COOLDOWN;
+
+    ok(C.AID_KILL_FRAMES > intercept,
+        'a convoy outlives the worst-case intercept, so the rescue is possible',
+        `timer ${C.AID_KILL_FRAMES} vs intercept ${intercept.toFixed(0)}`);
+
+    // CEILING: a timer longer than the rail is no timer at all, because the
+    // convoy reaches the camera and escapes before it can expire.
+    const railLife = (C.Z_FAR - C.Z_NEAR) / C.RAIL_SPEED_MAX;
+    ok(C.AID_KILL_FRAMES < railLife,
+        'and dies before it could simply fly off the end, so the threat is real',
+        `timer ${C.AID_KILL_FRAMES} vs rail life ${railLife.toFixed(0)}`);
+
+    // The two bounds have to leave room for each other. If a retune ever closes
+    // this gap the mechanic cannot be made fair and meaningful at once, and the
+    // fix is a faster ship or a shorter rail, not a bigger number here.
+    ok(railLife > intercept,
+        'the rail is long enough for an intercept to fit inside it at all',
+        `rail ${railLife.toFixed(0)} vs intercept ${intercept.toFixed(0)}`);
+}
+
 // ── 5. Spawning ───────────────────────────────────────────────────────────────
 
 console.log('\nspawning');

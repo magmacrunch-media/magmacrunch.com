@@ -184,7 +184,28 @@ const CONFIG = {
 
     // A convoy under fire dies this many frames after a hostile locks it, which
     // is the window you have to kill the attacker.
-    AID_KILL_FRAMES: 105,
+    //
+    // This is bounded from both sides and 105 was outside the lower one.
+    //
+    // FLOOR. Worst case the attacker is at the opposite corner of the rail:
+    // 64 frames to fly there with the real Player.update, 23 for the shot to
+    // reach maximum firing depth, 18 of reaction and up to 9 of gun cooldown,
+    // so 114 frames before a perfect player can land the shot. At 105 the
+    // convoy was already dead. It was not a tight window, it was an impossible
+    // one, and the test now asserts the floor rather than trusting it.
+    //
+    // CEILING. A convoy has a median 125 frames of rail left when it is locked,
+    // so a timer much past that means it reaches the camera and escapes before
+    // the clock runs out, and the threat stops existing. Measured over a
+    // 150-second passive run, the share of locked convoys that die:
+    //
+    //     105 -> 52%     150 -> 36%     180 -> 1%
+    //     135 -> 42%     165 ->  4%
+    //
+    // The collapse between 150 and 165 is the timer overtaking the rail. 150 is
+    // the largest value that still leaves the rule teeth, and it clears the
+    // 114-frame floor by a comfortable 1.3x.
+    AID_KILL_FRAMES: 150,
 
     // Minimum lateral separation between two contacts spawned in one wave, so a
     // convoy is never hidden behind a hostile at the moment you must identify it.
