@@ -64,6 +64,19 @@ PING_TIMEOUT = 20
 # was 30, i.e. shorter than the 40s worst case.
 SESSION_TIMEOUT = 90
 
+# A session is "away" once every page holding it says so — the tab is hidden, or
+# it has been visible but untouched for the widget's idle timeout. Away sessions
+# stay in the roster, flagged, but are left out of the count.
+#
+# This exists because the liveness check underneath is WebSocket ping/pong, and
+# the browser's network stack answers those without waking the page. A phone in
+# a pocket with a backgrounded arcade tab is, at that level, indistinguishable
+# from somebody sitting at the keyboard — so the count meant "tabs open", not
+# "people here". Nothing here can detect it; only the page can say.
+#
+# A client that never sends `presence` is simply never away, so an older widget
+# behaves exactly as it did before.
+
 # New sockets per client address per minute. Higher than the game servers' 10:
 # the widget normally holds one SharedWorker-backed socket across the whole
 # arcade, but browsers without SharedWorker support fall back to a socket per
@@ -120,7 +133,7 @@ messages = []                   # global chat history (last MAX_GLOBAL_MESSAGES)
 #
 # A session with no sockets is a disconnected one, kept until SESSION_TIMEOUT
 # passes so a returning socket can reclaim its name, color and rooms.
-sessions = {}                   # token -> { name, color, rooms:set(), sockets:set(), last_seen }
+sessions = {}                   # token -> { name, color, rooms:set(), sockets:set(), last_seen, away }
 socket_session = {}             # websocket -> token
 
 rooms = {}                      # room_code -> set(websocket), the fan-out set
@@ -222,6 +235,12 @@ def attach_socket(token, websocket):
         detach_socket(websocket)
 
     info = sessions[token]
+    if not info['sockets']:
+        # Coming back from nothing. Whatever this session's away state was when
+        # it lost its last socket, a fresh one means somebody is at a page again
+        # — and a widget too old to send `presence` would otherwise be stuck away
+        # for the life of the session. The page corrects us either way.
+        info['away'] = False
     info['sockets'].add(websocket)
     socket_session[websocket] = token
     for room in info['rooms']:
@@ -360,21 +379,29 @@ def user_list_message():
     showing whatever number it last heard, indefinitely.
     """
     users = []
+    present = 0
     for info in sessions.values():
         if not info['sockets']:
             continue
         user_rooms = list(info['rooms'])
         game = 'In Game' if any(code in rooms for code in user_rooms) else None
+        away = info.get('away', False)
+        if not away:
+            present += 1
         users.append({
             'name': info['name'],
             'color': info['color'],
             'rooms': user_rooms,
             'game': game,
+            'away': away,
         })
+    # `count` is people here, `users` is everyone connected. The widget draws the
+    # badge from the count and greys the away entries, so somebody who wandered
+    # off is still visibly in the room without being counted as present.
     return {
         'type': 'user_list',
         'users': users,
-        'count': len(users)
+        'count': present
     }
 
 
@@ -492,6 +519,7 @@ async def handler(websocket):
                         'rooms': set(),
                         'sockets': set(),
                         'last_seen': time.time(),
+                        'away': False,
                     }
                     attach_socket(token, websocket)
                     await websocket.send(json.dumps({
@@ -532,6 +560,27 @@ async def handler(websocket):
                         'type': 'name_assigned',
                         'name': info['name']
                     }))
+                    await broadcast_user_list()
+
+            elif msg_type == 'presence':
+                # Only the page can tell us this; see the note by SESSION_TIMEOUT.
+                # Rate limited because tab switching is high-frequency and this
+                # arrives on every one of them — the widget debounces and only
+                # sends transitions, but nothing here can assume a well-behaved
+                # client. A refusal costs the visitor nothing worse than being
+                # counted as present a little longer than they are.
+                if not ip_limiter.check((ip, "presence"), 20, 10):
+                    logger.warning("Rate limited: presence from %s", ip)
+                    continue
+                info = session_of(websocket)
+                if info is None:
+                    # A lurker: connected, but not on the roster, so there is no
+                    # presence to report. Not an error — the widget holds off on
+                    # set_name until the visitor actually joins in.
+                    continue
+                away = msg.get('state') == 'away'
+                if away != info.get('away', False):
+                    info['away'] = away
                     await broadcast_user_list()
 
             elif msg_type == 'set_color':

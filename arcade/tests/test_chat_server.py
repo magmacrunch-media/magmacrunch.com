@@ -589,6 +589,105 @@ class TestGreetingRoster:
         assert roster["type"] == "user_list" and roster["count"] == 1, roster
 
 
+# ── Away ──────────────────────────────────────────────────────────────────────
+
+class TestAway:
+    """
+    `count` is people here; `users` is everyone connected.
+
+    The liveness check underneath is WebSocket ping/pong, which the browser
+    answers without waking the page — so a backgrounded tab was counted as a
+    present person for as long as it stayed open. Only the page can tell us
+    otherwise, which is what `presence` is for.
+    """
+
+    async def _roster_after(self, ws, send):
+        await ws.send(json.dumps(send))
+        hit, seen = await until(ws, {"user_list"})
+        return hit, [f.get("type") for f in seen]
+
+    def test_going_away_leaves_the_roster_but_not_the_count(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada", token="ada")
+                await frames(a, 4, timeout=0.3)
+                return await self._roster_after(a, {"type": "presence", "state": "away"})
+        hit, types = serve(go)
+        assert hit is not None, types
+        assert hit["count"] == 0, f"an away session was still counted: {hit}"
+        assert [u["name"] for u in hit["users"]] == ["Ada"], "away is not gone, just not here"
+        assert hit["users"][0]["away"] is True
+
+    def test_coming_back_restores_the_count(self):
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada", token="ada")
+                await frames(a, 4, timeout=0.3)             # drain the join's own roster
+                await a.send(json.dumps({"type": "presence", "state": "away"}))
+                await until(a, {"user_list"})
+                return await self._roster_after(a, {"type": "presence", "state": "here"})
+        hit, types = serve(go)
+        assert hit is not None, types
+        assert hit["count"] == 1, hit
+        assert hit["users"][0]["away"] is False
+
+    def test_a_repeated_state_does_not_re_broadcast(self):
+        """The widget only sends transitions, but nothing here may assume that."""
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada", token="ada")
+                await frames(a, 4, timeout=0.3)             # drain the join's own roster
+                await a.send(json.dumps({"type": "presence", "state": "away"}))
+                await until(a, {"user_list"})
+                await a.send(json.dumps({"type": "presence", "state": "away"}))
+                return await frames(a, 1, timeout=0.4)
+        assert serve(go) == [], "an unchanged state still woke every client"
+
+    def test_someone_who_never_reports_presence_is_present(self):
+        """An older widget sends no `presence` at all, and must count normally."""
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada", token="ada")
+                async with websockets.connect(url, additional_headers=OK_ORIGIN) as b:
+                    return (await greet(b))[2]
+        roster = serve(go)
+        assert roster["count"] == 1, roster
+        assert roster["users"][0]["away"] is False
+
+    def test_presence_from_a_lurker_is_ignored_not_refused(self):
+        """No set_name means no session, so there is no presence to record."""
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as ws:
+                await greet(ws)
+                await ws.send(json.dumps({"type": "presence", "state": "away"}))
+                await ws.send(json.dumps({"type": "set_name", "name": "Late"}))
+                hit, seen = await until(ws, {"name_assigned"})
+                return hit, [f.get("type") for f in seen]
+        hit, types = serve(go)
+        assert hit is not None, f"the socket was broken by an early presence: {types}"
+        assert hit["name"] == "Late"
+
+    def test_reconnecting_clears_a_stale_away(self):
+        """
+        A widget too old to send `presence` would otherwise inherit the away
+        state its session was carrying when the last socket dropped, and have no
+        way to say otherwise.
+        """
+        async def go(url):
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as a:
+                await join(a, "Ada", token="ada")
+                await a.send(json.dumps({"type": "presence", "state": "away"}))
+                await until(a, {"user_list"})
+            await settle(lambda: not any(i["sockets"] for i in chat.sessions.values()))
+
+            async with websockets.connect(url, additional_headers=OK_ORIGIN) as b:
+                await join(b, "Ada", token="ada")            # same session, new socket
+                return chat.user_list_message()
+        roster = serve(go)
+        assert roster["count"] == 1, f"the session came back still marked away: {roster}"
+        assert roster["users"][0]["away"] is False
+
+
 # ── Names ─────────────────────────────────────────────────────────────────────
 
 class TestNames:

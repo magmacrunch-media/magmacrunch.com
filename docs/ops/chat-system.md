@@ -91,16 +91,29 @@ Three things make that number trustworthy, and each was a defect first:
   whichever landed last won. It was dead code; it is now a comment saying why
   not to add it back.
 
-Two things the count still gets wrong, both fixable only in the widget
-(`adenosine-chat.js`, generated — see the note at the top of this file):
+Two more, added with `adenosine-chat` 0.6.0, where the server holds half:
 
-- **A visitor who never opens the chat is counted.** `sendSavedCredentials()`
-  sends `set_name` with `name: myName || "Player"` on every connect, so merely
-  loading an arcade page registers a `PlayerNN`.
+- **`set_name` is what puts somebody on the roster, and the widget now holds it
+  back** until the visitor sends a message, joins a room, or picks a name or
+  colour. It used to go out on every connect, so merely loading a page
+  registered a `PlayerNN`. Expect sockets that never name themselves: they get
+  history, status and the roster, and are simply not in it. The gates that
+  already existed — `session_of(websocket) is None` on `chat`, `join_room`,
+  `set_color`, `typing` — are what make that safe.
+- **`presence`** carries `here` or `away`, and away sessions stay in `users`
+  flagged but drop out of `count`. Only the page can know this: the liveness
+  check is WebSocket ping/pong, answered by the browser's network stack without
+  the page being involved, so a backgrounded tab on a pocketed phone is
+  indistinguishable from somebody at the keyboard. `attach_socket` clears a
+  stale `away` when a session gains its first socket back, so a widget too old
+  to send `presence` cannot get stuck away.
+
+One thing the count still gets wrong, and it is inherent rather than a bug:
+
 - **Identity is per-origin.** The session token lives in `localStorage`, so the
   same person on the LAN, on magmacrunch.com and on a phone is three people.
-  This is inherent to the storage, not a bug — but it is why the count looks
-  inflated when you are testing across your own devices.
+  It is why the count looks inflated when you are testing across your own
+  devices. Fixing it needs an explicit claim code, not a cleverer key.
 
 Keying identity on IP instead would be worse, not better: everything behind one
 NAT (a household, an office) would collapse into a single identity that inherits
