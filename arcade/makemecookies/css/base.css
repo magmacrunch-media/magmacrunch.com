@@ -100,4 +100,28 @@ body::after {
 .mc-back::before { content: '← '; }
 .mc-back:hover { opacity: 1; color: var(--frosting); }
 
-body.game-active .mc-back { display: none; }
+/* Breadcrumb. arcade-base.css pins .mc-back to the corner by itself; inside
+   the crumbs strip it goes static so the two links can sit side by side. */
+.mc-crumbs {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 10000;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.mc-crumbs .mc-back { position: static; top: auto; left: auto; }
+
+.mc-crumb {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--subtext);
+  text-decoration: none;
+  opacity: 0.65;
+  transition: opacity 0.15s, color 0.15s;
+}
+.mc-crumb::before { content: '/ '; opacity: 0.5; }
+.mc-crumb:hover { opacity: 1; color: var(--frosting); }
+
+body.game-active .mc-crumbs { display: none; }

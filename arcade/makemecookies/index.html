@@ -19,10 +19,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/base.css?v=1dd2f5fe">
-<link rel="stylesheet" href="css/layout.css?v=7b91b927">
+<link rel="stylesheet" href="css/base.css?v=db46c26c">
+<link rel="stylesheet" href="css/layout.css?v=12940ae7">
 <link rel="stylesheet" href="css/modals.css?v=883e422f">
-<link rel="stylesheet" href="css/title.css?v=9d105fba">
+<link rel="stylesheet" href="css/title.css?v=3953ebdd">
 
 <link rel="preload" as="audio" href="audio/makemecookies-x4.ogg">
 </head>
@@ -31,7 +31,10 @@
 <div class="bg-grid"></div>
 <div class="bg-horizon"></div>
 
-<a href="../" class="mc-back">magmacrunch arcade</a>
+<nav class="mc-crumbs">
+  <a href="../" class="mc-back">magmacrunch arcade</a>
+  <a href="../action/" class="mc-crumb">action</a>
+</nav>
 
 <div id="app">
   <header>
@@ -46,7 +49,7 @@
       <div class="hud-value" id="hud-score">0</div>
     </div>
     <div class="hud-cell">
-      <div class="hud-label">COOKIES SHIPPED</div>
+      <div class="hud-label"><span class="wide-only">COOKIES </span>SHIPPED</div>
       <div class="hud-value pink" id="hud-shipped">0</div>
     </div>
     <div class="hud-cell">
@@ -59,6 +62,17 @@
 
   <div class="stage">
     <canvas id="line" width="960" height="420"></canvas>
+  </div>
+
+  <!-- Touch controls. These carry the same labels as the keyboard legend,
+       so on a phone you learn the stations by using them; the legend below is
+       hidden on touch rather than shown alongside. -->
+  <div class="touchpad" id="touchpad">
+    <button class="tp" data-bay="0"><b>1</b><span>FLOUR</span></button>
+    <button class="tp" data-bay="1"><b>2</b><span>MIX</span></button>
+    <button class="tp" data-bay="2"><b>3</b><span>BELT</span></button>
+    <button class="tp" data-bay="3"><b>4</b><span>OVEN</span></button>
+    <button class="tp" data-bay="4"><b>5</b><span>SHIP</span></button>
   </div>
 
   <div class="legend">
@@ -94,13 +108,6 @@
     <span><b>3</b>BELT — unstick jams and boost the line</span>
     <span><b>4</b>OVEN — pull it golden. Mash to fight fires</span>
     <span><b>5</b>PACK — ship the box. Four cookies pays double</span>
-  </div>
-
-  <div class="title-note">
-    The song is the clock. When it ends, so does your shift &mdash; there is no
-    losing, only how much you shipped and how much mess you left. Fill the MESS
-    bar and the health inspector stops the line for four seconds while the music
-    keeps playing.
   </div>
 
   <button class="btn" id="btn-start-title">CLOCK IN</button>
@@ -178,6 +185,15 @@
         </div>
       </div>
       <div class="credits-section">
+        <div class="credits-label">THE SHIFT</div>
+        <div class="credits-value">
+          The song is the clock. When it ends, so does your shift &mdash; there
+          is no losing, only how much you shipped and how much mess you left.
+          Fill the <strong>MESS</strong> bar and the health inspector stops the
+          line for four seconds while the music keeps playing.
+        </div>
+      </div>
+      <div class="credits-section">
         <div class="credits-label">HOW TO PLAY</div>
         <div class="credits-value">
           Keys <strong>1</strong>&ndash;<strong>5</strong> act on the station
@@ -214,7 +230,7 @@
 <script src="js/pixels.js?v=43f9f1cb"></script>
 <script src="js/stations.js?v=8bfb1f85"></script>
 <script src="js/render.js?v=dbee2dcc"></script>
-<script src="js/main.js?v=4466d6c7"></script>
+<script src="js/main.js?v=b9d7e03a"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=4fb80289">
 <script src="../shared/adenosine-chat.js?v=2b20b1f0"></script>

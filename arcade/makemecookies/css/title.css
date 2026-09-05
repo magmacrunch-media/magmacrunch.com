@@ -140,3 +140,8 @@
   letter-spacing: 3px;
   text-transform: uppercase;
 }
+
+/* "or press space" is a lie on a phone. */
+@media (hover: none) and (pointer: coarse) {
+  .title-hint { display: none; }
+}

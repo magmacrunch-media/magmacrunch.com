@@ -158,3 +158,96 @@ header .byline {
   .hud-value { font-size: 17px; }
   .legend { font-size: 10px; gap: 9px; }
 }
+
+/* ── Touch controls ─────────────────────────────────────────────────
+   Hidden by default and revealed only on a touch-primary device, so a
+   desktop with a touchscreen keeps the keyboard legend instead of getting
+   both. The buttons carry the station names, which is why the legend is
+   replaced rather than shown alongside. */
+
+.touchpad { display: none; }
+
+.tp {
+  font-family: 'Share Tech Mono', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: 58px;
+  padding: 8px 2px;
+  background: var(--panel-bg);
+  color: var(--dough);
+  border: 1px solid var(--border-bright);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.tp b {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: var(--neon);
+}
+.tp span { font-size: 10px; letter-spacing: 1px; color: var(--subtext); }
+.tp:active { background: var(--neon); }
+.tp:active b, .tp:active span { color: var(--bg); }
+
+@media (hover: none) and (pointer: coarse) {
+  .touchpad {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+  .legend { display: none; }
+}
+
+/* ── Narrow portrait ────────────────────────────────────────────────
+   The playfield is 2.29:1, so in a tall window it is always a letterbox.
+   Give it every pixel of width and spend the reclaimed height on the
+   touch pad rather than on chrome. */
+@media (max-width: 480px) {
+  /* "COOKIES SHIPPED" wraps to two lines here and throws the HUD row out of
+     alignment; the number is the point, not the word. */
+  .wide-only { display: none; }
+  #app { width: 100vw; padding: 10px 0 20px; gap: 8px; }
+  #line { width: 100vw; }
+  .stage { border-left: none; border-right: none; }
+  .hud, .controls, .touchpad { padding: 0 6px; }
+  header h1 { font-size: 15px; }
+  header .byline { font-size: 8px; letter-spacing: 2px; }
+  .hud-cell { min-width: 0; flex: 1; padding: 5px 6px; }
+  .hud-value { font-size: 15px; }
+}
+
+/* ── Short viewports (landscape phones) ─────────────────────────────
+   Without this the desktop-sized header and HUD push the canvas below the
+   fold, which is how the game "did not fit" in landscape despite landscape
+   being the right shape for it. */
+@media (max-height: 480px) {
+  #app { padding: 6px 6px 10px; gap: 6px; }
+  /* The canvas paints its own MAKEMECOOKIES! sign, so the page heading is
+     pure duplication exactly where vertical space is scarcest. */
+  header { display: none; }
+  header .byline { display: none; }
+  /* Size the playfield by height rather than width here. Width-sizing put the
+     canvas bottom - the meters, which are the whole readout - below the fold
+     at 341px tall in a 375px viewport. aspect-ratio derives the width back. */
+  #line {
+    aspect-ratio: 960 / 420;
+    height: calc(100vh - 158px);
+    width: auto;
+    max-width: 98vw;
+  }
+  .stage { max-width: 98vw; }
+  .neon-stripe { display: none; }
+  .hud-cell { padding: 3px 10px; min-width: 78px; }
+  .hud-label { font-size: 7px; margin-bottom: 2px; }
+  .hud-value { font-size: 14px; }
+  #hud-rush { font-size: 9px; min-height: 10px; }
+  .tp { min-height: 42px; padding: 4px 2px; gap: 1px; }
+  .tp b { font-size: 10px; }
+  .tp span { font-size: 8px; }
+  .controls .btn { padding: 7px 10px; font-size: 8px; }
+}

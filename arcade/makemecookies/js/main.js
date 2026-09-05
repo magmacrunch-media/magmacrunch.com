@@ -321,6 +321,19 @@ function dismissTitle() {
     bindings: COOKIE_BINDINGS,
   });
 
+  // Touch controls. pointerdown rather than click so the station fires on
+  // the press instead of the release — at this tempo that gap is felt — and
+  // preventDefault stops the browser synthesising a second click after it.
+  for (const btn of document.querySelectorAll('.tp')) {
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      if (!running || paused || finished) return;
+      const now = performance.now();
+      if (now < st.inspectUntil) return;
+      PRESS[+btn.dataset.bay](st, tune(st), now);
+    });
+  }
+
   // The loop only renders once gameStarted, so the attract frame behind
   // the title card has to be painted by hand.
   render();
