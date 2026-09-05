@@ -109,14 +109,32 @@ repaired=$(echo "$output" | sed -n 's/^FIXED  *//p')
 if [ -n "$repaired" ]; then
 	echo "$output" | grep -E '^(FIXED|  *->)' || true
 
+	# Held back for the same reason the straddle guard below is scoped: a page
+	# this commit does not record cannot be broken by it. The repair pass is
+	# repo-wide, so in a shared checkout it routinely finds a stale stamp in
+	# whatever another session is halfway through — and refusing over that
+	# blocked every commit in the tree until they happened to finish. Only a
+	# file THIS commit records is this commit's problem.
+	recorded=$(git diff --cached --name-only)
+
 	held_back=""
+	foreign=""
 	for file in $repaired; do
-		if echo "$dirty_before" | grep -qx "$file"; then
-			held_back="$held_back $file"
-		else
+		if ! echo "$dirty_before" | grep -qx "$file"; then
 			git add -- "$file"
+		elif echo "$recorded" | grep -qx "$file"; then
+			case " $held_back " in *" $file "*) ;; *) held_back="$held_back $file" ;; esac
+		else
+			case " $foreign " in *" $file "*) ;; *) foreign="$foreign $file" ;; esac
 		fi
 	done
+
+	if [ -n "$foreign" ]; then
+		echo "" >&2
+		echo "pre-commit: corrected stamps in pages this commit does not record, left" >&2
+		echo "            unstaged for whoever is editing them:" >&2
+		for file in $foreign; do echo "              $file" >&2; done
+	fi
 
 	if [ -n "$held_back" ]; then
 		echo "" >&2
