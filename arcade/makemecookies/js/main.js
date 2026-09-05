@@ -183,7 +183,13 @@ function togglePause() {
   else { music.play().catch(() => {}); hideModal('modal-pause'); }
 }
 
-function quitShift() {
+/**
+ * Back to the title card. The same operation whether you clocked out
+ * mid-shift or just finished one, which is the point: every exit now lands
+ * somewhere you can start again from. Closing the scoreboard after a shift
+ * used to leave the page on an idle factory with no CLOCK IN on it.
+ */
+function toTitle() {
   gameLoop.stop();
   music.pause();
   running = false; paused = false; finished = false;
@@ -192,8 +198,13 @@ function quitShift() {
   AdRPG.setGameOver(false);
   document.body.classList.remove('game-active');
   document.getElementById('btn-pause').style.display = 'none';
-  hideModal('modal-pause');
+  document.querySelectorAll('.modal-overlay').forEach((m) => m.classList.add('hidden'));
+  // Carry the measured song length across the reset. createShift() falls back
+  // to the 51000 constant, and loadedmetadata/durationchange have long since
+  // fired, so without this a second shift silently runs on the fallback.
+  const keep = st.shiftMs;
   st = createShift();
+  st.shiftMs = keep;
   render();
   showTitleScreen();
 }
@@ -276,8 +287,9 @@ function setupListeners() {
   wire('btn-start-title', () => dismissTitle());
   wire('btn-pause', () => togglePause());
   wire('btn-resume', () => togglePause());
-  wire('btn-quit', () => quitShift());
+  wire('btn-quit', () => toTitle());
   wire('btn-play-again', () => { hideModal('modal-gameover'); startShift(); });
+  wire('btn-menu', () => toTitle());
   wire('btn-submit', async () => {
     const initials = document.getElementById('initials-input').value.trim() || 'AAA';
     addScoreToTable(initials, st.score, st.shipped);
@@ -290,9 +302,17 @@ function setupListeners() {
     showModal('modal-scores');
   });
   wire('btn-scores', () => { renderScores(); showModal('modal-scores'); pauseForModal(); });
-  wire('btn-close-scores', () => { hideModal('modal-scores'); resumeFromModal(); });
+  // After a shift there is nothing to resume, so closing a modal has to go
+  // somewhere rather than nowhere.
+  wire('btn-close-scores', () => {
+    hideModal('modal-scores');
+    if (finished) toTitle(); else resumeFromModal();
+  });
   wire('btn-credits', () => { showModal('modal-credits'); pauseForModal(); });
-  wire('btn-close-credits', () => { hideModal('modal-credits'); resumeFromModal(); });
+  wire('btn-close-credits', () => {
+    hideModal('modal-credits');
+    if (finished) toTitle(); else resumeFromModal();
+  });
 }
 
 // ── Title screen ─────────────────────────────────────────────────────
