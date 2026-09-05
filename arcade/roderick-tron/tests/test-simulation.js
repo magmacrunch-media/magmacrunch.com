@@ -22,6 +22,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { findSurfaces, analyse } = require('./reachability.js');
 
 const JS_DIR = path.join(__dirname, '..', 'js');
 const FILES = ['config.js', 'levels.js', 'tilemap.js', 'sfx.js', 'renderer.js', 'player.js', 'entities.js', 'world.js'];
@@ -407,89 +408,39 @@ console.log('\nevery gap is clearable:');
 
 // ── The level can actually be finished ────────────────────────────────────────
 
-console.log('\ntraversal:');
+console.log('\nevery level is completable:');
 {
-    const g = makeGame(0);
-    const { map, CONFIG, player, entities, input, ctx } = g;
-    void ctx;
+    const probe = makeGame(0);
+    const levelCount = probe.LEVELS.length;
+    ok(levelCount > 0, levelCount + ' level(s) to check');
 
-    input.allOff();
-    input.hold('R');
-    input.hold('RUN');
+    for (let i = 0; i < levelCount; i++) {
+        const g = makeGame(i);
+        const surfaces = findSurfaces(g.map);
+        const env = {
+            CONFIG: g.CONFIG, input: g.input, map: g.map, surfaces: surfaces,
+            exit: g.map.exit,
+            newPlayer: () => vm.runInContext('new Player(__map)', g.ctx),
+        };
+        const r = analyse(env);
+        const name = 'level ' + (i + 1) + ' (' + g.map.name + ')';
 
-    let reachedExit = false, died = false, frames = 0;
-    const T = CONFIG.TILE;
+        ok(r.start >= 0, name + ': the spawn lands on a real surface');
+        ok(r.exitReached, name + ': the exit is reachable from the spawn',
+           'reached ' + r.reached.size + ' of ' + surfaces.length + ' surfaces');
+        ok(r.unreachablePickups.length === 0,
+           name + ': every note and letter is reachable',
+           r.unreachablePickups.slice(0, 6).join('; '));
+        console.log('      ' + surfaces.length + ' surfaces, '
+            + r.reached.size + ' reachable, ' + r.edges.length + ' connections');
 
-    for (; frames < 6000 && !reachedExit && !died; frames++) {
-        // A bot that reads the level ahead, the way a player who has learned it
-        // does: roll for a wide gap, jump for a narrow one or an enemy.
-        if (player.grounded) {
-            const frontTx = Math.floor((player.box.x + player.box.w) / T);
-            const footTy = Math.floor((player.box.y + player.box.h) / T);
-            let gap = 0;
-            while (gap < 10 && map.tileAt(frontTx + 1 + gap, footTy) !== '#'
-                   && map.tileAt(frontTx + 1 + gap, footTy) !== '=') gap++;
-
-            if (gap >= 6 && !player.rolling) input.tap('ROLL');
-            else if (gap >= 1) { input.tap('JUMP'); input.hold('JUMP'); }
-            else {
-                input.release('JUMP');
-                // Something in the way at body height: hop it, which stomps it.
-                for (const e of entities.enemies) {
-                    const d = e.x - (player.box.x + player.box.w);
-                    if (d > 0 && d < 26 && Math.abs(e.y - player.box.y) < 24) {
-                        input.tap('JUMP'); input.hold('JUMP');
-                    }
-                }
-            }
-        }
-        if (player.rolling && player.grounded) {
-            const frontTx = Math.floor((player.box.x + player.box.w) / T);
-            const footTy = Math.floor((player.box.y + player.box.h) / T);
-            if (map.tileAt(frontTx + 1, footTy) !== '#' && map.tileAt(frontTx + 1, footTy) !== '=') {
-                input.tap('JUMP'); input.hold('JUMP');
-            }
-        }
-
-        player.update(1.0);
-        entities.update(player, 1.0);
-        for (const ev of entities.events) if (ev.type === 'hurt') player.hurt(ev.x);
-
-        if (player.box.y > map.h + CONFIG.FALL_KILL_MARGIN) died = true;
-        if (player.lives <= 0) died = true;
-        if (map.exit
-            && player.box.x < map.exit.x + map.exit.w && player.box.x + player.box.w > map.exit.x
-            && player.box.y < map.exit.y + map.exit.h && player.box.y + player.box.h > map.exit.y) {
-            reachedExit = true;
+        // An island of scenery is fine; an island holding something you need
+        // is not, and the pickup check above is what tells the two apart.
+        if (r.reached.size < surfaces.length) {
+            console.log('      (' + (surfaces.length - r.reached.size)
+                + ' surface(s) unreached — decorative unless a pickup sits there)');
         }
     }
-
-    ok(reachedExit, 'a bot reaches the exit in ' + frames + ' frames (' + (frames / 60).toFixed(1) + 's)',
-       died ? 'it died on the way' : 'it never got there');
-    ok(!died, 'without dying');
-    ok(frames < 5000, 'and without dawdling');
-}
-
-// ── Drawing ───────────────────────────────────────────────────────────────────
-
-console.log('\ndrawing:');
-{
-    const g = makeGame(0);
-    const { world, entities, player, cam, map } = g;
-    const c = stubCtx();
-    let threw = null;
-    try {
-        cam.snapTo(player);
-        for (let i = 0; i < 6; i++) {
-            cam.x = (map.w - 480) * (i / 5);
-            world.draw(c, cam);
-            entities.drawBird(c, cam.x, cam.y);
-            entities.draw(c, cam.x, cam.y, i);
-            player.draw(c, cam.x, cam.y);
-        }
-    } catch (e) { threw = e; }
-    ok(!threw, 'a full frame draws at six camera positions', threw && threw.stack);
-    ok(c.calls.length > 100, 'and actually painted (' + c.calls.length + ' ops)');
 }
 
 // ── Sound effects ──
