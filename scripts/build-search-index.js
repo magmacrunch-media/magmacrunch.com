@@ -281,7 +281,7 @@ function parseArcadeGames() {
     'solitaire', 'cribbage', 'scandinavian-stud', 'solitaire_THLD', 'tarot',
     '2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'tetris',
     'moonlight-drift', 'very-long-boards', 'roderick-tron', 'SORRY',
-    'makemecookies', 'jovian-humanitarian-conflict',
+    'makemecookies', 'jovian-humanitarian-conflict', 'cave-diving',
     'aggravation'
   ];
 
@@ -290,7 +290,7 @@ function parseArcadeGames() {
     card: ['solitaire', 'cribbage', 'scandinavian-stud', 'solitaire_THLD', 'tarot'],
     puzzle: ['2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'tetris'],
     action: ['moonlight-drift', 'very-long-boards', 'roderick-tron', 'makemecookies',
-             'jovian-humanitarian-conflict'],
+             'jovian-humanitarian-conflict', 'cave-diving'],
     other: ['SORRY']
   };
 

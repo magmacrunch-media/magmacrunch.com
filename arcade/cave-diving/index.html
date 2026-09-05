@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CAVE DIVING (NOT EVEN ONCE) — magmacrunch media</title>
+    <meta name="description" content="A one-song dive into a flooded cave. Your headlamp is the only light, every stroke costs air, and the passage narrows behind you. Built around Juanito Thompson's cave diving (not even once).">
+    <link rel="icon" href="favicon.svg?v=3471cc82" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
+    <link rel="stylesheet" href="css/base.css?v=0ff9ea78">
+    <link rel="stylesheet" href="css/start-screen.css?v=464d070d">
+    <link rel="stylesheet" href="css/game.css?v=64f05f13">
+    <link rel="stylesheet" href="css/modals.css?v=255d91f2">
+</head>
+<body>
+<a href="../action/" class="mc-back">action games</a>
+
+<!-- Title -->
+<div id="titleScreen" class="title-screen">
+    <h1>CAVE DIVING<br><span class="sub-title">(not even once)</span></h1>
+    <p class="subtitle">one song. one tank. no way back.</p>
+    <div class="controls-hint">
+        ARROWS / WASD: aim<br>
+        Z / SPACE: stroke<br>
+        M: sound &middot; P: pause
+    </div>
+    <div class="brief">
+        <div class="brief-row">
+            <span class="brief-mark lamp">&#9679;</span>
+            <span class="brief-text">Your lamp is the only light. It points where you aim.</span>
+        </div>
+        <div class="brief-row">
+            <span class="brief-mark air">&#9679;</span>
+            <span class="brief-text">Every stroke costs air. Green pockets refill it.
+            Score is what you have left when you surface.</span>
+        </div>
+        <div class="brief-row">
+            <span class="brief-mark warn">&#9888;</span>
+            <span class="brief-text">Rock does not kill you. Running out of air does.
+            A rumble means the ceiling is coming down.</span>
+        </div>
+    </div>
+    <div class="start-prompt">PRESS SPACE</div>
+    <button id="btnStart" class="touch-start">DIVE</button>
+    <button id="btnSound" class="sound-toggle" aria-pressed="false">SOUND: ON</button>
+    <p id="audioWarning" class="audio-warning" hidden></p>
+    <p class="copyright">&copy; 2026 MAGMACRUNCH MEDIA</p>
+</div>
+
+<!-- Canvas -->
+<div id="gameContainer" class="game-container">
+    <canvas id="gameCanvas" width="480" height="270"></canvas>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="hud hidden">
+    <div class="hud-left">
+        <div class="hud-label">AIR</div>
+        <div class="air-bar"><div id="airFill" class="air-fill"></div></div>
+    </div>
+    <div class="hud-mid">
+        <div class="hud-label">DEPTH</div>
+        <div class="hud-value" id="depthDisplay">0m</div>
+    </div>
+    <div class="hud-mid">
+        <div class="hud-label">PEARLS</div>
+        <div class="hud-value" id="pearlDisplay">0</div>
+    </div>
+    <div class="hud-right">
+        <div class="hud-label" id="musicDisplay">M: ON</div>
+        <div class="hud-value zone" id="zoneDisplay">THE ENTRY</div>
+    </div>
+</div>
+
+<!-- Pause -->
+<div id="pauseOverlay" class="overlay hidden">
+    <div class="panel">
+        <h2>PAUSED</h2>
+        <p class="panel-note">the cave waits</p>
+        <button id="btnResume" class="btn">RESUME</button>
+    </div>
+</div>
+
+<!-- Game over -->
+<div id="gameOverOverlay" class="overlay hidden">
+    <div class="panel">
+        <h2 id="overTitle">OUT OF AIR</h2>
+        <div class="final-score" id="finalScore">0</div>
+        <div class="breakdown" id="finalBreakdown"></div>
+
+        <div id="initialsPrompt" class="initials hidden">
+            <label for="initialsInput">INITIALS</label>
+            <input id="initialsInput" maxlength="3" autocomplete="off" spellcheck="false" value="AAA">
+            <button id="initialsSubmit" class="btn">SAVE</button>
+        </div>
+
+        <table class="scores">
+            <thead><tr><th>#</th><th>WHO</th><th>SCORE</th></tr></thead>
+            <tbody id="scoresBody"><tr><td colspan="3">loading</td></tr></tbody>
+        </table>
+
+        <button id="btnRetry" class="btn">DIVE AGAIN</button>
+        <div class="credit">
+            music: <strong>cave diving (not even once)</strong> by
+            <a href="../../music/jukebox/">Juanito Thompson</a>,
+            from <em>Spooked</em> (2025)
+        </div>
+    </div>
+</div>
+
+<div class="scanlines"></div>
+
+<script src="../shared/adenosine-rpg.js?v=20bd6c8a"></script>
+<script src="../shared/adenosine-score-client.js?v=55cabd6d"></script>
+<script src="../shared/score-server.js?v=9acd988c"></script>
+<script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
+<script src="js/config.js?v=467d5fe5"></script>
+<script src="js/pixels.js?v=fc196ea8"></script>
+<script src="js/sfx.js?v=7779c59e"></script>
+<script src="js/input.js?v=c1c3efc1"></script>
+<script src="js/renderer.js?v=06ba91b9"></script>
+<script src="js/light.js?v=ed189e56"></script>
+<script src="js/player.js?v=596c8f4a"></script>
+<script src="js/world.js?v=f72720b5"></script>
+<script src="js/entities.js?v=bafce003"></script>
+<script src="js/main.js?v=ee8ca4f7"></script>
+
+<link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
+<script src="../shared/adenosine-chat.js?v=4a6b886b"></script>
+<script src="../shared/chat-server.js?v=2efa8028"></script>
+<script>const { ChatWidget } = AdChat;</script>
+<script>ChatWidget.connect(MC_CHAT_OPTS);</script>
+</body>
+</html>

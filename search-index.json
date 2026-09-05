@@ -1753,7 +1753,14 @@
     "t": "THE JOVIAN HUMANITARIAN CONFLICT",
     "c": "arcade",
     "u": "/arcade/jovian-humanitarian-conflict/",
-    "d": "An on-rails shooter over the cloud decks of Jupiter. Aid convoys fly among the hostiles and squawk a transponder you must learn to read — shoot one and it costs you the run. Built around Jimmi's The Jovian Humanitarian Conflict.",
+    "d": "An on-rails shooter over the cloud decks of Jupiter. Aid convoys fly among the hostiles and squawk a transponder. Shoot one and it costs you the run. Built around Jimmi's The Jovian Humanitarian Conflict.",
+    "b": ""
+  },
+  {
+    "t": "CAVE DIVING (NOT EVEN ONCE)",
+    "c": "arcade",
+    "u": "/arcade/cave-diving/",
+    "d": "A one-song dive into a flooded cave. Your headlamp is the only light, every stroke costs air, and the passage narrows behind you. Built around Juanito Thompson's cave diving (not even once).",
     "b": ""
   },
   {
@@ -1964,7 +1971,7 @@
     "c": "tool",
     "u": "/ware/sprite-forge/",
     "d": "game sprite editor · animation, onion skin, PNG sheet export",
-    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ⇲ FIT ▦ GRID ⇋ MIRROR ◎ ONION ◫ PREVIEW 32 × 32 animation sheet; click a frame to edit it surface ◀ ▶ EXPORT OUTPUT COPY COLOR #000000 + ADD RAMP SPRITES ADD DUP DEL every sprite here shares one palette, so a character's facings cannot drift onto different browns. each exports as its own sheet, named by the name above. TARGETS engine ADD FOLDER… the sheet lands in the engine's own directory under the folder you pick. t..."
+    "b": "sprite forge — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. SPRITE//FORGE 32×32 1 FRAME − 16× + ⇲ FIT ▦ GRID ⇋ MIRROR ◎ ONION ◫ PREVIEW 32 × 32 animation sheet; click a frame to edit it surface ◀ ▶ EXPORT OUTPUT COPY COLOR #000000 + ADD RAMP SPRITES ADD DUP DEL every sprite here shares one palette, so a character's facings cannot drift onto different browns. each exports as its own sheet, named by the name above. TARGETS engine ADD FOLDER… the sheet lands in the engine's own directory under the folder you pick — ..."
   },
   {
     "t": "texastoast",

@@ -1,0 +1,96 @@
+/* base.css — cave diving (not even once)
+   Page shell, palette custom properties, the canvas frame. */
+
+:root {
+    /* The shared back-link and scanline overlay read these. */
+    --mc-back-color: #3fe0d0;
+    --mc-back-glow: 0 0 8px #3fe0d0;
+    --mc-scanline-opacity: 0.11;
+
+    --deep: #030b10;
+    --water: #071820;
+    --rock: #241f2e;
+    --accent: #3fe0d0;
+    --accent-pale: #b8fff5;
+    --air: #5fe8a4;
+    --danger: #ff5f6d;
+    --lamp: #fff3c4;
+    --hud-text: #dcefee;
+    --hud-dim: #5d7a80;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: var(--deep);
+    color: var(--hud-text);
+    font-family: 'Press Start 2P', monospace;
+    overflow: hidden;
+    /* The whole game is aiming and stroking; a stray selection drag mid-dive
+       is nothing but a way to run out of air. */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* The back link is a way out of the cave that should not be on screen while
+   you are in it. */
+body.game-active .mc-back {
+    display: none;
+}
+
+.game-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+canvas {
+    /* Everything is drawn on a 480x270 grid and scaled up. Smoothing turns the
+       rock edges and the lamp cone into a grey wash. */
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    display: block;
+    background: var(--deep);
+    /* Sized in JS by Renderer.fit(). touch-action none so a steer drag is not
+       read as a page scroll. */
+    touch-action: none;
+}
+
+.btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--deep);
+    background: var(--accent);
+    border: none;
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.btn:hover,
+.btn:focus-visible {
+    background: var(--accent-pale);
+    outline: none;
+}
+
+/* Every panel button is a thumb target on a phone, not just the start button. */
+@media (hover: none), (pointer: coarse) {
+    .btn {
+        min-height: 48px;
+        padding: 14px 22px;
+    }
+}

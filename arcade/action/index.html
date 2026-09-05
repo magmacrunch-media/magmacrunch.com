@@ -313,6 +313,21 @@
             </div>
         </a>
 
+        <a href="../cave-diving/" class="game-card" style="--card-color: #3fe0d0">
+            <div class="card-inner">
+                <div class="card-tags">
+                    <span class="card-tag card-tag-demo">NEW</span>
+                    <span class="card-tag" style="color: #39ff6e">MOBILE</span>
+                </div>
+                <div class="card-title">CAVE DIVING<br>(NOT EVEN ONCE)</div>
+                <div class="card-canvas-wrap">
+                    <canvas id="cCave" width="72" height="72"></canvas>
+                </div>
+                <div class="card-desc">one song, one tank. your lamp is the only light down there.</div>
+                <div class="card-play">&#9654; PLAY<span class="card-arrow">_</span></div>
+            </div>
+        </a>
+
     </div>
 
 </main>
@@ -618,6 +633,74 @@
             c.style.boxShadow = i === selected ? '0 0 28px var(--card-color, #ff2e9c)' : '';
         });
     });
+})();
+
+// -- cave diving (not even once) preview --
+// A headlamp cone in a flooded shaft: the whole game in 72 pixels.
+(function() {
+    const c = document.getElementById('cCave');
+    if (!c) return;
+    const ctx = c.getContext('2d');
+
+    const water = ctx.createLinearGradient(0, 0, 0, 72);
+    water.addColorStop(0, '#0b2430');
+    water.addColorStop(1, '#030b10');
+    ctx.fillStyle = water;
+    ctx.fillRect(0, 0, 72, 72);
+
+    // Shaft walls, closing in toward the bottom.
+    ctx.fillStyle = '#332b45';
+    for (let y = 0; y < 72; y += 4) {
+        const squeeze = y * 0.16;
+        ctx.fillRect(0, y, 14 + squeeze, 4);
+        ctx.fillRect(58 - squeeze, y, 14 + squeeze, 4);
+    }
+    ctx.fillStyle = '#564a70';
+    for (let y = 0; y < 72; y += 4) {
+        const squeeze = y * 0.16;
+        ctx.fillRect(13 + squeeze, y, 2, 4);
+        ctx.fillRect(57 - squeeze, y, 2, 4);
+    }
+    ctx.fillStyle = '#1b1526';
+    ctx.fillRect(46, 40, 12, 6);
+
+    // The beam, additive so the rock it lands on actually looks lit.
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.beginPath();
+    ctx.moveTo(34, 30);
+    ctx.arc(34, 30, 42, 0.42, 2.28);
+    ctx.closePath();
+    ctx.clip();
+    const beam = ctx.createRadialGradient(34, 30, 0, 34, 30, 42);
+    beam.addColorStop(0, 'rgba(255,243,196,0.62)');
+    beam.addColorStop(0.4, 'rgba(214,236,222,0.28)');
+    beam.addColorStop(1, 'rgba(120,180,190,0)');
+    ctx.fillStyle = beam;
+    ctx.fillRect(-8, -12, 88, 88);
+    ctx.restore();
+
+    // The diver, head down.
+    ctx.fillStyle = '#2a6470';
+    ctx.fillRect(29, 16, 8, 4);
+    ctx.fillStyle = '#12333b';
+    ctx.fillRect(29, 20, 8, 3);
+    ctx.fillStyle = '#1e4a55';
+    ctx.fillRect(28, 22, 10, 8);
+    ctx.fillStyle = '#6e8794';
+    ctx.fillRect(37, 23, 3, 5);
+    ctx.fillStyle = '#0b1a22';
+    ctx.fillRect(28, 30, 10, 2);
+    ctx.fillStyle = '#9ff0ff';
+    ctx.fillRect(30, 30, 5, 2);
+    ctx.fillStyle = '#fff3c4';
+    ctx.fillRect(33, 32, 3, 2);
+
+    // An air pocket, the thing you are always heading for.
+    ctx.fillStyle = '#5fe8a4';
+    ctx.fillRect(24, 56, 2, 2);
+    ctx.fillRect(28, 59, 3, 3);
+    ctx.fillRect(25, 62, 2, 2);
 })();
 </script>
 

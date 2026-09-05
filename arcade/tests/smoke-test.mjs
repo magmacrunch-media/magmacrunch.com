@@ -33,6 +33,7 @@ const GAMES = [
   { name: '2^N', path: '2^N' },
   { name: 'aggravation', path: 'aggravation', lobby: { name: '#nameInput', open: '#joinBtn', port: 8774, joined: '#lobbyRoomCode' } },
   { name: 'backgammon', path: 'backgammon', lobby: { open: '#onlineBtn' } },
+  { name: 'cave-diving', path: 'cave-diving' },
   { name: 'checkers', path: 'checkers', lobby: { open: '#onlineBtn' } },
   { name: 'chess', path: 'chess', lobby: { open: '#multiplayerBtn' } },
   { name: 'chinese-checkers', path: 'chinese-checkers', lobby: { open: '#onlineBtn' } },

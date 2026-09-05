@@ -1,0 +1,70 @@
+/* game.css — cave diving (not even once)
+   The HUD strip that sits over the canvas during a dive. */
+
+.hud {
+    position: fixed;
+    /* Clears the shared .mc-back link, which arcade-base.css fixes at top 12px
+       and which is not in this element's flow. The other two action games
+       reserve the same strip for the same reason. */
+    top: 30px;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(10px, 3vw, 30px);
+    padding: 8px 14px;
+    pointer-events: none;
+    background: linear-gradient(to bottom,
+        rgba(3, 11, 16, 0.85) 0%,
+        rgba(3, 11, 16, 0) 100%);
+}
+
+/* Laid out by the flex row rather than pinned to the edges: at 480px wide,
+   pinned corners strand the middle values under the canvas. */
+.hud-left,
+.hud-mid,
+.hud-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 46px;
+}
+
+.hud-label {
+    font-size: 6px;
+    letter-spacing: 0.1em;
+    color: var(--hud-dim);
+}
+
+.hud-value {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    color: var(--hud-text);
+    white-space: nowrap;
+}
+
+.hud-value.zone {
+    font-size: 7px;
+    color: var(--accent);
+}
+
+/* The air meter is the one HUD element that has to be readable at a glance
+   with no numbers, because when it matters you are not reading. */
+.air-bar {
+    width: clamp(72px, 22vw, 132px);
+    height: 9px;
+    border: 1px solid var(--hud-dim);
+    background: rgba(3, 11, 16, 0.8);
+    overflow: hidden;
+}
+
+.air-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--air);
+    /* No transition on width: the meter must show a hit the frame it happens,
+       and an eased bar reads as the game being slow to respond. */
+}
