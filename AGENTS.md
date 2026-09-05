@@ -39,6 +39,67 @@ tooling adds such a line by default, remove it before committing.
 
 The same applies in `~/Documents/game_dev/adenosine`, which has no agent-guidance file of its own.
 
+## Two sessions at once — use a worktree
+
+**Do not run two agents in this clone at the same time.** They share the index,
+the branch and the push, not just the files. All four of these happened here in
+one afternoon:
+
+- `git add <my paths>` staged fine, but `git diff --cached` then showed the
+  *other* session's files too, because they were already in the shared index. A
+  plain `git commit` would have taken both.
+- The pre-commit hook refused every commit for twenty minutes because a page
+  belonging to the other session had an unstaged `?v=` stamp. Nothing was wrong
+  with the commit being attempted.
+- One session's staged work came within one `git commit -a` of being swept into
+  the other's commit, under the wrong message.
+- `git push` was rejected as behind — the other session had pushed the same
+  branch seconds earlier, carrying the first session's commit out with it
+  before its author had run `push` at all.
+
+Give each session its own checkout instead:
+
+```bash
+npm run worktree -- new <branch>
+```
+
+That creates `../.worktrees/<branch>` — beside the repo, not inside it, so
+recursive scans of the tree do not see it twice — and links in the gitignored
+directories `npm` needs. Without those links a worktree cannot run `npm test`
+at all: everything npm depends on is gitignored, so a fresh checkout has no
+eslint and no Playwright, and a per-worktree `npm ci` would cost 92MB and
+several minutes each time.
+
+| command | |
+|---|---|
+| `npm run worktree -- new <branch>` | create one and provision it |
+| `npm run worktree -- link <path>` | provision one that already exists |
+| `npm run worktree -- list` | every worktree, and whether it is provisioned |
+| `npm run worktree -- remove <path>` | remove it and its links |
+
+`link` is for worktrees this script did not create — Claude Code makes its own
+under `.claude/worktrees/`, and those need provisioning too.
+
+Each worktree has its own index, HEAD and branch over the one object store, so
+commits are independent and nothing is shared until a push. Secrets are **not**
+copied in: `arcade/private/config.json`, `arcade/admin/*.json` and
+`mcp-server/.env` stay in the primary tree, and `new` names any that exist so
+you can copy them by hand if that worktree needs the admin dashboard or a chat
+server.
+
+Removal is safe against the shared `node_modules`. `git worktree remove`,
+PowerShell's `Remove-Item -Recurse -Force` and Git Bash's `rm -rf` were each
+checked on MC1: all three unlink the junction and leave its 73MB of contents
+alone. What `git worktree remove` does *not* do is delete the junction
+directory, so it reports success while the path still exists and the next
+`new` on it fails as "already exists" — which is why `remove` above cleans up
+after it. It also calls git *before* unlinking, so a removal git refuses (the
+usual cause being uncommitted work) leaves the worktree provisioned and
+working rather than stripped of its tooling.
+
+Note the site deploys from `main`, so nothing on a worktree branch is live
+until it is merged and pushed.
+
 ## magmascript
 
 [magmascript](https://github.com/magmacrunch-media/magmascript) is the primary CLI
@@ -77,7 +138,7 @@ commands that access local files.
 │   └── jukebox/       # fetches songs.json for playlist
 ├── press/             # press.css, journals: scientific/, experimental/
 ├── mcp-server/        # MCP server — exposes project data + Pi management to AI assistants
-├── scripts/           # backup-musicbrainz.mjs
+├── scripts/           # tooling: worktree.mjs, run-tests.mjs, scaffold-game.mjs, ...
 ├── templates/         # JS template scripts for archive pages
 ├── ware/              # browser utilities + dev tools (was tools/ — see below)
 │   ├── shared/        # mgs-lang-bundle.js (generated) + mgs-runtime.js — the

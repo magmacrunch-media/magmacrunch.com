@@ -15,6 +15,7 @@
     "build:adenosine": "node scripts/sync-adenosine.mjs",
     "check:shell": "node scripts/check-shell-tokens.mjs",
     "check:cachebust": "node scripts/check-cache-busters.mjs",
+    "worktree": "node scripts/worktree.mjs",
     "fix:cachebust": "node scripts/check-cache-busters.mjs --fix",
     "hooks:install": "git config core.hooksPath .githooks"
   },
