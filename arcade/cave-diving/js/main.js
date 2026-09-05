@@ -33,6 +33,7 @@
     const btnStart        = document.getElementById('btnStart');
     const btnResume       = document.getElementById('btnResume');
     const btnRetry        = document.getElementById('btnRetry');
+    const btnSound        = document.getElementById('btnSound');
 
     const STATE = { TITLE: 0, PLAYING: 1, PAUSED: 2, OVER: 3 };
     const GAME_ID = 'cave-diving';
@@ -91,6 +92,10 @@
         if (music) music.volume = v ? 0 : CONFIG.MUSIC.VOLUME;
         Sfx.setMuted(v);
         if (musicDisplay) musicDisplay.textContent = v ? 'M: OFF' : 'M: ON';
+        if (btnSound) {
+            btnSound.textContent = v ? 'SOUND: OFF' : 'SOUND: ON';
+            btnSound.setAttribute('aria-pressed', v ? 'true' : 'false');
+        }
     }
 
     // ── Lifecycle ─────────────────────────────────────────────────────
@@ -403,6 +408,13 @@
         if (btnStart) btnStart.addEventListener('pointerdown', (e) => { e.preventDefault(); startDive(); });
         if (btnResume) btnResume.addEventListener('pointerdown', (e) => { e.preventDefault(); togglePause(); });
         if (btnRetry) btnRetry.addEventListener('pointerdown', (e) => { e.preventDefault(); startDive(); });
+        if (btnSound) {
+            btnSound.addEventListener('pointerdown', (e) => {
+                // stopPropagation so tapping the toggle does not also
+                // start the dive through the title screen's own handler.
+                e.preventDefault(); e.stopPropagation(); setMuted(!musicMuted);
+            });
+        }
         if (initialsSubmit) initialsSubmit.addEventListener('click', saveScore);
         if (initialsInput) {
             initialsInput.addEventListener('keydown', (e) => {

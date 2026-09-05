@@ -121,3 +121,37 @@
     color: var(--hud-dim);
     letter-spacing: 0.08em;
 }
+
+/* The mute state has to be visible BEFORE you dive.
+   It persists across sessions, and the only other indicator is a label in the
+   HUD that does not exist until a dive is under way - so a player who muted
+   the game a week ago meets silence with no way to explain it. Tapping this is
+   also the only way to mute on a phone, where there is no M key at all. */
+.sound-toggle {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.1em;
+    color: var(--hud-dim);
+    background: transparent;
+    border: 1px solid rgba(93, 122, 128, 0.5);
+    padding: 9px 14px;
+    min-height: 34px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.sound-toggle:hover,
+.sound-toggle:focus-visible {
+    color: var(--hud-text);
+    border-color: var(--hud-text);
+    outline: none;
+}
+
+.sound-toggle[aria-pressed="true"] {
+    color: var(--danger);
+    border-color: rgba(255, 95, 109, 0.55);
+}
+
+@media (hover: none), (pointer: coarse) {
+    .sound-toggle { min-height: 44px; padding: 12px 18px; font-size: 8px; }
+}
