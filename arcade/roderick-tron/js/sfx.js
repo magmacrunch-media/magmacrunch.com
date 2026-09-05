@@ -53,6 +53,9 @@ const Sfx = {
         caught:   { type: 'sine',     f0: 660, f1: 330, dur: 0.18, gain: 0.20 },
         launch:   { type: 'square',   f0: 330, f1: 990, dur: 0.22, gain: 0.22 },
         updraft:  { type: 'noise',    f0: 200, f1: 800, dur: 0.40, gain: 0.10 },
+        board:    { type: 'square',   f0: 160, f1: 300, dur: 0.14, gain: 0.20 },
+        crash:    { type: 'noise',    f0: 1400, f1: 90, dur: 0.34, gain: 0.36 },
+        dismount: { type: 'sine',     f0: 300, f1: 180, dur: 0.14, gain: 0.16 },
     },
 
     /** Little melodies, as scale-step offsets played in sequence. */

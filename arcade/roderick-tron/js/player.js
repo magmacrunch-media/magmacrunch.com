@@ -37,6 +37,10 @@ Player.prototype.reset = function (spawn) {
     // Set while a bell holds him. Normal physics is suspended: the bell owns
     // his position until it fires.
     this.captured = null;
+    // Set while a trolley carries him. Like capture, normal physics is
+    // suspended — the trolley owns his position — but unlike capture, jump
+    // still does something, because jump is the whole of the sub-mode.
+    this.riding = null;
 };
 
 /** Height depends on stance: rolling tucks him into a one-tile gap. */
@@ -46,6 +50,14 @@ Player.prototype.targetHeight = function () {
 
 Player.prototype.update = function (dt) {
     if (!this.alive) return;
+
+    // Carried. Timers still run; position belongs to the carrier.
+    if (this.riding) {
+        if (this.invincible > 0) this.invincible -= dt;
+        if (this.shakeFrames > 0) this.shakeFrames -= dt;
+        if (this.animTimer !== undefined) this.animTimer += dt;
+        return;
+    }
 
     // Held by a bell. Timers still run — invincibility should not pause while
     // he waits for the swing — but nothing else does; the bell places him.
@@ -217,6 +229,29 @@ Player.prototype.headroomAdjust = function () {
     const bottom = this.box.y + this.box.h;
     this.box.h = this.targetHeight();
     this.box.y = bottom - this.box.h;
+};
+
+/** Climbed aboard a trolley. */
+Player.prototype.board = function (trolley) {
+    this.riding = trolley;
+    this.vx = 0;
+    this.vy = 0;
+    this.grounded = true;
+    this.jumping = false;
+    if (this.rolling) {
+        this.rolling = false;
+        this.rollCooldown = CONFIG.ROLL_COOLDOWN;
+        this.headroomAdjust();
+    }
+};
+
+/** Stepped off, with whatever the trolley was doing carried into his own body. */
+Player.prototype.dismount = function (vx, vy) {
+    this.riding = null;
+    this.vx = vx;
+    this.vy = vy;
+    this.grounded = false;
+    this.coyote = CONFIG.COYOTE_FRAMES;
 };
 
 /** Caught by a bell. It owns him until it fires. */

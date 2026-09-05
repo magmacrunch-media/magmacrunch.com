@@ -167,6 +167,20 @@
                     score += 1000;
                     banner('T R O N  COMPLETE');
                 }
+            } else if (ev.type === 'board') {
+                Sfx.play('board');
+                banner('HOLD ON');
+            } else if (ev.type === 'trolleyJump') {
+                Sfx.play('jump');
+            } else if (ev.type === 'dismount') {
+                Sfx.play('dismount');
+            } else if (ev.type === 'crash') {
+                Sfx.play('crash');
+                flash(0.3, CONFIG.COLORS.lifeHeart);
+                entities.spawnParticles(ev.x, player.box.y + 10, 10,
+                                        CONFIG.COLORS.trolleyIron, 22);
+                player.hurt(ev.x);
+                if (player.lives <= 0) return die();
             } else if (ev.type === 'caught') {
                 Sfx.play('caught');
             } else if (ev.type === 'launch') {

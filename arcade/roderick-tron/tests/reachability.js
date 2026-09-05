@@ -33,6 +33,7 @@
 
 const SOLID = '#';
 const PLATFORM = '=';
+const RAIL = '-';
 
 /**
  * Every horizontally contiguous run of standable tile-tops, as one surface.
@@ -48,7 +49,8 @@ function findSurfaces(map) {
             const here = map.tileAt(tx, ty);
             const above = map.tileAt(tx, ty - 1);
             // Standable if this tile is footing and there is room to stand.
-            const standable = (here === SOLID || here === PLATFORM) && above !== SOLID;
+            // Rail is standable too: you can walk a rail as well as ride it.
+            const standable = (here === SOLID || here === PLATFORM || here === RAIL) && above !== SOLID;
             if (standable) {
                 if (run) run.tx1 = tx;
                 else { run = { ty: ty, tx0: tx, tx1: tx }; surfaces.push(run); }
@@ -108,6 +110,7 @@ function attempt(env, startX, startTy, plan) {
     const from = surfaceUnder(surfaces, p.box, CONFIG.TILE);
     const touched = [];
     const bells = map.bells || [];
+    const trolleys = map.trolleys || [];
     let hitExit = false;
     let rolled = false;
     let jumped = false;
@@ -127,12 +130,19 @@ function attempt(env, startX, startTy, plan) {
 
         if (exit && overlaps(p.box, exit)) hitExit = true;
 
+        for (let k = 0; k < trolleys.length; k++) {
+            const t = trolleys[k];
+            if (overlaps(p.box, { x: t.x, y: t.y, w: CONFIG.TROLLEY_W, h: CONFIG.TROLLEY_H })) {
+                return { to: -1, hitExit: hitExit, fell: false, touched: touched, bell: -1, trolley: k };
+            }
+        }
+
         // A bell ends the attempt: it catches you, and where you go next is a
         // question about the bell rather than about this jump.
         for (let k = 0; k < bells.length; k++) {
             const b = bells[k];
             if (overlaps(p.box, { x: b.x, y: b.y, w: CONFIG.BELL_W, h: CONFIG.BELL_H })) {
-                return { to: -1, hitExit: hitExit, fell: false, touched: touched, bell: k };
+                return { to: -1, hitExit: hitExit, fell: false, touched: touched, bell: k, trolley: -1 };
             }
         }
         // Pickups are swept, not stood next to: the letter over the roll gap
@@ -141,17 +151,17 @@ function attempt(env, startX, startTy, plan) {
             if (touched.indexOf(k) < 0 && overlaps(p.box, env.pickups[k].item)) touched.push(k);
         }
         if (p.box.y > map.h + CONFIG.FALL_KILL_MARGIN) {
-            return { to: -1, hitExit: hitExit, fell: true, touched: touched, bell: -1 };
+            return { to: -1, hitExit: hitExit, fell: true, touched: touched, bell: -1, trolley: -1 };
         }
         // Settled somewhere new.
         if (p.grounded && i > plan.runUp + 2) {
             const to = surfaceUnder(surfaces, p.box, CONFIG.TILE);
             if (to >= 0 && (to !== from || i > plan.runUp + 20)) {
-                return { to: to, hitExit: hitExit, fell: false, touched: touched, bell: -1 };
+                return { to: to, hitExit: hitExit, fell: false, touched: touched, bell: -1, trolley: -1 };
             }
         }
     }
-    return { to: surfaceUnder(surfaces, p.box, CONFIG.TILE), hitExit: hitExit, fell: false, touched: touched, bell: -1 };
+    return { to: surfaceUnder(surfaces, p.box, CONFIG.TILE), hitExit: hitExit, fell: false, touched: touched, bell: -1, trolley: -1 };
 }
 
 /**
@@ -191,6 +201,68 @@ function fire(env, bellIndex, angle) {
         }
     }
     return { to: -1, hitExit: hitExit, fell: false, touched: touched };
+}
+
+/**
+ * Ride a trolley to wherever it ends up, under one jump policy.
+ *
+ * The real Entities drives it, so this is the shipped trolley rather than a
+ * model of one. `lookahead` is the whole policy: jump when the rail runs out
+ * within that many pixels. Sweeping it from 0 upward sweeps the jump from as
+ * late as possible to as early as possible, and for a cart at constant speed
+ * the timing of each jump is the only degree of freedom there is — so the sweep
+ * covers the ride, even though it is not a search over every frame.
+ */
+function ride(env, trolleyIndex, lookahead) {
+    const { CONFIG, input, map, surfaces, exit, newGame } = env;
+    const sim = newGame();
+    const p = sim.player;
+    const ents = sim.entities;
+    const t0 = map.trolleys[trolleyIndex];
+
+    input.allOff();
+    // Put him on the trolley by standing him in it.
+    p.box.x = t0.x + (CONFIG.TROLLEY_W - p.box.w) / 2;
+    p.box.y = t0.y - p.box.h;
+    p.grounded = true;
+
+    const touched = [];
+    let hitExit = false;
+    let crashed = false;
+
+    for (let i = 0; i < 900; i++) {
+        const t = ents.trolleys[trolleyIndex];
+        if (t && t.riding && t.grounded) {
+            // Distance to the first missing footing ahead — the hole, not the
+            // track. Scanning for track instead finds it under the wheels at
+            // distance zero and jumps every single frame.
+            let gapAt = lookahead + 8;
+            for (let d = 0; d <= lookahead; d += 2) {
+                const probeX = t.x + t.w + d;
+                const footing = map.overlapsRail(probeX, t.y + t.h, 2, 4)
+                    || map.overlapsSolid(probeX, t.y + t.h, 2, 4);
+                if (!footing) { gapAt = d; break; }
+            }
+            if (gapAt <= lookahead) { input.pressed.JUMP = true; input.held.JUMP = true; }
+            else input.held.JUMP = false;
+        }
+
+        p.update(1.0);
+        ents.update(p, 1.0);
+        for (const ev of ents.events) if (ev.type === 'crash') crashed = true;
+
+        if (exit && overlaps(p.box, exit)) hitExit = true;
+        for (let k = 0; k < env.pickups.length; k++) {
+            if (touched.indexOf(k) < 0 && overlaps(p.box, env.pickups[k].item)) touched.push(k);
+        }
+        if (p.box.y > map.h + CONFIG.FALL_KILL_MARGIN) {
+            return { to: -1, hitExit, fell: true, touched, crashed };
+        }
+        if (!p.riding && p.grounded && i > 5) {
+            return { to: surfaceUnder(surfaces, p.box, CONFIG.TILE), hitExit, fell: false, touched, crashed };
+        }
+    }
+    return { to: -1, hitExit, fell: false, touched, crashed };
 }
 
 /** Angles the swing actually passes through, sampled evenly. */
@@ -262,13 +334,43 @@ function analyse(env) {
     const collected = new Set();
     const edges = [];
     let exitReached = false;
+    let survivableRides = true;
     if (start < 0) return { start, reached, exitReached, surfaces, edges, unreachablePickups: [] };
 
     reached.add(start);
     const queue = [start];
     const bellsSeen = new Set();
     const bells = map.bells || [];
+    const trolleys = map.trolleys || [];
     const angles = swingAngles(CONFIG, 13);
+
+    const trolleysSeen = new Set();
+
+    /**
+     * Ride a trolley under every jump timing, and take the best outcome.
+     *
+     * "Best" is deliberately generous: a ride that survives under ANY timing
+     * counts as passable, because a player gets to choose. What it must not do
+     * is count a ride that only ends in a hole.
+     */
+    const expandTrolley = (k) => {
+        if (trolleysSeen.has(k)) return;
+        trolleysSeen.add(k);
+        let anySurvived = false;
+        for (let look = 0; look <= 70; look += 5) {
+            const r = ride(env, k, look);
+            if (r.fell) continue;
+            anySurvived = true;
+            if (r.hitExit) exitReached = true;
+            for (const t of r.touched) collected.add(t);
+            if (r.to >= 0 && !reached.has(r.to)) {
+                reached.add(r.to);
+                edges.push(['trolley' + k, r.to]);
+                queue.push(r.to);
+            }
+        }
+        if (!anySurvived) survivableRides = false;
+    };
 
     /** Fire out of a bell at every angle its swing reaches. */
     const expandBell = (k) => {
@@ -307,6 +409,7 @@ function analyse(env) {
                         // the way into a pit is not a way of getting it.
                         if (!r.fell) for (const k of r.touched) collected.add(k);
                         if (r.bell >= 0) { edges.push([id, 'bell' + r.bell]); expandBell(r.bell); }
+                        if (r.trolley >= 0) { edges.push([id, 'trolley' + r.trolley]); expandTrolley(r.trolley); }
                         if (r.to >= 0 && !reached.has(r.to)) {
                             reached.add(r.to);
                             edges.push([id, r.to]);
@@ -328,7 +431,7 @@ function analyse(env) {
         .map((e, k) => (collected.has(k) ? null : e.label))
         .filter(Boolean);
 
-    return { start, reached, exitReached, surfaces, edges, unreachablePickups };
+    return { start, reached, exitReached, surfaces, edges, unreachablePickups, survivableRides };
 }
 
 module.exports = { findSurfaces, surfaceUnder, analyse, swingAngles };

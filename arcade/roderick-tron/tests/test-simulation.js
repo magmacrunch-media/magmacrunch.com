@@ -199,6 +199,21 @@ console.log('\ncollision:');
         const thru = { x: pTx * CONFIG.TILE + 1, y: top - 30, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
         const r3 = map.moveY(thru, 60, true);
         ok(!r3.platform, 'and a deliberate drop passes through it');
+
+        // Resting, not landing. A body already flush with a platform must stay
+        // on it — and did not: tileRange stops at (y + h - 1), so the tile
+        // holding it up was out of range on the first frame and rejected as
+        // "came from below" on the second, and it sank straight through. The
+        // landing case above hides this, because a fast step crosses the
+        // boundary in a single move.
+        const rest = { x: pTx * CONFIG.TILE + 1, y: top - CONFIG.PLAYER_H, w: CONFIG.PLAYER_W, h: CONFIG.PLAYER_H };
+        let sank = false;
+        for (let i = 0; i < 120; i++) {
+            const rr = map.moveY(rest, CONFIG.GRAVITY, false);
+            if (!rr.ground) { sank = true; break; }
+            rest.y = top - CONFIG.PLAYER_H;          // as a grounded body is re-placed
+        }
+        ok(!sank, 'a body resting flush on a platform stays on it');
     }
 }
 
@@ -421,6 +436,12 @@ console.log('\nevery level is completable:');
             CONFIG: g.CONFIG, input: g.input, map: g.map, surfaces: surfaces,
             exit: g.map.exit,
             newPlayer: () => vm.runInContext('new Player(__map)', g.ctx),
+            // A trolley ride is driven by the real Entities, so it needs a
+            // matched pair rather than a lone player.
+            newGame: () => ({
+                player: vm.runInContext('new Player(__map)', g.ctx),
+                entities: vm.runInContext('new Entities(__map)', g.ctx),
+            }),
         };
         const r = analyse(env);
         const name = 'level ' + (i + 1) + ' (' + g.map.name + ')';
@@ -431,6 +452,9 @@ console.log('\nevery level is completable:');
         ok(r.unreachablePickups.length === 0,
            name + ': every note and letter is reachable',
            r.unreachablePickups.slice(0, 6).join('; '));
+        ok(r.survivableRides !== false,
+           name + ': every trolley run can be survived',
+           'a trolley ends in a hole under every jump timing tried');
         console.log('      ' + surfaces.length + ' surfaces, '
             + r.reached.size + ' reachable, ' + r.edges.length + ' connections');
 

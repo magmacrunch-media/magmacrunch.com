@@ -6,9 +6,11 @@ const TILE_SOLID = '#';
 const TILE_PLATFORM = '=';
 const TILE_WATER = '~';
 const TILE_UPDRAFT = '^';
+const TILE_RAIL = '-';
 
 function isSolidTile(ch) { return ch === TILE_SOLID; }
-function isPlatformTile(ch) { return ch === TILE_PLATFORM; }
+function isPlatformTile(ch) { return ch === TILE_PLATFORM || ch === TILE_RAIL; }
+function isRailTile(ch) { return ch === TILE_RAIL; }
 function isWaterTile(ch) { return ch === TILE_WATER; }
 function isUpdraftTile(ch) { return ch === TILE_UPDRAFT; }
 
@@ -34,6 +36,7 @@ function Tilemap(def) {
     this.letters = [];
     this.enemies = [];
     this.bells = [];
+    this.trolleys = [];
 
     this.grid = [];
     for (let ty = 0; ty < this.rows; ty++) {
@@ -68,6 +71,8 @@ function Tilemap(def) {
                     x: px + (CONFIG.TILE - CONFIG.BELL_W) / 2,
                     y: py + (CONFIG.TILE - CONFIG.BELL_H) / 2,
                 });
+            } else if (ch === 'c') {
+                this.trolleys.push({ x: px, y: py + CONFIG.TILE - CONFIG.TROLLEY_H });
             } else if (ch === 's') {
                 this.enemies.push({ kind: 'statue', x: px, y: py + CONFIG.TILE - CONFIG.GARGOYLE_H });
             } else {
@@ -147,8 +152,15 @@ Tilemap.prototype.updraftCentre = function (x, y, w, h) {
  */
 Tilemap.prototype.platformTop = function (x, y, w, h, prevBottom) {
     const r = this.tileRange(x, y, w, h);
+    // Scan one row further down than the body occupies. tileRange stops at
+    // (y + h - 1), so a body resting EXACTLY on a platform — bottom flush with
+    // the tile top — never sees the tile holding it up, and sinks: the first
+    // frame the tile is out of range, and by the second the playhead has passed
+    // it and the came-from-above guard rejects it. Landing from a height hides
+    // this, because a fast step crosses the boundary in one move.
+    const bottomRow = Math.floor((y + h) / CONFIG.TILE);
     let best = null;
-    for (let ty = r[1]; ty <= r[3]; ty++) {
+    for (let ty = r[1]; ty <= Math.max(r[3], bottomRow); ty++) {
         const top = ty * CONFIG.TILE;
         if (prevBottom > top + 0.001) continue;        // came from below, or inside
         for (let tx = r[0]; tx <= r[2]; tx++) {
@@ -233,6 +245,11 @@ Tilemap.prototype.moveY = function (box, dy, dropping) {
         remaining -= move;
     }
     return result;
+};
+
+/** Is this box sitting over rail? The trolley only rolls where there is track. */
+Tilemap.prototype.overlapsRail = function (x, y, w, h) {
+    return this.overlaps(x, y, w, h, isRailTile);
 };
 
 /** Is there footing directly under this box? Used by enemy ledge-turning. */

@@ -79,6 +79,18 @@ const CONFIG = {
     UPDRAFT_MAX_RISE: 2.6,      // terminal upward speed inside a column
     UPDRAFT_DRIFT: 0.06,        // gentle sideways settling toward the centre
 
+    // ── Coal trolley ──────────────────────────────────────
+    // The mine cart of this rooftop. A sub-mode rather than a device: while you
+    // are aboard, the only verb is jump, and the level is a rail with holes in
+    // it. Speed is constant on purpose — a cart you can slow down is a cart you
+    // can wait out, and then the section stops being about commitment.
+    TROLLEY_W: 22,
+    TROLLEY_H: 14,
+    TROLLEY_SPEED: 3.4,
+    TROLLEY_JUMP: -7.6,         // a shade stronger than his own: it carries load
+    TROLLEY_DECEL: 0.10,        // once off the rails, it rolls to a halt
+    TROLLEY_DISMOUNT: 1.0,      // ...and below this speed he steps off
+
     // ── Combat ────────────────────────────────────────────
     NOTE_SPEED: 4.4,
     NOTE_W: 6,
@@ -177,5 +189,10 @@ const CONFIG = {
         bellBrass:    '#c9a227',
         bellShadow:   '#7a5f14',
         updraft:      'rgba(255, 224, 160, 0.10)',
+        railIron:     '#5b5f70',
+        railTie:      '#3a2a22',
+        trolleyBody:  '#4a3428',
+        trolleyIron:  '#8892a4',
+        trolleyCoal:  '#1a1620',
     },
 };

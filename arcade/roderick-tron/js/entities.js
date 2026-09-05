@@ -39,6 +39,10 @@ Entities.prototype.reset = function () {
     this.events = [];
     // A bell per marker, each swinging from its own phase so a row of them
     // does not beat in unison.
+    this.trolleys = map.trolleys.map(function (t) {
+        return { x: t.x, y: t.y, w: CONFIG.TROLLEY_W, h: CONFIG.TROLLEY_H,
+                 vx: 0, vy: 0, riding: false, rolling: false, spent: false };
+    });
     this.bells = map.bells.map(function (b, i) {
         return { x: b.x, y: b.y, w: CONFIG.BELL_W, h: CONFIG.BELL_H,
                  phase: i * 0.9, cooldown: 0, holding: false };
@@ -61,12 +65,100 @@ Entities.prototype.fire = function (player) {
 Entities.prototype.update = function (player, dt) {
     this.events.length = 0;
     this.updateShots(dt);
+    this.updateTrolleys(player, dt);
     this.updateBells(player, dt);
     this.updateEnemies(player, dt);
     this.updatePickups(player);
     this.updateBird(player, dt);
     this.updateParticles(dt);
     this.updatePopups(dt);
+};
+
+/**
+ * The coal trolleys.
+ *
+ * Board by touching one. From then on the trolley is the thing being simulated
+ * and the player is a passenger: it rolls right at a constant speed and the
+ * only input that reaches him is jump, which leaps the whole cart.
+ *
+ * Constant speed is the design. A cart you can slow down is a cart you can wait
+ * out, and then a rail with holes in it stops being about commitment and
+ * becomes about patience.
+ *
+ * The ride ends the way a real one would: off the rails the cart rolls to a
+ * halt and he steps off. Into a wall it stops hard and throws him. Into a hole
+ * it goes down with him, which is a fall like any other.
+ */
+Entities.prototype.updateTrolleys = function (player, dt) {
+    for (let i = 0; i < this.trolleys.length; i++) {
+        const t = this.trolleys[i];
+        if (t.spent) continue;
+
+        if (!t.riding) {
+            // Sitting on its rail, waiting. It does not roll until boarded, so
+            // a trolley placed in a level stays where the level put it.
+            if (player.riding || player.captured || !player.alive || player.exiting) continue;
+            if (!overlap(player.box.x, player.box.y, player.box.w, player.box.h,
+                         t.x, t.y, t.w, t.h)) continue;
+            t.riding = true;
+            t.vx = CONFIG.TROLLEY_SPEED;
+            player.board(t);
+            this.events.push({ type: 'board', x: t.x, y: t.y });
+            continue;
+        }
+
+        // ── The ride ──────────────────────────────────────
+        const onRail = this.map.overlapsRail(t.x, t.y + t.h, t.w, 2);
+        if (onRail) {
+            // Back up to speed as soon as there is track under the wheels.
+            t.vx += (CONFIG.TROLLEY_SPEED - t.vx) * Math.min(1, 0.2 * dt);
+        } else if (t.grounded) {
+            t.vx = Math.max(0, t.vx - CONFIG.TROLLEY_DECEL * dt);
+        }
+
+        if (Input.jump() && t.grounded) {
+            t.vy = CONFIG.TROLLEY_JUMP;
+            t.grounded = false;
+            this.events.push({ type: 'trolleyJump', x: t.x, y: t.y });
+        }
+
+        t.vy += CONFIG.GRAVITY * dt;
+        if (t.vy > CONFIG.MAX_FALL) t.vy = CONFIG.MAX_FALL;
+
+        const box = { x: t.x, y: t.y, w: t.w, h: t.h };
+        const blocked = this.map.moveX(box, t.vx * dt);
+        const land = this.map.moveY(box, t.vy * dt, false);
+        t.x = box.x; t.y = box.y;
+        t.grounded = land.ground;
+        if (land.ground) t.vy = 0;
+        if (land.ceiling) t.vy = 0;
+
+        // The passenger rides on top of it.
+        player.box.x = t.x + (t.w - player.box.w) / 2;
+        player.box.y = t.y - player.box.h + 2;
+
+        if (blocked) {
+            // Hit something head on. He is thrown clear; the trolley is done.
+            t.spent = true;
+            player.dismount(-1.6, -4.2);
+            this.events.push({ type: 'crash', x: t.x + t.w / 2 });
+            continue;
+        }
+
+        if (t.y > this.map.h + CONFIG.FALL_KILL_MARGIN) {
+            // Went into a hole. Nothing to do here; main.js sees him fall.
+            t.spent = true;
+            player.dismount(0, CONFIG.MAX_FALL);
+            continue;
+        }
+
+        if (t.grounded && !onRail && t.vx <= CONFIG.TROLLEY_DISMOUNT) {
+            t.spent = true;
+            t.riding = false;
+            player.dismount(t.vx, 0);
+            this.events.push({ type: 'dismount', x: t.x, y: t.y });
+        }
+    }
 };
 
 /**
@@ -289,6 +381,7 @@ Entities.prototype.addPopup = function (x, y, text, color) {
 // ── Drawing ───────────────────────────────────────────────
 
 Entities.prototype.draw = function (ctx, camX, camY, frame) {
+    for (let i = 0; i < this.trolleys.length; i++) this.drawTrolley(ctx, this.trolleys[i], camX, camY);
     for (let i = 0; i < this.bells.length; i++) this.drawBell(ctx, this.bells[i], camX, camY);
     for (let i = 0; i < this.enemies.length; i++) this.drawEnemy(ctx, this.enemies[i], camX, camY);
     for (let i = 0; i < this.shots.length; i++) this.drawShot(ctx, this.shots[i], camX, camY);
@@ -327,6 +420,32 @@ Entities.prototype.drawBird = function (ctx, camX, camY) {
     ctx.fillRect(x + 1, y + 2 - flap * 2, 5, 2);
     ctx.fillStyle = C.robotCyan;
     ctx.fillRect(x + 8, y + 2, 1, 1);
+};
+
+Entities.prototype.drawTrolley = function (ctx, t, camX, camY) {
+    if (t.spent) return;
+    const x = Math.round(t.x - camX);
+    const y = Math.round(t.y - camY);
+    const C = CONFIG.COLORS;
+
+    // Wheels turn with distance travelled, so a stopped cart has still wheels.
+    const spin = Math.floor(t.x / 5) % 2;
+
+    ctx.fillStyle = C.trolleyIron;
+    ctx.fillRect(x + 3, y + t.h - 4, 4, 4);
+    ctx.fillRect(x + t.w - 7, y + t.h - 4, 4, 4);
+    ctx.fillStyle = C.gargoyleDark;
+    ctx.fillRect(x + 4 + spin, y + t.h - 3, 2, 2);
+    ctx.fillRect(x + t.w - 6 + spin, y + t.h - 3, 2, 2);
+
+    ctx.fillStyle = C.trolleyBody;
+    ctx.fillRect(x, y + 2, t.w, t.h - 6);
+    ctx.fillStyle = C.trolleyCoal;
+    ctx.fillRect(x + 2, y + 3, t.w - 4, 4);
+    ctx.fillStyle = C.trolleyIron;
+    ctx.fillRect(x, y + 2, t.w, 2);
+    ctx.fillRect(x, y + 2, 2, t.h - 6);
+    ctx.fillRect(x + t.w - 2, y + 2, 2, t.h - 6);
 };
 
 Entities.prototype.drawBell = function (ctx, b, camX, camY) {

@@ -239,6 +239,19 @@ World.prototype.drawTiles = function (ctx, cam) {
                     ctx.fillStyle = 'rgba(255, 244, 214, ' + (0.30 + 0.3 * (k / 3)) + ')';
                     ctx.fillRect(Math.round(sx), Math.round(y + sy), 1, 3);
                 }
+            } else if (ch === TILE_RAIL) {
+                // Iron on sleepers. Deliberately unlike the pale plank of a
+                // one-way platform: a rail means a trolley is coming, and a
+                // player should be able to see that a section is a rail run
+                // before boarding rather than after.
+                ctx.fillStyle = C.railTie;
+                for (let k = 0; k < T; k += 5) ctx.fillRect(x + k, y + 3, 3, 4);
+                ctx.fillStyle = C.railIron;
+                ctx.fillRect(x, y, T, 2);
+                ctx.fillStyle = '#8f96a8';
+                ctx.fillRect(x, y, T, 1);
+                ctx.fillStyle = C.railTie;
+                ctx.fillRect(x, y + 7, T, 1);
             } else if (ch === TILE_WATER) {
                 ctx.fillStyle = C.canalBlue;
                 ctx.fillRect(x, y, T, T);
