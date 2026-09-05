@@ -30,6 +30,7 @@ Change the game in its own repo, sync, and commit the result. The historical
 | 2^N | tile puzzle (2048) | complete |
 | aggravation | board game (multiplayer) | complete |
 | backgammon | board game (multiplayer) | complete |
+| cave-diving | underwater survival | complete |
 | checkers | board game (multiplayer) | complete |
 | chess | board game (multiplayer) | complete |
 | chinese-checkers | board game (multiplayer) | complete |

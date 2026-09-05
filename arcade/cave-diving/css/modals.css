@@ -1,0 +1,129 @@
+/* modals.css — cave diving (not even once)
+   Pause and end-of-dive panels. */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 14px;
+    background: rgba(3, 11, 16, 0.9);
+    overflow-y: auto;
+}
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 20px;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    border: 1px solid rgba(63, 224, 208, 0.35);
+    background: rgba(7, 24, 32, 0.94);
+}
+
+.panel h2 {
+    margin: 0;
+    font-size: clamp(12px, 3.4vw, 18px);
+    letter-spacing: 0.08em;
+    color: var(--accent);
+}
+
+.panel-note {
+    margin: 0;
+    font-size: 7px;
+    color: var(--hud-dim);
+    letter-spacing: 0.08em;
+}
+
+.final-score {
+    font-size: clamp(18px, 5vw, 28px);
+    color: var(--lamp);
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 12px rgba(255, 243, 196, 0.4);
+}
+
+.breakdown {
+    font-size: 6px;
+    line-height: 2.2;
+    color: var(--hud-dim);
+    letter-spacing: 0.06em;
+    max-width: 380px;
+}
+
+.initials {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.initials label {
+    font-size: 7px;
+    color: var(--hud-dim);
+    letter-spacing: 0.1em;
+}
+
+.initials input {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    width: 68px;
+    padding: 9px 6px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--lamp);
+    background: rgba(3, 11, 16, 0.9);
+    border: 1px solid var(--hud-dim);
+}
+
+.initials input:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.scores {
+    width: 100%;
+    max-width: 320px;
+    border-collapse: collapse;
+    font-size: 7px;
+    color: var(--hud-text);
+}
+
+.scores th {
+    font-size: 6px;
+    font-weight: normal;
+    color: var(--hud-dim);
+    letter-spacing: 0.1em;
+    padding: 5px 4px;
+    border-bottom: 1px solid rgba(93, 122, 128, 0.4);
+}
+
+.scores td {
+    padding: 5px 4px;
+    letter-spacing: 0.06em;
+}
+
+.scores tbody tr:nth-child(odd) {
+    background: rgba(63, 224, 208, 0.05);
+}
+
+.credit {
+    font-size: 6px;
+    line-height: 2.1;
+    color: var(--hud-dim);
+    letter-spacing: 0.05em;
+}
+
+.credit a {
+    color: var(--accent);
+}
+
+.credit strong {
+    color: var(--hud-text);
+    font-weight: normal;
+}

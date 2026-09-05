@@ -1,0 +1,123 @@
+/* start-screen.css — cave diving (not even once)
+   The title card, the briefing, and the touch START button. */
+
+.title-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px 18px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 40%,
+        rgba(9, 40, 50, 0.86) 0%,
+        rgba(3, 11, 16, 0.95) 70%);
+    overflow-y: auto;
+}
+
+.title-screen h1 {
+    margin: 0;
+    font-size: clamp(15px, 4.6vw, 30px);
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-shadow: 0 0 14px rgba(63, 224, 208, 0.55);
+}
+
+.sub-title {
+    font-size: 0.52em;
+    color: var(--lamp);
+    text-shadow: 0 0 10px rgba(255, 243, 196, 0.4);
+}
+
+.subtitle {
+    margin: 0;
+    font-size: clamp(7px, 1.9vw, 10px);
+    color: var(--hud-dim);
+    letter-spacing: 0.08em;
+}
+
+.controls-hint {
+    font-size: 8px;
+    line-height: 2;
+    color: var(--hud-dim);
+    letter-spacing: 0.06em;
+}
+
+.brief {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    max-width: 470px;
+    text-align: left;
+    padding: 12px 14px;
+    border: 1px solid rgba(63, 224, 208, 0.28);
+    background: rgba(7, 24, 32, 0.7);
+}
+
+.brief-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.brief-mark {
+    flex: 0 0 auto;
+    font-size: 9px;
+    line-height: 1.7;
+}
+
+.brief-mark.lamp { color: var(--lamp); }
+.brief-mark.air { color: var(--air); }
+.brief-mark.warn { color: var(--danger); }
+
+.brief-text {
+    font-size: 7px;
+    line-height: 1.9;
+    color: var(--hud-text);
+}
+
+.start-prompt {
+    font-size: clamp(9px, 2.4vw, 12px);
+    color: var(--lamp);
+    letter-spacing: 0.1em;
+    animation: blink 1.15s steps(2, start) infinite;
+}
+
+@keyframes blink {
+    to { opacity: 0.25; }
+}
+
+/* Hidden on pointer-precise devices: the keyboard prompt above is the
+   instruction there, and a button nobody needs is a button in the way. */
+.touch-start {
+    display: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--deep);
+    background: var(--accent);
+    border: none;
+    padding: 18px 44px;
+    /* 48px minimum. At 16px padding this came out 43px tall, just under the
+       44px thumb target - the same trim makemecookies had to make. */
+    min-height: 48px;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+@media (hover: none), (pointer: coarse) {
+    .touch-start { display: block; }
+    .start-prompt { display: none; }
+    .controls-hint { display: none; }
+}
+
+.copyright {
+    margin: 0;
+    font-size: 6px;
+    color: var(--hud-dim);
+    letter-spacing: 0.08em;
+}
