@@ -1,11 +1,12 @@
 // cribbage-board.js — Cribbage board rendering | MagmaCrunch Media © 2026
-// Traditional 121-hole cribbage board with pegging animation
+// Traditional 121-hole cribbage board with front and back pegs
 
 const CribbageBoard = {
-    // Board configuration
-    TRACKS: 3,           // Number of tracks per player
-    HOLES_PER_TRACK: 41, // Holes per track (41 × 3 = 123, enough for 121)
-    TOTAL_HOLES: 121,    // Total holes
+    // Board configuration — three streets of forty, then the game hole
+    STREETS: 3,
+    HOLES_PER_STREET: 40,
+    HOLES_PER_GROUP: 5,
+    TOTAL_HOLES: 121,
 
     // Player colors
     COLORS: {
@@ -21,166 +22,158 @@ const CribbageBoard = {
 
     // DOM element references
     boardEl: null,
-    playerPegEl: null,
-    aiPegEl: null,
-    playerBackPegEl: null,
-    aiBackPegEl: null,
 
     // ── Initialize the board ──────────────────────────────────
     init(containerId) {
         this.boardEl = document.getElementById(containerId);
         if (!this.boardEl) return;
 
-        this.reset();
+        this.scores = { player: 0, ai: 0 };
+        this.prevScores = { player: 0, ai: 0 };
         this.render();
         this.updatePegs(0, 0);
     },
 
     // ── Render the board HTML ─────────────────────────────────
     render() {
+        // Rebuilding must not undo the collapse the player (or the phone
+        // layout) chose, so only the contents are replaced.
         this.boardEl.innerHTML = '';
-        this.boardEl.className = 'cribbage-board';
+        this.boardEl.classList.add('cribbage-board');
 
-        // Create score displays
-        const scoreDisplay = document.createElement('div');
-        scoreDisplay.className = 'board-scores';
-        scoreDisplay.innerHTML = `
-            <div class="score-item player-score">
-                <span class="score-label">You</span>
-                <span class="score-value" id="playerScoreDisplay">0</span>
-            </div>
-            <div class="score-item ai-score">
-                <span class="score-label">Opponent</span>
-                <span class="score-value" id="aiScoreDisplay">0</span>
-            </div>
-        `;
-        this.boardEl.appendChild(scoreDisplay);
+        this.boardEl.appendChild(this.createScoreDisplay());
 
-        // Create board tracks
-        const tracksEl = document.createElement('div');
-        tracksEl.className = 'board-tracks';
-
-        // Player track (bottom)
-        const playerTrack = this.createTrack('player');
-        tracksEl.appendChild(playerTrack);
-
-        // AI track (top)
-        const aiTrack = this.createTrack('ai');
-        tracksEl.appendChild(aiTrack);
-
-        this.boardEl.appendChild(tracksEl);
-
-        // Create pegs
-        this.createPegs();
+        const lanes = document.createElement('div');
+        lanes.className = 'board-lanes';
+        lanes.appendChild(this.createLane('player', 'You'));
+        lanes.appendChild(this.createLane('ai', 'Opponent'));
+        this.boardEl.appendChild(lanes);
     },
 
-    // ── Create a single track ─────────────────────────────────
-    createTrack(player) {
-        const track = document.createElement('div');
-        track.className = `board-track ${player}-track`;
+    createScoreDisplay() {
+        const scores = document.createElement('div');
+        scores.className = 'board-scores';
 
-        // Create 30 holes per track
-        for (let i = 1; i <= this.HOLES_PER_TRACK; i++) {
-            const hole = document.createElement('div');
-            hole.className = 'board-hole';
-            hole.dataset.position = i;
-            hole.dataset.player = player;
+        for (const [player, label] of [['player', 'You'], ['ai', 'Opponent']]) {
+            const item = document.createElement('div');
+            item.className = `score-item ${player}-score`;
 
-            // Add markers for every 5th hole
-            if (i % 5 === 0) {
-                hole.classList.add('marker');
-            }
+            const name = document.createElement('span');
+            name.className = 'score-label';
+            name.textContent = label;
 
-            // Add start hole
-            if (i === 1) {
-                hole.classList.add('start');
-            }
+            const value = document.createElement('span');
+            value.className = 'score-value';
+            value.id = `${player}ScoreDisplay`;
+            value.textContent = '0';
 
-            track.appendChild(hole);
+            item.append(name, value);
+            scores.appendChild(item);
         }
 
-        return track;
+        return scores;
     },
 
-    // ── Create peg elements ───────────────────────────────────
-    createPegs() {
-        // Player pegs
-        this.playerPegEl = document.createElement('div');
-        this.playerPegEl.className = 'board-peg player-peg';
-        this.playerPegEl.style.backgroundColor = this.COLORS.player.peg;
-        this.playerPegEl.style.boxShadow = `0 0 6px ${this.COLORS.player.shadow}`;
-        this.boardEl.appendChild(this.playerPegEl);
+    // ── Create one player's three streets ─────────────────────
+    createLane(player, label) {
+        const lane = document.createElement('div');
+        lane.className = `board-lane ${player}-lane`;
+        lane.style.setProperty('--peg-color', this.COLORS[player].peg);
+        lane.style.setProperty('--peg-shadow', this.COLORS[player].shadow);
 
-        this.playerBackPegEl = document.createElement('div');
-        this.playerBackPegEl.className = 'board-peg player-peg back-peg';
-        this.playerBackPegEl.style.backgroundColor = this.COLORS.player.shadow;
-        this.boardEl.appendChild(this.playerBackPegEl);
+        const title = document.createElement('div');
+        title.className = 'track-label';
+        title.textContent = label;
+        lane.appendChild(title);
 
-        // AI pegs
-        this.aiPegEl = document.createElement('div');
-        this.aiPegEl.className = 'board-peg ai-peg';
-        this.aiPegEl.style.backgroundColor = this.COLORS.ai.peg;
-        this.aiPegEl.style.boxShadow = `0 0 6px ${this.COLORS.ai.shadow}`;
-        this.boardEl.appendChild(this.aiPegEl);
+        const streets = document.createElement('div');
+        streets.className = 'board-streets';
 
-        this.aiBackPegEl = document.createElement('div');
-        this.aiBackPegEl.className = 'board-peg ai-peg back-peg';
-        this.aiBackPegEl.style.backgroundColor = this.COLORS.ai.shadow;
-        this.boardEl.appendChild(this.aiBackPegEl);
+        for (let street = 0; street < this.STREETS; street++) {
+            const row = document.createElement('div');
+            row.className = 'board-street';
+
+            // Holes are grouped in fives, the way a real board is drilled, so
+            // a glance lands on the right one without counting.
+            for (let start = 0; start < this.HOLES_PER_STREET; start += this.HOLES_PER_GROUP) {
+                const group = document.createElement('div');
+                group.className = 'hole-group';
+
+                for (let i = 0; i < this.HOLES_PER_GROUP; i++) {
+                    const position = street * this.HOLES_PER_STREET + start + i + 1;
+                    group.appendChild(this.createHole(player, position));
+                }
+                row.appendChild(group);
+            }
+            streets.appendChild(row);
+        }
+
+        lane.appendChild(streets);
+
+        // 121 sits on its own, past the last street.
+        const game = document.createElement('div');
+        game.className = 'board-game-hole';
+        game.appendChild(this.createHole(player, this.TOTAL_HOLES));
+        const gameLabel = document.createElement('span');
+        gameLabel.className = 'game-hole-label';
+        gameLabel.textContent = '121';
+        game.appendChild(gameLabel);
+        lane.appendChild(game);
+
+        return lane;
+    },
+
+    createHole(player, position) {
+        const hole = document.createElement('div');
+        hole.className = 'board-hole';
+        hole.dataset.position = position;
+        hole.dataset.player = player;
+        if (position % this.HOLES_PER_GROUP === 0) hole.classList.add('marker');
+        return hole;
     },
 
     // ── Update peg positions ──────────────────────────────────
-    updatePegs(playerScore, aiScore, animate = true) {
-        // Store previous scores for back peg
+    updatePegs(playerScore, aiScore) {
         this.prevScores.player = this.scores.player;
         this.prevScores.ai = this.scores.ai;
-
-        // Update current scores
         this.scores.player = playerScore;
         this.scores.ai = aiScore;
 
-        // Update score displays
-        const playerScoreEl = document.getElementById('playerScoreDisplay');
-        const aiScoreEl = document.getElementById('aiScoreDisplay');
-        if (playerScoreEl) playerScoreEl.textContent = playerScore;
-        if (aiScoreEl) aiScoreEl.textContent = aiScore;
+        for (const player of ['player', 'ai']) {
+            const scoreEl = document.getElementById(`${player}ScoreDisplay`);
+            if (scoreEl) scoreEl.textContent = this.scores[player];
 
-        // Position pegs
-        this.positionPeg(this.playerPegEl, playerScore, 'player');
-        this.positionPeg(this.playerBackPegEl, this.prevScores.player, 'player');
-        this.positionPeg(this.aiPegEl, aiScore, 'ai');
-        this.positionPeg(this.aiBackPegEl, this.prevScores.ai, 'ai');
+            this.placePegs(player, this.scores[player], this.prevScores[player]);
+        }
     },
 
-    // ── Position a single peg ─────────────────────────────────
-    positionPeg(pegEl, score, player) {
-        if (!pegEl) return;
+    // ── Seat both pegs for one player ─────────────────────────
+    // Pegs live inside their hole rather than at absolute coordinates, so the
+    // board can reflow — collapse, rotate, resize — without them drifting off.
+    placePegs(player, score, prevScore) {
+        if (!this.boardEl) return;
 
-        if (score === 0) {
-            // Hide peg at start
-            pegEl.style.display = 'none';
-            return;
-        }
+        const lane = this.boardEl.querySelector(`.${player}-lane`);
+        if (!lane) return;
 
-        pegEl.style.display = 'block';
+        lane.querySelectorAll('.board-peg').forEach(peg => peg.remove());
+        lane.querySelectorAll('.board-hole.pegged').forEach(h => h.classList.remove('pegged'));
 
-        // Calculate track and position
-        const track = Math.floor((score - 1) / this.HOLES_PER_TRACK);
-        const position = score - (track * this.HOLES_PER_TRACK);
+        this.seatPeg(lane, prevScore, 'back-peg');
+        this.seatPeg(lane, score, 'front-peg');
+    },
 
-        // Find the hole element
-        const trackEl = this.boardEl.querySelector(`.${player}-track`);
-        if (!trackEl) return;
+    seatPeg(lane, score, className) {
+        if (score <= 0) return;
 
-        const hole = trackEl.querySelector(`[data-position="${position}"]`);
+        const position = Math.min(score, this.TOTAL_HOLES);
+        const hole = lane.querySelector(`.board-hole[data-position="${position}"]`);
         if (!hole) return;
 
-        // Position peg at hole
-        const rect = hole.getBoundingClientRect();
-        const boardRect = this.boardEl.getBoundingClientRect();
-
-        pegEl.style.left = `${rect.left - boardRect.left + rect.width / 2 - 6}px`;
-        pegEl.style.top = `${rect.top - boardRect.top + rect.height / 2 - 6}px`;
+        const peg = document.createElement('div');
+        peg.className = `board-peg ${className}`;
+        hole.classList.add('pegged');
+        hole.appendChild(peg);
     },
 
     // ── Check for winner ──────────────────────────────────────
@@ -192,10 +185,8 @@ const CribbageBoard = {
 
     // ── Reset the board ───────────────────────────────────────
     reset() {
-        this.scores.player = 0;
-        this.scores.ai = 0;
-        this.prevScores.player = 0;
-        this.prevScores.ai = 0;
-        this.updatePegs(0, 0, false);
+        this.scores = { player: 0, ai: 0 };
+        this.prevScores = { player: 0, ai: 0 };
+        this.updatePegs(0, 0);
     }
 };

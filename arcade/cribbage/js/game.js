@@ -111,9 +111,11 @@ class CribbageGame {
     cutStarter() {
         if (this.phase !== PHASE.STARTER_CUT) return null;
 
-        // Cut the deck
-        const cutIndex = Math.floor(Math.random() * this.deck.length);
-        this.starter = this.deck[cutIndex];
+        // Cut the deck. AdCards.Deck keeps its cards on `.cards` and is not
+        // itself array-like, so indexing the deck directly yields undefined.
+        const undealt = this.deck.cards;
+        const cutIndex = Math.floor(Math.random() * undealt.length);
+        this.starter = undealt.splice(cutIndex, 1)[0];
         this.starter.faceUp = true;
 
         // Check for His Heels (Jack as starter)
@@ -138,7 +140,7 @@ class CribbageGame {
         if (this.phase !== PHASE.PEGGING) return null;
         if (this.currentTurn !== player) return null;
 
-        const value = RANK_VALUES[card.rank];
+        const value = pegValue(card.rank);
         if (this.currentCount + value > MAX_PEG_COUNT) return null;
 
         // Play the card
@@ -158,45 +160,73 @@ class CribbageGame {
         }
 
         // Score the play
-        const scoreResult = AdCards.CribbageHandEval.scorePeggingPlay(card, this.playedCards.slice(0, -1));
+        const scoreResult = CribbageScore.scorePegging(card, this.playedCards.slice(0, -1));
 
         // Update score
         if (scoreResult.points > 0) {
             this.scores[player] += scoreResult.points;
         }
 
-        // Check for 31
-        if (this.currentCount === 31) {
-            this.lastToPlay = player;
-            this.resetCount();
-            this.turnCount++;
+        this.lastToPlay = player;
+        this.turnCount++;
+
+        if (this.checkWinner()) {
+            this.phase = PHASE.GAME_OVER;
+            return scoreResult;
+        }
+
+        // Thirty-one ends the series outright; the two points are already in.
+        if (this.currentCount === MAX_PEG_COUNT) {
+            this.endSeries();
             return { ...scoreResult, hit31: true };
         }
 
-        // Check for Go
         const opponent = player === 'player' ? 'ai' : 'player';
-        const opponentHand = opponent === 'player' ? this.playerHand : this.aiHand;
-        const canOpponentPlay = opponentHand.some(c => RANK_VALUES[c.rank] + this.currentCount <= MAX_PEG_COUNT);
 
-        if (!canOpponentPlay) {
-            // Go - point to the player who played last
-            this.scores[player] += SCORE.GO;
-            this.goCalled = true;
-            this.lastToPlay = player;
-            this.resetCount();
-            this.turnCount++;
-            return { ...scoreResult, go: true, points: scoreResult.points + SCORE.GO };
+        // The turn only passes if the other hand holds a card that still fits.
+        // Otherwise it is a go, and this player keeps laying cards until they
+        // cannot either — which is where the go point is finally scored.
+        if (this.canPlay(opponent)) {
+            this.currentTurn = opponent;
+            return scoreResult;
         }
 
-        // Switch turns
-        this.currentTurn = opponent;
-        this.turnCount++;
+        if (this.canPlay(player)) {
+            this.goCalled = true;
+            return { ...scoreResult, go: true };
+        }
 
-        return scoreResult;
+        this.scores[player] += SCORE.GO;
+        this.endSeries();
+        return { ...scoreResult, go: true, points: scoreResult.points + SCORE.GO };
     }
 
-    // ── Reset count (after 31 or Go) ─────────────────────────
-    resetCount() {
+    // ── Can this hand still lay a card at the current count? ──
+    canPlay(player) {
+        const hand = player === 'player' ? this.playerHand : this.aiHand;
+        return hand.some(c => pegValue(c.rank) + this.currentCount <= MAX_PEG_COUNT);
+    }
+
+    // ── The player on turn cannot play ───────────────────────
+    // Only reachable as a fallback: playPeggingCard already settles a go the
+    // moment it is created. Kept so a stuck turn can never wedge the game.
+    declareGo() {
+        if (this.phase !== PHASE.PEGGING) return null;
+
+        const opponent = this.currentTurn === 'player' ? 'ai' : 'player';
+        if (this.canPlay(opponent)) {
+            this.currentTurn = opponent;
+            return { points: 0, go: true, description: 'Go!' };
+        }
+
+        if (this.lastToPlay) this.scores[this.lastToPlay] += SCORE.GO;
+        const scorer = this.lastToPlay;
+        this.endSeries();
+        return { points: SCORE.GO, go: true, scorer, description: 'Go!' };
+    }
+
+    // ── End a series (after 31 or a go) ──────────────────────
+    endSeries() {
         this.currentCount = 0;
         this.playedCards = [];
         this.goCalled = false;
@@ -207,7 +237,7 @@ class CribbageGame {
             return;
         }
 
-        // Next turn starts fresh
+        // Whoever did not lay the last card leads the next series.
         this.currentTurn = this.lastToPlay === 'player' ? 'ai' : 'player';
     }
 
@@ -215,26 +245,25 @@ class CribbageGame {
     scoreHands() {
         if (this.phase !== PHASE.HAND_SCORING) return null;
 
-        const results = [];
-
-        // Non-dealer scores first
-        const nonDealer = this.isPlayerDealer ? 'ai' : 'player';
-        const nonDealerHand = this.isPlayerDealer ? this.aiHand : this.playerHand;
-        const nonDealerScore = AdCards.CribbageHandEval.scoreHand(nonDealerHand, this.starter, false);
-        this.scores[nonDealer] += nonDealerScore.total;
-        results.push({ player: nonDealer, hand: nonDealerHand, score: nonDealerScore });
-
-        // Dealer scores next
         const dealer = this.isPlayerDealer ? 'player' : 'ai';
-        const dealerHand = this.isPlayerDealer ? this.playerHand : this.aiHand;
-        const dealerScore = AdCards.CribbageHandEval.scoreHand(dealerHand, this.starter, false);
-        this.scores[dealer] += dealerScore.total;
-        results.push({ player: dealer, hand: dealerHand, score: dealerScore });
+        const nonDealer = this.isPlayerDealer ? 'ai' : 'player';
 
-        // Crib scores last (dealer's)
-        const cribScore = AdCards.CribbageHandEval.scoreHand(this.crib, this.starter, true);
-        this.scores[dealer] += cribScore.total;
-        results.push({ player: 'crib', hand: this.crib, score: cribScore });
+        // Show is counted in order — non-dealer, dealer, then the dealer's crib
+        // — and the game ends the moment somebody pegs out, so a hand that only
+        // wins on paper after the crib does not actually win.
+        const show = [
+            { player: nonDealer, hand: this.isPlayerDealer ? this.aiHand : this.playerHand, isCrib: false },
+            { player: dealer, hand: this.isPlayerDealer ? this.playerHand : this.aiHand, isCrib: false },
+            { player: dealer, hand: this.crib, isCrib: true }
+        ];
+
+        const results = [];
+        for (const { player, hand, isCrib } of show) {
+            const score = CribbageScore.scoreHand(hand, this.starter, isCrib);
+            this.scores[player] += score.total;
+            results.push({ player: isCrib ? 'crib' : player, hand, score });
+            if (this.checkWinner()) break;
+        }
 
         // Check for winner
         const winner = this.checkWinner();
@@ -265,6 +294,7 @@ class CribbageGame {
             aiHand: [...this.aiHand],
             crib: [...this.crib],
             starter: this.starter,
+            playedCards: [...this.playedCards],
             currentCount: this.currentCount,
             currentTurn: this.currentTurn,
             isPlayerDealer: this.isPlayerDealer,

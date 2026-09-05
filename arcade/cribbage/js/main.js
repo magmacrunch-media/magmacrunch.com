@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scoresBtn = document.getElementById('viewScoresBtn');
     const newGameBtn = document.getElementById('newGameBtn');
     const menuBtn = document.getElementById('menuBtn');
-    const backLink = document.querySelector('.mc-back');
 
     // Game areas
     const playerHandEl = document.getElementById('playerHand');
     const aiHandEl = document.getElementById('aiHand');
     const cribAreaEl = document.getElementById('cribArea');
+    const playedCardsEl = document.getElementById('playedCards');
     const starterCardEl = document.getElementById('starterCard');
     const countDisplayEl = document.getElementById('countDisplay');
     const messageAreaEl = document.getElementById('messageArea');
@@ -38,11 +38,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Board toggle (collapse/expand)
     const boardToggle = document.getElementById('boardToggle');
     const cribbageBoard = document.getElementById('cribbageBoard');
+
+    function setBoardCollapsed(collapsed) {
+        cribbageBoard.classList.toggle('collapsed', collapsed);
+        boardToggle.textContent = collapsed ? '▶ Show Board' : '▼ Hide Board';
+    }
+
     if (boardToggle && cribbageBoard) {
+        // Stacked on a phone the board is most of a screenful, and it would sit
+        // between the header and the cards. Collapsing it leaves the two scores
+        // showing, which is what you actually read mid-hand.
+        setBoardCollapsed(window.matchMedia('(max-width: 900px)').matches);
+
         boardToggle.addEventListener('click', () => {
-            cribbageBoard.classList.toggle('collapsed');
-            const collapsed = cribbageBoard.classList.contains('collapsed');
-            boardToggle.textContent = collapsed ? '▶ Scores' : '▼ Board';
+            setBoardCollapsed(!cribbageBoard.classList.contains('collapsed'));
         });
     }
 
@@ -59,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── Deal new hand ───────────────────────────────────────────
     function dealNewHand() {
-        const { playerHand, aiHand } = game.deal();
+        game.deal();
         renderHands();
         showMessage(`Select 2 cards for the crib (${game.isPlayerDealer ? 'your' : "opponent's"} crib)`);
         showCribSelectionButtons();
@@ -69,11 +78,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderHands() {
         const state = game.getState();
 
-        // Player hand
+        // Player hand. During pegging a card that would carry the count past
+        // 31 cannot be laid, and a click that silently does nothing reads as a
+        // broken game, so those are dimmed instead.
+        const pegging = state.phase === PHASE.PEGGING;
         playerHandEl.innerHTML = '';
         state.playerHand.forEach(card => {
             const cardEl = createCardElement(card, true);
-            cardEl.addEventListener('click', () => handleCardClick(card));
+            if (pegging && pegValue(card.rank) + state.currentCount > MAX_PEG_COUNT) {
+                cardEl.classList.add('unplayable');
+            } else {
+                cardEl.addEventListener('click', () => handleCardClick(card));
+            }
+            if (state.selectedForCrib.some(c => c.suit === card.suit && c.rank === card.rank)) {
+                cardEl.classList.add('selected');
+            }
             playerHandEl.appendChild(cardEl);
         });
 
@@ -82,6 +101,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.aiHand.forEach(card => {
             const cardEl = createCardElement(card, false);
             aiHandEl.appendChild(cardEl);
+        });
+
+        // Cards laid so far this go
+        playedCardsEl.innerHTML = '';
+        state.playedCards.forEach(card => {
+            playedCardsEl.appendChild(createCardElement(card, true));
         });
 
         // Update crib display
@@ -132,6 +157,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // ── Build a one-shot action button ──────────────────────────
+    function actionButton(label, className, onClick) {
+        const btn = document.createElement('button');
+        btn.className = `action-btn ${className}`;
+        btn.textContent = label;
+        btn.addEventListener('click', () => {
+            btn.disabled = true;
+            onClick();
+        });
+        return btn;
+    }
+
     // ── Show crib selection buttons ─────────────────────────────
     function showCribSelectionButtons() {
         actionButtonsEl.innerHTML = '';
@@ -146,11 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         actionButtonsEl.innerHTML = '';
 
         if (selected === 2) {
-            const btn = document.createElement('button');
-            btn.className = 'action-btn confirm';
-            btn.textContent = `Send to Crib`;
-            btn.addEventListener('click', confirmCrib);
-            actionButtonsEl.appendChild(btn);
+            actionButtonsEl.appendChild(actionButton('Send to Crib', 'confirm', confirmCrib));
         } else {
             const msg = document.createElement('div');
             msg.className = 'selection-hint';
@@ -161,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── Confirm crib selection ──────────────────────────────────
     function confirmCrib() {
-        game.confirmCribSelection();
+        if (!game.confirmCribSelection()) return;
         renderHands();
         showMessage('Cut for starter...');
         showStarterCutButton();
@@ -170,16 +203,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ── Show starter cut button ─────────────────────────────────
     function showStarterCutButton() {
         actionButtonsEl.innerHTML = '';
-        const btn = document.createElement('button');
-        btn.className = 'action-btn cut';
-        btn.textContent = 'Cut Deck';
-        btn.addEventListener('click', cutStarter);
-        actionButtonsEl.appendChild(btn);
+        actionButtonsEl.appendChild(actionButton('Cut Deck', 'cut', cutStarter));
     }
 
     // ── Cut for starter ─────────────────────────────────────────
     function cutStarter() {
         const starter = game.cutStarter();
+        if (!starter) return;
         renderHands();
 
         if (starter.rank === 'J') {
@@ -202,17 +232,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (state.currentTurn === 'player') {
             // Show playable cards
             const playable = state.playerHand.filter(c =>
-                RANK_VALUES[c.rank] + state.currentCount <= MAX_PEG_COUNT
+                pegValue(c.rank) + state.currentCount <= MAX_PEG_COUNT
             );
 
             if (playable.length === 0) {
                 // Must say Go (only if count > 0, otherwise we just started a new round)
                 if (state.currentCount > 0) {
-                    const btn = document.createElement('button');
-                    btn.className = 'action-btn go';
-                    btn.textContent = 'Go';
-                    btn.addEventListener('click', sayGo);
-                    actionButtonsEl.appendChild(btn);
+                    actionButtonsEl.appendChild(actionButton('Go', 'go', sayGo));
                 } else {
                     // Count is 0 but no playable cards = hand is empty, auto-advance
                     showMessage('Waiting...');
@@ -257,14 +283,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── Say Go ──────────────────────────────────────────────────
     function sayGo() {
-        const state = game.getState();
-        const playerWhoCantPlay = state.currentTurn;
-
-        // Point already added in game.playPeggingCard(), just reset and switch turns
-        game.resetCount();
-
-        // After Go, the player who couldn't play goes first next round
-        game.currentTurn = playerWhoCantPlay;
+        game.declareGo();
 
         renderHands();
         showMessage('Go!');
@@ -299,13 +318,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         switch (state.phase) {
             case PHASE.PEGGING:
-                // If a Go was just called (count is 0 and it's a new round), auto-proceed
-                if (game.currentCount === 0 && game.goCalled) {
-                    // Go was just handled, proceed to next player's turn
-                    showPeggingButtons();
-                } else {
-                    showPeggingButtons();
-                }
+                showPeggingButtons();
                 break;
 
             case PHASE.HAND_SCORING:
@@ -381,7 +394,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ── Show message ────────────────────────────────────────────
     function showMessage(text) {
-        messageAreaEl.innerHTML = `<div class="game-message">${text.replace(/\n/g, '<br>')}</div>`;
+        messageAreaEl.innerHTML = '';
+        const message = document.createElement('div');
+        message.className = 'game-message';
+        message.textContent = text;   // .game-message is white-space: pre-line
+        messageAreaEl.appendChild(message);
     }
 
     // ── Show rules ──────────────────────────────────────────────
@@ -392,7 +409,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <p>Be the first to 121 points.</p>
 
                 <h3>Card Values</h3>
-                <p>A=1, 2-10 face value, J=11, Q=12, K=13</p>
+                <p>Counting to 15 and 31: A=1, 2-10 face value, J/Q/K=10.</p>
+                <p>In runs the court cards keep their order: 10, J, Q, K.</p>
 
                 <h3>Phases</h3>
                 <ol>
@@ -440,7 +458,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 modalContent.innerHTML = '<h2>High Scores</h2><p>No scores yet. Be the first!</p>';
             } else {
                 const scoresHtml = scores.slice(0, 10).map((s, i) => 
-                    `<div class="score-row"><span class="score-rank">${i + 1}.</span><span class="score-name">${s.initials || 'AAA'}</span><span class="score-pts">${s.score}</span></div>`
+                    `<div class="score-row"><span class="rank">${i + 1}.</span><span class="initials">${s.initials || 'AAA'}</span><span class="score">${s.score}</span></div>`
                 ).join('');
                 modalContent.innerHTML = `<h2>High Scores</h2>${scoresHtml}`;
             }

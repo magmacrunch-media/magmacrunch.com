@@ -9,10 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
-    <link rel="stylesheet" href="css/base.css?v=7dc55f67">
-    <link rel="stylesheet" href="css/start-screen.css?v=3922d7a7">
-    <link rel="stylesheet" href="css/game-layout.css?v=87bd18e3">
-    <link rel="stylesheet" href="css/board.css?v=e7c3b73b">
+    <link rel="stylesheet" href="../shared/cards/cards.css">
+    <link rel="stylesheet" href="css/base.css?v=2e6e45ff">
+    <link rel="stylesheet" href="css/start-screen.css?v=230173b5">
+    <link rel="stylesheet" href="css/game-layout.css?v=a4a4dc16">
+    <link rel="stylesheet" href="css/board.css?v=2a6625b4">
     <link rel="stylesheet" href="css/modals.css?v=b87dbbb2">
     <link rel="stylesheet" href="../shared/multiplayer/lobby.css?v=84fc4843">
     <style>
@@ -71,12 +72,6 @@
                 <div class="board-column">
                     <button id="boardToggle" class="board-toggle">▼ Board</button>
                     <div id="cribbageBoard" class="cribbage-board"></div>
-                    <div class="count-display">
-                        <div>
-                            <div id="countDisplay" class="count-value">0</div>
-                            <div class="count-label">Count</div>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Right column: Card play areas -->
@@ -86,9 +81,21 @@
                         <div id="aiHand" class="hand-cards"></div>
                     </div>
 
-                    <div class="starter-area">
-                        <div class="section-title">Starter</div>
-                        <div id="starterCard" class="starter-card"></div>
+                    <div class="table-area">
+                        <div class="section-title">
+                            <span>On the Table</span>
+                            <span class="count-badge">Count <span id="countDisplay">0</span></span>
+                        </div>
+                        <div class="table-row">
+                            <div class="starter-slot">
+                                <div class="slot-label">Starter</div>
+                                <div id="starterCard" class="starter-card"></div>
+                            </div>
+                            <div class="played-slot">
+                                <div class="slot-label">Played this go</div>
+                                <div id="playedCards" class="hand-cards"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="crib-area">
@@ -177,10 +184,11 @@
     <script src="../shared/score-server.js?v=9acd988c"></script>
     <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
     <!-- Game scripts -->
-    <script src="js/config.js?v=63a621fb"></script>
-    <script src="js/cribbage-board.js?v=a9134bc9"></script>
-    <script src="js/ai.js?v=40a6ba90"></script>
-    <script src="js/game.js?v=16f5c75b"></script>
-    <script src="js/main.js?v=23ff414d"></script>
+    <script src="js/scoring.js"></script>
+    <script src="js/config.js?v=753a39d9"></script>
+    <script src="js/cribbage-board.js?v=b77a3da5"></script>
+    <script src="js/ai.js?v=473ac2cd"></script>
+    <script src="js/game.js?v=20409c68"></script>
+    <script src="js/main.js?v=e0fa9f0c"></script>
 </body>
 </html>

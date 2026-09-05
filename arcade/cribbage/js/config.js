@@ -1,6 +1,6 @@
 // config.js — Cribbage | MagmaCrunch Media © 2026
 // Card constants come from AdCards (now properly scoped in IIFE)
-const { SUIT_SYMBOLS, RANK_VALUES } = AdCards;
+const { SUIT_SYMBOLS } = AdCards;
 
 // ── Game configuration ───────────────────────────────────────
 const WINNING_SCORE = 121;
@@ -9,18 +9,14 @@ const CRIB_SIZE = 4;         // Cards in the crib (2 from each player)
 const MAX_PEG_COUNT = 31;    // Maximum count during pegging phase
 
 // ── Scoring values ───────────────────────────────────────────
-const SCORE = {
-    FIFTEEN:     2,   // Cards summing to 15
-    PAIR:        2,   // Two cards of same rank
-    THREE_OF_KIND: 6, // Three cards of same rank
-    FOUR_OF_KIND: 12, // Four cards of same rank
-    FLUSH_4:     4,   // Four cards same suit (hand only)
-    FLUSH_5:     5,   // Five cards same suit (hand + starter)
-    NIBS:        1,   // Jack in hand matching starter suit
-    HIS_HEELS:   2,   // Jack turned as starter
-    GO:          1,   // Opponent cannot play
-    THIRTY_ONE:  2    // Hitting exactly 31
-};
+// Owned by scoring.js, which is also what the tests load.
+const SCORE = CribbageScore.SCORE;
+
+// Cribbage counts every court card as ten. AdCards.RANK_VALUES is the ordinal
+// table (J=11, Q=12, K=13), which is right for ordering runs and wrong for
+// counting to fifteen and thirty-one — reaching for it by habit is how a King
+// ends up worth 13 toward the count, so the game asks scoring.js instead.
+const pegValue = CribbageScore.value;
 
 // ── Game phases ──────────────────────────────────────────────
 const PHASE = {

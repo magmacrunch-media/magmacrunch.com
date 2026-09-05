@@ -4,8 +4,8 @@
     background: var(--board-bg);
     border: 4px solid var(--board-border);
     border-radius: 12px;
-    padding: 20px;
-    box-shadow: 
+    padding: 16px;
+    box-shadow:
         inset 0 2px 4px rgba(0,0,0,0.3),
         0 8px 24px rgba(0,0,0,0.5);
     position: relative;
@@ -15,14 +15,14 @@
 }
 
 .cribbage-board.collapsed {
-    padding: 15px 20px;
+    padding: 12px 16px;
 }
 
 /* Score displays */
 .board-scores {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .score-item {
@@ -50,72 +50,112 @@
     color: var(--ai-peg);
 }
 
-/* Board tracks */
-.board-tracks {
+/* Lanes — one player, three streets of forty holes */
+.board-lanes {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    max-height: 300px;
+    gap: 14px;
     overflow: hidden;
     opacity: 1;
-    transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+    transition: max-height 0.3s ease, opacity 0.3s ease, gap 0.3s ease;
+    max-height: 400px;
 }
 
-.cribbage-board.collapsed .board-tracks {
+.cribbage-board.collapsed .board-lanes {
     max-height: 0;
     opacity: 0;
-    margin-top: 0;
-    margin-bottom: 0;
     gap: 0;
 }
 
-.board-track {
+/* The lane is the wood; the holes are drilled into it. It used to be
+   var(--bg-dark), the same colour as --hole-bg, so the holes read as an empty
+   strip with faint outlines. */
+.board-lane {
     display: flex;
-    gap: 4px;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding: 10px;
-    background: var(--bg-dark);
+    flex-direction: column;
+    gap: 5px;
+    padding: 8px;
+    background: var(--bg-light);
     border-radius: 8px;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.06);
 }
 
-/* Board holes */
+.board-streets {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Holes flex to the available width, so the streets stay one row each at any
+   screen size rather than wrapping into a ragged block. */
+.board-street {
+    display: flex;
+    gap: 4px;
+}
+
+.hole-group {
+    display: flex;
+    gap: 2px;
+    flex: 1;
+}
+
 .board-hole {
-    width: 14px;
-    height: 14px;
+    flex: 1;
+    aspect-ratio: 1;
+    min-width: 4px;
     border-radius: 50%;
     background: var(--hole-bg);
     border: 1px solid var(--hole-border);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.8);
     position: relative;
-    transition: all 0.2s;
 }
 
+/* Every fifth hole, where a real board scores the wood */
 .board-hole.marker {
-    background: var(--bg-light);
+    border-color: var(--wood);
 }
 
-.board-hole.start {
+.board-game-hole {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-end;
+    margin-top: 2px;
+}
+
+.board-game-hole .board-hole {
+    flex: 0 0 auto;
+    width: 10px;
     background: var(--accent-dim);
 }
 
-.board-hole:hover {
-    transform: scale(1.2);
+.game-hole-label {
+    font-family: var(--font-pixel);
+    font-size: 7px;
+    color: var(--cream);
+    opacity: 0.6;
 }
 
-/* Pegs */
+/* Pegs sit inside their hole, so they follow it through any reflow */
 .board-peg {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    inset: -2px;
     border-radius: 50%;
-    z-index: 10;
-    transition: all 0.3s ease-out;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    background: var(--peg-color, var(--accent));
+    box-shadow: 0 0 6px var(--peg-shadow, transparent);
+    animation: peg-seat 0.25s ease-out;
 }
 
 .board-peg.back-peg {
-    opacity: 0.6;
-    transform: scale(0.8);
+    background: var(--peg-shadow, var(--accent-dim));
+    box-shadow: none;
+    inset: 0;
+    opacity: 0.75;
+}
+
+@keyframes peg-seat {
+    from { transform: scale(1.9); }
+    to   { transform: scale(1); }
 }
 
 /* Track labels */
@@ -124,27 +164,27 @@
     font-size: 8px;
     color: var(--cream);
     opacity: 0.6;
-    margin-bottom: 5px;
     text-transform: uppercase;
 }
+
+.player-lane .track-label { color: var(--player-peg); }
+.ai-lane .track-label { color: var(--ai-peg); }
 
 /* Responsive */
 @media (max-width: 600px) {
     .cribbage-board {
-        padding: 15px;
+        padding: 12px;
     }
 
-    .board-hole {
-        width: 10px;
-        height: 10px;
+    .board-street {
+        gap: 3px;
     }
 
-    .board-peg {
-        width: 8px;
-        height: 8px;
+    .hole-group {
+        gap: 1px;
     }
 
-    .board-track {
-        gap: 2px;
+    .score-value {
+        font-size: 20px;
     }
 }

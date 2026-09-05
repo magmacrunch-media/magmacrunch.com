@@ -4,8 +4,9 @@
 const CribbageAI = {
 
     // ── Select 2 cards for the crib ───────────────────────────
-    // Returns array of 2 cards to discard
-    selectCribCards(hand, isDealer) {
+    // Returns array of 2 cards to discard. `cribIsOpponents` is true when the
+    // human deals, so the crib these cards land in is not the AI's to score.
+    selectCribCards(hand, cribIsOpponents) {
         if (hand.length !== 6) return hand.slice(0, 2);
 
         // Score each possible pair of cards to discard
@@ -18,7 +19,7 @@ const CribbageAI = {
                 const remaining = hand.filter((_, idx) => idx !== i && idx !== j);
 
                 // Score this discard
-                const score = this.scoreCribDiscard(remaining, discard, isDealer);
+                const score = this.scoreCribDiscard(remaining, discard, cribIsOpponents);
                 if (score > bestScore) {
                     bestScore = score;
                     bestDiscard = discard;
@@ -31,13 +32,13 @@ const CribbageAI = {
 
     // ── Score a crib discard choice ───────────────────────────
     // Higher score = better discard
-    scoreCribDiscard(remaining, discard, isDealer) {
+    scoreCribDiscard(remaining, discard, cribIsOpponents) {
         let score = 0;
 
         // Keep cards that make 15s
         for (let i = 0; i < remaining.length; i++) {
             for (let j = i + 1; j < remaining.length; j++) {
-                if (RANK_VALUES[remaining[i].rank] + RANK_VALUES[remaining[j].rank] === 15) {
+                if (pegValue(remaining[i].rank) + pegValue(remaining[j].rank) === 15) {
                     score += 4;
                 }
             }
@@ -53,7 +54,7 @@ const CribbageAI = {
         }
 
         // Keep runs
-        const values = remaining.map(c => RANK_VALUES[c.rank]).sort((a, b) => a - b);
+        const values = remaining.map(c => CribbageScore.order(c.rank)).sort((a, b) => a - b);
         for (let i = 0; i < values.length - 2; i++) {
             if (values[i + 1] === values[i] + 1 && values[i + 2] === values[i] + 2) {
                 score += 3;
@@ -75,9 +76,8 @@ const CribbageAI = {
             if (card.rank === '5') score += 1;
         }
 
-        // Penalize giving good cards to opponent's crib
-        if (isDealer) {
-            // If we're not dealer, avoid giving high cards to dealer's crib
+        // Penalize giving good cards to the opponent's crib
+        if (cribIsOpponents) {
             for (const card of discard) {
                 if (card.rank === '5') score -= 2;
                 if (['10', 'J', 'Q', 'K'].includes(card.rank)) score -= 1;
@@ -90,7 +90,7 @@ const CribbageAI = {
     // ── Select card for pegging ───────────────────────────────
     // Returns the best card to play
     selectPeggingCard(hand, currentCount, playedCards) {
-        const playable = hand.filter(c => RANK_VALUES[c.rank] + currentCount <= MAX_PEG_COUNT);
+        const playable = hand.filter(c => pegValue(c.rank) + currentCount <= MAX_PEG_COUNT);
 
         if (playable.length === 0) return null; // Go
 
@@ -115,7 +115,7 @@ const CribbageAI = {
     // Higher score = better play
     scorePeggingPlay(card, currentCount, playedCards, hand) {
         let score = 0;
-        const newCount = currentCount + RANK_VALUES[card.rank];
+        const newCount = currentCount + pegValue(card.rank);
 
         // Check for 15 or 31
         if (newCount === 15 || newCount === 31) {
@@ -143,8 +143,8 @@ const CribbageAI = {
         // Check for run
         if (playedCards.length >= 2) {
             const lastN = playedCards.slice(-2).concat(card);
-            const sorted = [...lastN].sort((a, b) => RANK_VALUES[a.rank] - RANK_VALUES[b.rank]);
-            const isRun = sorted.every((c, i) => i === 0 || RANK_VALUES[c.rank] === RANK_VALUES[sorted[i - 1].rank] + 1);
+            const sorted = [...lastN].sort((a, b) => CribbageScore.order(a.rank) - CribbageScore.order(b.rank));
+            const isRun = sorted.every((c, i) => i === 0 || CribbageScore.order(c.rank) === CribbageScore.order(sorted[i - 1].rank) + 1);
             if (isRun) score += lastN.length;
         }
 
@@ -159,12 +159,12 @@ const CribbageAI = {
 
         // Prefer playing low cards when count is high
         if (newCount > 25) {
-            score -= RANK_VALUES[card.rank] / 10;
+            score -= pegValue(card.rank) / 10;
         }
 
         // Prefer playing cards that leave good options
         const remainingAfter = hand.filter(c => c !== card);
-        const playableAfter = remainingAfter.filter(c => RANK_VALUES[c.rank] + newCount <= MAX_PEG_COUNT);
+        const playableAfter = remainingAfter.filter(c => pegValue(c.rank) + newCount <= MAX_PEG_COUNT);
         score += playableAfter.length * 0.5;
 
         return score;
