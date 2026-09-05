@@ -38,3 +38,7 @@ opencode.json
 
 # Historian-tui corrections data (lives in its own repo)
 archive/_corrections.*
+
+# Where ci.yml checks the four game repos out for check:gamestamps. Only CI
+# makes this, but running those steps by hand should not offer to commit it.
+game-repos/

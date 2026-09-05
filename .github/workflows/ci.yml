@@ -34,6 +34,68 @@ jobs:
       - name: Check asset cache-busters
         run: npm run check:cachebust
 
+  # arcade/moonlight-drift/, george-boole/, solitaire_THLD/ and
+  # very-long-boards/ are copies of another repo's web/, and `make sync-<game>`
+  # recopies them verbatim, cache-buster stamps included. So a stale `?v=` that
+  # check:cachebust repairs here is reverted by the next sync, and the fix has
+  # to land in the game repo. This checks the stamps in those repos.
+  #
+  # It runs here, not there, because here is where they break. A stamp on
+  # ../shared/* goes stale the moment this repo takes a new adenosine bundle,
+  # and the game repo's own CI does not run then — nothing was pushed to it. It
+  # would fire whenever somebody next touched that game, which could be months,
+  # and "nobody noticed" is the entire failure mode. Failing on the commit that
+  # causes it is the point.
+  #
+  # The four checkouts are shallow and public, and nothing is installed: the
+  # check uses node builtins only, so there is no npm ci here.
+  game-stamps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      - name: Check out moonlight-drift
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/moonlight-drift
+          path: game-repos/moonlight-drift
+
+      - name: Check out george-boole
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/george-boole
+          path: game-repos/george-boole
+
+      - name: Check out texas-holdem-lava-dome
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/texas-holdem-lava-dome
+          path: game-repos/texas-holdem-lava-dome
+
+      # GAME_REPOS is also the assertion that the repos are there. Without it the
+      # check skips when it finds none, which is right for a clone that was never
+      # given them and wrong here — with it set, a checkout step that silently
+      # failed makes this job fail rather than pass over nothing.
+      #
+      # GAME_REPOS_OPTIONAL is the one hole, and it is spelled out rather than
+      # tolerated. very-long-boards is a private repo and a workflow's
+      # GITHUB_TOKEN reaches only the repo it runs in, so there is no checkout
+      # step for it above. The check names it in the log on every run and says it
+      # is not covered. Delete this line and restore the checkout once the repo is
+      # public, or once a token that can read it is available here.
+      #
+      # It is still covered where all four are on disk: `npm run check` on the dev
+      # box checks it like any other.
+      - name: Check the game repos' cache-busters
+        env:
+          GAME_REPOS: ${{ github.workspace }}/game-repos
+          GAME_REPOS_OPTIONAL: very-long-boards
+        run: npm run check:gamestamps
+
   test-python:
     runs-on: ubuntu-latest
     steps:

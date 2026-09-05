@@ -12,8 +12,9 @@ the deployed artifact is the git tree, so anything generated must be committed.
 
 There *is* npm and there *are* tests, despite what this line used to say:
 `npm ci` installs seven adenosine runtime deps, `npm test` runs lint plus the JS
-suite, `npm run check` adds the Python tests and the ware shell token contract,
-and `ci.yml` runs four jobs including a Playwright arcade smoke test.
+suite, `npm run check` adds the Python tests, the ware shell token contract and
+the game repos' cache-busters, and `ci.yml` runs five jobs including a Playwright
+arcade smoke test.
 `npm run build:adenosine` syncs bundles out of `node_modules/` and stamps cache
 busters — a copy step, not a compile step.
 
@@ -242,11 +243,18 @@ commands that access local files.
 ## Testing
 
 ```bash
-npm test          # lint + JS tests (fast)
-npm run check     # lint + Python + JS
-npm run test:py   # pytest suites under arcade/
-npm run test:js   # node test-*.js under arcade/*/tests/
+npm test               # lint + JS tests (fast)
+npm run check          # lint + Python + JS + both cache-buster checks
+npm run test:py        # pytest suites under arcade/
+npm run test:js        # node test-*.js under arcade/*/tests/
+npm run check:cachebust    # every ?v= on every page here
+npm run check:gamestamps   # every ?v= in the four game repos (see below)
 ```
+
+`check:gamestamps` needs those repos checked out; with none of them beside this
+one it says so and passes, rather than failing a clone that was never given
+them. CI sets `GAME_REPOS`, and with that set a missing repo is fatal instead —
+a check that quietly drops one is the failure it exists to catch.
 Run `npm run hooks:install` once per clone. It points `core.hooksPath` at
 `.githooks/`, whose `pre-commit` repairs stale `?v=` cache-buster stamps and
 stages them with the asset that moved. Without it nothing breaks — `lint` in
@@ -318,6 +326,32 @@ the stamp the hook had corrected here back to the game repo's older one.
 The fix belongs in the **source** repo's `web/index.html`, not in the copy —
 correcting it here only survives until the next sync. Run `check:cachebust`
 after any sync, and carry the digests it reports back upstream.
+
+`npm run check:gamestamps` checks those repos directly, and the `game-stamps` CI
+job runs it against fresh checkouts of all four. It resolves a reference in the
+game repo first and here only if it is not there, which splits the two ways a
+stamp rots: a game's own `css/` and `js/` go stale the ordinary way, when an edit
+forgets the bump, while `../shared/*` goes stale **with nothing in that repo
+touched at all**, because those files live here and are versioned here.
+
+That second kind is why the check runs in this repo rather than in the four. It
+is a commit *here* — taking a new adenosine bundle — that breaks them, and a
+check in a game repo would not run then, since nothing was pushed to it. It
+would fire whenever somebody next touched that game, and "nobody noticed" is the
+whole failure. Both kinds were real on 2026-09-05: seven stamps stale across the
+four repos, and then `adenosine-chat` 0.6.0 that same afternoon staled two more
+in three of them, between one commit and the next.
+
+When it fails, nothing here can fix it — the named repo needs its own commit.
+
+**CI covers three of the four.** `very-long-boards` is a private repo and a
+workflow's `GITHUB_TOKEN` reaches only the repo it runs in, so the job cannot
+check it out. That gap is declared in `ci.yml` as `GAME_REPOS_OPTIONAL` rather
+than tolerated: the check names the repo in its output on every run and says it
+is not covered, and an undeclared missing repo is still fatal. On the dev box,
+where all four are on disk, `npm run check` covers it like any other — so run
+that after syncing it. Restore the checkout step and drop the line once the repo
+is public or a token that can read it is available.
 
 Every other game under `arcade/` is authored in this repo as normal.
 
