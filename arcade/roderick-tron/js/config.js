@@ -96,9 +96,10 @@ const CONFIG = {
         URL: '../../music/jukebox/songs/'
              + encodeURIComponent('Jimmi - JIMMI - 04 Roderick Tron.ogg'),
         VOLUME: 0.38,
-        DUCKED: 0.12,      // while the FIN panel is up
         FADE_IN: 1.5,
-        DUCK_RAMP: 0.35,
+        // The run is over, so the track goes with it rather than looping on
+        // under the FIN panel with no game behind it.
+        FADE_OUT: 0.9,
     },
 
     // Particles

@@ -50,9 +50,10 @@
     // the page, a 937KB fetch may fail, and decodeAudioData may reject.
     const MUTE_KEY = 'roderickTronMuted';
     let musicReady = false;      // decoded and ready to start
-    let musicStarted = false;    // start() has run; the loop is playing
-    let musicWanted = false;     // a gesture asked for it, ready or not
+    let musicPlaying = false;    // a run is under way and the loop is running
+    let musicWanted = false;     // a run started before the decode finished
     let musicMuted = false;
+    let musicGen = 0;            // cancels a pending fade-out, see stopMusic()
 
     // ── Init ───────────────────────────────────────────────
     function init() {
@@ -99,7 +100,22 @@
                     fadeIn: CONFIG.MUSIC.FADE_IN,
                 },
             });
-            AdAudio.handleVisibility({ pauseMusic: true });
+            // NOT AdAudio.handleVisibility(). Its pause path calls
+            // musicSource.stop() without recording a playhead, and its resume
+            // path calls playMusic(0) — which is start(0), the top of the
+            // track. Every tab-away and back therefore replays the opening
+            // bars, which on a 50s loop is very audible. Measured: returning to
+            // the tab starts a second buffer source at offset 0.
+            //
+            // Ducking the gain instead leaves the one source running, so the
+            // playhead keeps advancing and coming back is seamless. The fix
+            // belongs upstream in @magmacrunch/adenosine-audio; this file
+            // cannot carry it, since arcade/shared/adenosine-*.js is generated
+            // by npm run build:adenosine and hand edits are destroyed.
+            document.addEventListener('visibilitychange', () => {
+                if (!musicReady) return;
+                AdAudio.setMusicMuted(document.hidden || musicMuted, 0.2);
+            });
             // Applied before playMusic(), which reads the muted flag to pick its
             // fade target — so a muted run starts silent rather than fading up
             // and being cut off.
@@ -112,27 +128,53 @@
     }
 
     /**
-     * Begin the loop. Browsers will not start an AudioContext without a user
-     * gesture, so this is only ever called from a keypress.
+     * Begin the loop, at the start of a run.
+     *
+     * Browsers will not let an AudioContext leave 'suspended' without a user
+     * gesture, so this is only ever reached from the keypress that starts the
+     * run — never from page load or a visibility change.
      */
     function startMusic() {
         musicWanted = true;
-        if (!musicReady || musicStarted) return;
-        musicStarted = true;
+        if (!musicReady) return;
+
+        // Cancel any fade-out still in flight from the previous run's end.
+        musicGen++;
+        AdAudio.setMusicVolume(CONFIG.MUSIC.VOLUME, 0.01);
+        if (musicPlaying) return;
+
+        musicPlaying = true;
         try {
-            AdAudio.playMusic();
+            AdAudio.playMusic(CONFIG.MUSIC.FADE_IN);
         } catch (e) {
-            musicStarted = false;
+            musicPlaying = false;
         }
     }
 
-    /** Pull the music down under the FIN panel, and back up on restart. */
-    function setMusicDucked(ducked) {
-        if (!musicReady) return;
-        AdAudio.setMusicVolume(
-            ducked ? CONFIG.MUSIC.DUCKED : CONFIG.MUSIC.VOLUME,
-            CONFIG.MUSIC.DUCK_RAMP
-        );
+    /**
+     * End the loop when the run ends.
+     *
+     * The track is 50 seconds and loops, so leaving it running under the FIN
+     * panel means it plays on indefinitely with no game behind it. It fades
+     * rather than cutting, and the generation counter is what stops a fast
+     * retry from being silenced by the previous run's pending stop.
+     */
+    function stopMusic() {
+        musicWanted = false;
+        if (!musicReady || !musicPlaying) return;
+        musicPlaying = false;
+
+        const gen = ++musicGen;
+        const fade = CONFIG.MUSIC.FADE_OUT;
+        AdAudio.setMusicVolume(0, fade);
+        setTimeout(() => {
+            if (gen !== musicGen) return;   // a new run began; leave it playing
+            try {
+                AdAudio.stopMusic();
+                // Restore the level, or playMusic() would fade up to zero next run.
+                AdAudio.setMusicVolume(CONFIG.MUSIC.VOLUME, 0.01);
+            } catch (e) { /* nothing to stop */ }
+        }, fade * 1000 + 80);
     }
 
     function loadMutePreference() {
@@ -307,7 +349,7 @@
         state = STATE.GAME_OVER;
         player.alive = false;
         hud.classList.remove('active');
-        setMusicDucked(true);
+        stopMusic();
 
         finalScore.textContent = score + 'm';
         finalDistance.textContent =
@@ -358,6 +400,7 @@
         player.reset();
         world.reset();
         entities.reset();
+        startMusic();
         // The Space that started the run is still queued as "just pressed" —
         // without this, Roderick jumps on his own first frame every time.
         Input.clearJustPressed();
@@ -365,7 +408,6 @@
         // Stand him on the opening roof rather than dropping him in from y=100.
         player.respawn(world.respawnSurface(CONFIG.PLAYER_X, CONFIG.PLAYER_W));
 
-        setMusicDucked(false);
         gameOverOverlay.classList.remove('active');
         titleScreen.classList.add('hidden');
         hud.classList.add('active');
@@ -454,8 +496,6 @@
 
             if (e.code !== 'Space') return;
             e.preventDefault();
-            // The gesture that starts a run is also the one that unlocks audio.
-            startMusic();
             if (state === STATE.TITLE) {
                 restartGame();
             } else if (state === STATE.GAME_OVER && newHighScoreIndex < 0) {

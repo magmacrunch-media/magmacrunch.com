@@ -599,7 +599,9 @@ console.log('\nmusic asset:');
     }
 
     ok(url.includes('%20'), 'spaces are percent-encoded for fetch()');
-    ok(CONFIG.MUSIC.DUCKED < CONFIG.MUSIC.VOLUME, 'the ducked level is quieter than the normal one');
+    ok(CONFIG.MUSIC.FADE_OUT > 0 && CONFIG.MUSIC.FADE_OUT < CONFIG.MUSIC.FADE_IN,
+       'fades out faster than it fades in, so the run ending reads as an ending');
+    ok(CONFIG.MUSIC.VOLUME > 0 && CONFIG.MUSIC.VOLUME <= 1, 'volume is a sane gain');
 }
 
 // ── Summary ───────────────────────────────────────────────────────────────────
