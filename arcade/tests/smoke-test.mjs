@@ -44,6 +44,7 @@ const GAMES = [
   { name: 'moonlight-drift', path: 'moonlight-drift' },
   { name: 'parchisi', path: 'parchisi', lobby: { name: '#nameInput', open: '#joinBtn', port: 8773, joined: '#roomCodeDisplay' } },
   { name: 'roderick-tron', path: 'roderick-tron' },
+  { name: 'jovian-humanitarian-conflict', path: 'jovian-humanitarian-conflict' },
   { name: 'scandinavian-stud', path: 'scandinavian-stud', lobby: { open: '#multiplayerBtn' } },
   { name: 'solitaire', path: 'solitaire' },
   { name: 'solitaire_THLD', path: 'solitaire_THLD' },

@@ -15,6 +15,7 @@
         { title: "Birds", artist: "Texas Hold'Em Lava Dome", file: "Texas Hold'Em Lava Dome - Birds - 01 Birds.ogg", duration: "4:47", hidden: false },
         { title: "A January Gathering", artist: "Bears Crossing", file: "Bears Crossing - A January Gathering.ogg", duration: "2:34", hidden: false },
         { title: "Neopolitan Mood", artist: "James R. McCoy", file: "James R. McCoy - Neopolitan Mood.ogg", duration: "3:16", hidden: false },
+        { title: "The Jovian Humanitarian Conflict", artist: "Jimmi", file: "Jimmi - JIMMI - 02 The Jovian Humanitarian Conflict.ogg", duration: "2:15", hidden: false },
         { title: "makemecookies! x4.", artist: "Jimmi", file: "Jimmi - JIMMI - 07 makemecookies! x4.ogg", duration: "0:51", hidden: false },
         { title: "Millstone Woods May 2018", artist: "Dag Henderson", file: "Dag Henderson - Millstone Woods May 2018.ogg", duration: "3:38", hidden: false },
         { title: "The End", artist: "Jon McCoy", file: "Jon McCoy - The End.ogg", duration: "3:26", hidden: false },

@@ -36,6 +36,7 @@ Change the game in its own repo, sync, and commit the result. The historical
 | cribbage | card game (multiplayer) | complete |
 | fifteen-puzzle | tile puzzle | complete |
 | george-boole | logic puzzle | complete |
+| jovian-humanitarian-conflict | on-rails shooter | complete |
 | klotski | tile puzzle | complete |
 | moonlight-drift | side-scroller | complete |
 | parchisi | board game (multiplayer) | complete |

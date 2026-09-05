@@ -281,7 +281,7 @@ function parseArcadeGames() {
     'solitaire', 'cribbage', 'scandinavian-stud', 'solitaire_THLD', 'tarot',
     '2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'tetris',
     'moonlight-drift', 'very-long-boards', 'roderick-tron', 'SORRY',
-    'makemecookies',
+    'makemecookies', 'jovian-humanitarian-conflict',
     'aggravation'
   ];
 
@@ -289,7 +289,8 @@ function parseArcadeGames() {
     board: ['chess', 'checkers', 'backgammon', 'parchisi', 'chinese-checkers', 'aggravation'],
     card: ['solitaire', 'cribbage', 'scandinavian-stud', 'solitaire_THLD', 'tarot'],
     puzzle: ['2^N', 'george-boole', 'fifteen-puzzle', 'threes', 'klotski', 'tetris'],
-    action: ['moonlight-drift', 'very-long-boards', 'roderick-tron', 'makemecookies'],
+    action: ['moonlight-drift', 'very-long-boards', 'roderick-tron', 'makemecookies',
+             'jovian-humanitarian-conflict'],
     other: ['SORRY']
   };
 
