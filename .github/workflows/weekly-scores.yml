@@ -1,8 +1,22 @@
 name: Weekly High Scores
 
+# Manual only. The scheduled run of this job belongs to the Pi now
+# (arcade/scripts/bot-weekly-scores.sh, Mondays 06:00 UTC), and the schedule
+# trigger that used to live here — cron "0 12 * * 0", Sundays — was left behind
+# when the rest of the bots migrated. It was the only migrated workflow that
+# still had one. Once the Pi bots were repaired on 2026-09-05 that meant the
+# leaderboard would be built twice a week by two different machines, posting
+# duplicate Discussions and Discord messages and making two "Update score data"
+# commits.
+#
+# It had also been failing since 2026-08-08: the Discord step 403s on this
+# repo's DISCORD_WEBHOOK_URL secret, which is stale. The Pi holds a different,
+# still-valid copy of that webhook, so the Pi's alerting is unaffected — only
+# this workflow was broken. The secret is left in place; nothing here uses it
+# on a schedule any more.
+#
+# workflow_dispatch is kept so the leaderboard can still be rebuilt by hand.
 on:
-  schedule:
-    - cron: "0 12 * * 0"
   workflow_dispatch:
 
 jobs:
