@@ -39,6 +39,14 @@ export const GAMES = {
       'There is no second version yet -- a terminal one is planned -- so unlike\n' +
       'the other entries here, this sync is the only thing crossing repos today.',
   },
+  'makemecookies': {
+    repo: 'makemecookies',
+    other:
+      "the rules' headless test suite, which the game\n" +
+      'is arranged around -- js/stations.js touches no DOM so the real shipped\n' +
+      'modules can be loaded and run without a browser. There is no second\n' +
+      'version yet; the repo exists so that one would have somewhere to go.',
+  },
   'very-long-boards': {
     repo: 'very-long-boards',
     other:

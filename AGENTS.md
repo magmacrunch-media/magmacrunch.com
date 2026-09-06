@@ -324,14 +324,21 @@ Two things worth knowing before this looks broken:
   `.catch(() => {})` calls are why this survived: a blocked or undecodable track
   reported nothing at all, to the player or to anyone testing.
 
-### Four arcade folders are generated — never edit them here
+### Six arcade folders are generated — never edit them here
 
-`arcade/moonlight-drift/`, `arcade/george-boole/`, `arcade/solitaire_THLD/` and
-`arcade/very-long-boards/` are copies. Each game lives in its own repo holding
-more than one version of itself, and the folder here is produced from that
-repo's `web/` by `make sync-<repo>`, which **deletes the folder and recopies
-it**. Anything edited here is destroyed the next time anyone syncs, with no
-warning and no conflict.
+The folders in the table below are copies. Each game lives in its own repo, and
+the folder here is produced from that repo's `web/` by `make sync-<repo>`, which
+**deletes the folder and recopies it**. Anything edited here is destroyed the
+next time anyone syncs, with no warning and no conflict.
+
+`scripts/games.mjs` is the list with teeth — it is what lets the sync delete a
+folder before recopying it, so a folder absent from it is not generated and one
+present in it is. Check there rather than counting this table.
+
+Most of these repos hold a second version of the game, which is the usual reason
+to have one. Two do not: `jovian-humanitarian-conflict` and `makemecookies` are
+browser-only today, and their repos exist so that a second version would have
+somewhere to go, and so the rules have a home that is not inside a website.
 
 | Folder here | Source repo | Target | Other version there |
 |---|---|---|---|
@@ -339,14 +346,16 @@ warning and no conflict.
 | `arcade/george-boole/` | `george-boole` | `make sync-george-boole` | Wii, terminal |
 | `arcade/solitaire_THLD/` | `texas-holdem-lava-dome` | `make sync-texas-holdem-lava-dome` | Wii, terminal |
 | `arcade/very-long-boards/` | `very-long-boards` | `make sync-very-long-boards` | Godot desktop |
+| `arcade/jovian-humanitarian-conflict/` | `jovian-humanitarian-conflict` | `make sync-jovian-humanitarian-conflict` | none yet |
+| `arcade/makemecookies/` | `makemecookies` | `make sync-makemecookies` | none yet |
 
 To change one of those games: edit `../<repo>/web/`, run its target here, commit
 the result. Each folder also carries a `GENERATED.md` saying the same thing, so
 the rule is visible from inside the copy as well as from here.
 
 **`very-long-boards` is the odd one out and its commits should say so.** The
-other three carry ports of one game, so a rules change is expected in every
-version. Its Godot version is a *different game* — a timed course rather than an
+other repos that hold two versions carry ports of one game, so a rules change is
+expected in every version. Its Godot version is a *different game* — a timed course rather than an
 endless run for score — and that repo's `AGENTS.md` says plainly that a change to
 one is not owed to the other.
 
