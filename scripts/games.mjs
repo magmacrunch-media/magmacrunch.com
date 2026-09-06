@@ -1,5 +1,5 @@
 /**
- * The four arcade folders that are generated from another repo, and where to
+ * The five arcade folders that are generated from another repo, and where to
  * find that repo.
  *
  * Extracted from sync-game.mjs so check-game-stamps.mjs works from the same
@@ -32,6 +32,13 @@ const WII_PORT =
 export const GAMES = {
   'george-boole': { repo: 'george-boole', other: WII_PORT },
   'moonlight-drift': { repo: 'moonlight-drift', other: WII_PORT },
+  'jovian-humanitarian-conflict': {
+    repo: 'jovian-humanitarian-conflict',
+    other:
+      "the game's simulation tests and its own AGENTS.md.\n" +
+      'There is no second version yet -- a terminal one is planned -- so unlike\n' +
+      'the other entries here, this sync is the only thing crossing repos today.',
+  },
   'very-long-boards': {
     repo: 'very-long-boards',
     other:
