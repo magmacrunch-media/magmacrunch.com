@@ -55,19 +55,6 @@
     };
     const backColorVar = BACK_COLOR_VAR[C.backColor] || 'var(--cyan)';
 
-    const ACCENT_RGB = {
-        green:   '57,255,110',
-        cyan:    '0,245,255',
-        rose:    '255,61,110',
-        yellow:  '255,224,58',
-        orange:  '255,124,31',
-        purple:  '196,95,255',
-        slate:   '136,153,170',
-        blue:    '70,120,255',
-        magenta: '255,45,120',
-        'fm-brand':    '168,90,24',
-    };
-    const accentRgb = ACCENT_RGB[accent] || '57,255,110';
     const accentVar = `var(--${accent})`;
 
     // ── 1. INJECT PAGE STYLES ──

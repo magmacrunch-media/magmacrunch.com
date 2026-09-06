@@ -16,12 +16,11 @@
  * Falls back to localStorage-cached count when Pi is unreachable.
  */
 
-var CounterClient = (function () {
+window.CounterClient = (function () {
     'use strict';
 
     var LS_KEY = 'mc_counter_cache';
     var INCREMENT_KEY = 'mc_counter_incremented';
-    var SESSION_KEY = 'mc_counter_session';
 
     // ── Host detection ──────────────────────────────────────────────────────
 
@@ -42,7 +41,6 @@ var CounterClient = (function () {
     var _connected = false;
     var _displayCallback = null;
     var _reconnectTimer = null;
-    var _currentCount = 0;
 
     // ── localStorage helpers ────────────────────────────────────────────────
 
@@ -105,7 +103,6 @@ var CounterClient = (function () {
                 return;
             }
             if (data.type === 'count' && typeof data.count === 'number') {
-                _currentCount = data.count;
                 _lsSetCount(data.count);
                 if (_displayCallback) _displayCallback(data.count);
             }

@@ -7,8 +7,6 @@
 
     var MB_ID = config.MB_ID;
     var ENTITY_MAP = window.__ENTITY_MAP || {};
-    var accent = config.accent || 'cyan';
-    var API = 'https://musicbrainz.org/ws/2/label/' + MB_ID + '?fmt=json&inc=artist-rels';
     var contentEl = document.getElementById('content');
     var idsEl = document.getElementById('contrib-ids');
 
@@ -50,10 +48,6 @@
             '</div>';
     }
 
-    function renderSimpleEntry(target, type) {
-        var link = archiveLink(target.id, target.name, type || 'artist');
-        return '<li>' + link + '</li>';
-    }
 
     function renderStaticLabelEntry(item) {
         var dates = item.dates ? esc(item.dates) : '';
@@ -197,7 +191,7 @@
         var personnelEntries = groupByArtist(personnelRels);
         sortEntries(personnelEntries);
         if (personnelEntries.length > 0) {
-            var items = personnelEntries.map(function(e) {
+            const items = personnelEntries.map(function(e) {
                 return renderEntry(e.target, e.roles, e.begin, e.end, e.ended, 'artist');
             }).join('');
             html += renderSection('personnel', items);
@@ -207,7 +201,7 @@
         var signedEntries = groupByArtist(signedRels);
         sortEntries(signedEntries);
         if (signedEntries.length > 0) {
-            var items = signedEntries.map(function(e) {
+            const items = signedEntries.map(function(e) {
                 return renderEntry(e.target, e.roles, e.begin, e.end, e.ended, 'artist');
             }).join('');
             html += renderSection('signed artists', items);
@@ -218,7 +212,7 @@
             return r['target-type'] === 'label' && r.label && r.type === 'label ownership' && r.direction === 'forward';
         });
         if (ownedLabels.length > 0) {
-            var items = ownedLabels.map(function(r) {
+            const items = ownedLabels.map(function(r) {
                 return '<li>' + archiveLink(r.label.id, r.label.name, 'label') + '</li>';
             }).join('');
             html += renderSection('owns', '<ul class="simple-list">' + items + '</ul>');
@@ -239,7 +233,7 @@
             }
         });
         if (ownedByAll.length > 0) {
-            var items = ownedByAll.map(function(e) {
+            const items = ownedByAll.map(function(e) {
                 return '<li>' + archiveLink(e.id, e.name, e.type) + '</li>';
             }).join('');
             html += renderSection('owned by', '<ul class="simple-list">' + items + '</ul>');
@@ -249,7 +243,7 @@
             return r['target-type'] === 'label' && r.label && r.type === 'label distribution';
         });
         if (distributedBy.length > 0) {
-            var items = distributedBy.map(function(r) {
+            const items = distributedBy.map(function(r) {
                 return '<li>' + archiveLink(r.label.id, r.label.name, 'label') + '</li>';
             }).join('');
             html += renderSection('distributed by', '<ul class="simple-list">' + items + '</ul>');
@@ -260,7 +254,7 @@
                 r.type !== 'label ownership' && r.type !== 'label distribution';
         });
         if (otherLabelRels.length > 0) {
-            var items = otherLabelRels.map(function(r) {
+            const items = otherLabelRels.map(function(r) {
                 return '<li>' + archiveLink(r.label.id, r.label.name, 'label') + ' <span class="credit-sub">(' + esc(r.type) + ')</span></li>';
             }).join('');
             html += renderSection('related labels', '<ul class="simple-list">' + items + '</ul>');
@@ -285,7 +279,7 @@
             eventEntries.sort(function(a, b) {
                 return (a.begin || b.event['life-span']?.begin || 'zzzz').localeCompare(b.begin || a.event['life-span']?.begin || 'zzzz');
             });
-            var items = eventEntries.map(function(e) {
+            const items = eventEntries.map(function(e) {
                 var eventDate = e.event['life-span']?.begin || e.begin;
                 return '<li><a href="https://musicbrainz.org/event/' + esc(e.event.id) + '" target="_blank" rel="noopener">' + esc(e.event.name) + '</a>' +
                     (eventDate ? ' <span class="credit-sub">' + esc(formatDate(eventDate)) + '</span>' : '') +
@@ -319,7 +313,7 @@
             return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
         });
         if (placeEntries.length > 0) {
-            var items = placeEntries.map(function(e) {
+            const items = placeEntries.map(function(e) {
                 return renderEntry(e.place, e.roles, e.begin, e.end, e.ended, 'place');
             }).join('');
             html += renderSection('associated places', items);
@@ -345,7 +339,7 @@
                 return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
             });
             if (releaseEntries.length > 0) {
-                var items = releaseEntries.map(function(e) {
+                const items = releaseEntries.map(function(e) {
                     return '<li>' + creditLink(e.release, 'release') + (e.begin ? ' <span class="credit-sub">' + esc(formatDate(e.begin)) + '</span>' : '') + '</li>';
                 }).join('');
                 html += renderSection('releases', '<ul class="simple-list">' + items + '</ul>');
@@ -370,7 +364,7 @@
                 mfgEntries.sort(function(a, b) {
                     return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
                 });
-                var items = mfgEntries.map(function(e) {
+                const items = mfgEntries.map(function(e) {
                     return '<li>' + creditLink(e.release, 'release') + (e.begin ? ' <span class="credit-sub">' + esc(formatDate(e.begin)) + '</span>' : '') + '</li>';
                 }).join('');
                 html += renderSection('manufactured', '<ul class="simple-list">' + items + '</ul>');
@@ -401,7 +395,7 @@
                 return (a.begin || 'zzzz').localeCompare(b.begin || 'zzzz');
             });
             if (workEntries.length > 0) {
-                var items = workEntries.map(function(e) {
+                const items = workEntries.map(function(e) {
                     var typeStr = e.types.length > 0 ? ' <span class="credit-sub">' + e.types.map(esc).join(', ') + '</span>' : '';
                     return '<li>' + creditLink(e.work, 'work') + typeStr + (e.begin ? ' <span class="credit-sub">' + esc(formatDate(e.begin)) + '</span>' : '') + '</li>';
                 }).join('');

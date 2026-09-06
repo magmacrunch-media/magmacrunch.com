@@ -55,26 +55,6 @@
     };
     const backColorVar = BACK_COLOR_VAR[C.backColor] || 'var(--cyan)';
 
-    const ACCENT_RGB = {
-        green:   '57,255,110',
-        cyan:    '0,245,255',
-        rose:    '255,61,110',
-        yellow:  '255,224,58',
-        orange:  '255,124,31',
-        purple:  '196,95,255',
-        slate:   '136,153,170',
-        blue:    '70,120,255',
-        magenta: '255,45,120',
-        'mh-coral':    '200,120,120',
-        'fm-rose':     '192,32,112',
-        'ih-brand':    '112,144,184',
-        'mg-accent':   '208,72,120',
-        'gs-brand':    '120,136,168',
-        'cg-surface':  '160,144,128',
-        'tc-green':    '80,120,64',
-        'tm-brand':    '74,104,88',
-    };
-    const accentRgb = ACCENT_RGB[accent] || '70,120,255';
     const accentVar = `var(--${accent})`;
 
     // ── 1. INJECT PAGE STYLES ──

@@ -9,8 +9,6 @@
     var TMDB_ID = config.TMDB_ID;
     var ARCHIVE_LINKS = config.ARCHIVE_LINKS || {};
     var ENTITY_MAP = window.__ENTITY_MAP || {};
-    var accent = config.accent || 'cyan';
-    var API = 'https://musicbrainz.org/ws/2/artist/' + MB_ID + '?fmt=json&inc=artist-rels';
     var contentEl = document.getElementById('content');
     var idsEl = document.getElementById('contrib-ids');
 
@@ -393,7 +391,7 @@
 
         /* Render crew departments */
         depts.forEach(function(dept) {
-            var items = crewByDept[dept].map(function(c) {
+            const items = crewByDept[dept].map(function(c) {
                 var year = c.release_date ? c.release_date.split('-')[0] : '';
                 return { html: tmdbFilmLink(c), year: year, roles: [c.job] };
             });
@@ -403,7 +401,7 @@
 
         /* Render acting */
         if (cast.length > 0) {
-            var items = cast.map(function(c) {
+            const items = cast.map(function(c) {
                 var year = c.release_date ? c.release_date.split('-')[0] : '';
                 var role = c.character || 'Self';
                 return { html: tmdbFilmLink(c), year: year, roles: [role] };
@@ -516,7 +514,7 @@
         });
 
         if (allBands.length > 0) {
-            var items = allBands.map(function(g) {
+            const items = allBands.map(function(g) {
                 var m = mergeRels(g.rels);
                 return renderEntry(g.artist, m.attributes, m.begin, m.end, m.ended, g.role);
             }).join('');
@@ -525,7 +523,7 @@
 
         /* Solo projects */
         if (aliases.length > 0) {
-            var items = aliases.map(function(r) {
+            const items = aliases.map(function(r) {
                 return renderSimpleEntry(r.artist);
             }).join('');
             html += renderSection('solo projects', '<ul class="simple-list">' + items + '</ul>');
@@ -690,7 +688,7 @@
 
         /* MusicBrainz attribution */
         if (!window.__mcPageAborted) {
-          var footer = document.querySelector('footer');
+          const footer = document.querySelector('footer');
           if (footer) {
             footer.insertAdjacentHTML('beforeend',
                 '<div class="mb-data-attribution">' +

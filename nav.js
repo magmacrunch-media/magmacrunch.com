@@ -582,6 +582,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             if (t.includes('MathJax') && t.includes('tex')) {
                 try {
                     const valueStr = t.replace(/MathJax\s*=\s*/, '');
+                    // Deliberate. The SPA swaps pages without a reload, so a fetched
+                    // page inline <script> has to be executed here or its config never
+                    // applies -- this is the feature, not an oversight. The content is
+                    // our own pages rather than anything a visitor supplies.
+                    // eslint-disable-next-line no-new-func
                     const cfg = new Function('return (' + valueStr + ')')();
                     if (cfg && cfg.tex && cfg.tex.macros && MathJax.config && MathJax.config.tex) {
                         if (!MathJax.config.tex.macros) MathJax.config.tex.macros = {};
@@ -597,6 +602,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 if (window[varName] !== undefined) {
                     try { delete window[varName]; } catch {}
                 }
+                // Deliberate. The SPA swaps pages without a reload, so a fetched
+                // page inline <script> has to be executed here or its config never
+                // applies -- this is the feature, not an oversight. The content is
+                // our own pages rather than anything a visitor supplies.
+                // eslint-disable-next-line no-new-func
                 try { window[varName] = new Function('return (' + valueStr + ')')(); } catch (e) { console.warn('SPA config:', e); }
             }
         }
@@ -615,6 +625,11 @@ document.querySelectorAll('nav a[href]').forEach(a => {
         }
 
         for (const t of inits) {
+            // Deliberate. The SPA swaps pages without a reload, so a fetched
+            // page inline <script> has to be executed here or its config never
+            // applies -- this is the feature, not an oversight. The content is
+            // our own pages rather than anything a visitor supplies.
+            // eslint-disable-next-line no-new-func
             try { new Function(t)(); } catch (e) { console.warn('SPA init:', e); }
         }
     }

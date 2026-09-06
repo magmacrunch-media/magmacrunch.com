@@ -61,7 +61,6 @@
         for (const item of index) {
             /* Check if ALL words appear in at least one field */
             let totalScore = 0;
-            let allFieldsMatch = true;
             const matches = [];
 
             for (const [key, weight] of Object.entries(FIELD_WEIGHTS)) {

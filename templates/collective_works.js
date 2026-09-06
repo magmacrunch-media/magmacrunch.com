@@ -188,7 +188,6 @@
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
     let _cache = null;
-    let apiCallsMade = false;
     async function loadCache() {
         if (!C.slug) return;
         try {
@@ -198,7 +197,6 @@
     }
     async function cached(path, cacheData) {
         if (cacheData !== undefined) return cacheData;
-        apiCallsMade = true;
         return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
 

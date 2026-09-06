@@ -40,40 +40,7 @@
         personnel:  'c-personnel',
     };
 
-    const BACK_COLOR_VAR = {
-        'c-green':   'var(--green)',
-        'c-cyan':    'var(--cyan)',
-        'c-rose':    'var(--rose)',
-        'c-yellow':  'var(--yellow)',
-        'c-orange':  'var(--orange)',
-        'c-purple':  'var(--purple)',
-        'c-slate':   'var(--slate)',
-        'c-blue':    'var(--blue)',
-        'c-magenta': 'var(--magenta)',
-        'c-darkgreen': 'var(--darkgreen)',
-    };
-    const backColorVar = BACK_COLOR_VAR[C.backColor] || 'var(--cyan)';
 
-    const ACCENT_RGB = {
-        green:   '57,255,110',
-        cyan:    '0,245,255',
-        rose:    '255,61,110',
-        yellow:  '255,224,58',
-        orange:  '255,124,31',
-        purple:  '196,95,255',
-        slate:   '136,153,170',
-        blue:    '70,120,255',
-        magenta: '255,45,120',
-        'mh-gold':     '212,160,96',
-        'fm-amber':    '232,160,64',
-        'ih-cta':      '168,104,72',
-        'mg-heading':  '232,192,96',
-        'gs-green':    '96,120,80',
-        'cg-cta':      '192,120,56',
-        'tc-bright':   '232,200,112',
-        'tm-warm':     '212,184,112',
-    };
-    const accentRgb = ACCENT_RGB[accent] || '255,224,58';
     const accentVar = `var(--${accent})`;
 
     // ── 1. INJECT PAGE STYLES ──
@@ -191,7 +158,6 @@
         return '';
     };
 
-    const cleanAttr   = a => a.includes(':') ? a : a.replace(/\s*\([^)]+\)/, '');
     const formatAttrs = a => a?.length ? ` (${a.join(', ')})` : '';
 
     (async () => {

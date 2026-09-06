@@ -47,40 +47,7 @@
         personnel:  'c-personnel',
     };
 
-    const BACK_COLOR_VAR = {
-        'c-green':     'var(--green)',
-        'c-cyan':      'var(--cyan)',
-        'c-rose':      'var(--rose)',
-        'c-yellow':    'var(--yellow)',
-        'c-orange':    'var(--orange)',
-        'c-purple':    'var(--purple)',
-        'c-slate':     'var(--slate)',
-        'c-blue':      'var(--blue)',
-        'c-magenta':   'var(--magenta)',
-        'c-darkgreen': 'var(--darkgreen)',
-    };
-    const backColorVar = BACK_COLOR_VAR[C.backColor] || 'var(--cyan)';
 
-    const ACCENT_RGB = {
-        green:   '57,255,110',
-        cyan:    '0,245,255',
-        rose:    '255,61,110',
-        yellow:  '255,224,58',
-        orange:  '255,124,31',
-        purple:  '196,95,255',
-        slate:   '136,153,170',
-        blue:    '70,120,255',
-        magenta: '255,45,120',
-        'mh-brand':    '104,120,160',
-        'fm-sky':      '96,128,232',
-        'ih-accent':   '128,184,200',
-        'mg-cream':    '240,128,160',
-        'gs-accent':   '192,120,56',
-        'cg-nature':   '96,120,80',
-        'tc-amber':    '184,120,40',
-        'tm-accent':   '192,120,72',
-    };
-    const accentRgb = ACCENT_RGB[accent] || '0,245,255';
     const accentVar = `var(--${accent})`;
 
     // ── 1. INJECT PAGE STYLES ──
@@ -156,11 +123,6 @@
             const r = await fetch(d + 'archive/_cache/places/' + placeId + '.json');
             if (r.ok) { const j = await r.json(); if (j.fetchedAt) _cache = j; }
         } catch {}
-    }
-    async function cached(path, cacheData) {
-        if (cacheData !== undefined) return cacheData;
-        apiCallsMade = true;
-        return fetchWithRetry('https://musicbrainz.org/ws/2/' + path);
     }
 
     function esc(str) {
@@ -244,7 +206,7 @@
             let completed = 0, failed = 0;
 
             for (let i = 0; i < unique.length; i++) {
-                const { id: recId, title: fallbackTitle, rel: placeRel } = unique[i];
+                const { id: recId, title: fallbackTitle } = unique[i];
                 statusEl.textContent = `loading details… ${completed + 1} of ${unique.length}${failed ? ` (${failed} failed)` : ''}`;
 
                 try {
