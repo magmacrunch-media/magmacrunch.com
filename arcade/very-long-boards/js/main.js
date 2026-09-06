@@ -70,7 +70,7 @@ function updateIdleWorld(dt) {
 
 function gameLogic() {
     frame++;
-    const dt = sceneObj.engine.getDeltaTime() / 1000;
+    const dt = Math.min(sceneObj.engine.getDeltaTime() / 1000, CONFIG.MAX_FRAME);
     const inp = consumeInput();
     if (menuNavCooldown > 0) menuNavCooldown -= dt;
 

@@ -16,8 +16,11 @@ window.createTerrain = function(scene) {
                Math.sin(z * 0.008) * 0.04;
     }
 
+    // The constant descent comes from CONFIG.GRADE, which is also what the
+    // terminal speeds in config.js are derived from - so the road and the
+    // physics cannot disagree about how steep this hill is.
     function hillAt(z) {
-        return -z * 0.06 +
+        return -z * CONFIG.GRADE +
                Math.sin(z * 0.004) * 4 +
                Math.sin(z * 0.01) * 1.5;
     }

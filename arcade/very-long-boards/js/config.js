@@ -1,23 +1,57 @@
 const CONFIG = {
     TURN_SPEED: 4.0,
-    MAX_SPEED: 18,
-    FRICTION: 0.997,
-    ACCELERATION: 0.03,
-    BRAKE_FORCE: 0.3,
-    CURVE_PUSH: 0.45,
-    HILL_DOWN_BOOST: 0.06,
-    SPEED_DISPLAY_FACTOR: 5,
 
-    KICK_ACCEL: 0.08,
-    KICK_DURATION: 60,
+    // ── The road ──
+    // The course descends at a constant grade with rolling sine terms over it.
+    // terrain.js builds hillAt() from this, and the terminal speeds below are
+    // derived from the same number, so making the road steeper really does make
+    // the ride faster instead of only looking different.
+    GRADE: 0.06,
 
-    STABILITY_DECAY: 0.4,
+    // ── Ride physics ──
+    //
+    // You never reach a top speed here; you settle at one. Each frame the hill
+    // adds GRADE * SLOPE_ACCEL and drag takes back a fraction DRAG of whatever
+    // you already have, so speed converges on grade*accel/drag and stays there.
+    // SPEED_RAIL is a safety clamp against a pathological slope, NOT a target -
+    // nothing in normal play comes near it.
+    //
+    // This used to be a cap of 18 * multipliers * 0.25, i.e. 4.5 for the
+    // baseline pairing, against a settling speed of 1.2. The cap never bound, so
+    // scaling it by a rider's speedMult changed nothing about how fast that
+    // rider went. SPD is bought with DRAG now, which is the term that actually
+    // decides the answer.
+    // Longest frame the physics will integrate in one go, in seconds. Every
+    // per-frame term scales by dt*60, so an unbounded frame scales them without
+    // bound: a tab left in the background and pumped once produced a 28-SECOND
+    // frame here, and pow(1 - DRAG, 1684) shed the rider's entire speed between
+    // one render and the next. A GC hitch or a slow asset load is the same event
+    // three orders of magnitude smaller, and still visible. Three frames' worth
+    // is enough to ride out a stutter and short enough that the worst case is a
+    // barely perceptible skip.
+    MAX_FRAME: 0.05,
+
+    SLOPE_ACCEL: 0.06,
+    DRAG: 0.003,
+    BRAKE_DRAG: 0.03,
+    KICK_SPEED: 0.15,
+    SPEED_RAIL: 2.6,
+
+    // World units per hour-ish, for the HUD. Chosen so the baseline pairing
+    // reads about 45 and the fastest about 68, which is what a longboard on a
+    // New Hampshire hill actually does. It read "5" before.
+    SPEED_DISPLAY_FACTOR: 38,
+
+    // Stability drains while you hold a line and refills when you carve.
+    // DECAY is per frame at 60fps, before the (0.2 + speedFactor) term and the
+    // rider's own stabilityMult. Halved from 0.4 when speedFactor stopped being
+    // measured against each rider's own ceiling - see player.js - which raised
+    // the term it multiplies and would otherwise have doubled everyone's drain.
+    STABILITY_DECAY: 0.195,
     STABILITY_GAIN: 6.0,
     STABILITY_MAX: 100,
     STABILITY_WOBBLE_AT: 55,
-    STABILITY_DANGER_AT: 25,
     STABILITY_BAIL_AT: 0,
-    WOBBLE_INTENSITY: 0.3,
 
     COUNTDOWN_SECS: 3,
 
@@ -118,3 +152,30 @@ const BOARDS = {
         gripColor: [0.25, 0.25, 0.2],
     },
 };
+
+// ═══════════════════════════════════════════════
+//  DERIVED
+// ═══════════════════════════════════════════════
+
+/**
+ * Where a pairing settles: the hill's acceleration against its own drag.
+ *
+ * Uses the road's constant grade and ignores the sine terms rolling over it, so
+ * the real speed breathes a little either side of this. It is a yardstick, not a
+ * promise.
+ */
+CONFIG.terminalSpeedFor = function (speedMult) {
+    return (CONFIG.GRADE * CONFIG.SLOPE_ACCEL) / (CONFIG.DRAG / speedMult);
+};
+
+/**
+ * The fastest pairing in the game, and the yardstick every "how fast is this"
+ * question is measured against - the stability drain, and the audio mix.
+ *
+ * Derived rather than written down, so adding a quicker board re-scales
+ * everything that reads it instead of quietly pinning them all at full.
+ */
+CONFIG.REFERENCE_SPEED = CONFIG.terminalSpeedFor(
+    Math.max.apply(null, Object.keys(CHARACTERS).map((k) => CHARACTERS[k].speedMult)) *
+    Math.max.apply(null, Object.keys(BOARDS).map((k) => BOARDS[k].speedMult))
+);

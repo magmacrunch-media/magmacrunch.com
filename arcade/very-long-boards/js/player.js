@@ -23,10 +23,14 @@ window.player = {
     groundY: 0, kicked: false,
     tricking: false, trickTimer: 0, trickCooldown: 0,
 
-    // Derived each frame by updatePlayer and read by the audio mix. Kept here
-    // rather than recomputed by whoever needs them, so the speed the wheels are
-    // pitched by is exactly the speed the physics is clamping to.
-    maxSpeed: 1, braking: false
+    // Derived each frame by updatePlayer and read by the audio mix and the HUD.
+    // Kept here rather than recomputed by whoever needs them.
+    //
+    // speedFactor is how fast you are going against CONFIG.REFERENCE_SPEED - the
+    // fastest pairing in the game - and NOT against your own ceiling. Everything
+    // that asks "how fast is this rider going" must use it; see the note on the
+    // stability drain below for what happens otherwise.
+    maxSpeed: 1, speedFactor: 0, braking: false
 };
 
 window.playerMesh = null;
@@ -155,6 +159,7 @@ window.resetPlayer = function() {
     player.bailing = false;
     player.bailTimer = 0;
     player.groundY = 0;
+    player.speedFactor = 0;
     player.kicked = false;
     player.tricking = false;
     player.trickTimer = 0;
@@ -166,11 +171,17 @@ window.resetPlayer = function() {
 window.updatePlayer = function(input, terrain, dt) {
     const char = CHARACTERS[currentCharacter];
     const board = BOARDS[currentBoard] || BOARDS['standard'];
-    const maxSpd = CONFIG.MAX_SPEED * char.speedMult * board.speedMult * 0.25;
-    player.maxSpeed = maxSpd;
+    const speedMult = char.speedMult * board.speedMult;
     const handling = CONFIG.TURN_SPEED * char.handlingMult * board.handlingMult * 0.15;
     const stabMult = char.stabilityMult * board.stabilityMult;
     const dtScale = dt * 60;
+
+    // SPD buys a lower drag coefficient, so a fast rider genuinely settles at a
+    // higher speed instead of carrying a ceiling he never touches. The ceiling
+    // is a safety rail; nothing in normal play reaches it.
+    const drag = CONFIG.DRAG / speedMult;
+    const maxSpd = CONFIG.SPEED_RAIL * speedMult;
+    player.maxSpeed = maxSpd;
 
     if (player.bailing) {
         player.bailTimer -= dtScale;
@@ -183,7 +194,7 @@ window.updatePlayer = function(input, terrain, dt) {
     if (!player.kicked) {
         if (input.trick) {
             player.kicked = true;
-            player.speed = 0.15;
+            player.speed = CONFIG.KICK_SPEED;
             playKickSound();
         }
         player.groundY = terrain ? terrain.hillAt(0) : 0;
@@ -191,13 +202,13 @@ window.updatePlayer = function(input, terrain, dt) {
     }
 
     const slope = terrain ? (terrain.hillAt(player.distance + 3) - terrain.hillAt(player.distance)) / 3 : 0;
-    const slopeAccel = -slope * 0.06;
+    const slopeAccel = -slope * CONFIG.SLOPE_ACCEL;
     player.speed += slopeAccel * dtScale;
-    player.speed *= Math.pow(0.997, dtScale);
+    player.speed *= Math.pow(1 - drag, dtScale);
 
     player.braking = Boolean(input.brake);
     if (input.brake) {
-        player.speed *= Math.pow(0.97, dtScale);
+        player.speed *= Math.pow(1 - CONFIG.BRAKE_DRAG, dtScale);
     }
 
     if (player.tricking) {
@@ -232,13 +243,27 @@ window.updatePlayer = function(input, terrain, dt) {
     player.speed = Math.max(0.02, Math.min(maxSpd, player.speed));
     player.x = Math.max(-3.5, Math.min(3.5, player.x));
 
+    // Measured against the fastest pairing in the game, not against this rider's
+    // own ceiling.
+    //
+    // This used to be speed/maxSpd, and maxSpd was scaled by the rider's SPD. A
+    // faster rider therefore reached any given speed at a LOWER fraction of his
+    // own ceiling, so raising SPD quietly bought stability: Party Carl on a
+    // Cruiser - the pairing the cards bill as the wildest in the game, SPD 5 and
+    // STAB 1 - held a line 21% LONGER than Office Carl on a Standard. Measured
+    // at matched speed: 8.36 stability/second against 10.13.
+    player.speedFactor = Math.min(player.speed / CONFIG.REFERENCE_SPEED, 1);
+
     const turning = input.left || input.right;
     if (turning) {
         player.stability += CONFIG.STABILITY_GAIN * stabMult * dtScale;
         if (player.stability > CONFIG.STABILITY_MAX) player.stability = CONFIG.STABILITY_MAX;
     } else if (player.speed > 0.3) {
-        const speedFactor = Math.min(player.speed / maxSpd, 1);
-        player.stability -= CONFIG.STABILITY_DECAY * (0.2 + speedFactor) * dtScale;
+        // stabMult divides the drain as well as multiplying the refill. It only
+        // ever helped you recover before, so a board sold as "steady & stable"
+        // was no steadier while you were actually holding a line - which is the
+        // whole thing STAB is supposed to describe.
+        player.stability -= CONFIG.STABILITY_DECAY * (0.2 + player.speedFactor) / stabMult * dtScale;
         if (player.stability < 0) player.stability = 0;
     }
 

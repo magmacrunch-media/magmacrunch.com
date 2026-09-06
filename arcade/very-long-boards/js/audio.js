@@ -182,8 +182,12 @@ window.updateAudioMix = function(gameState) {
     const riding = (gameState === 'playing' || gameState === 'countdown')
         && player.kicked && !player.bailing;
 
-    const maxSpd = player.maxSpeed || 1;
-    const v = riding ? clamp01(player.speed / maxSpd) : 0;
+    // player.speedFactor, not speed/maxSpeed: maxSpeed is a safety rail about
+    // twice the fastest speed anyone actually rides at, so calibrating the mix
+    // against it left the wind - which rides on v squared - at about 6% of its
+    // level and inaudible, and the wheels using only the bottom third of their
+    // pitch range.
+    const v = riding ? clamp01(player.speedFactor) : 0;
 
     // Rolling noise is broadly linear in speed, but its loudness is not: the
     // square root has the wheels audible the moment Carl is moving rather than
