@@ -35,9 +35,10 @@ export const GAMES = {
   'jovian-humanitarian-conflict': {
     repo: 'jovian-humanitarian-conflict',
     other:
-      "the game's simulation tests and its own AGENTS.md.\n" +
-      'There is no second version yet -- a terminal one is planned -- so unlike\n' +
-      'the other entries here, this sync is the only thing crossing repos today.',
+      "the game's terminal version, published to PyPI as\n" +
+      'magmacrunch-jhc. Its rules are a transcription of these very files and\n' +
+      'are checked against them by running them in a node vm, so a tuning\n' +
+      'change here fails that repo' + "'" + 's Python suite until it is carried across.',
   },
   'makemecookies': {
     repo: 'makemecookies',
