@@ -47,7 +47,7 @@ jobs:
   # and "nobody noticed" is the entire failure mode. Failing on the commit that
   # causes it is the point.
   #
-  # The four checkouts are shallow and public, and nothing is installed: the
+  # The game checkouts are shallow and public, and nothing is installed: the
   # check uses node builtins only, so there is no npm ci here.
   game-stamps:
     runs-on: ubuntu-latest
@@ -76,24 +76,49 @@ jobs:
           repository: magmacrunch-media/texas-holdem-lava-dome
           path: game-repos/texas-holdem-lava-dome
 
+      - name: Check out jovian-humanitarian-conflict
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/jovian-humanitarian-conflict
+          path: game-repos/jovian-humanitarian-conflict
+
+      - name: Check out makemecookies
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/makemecookies
+          path: game-repos/makemecookies
+
+      - name: Check out roderick-tron
+        uses: actions/checkout@v7
+        with:
+          repository: magmacrunch-media/roderick-tron
+          path: game-repos/roderick-tron
+
       # GAME_REPOS is also the assertion that the repos are there. Without it the
       # check skips when it finds none, which is right for a clone that was never
       # given them and wrong here — with it set, a checkout step that silently
       # failed makes this job fail rather than pass over nothing.
       #
-      # GAME_REPOS_OPTIONAL is the one hole, and it is spelled out rather than
-      # tolerated. very-long-boards is a private repo and a workflow's
-      # GITHUB_TOKEN reaches only the repo it runs in, so there is no checkout
-      # step for it above. The check names it in the log on every run and says it
-      # is not covered. Delete this line and restore the checkout once the repo is
-      # public, or once a token that can read it is available here.
+      # GAME_REPOS_OPTIONAL is the hole, and it is spelled out rather than
+      # tolerated. very-long-boards and pay2play are private repos, and a
+      # workflow's GITHUB_TOKEN reaches only the repo it runs in, so there are no
+      # checkout steps for them above. The check names them in the log on every
+      # run and says they are not covered. Drop a name from this line and add its
+      # checkout back once that repo is public, or once a token that can read it
+      # is available here.
       #
-      # It is still covered where all four are on disk: `npm run check` on the dev
-      # box checks it like any other.
+      # They are still covered where every repo is on disk: `npm run check` on
+      # the dev box checks them like any other.
+      #
+      # Every other entry in scripts/games.mjs needs a checkout step above, and
+      # check-game-stamps.mjs reads this file to enforce that. Adding a game
+      # there without adding one here used to turn this job red on main with a
+      # message blaming a missing web/ rather than a missing step, which is how
+      # four games in a row landed before anyone connected the two.
       - name: Check the game repos' cache-busters
         env:
           GAME_REPOS: ${{ github.workspace }}/game-repos
-          GAME_REPOS_OPTIONAL: very-long-boards
+          GAME_REPOS_OPTIONAL: very-long-boards,pay2play
         run: npm run check:gamestamps
 
   test-python:

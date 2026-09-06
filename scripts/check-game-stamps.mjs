@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Assert the `?v=` stamps in the four *source* repos still match the files
+ * Assert the `?v=` stamps in the *source* repos still match the files
  * they stamp.
  *
  * check-cache-busters.mjs already checks every page in this repo, and that
@@ -69,12 +69,63 @@ const stale = [];
 const missing = [];
 const summary = [];
 
+// ── Does CI actually check every game repo out? ──
+//
+// GAMES is the list; .github/workflows/ci.yml has to carry a checkout step per
+// entry, and nothing tied the two together. Three games in a row landed without
+// one, and each turned main red with "no web/ found for <repo>" -- a message
+// about the checkout that never ran, phrased as if the repo were the problem.
+// That failure only appears in CI, so it is found after the push rather than
+// before it.
+//
+// Both halves are read out of the workflow, so this holds on a dev box where no
+// GAME_REPOS_* variable is set: a repo is covered if ci.yml checks it out, or if
+// ci.yml itself declares it optional. The exemption stays where it is visible in
+// a diff.
+function ciCoverage() {
+  const yml = join(ROOT, '.github', 'workflows', 'ci.yml');
+  if (!existsSync(yml)) return null;
+  const text = readFileSync(yml, 'utf8');
+
+  const out = new Set();
+  for (const [, repo] of text.matchAll(/^\s*path:\s*game-repos\/(\S+)\s*$/gm)) out.add(repo);
+
+  const declared = new Set();
+  const opt = text.match(/^\s*GAME_REPOS_OPTIONAL:\s*(.+)$/m);
+  if (opt) for (const r of opt[1].split(',')) { const t = r.trim(); if (t) declared.add(t); }
+
+  if (!out.size) return null; // the job was restructured; do not guess at it
+  return { out, declared };
+}
+
+const ci = ciCoverage();
+if (ci) {
+  const uncovered = Object.values(GAMES)
+    .map((g) => g.repo)
+    .filter((repo) => !ci.out.has(repo) && !ci.declared.has(repo));
+  if (uncovered.length) {
+    console.error(`FAIL — .github/workflows/ci.yml never checks out: ${uncovered.join(', ')}.`);
+    console.error('\nEvery repo in scripts/games.mjs needs a checkout step in the');
+    console.error("game-stamps job, or a place in that job's GAME_REPOS_OPTIONAL.");
+    console.error('Without one the job fails in CI saying it found no web/, which');
+    console.error('reads as a broken repo rather than a missing step. Add:\n');
+    for (const repo of uncovered) {
+      console.error(`      - name: Check out ${repo}`);
+      console.error('        uses: actions/checkout@v7');
+      console.error('        with:');
+      console.error(`          repository: magmacrunch-media/${repo}`);
+      console.error(`          path: game-repos/${repo}\n`);
+    }
+    process.exit(1);
+  }
+}
+
 // Locating the repos is its own pass, because "none of them are here" and "one
 // of them is missing" want opposite answers.
 //
 // A clone with no game repos beside it — a fresh one, or the Mac — should not
 // fail `npm run check` over tooling it was never given. But a run that resolved
-// three of four must fail loudly: a check that quietly drops a repo reproduces
+// all but one of them must fail loudly: a check that quietly drops a repo reproduces
 // the exact bug it exists to catch, which is a stamp nobody is looking at.
 //
 // GAME_REPOS is how CI states the repos are meant to be there, so with it set
@@ -87,20 +138,20 @@ const found = located.filter((g) => g.web);
 
 if (!found.length && !process.env.GAME_REPOS) {
   console.log('No game repo checkout found beside this one, so there is nothing to');
-  console.log('check. CI checks all four out and sets GAME_REPOS, where a missing');
+  console.log('check. CI checks them out and sets GAME_REPOS, where a missing');
   console.log(`repo is fatal instead. Looked for: ${located.map((g) => g.repo).join(', ')}.`);
   process.exit(0);
 }
 
-// GAME_REPOS_OPTIONAL names repos this run cannot be expected to have. There is
-// exactly one, and it is not a preference: very-long-boards is a private repo,
-// and a workflow's GITHUB_TOKEN reaches only the repo it runs in, so CI cannot
-// check it out. Making that a soft skip would be the silent gap this whole
-// check exists to close — so instead it has to be *written down*, in the
-// workflow, where it shows in the diff, and it is printed on every run.
+// GAME_REPOS_OPTIONAL names repos this run cannot be expected to have, and it
+// is not a preference: very-long-boards and pay2play are private repos, and a
+// workflow's GITHUB_TOKEN reaches only the repo it runs in, so CI cannot check
+// them out. Making that a soft skip would be the silent gap this whole check
+// exists to close — so instead it has to be *written down*, in the workflow,
+// where it shows in the diff, and it is printed on every run.
 //
 // A repo named here that is nonetheless present is checked normally, which is
-// what happens on the dev box: all four are on disk there, so `npm run check`
+// what happens on the dev box: every repo is on disk there, so `npm run check`
 // covers what CI cannot.
 const optional = new Set(
   (process.env.GAME_REPOS_OPTIONAL ?? '').split(',').map((s) => s.trim()).filter(Boolean));

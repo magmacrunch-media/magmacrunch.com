@@ -106,7 +106,7 @@ function mainCheckout(root) {
  * this repo sits in web/ -- so both have to resolve, or the browser version
  * becomes undeployable the moment anyone reorganises.
  *
- * GAME_REPOS names a directory holding all four checkouts, which is what CI
+ * GAME_REPOS names a directory holding every checkout, which is what CI
  * has: the workflow checks each repo out under one path, and neither sibling
  * layout exists there.
  */
