@@ -10,6 +10,21 @@ window.createTerrain = function(scene) {
     const BACK = 50;
     const SEG_LEN = 3;
 
+    // The mountain band. MNT_BAND is a little past the camera's far plane, so a
+    // mountain wraps to the horizon while it is still deep in the fog rather
+    // than popping into clear air; MNT_BEHIND is how far past you it goes first.
+    // Twenty of them across 700 units leaves about seventeen in view at any
+    // moment, which is what the opening stretch used to look like before they
+    // ran out.
+    const MNT_COUNT = 20;
+    const MNT_BAND = 700;
+    const MNT_BEHIND = 150;
+
+    /** Positive modulo. JS % keeps the sign of the dividend, which is no use here. */
+    function mod(a, n) {
+        return ((a % n) + n) % n;
+    }
+
     function curveAt(z) {
         return Math.sin(z * 0.003) * 0.12 +
                Math.sin(z * 0.0012) * 0.18 +
@@ -76,7 +91,7 @@ window.createTerrain = function(scene) {
     road.material = roadMat;
 
     const mountains = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < MNT_COUNT; i++) {
         const h = 50 + Math.random() * 100;
         const d = 30 + Math.random() * 50;
         const m = BABYLON.MeshBuilder.CreateCylinder('mnt' + i, {
@@ -90,7 +105,8 @@ window.createTerrain = function(scene) {
         mat.freeze();
         m.material = mat;
         m._baseX = (Math.random() > 0.5 ? 1 : -1) * (40 + Math.random() * 150);
-        m._baseZ = Math.random() * 500;
+        // A fixed phase within the band, not a world position - see update().
+        m._baseZ = Math.random() * MNT_BAND;
         m._h = h;
         mountains.push(m);
     }
@@ -107,10 +123,28 @@ window.createTerrain = function(scene) {
             instance: road
         });
 
+        // Mountains RECYCLE. They used to be laid out once across 0..500 and then
+        // positioned at baseZ - scrollOffset with no wrap, so every one of them
+        // was behind the camera for good by about 500 m and the horizon stayed
+        // empty for the rest of the run - the world got emptier the better you
+        // did. Wrapping the band puts a fresh one at the horizon as each one
+        // passes you.
+        //
+        // The wrap is modular rather than incremental (baseZ += BAND when it
+        // falls behind) because a restart snaps scrollOffset back to zero, and
+        // incremental positions would all be a full run's distance ahead with
+        // nothing to bring them back. This form has no state to get wrong.
+        //
+        // Height and curve are sampled at the WRAPPED world position, not at
+        // baseZ. The road descends forever, so a mountain pinned to hillAt(baseZ)
+        // would keep its original altitude while the road dropped away beneath
+        // it - a 300-unit gap by 5 km, with the range hanging in the sky.
         for (const m of mountains) {
-            m.position.x = m._baseX + curveAt(m._baseZ) * (m._baseZ - scrollOffset);
-            m.position.y = hillAt(m._baseZ) + m._h / 2;
-            m.position.z = m._baseZ - scrollOffset;
+            const relZ = mod(m._baseZ - scrollOffset + MNT_BEHIND, MNT_BAND) - MNT_BEHIND;
+            const worldZ = scrollOffset + relZ;
+            m.position.x = m._baseX + curveAt(worldZ) * relZ;
+            m.position.y = hillAt(worldZ) + m._h / 2;
+            m.position.z = relZ;
         }
     }
 

@@ -295,6 +295,15 @@ body {
     color: #555;
 }
 
+/* Says where an ordinary ranked run landed, in place of asking. */
+.go-ranked {
+    margin-top: 10px;
+    font-size: 7px;
+    color: #39ff6e;
+    letter-spacing: 0.08em;
+    min-height: 7px;
+}
+
 /* ── Initials entry ── */
 /* Shown by adding .active rather than by setting an inline display, so the
    stylesheet keeps ownership of the layout: an inline display:block here beat

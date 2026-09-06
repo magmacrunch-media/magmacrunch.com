@@ -251,6 +251,8 @@ function gameLogic() {
 
 function startCountdown() {
     hideInitialsPrompt();
+    submittedScore = null;
+    setRankedNote('');
     window.resetPlayer();
     player.speed = 0.1;
     titleDist = 0;
@@ -289,8 +291,9 @@ function endGame(cause) {
 
     if (madeLeaderboard(player.score)) {
         playHighScoreSound();
-        showInitialsPrompt(player.score);
+        recordRankedScore(player.score);
     } else {
+        setRankedNote('');
         playGameOverSound();
     }
 }
@@ -306,8 +309,27 @@ function endGame(cause) {
 // ═══════════════════════════════════════════════
 
 const LEADERBOARD_SIZE = 10;
+
+/**
+ * Ranking inside the top few is worth stopping the game for. Ranking anywhere
+ * else is not.
+ *
+ * The board holds ten and a run lasts five to fourteen seconds, so with a quiet
+ * board almost every wipeout ranks somewhere - which meant almost every wipeout
+ * put a text field between the player and pressing Enter again. Below this the
+ * score is still recorded, under the initials already given, and the game just
+ * says so.
+ */
+const PROMPT_ABOVE_RANK = 3;
+
+/** Where the player's initials are remembered between runs and between visits. */
+const INITIALS_KEY = 'vlb-initials';
+
 let leaderboard = [];
 let awaitingInitials = false;
+
+/** The score last written, so a second Enter cannot record the same run twice. */
+let submittedScore = null;
 
 async function loadLeaderboard() {
     try {
@@ -358,25 +380,62 @@ function madeLeaderboard(score) {
     return score > leaderboard[leaderboard.length - 1].score;
 }
 
+/** Where this score would land, 1-based. Ties go below the score they equal. */
+function rankFor(score) {
+    let rank = 1;
+    for (const entry of leaderboard) if (entry.score >= score) rank++;
+    return rank;
+}
+
+function rememberedInitials() {
+    try {
+        return (localStorage.getItem(INITIALS_KEY) || '').slice(0, 3);
+    } catch (e) {
+        return '';
+    }
+}
+
 function isAwaitingInitials() { return awaitingInitials; }
 
-function showInitialsPrompt(score) {
+/**
+ * A run that ranked. Ask for initials the first time, and for a run good enough
+ * to deserve the pause; otherwise record it under the initials already given and
+ * leave Enter free to start the next run.
+ */
+function recordRankedScore(score) {
+    const known = rememberedInitials();
+    if (!known || rankFor(score) <= PROMPT_ABOVE_RANK) {
+        showInitialsPrompt(score, known);
+    } else {
+        submitInitials(known, score);
+    }
+}
+
+function showInitialsPrompt(score, prefill) {
     const prompt = document.getElementById('goInitials');
     const field = document.getElementById('goInitialsInput');
     if (!prompt || !field) {
         // No markup to type into: rank the score anyway rather than losing it.
-        submitInitials('AAA', score);
+        submitInitials(prefill || 'AAA', score);
         return;
     }
     awaitingInitials = true;
     prompt.classList.add('active');
-    field.value = '';
+    // Prefilled and selected, so Enter alone accepts and typing replaces.
+    field.value = prefill || '';
     field.disabled = false;
     field.focus();
+    field.select();
     field.onkeydown = (e) => {
         e.stopPropagation();
         if (e.key === 'Enter') submitInitials(field.value, score);
     };
+}
+
+/** The line under the board that says what happened, when nothing was asked. */
+function setRankedNote(text) {
+    const el = document.getElementById('goRanked');
+    if (el) el.textContent = text;
 }
 
 function hideInitialsPrompt() {
@@ -386,10 +445,16 @@ function hideInitialsPrompt() {
 }
 
 function submitInitials(raw, score) {
-    if (!awaitingInitials && raw !== 'AAA') return;   // guard a double Enter
+    if (submittedScore === score) return;   // guard a double Enter
+    submittedScore = score;
     awaitingInitials = false;
 
     const initials = (raw || '').trim().toUpperCase().slice(0, 3) || 'AAA';
+    try {
+        localStorage.setItem(INITIALS_KEY, initials);
+    } catch (e) {
+        // Private browsing. The score still ranks; it just asks again next time.
+    }
 
     // Insert locally first so the board on screen is right whether or not the
     // backend is reachable; scoreClient owns the actual persistence.
@@ -404,6 +469,9 @@ function submitInitials(raw, score) {
 
     hideInitialsPrompt();
     renderLeaderboard(score);
+
+    const rank = leaderboard.findIndex((e) => e.score === score && e.initials === initials) + 1;
+    setRankedNote(rank > 0 ? 'RANKED #' + rank + ' AS ' + initials : 'RANKED AS ' + initials);
 }
 
 function updateCharSelection() {
