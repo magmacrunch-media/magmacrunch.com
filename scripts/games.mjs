@@ -1,6 +1,6 @@
 /**
- * The five arcade folders that are generated from another repo, and where to
- * find that repo.
+ * The arcade folders that are generated from another repo, and where to find
+ * that repo.
  *
  * Extracted from sync-game.mjs so check-game-stamps.mjs works from the same
  * list. This is an allowlist with teeth: it is what lets sync-game.mjs delete
@@ -60,6 +60,14 @@ export const GAMES = {
       'a separate Godot desktop version. Those two are\n' +
       'deliberately not ports of each other -- different scoring, different failure\n' +
       'model -- so a change to this one is usually not owed to that one.',
+  },
+  pay2play: {
+    repo: 'pay2play',
+    other:
+      'the reel timing spike its difficulty is set from,\n' +
+      "and its own AGENTS.md. There is no second version yet -- a terminal one is\n" +
+      'planned -- so as with jovian-humanitarian-conflict, this sync is currently\n' +
+      'the only thing crossing repos.',
   },
   // Historical arcade folder name, kept because it is the live URL.
   'solitaire_THLD': { repo: 'texas-holdem-lava-dome', other: WII_PORT },

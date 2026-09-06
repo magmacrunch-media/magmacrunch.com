@@ -94,7 +94,7 @@ backup-mb: ## Run MusicBrainz cache backup
 # to prevent. build:adenosine recomputes them from the files themselves and
 # rewrites nothing when they already agree.
 
-.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron
+.PHONY: sync-moonlight-drift sync-george-boole sync-texas-holdem-lava-dome sync-very-long-boards sync-jovian-humanitarian-conflict sync-makemecookies sync-roderick-tron sync-pay2play
 sync-moonlight-drift: ## Regenerate arcade/moonlight-drift/ from the moonlight-drift repo's web/
 	node scripts/sync-game.mjs moonlight-drift
 	npm run --silent build:adenosine
@@ -117,6 +117,13 @@ sync-very-long-boards: ## Regenerate arcade/very-long-boards/ from the very-long
 sync-roderick-tron: ## Regenerate arcade/roderick-tron/ from the roderick-tron repo's web/
 	node scripts/sync-game.mjs roderick-tron
 	npm run --silent build:adenosine
+
+# No build:adenosine here, alone among these. pay2play depends on no engine --
+# it is standalone html, css and js and references nothing under arcade/shared/
+# -- so there is no vendored bundle for a sync to leave stale, and a step that
+# did nothing would only suggest otherwise.
+sync-pay2play: ## Regenerate arcade/pay2play/ from the pay2play repo's web/
+	node scripts/sync-game.mjs pay2play
 
 sync-jovian-humanitarian-conflict: ## Regenerate arcade/jovian-humanitarian-conflict/ from its repo's web/
 	node scripts/sync-game.mjs jovian-humanitarian-conflict

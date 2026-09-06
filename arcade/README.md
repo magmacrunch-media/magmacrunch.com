@@ -323,7 +323,7 @@ if ('serviceWorker' in navigator) {
 
 ### games to update (13 files)
 
-`arcade/index.html`, `2^N/`, `tetris/`, `george-boole/`, `moonlight-drift/`, `solitaire/`, `SORRY/`, `very-long-boards/`, `crystal-mirror-maze/`, `roderick-tron/`, `scandinavian-stud/`, `solitaire_THLD/`, `pay2play/pay2play.html`
+`arcade/index.html`, `2^N/`, `tetris/`, `george-boole/`, `moonlight-drift/`, `solitaire/`, `SORRY/`, `very-long-boards/`, `crystal-mirror-maze/`, `roderick-tron/`, `scandinavian-stud/`, `solitaire_THLD/`, `pay2play/index.html`
 
 ### deferred
 
