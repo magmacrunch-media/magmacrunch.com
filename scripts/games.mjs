@@ -47,6 +47,13 @@ export const GAMES = {
       'modules can be loaded and run without a browser. There is no second\n' +
       'version yet; the repo exists so that one would have somewhere to go.',
   },
+  'roderick-tron': {
+    repo: 'roderick-tron',
+    other:
+      'nothing else yet. The browser build is the only\n' +
+      'version so far, and the repo exists ahead of the others so that when one\n' +
+      'arrives it has somewhere to live rather than being bolted on afterwards.',
+  },
   'very-long-boards': {
     repo: 'very-long-boards',
     other:

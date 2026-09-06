@@ -324,7 +324,7 @@ Two things worth knowing before this looks broken:
   `.catch(() => {})` calls are why this survived: a blocked or undecodable track
   reported nothing at all, to the player or to anyone testing.
 
-### Six arcade folders are generated — never edit them here
+### Seven arcade folders are generated — never edit them here
 
 The folders in the table below are copies. Each game lives in its own repo, and
 the folder here is produced from that repo's `web/` by `make sync-<repo>`, which
@@ -336,9 +336,10 @@ folder before recopying it, so a folder absent from it is not generated and one
 present in it is. Check there rather than counting this table.
 
 Most of these repos hold a second version of the game, which is the usual reason
-to have one. Two do not: `jovian-humanitarian-conflict` and `makemecookies` are
-browser-only today, and their repos exist so that a second version would have
-somewhere to go, and so the rules have a home that is not inside a website.
+to have one. Three do not: `jovian-humanitarian-conflict`, `makemecookies` and
+`roderick-tron` are browser-only today, and their repos exist so that a second
+version would have somewhere to go, and so the rules have a home that is not
+inside a website.
 
 | Folder here | Source repo | Target | Other version there |
 |---|---|---|---|
@@ -348,6 +349,7 @@ somewhere to go, and so the rules have a home that is not inside a website.
 | `arcade/very-long-boards/` | `very-long-boards` | `make sync-very-long-boards` | Godot desktop |
 | `arcade/jovian-humanitarian-conflict/` | `jovian-humanitarian-conflict` | `make sync-jovian-humanitarian-conflict` | none yet |
 | `arcade/makemecookies/` | `makemecookies` | `make sync-makemecookies` | none yet |
+| `arcade/roderick-tron/` | `roderick-tron` | `make sync-roderick-tron` | none yet |
 
 To change one of those games: edit `../<repo>/web/`, run its target here, commit
 the result. Each folder also carries a `GENERATED.md` saying the same thing, so
