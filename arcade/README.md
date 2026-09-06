@@ -25,32 +25,41 @@ Change the game in its own repo, sync, and commit the result. The historical
 
 ## games
 
-| game | type | status |
-|------|------|--------|
-| 2^N | tile puzzle (2048) | complete |
-| aggravation | board game (multiplayer) | complete |
-| backgammon | board game (multiplayer) | complete |
-| cave-diving | underwater survival | complete |
-| checkers | board game (multiplayer) | complete |
-| chess | board game (multiplayer) | complete |
-| chinese-checkers | board game (multiplayer) | complete |
-| cribbage | card game (multiplayer) | complete |
-| fifteen-puzzle | tile puzzle | complete |
-| george-boole | logic puzzle | complete |
-| jovian-humanitarian-conflict | on-rails shooter | complete |
-| klotski | tile puzzle | complete |
-| moonlight-drift | side-scroller | complete |
-| parchisi | board game (multiplayer) | complete |
-| pay2play | experimental | under construction |
-| roderick-tron | platformer | under construction |
-| scandinavian-stud | card game (multiplayer) | complete |
-| solitaire | card game (klondike) | complete |
-| solitaire_THLD | card game (hold'em) | complete |
-| SORRY! | board game (multiplayer) | complete |
-| tarot | card game (french tarot) | complete |
-| tetris | classic | complete |
-| threes | tile puzzle | complete |
-| very-long-boards | downhill skater | complete |
+| game | type | status | adenosine |
+|------|------|--------|-----------|
+| 2^N | tile puzzle (2048) | complete | puzzle, score-client |
+| aggravation | board game (multiplayer) | complete | chat only |
+| backgammon | board game (multiplayer) | complete | multiplayer |
+| cave-diving | underwater survival | complete | rpg, score-client |
+| checkers | board game (multiplayer) | complete | multiplayer |
+| chess | board game (multiplayer) | complete | multiplayer |
+| chinese-checkers | board game (multiplayer) | complete | multiplayer |
+| cribbage | card game (multiplayer) | complete | cards, multiplayer, score-client |
+| fifteen-puzzle | tile puzzle | complete | puzzle, score-client |
+| george-boole | logic puzzle | complete | audio, puzzle, score-client |
+| jovian-humanitarian-conflict | on-rails shooter | complete | audio, score-client |
+| klotski | tile puzzle | complete | puzzle, score-client |
+| makemecookies | station tending | complete | rpg, score-client |
+| moonlight-drift | side-scroller | complete | audio, score-client |
+| parchisi | board game (multiplayer) | complete | chat only |
+| pay2play | experimental | under construction | none |
+| roderick-tron | platformer | under construction | audio |
+| scandinavian-stud | card game (multiplayer) | complete | cards, multiplayer, score-client |
+| solitaire | card game (klondike) | complete | cards, score-client |
+| solitaire_THLD | card game (hold'em) | complete | cards, score-client |
+| SORRY! | board game (multiplayer) | complete | multiplayer |
+| tarot | card game (french tarot) | complete | score-client |
+| tetris | classic | complete | rpg, score-client |
+| threes | tile puzzle | complete | puzzle, score-client |
+| very-long-boards | downhill skater | complete | score-client |
+
+The **adenosine** column lists the packages each game loads, minus
+`adenosine-chat`: the chat widget is page furniture rather than engine and sits
+on almost every page, so naming it in every row said nothing. "chat only" means
+a game takes the widget and no engine package, and generally has its own
+networking or logic instead. It is derived from the `<script>` tags on each
+page, so it is what actually ships rather than what was intended.
+
 
 ---
 
