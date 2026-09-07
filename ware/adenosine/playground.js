@@ -12,7 +12,7 @@ const PACKAGES = {
   audio:         { global: "AdAudio",   version: "0.3.1", css: [] },
   "score-client":{ global: "AdScore",   version: "0.3.0", css: [] },
   multiplayer:   { global: "AdMP",      version: "0.5.1", css: ["lobby.css"] },
-  chat:          { global: "AdChat",    version: "0.5.0", css: ["chat-widget.css"] },
+  chat:          { global: "AdChat",    version: "0.6.0", css: ["chat-widget.css"] },
 };
 
 const EXAMPLES = {
