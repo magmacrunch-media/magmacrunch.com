@@ -140,22 +140,7 @@
     <div class="tui-section">
         <div class="section-header" style="border-color: #39ff6e; color: #39ff6e; text-shadow: 0 0 12px rgba(57,255,110,0.6);">// TERMINAL ARCADE //</div>
 
-        <div class="tui-terminal">
-            <div class="tui-terminal-bar">
-                <span class="tui-dot"></span>
-                <span class="tui-dot"></span>
-                <span class="tui-dot"></span>
-                <span class="tui-terminal-title">magmacrunch</span>
-            </div>
-            <div class="tui-body">
-                <div class="tui-install-section">
-                    <div class="tui-prompt-row"><span class="tui-prompt">$</span> uvx magmacrunch</div>
-                    <div class="tui-comment"># or: pipx run magmacrunch</div>
-                    <div class="tui-comment"># or: pip install magmacrunch</div>
-                    <div class="tui-comment"># or: brew install magmacrunch-media/tap/magmacrunch</div>
-                </div>
-
-                <pre class="tui-preview">
+        <pre class="tui-preview">
                                                                       __
     .--------.---.-.-----.--------.---.-.----.----.--.--.-----.----.|  |--.
     |        |  _  |  _  |        |  _  |  __|   _|  |  |     |  __||     |
@@ -179,24 +164,32 @@
                       ↑↓←→ CHOOSE    ENTER PLAY    Q QUIT
                  © 2026 magmacrunch media  ·  magmacrunch.com</pre>
 
-                <div class="tui-label">// CABINETS //</div>
-                <div class="tui-cabinets">
-                    <div class="tui-cabinet"><span class="tui-cabinet-name">george-boole</span> — 2048 with logic gates</div>
-                    <div class="tui-cabinet"><span class="tui-cabinet-name">lava-dome</span> — Solo hold'em against a threshold</div>
-                    <div class="tui-cabinet"><span class="tui-cabinet-name">moonlight-drift</span> — Thread the columns; hold to climb</div>
-                    <div class="tui-cabinet"><span class="tui-cabinet-name">jovian</span> — Rail shooter over Jupiter</div>
+        <div class="tui-body">
+            <div class="tui-row">
+                <div class="tui-col">
+                    <div class="tui-label">// INSTALL //</div>
+                    <div class="tui-prompt-row"><span class="tui-prompt">$</span> uvx magmacrunch</div>
+                    <div class="tui-comment"># or: pipx run magmacrunch</div>
+                    <div class="tui-comment"># or: pip install magmacrunch</div>
+                    <div class="tui-comment"># or: brew install magmacrunch-media/tap/magmacrunch</div>
                 </div>
+                <div class="tui-col">
+                    <div class="tui-label">// CONTROLS //</div>
+                    <div class="tui-controls">
+                        <span class="tui-key">←→↑↓</span> navigate<br>
+                        <span class="tui-key">Enter</span> play<br>
+                        <span class="tui-key">Q</span> quit<br>
+                        <span class="tui-key">Esc</span> return to arcade
+                    </div>
+                </div>
+            </div>
 
-                <div class="tui-label">// CONTROLS //</div>
-                <div class="tui-controls">
-                    <span class="tui-key">←→↑↓</span> navigate
-                    <span class="tui-sep">·</span>
-                    <span class="tui-key">Enter</span> play
-                    <span class="tui-sep">·</span>
-                    <span class="tui-key">Q</span> quit
-                    <span class="tui-sep">·</span>
-                    <span class="tui-key">Esc</span> return to arcade
-                </div>
+            <div class="tui-cabinets">
+                <div class="tui-label">// CABINETS //</div>
+                <div class="tui-cabinet"><span class="tui-cabinet-name">george-boole</span> — 2048 with logic gates</div>
+                <div class="tui-cabinet"><span class="tui-cabinet-name">lava-dome</span> — Solo hold'em against a threshold</div>
+                <div class="tui-cabinet"><span class="tui-cabinet-name">moonlight-drift</span> — Thread the columns; hold to climb</div>
+                <div class="tui-cabinet"><span class="tui-cabinet-name">jovian</span> — Rail shooter over Jupiter</div>
             </div>
         </div>
 

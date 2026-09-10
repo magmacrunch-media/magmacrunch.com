@@ -432,53 +432,45 @@ footer span { color: #ff2e9c; }
     animation: fadeUp 0.5s 0.3s ease both;
 }
 
-.tui-terminal {
-    background: #0d0d0d;
-    border: 2px solid #39ff6e;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(57,255,110,0.15);
-}
-
-.tui-terminal-bar {
-    background: #1a1a1a;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-bottom: 1px solid #333;
-}
-
-.tui-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #555;
-}
-.tui-dot:nth-child(1) { background: #ff5f56; }
-.tui-dot:nth-child(2) { background: #ffbd2e; }
-.tui-dot:nth-child(3) { background: #27c93f; }
-
-.tui-terminal-title {
+.tui-preview {
     font-family: 'Courier Prime', monospace;
     font-size: 11px;
-    color: #8a7fa8;
-    margin-left: 10px;
+    line-height: 1.3;
+    color: #39ff6e;
+    text-shadow: 0 0 8px rgba(57,255,110,0.4);
+    white-space: pre;
+    margin: 0 0 32px;
+    padding: 20px;
+    background: #080808;
+    border: 1px solid #39ff6e;
+    border-radius: 4px;
+    overflow-x: auto;
+    box-shadow: 0 0 20px rgba(57,255,110,0.1);
 }
 
 .tui-body {
-    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
 }
 
-.tui-install-section {
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px dashed #333;
+.tui-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.tui-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #39ff6e;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
 }
 
 .tui-prompt-row {
     font-family: 'Courier Prime', monospace;
-    font-size: 14px;
+    font-size: 13px;
     color: #f0f8ff;
     line-height: 1.8;
 }
@@ -491,43 +483,19 @@ footer span { color: #ff2e9c; }
 
 .tui-comment {
     font-family: 'Courier Prime', monospace;
-    font-size: 13px;
+    font-size: 12px;
     color: #555;
     line-height: 1.8;
 }
 
-.tui-preview {
-    font-family: 'Courier Prime', monospace;
-    font-size: 11px;
-    line-height: 1.3;
-    color: #39ff6e;
-    text-shadow: 0 0 8px rgba(57,255,110,0.4);
-    white-space: pre;
-    margin: 24px 0;
-    padding: 16px;
-    background: #080808;
-    border: 1px solid #222;
-    border-radius: 4px;
-    overflow-x: auto;
-}
-
-.tui-label {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    color: #39ff6e;
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
-}
-
 .tui-cabinets {
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px dashed #333;
+    padding-top: 24px;
+    border-top: 1px dashed #333;
 }
 
 .tui-cabinet {
     font-family: 'Courier Prime', monospace;
-    font-size: 13px;
+    font-size: 12px;
     color: #8a7fa8;
     line-height: 2;
 }
@@ -541,7 +509,7 @@ footer span { color: #ff2e9c; }
     font-family: 'Courier Prime', monospace;
     font-size: 12px;
     color: #8a7fa8;
-    line-height: 1.8;
+    line-height: 2;
 }
 
 .tui-key {
@@ -549,21 +517,16 @@ footer span { color: #ff2e9c; }
     font-weight: bold;
 }
 
-.tui-sep {
-    color: #555;
-    margin: 0 8px;
-}
-
 .tui-note {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
     color: #555;
     text-align: center;
-    margin-top: 16px;
+    margin-top: 20px;
     letter-spacing: 0.05em;
 }
 
 @media (max-width: 700px) {
-    .tui-body { padding: 16px; }
+    .tui-row { grid-template-columns: 1fr; }
     .tui-preview { font-size: 8px; }
 }
