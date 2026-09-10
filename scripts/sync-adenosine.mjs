@@ -131,14 +131,6 @@ for (const pkg of PACKAGES) {
     missing.push(`@magmacrunch/adenosine-${pkg}`);
     continue;
   }
-  const bytes = readFileSync(src);
-  const dest = join(SHARED, `adenosine-${pkg}.js`);
-  const changed = !existsSync(dest) || !readFileSync(dest).equals(bytes);
-  if (changed) writeFileSync(dest, bytes);
-
-  const hash = shortHash(bytes);
-  hashes.set(pkg, hash);
-
   const version = JSON.parse(
     readFileSync(join(ROOT, 'node_modules', '@magmacrunch', `adenosine-${pkg}`, 'package.json'), 'utf8'),
   ).version;
@@ -147,10 +139,28 @@ for (const pkg of PACKAGES) {
   // lockfile has moved on (e.g. after pulling a branch that bumped a dep) and
   // npm ci has not been run, copying from node_modules would overwrite the
   // committed bundle with an older build — losing whatever the newer one fixed.
+  //
+  // This has to run before anything is written for this package. It used to
+  // sit after the copy, so the script overwrote the bundle, its assets and its
+  // CSS, printed "updated" for each, and only then said it should not have —
+  // a message about a downgrade that had already happened (2026-09-09,
+  // adenosine-chat 0.6.0 → 0.5.0; caught in the working tree, never committed).
+  // Skipping the package leaves the committed files exactly as they were, and
+  // the exit below still fails the run.
   const locked = lockedVersion(pkg);
   if (locked && locked !== version) {
     stale.push(`  @magmacrunch/adenosine-${pkg}: lockfile ${locked}, installed ${version}`);
+    console.log(`  skipped   adenosine-${pkg}.js  (installed v${version}, lockfile wants v${locked})`);
+    continue;
   }
+
+  const bytes = readFileSync(src);
+  const dest = join(SHARED, `adenosine-${pkg}.js`);
+  const changed = !existsSync(dest) || !readFileSync(dest).equals(bytes);
+  if (changed) writeFileSync(dest, bytes);
+
+  const hash = shortHash(bytes);
+  hashes.set(pkg, hash);
   console.log(`  ${changed ? 'updated' : 'unchanged'}  adenosine-${pkg}.js  v${version}  ?v=${hash}`);
 
   for (const asset of EXTRA_ASSETS[pkg] ?? []) {
@@ -203,8 +213,8 @@ if (missing.length) {
 if (stale.length) {
   console.error(
     `\nnode_modules does not match package-lock.json:\n${stale.join('\n')}\n\n` +
-      'Run `npm ci` and re-run this script. Continuing would copy the installed\n' +
-      'build over the committed bundle, downgrading it.',
+      'Run `npm ci` and re-run this script. Those packages were skipped, not\n' +
+      'copied: the committed bundles are untouched. Nothing was stamped.',
   );
   process.exit(1);
 }
