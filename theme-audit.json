@@ -5103,6 +5103,11 @@
     },
     {
       "name": "nav-glow",
+      "value": "rgba(255,224,58,0.3)",
+      "source": "home/donate.css"
+    },
+    {
+      "name": "nav-glow",
       "value": "rgba(57,255,110,0.4)",
       "source": "home/guestbook.css"
     },
