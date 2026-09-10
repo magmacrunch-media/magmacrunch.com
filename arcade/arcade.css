@@ -430,6 +430,9 @@ footer span { color: #ff2e9c; }
     max-width: 900px;
     margin: 60px auto 40px;
     animation: fadeUp 0.5s 0.3s ease both;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .tui-preview {
@@ -446,12 +449,14 @@ footer span { color: #ff2e9c; }
     border-radius: 4px;
     overflow-x: auto;
     box-shadow: 0 0 20px rgba(57,255,110,0.1);
+    flex-shrink: 0;
 }
 
 .tui-body {
     display: flex;
     flex-direction: column;
     gap: 28px;
+    width: 100%;
 }
 
 .tui-row {
