@@ -450,6 +450,8 @@ footer span { color: #ff2e9c; }
     overflow-x: auto;
     box-shadow: 0 0 20px rgba(57,255,110,0.1);
     flex-shrink: 0;
+    display: inline-block;
+    text-align: left;
 }
 
 .tui-body {
