@@ -70,16 +70,42 @@ These workflows now run as cron jobs on the Raspberry Pi (`arcade/scripts/bot-*.
 
 | Workflow | Cron | Purpose |
 |---|---|---|
-| `check-links.yml` | Mon 6 AM UTC | Lychee link checker → GitHub Issue |
+| `check-links.yml` | Mon 06:15 Pi time | Lychee link checker → GitHub Issue |
 | `check-services.yml` | Every 30 min | TCP health check → Discussion + Discord |
-| `smoke-test.yml` | Mon 10 AM UTC | Playwright smoke tests → GitHub Issue |
-| `backup-musicbrainz.yml` | Mon 6 AM UTC | MusicBrainz cache backup → git push |
-| `backup-tmdb.yml` | Mon 6:30 AM UTC | TMDB cache backup → git push |
-| `play-counts.yml` | Mon 6 AM UTC | Last.fm play counts → git push |
-| `weekly-scores.yml` | Mon 6 AM UTC | Score leaderboard → Discussion + Discord |
-| `rebuild-search-index.yml` | Daily 7 AM UTC | Rebuild search index → git push |
+| `smoke-test.yml` | Mon 10:00 Pi time | Playwright smoke tests → GitHub Issue |
+| `backup-musicbrainz.yml` | Mon 06:00 Pi time | MusicBrainz cache backup → git push |
+| `backup-tmdb.yml` | Mon 06:35 Pi time | TMDB cache backup → git push |
+| `play-counts.yml` | Mon 06:05 Pi time | Last.fm play counts → git push |
+| `weekly-scores.yml` | Mon 06:10 Pi time | Score leaderboard → Discussion + Discord |
+| `rebuild-search-index.yml` | Daily 07:05 Pi time | Rebuild search index → git push |
 
 All migrated workflows retain `workflow_dispatch` triggers for manual runs from the GitHub UI.
+
+**"Pi time" is America/New_York, not UTC.** The crontab's comments said UTC
+for a month and were wrong: Debian's cron has no `CRON_TZ`, so every entry
+runs on the Pi's local clock, and the bots' own log lines (which use
+`date -u`) show Monday 06:00 as `10:00 UTC` in summer. The times are also
+**staggered** now: the four weekly bots used to share Monday 06:00 with the
+half-hourly service check, and five processes in one git checkout is how
+2026-09-07 went (see the lock note below).
+
+**Pushes use a deploy key, not the PAT.** `~/website` on the Pi has an SSH
+remote and `core.sshCommand` pointing at `~/.ssh/magmacrunch-com-deploy`, a
+write deploy key on `magmacrunch-media/magmacrunch.com` (set 2026-09-11 after
+the previous classic PAT expired 30 days in, on 2026-09-07, and every push
+since had failed with `could not read Password`). Deploy keys do not expire
+and never appear in a URL, so they cannot end up in a log the way the old
+token did. `GITHUB_PAT` in `.env` is still read, but only by `gh_api`, for
+the three bots that file Issues and Discussions; the dead one needs
+replacing for those to post again.
+
+**Bots serialize on `~/arcade-config/bots.lock`.** `pi-bot-env.sh` takes a
+`flock` for the life of each bot, covering its fetch, merge, commit and push.
+On 2026-09-06 the index rebuild and the service check started in the same
+second, both failed to fast-forward the shared clone, the index bot committed
+on the stale base, and the clone stayed diverged (every push rejected
+non-fast-forward) until it was reset by hand. A bot that cannot take the lock
+within ten minutes exits with an error rather than running unsynchronised.
 
 ### Pi cron bot setup
 
@@ -89,14 +115,15 @@ Scripts live in `arcade/scripts/` and are deployed to the Pi via rsync. Shared h
 - Node.js 20+ (`sudo apt install nodejs`)
 - lychee (`/usr/local/bin/lychee`)
 - Playwright + Chromium (for smoke tests)
-- GitHub PAT with `repo` scope (for push + API access)
+- A write deploy key at `~/.ssh/magmacrunch-com-deploy` (for push — see below)
+- GitHub PAT (API only: the three reporting bots post Issues and Discussions)
 
 **Environment file**: `~/arcade-config/.env` on the Pi (mode `600`). Note this is
 *not* `~/arcade/.env` — `~/arcade/` is rsynced over by `deploy-pi.yml`, so a secret
 kept there would be destroyed on the next deploy. `pi-bot-env.sh` reads
 `~/arcade-config/.env`; only that path is live:
 ```
-GITHUB_PAT=ghp_...
+GITHUB_PAT=ghp_...        # API only, not for push
 TMDB_API_KEY=...
 LASTFM_API_KEY=...
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
@@ -137,7 +164,7 @@ ssh jake@100.74.172.4 "tail -50 ~/arcade/logs/check-services.log"
 
 `arcade/scripts/bot-check-links.sh` uses lychee to scan all HTML/MD files for broken links.
 
-- **Cron**: Monday 6 AM UTC
+- **Cron**: Monday 06:15 Pi time
 - **Excludes**: Private IPs (`192.168.*`, `localhost`), `mailto:` links
 - **Rate limits**: Accepts 403/429 (MusicBrainz bot protection)
 - **Reporting**: Creates/updates GitHub Issue with broken link report
