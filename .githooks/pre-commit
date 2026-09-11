@@ -54,15 +54,29 @@ cd "$repo_root"
 #
 # A path-limited `git commit <paths>` is safe by construction: git builds a
 # temporary index holding only those paths, so it cannot sweep up anything else.
-# Detected by the index git points us at not being the repo's real one, which is
-# more durable than matching git's temp-file name.
+#
+# The index git points us at says which kind of commit this is — the same test
+# the stamps section below makes. A bare `git commit` runs hooks against the
+# real index (`index`); `-a` and `-i <paths>` run them against its lock file
+# (`index.lock`), which is the whole index plus whatever they just staged into
+# it. Both are whole-index commits. A path-limited commit gets a temporary
+# `next-index-*.lock` instead, and is let through.
+#
+# `-a` is the worst case this guard exists for — it stages every tracked change
+# in the tree, another session's included, without showing anybody first — and
+# it was the one getting through until `index.lock` was matched here too.
+# Refusing it costs nothing: git discards the lock when the hook fails, so the
+# real index is left exactly as it was.
 if [ "$(git rev-parse --git-dir)" = "$(git rev-parse --git-common-dir)" ]; then
 	worktrees=$(git worktree list --porcelain | grep -c '^worktree ')
 
 	if [ "$worktrees" -gt 1 ] && [ "${MC_PRIMARY_COMMIT:-0}" != "1" ]; then
-		index_name=$(basename "${GIT_INDEX_FILE:-index}")
+		case "$(basename "${GIT_INDEX_FILE:-index}")" in
+			index | index.lock) whole_index=1 ;;
+			*)                  whole_index=0 ;;
+		esac
 
-		if [ "$index_name" = "index" ]; then
+		if [ "$whole_index" = 1 ]; then
 			staged=$(git diff --cached --name-only)
 			count=$(printf '%s\n' "$staged" | grep -c . || true)
 
@@ -72,9 +86,10 @@ if [ "$(git rev-parse --git-dir)" = "$(git rev-parse --git-common-dir)" ]; then
 			echo "            This clone has $worktrees checkouts, so feature work belongs in a" >&2
 			echo "            worktree and the primary tree is shared ground. A bare commit" >&2
 			echo "            here records everything staged — including anything a second" >&2
-			echo "            session staged into the same index." >&2
+			echo "            session staged into the same index — and -a adds every" >&2
+			echo "            tracked change in the tree on top." >&2
 			echo "" >&2
-			echo "            Staged right now ($count file(s)):" >&2
+			echo "            This commit would record ($count file(s)):" >&2
 			printf '%s\n' "$staged" | head -20 | sed 's/^/              /' >&2
 			if [ "$count" -gt 20 ]; then
 				echo "              ... and $((count - 20)) more" >&2

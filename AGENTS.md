@@ -171,8 +171,17 @@ What it deliberately does **not** touch:
   else's shared ground, and are the thing we want people doing.
 - **Merges, rebases, cherry-picks and reverts**, which do not run `pre-commit`.
 
-`git commit --amend` *is* refused, because it rewrites from the whole index and
-can sweep in exactly the same way. Scope it or use the override.
+`git commit -a` *is* refused, and so is `git commit -i <paths>`. Both commit the
+whole index after staging into it, and `-a` is the worst case the gate exists
+for: it stages every tracked change in the tree, another session's included,
+without showing anybody first — the near miss in the list above. It used to get
+through. Git runs the hook for `-a` and `-i` against `index.lock` rather than
+`index`, and the gate matched only `index`; it matches both now, the same test
+the stamp check makes. A refused `-a` stages nothing, because git discards the
+lock when the hook fails.
+
+`git commit --amend` is refused too, because it rewrites from the whole index
+and can sweep in exactly the same way. Scope it or use the override.
 
 The gate runs before the cache-buster pass, not after. That pass rewrites files,
 and a commit that is going to be refused should be refused without having edited
