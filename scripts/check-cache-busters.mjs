@@ -21,15 +21,19 @@
  * only: unstamped references stay unstamped, and a missing file stays a hard
  * failure. See the FIX comment further down for why the line is drawn there.
  *
- * .githooks/pre-commit runs it on every commit, so a stamp is normally repaired
- * before it can reach CI at all. Install with `npm run hooks:install`.
+ * .githooks/pre-commit does not run this. It used to, and that was the flaw:
+ * this reads the working tree, and a commit records the index, which in a
+ * shared checkout routinely differ. The hook runs check-staged-stamps.mjs,
+ * which applies the same rule to what the commit will actually record. Install
+ * it with `npm run hooks:install`.
  *
  * ── The rule itself lives in scripts/lib/cache-busters.mjs ──
  *
- * digest(), the reference patterns, and what counts as unresolvable are shared
- * with check-game-stamps.mjs, which applies the same rule to the game repos the
- * generated arcade folders are copied from. Why the digest normalises newlines
- * before hashing is explained there.
+ * digest(), the reference patterns, what counts as unresolvable, how a
+ * reference resolves and which trees are skipped are shared with
+ * check-game-stamps.mjs, which applies the same rule to the game repos the
+ * generated arcade folders are copied from, and with check-staged-stamps.mjs.
+ * Why the digest normalises newlines before hashing is explained there.
  *
  * ── Scope ──
  *
@@ -68,25 +72,16 @@
  * <img> tags on a placeholder that was never committed at all.
  */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
   digest, HTML_REF_RE, CSS_REF_RE, isUnresolvable, isRemote, stampOf, isDigestStamp,
+  resolveRef, rewriteStamps, SKIP_DIRS, GENERATED,
 } from './lib/cache-busters.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-// Only trees git does not track: node_modules, and the four .gitignore entries
-// that hold HTML. Everything deployed is checked, archive/ included — its ten
-// `?v=` hits are all YouTube watch URLs and one og:image, which is precisely
-// what the src/href-plus-extension pattern below exists to step over.
-// game-repos/ is the last entry and the odd one: it exists only inside a CI
-// workspace, where check-game-stamps.mjs has the four game repos checked out
-// under it. Their pages load ../shared/*, which resolves only after a sync, so
-// walking into them here would report a wall of missing files for pages that
-// are perfectly correct where they actually live.
-const SKIP_DIRS = new Set(['node_modules', 'wiki', 'wiki-old-backup', 'drafts', 'game-repos']);
 
 /** Every file with one of `exts` under a directory, skipping untracked trees. */
 function filesUnder(dir, exts, out = []) {
@@ -114,15 +109,6 @@ if (process.argv[2] === '--digest') {
   process.exit(0);
 }
 
-// Written by a running service rather than committed, so absent from a fresh
-// clone and from CI without that being a fault. arcade/admin/server.py renders
-// visual/tv/channels.js from tv-channels.json whenever the channel list is
-// saved, and visual/tv/main.js reads `window.TV_CHANNELS || [ ...fallback ]`
-// precisely so the page works in the window where the file does not exist.
-// Anything added here must have that shape: a generator in the tree, and a
-// consumer that copes with its absence.
-const GENERATED = new Set(['visual/tv/channels.js']);
-
 // `--fix` rewrites every stale stamp in place instead of reporting it. The
 // stamp is derived from the file, so a human retyping it is a transcription
 // step with nothing to decide — and the failure mode of forgetting is silent,
@@ -148,9 +134,7 @@ function inspect(href, query, source) {
   if (isUnresolvable(href)) return;
   if (isRemote(href)) return;                              // someone else's asset
 
-  const target = href.startsWith('/')
-    ? join(ROOT, href)
-    : join(dirname(source), href);
+  const target = join(ROOT, resolveRef(href, rel(source)));
 
   if (GENERATED.has(rel(target))) return;
 
@@ -190,46 +174,8 @@ for (const sheet of filesUnder(ROOT, ['.css'])) {
   for (const [, , href, query] of css.matchAll(CSS_REF_RE)) inspect(href, query, sheet);
 }
 
-/**
- * Rewrite the stale stamps in one file.
- *
- * The replacement runs through the same regex that found them, so what gets
- * edited is exactly what was matched — no second, looser search that could
- * land on a `?v=` in prose or in an unrelated attribute. Within a match the
- * reference is spliced by value rather than by index, and it appears once
- * there as the quoted attribute value, so repeated hrefs on a page each get
- * their own correct stamp.
- *
- * Written back as read. digest() normalises CRLF to LF to hash, which is right
- * for hashing and would be wrong here: writing a normalised string back would
- * silently convert a CRLF page to LF and bury a one-token change under a
- * whole-file diff.
- */
-function rewrite(source, entries) {
-  const re = source.endsWith('.css') ? CSS_REF_RE : HTML_REF_RE;
-  const wanted = new Map(entries.map(e => [e.href, e.actual]));
-  let changed = 0;
-
-  const after = readFileSync(source, 'utf8').replace(re, (match, ...groups) => {
-    // HTML captures (href, query); CSS captures (quote, href, query).
-    const [href, query] = re === CSS_REF_RE ? [groups[1], groups[2]] : [groups[0], groups[1]];
-    const actual = wanted.get(href);
-    if (actual === undefined) return match;
-
-    // Compare before counting: the same href can appear twice on a page, one
-    // occurrence stale and one already correct, and only the stale one is a
-    // change. stale[] holds one entry per match, so the counts line up.
-    const oldRef = href + (query ?? '');
-    const newRef = `${href}?v=${actual}`;
-    if (oldRef === newRef) return match;
-    changed++;
-    return match.replace(oldRef, newRef);
-  });
-
-  if (changed) writeFileSync(source, after);
-  return changed;
-}
-
+// rewriteStamps() in the lib does the editing, so this and the pre-commit hook
+// cannot disagree about what a repaired reference looks like.
 if (FIX && stale.length) {
   const byFile = new Map();
   for (const s of stale) {
@@ -239,14 +185,14 @@ if (FIX && stale.length) {
 
   let fixed = 0;
   for (const [page, entries] of byFile) {
-    const n = rewrite(join(ROOT, page), entries);
+    const n = rewriteStamps(join(ROOT, page), entries);
     fixed += n;
     for (const e of entries) {
       console.log(`FIXED    ${page}\n           -> ${e.href}  ${e.stamp} -> ${e.actual}`);
     }
     // A stale entry the rewrite could not land on means the two passes disagree
     // about what they are looking at. Stop rather than report a repair that did
-    // not happen — the hook trusts this output to decide what to stage.
+    // not happen.
     if (n !== entries.length) {
       console.error(`\nFAIL — ${page}: rewrote ${n} of ${entries.length} stale stamp(s).`);
       process.exit(1);

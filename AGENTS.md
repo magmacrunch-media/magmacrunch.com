@@ -171,8 +171,17 @@ What it deliberately does **not** touch:
   else's shared ground, and are the thing we want people doing.
 - **Merges, rebases, cherry-picks and reverts**, which do not run `pre-commit`.
 
-`git commit --amend` *is* refused, because it rewrites from the whole index and
-can sweep in exactly the same way. Scope it or use the override.
+`git commit -a` *is* refused, and so is `git commit -i <paths>`. Both commit the
+whole index after staging into it, and `-a` is the worst case the gate exists
+for: it stages every tracked change in the tree, another session's included,
+without showing anybody first — the near miss in the list above. It used to get
+through. Git runs the hook for `-a` and `-i` against `index.lock` rather than
+`index`, and the gate matched only `index`; it matches both now, the same test
+the stamp check makes. A refused `-a` stages nothing, because git discards the
+lock when the hook fails.
+
+`git commit --amend` is refused too, because it rewrites from the whole index
+and can sweep in exactly the same way. Scope it or use the override.
 
 The gate runs before the cache-buster pass, not after. That pass rewrites files,
 and a commit that is going to be refused should be refused without having edited
@@ -257,10 +266,25 @@ one it says so and passes, rather than failing a clone that was never given
 them. CI sets `GAME_REPOS`, and with that set a missing repo is fatal instead —
 a check that quietly drops one is the failure it exists to catch.
 Run `npm run hooks:install` once per clone. It points `core.hooksPath` at
-`.githooks/`, whose `pre-commit` repairs stale `?v=` cache-buster stamps and
-stages them with the asset that moved. Without it nothing breaks — `lint` in
-CI still fails on a stale stamp — you just find out later. Bypass a single
-commit with `git commit --no-verify`.
+`.githooks/`, whose `pre-commit` checks the `?v=` cache-buster stamps a commit
+records, judged on what the commit contains rather than what is on disk, and
+corrects stale ones in pages that have no other uncommitted edits. What
+happens next depends on how you commit:
+
+- **`git commit`** (the whole index): the correction is staged for you and the
+  commit goes ahead.
+- **`git commit -- <paths>`**: the commit is **refused** with the correction
+  written to disk, and the refusal names the pages to add. Run the same
+  command again with them in the pathspec. A hook cannot add a file to a
+  scoped commit without leaving the index disagreeing with HEAD, so this
+  costs one extra run.
+
+Committing an asset on its own, `git commit -- arcade/arcade.css`, is exactly
+the case this catches: the stamp lives in a page you did not touch.
+4cd6e278, c32b819a and f4b1d678 changed that stylesheet three times under one
+stamp. Without the hook nothing breaks locally — `lint` in CI still fails on a
+stale stamp — but you find out after the push has already deployed. Bypass a
+single commit with `git commit --no-verify`.
 
 Runner internals, Python interpreter selection, and what each suite covers: `docs/ops/testing.md`.
 
