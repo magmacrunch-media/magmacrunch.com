@@ -3,7 +3,10 @@
 # Sourced by individual bot scripts.
 #
 # After first setup, populate ~/arcade-config/.env with:
-#   GITHUB_PAT=ghp_...        API only (issues, discussions) — NOT for push
+#   GITHUB_PAT=github_pat_... API only (issues, discussions) — NOT for push.
+#                             Fine-grained, on magmacrunch.com, Issues and
+#                             Discussions read and write. gh_api warns into
+#                             the log for the last fortnight of its life.
 #   TMDB_API_KEY=...
 #   LASTFM_API_KEY=...
 #   DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
@@ -120,6 +123,59 @@ sync_repo() {
 
 sync_repo
 
+# Say so BEFORE the token dies, not after.
+#
+# The token that expired on 2026-09-07 was quiet about it: fetch still worked
+# (the repo is public), the Issue and Discussion posts simply stopped, and
+# nothing said why for a month. GitHub returns the expiry on every
+# authenticated response, so the bots can read it off a call they were
+# making anyway and complain into the log while there is still time.
+#
+# Once per bot run — every bot makes several calls and one warning is plenty.
+TOKEN_EXPIRY_WARNED=""
+
+# One header file for the whole run, cleaned up on the way out. Per-call
+# mktemp would leak one file every time curl failed, because `set -e` takes
+# the script down at the failing call and never reaches the rm — and the
+# service check runs every half hour.
+GH_HEADER_FILE=$(mktemp)
+trap 'rm -f "$GH_HEADER_FILE"' EXIT
+
+warn_if_token_expiring() {
+    local headers="$1"
+
+    if [ -n "$TOKEN_EXPIRY_WARNED" ]; then
+        return 0
+    fi
+    TOKEN_EXPIRY_WARNED=1
+
+    # "github-authentication-token-expiration: 2026-10-11 18:26:33 UTC".
+    # Absent for a token with no expiry set, which is not an error. Matched
+    # case-insensitively (sed's I flag): HTTP/2 lowercases header names, but
+    # nothing says a proxy or a future curl has to hand them over that way.
+    local expires
+    expires=$(sed -n 's/^github-authentication-token-expiration: *//Ip' "$headers" | tr -d '\r')
+    if [ -z "$expires" ]; then
+        return 0
+    fi
+
+    local until_ts
+    if ! until_ts=$(date -d "$expires" +%s 2>/dev/null); then
+        return 0
+    fi
+
+    local left=$(( (until_ts - $(date +%s)) / 86400 ))
+    if [ "$left" -lt 0 ]; then
+        echo "WARNING: GITHUB_PAT EXPIRED on $expires — posts are failing." >&2
+        echo "  Mint a fine-grained token on magmacrunch-media/magmacrunch.com with" >&2
+        echo "  Issues and Discussions read and write, and put it in $ENV_FILE." >&2
+    elif [ "$left" -le 14 ]; then
+        echo "WARNING: GITHUB_PAT expires in $left day(s), on $expires." >&2
+        echo "  Mint a fine-grained token on magmacrunch-media/magmacrunch.com with" >&2
+        echo "  Issues and Discussions read and write, and put it in $ENV_FILE." >&2
+    fi
+}
+
 # GitHub helper — call GitHub REST API
 # Usage: gh_api GET /repos/owner/repo/issues
 #        gh_api POST /repos/owner/repo/issues '{"title":"..."}'
@@ -137,7 +193,7 @@ gh_api() {
         return 1
     fi
 
-    local args=(-s -w "%{http_code}" \
+    local args=(-s -w "%{http_code}" -D "$GH_HEADER_FILE" \
         -X "$method" \
         -H "Authorization: Bearer $GITHUB_PAT" \
         -H "Accept: application/vnd.github+json" \
@@ -152,10 +208,15 @@ gh_api() {
     local http_code="${response: -3}"
     local body="${response:0:${#response}-3}"
 
+    warn_if_token_expiring "$GH_HEADER_FILE"
+
     if [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
         echo "$body"
     else
         echo "GitHub API error $http_code: $body" >&2
+        if [ "$http_code" = "401" ]; then
+            echo "  401 means the token is expired or revoked — mint a new GITHUB_PAT for $ENV_FILE." >&2
+        fi
         return 1
     fi
 }
