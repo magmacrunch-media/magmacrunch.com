@@ -169,11 +169,58 @@ warn_if_token_expiring() {
         echo "WARNING: GITHUB_PAT EXPIRED on $expires — posts are failing." >&2
         echo "  Mint a fine-grained token on magmacrunch-media/magmacrunch.com with" >&2
         echo "  Issues and Discussions read and write, and put it in $ENV_FILE." >&2
+        notify_token_expiry "**GITHUB_PAT expired on $expires.** Issue and Discussion posts are failing now."
     elif [ "$left" -le 14 ]; then
         echo "WARNING: GITHUB_PAT expires in $left day(s), on $expires." >&2
         echo "  Mint a fine-grained token on magmacrunch-media/magmacrunch.com with" >&2
         echo "  Issues and Discussions read and write, and put it in $ENV_FILE." >&2
+        notify_token_expiry "**GITHUB_PAT expires in $left day(s)**, on $expires."
     fi
+}
+
+# The same warning, to Discord, at most once a day.
+#
+# A warning that only reaches ~/arcade/logs/ is a warning nobody reads: the
+# logs are opened after something has already gone wrong, and these three
+# bots leave no commit behind whose absence would show up on the farm. So it
+# goes where the service alerts already go.
+#
+# The stamp file is what makes that bearable. The service check runs every
+# half hour, so an unthrottled warning would be about 48 Discord messages a
+# day for a fortnight, which is the same as no warning at all. One a day for
+# the last two weeks is 14 messages, each of them worth reading.
+#
+# discord_post is defined further down this file; every function here exists
+# by the time a bot calls gh_api.
+TOKEN_EXPIRY_STAMP="$PI_HOME/arcade-config/.token-expiry-notified"
+
+notify_token_expiry() {
+    local headline="$1"
+
+    local today
+    today=$(date +%F)
+    if [ -f "$TOKEN_EXPIRY_STAMP" ] && [ "$(cat "$TOKEN_EXPIRY_STAMP")" = "$today" ]; then
+        return 0
+    fi
+    printf '%s\n' "$today" > "$TOKEN_EXPIRY_STAMP"
+
+    discord_post "{
+        \"embeds\": [{
+            \"title\": \"🔑 GITHUB_PAT needs attention\",
+            \"description\": \"${headline}\",
+            \"color\": 15844367,
+            \"fields\": [
+                {
+                    \"name\": \"What stops working\",
+                    \"value\": \"check-links, check-services and smoke-test keep running, but cannot post Issues or Discussions.\"
+                },
+                {
+                    \"name\": \"Fix\",
+                    \"value\": \"Mint a fine-grained token on magmacrunch-media/magmacrunch.com with Issues and Discussions read and write, then store it on the Pi as GITHUB_PAT in ~/arcade-config/.env — see the header of arcade/scripts/pi-bot-env.sh.\"
+                }
+            ]
+        }]
+    }"
 }
 
 # GitHub helper — call GitHub REST API
