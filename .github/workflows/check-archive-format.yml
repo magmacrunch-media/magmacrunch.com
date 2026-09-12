@@ -27,7 +27,31 @@ jobs:
       - name: Run checker
         id: check
         run: |
-          magmascript archive check-format --json > /tmp/check-result.json || true
+          # check-format exits non-zero when it FINDS something, which is the
+          # ordinary case this workflow exists to turn into an Issue — so its
+          # exit status must not fail the step, hence the `|| true`.
+          #
+          # That used to make a checker which broke outright indistinguishable
+          # from one which found nothing: the redirect left an empty file, the
+          # json.load below raised, and the job died on a Python traceback that
+          # named neither magmascript nor the real error, which `|| true` had
+          # already thrown away. It failed that way on 2026-09-09 and read as
+          # "the archive has formatting problems", which it did not say at all.
+          #
+          # So keep swallowing the exit status, but check the OUTPUT, and keep
+          # stderr to say what went wrong when there is none.
+          magmascript archive check-format --json \
+            > /tmp/check-result.json 2> /tmp/check-err.txt || true
+
+          if ! python3 -c "import json; json.load(open('/tmp/check-result.json'))" 2>/dev/null; then
+            echo "::error::magmascript archive check-format produced no usable JSON — the archive was NOT checked"
+            echo "--- stderr ---"
+            cat /tmp/check-err.txt
+            echo "--- stdout ---"
+            cat /tmp/check-result.json
+            exit 1
+          fi
+
           COUNT=$(python3 -c "
           import json
           d = json.load(open('/tmp/check-result.json'))
