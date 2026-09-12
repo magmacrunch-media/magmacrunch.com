@@ -268,6 +268,31 @@ gh_api() {
     fi
 }
 
+# WHEN THE FAILURE IS THE NEWS, NOT AN ERROR.
+#
+# `set -euo pipefail` at the top of this file is right for the bots' own
+# logic and exactly wrong for the one command each reporting bot exists to
+# watch. `lychee ... | tail -20` returns lychee's status under pipefail, so
+# errexit killed bot-check-links the moment lychee found a broken link —
+# before the lines that file the Issue. The bot could only ever report a
+# clean site. bot-smoke-test had it too, and additionally leaked its
+# http.server child, since the kill came after the pipeline.
+#
+# Found 2026-09-12 by running check-links by hand: it printed lychee's two
+# errors and then stopped, with no "Broken links found" and no Issue.
+#
+# Wrap the watched command:
+#
+#   allow_failure
+#   lychee ... | tail -20
+#   EXIT_CODE=${PIPESTATUS[0]}
+#   restore_strict
+#
+# Read PIPESTATUS on the very next line: any other pipeline, `true`
+# included, overwrites it.
+allow_failure()  { set +e +o pipefail; }
+restore_strict() { set -e -o pipefail; }
+
 # Discord webhook helper
 # Usage: discord_post '{"embeds":[...]}'
 discord_post() {

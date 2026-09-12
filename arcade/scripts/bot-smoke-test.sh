@@ -14,8 +14,12 @@ sleep 2
 
 # Run tests
 cd "$REPO_DIR/arcade/tests"
+# A failing test is what this bot reports, so it must not be fatal here —
+# and the kill below has to be reached. See pi-bot-env.sh.
+allow_failure
 node smoke-test.mjs 2>&1 | tee /tmp/smoke-test-output.txt
 TEST_EXIT=${PIPESTATUS[0]}
+restore_strict
 
 kill $SERVER_PID 2>/dev/null || true
 

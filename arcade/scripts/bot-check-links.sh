@@ -9,6 +9,9 @@ echo "[$(date -u '+%Y-%m-%d %H:%M UTC')] Starting link check"
 
 LYCHEE_OUT="/tmp/lychee-out.md"
 
+# Broken links are the point of this bot, so lychee's non-zero exit must not
+# take the script down before the Issue is filed. See pi-bot-env.sh.
+allow_failure
 lychee \
     --verbose \
     --no-progress \
@@ -27,6 +30,7 @@ lychee \
     2>&1 | tail -20
 
 EXIT_CODE=${PIPESTATUS[0]}
+restore_strict
 
 if [ "$EXIT_CODE" -ne 0 ]; then
     echo "Broken links found (exit code $EXIT_CODE)"
