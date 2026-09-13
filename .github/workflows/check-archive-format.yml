@@ -22,7 +22,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install magmascript
-        run: pip install magmascript
+        run: pip install 'magmascript>=3.2.1'
 
       - name: Run checker
         id: check

@@ -35,13 +35,31 @@ const DELAY_MS = 300;
 
 // ─── rate-limited fetch ────────────────────────────────────────────
 
+/**
+ * Strip the API key out of anything on its way to a log or an error message.
+ *
+ * The key is a query parameter on every request URL, so interpolating a URL
+ * into a message writes the credential to stdout — and this script runs from
+ * bot-backup-tmdb.sh on the Pi, whose output is appended to
+ * ~/arcade/logs/backup.log. A single failed request was enough to leave the
+ * key sitting in that file. Applied at both the throw site and where a caught
+ * error is logged, since fetch failures can carry the URL along in `cause`
+ * rather than in `message`.
+ */
+function redact(value) {
+    return String(value).replace(/api_key=[^&\s'"]+/gi, 'api_key=REDACTED');
+}
+
 let lastFetch = 0;
 async function fetchTMDB(path) {
     const elapsed = Date.now() - lastFetch;
     if (elapsed < DELAY_MS) await delay(DELAY_MS - elapsed);
     lastFetch = Date.now();
 
-    // Support both v3 (query param) and v4 (Bearer token) auth
+    // v3 auth: the key rides on every request as an `api_key` query parameter.
+    // (An earlier comment here claimed v4 Bearer tokens were also supported.
+    // They are not — nothing sets an Authorization header, so a v4 token would
+    // be sent as a query parameter and rejected.)
     const separator = path.includes('?') ? '&' : '?';
     const url = path.startsWith('http') ? path : `${API}/${path}${separator}api_key=${API_KEY}`;
 
@@ -54,7 +72,7 @@ async function fetchTMDB(path) {
                 await delay(wait);
                 continue;
             }
-            if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status} for ${redact(url)}`);
             return await res.json();
         } catch (err) {
             if (i === 3) throw err;
@@ -198,7 +216,7 @@ async function main() {
             await backupPerson(entity);
             completed++;
         } catch (err) {
-            log(`  ✗ failed — ${err.message}`);
+            log(`  ✗ failed — ${redact(err.message)}`);
             failed++;
         }
     }
@@ -212,6 +230,9 @@ async function main() {
 }
 
 main().catch(err => {
-    console.error('\nBackup failed:', err);
+    // Print the stack rather than the error object, so it can be redacted:
+    // an unhandled fetch failure carries the request URL — and with it the
+    // API key — in its stack and `cause`.
+    console.error('\nBackup failed:', redact(err && err.stack ? err.stack : err));
     process.exit(1);
 });

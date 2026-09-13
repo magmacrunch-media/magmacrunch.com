@@ -8,7 +8,7 @@
  * Output: og/*.png
  */
 
-import { createCanvas, GlobalFonts } from '@napi-rs/canvas'
+import { createCanvas, GlobalFonts, loadImage } from '@napi-rs/canvas'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
@@ -29,10 +29,23 @@ if (!existsSync(FONT_PATH)) {
 GlobalFonts.registerFromPath(FONT_PATH, 'Press Start 2P')
 
 // ---------------------------------------------------------------------------
+// Logo
+// ---------------------------------------------------------------------------
+
+const LOGO_PATH = join(ROOT, 'assets', 'logos', 'MClogoNoText.png')
+let logo = null
+if (existsSync(LOGO_PATH)) {
+  logo = await loadImage(LOGO_PATH)
+} else {
+  console.warn('Logo not found at', LOGO_PATH, '— will use fallback pixel M')
+}
+
+// ---------------------------------------------------------------------------
 // Page configs
 // ---------------------------------------------------------------------------
 
 const PAGES = [
+  // Section pages
   { id: 'home', title: 'magmacrunch\nmedia', subtitle: 'music / art / archives / arcade', color: '#FF3D6E' },
   { id: 'arcade', title: 'ARCADE', subtitle: 'board games / card games / puzzles / action', color: '#00F5FF' },
   { id: 'music', title: 'MUSIC', subtitle: 'distributed music / jukebox / physical media', color: '#C45FFF' },
@@ -42,6 +55,48 @@ const PAGES = [
   { id: 'ware', title: 'WARE', subtitle: 'browser utilities', color: '#00F5FF' },
   { id: 'about', title: 'ABOUT', subtitle: 'magmacrunch media', color: '#FF3D6E' },
   { id: 'guestbook', title: 'GUESTBOOK', subtitle: 'sign the guestbook', color: '#39FF6E' },
+  { id: 'donate', title: 'DONATE', subtitle: 'support magmacrunch media', color: '#FF3D6E' },
+
+  // Arcade collection indexes
+  { id: 'arcade-board-games', title: 'BOARD GAMES', subtitle: 'chess / checkers / backgammon / parchisi / chinese checkers', color: '#00F5FF' },
+  { id: 'arcade-card-games', title: 'CARD GAMES', subtitle: 'solitaire / cribbage / soko / texas hold\'em / tarot', color: '#00F5FF' },
+  { id: 'arcade-puzzles', title: 'PUZZLES', subtitle: '2^N / george boole / 15 puzzle / threes / klotski / tetris', color: '#00F5FF' },
+  { id: 'arcade-action', title: 'ACTION', subtitle: 'moonlight drift / very long boards / roderick tron / cave diving', color: '#00F5FF' },
+
+  // Board games
+  { id: 'arcade-chess', title: 'CHESS', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
+  { id: 'arcade-checkers', title: 'CHECKERS', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
+  { id: 'arcade-backgammon', title: 'BACKGAMMON', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
+  { id: 'arcade-parchisi', title: 'PARCHIS', subtitle: 'play in the magmacrunch arcade', color: '#F1BF00' },
+  { id: 'arcade-chinese-checkers', title: 'CHINESE\nCHECKERS', subtitle: 'play in the magmacrunch arcade', color: '#C45FFF' },
+
+  // Card games
+  { id: 'arcade-solitaire', title: 'KLONDIKE\nSOLITAIRE', subtitle: 'play in the magmacrunch arcade', color: '#00F0FF' },
+  { id: 'arcade-cribbage', title: 'CRIBBAGE', subtitle: 'play in the magmacrunch arcade', color: '#FFD700' },
+  { id: 'arcade-scandinavian-stud', title: 'SOKO', subtitle: 'scandinavian stud — play in the arcade', color: '#39FF84' },
+  { id: 'arcade-solitaire-thld', title: 'TEXAS HOLD\'EM\nLAVA DOME', subtitle: 'play in the magmacrunch arcade', color: '#FF6F1A' },
+  { id: 'arcade-tarot', title: 'FRENCH\nTAROT', subtitle: 'play in the magmacrunch arcade', color: '#FFD700' },
+
+  // Puzzles
+  { id: 'arcade-2^N', title: '2^N', subtitle: 'play in the magmacrunch arcade', color: '#00F0FF' },
+  { id: 'arcade-george-boole', title: 'GEORGE BOOLE', subtitle: 'has entered the chat', color: '#39FF84' },
+  { id: 'arcade-fifteen-puzzle', title: '15 PUZZLE', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
+  { id: 'arcade-threes', title: 'THREES', subtitle: 'play in the magmacrunch arcade', color: '#00F5FF' },
+  { id: 'arcade-klotski', title: 'KLOTSKI', subtitle: 'play in the magmacrunch arcade', color: '#FF2D4A' },
+  { id: 'arcade-tetris', title: 'TETRIS', subtitle: 'helsinki 1989 — play in the arcade', color: '#F0F8FF' },
+
+  // Action
+  { id: 'arcade-moonlight-drift', title: 'MOONLIGHT\nDRIFT', subtitle: 'play in the magmacrunch arcade', color: '#FF2E9C' },
+  { id: 'arcade-very-long-boards', title: 'VERY LONG\nBOARDS', subtitle: 'play in the magmacrunch arcade', color: '#B537F2' },
+  { id: 'arcade-roderick-tron', title: 'RODERICK\nTRON', subtitle: 'play in the magmacrunch arcade', color: '#00F0FF' },
+  { id: 'arcade-makemecookies', title: 'MAKEME-\nCOOKIES!X4', subtitle: 'play in the magmacrunch arcade', color: '#FF5FA2' },
+  { id: 'arcade-jovian', title: 'JOVIAN', subtitle: 'humanitarian conflict — play in the arcade', color: '#FFC247' },
+  { id: 'arcade-cave-diving', title: 'CAVE\nDIVING', subtitle: 'not even once — play in the arcade', color: '#3FE0D0' },
+
+  // Unclassified
+  { id: 'arcade-sorry', title: 'SORRY!', subtitle: 'play in the magmacrunch arcade', color: '#FF8C00' },
+  { id: 'arcade-aggravation', title: 'AGGRAVATION', subtitle: 'play in the magmacrunch arcade', color: '#FFE03A' },
+  { id: 'arcade-pay2play', title: 'PAY2PLAY', subtitle: 'play in the magmacrunch arcade', color: '#FF00FF' },
 ]
 
 // ---------------------------------------------------------------------------
@@ -56,7 +111,6 @@ const HEIGHT = 630
 // ---------------------------------------------------------------------------
 
 function drawBackground(ctx) {
-  // Black background
   ctx.fillStyle = '#080808'
   ctx.fillRect(0, 0, WIDTH, HEIGHT)
 }
@@ -69,7 +123,6 @@ function drawScanlines(ctx) {
 }
 
 function drawBorder(ctx, color) {
-  // Thin neon border
   ctx.strokeStyle = color
   ctx.lineWidth = 3
   ctx.shadowColor = color
@@ -79,7 +132,6 @@ function drawBorder(ctx, color) {
 }
 
 function drawAccentBar(ctx, color) {
-  // Top accent bar
   ctx.fillStyle = color
   ctx.shadowColor = color
   ctx.shadowBlur = 20
@@ -110,13 +162,18 @@ function drawSubtitle(ctx, subtitle) {
 }
 
 function drawBranding(ctx, color) {
-  // Site URL at bottom
   ctx.fillStyle = '#4a4a4a'
   ctx.font = '10px "Press Start 2P"'
   ctx.fillText('magmacrunch.com', 60, HEIGHT - 50)
 
-  // Pixel logo on the right
-  drawPixelM(ctx, WIDTH - 180, HEIGHT - 200, color)
+  if (logo) {
+    const logoSize = 80
+    const logoX = WIDTH - 60 - logoSize
+    const logoY = HEIGHT - 60 - logoSize
+    ctx.drawImage(logo, logoX, logoY, logoSize, logoSize)
+  } else {
+    drawPixelM(ctx, WIDTH - 180, HEIGHT - 200, color)
+  }
 }
 
 function drawPixelM(ctx, x, y, color) {
