@@ -591,9 +591,15 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                     // our own pages rather than anything a visitor supplies.
                     // eslint-disable-next-line no-new-func
                     const cfg = new Function('return (' + valueStr + ')')();
-                    if (cfg && cfg.tex && cfg.tex.macros && MathJax.config && MathJax.config.tex) {
-                        if (!MathJax.config.tex.macros) MathJax.config.tex.macros = {};
-                        Object.assign(MathJax.config.tex.macros, cfg.tex.macros);
+                    if (MathJax.config && MathJax.config.tex) {
+                        // MathJax already loaded — merge macros into running config
+                        if (cfg && cfg.tex && cfg.tex.macros) {
+                            if (!MathJax.config.tex.macros) MathJax.config.tex.macros = {};
+                            Object.assign(MathJax.config.tex.macros, cfg.tex.macros);
+                        }
+                    } else {
+                        // MathJax not yet loaded — set config for CDN script to read
+                        window.MathJax = cfg;
                     }
                 } catch (e) { console.warn('SPA MathJax config:', e); }
                 continue;
