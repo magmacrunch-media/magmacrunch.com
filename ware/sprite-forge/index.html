@@ -127,7 +127,8 @@
                 <span class="tb-sep"></span>
                 <button id="grid-toggle" class="tool-btn toggle active" title="Toggle pixel grid (D)">&#9638; GRID</button>
                 <button id="mirror-toggle" class="tool-btn toggle" title="Mirror drawing across the vertical center (M)">&#8651; MIRROR</button>
-                <button id="onion-toggle" class="tool-btn toggle" title="Onion skin — ghost of the previous frame (N)">&#9678; ONION</button>
+                <button id="onion-toggle" class="tool-btn toggle" title="Onion skin — ghosts of the frames either side, rose behind and cyan ahead (N)">&#9678; ONION</button>
+                <button id="onion-depth" class="tool-btn" disabled title="How many frames the ghosts reach in each direction (Shift+N)">1</button>
                 <span class="tb-sep"></span>
                 <button id="dock-toggle" class="tool-btn toggle active" title="Show the preview dock (P)">&#9707; PREVIEW</button>
                 <span class="tb-sep"></span>
@@ -531,7 +532,12 @@
                 <dt><kbd>&minus;</kbd> <kbd>=</kbd></dt><dd>Zoom out / in</dd>
                 <dt><kbd>D</kbd></dt><dd>Pixel grid</dd>
                 <dt><kbd>M</kbd></dt><dd>Mirror across the vertical centre</dd>
-                <dt><kbd>N</kbd></dt><dd>Onion skin</dd>
+                <dt><kbd>N</kbd></dt><dd>Onion skin &mdash; ghosts of the frames either side of this one,
+                    rose for the ones behind and cyan for the ones ahead. It wraps, so the
+                    last frame ghosts against the first.</dd>
+                <dt><kbd>Shift</kbd><kbd>N</kbd></dt><dd>How far the ghosts reach, 1 to 4 each way.
+                    They fade with distance, and a frame is never ghosted twice however deep
+                    you wind it.</dd>
             </dl>
 
             <div class="sub-label">project</div>
@@ -622,7 +628,7 @@
     <script src="core/color.js?v=7c3a8d1d"></script>
     <script src="core/draw.js?v=6107b978"></script>
     <script src="core/select.js?v=e752f32c"></script>
-    <script src="core/frames.js?v=b059f8cc"></script>
+    <script src="core/frames.js?v=a6a54ab9"></script>
     <script src="core/transform.js?v=a27d6b54"></script>
     <script src="core/sheet.js?v=5b13d4e8"></script>
     <script src="core/mesh.js?v=51b06a44"></script>
@@ -639,13 +645,13 @@
     <script src="core/palettes.js?v=feb8f901"></script>
     <!-- the one keyboard table; editor.js, project-ui.js and help-ui.js all
          resolve through it -->
-    <script src="core/keybindings.js?v=95521259"></script>
+    <script src="core/keybindings.js?v=2f93e970"></script>
     <!-- before menu.js, which reads the hints it rewrites. On Windows this
          file does nothing at all. -->
     <script src="platform.js?v=f806408d"></script>
     <!-- before editor.js, which encodes the sheet it exports -->
     <script src="png.js?v=65978a7e"></script>
-    <script src="editor.js?v=1002a677"></script>
+    <script src="editor.js?v=304703bc"></script>
     <!-- after editor.js, and before project-ui.js which asks it for the list.
          It seeds itself from the blank sprite the editor has already made. -->
     <script src="sprites-ui.js?v=949bacd1"></script>
