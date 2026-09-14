@@ -85,6 +85,11 @@
                     </button>
                 </div>
 
+                <div class="start-deck">
+                    <label for="deck-choice">DECK</label>
+                    <select id="deck-choice" hidden></select>
+                </div>
+
                 <div class="start-footer">
                     <p>DRAW 3 &nbsp;·&nbsp; TIMED SCORING &nbsp;·&nbsp; TOP 10 LEADERBOARD</p>
                 </div>
@@ -271,6 +276,7 @@
     <script src="../shared/score-server.js?v=9acd988c"></script>
     <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
     <script src="../shared/adenosine-cards.js?v=d4b92390"></script>
+    <script src="../shared/cards/deck-choice.js?v=cd0e9c7c"></script>
     <script src="js/game.js?v=b5d6b467"></script>
     <script src="js/main.js?v=380b172e"></script>
 

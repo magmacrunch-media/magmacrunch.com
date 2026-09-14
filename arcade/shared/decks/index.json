@@ -1,0 +1,13 @@
+{
+  "format": "magmacrunch-arcade-deck",
+  "version": "1.0",
+  "decks": [
+    {
+      "file": "magmacrunch-v1.deck.json",
+      "name": "MagmaCrunch v1",
+      "cards": 52,
+      "extras": 0,
+      "updated": "2026-09-14"
+    }
+  ]
+}
