@@ -313,6 +313,13 @@
                     <button id="frame-left" title="Move this frame earlier (Shift+[)">&#8676; MOVE</button>
                     <button id="frame-right" title="Move this frame later (Shift+])">MOVE &#8677;</button>
                 </div>
+                <div class="row">
+                    <label class="field">
+                        <span class="label-text">hold</span>
+                        <input type="number" id="frame-hold" value="1" min="1" max="99"
+                               title="How many beats of the frame rate this frame stays up. 1 is an even animation; the sheet strip marks anything more.">
+                    </label>
+                </div>
                 <div class="sub-label">playback</div>
                 <div class="row">
                     <button id="anim-play" title="Play / pause (Space)">&#9654;</button>
@@ -510,6 +517,10 @@
                 <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Previous / next frame</dd>
                 <dt><kbd>Shift</kbd><kbd>[</kbd> <kbd>]</kbd></dt><dd>Move this frame earlier / later &mdash; or drag it in the sheet strip</dd>
                 <dt><kbd>Space</kbd></dt><dd>Play / pause</dd>
+                <dt>hold</dt><dd>How many beats of the frame rate this frame stays up.
+                    1 is an even animation; the sheet strip marks anything more with
+                    &times;n. It is in the .forge file and nowhere else &mdash; so is the
+                    frame rate, because no export target takes one.</dd>
                 <dt><kbd>&larr;&uarr;&darr;&rarr;</kbd></dt><dd>Nudge the whole drawing a pixel, wrapping at the edge &mdash; with a selection up they move that instead</dd>
                 <dt><kbd>H</kbd> <kbd>V</kbd></dt><dd>Flip this frame across the vertical / horizontal</dd>
                 <dt><kbd>R</kbd></dt><dd>Turn the whole sprite 90&deg; clockwise &mdash; every frame, and the frame size with them. A 16&times;24 becomes a 24&times;16 and the origin goes with it.</dd>
@@ -611,12 +622,12 @@
     <script src="core/color.js?v=7c3a8d1d"></script>
     <script src="core/draw.js?v=6107b978"></script>
     <script src="core/select.js?v=e752f32c"></script>
-    <script src="core/frames.js?v=20efaa25"></script>
+    <script src="core/frames.js?v=b059f8cc"></script>
     <script src="core/transform.js?v=a27d6b54"></script>
     <script src="core/sheet.js?v=5b13d4e8"></script>
     <script src="core/mesh.js?v=51b06a44"></script>
     <script src="core/templates.js?v=1d3705e7"></script>
-    <script src="core/project.js?v=df56292e"></script>
+    <script src="core/project.js?v=30ea7be7"></script>
     <script src="core/targets/gamemaker.js?v=6f0a6c02"></script>
     <script src="core/targets/engines.js?v=bb9f62ff"></script>
     <!-- store reads engines.kinds() at load: an engine it has never heard
@@ -634,7 +645,7 @@
     <script src="platform.js?v=f806408d"></script>
     <!-- before editor.js, which encodes the sheet it exports -->
     <script src="png.js?v=65978a7e"></script>
-    <script src="editor.js?v=899b5d98"></script>
+    <script src="editor.js?v=1002a677"></script>
     <!-- after editor.js, and before project-ui.js which asks it for the list.
          It seeds itself from the blank sprite the editor has already made. -->
     <script src="sprites-ui.js?v=949bacd1"></script>
