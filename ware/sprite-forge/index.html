@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="style.css?v=afcb1741">
+    <link rel="stylesheet" href="style.css?v=40af33dd">
     <!-- kit/ and bridge.js load here rather than with the other scripts at the
          end of the body. bridge-core.js decides whether there is a filesystem
          at all, and marks <html class="desktop"> when there is; doing that
@@ -148,7 +148,7 @@
                     <canvas id="anim-canvas"></canvas>
                 </div>
                 <div class="preview-block">
-                    <span class="sheet-label">sheet; click a frame to edit it</span>
+                    <span class="sheet-label">sheet; click a frame to edit it, drag to reorder</span>
                     <canvas id="sheet-canvas"></canvas>
                 </div>
                 <!-- The frame wrapped onto the surface it is bound for. A
@@ -308,6 +308,10 @@
                     <button id="frame-add" title="Add blank frame">ADD</button>
                     <button id="frame-dup" title="Duplicate frame">DUP</button>
                     <button id="frame-del" title="Delete frame">DEL</button>
+                </div>
+                <div class="row nav-row">
+                    <button id="frame-left" title="Move this frame earlier (Shift+[)">&#8676; MOVE</button>
+                    <button id="frame-right" title="Move this frame later (Shift+])">MOVE &#8677;</button>
                 </div>
                 <div class="sub-label">playback</div>
                 <div class="row">
@@ -504,6 +508,7 @@
             <div class="sub-label">frames</div>
             <dl class="ref-grid">
                 <dt><kbd>[</kbd> <kbd>]</kbd></dt><dd>Previous / next frame</dd>
+                <dt><kbd>Shift</kbd><kbd>[</kbd> <kbd>]</kbd></dt><dd>Move this frame earlier / later &mdash; or drag it in the sheet strip</dd>
                 <dt><kbd>Space</kbd></dt><dd>Play / pause</dd>
                 <dt><kbd>&larr;&uarr;&darr;&rarr;</kbd></dt><dd>Nudge the whole drawing a pixel, wrapping at the edge &mdash; with a selection up they move that instead</dd>
                 <dt><kbd>H</kbd> <kbd>V</kbd></dt><dd>Flip across the vertical / horizontal</dd>
@@ -606,6 +611,7 @@
     <script src="core/color.js?v=7c3a8d1d"></script>
     <script src="core/draw.js?v=6107b978"></script>
     <script src="core/select.js?v=e752f32c"></script>
+    <script src="core/frames.js?v=20efaa25"></script>
     <script src="core/sheet.js?v=5b13d4e8"></script>
     <script src="core/mesh.js?v=51b06a44"></script>
     <script src="core/templates.js?v=1d3705e7"></script>
@@ -621,13 +627,13 @@
     <script src="core/palettes.js?v=feb8f901"></script>
     <!-- the one keyboard table; editor.js, project-ui.js and help-ui.js all
          resolve through it -->
-    <script src="core/keybindings.js?v=fbcfb3f0"></script>
+    <script src="core/keybindings.js?v=95521259"></script>
     <!-- before menu.js, which reads the hints it rewrites. On Windows this
          file does nothing at all. -->
     <script src="platform.js?v=f806408d"></script>
     <!-- before editor.js, which encodes the sheet it exports -->
     <script src="png.js?v=65978a7e"></script>
-    <script src="editor.js?v=dca417de"></script>
+    <script src="editor.js?v=8c662183"></script>
     <!-- after editor.js, and before project-ui.js which asks it for the list.
          It seeds itself from the blank sprite the editor has already made. -->
     <script src="sprites-ui.js?v=949bacd1"></script>
