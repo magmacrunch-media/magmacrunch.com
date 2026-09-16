@@ -81,7 +81,14 @@ main {
     color: var(--mc-text-primary);
 }
 
-/* ── DONATE BUTTON ── */
+/* ── DONATE BUTTONS ── */
+.donate-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .donate-btn {
     display: inline-block;
     font-family: 'Press Start 2P', monospace;
@@ -104,6 +111,16 @@ main {
     color: var(--black);
     box-shadow: 0 0 30px rgba(0,245,255,0.5), inset 0 0 20px rgba(255,255,255,0.15);
     transform: translateY(-2px);
+}
+
+.donate-btn.paypal {
+    background: #0070ba;
+    box-shadow: 0 0 20px rgba(0,112,186,0.4), inset 0 0 20px rgba(255,255,255,0.1);
+}
+
+.donate-btn.paypal:hover {
+    background: #005ea6;
+    box-shadow: 0 0 30px rgba(0,112,186,0.5), inset 0 0 20px rgba(255,255,255,0.15);
 }
 
 /* ── NOTE ── */
