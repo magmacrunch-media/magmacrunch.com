@@ -124,13 +124,16 @@ main .breadcrumb-place .current { color: var(--green); }
     gap: 10px;
     margin-bottom: 36px;
 }
-/* Hero pages: keep this row's height constant regardless of which font
-   is active, so a font-swap reflow can't shift the bottom-anchored
-   hero block (and its title) above it. Scroll instead of wrapping. */
-.artist-hero .artist-header .sub-nav {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-}
+/* Hero pages once set flex-wrap: nowrap here, so a font-swap reflow could
+   not change this row's height and shove the bottom-anchored hero block
+   (and its title) up -- measured at 34px on jon-mccoy. It never covered
+   every hero: the selector wants .artist-header between .artist-hero and
+   .sub-nav, and svfp, thld and juanito-thompson nest .sub-nav straight in
+   .hero-inner, so those three wrapped while the other eighteen squashed
+   their buttons into a single row. Three behaviours for one component.
+   The cause is handled at the source instead -- every hero preloads
+   PressStart2P-Regular.woff2, so the font is present at first paint and
+   there is no swap left to reflow. All archive pages now wrap. */
 .subpage-links {
     width: 100%;
     max-width: 700px;
