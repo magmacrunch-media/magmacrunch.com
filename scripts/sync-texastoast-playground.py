@@ -18,15 +18,30 @@ run it by hand any time:
 Only the region between the BEGIN/END markers is touched. TT_FILES and the
 Pyodide directory list are derived from the embedded paths in app.js itself, so
 a new submodule needs no change here.
+
+It then points playground.html's app.js?v= stamp at app.js's new digest.
+Rewriting app.js without that leaves returning visitors on the cached old
+engine, and this script used to do exactly that: the 0.11.2 sync (2026-09-07)
+and the 0.11.3 sync (2026-09-15) each left the stamp stale until somebody
+restamped it by hand. The pre-commit hook would have caught it, but the
+workflow's bot commit never runs hooks. The stamp is checked on every run,
+including one where app.js is already current, so a stale stamp heals itself.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
 APP_JS = Path(__file__).resolve().parent.parent / "ware" / "texastoast" / "app.js"
+PLAYGROUND = APP_JS.with_name("playground.html")
+
+# The one reference to app.js in playground.html, with or without a stamp.
+# Anchored on the quote so a hypothetical other-app.js cannot match.
+APP_JS_REF_RE = re.compile(r'(["\'])(app\.js)(?:\?v=[^"\']*)?\1')
 
 BEGIN = "// BEGIN GENERATED TEXASTOAST FILES"
 END = "// END GENERATED TEXASTOAST FILES"
@@ -96,10 +111,48 @@ def main() -> int:
     if updated == app:
         print(f"unchanged — playground already matches texastoast {version} "
               f"({len(files)} modules)")
-        return 0
+    else:
+        APP_JS.write_text(updated, encoding="utf-8", newline="\n")
+        print(f"updated — synced playground to texastoast {version} ({len(files)} modules)")
 
-    APP_JS.write_text(updated, encoding="utf-8", newline="\n")
-    print(f"updated — synced playground to texastoast {version} ({len(files)} modules)")
+    return stamp_playground()
+
+
+def app_digest() -> str:
+    """First 8 hex of sha256 over app.js with newlines normalised to LF.
+
+    Must agree with digestContent() in scripts/lib/cache-busters.mjs, which
+    check-cache-busters.mjs and the pre-commit hook use to judge this stamp.
+    Normalising matters because .js is left to each clone's core.autocrlf: the
+    same blob is CRLF on Windows and LF on Linux, and a raw-byte hash would
+    make a Windows run and a CI run restamp each other forever.
+    """
+    text = APP_JS.read_bytes().decode("utf-8").replace("\r\n", "\n")
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:8]
+
+
+def stamp_playground() -> int:
+    """Point playground.html's app.js reference at ?v=<app_digest()>."""
+    if not PLAYGROUND.exists():
+        print(f"error: {PLAYGROUND} not found", file=sys.stderr)
+        return 1
+
+    # Bytes in and out, so the file's own line endings survive untouched.
+    source = PLAYGROUND.read_bytes().decode("utf-8")
+    digest = app_digest()
+    stamped, count = APP_JS_REF_RE.subn(
+        lambda m: f"{m.group(1)}{m.group(2)}?v={digest}{m.group(1)}", source
+    )
+    if count != 1:
+        print(f"error: expected one app.js reference in {PLAYGROUND.name}, "
+              f"found {count}", file=sys.stderr)
+        return 1
+
+    if stamped == source:
+        print(f"stamp current — {PLAYGROUND.name} loads app.js?v={digest}")
+    else:
+        PLAYGROUND.write_bytes(stamped.encode("utf-8"))
+        print(f"restamped — {PLAYGROUND.name} now loads app.js?v={digest}")
     return 0
 
 

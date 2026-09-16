@@ -9,9 +9,11 @@
  * wrong by the other.
  *
  * scripts/sync-playground.py:bundle_digest() is a third implementation, in
- * Python, for the bundle it generates. It cannot import this, so it carries a
- * comment saying the two must agree. Any change to digest() below belongs
- * there in the same commit.
+ * Python, for the bundle it generates, and
+ * scripts/sync-texastoast-playground.py:app_digest() a fourth, for the
+ * texastoast engine it embeds. Neither can import this, so each carries a
+ * comment saying they must agree. Any change to digest() below belongs in both
+ * of them in the same commit.
  *
  * check-staged-stamps.mjs, which .githooks/pre-commit runs, is the other
  * caller, and the reason more than the digest lives here. It reads files out

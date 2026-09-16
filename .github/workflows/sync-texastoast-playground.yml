@@ -47,7 +47,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ware/texastoast/app.js
+          # playground.html too: the script restamps its app.js?v= reference
+          # whenever app.js changes, and a bot commit runs no pre-commit hook
+          # to notice if the stamp is left behind.
+          git add ware/texastoast/app.js ware/texastoast/playground.html
           if git diff --cached --quiet; then
             echo "Playground already up to date."
           else
