@@ -65,9 +65,9 @@ body.jm-page .sub-nav .nav-card.c-recordings:hover { background: transparent; bo
 body.jm-page .sub-nav .nav-card.c-works { background: var(--jm-deep-sage); color: var(--jm-cream); border-color: var(--jm-deep-sage); }
 body.jm-page .sub-nav .nav-card.c-works:hover { background: transparent; border-color: var(--jm-deep-sage); color: var(--jm-near-white); }
 
-/* Music videos button: light cool */
-body.jm-page .sub-nav .nav-card.c-music-videos { background: var(--jm-light-cool); color: var(--jm-bg); border-color: var(--jm-light-cool); }
-body.jm-page .sub-nav .nav-card.c-music-videos:hover { background: transparent; border-color: var(--jm-light-cool); color: var(--jm-near-white); }
+/* Videos button: light cool */
+body.jm-page .sub-nav .nav-card.c-videos { background: var(--jm-light-cool); color: var(--jm-bg); border-color: var(--jm-light-cool); }
+body.jm-page .sub-nav .nav-card.c-videos:hover { background: transparent; border-color: var(--jm-light-cool); color: var(--jm-near-white); }
 
 /* Links button: periwinkle */
 body.jm-page .sub-nav .nav-card.c-links { background: var(--jm-periwinkle); color: var(--jm-near-white); border-color: var(--jm-periwinkle); }

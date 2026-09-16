@@ -89,19 +89,19 @@ body.fldc-page .nav-card.c-recordings:hover {
     color: var(--fldc-bg-screen-pale);
 }
 
-/* c-orange: arc orange (music videos) */
-body.fldc-page .nav-card.c-music-videos {
+/* c-orange: arc orange (videos) */
+body.fldc-page .nav-card.c-videos {
     background: var(--fldc-arc-orange);
     color: var(--fldc-bg-screen-pale);
     border-color: var(--fldc-arc-orange);
 }
-body.fldc-page .nav-card.c-music-videos:hover {
+body.fldc-page .nav-card.c-videos:hover {
     background: transparent;
     border-color: var(--fldc-arc-orange);
     color: var(--fldc-arc-orange);
 }
 
-/* c-events: alias for music videos (used by artist_links.js template) */
+/* c-events: alias for videos (used by artist_links.js template) */
 body.fldc-page .nav-card.c-events {
     background: var(--fldc-arc-orange);
     color: var(--fldc-bg-screen-pale);

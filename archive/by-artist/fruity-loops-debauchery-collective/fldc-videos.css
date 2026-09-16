@@ -1,19 +1,19 @@
-/* Fruity Loops Debauchery Bros — music-videos page — accent: c-orange */
-body.fldc-page.fldc-music-videos-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
-body.fldc-page.fldc-music-videos-page main > * { background: var(--fldc-bg); }
-body.fldc-page.fldc-music-videos-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
+/* Fruity Loops Debauchery Bros — videos page — accent: c-orange */
+body.fldc-page.fldc-videos-page main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+body.fldc-page.fldc-videos-page main > * { background: var(--fldc-bg); }
+body.fldc-page.fldc-videos-page main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
 
-body.fldc-page.fldc-music-videos-page .breadcrumb { color: var(--fldc-arc-orange); }
-body.fldc-page.fldc-music-videos-page .breadcrumb a { color: var(--fldc-arc-orange); }
-body.fldc-page.fldc-music-videos-page .breadcrumb a:hover { color: var(--fldc-arc-yellow); }
-body.fldc-page.fldc-music-videos-page .breadcrumb .sep { color: var(--fldc-arc-orange); opacity: 0.6; }
-body.fldc-page.fldc-music-videos-page .breadcrumb .current { color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-videos-page .breadcrumb { color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-videos-page .breadcrumb a { color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-videos-page .breadcrumb a:hover { color: var(--fldc-arc-yellow); }
+body.fldc-page.fldc-videos-page .breadcrumb .sep { color: var(--fldc-arc-orange); opacity: 0.6; }
+body.fldc-page.fldc-videos-page .breadcrumb .current { color: var(--fldc-arc-orange); }
 
-body.fldc-page.fldc-music-videos-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
-body.fldc-page.fldc-music-videos-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--fldc-arc-orange); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
-body.fldc-page.fldc-music-videos-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--fldc-arc-orange); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(208,96,32,0.45); }
+body.fldc-page.fldc-videos-page .page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+body.fldc-page.fldc-videos-page .artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--fldc-arc-orange); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+body.fldc-page.fldc-videos-page .page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--fldc-arc-orange); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(208,96,32,0.45); }
 
-body.fldc-page.fldc-music-videos-page .divider {
+body.fldc-page.fldc-videos-page .divider {
     width: 100%;
     max-width: 960px;
     height: 1px;
@@ -22,8 +22,8 @@ body.fldc-page.fldc-music-videos-page .divider {
     opacity: 0.4;
 }
 
-body.fldc-page.fldc-music-videos-page .videos-section { width: 100%; max-width: 960px; animation: fadeUp 0.5s 0.25s ease both; }
-body.fldc-page.fldc-music-videos-page .no-videos { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--fldc-bg-neutral); padding: 32px; text-align: center; opacity: 0.6; }
+body.fldc-page.fldc-videos-page .videos-section { width: 100%; max-width: 960px; animation: fadeUp 0.5s 0.25s ease both; }
+body.fldc-page.fldc-videos-page .no-videos { font-family: 'Courier Prime', monospace; font-size: 14px; color: var(--fldc-bg-neutral); padding: 32px; text-align: center; opacity: 0.6; }
 
 /* ── Video list ── */
 .video-list { width: 100%; }
@@ -166,8 +166,8 @@ body.fldc-page.fldc-music-videos-page .no-videos { font-family: 'Courier Prime',
 .mb-error { font-size: 0.78rem; color: var(--fldc-arc-red); }
 
 /* ── Nav card overrides ── */
-body.fldc-page.fldc-music-videos-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-orange); border-color: var(--fldc-arc-orange); }
-body.fldc-page.fldc-music-videos-page .nav-card.c-back:hover { background: var(--fldc-arc-orange); color: var(--fldc-bg-surface); }
+body.fldc-page.fldc-videos-page .nav-card.c-back { background: transparent; color: var(--fldc-arc-orange); border-color: var(--fldc-arc-orange); }
+body.fldc-page.fldc-videos-page .nav-card.c-back:hover { background: var(--fldc-arc-orange); color: var(--fldc-bg-surface); }
 
-body.fldc-page.fldc-music-videos-page .nav-card::after { display: none; }
-body.fldc-page.fldc-music-videos-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
+body.fldc-page.fldc-videos-page .nav-card::after { display: none; }
+body.fldc-page.fldc-videos-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }

@@ -60,9 +60,9 @@ body.thld-page .sub-nav .nav-card.c-about:hover { background: inherit !important
 body.thld-page .sub-nav .nav-card.c-events { background: var(--thld-warm-brown); color: var(--thld-bg); border-color: var(--thld-warm-brown); }
 body.thld-page .sub-nav .nav-card.c-events:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
 
-/* c-music-videos: solid slate teal (formerly c-slate) */
-body.thld-page .sub-nav .nav-card.c-music-videos { background: var(--thld-teal); color: var(--thld-bg); border-color: var(--thld-teal); }
-body.thld-page .sub-nav .nav-card.c-music-videos:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
+/* c-videos: solid slate teal (formerly c-slate) */
+body.thld-page .sub-nav .nav-card.c-videos { background: var(--thld-teal); color: var(--thld-bg); border-color: var(--thld-teal); }
+body.thld-page .sub-nav .nav-card.c-videos:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
 
 /* c-photography: solid dusty purple (formerly c-purple) */
 body.thld-page .sub-nav .nav-card.c-photography { background: var(--thld-purple); color: var(--thld-bg); border-color: var(--thld-purple); }

@@ -49,7 +49,7 @@ const COLOR_MAP = {
         releases:    'c-releases',
         works:       'c-works',
         lyrics:      'c-lyrics',
-        'music-videos': 'c-music-videos',
+        'videos': 'c-videos',
         games:       'c-games',
     };
 

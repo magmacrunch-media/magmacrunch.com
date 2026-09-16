@@ -93,6 +93,14 @@ function extractBodyText(html, maxLength = 600) {
   return text;
 }
 
+// ── Helper: skip pages that ask not to be indexed ──
+// Redirect stubs (the retired/moved pages) carry robots noindex. Without this
+// the crawler indexes ALL .html it finds, so a stub surfaces in search under
+// its own title rather than the page it points at.
+function isNoindex(html) {
+  return /<meta[^>]+name=["']robots["'][^>]*content=["'][^"']*noindex/i.test(html);
+}
+
 // ── Helper: extract title from HTML ────────────────────────
 function extractTitle(html) {
   const m = html.match(/<title>([^<]+)<\/title>/);
@@ -219,6 +227,7 @@ function parsePhysicalMedia() {
     const files = findHtmlFiles(dir);
     for (const file of files) {
       const html = fs.readFileSync(file, 'utf8');
+      if (isNoindex(html)) continue;
       const title = extractTitle(html);
       if (!title) continue;
       const relPath = path.relative(ROOT, file).replace(/\\/g, '/');
@@ -253,6 +262,7 @@ function parseArchiveSection(type) {
 
     for (const file of files) {
       const html = fs.readFileSync(file, 'utf8');
+      if (isNoindex(html)) continue;
       const title = extractTitle(html);
       if (!title) continue;
 
@@ -318,6 +328,7 @@ function parsePress() {
 
   for (const file of files) {
     const html = fs.readFileSync(file, 'utf8');
+    if (isNoindex(html)) continue;
     const title = extractTitle(html);
     if (!title) continue;
 

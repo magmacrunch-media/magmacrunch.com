@@ -63,9 +63,9 @@ body.woah-page .sub-nav .nav-card.c-releases:hover { background: var(--woah-dusk
 body.woah-page .sub-nav .nav-card.c-works { background: var(--woah-sage-mid); color: var(--woah-pink-sky); border-color: var(--woah-sage-mid); }
 body.woah-page .sub-nav .nav-card.c-works:hover { background: var(--woah-sage-dark); border-color: var(--woah-sage-dark); color: var(--woah-blush); }
 
-/* Music videos button: sunset pink */
-body.woah-page .sub-nav .nav-card.c-music-videos { background: var(--woah-sunset); color: var(--woah-bg); border-color: var(--woah-sunset); }
-body.woah-page .sub-nav .nav-card.c-music-videos:hover { background: var(--woah-rose-sky); border-color: var(--woah-rose-sky); color: var(--woah-blush); }
+/* Videos button: sunset pink */
+body.woah-page .sub-nav .nav-card.c-videos { background: var(--woah-sunset); color: var(--woah-bg); border-color: var(--woah-sunset); }
+body.woah-page .sub-nav .nav-card.c-videos:hover { background: var(--woah-rose-sky); border-color: var(--woah-rose-sky); color: var(--woah-blush); }
 
 /* Lavender / mauve variant: coastal blue variant */
 body.woah-page .sub-nav .nav-card.c-lavender { background: var(--woah-lavender); color: var(--woah-bg); border-color: var(--woah-lavender); }
@@ -75,7 +75,7 @@ body.woah-page .sub-nav .nav-card.c-lavender:hover { background: var(--woah-coas
 body.woah-page .sub-nav .nav-card.c-links { background: var(--woah-mauve); color: var(--woah-pink-sky); border-color: var(--woah-mauve); }
 body.woah-page .sub-nav .nav-card.c-links:hover { background: var(--woah-coastal); border-color: var(--woah-coastal); color: var(--woah-blush); }
 
-/* c-events: alias for music videos (used by artist_links.js template) */
+/* c-events: alias for videos (used by artist_links.js template) */
 body.woah-page .sub-nav .nav-card.c-events { background: var(--woah-sunset); color: var(--woah-bg); border-color: var(--woah-sunset); }
 body.woah-page .sub-nav .nav-card.c-events:hover { background: var(--woah-rose-sky); border-color: var(--woah-rose-sky); color: var(--woah-blush); }
 

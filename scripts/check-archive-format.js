@@ -22,7 +22,7 @@ const TEXT_TO_CLASS = {
   'events':       'c-events',
   'games':        'c-games',
   'links':        'c-links',
-  'music videos': 'c-music-videos',
+  'videos': 'c-videos',
   'network':      'c-network',
   'documentary':  'c-documentary',
   'personnel':    'c-personnel',
@@ -130,7 +130,7 @@ function loadCssClasses(dir) {
   for (const cssFile of cssFiles) {
     try {
       const css = fs.readFileSync(cssFile, 'utf8');
-      // Match .nav-card.c-classname patterns (handles .nav-card.c-music-videos, body.x-page .nav-card.c-events, etc.)
+      // Match .nav-card.c-classname patterns (handles .nav-card.c-videos, body.x-page .nav-card.c-events, etc.)
       const re = /\.nav-card\.([\w-]+)/g;
       let m;
       while ((m = re.exec(css))) classes.add(m[1]);

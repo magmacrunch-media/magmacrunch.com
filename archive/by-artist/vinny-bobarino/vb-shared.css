@@ -44,9 +44,9 @@ body.vb-page .sub-nav .nav-card.c-back:hover { background: var(--vb-accent); col
 body.vb-page .sub-nav .nav-card.c-about { background: var(--vb-deep); color: var(--vb-bg); border-color: var(--vb-deep); }
 body.vb-page .sub-nav .nav-card.c-about:hover { background: transparent; color: var(--vb-body); }
 
-/* Music videos button: formerly c-orange */
-body.vb-page .sub-nav .nav-card.c-music-videos { background: var(--vb-winter-sky); color: var(--vb-bg); border-color: var(--vb-winter-sky); }
-body.vb-page .sub-nav .nav-card.c-music-videos:hover { background: transparent; color: var(--vb-body); }
+/* Videos button: formerly c-orange */
+body.vb-page .sub-nav .nav-card.c-videos { background: var(--vb-winter-sky); color: var(--vb-bg); border-color: var(--vb-winter-sky); }
+body.vb-page .sub-nav .nav-card.c-videos:hover { background: transparent; color: var(--vb-body); }
 
 /* Photography button: solid sky blue */
 body.vb-page .sub-nav .nav-card.c-photography { background: var(--vb-sky); color: var(--vb-bg); border-color: var(--vb-sky); }

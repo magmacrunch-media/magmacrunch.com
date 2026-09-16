@@ -45,7 +45,7 @@
         games:       'c-games',
         links:       'c-links',
         lyrics:      'c-lyrics',
-        'music-videos': 'c-music-videos',
+        'videos': 'c-videos',
         network:     'c-network',
         photography: 'c-photography',
         events:      'c-events',

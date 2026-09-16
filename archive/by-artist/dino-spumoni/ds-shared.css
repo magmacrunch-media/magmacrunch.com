@@ -65,7 +65,7 @@ body.ds-page .nav-card.c-releases:hover { background: transparent; border-color:
 body.ds-page .nav-card.c-works { background: var(--ds-cta); color: var(--ds-deep); border-color: var(--ds-cta); }
 body.ds-page .nav-card.c-works:hover { background: transparent; border-color: var(--ds-cta); color: var(--ds-offwhite); }
 
-/* c-blue: solid brand (music videos button) */
+/* c-blue: solid brand (videos button) */
 body.ds-page .nav-card.c-blue { background: var(--ds-brand); color: var(--ds-heading); border-color: var(--ds-brand); }
 body.ds-page .nav-card.c-blue:hover { background: transparent; border-color: var(--ds-brand); color: var(--ds-offwhite); }
 
