@@ -17,12 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v7
+      # The repo's own checker, not `magmascript archive check-format`. That
+      # command has not run since magmascript 3.2.2 (2026-08-31): its domain
+      # commands are never registered, so every run of this workflow died on
+      # "Unknown domain: 'archive'" and checked nothing. Its Python port had
+      # also drifted -- it still expected the 'music videos' nav label.
+      # python3 below is the runner's own, used only to read the JSON.
+      - uses: actions/setup-node@v7
         with:
-          python-version: '3.12'
-
-      - name: Install magmascript
-        run: pip install 'magmascript>=3.2.1'
+          node-version: 22
 
       - name: Run checker
         id: check
@@ -40,11 +43,11 @@ jobs:
           #
           # So keep swallowing the exit status, but check the OUTPUT, and keep
           # stderr to say what went wrong when there is none.
-          magmascript archive check-format --json \
+          node scripts/check-archive-format.js --json \
             > /tmp/check-result.json 2> /tmp/check-err.txt || true
 
           if ! python3 -c "import json; json.load(open('/tmp/check-result.json'))" 2>/dev/null; then
-            echo "::error::magmascript archive check-format produced no usable JSON — the archive was NOT checked"
+            echo "::error::check-archive-format.js produced no usable JSON — the archive was NOT checked"
             echo "--- stderr ---"
             cat /tmp/check-err.txt
             echo "--- stdout ---"

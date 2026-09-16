@@ -12,15 +12,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v7
+      # The repo's own script, not magmascript's Python port of it: the ports
+      # drift, and no magmascript release from 3.2.2 can run a domain command.
+      - uses: actions/setup-node@v7
         with:
-          python-version: '3.12'
-
-      - name: Install magmascript
-        run: pip install magmascript
+          node-version: 22
 
       - name: Run backup
-        run: magmascript mb backup --skip-existing
+        run: node scripts/backup-musicbrainz.mjs --skip-existing
         env:
           MAGMA_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

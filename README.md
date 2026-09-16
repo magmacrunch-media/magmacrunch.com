@@ -122,15 +122,15 @@ See [Bots wiki page](https://github.com/magmacrunch-media/magmacrunch.com/wiki/B
 
 | Script | Purpose | Usage |
 |---|---|---|
-| `backup-musicbrainz.mjs` | Snapshot MusicBrainz data | `magmascript mb backup` |
+| `backup-musicbrainz.mjs` | Snapshot MusicBrainz data | `node scripts/backup-musicbrainz.mjs` |
 | `backup-tmdb.mjs` | Snapshot TMDB data | `node scripts/backup-tmdb.mjs` |
-| `bake-cache.mjs` | Inline cache into HTML pages | `magmascript archive bake-cache` |
+| `bake-cache.mjs` | Inline cache into HTML pages | `node scripts/bake-cache.mjs` |
 | `build-search-index.js` | Build search index | `make search-index` |
 | `generate-og.mjs` | Generate OG preview images | `npm run og` |
 | `generate-theme-audit.mjs` | Scan CSS, generate color preview | `node scripts/generate-theme-audit.mjs` |
 | `generate-archive-stubs.mjs` | Generate archive page stubs | `node scripts/generate-archive-stubs.mjs` |
 | `scaffold-game.mjs` | Generate new game boilerplate | `node scripts/scaffold-game.mjs` |
-| `weekly-scores.mjs` | Generate high score summary | `magmascript scores report` |
+| `weekly-scores.mjs` | Generate high score summary | `node scripts/weekly-scores.mjs` |
 
 **Note**: Most scripts now have magmascript equivalents. Use `magmascript <domain> --help` to see available commands.
 
