@@ -11,15 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v7
+      # The repo's own builder, as the Pi bot uses -- not magmascript's Python
+      # port, which drifted from it (see arcade/scripts/bot-rebuild-search-index.sh).
+      - uses: actions/setup-node@v7
         with:
-          python-version: '3.12'
-
-      - name: Install magmascript
-        run: pip install magmascript
+          node-version: 22
 
       - name: Build search index
-        run: magmascript search build-index
+        run: node scripts/build-search-index.js
 
       - name: Commit if changed
         run: |

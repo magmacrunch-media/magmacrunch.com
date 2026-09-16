@@ -125,7 +125,7 @@ See [Bots wiki page](https://github.com/magmacrunch-media/magmacrunch.com/wiki/B
 | `backup-musicbrainz.mjs` | Snapshot MusicBrainz data | `magmascript mb backup` |
 | `backup-tmdb.mjs` | Snapshot TMDB data | `node scripts/backup-tmdb.mjs` |
 | `bake-cache.mjs` | Inline cache into HTML pages | `magmascript archive bake-cache` |
-| `build-search-index.js` | Build search index | `magmascript search build-index` |
+| `build-search-index.js` | Build search index | `make search-index` |
 | `generate-og.mjs` | Generate OG preview images | `npm run og` |
 | `generate-theme-audit.mjs` | Scan CSS, generate color preview | `node scripts/generate-theme-audit.mjs` |
 | `generate-archive-stubs.mjs` | Generate archive page stubs | `node scripts/generate-archive-stubs.mjs` |
