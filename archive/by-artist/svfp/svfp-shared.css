@@ -71,6 +71,10 @@ body.svfp-page .nav-card.c-documentary:hover { background: transparent !importan
 body.svfp-page .nav-card.c-links { background: var(--svfp-teal-bright); color: var(--svfp-bg); border-color: var(--svfp-teal-bright); }
 body.svfp-page .nav-card.c-links:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
 
+/* Lyrics button: bridge (soft lilac) */
+body.svfp-page .nav-card.c-lyrics { background: var(--svfp-bridge); color: var(--svfp-bg); border-color: var(--svfp-bridge); }
+body.svfp-page .nav-card.c-lyrics:hover { background: transparent !important; color: var(--svfp-offwhite) !important; }
+
 body.svfp-page .nav-card::after { display: none; }
 body.svfp-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 

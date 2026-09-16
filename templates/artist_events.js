@@ -45,7 +45,8 @@ const COLOR_MAP = {
         recordings:  'c-recordings',
         releases:    'c-releases',
         works:       'c-works',
-        'music-videos': 'c-blue',
+        lyrics:      'c-lyrics',
+        'music-videos': 'c-music-videos',
     };
 
     const ACCENT_RGB = {

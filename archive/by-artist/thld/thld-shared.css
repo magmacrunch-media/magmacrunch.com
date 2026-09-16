@@ -92,5 +92,9 @@ body.thld-page .sub-nav .nav-card.c-games:hover { background: inherit !important
 body.thld-page .sub-nav .nav-card.c-links { background: var(--thld-sky); color: var(--thld-bg); border-color: var(--thld-sky); }
 body.thld-page .sub-nav .nav-card.c-links:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
 
+/* Lyrics button: honey */
+body.thld-page .sub-nav .nav-card.c-lyrics { background: var(--thld-honey); color: var(--thld-bg); border-color: var(--thld-honey); }
+body.thld-page .sub-nav .nav-card.c-lyrics:hover { background: inherit !important; color: var(--thld-offwhite) !important; box-shadow: none !important; }
+
 body.thld-page footer { color: var(--thld-muted); }
 body.thld-page footer span { color: var(--thld-highlight); }

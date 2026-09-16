@@ -53,6 +53,7 @@
         recordings:  'c-recordings',
         releases:    'c-releases',
         works:       'c-works',
+        lyrics:      'c-lyrics',
         'music-videos': 'c-music-videos',
         games:       'c-games',
     };

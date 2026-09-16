@@ -73,6 +73,10 @@ body.jm-page .sub-nav .nav-card.c-music-videos:hover { background: transparent; 
 body.jm-page .sub-nav .nav-card.c-links { background: var(--jm-periwinkle); color: var(--jm-near-white); border-color: var(--jm-periwinkle); }
 body.jm-page .sub-nav .nav-card.c-links:hover { background: transparent; border-color: var(--jm-periwinkle); color: var(--jm-near-white); }
 
+/* Lyrics button: taupe */
+body.jm-page .sub-nav .nav-card.c-lyrics { background: var(--jm-taupe); color: var(--jm-near-white); border-color: var(--jm-taupe); }
+body.jm-page .sub-nav .nav-card.c-lyrics:hover { background: transparent; border-color: var(--jm-taupe); color: var(--jm-near-white); }
+
 body.jm-page .nav-card::after { display: none; }
 
 body.jm-page footer { color: var(--jm-muted); }

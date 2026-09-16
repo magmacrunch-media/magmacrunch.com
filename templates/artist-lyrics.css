@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════════════
+   archive — lyrics page template
+   templates/artist-lyrics.css
+   ═══════════════════════════════════════════════
+   Set --section-accent in the page's <style> block:
+     :root { --section-accent: var(--jm-taupe); }
+   ═══════════════════════════════════════════════ */
+
+/* Main layout */
+main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 72px 20px 60px; }
+main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margin: 0 0 16px; align-self: flex-start; }
+
+/* Breadcrumb */
+.breadcrumb { color: var(--dim); }
+.breadcrumb a { color: var(--section-accent); }
+.breadcrumb a:hover { color: var(--cream, #f0ead8); }
+.breadcrumb .sep { color: var(--section-accent); opacity: 0.6; }
+.breadcrumb .current { color: var(--section-accent); }
+
+/* Page header */
+.page-header { width: 100%; max-width: 960px; margin-top: 16px; margin-bottom: 32px; animation: fadeUp 0.5s ease both; }
+.artist-label { font-family: 'Press Start 2P', monospace; font-size: 10px; color: var(--section-accent); letter-spacing: 0.2em; margin-bottom: 8px; opacity: 0.8; }
+.page-title { font-family: 'Press Start 2P', monospace; font-size: clamp(12px, 2.5vw, 20px); color: var(--section-accent); letter-spacing: 0.08em; line-height: 1.6; margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,0,0,0.3); }
+
+/* Back nav-card */
+.nav-card.c-back { background: transparent; color: var(--section-accent); border-color: var(--section-accent); }
+.nav-card.c-back:hover { background: var(--section-accent); color: var(--black, #080808); }
+.nav-card::after { display: none; }
+
+/* Piece cards (song list) */
+.lyrics-wrap {
+    width: min(640px, 90vw);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    animation: fadeUp 0.5s 0.1s ease both;
+}
+
+.piece-card {
+    display: flex;
+    gap: 0;
+    border: 2px solid var(--mc-border, #3D2018);
+    border-bottom: none;
+    background: var(--deep);
+    text-decoration: none;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+    overflow: hidden;
+}
+.piece-card:last-child { border-bottom: 2px solid var(--mc-border, #3D2018); }
+.piece-card:hover {
+    border-color: var(--section-accent);
+    background: var(--surface, #1a0d08);
+}
+
+.piece-card::before {
+    content: '';
+    display: block;
+    width: 4px;
+    flex-shrink: 0;
+    background: var(--section-accent);
+    transition: width 0.15s;
+}
+.piece-card:hover::before { width: 7px; }
+
+.piece-card-info {
+    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.piece-card-text { flex: 1; }
+
+.piece-card-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(8px, 1.4vw, 10px);
+    color: var(--section-accent);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+    margin-bottom: 5px;
+}
+
+.piece-card-arrow {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: var(--section-accent);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.15s, transform 0.15s;
+    flex-shrink: 0;
+}
+.piece-card:hover .piece-card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}

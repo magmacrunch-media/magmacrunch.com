@@ -30,7 +30,7 @@
     const d      = C.depth  || '../../../';
     const accent = C.accent || 'rose';
 
-const COLOR_MAP = {
+ const COLOR_MAP = {
         about:       'c-about',
         links:       'c-links',
         photography: 'c-photography',
@@ -38,7 +38,8 @@ const COLOR_MAP = {
         recordings:  'c-recordings',
         releases:    'c-releases',
         works:       'c-works',
-        'music-videos': 'c-events',
+        lyrics:      'c-lyrics',
+        'music-videos': 'c-music-videos',
         games:       'c-green',
     };
 

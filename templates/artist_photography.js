@@ -28,6 +28,7 @@
     const COLOR_MAP = {
         about:       'c-deep',
         links:       'c-links',
+        lyrics:      'c-lyrics',
         photography: 'c-blue',
         events:      'c-green',
         recordings:  'c-cyan',

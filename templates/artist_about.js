@@ -33,6 +33,7 @@
         recordings:  'c-recordings',
         releases:    'c-releases',
         works:       'c-works',
+        lyrics:      'c-lyrics',
     };
 
     const BACK_COLOR_VAR = {

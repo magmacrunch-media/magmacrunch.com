@@ -48,7 +48,8 @@ const COLOR_MAP = {
         recordings:  'c-recordings',
         releases:    'c-releases',
         works:       'c-works',
-        'music-videos': 'c-events',
+        lyrics:      'c-lyrics',
+        'music-videos': 'c-music-videos',
         games:       'c-green',
     };
 

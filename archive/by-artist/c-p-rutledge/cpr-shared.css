@@ -127,6 +127,17 @@ body.cpr-page .nav-card.c-back:hover {
     color: var(--cpr-cream);
 }
 
+/* Lyrics button: orange */
+body.cpr-page .nav-card.c-lyrics {
+    background: var(--cpr-orange);
+    color: var(--cpr-surface);
+    border-color: var(--cpr-orange);
+}
+body.cpr-page .nav-card.c-lyrics:hover {
+    background: transparent;
+    color: var(--cpr-cream);
+}
+
 body.cpr-page .nav-card::after { display: none; }
 body.cpr-page .nav-card:hover { background: inherit !important; color: inherit !important; box-shadow: none !important; }
 
