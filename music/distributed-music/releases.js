@@ -1,5 +1,15 @@
 window.RELEASES = [
   {
+    id: 'lost-months',
+    title: 'Lost Months EP (2026)',
+    artist: 'The Four B\'s',
+    artistLink: '../../archive/by-artist/four-bs/',
+    art: '../../assets/album-art/lost_months_EP.jpg',
+    mbid: 'd9955591-5e9c-475d-a052-a660fc81e815',
+    distLink: 'https://release.landr.com/lostmonthsep',
+    description: 'Distributed and first released on September 15, 2026.'
+  },
+  {
     id: 'sex-van-floor-plan',
     title: 'Sex Van Floor Plan (2026)',
     artist: 'Sex Van Floor Plan',
