@@ -268,6 +268,59 @@ gh_api() {
     fi
 }
 
+# Create a GitHub Discussion on magmacrunch.com.
+# Usage: url=$(gh_create_discussion <category-slug> <title> <body>)
+#
+# Prints the new Discussion's URL. On any failure, says why on stderr and
+# returns 1, so call it inside `if` -- under set -e a bare failing call would
+# take the bot down before its Discord post.
+#
+# Two things made the old inline versions post nothing:
+#   - createDiscussion takes a categoryId. There is no categorySlug input, so
+#     the category is looked up by slug first.
+#   - GraphQL reports errors with HTTP 200, which gh_api counts as success, so
+#     the response body is checked for the created Discussion.
+# Title and body reach node through the environment, never through the source
+# of a script, so quotes and newlines in them cannot break the payload.
+gh_create_discussion() {
+    local slug="$1" title="$2" body="$3"
+    local lookup response ids repo_id category_id payload
+
+    lookup=$(node -e 'console.log(JSON.stringify({ query:
+        "{ repository(owner: \"magmacrunch-media\", name: \"magmacrunch.com\") {" +
+        " id discussionCategories(first: 25) { nodes { id slug } } } }" }))')
+    response=$(gh_api POST /graphql "$lookup") || return 1
+
+    if ! ids=$(SLUG="$slug" RESPONSE="$response" node -e '
+        const d = JSON.parse(process.env.RESPONSE);
+        const repo = d.data && d.data.repository;
+        const cat = repo && repo.discussionCategories.nodes.find(c => c.slug === process.env.SLUG);
+        if (!repo || !cat) { console.error(JSON.stringify(d.errors || d)); process.exit(1); }
+        console.log(repo.id + " " + cat.id);'); then
+        echo "Discussion category '$slug' not found on magmacrunch.com" >&2
+        return 1
+    fi
+    read -r repo_id category_id <<< "$ids"
+
+    payload=$(REPO_ID="$repo_id" CATEGORY_ID="$category_id" TITLE="$title" BODY="$body" node -e '
+        console.log(JSON.stringify({
+            query: "mutation ($input: CreateDiscussionInput!) { createDiscussion(input: $input) { discussion { url } } }",
+            variables: { input: {
+                repositoryId: process.env.REPO_ID,
+                categoryId: process.env.CATEGORY_ID,
+                title: process.env.TITLE,
+                body: process.env.BODY,
+            } },
+        }));')
+    response=$(gh_api POST /graphql "$payload") || return 1
+
+    RESPONSE="$response" node -e '
+        const d = JSON.parse(process.env.RESPONSE);
+        const disc = d.data && d.data.createDiscussion && d.data.createDiscussion.discussion;
+        if (!disc) { console.error("GitHub refused the Discussion: " + JSON.stringify(d.errors || d)); process.exit(1); }
+        console.log(disc.url);'
+}
+
 # WHEN THE FAILURE IS THE NEWS, NOT AN ERROR.
 #
 # `set -euo pipefail` at the top of this file is right for the bots' own

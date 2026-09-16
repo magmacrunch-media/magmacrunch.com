@@ -42,62 +42,13 @@ if [ -n "${DRY_RUN:-}" ]; then
 fi
 
 # ── GitHub Discussion ──
-#
-# createDiscussion takes a category *id*, so look it up by slug first. GraphQL
-# answers HTTP 200 with an "errors" array when a call fails, which gh_api counts
-# as success -- so the response body is checked too, not just the status.
-# A failure here is reported and does not stop the Discord post.
-post_discussion() {
-    local lookup ids repo_id category_id payload response url
-
-    lookup=$(node -e 'console.log(JSON.stringify({ query:
-        "{ repository(owner: \"magmacrunch-media\", name: \"magmacrunch.com\") {" +
-        " id discussionCategories(first: 25) { nodes { id slug } } } }" }))')
-
-    if ! response=$(gh_api POST /graphql "$lookup"); then
-        echo "WARNING: could not look up the High Scores category — Discussion not posted." >&2
-        return 0
-    fi
-
-    if ! ids=$(RESPONSE="$response" node -e '
-        const d = JSON.parse(process.env.RESPONSE);
-        const repo = d.data && d.data.repository;
-        const cat = repo && repo.discussionCategories.nodes.find(c => c.slug === "high-scores");
-        if (!repo || !cat) { console.error(JSON.stringify(d.errors || d)); process.exit(1); }
-        console.log(repo.id + " " + cat.id);'); then
-        echo "WARNING: High Scores category not found — Discussion not posted." >&2
-        return 0
-    fi
-    read -r repo_id category_id <<< "$ids"
-
-    payload=$(REPO_ID="$repo_id" CATEGORY_ID="$category_id" TITLE="$TITLE" BODY="$REPORT" node -e '
-        console.log(JSON.stringify({
-            query: "mutation ($input: CreateDiscussionInput!) { createDiscussion(input: $input) { discussion { url } } }",
-            variables: { input: {
-                repositoryId: process.env.REPO_ID,
-                categoryId: process.env.CATEGORY_ID,
-                title: process.env.TITLE,
-                body: process.env.BODY,
-            } },
-        }));')
-
-    if ! response=$(gh_api POST /graphql "$payload"); then
-        echo "WARNING: Discussion post failed." >&2
-        return 0
-    fi
-
-    if url=$(RESPONSE="$response" node -e '
-        const d = JSON.parse(process.env.RESPONSE);
-        const disc = d.data && d.data.createDiscussion && d.data.createDiscussion.discussion;
-        if (!disc) { console.error(JSON.stringify(d.errors || d)); process.exit(1); }
-        console.log(disc.url);'); then
-        echo "Posted Discussion: $url"
-    else
-        echo "WARNING: GitHub refused the Discussion." >&2
-    fi
-}
-
-post_discussion
+# gh_create_discussion (pi-bot-env.sh) looks the category up by slug and checks
+# the response; a failure is reported and does not stop the Discord post.
+if url=$(gh_create_discussion high-scores "$TITLE" "$REPORT"); then
+    echo "Posted Discussion: $url"
+else
+    echo "WARNING: Discussion not posted." >&2
+fi
 
 # ── Discord ──
 if [ -n "${DISCORD_WEBHOOK_URL:-}" ]; then

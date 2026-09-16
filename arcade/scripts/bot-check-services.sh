@@ -2,9 +2,16 @@
 # Check Pi service health via TCP port checks.
 # Posts to GitHub Discussions and Discord on failure.
 # Cron: */30 * * * * (every 30 minutes)
+#
+#   DRY_RUN=1 bot-check-services.sh                  check, post nothing
+#   SERVICES_JSON=/tmp/x.json DRY_RUN=1 ...          check a test service list
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/pi-bot-env.sh"
+
+if [ -n "${DRY_RUN:-}" ]; then
+    discord_post() { echo "DRY_RUN: Discord not posted"; }
+fi
 
 echo "[$(date -u '+%Y-%m-%d %H:%M UTC')] Starting service health check"
 
@@ -15,7 +22,7 @@ HEALTHY=""
 # Ports come from arcade/shared/services.json, the same file chat-server.py and
 # start-all.sh read. This script keeping its own copy is how it ended up as the
 # only one of the three that knew about all eleven services.
-SERVICES_JSON="$SCRIPT_DIR/../shared/services.json"
+SERVICES_JSON="${SERVICES_JSON:-$SCRIPT_DIR/../shared/services.json}"
 
 if [ ! -f "$SERVICES_JSON" ]; then
     echo "Missing $SERVICES_JSON — cannot tell which ports to probe" >&2
@@ -40,27 +47,65 @@ done < <(node -e '
     }
 ' "$SERVICES_JSON")
 
+# ONE DISCUSSION PER OUTAGE, NOT ONE PER RUN.
+#
+# This bot has never posted a Discussion. The payload sent `categorySlug`, which
+# CreateDiscussionInput does not have (it takes a categoryId); the call's output
+# and status were both thrown away, and GraphQL reports errors with HTTP 200
+# anyway; and the body was built with "\n" inside double quotes, which bash
+# leaves as a literal backslash-n. None of it ever showed, because no service
+# has been down since the log began.
+#
+# Fixing only those would have produced a new public Discussion every thirty
+# minutes for as long as a service stayed down. So a Discussion is posted when
+# the SET of down services changes, and the set is remembered in DOWN_STAMP. A
+# failed post leaves the stamp alone, so the next run tries again; recovery
+# clears it, so the next outage posts. Discord keeps its every-run alert.
+DOWN_STAMP="$PI_HOME/arcade-config/.services-down"
+
 if [ -n "$FAILED" ]; then
     echo "Down services:$FAILED"
 
-    # Post to GitHub Discussion
-    REPORT="# Pi Service Health Check Failed\n\nSome services on the Pi are not responding.\n\n## Down services:$FAILED\n\n## Quick diagnosis\n\n\`\`\`bash\nssh jake@192.168.1.16 \"sudo systemctl status 'arcade-*' --no-pager\"\n\`\`\`\n\n## Restart a service\n\n\`\`\`bash\nssh jake@192.168.1.16 \"sudo systemctl restart arcade-<name>\"\n\`\`\`\n\n---\n*Created by Pi service health bot*"
+    DOWN_NOW=$(printf '%s\n' $FAILED | sort | tr '\n' ' ' | sed 's/ $//')
+    DOWN_BEFORE=$(cat "$DOWN_STAMP" 2>/dev/null || true)
 
-    PAYLOAD=$(node -e "
-        console.log(JSON.stringify({
-            query: 'mutation (\$input: CreateDiscussionInput!) { createDiscussion(input: \$input) { discussion { url } } }',
-            variables: {
-                input: {
-                    repositoryId: '$(gh_api GET /repos/magmacrunch-media/magmacrunch.com | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');console.log(JSON.parse(d).node_id)")',
-                    title: 'Pi services down — $(date -u '+%Y-%m-%d %H:%M')',
-                    body: $(printf '%s' "$REPORT" | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');console.log(JSON.stringify(d))"),
-                    categorySlug: 'service-health'
-                }
-            }
-        }));
-    ")
+    REPORT=$(cat <<EOF
+# Pi Service Health Check Failed
 
-    gh_api POST "/graphql" "$PAYLOAD" > /dev/null 2>&1 || echo "Failed to post Discussion"
+Some services on the Pi are not responding.
+
+## Down services
+
+$(printf -- '- %s\n' $FAILED)
+
+## Quick diagnosis
+
+\`\`\`bash
+ssh jake@192.168.1.16 "sudo systemctl status 'arcade-*' --no-pager"
+\`\`\`
+
+## Restart a service
+
+\`\`\`bash
+ssh jake@192.168.1.16 "sudo systemctl restart arcade-<name>"
+\`\`\`
+
+---
+*Created by Pi service health bot*
+EOF
+)
+
+    if [ "$DOWN_NOW" = "$DOWN_BEFORE" ]; then
+        echo "Discussion already posted for this outage ($DOWN_NOW) — not posting again"
+    elif [ -n "${DRY_RUN:-}" ]; then
+        echo "DRY_RUN: would post this Discussion to Service Health:"
+        printf '%s\n' "$REPORT"
+    elif url=$(gh_create_discussion service-health "Pi services down — $(date -u '+%Y-%m-%d %H:%M')" "$REPORT"); then
+        echo "Posted Discussion: $url"
+        printf '%s\n' "$DOWN_NOW" > "$DOWN_STAMP"
+    else
+        echo "WARNING: Discussion not posted — will try again next run." >&2
+    fi
 
     # Post to Discord
     SERVICE_LIST=$(echo "$FAILED" | sed 's/^[[:space:]]*//' | sed 's/ /\\n- /g')
@@ -86,6 +131,10 @@ if [ -n "$FAILED" ]; then
     }"
 else
     echo "All services healthy"
+    if [ -f "$DOWN_STAMP" ] && [ -z "${DRY_RUN:-}" ]; then
+        echo "Recovered from: $(cat "$DOWN_STAMP")"
+        rm -f "$DOWN_STAMP"
+    fi
 fi
 
 echo "[$(date -u '+%Y-%m-%d %H:%M UTC')] Service check complete"
