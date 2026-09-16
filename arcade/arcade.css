@@ -414,6 +414,66 @@ main {
     animation: blink 0.2s step-end 3;
 }
 
+/* ── SUPPORT SECTION ── */
+.support-section {
+    margin-top: 60px;
+    text-align: center;
+    animation: fadeUp 0.5s 0.55s ease both;
+}
+
+.support-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #fff733;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(255,224,58,0.4);
+}
+
+.support-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: #8a7fa8;
+    margin-bottom: 20px;
+}
+
+.support-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.support-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: #0a0612;
+    background: #fff733;
+    padding: 12px 24px;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 16px rgba(255,224,58,0.3);
+}
+
+.support-btn:hover {
+    background: #00f5ff;
+    box-shadow: 0 0 24px rgba(0,245,255,0.5);
+    transform: translateY(-2px);
+}
+
+.support-btn.paypal {
+    background: #0070ba;
+    color: #fff;
+    box-shadow: 0 0 16px rgba(0,112,186,0.3);
+}
+
+.support-btn.paypal:hover {
+    background: #005ea6;
+    box-shadow: 0 0 24px rgba(0,112,186,0.5);
+}
+
 /* ── FOOTER ── */
 footer { border-top-color: #3a2d5c; }
 footer span { color: #ff2e9c; }
