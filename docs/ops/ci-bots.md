@@ -146,7 +146,7 @@ rsync, so they do not appear anywhere in this repo:
 
 | Entry | Cron | What it is |
 |---|---|---|
-| `arcade/scripts/monitor-mc1-runner.py` | every 2 min | Pings MC1; appends to `~/arcade/logs/mc1-monitor.log`. Untracked — it exists only on the Pi, and the log has no rotation (~1 MB and growing). |
+| `arcade/scripts/monitor-mc1-runner.py` | every 2 min | Pings MC1; appends to `~/arcade/logs/mc1-monitor.log`. Untracked — it exists only on the Pi. Its log is rotated weekly with the rest of `~/arcade/logs/*.log` by `/etc/logrotate.d/pi-bots`, also Pi-only, which needs `su jake jake` because that directory is group-writable. |
 | `magmacrunch-ops/status/status.py` | every minute | Feeds the MAGMA//OPS status server. Belongs to `magmacrunch-ops`, not this repo. |
 
 **A Pi bot that dies in `pi-bot-env.sh` writes nothing at all** — no log line, no
