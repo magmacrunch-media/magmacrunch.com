@@ -38,9 +38,12 @@
             margin-bottom: 24px;
             align-self: flex-start;
         }
-        .breadcrumb a { color: var(--thld-muted); text-decoration: none; transition: color 0.15s; }
-        .breadcrumb a:hover { color: var(--section-accent); }
-        .breadcrumb .sep { margin: 0 8px; color: var(--thld-mid); }
+        /* The section accent throughout, as templates/artist-lyrics.css sets it
+           on every other lyrics page. This is the one song page that does not
+           link that template, so these rules are what it renders. */
+        .breadcrumb a { color: var(--section-accent); text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: var(--cream, #f0ead8); }
+        .breadcrumb .sep { margin: 0 8px; color: var(--section-accent); opacity: 0.6; }
         .breadcrumb .current { color: var(--section-accent); }
 
         .article-header {
