@@ -34,6 +34,10 @@
         releases:    'c-releases',
         works:       'c-works',
         lyrics:      'c-lyrics',
+    'music-videos': 'c-music-videos',
+    games:       'c-games',
+    documentary: 'c-documentary',
+    network:     'c-network',
     };
 
     const BACK_COLOR_VAR = {

@@ -47,6 +47,9 @@ const COLOR_MAP = {
         works:       'c-works',
         lyrics:      'c-lyrics',
         'music-videos': 'c-music-videos',
+    games:       'c-games',
+    documentary: 'c-documentary',
+    network:     'c-network',
     };
 
     const ACCENT_RGB = {

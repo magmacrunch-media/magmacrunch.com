@@ -50,7 +50,7 @@ const COLOR_MAP = {
         works:       'c-works',
         lyrics:      'c-lyrics',
         'music-videos': 'c-music-videos',
-        games:       'c-green',
+        games:       'c-games',
     };
 
     const BACK_COLOR_VAR = {
