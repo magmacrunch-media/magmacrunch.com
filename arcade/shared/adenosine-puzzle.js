@@ -386,10 +386,20 @@ var AdPuzzle = (() => {
 
   // src/puzzle-input.ts
   var SWIPE_THRESHOLD = 30;
-  function create3(callbacks, boardElement) {
+  function create3(callbacks, boardElement, options = {}) {
+    const threshold = options.swipeThreshold ?? SWIPE_THRESHOLD;
+    const wantsMove = !!callbacks.onDrag || !!options.commitOnThreshold;
     let touchStartX = 0;
     let touchStartY = 0;
+    let committed = false;
     const listeners = [];
+    function directionOf(dx, dy) {
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+      if (Math.max(absDx, absDy) <= threshold) return null;
+      if (absDx > absDy) return dx > 0 ? "right" : "left";
+      return dy > 0 ? "down" : "up";
+    }
     function onKeyDown(e) {
       if (!callbacks.isActive()) return;
       let direction = null;
@@ -416,23 +426,30 @@ var AdPuzzle = (() => {
       const touch = e.touches[0];
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
+      committed = false;
+    }
+    function onTouchMove(e) {
+      if (!callbacks.isActive()) return;
+      const touch = e.touches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const direction = directionOf(dx, dy);
+      if (direction) e.preventDefault();
+      if (options.commitOnThreshold && !committed && direction) {
+        committed = true;
+        callbacks.onMove(direction);
+      }
+      callbacks.onDrag?.({ dx, dy, direction, committed });
     }
     function onTouchEnd(e) {
       if (!callbacks.isActive()) return;
-      const touch = e.changedTouches[0];
-      const dx = touch.clientX - touchStartX;
-      const dy = touch.clientY - touchStartY;
-      const absDx = Math.abs(dx);
-      const absDy = Math.abs(dy);
-      if (Math.max(absDx, absDy) > SWIPE_THRESHOLD) {
-        let direction;
-        if (absDx > absDy) {
-          direction = dx > 0 ? "right" : "left";
-        } else {
-          direction = dy > 0 ? "down" : "up";
-        }
-        callbacks.onMove(direction);
+      if (!committed) {
+        const touch = e.changedTouches[0];
+        const direction = directionOf(touch.clientX - touchStartX, touch.clientY - touchStartY);
+        if (direction) callbacks.onMove(direction);
       }
+      committed = false;
+      callbacks.onDragEnd?.();
     }
     function setup() {
       document.addEventListener("keydown", onKeyDown);
@@ -442,6 +459,10 @@ var AdPuzzle = (() => {
         boardElement.addEventListener("touchend", onTouchEnd);
         listeners.push({ element: boardElement, event: "touchstart", handler: onTouchStart });
         listeners.push({ element: boardElement, event: "touchend", handler: onTouchEnd });
+        if (wantsMove) {
+          boardElement.addEventListener("touchmove", onTouchMove, { passive: false });
+          listeners.push({ element: boardElement, event: "touchmove", handler: onTouchMove });
+        }
       }
     }
     function destroy() {
