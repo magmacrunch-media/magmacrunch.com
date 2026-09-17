@@ -1,0 +1,141 @@
+/* ── PAGE-SPECIFIC: /privacy/ and /support/ ──
+   The two pages App Store Connect links to. Long-form reading text, so the
+   body is Courier Prime at a comfortable measure and Press Start 2P is kept
+   to headings, as on the donate page. */
+:root {
+    --nav-accent: var(--mc-cereal-cyan);
+    --nav-glow: rgba(0,245,255,0.3);
+    --nav-brand: var(--mc-cereal-rose);
+    --nav-brand-glow: rgba(255,61,110,0.6);
+}
+
+body {
+    background-color: var(--mc-sky-deep);
+    background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 4px
+    );
+    color: var(--mc-text-primary);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 16px 60px;
+}
+
+/* ── BREADCRUMB ── */
+.breadcrumb {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--mc-smoke);
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+    align-self: flex-start;
+}
+.breadcrumb a { color: var(--mc-smoke); text-decoration: none; }
+.breadcrumb a:hover { color: var(--mc-cereal-cyan); }
+.breadcrumb .sep { margin: 0 8px; color: var(--mc-ash); }
+.breadcrumb .current { color: var(--mc-text-primary); font-weight: 700; }
+
+/* ── PAGE TITLE ── */
+.page-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--mc-cereal-cyan);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    text-transform: lowercase;
+    text-align: center;
+    text-shadow: 0 0 12px rgba(0,245,255,0.35);
+}
+
+.page-sub {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: var(--mc-cereal-rose);
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    text-align: center;
+    margin-bottom: 36px;
+}
+
+/* ── CONTENT ── */
+.app-doc {
+    width: 100%;
+    max-width: 640px;
+}
+
+.app-doc h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--mc-lava-bright);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+    margin: 36px 0 14px;
+}
+
+.app-doc p,
+.app-doc li,
+.app-doc dd {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--mc-text-primary);
+}
+
+.app-doc p + p { margin-top: 12px; }
+
+.app-doc ul {
+    margin: 12px 0 0 22px;
+}
+
+.app-doc li + li { margin-top: 6px; }
+
+.app-doc a {
+    color: var(--mc-cereal-cyan);
+    overflow-wrap: anywhere;
+}
+.app-doc a:hover { color: var(--mc-lava-bright); }
+
+.app-doc strong { color: var(--mc-cereal-white); }
+
+/* The one-line answer at the top of the privacy policy. */
+.app-doc .lead {
+    font-size: 17px;
+    padding: 16px 18px;
+    border: 2px solid var(--mc-cereal-cyan);
+    background: rgba(0,245,255,0.06);
+    box-shadow: 0 0 18px rgba(0,245,255,0.15);
+}
+
+.app-doc dt {
+    font-family: 'Courier Prime', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--mc-cereal-white);
+    margin-top: 18px;
+}
+
+.app-doc dd { margin: 4px 0 0; color: var(--mc-text-dim); }
+
+.app-doc .contact {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+.app-doc .updated {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--mc-smoke);
+    letter-spacing: 0.1em;
+    text-transform: lowercase;
+    margin-top: 44px;
+}
