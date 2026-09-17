@@ -218,19 +218,45 @@ function createFloatingGates(container) {
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Initialize adenosine-audio
-        await AdAudio.init({
-            music: { url: audioSrc('audio/game-loop.ogg'), volume: 0.3, fadeIn: 2.0 },
-            sfx: {
-                spawn:    { url: audioSrc('audio/sfx/spawn.ogg'),     volume: 0.3, pool: 3 },
-                merge:    { url: audioSrc('audio/sfx/merge.ogg'),     volume: 0.3, pool: 3 },
-                victory:  { url: audioSrc('audio/sfx/victory.ogg'),   volume: 0.3, pool: 3 },
-                gameOver: { url: audioSrc('audio/sfx/gameover.ogg'),  volume: 0.3, pool: 3 },
-                move:     { url: audioSrc('audio/sfx/move.ogg'),      volume: 0.3, pool: 3 },
-                highScore:{ url: audioSrc('audio/sfx/highscore.ogg'), volume: 0.3, pool: 3 },
-            },
-        });
+        // Sound effects only. The music is deliberately not in this manifest:
+        // AdAudio.init() awaits every track it is given before it returns, and
+        // game-loop is 3:50 of audio that decodeAudioData turns into roughly
+        // 84MB of PCM. With it here the loading screen waited for that whole
+        // decode, and the sound effects did not even start loading until it
+        // was done -- on a desktop about 250ms of a 274ms launch, and several
+        // times that on a phone. Nothing on the title screen needs the music.
+        //
+        // Its own try, too: audio used to share the try below with everything
+        // that wires up the title screen, so one clip failing to decode threw
+        // past all of it and left the loading screen up for good. A game with
+        // no sound is still a game.
+        try {
+            await AdAudio.init({
+                sfx: {
+                    spawn:    { url: audioSrc('audio/sfx/spawn.ogg'),     volume: 0.3, pool: 3 },
+                    merge:    { url: audioSrc('audio/sfx/merge.ogg'),     volume: 0.3, pool: 3 },
+                    victory:  { url: audioSrc('audio/sfx/victory.ogg'),   volume: 0.3, pool: 3 },
+                    gameOver: { url: audioSrc('audio/sfx/gameover.ogg'),  volume: 0.3, pool: 3 },
+                    move:     { url: audioSrc('audio/sfx/move.ogg'),      volume: 0.3, pool: 3 },
+                    highScore:{ url: audioSrc('audio/sfx/highscore.ogg'), volume: 0.3, pool: 3 },
+                },
+            });
+        } catch (error) {
+            console.error('Sound effects failed to load:', error);
+        }
         AdAudio.handleVisibility({ pauseMusic: true });
+
+        // The music decodes in the background from here, while the title
+        // screen is already up. Started, not awaited; startGame() plays it once
+        // this settles, so tapping start before the decode finishes still gets
+        // music, just a moment later. Resolves false rather than rejecting, so
+        // a track that will not decode means silence and nothing else.
+        const musicReady = AdAudio.loadMusic(audioSrc('audio/game-loop.ogg'), { volume: 0.3 })
+            .then(() => true)
+            .catch((error) => {
+                console.error('Music failed to load:', error);
+                return false;
+            });
         
         // Start loading scores
         await loadScores();
@@ -270,8 +296,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             // render loop behind the board, which matters on a phone.
             rain.stop();
 
-            // Start music with fade-in
-            AdAudio.playMusic();
+            // Start music with fade-in, as soon as the background decode above
+            // has finished -- which it usually has by the time anyone taps.
+            musicReady.then((loaded) => {
+                if (loaded) AdAudio.playMusic(2.0);
+            });
         };
         
         // Function to advance from lore screen to difficulty selector
@@ -339,6 +368,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 returnToLoreScreen = true;
                 document.getElementById('settingsModal').classList.add('active');
                 document.getElementById('settingsModal').classList.add('menu-mode');
+            });
+        }
+
+        // "full rules" on the how-to-play screen. Same shape as the two quick
+        // actions above: the instructions modal stacks below the lore screen
+        // (z-index 2100 against 3000), so the lore screen has to step aside
+        // and be put back when the modal closes.
+        const loreFullRules = document.getElementById('loreFullRules');
+        if (loreFullRules) {
+            loreFullRules.addEventListener('click', () => {
+                loreScreen.classList.remove('active');
+                returnToLoreScreen = true;
+                const instructionsModal = document.getElementById('instructionsModal');
+                instructionsModal.classList.add('active');
+                const instructionsContent = instructionsModal.querySelector('.instructions-content');
+                if (instructionsContent) {
+                    instructionsContent.scrollTop = 0;
+                }
             });
         }
 
@@ -509,10 +556,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Instructions modal controls
-        document.getElementById('closeInstructions').addEventListener('click', () => {
+        // Opened from the how-to-play screen, closing goes back to it.
+        const returnFromInstructions = () => {
+            if (returnToLoreScreen) {
+                loreScreen.classList.add('active');
+                returnToLoreScreen = false;
+            }
+        };
+
+        const closeInstructionsModal = () => {
             document.getElementById('instructionsModal').classList.remove('active');
             returnToSettings = false;
-        });
+            returnFromInstructions();
+        };
+
+        document.getElementById('closeInstructions').addEventListener('click', closeInstructionsModal);
+
+        // The same action as "close", pinned to the top of the panel so leaving
+        // does not mean scrolling to the end of the rules first.
+        const instructionsBack = document.getElementById('instructionsBack');
+        if (instructionsBack) {
+            instructionsBack.addEventListener('click', closeInstructionsModal);
+        }
 
         document.getElementById('instructionsToSettings').addEventListener('click', () => {
             document.getElementById('instructionsModal').classList.remove('active');
@@ -524,6 +589,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.target.id === 'instructionsModal') {
                 document.getElementById('instructionsModal').classList.remove('active');
                 returnToSettings = false;
+                returnFromInstructions();
             }
         });
 
