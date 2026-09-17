@@ -334,7 +334,7 @@ window.NAV_CONFIG = {
     if (!document.querySelector('script[src*="search.js"]')) {
         cssReady.then(() => {
             const script = document.createElement('script');
-            script.src = root + 'assets/search.js?v=ef6072c0';
+            script.src = root + 'assets/search.js?v=44627a79';
             document.body.appendChild(script);
         });
     }
