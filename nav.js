@@ -70,13 +70,15 @@ window.NAV_CONFIG = {
         if (sec.items && sec.items.length) {
             // Dropdown item
             navHTML += `\n<li><a href="${href}">${sec.label}</a><div class="dropdown">`;
-            // "view all" is for sections whose href is an index page. When an
-            // item already links there (about → home/about.html), it would be
-            // the same page listed twice.
-            if (!sec.items.some(item => item.href === sec.href)) {
-                navHTML += `\n<a href="${href}" class="dropdown-view-all">view all ${sec.label}</a>`;
-            }
+            // The top line reads "view all <section>" for sections whose href is
+            // an index page. When an item already links there (about →
+            // home/about.html), that item takes the top line instead, so the
+            // same page is not listed twice.
+            const landing = sec.items.find(item => item.href === sec.href);
+            const topLabel = landing ? landing.label : `view all ${sec.label}`;
+            navHTML += `\n<a href="${href}" class="dropdown-view-all">${topLabel}</a>`;
             for (const item of sec.items) {
+                if (item === landing) continue;
                 navHTML += `\n<a href="${depth}${item.href}">${item.label}</a>`;
             }
             navHTML += '</div></li>';
