@@ -85,6 +85,14 @@
     }
     
     /* Title Screen Mobile */
+    .title-screen {
+        /* Column width of the binary rain follows the glyph size, so this is
+           the one number that controls how dense the field is on a phone.
+           36px -- what the first attempt hardcoded -- is about two and a half
+           columns across a 390pt screen. */
+        --rain-size: 14px;
+    }
+
     .title-large {
         font-size: 32px;
         letter-spacing: 2px;
@@ -100,6 +108,15 @@
         padding: 15px 30px;
         letter-spacing: 0.5px;
     }
+    .title-portrait {
+        width: 96px;
+        height: 96px;
+    }
+
+    .title-portrait-wrapper {
+        margin-bottom: 16px;
+    }
+
     
     .boolean-quote {
         font-size: 8px;
@@ -346,6 +363,10 @@
     }
     
     /* Title Screen Small Mobile */
+    .title-screen {
+        --rain-size: 12px;
+    }
+
     .title-large {
         font-size: 24px;
         letter-spacing: 1px;

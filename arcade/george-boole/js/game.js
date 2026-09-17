@@ -65,7 +65,14 @@ class BooleBoard {
         
         // Track pending timeouts for cleanup (prevent stale callbacks)
         this._pendingTimeouts = [];
-        
+
+        // Suppresses _emit while checkGameOver() probes the board. See _emit.
+        this._silent = false;
+
+        // Touch-drag feedback. See _dragTiles.
+        this._dragging = false;
+        this._settleTimer = 0;
+
         this.init();
         this.setupEventListeners();
         
@@ -84,7 +91,96 @@ class BooleBoard {
                 }
             },
             isActive: () => !this.gameOver && !this.waitingForInitials,
+            // adenosine-puzzle 0.4.0 and later. An older bundle reads only
+            // onMove and isActive, so these are ignored there and the board
+            // behaves exactly as it did.
+            onDrag: (state) => this._dragTiles(state),
+            onDragEnd: () => this._settleTiles(),
         }, document.getElementById('gameBoard'));
+
+        // The engine settles on touchend but does not listen for touchcancel,
+        // which iOS fires instead when a system gesture takes the touch -- the
+        // notification shade, an incoming call. Without this the tiles would
+        // stay nudged sideways until the next drag.
+        this.addListener(this.gameBoardElement, 'touchcancel', () => this._settleTiles());
+    }
+
+    /**
+     * Nudge the occupied tiles after the finger, along the drag's axis.
+     *
+     * A rubber band, deliberately not a prediction. Tiles here are sixteen
+     * fixed cells whose contents change in place, so showing each tile sliding
+     * to where it will land would mean knowing the result of the move before
+     * making it. That leaves two ways to find out, and both are wrong: copy the
+     * merge rules into the renderer, which is a fourth implementation of them
+     * in all but name, or simulate the move, which plays real sounds and shows
+     * real popups -- checkGameOver() already does that by accident. So every
+     * occupied tile leans the same way, capped at a fraction of a cell, which
+     * says "the board heard you" without pretending to say what happens next.
+     */
+    _dragTiles({ dx, dy, direction }) {
+        if (this.gameOver || this.waitingForInitials) return;
+        const size = this.size;
+        const first = this.tiles[0];
+        if (!first || !this.tiles[1] || !this.tiles[size]) return;
+
+        // Before the threshold there is no committed direction yet, so follow
+        // whichever axis the finger is mostly on; once there is one, lock to
+        // it so a slightly diagonal swipe does not wobble.
+        const horizontal = direction
+            ? direction === 'left' || direction === 'right'
+            : Math.abs(dx) >= Math.abs(dy);
+        const distance = horizontal ? dx : dy;
+
+        // Measured, not assumed: the cell pitch changes at both responsive
+        // breakpoints, and it includes the grid gap.
+        const pitch = horizontal
+            ? this.tiles[1].offsetLeft - first.offsetLeft
+            : this.tiles[size].offsetTop - first.offsetTop;
+        const reach = Math.max(1, pitch * 0.22);
+
+        // tanh gives a soft stop: near-linear for a small drag, flattening
+        // towards `reach` however far the finger goes.
+        const offset = reach * Math.tanh(distance / reach);
+        const transform = horizontal
+            ? `translate3d(${offset.toFixed(1)}px, 0, 0)`
+            : `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const tile = this.tiles[i * size + j];
+                if (this.board[i][j] === 0) {
+                    tile.style.transform = '';
+                    continue;
+                }
+                // The tile's own `transition: all 0.15s` would make it trail
+                // the finger by a sixth of a second.
+                tile.style.transition = 'none';
+                tile.style.transform = transform;
+            }
+        }
+        this._dragging = true;
+    }
+
+    /** Let whatever _dragTiles moved glide back into its cell. */
+    _settleTiles() {
+        if (!this._dragging) return;
+        this._dragging = false;
+
+        for (const tile of this.tiles) {
+            tile.style.transition = 'transform 0.12s ease-out';
+            tile.style.transform = '';
+        }
+
+        // Hand the transition back to the stylesheet afterwards. A plain
+        // setTimeout rather than _setTimeout: checkGameOver() clears the
+        // pending-timeout list when it probes a full board, and losing this
+        // one would leave every tile on a transform-only transition, silently
+        // dropping the colour fades.
+        clearTimeout(this._settleTimer);
+        this._settleTimer = setTimeout(() => {
+            for (const tile of this.tiles) tile.style.transition = '';
+        }, 140);
     }
     
     // Clean up event listeners and timeouts to prevent memory leaks
@@ -95,14 +191,54 @@ class BooleBoard {
         this.eventListeners = [];
         this._pendingTimeouts.forEach(id => clearTimeout(id));
         this._pendingTimeouts = [];
+        clearTimeout(this._settleTimer);
     }
-    
+
     // Helper to register event listeners for later cleanup
     addListener(element, event, handler, options) {
         element.addEventListener(event, handler, options);
         this.eventListeners.push({ element, event, handler });
     }
     
+    /**
+     * Announce a game moment on the document.
+     *
+     * A seam for builds that want to react to what just happened. The browser
+     * version has no listener, so on magmacrunch.com this allocates a
+     * CustomEvent at moments that were already doing a DOM write and playing a
+     * sound, and nothing else happens. That is the point: the App Store
+     * build's haptics and Game Center achievements hang off these events, and
+     * none of that code has to live in web/ or be named here. The events
+     * describe the game, not a platform.
+     *
+     * `difficulty` and `bits` ride along on every event so no call site has to
+     * remember which listener wanted them.
+     *
+     * The _silent guard is not optional. checkGameOver() decides whether the
+     * board is dead by running moveLeft() for real, four times, and restoring
+     * the score, both flag boards, highestValueEver and any queued timeouts
+     * afterwards. A dispatched event cannot be taken back. Without the guard,
+     * filling the board would buzz the phone four times and hand out
+     * achievements nobody earned.
+     */
+    _emit(name, detail) {
+        if (this._silent) return;
+        // An announcement must never be able to break the move it announces.
+        // Every browser has both of these; web/tests/test-game.js runs the
+        // game against a stub document that has neither, and before this
+        // guard an overflow there threw out of moveLeft() -- taking the rest of
+        // that test block's scoring assertions down with it.
+        if (typeof document === 'undefined'
+            || typeof document.dispatchEvent !== 'function'
+            || typeof CustomEvent !== 'function') return;
+        document.dispatchEvent(new CustomEvent('boole:' + name, {
+            detail: Object.assign(
+                { difficulty: this.difficulty, bits: this.bitMode },
+                detail
+            ),
+        }));
+    }
+
     // Helper to register timeouts that auto-cancel on destroy
     _setTimeout(fn, delay) {
         const id = setTimeout(() => {
@@ -409,6 +545,7 @@ class BooleBoard {
             } else {
                 AdAudio.playSfx('move');
             }
+            this._emit('move', { direction, merged: mergeOccurred });
         }
         
         return boardChanged;
@@ -605,6 +742,7 @@ class BooleBoard {
     
     // Show overflow notification
     showOverflowNotification(bonus) {
+        this._emit('overflow', { bonus });
         const notification = document.getElementById('overflowNotification');
         if (!notification) return;
         
@@ -630,6 +768,7 @@ class BooleBoard {
     
     // Show height bonus notification (new personal best!)
     showHeightBonus(value, bonus) {
+        this._emit('height-bonus', { value, bonus });
         const notification = document.getElementById('overflowNotification');
         if (!notification) return;
         
@@ -655,6 +794,7 @@ class BooleBoard {
     
     // Show upgrade notification for endless mode progression!
     showUpgradeNotification(newBitMode) {
+        this._emit('promotion', { bits: newBitMode });
         const notification = document.getElementById('overflowNotification');
         if (!notification) return;
         
@@ -886,6 +1026,14 @@ class BooleBoard {
         const savedHasReached = this.hasReachedMaxInCurrentMode;
         const savedTimeouts = this._pendingTimeouts.slice();
 
+        // These are real moveLeft() calls on a copy of the board, so everything
+        // a move can announce is about to be announced four times for moves
+        // nobody made. The score and the flag boards are snapshotted above and
+        // restored below; an event is not restorable, so it must not be sent.
+        // try/finally rather than a reset after the loop: there is an early
+        // `return false` inside it, and that path has to clear the flag too.
+        this._silent = true;
+        try {
         // Try each direction
         for (const direction of ['left', 'right', 'up', 'down']) {
             // Temporarily set board for testing
@@ -926,7 +1074,10 @@ class BooleBoard {
                 return false;
             }
         }
-        
+        } finally {
+            this._silent = false;
+        }
+
         // Restore original board and all simulation side-effects
         this.board = testBoard;
         this.highestValueEver = savedHighest;
@@ -1008,6 +1159,13 @@ class BooleBoard {
     }
     
     handleGameOver() {
+        this._emit('game-over', {
+            score: this.score,
+            moves: this.moves,
+            highest: this.highestValueEver,
+            victory: this.wasVictory,
+        });
+
         // Play game over sound (only if not victory)
         if (!this.wasVictory) {
             AdAudio.playSfx('gameOver');
