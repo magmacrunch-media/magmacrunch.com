@@ -13,7 +13,8 @@ window.NAV_CONFIG = {
         { label: 'home', href: './' },
         { label: 'about', href: 'home/about.html', items: [
             { href: 'home/about.html', label: 'about' },
-            { href: 'home/donate.html', label: 'donate' }
+            { href: 'home/donate.html', label: 'donate' },
+            { href: 'home/guestbook.html', label: 'guestbook' }
         ]},
         { label: 'music', href: 'music/', items: [
             { href: 'music/jukebox/', label: 'jukebox' },
@@ -46,8 +47,7 @@ window.NAV_CONFIG = {
         { label: 'ware', href: 'ware/', items: [
             { href: 'ware/utilities/', label: 'creative utilities' },
             { href: 'ware/dev/', label: 'developer tools' }
-        ]},
-        { label: 'guestbook', href: 'home/guestbook.html' }
+        ]}
     ]
 };
 
@@ -70,7 +70,12 @@ window.NAV_CONFIG = {
         if (sec.items && sec.items.length) {
             // Dropdown item
             navHTML += `\n<li><a href="${href}">${sec.label}</a><div class="dropdown">`;
-            navHTML += `\n<a href="${href}" class="dropdown-view-all">view all ${sec.label}</a>`;
+            // "view all" is for sections whose href is an index page. When an
+            // item already links there (about → home/about.html), it would be
+            // the same page listed twice.
+            if (!sec.items.some(item => item.href === sec.href)) {
+                navHTML += `\n<a href="${href}" class="dropdown-view-all">view all ${sec.label}</a>`;
+            }
             for (const item of sec.items) {
                 navHTML += `\n<a href="${depth}${item.href}">${item.label}</a>`;
             }
