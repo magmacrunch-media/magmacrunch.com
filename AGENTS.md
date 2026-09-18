@@ -250,6 +250,41 @@ commands that access local files.
 - **`archive/more/` holds redirect stubs only**: `contributors.html` and `video.html` were unlinked from the site and are now stubs to `/archive/`. The MusicBrainz series behind them still exist and are curated, so restoring either page is a real option — but it means relinking it, not just editing the stub
 - **Serve local dev over http** when testing chat/multiplayer: a `file://` page sends `Origin: null`, which the handshake gate refuses
 
+## The nav dropdowns open inward at the right edge
+
+`.dropdown` is `position: absolute; left: 0` against its nav item and `min-width: 180px`,
+while `.nav-links` is pushed right with `margin-left: auto` — so the rightmost items never
+have 180px of room to their right and open off the side of the window. **It is not a
+narrow-window problem, and that is the trap.** The overflow is a constant per item, 85px
+for `ware` and 29px for `press`, the same at 1000px wide as at 1400px, because the menu
+hugs the right edge at every width. Anything reached for at the width where it was noticed
+reproduces at all the others. Tablets are included: 768px is above the 640px breakpoint and
+gets the desktop nav.
+
+Fixed 2026-09-17 in `c09f3bc2`. `.dropdown.align-right` anchors to the item's right edge
+instead, and `nav.js` measures which dropdowns need it rather than naming them, since that
+is a function of the window width. Three things the measurement has to survive, so check
+them before moving that block:
+
+- **fonts** — it runs again on `document.fonts.ready`, because the nav is set in
+  'Press Start 2P' and the fallback is not the same width.
+- **the breakpoint** — it runs again, debounced, on resize, and clears the class below
+  640px, where dropdowns are `position: static` and open inline. Without the clear a
+  mobile panel keeps a stale class; without the re-run a resize back up never re-measures.
+- **the SPA router** — `navigate()` calls `window.__mcAlignDropdowns` after a swap. It
+  replaces `main`, `footer` and the page's CSS while the nav element itself survives, so
+  the nav is still there when its metrics are not.
+
+A dropdown is `display: none` until hovered, so each is measured by being displayed with
+`visibility: hidden` and restored in the same synchronous block, where the browser cannot
+paint in between.
+
+Editing `nav.js` or `style.css` reaches every page that stamps them — 18 pages for that
+pair — so the `?v=` rules under **Testing** apply: `npm run fix:cachebust` rewrites the
+stale stamps, and the pre-commit gate refuses a pathspec commit that leaves one behind. Nav
+*colors* are a separate matter and belong on `:root` rather than a body class, see
+`docs/ops/frontend.md`.
+
 ## Testing
 
 ```bash
