@@ -175,6 +175,12 @@ nav {
 .nav-links > li:hover .dropdown,
 .nav-links > li.open .dropdown { display: flex; }
 
+/* Anchored to the item's right edge, so the dropdown opens inward. The nav
+   items sit hard against the right of the window, so the last few would
+   otherwise run off it and be clipped. Which ones depends on the window width,
+   so nav.js measures them and sets this — see its edge-flip block. */
+.dropdown.align-right { left: auto; right: 0; }
+
 .dropdown a {
     font-family: 'Press Start 2P', monospace;
     font-size: 6px;

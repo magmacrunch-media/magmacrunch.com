@@ -154,6 +154,80 @@ window.NAV_CONFIG = {
 })();
 
 /* ═══════════════════════════════════════════════
+   DROPDOWN EDGE FLIP
+   ───────────────────────────────────────────────
+   A dropdown anchors to its nav item's left edge, and the nav items sit hard
+   against the right of the window, so the rightmost ones open off-screen and
+   are clipped — at 1000px wide, `ware` loses most of "creative utilities" and
+   `press` has started to go. Those get anchored to their item's right edge
+   instead, which opens them inward.
+
+   Which items overflow depends on the window width, so this cannot be a static
+   rule: the widths are measured. Measuring needs the box laid out and a
+   dropdown is `display: none` until hovered, so each is displayed with
+   visibility hidden and restored in the same synchronous block — the browser
+   cannot paint in between, so nothing flickers.
+   ═══════════════════════════════════════════════ */
+
+(function () {
+    function align() {
+        const navLinks = document.getElementById('navLinks');
+        if (!navLinks) return;
+        const dropdowns = navLinks.querySelectorAll('.dropdown');
+
+        // Mobile dropdowns are `position: static` and open inline, so the
+        // offsets would be ignored anyway. Clear the class rather than leave a
+        // stale one behind for the resize back up.
+        if (window.matchMedia('(max-width: 640px)').matches) {
+            dropdowns.forEach(d => d.classList.remove('align-right'));
+            return;
+        }
+
+        // clientWidth, not innerWidth: it excludes the vertical scrollbar,
+        // which is real space the dropdown cannot open into.
+        const room = document.documentElement.clientWidth;
+
+        dropdowns.forEach(d => {
+            const li = d.closest('li');
+            if (!li) return;
+            d.classList.remove('align-right');
+
+            const display = d.style.display;
+            const visibility = d.style.visibility;
+            d.style.visibility = 'hidden';
+            d.style.display = 'flex';
+            const box = d.getBoundingClientRect();
+            const item = li.getBoundingClientRect();
+            d.style.display = display;
+            d.style.visibility = visibility;
+
+            // Flip only where it helps. One wider than the distance from its
+            // item's right edge to the window's left would just be clipped at
+            // the other end instead.
+            if (box.right > room && item.right - box.width >= 0) {
+                d.classList.add('align-right');
+            }
+        });
+    }
+
+    align();
+
+    // The nav is set in 'Press Start 2P'. Measuring before it loads measures
+    // the fallback font, and the two are not the same width.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+
+    let pending;
+    window.addEventListener('resize', () => {
+        clearTimeout(pending);
+        pending = setTimeout(align, 100);
+    });
+
+    // The SPA router swaps page CSS on navigation, which can change these
+    // metrics even though the nav element itself survives the swap.
+    window.__mcAlignDropdowns = align;
+})();
+
+/* ═══════════════════════════════════════════════
     archive sub-nav auto-inject
     ───────────────────────────────────────────────
     Add  data-siblings="events,personnel,recordings,works"
@@ -753,6 +827,10 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             }
 
             document.title = doc.title;
+
+            // The page's CSS has just changed under a nav that survived the
+            // swap; re-measure which dropdowns have to open inward.
+            if (typeof window.__mcAlignDropdowns === 'function') window.__mcAlignDropdowns();
 
             await runScripts(doc, url);
             window.__mcPageAborted = false;
