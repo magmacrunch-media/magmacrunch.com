@@ -7,7 +7,10 @@ function getScoreboardDefault() {
     return localStorage.getItem('lastPlayedDifficulty') || 'overall';
 }
 
-// Track if we opened instructions/credits from settings
+// Set when settings opened whatever is on top of it, and read by that
+// thing's every exit. It used to be set and cleared and never read, so
+// closing credits from settings closed both -- and since opening settings
+// from the rules screen hides that screen, what was left was an empty board.
 let returnToSettings = false;
 
 // Track if we opened instructions from difficulty modal
@@ -306,23 +309,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Function to advance from lore screen to difficulty selector
         const showDifficulty = () => {
             loreScreen.classList.remove('active');
+            difficultyModal.dataset.from = 'lore';
             difficultyModal.classList.add('active');
-            
-            // Sync quick toggle states with current settings
-            const quickMusicToggle = document.getElementById('quickMusicToggle');
-            const quickSfxToggle = document.getElementById('quickSfxToggle');
-            
-            if (quickMusicToggle) {
-                const musicMuted = AdAudio.isMusicMuted();
-                quickMusicToggle.classList.toggle('active', !musicMuted);
-                quickMusicToggle.querySelector('.toggle-state').textContent = musicMuted ? 'OFF' : 'ON';
-            }
-            
-            if (quickSfxToggle) {
-                const sfxMuted = AdAudio.isSfxMuted();
-                quickSfxToggle.classList.toggle('active', !sfxMuted);
-                quickSfxToggle.querySelector('.toggle-state').textContent = sfxMuted ? 'OFF' : 'ON';
-            }
         };
         
         // Click handler for start button (title → lore)
@@ -426,11 +414,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
-        // Back button: difficulty modal -> lore screen
+        // Back button: wherever the mode picker was opened from.
+        //
+        // It always went to the rules screen, which is right when that is
+        // where you came from and quietly destructive when it is not: "new
+        // game" during a game opens this picker, and backing out of it left
+        // the rules screen with a live board behind it and no way to reach
+        // that board again. The only way on was to start a different game, so
+        // second thoughts cost you the one you were playing.
         const difficultyBack = document.getElementById('difficultyBack');
         if (difficultyBack) {
             difficultyBack.addEventListener('click', () => {
+                const from = difficultyModal.dataset.from || 'lore';
                 difficultyModal.classList.remove('active');
+                delete difficultyModal.dataset.from;
+
+                if (from === 'game') return;                 // back to the board
+                if (from === 'gameover') {
+                    document.getElementById('gameOver').classList.add('active');
+                    return;
+                }
                 loreScreen.classList.add('active');
             });
         }
@@ -623,17 +626,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         // Settings links to other modals
-        document.getElementById('settingsHowToPlay').addEventListener('click', () => {
-            returnToSettings = true; // Remember we came from settings
-            document.getElementById('settingsModal').classList.remove('active');
-            const instructionsModal = document.getElementById('instructionsModal');
-            instructionsModal.classList.add('active');
-            
-            // Reset scroll position to top
-            const instructionsContent = instructionsModal.querySelector('.instructions-content');
-            if (instructionsContent) {
-                instructionsContent.scrollTop = 0;
-            }
+        // The codex, not the rules: "full rules" is already one tap away on
+        // the board behind this modal, and the codex was reachable only by
+        // tapping a gate symbol in the rules strip, which nothing announces.
+        const settingsCodex = document.getElementById('settingsCodex');
+        if (settingsCodex) {
+            settingsCodex.addEventListener('click', () => {
+                // js/codex.js owns the modal and loads before this file, but
+                // the game must not break if it ever does not.
+                if (!window.BooleCodex) return;
+                document.getElementById('settingsModal').classList.remove('active');
+                returnToSettings = true;
+                window.BooleCodex.open();
+            });
+        }
+
+        // Closing the codex goes back to settings, as credits and the full
+        // rules do. It has to: opening settings from the rules screen hides
+        // that screen, so simply closing the codex left an empty board.
+        document.addEventListener('boole:codex-closed', () => {
+            if (!returnToSettings) return;
+            returnToSettings = false;
+            document.getElementById('settingsModal').classList.add('active');
         });
 
         document.getElementById('settingsCredits').addEventListener('click', () => {
@@ -706,10 +720,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Credits modal controls
-        document.getElementById('closeCredits').addEventListener('click', () => {
+        // Both ways out of credits go back where they came from. The
+        // "settings" button below is the explicit version of the same thing,
+        // kept because it says so on the button.
+        const closeCreditsModal = () => {
             document.getElementById('creditsModal').classList.remove('active');
+            if (!returnToSettings) return;
             returnToSettings = false;
-        });
+            document.getElementById('settingsModal').classList.add('active');
+        };
+
+        document.getElementById('closeCredits').addEventListener('click', closeCreditsModal);
 
         document.getElementById('creditsToSettings').addEventListener('click', () => {
             document.getElementById('creditsModal').classList.remove('active');
@@ -718,10 +739,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         document.getElementById('creditsModal').addEventListener('click', (e) => {
-            if (e.target.id === 'creditsModal') {
-                document.getElementById('creditsModal').classList.remove('active');
-                returnToSettings = false;
-            }
+            if (e.target.id === 'creditsModal') closeCreditsModal();
         });
     } catch (error) {
         console.error('Error initializing game:', error);
