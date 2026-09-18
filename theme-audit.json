@@ -4573,6 +4573,16 @@
   ],
   "Assets": [
     {
+      "name": "nav-glow",
+      "value": "rgba(0,245,255,0.3)",
+      "source": "assets/app-pages.css"
+    },
+    {
+      "name": "nav-brand-glow",
+      "value": "rgba(255,61,110,0.6)",
+      "source": "assets/app-pages.css"
+    },
+    {
       "name": "dorf-white",
       "value": "#F8F8F8",
       "source": "assets/dorfic-palette.css"
