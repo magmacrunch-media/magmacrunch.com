@@ -7,14 +7,31 @@ function getScoreboardDefault() {
     return localStorage.getItem('lastPlayedDifficulty') || 'overall';
 }
 
-// Set when settings opened whatever is on top of it, and read by that
-// thing's every exit. It used to be set and cleared and never read, so
-// closing credits from settings closed both -- and since opening settings
-// from the rules screen hides that screen, what was left was an empty board.
-let returnToSettings = false;
 
 // Track if we opened instructions from difficulty modal
 let returnToLoreScreen = false;
+
+/**
+ * Settings that survive a reload. Wrapped because localStorage throws in
+ * private mode rather than returning null, and a display toggle is not worth
+ * taking the page down for.
+ */
+function readSetting(key, fallback) {
+    try {
+        const raw = localStorage.getItem(key);
+        return raw === null ? fallback : raw === 'on';
+    } catch (e) {
+        return fallback;
+    }
+}
+
+function writeSetting(key, on) {
+    try {
+        localStorage.setItem(key, on ? 'on' : 'off');
+    } catch (e) {
+        // Storage full or disabled. The setting still applies to this session.
+    }
+}
 
 // Binary display mode - enabled by default
 let binaryDisplayMode = true;
@@ -569,7 +586,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const closeInstructionsModal = () => {
             document.getElementById('instructionsModal').classList.remove('active');
-            returnToSettings = false;
             returnFromInstructions();
         };
 
@@ -585,15 +601,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('instructionsToSettings').addEventListener('click', () => {
             document.getElementById('instructionsModal').classList.remove('active');
             document.getElementById('settingsModal').classList.add('active');
-            returnToSettings = false;
         });
 
         document.getElementById('instructionsModal').addEventListener('click', (e) => {
             if (e.target.id === 'instructionsModal') {
                 document.getElementById('instructionsModal').classList.remove('active');
-                returnToSettings = false;
                 returnFromInstructions();
             }
+        });
+
+        // Escape closes whatever is on top. The codex handles its own (it
+        // also swallows the arrow keys while it is open), so it is absent
+        // here; the initials prompt and the game-over screen are deliberately
+        // absent too, since neither is something to dismiss.
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            const close = (id, fn) => {
+                const el = document.getElementById(id);
+                if (!el || !el.classList.contains('active')) return false;
+                fn();
+                return true;
+            };
+            close('creditsModal', closeCreditsModal)
+                || close('instructionsModal', closeInstructionsModal)
+                || close('settingsModal', () => document.getElementById('closeSettings').click())
+                || close('scoreboardModal', () => document.getElementById('closeScoreboard').click())
+                || close('difficultyModal', () => {
+                    const back = document.getElementById('difficultyBack');
+                    if (back) back.click();
+                });
         });
 
         // Settings modal controls
@@ -629,32 +665,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // The codex, not the rules: "full rules" is already one tap away on
         // the board behind this modal, and the codex was reachable only by
         // tapping a gate symbol in the rules strip, which nothing announces.
-        const settingsCodex = document.getElementById('settingsCodex');
-        if (settingsCodex) {
-            settingsCodex.addEventListener('click', () => {
-                // js/codex.js owns the modal and loads before this file, but
-                // the game must not break if it ever does not.
-                if (!window.BooleCodex) return;
-                document.getElementById('settingsModal').classList.remove('active');
-                returnToSettings = true;
-                window.BooleCodex.open();
+        const loreCredits = document.getElementById('loreCredits');
+        if (loreCredits) {
+            loreCredits.addEventListener('click', () => {
+                loreScreen.classList.remove('active');
+                returnToLoreScreen = true;
+                document.getElementById('creditsModal').classList.add('active');
             });
         }
-
-        // Closing the codex goes back to settings, as credits and the full
-        // rules do. It has to: opening settings from the rules screen hides
-        // that screen, so simply closing the codex left an empty board.
-        document.addEventListener('boole:codex-closed', () => {
-            if (!returnToSettings) return;
-            returnToSettings = false;
-            document.getElementById('settingsModal').classList.add('active');
-        });
-
-        document.getElementById('settingsCredits').addEventListener('click', () => {
-            returnToSettings = true; // Remember we came from settings
-            document.getElementById('settingsModal').classList.remove('active');
-            document.getElementById('creditsModal').classList.add('active');
-        });
 
         // Side panel "full rules" link opens instructions modal
         const sidePanelHowToPlay = document.getElementById('sidePanelHowToPlay');
@@ -694,13 +712,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
+        // Both of these are remembered, as "show the math" already was. Three
+        // switches in one group, two of which forgot on reload, is the kind of
+        // thing a player reads as the setting not working.
+        const setToggle = (button, on) => {
+            button.classList.toggle('active', on);
+            button.querySelector('.toggle-status').textContent = on ? 'ON' : 'OFF';
+        };
+
         // Binary display toggle
         const binaryToggle = document.getElementById('binaryToggle');
         if (binaryToggle) {
+            binaryDisplayMode = readSetting('gb_binary', true);
+            setToggle(binaryToggle, binaryDisplayMode);
+
             binaryToggle.addEventListener('click', function() {
                 binaryDisplayMode = !binaryDisplayMode;
-                this.classList.toggle('active');
-                this.querySelector('.toggle-status').textContent = binaryDisplayMode ? 'ON' : 'OFF';
+                setToggle(this, binaryDisplayMode);
+                writeSetting('gb_binary', binaryDisplayMode);
                 
                 // Re-render the game board if game is active
                 if (currentGame) {
@@ -712,22 +741,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Performance mode toggle
         const performanceToggle = document.getElementById('performanceToggle');
         if (performanceToggle) {
+            const performanceOn = readSetting('gb_performance', false);
+            document.body.classList.toggle('performance-mode', performanceOn);
+            setToggle(performanceToggle, performanceOn);
+
             performanceToggle.addEventListener('click', function() {
-                const performanceModeEnabled = document.body.classList.toggle('performance-mode');
-                this.classList.toggle('active');
-                this.querySelector('.toggle-status').textContent = performanceModeEnabled ? 'ON' : 'OFF';
+                const on = document.body.classList.toggle('performance-mode');
+                setToggle(this, on);
+                writeSetting('gb_performance', on);
             });
         }
 
-        // Credits modal controls
-        // Both ways out of credits go back where they came from. The
-        // "settings" button below is the explicit version of the same thing,
-        // kept because it says so on the button.
+        // Credits modal controls. Opened from the rules screen, which sits
+        // above this modal in the stack and so is hidden while it is up;
+        // every way out puts it back.
         const closeCreditsModal = () => {
             document.getElementById('creditsModal').classList.remove('active');
-            if (!returnToSettings) return;
-            returnToSettings = false;
-            document.getElementById('settingsModal').classList.add('active');
+            returnFromInstructions();
         };
 
         document.getElementById('closeCredits').addEventListener('click', closeCreditsModal);
@@ -735,7 +765,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('creditsToSettings').addEventListener('click', () => {
             document.getElementById('creditsModal').classList.remove('active');
             document.getElementById('settingsModal').classList.add('active');
-            returnToSettings = false;
         });
 
         document.getElementById('creditsModal').addEventListener('click', (e) => {

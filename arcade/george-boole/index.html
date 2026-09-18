@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="css/container.css?v=a30fdcef">
     <link rel="stylesheet" href="css/game.css?v=3eaa3eb3">
     <link rel="stylesheet" href="css/modal-title.css?v=71636a7e">
-    <link rel="stylesheet" href="css/modal-lore.css?v=64b89acc">
+    <link rel="stylesheet" href="css/modal-lore.css?v=11d41076">
     <link rel="stylesheet" href="css/modal-difficulty.css?v=2cea08f0">
     <link rel="stylesheet" href="css/modal-scoreboard.css?v=0ae5f201">
     <link rel="stylesheet" href="css/modal-settings.css?v=52d3c30a">
@@ -95,6 +95,7 @@
                         <span class="scoring-label">height bonus</span>
                         <span class="scoring-value">2&times; value</span>
                     </div>
+                    <div class="rule-item" style="margin-top: 2px;">no height bonus in 2-bit: every value spawns</div>
                     <div class="scoring-row">
                         <span class="scoring-label">overflow</span>
                         <span class="scoring-value">3&times; max</span>
@@ -136,7 +137,7 @@
             </div>
             
             <div class="controls">
-                <button id="toggleScoreboard">scores</button>
+                <button id="toggleScoreboard">high scores</button>
                 <button id="newGame">new game</button>
                 <button id="toggleSettings">settings</button>
             </div>
@@ -155,7 +156,10 @@
                     <span class="gate-tag" data-gate="and"><b>&and;</b> AND</span>
                     <span class="gate-tag" data-gate="not"><b>&not;</b> NOT</span>
                 </div>
-                <div class="rules-row"><span class="rule-link" id="howToPlayLink">full rules &rarr;</span></div>
+                <div class="rules-row">
+                    <span class="rule-link" id="howToPlayLink">full rules &rarr;</span>
+                    <span class="rule-link" id="stripCodexLink">gate codex &rarr;</span>
+                </div>
             </div>
         </div>
 
@@ -295,6 +299,7 @@
                 <button class="lore-rules-link" id="loreFullRules" type="button">full rules &rarr;</button>
                 <!-- Opened by js/codex.js. -->
                 <button class="lore-rules-link" id="loreCodex" type="button">gate codex &rarr;</button>
+                <button class="lore-rules-link" id="loreCredits" type="button">credits &rarr;</button>
             </div>
 
             <div class="lore-quick-actions">
@@ -398,9 +403,9 @@
     
     <div class="scoreboard-modal" id="scoreboardModal">
         <div class="scoreboard-content">
-            <h3>all-time high scores</h3>
+            <h3>high scores</h3>
             <div class="mode-selector-container">
-                <label class="mode-label">SELECT MODE:</label>
+                <label class="mode-label">MODE:</label>
                 <div class="custom-dropdown" id="customDropdown">
                     <div class="dropdown-selected" id="dropdownSelected">
                         <span class="selected-text">OVERALL (all modes)</span>
@@ -431,7 +436,7 @@
             <div class="instructions-topbar">
                 <button class="modal-back" id="instructionsBack" type="button">&larr; back</button>
             </div>
-            <h3 style="margin-bottom: 25px;">how to play</h3>
+            <h3 style="margin-bottom: 25px;">full rules</h3>
             
             <div class="info-box" style="background: rgba(138, 43, 226, 0.15); padding: 15px; margin-bottom: 20px; border-left: 4px solid #8a2be2;">
                 <p style="font-size: 11px; line-height: 1.8; margin: 0;">Just as in <em>2048</em>, <strong style="color: #00ffff;">use arrow keys or swipe</strong> to move tiles on a 4 by 4 grid in any direction.</p>
@@ -504,6 +509,7 @@
                 <p style="margin: 0 0 6px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);"><strong style="color: #00ffff;">gate usage:</strong></p>
                 <ul style="font-size: 10px; line-height: 1.7; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
                     <li style="margin-bottom: 4px;"><strong style="color: #ffd700;">¬ NOT:</strong> slide into any number! <span style="color: #00ff00;">[¬][num]</span> or <span style="color: #00ff00;">[num][¬]</span></li>
+                    <li style="margin-bottom: 4px;"><strong style="color: #ffd700;">¬ meets ¬:</strong> two NOTs cancel: both tiles clear, for no points</li>
                     <li style="margin-bottom: 4px;"><strong style="color: #00ffff;">⊕ ∨ ∧:</strong> sandwich between two numbers! <span style="color: #00ff00;">[num][gate][num]</span></li>
                     <li style="margin-bottom: 4px;"><strong style="color: #ff4444;">result 0:</strong> a gate that comes out to 0 clears its tiles for no points: <span style="color: #00ff00;">3⊕3 = 0, 1∧2 = 0</span></li>
                 </ul>
@@ -654,17 +660,10 @@
                 <p style="font-size: 8px; color: rgba(255, 255, 255, 0.6); margin-top: 10px; line-height: 1.4;">Turns off visual effects to save power.</p>
             </div>
             
-            <div class="settings-section">
-                <h4>information</h4>
-                <div class="settings-links">
-                    <!-- Not "how to play": that opened the full rules, which
-                         the rules strip already links to by that name from the
-                         same screen. The codex is the one thing here with no
-                         obvious way in during a game. -->
-                    <button class="settings-link" id="settingsCodex">gate codex</button>
-                    <button class="settings-link" id="settingsCredits">credits</button>
-                </div>
-            </div>
+            <!-- No "information" section here. It held a gate codex link and a
+                 credits link, and both are on the rules screen now, beside
+                 "full rules"; the codex is also on the strip under the board
+                 and on every gate symbol. Settings is for settings. -->
             
             <button id="closeSettings">close</button>
         </div>
@@ -674,9 +673,9 @@
         <div class="credits-content">
             <h3>credits</h3>
             
-            <p><strong>by:</strong><br>Jake A. McCoy for magmacrunch media</p>
+            <p><strong>game by:</strong><br>Jake A. McCoy for magmacrunch media</p>
             
-            <p><strong>music:</strong><br>"George Boole" by Juanito Thompson</p>
+            <p><strong>music:</strong><br>"George Boole Has Entered the Chat" by Juanito Thompson</p>
             
             <!-- The lineage line stays, in these words. Guideline 4.3 is about
                  undisclosed clones, so saying it is the protection; it is the
@@ -706,10 +705,10 @@
 <script src="../shared/adenosine-puzzle.js?v=52ca5e4d"></script>
     <script src="js/config.js?v=fdc4d4d3"></script>
     <script src="js/scoring.js?v=36b0bed2"></script>
-    <script src="js/game.js?v=624727bb"></script>
-    <script src="js/math-overlay.js?v=2dd84444"></script>
-    <script src="js/codex.js?v=28fc9e1e"></script>
-    <script src="js/main.js?v=dca7691f"></script>
+    <script src="js/game.js?v=8311982c"></script>
+    <script src="js/math-overlay.js?v=44ff0d30"></script>
+    <script src="js/codex.js?v=e5f34bee"></script>
+    <script src="js/main.js?v=573b74a3"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
 <script src="../shared/adenosine-chat.js?v=4a6b886b"></script>
