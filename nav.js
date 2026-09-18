@@ -146,6 +146,24 @@ window.NAV_CONFIG = {
                 navLinks.querySelectorAll('li.open').forEach(li => li.classList.remove('open'));
             });
         });
+
+        // ── TAP OUTSIDE TO CLOSE ──
+        // Until this, the only ways out of the open mobile panel were the
+        // hamburger and a link inside it: tapping the page behind left it open,
+        // with nothing on screen saying how to dismiss it. The SPA router's
+        // document listener looks like it covers this and does not — it returns
+        // on a click that is not an eligible link, before it reaches its own
+        // menu-close lines.
+        //
+        // Clicks anywhere inside <nav> are left alone. The hamburger lives there
+        // and its own listener has already toggled by the time this bubbles up,
+        // so closing here too would undo the tap that opened the menu.
+        document.addEventListener('click', (e) => {
+            if (!navLinks.classList.contains('open')) return;
+            if (!(e.target instanceof Element) || e.target.closest('nav')) return;
+            navLinks.classList.remove('open');
+            navLinks.querySelectorAll('li.open').forEach(li => li.classList.remove('open'));
+        });
     }
 
     // ── ACTIVE LINK HIGHLIGHT ──
