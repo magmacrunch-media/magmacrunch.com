@@ -1,12 +1,12 @@
 name: Sync adenosine playground
 
 # Keeps ware/adenosine/{playground,theme,tiles}.js and the install snippet in
-# ware/adenosine/index.html pinned to the published
-# adenosine packages. Unlike the magmascript and texastoast playgrounds these
-# embed nothing — they load each package from jsDelivr at runtime, off a version
-# written into the source by hand. A release bumps none of them, so the site
-# keeps serving the previous build to every visitor, with no error, because the
-# old version is still on the CDN and still works.
+# ware/adenosine/index.html pinned to the published adenosine packages. Unlike
+# the magmascript and texastoast playgrounds these embed nothing — they load
+# each package from jsDelivr at runtime, off a version written into the source
+# by hand. A release bumps none of them, so the site keeps serving the previous
+# build to every visitor, with no error, because the old version is still on
+# the CDN and still works.
 #
 # The weekly schedule is the normal path. Unlike the magmascript and texastoast
 # syncs, no release workflow dispatches this — that would mean a cross-repo PAT
@@ -50,14 +50,34 @@ jobs:
           fi
           node scripts/sync-adenosine-pins.mjs
 
+      # Repinning rewrites playground.js and theme.js, which changes the bytes
+      # the .html beside them stamp with ?v=. A stale stamp means visitors keep
+      # the cached old bundle, so the repin above reaches nobody — the exact
+      # failure this job exists to prevent, reintroduced one step later.
+      #
+      # The plain check afterwards is the gate: --fix reporting what it fixed is
+      # not the same as nothing being left stale, and pushing a half-restamped
+      # tree is worse than not pushing.
+      - name: Restamp what the repin changed
+        run: |
+          node scripts/check-cache-busters.mjs --fix
+          node scripts/check-cache-busters.mjs
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          # Every file the script writes, or the rewrite is made in the runner's
-          # working tree and thrown away at the end of the job.
-          git add ware/adenosine/playground.js ware/adenosine/theme.js \
-                  ware/adenosine/tiles.js ware/adenosine/index.html
+          # The directory, not a list of files. The steps above write the four
+          # pinned files and restamp the .html beside them, and it was a list
+          # that let index.html be rewritten and then thrown away.
+          git add ware/adenosine/
+          # Nothing should have been written outside it. Fail rather than push
+          # part of a change and drop the rest on the floor.
+          if ! git diff --quiet; then
+            echo "Unexpected changes outside ware/adenosine/:"
+            git status --porcelain
+            exit 1
+          fi
           if git diff --cached --quiet; then
             echo "Tools already pinned to the published versions."
           else
