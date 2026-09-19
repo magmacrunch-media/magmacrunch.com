@@ -170,6 +170,7 @@ function parseMainPages() {
     { file: 'archive/by-contributor/index.html', title: 'Contributors', desc: 'Browse by contributor' },
     { file: 'arcade/index.html', title: 'Arcade Hub', desc: 'Pixel games and multiplayer' },
     { file: 'arcade/server.html', title: 'Arcade Server', desc: 'Server status and info' },
+    { file: 'arcade/terminal.html', title: 'Terminal Arcade', desc: 'The arcade in a shell: install, controls, cabinets' },
     { file: 'arcade/board-games/index.html', title: 'Board Games', desc: 'Chess, checkers, backgammon, and more' },
     { file: 'arcade/card-games/index.html', title: 'Card Games', desc: 'Solitaire, cribbage, poker' },
     { file: 'arcade/puzzles/index.html', title: 'Puzzles', desc: '2048, Tetris, and brain teasers' },

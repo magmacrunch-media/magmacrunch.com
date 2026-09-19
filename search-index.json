@@ -154,6 +154,13 @@
     "b": "the server — arcade — magmacrunch media home › arcade › server ._ _ _ ___ ___ ._ _ _ ___ ___ _ _ _ _ ._ _ ___ | |_ ___ ___ _ _ _ _ ___ _ _ | ' ' | |/ . || ' ' | |/ | '| '_>| | || ' |/ | '| . | | '_>| | |/ ._>| '_> |_|_|_| // how it works // // THE SERVER // The magmacrunch arcade runs on a Raspberry Pi sitting in a closet. It hosts all the game servers and the chat, 24/7. No cloud, no hosting provider — just a little computer with a big job. Everything talks over WebSockets , which means your browser maintains a live connection to the server while you play. No page refreshes, no polling — move..."
   },
   {
+    "t": "terminal arcade",
+    "c": "page",
+    "u": "/arcade/terminal.html",
+    "d": "The arcade in a shell: install, controls, cabinets",
+    "b": "terminal arcade — arcade — magmacrunch media home › arcade › terminal arcade ████ ████ ███▄ █▄▄█ ▀██▀ ██ █ ▄██▄ █ ▄██▄ ███▄ ▄███ ▄██▄ ███▄ ████ ██ ██▀ ███▀ █▀▀█ ██ █▀██ █▀▀█ █ █▀▀█ ███▀ █ █▀▀█ █ █ ██▀ ██ ████ █ █ █ █ ▄██▄ █ █ █ █ ████ █ █ █ █ ▀███ █ █ ███▀ ████ // the arcade in a shell // // THE FLOOR // __ .--------.---.-.-----.--------.---.-.----.----.--.--.-----.----.| |--. | | _ | _ | | _ | __| _| | | | __|| | |__|__|__|___._|___ |__|__|__|___._|____|__| |_____|__|__|____||__|__| |_____| EVERY CABINET ON THIS MACHINE INSERT COIN ┌──────────────────────────────┐ ┌───────────────────────────..."
+  },
+  {
     "t": "board games",
     "c": "page",
     "u": "/arcade/board-games/index.html",
