@@ -580,21 +580,9 @@ const genSrc = fs.readFileSync(path.join(JS_DIR, 'generators.js'), 'utf8')
 ok(!/Math\s*\.\s*random/.test(genSrc), 'no Math.random left in generators.js (comments aside)',
     'a stray call reproduces most of an image and still varies, so the checks above can miss it');
 
-/**
- * The source panels are hidden with the `hidden` attribute, and `.prop-group`
- * sets `display: flex`, which beats the user-agent stylesheet's
- * `[hidden] { display: none }` outright. Without an author rule restoring it
- * every panel is permanently visible while app.js believes it hid them, and
- * nothing in JavaScript can notice: `el.hidden` reads back true either way.
- *
- * That was the live state until 2026-09-19. It is checked here rather than in
- * the browser because it is a one-line stylesheet fact with no behaviour to
- * drive, and a static check is the only kind that runs on every push.
- */
-const cssSrc = fs.readFileSync(path.join(__dirname, '..', 'css', 'style.css'), 'utf8');
-ok(/\.prop-group\[hidden\]\s*\{[^}]*display:\s*none/.test(cssSrc),
-    'style.css neutralises display for a hidden .prop-group',
-    'without it the SEED row and both colour pickers show under every source');
+// The stylesheet rule that makes the SEED row's `hidden` attribute actually
+// hide it is asserted in tests/test-page.js, with the rest of the static
+// page guards. It is a fact about style.css, not about the generators.
 
 // The two must not be handed the same picture for the same seed, which is what
 // the differing mix constants in generators.js are for.

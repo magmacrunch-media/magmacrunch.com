@@ -669,3 +669,84 @@ footer {
 .footer-text {
     letter-spacing: 0.1em;
 }
+
+/* ── TITLE SCREEN ── */
+/* Above everything, the shell's toast at 3000 included: while this is up it is
+   the only thing on screen, and a toast surfacing behind it would be lost. */
+.title-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    background-image: repeating-linear-gradient(
+        0deg, transparent, transparent 2px,
+        var(--scanline) 2px, var(--scanline) 4px
+    );
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+/* js/title.js removes the element after this transition rather than leaving it
+   hidden, so nothing full-screen stays behind to swallow drops and pastes. */
+.title-screen.is-leaving {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.title-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    padding: 0 16px;
+    text-align: center;
+}
+
+/* Scaled by CSS rather than by drawImage: the canvas is 384x72 and nearest
+   neighbour is the whole look, so the browser does the upscale for free. */
+.title-canvas {
+    display: block;
+    width: min(560px, 86vw);
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.title-sub {
+    font-family: 'VT323', monospace;
+    font-size: 16px;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+    margin: 0;
+}
+
+.title-enter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    padding: 12px 22px;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: background 0.15s;
+}
+
+.title-enter:hover {
+    background: var(--amber);
+}
+
+.title-enter:focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 2px;
+}
+
+.title-hint {
+    font-family: 'VT323', monospace;
+    font-size: 13px;
+    color: var(--dim);
+    opacity: 0.7;
+    margin: 0;
+}

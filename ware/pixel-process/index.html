@@ -14,9 +14,22 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=c1ea8b79">
+    <link rel="stylesheet" href="css/style.css?v=461a0e09">
 </head>
 <body>
+    <!-- The title screen. Its wordmark is not written here: js/title.js reads
+         the <h1> below and draws it, so the app's name stays in one place and
+         a rename stays cheap. The canvas is sized and labelled by that file
+         too. -->
+    <div class="title-screen" id="titleScreen">
+        <div class="title-inner">
+            <canvas id="titleCanvas" class="title-canvas"></canvas>
+            <p class="title-sub">a signal chain for images</p>
+            <button class="title-enter" id="titleEnter" type="button">ENTER</button>
+            <p class="title-hint">or press any key</p>
+        </div>
+    </div>
+
     <div class="mobile-notice">
         This tool is best experienced on a desktop or laptop.<br>
         Please visit on a wider screen for the full workspace.
@@ -190,5 +203,7 @@
     <script src="js/effects/feedback.js?v=01a2c032"></script>
     <script src="js/ui.js?v=b110ddc7"></script>
     <script src="js/app.js?v=4faaf46c"></script>
+    <!-- Last: it reads the effect registry the files above fill in. -->
+    <script src="js/title.js?v=417122e6"></script>
 </body>
 </html>
