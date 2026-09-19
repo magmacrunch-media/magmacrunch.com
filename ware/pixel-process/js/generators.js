@@ -16,11 +16,28 @@
         return Math.round(a + (b - a) * t);
     }
 
+    /* The two noise generators take a seed, and neither calls Math.random.
+
+       They used to, and it made them the one part of this tool whose output
+       could not be got back. An effect chain is a recipe that can be written
+       down and replayed; a source that rerolls itself every call cannot be,
+       so a saved chain over white noise would have restored the recipe and
+       lost the picture. Seeding them is what lets a preset name its source.
+
+       The seed is mixed the way the seeded effects mix theirs, with a
+       different pair of constants each, so two generators handed the same
+       seed do not produce correlated patterns.
+
+       Callers roll the seed; these functions never invent one. An omitted
+       seed is 0, which is a real image rather than a random one, and that is
+       deliberate: a generator that quietly reseeded itself when asked for
+       nothing would be the old behaviour wearing the new signature. */
     var generators = {
-        'white-noise': function(w, h) {
+        'white-noise': function(w, h, seed) {
+            var rng = Chain.rng((seed | 0) * 24571 + 15485);
             var pixels = new Uint8ClampedArray(w * h * 4);
             for (var i = 0; i < pixels.length; i += 4) {
-                var v = Math.floor(Math.random() * 256);
+                var v = Math.floor(rng() * 256);
                 pixels[i] = v;
                 pixels[i+1] = v;
                 pixels[i+2] = v;
@@ -29,7 +46,8 @@
             return pixels;
         },
 
-        'perlin-noise': function(w, h) {
+        'perlin-noise': function(w, h, seed) {
+            var rng = Chain.rng((seed | 0) * 51043 + 86711);
             var pixels = new Uint8ClampedArray(w * h * 4);
             // Simple value noise with interpolation
             var grid = 8;
@@ -39,7 +57,7 @@
             for (var i = 0; i <= grid; i++) {
                 values[i] = [];
                 for (var j = 0; j <= grid; j++) {
-                    values[i][j] = Math.random();
+                    values[i][j] = rng();
                 }
             }
 

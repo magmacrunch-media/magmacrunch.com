@@ -545,21 +545,62 @@ if (Chain.getLastFailures) eq(Chain.getLastFailures().length, 0, 'failures clear
 
 console.log('\n=== deterministic generators ===');
 
-// color-bars and checkerboard take no randomness, so they can be pinned. The
-// gradients take colours and are covered by shape only; white and perlin noise
-// call Math.random() and cannot be tested until they take a seed.
 for (const name of ['color-bars', 'checkerboard']) {
     const a = Generators[name](W, H);
     const b = Generators[name](W, H);
     eq(sha(Uint8ClampedArray.from(a)), sha(Uint8ClampedArray.from(b)), `${name}: deterministic`);
 }
 
-let noiseVaries = false;
-const n1 = Generators['white-noise'](W, H);
-const n2 = Generators['white-noise'](W, H);
-if (sha(Uint8ClampedArray.from(n1)) !== sha(Uint8ClampedArray.from(n2))) noiseVaries = true;
-ok(noiseVaries, 'white-noise is still unseeded (expected until it takes a seed)',
-    'if this fails, white-noise gained a seed and the preset format can now name it');
+/**
+ * The seeded sources. These called Math.random() until 2026-09-19, which made
+ * them the one part of the tool whose output could not be got back: a saved
+ * chain over white noise would have restored the recipe and lost the picture.
+ *
+ * Three properties, and all three are needed. Same seed reproduces, or a preset
+ * is a lie. Different seeds differ, or the seed is being ignored and everything
+ * reproduces trivially. And no Math.random survives in the file, which is the
+ * only one of the three that a partial conversion could otherwise pass: seeding
+ * the grid of a value-noise generator while leaving one stray call would repeat
+ * most of the image and still fail no comparison run twice in a row.
+ */
+for (const name of ['white-noise', 'perlin-noise']) {
+    const a = sha(Uint8ClampedArray.from(Generators[name](W, H, 12345)));
+    const b = sha(Uint8ClampedArray.from(Generators[name](W, H, 12345)));
+    const c = sha(Uint8ClampedArray.from(Generators[name](W, H, 12346)));
+    eq(a, b, `${name}: same seed reproduces`);
+    ok(a !== c, `${name}: different seeds differ`, 'the seed is being ignored');
+}
+
+// Comments are stripped first. The header of generators.js explains that it no
+// longer calls Math.random, and naming it there tripped this check on its first
+// run, which is a false positive worth not living with.
+const genSrc = fs.readFileSync(path.join(JS_DIR, 'generators.js'), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/.*$/gm, '$1');
+ok(!/Math\s*\.\s*random/.test(genSrc), 'no Math.random left in generators.js (comments aside)',
+    'a stray call reproduces most of an image and still varies, so the checks above can miss it');
+
+/**
+ * The source panels are hidden with the `hidden` attribute, and `.prop-group`
+ * sets `display: flex`, which beats the user-agent stylesheet's
+ * `[hidden] { display: none }` outright. Without an author rule restoring it
+ * every panel is permanently visible while app.js believes it hid them, and
+ * nothing in JavaScript can notice: `el.hidden` reads back true either way.
+ *
+ * That was the live state until 2026-09-19. It is checked here rather than in
+ * the browser because it is a one-line stylesheet fact with no behaviour to
+ * drive, and a static check is the only kind that runs on every push.
+ */
+const cssSrc = fs.readFileSync(path.join(__dirname, '..', 'css', 'style.css'), 'utf8');
+ok(/\.prop-group\[hidden\]\s*\{[^}]*display:\s*none/.test(cssSrc),
+    'style.css neutralises display for a hidden .prop-group',
+    'without it the SEED row and both colour pickers show under every source');
+
+// The two must not be handed the same picture for the same seed, which is what
+// the differing mix constants in generators.js are for.
+eq(sha(Uint8ClampedArray.from(Generators['white-noise'](W, H, 99))) ===
+   sha(Uint8ClampedArray.from(Generators['perlin-noise'](W, H, 99))), false,
+    'the two seeded sources are not correlated at the same seed');
 
 // -- Summary -----------------------------------------------------------------
 

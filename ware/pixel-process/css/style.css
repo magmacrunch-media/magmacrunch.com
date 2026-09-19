@@ -140,6 +140,17 @@ body {
     gap: 6px;
 }
 
+/* The `hidden` attribute does nothing on its own here, and had not since this
+   rule above was written: the UA stylesheet's `[hidden] { display: none }` is
+   an author-versus-user-agent contest that any author `display` wins. So
+   app.js has been setting `.hidden` on the source panels all along while the
+   COLOR picker and both gradient swatches stayed on screen for every source,
+   including the ones that ignore them. Found when the SEED row inherited the
+   same fault and appeared under COLOR BARS. */
+.prop-group[hidden] {
+    display: none;
+}
+
 .prop-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 7px;
@@ -334,6 +345,50 @@ body {
     font-family: 'VT323', monospace;
     font-size: 14px;
     color: var(--dim);
+}
+
+/* Seed row: shown only for the generators that answer to a seed. The box takes
+   the space and REROLL sits beside it, because typing an exact seed back in is
+   the point of the control and rerolling is the casual half. */
+.seed-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.seed-input {
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 8px;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    outline: none;
+    letter-spacing: 0.05em;
+}
+
+.seed-input:focus {
+    border-color: var(--accent);
+}
+
+.seed-btn {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 7px 8px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.seed-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
 }
 
 /* ── CENTER AREA ── */

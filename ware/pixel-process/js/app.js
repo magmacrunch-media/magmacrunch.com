@@ -140,15 +140,48 @@
     var generatorDropdown = document.getElementById('generatorDropdown');
     var solidColorGroup = document.getElementById('solidColorGroup');
     var gradColorGroup = document.getElementById('gradColorGroup');
+    var seedGroup = document.getElementById('seedGroup');
+    var seedInput = document.getElementById('genSeed');
+    var rerollBtn = document.getElementById('rerollBtn');
 
     setupDropdown(generatorDropdown, function(value) {
+        // A new seed per pick, so choosing white noise twice still gives two
+        // different images. The difference from before is that the seed is
+        // now written down, so the second one can be got back.
+        if (SEEDED_SOURCES.indexOf(value) !== -1) rollSeed();
+        regenerate(value);
+    });
+
+    /* Which generators answer to the seed, and the current source.
+
+       `lastGenerator` is what makes REROLL and the seed box work at all: both
+       have to know which generator to run again, and the dropdown only tells
+       you at the moment it is clicked. */
+    var SEEDED_SOURCES = ['white-noise', 'perlin-noise'];
+    var lastGenerator = null;
+
+    function currentSeed() {
+        var v = parseInt(seedInput.value, 10);
+        return isNaN(v) ? 0 : v;
+    }
+
+    function rollSeed() {
+        seedInput.value = Math.floor(Math.random() * 1000000);
+    }
+
+    function regenerate(value) {
         var w = Canvas.getWidth();
         var h = Canvas.getHeight();
         var pixels;
 
+        lastGenerator = value;
+        seedGroup.hidden = SEEDED_SOURCES.indexOf(value) === -1;
+
         switch (value) {
             case 'white-noise':
             case 'perlin-noise':
+                pixels = Generators[value](w, h, currentSeed());
+                break;
             case 'color-bars':
             case 'checkerboard':
                 pixels = Generators[value](w, h);
@@ -170,6 +203,20 @@
             Canvas.loadSourcePixels(pixels, w, h);
             Chain.render();
         }
+    }
+
+    // REROLL draws the next seed; editing the box replays an exact one, which
+    // is the whole point of writing the seed down.
+    rerollBtn.addEventListener('click', function() {
+        if (!lastGenerator) return;
+        rollSeed();
+        regenerate(lastGenerator);
+    });
+
+    seedInput.addEventListener('change', function() {
+        var v = parseInt(seedInput.value, 10);
+        seedInput.value = isNaN(v) ? 0 : Math.max(0, v);
+        if (lastGenerator) regenerate(lastGenerator);
     });
 
     // Show/hide source-specific controls

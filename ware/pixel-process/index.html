@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=dfee635e">
+    <link rel="stylesheet" href="css/style.css?v=c1ea8b79">
 </head>
 <body>
     <div class="mobile-notice">
@@ -71,6 +71,14 @@
                 <div class="color-row">
                     <input type="color" id="genColor" value="#ff8c42" class="color-input">
                     <input type="text" id="genHex" class="color-hex-input" value="#ff8c42" maxlength="7">
+                </div>
+            </div>
+
+            <div class="prop-group" id="seedGroup" hidden>
+                <label class="prop-label">SEED</label>
+                <div class="seed-row">
+                    <input type="number" id="genSeed" class="seed-input" value="0" min="0" step="1">
+                    <button class="seed-btn" id="rerollBtn">REROLL</button>
                 </div>
             </div>
 
@@ -173,7 +181,7 @@
     <script src="../shell/dropdown.js?v=b0e0a994"></script>
     <script src="js/canvas.js?v=eaab4e32"></script>
     <script src="js/chain.js?v=23de3647"></script>
-    <script src="js/generators.js?v=2a6edfac"></script>
+    <script src="js/generators.js?v=fe23af02"></script>
     <script src="js/effects/channels.js?v=f5d89303"></script>
     <script src="js/effects/sort.js?v=fd949ab6"></script>
     <script src="js/effects/displace.js?v=94df8fc3"></script>
@@ -181,6 +189,6 @@
     <script src="js/effects/fft.js?v=eded4f9a"></script>
     <script src="js/effects/feedback.js?v=01a2c032"></script>
     <script src="js/ui.js?v=b110ddc7"></script>
-    <script src="js/app.js?v=a1f6d1ff"></script>
+    <script src="js/app.js?v=4faaf46c"></script>
 </body>
 </html>
