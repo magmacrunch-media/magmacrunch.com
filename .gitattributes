@@ -36,13 +36,17 @@
 #
 #   arcade/shared/adenosine-*.js and the assets beside them are byte-copied out
 #   of the npm packages by scripts/sync-adenosine.mjs
-#   arcade/george-boole/tests/ arrives from the game's own repo
 #
-# Only paths already LF on disk are listed, so pinning them rewrites nothing.
-# The rest of arcade/george-boole/ is deliberately absent: 15 of its files are
-# CRLF in the working tree, and pinning those would force exactly the mass
-# renormalisation the note at the top of this file avoids. Normalising that
-# directory is a job to do with the sync that fills it, not in passing.
+# These are safe to pin because npm tarballs are LF whatever any clone's
+# autocrlf is set to, so the two ends cannot disagree.
+#
+# arcade/george-boole/ is deliberately absent, including its tests/. It is not
+# authored here: scripts/sync-game.mjs replaces it wholesale with a byte copy of
+# web/ from the game's own repo, so the two repos have to want the same endings.
+# That repo's .gitattributes declines an eol pin for exactly this reason, and
+# pinning this side alone would make every sync land files git reports as
+# modified -- the problem these rules exist to remove, on a different schedule.
+# Normalising it means changing both repos together, not this one in passing.
 
 arcade/shared/adenosine-*.js             text eol=lf
 arcade/shared/chat-worker.js             text eol=lf
@@ -51,4 +55,3 @@ arcade/shared/cards/cards.css            text eol=lf
 arcade/shared/chips/chip-animation.css   text eol=lf
 arcade/shared/multiplayer/lobby.css      text eol=lf
 arcade/puzzle-framework/css/puzzle-*.css text eol=lf
-arcade/george-boole/tests/*.js           text eol=lf
