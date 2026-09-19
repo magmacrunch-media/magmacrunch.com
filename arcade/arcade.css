@@ -522,11 +522,6 @@ footer span { color: #ff2e9c; }
     max-width: 900px;
 }
 
-.tui-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-}
 
 .tui-label {
     font-family: 'Press Start 2P', monospace;
@@ -556,34 +551,29 @@ footer span { color: #ff2e9c; }
     line-height: 1.8;
 }
 
-.tui-cabinets {
-    padding-top: 24px;
-    border-top: 1px dashed #333;
+/* The link through to terminal.html, where the install table, the controls,
+   the cabinet list and the terminal-size rungs live. */
+.tui-more {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: 20px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: #39ff6e;
+    text-decoration: none;
+    border: 1px solid #39ff6e;
+    padding: 12px 16px;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
 
-.tui-cabinet {
-    font-family: 'Courier Prime', monospace;
-    font-size: 12px;
-    color: #8a7fa8;
-    line-height: 2;
+.tui-more:hover {
+    background: #39ff6e;
+    color: #080808;
+    box-shadow: 0 0 16px rgba(57,255,110,0.4);
 }
 
-.tui-cabinet-name {
-    color: #00f0ff;
-    font-weight: bold;
-}
-
-.tui-controls {
-    font-family: 'Courier Prime', monospace;
-    font-size: 12px;
-    color: #8a7fa8;
-    line-height: 2;
-}
-
-.tui-key {
-    color: #fff733;
-    font-weight: bold;
-}
+.tui-more-cursor { animation: blink 1s step-end infinite; }
 
 .tui-note {
     font-family: 'Press Start 2P', monospace;
@@ -595,6 +585,5 @@ footer span { color: #ff2e9c; }
 }
 
 @media (max-width: 700px) {
-    .tui-row { grid-template-columns: 1fr; }
     .tui-preview { font-size: 8px; }
 }

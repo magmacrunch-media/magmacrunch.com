@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>terminal arcade — arcade — magmacrunch media</title>
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+    <link rel="stylesheet" href="../style.css?v=53e9e146">
+    <style>
+        /* ══ PAGE: terminal arcade ══ */
+        :root {
+            --nav-accent: #39ff6e;
+            --nav-brand: #39ff6e;
+            --nav-glow: rgba(57,255,110,0.4);
+            --nav-brand-glow: rgba(57,255,110,0.7);
+        }
+        body {
+            background: #060a07;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #7f9186;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #7f9186; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #39ff6e; }
+        .breadcrumb .sep { margin: 0 8px; color: #39ff6e; opacity: 0.7; }
+        .breadcrumb .current { color: #39ff6e; }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 60px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-title-ascii-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow-x: auto;
+        }
+
+        .page-title-ascii {
+            display: inline-block;
+            font-family: 'Courier Prime', monospace;
+            font-size: 15px;
+            line-height: 1.1;
+            color: #39ff6e;
+            text-shadow: 0 0 8px rgba(57,255,110,0.5);
+            white-space: pre;
+            text-align: left;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1200px) { .page-title-ascii { font-size: 13px; } }
+        @media (max-width: 900px)  { .page-title-ascii { font-size: 10px; } }
+        @media (max-width: 600px)  { .page-title-ascii { font-size: 7px; } }
+
+        .page-subtitle {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #39ff6e;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 8px rgba(57,255,110,0.5);
+        }
+
+        .content {
+            width: 100%;
+            max-width: 740px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .content-section h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #39ff6e;
+            letter-spacing: 0.12em;
+            margin-bottom: 16px;
+            text-shadow: 0 0 8px rgba(57,255,110,0.4);
+        }
+
+        .content-section p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            color: #c2cec6;
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+
+        .content-section p strong { color: #f0f8ff; }
+        .content-section a { color: #00f0ff; }
+
+        /* ── terminal screenshot ── */
+        .screen {
+            font-family: 'Courier Prime', monospace;
+            font-size: 11px;
+            line-height: 1.3;
+            color: #39ff6e;
+            text-shadow: 0 0 8px rgba(57,255,110,0.4);
+            white-space: pre;
+            margin: 0 0 24px;
+            padding: 20px;
+            background: #080808;
+            border: 1px solid #39ff6e;
+            border-radius: 4px;
+            overflow-x: auto;
+            box-shadow: 0 0 20px rgba(57,255,110,0.1);
+        }
+
+        @media (max-width: 700px) { .screen { font-size: 8px; } }
+
+        /* ── command blocks ── */
+        .cmd {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            line-height: 1.9;
+            background: #0b1410;
+            border-left: 2px solid #39ff6e;
+            padding: 12px 16px;
+            margin: 0 0 16px;
+            overflow-x: auto;
+            white-space: pre;
+            color: #f0f8ff;
+        }
+        .cmd .p { color: #39ff6e; font-weight: bold; }
+        .cmd .c { color: #5c6b62; }
+
+        /* ── tables ── */
+        .t-wrap {
+            overflow-x: auto;
+            margin: 0 0 16px;
+        }
+
+        .t {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 100%;
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+        }
+        .t th {
+            text-align: left;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            letter-spacing: 0.1em;
+            color: #39ff6e;
+            padding: 8px 12px 8px 0;
+            border-bottom: 1px solid #23372a;
+        }
+        .t td {
+            padding: 9px 12px 9px 0;
+            border-bottom: 1px solid #16211a;
+            color: #9fb0a5;
+            vertical-align: top;
+        }
+        .t tr:last-child td { border-bottom: none; }
+        .t td.k { color: #f0f8ff; white-space: nowrap; }
+        .t td.k code, .t code { color: #00f0ff; }
+        .t tr.hi td { color: #e8f4ec; }
+        .t tr.hi td.k { color: #fff733; }
+
+        code {
+            font-family: 'Courier Prime', monospace;
+            color: #00f0ff;
+        }
+
+        /* ── cabinet list ── */
+        .cab-list { list-style: none; padding: 0; margin: 0 0 16px 0; }
+        .cab-list li {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: #9fb0a5;
+            padding: 8px 0;
+            border-bottom: 1px solid #16211a;
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+        }
+        .cab-list li:last-child { border-bottom: none; }
+        .cab-list .cab-name { color: #00f0ff; font-weight: bold; white-space: nowrap; }
+
+        /* ── key hints ── */
+        .keys {
+            font-family: 'Courier Prime', monospace;
+            font-size: 13px;
+            color: #9fb0a5;
+            line-height: 2.1;
+        }
+        .keys .key { color: #fff733; font-weight: bold; }
+
+        .note {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #4f5d54;
+            text-align: center;
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+            line-height: 2;
+        }
+
+        footer { border-top-color: #23372a; }
+        footer span { color: #39ff6e; }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../">home</a>
+        <span class="sep">›</span>
+        <a href="./">arcade</a>
+        <span class="sep">›</span>
+        <span class="current">terminal arcade</span>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-title-ascii-wrap"><pre class="page-title-ascii">
+████ ████ ███▄ █▄▄█ ▀██▀ ██ █ ▄██▄ █         ▄██▄ ███▄ ▄███ ▄██▄ ███▄ ████
+ ██  ██▀  ███▀ █▀▀█  ██  █▀██ █▀▀█ █         █▀▀█ ███▀ █    █▀▀█ █  █ ██▀
+ ██  ████ █  █ █  █ ▄██▄ █  █ █  █ ████      █  █ █  █ ▀███ █  █ ███▀ ████</pre></div>
+        <div class="page-subtitle">// the arcade in a shell //</div>
+    </div>
+
+    <div class="content">
+
+        <div class="content-section">
+            <h2>// THE FLOOR //</h2>
+
+            <pre class="screen">
+                                                                      __
+    .--------.---.-.-----.--------.---.-.----.----.--.--.-----.----.|  |--.
+    |        |  _  |  _  |        |  _  |  __|   _|  |  |     |  __||     |
+    |__|__|__|___._|___  |__|__|__|___._|____|__| |_____|__|__|____||__|__|
+                   |_____|
+                         EVERY CABINET ON THIS MACHINE
+                                  INSERT COIN
+
+
+      ┌──────────────────────────────┐  ┌──────────────────────────────┐
+      │ George Boole Has Entered The │  │ Moonlight Drift              │
+      │ Chat                         │  │                              │
+      │ 2048 played with logic gates │  │ Thread the columns. Hold to  │
+      │ — merge, invert, overflow.   │  │ climb, release to fall.      │
+      │                              │  │                              │
+      │ ▶ ENTER_        BEST 131,072 │  │ ▶ ENTER           BEST 8,420 │
+      └──────────────────────────────┘  └──────────────────────────────┘
+                                   PAGE 1/2
+
+
+                      ↑↓←→ CHOOSE    ENTER PLAY    Q QUIT
+                 © 2026 magmacrunch media  ·  magmacrunch.com</pre>
+
+            <p>
+                <strong>magmacrunch</strong> is this arcade in a shell. One command,
+                a menu of every cabinet installed on the machine, and a way into one.
+                Same palette, same card grid, same blinking cursor on the card you are
+                about to start.
+            </p>
+            <p>
+                The one thing that could not come across is the typography. The web
+                page sets <code>Press Start 2P</code> on nearly every string, and a
+                terminal program does not choose its font — so the pixel lettering has
+                to be drawn out of block glyphs instead.
+            </p>
+            <p>
+                Each card carries your best score on that cabinet, read from the same
+                file the game writes when you set one. A cabinet you have never played
+                says nothing rather than <code>BEST 0</code>, which would be inviting
+                you to beat a score that does not exist.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// INSTALL //</h2>
+            <p>
+                Every package in the stack is a pure-Python wheel, so there is nothing
+                to compile on macOS, Linux or Windows. What differs between the three
+                is not the build, it is which installer you already have — so that is
+                what this table is keyed on.
+            </p>
+            <div class="t-wrap"><table class="t">
+                <tr><th>you already have</th><th>run</th><th></th></tr>
+                <tr class="hi">
+                    <td class="k">uv</td>
+                    <td class="k"><code>uvx magmacrunch</code></td>
+                    <td>nothing lands on your PATH</td>
+                </tr>
+                <tr>
+                    <td class="k">pipx</td>
+                    <td class="k"><code>pipx run magmacrunch</code></td>
+                    <td>the same trick</td>
+                </tr>
+                <tr>
+                    <td class="k">Python 3.10+, and nothing else</td>
+                    <td class="k"><code>pip install magmacrunch</code></td>
+                    <td>the command, kept</td>
+                </tr>
+                <tr>
+                    <td class="k">Homebrew</td>
+                    <td class="k"><code>brew install magmacrunch-media/tap/magmacrunch</code></td>
+                    <td>brew owns it</td>
+                </tr>
+            </table></div>
+            <p>
+                The first two run the arcade out of a throwaway environment: nothing
+                reaches your PATH, and nothing can collide with anything. To keep the
+                command around instead:
+            </p>
+            <div class="cmd"><span class="p">$</span> uv tool install magmacrunch
+<span class="p">$</span> pipx install magmacrunch</div>
+            <p>
+                Either one puts <code>magmacrunch</code> — and each cabinet's own
+                command — on your PATH inside an isolated virtualenv. Whichever route
+                you take, that one install brings the arcade and all four cabinets.
+            </p>
+            <p>
+                On Windows, note that <strong><code>python3</code> is usually not
+                Python</strong>: Windows ships an app-execution alias of that name
+                pointing at the Microsoft Store, so <code>python3 -m magmacrunch</code>
+                can answer <em>Python was not found</em> on a machine that has both
+                Python and the arcade. Use the launcher — <code>py -m magmacrunch</code>
+                — which finds it either way.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// PLAYING //</h2>
+            <div class="cmd"><span class="p">$</span> magmacrunch      <span class="c">the arcade — every cabinet on the machine</span>
+<span class="p">$</span> george-boole     <span class="c">2048 with logic gates, on its own</span>
+<span class="p">$</span> lava-dome        <span class="c">solo hold'em, on its own</span>
+<span class="p">$</span> moonlight-drift  <span class="c">the endless drifter, on its own</span>
+<span class="p">$</span> jovian           <span class="c">the rail over Jupiter, on its own</span></div>
+            <p>
+                A game plays identically whether you start it directly or pick it from
+                the arcade: the arcade is not a wrapper around them, it is the same
+                host they run on.
+            </p>
+            <div class="keys">
+                <span class="key">←→</span> move between cabinets<br>
+                <span class="key">↑↓</span> move a row<br>
+                <span class="key">Enter</span> play<br>
+                <span class="key">Q</span> quit<br>
+                <span class="key">Esc</span> inside a game returns to the arcade
+            </div>
+            <p style="margin-top:16px">
+                That last one is the whole reason the host exists. A cabinet says so on
+                its own title screen, and <em>only</em> when the arcade started it — the
+                same key ends the session when the game was launched as its own command,
+                so a hint printed unconditionally would be a lie half the time.
+            </p>
+            <p>
+                The floor takes the colour of whichever cabinet is highlighted: title,
+                tagline and key line all shift as you arrow across the grid, the way a
+                card and its border recolour on hover here.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// CABINETS //</h2>
+            <ul class="cab-list">
+                <li><span class="cab-name">george-boole</span><span>2048 played with logic gates</span></li>
+                <li><span class="cab-name">lava-dome</span><span>solo hold'em against a climbing threshold</span></li>
+                <li><span class="cab-name">moonlight-drift</span><span>thread the columns; hold to climb</span></li>
+                <li><span class="cab-name">jovian</span><span>know what you are shooting at</span></li>
+            </ul>
+            <p>
+                Installing <code>magmacrunch</code> installs all four. To see what is
+                actually on the machine:
+            </p>
+            <div class="cmd"><span class="p">$</span> magmacrunch --list</div>
+            <p>
+                That prints every cabinet found, what terminal size it wants, and how it
+                wants input. If a game you installed is not in the menu, this says why —
+                a game that fails to load is reported rather than silently skipped.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// HOW GAMES GET HERE //</h2>
+            <p>
+                Games are <strong>not</strong> bundled. Each one lives in its own repo
+                alongside its browser and Wii versions, publishes its own wheel, and
+                declares an entry point:
+            </p>
+            <div class="cmd">[project.entry-points."magmacrunch.games"]
+george-boole = "boole.arcade:GAME"</div>
+            <p>
+                pointing at an object with <code>info: GameInfo</code> and
+                <code>start(host)</code>. The launcher enumerates that group at startup.
+                <strong>Installing a game makes it appear here; uninstalling makes it
+                vanish; neither needs a release of the arcade.</strong>
+            </p>
+            <p>
+                Nothing in the launcher imports a game, so the arcade runs with none
+                installed and tells you how to get one.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// FITTING YOUR TERMINAL //</h2>
+            <p>
+                Python 3.10+, and a terminal at least <strong>36×17</strong>. Individual
+                cabinets ask for more — around 59×22 — and below that their card greys
+                out, says the size it wants, and cannot be started. The arcade's own
+                floor is deliberately lower than any game's, so getting to the floor is
+                never the thing that fails.
+            </p>
+            <p>
+                Two cards sit side by side from 70 columns and stack into one below
+                that. More cabinets than fit are paged, not scrolled.
+            </p>
+            <p>
+                The title art stands down as the window grows or shrinks, and always
+                before the cabinets have to:
+            </p>
+            <div class="t-wrap"><table class="t">
+                <tr><th>window</th><th>banner</th></tr>
+                <tr><td class="k">121×34 and up</td><td>the full site wordmark, MAGMACRUNCH over ARCADE, 119×19</td></tr>
+                <tr><td class="k">~73×30</td><td>the same two words in 71 columns instead of 119</td></tr>
+                <tr class="hi"><td class="k">80×24</td><td>MAGMACRUNCH alone, 71×5</td></tr>
+                <tr><td class="k">~62–72 cols</td><td>the ARCADE wordmark alone, 60×8</td></tr>
+                <tr><td class="k">~50 cols</td><td>a block-glyph MAGMACRUNCH, 48×2</td></tr>
+                <tr><td class="k">36 cols</td><td>spaced capitals</td></tr>
+            </table></div>
+            <p>
+                Art is measured rather than declared, so the 119-column piece can sit at
+                the top of the list without ever bothering someone on an ordinary
+                terminal — it is simply never the one that fits.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// COLOUR AND CHARACTERS //</h2>
+            <p>
+                Truecolor helps but is not required. <code>NO_COLOR</code> is honoured,
+                and the palettes survive it: nothing in any cabinet is readable in
+                colour and unreadable without it.
+            </p>
+            <p>
+                Colour degrades on its own; characters do not. Windows' two common
+                codepages are where that shows — cp1252 has none of the block elements,
+                arrows or suits, and cp437 has the blocks and none of the arrows, stars
+                or suits. So the engine asks the terminal what it can encode and
+                substitutes what it cannot, one <em>group</em> of related glyphs at a
+                time, so a set never comes back half translated and a terminal that can
+                draw the blocks keeps them.
+            </p>
+            <p>
+                Detection is automatic. Override it for the case no probe can see — an
+                encoding that accepts the character in a font with no picture for it:
+            </p>
+            <div class="cmd"><span class="p">$</span> magmacrunch --ascii   <span class="c">this session</span>
+<span class="p"> </span> MAGMACRUNCH_ASCII=1   <span class="c">always, and every cabinet run on its own too</span></div>
+            <p>
+                Every substitute is exactly one cell wide, so a plain screen has the
+                same layout as a fancy one rather than a reflowed approximation of it.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>// LICENCE //</h2>
+            <p>
+                Two licences, split at the same seam the code is. The launcher is
+                <strong>PolyForm Noncommercial 1.0.0</strong>, because the games it
+                seats are. The TUI engine is <strong>Apache-2.0</strong>, because it
+                depends on none of them. Every engine file carries an SPDX header
+                saying which.
+            </p>
+            <p>
+                Source: <a href="https://github.com/magmacrunch-media/magmacrunch" target="_blank" rel="noopener">github.com/magmacrunch-media/magmacrunch ↗</a>
+                &nbsp;·&nbsp;
+                <a href="https://pypi.org/project/magmacrunch/" target="_blank" rel="noopener">pypi.org/project/magmacrunch ↗</a>
+            </p>
+        </div>
+
+        <div class="note">Python 3.10+ · Terminal 36×17 minimum · Pure Python, no compilation</div>
+
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../nav.js?v=05581e34"></script>
+</body>
+</html>
