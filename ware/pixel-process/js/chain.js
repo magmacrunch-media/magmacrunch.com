@@ -131,7 +131,7 @@
             Canvas.display(result);
         }
 
-        updateStat();
+        UI.updateStat();
     }
 
     // Debounced render via requestAnimationFrame
@@ -143,22 +143,28 @@
         });
     }
 
-    function updateStat() {
-        var enabledCount = 0;
-        for (var i = 0; i < effects.length; i++) {
-            if (effects[i].enabled) enabledCount++;
-        }
-        var stat = document.getElementById('chainStat');
-        stat.textContent = enabledCount + ' EFFECT' + (enabledCount !== 1 ? 'S' : '');
+    /* The names of the effects skipped by the most recent `process`, and the
+       reason this file no longer draws the chrome itself.
 
-        // Say so in the chrome when an effect is being skipped, otherwise the
-        // count claims work the render did not actually do.
-        if (lastFailures.length) {
-            stat.textContent += ' · ' + lastFailures.length + ' FAILED';
-            stat.title = 'Skipped: ' + lastFailures.join(', ');
-        } else {
-            stat.title = '';
+       `updateStat` used to read `document` from here, which made this whole
+       module unloadable anywhere without a DOM: not in a Worker, where the
+       full-resolution export has to run, and not under `node`, where
+       tests/test-effects.js pins every effect's output. Neither was worth
+       giving up to save one function call, so the counter moved to ui.js and
+       the core answers the question instead of rendering the answer.
+
+       Returns a copy: a caller that sorted or spliced the real array in place
+       would be editing this module's state through a getter. */
+    function getLastFailures() {
+        return lastFailures.slice();
+    }
+
+    function countEnabled() {
+        var n = 0;
+        for (var i = 0; i < effects.length; i++) {
+            if (effects[i].enabled) n++;
         }
+        return n;
     }
 
     function getRegistry() {
@@ -193,6 +199,8 @@
         getEffect: getEffect,
         getEffects: getEffects,
         clearEffects: clearEffects,
+        countEnabled: countEnabled,
+        getLastFailures: getLastFailures,
         process: process,
         render: render,
         renderImmediate: renderImmediate,

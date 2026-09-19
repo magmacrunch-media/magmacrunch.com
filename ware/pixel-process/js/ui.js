@@ -305,9 +305,32 @@
         }
     }
 
+    /* The header chip. This lived in chain.js until the core was made loadable
+       without a DOM; it is the only thing that was in the way. Chain answers
+       how many effects are enabled and which were skipped, and drawing that is
+       this file's job, like every other element of the chain panel. */
+    function updateStat() {
+        var stat = document.getElementById('chainStat');
+        if (!stat) return;
+
+        var enabled = Chain.countEnabled();
+        stat.textContent = enabled + ' EFFECT' + (enabled !== 1 ? 'S' : '');
+
+        // Say so in the chrome when an effect is being skipped, otherwise the
+        // count claims work the render did not actually do.
+        var failures = Chain.getLastFailures();
+        if (failures.length) {
+            stat.textContent += ' · ' + failures.length + ' FAILED';
+            stat.title = 'Skipped: ' + failures.join(', ');
+        } else {
+            stat.title = '';
+        }
+    }
+
     window.UI = {
         renderChain: renderChain,
         bindEvents: bindEvents,
+        updateStat: updateStat,
         effectUI: effectUI
     };
 })();

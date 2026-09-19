@@ -157,9 +157,20 @@ jobs:
         with:
           node-version: 22
 
+      # Roots must match JS_ROOTS in scripts/run-tests.mjs. This loop is the
+      # second of the two places that decide whether a suite runs at all, and a
+      # find that matches nothing would run no tests and report success -- so the
+      # count is asserted rather than assumed.
       - name: Run JS tests
         run: |
-          for test_file in $(find arcade -name 'test-*.js' -path '*/tests/*'); do
+          test_files=$(find arcade ware -name 'test-*.js' -path '*/tests/*' | sort)
+          count=$(printf '%s\n' "$test_files" | grep -c . || true)
+          echo "Found $count JS suite(s)."
+          if [ "$count" -lt 1 ]; then
+            echo "No tests/test-*.js found under arcade/ or ware/ -- the search is broken, not the tree." >&2
+            exit 1
+          fi
+          for test_file in $test_files; do
             echo "=== Running $test_file ==="
             node "$test_file" || exit 1
           done

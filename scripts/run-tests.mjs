@@ -29,6 +29,16 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ARCADE = join(ROOT, 'arcade');
+const WARE = join(ROOT, 'ware');
+
+/**
+ * Where JS suites live. `arcade/` was the only one until ware/pixel-process/
+ * gained tests, and a test under a root that is not listed here does not fail:
+ * it is never found, and the run reports success over it. Add the root when a
+ * directory gains its first suite, and add it to ci.yml's own find as well --
+ * see the note above about CI keeping its own copy.
+ */
+const JS_ROOTS = [ARCADE, WARE];
 
 const SKIP_DIRS = new Set(['node_modules', '__pycache__', 'venv', '.git']);
 
@@ -119,12 +129,13 @@ function runPython() {
 }
 
 function runJs() {
-  const files = walk(ARCADE, (name) => name.startsWith('test-') && name.endsWith('.js'))
+  const files = JS_ROOTS
+    .flatMap((root) => walk(root, (name) => name.startsWith('test-') && name.endsWith('.js')))
     .filter((f) => f.split(/[\\/]/).includes('tests'))
     .sort();
 
   if (files.length === 0) {
-    console.error('No tests/test-*.js files found under arcade/.');
+    console.error(`No tests/test-*.js files found under ${JS_ROOTS.map((r) => relative(ROOT, r) + '/').join(', ')}.`);
     return 1;
   }
 
