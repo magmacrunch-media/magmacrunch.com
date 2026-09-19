@@ -302,9 +302,13 @@ const GOLDENS = {
     sha: '1da21ff4361d84c3',
     sig: [96.72, 118.95, 169.78, 184.42, 105.34, 177.23, 101.91, 92.8, 101.32, 63, 76.12, 164.22, 40.04, 61.81, 134.31, 192.22, 28.24, 29.48, 31.57, 57.71, 88.55, 92.42, 106.07, 157.23, 160, 100.69, 122.78, 140.31, 224.69, 171.62, 185.5, 195.3, 34.63, 93.18, 97.53, 66.16, 87.54, 153.73, 177.23, 103.42, 150.51, 207.39, 160.1, 112.48, 71.6, 132.09, 127.42, 80.71],
   },
+  /* Moved 2026-09-19 when the random pattern stopped consuming one PRNG
+     value per row. The old value described a picture that changed shape
+     with the image height; this one does not. Verified against the
+     previous implementation that the two agree exactly at REFERENCE. */
   'row-displace': {
-    sha: 'f4d2d67278f5f496',
-    sig: [128.13, 120.7, 149.02, 172.04, 114.76, 111.36, 101.8, 149.37, 60.89, 66.04, 125.39, 152.35, 70.39, 64.92, 127.41, 165.67, 28.21, 31.55, 48.76, 38.47, 89.86, 95.7, 142.95, 115.77, 157.7, 103.67, 120.45, 141.96, 213.24, 177.92, 187.8, 198.14, 40.92, 95.73, 97.58, 57.27, 98.68, 157.92, 154.15, 111.17, 116.6, 208.33, 186.11, 119.43, 69.49, 131.15, 126.57, 84.61],
+    sha: 'b34bc81555aa810b',
+    sig: [120.27, 124.03, 152.34, 173.24, 107.17, 111.42, 99.31, 159.39, 58.54, 68.8, 125.47, 151.86, 57.43, 77.61, 141.74, 151.61, 28.37, 29.34, 48.65, 40.65, 89.03, 96.48, 150.64, 108.12, 154.55, 109.56, 119.07, 140.6, 217.24, 175.74, 188.95, 195.17, 42.8, 99.39, 96.3, 53.01, 99.97, 168.61, 146.69, 106.65, 118.18, 205.67, 189.17, 117.46, 72.25, 138.57, 123.02, 77.97],
   },
   'wave-distort': {
     sha: '3b2dea11197de3c0',
@@ -542,6 +546,149 @@ Chain.clearEffects();
 Chain.addEffect('invert');
 Chain.process(imageData(src, W, H), W, H);
 if (Chain.getLastFailures) eq(Chain.getLastFailures().length, 0, 'failures clear on a clean render');
+
+console.log('\n=== resolution independence ===');
+
+/**
+ * Spatial parameters are written against Chain.REFERENCE and scaled to the real
+ * render size by Chain.scaleParams, which Chain.process applies on the way into
+ * every effect. Without it the same chain looks weaker the larger you render:
+ * changing WORK SIZE from 256 to 1024 quartered the apparent strength of most of
+ * a chain, and it is the same fault that would make "preview small, export
+ * large" wrong rather than merely approximate.
+ */
+eq(Chain.REFERENCE, 256, 'REFERENCE is the size the workspace opens at');
+
+{
+    const base = { rx: 4, ry: -2, gx: 0, gy: 0, bx: -4, by: 2 };
+
+    // The factor is exactly 1 at REFERENCE, which is what makes this change a
+    // no-op everywhere the app is actually tuned.
+    const same = Chain.scaleParams('channel-shift', base, 256, 256);
+    eq(JSON.stringify(same), JSON.stringify(base), 'at REFERENCE nothing is scaled');
+
+    const big = Chain.scaleParams('channel-shift', base, 512, 512);
+    eq(big.rx, 8, 'a length doubles at twice the reference');
+    eq(big.by, 4, 'and so does every other one');
+
+    // The long edge decides, so a diagonal shift stays diagonal on a
+    // non-square image instead of skewing.
+    const wide = Chain.scaleParams('channel-shift', base, 1024, 768);
+    eq(wide.rx, 16, 'the long edge sets the factor, not width and height apart');
+    eq(wide.ry, -8, 'and it sets it for the vertical axis too');
+}
+
+{
+    // A frequency is cycles per pixel, so it has to scale the other way or a
+    // taller image fits proportionally more waves into the same picture.
+    const base = { amplitude: 6, frequency: 8, axis: 0, phase: 12 };
+    const big = Chain.scaleParams('wave-distort', base, 512, 512);
+    eq(big.amplitude, 12, 'amplitude is a length and doubles');
+    eq(big.frequency, 4, 'frequency is a rate and halves');
+    eq(big.phase, 12, 'phase is an angle and is left alone');
+    eq(big.axis, 0, 'an enum is left alone');
+}
+
+{
+    // An effect with no spatial parameters must come back untouched, and
+    // scaleParams must never hand back the caller's own object: the live params
+    // belong to an effect card and the UI reads them back to draw the sliders.
+    const base = { levels: 5 };
+    const out = Chain.scaleParams('posterize', base, 2048, 2048);
+    eq(JSON.stringify(out), JSON.stringify(base), 'an effect with no spatial params is unchanged');
+    out.levels = 99;
+    eq(base.levels, 5, 'scaleParams returns a copy, never the live params object');
+
+    const shifted = Chain.scaleParams('channel-shift', { rx: 4 }, 512, 512);
+    eq(shifted.rx, 8, 'and it still scales when it copies');
+}
+
+// Every declared spatial key must exist in that effect's defaults. A typo here
+// is silent: the misspelled key is scaled, nothing reads it, and the parameter
+// it was meant to name goes on being resolution dependent.
+for (const type of types) {
+    const spec = registry[type].spatial;
+    if (!spec) continue;
+    const defaults = registry[type].defaults || {};
+    const declared = [].concat(spec.lengths || [], spec.frequencies || []);
+    const unknown = declared.filter((k) => !(k in defaults));
+    eq(unknown.join(','), '', type + ': every declared spatial key exists in defaults');
+    ok(declared.length > 0, type + ': declares at least one spatial key',
+        'an empty spatial block should be null instead, so it reads as a decision');
+}
+
+/**
+ * The property itself, end to end through Chain.process rather than through
+ * scaleParams alone.
+ *
+ * The source is black with a single white column, so after a horizontal shift
+ * the displacement reads straight back off the image: the column lands at
+ * (x0 + shift) % w. Comparing its NORMALIZED position at two sizes tests the
+ * claim directly, which a block-mean comparison cannot. The first attempt used
+ * band means over a gradient and reported no improvement at all, because
+ * averaging a row of shifted gradient washes out the very shift being measured.
+ */
+function spikeColumn(w, h) {
+    const px = new Uint8ClampedArray(w * h * 4);
+    for (let i = 3; i < px.length; i += 4) px[i] = 255;
+    const x0 = Math.floor(w / 4);
+    for (let y = 0; y < h; y++) {
+        const i = (y * w + x0) * 4;
+        px[i] = px[i + 1] = px[i + 2] = 255;
+    }
+    return px;
+}
+
+function redSpikeAt(w, h, row) {
+    const res = Chain.process(imageData(spikeColumn(w, h), w, h), w, h);
+    for (let x = 0; x < w; x++) if (res.data[(row * w + x) * 4] > 200) return x / w;
+    return NaN;
+}
+
+{
+    Chain.clearEffects();
+    const e = Chain.addEffect('channel-shift');
+    e.params = { rx: 8, ry: 0, gx: 0, gy: 0, bx: 0, by: 0 };
+
+    const at256 = redSpikeAt(256, 256, 128);
+    const at512 = redSpikeAt(512, 512, 256);
+    const at1024 = redSpikeAt(1024, 1024, 512);
+
+    ok(Number.isFinite(at256) && Number.isFinite(at512), 'the spike is found at both sizes');
+    ok(Math.abs(at256 - at512) < 0.002,
+        'channel-shift lands in the same place at 256 and 512 (' + at256.toFixed(4) + ' vs ' + at512.toFixed(4) + ')');
+    ok(Math.abs(at256 - at1024) < 0.002,
+        'and at 1024 (' + at256.toFixed(4) + ' vs ' + at1024.toFixed(4) + ')');
+}
+
+{
+    /* ROW DISPLACE with the random pattern is the case that needed more than a
+       scaled parameter. It called the generator once per row, so a seed
+       described finer noise the taller the image: 64 rows consumed 64 values,
+       256 rows consumed 256. It now samples a fixed table by normalized
+       position instead.
+
+       Measured against the previous implementation: worst normalized offset
+       error across 256, 512 and 1024 went from 0.055 to 0.0020, and 0.0020 is
+       half a pixel at 256, which is rounding. The bound below sits between the
+       two, so it discriminates rather than merely passing. */
+    Chain.clearEffects();
+    const e = Chain.addEffect('row-displace');
+    e.params = { amount: 10, axis: 0, pattern: 2, frequency: 4, seed: 7 };
+
+    let worst = 0;
+    for (let s = 0; s < 16; s++) {
+        const t = (s + 0.5) / 16;
+        const a = redSpikeAt(256, 256, Math.floor(t * 256));
+        const b = redSpikeAt(512, 512, Math.floor(t * 512));
+        if (!Number.isFinite(a) || !Number.isFinite(b)) continue;
+        const wrapped = Math.abs(((a - b + 1.5) % 1) - 0.5);
+        if (wrapped > worst) worst = wrapped;
+    }
+    ok(worst < 0.006,
+        'a seeded random displacement describes the same bands at 256 and 512 (worst ' + worst.toFixed(4) + ')',
+        'the per-row generator is back, or the table is no longer indexed by normalized position');
+}
 
 console.log('\n=== deterministic generators ===');
 

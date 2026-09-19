@@ -129,6 +129,14 @@
     // ── FFT FILTER ──
     Chain.register('fft-filter', {
         name: 'FFT FILTER',
+        /* Deliberately unscaled, and the one effect that is NOT resolution
+           independent after this change. `cutoff` and `width` are radii in
+           the bins of an n x n transform whose n is itself clamped to 256,
+           so what a bin means already varies with size in a way no single
+           factor expresses. Phase 2 rebuilds this filter to cover the whole
+           image; scaling the parameter now would pin behaviour that is
+           about to be replaced. */
+        spatial: null,
         defaults: {
             filterType: 0, // 0=lowpass, 1=highpass, 2=bandpass, 3=notch
             cutoff: 40,

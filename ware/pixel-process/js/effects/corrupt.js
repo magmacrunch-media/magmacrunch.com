@@ -7,6 +7,11 @@
     Chain.register('block-corrupt', {
         name: 'BLOCK CORRUPT',
         defaults: { intensity: 30, blockSize: 16, count: 8, seed: 0 },
+        /* `intensity` is the pixel distance a block is thrown, despite the
+           name and the AMT label. `count` is a number of blocks, not a
+           length, and block POSITIONS are already drawn as a fraction of w
+           and h, so a seed places them proportionally at any size. */
+        spatial: { lengths: ['blockSize', 'intensity'] },
         fn: function(src, dst, p, w, h) {
             // Copy source
             for (var i = 0; i < src.length; i++) dst[i] = src[i];
@@ -49,6 +54,10 @@
     Chain.register('dead-pixels', {
         name: 'DEAD PIXELS',
         defaults: { density: 20, color: 0, seed: 0 },
+        /* Nothing to scale. `density` is already per unit area (the count
+           is w * h * density / 1000) and positions are drawn as a fraction
+           of the total, so this effect was resolution independent already. */
+        spatial: null,
         // color: 0=random, 1=black, 2=white
         fn: function(src, dst, p, w, h) {
             for (var i = 0; i < src.length; i++) dst[i] = src[i];

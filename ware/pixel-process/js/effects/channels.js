@@ -7,6 +7,8 @@
     Chain.register('channel-shift', {
         name: 'CHANNEL SHIFT',
         defaults: { rx: 3, ry: 0, gx: 0, gy: 0, bx: -3, by: 0 },
+        // All six are pixel offsets, so all six scale with the image.
+        spatial: { lengths: ['rx', 'ry', 'gx', 'gy', 'bx', 'by'] },
         fn: function(src, dst, p, w, h) {
             for (var y = 0; y < h; y++) {
                 for (var x = 0; x < w; x++) {

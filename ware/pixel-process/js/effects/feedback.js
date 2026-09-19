@@ -19,6 +19,11 @@
     // FEEDBACK ECHO
     Chain.register('feedback', {
         name: 'FEEDBACK ECHO',
+        /* The `scale` PARAMETER below and `rotation` are a ratio and an
+           angle; `decay` and
+           `iterations` are neither spatial nor countable in pixels. Only the
+           two offsets are lengths. */
+        spatial: { lengths: ['offsetX', 'offsetY'] },
         defaults: {
             iterations: 5,
             decay: 0.7,

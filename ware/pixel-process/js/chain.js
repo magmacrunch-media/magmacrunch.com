@@ -79,6 +79,72 @@
         effects = [];
     }
 
+    /* ── Resolution independence ──────────────────────────────────────────
+
+       Every spatial parameter in this tool is written in pixels: a channel
+       shift of 3, a block 16 across, a feedback offset of 2. Handed to a
+       larger image unchanged, all of them shrink relative to the picture, so
+       the same chain looks weaker the bigger you render it. Changing WORK SIZE
+       from 256 to 1024 today quarters the apparent strength of most of a
+       chain, and it is the same fault that would make "preview small, export
+       large" wrong rather than merely approximate.
+
+       So parameters are declared against a reference resolution and scaled to
+       the real one here, in one place, rather than inside twelve effect
+       functions. An effect says which of its parameters are lengths (scaling
+       with the image) and which are frequencies (scaling inversely, being
+       cycles per pixel). Anything unlisted is a count, a ratio, an angle or a
+       level, and is passed through untouched.
+
+       REFERENCE is 256 because that is the size this tool opens at and the
+       size its defaults were plainly tuned at, so the factor is exactly 1 in
+       the default workspace. This changes nothing about how the app looks
+       where most of the tuning happens, and only begins acting once you leave
+       that size. Choosing 1024 instead would have quietly weakened every
+       existing chain by four.
+
+       The long edge, rather than width and height separately: scaling x by w
+       and y by h would skew a diagonal shift on a non-square image, turning a
+       change of resolution into a different picture instead of the same one
+       larger. */
+    var REFERENCE = 256;
+
+    function scaleFactor(w, h) {
+        return Math.max(w, h) / REFERENCE;
+    }
+
+    /* A copy of `params` with its spatial entries scaled for a w by h render.
+
+       Always a copy. The live object belongs to an effect card and the UI
+       reads it back to draw the sliders, so scaling in place would drag every
+       slider a little further along on each re-render. */
+    function scaleParams(type, params, w, h) {
+        var out = {};
+        for (var k in params) out[k] = params[k];
+
+        var def = registry[type];
+        var spec = def && def.spatial;
+        if (!spec) return out;
+
+        var f = scaleFactor(w, h);
+        if (f === 1) return out;
+
+        var i, key;
+        if (spec.lengths) {
+            for (i = 0; i < spec.lengths.length; i++) {
+                key = spec.lengths[i];
+                if (typeof out[key] === 'number') out[key] = out[key] * f;
+            }
+        }
+        if (spec.frequencies) {
+            for (i = 0; i < spec.frequencies.length; i++) {
+                key = spec.frequencies[i];
+                if (typeof out[key] === 'number') out[key] = out[key] / f;
+            }
+        }
+        return out;
+    }
+
     // Process source through all enabled effects in order
     // sourceImageData is NOT copied — caller must provide a fresh copy
     /* A throwing effect used to take the whole render with it: the exception
@@ -103,7 +169,7 @@
 
             var out = new ImageData(w, h);
             try {
-                e.fn(current.data, out.data, e.params, w, h);
+                e.fn(current.data, out.data, scaleParams(e.type, e.params, w, h), w, h);
                 current = out;
             } catch (err) {
                 // Keep `current` as it was: `out` is half-written and would
@@ -200,6 +266,8 @@
         getEffects: getEffects,
         clearEffects: clearEffects,
         countEnabled: countEnabled,
+        REFERENCE: REFERENCE,
+        scaleParams: scaleParams,
         getLastFailures: getLastFailures,
         process: process,
         render: render,
