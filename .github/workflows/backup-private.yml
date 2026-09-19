@@ -1,5 +1,40 @@
 name: Backup to Private Repo
 
+# Mirrors the server-side and tooling parts of this repo into the private
+# magma-ops-backup, so the things that are not on GitHub Pages survive losing
+# this repo.
+#
+# ── Two things were wrong here, fixed 2026-09-18 ──
+#
+# **The credential expired, and the wording is how you tell.** BACKUP_REPO_TOKEN
+# was set 2026-08-08, the workflow succeeded 26 times through 2026-09-06, and
+# every run from 2026-09-10 failed -- a 30-day PAT, expired 2026-09-07. Over git
+# HTTPS those two failures read differently, one line apart in a log:
+#
+#   remote: Repository not found.                    the rename unscoped a live
+#                                                    PAT (the REST API's 403)
+#   remote: Invalid username or token. Password ...  the token itself is dead
+#
+# This repo has one of each: "Repository not found" on 2026-08-31, re-scoped and
+# green 85 minutes later, then "Invalid username or token" from 2026-09-10 on.
+# Reading the second as the first sends you to re-scope a token that no longer
+# exists. So this now mints an installation token per run from the
+# magmacrunch-release App, the way texastoast, magmascript and crunch-c do: the
+# token expires with the run, the App's key does not expire, and installation
+# permissions survive a rename. There is nothing left to rotate.
+#
+# BACKUP_REPO_TOKEN is left in the repo as a rollback and is inert. Delete it
+# once a run has gone green.
+#
+# **The mirror was one commit, and had always been one commit.** `git fetch
+# origin main` sets FETCH_HEAD and creates no local branch, so the old
+# `git checkout -B main || true` had no start point on an unborn HEAD, failed,
+# and was swallowed. Every run therefore built a rootless snapshot and
+# force-pushed it over the previous one -- while the fetch and checkout sitting
+# right there said the intent was to build on what was already in the mirror.
+# Now it does, and the push is an ordinary fast-forward with no --force to
+# flatten anything. The single commit that is there stays as the root.
+
 on:
   push:
     branches: [main]
@@ -13,6 +48,9 @@ on:
       - 'mcp-server/**'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   backup:
     runs-on: ubuntu-latest
@@ -21,17 +59,66 @@ jobs:
         with:
           fetch-depth: 0
 
+      # An unset secret is not an error to the expression that reads it -- it
+      # expands to the empty string and the failure surfaces later wearing the
+      # face of a different problem, which is how crunch-c sent an empty Bearer
+      # header for three weeks. Name it here instead.
+      - name: Check the App credentials are present
+        env:
+          APP_ID: ${{ secrets.RELEASE_APP_ID }}
+          APP_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+        run: |
+          if [ -z "$APP_ID" ] || [ -z "$APP_KEY" ]; then
+            echo "::error::RELEASE_APP_ID / RELEASE_APP_PRIVATE_KEY are not visible to this repository."
+            echo "They are organization secrets on magmacrunch-media at visibility 'all', so this"
+            echo "means they were removed or their visibility narrowed. Nothing is lost meanwhile:"
+            echo "the mirror is behind, not corrupted."
+            exit 1
+          fi
+
+      - name: Mint a short-lived token for the mirror
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: magmacrunch-media
+          repositories: magma-ops-backup
+
       - name: Sync to private backup repo
         env:
-          BACKUP_TOKEN: ${{ secrets.BACKUP_REPO_TOKEN }}
+          BACKUP_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           REPO_URL="https://x-access-token:${BACKUP_TOKEN}@github.com/magmacrunch-media/magma-ops-backup.git"
           TMPDIR=$(mktemp -d)
 
-          git init "$TMPDIR" -q
+          git init -q -b main "$TMPDIR"
           git -C "$TMPDIR" remote add origin "$REPO_URL"
-          git -C "$TMPDIR" fetch origin main || true
-          git -C "$TMPDIR" checkout -B main || true
+
+          # ls-remote answers in three distinguishable ways, and keeping them
+          # apart is the whole point: 0 the branch is there, 2 we reached the
+          # mirror and it has no main yet, anything else we could not talk to it
+          # at all. The old `fetch || true` collapsed all three into "carry on".
+          set +e
+          git -C "$TMPDIR" ls-remote --exit-code --heads origin main >/dev/null 2>&1
+          rc=$?
+          set -e
+
+          case "$rc" in
+            0)
+              git -C "$TMPDIR" fetch -q origin main
+              git -C "$TMPDIR" reset -q --hard FETCH_HEAD
+              ;;
+            2)
+              echo "The mirror has no main branch yet; this run starts its history."
+              ;;
+            *)
+              echo "::error::Cannot reach magma-ops-backup (git ls-remote exit $rc)."
+              echo "The token is minted per run and cannot have expired, so this is reachability"
+              echo "or installation: check that magmacrunch-release is installed on that repo."
+              exit 1
+              ;;
+          esac
 
           rsync -a --delete \
             . "$TMPDIR/" \
@@ -57,8 +144,11 @@ jobs:
 
           cd "$TMPDIR"
           git add -A
-          git diff --cached --quiet && echo "No changes to back up." && exit 0
+          if git diff --cached --quiet; then
+            echo "No changes to back up."
+            exit 0
+          fi
           git -c user.name="github-actions[bot]" -c user.email="github-actions[bot]@users.noreply.github.com" \
             commit -q -m "Backup from magmacrunch.com $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          git push --force origin main
+          git push -q origin main
           echo "Backup pushed."
