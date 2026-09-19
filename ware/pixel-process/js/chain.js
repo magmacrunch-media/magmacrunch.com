@@ -145,6 +145,35 @@
         return out;
     }
 
+    /* Two buffers, reused, rather than a fresh ImageData for every effect.
+
+       `new ImageData(w, h)` allocates w * h * 4 bytes AND zero-fills them, once
+       per enabled effect per render. At twelve megapixels that is 48MB
+       allocated and 48MB pointlessly zeroed for each effect in the chain, on
+       every drag of every slider. Two buffers alternating cost 96MB once and
+       zero nothing.
+
+       Zeroing nothing is only safe because every effect writes every byte of
+       its destination. That is a precondition, not an assumption:
+       tests/test-effects.js runs each effect twice into destinations pre-filled
+       0x00 and 0xFF and requires the two results to match, which no effect that
+       skipped a byte could do. A fresh ImageData would have hidden such a byte
+       as transparent black; a reused buffer shows whatever was there two
+       renders ago, which in the app looks like ghosting.
+
+       So the ImageData handed back wraps a buffer this module owns and will
+       write over on the next call. Use it before calling process again.
+       Canvas.display does. The tests snapshot, and assert that they have to. */
+    var poolA = null, poolB = null, poolBytes = -1;
+
+    function ensurePool(w, h) {
+        var bytes = w * h * 4;
+        if (poolBytes === bytes) return;
+        poolA = new Uint8ClampedArray(bytes);
+        poolB = new Uint8ClampedArray(bytes);
+        poolBytes = bytes;
+    }
+
     // Process source through all enabled effects in order
     // sourceImageData is NOT copied — caller must provide a fresh copy
     /* A throwing effect used to take the whole render with it: the exception
@@ -160,27 +189,38 @@
     function process(sourceImageData, w, h) {
         if (!sourceImageData) return null;
 
-        var current = sourceImageData;
+        var current = sourceImageData.data;
         var failed = [];
+        var useA = true;
+        var wrote = false;
 
         for (var i = 0; i < effects.length; i++) {
             var e = effects[i];
             if (!e.enabled) continue;
 
-            var out = new ImageData(w, h);
+            ensurePool(w, h);
+            var out = useA ? poolA : poolB;
             try {
-                e.fn(current.data, out.data, scaleParams(e.type, e.params, w, h), w, h);
+                e.fn(current, out, scaleParams(e.type, e.params, w, h), w, h);
                 current = out;
+                useA = !useA;
+                wrote = true;
             } catch (err) {
-                // Keep `current` as it was: `out` is half-written and would
-                // put torn pixels through the rest of the chain.
+                /* Keep `current` as it was: `out` is half written and would put
+                   torn pixels through the rest of the chain. `useA` is left
+                   alone too, so the next effect targets the same half written
+                   buffer and overwrites it completely, which it can because
+                   every effect is total. */
                 failed.push(e.name || e.id || 'effect ' + (i + 1));
                 console.error('pixel-process: effect failed, skipping', e, err);
             }
         }
 
         lastFailures = failed;
-        return current;
+
+        // Nothing ran: hand back the caller's own source, untouched. That is
+        // what makes an all-disabled chain a true bypass rather than a copy.
+        return wrote ? new ImageData(current, w, h) : sourceImageData;
     }
 
     // Full render: get source, process, display

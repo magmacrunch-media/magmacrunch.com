@@ -457,6 +457,30 @@ for (const [type, params] of CASES) {
     ok(finite, `${type}: output has no NaN`);
 }
 
+console.log('\n=== every effect writes every pixel ===');
+
+/**
+ * This is the precondition for Chain.process reusing two buffers instead of
+ * allocating a fresh ImageData per effect. A fresh ImageData arrives zeroed, so
+ * an effect that skips a byte silently gets transparent black there. A reused
+ * buffer gives it whatever was in that byte two renders ago, which looks like
+ * ghosting in the app and cannot be reproduced from a single run.
+ *
+ * Checked without a sentinel value, which would false-alarm whenever a correct
+ * output happened to contain it. Each effect runs twice over identical input,
+ * into destinations pre-filled with 0x00 and with 0xFF. A byte that is never
+ * written keeps its fill, so it differs between the two runs and nothing else
+ * can.
+ */
+for (const [type, params] of CASES) {
+    const def = Chain.getRegistry()[type];
+    const zeros = new Uint8ClampedArray(W * H * 4).fill(0x00);
+    const ones = new Uint8ClampedArray(W * H * 4).fill(0xFF);
+    def.fn(src, zeros, params, W, H);
+    def.fn(src, ones, params, W, H);
+    eq(sha(zeros), sha(ones), `${type}: leaves no byte unwritten`);
+}
+
 console.log('\n=== odd, non-power-of-two size (' + ODD_W + 'x' + ODD_H + ') ===');
 
 // The FFT rounds down to a power of two and copies the remainder through, so a
@@ -474,6 +498,33 @@ for (const [type, params] of CASES) {
         if (!Number.isFinite(out[i])) finite = false;
     }
     ok(opaque && finite, `${type}: runs at ${ODD_W}x${ODD_H}, opaque and finite`);
+}
+
+console.log('\n=== buffers survive a change of size ===');
+
+/**
+ * FEEDBACK ECHO keeps its working buffers and its index map between calls,
+ * cached on the pixel count, which is what makes it affordable at all: they are
+ * the largest allocation in the tool. A cache keyed on size has one failure
+ * mode, and it is silent. Work at one size, work at another, come back to the
+ * first, and any buffer that was resized without being re-initialised hands
+ * back a blend of the two.
+ *
+ * Nothing else here would catch it. The determinism check runs an effect twice
+ * at the same size, and the odd-size pass runs each effect once. Only the round
+ * trip does.
+ */
+for (const [type, params] of CASES) {
+    const def = Chain.getRegistry()[type];
+    const first = new Uint8ClampedArray(W * H * 4);
+    const again = new Uint8ClampedArray(W * H * 4);
+    const other = new Uint8ClampedArray(ODD_W * ODD_H * 4);
+
+    def.fn(src, first, params, W, H);
+    def.fn(oddSrc, other, params, ODD_W, ODD_H);
+    def.fn(src, again, params, W, H);
+
+    eq(sha(first), sha(again), `${type}: unaffected by a render at another size in between`);
 }
 
 console.log('\n=== chain processing ===');
@@ -508,7 +559,9 @@ mid.fn = function () { throw new Error('deliberate'); };
 const realError = ctx.console.error;
 let logged = 0;
 ctx.console.error = () => { logged++; };
-const withThrow = Chain.process(imageData(src, W, H), W, H);
+// Snapshotted, not held. See the contract assertion below: the array this
+// comes back on is process's own and the next call writes over it.
+const withThrow = Uint8ClampedArray.from(Chain.process(imageData(src, W, H), W, H).data);
 ctx.console.error = realError;
 eq(logged, 1, 'the skipped effect is logged, not swallowed');
 
@@ -529,10 +582,27 @@ if (failures) {
 Chain.clearEffects();
 Chain.addEffect('invert');
 Chain.addEffect('invert');
-const withoutMid = Chain.process(imageData(src, W, H), W, H);
+const withoutMid = Uint8ClampedArray.from(Chain.process(imageData(src, W, H), W, H).data);
 
-eq(sha(withThrow.data), sha(withoutMid.data), 'a throwing effect is skipped, not fatal');
-eq(sha(withThrow.data), sha(src), 'and invert twice is the identity');
+eq(sha(withThrow), sha(withoutMid), 'a throwing effect is skipped, not fatal');
+eq(sha(withThrow), sha(src), 'and invert twice is the identity');
+
+/* The two comparisons above went vacuously green the moment Chain.process
+   started reusing two buffers: both results came back on literally the same
+   array, so they could not have differed however broken the skip-on-throw path
+   was. The suite stayed at 152 passed and had quietly stopped checking. The
+   snapshots are what make them real again, and this is what stops those
+   snapshots reading as fussiness. */
+Chain.clearEffects();
+Chain.addEffect('invert');
+const firstResult = Chain.process(imageData(src, W, H), W, H);
+const beforeSecond = sha(firstResult.data);
+Chain.clearEffects();
+Chain.addEffect('threshold');
+Chain.process(imageData(src, W, H), W, H);
+ok(sha(firstResult.data) !== beforeSecond,
+    'a result is invalidated by the next process call',
+    'if this fails, process has started copying, which is an allocation per render');
 
 ok(failures !== null, 'Chain.getLastFailures exists', 'the core must report failures without touching the DOM');
 if (failures) {
@@ -546,6 +616,46 @@ Chain.clearEffects();
 Chain.addEffect('invert');
 Chain.process(imageData(src, W, H), W, H);
 if (Chain.getLastFailures) eq(Chain.getLastFailures().length, 0, 'failures clear on a clean render');
+
+/* process must hand each effect the PREVIOUS effect's output, in a buffer that
+   is not also its destination.
+
+   Every other chain test here uses INVERT, POSTERIZE and THRESHOLD, and all
+   three are pointwise: they read src[i] and write dst[i] at the same index, so
+   they are correct even when src and dst are the same array. That made them
+   blind to the ping-pong failing to alternate. Deleting `useA = !useA` left the
+   whole suite green. A spatial effect reads a different index than it writes
+   and is destroyed by the same aliasing, so two of them composed is the case
+   that actually pins it.
+
+   Comparing against the same two applied by hand also pins that process applies
+   scaleParams on the way in, since the manual path has to do it too. */
+Chain.clearEffects();
+const shiftStep = Chain.addEffect('channel-shift');
+shiftStep.params = { rx: 5, ry: -3, gx: 0, gy: 0, bx: -5, by: 3 };
+const displaceStep = Chain.addEffect('row-displace');
+displaceStep.params = { amount: 7, axis: 1, pattern: 0, frequency: 3, seed: 2 };
+
+const viaChain = Uint8ClampedArray.from(Chain.process(imageData(src, W, H), W, H).data);
+
+const byHand1 = new Uint8ClampedArray(W * H * 4);
+const byHand2 = new Uint8ClampedArray(W * H * 4);
+registry['channel-shift'].fn(src, byHand1,
+    Chain.scaleParams('channel-shift', shiftStep.params, W, H), W, H);
+registry['row-displace'].fn(byHand1, byHand2,
+    Chain.scaleParams('row-displace', displaceStep.params, W, H), W, H);
+
+eq(sha(viaChain), sha(byHand2),
+    'process composes two spatial effects in order, without aliasing src and dst');
+
+// And the order matters, so the comparison above is not passing on a symmetry.
+const swapped1 = new Uint8ClampedArray(W * H * 4);
+const swapped2 = new Uint8ClampedArray(W * H * 4);
+registry['row-displace'].fn(src, swapped1,
+    Chain.scaleParams('row-displace', displaceStep.params, W, H), W, H);
+registry['channel-shift'].fn(swapped1, swapped2,
+    Chain.scaleParams('channel-shift', shiftStep.params, W, H), W, H);
+ok(sha(viaChain) !== sha(swapped2), 'and the two orders differ, so that is a real comparison');
 
 console.log('\n=== resolution independence ===');
 
