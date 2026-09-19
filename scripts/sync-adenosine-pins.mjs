@@ -5,7 +5,8 @@
  * The adenosine tools do not embed the engines — unlike the magmascript and
  * texastoast playgrounds, they load each package from jsDelivr at runtime, off
  * a version written into the source by hand. playground.js keeps a table of
- * seven, theme.js four, tiles.js one inline.
+ * seven, theme.js four, tiles.js one inline, and index.html one more in the
+ * install snippet its about section hands to visitors.
  *
  * So a release bumps nothing here, and the site keeps serving the previous
  * build to every visitor — with no error, because the old version is still on
@@ -60,6 +61,24 @@ const TARGETS = [
     packages: ['rpg'],
     // https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-rpg@0.2.3/dist/...
     pattern: (pkg) => new RegExp(`(@magmacrunch/adenosine-${pkg}@)(\\d+\\.\\d+\\.\\d+)()`),
+  },
+  {
+    file: 'index.html',
+    packages: ['rpg'],
+    // The about section's copy-paste install line, HTML-escaped inside
+    // <pre><code>:
+    //   &lt;script src="https://cdn.jsdelivr.net/npm/@magmacrunch/adenosine-rpg@0.3.0/dist/index.global.js"&gt;
+    //
+    // Nothing on the page loads it, so a stale one breaks no tool here. It is
+    // worth sweeping anyway: it is the version a reader installs and walks away
+    // with, and it sat at 0.2 through three rpg releases precisely because this
+    // file was the one thing in ware/adenosine/ the script did not read.
+    //
+    // The version group tolerates a missing patch so that drifted minor-only
+    // form still matches and is rewritten to exact, rather than reported as a
+    // stale pattern nobody can act on. After one run it is three-part like the
+    // rest.
+    pattern: (pkg) => new RegExp(`(@magmacrunch/adenosine-${pkg}@)(\\d+\\.\\d+(?:\\.\\d+)?)()`),
   },
 ];
 
