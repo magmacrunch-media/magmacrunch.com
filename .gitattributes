@@ -26,3 +26,29 @@
 *.yaml      text eol=lf
 *.conf      text eol=lf
 .githooks/* text eol=lf
+
+# Generated files, pinned for the opposite reason: CRLF breaks none of these.
+# The tools that write them emit LF, so core.autocrlf expects a CRLF working
+# tree it is never given, and git calls them modified forever. That is not only
+# noise in every `git status` — git will not overwrite what it believes is an
+# edit, so a pull refuses with "local changes would be overwritten" naming files
+# nobody has touched.
+#
+#   arcade/shared/adenosine-*.js and the assets beside them are byte-copied out
+#   of the npm packages by scripts/sync-adenosine.mjs
+#   arcade/george-boole/tests/ arrives from the game's own repo
+#
+# Only paths already LF on disk are listed, so pinning them rewrites nothing.
+# The rest of arcade/george-boole/ is deliberately absent: 15 of its files are
+# CRLF in the working tree, and pinning those would force exactly the mass
+# renormalisation the note at the top of this file avoids. Normalising that
+# directory is a job to do with the sync that fills it, not in passing.
+
+arcade/shared/adenosine-*.js             text eol=lf
+arcade/shared/chat-worker.js             text eol=lf
+arcade/shared/chat-widget.css            text eol=lf
+arcade/shared/cards/cards.css            text eol=lf
+arcade/shared/chips/chip-animation.css   text eol=lf
+arcade/shared/multiplayer/lobby.css      text eol=lf
+arcade/puzzle-framework/css/puzzle-*.css text eol=lf
+arcade/george-boole/tests/*.js           text eol=lf
