@@ -254,7 +254,15 @@
     // ── Export ──
     exportBtn.addEventListener('click', function() {
         var filename = fileNameInput.value || 'pixel-process';
-        // Display is already current from last render — just export
+        /* Render synchronously first, rather than trusting the work canvas.
+
+           It used to be true that the display was always current, because a
+           render always finished before a click could happen. Since
+           js/render.js moved rendering into a worker it is not: a render can
+           still be in flight, and exporting then writes whatever frame landed
+           last. One extra render costs a few hundred milliseconds at the very
+           worst, and makes the file match the screen. */
+        Chain.renderImmediate();
         Canvas.exportPNG(filename);
     });
 

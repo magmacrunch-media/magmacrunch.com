@@ -847,6 +847,149 @@ eq(sha(Uint8ClampedArray.from(Generators['white-noise'](W, H, 99))) ===
    sha(Uint8ClampedArray.from(Generators['perlin-noise'](W, H, 99))), false,
     'the two seeded sources are not correlated at the same seed');
 
+console.log('\n=== the worker imports what the page loads ===');
+
+/**
+ * js/render.js builds its worker from a Blob and tells it to importScripts the
+ * page's own `<script src>` URLs, stamps included. That is what makes a stale
+ * worker impossible: scripts/check-cache-busters.mjs only scans .html, so a
+ * worker file on disk would be fetched unstamped and could go on running a
+ * cached old chain.js while the page ran a fresh one.
+ *
+ * The risk that replaces it is narrower and is what these check: the matcher
+ * picking the wrong set. An effect the worker fails to import is not an error
+ * anywhere. Chain.addEffect returns null for an unknown type, render.js skips
+ * it, and the image comes back quietly missing one effect.
+ */
+const renderSrc = fs.readFileSync(path.join(JS_DIR, 'render.js'), 'utf8');
+
+// Load render.js with no DOM and no Worker, which is also the fallback path:
+// it must define window.Render and must not throw.
+const renderCtx = vm.createContext({
+    console: { log() {}, warn() {}, error() {} },
+    URL: globalThis.URL,
+});
+vm.runInContext('var window = globalThis;', renderCtx);
+let renderThrew = null;
+try {
+    vm.runInContext(renderSrc, renderCtx, { filename: 'render.js' });
+} catch (err) {
+    renderThrew = err;
+}
+ok(renderThrew === null, 'render.js loads with no Worker and no document',
+    renderThrew ? String(renderThrew.message) : '');
+ok(renderCtx.Render && typeof renderCtx.Render.coreScripts === 'function',
+    'and still exposes its matcher');
+
+// The real script list from the page, and the real effect files on disk.
+const pageSrcs = [...html.matchAll(/<script src="([^"]+)"/g)].map((m) => m[1]);
+const picked = renderCtx.Render.coreScripts(pageSrcs);
+const effectFiles = fs.readdirSync(path.join(JS_DIR, 'effects')).filter((f) => f.endsWith('.js')).sort();
+
+eq(picked.length, effectFiles.length + 1,
+    `the worker imports chain.js plus all ${effectFiles.length} effect files`);
+ok(/(^|\/)chain\.js/.test(picked[0]),
+    'chain.js is imported first, since the effects register against it');
+
+for (const file of effectFiles) {
+    ok(picked.some((s) => s.indexOf('effects/' + file) !== -1),
+        `effects/${file} is imported by the worker`,
+        'it is on disk and the page loads it, but the worker would render without it');
+}
+
+// And the page itself must load every effect file on disk, or the matcher
+// agreeing with the page proves nothing.
+for (const file of effectFiles) {
+    ok(pageSrcs.some((s) => s.indexOf('effects/' + file) !== -1),
+        `index.html loads effects/${file}`);
+}
+
+// Nothing that is not core should be dragged across. app.js and ui.js touch
+// the DOM at load and would throw inside a worker.
+for (const unwanted of ['app.js', 'ui.js', 'canvas.js', 'title.js', 'render.js', 'generators.js']) {
+    ok(!picked.some((s) => s.indexOf(unwanted) !== -1),
+        `the worker does not import ${unwanted}`);
+}
+
+console.log('\n=== the worker bootstrap actually runs the chain ===');
+
+/**
+ * The bootstrap is a string, so it can be executed here with importScripts and
+ * postMessage shimmed. This is the real text that becomes the worker: it runs
+ * the same effect files, over the same core, and its answer is compared against
+ * Chain.process on this side.
+ */
+{
+    const posted = [];
+    const workerCtx = vm.createContext({
+        ImageData: ctx.ImageData,
+        console: { log() {}, error() {} },
+    });
+    vm.runInContext('var self = globalThis;', workerCtx);
+    workerCtx.importScripts = function () {
+        for (const f of ['chain.js', 'effects/channels.js', 'effects/sort.js', 'effects/displace.js',
+            'effects/corrupt.js', 'effects/fft.js', 'effects/feedback.js']) {
+            vm.runInContext(fs.readFileSync(path.join(JS_DIR, f), 'utf8'), workerCtx, { filename: f });
+        }
+    };
+    workerCtx.postMessage = function (m) { posted.push(m); };
+
+    vm.runInContext(renderCtx.Render.workerSource, workerCtx, { filename: 'bootstrap' });
+
+    // Absolute URLs are what render.js sends; the shim ignores them.
+    workerCtx.self.onmessage({ data: { type: 'init', scripts: ['chain.js'] } });
+    eq(posted.length, 1, 'the bootstrap answers init');
+    eq(posted[0].type, 'ready', 'and reports ready once the effects are in');
+
+    const chainSpec = [
+        { type: 'channel-shift', params: { rx: 5, ry: -3, gx: 0, gy: 0, bx: -5, by: 3 }, enabled: true },
+        { type: 'row-displace', params: { amount: 7, axis: 1, pattern: 0, frequency: 3, seed: 2 }, enabled: true },
+    ];
+    const payload = Uint8ClampedArray.from(src);
+    workerCtx.self.onmessage({
+        data: { type: 'render', id: 9, w: W, h: H, chain: chainSpec, src: payload.buffer },
+    });
+
+    eq(posted.length, 2, 'the bootstrap answers render');
+    const done = posted[1];
+    eq(done.type, 'done', 'with a done message');
+    eq(done.id, 9, 'echoing the request id, so a stale frame can be dropped');
+    eq(done.w, W, 'and the width it rendered at');
+
+    // The same chain on this side. If these disagree the worker is running
+    // different code from the page, which is the whole thing render.js is
+    // arranged to prevent.
+    Chain.clearEffects();
+    for (const step of chainSpec) {
+        const made = Chain.addEffect(step.type);
+        made.params = step.params;
+        made.enabled = step.enabled;
+    }
+    const here = Uint8ClampedArray.from(Chain.process(imageData(src, W, H), W, H).data);
+    eq(sha(new Uint8ClampedArray(done.pixels)), sha(here),
+        'the worker and the main thread render the same pixels');
+
+    // A disabled step must be honoured across the boundary too.
+    const offSpec = chainSpec.map((s) => ({ ...s, enabled: false }));
+    workerCtx.self.onmessage({
+        data: { type: 'render', id: 10, w: W, h: H, chain: offSpec, src: Uint8ClampedArray.from(src).buffer },
+    });
+    eq(sha(new Uint8ClampedArray(posted[2].pixels)), sha(src),
+        'an all-disabled chain comes back untouched through the worker');
+
+    // A throwing effect must be reported across the boundary, not swallowed:
+    // ui.js draws the FAILED chip from exactly this list.
+    const registryThere = workerCtx.Chain.getRegistry();
+    const realFn = registryThere['channel-shift'].fn;
+    registryThere['channel-shift'].fn = function () { throw new Error('deliberate'); };
+    workerCtx.self.onmessage({
+        data: { type: 'render', id: 11, w: W, h: H, chain: chainSpec, src: Uint8ClampedArray.from(src).buffer },
+    });
+    registryThere['channel-shift'].fn = realFn;
+    eq(posted[3].failures.join(','), 'CHANNEL SHIFT',
+        'a failure inside the worker is reported back by name');
+}
+
 // -- Summary -----------------------------------------------------------------
 
 console.log(`\n${passed} passed, ${failed} failed`);

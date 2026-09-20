@@ -240,8 +240,26 @@
         UI.updateStat();
     }
 
+    /* An asynchronous renderer, if one has been installed.
+
+       js/render.js installs a Worker-backed one once its worker reports ready,
+       and uninstalls it if the worker errors or stops answering. Until then,
+       and on any browser without Workers, `_async` is null and rendering stays
+       exactly as it was: debounced on rAF, on this thread.
+
+       Note this file is also loaded INSIDE that worker, where nothing ever
+       installs a renderer and `render` is never called. The core stays unaware
+       of which side of the postMessage boundary it is running on. */
+    var _async = null;
+
+    function setAsyncRenderer(fn) {
+        _async = fn || null;
+        if (_async && _rafId) { cancelAnimationFrame(_rafId); _rafId = 0; }
+    }
+
     // Debounced render via requestAnimationFrame
     function render() {
+        if (_async) { _async(); return; }
         if (_rafId) return;
         _rafId = requestAnimationFrame(function() {
             _rafId = 0;
@@ -306,6 +324,7 @@
         getEffects: getEffects,
         clearEffects: clearEffects,
         countEnabled: countEnabled,
+        setAsyncRenderer: setAsyncRenderer,
         REFERENCE: REFERENCE,
         scaleParams: scaleParams,
         getLastFailures: getLastFailures,

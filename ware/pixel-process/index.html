@@ -193,7 +193,7 @@
     <script src="../shell/toast.js?v=d87a2776"></script>
     <script src="../shell/dropdown.js?v=b0e0a994"></script>
     <script src="js/canvas.js?v=eaab4e32"></script>
-    <script src="js/chain.js?v=46322f3c"></script>
+    <script src="js/chain.js?v=d5985106"></script>
     <script src="js/generators.js?v=fe23af02"></script>
     <script src="js/effects/channels.js?v=04cf9f5c"></script>
     <script src="js/effects/sort.js?v=fd949ab6"></script>
@@ -201,8 +201,11 @@
     <script src="js/effects/corrupt.js?v=987639f6"></script>
     <script src="js/effects/fft.js?v=14391654"></script>
     <script src="js/effects/feedback.js?v=b7fd05b3"></script>
-    <script src="js/ui.js?v=b110ddc7"></script>
-    <script src="js/app.js?v=4faaf46c"></script>
+    <script src="js/ui.js?v=97a418e7"></script>
+    <script src="js/app.js?v=363bdc33"></script>
+    <!-- After app.js: it reads the page's own script tags to find the
+         stamped core files, and hands them to a worker. -->
+    <script src="js/render.js?v=c7f4361a"></script>
     <!-- Last: it reads the effect registry the files above fill in. -->
     <script src="js/title.js?v=417122e6"></script>
 </body>

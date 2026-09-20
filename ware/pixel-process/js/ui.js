@@ -309,7 +309,13 @@
        without a DOM; it is the only thing that was in the way. Chain answers
        how many effects are enabled and which were skipped, and drawing that is
        this file's job, like every other element of the chain panel. */
-    function updateStat() {
+    /* `failures` is optional and defaults to this thread's Chain.
+
+       It has to be passable because when js/render.js is driving a worker, the
+       effects run over there and it is that copy of Chain which knows what was
+       skipped. This thread's copy never ran and would report an empty list,
+       quietly turning a visible "1 FAILED" back into silence. */
+    function updateStat(failures) {
         var stat = document.getElementById('chainStat');
         if (!stat) return;
 
@@ -318,7 +324,7 @@
 
         // Say so in the chrome when an effect is being skipped, otherwise the
         // count claims work the render did not actually do.
-        var failures = Chain.getLastFailures();
+        if (!failures) failures = Chain.getLastFailures();
         if (failures.length) {
             stat.textContent += ' · ' + failures.length + ' FAILED';
             stat.title = 'Skipped: ' + failures.join(', ');
