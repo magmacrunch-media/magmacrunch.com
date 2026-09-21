@@ -360,6 +360,21 @@
         displayCanvas.addEventListener(type, function() { Canvas.showOriginal(false); });
     });
 
+    // ── The graticule switch ──
+    var gratToggle = document.getElementById('gratToggle');
+    if (gratToggle) {
+        var syncGrat = function() {
+            var on = Canvas.getGraticule();
+            gratToggle.setAttribute('aria-pressed', String(on));
+            gratToggle.classList.toggle('on', on);
+        };
+        gratToggle.addEventListener('click', function() {
+            Canvas.setGraticule(!Canvas.getGraticule());
+            syncGrat();
+        });
+        syncGrat();
+    }
+
     // ── Phone action bar ──
     /* Each button forwards a click to the real control, so an action has
        one handler and the bar cannot disagree with the panels. A disabled

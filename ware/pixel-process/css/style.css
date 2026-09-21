@@ -158,41 +158,6 @@ body {
     letter-spacing: 0.1em;
 }
 
-.range-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.range-input {
-    -webkit-appearance: none;
-    appearance: none;
-    flex: 1;
-    height: 4px;
-    background: var(--border);
-    outline: none;
-    cursor: pointer;
-}
-
-.range-input::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    background: var(--accent);
-    border: none;
-    cursor: pointer;
-}
-
-.range-input::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    background: var(--accent);
-    border: none;
-    cursor: pointer;
-    border-radius: 0;
-}
-
 .range-val {
     font-family: 'VT323', monospace;
     font-size: 14px;
@@ -601,10 +566,6 @@ body {
     letter-spacing: 0.08em;
 }
 
-.effect-row .range-input {
-    flex: 1;
-}
-
 .effect-row .range-val {
     min-width: 24px;
     font-size: 12px;
@@ -960,17 +921,195 @@ footer {
 
 /* Touch targets, keyed on the INPUT DEVICE rather than the width.
 
-   A 12px slider thumb is a poor thing to aim a finger at. These were inside
-   the phone layout's query at first, which left an iPad in landscape, wide
-   enough for three panels and still driven by touch, with mouse-sized
+   A knob sized for a mouse is a poor thing to turn with a finger. These were
+   inside the phone layout's query at first, which left an iPad in landscape,
+   wide enough for three panels and still driven by touch, with mouse-sized
    controls. `pointer: coarse` is what actually describes a finger. */
 @media (pointer: coarse) {
-    .range-input { margin: 10px 0; }
-    .range-input::-webkit-slider-thumb { width: 22px; height: 22px; }
-    .range-input::-moz-range-thumb { width: 22px; height: 22px; }
+    /* A knob a finger can turn. 58px, where the desktop dial is 46. */
+    .knob { width: 58px; height: 58px; }
+    .effect-body { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); }
     .effect-btn,
     .lab-btn,
     .seed-btn,
     .action-btn,
     .export-btn { min-height: 40px; }
+}
+
+/* ── INSTRUMENT ───────────────────────────────────────────────────────────
+
+   The tool is meant to feel like a piece of test equipment, or a synthesizer:
+   a panel of modules, each with a power light, and a knob for every value.
+   The existing palette already suits it, being close to an amber phosphor
+   display. */
+
+/* Each effect is a module on a rack: a faceplate with a screw in each corner
+   and a power LED, rather than a card with a word for a switch. */
+.effect-card {
+    background:
+        radial-gradient(circle at 7px 7px, #4a3e34 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at calc(100% - 7px) 7px, #4a3e34 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at 7px calc(100% - 7px), #4a3e34 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at calc(100% - 7px) calc(100% - 7px), #4a3e34 0 1.8px, transparent 2.4px),
+        linear-gradient(180deg, #231b15, var(--surface) 40%);
+    padding: 14px 16px 12px;
+}
+
+.effect-card.disabled .knob-value { stroke: var(--dim); }
+
+.effect-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.effect-toggle::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3a1a0c;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.effect-toggle.on::before {
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent), inset 0 0 2px #fff;
+}
+
+/* The controls: knobs on a grid, with the switch rows across the full width. */
+.effect-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+    gap: 12px 6px;
+}
+
+.effect-body > .effect-row:not(.knob-cell) {
+    grid-column: 1 / -1;
+}
+
+.knob-cell {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.knob {
+    position: relative;
+    width: 46px;
+    height: 46px;
+    cursor: ns-resize;
+    /* Vertical drags turn the knob rather than scrolling the page. */
+    touch-action: none;
+}
+
+.knob-dial {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.knob-tick { stroke: var(--dim); stroke-width: 2; opacity: 0.55; }
+.knob-tick.major { stroke: var(--text); opacity: 0.7; }
+.knob-track { fill: none; stroke: var(--border); stroke-width: 6; }
+.knob-value { fill: none; stroke: var(--accent); stroke-width: 6; }
+
+.knob-cap {
+    fill: var(--panel);
+    stroke: #4a3e34;
+    stroke-width: 1.5;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.6));
+}
+
+.knob-pointer {
+    stroke: var(--text);
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.knob.turning .knob-cap { stroke: var(--accent); }
+.knob.turning .knob-value { filter: drop-shadow(0 0 3px var(--accent)); }
+
+/* The real control: hidden, focusable, and out of the way of the pointer, so
+   a click turns the knob instead of jumping the value to where it landed. */
+.knob-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.knob:has(.knob-input:focus-visible) .knob-cap {
+    stroke: var(--accent);
+    stroke-width: 3;
+}
+
+/* A small LCD under each knob, because a knob with no number is a guess. */
+.knob-cell .range-val {
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    background: #0a0604;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
+    padding: 0 4px;
+    min-width: 40px;
+    text-align: center;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 4px rgba(255, 140, 66, 0.45);
+}
+
+.knob-cell label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    min-width: 0;
+    text-align: center;
+}
+
+.effect-btn.active {
+    color: var(--accent);
+    box-shadow: inset 0 0 6px rgba(255, 140, 66, 0.25);
+}
+
+/* The GRID switch, on the bezel of the display. */
+.grat-toggle {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    background: rgba(10, 8, 8, 0.75);
+    border: 1px solid var(--border);
+    padding: 5px 6px;
+    cursor: pointer;
+}
+
+.grat-toggle::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #3a1a0c;
+}
+
+.grat-toggle.on {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.grat-toggle.on::before {
+    background: var(--accent);
+    box-shadow: 0 0 5px var(--accent);
 }

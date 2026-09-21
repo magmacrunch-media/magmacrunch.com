@@ -22,6 +22,8 @@ const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const css = fs.readFileSync(path.join(ROOT, 'css', 'style.css'), 'utf8');
 const titleJs = fs.readFileSync(path.join(ROOT, 'js', 'title.js'), 'utf8');
 const toastCss = fs.readFileSync(path.join(ROOT, '..', 'shell', 'toast.css'), 'utf8');
+const uiJs = fs.readFileSync(path.join(ROOT, 'js', 'ui.js'), 'utf8');
+const canvasJs = fs.readFileSync(path.join(ROOT, 'js', 'canvas.js'), 'utf8');
 
 let passed = 0, failed = 0;
 
@@ -191,7 +193,7 @@ ok(html.indexOf('class="mobile-bar"') !== -1, 'the phone action bar is present')
     const coarse = css.indexOf('@media (pointer: coarse)');
     ok(coarse !== -1, 'touch targets are keyed on pointer: coarse');
     const coarseBlock = coarse === -1 ? '' : css.slice(coarse, css.indexOf('\n}', coarse));
-    ok(coarseBlock.indexOf('-webkit-slider-thumb') !== -1, 'and that is where the big slider thumb lives');
+    ok(coarseBlock.indexOf('.knob {') !== -1, 'and that is where the knob is enlarged for a finger');
 }
 
 {
@@ -213,6 +215,52 @@ ok(html.indexOf('class="mobile-bar"') !== -1, 'the phone action bar is present')
     const margins = body.split('margin-bottom:').length - 1;
     eq(bottoms, margins, 'and sets no plain bottom, which toast.js sets inline and would win');
     ok(body.indexOf('!important') === -1, 'and does not reach for !important, which would break stacking');
+}
+
+console.log('\n=== the instrument ===');
+
+{
+    /* Every knob is a face over a real <input type="range">, which stays the
+     * control. That is what keeps the keyboard and screen readers working, so
+     * it is checked here rather than trusted: the input must exist, must carry
+     * a name a screen reader can announce, and must report its value with its
+     * unit rather than as a bare number. */
+    ok(uiJs.indexOf("input.type = 'range'") !== -1, 'each knob is backed by a real range input');
+    ok(uiJs.indexOf("input.setAttribute('aria-label'") !== -1, 'which carries a spoken name');
+    ok(uiJs.indexOf("setAttribute('aria-valuetext'") !== -1, 'and reports its value with its unit');
+
+    // The face must not intercept the click itself, or a click would jump the
+    // value to wherever it landed instead of starting a turn.
+    const inputRule = ruleBody(css, '.knob-input {');
+    ok(inputRule !== null && inputRule.indexOf('pointer-events: none') !== -1,
+        'the hidden input ignores the pointer, so a click turns the knob');
+    ok(inputRule !== null && inputRule.indexOf('display: none') === -1,
+        'and is hidden by opacity, not display, so it stays in the tab order');
+
+    // No visible sliders remain, so no slider styling should either, or the
+    // touch sizing would appear to cover something it no longer reaches.
+    ok(css.indexOf('.range-input') === -1, 'no slider styles are left behind');
+}
+
+{
+    /* The graticule is drawn over the display and never onto the work canvas,
+     * because the work canvas is what export reads. A grid in someone's saved
+     * image would be the worst possible version of this feature. Checked here
+     * at the source, and separately in the browser against a real export. */
+    const start = canvasJs.indexOf('function drawGraticule');
+    const end = canvasJs.indexOf('\n    }\n', start);
+    const body = start === -1 ? '' : canvasJs.slice(start, end);
+    ok(body.length > 0, 'the graticule has its own drawing function');
+    ok(body.indexOf('displayCtx') !== -1, 'which draws on the display canvas');
+    ok(body.indexOf('workCtx') === -1, 'and never on the work canvas, which export reads');
+
+    // The setting is remembered under a key that does not name the tool: the
+    // name is provisional, and this origin's storage is shared by other tools.
+    const keyMatch = canvasJs.match(/var GRATICULE_KEY = '([^']*)'/);
+    ok(keyMatch !== null && keyMatch[1].toLowerCase().indexOf('pixel') === -1,
+        'the stored setting is not keyed on the provisional app name');
+
+    ok(html.indexOf('id="gratToggle"') !== -1, 'the GRID switch is on the display bezel');
 }
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');

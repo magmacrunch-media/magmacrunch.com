@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=b115c463">
+    <link rel="stylesheet" href="css/style.css?v=a8aaa7aa">
 </head>
 <body>
     <!-- The title screen. Its wordmark is not written here: js/title.js reads
@@ -140,6 +140,8 @@
         <div class="center-area">
             <div class="canvas-wrap" id="canvasWrap">
                 <canvas id="displayCanvas"></canvas>
+                <button type="button" class="grat-toggle" id="gratToggle" aria-pressed="true"
+                        title="Show or hide the graticule">GRID</button>
                 <div class="drop-overlay" id="dropOverlay">
                     <span>DROP IMAGE</span>
                 </div>
@@ -220,7 +222,7 @@
 
     <script src="../shell/toast.js?v=d87a2776"></script>
     <script src="../shell/dropdown.js?v=b0e0a994"></script>
-    <script src="js/canvas.js?v=d683bd13"></script>
+    <script src="js/canvas.js?v=e1c8c921"></script>
     <script src="js/chain.js?v=d5985106"></script>
     <script src="js/generators.js?v=fe23af02"></script>
     <script src="js/effects/channels.js?v=2757f65d"></script>
@@ -229,8 +231,8 @@
     <script src="js/effects/corrupt.js?v=987639f6"></script>
     <script src="js/effects/fft.js?v=c54abb6d"></script>
     <script src="js/effects/feedback.js?v=b7fd05b3"></script>
-    <script src="js/ui.js?v=2e902ddb"></script>
-    <script src="js/app.js?v=b6e6728b"></script>
+    <script src="js/ui.js?v=72572dd7"></script>
+    <script src="js/app.js?v=ebaac1b3"></script>
     <!-- After app.js: it reads the page's own script tags to find the
          stamped core files, and hands them to a worker. -->
     <script src="js/render.js?v=c7f4361a"></script>

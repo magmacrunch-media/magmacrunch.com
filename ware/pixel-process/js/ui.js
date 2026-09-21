@@ -1,4 +1,4 @@
-/* ── ui.js — effect card rendering, slider generation, drag reorder ── */
+/* ── ui.js — effect modules, knobs, chips, drag reorder ── */
 
 (function() {
     'use strict';
@@ -27,6 +27,136 @@
         if (maxId > highestSeen) { selectedId = maxId; present = true; }
         if (maxId > highestSeen) highestSeen = maxId;
         if (!present) selectedId = effects.length ? effects[effects.length - 1].id : null;
+    }
+
+    /* ── Knobs ──
+
+       Every numeric parameter is a knob, because the tool is meant to feel
+       like an instrument, and on an instrument you turn things. Drag up to
+       turn clockwise and down to turn back, the convention in synthesizer
+       software, because a circular drag on a small dial is hard to hit with a
+       mouse and harder with a finger. Shift divides the sensitivity by four for
+       fine adjustment. Double-click returns a knob to the value the effect was
+       designed around.
+
+       The knob is only the face. Behind each one is the same
+       <input type="range"> the sliders were, visually hidden and still in the
+       tab order, and it remains the single source of truth: turning the knob
+       sets its value and fires `input`, so bindEvents, presets and the render
+       path are untouched, and the keyboard and screen readers get a real
+       slider, with the arrow keys, Page Up and Page Down, Home and End, for
+       nothing. A control rebuilt from divs would have had to reimplement all
+       of that, and would have got some of it wrong. */
+    var SVG_NS = 'http://www.w3.org/2000/svg';
+    var SWEEP = 270;    // degrees of travel, from -135 to +135
+    var DRAG_PX = 180;  // pixels of vertical drag for the full range
+    var FINE = 4;       // Shift divides the sensitivity by this
+
+    function polar(r, deg) {
+        var a = deg * Math.PI / 180;
+        return [50 + r * Math.sin(a), 50 - r * Math.cos(a)];
+    }
+
+    function arcPath(r) {
+        var s = polar(r, -SWEEP / 2), e = polar(r, SWEEP / 2);
+        return 'M ' + s[0].toFixed(2) + ' ' + s[1].toFixed(2) +
+            ' A ' + r + ' ' + r + ' 0 1 1 ' + e[0].toFixed(2) + ' ' + e[1].toFixed(2);
+    }
+
+    function svgEl(name, attrs) {
+        var el = document.createElementNS(SVG_NS, name);
+        for (var k in attrs) el.setAttribute(k, attrs[k]);
+        return el;
+    }
+
+    /* The dial: a graduated scale, a track, the lit arc of the current value,
+       a cap and a pointer. The scale is what makes it read as an instrument
+       rather than a volume control: eleven ticks, the ends and the centre
+       drawn long, the way a meter face is marked. */
+    function buildDial() {
+        var svg = svgEl('svg', { viewBox: '0 0 100 100', 'class': 'knob-dial', 'aria-hidden': 'true' });
+        for (var i = 0; i <= 10; i++) {
+            var deg = -SWEEP / 2 + i * SWEEP / 10;
+            var major = i === 0 || i === 5 || i === 10;
+            var a = polar(major ? 40 : 43, deg), b = polar(49, deg);
+            svg.appendChild(svgEl('line', {
+                x1: a[0].toFixed(2), y1: a[1].toFixed(2), x2: b[0].toFixed(2), y2: b[1].toFixed(2),
+                'class': 'knob-tick' + (major ? ' major' : '')
+            }));
+        }
+        var d = arcPath(34);
+        svg.appendChild(svgEl('path', { d: d, 'class': 'knob-track', pathLength: 100 }));
+        svg.appendChild(svgEl('path', { d: d, 'class': 'knob-value', pathLength: 100 }));
+        svg.appendChild(svgEl('circle', { cx: 50, cy: 50, r: 25, 'class': 'knob-cap' }));
+        svg.appendChild(svgEl('line', { x1: 50, y1: 50, x2: 50, y2: 30, 'class': 'knob-pointer' }));
+        return svg;
+    }
+
+    function turnOf(input) {
+        var min = parseFloat(input.min), max = parseFloat(input.max);
+        var v = parseFloat(input.value);
+        if (!(max > min)) return 0;
+        return Math.max(0, Math.min(1, (v - min) / (max - min)));
+    }
+
+    function paintKnob(knob) {
+        var input = knob.querySelector('.knob-input');
+        var t = turnOf(input);
+        knob.querySelector('.knob-value').setAttribute('stroke-dasharray', (t * 100).toFixed(2) + ' 100');
+        knob.querySelector('.knob-pointer').setAttribute('transform',
+            'rotate(' + (-SWEEP / 2 + t * SWEEP).toFixed(2) + ' 50 50)');
+    }
+
+    function attachDrag(knob, input) {
+        var startY = 0, startV = 0, fine = false, active = false;
+
+        function setValue(v) {
+            var min = parseFloat(input.min), max = parseFloat(input.max);
+            var step = parseFloat(input.step) || 1;
+            v = min + Math.round((v - min) / step) * step;
+            v = Math.max(min, Math.min(max, v));
+            v = Math.round(v * 1e6) / 1e6;
+            if (String(v) === input.value) return;
+            input.value = v;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        knob.addEventListener('pointerdown', function(e) {
+            if (e.button > 0) return;
+            active = true;
+            fine = e.shiftKey;
+            startY = e.clientY;
+            startV = parseFloat(input.value);
+            knob.setPointerCapture(e.pointerId);
+            knob.classList.add('turning');
+            input.focus({ preventScroll: true });
+            e.preventDefault();
+        });
+
+        knob.addEventListener('pointermove', function(e) {
+            if (!active) return;
+            // Re-anchor when Shift changes mid-turn, or the change of
+            // sensitivity would make the value jump.
+            if (e.shiftKey !== fine) {
+                fine = e.shiftKey;
+                startY = e.clientY;
+                startV = parseFloat(input.value);
+            }
+            var range = parseFloat(input.max) - parseFloat(input.min);
+            setValue(startV + (startY - e.clientY) / (DRAG_PX * (fine ? FINE : 1)) * range);
+        });
+
+        function end() {
+            active = false;
+            knob.classList.remove('turning');
+        }
+        knob.addEventListener('pointerup', end);
+        knob.addEventListener('pointercancel', end);
+        knob.addEventListener('lostpointercapture', end);
+
+        knob.addEventListener('dblclick', function() {
+            setValue(parseFloat(input.dataset.default));
+        });
     }
 
     // Effect UI definitions: maps effect type to its parameter controls
@@ -123,7 +253,8 @@
 
     function createEffectCard(effect) {
         var card = document.createElement('div');
-        card.className = 'effect-card' + (effect.id === selectedId ? ' selected' : '');
+        card.className = 'effect-card' + (effect.id === selectedId ? ' selected' : '') +
+            (effect.enabled ? '' : ' disabled');
         card.dataset.id = effect.id;
 
         // Header
@@ -183,24 +314,37 @@
                 row.appendChild(label);
                 row.appendChild(btns);
             } else {
-                var range = document.createElement('input');
-                range.type = 'range';
-                range.className = 'range-input';
-                range.min = def.min;
-                range.max = def.max;
-                range.step = def.step;
-                range.value = effect.params[def.key];
+                row.className = 'effect-row knob-cell';
+
+                var input = document.createElement('input');
+                input.type = 'range';
+                input.className = 'knob-input';
+                input.min = def.min;
+                input.max = def.max;
+                input.step = def.step;
+                input.value = effect.params[def.key];
+                input.dataset.key = def.key;
+                input.dataset.suffix = def.suffix || '';
+                var registered = Chain.getRegistry()[effect.type];
+                input.dataset.default = registered && registered.defaults
+                    ? registered.defaults[def.key] : input.value;
+                input.setAttribute('aria-label', effect.name + ' ' + def.label);
+                input.setAttribute('aria-valuetext', effect.params[def.key] + (def.suffix || ''));
+
+                var knob = document.createElement('div');
+                knob.className = 'knob';
+                knob.appendChild(buildDial());
+                knob.appendChild(input);
+                attachDrag(knob, input);
+                paintKnob(knob);
 
                 var val = document.createElement('span');
                 val.className = 'range-val';
                 val.textContent = effect.params[def.key] + (def.suffix || '');
 
-                range.dataset.key = def.key;
-                range.dataset.suffix = def.suffix || '';
-
-                row.appendChild(label);
-                row.appendChild(range);
+                row.appendChild(knob);
                 row.appendChild(val);
+                row.appendChild(label);
             }
 
             body.appendChild(row);
@@ -365,8 +509,10 @@
                 };
             })(id);
 
-            // Sliders
-            var ranges = card.querySelectorAll('.range-input');
+            // Knobs. The hidden range input behind each one is still the
+            // control: a turn of the knob sets it and fires `input`, and so
+            // does the keyboard, so this is the one place a value lands.
+            var ranges = card.querySelectorAll('.knob-input');
             for (var j = 0; j < ranges.length; j++) {
                 ranges[j].oninput = (function(id, range) {
                     return function() {
@@ -375,10 +521,13 @@
                         var key = range.dataset.key;
                         var val = parseFloat(range.value);
                         effect.params[key] = val;
-                        var valSpan = range.parentElement.querySelector('.range-val');
-                        if (valSpan) {
-                            valSpan.textContent = val + (range.dataset.suffix || '');
-                        }
+                        var text = val + (range.dataset.suffix || '');
+                        var cell = range.closest('.effect-row');
+                        var valSpan = cell && cell.querySelector('.range-val');
+                        if (valSpan) valSpan.textContent = text;
+                        range.setAttribute('aria-valuetext', text);
+                        var knob = range.closest('.knob');
+                        if (knob) paintKnob(knob);
                         Chain.render();
                     };
                 })(id, ranges[j]);

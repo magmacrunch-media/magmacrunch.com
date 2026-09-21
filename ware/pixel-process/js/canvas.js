@@ -125,13 +125,67 @@
        result rather than a stale one. */
     var showingOriginal = false;
 
-    function showOriginal(on) {
-        on = !!on;
-        if (on === showingOriginal) return;
-        showingOriginal = on;
+    /* The graticule: the grid an oscilloscope draws over its screen so a
+       signal can be read against it. Ten divisions each way, dotted, with the
+       centre axes solid and ticked at a fifth of a division, the way a scope
+       face is marked.
+
+       It is drawn on the DISPLAY canvas, after the picture, and never on the
+       work canvas, which is what export reads. So it scales with the view, it
+       survives hold-to-compare, and it can never end up in a saved file.
+       tests/test-page.js cannot see pixels, so that promise was checked in the
+       browser against an export with the grid switched on.
+
+       The setting is remembered per browser, under a key that does not name
+       the tool: the name is provisional, and the site's other tools share
+       this origin's storage. */
+    var GRATICULE_KEY = 'signalchain:graticule';
+    var graticuleOn = true;
+    try { graticuleOn = window.localStorage.getItem(GRATICULE_KEY) !== '0'; } catch (e) {}
+
+    function drawGraticule() {
+        if (!graticuleOn) return;
+        var W = displayCanvas.width, H = displayCanvas.height;
+        var g = displayCtx;
+        var i, x, y;
+        g.save();
+
+        g.strokeStyle = 'rgba(255, 140, 66, 0.16)';
+        g.lineWidth = 1;
+        g.setLineDash([2, 3]);
+        g.beginPath();
+        for (i = 1; i < 10; i++) {
+            if (i === 5) continue;
+            x = Math.round(W * i / 10) + 0.5;
+            y = Math.round(H * i / 10) + 0.5;
+            g.moveTo(x, 0); g.lineTo(x, H);
+            g.moveTo(0, y); g.lineTo(W, y);
+        }
+        g.stroke();
+
+        g.setLineDash([]);
+        g.strokeStyle = 'rgba(255, 140, 66, 0.3)';
+        g.beginPath();
+        var cx = Math.round(W / 2) + 0.5, cy = Math.round(H / 2) + 0.5;
+        g.moveTo(cx, 0); g.lineTo(cx, H);
+        g.moveTo(0, cy); g.lineTo(W, cy);
+        for (i = 1; i < 50; i++) {
+            var len = i % 5 === 0 ? 5 : 3;
+            x = Math.round(W * i / 50) + 0.5;
+            y = Math.round(H * i / 50) + 0.5;
+            g.moveTo(x, cy - len); g.lineTo(x, cy + len);
+            g.moveTo(cx - len, y); g.lineTo(cx + len, y);
+        }
+        g.stroke();
+        g.restore();
+    }
+
+    /* Everything that reaches the screen goes through here: the result or,
+       while held, the source, and then the graticule on top. */
+    function repaint() {
         displayCtx.imageSmoothingEnabled = false;
         displayCtx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-        if (on && originalImageData) {
+        if (showingOriginal && originalImageData) {
             var tmp = document.createElement('canvas');
             tmp.width = width;
             tmp.height = height;
@@ -140,17 +194,32 @@
         } else {
             displayCtx.drawImage(workCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
         }
+        drawGraticule();
+    }
+
+    function showOriginal(on) {
+        on = !!on;
+        if (on === showingOriginal) return;
+        showingOriginal = on;
+        repaint();
+    }
+
+    function setGraticule(on) {
+        graticuleOn = !!on;
+        try { window.localStorage.setItem(GRATICULE_KEY, graticuleOn ? '1' : '0'); } catch (e) {}
+        repaint();
+    }
+
+    function getGraticule() {
+        return graticuleOn;
     }
 
     // Push processed ImageData to display canvas
     function display(imgData) {
-        // Put processed data onto work canvas
+        // Put processed data onto work canvas, which is what export reads
         workCtx.putImageData(imgData, 0, 0);
         if (showingOriginal) return;
-        // Scale up to display with nearest-neighbor
-        displayCtx.imageSmoothingEnabled = false;
-        displayCtx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-        displayCtx.drawImage(workCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
+        repaint();
     }
 
     // Export as PNG at native working resolution
@@ -198,6 +267,8 @@
         reloadSource: reloadSource,
         display: display,
         showOriginal: showOriginal,
+        setGraticule: setGraticule,
+        getGraticule: getGraticule,
         exportPNG: exportPNG,
         hasSource: hasSource,
         createBlankSource: createBlankSource
