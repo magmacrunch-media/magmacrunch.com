@@ -115,7 +115,10 @@
         'wave-distort': { amplitude: [2, 18], frequency: [2, 16] },
         'block-corrupt': { intensity: [10, 70], blockSize: [4, 32], count: [2, 18] },
         'dead-pixels': { density: [5, 60] },
-        'fft-filter': { cutoff: [8, 60], width: [4, 30], gain: [0.6, 1.6] },
+        'fft-filter': { cutoff: [5, 55], width: [3, 25], gain: [0.6, 1.6] },
+        'fft-spectrum': { gain: [0.8, 2.2], floor: [0, 40] },
+        'fft-scramble': { amount: [25, 100] },
+        'fft-wedge': { spread: [8, 50] },
         'feedback': {
             iterations: [3, 10], decay: [0.45, 0.85],
             offsetX: [-6, 6], offsetY: [-6, 6], scale: [0.94, 1.04], rotation: [-4, 4]
@@ -123,7 +126,10 @@
     };
 
     // Two of these in one chain is rarely better than one and always slower.
-    var HEAVY = ['feedback', 'fft-filter'];
+    /* Every transform-domain effect is heavy: each one is a pair of full
+       Fourier transforms over the padded image, which at a megapixel is over a
+       second. One per chain. */
+    var HEAVY = ['feedback', 'fft-filter', 'fft-spectrum', 'fft-scramble', 'fft-wedge'];
 
     /* The bar, set from the measured distribution rather than guessed.
      *

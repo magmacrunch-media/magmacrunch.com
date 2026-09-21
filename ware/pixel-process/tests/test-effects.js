@@ -256,19 +256,22 @@ const CASES = [
     ['dead-pixels', { density: 40, color: 0, seed: 11 }],
     ['fft-filter', { filterType: 2, cutoff: 18, width: 9, gain: 1.2 }],
     ['feedback', { iterations: 4, decay: 0.6, offsetX: 3, offsetY: -2, scale: 0.97, rotation: 2 }],
+    ['fft-spectrum', { gain: 1.4, floor: 10 }],
+    ['fft-scramble', { amount: 80, seed: 5, channels: 0 }],
+    ['fft-wedge', { angle: 45, spread: 20, mode: 1, channels: 0 }],
 ];
 
 const W = 64, H = 64;
 const ODD_W = 48, ODD_H = 40;
 
 /**
- * One case above the FFT's internal cap.
+ * A second, larger case for the FFT, kept after the rebuild for a new reason.
  *
- * `effects/fft.js` rounds the transform up to a power of two and then clamps it
- * to 256, so at 64x64 the clamp is dead code and a golden there cannot see it
- * move. 320x288 rounds to 512 and is clamped, which is the only arrangement that
- * exercises it. Found by mutation testing: lowering the cap to 128 left the
- * whole suite green.
+ * It existed because the old transform clamped itself to 256 and a golden at
+ * 64x64 could not see that clamp move. There is no clamp now: the transform
+ * covers the whole image, padded to 1024x512 here. What this pins instead is
+ * the rectangular path, where the two sides pad to different powers of two and
+ * the row and column passes use different transform lengths.
  *
  * Only fft-filter is pinned here. block-corrupt, dead-pixels and row-displace
  * place their seeded features in pixel coordinates, so a second size would pin
@@ -324,13 +327,25 @@ const GOLDENS = {
     sig: [101.63, 117.96, 139.75, 213.11, 75.25, 111.3, 98.5, 196.25, 33.05, 65.63, 129.27, 180.49, 34.6, 74.82, 135.44, 190.83, 34.27, 33.46, 53.38, 38.97, 90.88, 94.31, 147.84, 115.12, 159.84, 101.62, 122.53, 138.33, 222.46, 167.18, 185.09, 194.18, 38.66, 96.4, 101.81, 62.02, 91.22, 169.29, 155.54, 106.56, 108.81, 210.33, 187.22, 116.06, 64.67, 141.3, 127.21, 82.48],
   },
   'fft-filter': {
-    sha: '1c70497c863e8f27',
-    sig: [42.31, 42.27, 44.57, 83.44, 33.11, 48.39, 42.78, 93.11, 13.43, 28.98, 58.82, 87.88, 14.7, 36.06, 67.3, 97.16, 7.57, 11.55, 23.7, 17.74, 32.24, 40.5, 67.5, 53.64, 65.99, 47.11, 57.08, 65.57, 105.51, 89.6, 94.73, 98.78, 4.19, 30.33, 36.88, 24.69, 32.23, 75.16, 69.3, 48.66, 45.73, 76.68, 76.79, 53.68, 28.48, 48.81, 50.39, 35.72],
+    sha: 'ae2e0f2a6bda0575',
+    sig: [68.04, 64.52, 83.36, 156.55, 40.66, 48.39, 49.36, 137.16, 0.28, 18.34, 64.13, 107.14, 0.45, 21.41, 67.32, 112.36, 2.2, 1.38, 21.4, 7.97, 33.14, 32.3, 77.64, 45.16, 92.52, 52.39, 59.3, 63.36, 153.37, 117.96, 117.7, 115.44, 5.29, 44.87, 41.05, 11.23, 37.41, 114.36, 85.65, 36.74, 41.82, 150.3, 121.93, 43.04, 7.85, 78.43, 56.61, 17.6],
   },
   // fft-filter again at BIG_W x BIG_H, where the 256 cap actually engages.
   '__big__': {
-    sha: '5ebd7abd0ab0d335',
-    sig: [14.25, 15.45, 15.8, 185.76, 9.93, 15.12, 13.54, 178.03, 4.3, 9.44, 29.03, 163.59, 16.89, 48.47, 91.29, 181.58, 3.27, 3.93, 7.74, 30.44, 10.84, 12.56, 20.32, 88.82, 21.01, 15.15, 28.49, 123.25, 126.19, 120.77, 130.75, 184.55, 3, 11.48, 13.25, 46.85, 10.51, 23.54, 21.61, 79.37, 13.89, 27.08, 36.28, 96.32, 27.03, 55.27, 63.81, 73.8],
+    sha: 'cf0b7f7216a6e856',
+    sig: [57.45, 63.74, 78.37, 136.42, 29.64, 21.98, 26.6, 92.28, 0, 0.2, 28.8, 76.9, 0, 0.04, 14.62, 55.03, 2.85, 0, 13.19, 5.62, 25.29, 6.09, 34.92, 14.84, 60.13, 19.56, 23.29, 33.36, 95.92, 58.49, 56.21, 58.07, 14.73, 52.66, 38.38, 1.83, 27.14, 87.71, 55.07, 3.27, 12.49, 123.14, 90.01, 30.97, 0, 55.28, 39.87, 26.09],
+  },
+  'fft-spectrum': {
+    sha: '153ece1272cce340',
+    sig: [188.44, 175.35, 169.32, 180.12, 176.45, 187.93, 188.7, 161.86, 170.86, 187.65, 197.09, 177.68, 180.46, 160.45, 177.95, 180.35, 188.44, 175.35, 169.32, 180.12, 176.45, 187.93, 188.7, 161.86, 170.86, 187.65, 197.09, 177.68, 180.46, 160.45, 177.95, 180.35, 188.44, 175.35, 169.32, 180.12, 176.45, 187.93, 188.7, 161.86, 170.86, 187.65, 197.09, 177.68, 180.46, 160.45, 177.95, 180.35],
+  },
+  'fft-scramble': {
+    sha: '4c71c07639700ac0',
+    sig: [130.38, 117.51, 142.41, 217.44, 105.72, 129.77, 93.27, 183.18, 50.33, 49.97, 135.57, 174.25, 33.7, 52.75, 94.88, 165.02, 78.6, 54.3, 70.96, 64.66, 124.56, 114.63, 133.02, 101.65, 179.28, 86.53, 131.82, 133.36, 204.04, 139.81, 145.37, 170.36, 83.45, 101.84, 107.34, 81.51, 124.6, 193.78, 141.58, 92.88, 127.81, 192.95, 193.04, 111.83, 59.02, 111.72, 89.36, 78.09],
+  },
+  'fft-wedge': {
+    sha: '2dd942657e9cf546',
+    sig: [101.58, 113.52, 140.28, 213.83, 76.6, 107.18, 92.68, 198.92, 22.9, 57, 135.48, 186.15, 31.52, 84.22, 130.14, 184.39, 33.55, 25.97, 53.18, 36.8, 93.6, 90.87, 142.93, 116.88, 151.02, 93.96, 131.78, 146.75, 220.92, 183.4, 178.85, 187.75, 40, 89.67, 102.88, 59.24, 92.44, 170.73, 150.93, 107.82, 99.29, 203.91, 198.79, 125.14, 60.65, 151.24, 123.03, 74.55],
   },
   'feedback': {
     sha: '8fb9e00f76241226',
@@ -363,10 +378,10 @@ ok(menuStart !== -1 && menuEnd !== -1, 'found the add-effect menu in index.html'
 const menu = [...html.slice(menuStart, menuEnd)
     .matchAll(/data-value="([a-z-]+)"/g)].map((m) => m[1]).sort();
 
-eq(types.length, 12, '12 effects registered');
-eq(menu.length, 12, '12 effects in the add-effect menu');
+eq(types.length, 15, '15 effects registered');
+eq(menu.length, 15, '15 effects in the add-effect menu');
 eq(types.join(','), menu.join(','), 'registry and menu agree');
-eq(CASES.length, 12, '12 golden cases defined');
+eq(CASES.length, 15, '15 golden cases defined');
 eq(CASES.map((c) => c[0]).sort().join(','), types.join(','), 'every registered effect has a case');
 
 console.log('\n=== parameter tables ===');
@@ -1059,6 +1074,366 @@ console.log('\n=== the worker bootstrap actually runs the chain ===');
     registryThere['channel-shift'].fn = realFn;
     eq(posted[3].failures.join(','), 'CHANNEL SHIFT',
         'a failure inside the worker is reported back by name');
+}
+
+console.log('\n=== the Fourier transform itself ===');
+
+/**
+ * Goldens pin what the filter draws. These pin that the transform underneath it
+ * is a Fourier transform, which is a far sharper statement and one that does
+ * not need updating when taste about a filter changes.
+ *
+ * All three of these would have failed on the version this replaced, which
+ * read past the end of any image that was not a power of two on both sides.
+ */
+const F = Chain.fft;
+ok(!!F, 'the transform is exposed for testing');
+
+{
+    // Mirror padding: index n must come back as n-2, so the sample just outside
+    // the edge is the one just inside it and the boundary has no step in it. A
+    // step is a bright cross through the spectrum that every filter then acts on.
+    eq([0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => F.reflect(i, 5)).join(' '), '0 1 2 3 4 3 2 1 0',
+        'reflect mirrors with period 2n-2');
+    eq(F.reflect(-1, 5), 1, 'and mirrors backwards too');
+    eq(F.reflect(0, 1), 0, 'and survives a single-pixel axis');
+
+    eq(F.nextPow2(220), 256, 'nextPow2 rounds up');
+    eq(F.nextPow2(1024), 1024, 'and leaves an exact power of two alone');
+    eq(F.nextPow2(1), 1, 'and handles one');
+}
+
+{
+    /* A forward followed by an inverse must return the input.
+     *
+     * This is the single most useful check on an FFT: it catches a wrong
+     * twiddle sign, a bad bit-reversal, a missing 1/n, and a row or column pass
+     * that walks the wrong stride, none of which a picture would obviously
+     * show. Rectangular sizes are included because the two passes then run at
+     * different lengths off one shared twiddle table, which is exactly where a
+     * stride mistake hides.
+     */
+    for (const [w2, h2] of [[64, 64], [256, 256], [512, 256], [128, 512]]) {
+        const re = new Float32Array(w2 * h2);
+        const im = new Float32Array(w2 * h2);
+        const orig = new Float64Array(w2 * h2);
+        let s = 12345;
+        const rnd = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; };
+        for (let i = 0; i < re.length; i++) { orig[i] = Math.round(rnd() * 255); re[i] = orig[i]; }
+
+        F.forward(re, im, w2, h2);
+        F.inverse(re, im, w2, h2);
+
+        let worst = 0;
+        for (let i = 0; i < re.length; i++) worst = Math.max(worst, Math.abs(re[i] - orig[i]));
+        ok(worst < 0.01, `${w2}x${h2}: forward then inverse returns the input (worst ${worst.toFixed(5)})`,
+            'a wrong twiddle sign, stride or 1/n all show up here and nowhere else');
+    }
+}
+
+{
+    // A pure horizontal cosine of k cycles has to land in exactly two bins, at
+    // k and at n-k, and nowhere else. This is the check that the transform is
+    // the transform rather than merely something invertible.
+    const n = 64, k = 5;
+    const re = new Float64Array(n * n), im = new Float64Array(n * n);
+    for (let y = 0; y < n; y++) {
+        for (let x = 0; x < n; x++) re[y * n + x] = Math.cos(2 * Math.PI * k * x / n);
+    }
+    F.forward(re, im, n, n);
+
+    const peaks = [];
+    for (let i = 0; i < re.length; i++) {
+        if (Math.hypot(re[i], im[i]) > n * n * 0.1) peaks.push((i % n) + ':' + Math.floor(i / n));
+    }
+    // Sorted numerically. A lexical sort puts "59:0" before "5:0", because ':'
+    // outranks '9', which is a fine way to fail a correct assertion.
+    peaks.sort(function (a, b) { return parseInt(a, 10) - parseInt(b, 10); });
+    eq(peaks.join(' '), '5:0 59:0', 'a horizontal cosine lands in exactly two bins, at k and n-k');
+}
+
+{
+    // The zero-frequency bin is the sum of the samples, by definition.
+    const n = 32;
+    const re = new Float64Array(n * n), im = new Float64Array(n * n);
+    let total = 0;
+    for (let i = 0; i < re.length; i++) { re[i] = (i % 7) * 10; total += re[i]; }
+    F.forward(re, im, n, n);
+    eq(Math.round(re[0]), total, 'the DC bin equals the sum of the input');
+    ok(Math.abs(im[0]) < 1e-6, 'and carries no imaginary part for real input');
+}
+
+{
+    // The response curve, which is what the four filter types actually are.
+    ok(F.response(0, 0, 0.3, 0.1) === 1, 'low pass passes DC untouched');
+    ok(F.response(1.2, 0, 0.3, 0.1) < 0.01, 'and rejects well above its cutoff');
+    ok(F.response(0, 1, 0.3, 0.1) < 0.1, 'high pass rejects DC');
+    ok(F.response(1.2, 1, 0.3, 0.1) === 1, 'and passes well above its cutoff');
+    ok(F.response(0.3, 2, 0.3, 0.1) === 1, 'band pass passes its centre');
+    ok(F.response(0.3, 3, 0.3, 0.1) === 0, 'and notch rejects exactly there');
+}
+
+console.log('\n=== the FFT filter is resolution independent now ===');
+
+/**
+ * It was the one effect that was not, and the reason was structural: cutoff was
+ * a count of bins in a transform whose size varied with the image, so the same
+ * number meant a different filter on every picture. It is a percentage of
+ * Nyquist now, which is a property of the image rather than of its pixel count.
+ *
+ * The source here is deliberately smooth. makeSource carries a one-pixel
+ * checker patch, which is genuinely finer relative to the frame at a larger
+ * size, so a low pass SHOULD treat it differently and comparing across sizes
+ * would be measuring the source rather than the filter.
+ */
+function smoothSource(w, h) {
+    const px = new Uint8ClampedArray(w * h * 4);
+    const diag = Math.sqrt(w * w + h * h);
+    for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+            const i = (y * w + x) * 4;
+            const dx = x - w / 2, dy = y - h / 2;
+            const r = (Math.sqrt(dx * dx + dy * dy) * 2) / diag;
+            px[i] = Math.round((255 * x) / (w - 1));
+            px[i + 1] = Math.round((255 * y) / (h - 1));
+            px[i + 2] = Math.round(255 * (1 - Math.min(1, r)));
+            px[i + 3] = 255;
+        }
+    }
+    // One large block, proportionally placed, so there is a real edge at every
+    // size rather than only a gradient.
+    for (let y = Math.round(0.2 * h); y < Math.round(0.45 * h); y++) {
+        for (let x = Math.round(0.15 * w); x < Math.round(0.4 * w); x++) {
+            const i = (y * w + x) * 4;
+            px[i] = 250; px[i + 1] = 40; px[i + 2] = 20;
+        }
+    }
+    return px;
+}
+
+/* Agreement is asserted at the sizes people work at, and the residual is
+ * asserted to SHRINK as the transform grows rather than being waved through
+ * under a threshold chosen to make it pass.
+ *
+ * It does not converge to zero and it should not. A discrete transform samples
+ * the filter on a grid of bins, and a 128 point transform resolves a narrow
+ * ring at 20 per cent of Nyquist with very few of them. Measured for band pass,
+ * the worst block difference runs 7.9 levels between 128 and 512, 2.9 between
+ * 256 and 512, and 1.8 between 512 and 1024. That is the grid getting finer,
+ * which is the expected behaviour of the thing rather than a defect in it, and
+ * the shape of that sequence is what separates the two.
+ */
+function filterSig(type, n) {
+    const out = new Uint8ClampedArray(n * n * 4);
+    registry['fft-filter'].fn(smoothSource(n, n), out,
+        { filterType: type, cutoff: 20, width: 10, gain: 1, channels: 0 }, n, n);
+    return signature(out, n, n);
+}
+
+function worstGap(a, b) {
+    let worst = 0;
+    for (let i = 0; i < a.length; i++) worst = Math.max(worst, Math.abs(a[i] - b[i]));
+    return worst;
+}
+
+for (const type of [0, 1, 2, 3]) {
+    const at128 = filterSig(type, 128);
+    const at256 = filterSig(type, 256);
+    const at512 = filterSig(type, 512);
+
+    const coarse = worstGap(at128, at512);
+    const fine = worstGap(at256, at512);
+
+    ok(fine < 4, `filter type ${type}: 256 and 512 agree (worst ${fine.toFixed(1)} levels)`,
+        'cutoff is a fraction of Nyquist now, so it must describe one filter at every size');
+    ok(fine < coarse, `filter type ${type}: and the gap narrows as the grid gets finer (${coarse.toFixed(1)} to ${fine.toFixed(1)})`,
+        'if the coarse pair agreed BETTER, this is not discrete sampling and something is wrong');
+}
+
+{
+    // And the whole image is filtered, not a corner of it. The old transform
+    // covered the top-left square and copied the rest through untouched, so the
+    // bottom-right of a wide image was identical to its source.
+    const w = 320, h = 160;
+    const src320 = smoothSource(w, h);
+    const out = new Uint8ClampedArray(w * h * 4);
+    registry['fft-filter'].fn(src320, out, { filterType: 1, cutoff: 15, width: 8, gain: 1, channels: 0 }, w, h);
+
+    let touchedFar = 0, farPixels = 0;
+    for (let y = Math.floor(h * 0.6); y < h; y++) {
+        for (let x = Math.floor(w * 0.6); x < w; x++) {
+            const i = (y * w + x) * 4;
+            farPixels++;
+            if (Math.abs(out[i] - src320[i]) > 2) touchedFar++;
+        }
+    }
+    ok(touchedFar > farPixels * 0.5,
+        `the far corner of a wide image is filtered too (${touchedFar}/${farPixels} pixels changed)`,
+        'the transform used to cover only the top-left square');
+}
+
+console.log('\n=== what the transform effects ARE ===');
+
+/**
+ * Each of these states the defining property of an effect rather than pinning
+ * a picture. A golden says "this is what it drew last time"; these say "this is
+ * what it is", and they are what would catch a rewrite that still draws
+ * something plausible while having stopped meaning anything.
+ */
+
+/** An image that varies only along x: vertical stripes, k cycles across. */
+function stripes(w, h, k, vertical) {
+    const px = new Uint8ClampedArray(w * h * 4);
+    for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+            const t = vertical ? x / w : y / h;
+            const v = Math.round(128 + 110 * Math.cos(2 * Math.PI * k * t));
+            const i = (y * w + x) * 4;
+            px[i] = v; px[i + 1] = v; px[i + 2] = v; px[i + 3] = 255;
+        }
+    }
+    return px;
+}
+
+function spreadOf(px) {
+    let s = 0, q = 0, n = 0;
+    for (let i = 0; i < px.length; i += 4) {
+        const l = px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114;
+        s += l; q += l * l; n++;
+    }
+    return Math.sqrt(Math.max(0, q / n - (s / n) * (s / n)));
+}
+
+{
+    // PHASE SCRAMBLE at zero amount changes no phase, so it must be the
+    // identity. It is the sharpest check available on the whole pipeline: a
+    // forward transform, an untouched spectrum, an inverse, and the luma delta
+    // applied back, all of it cancelling to nothing.
+    const n = 64;
+    const src64 = makeSource(n, n);
+    const out = new Uint8ClampedArray(n * n * 4);
+    registry['fft-scramble'].fn(src64, out, { amount: 0, seed: 3, channels: 0 }, n, n);
+
+    let worst = 0;
+    for (let i = 0; i < out.length; i += 4) {
+        for (let c = 0; c < 3; c++) worst = Math.max(worst, Math.abs(out[i + c] - src64[i + c]));
+    }
+    ok(worst <= 1, `phase scramble at amount 0 is the identity (worst ${worst})`,
+        'a wrong twiddle sign, a missing 1/n or a broken conjugate pairing all show here');
+}
+
+{
+    /* Scrambling keeps the magnitude spectrum and destroys the arrangement, so
+     * the overall contrast survives while the picture does not.
+     *
+     * This is also what checks the conjugate pairing. Randomizing phases
+     * without pairing leaves the inverse transform complex, and taking its real
+     * part throws away roughly half the energy, so the output comes back
+     * visibly flatter. A ratio near 1 is the pairing working. */
+    const n = 128;
+    const src128 = makeSource(n, n);
+    const out = new Uint8ClampedArray(n * n * 4);
+    registry['fft-scramble'].fn(src128, out, { amount: 100, seed: 7, channels: 1 }, n, n);
+
+    const before = spreadOf(src128);
+    const after = spreadOf(out);
+    const ratio = after / before;
+    ok(ratio > 0.7 && ratio < 1.45,
+        `a full scramble keeps the contrast (${before.toFixed(1)} to ${after.toFixed(1)}, ratio ${ratio.toFixed(2)})`,
+        'a ratio near 0.7 or below means the conjugate pairing is broken and the real part is being thrown away');
+
+    // And it really did rearrange the picture.
+    let moved = 0;
+    for (let i = 0; i < out.length; i += 4) if (Math.abs(out[i] - src128[i]) > 12) moved++;
+    ok(moved > (n * n) / 3, 'and rearranges it rather than returning it');
+
+    /* Every seed, not just the one the golden happens to use.
+     *
+     * DC is self-conjugate, so the pairing branch could only ever give it a
+     * sign at random, and a negative mean puts every pixel below zero and
+     * clamps the picture to black. It was a coin flip per seed. Seeds 0, 1, 2
+     * and 5 were fine and seed 7 was solid black, and the golden for this
+     * effect uses seed 5, so it passed over an effect that was broken for half
+     * of its inputs. A sweep is the only shape of test that catches that. */
+    let collapsed = [];
+    for (let seed = 0; seed < 40; seed++) {
+        const s = new Uint8ClampedArray(n * n * 4);
+        registry['fft-scramble'].fn(src128, s, { amount: 100, seed, channels: 1 }, n, n);
+        if (spreadOf(s) < before * 0.5) collapsed.push(seed);
+    }
+    eq(collapsed.join(','), '', 'no seed collapses the picture');
+
+    // Same seed, same scramble: a preset naming one has to reproduce it.
+    const again = new Uint8ClampedArray(n * n * 4);
+    registry['fft-scramble'].fn(src128, again, { amount: 100, seed: 7, channels: 1 }, n, n);
+    eq(sha(out), sha(again), 'and the same seed scrambles the same way');
+}
+
+{
+    /* ANGULAR WEDGE is a filter on orientation, so the test is a picture with
+     * exactly one orientation in it. Vertical stripes vary along x, which puts
+     * all their energy on the horizontal axis of the spectrum, at angle zero.
+     * Cutting that angle must erase them; cutting the perpendicular must leave
+     * them alone. If the two came out the same, the wedge is not reading angles
+     * at all and every golden would still pass. */
+    const n = 128;
+    const vert = stripes(n, n, 8, true);
+    const before = spreadOf(vert);
+
+    const cutAlong = new Uint8ClampedArray(n * n * 4);
+    registry['fft-wedge'].fn(vert, cutAlong, { angle: 0, spread: 25, mode: 1, channels: 0 }, n, n);
+
+    const cutAcross = new Uint8ClampedArray(n * n * 4);
+    registry['fft-wedge'].fn(vert, cutAcross, { angle: 90, spread: 25, mode: 1, channels: 0 }, n, n);
+
+    const along = spreadOf(cutAlong), across = spreadOf(cutAcross);
+    ok(along < before * 0.2,
+        `cutting the stripes' own orientation erases them (${before.toFixed(1)} to ${along.toFixed(1)})`);
+    ok(across > before * 0.8,
+        `cutting the perpendicular leaves them (${before.toFixed(1)} to ${across.toFixed(1)})`);
+
+    // KEEP is the complement of CUT, so keeping the perpendicular must also
+    // erase them. Two ways of saying the same thing, and a mode flag that was
+    // ignored would pass one and fail the other.
+    const keepAcross = new Uint8ClampedArray(n * n * 4);
+    registry['fft-wedge'].fn(vert, keepAcross, { angle: 90, spread: 25, mode: 0, channels: 0 }, n, n);
+    ok(spreadOf(keepAcross) < before * 0.2, 'and KEEP is the complement of CUT');
+
+    // Horizontal stripes are the mirror case, so a wedge at 90 must now be the
+    // one that erases. This is what stops the whole test passing on an effect
+    // that simply blurs whatever it is given.
+    const horiz = stripes(n, n, 8, false);
+    const horizCut = new Uint8ClampedArray(n * n * 4);
+    registry['fft-wedge'].fn(horiz, horizCut, { angle: 90, spread: 25, mode: 1, channels: 0 }, n, n);
+    ok(spreadOf(horizCut) < spreadOf(horiz) * 0.2, 'and the axes are not swapped');
+}
+
+{
+    /* SPECTRUM of a pure horizontal cosine has to be two dots on the horizontal
+     * centre line, either side of DC, and nothing anywhere else. That is the
+     * measurement being a measurement. */
+    const n = 128;
+    const out = new Uint8ClampedArray(n * n * 4);
+    registry['fft-spectrum'].fn(stripes(n, n, 8, true), out, { gain: 1, floor: 0 }, n, n);
+
+    const mid = n >> 1;
+    let brightOnAxis = 0, brightOffAxis = 0;
+    for (let y = 0; y < n; y++) {
+        for (let x = 0; x < n; x++) {
+            if (out[(y * n + x) * 4] < 200) continue;
+            if (Math.abs(y - mid) <= 1) brightOnAxis++;
+            else brightOffAxis++;
+        }
+    }
+    ok(brightOnAxis >= 3, `a horizontal cosine puts bright bins on the centre line (${brightOnAxis})`);
+    ok(brightOffAxis === 0, 'and none off it', `found ${brightOffAxis} bright pixels away from the axis`);
+
+    // Greyscale by construction, since a magnitude has no colour.
+    let coloured = 0;
+    for (let i = 0; i < out.length; i += 4) {
+        if (out[i] !== out[i + 1] || out[i + 1] !== out[i + 2]) coloured++;
+    }
+    eq(coloured, 0, 'and the spectrum is drawn in grey');
 }
 
 console.log('\n=== presets: records ===');

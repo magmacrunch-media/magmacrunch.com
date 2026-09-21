@@ -59,11 +59,34 @@
             { key: 'color', label: 'CLR', min: 0, max: 2, step: 1, labels: ['RND', 'BLK', 'WHT'] },
             { key: 'seed', label: 'SEED', min: 0, max: 999, step: 1 }
         ],
+        /* CUT and WIDTH are per cent of Nyquist, not bins. The transform
+           covers the whole image now, so a frequency is a fraction of what the
+           image can carry and means the same thing at every size. */
         'fft-filter': [
             { key: 'filterType', label: 'TYPE', min: 0, max: 3, step: 1, labels: ['LP', 'HP', 'BP', 'NOTCH'] },
-            { key: 'cutoff', label: 'CUT', min: 1, max: 120, step: 1 },
-            { key: 'width', label: 'WIDTH', min: 1, max: 60, step: 1 },
-            { key: 'gain', label: 'GAIN', min: 0, max: 3, step: 0.1 }
+            { key: 'cutoff', label: 'CUT', min: 1, max: 100, step: 1, suffix: '%' },
+            { key: 'width', label: 'WIDTH', min: 1, max: 100, step: 1, suffix: '%' },
+            { key: 'gain', label: 'GAIN', min: 0, max: 3, step: 0.1 },
+            { key: 'channels', label: 'CHAN', min: 0, max: 1, step: 1, labels: ['LUMA', 'RGB'] }
+        ],
+        /* SPECTRUM is a measurement, so its two controls are about
+           reading it rather than about the picture: GAIN brightens and
+           FLOOR clips the low end away to pull faint structure out of the
+           haze around DC. */
+        'fft-spectrum': [
+            { key: 'gain', label: 'GAIN', min: 0.2, max: 4, step: 0.1 },
+            { key: 'floor', label: 'FLOOR', min: 0, max: 90, step: 1, suffix: '%' }
+        ],
+        'fft-scramble': [
+            { key: 'amount', label: 'AMT', min: 0, max: 100, step: 1, suffix: '%' },
+            { key: 'seed', label: 'SEED', min: 0, max: 999, step: 1 },
+            { key: 'channels', label: 'CHAN', min: 0, max: 1, step: 1, labels: ['LUMA', 'RGB'] }
+        ],
+        'fft-wedge': [
+            { key: 'angle', label: 'ANGLE', min: 0, max: 179, step: 1, suffix: '\u00b0' },
+            { key: 'spread', label: 'SPREAD', min: 1, max: 89, step: 1, suffix: '\u00b0' },
+            { key: 'mode', label: 'MODE', min: 0, max: 1, step: 1, labels: ['KEEP', 'CUT'] },
+            { key: 'channels', label: 'CHAN', min: 0, max: 1, step: 1, labels: ['LUMA', 'RGB'] }
         ],
         'feedback': [
             { key: 'iterations', label: 'ITER', min: 1, max: 20, step: 1 },
