@@ -113,10 +113,40 @@
         }
     }
 
+    /* Hold to compare.
+
+       After four effects it is easy to lose track of what the picture
+       was, and a signal chain needs a before and after more than most
+       tools do. While held, the display shows the untouched source.
+
+       A render that lands during the hold still updates the work canvas,
+       which is what export reads, but does not reach the screen: the
+       comparison wins until release, and release then shows the newest
+       result rather than a stale one. */
+    var showingOriginal = false;
+
+    function showOriginal(on) {
+        on = !!on;
+        if (on === showingOriginal) return;
+        showingOriginal = on;
+        displayCtx.imageSmoothingEnabled = false;
+        displayCtx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+        if (on && originalImageData) {
+            var tmp = document.createElement('canvas');
+            tmp.width = width;
+            tmp.height = height;
+            tmp.getContext('2d').putImageData(originalImageData, 0, 0);
+            displayCtx.drawImage(tmp, 0, 0, displayCanvas.width, displayCanvas.height);
+        } else {
+            displayCtx.drawImage(workCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
+        }
+    }
+
     // Push processed ImageData to display canvas
     function display(imgData) {
         // Put processed data onto work canvas
         workCtx.putImageData(imgData, 0, 0);
+        if (showingOriginal) return;
         // Scale up to display with nearest-neighbor
         displayCtx.imageSmoothingEnabled = false;
         displayCtx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
@@ -167,6 +197,7 @@
         loadSourcePixels: loadSourcePixels,
         reloadSource: reloadSource,
         display: display,
+        showOriginal: showOriginal,
         exportPNG: exportPNG,
         hasSource: hasSource,
         createBlankSource: createBlankSource

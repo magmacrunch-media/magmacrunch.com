@@ -6,6 +6,29 @@
     var chainList = document.getElementById('chainList');
     var dragSrcIndex = null;
 
+    /* Which card is open on a phone.
+
+       Below 768px there is room for one effect's controls at a time, so the
+       chain becomes a row of chips and only the selected card is shown.
+       This is the only state the phone layout adds. On a wide screen every
+       card is visible and the selection is simply unused, which is why it
+       lives here rather than in a separate mobile file that could drift. */
+    var selectedId = null;
+    var highestSeen = -1;
+
+    function resolveSelection(effects) {
+        var maxId = -1, present = false;
+        for (var i = 0; i < effects.length; i++) {
+            if (effects[i].id > maxId) maxId = effects[i].id;
+            if (effects[i].id === selectedId) present = true;
+        }
+        // A newly added effect is selected, because it is the one you are
+        // about to tune. Ids only ever increase, so a higher one is new.
+        if (maxId > highestSeen) { selectedId = maxId; present = true; }
+        if (maxId > highestSeen) highestSeen = maxId;
+        if (!present) selectedId = effects.length ? effects[effects.length - 1].id : null;
+    }
+
     // Effect UI definitions: maps effect type to its parameter controls
     var effectUI = {
         'channel-shift': [
@@ -100,7 +123,7 @@
 
     function createEffectCard(effect) {
         var card = document.createElement('div');
-        card.className = 'effect-card';
+        card.className = 'effect-card' + (effect.id === selectedId ? ' selected' : '');
         card.dataset.id = effect.id;
 
         // Header
@@ -199,8 +222,62 @@
     function renderChain() {
         chainList.innerHTML = '';
         var effects = Chain.getEffects();
+        resolveSelection(effects);
         for (var i = 0; i < effects.length; i++) {
             chainList.appendChild(createEffectCard(effects[i]));
+        }
+        renderChips(effects);
+    }
+
+    function select(id) {
+        selectedId = id;
+        renderChain();
+        bindEvents();
+    }
+
+    function rerender() {
+        renderChain();
+        bindEvents();
+        Chain.render();
+    }
+
+    function chipButton(label, cls, enabled, onClick) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = cls;
+        b.textContent = label;
+        b.disabled = !enabled;
+        b.onclick = onClick;
+        return b;
+    }
+
+    /* The chip row. Tap selects, double tap bypasses, and the two arrows
+       move the selected effect, because touch has no drag and drop and
+       the order of a signal chain is not cosmetic: the same four effects
+       in a different order are a different picture. */
+    function renderChips(effects) {
+        var row = document.getElementById('chainChips');
+        if (!row) return;
+        row.innerHTML = '';
+
+        var at = -1;
+        for (var i = 0; i < effects.length; i++) {
+            (function(e) {
+                var cls = 'chain-chip' + (e.id === selectedId ? ' selected' : '') + (e.enabled ? '' : ' off');
+                var chip = chipButton(e.name, cls, true, function() { select(e.id); });
+                chip.ondblclick = function() { Chain.toggleEffect(e.id); rerender(); };
+                row.appendChild(chip);
+            })(effects[i]);
+            if (effects[i].id === selectedId) at = i;
+        }
+
+        if (effects.length > 1 && at !== -1) {
+            row.appendChild(chipButton('\u25C0', 'chain-move', at > 0, function() {
+                Chain.moveEffect(at, at - 1); rerender();
+            }));
+            row.appendChild(chipButton('\u25B6', 'chain-move', at < effects.length - 1, function() {
+                Chain.moveEffect(at, at + 1); rerender();
+            }));
         }
     }
 
@@ -358,6 +435,8 @@
 
     window.UI = {
         renderChain: renderChain,
+        select: select,
+        getSelected: function() { return selectedId; },
         bindEvents: bindEvents,
         updateStat: updateStat,
         effectUI: effectUI

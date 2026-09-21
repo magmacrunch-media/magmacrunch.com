@@ -347,6 +347,33 @@
         }, 100);
     });
 
+    // ── Hold to compare ──
+    /* Press and hold the picture to see the source, let go to see the
+       result. A scroll that starts on the canvas fires pointercancel,
+       which restores the result, so the comparison never sticks. */
+    var displayCanvas = document.getElementById('displayCanvas');
+    displayCanvas.addEventListener('pointerdown', function(e) {
+        if (e.button > 0) return;
+        Canvas.showOriginal(true);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function(type) {
+        displayCanvas.addEventListener(type, function() { Canvas.showOriginal(false); });
+    });
+
+    // ── Phone action bar ──
+    /* Each button forwards a click to the real control, so an action has
+       one handler and the bar cannot disagree with the panels. A disabled
+       target is left alone, which is what a click on it would do anyway. */
+    var mobileBar = document.querySelector('.mobile-bar');
+    if (mobileBar) {
+        mobileBar.addEventListener('click', function(e) {
+            var btn = e.target.closest('[data-forward]');
+            if (!btn) return;
+            var target = document.getElementById(btn.getAttribute('data-forward'));
+            if (target && !target.disabled) target.click();
+        });
+    }
+
     // ── Init ──
     // Generate color bars as default source so effects are visible on load
     var initW = Canvas.getWidth();

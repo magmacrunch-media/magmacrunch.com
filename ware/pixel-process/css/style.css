@@ -780,3 +780,197 @@ footer {
     opacity: 0.45;
     cursor: default;
 }
+
+/* ── PHONE ────────────────────────────────────────────────────────────────
+
+   Below 768px the three panels stack: the picture first, then the chain, then
+   the source controls. Measured before this existed, at 375 by 812: the canvas
+   rendered at 2 by 2 pixels, squeezed to nothing between two panels of fixed
+   width, and the chain panel ran 145px off the right edge of the screen.
+
+   The shared shell pins html and body to the viewport with overflow hidden.
+   That is right for the desktop workspace, and it would make a stacked layout
+   impossible to scroll. Rather than override the shell, the WORKSPACE scrolls,
+   between a header pinned above and an action bar pinned below, which is the
+   right shape for an app on a phone in any case.
+
+   The query is about ORIENTATION as much as width, and the plan had that
+   wrong. It said 768 and wider, iPad portrait included, should keep three
+   panels. Measured at essentially the same width, 768 stacked gives the
+   picture 441 by 441 and 769 in three panels gives it 219 by 219: a quarter of
+   the area, on a touch screen, where the panels' drag-to-reorder does not
+   work at all. What decides it is shape. A tall screen stacks better and a
+   wide one lays out side by side better, so every portrait screen up to 1100
+   stacks, and a tablet turned to landscape gets its panels back. */
+
+.chain-chips,
+.mobile-bar {
+    display: none;
+}
+
+@media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    header { padding: 10px 14px; }
+    h1.glitch { font-size: 13px; }
+    .header-right { gap: 6px; }
+    .sys-stat { font-size: 12px; padding: 4px 6px; }
+    .tool-nav,
+    footer,
+    .canvas-hint { display: none; }
+
+    .workspace {
+        flex-direction: column;
+        overflow-x: hidden;
+        overflow-y: auto;
+        min-height: 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .center-area {
+        order: 1;
+        flex: none;
+        height: 46vh;
+        min-height: 220px;
+    }
+
+    .chain-panel { order: 2; }
+    .input-panel { order: 3; }
+
+    .panel,
+    .panel:last-child {
+        width: 100%;
+        flex-shrink: 0;
+        overflow: visible;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid var(--border);
+    }
+
+    .chain-list {
+        flex: none;
+        overflow: visible;
+    }
+
+    /* One card at a time; the chips choose which. */
+    .effect-card:not(.selected) { display: none; }
+
+    .chain-chips {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+    }
+
+    .chain-chips::-webkit-scrollbar { display: none; }
+
+    .chain-chip,
+    .chain-move {
+        flex: 0 0 auto;
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7px;
+        letter-spacing: 0.06em;
+        color: var(--dim);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0 10px;
+        min-height: 40px;
+        touch-action: manipulation;
+        cursor: pointer;
+    }
+
+    .chain-chip.selected {
+        color: var(--bg);
+        background: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .chain-chip.off {
+        opacity: 0.45;
+        text-decoration: line-through;
+    }
+
+    .chain-move:disabled { opacity: 0.3; }
+
+    .mobile-bar {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        flex-shrink: 0;
+        border-top: 1px solid var(--border);
+        background: var(--panel);
+        /* Clear the home indicator on a notched iPhone. */
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .mobile-bar button {
+        font-family: 'Press Start 2P', monospace;
+        font-size: 7px;
+        letter-spacing: 0.04em;
+        color: var(--text);
+        background: none;
+        border: none;
+        border-right: 1px solid var(--border);
+        min-height: 52px;
+        touch-action: manipulation;
+        cursor: pointer;
+    }
+
+    .mobile-bar button:last-child {
+        border-right: none;
+        color: var(--accent);
+    }
+
+    .mobile-bar button:active { background: var(--surface); }
+}
+
+@media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    /* The effect being tuned goes directly under the picture. As first laid
+       out, the bench sat in between, and the selected effect's controls landed
+       below the fold, behind an action bar that already carries DICE, MUTATE
+       and UNDO. */
+    .chain-panel > * { order: 4; }
+    .chain-panel > .chain-chips { order: 1; }
+    .chain-panel > .chain-list { order: 2; }
+    .chain-panel > .add-effect-wrap { order: 3; }
+
+    /* The chip row is its own heading, and MUTATE and UNDO are in the bar.
+       Hiding them is safe for the bar's sake: it forwards with .click(),
+       which still fires on an element that is display: none. */
+    .chain-panel > .panel-label:first-child,
+    .chain-panel > .panel-hint:nth-child(2),
+    #mutateBtn,
+    #undoBtn { display: none; }
+
+    /* Lift the toasts clear of the action bar, with a MARGIN, not `bottom`.
+
+       The shell's toast sits 20px off the bottom, which on a phone is on top of
+       the action bar and hides DICE and UNDO for the length of the toast. The
+       obvious fix, overriding `bottom`, does nothing: ware/shell/toast.js sets
+       `bottom` as an inline style on every toast, and inline beats any rule in
+       a stylesheet. The override matched and lost, and the toast stayed put.
+
+       `!important` would win, and would break something worse. toast.js
+       stacks toasts by writing a larger `bottom` for each one already showing,
+       so pinning `bottom` puts every toast on the same line, which is the
+       exact overlap that file's own header records fixing once already. A
+       margin lifts the whole stack and leaves the stacking untouched, and this
+       stays out of the shell, which album-art-maker, media-search and
+       sprite-forge also load. */
+    .toast { margin-bottom: calc(46px + env(safe-area-inset-bottom)); }
+}
+
+/* Touch targets, keyed on the INPUT DEVICE rather than the width.
+
+   A 12px slider thumb is a poor thing to aim a finger at. These were inside
+   the phone layout's query at first, which left an iPad in landscape, wide
+   enough for three panels and still driven by touch, with mouse-sized
+   controls. `pointer: coarse` is what actually describes a finger. */
+@media (pointer: coarse) {
+    .range-input { margin: 10px 0; }
+    .range-input::-webkit-slider-thumb { width: 22px; height: 22px; }
+    .range-input::-moz-range-thumb { width: 22px; height: 22px; }
+    .effect-btn,
+    .lab-btn,
+    .seed-btn,
+    .action-btn,
+    .export-btn { min-height: 40px; }
+}

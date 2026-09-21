@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=b93c3e6b">
+    <link rel="stylesheet" href="css/style.css?v=b115c463">
 </head>
 <body>
     <!-- The title screen. Its wordmark is not written here: js/title.js reads
@@ -28,11 +28,6 @@
             <button class="title-enter" id="titleEnter" type="button">ENTER</button>
             <p class="title-hint">or press any key</p>
         </div>
-    </div>
-
-    <div class="mobile-notice">
-        This tool is best experienced on a desktop or laptop.<br>
-        Please visit on a wider screen for the full workspace.
     </div>
 
     <header>
@@ -172,6 +167,10 @@
 
             <div class="panel-divider"></div>
 
+            <!-- Below 768px the chain is a row of chips and only the selected
+                 card is shown. Rendered by js/ui.js; empty on a wide screen. -->
+            <div class="chain-chips" id="chainChips" aria-label="effects in the chain"></div>
+
             <div class="chain-list" id="chainList">
                 <!-- effect cards rendered by JS -->
             </div>
@@ -204,13 +203,24 @@
         </aside>
     </div>
 
+    <!-- The phone action bar. Every button forwards to the real control
+         elsewhere on the page, so each action has one handler rather than
+         two that can drift. tests/test-page.js checks every target exists. -->
+    <nav class="mobile-bar" aria-label="actions">
+        <button type="button" data-forward="uploadBtn">UPLOAD</button>
+        <button type="button" data-forward="diceBtn">DICE</button>
+        <button type="button" data-forward="mutateBtn">MUTATE</button>
+        <button type="button" data-forward="undoBtn">UNDO</button>
+        <button type="button" data-forward="exportBtn">EXPORT</button>
+    </nav>
+
     <footer>
         <span class="footer-text">PIXEL//PROCESS v1.1 &mdash; <span>MAGMACRUNCH MEDIA</span></span>
     </footer>
 
     <script src="../shell/toast.js?v=d87a2776"></script>
     <script src="../shell/dropdown.js?v=b0e0a994"></script>
-    <script src="js/canvas.js?v=eaab4e32"></script>
+    <script src="js/canvas.js?v=d683bd13"></script>
     <script src="js/chain.js?v=d5985106"></script>
     <script src="js/generators.js?v=fe23af02"></script>
     <script src="js/effects/channels.js?v=2757f65d"></script>
@@ -219,8 +229,8 @@
     <script src="js/effects/corrupt.js?v=987639f6"></script>
     <script src="js/effects/fft.js?v=c54abb6d"></script>
     <script src="js/effects/feedback.js?v=b7fd05b3"></script>
-    <script src="js/ui.js?v=7688d64e"></script>
-    <script src="js/app.js?v=860764a3"></script>
+    <script src="js/ui.js?v=2e902ddb"></script>
+    <script src="js/app.js?v=b6e6728b"></script>
     <!-- After app.js: it reads the page's own script tags to find the
          stamped core files, and hands them to a worker. -->
     <script src="js/render.js?v=c7f4361a"></script>

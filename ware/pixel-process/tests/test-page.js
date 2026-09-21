@@ -144,5 +144,76 @@ ok(hiddenRule !== null && hiddenRule.indexOf('display: none') !== -1,
     'style.css neutralises display for a hidden .prop-group',
     'without it the SEED row and both colour pickers show under every source');
 
+console.log('\n=== the phone layout ===');
+
+// Measured before Phase 3, at 375 by 812: the canvas rendered at 2 by 2 pixels
+// and the chain panel ran 145px off the edge. The notice that apologised for
+// that is gone because the thing it apologised for is.
+ok(markup.indexOf('mobile-notice') === -1, 'the "use a desktop" notice is gone');
+ok(html.indexOf('id="chainChips"') !== -1, 'the chip row is present');
+ok(html.indexOf('class="mobile-bar"') !== -1, 'the phone action bar is present');
+
+{
+    /* Every button in the bar forwards a click to a control by id. A mistyped
+     * id is the silent failure this invites: the button renders, takes the
+     * tap, finds nothing, and does nothing, with no error anywhere. So every
+     * target is checked to exist, and the list is checked to be non-empty so
+     * this cannot pass by finding no buttons at all. */
+    const targets = [];
+    let at = 0;
+    for (;;) {
+        const found = markup.indexOf('data-forward="', at);
+        if (found === -1) break;
+        const start = found + 'data-forward="'.length;
+        const end = markup.indexOf('"', start);
+        targets.push(markup.slice(start, end));
+        at = end;
+    }
+    ok(targets.length >= 4, 'the bar forwards at least four actions (' + targets.join(', ') + ')');
+    for (const id of targets) {
+        ok(markup.indexOf('id="' + id + '"') !== -1, 'the bar forwards to #' + id + ', which exists',
+            'a forward to a missing id renders a button that silently does nothing');
+    }
+}
+
+{
+    /* The layout query is about shape, not only width. The plan said 768 and
+     * wider should keep three panels; measured at the same width, stacking
+     * gave the picture 441 by 441 and three panels gave it 219 by 219. A
+     * width-only query would send every portrait iPad to the smaller one. */
+    const phoneQuery = '(max-width: 768px), (orientation: portrait) and (max-width: 1100px)';
+    ok(css.indexOf('@media ' + phoneQuery) !== -1, 'the phone layout covers portrait tablets as well as phones');
+    ok(css.indexOf('@media (max-width: 768px) {') === -1,
+        'and no width-only phone query is left behind to disagree with it');
+
+    // Touch sizing belongs to the finger, not the width, so a tablet in
+    // landscape, laid out in three panels, still gets controls it can hit.
+    const coarse = css.indexOf('@media (pointer: coarse)');
+    ok(coarse !== -1, 'touch targets are keyed on pointer: coarse');
+    const coarseBlock = coarse === -1 ? '' : css.slice(coarse, css.indexOf('\n}', coarse));
+    ok(coarseBlock.indexOf('-webkit-slider-thumb') !== -1, 'and that is where the big slider thumb lives');
+}
+
+{
+    /* The toast is lifted clear of the bar with a MARGIN, and this is the
+     * guard on that choice, because both obvious alternatives are wrong and
+     * one of them looks like it works.
+     *
+     * Overriding `bottom` does nothing: ware/shell/toast.js writes `bottom` as
+     * an inline style, which beats any stylesheet rule, so the override
+     * matches, loses, and the toast stays on top of DICE and UNDO. Adding
+     * !important would win, and would pin every toast to one line, because
+     * toast.js stacks them by giving each a larger `bottom`. */
+    const toastRule = css.indexOf('.toast {', css.indexOf('@media (max-width: 768px), (orientation: portrait)'));
+    const body = toastRule === -1 ? '' : css.slice(toastRule, css.indexOf('}', toastRule));
+    ok(body.indexOf('margin-bottom') !== -1, 'the phone toast is lifted with margin-bottom');
+    // "margin-bottom:" contains "bottom:", so count both: every bottom must be
+    // part of a margin-bottom, and none may stand alone.
+    const bottoms = body.split('bottom:').length - 1;
+    const margins = body.split('margin-bottom:').length - 1;
+    eq(bottoms, margins, 'and sets no plain bottom, which toast.js sets inline and would win');
+    ok(body.indexOf('!important') === -1, 'and does not reach for !important, which would break stacking');
+}
+
 console.log('\n' + passed + ' passed, ' + failed + ' failed');
 process.exit(failed > 0 ? 1 : 0);
