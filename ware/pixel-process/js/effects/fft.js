@@ -144,10 +144,26 @@
             gain: 1
         },
         fn: function(src, dst, p, w, h) {
-            // Must be power of 2 — use the smaller power of 2 that fits
+            /* The largest power of two that FITS, capped for performance.
+             *
+             * This used to double while `n < w && n < h`, which stops at the
+             * first power of two at or ABOVE the smaller side rather than below
+             * it: a 220 by 180 image got n = 256, and the transform then read
+             * rows 180 to 255 of an image that has 180. Out of bounds on a
+             * typed array is `undefined`, which arithmetic turns into NaN and
+             * the final clamp turns into 0, so the filtered region came out
+             * black and the edge-fill loops that were meant to copy the
+             * remainder never ran, because they start at n and n was past the
+             * end.
+             *
+             * It was wrong for every image that is not a power of two on both
+             * sides, which is nearly every photograph. The goldens did not see
+             * it: they run at 64 by 64 and 320 by 288, and this picks the same
+             * n as the old code for both.
+             */
             var n = 1;
-            while (n < w && n < h) n <<= 1;
-            if (n > 256) n = 256; // cap for performance
+            while (n * 2 <= w && n * 2 <= h) n <<= 1;
+            if (n > 256) n = 256;
 
             // Extract luminance channel for processing
             var re = new Float64Array(n * n);

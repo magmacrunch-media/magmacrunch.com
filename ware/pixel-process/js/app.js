@@ -219,6 +219,50 @@
         if (lastGenerator) regenerate(lastGenerator);
     });
 
+    /* The source, as data rather than as scattered DOM state.
+
+       js/preset.js needs to record what the picture was made from and put
+       it back later, and until now that lived in `lastGenerator`, the seed
+       box and two colour pickers, none of which it could reach. An uploaded
+       image reports itself as `image` and carries no pixels: a preset is a
+       few hundred bytes of description and is not the place to put a photo,
+       so applying one keeps whatever image is already loaded. */
+    function getSource() {
+        if (!lastGenerator) return { type: 'image' };
+        var desc = { type: lastGenerator };
+        if (SEEDED_SOURCES.indexOf(lastGenerator) !== -1) {
+            desc.seed = currentSeed();
+        } else if (lastGenerator === 'solid-color') {
+            desc.color = document.getElementById('genColor').value;
+        } else if (['h-gradient', 'v-gradient', 'radial-gradient'].indexOf(lastGenerator) !== -1) {
+            desc.colorA = document.getElementById('gradColorA').value;
+            desc.colorB = document.getElementById('gradColorB').value;
+        }
+        return desc;
+    }
+
+    function setSource(desc) {
+        if (!desc || !desc.type || desc.type === 'image') {
+            // Nothing to rebuild. Keep the loaded image, but re-fit it if the
+            // work size changed underneath us.
+            if (Canvas.hasSource()) Canvas.reloadSource();
+            return;
+        }
+        if (typeof desc.seed === 'number') seedInput.value = Math.max(0, Math.round(desc.seed));
+        if (desc.color) setColorPair('genColor', 'genHex', desc.color);
+        if (desc.colorA) setColorPair('gradColorA', 'gradHexA', desc.colorA);
+        if (desc.colorB) setColorPair('gradColorB', 'gradHexB', desc.colorB);
+        regenerate(desc.type);
+    }
+
+    function setColorPair(colorId, hexId, value) {
+        if (!/^#[0-9a-f]{6}$/i.test(value)) return;
+        document.getElementById(colorId).value = value;
+        document.getElementById(hexId).value = value;
+    }
+
+    window.App = { getSource: getSource, setSource: setSource };
+
     // Show/hide source-specific controls
     var genOptions = generatorDropdown.querySelectorAll('.dropdown-option');
     for (var i = 0; i < genOptions.length; i++) {

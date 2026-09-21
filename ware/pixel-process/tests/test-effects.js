@@ -116,6 +116,7 @@ function loadShipped() {
         'effects/feedback.js',
         'generators.js',
         'ui.js',
+        'preset.js',
     ];
     for (const f of files) {
         const src = fs.readFileSync(path.join(JS_DIR, f), 'utf8');
@@ -800,6 +801,76 @@ function redSpikeAt(w, h, row) {
         'the per-row generator is back, or the table is no longer indexed by normalized position');
 }
 
+console.log('\n=== fractional scale factors ===');
+
+/**
+ * The gap that let a black image ship.
+ *
+ * Every resolution case above renders at 512 or 1024, which are 2x and 4x
+ * Chain.REFERENCE, so every scaled length came out a whole number and the
+ * suite could not see what happens when one does not. At 320 the factor is
+ * 1.25, and a channel shift of 4 arrives as 5; at 220 it is 0.859 and the same
+ * shift arrives as 3.4375.
+ *
+ * A fractional array index is not an error in JavaScript. `src[3.4]` is
+ * `undefined`, and storing `undefined` into a Uint8ClampedArray writes 0, so
+ * CHANNEL SHIFT turned every pixel black at any size that was not a whole
+ * multiple of the reference. Nothing threw, nothing warned, and the effect
+ * still wrote every byte of its destination, so even the totality check passed.
+ *
+ * These run every effect at two deliberately awkward sizes and require the
+ * output to still be a picture.
+ */
+const AWKWARD = [[320, 320], [220, 180]];
+
+for (const [aw, ah] of AWKWARD) {
+    const awkwardSrc = makeSource(aw, ah);
+    const factor = Math.max(aw, ah) / Chain.REFERENCE;
+    ok(Math.abs(factor - Math.round(factor)) > 0.01,
+        `${aw}x${ah} really is a non-integer scale factor (${factor.toFixed(3)})`);
+
+    for (const [type, params] of CASES) {
+        Chain.clearEffects();
+        const step = Chain.addEffect(type);
+        step.params = params;
+
+        const res = Chain.process(imageData(awkwardSrc, aw, ah), aw, ah);
+        const out = res.data;
+
+        // Not collapsed. The source has plenty of variety, so an output with
+        // one or two distinct values is the failure this exists to catch.
+        const seen = new Set();
+        let opaque = true;
+        for (let i = 0; i < out.length; i += 4) {
+            if (out[i + 3] !== 255) opaque = false;
+            if (seen.size < 8) seen.add((out[i] >> 4) + ',' + (out[i + 1] >> 4) + ',' + (out[i + 2] >> 4));
+        }
+        ok(opaque, `${type} at ${aw}x${ah}: still opaque`);
+        ok(seen.size > 2, `${type} at ${aw}x${ah}: still a picture, not a flat field`,
+            `collapsed to ${seen.size} distinct colour bucket(s), which is what a fractional array index does`);
+    }
+}
+
+{
+    // And the specific shape of it: a scaled parameter that lands on a
+    // fraction must behave like its rounded self, not like a black screen.
+    const w = 220, h = 220;
+    const src220 = makeSource(w, h);
+    const def = Chain.getRegistry()['channel-shift'];
+
+    const fractional = new Uint8ClampedArray(w * h * 4);
+    const rounded = new Uint8ClampedArray(w * h * 4);
+    def.fn(src220, fractional, { rx: 3.4375, ry: -0.859, gx: -3.4375, gy: 1.71, bx: 0.859, by: -0.859 }, w, h);
+    def.fn(src220, rounded, { rx: 3, ry: -1, gx: -3, gy: 2, bx: 1, by: -1 }, w, h);
+    eq(sha(fractional), sha(rounded),
+        'channel-shift treats a fractional offset as its rounded self');
+
+    let black = 0;
+    for (let i = 0; i < fractional.length; i += 4) if (!fractional[i] && !fractional[i + 1] && !fractional[i + 2]) black++;
+    ok(black < (w * h) / 2, 'and does not turn the image black',
+        'a fractional index reads undefined, which stores as 0');
+}
+
 console.log('\n=== deterministic generators ===');
 
 for (const name of ['color-bars', 'checkerboard']) {
@@ -988,6 +1059,184 @@ console.log('\n=== the worker bootstrap actually runs the chain ===');
     registryThere['channel-shift'].fn = realFn;
     eq(posted[3].failures.join(','), 'CHANNEL SHIFT',
         'a failure inside the worker is reported back by name');
+}
+
+console.log('\n=== presets: records ===');
+
+const Preset = ctx.Preset;
+ok(!!Preset, 'preset.js loaded');
+
+{
+    // A round trip through text must be exact, because that is the whole claim
+    // a preset makes: it reproduces a picture rather than describing one.
+    const made = {
+        v: 1,
+        size: [512, 384],
+        source: { type: 'perlin-noise', seed: 4242 },
+        chain: [
+            { type: 'channel-shift', params: { rx: 5, ry: -3, gx: 0, gy: 0, bx: -5, by: 3 }, enabled: true },
+            { type: 'pixel-sort', params: { threshold: 90, axis: 0, sortBy: 1, direction: 1 }, enabled: false },
+        ],
+    };
+    const back = Preset.parse(Preset.serialize(made));
+    ok(back.ok, 'a serialized preset parses', back.error);
+    eq(JSON.stringify(back.preset.chain), JSON.stringify(made.chain), 'the chain survives the round trip');
+    eq(JSON.stringify(back.preset.size), JSON.stringify(made.size), 'and so does the size');
+    eq(back.preset.chain[1].enabled, false, 'and a disabled step stays disabled');
+}
+
+{
+    // Text from elsewhere is the one untrusted input this tool has.
+    eq(Preset.parse('not json').ok, false, 'garbage is refused');
+    eq(Preset.parse('{"v":99,"chain":[]}').ok, false, 'a future version is refused rather than guessed at');
+    eq(Preset.parse('{"v":1}').ok, false, 'a preset with no chain is refused');
+
+    const odd = Preset.parse(JSON.stringify({
+        v: 1,
+        chain: [
+            { type: 'not-an-effect', params: {}, enabled: true },
+            { type: 'posterize', params: { levels: 9999 }, enabled: true },
+            { type: 'invert', params: {}, enabled: true },
+        ],
+    }));
+    ok(odd.ok, 'a preset with one bad step still loads');
+    eq(odd.preset.chain.length, 2, 'the unknown effect is dropped');
+    eq(odd.dropped.join(','), 'not-an-effect', 'and is named rather than silently skipped');
+    eq(odd.preset.chain[0].params.levels, 16, 'an out-of-range parameter is clamped to its slider maximum');
+    eq(odd.preset.chain[1].params.amount, 100, 'a missing parameter falls back to the default');
+}
+
+console.log('\n=== presets: seeds ===');
+
+/**
+ * The claim this section exists to check: a seed names one chain, everywhere,
+ * and every chain a seed produces clears a measured bar.
+ *
+ * The bar matters because a chain drawn purely at random is mostly mud. Over a
+ * thousand unfiltered chains the 25th percentile of output spread is 3.9 levels
+ * against a source spread of 56, so a QUARTER of raw rolls flatten the probe to
+ * near-uniform. Rejecting those is the difference between a dice button worth
+ * pressing and one that wastes your time.
+ */
+{
+    const PROBE = { px: Preset.probeImage(), w: Preset.PROBE, h: Preset.PROBE };
+    const a = Preset.fromSeed(12345, PROBE);
+    const b = Preset.fromSeed(12345, PROBE);
+    eq(JSON.stringify(a.chain), JSON.stringify(b.chain), 'the same seed gives the same chain');
+
+    const c = Preset.fromSeed(12346, PROBE);
+    ok(JSON.stringify(a.chain) !== JSON.stringify(c.chain), 'a different seed gives a different chain');
+
+    /* And not just that pair. The search used to advance with seed + attempt,
+       so a rejected seed landed on its neighbour's chain and a third of
+       adjacent pairs were identical. One pair caught it; this is the check
+       that would have caught it without luck. */
+    let collisions = 0;
+    let prev = JSON.stringify(Preset.fromSeed(0, PROBE).chain);
+    for (let s = 1; s <= 200; s++) {
+        const here = JSON.stringify(Preset.fromSeed(s, PROBE).chain);
+        if (here === prev) collisions++;
+        prev = here;
+    }
+    eq(collisions, 0, 'no two adjacent seeds out of 200 produce the same chain');
+
+    ok(a.chain.length >= 2 && a.chain.length <= 4, 'a generated chain is 2 to 4 effects long');
+}
+
+{
+    // Every accepted chain must actually clear the bar it claims to clear.
+    const probe = { px: Preset.probeImage(), w: Preset.PROBE, h: Preset.PROBE };
+    const bar = Preset.spreadBar(probe);
+    const N = 300;
+    let below = 0, rejectedTotal = 0, gaveUp = 0, worstChanged = Infinity, worstSpread = Infinity;
+    const lengths = {};
+    const used = {};
+
+    for (let s = 0; s < N; s++) {
+        const res = Preset.fromSeed(s, probe);
+        rejectedTotal += res.rejected;
+        if (res.belowBar) { gaveUp++; continue; }
+
+        const m = Preset.measure(res.chain, probe.px, probe.w, probe.h);
+        if (m.changed < Preset.ACCEPT.changed || m.spread < bar) below++;
+        worstChanged = Math.min(worstChanged, m.changed);
+        worstSpread = Math.min(worstSpread, m.spread);
+        lengths[res.chain.length] = (lengths[res.chain.length] || 0) + 1;
+
+        // No effect may appear twice in one chain: stacking two thresholds or
+        // two inverts is the cancelling case the bar would then have to catch.
+        const seen = {};
+        let dupe = false;
+        let heavy = 0;
+        for (const step of res.chain) {
+            if (seen[step.type]) dupe = true;
+            seen[step.type] = true;
+            if (Preset.HEAVY.indexOf(step.type) !== -1) heavy++;
+        }
+        if (dupe) { ok(false, `seed ${s}: no effect repeats in a chain`); break; }
+        if (heavy > 1) { ok(false, `seed ${s}: at most one heavy effect per chain`); break; }
+    }
+
+    eq(below, 0, `all ${N} accepted chains clear the measured bar`);
+    eq(gaveUp, 0, `and none of the ${N} exhausted its search`);
+    ok(worstSpread >= bar, `the worst accepted spread is above the bar (${worstSpread.toFixed(1)} >= ${bar.toFixed(1)})`);
+    ok(worstChanged >= Preset.ACCEPT.changed,
+        `and the worst accepted change is above it too (${worstChanged.toFixed(1)})`);
+
+    // A search that never rejects anything is a bar that is not doing its job,
+    // and would pass every assertion above by being vacuous.
+    ok(rejectedTotal > 0, 'the bar actually rejects candidates',
+        'nothing was ever rejected, so this is measuring a filter that is not filtering');
+    console.log(`        (${rejectedTotal} candidates rejected across ${N} seeds, ` +
+        `lengths ${JSON.stringify(lengths)})`);
+}
+
+{
+    // Every effect must be reachable from some seed, or part of the tool is
+    // invisible to the dice and nobody would ever find it.
+    const seen = {};
+    const PROBE2 = { px: Preset.probeImage(), w: Preset.PROBE, h: Preset.PROBE };
+    for (let s = 0; s < 400; s++) {
+        for (const step of Preset.fromSeed(s, PROBE2).chain) seen[step.type] = (seen[step.type] || 0) + 1;
+    }
+    const missing = types.filter((t) => !seen[t]);
+    eq(missing.join(','), '', 'every registered effect turns up in some generated chain');
+}
+
+{
+    // Parameters must stay inside the declared control ranges, or a generated
+    // chain produces a slider that cannot represent its own value.
+    let outside = '';
+    const PROBE3 = { px: Preset.probeImage(), w: Preset.PROBE, h: Preset.PROBE };
+    for (let s = 0; s < 200 && !outside; s++) {
+        for (const step of Preset.fromSeed(s, PROBE3).chain) {
+            for (const def of UI.effectUI[step.type] || []) {
+                const v = step.params[def.key];
+                if (typeof v !== 'number' || v < def.min || v > def.max) {
+                    outside = `seed ${s}: ${step.type}.${def.key} = ${v}, range [${def.min},${def.max}]`;
+                }
+            }
+        }
+    }
+    eq(outside, '', 'generated parameters stay inside their control ranges');
+}
+
+{
+    // Taste tables name real parameters. A typo here silently does nothing:
+    // the override is never found and the full slider range is used instead.
+    let bad = [];
+    for (const type in Preset.TASTE) {
+        if (!registry[type]) { bad.push(type + ' (not an effect)'); continue; }
+        const keys = (UI.effectUI[type] || []).map((d) => d.key);
+        for (const key in Preset.TASTE[type]) {
+            if (keys.indexOf(key) === -1) bad.push(type + '.' + key);
+        }
+    }
+    eq(bad.join(','), '', 'every taste override names a real effect and parameter');
+
+    for (const type of Preset.HEAVY) {
+        ok(!!registry[type], `HEAVY names a real effect: ${type}`);
+    }
 }
 
 // -- Summary -----------------------------------------------------------------

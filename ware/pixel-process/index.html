@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=461a0e09">
+    <link rel="stylesheet" href="css/style.css?v=b93c3e6b">
 </head>
 <body>
     <!-- The title screen. Its wordmark is not written here: js/title.js reads
@@ -157,6 +157,21 @@
             <div class="panel-label">SIGNAL CHAIN</div>
             <p class="panel-hint">effects process the source image</p>
 
+            <div class="panel-label">CHAIN SEED</div>
+            <p class="panel-hint">one number, a whole chain</p>
+            <div class="seed-row">
+                <input type="number" id="chainSeed" class="seed-input" value="0" min="0" step="1">
+                <button class="seed-btn" id="diceBtn">DICE</button>
+            </div>
+            <div class="lab-row">
+                <button class="lab-btn" id="mutateBtn">MUTATE</button>
+                <button class="lab-btn" id="undoBtn">UNDO</button>
+                <button class="lab-btn" id="copyBtn">COPY</button>
+                <button class="lab-btn" id="pasteBtn">PASTE</button>
+            </div>
+
+            <div class="panel-divider"></div>
+
             <div class="chain-list" id="chainList">
                 <!-- effect cards rendered by JS -->
             </div>
@@ -195,17 +210,21 @@
     <script src="js/canvas.js?v=eaab4e32"></script>
     <script src="js/chain.js?v=d5985106"></script>
     <script src="js/generators.js?v=fe23af02"></script>
-    <script src="js/effects/channels.js?v=04cf9f5c"></script>
+    <script src="js/effects/channels.js?v=2757f65d"></script>
     <script src="js/effects/sort.js?v=fd949ab6"></script>
     <script src="js/effects/displace.js?v=b372d3ac"></script>
     <script src="js/effects/corrupt.js?v=987639f6"></script>
-    <script src="js/effects/fft.js?v=14391654"></script>
+    <script src="js/effects/fft.js?v=a84cfbc6"></script>
     <script src="js/effects/feedback.js?v=b7fd05b3"></script>
     <script src="js/ui.js?v=97a418e7"></script>
-    <script src="js/app.js?v=363bdc33"></script>
+    <script src="js/app.js?v=860764a3"></script>
     <!-- After app.js: it reads the page's own script tags to find the
          stamped core files, and hands them to a worker. -->
     <script src="js/render.js?v=c7f4361a"></script>
+    <!-- preset.js is the logic and lab.js the buttons; both need Chain,
+         Canvas and UI to exist, so they follow app.js. -->
+    <script src="js/preset.js?v=bbe745ea"></script>
+    <script src="js/lab.js?v=183a049b"></script>
     <!-- Last: it reads the effect registry the files above fill in. -->
     <script src="js/title.js?v=417122e6"></script>
 </body>

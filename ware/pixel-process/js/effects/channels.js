@@ -10,23 +10,47 @@
         // All six are pixel offsets, so all six scale with the image.
         spatial: { lengths: ['rx', 'ry', 'gx', 'gy', 'bx', 'by'] },
         fn: function(src, dst, p, w, h) {
+            /* Rounded, because these six become array indices.
+             *
+             * They used to be used as they arrived, which was harmless while
+             * the only source of them was a slider with a step of 1. Then
+             * Chain.scaleParams started multiplying them by the ratio of the
+             * render size to the reference, and at any size that is not a whole
+             * multiple of 256 that ratio is fractional: at 220 a shift of 4
+             * arrives as 3.4375.
+             *
+             * A fractional index into a typed array is not an error and does
+             * not throw. `src[3.4]` is `undefined`, and assigning undefined to
+             * a Uint8ClampedArray stores 0, so every pixel came out black. The
+             * whole image, silently, with no warning anywhere.
+             *
+             * Found by looking at a montage of generated chains and asking why
+             * two of six were solid colours. The test suite was green: every
+             * resolution case it had used 512 or 1024, which are 2x and 4x the
+             * reference, so the scaled offsets stayed whole and the bug could
+             * not fire. There is a non-integer factor in there now.
+             */
+            var rx = Math.round(p.rx), ry = Math.round(p.ry);
+            var gx = Math.round(p.gx), gy = Math.round(p.gy);
+            var bx = Math.round(p.bx), by = Math.round(p.by);
+
             for (var y = 0; y < h; y++) {
                 for (var x = 0; x < w; x++) {
                     var i = (y * w + x) * 4;
 
                     // Red channel with offset
-                    var sxr = ((x - p.rx + w) % w);
-                    var syr = ((y - p.ry + h) % h);
+                    var sxr = ((x - rx + w) % w);
+                    var syr = ((y - ry + h) % h);
                     var ri = (syr * w + sxr) * 4;
 
                     // Green channel with offset
-                    var sxg = ((x - p.gx + w) % w);
-                    var syg = ((y - p.gy + h) % h);
+                    var sxg = ((x - gx + w) % w);
+                    var syg = ((y - gy + h) % h);
                     var gi = (syg * w + sxg) * 4;
 
                     // Blue channel with offset
-                    var sxb = ((x - p.bx + w) % w);
-                    var syb = ((y - p.by + h) % h);
+                    var sxb = ((x - bx + w) % w);
+                    var syb = ((y - by + h) % h);
                     var bi = (syb * w + sxb) * 4;
 
                     dst[i]     = src[ri];     // R
