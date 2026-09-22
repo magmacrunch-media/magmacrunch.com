@@ -32,8 +32,10 @@ const ARCADE = join(ROOT, 'arcade');
 const WARE = join(ROOT, 'ware');
 
 /**
- * Where JS suites live. `arcade/` was the only one until ware/pixel-process/
- * gained tests, and a test under a root that is not listed here does not fail:
+ * Where JS suites live. `ware/` is listed for ware/pixel-process/, whose tests
+ * moved with its source to apps/crunchscope on 2026-09-21, so it holds none
+ * today; it stays listed so the next ware tool to gain a suite is found. A
+ * test under a root that is not listed here does not fail:
  * it is never found, and the run reports success over it. Add the root when a
  * directory gains its first suite, and add it to ci.yml's own find as well --
  * see the note above about CI keeping its own copy.

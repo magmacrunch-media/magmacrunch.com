@@ -222,6 +222,25 @@
         repaint();
     }
 
+    /* Saving the file is a seam, because it is the one thing a browser and the
+       iOS app do differently. A browser downloads through an <a download>; in
+       WKWebView that does nothing at all, so the app installs its own exporter
+       (ios/shim/export.js) that writes the file and opens the share sheet.
+       Rendering the export canvas stays here either way, so both platforms
+       save exactly the same pixels. */
+    function downloadExporter(pngCanvas, name) {
+        var link = document.createElement('a');
+        link.download = name;
+        link.href = pngCanvas.toDataURL('image/png');
+        link.click();
+    }
+
+    var exporter = downloadExporter;
+
+    function setExporter(fn) {
+        exporter = typeof fn === 'function' ? fn : downloadExporter;
+    }
+
     // Export as PNG at native working resolution
     function exportPNG(filename) {
         var exportCanvas = document.createElement('canvas');
@@ -231,10 +250,7 @@
         exportCtx.imageSmoothingEnabled = false;
         exportCtx.drawImage(workCanvas, 0, 0);
 
-        var link = document.createElement('a');
-        link.download = (filename || 'pixel-process') + '.png';
-        link.href = exportCanvas.toDataURL('image/png');
-        link.click();
+        return exporter(exportCanvas, (filename || 'crunchscope') + '.png');
     }
 
     // Check if we have a source loaded
@@ -270,6 +286,7 @@
         setGraticule: setGraticule,
         getGraticule: getGraticule,
         exportPNG: exportPNG,
+        setExporter: setExporter,
         hasSource: hasSource,
         createBlankSource: createBlankSource
     };

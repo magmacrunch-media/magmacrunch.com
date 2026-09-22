@@ -111,7 +111,7 @@
         if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
         busy = false;
         pending = false;
-        if (why) console.warn('pixel-process: rendering on the main thread (' + why + ')');
+        if (why) console.warn('crunchscope: rendering on the main thread (' + why + ')');
         // Recover the picture on this thread, so a worker that dies mid-render
         // does not leave the last frame on screen.
         if (window.Chain && Chain.renderImmediate) Chain.renderImmediate();
@@ -211,7 +211,7 @@
         // Nothing to import means the page moved and this matcher did not.
         // Staying on the main thread is right; silently rendering with an empty
         // registry would not be.
-        if (!scripts.length) { console.warn('pixel-process: no core scripts found, staying on the main thread'); return; }
+        if (!scripts.length) { console.warn('crunchscope: no core scripts found, staying on the main thread'); return; }
 
         try {
             blobUrl = URL.createObjectURL(new Blob([BOOTSTRAP], { type: 'text/javascript' }));

@@ -212,7 +212,7 @@
                    buffer and overwrites it completely, which it can because
                    every effect is total. */
                 failed.push(e.name || e.id || 'effect ' + (i + 1));
-                console.error('pixel-process: effect failed, skipping', e, err);
+                console.error('crunchscope: effect failed, skipping', e, err);
             }
         }
 

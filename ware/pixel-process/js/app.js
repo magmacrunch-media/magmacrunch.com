@@ -297,7 +297,7 @@
 
     // ── Export ──
     exportBtn.addEventListener('click', function() {
-        var filename = fileNameInput.value || 'pixel-process';
+        var filename = fileNameInput.value || 'crunchscope';
         /* Render synchronously first, rather than trusting the work canvas.
 
            It used to be true that the display was always current, because a
