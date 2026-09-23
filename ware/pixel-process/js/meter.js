@@ -73,13 +73,34 @@
         };
     }
 
-    /** Luma at n x n, point-sampled from a w x h RGBA buffer. */
-    function lumaPlane(pixels, w, h, n) {
+    /** Mirror an index back inside 0..n-1, the way fft.js pads. */
+    function reflect(i, n) {
+        if (n <= 1) return 0;
+        var period = 2 * n - 2;
+        var m = ((i % period) + period) % period;
+        return m < n ? m : period - m;
+    }
+
+    /**
+     * Luma on an n x n grid, point-sampled from a w x h RGBA buffer at ONE
+     * pitch for both axes, mirroring outside the picture.
+     *
+     * The pitch is what makes this correct on an image that is not square.
+     * Squashing 640x480 into a square samples the two axes at different
+     * rates, so a pattern of 20 cycles across the width and one of 20 cycles
+     * down the height come out at the same frequency although they are not
+     * the same frequency at all. Sampling both axes every `pitch` pixels and
+     * mirroring the leftover region keeps the transform isotropic, which is
+     * the only thing that makes a radial average mean anything. Mirroring
+     * rather than zero-filling is fft.js's choice, for its reason: a hard
+     * edge at the border is itself a signal, and a loud one.
+     */
+    function lumaPlane(pixels, w, h, n, pitch) {
         var out = new Float32Array(n * n);
         for (var y = 0; y < n; y++) {
-            var sy = Math.min(h - 1, (y * h / n) | 0);
+            var sy = reflect(Math.round(y * pitch), h);
             for (var x = 0; x < n; x++) {
-                var sx = Math.min(w - 1, (x * w / n) | 0);
+                var sx = reflect(Math.round(x * pitch), w);
                 var i = (sy * w + sx) * 4;
                 out[y * n + x] = 0.299 * pixels[i] + 0.587 * pixels[i + 1] + 0.114 * pixels[i + 2];
             }
@@ -110,6 +131,8 @@
         fft.forward(re, im, n, n);
 
         var sums = new Float64Array(BINS), counts = new Uint32Array(BINS);
+        // Magnitude-weighted radius, per bin, for the peak reading below.
+        var radSums = new Float64Array(BINS);
         var half = n >> 1;
         for (var y = 0; y < n; y++) {
             var dy = y <= half ? y : y - n;
@@ -120,7 +143,9 @@
                 if (rad > 1) continue;      // the corners reach past Nyquist
                 var bin = Math.min(BINS - 1, (rad * BINS) | 0);
                 var k = y * n + x;
-                sums[bin] += Math.sqrt(re[k] * re[k] + im[k] * im[k]);
+                var mag = Math.sqrt(re[k] * re[k] + im[k] * im[k]);
+                sums[bin] += mag;
+                radSums[bin] += mag * rad;
                 counts[bin]++;
             }
         }
@@ -131,6 +156,20 @@
             curve[i] = v;
             if (v > peakVal) { peakVal = v; peakBin = i; }
         }
+
+        /* Where inside its bin the peak really sits: the magnitude-weighted
+           mean radius of what that bin holds, which for a single tone is
+           exactly the tone's frequency.
+           Reporting the bin centre instead is a real error and not a rounding
+           one, because it is biased the same way every time: a 32 pixel
+           pattern falls at the left edge of its bin and reads as 31.
+           Interpolating between neighbouring bins does not fix it either,
+           which the suite showed before this replaced it -- a pure tone puts
+           everything in one bin and leaves its neighbours equal, so there is
+           no shape to fit and the correction comes out as zero. */
+        var peak = sums[peakBin] > 0
+            ? radSums[peakBin] / sums[peakBin]
+            : (peakBin + 0.5) / BINS;
         // dB relative to the peak, floored, so a flat spectrum reads flat and
         // a silent image does not produce -Infinity.
         for (i = 0; i < BINS; i++) {
@@ -138,7 +177,7 @@
                 ? Math.max(-60, 20 * Math.log10(Math.max(1e-6, curve[i]) / peakVal))
                 : -60;
         }
-        return { curve: curve, peak: (peakBin + 0.5) / BINS };
+        return { curve: curve, peak: peak };
     }
 
     window.Meter = {
@@ -265,7 +304,7 @@
             + '  CLIP ' + (hist.clipLow * 100).toFixed(1) + '/' + (hist.clipHigh * 100).toFixed(1) + '%';
     }
 
-    function drawSpectrum(spec) {
+    function drawSpectrum(spec, pitchPx) {
         var w = screen.width, h = screen.height, i;
         ctx.beginPath();
         for (i = 0; i < spec.curve.length; i++) {
@@ -279,7 +318,16 @@
         ctx.lineWidth = Math.max(1, (window.devicePixelRatio || 1));
         ctx.stroke();
 
-        readout.textContent = 'PEAK ' + spec.peak.toFixed(2) + ' NYQ';
+        /* In pixels, not as a fraction of anything. The curve's axis is the
+           analysis band, but a fraction of Nyquist means nothing to the eye
+           and, worse, would have to be a fraction of WHICH side on a picture
+           that is not square. The period of the strongest component is one
+           number that is true whichever way the image is turned: "the loudest
+           repeating detail is every 32 pixels". */
+        var period = spec.peak > 0 ? 2 * pitchPx / spec.peak : Infinity;
+        readout.textContent = period > 4 * ANALYSE * pitchPx
+            ? 'PEAK --'
+            : 'PEAK ' + (period < 10 ? period.toFixed(1) : Math.round(period)) + ' PX';
     }
 
     /**
@@ -290,24 +338,34 @@
     function update(source) {
         if (!on || !source || !source.width || !source.height) return;
 
-        // Point-sampled, never smoothed: a smoothed downscale invents levels
-        // that are not in the picture, which is a lie in a measurement.
+        /* One pitch for both axes: the longer side gets ANALYSE samples and
+           the shorter gets proportionally fewer, so a 640x480 picture is
+           sampled 128 x 96 rather than squashed into a square. Point-sampled,
+           never smoothed, because a smoothed downscale invents levels that
+           are not in the picture, which is a lie in a measurement. */
         var n = ANALYSE;
+        var pitch = Math.max(source.width, source.height) / n;
+        var nx = Math.max(1, Math.min(n, Math.round(source.width / pitch)));
+        var ny = Math.max(1, Math.min(n, Math.round(source.height / pitch)));
+
         if (sample.width !== n || sample.height !== n) {
             sample.width = n;
             sample.height = n;
         }
         sampleCtx.imageSmoothingEnabled = false;
         sampleCtx.clearRect(0, 0, n, n);
-        sampleCtx.drawImage(source, 0, 0, n, n);
-        var pixels = sampleCtx.getImageData(0, 0, n, n).data;
+        sampleCtx.drawImage(source, 0, 0, source.width, source.height, 0, 0, nx, ny);
+        var pixels = sampleCtx.getImageData(0, 0, nx, ny).data;
 
         if (!fit()) return;
         ctx.clearRect(0, 0, screen.width, screen.height);
         graticule();
 
         if (mode === 'spectrum' && window.Chain && Chain.fft) {
-            drawSpectrum(spectrum(lumaPlane(pixels, n, n, n), n, Chain.fft));
+            // Already at one pitch, so the plane only has to be mirrored out
+            // to the square the transform needs: pitch 1 in sample units.
+            var plane = lumaPlane(pixels, nx, ny, n, 1);
+            drawSpectrum(spectrum(plane, n, Chain.fft), source.width / nx);
         } else {
             drawLevels(histogram(pixels));
         }
