@@ -297,22 +297,58 @@
             label.textContent = def.label;
 
             if (def.labels) {
-                // Button group instead of slider
-                var btns = document.createElement('div');
-                btns.className = 'effect-btns';
                 var values = [];
                 for (var v = def.min; v <= def.max; v += def.step) values.push(v);
 
-                for (var j = 0; j < values.length; j++) {
-                    var btn = document.createElement('button');
-                    btn.className = 'effect-btn' + (effect.params[def.key] === values[j] ? ' active' : '');
-                    btn.textContent = def.labels[j];
-                    btn.dataset.key = def.key;
-                    btn.dataset.value = values[j];
-                    btns.appendChild(btn);
+                if (values.length > 2) {
+                    /* More than two choices becomes a selector switch rather
+                       than a row of chips. Four modes across a 211px panel is
+                       six-pixel type nobody can read, and on a phone the row
+                       is the first thing to be squeezed; the list also has to
+                       escape the card, which is why it is opened on the body
+                       rather than inside it. Two choices stay as chips: that
+                       is a switch, and a switch should show both positions. */
+                    var picked = values.indexOf(effect.params[def.key]);
+                    var options = [];
+                    for (var s = 0; s < values.length; s++) options.push([values[s], def.labels[s]]);
+
+                    var trigger = document.createElement('button');
+                    trigger.type = 'button';
+                    trigger.className = 'selector';
+                    trigger.dataset.key = def.key;
+                    trigger.dataset.options = JSON.stringify(options);
+                    trigger.setAttribute('aria-haspopup', 'listbox');
+                    trigger.setAttribute('aria-expanded', 'false');
+                    trigger.setAttribute('aria-label', effect.name + ' ' + def.label);
+
+                    var value = document.createElement('span');
+                    value.className = 'selector-value';
+                    value.textContent = picked === -1 ? def.labels[0] : def.labels[picked];
+                    var caret = document.createElement('span');
+                    caret.className = 'selector-caret';
+                    caret.setAttribute('aria-hidden', 'true');
+                    caret.textContent = '▾';
+                    trigger.appendChild(value);
+                    trigger.appendChild(caret);
+
+                    row.appendChild(label);
+                    row.appendChild(trigger);
+                } else {
+                    // Button group instead of slider
+                    var btns = document.createElement('div');
+                    btns.className = 'effect-btns';
+
+                    for (var j = 0; j < values.length; j++) {
+                        var btn = document.createElement('button');
+                        btn.className = 'effect-btn' + (effect.params[def.key] === values[j] ? ' active' : '');
+                        btn.textContent = def.labels[j];
+                        btn.dataset.key = def.key;
+                        btn.dataset.value = values[j];
+                        btns.appendChild(btn);
+                    }
+                    row.appendChild(label);
+                    row.appendChild(btns);
                 }
-                row.appendChild(label);
-                row.appendChild(btns);
             } else {
                 row.className = 'effect-row knob-cell';
 
@@ -364,6 +400,8 @@
     }
 
     function renderChain() {
+        // Any open selector belongs to a card that is about to be discarded.
+        closeSelector(false);
         chainList.innerHTML = '';
         var effects = Chain.getEffects();
         resolveSelection(effects);
@@ -533,6 +571,14 @@
                 })(id, ranges[j]);
             }
 
+            // Selector switches
+            var selectors = card.querySelectorAll('.selector');
+            for (var s = 0; s < selectors.length; s++) {
+                selectors[s].onclick = (function(id, trigger) {
+                    return function() { openSelector(trigger, id); };
+                })(id, selectors[s]);
+            }
+
             // Button groups
             var btns = card.querySelectorAll('.effect-btn');
             for (var j = 0; j < btns.length; j++) {
@@ -552,6 +598,139 @@
                 })(id, btns[j]);
             }
         }
+    }
+
+    /* ── The selector switch ──
+     *
+     * One list is open at a time and it lives on the BODY, not in the card.
+     * The chain panel scrolls and clips, and the card itself is inside it, so
+     * a list opened in place is cut off exactly when it is longest. It is
+     * positioned against the trigger and flipped above it when there is no
+     * room below, which is the usual case for the last module in a chain.
+     *
+     * It is built from real buttons so the keyboard works: arrows move, Enter
+     * or Space chooses, Escape closes and puts focus back on the trigger.
+     * That is the same reason the knobs are drawn over real range inputs.
+     */
+    var openPop = null;
+
+    function closeSelector(focusTrigger) {
+        if (!openPop) return;
+        var trigger = openPop.trigger;
+        openPop.el.remove();
+        document.removeEventListener('pointerdown', onPopPointer, true);
+        document.removeEventListener('keydown', onPopKey, true);
+        window.removeEventListener('resize', onPopDismiss, true);
+        window.removeEventListener('scroll', onPopDismiss, true);
+        openPop = null;
+        trigger.setAttribute('aria-expanded', 'false');
+        if (focusTrigger) trigger.focus();
+    }
+
+    /* Follow the trigger rather than dismiss.
+     *
+     * Dismissing on any scroll sounds tidy and is not: the chain panel scrolls
+     * when an option takes focus, so the list closed the instant it opened on
+     * a phone. It is repositioned instead, and only closes once the switch
+     * itself has left the viewport, where there is nothing left to attach to. */
+    function onPopDismiss() {
+        if (!openPop) return;
+        var rect = openPop.trigger.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) closeSelector(false);
+        else placePop(openPop.el, openPop.trigger);
+    }
+
+    function onPopPointer(e) {
+        if (!openPop) return;
+        if (openPop.el.contains(e.target) || openPop.trigger.contains(e.target)) return;
+        closeSelector(false);
+    }
+
+    function onPopKey(e) {
+        if (!openPop) return;
+        var items = openPop.items;
+        var at = items.indexOf(document.activeElement);
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            closeSelector(true);
+        } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            var next = e.key === 'ArrowDown' ? at + 1 : at - 1;
+            if (next < 0) next = items.length - 1;
+            if (next >= items.length) next = 0;
+            items[next].focus();
+        } else if (e.key === 'Home' || e.key === 'End') {
+            e.preventDefault();
+            items[e.key === 'Home' ? 0 : items.length - 1].focus();
+        } else if (e.key === 'Tab') {
+            closeSelector(false);
+        }
+    }
+
+    function placePop(el, trigger) {
+        var rect = trigger.getBoundingClientRect();
+        var gap = 4;
+        el.style.minWidth = Math.round(rect.width) + 'px';
+        var size = el.getBoundingClientRect();
+        var top = rect.bottom + gap;
+        if (top + size.height > window.innerHeight - 8) {
+            var above = rect.top - gap - size.height;
+            top = above >= 8 ? above : Math.max(8, window.innerHeight - 8 - size.height);
+        }
+        var left = Math.min(rect.left, window.innerWidth - 8 - size.width);
+        el.style.top = Math.round(top) + 'px';
+        el.style.left = Math.round(Math.max(8, left)) + 'px';
+    }
+
+    function openSelector(trigger, id) {
+        if (openPop && openPop.trigger === trigger) { closeSelector(true); return; }
+        closeSelector(false);
+
+        var effect = Chain.getEffect(id);
+        if (!effect) return;
+        var key = trigger.dataset.key;
+        var options = JSON.parse(trigger.dataset.options);
+        var el = document.createElement('div');
+        el.className = 'selector-pop';
+        el.setAttribute('role', 'listbox');
+        var items = [];
+
+        for (var i = 0; i < options.length; i++) {
+            var option = document.createElement('button');
+            option.type = 'button';
+            option.setAttribute('role', 'option');
+            var chosen = effect.params[key] === options[i][0];
+            option.setAttribute('aria-selected', chosen ? 'true' : 'false');
+            option.className = 'selector-option' + (chosen ? ' active' : '');
+            option.textContent = options[i][1];
+            option.onclick = (function(value, labelText) {
+                return function() {
+                    var live = Chain.getEffect(id);
+                    if (live) live.params[key] = value;
+                    trigger.querySelector('.selector-value').textContent = labelText;
+                    closeSelector(true);
+                    Chain.render();
+                };
+            })(options[i][0], options[i][1]);
+            items.push(option);
+            el.appendChild(option);
+        }
+
+        document.body.appendChild(el);
+        openPop = { el: el, trigger: trigger, items: items };
+        placePop(el, trigger);
+        trigger.setAttribute('aria-expanded', 'true');
+
+        var current = items.filter(function(b) { return b.classList.contains('active'); })[0];
+        (current || items[0]).focus({ preventScroll: true });
+
+        document.addEventListener('pointerdown', onPopPointer, true);
+        document.addEventListener('keydown', onPopKey, true);
+        // Dismiss rather than follow: the trigger can scroll out from under an
+        // open list, and a list left hanging over the workspace is worse than
+        // one that closes.
+        window.addEventListener('resize', onPopDismiss, true);
+        window.addEventListener('scroll', onPopDismiss, true);
     }
 
     /* The header chip. This lived in chain.js until the core was made loadable

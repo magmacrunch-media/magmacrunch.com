@@ -1229,7 +1229,100 @@ footer {
    phone block above: these rules and the ones above them have equal
    specificity, so the later wins, and the monitor's own block is at the end
    of this file. In the phone block the shorter screen simply lost. */
+/* ═══════════════════════════════════════════════
+   THE SELECTOR SWITCH
+
+   An enum with more than two positions. Four modes as chips across a 211px
+   panel is six-pixel type nobody can read, so the switch shows the position
+   it is in and opens a list of the rest. js/ui.js puts that list on the body,
+   because the chain panel scrolls and clips; these rules only have to make it
+   look like part of the instrument.
+   ═══════════════════════════════════════════════ */
+.selector {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 92px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    background: #0d0a08;
+    border: 1px solid var(--border);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+    padding: 6px 7px;
+    cursor: pointer;
+}
+
+.selector:hover,
+.selector[aria-expanded="true"] {
+    border-color: var(--amber);
+}
+
+.selector:focus-visible {
+    outline: 1px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.selector-value {
+    color: var(--amber);
+    text-shadow: 0 0 5px rgba(212, 160, 48, 0.4);
+}
+
+.selector-caret {
+    color: var(--dim);
+    font-size: 8px;
+    line-height: 1;
+}
+
+.selector-pop {
+    position: fixed;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    max-height: 60vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--amber);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.7);
+}
+
+.selector-option {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.05em;
+    text-align: left;
+    color: var(--dim);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 9px 12px;
+    cursor: pointer;
+}
+
+.selector-option:last-child { border-bottom: none; }
+
+.selector-option:hover,
+.selector-option:focus-visible {
+    color: var(--text);
+    background: rgba(212, 160, 48, 0.14);
+    outline: none;
+}
+
+.selector-option.active {
+    color: var(--accent);
+}
+
+.selector-option.active::after {
+    content: ' ◀';
+    color: var(--accent);
+}
+
 @media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    .selector { font-size: 8px; padding: 9px 9px; min-width: 104px; }
+    .selector-option { font-size: 8px; padding: 14px 14px; }
+
     .meter {
         margin-top: 6px;
         padding: 5px 6px 6px;

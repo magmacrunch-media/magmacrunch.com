@@ -263,9 +263,14 @@
 
     /** One channel's curve, as a path across the full width. */
     function plotCounts(counts, max, colour, fill) {
-        var w = screen.width, h = screen.height;
+        var h = screen.height;
+        /* Inset by a pixel at each end. Levels 0 and 255 are drawn at the
+           very edge otherwise, and those are exactly the two bins that matter
+           most: a hard black and white picture is two spikes on the borders,
+           half of each clipped, and the screen reads as empty. */
+        var x0 = 1, w = screen.width - 2;
         ctx.beginPath();
-        ctx.moveTo(0, h);
+        ctx.moveTo(x0, h);
         var scale = max > 0 ? 1 / Math.log(1 + max) : 0;
         for (var i = 0; i < 256; i++) {
             /* Log, not linear and not square root. A picture with few levels
@@ -274,9 +279,9 @@
                the picture is a flat line at the axis on either of the other
                two scales. Log shows a bin holding one pixel in a thousand. */
             var v = scale * Math.log(1 + counts[i]);
-            ctx.lineTo(i / 255 * w, h - v * (h - 2) - 1);
+            ctx.lineTo(x0 + i / 255 * w, h - v * (h - 2) - 1);
         }
-        ctx.lineTo(w, h);
+        ctx.lineTo(x0 + w, h);
         if (fill) {
             ctx.fillStyle = colour;
             ctx.fill();
