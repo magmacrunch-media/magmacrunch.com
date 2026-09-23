@@ -195,6 +195,16 @@
             displayCtx.drawImage(workCanvas, 0, 0, displayCanvas.width, displayCanvas.height);
         }
         drawGraticule();
+        refreshMeter();
+    }
+
+    /* The monitor under the display reads the work canvas, which is what
+       export writes, so it measures the picture rather than the scaled view
+       on screen. One call, here, is the whole of what canvas.js knows about
+       js/meter.js; the monitor is absent from a page that does not have it
+       and from the headless suite, and this stays a no-op there. */
+    function refreshMeter() {
+        if (window.Meter && Meter.update) Meter.update(workCanvas);
     }
 
     function showOriginal(on) {
@@ -284,6 +294,7 @@
         display: display,
         showOriginal: showOriginal,
         setGraticule: setGraticule,
+        refreshMeter: refreshMeter,
         getGraticule: getGraticule,
         exportPNG: exportPNG,
         setExporter: setExporter,

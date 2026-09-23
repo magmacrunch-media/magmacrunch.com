@@ -1113,3 +1113,128 @@ footer {
     background: var(--accent);
     box-shadow: 0 0 5px var(--accent);
 }
+
+/* ═══════════════════════════════════════════════
+   THE MONITOR
+
+   A second screen under the display, drawn by js/meter.js: LEVELS is a
+   histogram, SPECTRUM is power against spatial frequency. The canvas has no
+   intrinsic size here on purpose -- CSS gives it one and the script matches
+   its backing store to that at the device pixel ratio, so a grid line is one
+   pixel rather than a blurred one and a resize does not stretch the drawing.
+   ═══════════════════════════════════════════════ */
+.meter {
+    width: 100%;
+    max-width: 560px;
+    flex: none;
+    margin-top: 10px;
+    padding: 6px 8px 8px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.meter-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.meter-power {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 5px 6px;
+    cursor: pointer;
+}
+
+/* The same lamp as the module switches and the GRID toggle: lit is on. */
+.meter-power::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #3a1a0c;
+}
+
+.meter:not(.off) .meter-power {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.meter:not(.off) .meter-power::before {
+    background: var(--accent);
+    box-shadow: 0 0 5px var(--accent);
+}
+
+.meter-modes {
+    display: flex;
+    gap: 4px;
+}
+
+.meter-mode {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.06em;
+    color: var(--dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 5px 6px;
+    cursor: pointer;
+}
+
+.meter-mode.active {
+    color: var(--text);
+    border-color: var(--amber);
+    background: rgba(212, 160, 48, 0.12);
+}
+
+.meter-readout {
+    margin-left: auto;
+    font-family: 'VT323', monospace;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--amber);
+    text-shadow: 0 0 6px rgba(212, 160, 48, 0.45);
+    white-space: nowrap;
+}
+
+.meter-screen {
+    display: block;
+    width: 100%;
+    height: 74px;
+    background: #0d0a08;
+    border: 1px solid var(--border);
+}
+
+/* Switched off, the panel stays as a dark faceplate rather than vanishing:
+   a missing instrument reads as a layout bug, an unlit one reads as off. */
+.meter.off .meter-screen {
+    height: 0;
+    border-width: 0;
+}
+
+.meter.off .meter-mode {
+    opacity: 0.4;
+}
+
+/* The phone sizes for the monitor, repeated here rather than left in the
+   phone block above: these rules and the ones above them have equal
+   specificity, so the later wins, and the monitor's own block is at the end
+   of this file. In the phone block the shorter screen simply lost. */
+@media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    .meter {
+        margin-top: 6px;
+        padding: 5px 6px 6px;
+    }
+
+    .meter-screen { height: 52px; }
+    .meter-readout { font-size: 12px; }
+}
