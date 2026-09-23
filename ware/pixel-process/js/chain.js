@@ -64,6 +64,34 @@
         effects.splice(toIndex, 0, item);
     }
 
+    /**
+     * Reorder the chain to match a list of ids.
+     *
+     * The drag moves DOM nodes about while the pointer is down and tells the
+     * chain the answer once, on release, rather than shuffling the model on
+     * every pointer move. Any effect whose id is missing from `ids` keeps its
+     * place at the end, in its existing order, so a list that has gone stale
+     * cannot silently drop an effect out of the chain.
+     */
+    function setOrder(ids) {
+        var byId = {};
+        for (var i = 0; i < effects.length; i++) byId[effects[i].id] = effects[i];
+
+        var next = [];
+        var taken = {};
+        for (var j = 0; j < ids.length; j++) {
+            var effect = byId[ids[j]];
+            if (effect && !taken[ids[j]]) {
+                next.push(effect);
+                taken[ids[j]] = true;
+            }
+        }
+        for (var k = 0; k < effects.length; k++) {
+            if (!taken[effects[k].id]) next.push(effects[k]);
+        }
+        effects = next;
+    }
+
     function getEffect(id) {
         for (var i = 0; i < effects.length; i++) {
             if (effects[i].id === id) return effects[i];
@@ -320,6 +348,7 @@
         removeEffect: removeEffect,
         toggleEffect: toggleEffect,
         moveEffect: moveEffect,
+        setOrder: setOrder,
         getEffect: getEffect,
         getEffects: getEffects,
         clearEffects: clearEffects,

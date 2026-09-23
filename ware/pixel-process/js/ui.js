@@ -4,7 +4,6 @@
     'use strict';
 
     var chainList = document.getElementById('chainList');
-    var dragSrcIndex = null;
 
     /* Which card is open on a phone.
 
@@ -268,6 +267,26 @@
         var actions = document.createElement('div');
         actions.className = 'effect-actions';
 
+        /* Move buttons beside the switch, not only a drag.
+           A drag is a gesture nobody can reach by keyboard, and it is the
+           hardest thing in this panel to do accurately with a thumb. These
+           two are the plain way to say the same thing, and they are what a
+           screen reader reads. Their disabled state at the ends of the chain
+           is the only indication of where a module sits, so it matters. */
+        var up = document.createElement('button');
+        up.className = 'effect-move';
+        up.dataset.action = 'up';
+        up.textContent = '▲';
+        up.title = 'Move earlier in the chain';
+        up.setAttribute('aria-label', 'Move ' + effect.name + ' earlier in the chain');
+
+        var down = document.createElement('button');
+        down.className = 'effect-move';
+        down.dataset.action = 'down';
+        down.textContent = '▼';
+        down.title = 'Move later in the chain';
+        down.setAttribute('aria-label', 'Move ' + effect.name + ' later in the chain');
+
         var toggle = document.createElement('button');
         toggle.className = 'effect-toggle' + (effect.enabled ? ' on' : '');
         toggle.textContent = effect.enabled ? 'ON' : 'OFF';
@@ -278,6 +297,8 @@
         remove.textContent = '×';
         remove.dataset.action = 'remove';
 
+        actions.appendChild(up);
+        actions.appendChild(down);
         actions.appendChild(toggle);
         actions.appendChild(remove);
         header.appendChild(name);
@@ -389,12 +410,9 @@
         card.appendChild(header);
         card.appendChild(body);
 
-        // Drag and drop — only header is the drag handle
-        header.draggable = true;
-        header.addEventListener('dragstart', onDragStart);
-        header.addEventListener('dragend', onDragEnd);
-        card.addEventListener('dragover', onDragOver);
-        card.addEventListener('drop', onDrop);
+        // The header is the drag handle, by pointer rather than by HTML5 drag
+        // and drop: see startDrag.
+        header.addEventListener('pointerdown', onHeaderPointerDown);
 
         return card;
     }
@@ -463,53 +481,96 @@
         }
     }
 
-    // ── Drag & Drop ──
+    /* ── Dragging a module to a new place in the chain ──
+     *
+     * By pointer events, not by HTML5 drag and drop. `draggable` never fires
+     * from a finger in WKWebView, so on the iOS build and on an iPad in the
+     * three-panel layout the chain simply could not be reordered at all, and
+     * the order of a signal chain is not cosmetic: the same four effects in a
+     * different order are a different picture. Pointer events are one code
+     * path for mouse, pen and touch.
+     *
+     * The card is moved in the DOM as the pointer passes each neighbour's
+     * midpoint, and the chain is told the resulting order once, on release
+     * (Chain.setOrder). Shuffling the model on every move would re-render the
+     * panel under the pointer several times a second.
+     *
+     * A drag only begins after the pointer has travelled a few pixels, so a
+     * tap on the header still selects the card rather than nudging it, and
+     * `touch-action: none` on the header is what stops the panel scrolling
+     * away underneath a drag that has begun.
+     */
+    var drag = null;
 
-    function onDragStart(e) {
+    function onHeaderPointerDown(e) {
+        // The buttons live in the header; a press on one is not a drag.
+        if (e.button !== 0 || (e.target.closest && e.target.closest('button'))) return;
         var header = e.target.closest('.effect-header');
         var card = header && header.closest('.effect-card');
-        if (!card) return;
-        dragSrcIndex = getCardIndex(card);
-        card.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', card.dataset.id);
+        if (!card || chainList.querySelectorAll('.effect-card').length < 2) return;
+
+        drag = { card: card, header: header, startY: e.clientY, moved: false, pointerId: e.pointerId };
+        header.addEventListener('pointermove', onHeaderPointerMove);
+        header.addEventListener('pointerup', onHeaderPointerUp);
+        header.addEventListener('pointercancel', onHeaderPointerUp);
+        // Listeners first, and the capture is allowed to fail: it throws for a
+        // pointer the browser does not consider active, and a drag that works
+        // only while the pointer stays exactly over the header is worse than
+        // one without capture.
+        try { header.setPointerCapture(e.pointerId); } catch (err) { /* no capture, still draggable */ }
     }
 
-    function onDragEnd(e) {
-        var header = e.target.closest('.effect-header');
-        var card = header && header.closest('.effect-card');
-        if (card) card.classList.remove('dragging');
-        // Remove all drag-over highlights
+    function onHeaderPointerMove(e) {
+        if (!drag) return;
+        if (!drag.moved) {
+            if (Math.abs(e.clientY - drag.startY) < 6) return;
+            drag.moved = true;
+            drag.card.classList.add('dragging');
+        }
+        e.preventDefault();
+
+        /* Where the card belongs, decided once from one snapshot of the
+           layout: the first card whose middle is below the pointer, and the
+           end of the list if there is none.
+           Swapping with a neighbour and then looking again does not work,
+           however carefully it is bounded. Each swap moves every other card,
+           so the next look finds the pointer on the far side of a midpoint
+           and swaps back: dragging upwards oscillated and settled exactly
+           where it started, while dragging down happened to work, which is
+           the sort of asymmetry that reads as "sometimes it does not drag". */
         var cards = chainList.querySelectorAll('.effect-card');
+        var before = null;
         for (var i = 0; i < cards.length; i++) {
-            cards[i].classList.remove('drag-over');
+            if (cards[i] === drag.card) continue;
+            var box = cards[i].getBoundingClientRect();
+            if (e.clientY < box.top + box.height / 2) { before = cards[i]; break; }
         }
-        dragSrcIndex = null;
-    }
 
-    function onDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        var card = e.target.closest('.effect-card');
-        if (card) {
-            // Remove highlight from all, add to this one
-            var cards = chainList.querySelectorAll('.effect-card');
-            for (var i = 0; i < cards.length; i++) cards[i].classList.remove('drag-over');
-            card.classList.add('drag-over');
+        if (before !== drag.card.nextSibling && before !== drag.card) {
+            chainList.insertBefore(drag.card, before);
         }
     }
 
-    function onDrop(e) {
-        e.preventDefault();
-        var card = e.target.closest('.effect-card');
-        if (!card || dragSrcIndex === null) return;
-        var toIndex = getCardIndex(card);
-        if (dragSrcIndex !== toIndex) {
-            Chain.moveEffect(dragSrcIndex, toIndex);
-            renderChain();
-            bindEvents();
-            Chain.render();
+    function onHeaderPointerUp(e) {
+        if (!drag) return;
+        var moved = drag.moved;
+        var card = drag.card;
+        var header = drag.header;
+        header.removeEventListener('pointermove', onHeaderPointerMove);
+        header.removeEventListener('pointerup', onHeaderPointerUp);
+        header.removeEventListener('pointercancel', onHeaderPointerUp);
+        if (header.hasPointerCapture && header.hasPointerCapture(e.pointerId)) {
+            header.releasePointerCapture(e.pointerId);
         }
+        card.classList.remove('dragging');
+        drag = null;
+        if (!moved) return;
+
+        var cards = chainList.querySelectorAll('.effect-card');
+        var ids = [];
+        for (var i = 0; i < cards.length; i++) ids.push(parseInt(cards[i].dataset.id, 10));
+        Chain.setOrder(ids);
+        rerender();
     }
 
     function getCardIndex(card) {
@@ -537,6 +598,26 @@
                     Chain.render();
                 };
             })(id);
+
+            // Move buttons. The index is read at click time rather than
+            // captured here, because every other control re-renders the panel
+            // and a captured index would be stale the moment anything moved.
+            var moveButtons = card.querySelectorAll('[data-action="up"], [data-action="down"]');
+            for (var m = 0; m < moveButtons.length; m++) {
+                var at = i;
+                var isUp = moveButtons[m].dataset.action === 'up';
+                moveButtons[m].disabled = isUp ? at === 0 : at === cards.length - 1;
+                moveButtons[m].onclick = (function(id, up) {
+                    return function() {
+                        var effects = Chain.getEffects();
+                        var from = -1;
+                        for (var k = 0; k < effects.length; k++) if (effects[k].id === id) from = k;
+                        if (from === -1) return;
+                        Chain.moveEffect(from, from + (up ? -1 : 1));
+                        rerender();
+                    };
+                })(id, isUp);
+            }
 
             card.querySelector('[data-action="remove"]').onclick = (function(id) {
                 return function() {

@@ -483,20 +483,50 @@ body {
 }
 
 .effect-card.dragging {
-    opacity: 0.5;
+    opacity: 0.75;
     border-left-color: var(--amber);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
 }
 
-.effect-card.drag-over {
-    border-left-color: var(--amber);
-    box-shadow: 0 0 8px rgba(212,160,48,0.2);
-}
 
 .effect-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 6px;
+    cursor: grab;
+    /* The header is the drag handle, and js/ui.js drags it with pointer
+       events. Without this the browser claims a vertical drag for scrolling
+       the panel and the module never moves on a touch screen. */
+    touch-action: none;
+}
+
+.effect-card.dragging .effect-header {
+    cursor: grabbing;
+}
+
+/* Move earlier, move later. Beside the switch rather than hidden behind a
+   drag: this is the path that works with a keyboard and with a thumb, and
+   the disabled state at the ends of the chain is the only thing that says
+   where in the chain a module sits. */
+.effect-move {
+    font-size: 7px;
+    line-height: 1;
+    color: var(--dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 4px 5px;
+    cursor: pointer;
+}
+
+.effect-move:hover:not(:disabled) {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.effect-move:disabled {
+    opacity: 0.3;
+    cursor: default;
 }
 
 .effect-name {
@@ -1320,6 +1350,8 @@ footer {
 }
 
 @media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    .effect-move { padding: 8px 9px; font-size: 8px; }
+
     .selector { font-size: 8px; padding: 9px 9px; min-width: 104px; }
     .selector-option { font-size: 8px; padding: 14px 14px; }
 
