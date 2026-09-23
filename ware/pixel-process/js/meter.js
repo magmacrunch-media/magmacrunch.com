@@ -287,7 +287,10 @@
             ctx.fill();
         } else {
             ctx.strokeStyle = colour;
-            ctx.lineWidth = 1;
+            // With the device ratio, not one pixel: a hairline on a 3x phone
+            // screen is a third of the width it is on a desktop, and the
+            // histogram of a picture with few levels is nothing but hairlines.
+            ctx.lineWidth = Math.max(1, Math.round(window.devicePixelRatio || 1));
             ctx.stroke();
         }
     }
@@ -300,7 +303,7 @@
             if (hist.g[i] > max) max = hist.g[i];
             if (hist.b[i] > max) max = hist.b[i];
         }
-        plotCounts(hist.lum, max, 'rgba(255, 140, 66, 0.28)', true);
+        plotCounts(hist.lum, max, 'rgba(255, 140, 66, 0.45)', true);
         plotCounts(hist.r, max, 'rgba(255, 70, 70, 0.85)', false);
         plotCounts(hist.g, max, 'rgba(70, 230, 120, 0.85)', false);
         plotCounts(hist.b, max, 'rgba(90, 130, 255, 0.85)', false);
