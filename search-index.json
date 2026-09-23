@@ -228,7 +228,7 @@
     "c": "page",
     "u": "/ware/utilities/index.html",
     "d": "browser-based tools for art, media & image processing",
-    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ PIXEL//PROCESS circuit-bent image processor · channel shift, pixel sort, FFT filter ▶ SPRITE//FORGE game sprite editor · animation, onion skin, PNG sheet export ▶"
+    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ CRUNCH//SCOPE an image signal chain you play like an instrument · pixel sort, FFT filter, feedback ▶ SPRITE//FORGE game sprite editor · animation, onion skin, PNG sheet export ▶"
   },
   {
     "t": "developer tools",
@@ -2079,11 +2079,11 @@
     "b": "media//search — magmacrunch media MEDIA//SEARCH 0 RESULTS SOURCES TYPE ALL ▾ ALL PHOTOS ILLUSTRATIONS VIDEO AUDIO LICENSE ALL ▾ ALL PUBLIC DOMAIN CC0 NO ATTRIBUTION ORIENTATION ALL ▾ ALL HORIZONTAL VERTICAL SQUARE CLEAR GO ◆ SEARCH ACROSS FREE MEDIA SOURCES Pexels, Pixabay, Openverse, Met Museum, Smithsonian, Internet Archive SEARCHING... LOAD MORE ← → × OPEN IN TAB DOWNLOAD COPY URL"
   },
   {
-    "t": "pixel process",
+    "t": "crunchscope",
     "c": "tool",
     "u": "/ware/pixel-process/",
-    "d": "circuit-bent image processor · channel shift, pixel sort, FFT filter",
-    "b": "pixel process — magmacrunch media This tool is best experienced on a desktop or laptop. Please visit on a wider screen for the full workspace. PIXEL//PROCESS 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT ▾ WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR COLOR A COLOR B WORK SIZE W H PRESETS ▾ 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG DROP IMAGE drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image + ADD EFFEC..."
+    "d": "an image signal chain you play like an instrument · pixel sort, FFT filter, feedback",
+    "b": "crunchscope — magmacrunch media a signal chain for images ENTER or press any key CRUNCH//SCOPE 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT ▾ WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR SEED REROLL COLOR A COLOR B WORK SIZE W H PRESETS ▾ 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG GRID DROP IMAGE MON LEVELS SPECTRUM drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image CHAIN SEED one number, a whole chain ..."
   },
   {
     "t": "sprite forge",
