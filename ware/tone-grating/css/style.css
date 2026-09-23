@@ -1,0 +1,398 @@
+/* TONE//GRATING
+ *
+ * Loaded after ware/shell/app-shell.css, which defines the chrome and consumes
+ * the six palette variables below. Overrides go on :root and not on a body
+ * class, per ware/shell/README.md: a body class does not reliably beat a
+ * :root fallback.
+ *
+ * The colour scheme carries the argument. Amber is the time domain, violet is
+ * space, and cyan is reserved for the one quantity that belongs to neither:
+ * J_m(beta), the carrier, the zero order, the shared slider. Nothing else on
+ * the page is allowed to be cyan.
+ */
+
+/* ── PALETTE — cold bench instrument ── */
+:root {
+    --bg:       #06080c;
+    --surface:  #0e1219;
+    --panel:    #11161f;
+    --border:   #232c3a;
+    --text:     #dfe9f5;
+    --dim:      #6b7a8f;
+    --accent:   #35e0d0;
+
+    --tone:     #ffc74d;
+    --space:    #9b86ff;
+    --grid:     #1a2230;
+    --ghost:    #223046;
+
+    --panel-w:  262px;
+    --nums-w:   272px;
+
+    /* ── SHELL OVERRIDES ── */
+    --scanline:      rgba(90,140,180,0.035);
+    --title-color:   var(--accent);
+    --glitch-tint-1: rgba(53,224,208,0.22);
+    --glitch-tint-2: rgba(155,134,255,0.22);
+    --chrome-tint-1: rgba(53,224,208,0.3);
+    --chrome-tint-2: rgba(155,134,255,0.3);
+    --stat-font:     'Courier Prime', monospace;
+    --stat-size:     13px;
+    --backlink-glow: rgba(53,224,208,0.3);
+    --backlink-hover-border: var(--accent);
+}
+
+body { user-select: none; }
+
+/* The right-hand stat lights only on a zero of J0. It is the one piece of
+   state worth seeing from across the room. */
+.sys-stat.lit {
+    color: var(--accent);
+    border-color: var(--accent);
+    text-shadow: 0 0 8px rgba(53,224,208,0.45);
+}
+
+/* ── PANELS ───────────────────────────────────────────────────────────── */
+
+.panel {
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 14px 14px 20px;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.panel.controls { width: var(--panel-w); }
+
+.panel.numbers {
+    width: var(--nums-w);
+    border-right: none;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--dim);
+    margin-bottom: 6px;
+}
+
+.panel-label.shared { color: var(--accent); }
+.panel-label.tone   { color: var(--tone); }
+.panel-label.space  { color: var(--space); }
+
+.panel-hint {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--dim);
+    margin-bottom: 12px;
+}
+
+.panel-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0 14px;
+}
+
+.panel-note {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--dim);
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+/* ── CONTROLS ─────────────────────────────────────────────────────────── */
+
+.ctl {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 5px;
+}
+
+.ctl-name {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    line-height: 1.5;
+}
+
+.ctl-val {
+    font-family: 'Courier Prime', monospace;
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+}
+
+.ctl.big .ctl-name { color: var(--accent); font-size: 8px; }
+.ctl.big .ctl-val  { color: var(--accent); font-size: 17px; }
+
+input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    outline: none;
+    margin-bottom: 14px;
+    cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 11px;
+    height: 15px;
+    background: var(--text);
+    border: none;
+    cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 11px;
+    height: 15px;
+    background: var(--text);
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+/* The shared slider is the only cyan control, and it is thicker than the rest
+   because it is the only one that moves both panels. */
+.shared-range { height: 5px; margin-bottom: 10px; }
+.shared-range::-webkit-slider-thumb { background: var(--accent); width: 13px; height: 19px; }
+.shared-range::-moz-range-thumb     { background: var(--accent); width: 13px; height: 19px; }
+
+.preset-row { display: flex; gap: 5px; }
+
+.preset {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--dim);
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    padding: 5px 2px;
+    cursor: pointer;
+    transition: color 0.12s, border-color 0.12s;
+}
+
+.preset:hover { color: var(--accent); border-color: var(--accent); }
+
+.action-btn {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    padding: 10px 6px;
+    margin: 6px 0 10px;
+    cursor: pointer;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+
+.action-btn:hover { border-color: var(--tone); color: var(--tone); }
+
+.action-btn.on {
+    border-color: var(--tone);
+    color: var(--bg);
+    background: var(--tone);
+}
+
+.derived {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    padding: 3px 0;
+}
+
+.derived span:last-child { color: var(--text); }
+.derived.check span:last-child { color: var(--accent); }
+
+/* ── STAGE ────────────────────────────────────────────────────────────── */
+
+.stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    background: var(--bg);
+}
+
+.dom {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 12px 18px 10px;
+}
+
+.dom-time  { border-bottom: 1px solid var(--border); }
+
+.dom-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.dom-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+}
+
+.dom-time  .dom-title { color: var(--tone); }
+.dom-space .dom-title { color: var(--space); }
+
+.dom-rule {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: var(--dim);
+}
+
+.strip {
+    width: 100%;
+    height: 62px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: block;
+}
+
+.spectrum {
+    width: 100%;
+    flex: 1;
+    min-height: 90px;
+    display: block;
+    margin-top: 8px;
+}
+
+.dom-foot {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 4px;
+}
+
+/* ── THE TABLE ────────────────────────────────────────────────────────── */
+
+.table-wrap {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+
+/* Five columns into a fixed-width panel. The table is the argument, so it
+   has to fit without a horizontal scrollbar: a reader who has to scroll to
+   see the angle beside the frequency is being shown two tables, not one. */
+table.orders {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+}
+
+table.orders th {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    color: var(--dim);
+    font-weight: normal;
+    text-align: right;
+    padding: 5px 4px;
+    border-bottom: 1px solid var(--border);
+}
+
+table.orders th.c-m  { width: 12%; }
+table.orders th.c-j  { width: 26%; }
+table.orders th.c-sq { width: 22%; }
+table.orders th.c-f  { width: 20%; }
+table.orders th.c-t  { width: 20%; }
+
+table.orders th.j { color: var(--accent); }
+
+table.orders td {
+    text-align: right;
+    padding: 3px 4px;
+    color: var(--dim);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Only the J column is cyan, in the table as everywhere else: it is the column
+   the two outer ones are both derived from. */
+table.orders td.j { color: var(--accent); }
+table.orders td.f { color: var(--tone); }
+table.orders td.t { color: var(--space); }
+table.orders td.m { color: var(--text); }
+
+table.orders tr.carrier { background: rgba(53,224,208,0.07); }
+
+/* A folded sideband and an evanescent order are both "the axis ran out", so
+   they get the same treatment rather than two different warnings. */
+table.orders td.flag {
+    opacity: 0.45;
+    font-style: italic;
+}
+
+/* ── NARROW ────────────────────────────────────────────────────────
+ * The shell pins html and body to 100% with overflow hidden, which is right
+ * for a full-bleed workspace and wrong the moment the three columns cannot sit
+ * side by side. Without this the stage and the table are cut off the right
+ * edge, under a notice saying to come back on a wider screen: true, but a
+ * clipped page reads as broken rather than as deliberate.
+ *
+ * So below the shell's own 769px breakpoint the columns stack and the document
+ * scrolls. This is not a phone design. The two spectra are meant to be compared
+ * at a glance and stacking them costs exactly that, which is what the notice is
+ * for. It is here so the page degrades to usable instead of to broken.
+ */
+@media (max-width: 768px) {
+    html, body { height: auto; overflow: auto; }
+
+    .workspace { flex-direction: column; }
+
+    .panel {
+        overflow-y: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    /* Both selectors spelled out. A media query adds no specificity, so a bare
+       `.panel { width: auto }` here loses to `.panel.controls { width: ... }`
+       above it and the column keeps its desktop width with dead space beside
+       it. */
+    .panel.controls,
+    .panel.numbers { width: auto; }
+
+    .panel.numbers {
+        border-left: none;
+        border-bottom: none;
+    }
+
+    /* The table scrolls inside itself on a wide screen because the panel is a
+       fixed-height column. Stacked it has no height to be a fraction of, so it
+       gets an explicit one rather than running to a hundred rows. */
+    .table-wrap { max-height: 320px; }
+
+    .dom { padding: 14px 16px 12px; }
+    .spectrum { height: 200px; flex: none; }
+}

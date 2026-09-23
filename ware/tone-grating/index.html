@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tone grating — magmacrunch media</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
+    <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
+    <link rel="stylesheet" href="css/style.css?v=0ac95d3f">
+</head>
+<body>
+    <div class="mobile-notice">
+        This instrument wants two panels side by side.<br>
+        Please visit on a wider screen.
+    </div>
+
+    <header>
+        <div class="header-left">
+            <h1 class="glitch" data-text="TONE//GRATING">TONE//GRATING</h1>
+        </div>
+        <div class="header-right">
+            <span class="sys-stat" id="betaStat">&beta; 2.405</span>
+            <span class="sys-stat" id="stateStat">CARRIER NULL</span>
+        </div>
+    </header>
+
+    <nav class="tool-nav">
+        <a href="../utilities/" class="back-link chip"><span class="chrome" data-text="← UTILITIES">← creative utilities</span></a>
+    </nav>
+
+    <div class="workspace">
+
+        <!-- LEFT: the controls. Beta is set apart from the rest because it is
+             the only one that reaches both panels; everything below the first
+             divider belongs to one domain or the other. -->
+        <aside class="panel controls">
+
+            <div class="panel-label shared">SHARED</div>
+            <p class="panel-hint">one number, both panels</p>
+
+            <label class="ctl big" for="beta">
+                <span class="ctl-name">MODULATION INDEX &beta;</span>
+                <span class="ctl-val" id="betaOut">2.405</span>
+            </label>
+            <input type="range" id="beta" class="shared-range" min="0" max="12" step="0.001" value="2.405">
+
+            <div class="preset-row">
+                <button class="preset" data-beta="0" title="No modulation: a bare sine, and a flat mirror">0</button>
+                <button class="preset" data-beta="2.404826" title="First zero of J0: the carrier and the zero order both vanish">2.405</button>
+                <button class="preset" data-beta="5.520078" title="Second zero of J0">5.520</button>
+                <button class="preset" data-beta="8.653728" title="Third zero of J0">8.654</button>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label tone">TIME DOMAIN</div>
+
+            <label class="ctl" for="fc">
+                <span class="ctl-name">CARRIER f<sub>c</sub></span>
+                <span class="ctl-val" id="fcOut">440 Hz</span>
+            </label>
+            <input type="range" id="fc" min="110" max="880" step="1" value="440">
+
+            <label class="ctl" for="ratio">
+                <span class="ctl-name">RATIO f<sub>m</sub>/f<sub>c</sub></span>
+                <span class="ctl-val" id="ratioOut">0.25</span>
+            </label>
+            <input type="range" id="ratio" min="0.05" max="4" step="0.05" value="0.25">
+
+            <div class="derived">
+                <span>modulator f<sub>m</sub></span><span id="fmOut">110 Hz</span>
+            </div>
+
+            <button class="action-btn" id="play" type="button">PLAY TONE</button>
+            <p class="panel-hint">at &beta; = 2.405 the pitch you started on is the one frequency missing</p>
+
+            <div class="panel-divider"></div>
+
+            <div class="panel-label space">SPACE DOMAIN</div>
+
+            <label class="ctl" for="d">
+                <span class="ctl-name">GROOVE SPACING d</span>
+                <span class="ctl-val" id="dOut">2.00 &micro;m</span>
+            </label>
+            <input type="range" id="d" min="0.6" max="10" step="0.05" value="2">
+
+            <label class="ctl" for="lam">
+                <span class="ctl-name">WAVELENGTH &lambda;</span>
+                <span class="ctl-val" id="lamOut">500 nm</span>
+            </label>
+            <input type="range" id="lam" min="200" max="900" step="1" value="500">
+
+            <div class="derived">
+                <span>groove depth (p&ndash;v)</span><span id="depthOut">191.4 nm</span>
+            </div>
+            <div class="derived">
+                <span>highest order</span><span id="maxOrderOut">&plusmn;4</span>
+            </div>
+
+        </aside>
+
+        <!-- CENTRE: the two panels. Same bar heights, different placement rule.
+             Each has its source above its spectrum. -->
+        <main class="stage">
+
+            <section class="dom dom-time">
+                <div class="dom-head">
+                    <span class="dom-title">TIME</span>
+                    <span class="dom-rule">sidebands at f<sub>c</sub> + m&middot;f<sub>m</sub></span>
+                </div>
+                <canvas id="waveCanvas" class="strip"></canvas>
+                <canvas id="toneCanvas" class="spectrum"></canvas>
+                <p class="dom-foot">a carrier phase-modulated by &beta;&middot;sin(2&pi;f<sub>m</sub>t)</p>
+            </section>
+
+            <section class="dom dom-space">
+                <div class="dom-head">
+                    <span class="dom-title">SPACE</span>
+                    <span class="dom-rule">orders at sin&thinsp;&theta; = m&lambda;/d</span>
+                </div>
+                <canvas id="grooveCanvas" class="strip"></canvas>
+                <canvas id="orderCanvas" class="spectrum"></canvas>
+                <p class="dom-foot">a wavefront phase-modulated by &beta;&middot;sin(2&pi;x/d)</p>
+            </section>
+
+        </main>
+
+        <!-- RIGHT: the column both panels read. This is the argument. -->
+        <aside class="panel numbers">
+
+            <div class="panel-label shared">J<sub>m</sub>(&beta;)</div>
+            <p class="panel-hint">the middle column is computed once and drawn twice</p>
+
+            <div class="table-wrap">
+                <table class="orders">
+                    <thead>
+                        <tr>
+                            <th class="c-m">m</th>
+                            <th class="c-j j">J<sub>m</sub></th>
+                            <th class="c-sq">J<sub>m</sub><sup>2</sup></th>
+                            <th class="c-f">Hz</th>
+                            <th class="c-t">&theta;</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rows"></tbody>
+                </table>
+            </div>
+
+            <div class="panel-divider"></div>
+
+            <div class="derived check">
+                <span>&Sigma; J<sub>m</sub><sup>2</sup></span><span id="powerOut">1.0000</span>
+            </div>
+            <div class="derived">
+                <span>folded below 0 Hz</span><span id="foldOut">0</span>
+            </div>
+            <div class="derived">
+                <span>evanescent orders</span><span id="evanOut">0</span>
+            </div>
+
+            <p class="panel-note">
+                Both axes run out. A sideband pushed below zero folds back onto
+                its own magnitude; an order past sin&thinsp;&theta; = 1 stops
+                propagating and is simply not there. That is the one place the
+                two domains stop agreeing, and it is where &lambda; enters: only
+                the optical axis knows what colour the light is.
+            </p>
+
+        </aside>
+
+    </div>
+
+    <footer>
+        <span class="footer-text">TONE//GRATING v0.1 &ndash; <span>MAGMACRUNCH MEDIA</span></span>
+    </footer>
+
+    <script src="js/bessel.js?v=806fd60a"></script>
+    <script src="js/audio.js?v=f377b5da"></script>
+    <script src="js/draw.js?v=3baabb43"></script>
+    <script src="js/app.js?v=4a4431fe"></script>
+</body>
+</html>
