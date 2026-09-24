@@ -143,38 +143,76 @@
     var graticuleOn = true;
     try { graticuleOn = window.localStorage.getItem(GRATICULE_KEY) !== '0'; } catch (e) {}
 
+    /* The graticule, in SQUARE divisions.
+     *
+     * It used to be ten divisions each way, which on anything but a square
+     * picture drew stretched rectangles: at 800x300 a division was 80 across
+     * and 30 down, so a feature that measured two divisions horizontally and
+     * two vertically was not the same size at all. A scope's divisions are
+     * square, and that is the whole use of them -- you read distances off the
+     * screen by counting cells, and cells that are not square cannot be
+     * counted against each other.
+     *
+     * So one division is a fixed number of pixels, ten across the SHORTER
+     * side, and the longer side gets however many fit. The grid is drawn
+     * outward from the centre, as a scope's is: the centre lines are the axes
+     * and everything is measured from them, which also puts the partial cells
+     * at the edges where they belong rather than leaving the axes off centre.
+     */
+    var DIVISIONS = 10;   // across the shorter side
+    var SUBDIVS = 5;      // ticks per division on the centre axes
+
     function drawGraticule() {
         if (!graticuleOn) return;
         var W = displayCanvas.width, H = displayCanvas.height;
         var g = displayCtx;
-        var i, x, y;
+        var div = Math.min(W, H) / DIVISIONS;
+        if (div < 4) return;   // too small to read; a grey wash would be worse
+
+        var cx = Math.round(W / 2) + 0.5, cy = Math.round(H / 2) + 0.5;
+        var k, at;
         g.save();
 
         g.strokeStyle = 'rgba(255, 140, 66, 0.16)';
         g.lineWidth = 1;
         g.setLineDash([2, 3]);
         g.beginPath();
-        for (i = 1; i < 10; i++) {
-            if (i === 5) continue;
-            x = Math.round(W * i / 10) + 0.5;
-            y = Math.round(H * i / 10) + 0.5;
-            g.moveTo(x, 0); g.lineTo(x, H);
-            g.moveTo(0, y); g.lineTo(W, y);
+        for (k = 1; k * div <= W / 2; k++) {
+            at = Math.round(cx + k * div) + 0.5;
+            if (at < W) { g.moveTo(at, 0); g.lineTo(at, H); }
+            at = Math.round(cx - k * div) + 0.5;
+            if (at > 0) { g.moveTo(at, 0); g.lineTo(at, H); }
+        }
+        for (k = 1; k * div <= H / 2; k++) {
+            at = Math.round(cy + k * div) + 0.5;
+            if (at < H) { g.moveTo(0, at); g.lineTo(W, at); }
+            at = Math.round(cy - k * div) + 0.5;
+            if (at > 0) { g.moveTo(0, at); g.lineTo(W, at); }
         }
         g.stroke();
 
         g.setLineDash([]);
         g.strokeStyle = 'rgba(255, 140, 66, 0.3)';
         g.beginPath();
-        var cx = Math.round(W / 2) + 0.5, cy = Math.round(H / 2) + 0.5;
         g.moveTo(cx, 0); g.lineTo(cx, H);
         g.moveTo(0, cy); g.lineTo(W, cy);
-        for (i = 1; i < 50; i++) {
-            var len = i % 5 === 0 ? 5 : 3;
-            x = Math.round(W * i / 50) + 0.5;
-            y = Math.round(H * i / 50) + 0.5;
-            g.moveTo(x, cy - len); g.lineTo(x, cy + len);
-            g.moveTo(cx - len, y); g.lineTo(cx + len, y);
+
+        // Ticks along the axes, at a fifth of a division, longer on the
+        // division itself. Same spacing both ways, for the same reason.
+        var step = div / SUBDIVS;
+        for (k = 1; k * step <= W / 2; k++) {
+            var lenX = k % SUBDIVS === 0 ? 5 : 3;
+            g.moveTo(Math.round(cx + k * step) + 0.5, cy - lenX);
+            g.lineTo(Math.round(cx + k * step) + 0.5, cy + lenX);
+            g.moveTo(Math.round(cx - k * step) + 0.5, cy - lenX);
+            g.lineTo(Math.round(cx - k * step) + 0.5, cy + lenX);
+        }
+        for (k = 1; k * step <= H / 2; k++) {
+            var lenY = k % SUBDIVS === 0 ? 5 : 3;
+            g.moveTo(cx - lenY, Math.round(cy + k * step) + 0.5);
+            g.lineTo(cx + lenY, Math.round(cy + k * step) + 0.5);
+            g.moveTo(cx - lenY, Math.round(cy - k * step) + 0.5);
+            g.lineTo(cx + lenY, Math.round(cy - k * step) + 0.5);
         }
         g.stroke();
         g.restore();
