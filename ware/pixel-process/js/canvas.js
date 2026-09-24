@@ -24,10 +24,19 @@
         workCanvas.width = w;
         workCanvas.height = h;
 
-        // Size display canvas to fit container while preserving aspect ratio
+        /* Size the display canvas to fit its container, preserving aspect.
+
+           clientWidth INCLUDES padding, and the wrap is the chassis around
+           the screen, so its padding has to come off or the picture is sized
+           into the frame and overflows it. The 8 on top is the old hand-tuned
+           margin, reduced from 32 because the chassis now provides the
+           breathing room that number was standing in for. */
         var wrap = document.getElementById('canvasWrap');
-        var wrapW = wrap.clientWidth - 32;
-        var wrapH = wrap.clientHeight - 32;
+        var pad = window.getComputedStyle(wrap);
+        var padX = (parseFloat(pad.paddingLeft) || 0) + (parseFloat(pad.paddingRight) || 0);
+        var padY = (parseFloat(pad.paddingTop) || 0) + (parseFloat(pad.paddingBottom) || 0);
+        var wrapW = wrap.clientWidth - padX - 8;
+        var wrapH = wrap.clientHeight - padY - 8;
         var scale = Math.min(wrapW / w, wrapH / h, 4); // cap at 4x scale
         scale = Math.max(scale, 0.5);
 

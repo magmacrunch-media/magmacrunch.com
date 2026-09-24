@@ -287,6 +287,20 @@
     }
 
     /** One channel's curve, as a path across the full width. */
+    /**
+     * One distribution: the luma as a filled area, a channel as a curve.
+     *
+     * The curve LIFTS at an empty bin rather than running along the bottom of
+     * the screen to the next one. A joined-up line spends most of its length
+     * at zero on any picture that does not use every level, and with three
+     * channels drawn in turn the last one painted owned that line: on colour
+     * bars it read as a blue border around the monitor rather than as a
+     * measurement. A bin with nothing in it now draws nothing.
+     *
+     * A lone bin between two empty ones would be a zero-length segment and
+     * therefore invisible, so it is drawn as a spike from the axis. Those are
+     * exactly the bins worth seeing: a posterised picture is nothing else.
+     */
     function plotCounts(counts, max, colour, fill) {
         var h = screen.height;
         /* Inset by a pixel at each end. Levels 0 and 255 are drawn at the
@@ -294,30 +308,53 @@
            most: a hard black and white picture is two spikes on the borders,
            half of each clipped, and the screen reads as empty. */
         var x0 = 1, w = screen.width - 2;
-        ctx.beginPath();
-        ctx.moveTo(x0, h);
         var scale = max > 0 ? 1 / Math.log(1 + max) : 0;
-        for (var i = 0; i < 256; i++) {
-            /* Log, not linear and not square root. A picture with few levels
-               in it -- colour bars, a posterised chain -- puts nearly every
-               pixel in a handful of bins, and against that peak the rest of
-               the picture is a flat line at the axis on either of the other
-               two scales. Log shows a bin holding one pixel in a thousand. */
-            var v = scale * Math.log(1 + counts[i]);
-            ctx.lineTo(x0 + i / 255 * w, h - v * (h - 2) - 1);
-        }
-        ctx.lineTo(x0 + w, h);
+        var i, v, x, y;
+
+        /* Log, not linear and not square root. A picture with few levels in
+           it -- colour bars, a posterised chain -- puts nearly every pixel in
+           a handful of bins, and against that peak the rest of the picture is
+           a flat line at the axis on either of the other two scales. Log
+           shows a bin holding one pixel in a thousand. */
+        ctx.beginPath();
+
         if (fill) {
+            ctx.moveTo(x0, h);
+            for (i = 0; i < 256; i++) {
+                v = scale * Math.log(1 + counts[i]);
+                ctx.lineTo(x0 + i / 255 * w, h - v * (h - 2) - 1);
+            }
+            ctx.lineTo(x0 + w, h);
             ctx.fillStyle = colour;
             ctx.fill();
-        } else {
-            ctx.strokeStyle = colour;
-            // With the device ratio, not one pixel: a hairline on a 3x phone
-            // screen is a third of the width it is on a desktop, and the
-            // histogram of a picture with few levels is nothing but hairlines.
-            ctx.lineWidth = Math.max(1, Math.round(window.devicePixelRatio || 1));
-            ctx.stroke();
+            return;
         }
+
+        var down = false;
+        for (i = 0; i < 256; i++) {
+            if (!counts[i]) { down = false; continue; }
+            v = scale * Math.log(1 + counts[i]);
+            x = x0 + i / 255 * w;
+            y = h - v * (h - 2) - 1;
+
+            if (!counts[i - 1] && !counts[i + 1]) {
+                ctx.moveTo(x, h - 1);
+                ctx.lineTo(x, y);
+                down = false;
+            } else if (down) {
+                ctx.lineTo(x, y);
+            } else {
+                ctx.moveTo(x, y);
+                down = true;
+            }
+        }
+
+        ctx.strokeStyle = colour;
+        // With the device ratio, not one pixel: a hairline on a 3x phone
+        // screen is a third of the width it is on a desktop, and the
+        // histogram of a picture with few levels is nothing but hairlines.
+        ctx.lineWidth = Math.max(1, Math.round(window.devicePixelRatio || 1));
+        ctx.stroke();
     }
 
     function peak(hist) {

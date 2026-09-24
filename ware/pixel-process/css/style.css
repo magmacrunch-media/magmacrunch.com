@@ -367,6 +367,13 @@ body {
     overflow: hidden;
 }
 
+/* The chassis around the screen: a bevelled frame with the same four screws
+   the module faceplates carry, so the picture reads as mounted in the
+   instrument rather than floating on the page.
+
+   Its padding is load-bearing. canvas.js sizes the display canvas from this
+   element's clientWidth, which INCLUDES padding, so it subtracts what is set
+   here; changing it changes the picture's size. */
 .canvas-wrap {
     position: relative;
     display: flex;
@@ -374,9 +381,26 @@ body {
     justify-content: center;
     flex: 1;
     width: 100%;
+    padding: 12px;
+    border: 1px solid #40352c;
+    border-radius: 2px;
+    background:
+        radial-gradient(circle at 8px 8px, #4a3e34 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at calc(100% - 8px) 8px, #4a3e34 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at 8px calc(100% - 8px), #4a3e34 0 1.8px, transparent 2.4px),
+        radial-gradient(circle at calc(100% - 8px) calc(100% - 8px), #4a3e34 0 1.8px, transparent 2.4px),
+        linear-gradient(180deg, #2a221c, #191410 60%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 200, 150, 0.06),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5),
+        0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
+/* Recessed into the chassis. */
 #displayCanvas {
+    box-shadow:
+        0 0 0 1px #0b0806,
+        inset 0 0 18px rgba(0, 0, 0, 0.55);
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     max-width: 100%;
@@ -451,6 +475,9 @@ body {
     width: 280px;
 }
 
+/* The rails the modules bolt into: a strip of metal down each side with
+   mounting holes punched at a fixed pitch, drawn with gradients so they cost
+   nothing to ship and repeat however tall the chain grows. */
 .chain-list {
     flex: 1;
     display: flex;
@@ -458,6 +485,23 @@ body {
     gap: 6px;
     overflow-y: auto;
     min-height: 0;
+    padding: 4px 10px;
+    background:
+        /* the two rails: a strip of metal down each side ... */
+        linear-gradient(90deg, #231d18 0 8px, transparent 8px),
+        linear-gradient(270deg, #231d18 0 8px, transparent 8px),
+        /* ... and their mounting holes, punched at a fixed pitch */
+        repeating-linear-gradient(180deg,
+            transparent 0 8px,
+            rgba(0, 0, 0, 0.55) 8px 12px,
+            transparent 12px 22px),
+        repeating-linear-gradient(180deg,
+            transparent 0 8px,
+            rgba(0, 0, 0, 0.55) 8px 12px,
+            transparent 12px 22px);
+    background-repeat: no-repeat, no-repeat, repeat-y, repeat-y;
+    background-size: auto, auto, 3px 22px, 3px 22px;
+    background-position: 0 0, 100% 0, 3px 0, calc(100% - 3px) 0;
 }
 
 /* ── EFFECT CARD ── */
@@ -494,6 +538,12 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 6px;
+    /* Wrap rather than overflow. Six things sit in this row now -- slot
+       number, name, two move buttons, the switch and the remove button --
+       and on a narrow panel with the rails taking their width they do not
+       all fit on one line. Wrapping puts the actions on a second line; not
+       wrapping put a scrollbar under the whole chain. */
+    flex-wrap: wrap;
     cursor: grab;
     /* The header is the drag handle, and js/ui.js drags it with pointer
        events. Without this the browser claims a vertical drag for scrolling
@@ -534,7 +584,8 @@ body {
     font-size: 7px;
     color: var(--accent);
     letter-spacing: 0.08em;
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
     cursor: pointer;
 }
 
@@ -1169,6 +1220,12 @@ footer {
     align-items: center;
     gap: 8px;
     margin-bottom: 6px;
+    /* The readout is a measurement and must not be cut in half. At a narrow
+       window MEAN 128 (0) CLIP 0.0/0.0% does not fit beside the three
+       buttons, and it was being clipped to "CLI". Wrapping gives it its own
+       line instead; the switch and the modes keep theirs. */
+    flex-wrap: wrap;
+    row-gap: 4px;
 }
 
 .meter-power {
@@ -1228,6 +1285,10 @@ footer {
 
 .meter-readout {
     margin-left: auto;
+    /* On its own line it starts at the left rather than hanging off the
+       right edge, which is what margin-left: auto would do to a wrapped
+       item with nothing beside it. */
+    flex: 0 1 auto;
     font-family: 'VT323', monospace;
     font-size: 14px;
     line-height: 1;
@@ -1456,4 +1517,18 @@ footer {
     width: 26px;
     height: 32px;
     opacity: 0.6;
+}
+
+@media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    /* A phone shows one module at a time, so there is no rack to bolt it
+       into: the rails would be two stripes beside a single card. The chassis
+       stays, but thinner, because every pixel it takes is off the picture. */
+    .chain-list {
+        padding: 0;
+        background: none;
+    }
+
+    .canvas-wrap {
+        padding: 6px;
+    }
 }
