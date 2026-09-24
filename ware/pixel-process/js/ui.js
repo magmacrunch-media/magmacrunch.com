@@ -70,13 +70,36 @@
 
     /* The dial: a graduated scale, a track, the lit arc of the current value,
        a cap and a pointer. The scale is what makes it read as an instrument
-       rather than a volume control: eleven ticks, the ends and the centre
-       drawn long, the way a meter face is marked. */
-    function buildDial() {
+       rather than a volume control: ticks around the face, the ends drawn
+       long, the way a meter face is marked.
+
+       A knob with few positions is a DETENTED one: a selector switch rather
+       than a continuous control, and its face says so by carrying one tick per
+       position instead of a generic scale of ten. POSTERIZE has fifteen
+       levels, FEEDBACK has twenty iterations, and a scale of ten over either
+       of those is a lie about where the values are -- the pointer lands
+       between the marks.
+
+       Above this count the ticks would be closer together than the pointer is
+       wide, so the face keeps its ten-division scale and the knob reads as
+       continuous, which at 256 levels it effectively is. */
+    var MAX_DETENTS = 24;
+
+    function detentsOf(input) {
+        var min = parseFloat(input.min), max = parseFloat(input.max);
+        var step = parseFloat(input.step) || 1;
+        if (!(max > min) || !(step > 0)) return 0;
+        var count = Math.round((max - min) / step) + 1;
+        return count >= 2 && count <= MAX_DETENTS ? count : 0;
+    }
+
+    function buildDial(detents) {
         var svg = svgEl('svg', { viewBox: '0 0 100 100', 'class': 'knob-dial', 'aria-hidden': 'true' });
-        for (var i = 0; i <= 10; i++) {
-            var deg = -SWEEP / 2 + i * SWEEP / 10;
-            var major = i === 0 || i === 5 || i === 10;
+        var marks = detents || 11;
+        for (var i = 0; i < marks; i++) {
+            var deg = -SWEEP / 2 + i * SWEEP / (marks - 1);
+            // The ends and, on a plain scale, the centre.
+            var major = i === 0 || i === marks - 1 || (!detents && i === 5);
             var a = polar(major ? 40 : 43, deg), b = polar(49, deg);
             svg.appendChild(svgEl('line', {
                 x1: a[0].toFixed(2), y1: a[1].toFixed(2), x2: b[0].toFixed(2), y2: b[1].toFixed(2),
@@ -427,9 +450,16 @@
                 input.setAttribute('aria-label', effect.name + ' ' + def.label);
                 input.setAttribute('aria-valuetext', effect.params[def.key] + (def.suffix || ''));
 
+                /* Detents are a property of the parameter, so they are
+                   read off the input the knob is drawn over rather than
+                   declared twice. ios/shim/haptics.js reads the same
+                   attribute to click the Taptic Engine once per position. */
+                var detents = detentsOf(input);
+                if (detents) input.dataset.detents = detents;
+
                 var knob = document.createElement('div');
-                knob.className = 'knob';
-                knob.appendChild(buildDial());
+                knob.className = 'knob' + (detents ? ' detented' : '');
+                knob.appendChild(buildDial(detents));
                 knob.appendChild(input);
                 attachDrag(knob, input);
                 paintKnob(knob);
