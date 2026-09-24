@@ -228,7 +228,7 @@
     "c": "page",
     "u": "/ware/utilities/index.html",
     "d": "browser-based tools for art, media & image processing",
-    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ CRUNCH//SCOPE an image signal chain you play like an instrument · pixel sort, FFT filter, feedback ▶ SPRITE//FORGE game sprite editor · animation, onion skin, PNG sheet export ▶"
+    "b": "creative utilities — ware — magmacrunch media home › ware › creative utilities // creative utilities // browser-based tools for art, media & image processing ALBUM//ART pixel art editor for album covers · text, shapes, images ▶ MEDIA//SEARCH free media aggregator · CC-licensed images, video & audio ▶ CRUNCH//SCOPE an image signal chain you play like an instrument · pixel sort, FFT filter, feedback ▶ TONE//GRATING FM synthesis and a diffraction grating are the same calculation · one Bessel column, two domains ▶ SPRITE//FORGE game sprite editor · animation, onion skin, PNG sheet export ▶"
   },
   {
     "t": "developer tools",
@@ -2098,5 +2098,12 @@
     "u": "/ware/texastoast/",
     "d": "Python RPG engine with I2C hardware abstraction for magmacrunch game systems",
     "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ ▶ Playground Run the real engine in your browser under Pyodide. Four examples, playable with the keyboard, no install required. 📖 API Reference Game, entities, tile maps, camera, input, and the UI widgets, plus the magmascript domain table. features Game Loop Frame-rate independent, dt-clamped, gives up on a broken frame instead of spinning Tile Maps JSON save/load, per-tile solidity, sub-stepped AABB collision that slides alon..."
+  },
+  {
+    "t": "tone grating",
+    "c": "tool",
+    "u": "/ware/tone-grating/",
+    "d": "FM synthesis and a diffraction grating are the same calculation · one Bessel column, two domains",
+    "b": "tone grating — magmacrunch media This instrument wants two panels side by side. Please visit on a wider screen. TONE//GRATING β 2.405 CARRIER NULL SHARED one number, both panels MODULATION INDEX β 2.405 0 2.405 5.520 8.654 TIME DOMAIN CARRIER f c 440 Hz RATIO f m /f c 0.25 modulator f m 110 Hz PLAY TONE at β = 2.405 the pitch you started on is the one frequency missing SPACE DOMAIN GROOVE SPACING d 2.00 µm WAVELENGTH λ 500 nm groove depth (p–v) 191.4 nm highest order ±4 TIME sidebands at f c + m·f m a carrier phase-modulated by β·sin(2πf m t) SPACE orders at sin&thinsp;&theta; = mλ/d a wavefro..."
   }
 ]
