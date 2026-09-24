@@ -92,6 +92,38 @@ music.addEventListener('loadedmetadata', syncDuration);
 music.addEventListener('durationchange', syncDuration);
 music.addEventListener('ended', () => endShift());
 
+// The song is the clock, so losing it mid-shift is not a missing soundtrack,
+// it is the shift being played deaf: the ramp and the four RUSH windows carry
+// on landing, on a frame counter, with nothing to hear them in.
+//
+// iOS hands the audio session to calls, to Control Center and to any app that
+// starts playing something, and the app is NOT backgrounded for all of those.
+// Backgrounding is already covered by the visibilitychange handler further
+// down; a Control Center pause leaves the game on screen and running, and this
+// is the case that was going unnoticed.
+//
+// Treated as the BREAK it already resembles. That is not just the kindest
+// answer, it is the one that keeps the two clocks together: the loop skips
+// update() entirely while paused, so the accumulator cannot advance behind the
+// modal, and the song resumes exactly where it stopped with the shift clock
+// still standing where it left it. Nothing diverges, and no stretch of the
+// shift is ever played in silence. Voiding the shift was the other candidate;
+// it throws away a run the player did nothing wrong in.
+//
+// It grants nothing either, which is the reason it needs no safeguard: the
+// PAUSE button already stops the clock for as long as you like.
+//
+// The condition is the whole of "we did not do this ourselves". Every place
+// in this file that pauses the music sets running/paused/finished first, so a
+// live, unpaused, unfinished shift whose music stopped was stopped from
+// outside. toTitle's ordering exists for this and is commented there.
+music.addEventListener('pause', () => {
+  if (running && !paused && !finished) {
+    togglePause();
+    setPauseReason('the music stopped. tap resume to pick the shift back up');
+  }
+});
+
 // ── Input ────────────────────────────────────────────────────────────
 // initInput records keysPressed for *every* key, so 1-5 need no binding.
 // But it only clears keysPressed on keyup, and consuming it by hand (as
@@ -124,6 +156,35 @@ function updateHUD() {
   elRush.textContent = st.rush >= 0 ? 'RUSH x' + (st.rush + 1) : '';
 }
 
+// ── The native seam ──────────────────
+//
+// CustomEvents on `document`, for the shims the App Store build injects
+// and the website does not. Nothing here knows what listens: on the web
+// they are dispatched into a document that has no listeners, which costs
+// one function call at moments that already push a toast and a sprite.
+//
+// What counts as notable is decided by js/moments.js, which is DOM-free
+// and therefore testable; this end only turns its answer into events.
+//
+// There is no silent-probe guard here, unlike george-boole's seam, and
+// the reason is worth stating so nobody adds one on the strength of the
+// comparison: that game replays four moves speculatively to decide
+// whether the board is dead, so its events had to be suppressed during
+// the probe. Nothing in this game looks ahead. A moment fires once
+// because it happened once.
+
+let momentMark = null;
+
+function emit(name, detail) {
+  document.dispatchEvent(new CustomEvent('cookies:' + name, { detail }));
+}
+
+function emitMoments() {
+  if (!momentMark) return;
+  for (const m of momentsSince(momentMark, st)) emit(m.name, m.detail);
+  momentMark = snapshot(st);
+}
+
 // ── Loop ─────────────────────────────────────────────────────────────
 
 function update(dtFactor) {
@@ -133,8 +194,25 @@ function update(dtFactor) {
   // The shift clock is the song, not the frame counter — so the ramp and
   // the four rush windows land on the music even when the tab drops
   // frames. The accumulator is the fallback for a rejected play().
-  if (!music.paused && music.currentTime > 0) st.elapsed = music.currentTime * 1000;
-  else st.elapsed += dtMs;
+  //
+  // It only ever goes forwards, and that guard is for iOS. The two sources
+  // disagree the moment the system takes the audio session and hands it
+  // back: on an interruption `music.paused` goes true and the accumulator
+  // carries the shift on, in silence; when the song resumes it resumes
+  // where it stopped, which is now BEHIND. A bare assignment would rewind
+  // the shift by the length of the interruption, and a rewind is not a
+  // cosmetic glitch here, because RUSH_AT is read as "is the clock inside
+  // this window" every frame rather than as an event that has fired. Going
+  // back over a window opens it a second time.
+  //
+  // Taking the later of the two keeps the song as the clock whenever the
+  // song is actually playing, which is the normal case and the whole point
+  // of reading currentTime, and leaves a shift interrupted mid-way running
+  // on the accumulator rather than repeating itself. What SHOULD happen to
+  // a shift whose music was taken away is still open (see the audio note in
+  // ios/AGENTS.md); this is the part that is right either way.
+  const fromSong = !music.paused && music.currentTime > 0 ? music.currentTime * 1000 : 0;
+  st.elapsed = Math.max(st.elapsed + (fromSong ? 0 : dtMs), fromSong);
 
   st.rush = RUSH_AT.findIndex((f) => {
     const t0 = f * st.shiftMs;
@@ -151,6 +229,7 @@ function update(dtFactor) {
   }
 
   st.__T = updateShift(st, dtMs, now);
+  emitMoments();
 
   // The inspector ducks the music rather than stopping it. Idempotent, so
   // there is no transition to detect.
@@ -196,6 +275,7 @@ function startShift() {
 
   const now = performance.now();
   armShift(st, tune(st), now);
+  momentMark = snapshot(st);
 
   running = true; paused = false; finished = false;
   AdRPG.setGameStarted(true);
@@ -218,6 +298,22 @@ function endShift() {
   music.pause();
   const bonus = settleShift(st);
 
+  // The last moments of the shift, then the shift itself. Emitted before
+  // the modal goes up, so a shim can react while the card is still
+  // animating in rather than after the player has read it.
+  emitMoments();
+  emit('shift-end', {
+    score: st.score, shipped: st.shipped, mess: st.mess,
+    boxes: st.tally.boxes, perfect: st.tally.perfect,
+    fires: st.tally.fires, inspections: st.inspections,
+    bonus: bonus ? bonus.points : 0,
+    // The label, not just the points: a listener that compared points
+    // against 500, or mess against CLEAN_BONUS.threshold, would be
+    // re-deriving a rule that a tuning change moves without warning.
+    bonusLabel: bonus ? bonus.label : null,
+    stars: starsFor(st.shipped),
+  });
+
   AdRPG.setGameOver(true);
   AdRPG.setGameStarted(false);
   gameLoop.stop();
@@ -226,11 +322,51 @@ function endShift() {
   document.getElementById('btn-pause').style.display = 'none';
   document.getElementById('final-score').textContent = st.score.toLocaleString();
   document.getElementById('final-shipped').textContent = st.shipped;
+  showStars(st.shipped);
   document.getElementById('final-bonus').textContent =
     bonus ? bonus.label + '  +' + bonus.points : 'NO CLEAN-UP BONUS';
   document.getElementById('initials-input').value = '';
   reportShift(bonus);
   showModal('modal-gameover');
+}
+
+/**
+ * The rules panel, opened from the title card.
+ *
+ * The star line is built from STARS rather than written into the markup: it is
+ * the only sentence in the game's own words that carries a number the bench
+ * can move, and a rules screen quoting the wrong one is worse than a rules
+ * screen that does not mention them.
+ *
+ * Opening it does not start or pause anything. The title card is still up
+ * behind it, and the shift has not begun.
+ */
+function showRules() {
+  const line = document.getElementById('rules-stars');
+  if (line) {
+    line.textContent = STARS.map((n, i) => '*'.repeat(i + 1) + ' ' + n).join('   ');
+  }
+  showModal('modal-rules');
+}
+
+/**
+ * The stars, and what they are called.
+ *
+ * Built as elements rather than a string of asterisks so the earned ones can
+ * carry the glow and the rest stay dim: three characters that all look the
+ * same say nothing about how close you were.
+ */
+function showStars(cookies) {
+  const earned = starsFor(cookies);
+  const row = document.getElementById('final-stars');
+  row.textContent = '';
+  for (let i = 0; i < STARS.length; i++) {
+    const star = document.createElement('span');
+    star.className = 'star' + (i < earned ? ' on' : '');
+    star.textContent = '*';
+    row.appendChild(star);
+  }
+  document.getElementById('final-rank').textContent = STAR_LABELS[earned];
 }
 
 /**
@@ -247,7 +383,8 @@ function reportShift(bonus) {
     `mixer   overmixed ${t.overmixed}   packing  boxes ${t.boxes}`,
     `belt    jams ${t.jams}   spills ${t.spills}`,
     `mess    peak ${Math.round(t.peakMess)}  final ${Math.round(st.mess)}  ` +
-      `fires ${t.fires} (${(t.fireMs / 1000).toFixed(1)}s)  inspections ${st.inspections}`,
+      `fires ${t.fires} (${(t.fireMs / 1000).toFixed(1)}s, ${t.firesOut} out)  `
+      + `inspections ${st.inspections}`,
   ];
   console.log('%c makemecookies shift ', 'background:#FF2E9C;color:#180C18', '\n' + lines.join('\n'));
 
@@ -258,11 +395,30 @@ function reportShift(bonus) {
   }
 }
 
+/**
+ * Swap the pause card's subtitle, or restore it with null.
+ *
+ * The default wording is read from index.html the first time rather than
+ * repeated here, so the card and this file cannot come to disagree about what
+ * a plain BREAK says.
+ */
+let pauseSubDefault = null;
+function setPauseReason(text) {
+  const el = document.querySelector('#modal-pause .modal-sub');
+  if (!el) return;
+  if (pauseSubDefault === null) pauseSubDefault = el.textContent;
+  el.textContent = text === null ? pauseSubDefault : text;
+}
+
 function togglePause() {
   if (!running || finished) return;
   paused = !paused;
   AdRPG.setGamePaused(paused);
   document.getElementById('btn-pause').textContent = paused ? 'RESUME' : 'PAUSE';
+  // Restored on the way in rather than on the way out: an interrupted shift
+  // that is resumed and then paused again by hand should say what a hand pause
+  // says. The audio-interruption handler overrides this immediately after.
+  setPauseReason(null);
   if (paused) { music.pause(); showModal('modal-pause'); }
   else { music.play().catch(() => {}); hideModal('modal-pause'); }
 }
@@ -275,8 +431,13 @@ function togglePause() {
  */
 function toTitle() {
   gameLoop.stop();
-  music.pause();
+  // The flags come down BEFORE the music, and the order is load-bearing: the
+  // audio 'pause' listener reads exactly this state to tell an interruption
+  // from a stop this file asked for. Pausing first would look, for one task
+  // queue turn, like the system had taken the song away mid-shift, and raise
+  // the BREAK card over a title screen.
   running = false; paused = false; finished = false;
+  music.pause();
   AdRPG.setGameStarted(false);
   AdRPG.setGamePaused(false);
   AdRPG.setGameOver(false);
@@ -369,6 +530,8 @@ function wire(id, fn) {
 
 function setupListeners() {
   wire('btn-start-title', () => dismissTitle());
+  wire('btn-how-to-play', () => showRules());
+  wire('btn-close-rules', () => hideModal('modal-rules'));
   wire('btn-pause', () => togglePause());
   wire('btn-resume', () => togglePause());
   wire('btn-quit', () => toTitle());
@@ -393,6 +556,10 @@ function setupListeners() {
     if (finished) toTitle(); else resumeFromModal();
   });
   wire('btn-credits', () => { showModal('modal-credits'); pauseForModal(); });
+  // The same panel from the title card. pauseForModal and resumeFromModal are
+  // both guarded by `running`, so they do nothing before a shift has started
+  // and the one handler serves both entrances.
+  wire('btn-credits-title', () => { showModal('modal-credits'); pauseForModal(); });
   wire('btn-close-credits', () => {
     hideModal('modal-credits');
     if (finished) toTitle(); else resumeFromModal();
@@ -400,6 +567,31 @@ function setupListeners() {
 }
 
 // ── Title screen ─────────────────────────────────────────────────────
+
+/**
+ * Paint the hero cookie on the title card.
+ *
+ * Drawn from SPR_COOKIE_BIG rather than loaded as an image, so the card
+ * shows the app icon's cookie by reading the icon's own table instead of
+ * by somebody remembering to re-export a PNG.
+ *
+ * The backing store is sized in WHOLE cells, and that is the only part
+ * here with a way to go wrong: `sprite()` fills a run of same-coloured
+ * cells as one rect, so a fractional cell size lands those rects on
+ * fractional pixels and leaves hairline seams between the runs. CSS then
+ * scales the result to whatever the card has room for, which is safe
+ * because .title-cookie asks for `pixelated`.
+ *
+ * Called once at init. The card is built before a shift and survives
+ * every return to it, so there is nothing to repaint.
+ */
+function paintTitleCookie() {
+  const cv = document.getElementById('title-cookie');
+  if (!cv) return;
+  const CELL = 8;
+  cv.width = cv.height = COOKIE_BIG_CELLS * CELL;
+  sprite(cv.getContext('2d'), SPR_COOKIE_BIG, 0, 0, CELL);
+}
 
 function showTitleScreen() {
   const to = document.getElementById('title-overlay');
@@ -419,6 +611,7 @@ function dismissTitle() {
 
 (async () => {
   setupListeners();
+  paintTitleCookie();
 
   AdRPG.initInput({
     onPause: () => { if (running && !finished) togglePause(); },
@@ -448,6 +641,20 @@ function dismissTitle() {
     if (!to || to.style.display === 'none') return;
     const tag = document.activeElement && document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    // The rules open over the title card, so while they are up the keys the
+    // card owns belong to the panel: space would otherwise clock in behind it,
+    // and Escape would do nothing at all. On a phone held in landscape the
+    // CLOSE button can be below the fold, which makes Escape the way out.
+    const rules = document.getElementById('modal-rules');
+    if (rules && !rules.classList.contains('hidden')) {
+      if (e.key === 'Escape' || e.code === 'Space' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        hideModal('modal-rules');
+      }
+      return;
+    }
+
     if (e.code === 'Space' || e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
       dismissTitle();

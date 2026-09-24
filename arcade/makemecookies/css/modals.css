@@ -238,3 +238,75 @@
   word-break: break-word;
   user-select: text;
 }
+
+/* Stars on the end-of-shift card.
+   Asterisks rather than a star glyph: Press Start 2P has no U+2605 and
+   renders it as the same .notdef box every other missing character gets,
+   which is the trap the icon's gate symbols already taught. */
+.final-stars {
+  margin: 10px 0 2px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 28px;
+  letter-spacing: 10px;
+  line-height: 1;
+}
+.final-stars .star { color: var(--dim); }
+.final-stars .star.on {
+  color: var(--butter);
+  text-shadow: var(--glow-butter);
+}
+.final-rank {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--sprinkle);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  min-height: 11px;
+}
+
+/* These open FROM the title card, which is z-index 8000, so they have to sit
+   above it or the panel appears behind the thing that opened it. */
+#modal-rules,
+#modal-credits { z-index: 8500; }
+
+#modal-rules .modal { max-width: 520px; text-align: left; }
+
+.rules-lead {
+  font-size: 9px;
+  line-height: 1.7;
+  color: var(--text);
+  margin: 10px 0 14px;
+}
+
+.rules-list {
+  margin: 0 0 14px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  align-items: baseline;
+}
+.rules-list dt {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--sprinkle);
+  white-space: nowrap;
+}
+.rules-list dt b {
+  display: inline-block;
+  min-width: 14px;
+  color: var(--butter);
+}
+.rules-list dd {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.6;
+  color: var(--subtext);
+}
+
+.rules-note {
+  font-size: 9px;
+  line-height: 1.7;
+  color: var(--subtext);
+  margin: 0 0 8px;
+}
+.rules-note b { color: var(--neon); }

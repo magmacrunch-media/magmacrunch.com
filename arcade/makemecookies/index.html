@@ -4,15 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MAKEMECOOKIES!X4</title>
-    <meta property="og:title" content="MAKEMECOOKIES!X4 — magmacrunch media">
-    <meta property="og:description" content="One song, one shift. Tend five stations of a cookie factory line.">
-    <meta property="og:image" content="https://magmacrunch.com/og/arcade-makemecookies.png?v=1">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="magmacrunch media">
-    <meta property="og:locale" content="en_US">
-    <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="One song, one shift. Tend five stations of a cookie factory line — hopper, mixer, conveyor, oven, packing — for the 51 seconds of Jimmi's makemecookies! x4.">
 
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23F2D8A7'/%3E%3Ccircle cx='11' cy='12' r='3' fill='%234B2E1E'/%3E%3Ccircle cx='21' cy='15' r='2.6' fill='%234B2E1E'/%3E%3Ccircle cx='15' cy='22' r='2.4' fill='%234B2E1E'/%3E%3C/svg%3E">
@@ -25,13 +16,38 @@
 </style>
 
 <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<!-- Both faces, self-hosted, so the page needs no Google Fonts round trip.
+     `../../fonts/` names files that are not in this repo, the same arrangement
+     as `../shared/` above: they resolve once web/ has been copied into the
+     website's arcade/makemecookies/, and ios/package.mjs repoints them at the
+     bundle's own fonts/ when it builds the app.
+
+     `display=swap` was on the CDN URL this replaces, so font-display: swap
+     keeps the behaviour the page had. The bundle overrides it to block, for a
+     reason written down in ios/package.mjs.
+
+     Preloaded because the faces are declared in a stylesheet the browser has
+     not parsed when it reaches the head, so without this the fetch queues
+     behind it and the swap lands later than it did on the CDN. -->
+<link rel="preload" as="font" type="font/woff2" href="../../fonts/PressStart2P-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../../fonts/ShareTechMono-Regular.woff2" crossorigin>
+<style>
+    @font-face {
+        font-family: 'Press Start 2P';
+        src: url('../../fonts/PressStart2P-Regular.woff2') format('woff2'),
+             url('../../fonts/PressStart2P-Regular.ttf') format('truetype');
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Share Tech Mono';
+        src: url('../../fonts/ShareTechMono-Regular.woff2') format('woff2');
+        font-display: swap;
+    }
+</style>
 <link rel="stylesheet" href="css/base.css?v=abf25d69">
-<link rel="stylesheet" href="css/layout.css?v=d8e37fcb">
-<link rel="stylesheet" href="css/modals.css?v=0c7641cf">
-<link rel="stylesheet" href="css/title.css?v=3953ebdd">
+<link rel="stylesheet" href="css/layout.css?v=91e7eff9">
+<link rel="stylesheet" href="css/modals.css?v=92038100">
+<link rel="stylesheet" href="css/title.css?v=7fbb830c">
 
 </head>
 <body>
@@ -102,25 +118,78 @@
 
 <!-- ── Title card ─────────────────────────────────────────────────── -->
 <div id="title-overlay">
+  <!-- The cookie off the app icon. Painted into the canvas from
+       SPR_COOKIE_BIG by main.js rather than shipped as an image, so the
+       home screen and the first screen are reading one table and cannot
+       come to show two different cookies. Decoration: the card announces
+       its name through .title-main and does not need this read out too. -->
+  <canvas class="title-cookie" id="title-cookie" aria-hidden="true"></canvas>
+
   <div class="title-stack">
-    <div class="title-main">MAKEMECOOKIES!</div>
-    <div class="title-x4">X4</div>
-    <div class="title-sub">a magmacrunch media cookie factory</div>
-    <div class="title-song">song: &ldquo;makemecookies! x4.&rdquo; by Jimmi &mdash; 0:51</div>
+    <!-- The title four times over, which is what x4 means. The first three
+         are decoration and are hidden from assistive tech, so the card still
+         announces its name once rather than stuttering it. -->
+    <div class="title-main" aria-label="makemecookies x4">
+      <span class="echo e1" aria-hidden="true">MAKEMECOOKIES!</span>
+      <span class="echo e2" aria-hidden="true">MAKEMECOOKIES!</span>
+      <span class="echo e3" aria-hidden="true">MAKEMECOOKIES!</span>
+      <span class="echo e4">MAKEMECOOKIES!</span>
+    </div>
   </div>
 
   <div class="title-line"></div>
 
-  <div class="title-rules">
-    <span><b>1</b>HOPPER — dump flour, don't overfill</span>
-    <span><b>2</b>MIXER — start it, then eject before it toughens</span>
-    <span><b>3</b>BELT — unstick jams and boost the line</span>
-    <span><b>4</b>OVEN — pull it golden. Mash to fight fires</span>
-    <span><b>5</b>PACK — ship the box. Four cookies pays double</span>
+  <div class="title-buttons">
+    <button class="btn" id="btn-start-title">CLOCK IN</button>
+    <button class="btn mint" id="btn-how-to-play">HOW TO PLAY</button>
+    <button class="btn gold" id="btn-credits-title">CREDITS</button>
   </div>
+  <!-- The publisher, quietly, at the foot of the card. A link on the web and
+       plain text in the app: package.mjs unlinks it, because an outbound link
+       on the first screen would send a player to Safari before they have
+       played anything. -->
+  <div class="title-publisher">
+    <a class="title-publisher-link" href="https://magmacrunch.com">
+      <img class="title-publisher-mark" src="img/mc-logo.png" alt="" width="26" height="32">
+      <span>magmacrunch media</span>
+    </a>
+  </div>
+</div>
 
-  <button class="btn" id="btn-start-title">CLOCK IN</button>
-  <div class="title-hint">or press space</div>
+<!-- ── How to play ─────────────────────────────────── -->
+<div class="modal-overlay hidden" id="modal-rules">
+  <div class="modal">
+    <h2>HOW TO PLAY</h2>
+    <div class="modal-sub">one song, one shift</div>
+
+    <p class="rules-lead">Five machines, none of them waiting for you. Tap a
+    station, or press its number.</p>
+
+    <dl class="rules-list">
+      <dt><b>1</b>HOPPER</dt>
+      <dd>Dump a sack of flour. Overfill it and it goes on the floor.</dd>
+      <dt><b>2</b>MIXER</dt>
+      <dd>Press once to start, again to eject. Leave it and the dough toughens.</dd>
+      <dt><b>3</b>BELT</dt>
+      <dd>Unstick a jam and boost the line.</dd>
+      <dt><b>4</b>OVEN</dt>
+      <dd>Pull the tray golden, not after. Mash to put out a fire.</dd>
+      <dt><b>5</b>PACKING</dt>
+      <dd>Ship the box. Four cookies pays double.</dd>
+    </dl>
+
+    <p class="rules-note"><b>RUSH</b> lands four times, on the music. The belt
+    speeds up and every box scores double.</p>
+    <p class="rules-note"><b>MESS</b> builds from spills, burnt trays and
+    fires. Fill the meter and the inspector freezes the line while the song
+    plays on.</p>
+    <p class="rules-note"><b>NO LOSING.</b> The shift ends with the song, and
+    is scored on what you shipped: <span id="rules-stars">&nbsp;</span></p>
+
+    <div class="controls">
+      <button class="btn mint" id="btn-close-rules">CLOSE</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── End of shift ───────────────────────────────────────────────── -->
@@ -131,6 +200,8 @@
     <div class="final-line">score</div>
     <div class="final-big" id="final-score">0</div>
     <div class="final-line">cookies shipped: <span id="final-shipped">0</span></div>
+    <div class="final-stars" id="final-stars"></div>
+    <div class="final-rank" id="final-rank"></div>
     <div class="final-bonus" id="final-bonus">&nbsp;</div>
     <pre id="debug-readout" hidden></pre>
     <input class="initials-input" id="initials-input" maxlength="3" placeholder="AAA" autocomplete="off">
@@ -237,11 +308,12 @@
 <script src="../shared/adenosine-score-client.js?v=55cabd6d"></script>
 <script src="../shared/score-server.js?v=9acd988c"></script>
 <script>const scoreClient = new AdScore.ScoreClient().auto(MC_SCORE_OPTS);</script>
-<script src="js/config.js?v=fa4030e8"></script>
-<script src="js/pixels.js?v=43f9f1cb"></script>
-<script src="js/stations.js?v=dd950da5"></script>
+<script src="js/config.js?v=ad80a492"></script>
+<script src="js/pixels.js?v=ebd91790"></script>
+<script src="js/stations.js?v=f76edefe"></script>
 <script src="js/render.js?v=dbee2dcc"></script>
-<script src="js/main.js?v=1d7e4b3e"></script>
+<script src="js/moments.js?v=e78359c7"></script>
+<script src="js/main.js?v=3106aff9"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
 <script src="../shared/adenosine-chat.js?v=4a6b886b"></script>
