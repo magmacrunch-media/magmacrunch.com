@@ -158,15 +158,45 @@
         });
     }
 
+    /* What the numbers on the readouts mean.
+     *
+     * A readout that says 12 is a number; one that says 12 PX is a
+     * measurement, and the difference is most of what makes a panel feel
+     * like an instrument rather than a form. Each unit here is what the
+     * effect actually does with the value, checked against the effect
+     * rather than guessed:
+     *
+     *   PX     a distance, in pixels at Chain.REFERENCE (256). Every length
+     *          scales with the image (Chain.scaleParams), so the same chain
+     *          covers the same fraction of the picture at any WORK SIZE.
+     *   CYC    cycles across the image. Frequencies scale inversely, which
+     *          is exactly what keeps the count the same at every size.
+     *   /KPX   per thousand pixels: dead-pixels draws w * h * density / 1000.
+     *   /255   a level on the 0 to 255 scale the pixels themselves use.
+     *   x      a multiplier.
+     *
+     * AMT on BLOCK CORRUPT is deliberately unitless. It is listed as a
+     * length in the effect, so it scales, but it is a strength rather than
+     * a distance and PX would be a lie with a unit on it.
+     */
+    var HINT = {
+        px: 'Pixels at the 256 reference. Lengths scale with the image, so the chain covers the same fraction of the picture at any size.',
+        cyc: 'Cycles across the image, whatever its size.',
+        kpx: 'Dead pixels per thousand pixels of the image.',
+        level: 'A level on the 0 to 255 scale.',
+        mul: 'A multiplier.',
+        decay: 'A multiplier, applied once per iteration.'
+    };
+
     // Effect UI definitions: maps effect type to its parameter controls
     var effectUI = {
         'channel-shift': [
-            { key: 'rx', label: 'RX', min: -32, max: 32, step: 1 },
-            { key: 'ry', label: 'RY', min: -32, max: 32, step: 1 },
-            { key: 'gx', label: 'GX', min: -32, max: 32, step: 1 },
-            { key: 'gy', label: 'GY', min: -32, max: 32, step: 1 },
-            { key: 'bx', label: 'BX', min: -32, max: 32, step: 1 },
-            { key: 'by', label: 'BY', min: -32, max: 32, step: 1 }
+            { key: 'rx', label: 'RX', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'ry', label: 'RY', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'gx', label: 'GX', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'gy', label: 'GY', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'bx', label: 'BX', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'by', label: 'BY', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px }
         ],
         'channel-swap': [
             { key: 'mode', label: 'MODE', min: 0, max: 3, step: 1, labels: ['RBG', 'GRB', 'BRG', 'BGR'] }
@@ -178,36 +208,36 @@
             { key: 'levels', label: 'LVL', min: 2, max: 16, step: 1 }
         ],
         'threshold': [
-            { key: 'level', label: 'LVL', min: 0, max: 255, step: 1 },
+            { key: 'level', label: 'LVL', min: 0, max: 255, step: 1, suffix: '/255', hint: HINT.level },
             { key: 'colorOut', label: 'MODE', min: 0, max: 1, step: 1, labels: ['B/W', 'COLOR'] }
         ],
         'pixel-sort': [
-            { key: 'threshold', label: 'THR', min: 0, max: 255, step: 1 },
+            { key: 'threshold', label: 'THR', min: 0, max: 255, step: 1, suffix: '/255', hint: HINT.level },
             { key: 'axis', label: 'AXIS', min: 0, max: 1, step: 1, labels: ['H', 'V'] },
             { key: 'sortBy', label: 'BY', min: 0, max: 4, step: 1, labels: ['BRI', 'HUE', 'R', 'G', 'B'] },
             { key: 'direction', label: 'DIR', min: 0, max: 1, step: 1, labels: ['ASC', 'DESC'] }
         ],
         'row-displace': [
-            { key: 'amount', label: 'AMT', min: -32, max: 32, step: 1 },
+            { key: 'amount', label: 'AMT', min: -32, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
             { key: 'axis', label: 'AXIS', min: 0, max: 1, step: 1, labels: ['H', 'V'] },
             { key: 'pattern', label: 'PAT', min: 0, max: 2, step: 1, labels: ['SIN', 'SAW', 'RND'] },
-            { key: 'frequency', label: 'FREQ', min: 1, max: 32, step: 1 },
+            { key: 'frequency', label: 'FREQ', min: 1, max: 32, step: 1, suffix: ' CYC', hint: HINT.cyc },
             { key: 'seed', label: 'SEED', min: 0, max: 999, step: 1 }
         ],
         'wave-distort': [
-            { key: 'amplitude', label: 'AMP', min: 0, max: 32, step: 1 },
-            { key: 'frequency', label: 'FREQ', min: 1, max: 32, step: 1 },
+            { key: 'amplitude', label: 'AMP', min: 0, max: 32, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'frequency', label: 'FREQ', min: 1, max: 32, step: 1, suffix: ' CYC', hint: HINT.cyc },
             { key: 'axis', label: 'AXIS', min: 0, max: 1, step: 1, labels: ['H', 'V'] },
             { key: 'phase', label: 'PHASE', min: 0, max: 62, step: 1 }
         ],
         'block-corrupt': [
             { key: 'intensity', label: 'AMT', min: 1, max: 100, step: 1 },
-            { key: 'blockSize', label: 'SIZE', min: 2, max: 64, step: 1 },
+            { key: 'blockSize', label: 'SIZE', min: 2, max: 64, step: 1, suffix: ' PX', hint: HINT.px },
             { key: 'count', label: 'NUM', min: 1, max: 50, step: 1 },
             { key: 'seed', label: 'SEED', min: 0, max: 999, step: 1 }
         ],
         'dead-pixels': [
-            { key: 'density', label: 'DENS', min: 1, max: 200, step: 1 },
+            { key: 'density', label: 'DENS', min: 1, max: 200, step: 1, suffix: '/KPX', hint: HINT.kpx },
             { key: 'color', label: 'CLR', min: 0, max: 2, step: 1, labels: ['RND', 'BLK', 'WHT'] },
             { key: 'seed', label: 'SEED', min: 0, max: 999, step: 1 }
         ],
@@ -218,7 +248,7 @@
             { key: 'filterType', label: 'TYPE', min: 0, max: 3, step: 1, labels: ['LP', 'HP', 'BP', 'NOTCH'] },
             { key: 'cutoff', label: 'CUT', min: 1, max: 100, step: 1, suffix: '%' },
             { key: 'width', label: 'WIDTH', min: 1, max: 100, step: 1, suffix: '%' },
-            { key: 'gain', label: 'GAIN', min: 0, max: 3, step: 0.1 },
+            { key: 'gain', label: 'GAIN', min: 0, max: 3, step: 0.1, suffix: '\u00d7', hint: HINT.mul },
             { key: 'channels', label: 'CHAN', min: 0, max: 1, step: 1, labels: ['LUMA', 'RGB'] }
         ],
         /* SPECTRUM is a measurement, so its two controls are about
@@ -226,7 +256,7 @@
            FLOOR clips the low end away to pull faint structure out of the
            haze around DC. */
         'fft-spectrum': [
-            { key: 'gain', label: 'GAIN', min: 0.2, max: 4, step: 0.1 },
+            { key: 'gain', label: 'GAIN', min: 0.2, max: 4, step: 0.1, suffix: '\u00d7', hint: HINT.mul },
             { key: 'floor', label: 'FLOOR', min: 0, max: 90, step: 1, suffix: '%' }
         ],
         'fft-scramble': [
@@ -242,10 +272,10 @@
         ],
         'feedback': [
             { key: 'iterations', label: 'ITER', min: 1, max: 20, step: 1 },
-            { key: 'decay', label: 'DECAY', min: 0, max: 1, step: 0.05 },
-            { key: 'offsetX', label: 'OX', min: -20, max: 20, step: 1 },
-            { key: 'offsetY', label: 'OY', min: -20, max: 20, step: 1 },
-            { key: 'scale', label: 'SCALE', min: 0.8, max: 1.2, step: 0.01 },
+            { key: 'decay', label: 'DECAY', min: 0, max: 1, step: 0.05, suffix: '\u00d7', hint: HINT.decay },
+            { key: 'offsetX', label: 'OX', min: -20, max: 20, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'offsetY', label: 'OY', min: -20, max: 20, step: 1, suffix: ' PX', hint: HINT.px },
+            { key: 'scale', label: 'SCALE', min: 0.8, max: 1.2, step: 0.01, suffix: '\u00d7', hint: HINT.mul },
             { key: 'rotation', label: 'ROT', min: -10, max: 10, step: 0.5, suffix: '°' }
         ]
     };
@@ -259,6 +289,14 @@
         // Header
         var header = document.createElement('div');
         header.className = 'effect-header';
+
+        /* The slot number, counted from the top of the chain rather than
+           from the effect's id: it says where in the signal path this module
+           sits, which is the thing that changes when you reorder, and it is
+           the only place the order is written down in words. */
+        var index = document.createElement('span');
+        index.className = 'effect-index';
+        index.setAttribute('aria-hidden', 'true');
 
         var name = document.createElement('span');
         name.className = 'effect-name';
@@ -301,6 +339,7 @@
         actions.appendChild(down);
         actions.appendChild(toggle);
         actions.appendChild(remove);
+        header.appendChild(index);
         header.appendChild(name);
         header.appendChild(actions);
 
@@ -399,6 +438,8 @@
                 val.className = 'range-val';
                 val.textContent = effect.params[def.key] + (def.suffix || '');
 
+                if (def.hint) row.title = def.label + ': ' + def.hint;
+
                 row.appendChild(knob);
                 row.appendChild(val);
                 row.appendChild(label);
@@ -423,10 +464,42 @@
         chainList.innerHTML = '';
         var effects = Chain.getEffects();
         resolveSelection(effects);
+
+        /* The chain is drawn as a signal path: the picture goes in at the
+           top, through each module in turn, and out at the bottom. The order
+           is the whole point of the tool -- the same modules in a different
+           order are a different picture -- and until this there was nothing
+           on screen that said so. The ports and links are decoration and are
+           marked as such for a screen reader; the slot numbers are not, they
+           are read out as part of each module's name. */
+        if (effects.length) chainList.appendChild(port('INPUT'));
+
         for (var i = 0; i < effects.length; i++) {
-            chainList.appendChild(createEffectCard(effects[i]));
+            if (i > 0) chainList.appendChild(link());
+            var card = createEffectCard(effects[i]);
+            var slot = i + 1;
+            card.querySelector('.effect-index').textContent = (slot < 10 ? '0' : '') + slot;
+            chainList.appendChild(card);
         }
+
+        if (effects.length) chainList.appendChild(port('OUTPUT'));
         renderChips(effects);
+    }
+
+    function port(label) {
+        var el = document.createElement('div');
+        el.className = 'chain-port';
+        el.setAttribute('aria-hidden', 'true');
+        el.textContent = label;
+        return el;
+    }
+
+    function link() {
+        var el = document.createElement('div');
+        el.className = 'chain-link';
+        el.setAttribute('aria-hidden', 'true');
+        el.textContent = '│';
+        return el;
     }
 
     function select(id) {

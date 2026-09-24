@@ -1363,3 +1363,62 @@ footer {
     .meter-screen { height: 52px; }
     .meter-readout { font-size: 12px; }
 }
+
+/* ═══════════════════════════════════════════════
+   THE SIGNAL PATH
+
+   The chain is a path, not a list: in at the top, through each module in
+   turn, out at the bottom. Slot numbers say where a module sits, and change
+   when it is moved. js/ui.js draws the ports and the links between cards.
+   ═══════════════════════════════════════════════ */
+.chain-port {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-align: center;
+    padding: 5px 0;
+    border: 1px dashed var(--border);
+    background: rgba(255, 140, 66, 0.03);
+}
+
+.chain-link {
+    font-family: 'VT323', monospace;
+    font-size: 15px;
+    line-height: 1;
+    color: var(--border);
+    text-align: center;
+    padding: 2px 0;
+    user-select: none;
+}
+
+.effect-index {
+    font-family: 'VT323', monospace;
+    font-size: 15px;
+    line-height: 1;
+    color: var(--dim);
+    background: #0a0604;
+    border: 1px solid var(--border);
+    padding: 1px 4px;
+    letter-spacing: 0.08em;
+}
+
+.effect-card.selected .effect-index,
+.effect-card:hover .effect-index {
+    color: var(--amber);
+}
+
+/* A module that is switched off is still in the chain and still numbered,
+   but the picture passes through it untouched. */
+.effect-card.disabled .effect-index {
+    opacity: 0.45;
+}
+
+@media (max-width: 768px), (orientation: portrait) and (max-width: 1100px) {
+    /* One card at a time here, so a path drawn between cards would connect
+       things that are not on screen. The chip row is the order instead. */
+    .chain-port,
+    .chain-link { display: none; }
+
+    .effect-index { font-size: 13px; }
+}
