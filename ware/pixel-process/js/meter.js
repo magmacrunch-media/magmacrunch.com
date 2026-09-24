@@ -73,6 +73,30 @@
         };
     }
 
+    /**
+     * Point-sample a w x h RGBA buffer down to nx x ny.
+     *
+     * The output is read off a canvas with drawImage, which cannot be done to
+     * an ImageData, so the source is sampled here instead. Both paths must
+     * pick pixels rather than blend them, or the two curves on screen would
+     * be measured differently and the comparison would be worthless.
+     */
+    function samplePixels(pixels, w, h, nx, ny) {
+        var out = new Uint8ClampedArray(nx * ny * 4);
+        for (var y = 0; y < ny; y++) {
+            var sy = Math.min(h - 1, Math.floor(y * h / ny));
+            for (var x = 0; x < nx; x++) {
+                var sx = Math.min(w - 1, Math.floor(x * w / nx));
+                var s = (sy * w + sx) * 4, d = (y * nx + x) * 4;
+                out[d] = pixels[s];
+                out[d + 1] = pixels[s + 1];
+                out[d + 2] = pixels[s + 2];
+                out[d + 3] = pixels[s + 3];
+            }
+        }
+        return out;
+    }
+
     /** Mirror an index back inside 0..n-1, the way fft.js pads. */
     function reflect(i, n) {
         if (n <= 1) return 0;
@@ -183,6 +207,7 @@
     window.Meter = {
         histogram: histogram,
         lumaPlane: lumaPlane,
+        samplePixels: samplePixels,
         spectrum: spectrum,
         BINS: BINS
     };
@@ -295,36 +320,67 @@
         }
     }
 
-    function drawLevels(hist) {
+    function peak(hist) {
         var max = 0, i;
-        for (i = 0; i < 256; i++) if (hist.lum[i] > max) max = hist.lum[i];
         for (i = 0; i < 256; i++) {
+            if (hist.lum[i] > max) max = hist.lum[i];
             if (hist.r[i] > max) max = hist.r[i];
             if (hist.g[i] > max) max = hist.g[i];
             if (hist.b[i] > max) max = hist.b[i];
         }
+        return max;
+    }
+
+    /**
+     * `hist` is the picture as it is now; `was` is the source before the
+     * chain touched it, drawn behind in outline.
+     *
+     * Both are scaled against the same peak, or the comparison would be
+     * between two differently stretched pictures and the one that happened to
+     * have a taller spike would look quieter. That is the whole reason the
+     * reference is drawn here rather than in its own pass.
+     */
+    function drawLevels(hist, was) {
+        var max = Math.max(peak(hist), was ? peak(was) : 0);
+        if (was) plotCounts(was.lum, max, 'rgba(245, 230, 200, 0.30)', false);
         plotCounts(hist.lum, max, 'rgba(255, 140, 66, 0.45)', true);
         plotCounts(hist.r, max, 'rgba(255, 70, 70, 0.85)', false);
         plotCounts(hist.g, max, 'rgba(70, 230, 120, 0.85)', false);
         plotCounts(hist.b, max, 'rgba(90, 130, 255, 0.85)', false);
 
-        readout.textContent = 'MEAN ' + Math.round(hist.mean)
+        /* The mean as a change, when there is something to compare with:
+           what the chain did to the picture is the useful number, and the
+           sign of it is the fastest way to see a chain quietly darkening
+           everything. */
+        var mean = 'MEAN ' + Math.round(hist.mean);
+        if (was) {
+            var delta = Math.round(hist.mean - was.mean);
+            mean += ' (' + (delta > 0 ? '+' : '') + delta + ')';
+        }
+        readout.textContent = mean
             + '  CLIP ' + (hist.clipLow * 100).toFixed(1) + '/' + (hist.clipHigh * 100).toFixed(1) + '%';
     }
 
-    function drawSpectrum(spec, pitchPx) {
+    /** One curve of dB against frequency, -60 dB at the floor. */
+    function plotCurve(curve, colour, width) {
         var w = screen.width, h = screen.height, i;
         ctx.beginPath();
-        for (i = 0; i < spec.curve.length; i++) {
-            // -60 dB at the floor, 0 dB at the top.
-            var v = (spec.curve[i] + 60) / 60;
-            var x = i / (spec.curve.length - 1) * w;
+        for (i = 0; i < curve.length; i++) {
+            var v = (curve[i] + 60) / 60;
+            var x = i / (curve.length - 1) * w;
             var y = h - v * (h - 2) - 1;
             if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = 'rgba(255, 170, 90, 0.95)';
-        ctx.lineWidth = Math.max(1, (window.devicePixelRatio || 1));
+        ctx.strokeStyle = colour;
+        ctx.lineWidth = width;
         ctx.stroke();
+    }
+
+    function drawSpectrum(spec, pitchPx, was) {
+        var line = Math.max(1, Math.round(window.devicePixelRatio || 1));
+        // The source first, so the live trace draws over it.
+        if (was) plotCurve(was.curve, 'rgba(245, 230, 200, 0.28)', line);
+        plotCurve(spec.curve, 'rgba(255, 170, 90, 0.95)', line);
 
         /* In pixels, not as a fraction of anything. The curve's axis is the
            analysis band, but a fraction of Nyquist means nothing to the eye
@@ -343,7 +399,35 @@
      * which is the same pixels export writes, so the monitor measures what
      * would be saved rather than what is on screen.
      */
-    function update(source) {
+    /* The source is measured once and kept, because it changes when an
+       image is loaded or a generator rerolled and not otherwise, while the
+       output changes on every turn of every knob. Keyed on the ImageData
+       object itself: canvas.js replaces it wholesale whenever the source
+       changes and never mutates it in place, so identity is the cheapest
+       correct answer here. The grid is part of the key, since a different
+       work size samples to a different grid. */
+    var reference = { data: null, nx: 0, ny: 0, levels: null, spectrum: null };
+
+    function referenceFor(imageData, nx, ny, n, wantSpectrum) {
+        if (!imageData) return null;
+        if (reference.data !== imageData || reference.nx !== nx || reference.ny !== ny) {
+            reference = { data: imageData, nx: nx, ny: ny, levels: null, spectrum: null };
+        }
+        var pixels = null;
+        if (!reference.levels) {
+            pixels = samplePixels(imageData.data, imageData.width, imageData.height, nx, ny);
+            reference.levels = histogram(pixels);
+        }
+        if (wantSpectrum && !reference.spectrum && window.Chain && Chain.fft) {
+            if (!pixels) {
+                pixels = samplePixels(imageData.data, imageData.width, imageData.height, nx, ny);
+            }
+            reference.spectrum = spectrum(lumaPlane(pixels, nx, ny, n, 1), n, Chain.fft);
+        }
+        return reference;
+    }
+
+    function update(source, sourceData) {
         if (!on || !source || !source.width || !source.height) return;
 
         /* One pitch for both axes: the longer side gets ANALYSE samples and
@@ -369,13 +453,23 @@
         ctx.clearRect(0, 0, screen.width, screen.height);
         graticule();
 
-        if (mode === 'spectrum' && window.Chain && Chain.fft) {
+        var wantSpectrum = mode === 'spectrum' && window.Chain && Chain.fft;
+        /* Only compare against a source of the same size. A load or a resize
+           replaces both within a render of each other, and a reference from
+           the old size would be a curve of a different picture. */
+        var was = (sourceData && sourceData.width === source.width
+            && sourceData.height === source.height)
+            ? referenceFor(sourceData, nx, ny, n, wantSpectrum)
+            : null;
+
+        if (wantSpectrum) {
             // Already at one pitch, so the plane only has to be mirrored out
             // to the square the transform needs: pitch 1 in sample units.
             var plane = lumaPlane(pixels, nx, ny, n, 1);
-            drawSpectrum(spectrum(plane, n, Chain.fft), source.width / nx);
+            drawSpectrum(spectrum(plane, n, Chain.fft), source.width / nx,
+                was && was.spectrum);
         } else {
-            drawLevels(histogram(pixels));
+            drawLevels(histogram(pixels), was && was.levels);
         }
     }
 

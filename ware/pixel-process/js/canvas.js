@@ -204,7 +204,10 @@
        js/meter.js; the monitor is absent from a page that does not have it
        and from the headless suite, and this stays a no-op there. */
     function refreshMeter() {
-        if (window.Meter && Meter.update) Meter.update(workCanvas);
+        // The source goes with it, so the monitor can draw what the chain did
+        // rather than only where it ended up. It is the pristine copy, never
+        // mutated, and meter.js holds its analysis until the object changes.
+        if (window.Meter && Meter.update) Meter.update(workCanvas, originalImageData);
     }
 
     function showOriginal(on) {
