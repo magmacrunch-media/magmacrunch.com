@@ -1422,3 +1422,38 @@ footer {
 
     .effect-index { font-size: 13px; }
 }
+
+/* ═══════════════════════════════════════════════
+   THE PUBLISHER'S MARK
+
+   The logo above the name, at the foot of the title screen, the way the
+   games carry it: stacked, it reads as a signature block rather than as a
+   line of text with a bullet in front of it. The image is white, derived
+   from the website's black-on-transparent logo by scripts/make-logo.py, and
+   drawn at a third of its pixel size so it stays smooth on a phone. This one
+   mark is a curve, not pixel art.
+   ═══════════════════════════════════════════════ */
+.title-publisher {
+    position: absolute;
+    left: 0;
+    right: 0;
+    /* Clear of the home indicator in the app; env() is simply 0 elsewhere. */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    letter-spacing: 0.18em;
+    color: var(--dim);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+}
+
+.title-publisher-mark {
+    display: block;
+    width: 26px;
+    height: 32px;
+    opacity: 0.6;
+}

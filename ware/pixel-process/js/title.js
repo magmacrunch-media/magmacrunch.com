@@ -26,6 +26,7 @@
 
     var W = 384, H = 72;
     var MAX_FONT_PX = 24;
+    var WARM_MS = 620;     // the tube striking, before the glitch loop starts
     var BURST_MS = 2500;
     var BURST_AT = 0.55;
     var BURST_LEN = 0.14;
@@ -45,6 +46,9 @@
     var a = new Uint8ClampedArray(W * H * 4);
     var b = new Uint8ClampedArray(W * H * 4);
     var pristine = null;
+    var wordmarkCanvas = null;
+    var warmedAt = 0;      // when the tube finished striking
+    var painted = false;   // has a real animation frame been drawn yet
     var rafId = 0;
     var started = 0;
     var dismissed = false;
@@ -77,7 +81,49 @@
         g.textBaseline = 'middle';
         g.fillStyle = FG;
         g.fillText(WORDMARK, W / 2, H / 2);
+        wordmarkCanvas = c;
         return g.getImageData(0, 0, W, H);
+    }
+
+    /* The tube striking: a line across the middle that opens into a picture.
+     *
+     * A real CRT collapses to a bright line when it loses deflection and
+     * opens back out as it comes up, so this is the same thing in reverse:
+     * the wordmark is squeezed to a couple of pixels at the centre, expands
+     * to full height, and the beam line that carried it fades as it goes. The
+     * brightness overshoots on the way, because a tube does.
+     *
+     * Drawn with drawImage rather than through the effect buffers: this is
+     * the one part of this screen that is not an effect, and squeezing an
+     * ImageData by hand would be a second scaler to get wrong.
+     */
+    function warmFrame(t) {
+        var ease = 1 - Math.pow(1 - t, 3);
+        var height = Math.max(2, ease * H);
+        var top = (H - height) / 2;
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = BG;
+        ctx.fillRect(0, 0, W, H);
+
+        if (wordmarkCanvas) {
+            // Over-bright early, settling to normal: t of 0.25 is where a
+            // tube is brightest as the beam spreads.
+            ctx.globalAlpha = Math.min(1, 0.35 + ease * 0.9);
+            ctx.drawImage(wordmarkCanvas, 0, 0, W, H, 0, top, W, height);
+            ctx.globalAlpha = 1;
+        }
+
+        // The beam itself, brightest while the picture is still a line.
+        var beam = Math.max(0, 1 - t * 1.6);
+        if (beam > 0) {
+            ctx.fillStyle = FG;
+            ctx.globalAlpha = beam;
+            ctx.fillRect(0, H / 2 - 1, W, 2);
+            ctx.globalAlpha = beam * 0.35;
+            ctx.fillRect(0, H / 2 - 3, W, 6);
+            ctx.globalAlpha = 1;
+        }
     }
 
     /* One effect, from the real registry, over the working buffer.
@@ -148,7 +194,17 @@
     function loop(now) {
         if (dismissed) return;
         if (!started) started = now;
-        render(now - started);
+        painted = true;
+
+        var elapsed = now - started;
+        if (elapsed < WARM_MS) {
+            warmFrame(elapsed / WARM_MS);
+        } else {
+            // The glitch loop starts from zero once the tube is up, so its
+            // burst lands where it always did rather than part way through.
+            if (!warmedAt) warmedAt = now;
+            render(now - warmedAt);
+        }
         rafId = requestAnimationFrame(loop);
     }
 
@@ -197,14 +253,28 @@
         if (dismissed) return;
         pristine = drawWordmark();
 
-        // One frame synchronously, before any rAF. A background tab never
-        // fires rAF at all, and a splash that is blank until focus is worse
-        // than one that does not animate.
-        render(0);
-
         var reduce = window.matchMedia
             && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reduce) return;
+
+        /* One frame synchronously, before any rAF. A background tab never
+           fires rAF at all, and a splash that is blank until focus is worse
+           than one that does not animate.
+
+           With the warm-up that frame is the FIRST frame of it, a line across
+           the middle, which is exactly the wrong thing to leave on screen in
+           a tab nobody is looking at. So a timer answers for rAF: timers are
+           throttled in a background tab but they do fire, and if no animation
+           frame has been painted by then the wordmark is drawn settled. Under
+           reduced motion the tube does not strike at all. */
+        if (reduce) {
+            render(0);
+            return;
+        }
+
+        warmFrame(0);
+        window.setTimeout(function() {
+            if (!painted && !dismissed) render(0);
+        }, 400);
 
         rafId = requestAnimationFrame(loop);
     });

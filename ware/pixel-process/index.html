@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=d23f3940">
+    <link rel="stylesheet" href="css/style.css?v=12aa8194">
 </head>
 <body>
     <!-- The title screen. Its wordmark is not written here: js/title.js reads
@@ -28,6 +28,17 @@
             <p class="title-sub">a signal chain for images</p>
             <button class="title-enter" id="titleEnter" type="button">ENTER</button>
             <p class="title-hint">or press any key</p>
+        </div>
+
+        <!-- The publisher's mark, as the games carry it: the logo above the
+             name rather than beside it, so it reads as a signature block. The
+             image is derived from the website's own logo by
+             scripts/make-logo.py, and is not a link: the footer carries that
+             on the website, and in the app there is nowhere for a link to go
+             that is not Safari. -->
+        <div class="title-publisher">
+            <img class="title-publisher-mark" src="img/mc-logo.png" alt="" width="26" height="32">
+            <span>magmacrunch media</span>
         </div>
     </div>
 
@@ -260,6 +271,6 @@
     <script src="js/preset.js?v=cfdcc27e"></script>
     <script src="js/lab.js?v=183a049b"></script>
     <!-- Last: it reads the effect registry the files above fill in. -->
-    <script src="js/title.js?v=417122e6"></script>
+    <script src="js/title.js?v=053b22eb"></script>
 </body>
 </html>
