@@ -26,6 +26,56 @@
         return typeof target === 'string' ? document.getElementById(target) : target;
     }
 
+    /* Put a fixed list where it can actually be read.
+     *
+     * A fixed list does not scroll with the page, so anything of it below the
+     * fold is unreachable: pixel-process's ADD EFFECT sits at the foot of a
+     * panel, and its fifteen effects opened 240px downwards from a trigger
+     * 49px above the bottom of the window. Two options were visible, the
+     * list's own scrollbar was off-screen, and the remaining thirteen effects
+     * could not be got at by any means.
+     *
+     * So the list is given the room it has: dropped below the trigger when
+     * there is space, lifted above it when there is more room up there, and
+     * capped to whatever remains so it scrolls inside the window rather than
+     * past the edge of it. MARGIN keeps it off the very edge.
+     *
+     * `opening` is false when this click is about to CLOSE the list, where
+     * measuring a list that is about to disappear is wasted work.
+     */
+    const MARGIN = 8;
+
+    function place(trigger, list, opening) {
+        if (!opening) return;
+
+        const rect = trigger.getBoundingClientRect();
+        // Measure the list at its natural height, which means showing it
+        // before it is placed: `display` is what the .open class toggles, so
+        // a list that is still closed measures zero.
+        const previous = { display: list.style.display, maxHeight: list.style.maxHeight };
+        list.style.display = 'block';
+        list.style.maxHeight = 'none';
+        const wanted = list.scrollHeight;
+        list.style.maxHeight = previous.maxHeight;
+        list.style.display = previous.display;
+
+        const below = window.innerHeight - rect.bottom - MARGIN;
+        const above = rect.top - MARGIN;
+        const dropDown = wanted <= below || below >= above;
+        const room = Math.max(64, dropDown ? below : above);
+        const height = Math.min(wanted, room);
+
+        list.style.maxHeight = height + 'px';
+        list.style.top = dropDown
+            ? rect.bottom + 'px'
+            : Math.max(MARGIN, rect.top - height) + 'px';
+
+        list.style.width = rect.width + 'px';
+        const width = rect.width || list.offsetWidth;
+        list.style.left = Math.max(MARGIN,
+            Math.min(rect.left, window.innerWidth - MARGIN - width)) + 'px';
+    }
+
     /* Attach open/close and selection behaviour to one dropdown.
        onSelect receives the chosen option's data-value.
 
@@ -55,10 +105,7 @@
             // so it has to be told where to go. Absolute lists position
             // themselves off the trigger and must not be touched.
             if (list && getComputedStyle(list).position === 'fixed') {
-                const rect = selected.getBoundingClientRect();
-                list.style.top = rect.bottom + 'px';
-                list.style.left = rect.left + 'px';
-                list.style.width = rect.width + 'px';
+                place(selected, list, !container.classList.contains('open'));
             }
 
             container.classList.toggle('open');
@@ -105,5 +152,9 @@
         if (label && active) label.textContent = active.textContent;
     }
 
-    window.RetroDropdown = { setup, getValue, setValue };
+    /* place is exported for ware/shell/tests/test-dropdown.js. Its arithmetic
+       is the whole of this fix and is worth checking without a browser: a list
+       that opens off the bottom of the window cannot be scrolled to, because a
+       fixed list does not move with the page. */
+    window.RetroDropdown = { setup, getValue, setValue, place };
 })();
