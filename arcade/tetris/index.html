@@ -20,10 +20,12 @@
     }
 </style>
 <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="base.css?v=2c65e8a1">
+<!-- Both faces are self-hosted; the @font-face blocks are at the top of
+     base.css. Preloaded because they are declared in a stylesheet the browser
+     has not parsed yet, so without this the fetch waits on base.css. -->
+<link rel="preload" as="font" type="font/woff2" href="../../fonts/PressStart2P-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="../../fonts/ShareTechMono-Regular.woff2" crossorigin>
+<link rel="stylesheet" href="base.css?v=4c3bb1de">
 <link rel="stylesheet" href="layout.css?v=93bf802e">
 <link rel="stylesheet" href="modals.css?v=e71607ee">
 <link rel="stylesheet" href="title.css?v=bed2e590">

@@ -3,6 +3,37 @@
    CSS variables, reset, body, CRT overlay, background effects
    ===================================================================== */
 
+/* Both faces, self-hosted, so this page needs no Google Fonts round trip.
+   `display=swap` was on the CDN URL these replaced, so `font-display: swap`
+   keeps the behaviour it had rather than quietly changing it. (The iOS bundle
+   of makemecookies uses `block` instead, deliberately and for its own reason,
+   which is written down there.)
+
+   url() resolves against the stylesheet that contains it, so `../../fonts/`
+   only works while this file sits exactly two levels below the repo root.
+   True on magmacrunch.com and false anywhere this folder is copied to. The
+   same caveat is on ware/shell/fonts.css and for the same reason.
+
+   Here rather than in arcade/shared/ because this is the only arcade page
+   that self-hosts so far: with one example there is no telling which parts
+   are tetris's and which are arcade-wide. Move it to shared when a second
+   page wants it, which is the same call hypnopompia made about the bundle
+   pipeline. Note arcade/makemecookies/ is a synced copy of the game repo and
+   cannot be edited here; its own index.html still names the CDN, and changing
+   that means changing its ios/package.mjs transform in the same commit. */
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('../../fonts/PressStart2P-Regular.woff2') format('woff2'),
+         url('../../fonts/PressStart2P-Regular.ttf') format('truetype');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Share Tech Mono';
+    src: url('../../fonts/ShareTechMono-Regular.woff2') format('woff2');
+    font-display: swap;
+}
+
 :root {
   /* Core palette — cold, desaturated, Nordic */
   --ice:        #AFCBD3;
