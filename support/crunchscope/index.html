@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>support — CRUNCH//SCOPE — magmacrunch media</title>
+    <meta name="description" content="Help for CRUNCH//SCOPE, the magmacrunch media image instrument for iPhone and iPad: how the signal chain works, what the monitor reads, and how to get in touch.">
+    <meta property="og:title" content="support — CRUNCH//SCOPE — magmacrunch media">
+    <meta property="og:description" content="Help and answers for CRUNCH//SCOPE on iPhone and iPad.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="magmacrunch media">
+    <meta property="og:locale" content="en_US">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="../../style.css?v=53e9e146">
+    <link rel="stylesheet" href="../../assets/app-pages.css">
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../">home</a>
+        <span class="sep">›</span>
+        <a href="../">support</a>
+        <span class="sep">›</span>
+        <span class="current">CRUNCH//SCOPE</span>
+    </div>
+
+    <h1 class="page-title">// support //</h1>
+    <p class="page-sub">crunch//scope for iphone and ipad</p>
+
+    <article class="app-doc">
+
+        <p>CRUNCH//SCOPE is a signal chain for images, played like an
+        instrument. A picture goes in at the top, passes through the modules
+        you patch together, and comes out at the bottom: pixel sorting, channel
+        shifts, block corruption, Fourier filtering, feedback. You turn knobs
+        to find things rather than typing numbers into a form.</p>
+
+        <h2>get in touch</h2>
+        <p>For help, feedback or a bug report, email:</p>
+        <a class="contact" href="mailto:info@magmacrunch.com?subject=CRUNCH%2F%2FSCOPE%20for%20iOS">info@magmacrunch.com</a>
+        <p>For a bug, it helps to include your device (for example, iPhone 16),
+        its iOS version, and what you did just before it went wrong. If a
+        particular chain does it, press COPY and paste that into the email: it
+        is the whole chain in a line of text, and it reproduces exactly what you
+        were looking at.</p>
+
+        <h2>questions</h2>
+        <dl>
+            <dt>how do i get a picture in?</dt>
+            <dd>UPLOAD IMAGE opens your photo picker. Or use one of the
+            SOURCES, which generate a picture to work on instead: noise,
+            gradients, colour bars, a checkerboard.</dd>
+
+            <dt>how do i get one out?</dt>
+            <dd>EXPORT writes the picture at its full working size and opens
+            the share sheet, where you can save it to Photos, put it in Files,
+            or send it to someone. The grid over the display is never in the
+            saved file.</dd>
+
+            <dt>how do i change the order of the modules?</dt>
+            <dd>Drag a module by its name, or use the small arrows beside its
+            switch. Order matters: the same modules in a different order are a
+            different picture.</dd>
+
+            <dt>what are DICE and MUTATE?</dt>
+            <dd>DICE builds a whole chain from one number, so the same number
+            always gives the same picture. MUTATE nudges the chain you have.
+            UNDO steps back.</dd>
+
+            <dt>what is the screen under the picture?</dt>
+            <dd>The monitor. LEVELS is a histogram: how much of the picture
+            sits at each brightness, with the source drawn behind in outline so
+            you can see what the chain did, and a reading of the mean and how
+            much is clipped at black and white. SPECTRUM shows how much detail
+            there is at each size, and reads out the strongest repeating detail
+            in pixels. MON switches it off if you would rather have the
+            height.</dd>
+
+            <dt>what do PX and CYC mean on the knobs?</dt>
+            <dd>PX is a distance in pixels, measured at the 256 reference size,
+            so a chain covers the same fraction of the picture whatever size
+            you work at. CYC is cycles across the picture. Touch and hold a
+            control to see what its unit means.</dd>
+
+            <dt>why is my picture small?</dt>
+            <dd>WORK SIZE is the size everything is processed at, and it starts
+            at 256 by 256 so the knobs respond instantly. Raise it before you
+            export; heavy effects take longer at larger sizes, and the Fourier
+            ones take the longest.</dd>
+
+            <dt>some effects were rejected when i pressed DICE</dt>
+            <dd>That is deliberate. A generated chain that leaves the picture
+            unchanged, or flattens it to mud, is thrown away and rolled again,
+            so DICE gives you something worth looking at.</dd>
+
+            <dt>can i turn off the vibration?</dt>
+            <dd>Yes, with your device's own settings: Settings › Sounds &amp;
+            Haptics › System Haptics.</dd>
+
+            <dt>does it need the internet?</dt>
+            <dd>No. The app works entirely offline and makes no network
+            connections at all.</dd>
+
+            <dt>can i use it somewhere else?</dt>
+            <dd>Yes, free in a browser at
+            <a href="../../ware/pixel-process/">magmacrunch.com/ware/pixel-process</a>.</dd>
+        </dl>
+
+        <h2>privacy</h2>
+        <p>The app collects no data and your pictures stay on your device. The
+        full policy is on the
+        <a href="../../privacy/crunchscope/">privacy page</a>.</p>
+
+    </article>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../nav.js?v=05581e34"></script>
+
+</body>
+</html>
