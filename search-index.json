@@ -2083,7 +2083,7 @@
     "c": "tool",
     "u": "/ware/pixel-process/",
     "d": "an image signal chain you play like an instrument · pixel sort, FFT filter, feedback",
-    "b": "crunchscope — magmacrunch media a signal chain for images ENTER or press any key CRUNCH//SCOPE 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT ▾ WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR SEED REROLL COLOR A COLOR B WORK SIZE W H PRESETS ▾ 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG GRID DROP IMAGE MON LEVELS SPECTRUM drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image CHAIN SEED one number, a whole chain ..."
+    "b": "crunchscope — magmacrunch media a signal chain for images ENTER or press any key magmacrunch media CRUNCH//SCOPE 256×256 0 EFFECTS INPUT UPLOAD IMAGE SOURCES generators replace the input image SELECT ▾ WHITE NOISE PERLIN NOISE H GRADIENT V GRADIENT RADIAL GRADIENT COLOR BARS CHECKERBOARD SOLID COLOR COLOR SEED REROLL COLOR A COLOR B WORK SIZE W H PRESETS ▾ 128 × 128 256 × 256 512 × 512 640 × 480 800 × 600 1024 × 768 FILE NAME EXPORT PNG GRID DROP IMAGE MON LEVELS SPECTRUM drag & drop · ctrl+v paste · upload image · add effects → SIGNAL CHAIN effects process the source image CHAIN SEED one numb..."
   },
   {
     "t": "sprite forge",
