@@ -65,6 +65,38 @@ body.dh-page.dh-videos-page .video-entry.active .video-thumb      { display: non
 body.dh-page.dh-videos-page .video-entry.active .video-iframe-wrap { display: block; }
 body.dh-page.dh-videos-page .video-embed.ia-embed .video-iframe-wrap iframe { top: -52px; height: calc(100% + 52px); }
 
+/* ── MusicBrainz panel ──
+   Every artist videos page emits this markup from its own renderMBPanel(),
+   and each one carries its own copy of these rules -- fldc in its stylesheet,
+   jon-mccoy, juanito-thompson, thld and woah in an inline <style>. This page
+   was the one without them, so .mb-label and .mb-val rendered as two bare
+   adjacent inline spans and every row read as "artistDag Henderson". The
+   grid, not a separator, is what puts the label and the value apart. */
+body.dh-page.dh-videos-page .video-mb { margin-top: 0.75rem; }
+body.dh-page.dh-videos-page .mb-table {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+body.dh-page.dh-videos-page .mb-row { display: contents; }
+body.dh-page.dh-videos-page .mb-label {
+    color: var(--dh-sage);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.07em;
+    padding-top: 3px;
+    white-space: nowrap;
+}
+body.dh-page.dh-videos-page .mb-val { color: var(--dh-white); min-width: 0; overflow-wrap: anywhere; }
+body.dh-page.dh-videos-page .mb-val a { color: var(--dh-amber); }
+body.dh-page.dh-videos-page .mb-date { color: var(--dh-tan); }
+body.dh-page.dh-videos-page .mb-loading { font-size: 0.78rem; color: var(--dh-tan); font-style: italic; }
+body.dh-page.dh-videos-page .mb-empty { font-size: 0.78rem; color: var(--dh-tan); opacity: 0.7; font-style: italic; }
+body.dh-page.dh-videos-page .mb-error { font-size: 0.78rem; color: var(--dh-rust); }
+
 body.dh-page.dh-videos-page .nav-card.c-back {
     background: transparent;
     color: var(--dh-rust-dark);
