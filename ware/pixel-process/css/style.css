@@ -1003,11 +1003,11 @@ footer {
 
     /* The chip row is its own heading, and MUTATE and UNDO are in the bar.
        Hiding them is safe for the bar's sake: it forwards with .click(),
-       which still fires on an element that is display: none. */
+       which still fires on an element that is display: none. The row goes
+       rather than the two buttons, so it does not leave its own gap behind. */
     .chain-panel > .panel-label:first-child,
     .chain-panel > .panel-hint:nth-child(2),
-    #mutateBtn,
-    #undoBtn { display: none; }
+    #rollRow { display: none; }
 
     /* Lift the toasts clear of the action bar, with a MARGIN, not `bottom`.
 
@@ -1025,6 +1025,41 @@ footer {
        stays out of the shell, which album-art-maker, media-search and
        sprite-forge also load. */
     .toast { margin-bottom: calc(46px + env(safe-area-inset-bottom)); }
+}
+
+/* ── The picture stays on screen while the controls run past it ──
+
+   Everything below the display scrolls: the selected module, the chain seed,
+   the sources, the work size, the file name, EXPORT. A phone is short enough
+   that reaching any of them took the picture off the top of the screen, which
+   is the wrong way round for a tool whose whole subject is what the image
+   looks like -- worst at the bottom, where you set the export size and then
+   press EXPORT having not seen the frame since you scrolled.
+
+   Sticky rather than fixed, so the deck occupies its own space in the flow at
+   rest and nothing below has to be padded out from under it. The monitor comes
+   along: it measures the same frame, and switched off -- which is where a
+   touch screen starts it -- it costs only its own header.
+
+   The height condition is what keeps this from being a bad trade. Pinning 46vh
+   is fine on a phone held upright and absurd on a short landscape window,
+   where `min-height: 220px` would pin two thirds of the viewport and leave a
+   slot to scroll a whole panel through. Portrait is tall by definition, so
+   only the width branch needs the floor. */
+@media (max-width: 768px) and (min-height: 600px),
+       (orientation: portrait) and (max-width: 1100px) {
+    .center-area {
+        position: sticky;
+        top: 0;
+        /* Above the panels, which set none, and below everything that is
+           position: fixed and leaves this stacking context anyway: the
+           dropdown lists at 100, the selector pop at 60, the title at 4000. */
+        z-index: 3;
+        /* The panel scrolls underneath it, so it cannot be transparent, and
+           the rule beneath it is where the deck ends and the bench begins. */
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+    }
 }
 
 /* Touch targets, keyed on the INPUT DEVICE rather than the width.

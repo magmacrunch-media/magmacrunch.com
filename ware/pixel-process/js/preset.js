@@ -446,8 +446,18 @@
         };
     }
 
+    /* One line, not pretty-printed.
+     *
+     * A preset is something you hand to somebody, and the places it travels
+     * through are hostile to sixty lines of indented JSON: a chat message, a
+     * note, and above all the window.prompt() that js/lab.js falls back to
+     * when the clipboard read is refused, which is a single-line field and is
+     * the only paste path the iOS app reliably has. Compact costs nothing --
+     * nobody reads this, parse() does -- and a four-effect chain goes from
+     * about sixty lines to one.
+     */
     function serialize(preset) {
-        return JSON.stringify(preset || capture(), null, 2);
+        return JSON.stringify(preset || capture());
     }
 
     /* Validating rather than trusting, because this is the one input to the

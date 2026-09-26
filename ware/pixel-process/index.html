@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=c7d6fe7b">
+    <link rel="stylesheet" href="css/style.css?v=7503280a">
 </head>
 <body>
     <!-- The title screen. Its wordmark is not written here: js/title.js reads
@@ -187,9 +187,22 @@
                 <input type="number" id="chainSeed" class="seed-input" value="0" min="0" step="1">
                 <button class="seed-btn" id="diceBtn">DICE</button>
             </div>
-            <div class="lab-row">
+            <div class="lab-row" id="rollRow">
                 <button class="lab-btn" id="mutateBtn">MUTATE</button>
                 <button class="lab-btn" id="undoBtn">UNDO</button>
+            </div>
+
+            <!-- Under their own heading, not under CHAIN SEED. These two carry
+                 the whole chain as text, which is the thing a seed cannot do:
+                 a seed replays a roll, and nothing else replays a chain you
+                 tuned by hand. Sat in one row with MUTATE and UNDO they read
+                 as two more operations on the number above them, and on a
+                 phone, where MUTATE and UNDO are hidden because the action bar
+                 carries them, they were the only two buttons left under a seed
+                 box. -->
+            <div class="panel-label">PRESET</div>
+            <p class="panel-hint">the whole chain, as text</p>
+            <div class="lab-row">
                 <button class="lab-btn" id="copyBtn">COPY</button>
                 <button class="lab-btn" id="pasteBtn">PASTE</button>
             </div>
@@ -268,7 +281,7 @@
     <script src="js/render.js?v=eb43f82d"></script>
     <!-- preset.js is the logic and lab.js the buttons; both need Chain,
          Canvas and UI to exist, so they follow app.js. -->
-    <script src="js/preset.js?v=cfdcc27e"></script>
+    <script src="js/preset.js?v=36a0f008"></script>
     <script src="js/lab.js?v=183a049b"></script>
     <!-- Last: it reads the effect registry the files above fill in. -->
     <script src="js/title.js?v=053b22eb"></script>
