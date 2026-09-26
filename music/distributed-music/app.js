@@ -21,13 +21,16 @@
     releases.forEach(function (r) {
       var artSrc = r.art || (r.mbid
         ? 'https://coverartarchive.org/release/' + r.mbid + '/front-250'
-        : 'assets/album-art/placeholder.jpg');
+        : '');
       var card = document.createElement('div');
       card.className = 'dist-card';
       card.id = r.id;
+      var artHTML = artSrc
+        ? '<img class="release-hero-img" src="' + artSrc + '" alt="' + r.title + '">'
+        : '<div class="dist-art-placeholder">no art</div>';
       card.innerHTML =
         '<div class="dist-art">' +
-          '<img class="release-hero-img" src="' + artSrc + '" alt="' + r.title + '" onerror="this.style.display=\'none\'">' +
+          artHTML +
         '</div>' +
         '<div class="dist-info">' +
           '<div class="dist-title">' + r.title + '</div>' +
