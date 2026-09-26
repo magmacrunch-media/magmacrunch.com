@@ -3,7 +3,10 @@
  *
  * A `.dropdown-options` list is position:fixed for pixel-process, so it does
  * not scroll with the page: anything of it below the bottom of the window is
- * unreachable by any means, including its own scrollbar. That is not
+ * unreachable by any means, including its own scrollbar. An absolute list
+ * reaches the same dead end from the other side: it scrolls with the page but
+ * only inside itself, so once its own scrollbar is at the end, whatever is
+ * still below the fold stays there. That is not
  * hypothetical. ADD EFFECT sits at the foot of the chain panel, and its
  * fifteen effects opened 240px downward from a trigger 49px above the bottom
  * of a 768px window: two options were visible and the remaining thirteen
@@ -34,13 +37,14 @@ function eq(actual, expected, name) {
     ok(actual === expected, name, 'got ' + JSON.stringify(actual) + ', expected ' + JSON.stringify(expected));
 }
 
-/** The module, loaded against a window of the given size. */
-function load(innerWidth, innerHeight) {
+/** The module, loaded against a window of the given size. `position` is what
+    every list reports, which is the branch place() takes. */
+function load(innerWidth, innerHeight, position) {
     const win = { innerWidth: innerWidth, innerHeight: innerHeight };
     const ctx = vm.createContext({
         window: win,
         document: { addEventListener() {}, querySelectorAll: () => [] },
-        getComputedStyle: () => ({ position: 'fixed' }),
+        getComputedStyle: () => ({ position: position || 'fixed' }),
     });
     vm.runInContext(fs.readFileSync(SOURCE, 'utf8'), ctx, { filename: 'dropdown.js' });
     return ctx.window.RetroDropdown;
@@ -76,11 +80,18 @@ function stubClassList() {
     };
 }
 
-/** A trigger at a given place, and a list that wants `wanted` pixels. */
+/** A trigger at a given place, and a list that wants `wanted` pixels.
+
+    The style stub takes setProperty as well as plain assignment, because the
+    two branches write differently: a fixed list is positioned with top and
+    left, an absolute one is handed a custom property and left where it is.
+    Reading style['--dd-room'] afterwards is how the second is checked. */
 function stubs(trigger, wanted) {
+    const style = {};
+    style.setProperty = function (name, value) { style[name] = value; };
     return [
         { getBoundingClientRect: () => trigger },
-        { style: {}, scrollHeight: wanted, offsetWidth: 200 },
+        { style: style, scrollHeight: wanted, offsetWidth: 200 },
     ];
 }
 
@@ -132,6 +143,42 @@ console.log('\n=== a fixed list is placed where it can be read ===');
     const [trigger, list] = stubs({ top: 100, bottom: 130, left: 40, width: 200 }, 300);
     place(trigger, list, false);
     eq(list.style.top, undefined, 'closing does not move the list');
+}
+
+console.log('\n=== an absolute list is capped to the room it has ===');
+
+{
+    /* GATE//FOLD's ADD TEXT modal, measured in the LITE build at a 560px
+       window: the font trigger's bottom edge at 427, a list of fifteen faces
+       wanting 329px and capped by the stylesheet at 240. 427 + 240 = 667,
+       which is 107px below the fold, and the list's own scrollbar runs out
+       before it gets there. */
+    const { place } = load(1024, 560, 'absolute');
+
+    let [trigger, list] = stubs({ top: 397, bottom: 427, left: 319, width: 433 }, 329);
+    place(trigger, list, true);
+    eq(list.style.top, undefined, 'an absolute list is not moved');
+    eq(list.style['--dd-room'], '125px', 'it is told the room below the trigger');
+    ok(427 + 125 <= 560, 'which is a list that ends above the fold');
+
+    // Room to spare: the stylesheet's own cap goes on deciding.
+    [trigger, list] = stubs({ top: 100, bottom: 130, left: 40, width: 200 }, 329);
+    place(trigger, list, true);
+    ok(parseInt(list.style['--dd-room'], 10) >= 240,
+        'with room to spare the measurement shrinks nothing (' + list.style['--dd-room'] + ')');
+
+    // A trigger pinned to the very foot of the window still shows something,
+    // rather than a slot where the border is the whole list.
+    [trigger, list] = stubs({ top: 530, bottom: 558, left: 40, width: 200 }, 329);
+    place(trigger, list, true);
+    eq(list.style['--dd-room'], '64px', 'a trigger at the foot of the window gets the floor');
+
+    // Closing measures nothing here either, and leaves nothing behind: the
+    // closed state IS the stylesheet's max-height of 0, which an inline cap
+    // would beat.
+    [trigger, list] = stubs({ top: 100, bottom: 130, left: 40, width: 200 }, 329);
+    place(trigger, list, false);
+    eq(list.style['--dd-room'], undefined, 'closing publishes nothing');
 }
 
 console.log('\n=== a menu keeps its own name; a picker takes the value ===');

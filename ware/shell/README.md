@@ -43,6 +43,12 @@ nav colour variables.
 `dropdown.css` tokens: `--dd-border-w`, `--dd-accent`, `--dd-glow`,
 `--dd-glow-open`, `--dd-tint`, `--dd-tint-soft`, `--dd-font-size`, `--dd-arrow`.
 
+`--dd-room` is the one token written *by* `dropdown.js` rather than by an app:
+the space below the trigger, measured each time a list opens and set on the list
+itself, which the open rule caps its 240px against. An app that overrides that
+cap wants `var(--dd-room)` inside its own `min()`, or it has opted back out of
+the measurement and can open past the bottom of the window again.
+
 `toast.css` tokens: `--toast-accent`, `--toast-bg`, `--toast-hold`.
 media-search overrides `--toast-accent` to its `--green`; album-art-maker takes
 the default. `--toast-hold` is the on-screen time before the fade — change it

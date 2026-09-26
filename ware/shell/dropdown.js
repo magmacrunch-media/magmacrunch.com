@@ -13,7 +13,8 @@
       - `target` may be an element or an element id
       - the rect positioning runs only when .dropdown-options actually
         computes to position:fixed, so the absolute-positioned callers are
-        untouched
+        not moved; they are measured instead and told how much room they
+        have, which the stylesheet's open rule caps against
 
     Pair with ware/shell/dropdown.css (album-art-maker, media-search).
     pixel-process keeps its own stylesheet — see the note in dropdown.css.
@@ -44,8 +45,10 @@
      * measuring a list that is about to disappear is wasted work.
      */
     const MARGIN = 8;
+    const MIN_ROOM = 64;
 
     function place(trigger, list, opening) {
+        if (getComputedStyle(list).position !== 'fixed') return cap(trigger, list, opening);
         if (!opening) return;
 
         const rect = trigger.getBoundingClientRect();
@@ -62,7 +65,7 @@
         const below = window.innerHeight - rect.bottom - MARGIN;
         const above = rect.top - MARGIN;
         const dropDown = wanted <= below || below >= above;
-        const room = Math.max(64, dropDown ? below : above);
+        const room = Math.max(MIN_ROOM, dropDown ? below : above);
         const height = Math.min(wanted, room);
 
         list.style.maxHeight = height + 'px';
@@ -74,6 +77,32 @@
         const width = rect.width || list.offsetWidth;
         list.style.left = Math.max(MARGIN,
             Math.min(rect.left, window.innerWidth - MARGIN - width)) + 'px';
+    }
+
+    /* An absolute list cannot be moved, and must not be: `top: 100%` puts it
+     * under its own trigger, inside whatever scrolls around it. What it can
+     * still do is open past the bottom of the WINDOW, and then its own
+     * scrollbar reaches the end while the box is still off-screen, which is
+     * the same dead end as a fixed list by a different route. GATE//FOLD's
+     * ADD TEXT modal did it at a 560px window: the font list ran to y=667,
+     * 105px below the fold, and neither the modal nor the page scrolled to
+     * bring the last of the fifteen faces back.
+     *
+     * So the room is measured and published, and the open rule in
+     * dropdown.css takes the smaller of its own cap and this one. The list
+     * gets shorter and scrolls inside itself, which is always reachable.
+     *
+     * A CUSTOM PROPERTY rather than an inline max-height, and that is the
+     * whole reason this is not four lines inside place(). The CLOSED state is
+     * a max-height of 0, so an inline max-height would beat it and the list
+     * would never collapse again. A custom property is inert until the open
+     * rule asks for it, so there is nothing to clear and closing stays the
+     * stylesheet's business.
+     */
+    function cap(trigger, list, opening) {
+        if (!opening) return;
+        const below = window.innerHeight - trigger.getBoundingClientRect().bottom - MARGIN;
+        list.style.setProperty('--dd-room', Math.max(MIN_ROOM, below) + 'px');
     }
 
     /* Attach open/close and selection behaviour to one dropdown.
@@ -113,12 +142,11 @@
                 if (d !== container) d.classList.remove('open');
             });
 
-            // A fixed-position list is outside the trigger's containing block,
-            // so it has to be told where to go. Absolute lists position
-            // themselves off the trigger and must not be touched.
-            if (list && getComputedStyle(list).position === 'fixed') {
-                place(selected, list, !container.classList.contains('open'));
-            }
+            // A fixed-position list is outside the trigger's containing
+            // block, so it has to be told where to go; an absolute one puts
+            // itself under the trigger and is only told how much room it has.
+            // place() reads which it is.
+            if (list) place(selected, list, !container.classList.contains('open'));
 
             container.classList.toggle('open');
         });
@@ -168,7 +196,8 @@
 
     /* place is exported for ware/shell/tests/test-dropdown.js. Its arithmetic
        is the whole of this fix and is worth checking without a browser: a list
-       that opens off the bottom of the window cannot be scrolled to, because a
-       fixed list does not move with the page. */
+       that opens off the bottom of the window cannot be scrolled to, whether
+       it is fixed and does not move with the page, or absolute and has already
+       run out of its own scrollbar. Both branches are driven from there. */
     window.RetroDropdown = { setup, getValue, setValue, place };
 })();

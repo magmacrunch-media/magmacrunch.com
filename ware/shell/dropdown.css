@@ -17,6 +17,10 @@
      --dd-glow       accent at low alpha, for the box-shadow
      --dd-tint       accent at very low alpha, for option hover/active fills
      --dd-font-size  trigger label size (options are always 7px)
+
+   One token is written BY dropdown.js rather than read from an app:
+   --dd-room, the space below the trigger, set on the list itself each time
+   it opens. See the open rule below.
    ═══════════════════════════════════════════════ */
 
 :root {
@@ -86,8 +90,15 @@
     z-index: 50;
 }
 
+/* 240px, OR THE ROOM THERE ACTUALLY IS, whichever is less. dropdown.js
+   measures the space below the trigger on open and publishes it as
+   --dd-room; without it the fifteen faces of album-art-maker's font picker
+   open 240px downwards wherever the trigger happens to be, and on a short
+   window the last of them land below the fold with the list's own scrollbar
+   already at its end. An app overriding this cap wants var(--dd-room) in its
+   own min() or it opts back out of the measurement. */
 .custom-dropdown.open .dropdown-options {
-    max-height: 240px;
+    max-height: min(240px, var(--dd-room, 240px));
 }
 
 .dropdown-option {
