@@ -46,6 +46,36 @@ function load(innerWidth, innerHeight) {
     return ctx.window.RetroDropdown;
 }
 
+/** A dropdown of stub elements: one trigger with a label span, two options. */
+function stubDropdown(labelText) {
+    const label = { textContent: labelText };
+    const selected = {
+        querySelector: () => label,
+        addEventListener(type, fn) { this.onclick = fn; },
+    };
+    const options = [
+        { textContent: 'ALPHA', dataset: { value: 'alpha' }, classList: stubClassList(), addEventListener(t, fn) { this.click = fn; } },
+        { textContent: 'BETA', dataset: { value: 'beta' }, classList: stubClassList(), addEventListener(t, fn) { this.click = fn; } },
+    ];
+    const container = {
+        classList: stubClassList(),
+        contains: () => true,
+        querySelector: (sel) => (sel === '.dropdown-selected' ? selected : null),
+        querySelectorAll: () => options,
+    };
+    return { container, selected, label, options };
+}
+
+function stubClassList() {
+    const set = new Set();
+    return {
+        add: (c) => set.add(c),
+        remove: (c) => set.delete(c),
+        contains: (c) => set.has(c),
+        toggle: (c) => (set.has(c) ? (set.delete(c), false) : (set.add(c), true)),
+    };
+}
+
 /** A trigger at a given place, and a list that wants `wanted` pixels. */
 function stubs(trigger, wanted) {
     return [
@@ -102,6 +132,31 @@ console.log('\n=== a fixed list is placed where it can be read ===');
     const [trigger, list] = stubs({ top: 100, bottom: 130, left: 40, width: 200 }, 300);
     place(trigger, list, false);
     eq(list.style.top, undefined, 'closing does not move the list');
+}
+
+console.log('\n=== a menu keeps its own name; a picker takes the value ===');
+
+{
+    // The default: a value picker's trigger becomes what you chose.
+    const { setup } = load(375, 812);
+    const d = stubDropdown('SELECT');
+    setup(d.container, () => {});
+    d.options[0].click();
+    eq(d.label.textContent, 'ALPHA', 'a picker shows the option it was given');
+}
+
+{
+    /* keepLabel: an action menu keeps its own name. "+ ADD EFFECT" that
+       renames itself to the effect you just added is not a label, it is a
+       readout -- and it is then the only control that can add a second one. */
+    const { setup } = load(375, 812);
+    const d = stubDropdown('+ ADD EFFECT');
+    setup(d.container, () => {}, { markActive: false, keepLabel: true });
+    d.options[0].click();
+    eq(d.label.textContent, '+ ADD EFFECT', 'a menu still says what it does');
+    d.options[1].click();
+    eq(d.label.textContent, '+ ADD EFFECT', 'and goes on saying it for the second pick');
+    ok(!d.options[0].classList.contains('active'), 'markActive false leaves no sticky highlight');
 }
 
 console.log('\n' + passed + ' passed, ' + failed + ' failed');

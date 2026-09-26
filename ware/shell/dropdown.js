@@ -82,9 +82,21 @@
        opts.markActive (default true) moves the .active class to the chosen
        option. pixel-process passes false: two of its three dropdowns are
        action menus — picking "ADD EFFECT > BLUR" appends to a chain rather
-       than selecting a value — so a sticky highlight would be misleading. */
+       than selecting a value — so a sticky highlight would be misleading.
+
+       opts.keepLabel (default false) is the other half of that, and it was
+       missing for a year. The trigger's label was rewritten to the chosen
+       option unconditionally, so "+ ADD EFFECT" became "PIXEL SORT" the
+       moment you added one: the one control that adds an effect stopped
+       saying so, and read instead like a display of the effect you were
+       already editing. On a phone, where it is also the only way back to the
+       list, the app looked as though it had no way to choose a second effect.
+       A menu keeps its own name; a value picker ("SELECT" -> "WHITE NOISE")
+       still wants the rewrite, which is why this is per-dropdown and not
+       tied to markActive. */
     function setup(target, onSelect, opts) {
         const markActive = !(opts && opts.markActive === false);
+        const keepLabel = !!(opts && opts.keepLabel);
         const container = resolve(target);
         if (!container) return;
 
@@ -113,8 +125,10 @@
 
         options.forEach(opt => {
             opt.addEventListener('click', () => {
-                const label = selected.querySelector('span:first-child');
-                if (label) label.textContent = opt.textContent;
+                if (!keepLabel) {
+                    const label = selected.querySelector('span:first-child');
+                    if (label) label.textContent = opt.textContent;
+                }
                 if (markActive) {
                     options.forEach(o => o.classList.remove('active'));
                     opt.classList.add('active');

@@ -287,13 +287,15 @@
     syncColorInputs(gradColorB, gradHexB);
 
     // ── Add Effect Dropdown ──
+    // keepLabel, because this one is a menu and not a picker: see the note on
+    // setupDropdown below.
     var addEffectDropdown = document.getElementById('addEffectDropdown');
     setupDropdown(addEffectDropdown, function(value) {
         Chain.addEffect(value);
         UI.renderChain();
         UI.bindEvents();
         Chain.render();
-    });
+    }, true);
 
     // ── Export ──
     exportBtn.addEventListener('click', function() {
@@ -318,8 +320,18 @@
     // off because these are action menus, not value pickers.
     // The shared setup attaches its own outside-click close, so the global
     // close-all listener that used to live here is gone.
-    function setupDropdown(dropdown, callback) {
-        RetroDropdown.setup(dropdown, callback, { markActive: false });
+    //
+    // keepLabel is for ADD EFFECT alone. The shell rewrites a trigger's label
+    // to whatever was picked, which is right for SOURCES ("SELECT" becomes
+    // "WHITE NOISE") and wrong for a menu: "+ ADD EFFECT" became "PIXEL SORT"
+    // as soon as you added one, so the control that adds an effect no longer
+    // said so. On a phone it is also the way back to the list of effects, and
+    // the app read as though there were none.
+    function setupDropdown(dropdown, callback, keepLabel) {
+        RetroDropdown.setup(dropdown, callback, {
+            markActive: false,
+            keepLabel: !!keepLabel
+        });
     }
 
     // ── Color Input Sync Helper ──

@@ -968,11 +968,38 @@ footer {
     /* The effect being tuned goes directly under the picture. As first laid
        out, the bench sat in between, and the selected effect's controls landed
        below the fold, behind an action bar that already carries DICE, MUTATE
-       and UNDO. */
+       and UNDO.
+
+       ADD EFFECT rides with the chips rather than under the card, which costs
+       the card 36px and is worth it: the chips and ADD EFFECT are the whole of
+       how a chain is navigated on a phone, and one selected card is tall
+       enough to push ADD EFFECT off the bottom on its own. It landed at y=793
+       in an 812px window with one effect added -- just past the end of the
+       panel, so the page appeared to stop there and the only control that
+       reaches the other fourteen effects was out of sight. */
     .chain-panel > * { order: 4; }
     .chain-panel > .chain-chips { order: 1; }
-    .chain-panel > .chain-list { order: 2; }
-    .chain-panel > .add-effect-wrap { order: 3; }
+    .chain-panel > .add-effect-wrap { order: 2; }
+    .chain-panel > .chain-list { order: 3; }
+
+    /* The header stops eating vertical drags here.
+
+       It carries `touch-action: none` because it is the drag handle for
+       reordering the chain, and a browser that claims the drag for scrolling
+       leaves the module unmovable. On a phone that trade is all cost: only the
+       selected card is displayed, so a drag would carry a card past siblings
+       nobody can see, and the two ways to reorder that do work on a phone --
+       the card's own up/down buttons and the chips' arrows -- are both already
+       here. What it left behind was a full-width dead stripe across the top of
+       the card, in the one region a thumb reaches for when the card runs past
+       the bottom of the screen: the page simply would not scroll.
+
+       An iPad in the three-panel layout shows every card and keeps the drag,
+       which is why this is the phone query and not `pointer: coarse`. */
+    .effect-header {
+        touch-action: pan-y;
+        cursor: default;
+    }
 
     /* The chip row is its own heading, and MUTATE and UNDO are in the bar.
        Hiding them is safe for the bar's sake: it forwards with .click(),
