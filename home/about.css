@@ -90,18 +90,26 @@
            rather than through the lava reds the homepage title uses. */
         .masthead-title {
             font-family: 'Press Start 2P', monospace;
-            font-size: clamp(18px, 4.4vw, 46px);
+            /* Floor is 20px, not 18, so that at the smallest size the 0.05em
+               layers land on whole pixels (1/2/3/4/5) rather than 0.9/1.8/2.7.
+               Press Start 2P is a pixel face and a fractional offset softens
+               it. Matches the homepage title's floor. */
+            font-size: clamp(20px, 4.4vw, 46px);
             line-height: 1.45;
             text-align: center;
             text-transform: lowercase;
             color: var(--mc-crater);
             letter-spacing: 0.05em;
+            /* Same proportional extrusion as the homepage title, so the
+               same wordmark reads the same on both pages, and so the media
+               query below needs no second set of offsets. */
+            --title-layer: 0.05em;
             text-shadow:
-                3px 3px 0 #ff6cb2,
-                6px 6px 0 var(--mc-cereal-cyan),
-                9px 9px 0 #f5e6d0,
-                12px 12px 0 var(--mc-lava-bright),
-                15px 15px 0 #09090c;
+                calc(var(--title-layer) * 1) calc(var(--title-layer) * 1) 0 #ff6cb2,
+                calc(var(--title-layer) * 2) calc(var(--title-layer) * 2) 0 var(--mc-cereal-cyan),
+                calc(var(--title-layer) * 3) calc(var(--title-layer) * 3) 0 #f5e6d0,
+                calc(var(--title-layer) * 4) calc(var(--title-layer) * 4) 0 var(--mc-lava-bright),
+                calc(var(--title-layer) * 5) calc(var(--title-layer) * 5) 0 #09090c;
         }
         .masthead-rule {
             width: min(420px, 70%);
@@ -416,15 +424,7 @@
             .zine-links { flex-direction: column; align-items: center; }
             .cereal-canvas-wrap { float: none; width: 80%; max-width: 260px; margin: 16px auto; }
 
-            .masthead-title {
-                line-height: 1.5;
-                text-shadow:
-                    1px 1px 0 var(--mc-mount-mid),
-                    2px 2px 0 var(--mc-lava-deep),
-                    3px 3px 0 var(--mc-mount-dark),
-                    4px 4px 0 var(--mc-lava-amber),
-                    5px 5px 0 #000;
-            }
+            .masthead-title { line-height: 1.5; }
             .masthead-rule { margin: 18px 0 12px; }
             .masthead-sub { font-size: 11px; letter-spacing: 0.3em; text-indent: 0.3em; }
             .masthead-quote { font-size: 12px; line-height: 1.8; }

@@ -45,12 +45,19 @@
             text-align: center;
             text-transform: lowercase;
             color: var(--mc-crater);
+            /* Offsets are a fraction of the font size, not fixed pixels, so
+               the extrusion keeps the same proportions at every size and the
+               media query below needs no second set of numbers. At 4px steps
+               against a 48px face the layers read as five separate ghosts;
+               --title-layer is the one number to turn if it wants tightening
+               or loosening again. */
+            --title-layer: 0.05em;
             text-shadow:
-                4px 4px 0px var(--mc-mount-mid),
-                8px 8px 0px var(--mc-lava-deep),
-                12px 12px 0px var(--mc-mount-dark),
-                16px 16px 0px var(--mc-lava-amber),
-                20px 20px 0px #000000;
+                calc(var(--title-layer) * 1) calc(var(--title-layer) * 1) 0 var(--mc-mount-mid),
+                calc(var(--title-layer) * 2) calc(var(--title-layer) * 2) 0 var(--mc-lava-deep),
+                calc(var(--title-layer) * 3) calc(var(--title-layer) * 3) 0 var(--mc-mount-dark),
+                calc(var(--title-layer) * 4) calc(var(--title-layer) * 4) 0 var(--mc-lava-amber),
+                calc(var(--title-layer) * 5) calc(var(--title-layer) * 5) 0 #000000;
             letter-spacing: 0.05em;
             margin-bottom: 1.5rem;
             line-height: 1.4;
@@ -158,14 +165,6 @@
             .nav-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .nav-card { padding: 12px 10px; }
             .card-sub { font-size: 11px; }
-            .volcano-title {
-                text-shadow:
-                    1px 1px 0px var(--mc-mount-mid),
-                    2px 2px 0px var(--mc-lava-deep),
-                    3px 3px 0px var(--mc-mount-dark),
-                    4px 4px 0px var(--mc-lava-amber),
-                    5px 5px 0px #000000;
-            }
         }
     </style>
 </head>
