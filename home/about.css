@@ -202,7 +202,31 @@
             text-shadow: 0 0 10px rgba(255,224,58,0.3);
         }
 
-        /* ── FLOAT ASCII FOR TEXT WRAPPING ── */
+        /* ── CENTRED ASCII ──
+           The "founded by" credit was float: right at clamp(2px, 0.5vw, 5px),
+           which rendered it 139px wide in a 799px column -- 17% of the width,
+           and floated beside nothing, because the element after it is a heading
+           that clears. Centred and sized to the column instead, by the same
+           --cols arithmetic the artist strips use: 0.6 is Courier Prime's
+           advance in em, so 100cqw / cols / 0.6 is the size that exactly fills
+           the width, and the cap stops it growing past a comfortable measure. */
+        .ascii-center {
+            container-type: inline-size;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            clear: both;
+            margin: 34px 0 30px;
+        }
+        .ascii-center pre {
+            font-size: min(13px, calc(100cqw / var(--cols, 60) / 0.6)) !important;
+            line-height: 1.2;
+            white-space: pre;
+            flex-shrink: 0;
+        }
+
+        /* ── FLOAT ASCII FOR TEXT WRAPPING ──
+           Only the commented-out "producers" block uses this now. */
         .ascii-float-right {
             float: right;
             margin: 20px 20px 20px 24px;
