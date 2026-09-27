@@ -439,6 +439,12 @@
             filter: brightness(0.35) saturate(0.7);
         }
         .link-strip-inner {
+            /* Query container for the fit-to-box font-size below. `size` and
+               not `inline-size`, because the art has to fit vertically too and
+               that needs 100cqh. It is safe here: this box takes both its
+               dimensions from the strip (100% of a fixed 140px), so size
+               containment removes nothing it was using. */
+            container-type: size;
             position: relative;
             z-index: 1;
             display: flex;
@@ -451,9 +457,34 @@
             padding: 12px 20px;
             box-sizing: border-box;
         }
+        /* ── ARTIST STRIP ART ──
+           Every strip used to be set at the same clamp whatever its size, so a
+           block too big for the box was silently cropped rather than scaled:
+           texas-holdem-lava-dome overflowed 474x161 into 918x114 and lost its
+           top and bottom rows, juanito thompson 138 into 114, and on a phone
+           texas-holdem also ran 379px of art through 305px of room and lost the
+           end of the word. Nothing said so -- the art just stopped early.
+
+           Each <pre> carries its own --cols and --rows, so the size below is
+           whichever of three limits binds first: the 5px cap, the width, or the
+           height. 0.6 is Courier Prime's advance in em, measured rather than
+           assumed (158 cols at 4px come to 379px, and 379/158/4 = 0.5997);
+           1.15 is the line-height on this rule.
+
+           The clamp stays as the first declaration. A browser without container
+           queries cannot parse cqw/cqh, drops the second declaration whole, and
+           keeps the old behaviour. */
         .link-strip-inner pre {
             font-family: 'Courier Prime', monospace;
             font-size: clamp(2px, 0.5vw, 5px);
+            /* The outer max() keeps the clamp's old 2px floor: past that
+               point shrinking stops buying anything and cropping is the lesser
+               of the two evils. */
+            font-size: max(2px, min(
+                5px,
+                calc(100cqw / var(--cols, 120) / 0.6),
+                calc(100cqh / var(--rows, 20) / 1.15)
+            ));
             line-height: 1.15;
             white-space: pre;
             text-shadow: 0 0 8px rgba(255,45,155,0.3);
@@ -493,7 +524,14 @@
 
         @media (max-width: 640px) {
             .link-strip { height: 110px; }
-            .link-strip-inner pre { font-size: clamp(1.5px, 1.2vw, 4px); }
+            .link-strip-inner pre {
+                font-size: clamp(1.5px, 1.2vw, 4px);
+                font-size: max(1.5px, min(
+                    4px,
+                    calc(100cqw / var(--cols, 120) / 0.6),
+                    calc(100cqh / var(--rows, 20) / 1.15)
+                ));
+            }
         }
 
         /* ── EMAIL CALLOUT ── */
