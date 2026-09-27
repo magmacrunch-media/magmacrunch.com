@@ -388,11 +388,18 @@ body .title-screen .title-subtitle {
         opacity: 0;
         transform: translateY(100vh) rotate(0deg);
     }
+    /* 0.8, not 0.3, and the difference is a multiplication that was easy to
+       miss: the colours above are already rgba(..., 0.3), so an 0.3 here put
+       the glyphs on screen at an effective 0.09 alpha. On a phone that is two
+       faint marks in a corner rather than an atmosphere -- they read as
+       something left behind rather than something drifting. 0.8 against the
+       colours' own 0.3 lands at about 0.24, which is visible without
+       competing with the binary rain or the title. */
     10% {
-        opacity: 0.3;
+        opacity: 0.8;
     }
     90% {
-        opacity: 0.3;
+        opacity: 0.8;
     }
     100% {
         opacity: 0;

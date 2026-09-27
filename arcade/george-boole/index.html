@@ -40,13 +40,13 @@
     <link rel="stylesheet" href="css/themes.css?v=97c2703d">
     <link rel="stylesheet" href="css/container.css?v=a30fdcef">
     <link rel="stylesheet" href="css/game.css?v=3eaa3eb3">
-    <link rel="stylesheet" href="css/modal-title.css?v=99f2b3e9">
+    <link rel="stylesheet" href="css/modal-title.css?v=2ad178ce">
     <link rel="stylesheet" href="css/modal-lore.css?v=5d85f992">
     <link rel="stylesheet" href="css/modal-difficulty.css?v=2cea08f0">
     <link rel="stylesheet" href="css/modal-scoreboard.css?v=0ae5f201">
     <link rel="stylesheet" href="css/modal-settings.css?v=52d3c30a">
-    <link rel="stylesheet" href="css/modal-misc.css?v=bb31ae76">
-    <link rel="stylesheet" href="css/responsive.css?v=e97b84e7">
+    <link rel="stylesheet" href="css/modal-misc.css?v=b7074cbd">
+    <link rel="stylesheet" href="css/responsive.css?v=5b8ab20a">
     <link rel="stylesheet" href="css/gates.css?v=71f1f693">
     <link rel="stylesheet" href="css/side-panels.css?v=750ad1a6">
     <link rel="stylesheet" href="css/math-overlay.css?v=2b2e3275">
@@ -486,52 +486,114 @@
                 <ul style="font-size: 10px; line-height: 1.7; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
                     <li style="margin-bottom: 4px;">→ 1 + 1 = 1 <span style="opacity: 0.8;">(consolidates, awards points)</span></li>
                     <li style="margin-bottom: 4px;">→ 2 + 2 = 2 <span style="opacity: 0.8;">(merges to same, no doubling!)</span></li>
-                    <li style="margin-bottom: 4px;">→ 7 + 7 = 7 <span style="opacity: 0.8;">(Boolean logic: A∨A = A)</span></li>
+                    <li style="margin-bottom: 4px;">→ 7 + 7 = 7 <span style="opacity: 0.8;">(Boolean logic: A<span class="glyph">∨</span>A = A)</span></li>
                 </ul>
             </div>
             
             <div class="rule-box" style="background: rgba(255, 0, 255, 0.08); padding: 12px; margin-bottom: 15px; border-left: 3px solid #ff00ff;">
                 <p style="margin: 0 0 8px 0; font-size: 11px;"><strong style="color: #ff00ff;">different numbers need gates</strong></p>
                 <p style="font-size: 10px; line-height: 1.7; margin: 0; color: rgba(255, 255, 255, 0.95);">
-                    e.g., you <strong>cannot</strong> merge 1 + 2 directly; you must use tiles with <strong>logic gates (⊕ ∨ ∧ ¬)</strong>.
+                    e.g., you <strong>cannot</strong> merge 1 + 2 directly; you must use tiles with <strong>logic gates (<span class="glyph">⊕</span> <span class="glyph">∨</span> <span class="glyph">∧</span> <span class="glyph">¬</span>)</strong>.
                 </p>
             </div>
             
             <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
             
+            <!-- ── For somebody who has never met a logic gate ──────────────
+                 Everything after this point assumed the reader already knew
+                 what a bit is. The gate cards say "sets bits where inputs
+                 differ", the codex says "AND two numbers that share no bits",
+                 and neither is any use if "bits" is the word you are stuck on.
+                 The codex cannot fill the gap either: every gate in it is
+                 locked until you have fired it, so the explanation is behind
+                 the thing it explains.
+
+                 So: four lamps, then one worked sum done a column at a time.
+                 It is a section like any other, which means rules-pages.js
+                 paginates it with the rest and it needs nothing added there. -->
+            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">NEW TO THIS? A NUMBER IS FOUR LAMPS</h4>
+
+            <div class="rule-box" style="background: rgba(0, 255, 255, 0.06); padding: 12px; margin-bottom: 15px; border-left: 3px solid #00ffff;">
+                <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    Every tile is four lamps in a row, each either <strong style="color: #00ff00;">on (1)</strong>
+                    or <strong style="color: #666;">off (0)</strong>. The lamps are worth
+                    <strong style="color: #ffd700;">8, 4, 2, 1</strong>, and the number on the tile is
+                    whatever the lit ones add up to.
+                </p>
+                <div style="font-family: monospace; font-size: 13px; line-height: 1.8; color: #00ffff; margin-left: 4px;">
+                    <div><span style="color:#ffd700;">8 4 2 1</span></div>
+                    <div>0 1 0 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">= 4+1 =</span> <strong style="color:#00ff00;">5</strong></div>
+                    <div>0 0 1 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">= 2+1 =</span> <strong style="color:#00ff00;">3</strong></div>
+                </div>
+            </div>
+
+            <div class="rule-box" style="background: rgba(138, 43, 226, 0.12); padding: 12px; margin-bottom: 15px; border-left: 3px solid #8a2be2;">
+                <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    A gate compares the two tiles <strong>one lamp at a time</strong> and decides
+                    whether that lamp is on in the answer. Nothing carries, nothing adds up.
+                    <strong style="color: #00ffff;">XOR</strong> lights a lamp when the two disagree:
+                </p>
+                <div style="font-family: monospace; font-size: 13px; line-height: 1.8; margin-left: 4px;">
+                    <div><span style="color:#ffd700;">8 4 2 1</span></div>
+                    <div style="color:#00ffff;">0 1 0 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">5</span></div>
+                    <div style="color:#00ffff;">0 0 1 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">3</span></div>
+                    <div style="color:#8a2be2;">------- <span style="color:#ff00ff;"><span class="glyph">⊕</span></span></div>
+                    <div style="color:#00ff00;">0 1 1 0 &nbsp;<span style="color: rgba(255,255,255,0.8);">= 4+2 =</span> <strong>6</strong></div>
+                </div>
+                <p style="margin: 10px 0 0 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    Same idea for the others: <strong style="color: #00ffff;">OR</strong> lights a lamp
+                    if it is on in <em>either</em>, <strong style="color: #00ffff;">AND</strong> only if it is
+                    on in <em>both</em>, and <strong style="color: #ffd700;">NOT</strong> flips all four on a
+                    single tile.
+                </p>
+            </div>
+
+            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
+
             <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">LOGIC GATES</h4>
             
             <div class="gates-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <!-- The symbol on its own line and twice the size it was. These
+                     four glyphs are the thing the section is about, and at 11px
+                     inline with the name they were the least legible text on the
+                     card: <span class="glyph">∨</span> and <span class="glyph">∧</span> differ by one row of pixels at that size, and
+                     <span class="glyph">⊕</span> is a circle with a cross in it rendered into about eight.
+                     The body was 9px, which is under this face's floor on a
+                     phone. -->
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
-                    <div style="font-size: 11px; color: #00ffff; margin-bottom: 4px;"><strong>⊕ XOR</strong></div>
-                    <div style="font-size: 9px; line-height: 1.5; color: rgba(255, 255, 255, 0.9);">sets bits where inputs differ</div>
-                    <div style="font-size: 9px; color: #00ff00; margin-top: 4px;">1⊕2=3, 2⊕3=1</div>
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">⊕</div>
+                    <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>XOR</strong></div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">sets bits where inputs differ</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">⊕</span>2=3, 2<span class="glyph">⊕</span>3=1</div>
                 </div>
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
-                    <div style="font-size: 11px; color: #00ffff; margin-bottom: 4px;"><strong>∨ OR</strong></div>
-                    <div style="font-size: 9px; line-height: 1.5; color: rgba(255, 255, 255, 0.9);">sets any bit that is 1 in either</div>
-                    <div style="font-size: 9px; color: #00ff00; margin-top: 4px;">1∨2=3, 4∨3=7</div>
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∨</div>
+                    <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>OR</strong></div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">sets any bit that is 1 in either</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">∨</span>2=3, 4<span class="glyph">∨</span>3=7</div>
                 </div>
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
-                    <div style="font-size: 11px; color: #00ffff; margin-bottom: 4px;"><strong>∧ AND</strong></div>
-                    <div style="font-size: 9px; line-height: 1.5; color: rgba(255, 255, 255, 0.9);">keeps shared bits</div>
-                    <div style="font-size: 9px; color: #00ff00; margin-top: 4px;">3∧2=2, 7∧4=4</div>
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∧</div>
+                    <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>AND</strong></div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">keeps bits that are 1 in both</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">3<span class="glyph">∧</span>2=2, 7<span class="glyph">∧</span>4=4</div>
                 </div>
                 <div class="gate-card" style="background: rgba(255, 215, 0, 0.08); padding: 10px; border: 2px solid rgba(255, 215, 0, 0.5);">
-                    <div style="font-size: 11px; color: #ffd700; margin-bottom: 4px;"><strong>¬ NOT</strong></div>
-                    <div style="font-size: 9px; line-height: 1.5; color: rgba(255, 255, 255, 0.9);">inverts all bits (acts one number only)</div>
-                    <div style="font-size: 9px; color: #00ff00; margin-top: 4px;">¬1=2 (2-bit), ¬8=7 (4-bit)</div>
-                    <div style="font-size: 9px; color: #ff4444; margin-top: 3px;">¬max = OVERFLOW</div>
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.6);">¬</div>
+                    <div style="font-size: 11px; color: #ffd700; margin: 4px 0 5px 0;"><strong>NOT</strong></div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">flips every bit, on one number</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="glyph">¬</span>1=2 (2-bit), <span class="glyph">¬</span>8=7 (4-bit)</div>
+                    <div style="font-size: 10px; color: #ff4444; margin-top: 4px;"><span class="glyph">¬</span>max = OVERFLOW</div>
                 </div>
             </div>
             
             <div class="info-box" style="background: rgba(138, 43, 226, 0.12); padding: 12px; margin-bottom: 15px; border-left: 3px solid #8a2be2;">
                 <p style="margin: 0 0 6px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);"><strong style="color: #00ffff;">gate usage:</strong></p>
                 <ul style="font-size: 10px; line-height: 1.7; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
-                    <li style="margin-bottom: 4px;"><strong style="color: #ffd700;">¬ NOT:</strong> slide into any number! <span style="color: #00ff00;">[¬][num]</span> or <span style="color: #00ff00;">[num][¬]</span></li>
-                    <li style="margin-bottom: 4px;"><strong style="color: #ffd700;">¬ meets ¬:</strong> two NOTs cancel: both tiles clear, for no points</li>
-                    <li style="margin-bottom: 4px;"><strong style="color: #00ffff;">⊕ ∨ ∧:</strong> sandwich between two numbers! <span style="color: #00ff00;">[num][gate][num]</span></li>
-                    <li style="margin-bottom: 4px;"><strong style="color: #ff4444;">result 0:</strong> a gate that comes out to 0 clears its tiles for no points: <span style="color: #00ff00;">3⊕3 = 0, 1∧2 = 0</span></li>
+                    <li style="margin-bottom: 4px;"><strong style="color: #ffd700;"><span class="glyph">¬</span> NOT:</strong> slide into any number! <span style="color: #00ff00;">[<span class="glyph">¬</span>][num]</span> or <span style="color: #00ff00;">[num][<span class="glyph">¬</span>]</span></li>
+                    <li style="margin-bottom: 4px;"><strong style="color: #ffd700;"><span class="glyph">¬</span> meets <span class="glyph">¬</span>:</strong> two NOTs cancel: both tiles clear, for no points</li>
+                    <li style="margin-bottom: 4px;"><strong style="color: #00ffff;"><span class="glyph">⊕</span> <span class="glyph">∨</span> <span class="glyph">∧</span>:</strong> sandwich between two numbers! <span style="color: #00ff00;">[num][gate][num]</span></li>
+                    <li style="margin-bottom: 4px;"><strong style="color: #ff4444;">result 0:</strong> a gate that comes out to 0 clears its tiles for no points: <span style="color: #00ff00;">3<span class="glyph">⊕</span>3 = 0, 1<span class="glyph">∧</span>2 = 0</span></li>
                 </ul>
             </div>
             
@@ -554,13 +616,13 @@
                     <div><strong style="color: #00ffff;">GAUNTLET:</strong> progressive</div>
                 </div>
                 <div style="background: rgba(255, 100, 100, 0.15); padding: 10px; border: 2px dashed #ff4444; margin-top: 10px;">
-                    <p style="margin: 0 0 8px 0; font-size: 11px; color: #ff4444;"><strong>¬ MAX = OVERFLOW BONUS!</strong></p>
+                    <p style="margin: 0 0 8px 0; font-size: 11px; color: #ff4444;"><strong><span class="glyph">¬</span> MAX = OVERFLOW BONUS!</strong></p>
                     <p style="margin: 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
-                        • bitwise operations never exceed the maximum, but <strong style="color: #ffd700;">¬ NOT of the max value is 0</strong>, and no tile can hold 0<br>
+                        • bitwise operations never exceed the maximum, but <strong style="color: #ffd700;"><span class="glyph">¬</span> NOT of the max value is 0</strong>, and no tile can hold 0<br>
                         • that tile disappears (clears space) and awards a <strong style="color: #ffff00;">3× max value bonus</strong><br>
                         • this is the only way to overflow<br>
-                        • e.g., in 2-bit: ¬3 → <strong style="color: #00ff00;">overflow! +9 pts</strong><br>
-                        • e.g., in 4-bit: ¬15 → <strong style="color: #00ff00;">overflow! +45 pts</strong>
+                        • e.g., in 2-bit: <span class="glyph">¬</span>3 → <strong style="color: #00ff00;">overflow! +9 pts</strong><br>
+                        • e.g., in 4-bit: <span class="glyph">¬</span>15 → <strong style="color: #00ff00;">overflow! +45 pts</strong>
                     </p>
                 </div>
             </div>
@@ -732,7 +794,7 @@
     <script src="js/math-overlay.js?v=44ff0d30"></script>
     <script src="js/codex.js?v=e5f34bee"></script>
     <script src="js/rules-pages.js?v=460908e3"></script>
-    <script src="js/main.js?v=d7a0a6ca"></script>
+    <script src="js/main.js?v=dbb498e0"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
 <script src="../shared/adenosine-chat.js?v=4a6b886b"></script>

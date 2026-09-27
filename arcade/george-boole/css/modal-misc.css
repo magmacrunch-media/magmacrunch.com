@@ -19,6 +19,22 @@
     display: flex;
 }
 
+/* The four gate glyphs, wherever they appear inside a sentence in the rules.
+   ⊕ ∨ ∧ ¬ are drawn small in this face -- ∨ and ∧ differ by about one row of
+   pixels, and ⊕ is a circle with a cross in it -- so at the 10px the prose
+   uses they read as subscripts rather than as the symbols the whole section is
+   about. 1.35em keeps them tied to whatever text they sit in, so a line at
+   9px and a line at 12px both get a legible glyph, and the baseline nudge
+   stops the taller character pushing its line apart.
+
+   The display glyphs on the gate cards carry their own size and are
+   deliberately not given this class. */
+.instructions-content .glyph {
+    font-size: 1.35em;
+    line-height: 1;
+    vertical-align: -0.08em;
+}
+
 .instructions-content {
     background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
     padding: 30px;
@@ -343,16 +359,24 @@
    privacy policy and the support page, the two a reviewer goes looking for.
    Cyan is what the rest of this panel uses for anything that is not body
    text, and the underline is what says it can be tapped. */
+/* Gold, because cyan is what the section labels are. A link the same colour as
+   the label above it is carried entirely by its underline, which on a 10px
+   pixel face at a phone's scale is one row of pixels. Gold is already the
+   accent this game puts on a term worth noticing ("gate", "overflow bonus"),
+   it is nowhere near the magenta heading, and it holds up on the #1a1a2e
+   panel. The underline stays: colour alone should not be what says "link". */
 .credits-content a {
-    color: #00ffff;
+    color: #ffd700;
     text-decoration: underline;
     text-underline-offset: 3px;
     text-decoration-thickness: 1px;
 }
 
+/* White rather than the old yellow, which is now a shade off the resting
+   colour and would read as nothing happening. */
 .credits-content a:hover,
 .credits-content a:focus-visible {
-    color: #ffff00;
+    color: #ffffff;
 }
 
 .credits-content .credits-subtitle {

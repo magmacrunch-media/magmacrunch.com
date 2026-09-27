@@ -259,8 +259,21 @@
         padding: 8px !important;
     }
     
+    /* 10px, not 9. This rule is why the gate cards were unreadable on a phone
+       and fine on a desktop: it flattens EVERY line in the card, so the big
+       display glyph the card is built around came out at 9px along with the
+       body text, and an ⊕ at 9px in this face is a smudge. The examples
+       underneath (1⊕2=3) were the same size as their own punctuation. */
     .gate-card div {
-        font-size: 9px !important;
+        font-size: 10px !important;
+    }
+
+    /* The glyph the card is about. It has to beat the rule above, which is
+       why it is !important too rather than just more specific: that one is
+       already !important and would otherwise win on being later. */
+    .gate-card .gate-glyph {
+        font-size: 26px !important;
+        line-height: 1.1 !important;
     }
     
     .game-over h2 {

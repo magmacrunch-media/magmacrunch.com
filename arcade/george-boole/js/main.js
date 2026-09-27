@@ -221,16 +221,22 @@ function createFloatingGates(container) {
         { symbol: '∧', gate: 'and' },
         { symbol: '¬', gate: 'not' },
     ];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 14; i++) {
         const g = gates[i % gates.length];
         const el = document.createElement('span');
         el.className = 'floating-gate';
         el.setAttribute('data-gate', g.gate);
         el.textContent = g.symbol;
-        el.style.left = (10 + Math.random() * 80) + '%';
-        el.style.animationDuration = (12 + Math.random() * 18) + 's';
-        el.style.animationDelay = (Math.random() * 20) + 's';
-        el.style.fontSize = (12 + Math.random() * 10) + 'px';
+        el.style.left = (6 + Math.random() * 88) + '%';
+        const seconds = 12 + Math.random() * 18;
+        el.style.animationDuration = seconds + 's';
+        // NEGATIVE, so each glyph starts part-way through its own cycle and the
+        // screen is populated the moment the title appears. A positive delay of
+        // up to 20s against a 12-30s float meant most of them were still
+        // waiting to begin when somebody looked, which is why there were two on
+        // screen rather than a drift.
+        el.style.animationDelay = -(Math.random() * seconds) + 's';
+        el.style.fontSize = (14 + Math.random() * 12) + 'px';
         container.appendChild(el);
     }
 }
