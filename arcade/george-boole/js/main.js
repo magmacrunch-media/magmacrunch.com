@@ -721,6 +721,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // In-game credits, from the strip on a phone and the side panel on a
+        // desktop. Both open the modal directly and leave returnToLoreScreen
+        // alone: closing it should put the player back on the board they were
+        // playing, not on a card whose continue button starts a new game.
+        ['stripCreditsLink', 'sidePanelCredits'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.addEventListener('click', () => {
+                document.getElementById('creditsModal').classList.add('active');
+            });
+        });
+
         // Side panel "full rules" link opens instructions modal
         const sidePanelHowToPlay = document.getElementById('sidePanelHowToPlay');
         if (sidePanelHowToPlay) {
