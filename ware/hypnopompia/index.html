@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>hypnopompia — magmacrunch media</title>
+  <meta property="og:title" content="hypnopompia — magmacrunch media">
+  <meta property="og:description" content="the iOS shell for magmacrunch arcade games: Game Center plugin, bundle pipeline, store tooling">
+  <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:site_name" content="magmacrunch media">
+  <meta property="og:locale" content="en_US">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+  <link rel="stylesheet" href="../../style.css?v=53e9e146">
+  <style>
+    :root {
+      color-scheme: dark;
+      /* Darker purple than the site --purple (#c45fff): the hero and the
+         section headings. Still 4.1:1 on #14141b, which large display text
+         needs to clear 3:1, so there is room to go darker but not much. */
+      --hp-deep:   #9257de;
+      --hp-accent: #b98cf5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font: 14px/1.6 'Courier Prime', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #14141b; color: #e8e6f0;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    /* ── Hero ──────────────────────────────────────────── */
+
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1.5rem 2.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(22px, 4vw, 44px);
+      font-weight: 400;
+      color: var(--hp-deep);
+      text-shadow:
+        3px 3px 0 #33304a,
+        6px 6px 0 #1c1b26;
+      letter-spacing: 0.08em;
+      margin-bottom: .75rem;
+    }
+
+    .hero .tagline {
+      font-size: 13px;
+      color: #9d99b5;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Features ──────────────────────────────────────── */
+
+    .features {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .features h2,
+    .about h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 10px; font-weight: 400;
+      color: var(--hp-deep);
+      margin-bottom: .75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .5rem;
+    }
+
+    .feat-item {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      padding: .6rem .75rem;
+      font-size: 12px;
+    }
+
+    .feat-item strong {
+      color: var(--hp-accent);
+      display: block;
+      margin-bottom: .15rem;
+      font-size: 11px;
+    }
+
+    .feat-item span {
+      color: #9d99b5;
+      font-size: 11px;
+    }
+
+    .feat-item code {
+      font-family: 'Courier Prime', monospace;
+      color: #cbb3f7;
+    }
+
+    /* ── About ─────────────────────────────────────────── */
+
+    .about {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+    }
+
+    .about h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px; font-weight: 400;
+      color: #e8e6f0;
+      margin: 1.5rem 0 .5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .about p { margin-bottom: .5rem; }
+
+    .about strong { color: #e8e6f0; }
+
+    .about pre {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .6rem .75rem;
+      overflow-x: auto;
+      margin-bottom: .5rem;
+    }
+
+    .about code {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--hp-accent);
+    }
+
+    .about-label {
+      color: #666;
+      font-size: 11px;
+      margin-bottom: .25rem;
+    }
+
+    .about-links {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .about-links a {
+      color: var(--hp-accent);
+      text-decoration: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: .4rem .6rem;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      transition: border-color .15s;
+    }
+    .about-links a:hover { border-color: var(--hp-accent); }
+
+    .about-license {
+      color: #555;
+      font-size: 11px;
+      margin-top: 1rem;
+    }
+
+    /* ── Footer ────────────────────────────────────────── */
+
+    footer {
+      margin-top: auto;
+      padding: 1.5rem;
+      text-align: center;
+      font-size: 12px;
+      color: #9d99b5;
+      border-top: 1px solid #33304a;
+    }
+
+    footer span {
+      color: var(--hp-accent);
+    }
+
+    @media (max-width: 480px) {
+      .feat-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Override style.css conflicts ─────────────────── */
+    .tool-nav {
+      margin-top: 48px;
+      padding: 8px 24px;
+      border-bottom: 1px solid #33304a;
+      background: #14141b;
+      flex-shrink: 0;
+    }
+    .tool-nav .back-link {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      background: #1c1b26;
+      padding: 6px 10px;
+      border: 1px solid #33304a;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tool-nav .back-link:hover {
+      color: #e8e6f0;
+      border-color: var(--hp-accent);
+    }
+    body {
+      background: #14141b;
+      background-image: none;
+      color: #e8e6f0;
+    }
+    a { color: var(--hp-accent); }
+    footer {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      border-top: 1px solid #33304a;
+    }
+    footer span { color: var(--hp-accent); }
+  </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<div class="tool-nav">
+    <a href="../dev/" class="back-link">&larr; developer tools</a>
+</div>
+
+  <div class="hero">
+    <h1>hypnopompia</h1>
+    <p class="tagline">the iOS shell for magmacrunch arcade games</p>
+  </div>
+
+  <div class="features">
+    <h2>what is here</h2>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <strong>native/</strong>
+        <span>The Game Center plugin and view controller, Swift, vendored byte-identical into each game&rsquo;s App target</span>
+      </div>
+      <div class="feat-item">
+        <strong>pipeline/</strong>
+        <span>The bundle transforms every App Store build shares, and the self-contained sweep</span>
+      </div>
+      <div class="feat-item">
+        <strong>sync.mjs</strong>
+        <span>Vendors <code>native/</code> into a game; <code>--check</code> hash-compares every consumer and is the drift detector</span>
+      </div>
+      <div class="feat-item">
+        <strong>check-metadata.mjs</strong>
+        <span>A game&rsquo;s store copy against App Store Connect&rsquo;s field limits, before the upload rejects it</span>
+      </div>
+      <div class="feat-item">
+        <strong>check-game-center.mjs</strong>
+        <span>Leaderboard and achievement ids and their art, before any of them are created</span>
+      </div>
+      <div class="feat-item">
+        <strong>check-launch-crop.mjs</strong>
+        <span>Launch-image crop limits against the orientations the Info.plist actually declares</span>
+      </div>
+      <div class="feat-item">
+        <strong>consumers.json</strong>
+        <span>Every game repo that vendors from here. A path that does not exist is reported, not failed</span>
+      </div>
+      <div class="feat-item">
+        <strong>tests/</strong>
+        <span>61 checks on node&rsquo;s own test runner, and both ends of the vendoring check run in CI</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="features">
+    <h2>the shared transforms</h2>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <strong>loadShims</strong>
+        <span>Injects the app-only shims after the score bootstrap, so a shim is listening before the game can dispatch anything</span>
+      </div>
+      <div class="feat-item">
+        <strong>pointSharedAssets</strong>
+        <span>Repoints shared assets at the bundle, which has no parent directory to climb to</span>
+      </div>
+      <div class="feat-item">
+        <strong>stripStamps</strong>
+        <span>Drops the cache-buster stamps. A bundle ships its assets; a stamp is a trick it has no use for</span>
+      </div>
+      <div class="feat-item">
+        <strong>viewportNotch</strong>
+        <span>Adds <code>viewport-fit=cover</code> so the viewport reaches the notch</span>
+      </div>
+      <div class="feat-item">
+        <strong>outboundLinks</strong>
+        <span>Opens outbound links in the system browser, rather than navigating the app into a dead end with no back button</span>
+      </div>
+      <div class="feat-item">
+        <strong>the sweep</strong>
+        <span>Fails the build on anything the bundle would have to fetch over the network to render</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <h2>about</h2>
+    <p>The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the
+      store tooling, by <a href="../../">magmacrunch media</a>. It is to iOS what
+      <a href="../magnolia/">magnolia</a> is to the Wii: the part that is the same every time.</p>
+
+    <p><strong>It runs no game logic.</strong> A game&rsquo;s rules live in that game&rsquo;s repo,
+      once per platform. This holds what every App Store build needs and no game should have to
+      reinvent: a plugin, a project, a pipeline and a checklist that fails loudly.</p>
+
+    <h3>the name</h3>
+    <p>After <a href="../../archive/by-artist/thld/releases.html">Hypnopompia</a> by Texas
+      Hold&rsquo;Em Lava Dome, from <em>Pompous Fanfare for All Occasions</em> (2019).
+      <a href="../adenosine/">Adenosine</a> is the molecule that builds sleep pressure;
+      hypnopompia is surfacing out of it.</p>
+
+    <h3>using it</h3>
+    <p class="about-label">Node 22 or newer, and nothing else:</p>
+    <pre><code>node tools/sync.mjs ../../games/&lt;game&gt;
+node tools/sync.mjs --check
+node tools/check-metadata.mjs ../../games/&lt;game&gt;/ios
+node tools/check-game-center.mjs ../../games/&lt;game&gt;/ios
+node tools/check-launch-crop.mjs ../../games/&lt;game&gt;/ios</code></pre>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunch-media/hypnopompia" target="_blank" rel="noopener">GitHub</a>
+    </div>
+
+    <p class="about-license">PolyForm Noncommercial 1.0.0 &middot; Copyright 2026 magmacrunch media</p>
+  </div>
+
+  <footer>
+      &copy; 2026 <span>magmacrunch media</span>
+  </footer>
+
+  <script src="../../nav.js?v=05581e34"></script>
+</body>
+</html>

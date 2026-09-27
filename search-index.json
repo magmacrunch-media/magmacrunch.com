@@ -235,7 +235,7 @@
     "c": "page",
     "u": "/ware/dev/index.html",
     "d": "game engines, scripting language, & memory course",
-    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
+    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ HYPNOPOMPIA iOS shell for the arcade games · Game Center plugin · store tooling ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -2056,6 +2056,13 @@
     "u": "/ware/hologram/",
     "d": "optics-first 3D game engine: a spectral ray tracer where light obeys physics",
     "b": "hologram — magmacrunch media ← developer tools hologram an optics-first 3D game engine: a spectral ray tracer where light obeys physics v0.1.0 PolyForm Noncommercial C99 + HLSL/GLSL/MSL 📚 Modules Reference The public C API across twelve modules. Structs, constants and every function the umbrella header exposes. 📖 Wiki The full reference, including the shader constraints that shape how the GPU walk is written. what it does that other engines don't Every effect below is computed from the physics rather than approximated by a shader trick, and every one is pinned by a host test against its clos..."
+  },
+  {
+    "t": "hypnopompia",
+    "c": "tool",
+    "u": "/ware/hypnopompia/",
+    "d": "the iOS shell for magmacrunch arcade games: Game Center plugin, bundle pipeline, store tooling",
+    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games what is here native/ The Game Center plugin and view controller, Swift, vendored byte-identical into each game’s App target pipeline/ The bundle transforms every App Store build shares, and the self-contained sweep sync.mjs Vendors native/ into a game; --check hash-compares every consumer and is the drift detector check-metadata.mjs A game’s store copy against App Store Connect’s field limits, before the upload rejects it check-game-center.mjs Leaderboard and achievement ids and their art, ..."
   },
   {
     "t": "magmascript",
