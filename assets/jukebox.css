@@ -19,6 +19,60 @@
     width: auto;
 }
 
+/* ═══════════════════════════════════════════════
+   NOW-PLAYING READOUT (in the nav)
+   ───────────────────────────────────────────────
+   Lives in the dead centre of the nav bar, and only
+   while a track is playing. See the comment on
+   createNavReadout in jukebox.js.
+   ═══════════════════════════════════════════════ */
+.mcj-now {
+    flex: 1 1 auto;
+    min-width: 0;
+    /* The nav is 48px and this is a button, so it carries none of the
+       chrome one would default to. */
+    background: none;
+    border: none;
+    padding: 0 16px;
+    margin: 0;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    text-align: center;
+    color: var(--nav-accent, var(--rose, #ff3d6e));
+    opacity: 0.75;
+    cursor: pointer;
+    /* One line, ellipsed. The gap shrinks with the window and the track
+       titles here run to 76 characters. */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.15s;
+}
+
+.mcj-now:hover {
+    opacity: 1;
+}
+
+.mcj-now:focus-visible {
+    outline: 2px solid var(--yellow, #ffe03a);
+    outline-offset: 2px;
+    opacity: 1;
+}
+
+/* `hidden` has to beat the flex display above, or the readout shows blank
+   and still eats the gap. */
+.mcj-now[hidden] {
+    display: none;
+}
+
+/* The full jukebox page has the real player in the content; the widget
+   already hides itself there (see the :has rule below) and so does this. */
+body:has(main .jukebox) .mcj-now {
+    display: none !important;
+}
+
 /* ── FLOATING BUTTON (collapsed) ──
    A pill, not a square: the disc on its own does not say "jukebox" to a first
    visit. Width is content-driven so the label sets it. ── */

@@ -53,6 +53,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
     let progressFill = null;
     let volSlider = null;
     let volLabel = null;
+    let navReadout = null;
 
     /* ── HELPERS ── */
     function fmtTime(s) {
@@ -233,9 +234,68 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         }
     }
 
+    /* ── NOW-PLAYING READOUT (in the nav) ──
+       The centre of the nav is dead space: at 1440px the brand ends at x=159
+       and the links begin at x=932. A line of text there says what the site is
+       doing in the site's own masthead, which a pill in the bottom corner
+       cannot - that corner is where support bubbles and cookie banners live,
+       and people have learned to skip it.
+
+       Only while something is playing. Silent, the bar is exactly as it was,
+       so a first visit gets no extra furniture. It is a flex child rather than
+       absolutely centred so it takes the gap that is actually there and
+       truncates instead of colliding with the links on a narrow window.
+
+       The SPA router swaps only main.innerHTML, so the nav survives a
+       navigation and this needs no re-injection. Creation is still idempotent,
+       because createWidget is re-entered by __initJukeboxPlayer. ── */
+    function createNavReadout() {
+        const nav = document.querySelector('nav');
+        if (!nav) return null;
+        const existing = nav.querySelector('.mcj-now');
+        if (existing) return existing;
+
+        const el = document.createElement('button');
+        el.className = 'mcj-now';
+        el.type = 'button';
+        el.hidden = true;
+        el.addEventListener('click', () => {
+            if (widgetEl && widgetEl.classList.contains('minimized')) toggleExpand();
+        });
+
+        // Before the links, so flex order puts it in the gap rather than past
+        // them. insertBefore with a null reference appends, which is the right
+        // fallback for a nav built without a .nav-links list.
+        nav.insertBefore(el, nav.querySelector('.nav-links'));
+        return el;
+    }
+
+    function updateNavReadout(track) {
+        if (!navReadout) return;
+        const show = !!track && isPlaying;
+        navReadout.hidden = !show;
+        if (!show) {
+            navReadout.textContent = '';
+            navReadout.removeAttribute('title');
+            navReadout.removeAttribute('aria-label');
+            return;
+        }
+        // '//' rather than a dash: it is the separator the rest of the site
+        // sets its headings in, and it survives a monospace pixel font.
+        const line = '♪ ' + track.title + ' // ' + track.artist;
+        if (navReadout.textContent !== line) {
+            navReadout.textContent = line;
+            navReadout.title = line;
+            navReadout.setAttribute('aria-label', 'now playing: ' + track.title +
+                ' by ' + track.artist + '. Open the jukebox mini-player.');
+        }
+    }
+
     function updateUI() {
         if (!widgetEl) return;
         const track = currentTrack >= 0 ? TRACKS[currentTrack] : null;
+
+        updateNavReadout(track);
 
         // Playing state on root element (drives vinyl spin)
         widgetEl.classList.toggle('playing', isPlaying);
@@ -286,6 +346,8 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         if (widgetEl && widgetEl.isConnected) return;
         if (widgetEl && !widgetEl.isConnected) widgetEl = null;
         if (document.body.classList.contains('no-jukebox')) return;
+
+        navReadout = createNavReadout();
 
         const jukeboxHref = new URL('music/jukebox/', location.origin).pathname;
 
@@ -387,14 +449,24 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
             navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
         }
 
-        // SPA cleanup — save state and pause audio before page navigation
-        window.__pageCleanup = function() {
-            stopSaveInterval();
-            if (audio && isPlaying) {
-                saveState();
-                audio.pause();
-            }
-        };
+        /* No __pageCleanup here, deliberately. This used to register one that
+           paused the audio, and it was wrong twice over.
+
+           It paused the thing the widget exists to keep playing. __pageCleanup
+           is the SPA router's "this page is going away" hook, for resources
+           scoped to a page: rAF loops, poll intervals, observers. The jukebox
+           is the one thing on the site that is scoped to the SESSION, so it
+           has no business in that hook. Every SPA navigation stopped the
+           music, which is the entire feature.
+
+           And it is a single global slot, not a list, so claiming it
+           unconditionally clobbered whatever the page had put there. jukebox.js
+           is injected by nav.js on requestIdleCallback, so it always ran last
+           and always won. index.html says so in its own comment and carries a
+           gone() guard to survive it, which is a workaround for this line.
+
+           Real unloads are already covered by the beforeunload handler below,
+           and the save interval keeps running because playback does. */
 
         /* ── RESTORE STATE ── */
         // Expand/collapse preference
