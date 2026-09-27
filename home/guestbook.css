@@ -205,8 +205,8 @@
         .mcj-bar { border-color: var(--green); }
         .mcj-bar:hover { border-color: #e5b300; box-shadow: 0 0 12px rgba(229,179,0,0.3); }
         .mcj-bar-label { color: var(--green); text-shadow: 0 0 6px rgba(57,255,110,0.5); }
-        .mcj-bar-play { border-color: var(--green); color: var(--green); }
-        .mcj-bar-play:hover { background: var(--green); color: #000; }
+        /* .mcj-bar-play went with the collapsed bar's inline play button in
+           79ddd5c4 and its overrides were dead here until 2026-09-26. */
         .mcj-btn { border-color: var(--green); color: var(--green); }
         .mcj-btn:hover { background: var(--green); color: #000; }
         .mcj-btn-play { background: #e5b300; color: #000; border-color: #e5b300; }

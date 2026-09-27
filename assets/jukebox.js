@@ -202,6 +202,8 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         const expanding = widgetEl.classList.contains('minimized');
         widgetEl.classList.toggle('minimized', !expanding);
         widgetEl.classList.toggle('expanded', expanding);
+        const bar = widgetEl.querySelector('.mcj-bar');
+        if (bar) bar.setAttribute('aria-expanded', expanding ? 'true' : 'false');
         try { localStorage.setItem(EXPANDED_KEY, expanding ? 'true' : 'false'); } catch (e) {}
     }
 
@@ -290,9 +292,15 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         widgetEl = document.createElement('div');
         widgetEl.className = 'mcj minimized';
         widgetEl.innerHTML =
-            /* ── FLOATING BUTTON ── */
-            '<div class="mcj-bar">' +
+            /* ── FLOATING BUTTON ──
+               The disc alone says nothing. It carried a label until 79ddd5c4
+               stripped the collapsed bar to a bare 48px square, and at that
+               size the vinyl reads as a grey circle to anyone who has not been
+               told. Restored 2026-09-26. ── */
+            '<div class="mcj-bar" role="button" tabindex="0" ' +
+                    'aria-label="open the jukebox mini-player" aria-expanded="false">' +
                 '<div class="mcj-mini-vinyl"></div>' +
+                '<span class="mcj-bar-label">JUKEBOX</span>' +
             '</div>' +
             /* ── EXPANDED HEADER ── */
             '<div class="mcj-header">' +
@@ -340,8 +348,16 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
 
         /* ── EVENT LISTENERS ── */
 
-        // Bar click → expand/collapse
-        widgetEl.querySelector('.mcj-bar').addEventListener('click', toggleExpand);
+        // Bar click → expand/collapse. It is a role="button", so it owes the
+        // keyboard the activation a real <button> would have given for free.
+        const barEl = widgetEl.querySelector('.mcj-bar');
+        barEl.addEventListener('click', toggleExpand);
+        barEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+                e.preventDefault();
+                toggleExpand();
+            }
+        });
 
         // Minimize button → collapse
         widgetEl.querySelector('.mcj-minimize').addEventListener('click', (e) => {
@@ -386,6 +402,8 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
             if (localStorage.getItem(EXPANDED_KEY) === 'true') {
                 widgetEl.classList.remove('minimized');
                 widgetEl.classList.add('expanded');
+                const bar = widgetEl.querySelector('.mcj-bar');
+                if (bar) bar.setAttribute('aria-expanded', 'true');
             }
         } catch (e) {}
 
@@ -405,12 +423,28 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         updateUI();
     }
 
-    /* ── KEYBOARD SHORTCUTS (one-time) ── */
+    /* ── KEYBOARD SHORTCUTS (one-time) ──
+       Only while the panel is open. These keys belong to the page before they
+       belong to the jukebox: Space pages down and the arrows scroll. This
+       handler is installed at script load rather than from createWidget, so
+       until 2026-09-26 it swallowed all five on every page that loads nav.js,
+       whether or not the widget had ever been opened - keyboard scrolling was
+       dead site-wide to serve a player most visitors never touch. Expanded is
+       the one unambiguous "I am using the player" signal, and it is also when
+       the controls are on screen to explain what the keys did. Collapsed, the
+       OS media keys and MediaSession still work.
+
+       Modifier chords are the page's too: Ctrl/Alt/Cmd + arrow is a browser or
+       OS shortcut, never a volume change. ── */
     if (!window.__mcJukeboxKeys) {
         window.__mcJukeboxKeys = true;
         window.addEventListener('keydown', (e) => {
-            const tag = document.activeElement && document.activeElement.tagName;
+            if (!widgetEl || !widgetEl.classList.contains('expanded')) return;
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            const el = document.activeElement;
+            const tag = el && el.tagName;
             if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+            if (el && el.isContentEditable) return;
             if (e.key === ' ' || e.code === 'Space') { e.preventDefault(); togglePlay(); }
             else if (e.key === 'ArrowLeft') { e.preventDefault(); prevTrack(); }
             else if (e.key === 'ArrowRight') { e.preventDefault(); nextTrack(); }

@@ -345,11 +345,25 @@ window.NAV_CONFIG = {
    on every page that has a <nav> element.
    Arcade games don't load nav.js, so they're
    automatically excluded.
+
+   Not on touch, and not in a narrow window. The
+   expanded panel is 300px of a 375px phone and up
+   to 60vh of its height, and it is redundant there
+   anyway: the widget wires up MediaSession, so once
+   a track is playing the lock screen carries the
+   controls. The nav's own 'jukebox' link still
+   reaches music/jukebox/ on every device.
+
+   (pointer: coarse) rather than width alone, so a
+   phone held in landscape - wider than 600px - is
+   still a phone.
    ═══════════════════════════════════════════════ */
 
 (function () {
     const nav = document.querySelector('nav');
     if (!nav || document.body.classList.contains('no-jukebox')) return;
+    if (window.matchMedia &&
+        window.matchMedia('(max-width: 600px), (pointer: coarse)').matches) return;
 
     // Compute base path to site root from current page
     const depth = window.location.pathname.split('/').length - 2;

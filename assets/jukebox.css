@@ -9,7 +9,7 @@
     bottom: 20px;
     left: 20px;
     z-index: 9998;
-    width: 48px;
+    width: auto;
     font-family: 'Press Start 2P', monospace;
     color: var(--white, #f0ead8);
     user-select: none;
@@ -19,12 +19,16 @@
     width: auto;
 }
 
-/* ── FLOATING BUTTON (collapsed) ── */
+/* ── FLOATING BUTTON (collapsed) ──
+   A pill, not a square: the disc on its own does not say "jukebox" to a first
+   visit. Width is content-driven so the label sets it. ── */
 .mcj-bar {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
+    gap: 8px;
+    width: auto;
+    padding: 0 12px 0 10px;
     height: 48px;
     background:
         repeating-linear-gradient(
@@ -48,7 +52,28 @@
     border-color: var(--yellow, #ffe03a);
 }
 
+.mcj-bar:focus-visible {
+    outline: 2px solid var(--yellow, #ffe03a);
+    outline-offset: 3px;
+}
+
+/* ── COLLAPSED LABEL ── */
+.mcj-bar-label {
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--nav-accent, var(--rose, #ff3d6e));
+}
+
+/* Expanded, the header says "// JUKEBOX //" - the pill would say it twice. */
+.mcj.expanded .mcj-bar-label {
+    display: none;
+}
+
 .mcj.expanded .mcj-bar {
+    width: 48px;
+    padding: 0;
     border-radius: 12px 12px 0 0;
     border-bottom-color: transparent;
 }
@@ -417,13 +442,16 @@ body:has(main .jukebox) .mcj {
     display: none !important;
 }
 
-/* ── MOBILE ── */
+/* ── NARROW ──
+   nav.js no longer loads the widget under 600px or on a coarse pointer, so
+   this block is reached only by a desktop window dragged narrow after the page
+   loaded. Kept so that window stays usable rather than clipping the pill. ── */
 @media (max-width: 600px) {
     .mcj {
         bottom: 16px;
         left: 16px;
         right: auto;
-        width: 48px;
+        width: auto;
         z-index: 9998;
     }
 
