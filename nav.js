@@ -758,6 +758,9 @@ document.querySelectorAll('nav a[href]').forEach(a => {
 
     /* ── NAVIGATION ── */
     let navigating = false;
+    // What document is on screen, ignoring the fragment. popstate fires for
+    // in-page #anchors too, and telling the two apart needs this.
+    let renderedDoc = location.pathname + location.search;
     // Monotonic token identifying the current page instance. Templates capture
     // this at load time and compare before mutating shared DOM (e.g. footer
     // attribution badges) from a slow-finishing async fetch, so stale work from
@@ -886,6 +889,7 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             }
 
             if (push) history.pushState({ spa: true }, '', url);
+            renderedDoc = new URL(url, location.href).pathname + new URL(url, location.href).search;
 
             // Re-inject jukebox widget if missing after SPA navigation
             if (!document.querySelector('.mcj') && window.__jukeboxReady) {
@@ -895,7 +899,16 @@ document.querySelectorAll('nav a[href]').forEach(a => {
                 }
             }
 
-            window.scrollTo(0, 0);
+            // Land on the fragment if the URL has one, rather than always at
+            // the top -- a link to another page's #section used to arrive there
+            // and then scroll away from it.
+            let landed = false;
+            const frag = new URL(url, location.href).hash.slice(1);
+            if (frag) {
+                const el = document.getElementById(decodeURIComponent(frag));
+                if (el) { el.scrollIntoView(); landed = true; }
+            }
+            if (!landed) window.scrollTo(0, 0);
 
         } catch (e) {
             console.error('SPA nav failed:', e);
@@ -923,7 +936,16 @@ document.querySelectorAll('nav a[href]').forEach(a => {
     });
 
     /* ── BACK/FORWARD ── */
-    window.addEventListener('popstate', function (e) {
+    // A same-document fragment navigation fires popstate as well as a real
+    // back/forward. Re-rendering the page for one replaces the element the
+    // browser has just scrolled to and then runs window.scrollTo(0, 0) over
+    // the top of it, so every in-page #anchor on the site did nothing at all
+    // and cost a full re-fetch for the privilege. Only navigate when the
+    // document itself changed; let the browser handle a fragment on its own.
+    window.addEventListener('popstate', function () {
+        const target = location.pathname + location.search;
+        if (target === renderedDoc) return;
+        renderedDoc = target;
         navigate(location.href, false);
     });
 

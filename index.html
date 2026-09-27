@@ -56,19 +56,14 @@
             line-height: 1.4;
         }
 
-        /* 200x240 canvas at exactly 2x, so image-rendering: pixelated has
-           whole pixels to work with. A non-integer scale is what made the
-           old 400x480-into-340px version mushy. */
-        .volcano-canvas-wrap {
-            width: min(400px, 80vw);
-            aspect-ratio: 5 / 6;
+        .hero-emblem {
+            width: min(320px, 68vw);
+            margin-top: 8px;
         }
-        .volcano-canvas-wrap canvas {
+        .hero-emblem img {
             display: block;
             width: 100%;
-            height: 100%;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
+            height: auto;
         }
 
         .volcano-tagline {
@@ -127,18 +122,6 @@
             border-bottom-color: var(--mc-lava-bright);
         }
 
-        /* Insert coin */
-        .insert-coin {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            color: var(--mc-lava-bright);
-            letter-spacing: 0.15em;
-            margin: 44px 0 26px;
-            text-shadow: 0 0 12px rgba(255,224,58,0.8);
-            animation: blink 1s step-end infinite, fadeUp 0.6s 0.3s ease both;
-            animation-fill-mode: both;
-        }
-
         /* ── SECTION CARDS ──
            .nav-cards / .nav-card are the shared components in style.css, plus
            the five homepage-only colours it already defines. All this block
@@ -148,6 +131,7 @@
            label length wrap 3/4/1 under flex, which looks like an accident. */
         .nav-cards {
             animation: fadeUp 0.6s 0.4s ease both;
+            margin-top: 48px;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             max-width: 760px;
@@ -169,9 +153,7 @@
 
         @media (max-width: 640px) {
             main { padding: 48px 18px 48px; }
-            .insert-coin { font-size: 8px; margin: 34px 0 20px; }
             .home-intro { font-size: 13px; line-height: 1.7; margin-top: 32px; }
-            .volcano-canvas-wrap { aspect-ratio: 1 / 1; }
             /* Two per row rather than one, so the grid is still a grid. */
             .nav-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
             .nav-card { padding: 12px 10px; }
@@ -196,8 +178,10 @@
     <!-- VOLCANO ANIMATION -->
     <div class="volcano-wrap">
         <div class="volcano-title">magmacrunch<br>media</div>
-        <div class="volcano-canvas-wrap">
-            <canvas id="volcano" width="64" height="64"></canvas>
+        <div class="hero-emblem">
+            <img src="assets/logos/mc-emblem.png"
+                 width="800" height="848" fetchpriority="high"
+                 alt="magmacrunch media emblem: an erupting volcano whose lightning bolt forms an M above a C">
         </div>
         <div class="volcano-tagline">
             <div class="volcano-est">est. 2023</div>
@@ -218,8 +202,6 @@
     </p>
 
     <!-- WHERE TO GO -->
-    <div class="insert-coin">&mdash; INSERT COIN &mdash;</div>
-
     <div class="nav-cards">
         <a href="music/" class="nav-card c-violet">
             music<span class="card-sub">releases &amp; jukebox</span></a>
@@ -245,82 +227,6 @@
     &copy; 2026 <span>magmacrunch media</span>
 </footer>
 
-<script src="nav.js?v=4def08af"></script>
-<script>
-/* Picks the desktop lamp or the 64x64 pixel fallback, and re-picks when the
-   window crosses the breakpoint. It used to choose once at load, so a window
-   opened narrow and then widened kept the mobile animation for ever.
-
-   Each animation exposes window.__volcanoStop, which cancels its loop AND
-   removes its visibilitychange listener; a listener left behind would restart
-   a cancelled loop on the next tab switch, leaving two animations drawing into
-   one canvas.
-
-   window.__pageCleanup, which the SPA router in nav.js calls on navigation, is
-   registered below but is NOT trusted: it is a single global slot and
-   assets/jukebox.js claims it too, from a script nav.js injects after this one
-   runs, so on this page the jukebox wins and the cleanup here never fires.
-   Hence gone(): every resize check first asks whether the canvas is still in
-   the document and tears down if it is not. The animations carry the same
-   guard in their own loops. */
-(function () {
-    var BREAKPOINT = 640;   // matches the CSS media query above
-    var SRC = {
-        lamp:  '/animations/volcano-lamp.js',
-        pixel: '/animations/volcano-pixel.js'
-    };
-    var current = null, tag = null, timer = null;
-
-    function wanted() {
-        return window.innerWidth > BREAKPOINT ? 'lamp' : 'pixel';
-    }
-
-    function load(mode) {
-        if (mode === current) return;
-        if (typeof window.__volcanoStop === 'function') window.__volcanoStop();
-        window.__volcanoStop = null;
-        if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-        current = mode;
-        tag = document.createElement('script');
-        tag.src = SRC[mode];
-        document.body.appendChild(tag);
-    }
-
-    // The canvas lives in <main>, which the SPA replaces wholesale.
-    function gone() {
-        var c = document.getElementById('volcano');
-        return !c || !c.isConnected;
-    }
-
-    function teardown() {
-        clearTimeout(timer);
-        window.removeEventListener('resize', onResize);
-        if (typeof window.__volcanoStop === 'function') window.__volcanoStop();
-        window.__volcanoStop = null;
-        if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
-        tag = null;
-        current = null;
-    }
-
-    function onResize() {
-        if (gone()) { teardown(); return; }
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-            if (gone()) teardown(); else load(wanted());
-        }, 180);
-    }
-
-    load(wanted());
-    window.addEventListener('resize', onResize);
-
-    // Chained rather than assigned, so registering this does not itself become
-    // the clobber the comment above describes.
-    var prevCleanup = window.__pageCleanup;
-    window.__pageCleanup = function () {
-        teardown();
-        if (typeof prevCleanup === 'function') prevCleanup();
-    };
-})();
-</script>
+<script src="nav.js?v=a4456064"></script>
 </body>
 </html>

@@ -250,10 +250,13 @@
 
   function loop(ts) {
     // Stop when the canvas is no longer in the document. The SPA router in
-    // nav.js swaps <main> out from under us, and window.__pageCleanup cannot
-    // be relied on to tell us: it is a single global slot, and assets/jukebox.js
-    // claims it too, from a script nav.js injects after the page's own. Whoever
-    // writes last wins, so a page-owned cleanup is routinely clobbered.
+    // nav.js swaps <main> out from under us, and window.__pageCleanup is not
+    // a dependable way to hear about it: it is a single global slot rather
+    // than a list, so whoever writes it last wins and a page-owned cleanup can
+    // be clobbered by anything nav.js injects afterwards. assets/jukebox.js
+    // used to do exactly that; it gave the slot up in 6aafaa0b, for its own
+    // reasons. Not depending on the slot at all is cheaper than tracking who
+    // currently holds it.
     if (!canvas.isConnected) { rafId = 0; return; }
     rafId = requestAnimationFrame(loop);
     if (ts - lastTime < FRAME_MS) return;

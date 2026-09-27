@@ -83,6 +83,11 @@
             align-items: center;
             margin-bottom: 18px;
         }
+        /* The shadow stack is the cereal box's palette, not the homepage's.
+           This page's animation is the box (animations/cereal.js), whose
+           colours are pink #FF3D6E, edge #FF6CB2, the cyan band #00F5FF, milk
+           #F5E6D0 and box black #09090C -- so the masthead steps through those
+           rather than through the lava reds the homepage title uses. */
         .masthead-title {
             font-family: 'Press Start 2P', monospace;
             font-size: clamp(18px, 4.4vw, 46px);
@@ -92,33 +97,39 @@
             color: var(--mc-crater);
             letter-spacing: 0.05em;
             text-shadow:
-                3px 3px 0 var(--mc-mount-mid),
-                6px 6px 0 var(--mc-lava-deep),
-                9px 9px 0 var(--mc-mount-dark),
-                12px 12px 0 var(--mc-lava-amber),
-                15px 15px 0 #000;
+                3px 3px 0 #ff6cb2,
+                6px 6px 0 var(--mc-cereal-cyan),
+                9px 9px 0 #f5e6d0,
+                12px 12px 0 var(--mc-lava-bright),
+                15px 15px 0 #09090c;
         }
         .masthead-rule {
             width: min(420px, 70%);
             height: 2px;
-            margin: 26px 0 14px;
+            margin: 26px 0 16px;
             background: linear-gradient(90deg,
-                transparent, var(--mc-crater) 20%,
-                var(--mc-crater) 80%, transparent);
+                transparent, var(--mc-cereal-cyan) 20%,
+                var(--mc-crater) 50%,
+                var(--mc-cereal-cyan) 80%, transparent);
         }
+        /* Both of these were figlet blocks set in Courier Prime before, and
+           that is the register they belong in. Press Start 2P and Lora were
+           pulling them toward the homepage and the zine body copy instead. */
         .masthead-sub {
-            font-family: 'Press Start 2P', monospace;
-            font-size: 11px;
-            letter-spacing: 0.22em;
-            color: var(--mc-lava-amber);
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.42em;
+            text-indent: 0.42em;
+            color: var(--mc-cereal-cyan);
             text-transform: uppercase;
         }
         .masthead-quote {
-            margin-top: 12px;
-            font-family: 'Lora', Georgia, serif;
-            font-style: italic;
-            font-size: 16px;
-            line-height: 1.7;
+            margin-top: 14px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.9;
+            letter-spacing: 0.06em;
             text-align: center;
             color: var(--mc-smoke);
         }
@@ -391,8 +402,8 @@
                     5px 5px 0 #000;
             }
             .masthead-rule { margin: 18px 0 12px; }
-            .masthead-sub { font-size: 8px; }
-            .masthead-quote { font-size: 14px; }
+            .masthead-sub { font-size: 11px; letter-spacing: 0.3em; text-indent: 0.3em; }
+            .masthead-quote { font-size: 12px; line-height: 1.8; }
 
             .about-jump { gap: 5px 6px; margin-bottom: 20px; }
             .about-jump a { font-size: 7px; padding: 6px 7px; }
