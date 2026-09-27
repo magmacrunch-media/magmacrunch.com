@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="about.css">
+    <link rel="stylesheet" href="about.css?v=720b25a5">
 </head>
 <body>
 
@@ -54,47 +54,38 @@
 
     <h1 class="page-title">// about //</h1>
 
-    <!-- BIG ASCII (moved from home) -->
-    <div class="ascii-main ascii-block ascii-masthead">
-        <pre>
-                                                                                       __                               __                  
-                                                                                      /\ \                             /\ \  __             
-  ___ ___      __       __     ___ ___      __      ___   _ __   __  __    ___     ___\ \ \___       ___ ___      __   \_\ \/\_\     __     
-/' __` __`\  /'__`\   /'_ `\ /' __` __`\  /'__`\   /'___\/\`'__\/\ \/\ \ /' _ `\  /'___\ \  _ `\   /' __` __`\  /'__`\ /'_` \/\ \  /'__`\  
-/\ \/\ \/\ \/\ \L\.\_/\ \L\ \/\ \/\ \/\ \/\ \L\.\_/\ \__/\ \ \/ \ \ \_\ \/\ \/\ \/\ \__/\ \ \ \ \  /\ \/\ \/\ \/\  __//\ \L\ \ \ \/\ \L\.\_
-\ \_\ \_\ \_\ \__/.\_\ \____ \ \_\ \_\ \_\ \__/.\_\ \____\\ \_\  \ \____/\ \_\ \_\ \____\\ \_\ \_\ \ \_\ \_\ \_\ \____\ \___,_\ \_\ \__/.\_\
- \/_/\/_/\/_/\/__/\/_/\/___L\ \/_/\/_/\/_/\/__/\/_/\/____/ \/_/   \/___/  \/_/\/_/\/____/ \/_/\/_/  \/_/\/_/\/_/\/____/\/__,_ /\/_/\/__/\/_/
-                        /\____/                                                                                                             
-                        \_/__/                                                                                                              
-
-                                     d8b                                .d8888b.   .d8888b.   .d8888b.   .d8888b. 
-                                     Y8P                               d88P  Y88b d88P  Y88b d88P  Y88b d88P  Y88b
-                                                                              888 888    888        888      .d88P
-                            .d8888b  888 88888b.   .d8888b .d88b.           .d88P 888    888      .d88P     8888" 
-                            88K      888 888 "88b d88P"   d8P  Y8b      .od888P"  888    888  .od888P"       "Y8b.
-                            "Y8888b. 888 888  888 888     88888888     d88P"      888    888 d88P"      888    888
-                                 X88 888 888  888 Y88b.   Y8b.         888"       Y88b  d88P 888"       Y88b  d88P
-                             88888P' 888 888  888  "Y8888P "Y8888      888888888   "Y8888P"  888888888   "Y8888P" </pre>
+    <!-- Section jump list. The page is a single long scroll of five distinct
+         things; without this there is no way to tell that the artists and the
+         labels are down there at all. -->
+    <div class="about-jump" role="navigation" aria-label="sections of this page">
+        <a href="#what">what this is</a>
+        <a href="#how">how it works</a>
+        <a href="#who">who we are</a>
+        <a href="#contact">get in touch</a>
+        <a href="#artists">artists</a>
+        <a href="#labels">labels &amp; friends</a>
     </div>
 
-    <!-- SMALLER "SINCE 2023 / MELODIES TO THEIR NOISE" ASCII -->
-    <div class="ascii-since ascii-block"><pre>
-.. __   __         ___ ___          ___  __       ___ .  __      __         ___  ___
-''/__` /  \  |\/| |__   |  |  |\/| |__  /__`    |  |  ' /__`    /  \ |  | |  |  |__ 
-  .__/ \__/  |  | |___  |  |  |  | |___ .__/    |  |    .__/    \__X \__/ |  |  |___
-
-       ___       __   __     __        __       __  ___       ___  __               
- |\/| |__  |    /  \ |  \ | /  \ |  | /__` .   /  \  |  |__| |__  |__)              
- |  | |___ |___ \__/ |__/ | \__/ \__/ .__/ ,   \__/  |  |  | |___ |  \              
-
-___          ___  __       ___ .  __           __     __   ___ ..                   
- |  |  |\/| |__  /__`    |  |  ' /__`    |\ | /  \ | /__` |__  ''                   
- |  |  |  | |___ .__/    |  |    .__/    | \| \__/ | .__/ |___                      </pre></div>
+    <!-- MASTHEAD
+         Was two blocks of figlet ASCII. The big one was 140 columns wide,
+         which forced it down to clamp(3px, 0.7vw, 7px) to fit, and at that
+         size a font built from /\ and \/ strokes is a smear rather than a
+         word. This says the same thing in the site's own pixel typeface,
+         which is legible at any size and is real selectable text. -->
+    <div class="masthead">
+        <div class="masthead-title">magmacrunch<br>media</div>
+        <div class="masthead-rule"></div>
+        <div class="masthead-sub">since 2023</div>
+        <div class="masthead-quote">
+            "sometimes it's quite melodious;<br>other times it's noise"
+        </div>
+    </div>
 
     <div class="divider"></div>
 
     <!-- Body text -->
     <div class="about-text">
+        <h2 class="about-heading" id="what">what this is</h2>
         <!-- Cereal animation (floated right) -->
         <div class="cereal-canvas-wrap">
             <canvas id="cereal-scene" width="600" height="512"></canvas>
@@ -108,6 +99,24 @@ ___          ___  __       ___ .  __           __     __   ___ ..
             After <a href="../archive/by-label/magmacrunch-music/">magmacrunch music</a> was established as a publishing entity in 2025, early development of this website led to the creation of the <a href="../arcade/">magmacrunch arcade</a> as well as a historical  <a href="../archive/">archive</a>. 
             The collective continues to branch out into other areas of art and technology, with future plans for constructing hardware, making documentaries, and more. 
             </p>
+
+        <p>
+            What started as a way to put records out has since spread a good
+            deal further. The <a href="../arcade/">arcade</a> now holds a couple
+            of dozen browser games, most of them built on engines we wrote
+            ourselves rather than on anything off the shelf, and a few of those
+            games have been ported back onto real Nintendo Wii hardware and
+            onto the iPhone. The <a href="../ware/">ware</a> section collects
+            what fell out of making all of it: a handful of creative utilities
+            for anyone to use in a browser, alongside the programming language,
+            the game engines and the course on how computer memory works that we
+            built for ourselves first. The
+            <a href="../press/">press</a> section is where the writing goes, and
+            <a href="../visual/">visual</a> is where the films, collage and
+            photography live.
+        </p>
+
+        <h2 class="about-heading" id="how">how it works</h2>
 
         <div class="pull-quote">
             Traditional record labels feel weird sometimes. The idea of giving up music rights and ending up indebted to a label after working so hard just to get there never felt appealing to us. 
@@ -149,6 +158,8 @@ ___          ___  __       ___ .  __           __     __   ___ ..
                                                      |___/ 
                                                     </pre>
         </div>
+
+        <h2 class="about-heading" id="who">who we are</h2>
 
         <div class="zine-bg-magenta">
             <p>
@@ -209,14 +220,14 @@ ___          ___  __       ___ .  __           __     __   ___ ..
     </div>
 
     <!-- EMAIL CALLOUT -->
-    <div class="email-callout">
+    <div class="email-callout" id="contact">
         <div class="email-callout-label">get in touch</div>
         <a href="mailto:info@magmacrunch.com">email us</a>
         <div class="email-callout-sub">we'd love to hear from you</div>
     </div>
 
     <div class="strips-divider"></div>
-    <div class="section-label">// artists //</div>
+    <h2 class="section-label" id="artists">// artists //</h2>
 
     <!-- SVFP -->
     <div class="link-strip svfp">
@@ -394,7 +405,7 @@ __/\\\______________________________________________/\\\________________________
 
     <!-- PIXELATED LOGO GRID -->
     <div class="logo-grid-section">
-        <div class="logo-grid-label">// find us everywhere //</div>
+        <h2 class="logo-grid-label" id="labels">// find us everywhere //</h2>
 
         <div class="logo-grid-groups">
             <div class="logo-group">

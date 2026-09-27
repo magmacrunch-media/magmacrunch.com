@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An independent record label and creative collective. Music, film, video games, web tools, writing, and an archive of the people who made them.">
     <title>magmacrunch media</title>
     <meta property="og:title" content="magmacrunch media">
-    <meta property="og:description" content="music, visual art, archives, arcade games, and more">
+    <meta property="og:description" content="An independent record label and creative collective. Music, film, video games, web tools, writing, and an archive of the people who made them.">
     <meta property="og:image" content="https://magmacrunch.com/og/home.png?v=2">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -55,8 +56,11 @@
             line-height: 1.4;
         }
 
+        /* 200x240 canvas at exactly 2x, so image-rendering: pixelated has
+           whole pixels to work with. A non-integer scale is what made the
+           old 400x480-into-340px version mushy. */
         .volcano-canvas-wrap {
-            width: min(340px, 72vw);
+            width: min(400px, 80vw);
             aspect-ratio: 5 / 6;
         }
         .volcano-canvas-wrap canvas {
@@ -95,24 +99,83 @@
             animation: blink 1.2s step-end infinite;
         }
 
+        /* ── WHAT THIS IS ──
+           Press Start 2P is unreadable below about 10px, so the one piece of
+           prose on the page is set in Courier Prime like the rest of the
+           site's body copy. */
+        .home-intro {
+            font-family: 'Courier Prime', monospace;
+            font-size: 15px;
+            line-height: 1.85;
+            color: var(--mc-text, #f0ead8);
+            text-align: center;
+            max-width: 62ch;
+            margin: 44px 0 0;
+            animation: fadeUp 0.6s 0.25s ease both;
+        }
+        .home-intro b {
+            color: var(--mc-lava-amber);
+            font-weight: 700;
+        }
+        .home-intro a {
+            color: var(--mc-cereal-cyan);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0,245,255,0.35);
+        }
+        .home-intro a:hover {
+            color: var(--mc-lava-bright);
+            border-bottom-color: var(--mc-lava-bright);
+        }
+
         /* Insert coin */
         .insert-coin {
             font-family: 'Press Start 2P', monospace;
             font-size: 11px;
             color: var(--mc-lava-bright);
             letter-spacing: 0.15em;
-            margin-bottom: 32px;
+            margin: 44px 0 26px;
             text-shadow: 0 0 12px rgba(255,224,58,0.8);
             animation: blink 1s step-end infinite, fadeUp 0.6s 0.3s ease both;
             animation-fill-mode: both;
         }
 
-        /* Nav cards animation delay */
-        .nav-cards { animation: fadeUp 0.6s 0.4s ease both; }
+        /* ── SECTION CARDS ──
+           .nav-cards / .nav-card are the shared components in style.css, plus
+           the five homepage-only colours it already defines. All this block
+           adds is the second line, so the cards can say what is behind them
+           rather than only naming it. */
+        /* Grid rather than the shared flex wrap: eight cards of unequal
+           label length wrap 3/4/1 under flex, which looks like an accident. */
+        .nav-cards {
+            animation: fadeUp 0.6s 0.4s ease both;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 760px;
+            width: 100%;
+        }
+        .nav-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 16px;
+        }
+        .card-sub {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            letter-spacing: 0;
+            opacity: 0.72;
+        }
 
         @media (max-width: 640px) {
-            .insert-coin { font-size: 8px; }
+            main { padding: 48px 18px 48px; }
+            .insert-coin { font-size: 8px; margin: 34px 0 20px; }
+            .home-intro { font-size: 13px; line-height: 1.7; margin-top: 32px; }
             .volcano-canvas-wrap { aspect-ratio: 1 / 1; }
+            /* Two per row rather than one, so the grid is still a grid. */
+            .nav-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .nav-card { padding: 12px 10px; }
+            .card-sub { font-size: 11px; }
             .volcano-title {
                 text-shadow:
                     1px 1px 0px var(--mc-mount-mid),
@@ -145,6 +208,37 @@
         </div>
     </div>
 
+    <!-- WHAT THIS IS -->
+    <p class="home-intro">
+        <b>magmacrunch media</b> is an independent record label and creative
+        collective, founded in 2023 across Pennsylvania, California and New
+        Hampshire. We release our own music, films, video games, web tools and
+        writing, and we keep an <a href="archive/">archive</a> of the people who
+        made them. <a href="home/about.html">More about us</a>.
+    </p>
+
+    <!-- WHERE TO GO -->
+    <div class="insert-coin">&mdash; INSERT COIN &mdash;</div>
+
+    <div class="nav-cards">
+        <a href="music/" class="nav-card c-violet">
+            music<span class="card-sub">releases &amp; jukebox</span></a>
+        <a href="visual/" class="nav-card c-cyan">
+            visual<span class="card-sub">film &amp; collage</span></a>
+        <a href="archive/" class="nav-card c-mintteal">
+            archive<span class="card-sub">who played what</span></a>
+        <a href="arcade/" class="nav-card c-softpink">
+            arcade<span class="card-sub">browser games</span></a>
+        <a href="press/" class="nav-card c-yellow">
+            press<span class="card-sub">writing &amp; lyrics</span></a>
+        <a href="ware/" class="nav-card c-green">
+            ware<span class="card-sub">tools &amp; toys</span></a>
+        <a href="home/about.html" class="nav-card c-burntorange">
+            about<span class="card-sub">who we are</span></a>
+        <a href="home/guestbook.html" class="nav-card c-nearwhite">
+            guestbook<span class="card-sub">say hi</span></a>
+    </div>
+
 </main>
 
 <footer>
@@ -153,13 +247,79 @@
 
 <script src="nav.js?v=4def08af"></script>
 <script>
-(function() {
-    var src = window.innerWidth > 640
-        ? '/animations/volcano-lamp.js'
-        : '/animations/volcano-pixel.js';
-    var s = document.createElement('script');
-    s.src = src;
-    document.body.appendChild(s);
+/* Picks the desktop lamp or the 64x64 pixel fallback, and re-picks when the
+   window crosses the breakpoint. It used to choose once at load, so a window
+   opened narrow and then widened kept the mobile animation for ever.
+
+   Each animation exposes window.__volcanoStop, which cancels its loop AND
+   removes its visibilitychange listener; a listener left behind would restart
+   a cancelled loop on the next tab switch, leaving two animations drawing into
+   one canvas.
+
+   window.__pageCleanup, which the SPA router in nav.js calls on navigation, is
+   registered below but is NOT trusted: it is a single global slot and
+   assets/jukebox.js claims it too, from a script nav.js injects after this one
+   runs, so on this page the jukebox wins and the cleanup here never fires.
+   Hence gone(): every resize check first asks whether the canvas is still in
+   the document and tears down if it is not. The animations carry the same
+   guard in their own loops. */
+(function () {
+    var BREAKPOINT = 640;   // matches the CSS media query above
+    var SRC = {
+        lamp:  '/animations/volcano-lamp.js',
+        pixel: '/animations/volcano-pixel.js'
+    };
+    var current = null, tag = null, timer = null;
+
+    function wanted() {
+        return window.innerWidth > BREAKPOINT ? 'lamp' : 'pixel';
+    }
+
+    function load(mode) {
+        if (mode === current) return;
+        if (typeof window.__volcanoStop === 'function') window.__volcanoStop();
+        window.__volcanoStop = null;
+        if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
+        current = mode;
+        tag = document.createElement('script');
+        tag.src = SRC[mode];
+        document.body.appendChild(tag);
+    }
+
+    // The canvas lives in <main>, which the SPA replaces wholesale.
+    function gone() {
+        var c = document.getElementById('volcano');
+        return !c || !c.isConnected;
+    }
+
+    function teardown() {
+        clearTimeout(timer);
+        window.removeEventListener('resize', onResize);
+        if (typeof window.__volcanoStop === 'function') window.__volcanoStop();
+        window.__volcanoStop = null;
+        if (tag && tag.parentNode) tag.parentNode.removeChild(tag);
+        tag = null;
+        current = null;
+    }
+
+    function onResize() {
+        if (gone()) { teardown(); return; }
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            if (gone()) teardown(); else load(wanted());
+        }, 180);
+    }
+
+    load(wanted());
+    window.addEventListener('resize', onResize);
+
+    // Chained rather than assigned, so registering this does not itself become
+    // the clobber the comment above describes.
+    var prevCleanup = window.__pageCleanup;
+    window.__pageCleanup = function () {
+        teardown();
+        if (typeof prevCleanup === 'function') prevCleanup();
+    };
 })();
 </script>
 </body>

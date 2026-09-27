@@ -45,6 +45,7 @@
 
   /* ── ANIMATION ── */
   const FRAME_MS = 1000 / 15;
+  const WARMUP_FRAMES = 90;
 
   /* ── COLORS ── */
   const C = {
@@ -59,6 +60,13 @@
 
   /* ── STATE ── */
   const canvas = document.getElementById('volcano');
+  if (!canvas) return;
+  // Set explicitly rather than relying on the width/height attributes in the
+  // page. When index.html swaps back to this script after a window narrows,
+  // the canvas is still carrying volcano-lamp.js's 200x240 and the 64x64
+  // scene ends up drawn small in the top-left corner.
+  canvas.width = W;
+  canvas.height = H;
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
@@ -238,9 +246,15 @@
 
   /* ── LOOP ── */
 
-  let lastTime = 0, rafId;
+  let lastTime = 0, rafId = 0;
 
   function loop(ts) {
+    // Stop when the canvas is no longer in the document. The SPA router in
+    // nav.js swaps <main> out from under us, and window.__pageCleanup cannot
+    // be relied on to tell us: it is a single global slot, and assets/jukebox.js
+    // claims it too, from a script nav.js injects after the page's own. Whoever
+    // writes last wins, so a page-owned cleanup is routinely clobbered.
+    if (!canvas.isConnected) { rafId = 0; return; }
     rafId = requestAnimationFrame(loop);
     if (ts - lastTime < FRAME_MS) return;
     lastTime = ts;
@@ -249,18 +263,33 @@
     frame++;
   }
 
-  document.addEventListener('visibilitychange', () => {
+  function onVisibility() {
     if (document.hidden) {
       cancelAnimationFrame(rafId);
-    } else {
+      rafId = 0;
+    } else if (!rafId) {
       lastTime = 0;
       rafId = requestAnimationFrame(loop);
     }
-  });
+  }
 
+  // Run the physics before the first paint so the canvas opens with an
+  // eruption already in flight. Without it the upper half of the frame, which
+  // is reserved for the plume, is empty for the first several seconds.
+  for (let i = 0; i < WARMUP_FRAMES; i++) { update(); frame++; }
+
+  document.addEventListener('visibilitychange', onVisibility);
   rafId = requestAnimationFrame(loop);
 
-  window.__pageCleanup = function () {
+  // The listener has to come off with the loop. index.html swaps between this
+  // script and volcano-lamp.js when the window crosses the 640px breakpoint,
+  // and a listener left behind restarts a cancelled loop the next time the tab
+  // is hidden and shown, so two animations then share one canvas. The loader
+  // owns window.__pageCleanup and calls this.
+  window.__volcanoStop = function () {
     cancelAnimationFrame(rafId);
+    rafId = 0;
+    document.removeEventListener('visibilitychange', onVisibility);
+    ctx.clearRect(0, 0, W, H);
   };
 })();

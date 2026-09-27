@@ -71,44 +71,108 @@
             text-transform: lowercase;
         }
 
-        /* ── MASTHEAD ASCII ── */
-        .ascii-main {
+        /* ── MASTHEAD ──
+           The figlet ASCII this replaced needed 140 monospace columns, so it
+           had to be set at three to seven pixels to fit the page and became a
+           smear at every width. Same words, in the site's own pixel face. */
+        .masthead {
             width: 100%;
             max-width: 960px;
-            margin-bottom: 8px;
-            overflow-x: auto;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 18px;
         }
-        .ascii-main pre {
-            font-family: 'Courier Prime', monospace;
-            font-size: clamp(3px, 0.7vw, 7px);
-            line-height: 1.2;
-            color: var(--mc-text-primary);
-            text-shadow: 0 0 10px rgba(255,45,155,0.3);
-            white-space: pre;
-            display: inline-block;
-            text-align: left;
-            flex-shrink: 0;
+        .masthead-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(18px, 4.4vw, 46px);
+            line-height: 1.45;
+            text-align: center;
+            text-transform: lowercase;
+            color: var(--mc-crater);
+            letter-spacing: 0.05em;
+            text-shadow:
+                3px 3px 0 var(--mc-mount-mid),
+                6px 6px 0 var(--mc-lava-deep),
+                9px 9px 0 var(--mc-mount-dark),
+                12px 12px 0 var(--mc-lava-amber),
+                15px 15px 0 #000;
+        }
+        .masthead-rule {
+            width: min(420px, 70%);
+            height: 2px;
+            margin: 26px 0 14px;
+            background: linear-gradient(90deg,
+                transparent, var(--mc-crater) 20%,
+                var(--mc-crater) 80%, transparent);
+        }
+        .masthead-sub {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 11px;
+            letter-spacing: 0.22em;
+            color: var(--mc-lava-amber);
+            text-transform: uppercase;
+        }
+        .masthead-quote {
+            margin-top: 12px;
+            font-family: 'Lora', Georgia, serif;
+            font-style: italic;
+            font-size: 16px;
+            line-height: 1.7;
+            text-align: center;
+            color: var(--mc-smoke);
         }
 
-        .ascii-since {
+        /* ── SECTION JUMP LIST ──
+           A div rather than a <nav>: style.css styles the bare `nav` element
+           as the fixed top bar, so a second <nav> anywhere on a page is
+           pinned over the site nav until six properties are undone. */
+        .about-jump {
             width: 100%;
             max-width: 960px;
-            margin-bottom: 12px;
-            overflow-x: auto;
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            gap: 6px 10px;
+            margin: 4px 0 26px;
         }
-        .ascii-since pre {
-            font-family: 'Courier Prime', monospace;
-            font-size: clamp(2px, 0.4vw, 4.5px);
-            line-height: 1.25;
+        .about-jump a {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            letter-spacing: 0.08em;
             color: var(--mc-smoke);
-            white-space: pre;
-            display: inline-block;
-            flex-shrink: 0;
+            text-decoration: none;
+            padding: 7px 10px;
+            border: 1px solid var(--mc-border);
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
         }
+        .about-jump a:hover,
+        .about-jump a:focus-visible {
+            color: var(--mc-sky-deep);
+            background: var(--mc-crater);
+            border-color: var(--mc-crater);
+        }
+
+        /* ── SECTION HEADINGS ──
+           scroll-margin-top keeps a jumped-to heading clear of the fixed nav. */
+        .about-heading,
+        .section-label,
+        .logo-grid-label,
+        .email-callout { scroll-margin-top: 90px; }
+
+        .about-heading {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            text-transform: lowercase;
+            color: var(--mc-crater);
+            margin: 34px 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--mc-border);
+            clear: both;
+        }
+        .about-text > .about-heading:first-child { margin-top: 0; }
 
         /* ── ASCII BLOCK COLORS ── */
         .ascii-block.ascii-masthead pre {
@@ -300,9 +364,6 @@
 
         /* ── QUICK LINKS (old sidebar, now unused) ── */
 
-        /* Hide nav-cards on about page */
-        .nav-card { display: none; }
-
         /* ── FOOTER ── */
         footer {
             background: var(--mc-sky-deep) !important;
@@ -313,12 +374,41 @@
 
         /* ── MOBILE ── */
         @media (max-width: 640px) {
+            main { padding: 64px 14px 48px; }
             .page-title { font-size: 10px; }
             .about-text p { font-size: 13px; }
             .dateline { font-size: 7px; gap: 10px; }
-            .ascii-main pre { font-size: clamp(2px, 1.5vw, 5px); }
             .zine-links { flex-direction: column; align-items: center; }
             .cereal-canvas-wrap { float: none; width: 80%; max-width: 260px; margin: 16px auto; }
+
+            .masthead-title {
+                line-height: 1.5;
+                text-shadow:
+                    1px 1px 0 var(--mc-mount-mid),
+                    2px 2px 0 var(--mc-lava-deep),
+                    3px 3px 0 var(--mc-mount-dark),
+                    4px 4px 0 var(--mc-lava-amber),
+                    5px 5px 0 #000;
+            }
+            .masthead-rule { margin: 18px 0 12px; }
+            .masthead-sub { font-size: 8px; }
+            .masthead-quote { font-size: 14px; }
+
+            .about-jump { gap: 5px 6px; margin-bottom: 20px; }
+            .about-jump a { font-size: 7px; padding: 6px 7px; }
+
+            .about-heading { font-size: 10px; margin: 26px 0 14px; }
+
+            /* The floated ASCII blocks are 60-plus monospace columns wide. At
+               half a phone's width they are unreadable AND they squeeze the
+               prose into a four-word column, so they go full width here. */
+            .ascii-float-right {
+                float: none;
+                max-width: 100%;
+                margin: 18px 0;
+                overflow-x: auto;
+            }
+            .ascii-float-right pre { font-size: clamp(3px, 1.5vw, 6px) !important; }
         }
 
         /* ── ARTIST LINK STRIPS ── */
