@@ -29,6 +29,13 @@
       display: flex; flex-direction: column;
     }
 
+    /* A column flex container sizes its line to the widest child's max-content,
+       so one wide <pre> pushed the whole page past a phone's viewport and every
+       other section scrolled sideways with it. A definite width pins the line to
+       the container instead. max-width: 100% does not do it -- the line is
+       already too wide by the time it would apply. */
+    body > * { width: 100%; }
+
     /* ── Hero ──────────────────────────────────────────── */
 
     .hero {
@@ -141,6 +148,25 @@
       font-size: 11px;
     }
 
+    /* ── Lead ────────────────────────────── */
+
+    /* What this is, before what it contains. Brighter than .about so it reads
+       as the opening rather than as another block of body copy. */
+    .lead {
+      max-width: 600px;
+      margin: 0 auto 2.75rem;
+      padding: 0 1.5rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #b8b4cc;
+    }
+
+    .lead p { margin-bottom: .6rem; }
+    .lead p:last-child { margin-bottom: 0; }
+    .lead strong { color: #e8e6f0; }
+    .lead code { font-family: 'Courier Prime', monospace; font-size: 12px; }
+    .lead .about-links { margin: 1.25rem 0 0; }
+
     /* ── About ─────────────────────────────────────────── */
 
     .about {
@@ -185,6 +211,7 @@
 
     .about-links {
       display: flex;
+      flex-wrap: wrap;
       gap: 1rem;
       margin: 1.5rem 0 .75rem;
     }
@@ -223,6 +250,14 @@
     }
 
     @media (max-width: 480px) {
+      .hero { padding: 2.5rem 1.25rem 1.75rem; }
+      .lead { margin-bottom: 2rem; }
+      /* A code block that scrolls sideways inside a page is unfindable on a
+         phone, so wrap instead -- pre-wrap keeps the indentation. */
+      .about pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      .about-links { gap: .6rem; }
+      /* 44px is the smallest comfortable tap target; these were 26px. */
+      .about-links a { padding: .55rem .9rem; min-height: 44px; display: inline-flex; align-items: center; }
       .tools { grid-template-columns: 1fr; }
       .feat-grid { grid-template-columns: 1fr; }
     }
@@ -275,6 +310,20 @@
   <div class="hero">
     <h1>magmascript</h1>
     <p class="tagline">a Python-inspired mini language for magmacrunch infrastructure</p>
+  </div>
+
+  <div class="lead">
+    <p>A Python-inspired mini scripting language by <a href="https://magmacrunch.com">magmacrunch media</a>.
+      Write <code>.mgs</code> scripts that combine general-purpose programming with infrastructure
+      automation via the domain bridge. Tree-walk interpreter, no compilation step, runs in your
+      terminal or browser.</p>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunch-media/magmascript" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/magmacrunch-media/magmascript/wiki" target="_blank" rel="noopener">Docs</a>
+      <a href="https://pypi.org/project/magmascript/" target="_blank" rel="noopener">PyPI</a>
+      <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
+    </div>
   </div>
 
   <div class="tools">
@@ -341,10 +390,7 @@
   </div>
 
   <div class="about">
-    <h2>about</h2>
-    <p>A Python-inspired mini scripting language by <a href="https://magmacrunch.com">magmacrunch media</a>.
-      Write <code>.mgs</code> scripts that combine general-purpose programming with infrastructure automation via the domain bridge.
-      Tree-walk interpreter, no compilation step, runs in your terminal or browser.</p>
+    <h2>getting started</h2>
 
     <h3>install</h3>
     <p class="about-label">pip:</p>
@@ -356,13 +402,6 @@
     <h3>quick start</h3>
     <pre><code>magmascript run script.mgs
 magmascript repl</code></pre>
-
-    <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/magmascript" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/magmacrunch-media/magmascript/wiki" target="_blank" rel="noopener">Docs</a>
-      <a href="https://pypi.org/project/magmascript/" target="_blank" rel="noopener">PyPI</a>
-      <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
-    </div>
 
     <p class="about-license">MIT · Copyright 2026 magmacrunch media</p>
   </div>

@@ -36,6 +36,13 @@
       display: flex; flex-direction: column;
     }
 
+    /* A column flex container sizes its line to the widest child's max-content,
+       so one wide <pre> pushed the whole page past a phone's viewport and every
+       other section scrolled sideways with it. A definite width pins the line to
+       the container instead. max-width: 100% does not do it -- the line is
+       already too wide by the time it would apply. */
+    body > * { width: 100%; }
+
     /* ── Hero ──────────────────────────────────────────── */
 
     .hero {
@@ -109,6 +116,25 @@
       color: #cbb3f7;
     }
 
+    /* ── Lead ────────────────────────────── */
+
+    /* What this is, before what it contains. Brighter than .about so it reads
+       as the opening rather than as another block of body copy. */
+    .lead {
+      max-width: 600px;
+      margin: 0 auto 2.75rem;
+      padding: 0 1.5rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #b8b4cc;
+    }
+
+    .lead p { margin-bottom: .6rem; }
+    .lead p:last-child { margin-bottom: 0; }
+    .lead strong { color: #e8e6f0; }
+    .lead code { font-family: 'Courier Prime', monospace; font-size: 12px; }
+    .lead .about-links { margin: 1.25rem 0 0; }
+
     /* ── About ─────────────────────────────────────────── */
 
     .about {
@@ -155,6 +181,7 @@
 
     .about-links {
       display: flex;
+      flex-wrap: wrap;
       gap: 1rem;
       margin: 1.5rem 0 .75rem;
     }
@@ -193,6 +220,14 @@
     }
 
     @media (max-width: 480px) {
+      .hero { padding: 2.5rem 1.25rem 1.75rem; }
+      .lead { margin-bottom: 2rem; }
+      /* A code block that scrolls sideways inside a page is unfindable on a
+         phone, so wrap instead -- pre-wrap keeps the indentation. */
+      .about pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      .about-links { gap: .6rem; }
+      /* 44px is the smallest comfortable tap target; these were 26px. */
+      .about-links a { padding: .55rem .9rem; min-height: 44px; display: inline-flex; align-items: center; }
       .feat-grid { grid-template-columns: 1fr; }
     }
 
@@ -244,6 +279,20 @@
   <div class="hero">
     <h1>hypnopompia</h1>
     <p class="tagline">the iOS shell for magmacrunch arcade games</p>
+  </div>
+
+  <div class="lead">
+    <p>The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the
+      store tooling, by <a href="../../">magmacrunch media</a>. It is to iOS what
+      <a href="../magnolia/">magnolia</a> is to the Wii: the part that is the same every time.</p>
+
+    <p><strong>It runs no game logic.</strong> A game&rsquo;s rules live in that game&rsquo;s repo,
+      once per platform. This holds what every App Store build needs and no game should have to
+      reinvent: a plugin, a project, a pipeline and a checklist that fails loudly.</p>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunch-media/hypnopompia" target="_blank" rel="noopener">GitHub</a>
+    </div>
   </div>
 
   <div class="features">
@@ -315,32 +364,21 @@
   </div>
 
   <div class="about">
-    <h2>about</h2>
-    <p>The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the
-      store tooling, by <a href="../../">magmacrunch media</a>. It is to iOS what
-      <a href="../magnolia/">magnolia</a> is to the Wii: the part that is the same every time.</p>
-
-    <p><strong>It runs no game logic.</strong> A game&rsquo;s rules live in that game&rsquo;s repo,
-      once per platform. This holds what every App Store build needs and no game should have to
-      reinvent: a plugin, a project, a pipeline and a checklist that fails loudly.</p>
-
-    <h3>the name</h3>
+    <h2>the name</h2>
     <p>After <a href="../../archive/by-artist/thld/releases.html">Hypnopompia</a> by Texas
       Hold&rsquo;Em Lava Dome, from <em>Pompous Fanfare for All Occasions</em> (2019).
       <a href="../adenosine/">Adenosine</a> is the molecule that builds sleep pressure;
       hypnopompia is surfacing out of it.</p>
+  </div>
 
-    <h3>using it</h3>
+  <div class="about">
+    <h2>using it</h2>
     <p class="about-label">Node 22 or newer, and nothing else:</p>
     <pre><code>node tools/sync.mjs ../../games/&lt;game&gt;
 node tools/sync.mjs --check
 node tools/check-metadata.mjs ../../games/&lt;game&gt;/ios
 node tools/check-game-center.mjs ../../games/&lt;game&gt;/ios
 node tools/check-launch-crop.mjs ../../games/&lt;game&gt;/ios</code></pre>
-
-    <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/hypnopompia" target="_blank" rel="noopener">GitHub</a>
-    </div>
 
     <p class="about-license">PolyForm Noncommercial 1.0.0 &middot; Copyright 2026 magmacrunch media</p>
   </div>

@@ -2034,7 +2034,7 @@
     "c": "tool",
     "u": "/ware/adenosine/",
     "d": "lightweight web game engines · try every package live",
-    "b": "adenosine — magmacrunch media ← developer tools adenosine lightweight game engines by magmacrunch media ▶ Playground Try every package live. Code editor with syntax highlighting, pre-loaded examples, and console output. ▢ Tile Map Editor Draw tile maps for the RPG engine. Paint, fill, export JSON, preview with AdRPG. ✎ Theme Customizer Customize CSS colors for cards, puzzle, chat, and multiplayer packages. packages Package Description Links rpg 2D tile-based RPG engine npm puzzle Sliding tile puzzle framework npm cards Card deck, pixel-art SVG, chips npm audio Web Audio music + SFX engine npm ..."
+    "b": "adenosine — magmacrunch media ← developer tools adenosine lightweight game engines by magmacrunch media A collection of lightweight web game engines by magmacrunch media . TypeScript and JavaScript, zero runtime dependencies, built for browsers. Powering the magmacrunch web arcade since 2026. GitHub npm magmacrunch.com ▶ Playground Try every package live. Code editor with syntax highlighting, pre-loaded examples, and console output. ▢ Tile Map Editor Draw tile maps for the RPG engine. Paint, fill, export JSON, preview with AdRPG. ✎ Theme Customizer Customize CSS colors for cards, puzzle, chat,..."
   },
   {
     "t": "album art maker",
@@ -2062,21 +2062,21 @@
     "c": "tool",
     "u": "/ware/hypnopompia/",
     "d": "the iOS shell for magmacrunch arcade games: Game Center plugin, bundle pipeline, store tooling",
-    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games what is here native/ The Game Center plugin and view controller, Swift, vendored byte-identical into each game’s App target pipeline/ The bundle transforms every App Store build shares, and the self-contained sweep sync.mjs Vendors native/ into a game; --check hash-compares every consumer and is the drift detector check-metadata.mjs A game’s store copy against App Store Connect’s field limits, before the upload rejects it check-game-center.mjs Leaderboard and achievement ids and their art, ..."
+    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the store tooling, by magmacrunch media . It is to iOS what magnolia is to the Wii: the part that is the same every time. It runs no game logic. A game’s rules live in that game’s repo, once per platform. This holds what every App Store build needs and no game should have to reinvent: a plugin, a project, a pipeline and a checklist that fails loudly. GitHub what is here native/ The Game Center plugin and ..."
   },
   {
     "t": "magmascript",
     "c": "tool",
     "u": "/ware/magmascript/",
     "d": "a Python-inspired mini language for magmacrunch infrastructure",
-    "b": "magmascript — magmacrunch media ← developer tools magmascript a Python-inspired mini language for magmacrunch infrastructure ▶ Playground Write and run .mgs scripts in-browser with Pyodide. 14 examples, syntax highlighting, console output. 📖 Language Reference Syntax cheat sheet: variables, functions, classes, control flow, built-in functions, and string methods. features Variables & F-Strings Dynamic typing, f\"interpolation {expressions}\" Functions & Closures fn, arrow functions, default params, closures Lists & Dicts Slicing [1:3], [::-1], comprehensions Classes Methods, constructors, self,..."
+    "b": "magmascript — magmacrunch media ← developer tools magmascript a Python-inspired mini language for magmacrunch infrastructure A Python-inspired mini scripting language by magmacrunch media . Write .mgs scripts that combine general-purpose programming with infrastructure automation via the domain bridge. Tree-walk interpreter, no compilation step, runs in your terminal or browser. GitHub Docs PyPI magmacrunch.com ▶ Playground Write and run .mgs scripts in-browser with Pyodide. 14 examples, syntax highlighting, console output. 📖 Language Reference Syntax cheat sheet: variables, functions, classe..."
   },
   {
     "t": "magnolia",
     "c": "tool",
     "u": "/ware/magnolia/",
     "d": "lightweight C engine for Wii homebrew score-attack games",
-    "b": "magnolia — magmacrunch media ← developer tools magnolia lightweight C engine for Wii homebrew games 📚 API Reference 153 functions across 12 modules. Interactive search, module tabs, code examples with syntax highlighting. 🛠 Scaffold Generate a new game project with the magnolia engine pre-configured. coming soon modules core Engine init, SD mount, asset paths renderer Video, font, frame presentation sprite Textures, sprite sheets, mirroring, origin-based drawing input Up to four Wiimotes: press, hold, release, snapshots audio PCM16 SFX and music playback scoring High-score tables with SD JSO..."
+    "b": "magnolia — magmacrunch media ← developer tools magnolia lightweight C engine for Wii homebrew games A lightweight C engine for Wii homebrew by magmacrunch media . It handles initialization, input, rendering, scoring, audio, and the game state shell, so you only write the gameplay. Built with devkitPPC and GRRLIB . GitHub 📚 API Reference 153 functions across 12 modules. Interactive search, module tabs, code examples with syntax highlighting. 🛠 Scaffold Generate a new game project with the magnolia engine pre-configured. coming soon modules core Engine init, SD mount, asset paths renderer Vide..."
   },
   {
     "t": "media//search",
@@ -2104,7 +2104,7 @@
     "c": "tool",
     "u": "/ware/texastoast/",
     "d": "Python RPG engine with I2C hardware abstraction for magmacrunch game systems",
-    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ ▶ Playground Run the real engine in your browser under Pyodide. Four examples, playable with the keyboard, no install required. 📖 API Reference Game, entities, tile maps, camera, input, and the UI widgets, plus the magmascript domain table. features Game Loop Frame-rate independent, dt-clamped, gives up on a broken frame instead of spinning Tile Maps JSON save/load, per-tile solidity, sub-stepped AABB collision that slides alon..."
+    "b": "texastoast — magmacrunch media ← developer tools texastoast Python RPG engine with I2C hardware abstraction for magmacrunch game systems v0.5.0 Apache-2.0 Python 3.10+ A tkinter-based 2D game engine by magmacrunch media , inspired by adenosine and built for the same kind of small RPGs, but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi. Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it is absent. It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against imaginary controllers, a ..."
   },
   {
     "t": "tone grating",

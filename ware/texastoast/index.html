@@ -29,6 +29,13 @@
       display: flex; flex-direction: column;
     }
 
+    /* A column flex container sizes its line to the widest child's max-content,
+       so one wide <pre> pushed the whole page past a phone's viewport and every
+       other section scrolled sideways with it. A definite width pins the line to
+       the container instead. max-width: 100% does not do it -- the line is
+       already too wide by the time it would apply. */
+    body > * { width: 100%; }
+
     /* ── Hero ──────────────────────────────────────────── */
 
     .hero {
@@ -158,6 +165,25 @@
       font-size: 11px;
     }
 
+    /* ── Lead ────────────────────────────── */
+
+    /* What this is, before what it contains. Brighter than .about so it reads
+       as the opening rather than as another block of body copy. */
+    .lead {
+      max-width: 600px;
+      margin: 0 auto 2.75rem;
+      padding: 0 1.5rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #b8b4cc;
+    }
+
+    .lead p { margin-bottom: .6rem; }
+    .lead p:last-child { margin-bottom: 0; }
+    .lead strong { color: #e8e6f0; }
+    .lead code { font-family: 'Courier Prime', monospace; font-size: 12px; }
+    .lead .about-links { margin: 1.25rem 0 0; }
+
     /* ── About ─────────────────────────────────────────── */
 
     .about {
@@ -202,6 +228,7 @@
 
     .about-links {
       display: flex;
+      flex-wrap: wrap;
       gap: 1rem;
       margin: 1.5rem 0 .75rem;
       flex-wrap: wrap;
@@ -241,6 +268,14 @@
     }
 
     @media (max-width: 480px) {
+      .hero { padding: 2.5rem 1.25rem 1.75rem; }
+      .lead { margin-bottom: 2rem; }
+      /* A code block that scrolls sideways inside a page is unfindable on a
+         phone, so wrap instead -- pre-wrap keeps the indentation. */
+      .about pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      .about-links { gap: .6rem; }
+      /* 44px is the smallest comfortable tap target; these were 26px. */
+      .about-links a { padding: .55rem .9rem; min-height: 44px; display: inline-flex; align-items: center; }
       .tools { grid-template-columns: 1fr; }
       .feat-grid { grid-template-columns: 1fr; }
     }
@@ -297,6 +332,26 @@
       <span class="badge">v0.5.0</span>
       <span class="badge">Apache-2.0</span>
       <span class="badge">Python 3.10+</span>
+    </div>
+  </div>
+
+  <div class="lead">
+    <p>A tkinter-based 2D game engine by <a href="https://magmacrunch.com">magmacrunch media</a>,
+      inspired by <a href="../adenosine/">adenosine</a> and built for the same kind of small RPGs,
+      but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi.
+      Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when
+      it is absent.</p>
+
+    <p>It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against
+      imaginary controllers, a live test bench for bringing real ones up, and session record/replay
+      that turns a captured session into a regression test. You can build for the Magma Hub before
+      the Magma Hub exists.</p>
+
+    <div class="about-links">
+      <a href="https://github.com/magmacrunch-media/texastoast" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://pypi.org/project/texastoast/" target="_blank" rel="noopener">PyPI</a>
+      <a href="https://github.com/magmacrunch-media/texastoast/wiki" target="_blank" rel="noopener">Docs</a>
+      <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
     </div>
   </div>
 
@@ -372,15 +427,7 @@
   </div>
 
   <div class="about">
-    <h2>about</h2>
-    <p>A tkinter-based 2D game engine by <a href="https://magmacrunch.com">magmacrunch media</a>,
-      inspired by <a href="../adenosine/">adenosine</a> and built for the same kind of small RPGs,
-      but in Python, and able to read real controllers over I2C when it runs on a Raspberry Pi.
-      Game logic never depends on tkinter, and hardware degrades gracefully to the keyboard when it is absent.</p>
-    <p>It also ships a hardware dev kit: a bus-level simulator that runs the real I2C stack against
-      imaginary controllers, a live test bench for bringing real ones up, and session record/replay
-      that turns a captured session into a regression test. You can build for the Magma Hub before
-      the Magma Hub exists.</p>
+    <h2>getting started</h2>
 
     <h3>install</h3>
     <p class="about-label">pip:</p>
@@ -459,13 +506,6 @@ update = fn(dt) {
     player.move(s.dx, s.dy, dt, world)
     if s.a { player.speed = 220 } else { player.speed = 100 }
 }</code></pre>
-
-    <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/texastoast" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://pypi.org/project/texastoast/" target="_blank" rel="noopener">PyPI</a>
-      <a href="https://github.com/magmacrunch-media/texastoast/wiki" target="_blank" rel="noopener">Docs</a>
-      <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
-    </div>
 
     <p class="about-license">Apache-2.0 · Copyright 2026 magmacrunch media</p>
   </div>
