@@ -398,18 +398,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         // actions above: the instructions modal stacks below the lore screen
         // (z-index 2100 against 3000), so the lore screen has to step aside
         // and be put back when the modal closes.
+        // Two doors into the one rules panel: "full rules" opens at how the
+        // board works, and "new to binary?" opens at the primer three sections
+        // earlier. Asked for by heading rather than page number, because the
+        // numbers shift every time a section is added and a stale number would
+        // land a first-time player on whatever happened to be there.
+        const openRules = (section) => {
+            loreScreen.classList.remove('active');
+            returnToLoreScreen = true;
+            const instructionsModal = document.getElementById('instructionsModal');
+            instructionsModal.classList.add('active');
+            const instructionsContent = instructionsModal.querySelector('.instructions-content');
+            if (instructionsContent) {
+                instructionsContent.scrollTop = 0;
+            }
+            // The pager measures on first open, so the page it is asked for has
+            // to be asked for after the panel is on screen and has a height.
+            if (section && window.BooleRules) {
+                requestAnimationFrame(() => window.BooleRules.showSection(section));
+            }
+        };
+
         const loreFullRules = document.getElementById('loreFullRules');
         if (loreFullRules) {
-            loreFullRules.addEventListener('click', () => {
-                loreScreen.classList.remove('active');
-                returnToLoreScreen = true;
-                const instructionsModal = document.getElementById('instructionsModal');
-                instructionsModal.classList.add('active');
-                const instructionsContent = instructionsModal.querySelector('.instructions-content');
-                if (instructionsContent) {
-                    instructionsContent.scrollTop = 0;
-                }
-            });
+            loreFullRules.addEventListener('click', () => openRules('goal'));
+        }
+
+        const loreBasics = document.getElementById('loreBasics');
+        if (loreBasics) {
+            loreBasics.addEventListener('click', () => openRules('start with counting'));
         }
 
         // Setup difficulty selection

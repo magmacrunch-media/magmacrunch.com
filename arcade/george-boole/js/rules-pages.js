@@ -308,6 +308,28 @@
             return pages.length;
         },
         show: (n) => show(n - 1),
+
+        /**
+         * Open the page a section starts on, found by a bit of its heading.
+         *
+         * By text rather than by number because the numbers move: the primer
+         * added three sections at the front and every page after it shifted by
+         * three. A caller that said show(4) would have been silently wrong,
+         * and silently wrong about which screen a first-time player lands on.
+         * Returns false if nothing matched, so a caller can fall back rather
+         * than open the rules at whatever happened to be first.
+         */
+        showSection(needle) {
+            const want = String(needle).toLowerCase();
+            const at = pages.findIndex((page) => {
+                const h = page.querySelector('h4');
+                return h && h.textContent.toLowerCase().includes(want);
+            });
+            if (at === -1) return false;
+            show(at);
+            return true;
+        },
+
         relayout: layout,
     };
 })();

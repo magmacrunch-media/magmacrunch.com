@@ -46,7 +46,7 @@
     <link rel="stylesheet" href="css/modal-scoreboard.css?v=0ae5f201">
     <link rel="stylesheet" href="css/modal-settings.css?v=52d3c30a">
     <link rel="stylesheet" href="css/modal-misc.css?v=b7074cbd">
-    <link rel="stylesheet" href="css/responsive.css?v=5b8ab20a">
+    <link rel="stylesheet" href="css/responsive.css?v=f0fe00bb">
     <link rel="stylesheet" href="css/gates.css?v=71f1f693">
     <link rel="stylesheet" href="css/side-panels.css?v=750ad1a6">
     <link rel="stylesheet" href="css/math-overlay.css?v=2b2e3275">
@@ -312,6 +312,15 @@
             </div>
 
             <div class="lore-links">
+                <!-- Its own door, opening the same panel at the primer.
+                     "full rules" is where somebody already playing goes to
+                     check a detail; this is where somebody who has never met
+                     binary starts, and neither would look under the other's
+                     name. One body of content, two ways in: js/main.js asks
+                     BooleRules.showSection for the page each one wants, by
+                     heading rather than by number, since a number moves the
+                     next time a section is added. -->
+                <button class="lore-rules-link" id="loreBasics" type="button">new to binary? &rarr;</button>
                 <button class="lore-rules-link" id="loreFullRules" type="button">full rules &rarr;</button>
                 <!-- Opened by js/codex.js. -->
                 <button class="lore-rules-link" id="loreCodex" type="button">gate codex &rarr;</button>
@@ -511,27 +520,108 @@
                  So: four lamps, then one worked sum done a column at a time.
                  It is a section like any other, which means rules-pages.js
                  paginates it with the rest and it needs nothing added there. -->
-            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">NEW TO THIS? A NUMBER IS FOUR LAMPS</h4>
+            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">NEW TO THIS? START WITH COUNTING</h4>
 
             <div class="rule-box" style="background: rgba(0, 255, 255, 0.06); padding: 12px; margin-bottom: 15px; border-left: 3px solid #00ffff;">
                 <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
-                    Every tile is four lamps in a row, each either <strong style="color: #00ff00;">on (1)</strong>
-                    or <strong style="color: #666;">off (0)</strong>. The lamps are worth
-                    <strong style="color: #ffd700;">8, 4, 2, 1</strong>, and the number on the tile is
-                    whatever the lit ones add up to.
+                    You count with ten digits, 0 to 9. A computer counts with two,
+                    <strong style="color: #00ff00;">0</strong> and <strong style="color: #00ff00;">1</strong>.
+                    That is all binary means.
                 </p>
+                <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    Think of a tile as <strong style="color: #ffd700;">four lamps in a row</strong>, each on (1) or
+                    off (0). Each lamp is worth double the one to its right:
+                    <strong style="color: #ffd700;">8, 4, 2, 1</strong>. The number on the tile is whatever the lit
+                    ones add up to.
+                </p>
+            </div>
+
+            <!-- Its own box, not a longer one above. The pager gives a section
+                 a page and moves a block that does not fit to the next, so a
+                 block taller than a whole page leaves its heading stranded on
+                 an empty one. Two modest boxes page cleanly where one tall one
+                 did not. -->
+            <div class="rule-box" style="background: rgba(0, 255, 255, 0.06); padding: 12px; margin-bottom: 15px; border-left: 3px solid #00ffff;">
                 <div style="font-family: monospace; font-size: 13px; line-height: 1.8; color: #00ffff; margin-left: 4px;">
                     <div><span style="color:#ffd700;">8 4 2 1</span></div>
-                    <div>0 1 0 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">= 4+1 =</span> <strong style="color:#00ff00;">5</strong></div>
+                    <div>0 0 0 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">=</span> <strong style="color:#00ff00;">1</strong></div>
+                    <div>0 0 1 0 &nbsp;<span style="color: rgba(255,255,255,0.95);">=</span> <strong style="color:#00ff00;">2</strong></div>
                     <div>0 0 1 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">= 2+1 =</span> <strong style="color:#00ff00;">3</strong></div>
+                    <div>0 1 0 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">= 4+1 =</span> <strong style="color:#00ff00;">5</strong></div>
+                    <div>1 1 1 1 &nbsp;<span style="color: rgba(255,255,255,0.95);">= 8+4+2+1 =</span> <strong style="color:#00ff00;">15</strong></div>
+                </div>
+                <p style="margin: 10px 0 0 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    Four lamps is why 4-bit tops out at <strong style="color: #ffd700;">15</strong>. Two lamps top out
+                    at 3, eight lamps at 255. That is the whole of the bit modes.
+                </p>
+            </div>
+
+            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
+
+            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">A GATE IS A RULE FOR ONE LAMP</h4>
+
+            <div class="rule-box" style="background: rgba(138, 43, 226, 0.12); padding: 12px; margin-bottom: 15px; border-left: 3px solid #8a2be2;">
+                <p style="margin: 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    Before any of it touches a whole number, a gate is a rule about
+                    <strong>one lamp against one lamp</strong>: two in, one out. There are only four
+                    rules, and each is four lines long. Read them as "in, in, out".
+                </p>
+            </div>
+
+            <div class="gates-grid truth-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">⊕</div>
+                    <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>XOR</strong></div>
+                    <div style="font-family: monospace; font-size: 12px; line-height: 1.7; color: #00ff00;">
+                        0 <span class="glyph">⊕</span> 0 = 0<br>
+                        0 <span class="glyph">⊕</span> 1 = 1<br>
+                        1 <span class="glyph">⊕</span> 0 = 1<br>
+                        1 <span class="glyph">⊕</span> 1 = 0
+                    </div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); margin-top: 5px;">on when they differ</div>
+                </div>
+                <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∨</div>
+                    <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>OR</strong></div>
+                    <div style="font-family: monospace; font-size: 12px; line-height: 1.7; color: #00ff00;">
+                        0 <span class="glyph">∨</span> 0 = 0<br>
+                        0 <span class="glyph">∨</span> 1 = 1<br>
+                        1 <span class="glyph">∨</span> 0 = 1<br>
+                        1 <span class="glyph">∨</span> 1 = 1
+                    </div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); margin-top: 5px;">on if either is on</div>
+                </div>
+                <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∧</div>
+                    <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>AND</strong></div>
+                    <div style="font-family: monospace; font-size: 12px; line-height: 1.7; color: #00ff00;">
+                        0 <span class="glyph">∧</span> 0 = 0<br>
+                        0 <span class="glyph">∧</span> 1 = 0<br>
+                        1 <span class="glyph">∧</span> 0 = 0<br>
+                        1 <span class="glyph">∧</span> 1 = 1
+                    </div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); margin-top: 5px;">on only if both are on</div>
+                </div>
+                <div class="gate-card" style="background: rgba(255, 215, 0, 0.08); padding: 10px; border: 2px solid rgba(255, 215, 0, 0.5);">
+                    <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.6);">¬</div>
+                    <div style="font-size: 11px; color: #ffd700; margin: 4px 0 5px 0;"><strong>NOT</strong></div>
+                    <div style="font-family: monospace; font-size: 12px; line-height: 1.7; color: #00ff00;">
+                        <span class="glyph">¬</span> 0 = 1<br>
+                        <span class="glyph">¬</span> 1 = 0
+                    </div>
+                    <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9); margin-top: 5px;">one lamp in, flipped</div>
                 </div>
             </div>
 
-            <div class="rule-box" style="background: rgba(138, 43, 226, 0.12); padding: 12px; margin-bottom: 15px; border-left: 3px solid #8a2be2;">
+            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
+
+            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">NOW DO IT TO A WHOLE NUMBER</h4>
+
+            <div class="rule-box" style="background: rgba(0, 255, 255, 0.06); padding: 12px; margin-bottom: 15px; border-left: 3px solid #00ffff;">
                 <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
-                    A gate compares the two tiles <strong>one lamp at a time</strong> and decides
-                    whether that lamp is on in the answer. Nothing carries, nothing adds up.
-                    <strong style="color: #00ffff;">XOR</strong> lights a lamp when the two disagree:
+                    A gate does not know what 5 is. It takes the two tiles' lamps
+                    <strong>column by column</strong>, applies that one rule four times, and reads the
+                    answer back as a number. Nothing carries the way addition carries.
                 </p>
                 <div style="font-family: monospace; font-size: 13px; line-height: 1.8; margin-left: 4px;">
                     <div><span style="color:#ffd700;">8 4 2 1</span></div>
@@ -541,10 +631,35 @@
                     <div style="color:#00ff00;">0 1 1 0 &nbsp;<span style="color: rgba(255,255,255,0.8);">= 4+2 =</span> <strong>6</strong></div>
                 </div>
                 <p style="margin: 10px 0 0 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
-                    Same idea for the others: <strong style="color: #00ffff;">OR</strong> lights a lamp
-                    if it is on in <em>either</em>, <strong style="color: #00ffff;">AND</strong> only if it is
-                    on in <em>both</em>, and <strong style="color: #ffd700;">NOT</strong> flips all four on a
-                    single tile.
+                    Column 1: both lamps on, XOR says off. Column 2: one on, one off, so on.
+                    Column 4: one on, so on. Column 8: neither, so off. That is
+                    <strong style="color: #00ff00;">0110</strong>, which is 6.
+                </p>
+            </div>
+
+            <div class="rule-box" style="background: rgba(138, 43, 226, 0.12); padding: 12px; margin-bottom: 15px; border-left: 3px solid #8a2be2;">
+                <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    The same two tiles through the other two gates. Same lamps, different rule,
+                    different number out:
+                </p>
+                <div style="font-family: monospace; font-size: 13px; line-height: 1.8; margin-left: 4px;">
+                    <div><span style="color:#ffd700;">8 4 2 1</span></div>
+                    <div style="color:#00ffff;">0 1 0 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">5</span></div>
+                    <div style="color:#00ffff;">0 0 1 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">3</span></div>
+                    <div style="color:#8a2be2;">------- <span style="color:#ff00ff;"><span class="glyph">∨</span></span></div>
+                    <div style="color:#00ff00;">0 1 1 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">= 4+2+1 =</span> <strong>7</strong></div>
+                </div>
+                <div style="font-family: monospace; font-size: 13px; line-height: 1.8; margin: 12px 0 0 4px;">
+                    <div><span style="color:#ffd700;">8 4 2 1</span></div>
+                    <div style="color:#00ffff;">0 1 0 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">5</span></div>
+                    <div style="color:#00ffff;">0 0 1 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">3</span></div>
+                    <div style="color:#8a2be2;">------- <span style="color:#ff00ff;"><span class="glyph">∧</span></span></div>
+                    <div style="color:#00ff00;">0 0 0 1 &nbsp;<span style="color: rgba(255,255,255,0.8);">=</span> <strong>1</strong></div>
+                </div>
+                <p style="margin: 10px 0 0 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
+                    And <strong style="color: #ffd700;">NOT</strong> needs only one tile: it flips all four lamps.
+                    <span style="font-family: monospace; color: #00ff00;"><span class="glyph">¬</span>5</span>
+                    is 0101 flipped to 1010, which is <strong style="color: #00ff00;">10</strong>.
                 </p>
             </div>
 
@@ -793,8 +908,8 @@
     <script src="js/game.js?v=8311982c"></script>
     <script src="js/math-overlay.js?v=44ff0d30"></script>
     <script src="js/codex.js?v=e5f34bee"></script>
-    <script src="js/rules-pages.js?v=460908e3"></script>
-    <script src="js/main.js?v=dbb498e0"></script>
+    <script src="js/rules-pages.js?v=b4a3b413"></script>
+    <script src="js/main.js?v=0660e22f"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
 <script src="../shared/adenosine-chat.js?v=4a6b886b"></script>

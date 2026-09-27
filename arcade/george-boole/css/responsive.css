@@ -254,6 +254,15 @@
     .gates-grid {
         grid-template-columns: 1fr !important;
     }
+
+    /* The truth tables stay two across. The rule above is right for the gate
+       cards, whose descriptions are sentences that need the width, and wrong
+       for these, whose widest line is "0 ⊕ 0 = 0": one column would make the
+       section twice as tall for no gain, and the pager would then split four
+       tables that belong together. */
+    .truth-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
     
     .gate-card {
         padding: 8px !important;
