@@ -142,9 +142,18 @@
             border: 2px solid var(--cyan-dim);
             border-bottom: none;
             background: rgba(0,255,255,0.02);
-            transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+            transition: background 0.15s, border-color 0.15s, box-shadow 0.15s,
+                        background-size 0.15s;
             position: relative;
             overflow: hidden;
+            /* three-segment bar along the bottom edge */
+            background-image: linear-gradient(90deg,
+                var(--accent) 0 33.334%,
+                var(--a2)     33.334% 66.667%,
+                var(--a3)     66.667% 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 4px;
+            background-position: left bottom;
         }
         .tool-card:last-child {
             border-bottom: 2px solid var(--cyan-dim);
@@ -155,18 +164,33 @@
             display: block;
             width: 4px;
             flex-shrink: 0;
-            background: var(--cyan);
+            background: var(--accent, var(--cyan));
             transition: width 0.15s;
         }
 
         .tool-card:hover {
-            background: rgba(0,255,255,0.05);
-            border-color: var(--cyan);
+            background-color: rgba(0,255,255,0.05);
+            border-color: var(--accent, var(--cyan));
             box-shadow: 0 0 20px rgba(0,255,255,0.15),
                         inset 0 0 40px rgba(0,255,255,0.02);
+            background-size: 100% 7px;
         }
         .tool-card:hover::before { width: 7px; }
         .tool-card:hover .tc-arrow { opacity: 1; transform: translateX(0); }
+
+        /* Per-tool card themes */
+        .t-adenosine  { --accent:#ff6ec7; --a2:#ff3d8a; --a3:#c94ba0; --ink:#ffd0e8; } /* pink */
+        .t-texastoast { --accent:#ffe03a; --a2:#f0c020; --a3:#d4a010; --ink:#fff8d0; } /* yellow */
+        .t-magmascript { --accent:#ff3d3d; --a2:#e02020; --a3:#c01010; --ink:#ffd0d0; } /* red */
+        .t-magnolia   { --accent:#00f5ff; --a2:#00c0d0; --a3:#0090a0; --ink:#d0f8ff; } /* cyan */
+        .t-hologram   { --accent:#c45fff; --a2:#9040d0; --a3:#6030a0; --ink:#e8d0ff; } /* purple */
+        .t-hypnopompia { --accent:#b98cf5; --a2:#9060d0; --a3:#7040b0; --ink:#e0d0f8; } /* lavender */
+        .t-crunch-c   { --accent:#7cc7ff; --a2:#4090d0; --a3:#2060a0; --ink:#d0e8ff; } /* blue */
+        .t-crunchscope { --accent:#ff8c42; --a2:#e06020; --a3:#c04010; --ink:#ffe0c0; } /* orange */
+        .t-tone-grating { --accent:#35e0d0; --a2:#20b0a0; --a3:#108080; --ink:#d0f8f0; } /* teal */
+        .t-sprite-forge { --accent:#ff3d6e; --a2:#e02050; --a3:#c01040; --ink:#ffd0e0; } /* rose */
+        .t-album-art  { --accent:#f0a030; --a2:#d08020; --a3:#b06010; --ink:#f8e0c0; } /* amber */
+        .t-media-search { --accent:#2ee8a5; --a2:#20b080; --a3:#108060; --ink:#d0f8e8; } /* green */
 
         .tc-inner {
             padding: 20px 22px;
@@ -180,7 +204,7 @@
         .tc-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 9px;
-            color: var(--cyan);
+            color: var(--accent, var(--cyan));
             letter-spacing: 0.08em;
             margin-bottom: 7px;
             display: block;
@@ -197,7 +221,7 @@
         .tc-arrow {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
-            color: var(--cyan);
+            color: var(--accent, var(--cyan));
             opacity: 0;
             transform: translateX(-6px);
             transition: opacity 0.15s, transform 0.15s;
@@ -230,19 +254,23 @@
             display: block;
             width: 4px;
             flex-shrink: 0;
-            background: var(--cyan);
+            background: var(--accent, var(--cyan));
             transition: width 0.15s;
         }
 
         .category-card:hover {
             background: rgba(0,255,255,0.05);
-            border-color: var(--cyan);
+            border-color: var(--accent, var(--cyan));
             box-shadow: 0 0 24px rgba(0,255,255,0.2),
                         inset 0 0 40px rgba(0,255,255,0.02);
             transform: translateY(-3px);
         }
         .category-card:hover::before { width: 7px; }
         .category-card:hover .cc-arrow { opacity: 1; transform: translateX(0); }
+
+        /* Per-category card themes */
+        .cat-utilities { --accent:#ff8c42; --a2:#e06020; --a3:#c04010; --ink:#ffe0c0; } /* orange */
+        .cat-dev      { --accent:#7cc7ff; --a2:#4090d0; --a3:#2060a0; --ink:#d0e8ff; } /* blue */
 
         .cc-inner {
             padding: 24px 20px;
@@ -255,7 +283,7 @@
         .cc-label {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
-            color: var(--cyan);
+            color: var(--accent, var(--cyan));
             letter-spacing: 0.08em;
             text-shadow: 0 0 8px rgba(0,255,255,0.4);
         }
@@ -270,7 +298,7 @@
         .cc-arrow {
             font-family: 'Press Start 2P', monospace;
             font-size: 10px;
-            color: var(--cyan);
+            color: var(--accent, var(--cyan));
             opacity: 0;
             transform: translateX(-6px);
             transition: opacity 0.15s, transform 0.15s;
