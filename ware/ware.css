@@ -11,10 +11,17 @@
             --cyan-dim: #007A7A;
             --cyan-glow: rgba(0,255,255,0.4);
             --cyan-bright: #7DF9FF;
-            background: #040c0c;
+            /* The terminal was teal-black (#040c0c) with cyan scanlines, which
+               is what the cyan chrome was designed against. The volcano lamp
+               that now sits on this page is violet glass over warm lava, and
+               teal-black read as a different room to it. This is the same
+               terminal a shade violet instead, which the lamp's liquid belongs
+               in and which cyan still reads well against; the scanlines keep a
+               little cyan so the CRT feel survives the change. */
+            background: #07060f;
             background-image: repeating-linear-gradient(
                 0deg, transparent, transparent 2px,
-                rgba(0,255,255,0.03) 2px, rgba(0,255,255,0.03) 4px
+                rgba(120,220,255,0.028) 2px, rgba(120,220,255,0.028) 4px
             );
         }
 
@@ -79,6 +86,39 @@
             letter-spacing: 0.05em;
             margin-bottom: 48px;
             animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        /* ── VOLCANO LAMP ──
+           200x240 canvas shown at exactly 2x so image-rendering: pixelated has
+           whole pixels; the mobile fallback is 64x64 and square, hence the
+           aspect-ratio switch in the media query at the foot of this file. */
+        .ware-lamp {
+            position: relative;
+            width: min(400px, 80vw);
+            aspect-ratio: 5 / 6;
+            margin: -12px 0 34px;
+            animation: fadeUp 0.5s 0.15s ease both;
+        }
+        /* The lamp lights the page it stands on. Anchored to the element
+           rather than painted into the body background, so it stays behind the
+           glass however far the page is scrolled or however tall it gets. */
+        .ware-lamp::before {
+            content: '';
+            position: absolute;
+            inset: -22% -38%;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(closest-side,
+                rgba(255,106,0,0.14),
+                rgba(196,95,255,0.07) 55%,
+                transparent 78%);
+        }
+        .ware-lamp canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
 
         @keyframes blink-cyan {
@@ -243,4 +283,6 @@
             .page-title { font-size: 13px; }
             .tc-label { font-size: 8px; }
             .category-grid { grid-template-columns: 1fr; }
+            /* The fallback canvas is 64x64, so its box is square. */
+            .ware-lamp { aspect-ratio: 1 / 1; margin: -4px 0 24px; }
         }
