@@ -39,11 +39,7 @@ window.NAV_CONFIG = {
             { href: 'arcade/puzzles/', label: 'puzzles' },
             { href: 'arcade/action/', label: 'action' }
         ]},
-        { label: 'press', href: 'press/', items: [
-            { href: 'press/scientific/', label: 'scientific' },
-            { href: 'press/experimental/', label: 'experimental' },
-            { href: 'press/lyrics/', label: 'lyrics' }
-        ]},
+        { label: 'press', href: 'press/' },
         { label: 'ware', href: 'ware/', items: [
             { href: 'ware/utilities/', label: 'creative utilities' },
             { href: 'ware/dev/', label: 'developer tools' }
