@@ -3,87 +3,43 @@
    assets/jukebox.css
    ═══════════════════════════════════════════════ */
 
-/* ── ROOT CONTAINER ── */
+/* ── ROOT CONTAINER ──
+   A flex child of the nav, in the dead centre of the bar. flex-grow - not
+   the nav's own auto margins, which resolve after it - takes the whole gap
+   between the brand and the section links, so the pill centres in the space
+   that is actually there and its label truncates rather than colliding with
+   the links. Stretched to the nav's full height so the drop panel anchors to
+   the bar's bottom edge, the same edge the nav dropdowns hang from. */
 .mcj {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 9998;
-    width: auto;
+    position: relative;
+    flex: 1 1 auto;
+    min-width: 0;
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: 'Press Start 2P', monospace;
     color: var(--white, #f0ead8);
     user-select: none;
 }
 
-.mcj.expanded {
-    width: auto;
-}
-
-/* ═══════════════════════════════════════════════
-   NOW-PLAYING READOUT (in the nav)
-   ───────────────────────────────────────────────
-   Lives in the dead centre of the nav bar, and only
-   while a track is playing. See the comment on
-   createNavReadout in jukebox.js.
-   ═══════════════════════════════════════════════ */
-.mcj-now {
-    flex: 1 1 auto;
-    min-width: 0;
-    /* The nav is 48px and this is a button, so it carries none of the
-       chrome one would default to. */
-    background: none;
-    border: none;
-    padding: 0 16px;
-    margin: 0;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 7px;
-    line-height: 1.6;
-    letter-spacing: 0.05em;
-    text-align: center;
-    color: var(--nav-accent, var(--rose, #ff3d6e));
-    opacity: 0.75;
-    cursor: pointer;
-    /* One line, ellipsed. The gap shrinks with the window and the track
-       titles here run to 76 characters. */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: opacity 0.15s;
-}
-
-.mcj-now:hover {
-    opacity: 1;
-}
-
-.mcj-now:focus-visible {
-    outline: 2px solid var(--yellow, #ffe03a);
-    outline-offset: 2px;
-    opacity: 1;
-}
-
-/* `hidden` has to beat the flex display above, or the readout shows blank
-   and still eats the gap. */
-.mcj-now[hidden] {
-    display: none;
-}
-
-/* The full jukebox page has the real player in the content; the widget
-   already hides itself there (see the :has rule below) and so does this. */
-body:has(main .jukebox) .mcj-now {
-    display: none !important;
-}
-
 /* ── FLOATING BUTTON (collapsed) ──
    A pill, not a square: the disc on its own does not say "jukebox" to a first
    visit. Width is content-driven so the label sets it. ── */
+/* ── COLLAPSED PILL (in the nav) ──
+   A pill, not a square: the disc on its own does not say "jukebox" to a first
+   visit. Width is content-driven so the label sets it, capped at the gap so
+   the readout truncates. 32px of the 48px bar, so it reads as sitting in the
+   nav rather than covering it. ── */
 .mcj-bar {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    width: auto;
-    padding: 0 12px 0 10px;
-    height: 48px;
+    height: 32px;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0 14px 0 10px;
     background:
         repeating-linear-gradient(
             0deg,
@@ -94,15 +50,15 @@ body:has(main .jukebox) .mcj-now {
         ),
         var(--black, #080808);
     border: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    box-shadow: 0 0 16px var(--nav-glow, rgba(255, 61, 110, 0.3));
-    transition: transform 0.15s, box-shadow 0.15s, border-radius 0.2s, border-color 0.2s;
+    box-shadow: 0 0 12px var(--nav-glow, rgba(255, 61, 110, 0.3));
+    transition: transform 0.15s, box-shadow 0.15s, border-color 0.2s;
 }
 
 .mcj-bar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 24px var(--nav-glow, rgba(255, 61, 110, 0.5));
+    transform: translateY(-1px);
+    box-shadow: 0 0 18px var(--nav-glow, rgba(255, 61, 110, 0.5));
     border-color: var(--yellow, #ffe03a);
 }
 
@@ -111,31 +67,31 @@ body:has(main .jukebox) .mcj-now {
     outline-offset: 3px;
 }
 
-/* ── COLLAPSED LABEL ── */
+/* ── COLLAPSED LABEL (the now-playing readout) ──
+   Idle it names the button; playing, jukebox.js swaps in the track line.
+   Track titles here run to 76 characters and the gap shrinks with the
+   window, so it ellipses rather than colliding with the links. */
 .mcj-bar-label {
     font-size: 8px;
     letter-spacing: 0.1em;
     line-height: 1;
     white-space: nowrap;
     color: var(--nav-accent, var(--rose, #ff3d6e));
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Expanded, the header says "// JUKEBOX //" - the pill would say it twice. */
+/* Expanded, the header says "// JUKEBOX //" and the window carries the track
+   - the pill would say it twice. */
 .mcj.expanded .mcj-bar-label {
     display: none;
 }
 
-.mcj.expanded .mcj-bar {
-    width: 48px;
-    padding: 0;
-    border-radius: 12px 12px 0 0;
-    border-bottom-color: transparent;
-}
-
-/* ── VINYL DISC (in button) ── */
+/* ── VINYL DISC (in the pill) ── */
 .mcj-mini-vinyl {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     border: 1px solid #444;
     background:
@@ -168,7 +124,26 @@ body:has(main .jukebox) .mcj-now {
     to   { transform: rotate(360deg); }
 }
 
-/* ── EXPANDED HEADER ── */
+/* ── DROP PANEL ──
+   The same pattern as a nav dropdown: absolutely anchored below the 48px bar,
+   centred on the pill's container. 300px at the centre of the window cannot
+   clip above ~640px, and below 900px the widget is not shown at all - see the
+   NARROW block at the foot of this file. One wrapper carries header + window
+   so both keep their separate max-height transitions at a single anchor. ── */
+.mcj-drop {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── EXPANDED HEADER ──
+   The panel's title strip. It is the top edge of the panel now, not the
+   underside of the pill it used to connect to, so it carries a top border
+   and rounded top corners. ── */
 .mcj-header {
     background: var(--nav-accent, var(--rose, #ff3d6e));
     color: var(--black, #080808);
@@ -183,10 +158,8 @@ body:has(main .jukebox) .mcj-now {
     opacity: 0;
     overflow: hidden;
     padding: 0 12px;
-    border-left: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
-    border-right: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
-    border-bottom: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
-    border-top: none;
+    border: 2px solid var(--nav-accent, var(--rose, #ff3d6e));
+    border-radius: 12px 12px 0 0;
     transition: max-height 0.3s ease, opacity 0.2s ease, padding 0.3s ease;
 }
 
@@ -194,8 +167,6 @@ body:has(main .jukebox) .mcj-now {
     max-height: 40px;
     opacity: 1;
     padding: 8px 12px;
-    width: 300px;
-    box-sizing: border-box;
 }
 
 .mcj.minimized .mcj-header {
@@ -243,7 +214,6 @@ body:has(main .jukebox) .mcj-now {
 .mcj.expanded .mcj-window {
     max-height: 400px;
     opacity: 1;
-    width: 300px;
 }
 
 /* ── EXPANDED INNER LAYOUT ── */
@@ -497,43 +467,13 @@ body:has(main .jukebox) .mcj {
 }
 
 /* ── NARROW ──
-   nav.js no longer loads the widget under 600px or on a coarse pointer, so
-   this block is reached only by a desktop window dragged narrow after the page
-   loaded. Kept so that window stays usable rather than clipping the pill. ── */
-@media (max-width: 600px) {
+   nav.js no longer loads the widget under 900px or on a coarse pointer, so
+   this block is reached only by a desktop window dragged narrow after the
+   page loaded. The centre gap between the brand and the eight section links
+   is not wide enough to hold the pill below 900px (brand + padding + links
+   come to ~670px), so it hides rather than squeezing the links. ── */
+@media (max-width: 900px) {
     .mcj {
-        bottom: 16px;
-        left: 16px;
-        right: auto;
-        width: auto;
-        z-index: 9998;
+        display: none;
     }
-
-    .mcj-bar {
-        border-radius: 14px;
-    }
-
-    .mcj.expanded .mcj-bar {
-        border-radius: 14px 14px 0 0;
-        border-bottom-color: transparent;
-    }
-
-    .mcj-window {
-        border-radius: 0 0 14px 14px;
-        max-height: 0;
-    }
-
-    .mcj.expanded .mcj-window {
-        max-height: 60vh;
-    }
-
-    .mcj-vinyl {
-        width: 72px;
-        height: 72px;
-    }
-
-    /* larger touch targets */
-    .mcj-btn { padding: 10px 12px; }
-    .mcj-btn-skip { padding: 10px 10px; }
-    .mcj-mute { padding: 8px 10px; font-size: 12px; }
 }

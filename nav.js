@@ -338,20 +338,24 @@ window.NAV_CONFIG = {
    JUKEBOX MINI-PLAYER LOADER
    ───────────────────────────────────────────────
    Loads assets/jukebox.css and assets/jukebox.js
-   on every page that has a <nav> element.
-   Arcade games don't load nav.js, so they're
+   on every page that has a <nav> element. Arcade
+   games don't load nav.js, so they're
    automatically excluded.
 
-   Not on touch, and not in a narrow window. The
-   expanded panel is 300px of a 375px phone and up
-   to 60vh of its height, and it is redundant there
-   anyway: the widget wires up MediaSession, so once
-   a track is playing the lock screen carries the
-   controls. The nav's own 'jukebox' link still
-   reaches music/jukebox/ on every device.
+   The widget is a pill in the dead centre of the
+   nav bar - the gap between the brand and the
+   section links - whose panel drops from the bar
+   like a dropdown. Not on touch: the widget wires
+   up MediaSession, so once a track is playing the
+   lock screen carries the controls. And not under
+   900px, where the centre gap is not wide enough
+   to hold the pill (brand + padding + the eight
+   section links come to ~670px). The nav's own
+   'jukebox' link still reaches music/jukebox/ on
+   every device.
 
    (pointer: coarse) rather than width alone, so a
-   phone held in landscape - wider than 600px - is
+   phone held in landscape - wider than 900px - is
    still a phone.
    ═══════════════════════════════════════════════ */
 
@@ -359,18 +363,22 @@ window.NAV_CONFIG = {
     const nav = document.querySelector('nav');
     if (!nav || document.body.classList.contains('no-jukebox')) return;
     if (window.matchMedia &&
-        window.matchMedia('(max-width: 600px), (pointer: coarse)').matches) return;
+        window.matchMedia('(max-width: 900px), (pointer: coarse)').matches) return;
 
     // Compute base path to site root from current page
     const depth = window.location.pathname.split('/').length - 2;
     const root = depth > 0 ? '../'.repeat(depth) : '';
 
-    // Load CSS immediately — prevents FOUT when widget is created
+    // Load CSS immediately — prevents FOUT when widget is created.
+    // Stamped like the search loader's refs below: a nav.js edit deploys both
+    // of these files' loader, and an unstamped ref would keep serving whichever
+    // of the pair the browser already had — a new jukebox.js against an old
+    // jukebox.css positions a widget that no longer exists.
     let cssReady;
     if (!document.querySelector('link[href*="jukebox.css"]')) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = root + 'assets/jukebox.css';
+        link.href = root + 'assets/jukebox.css?v=76382dd2';
         cssReady = new Promise((resolve) => {
             link.addEventListener('load', resolve, { once: true });
             link.addEventListener('error', resolve, { once: true });
@@ -385,7 +393,7 @@ window.NAV_CONFIG = {
         if (!document.querySelector('script[src*="jukebox.js"]')) {
             window.__jukeboxReady = cssReady.then(() => new Promise((resolve) => {
                 const script = document.createElement('script');
-                script.src = root + 'assets/jukebox.js';
+                script.src = root + 'assets/jukebox.js?v=f204e1c8';
                 script.onload = resolve;
                 script.onerror = resolve;
                 document.body.appendChild(script);

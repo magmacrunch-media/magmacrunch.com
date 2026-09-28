@@ -53,7 +53,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
     let progressFill = null;
     let volSlider = null;
     let volLabel = null;
-    let navReadout = null;
+    let barLabel = null;
 
     /* ── HELPERS ── */
     function fmtTime(s) {
@@ -234,60 +234,35 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         }
     }
 
-    /* ── NOW-PLAYING READOUT (in the nav) ──
+    /* ── NOW-PLAYING READOUT ──
        The centre of the nav is dead space: at 1440px the brand ends at x=159
        and the links begin at x=932. A line of text there says what the site is
        doing in the site's own masthead, which a pill in the bottom corner
        cannot - that corner is where support bubbles and cookie banners live,
        and people have learned to skip it.
 
-       Only while something is playing. Silent, the bar is exactly as it was,
-       so a first visit gets no extra furniture. It is a flex child rather than
-       absolutely centred so it takes the gap that is actually there and
-       truncates instead of colliding with the links on a narrow window.
-
-       The SPA router swaps only main.innerHTML, so the nav survives a
-       navigation and this needs no re-injection. Creation is still idempotent,
-       because createWidget is re-entered by __initJukeboxPlayer. ── */
-    function createNavReadout() {
-        const nav = document.querySelector('nav');
-        if (!nav) return null;
-        const existing = nav.querySelector('.mcj-now');
-        if (existing) return existing;
-
-        const el = document.createElement('button');
-        el.className = 'mcj-now';
-        el.type = 'button';
-        el.hidden = true;
-        el.addEventListener('click', () => {
-            if (widgetEl && widgetEl.classList.contains('minimized')) toggleExpand();
-        });
-
-        // Before the links, so flex order puts it in the gap rather than past
-        // them. insertBefore with a null reference appends, which is the right
-        // fallback for a nav built without a .nav-links list.
-        nav.insertBefore(el, nav.querySelector('.nav-links'));
-        return el;
-    }
-
-    function updateNavReadout(track) {
-        if (!navReadout) return;
-        const show = !!track && isPlaying;
-        navReadout.hidden = !show;
-        if (!show) {
-            navReadout.textContent = '';
-            navReadout.removeAttribute('title');
-            navReadout.removeAttribute('aria-label');
-            return;
-        }
-        // '//' rather than a dash: it is the separator the rest of the site
-        // sets its headings in, and it survives a monospace pixel font.
-        const line = '♪ ' + track.title + ' // ' + track.artist;
-        if (navReadout.textContent !== line) {
-            navReadout.textContent = line;
-            navReadout.title = line;
-            navReadout.setAttribute('aria-label', 'now playing: ' + track.title +
-                ' by ' + track.artist + '. Open the jukebox mini-player.');
+       The readout is the pill's own label now rather than a second element:
+       idle it names the button, playing it names the track. It truncates with
+       an ellipsis rather than colliding with the links, and the SPA router
+       swaps only main.innerHTML, so the nav (and the widget inside it)
+       survives a navigation with no re-injection. Creation is still
+       idempotent, because createWidget is re-entered by __initJukeboxPlayer. ── */
+    function updateBarLabel(track) {
+        if (!barLabel) return;
+        const line = (track && isPlaying)
+            // '//' rather than a dash: it is the separator the rest of the site
+            // sets its headings in, and it survives a monospace pixel font.
+            ? '\u266A ' + track.title + ' // ' + track.artist
+            : 'JUKEBOX';
+        if (barLabel.textContent !== line) {
+            barLabel.textContent = line;
+            const bar = barLabel.closest('.mcj-bar');
+            if (bar) {
+                bar.setAttribute('aria-label', (track && isPlaying)
+                    ? 'now playing: ' + track.title + ' by ' + track.artist +
+                      '. Open the jukebox mini-player.'
+                    : 'open the jukebox mini-player');
+            }
         }
     }
 
@@ -295,7 +270,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         if (!widgetEl) return;
         const track = currentTrack >= 0 ? TRACKS[currentTrack] : null;
 
-        updateNavReadout(track);
+        updateBarLabel(track);
 
         // Playing state on root element (drives vinyl spin)
         widgetEl.classList.toggle('playing', isPlaying);
@@ -347,57 +322,75 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         if (widgetEl && !widgetEl.isConnected) widgetEl = null;
         if (document.body.classList.contains('no-jukebox')) return;
 
-        navReadout = createNavReadout();
+        // In the nav or not at all: the widget is nav furniture now, and there
+        // is nowhere else it belongs. nav.js's loader only runs this on pages
+        // that have a nav, but __initJukeboxPlayer can be re-entered by the SPA
+        // router, so the guard stays.
+        const nav = document.querySelector('nav');
+        if (!nav) return;
 
         const jukeboxHref = new URL('music/jukebox/', location.origin).pathname;
 
         widgetEl = document.createElement('div');
         widgetEl.className = 'mcj minimized';
         widgetEl.innerHTML =
-            /* ── FLOATING BUTTON ──
+            /* ── COLLAPSED PILL ──
                The disc alone says nothing. It carried a label until 79ddd5c4
                stripped the collapsed bar to a bare 48px square, and at that
                size the vinyl reads as a grey circle to anyone who has not been
-               told. Restored 2026-09-26. ── */
+               told. Restored 2026-09-26. Moved into the nav 2026-09-27, and
+               the label now doubles as the now-playing readout - see
+               updateBarLabel. ── */
             '<div class="mcj-bar" role="button" tabindex="0" ' +
                     'aria-label="open the jukebox mini-player" aria-expanded="false">' +
                 '<div class="mcj-mini-vinyl"></div>' +
                 '<span class="mcj-bar-label">JUKEBOX</span>' +
             '</div>' +
-            /* ── EXPANDED HEADER ── */
-            '<div class="mcj-header">' +
-                '<span>// JUKEBOX //</span>' +
-                '<button class="mcj-minimize" aria-label="minimize">\u2014</button>' +
-            '</div>' +
-            /* ── EXPANDED WINDOW ── */
-            '<div class="mcj-window">' +
-                '<div class="mcj-expanded-inner">' +
-                    '<div class="mcj-vinyl"></div>' +
-                    '<div class="mcj-info">' +
-                        '<div class="mcj-title">\u2014</div>' +
-                        '<div class="mcj-artist">\u2014</div>' +
-                        '<div class="mcj-time">0:00 / 0:00</div>' +
+            /* ── EXPANDED PANEL ──
+               Drops from the nav bar below the pill, the same pattern as a nav
+               dropdown. One wrapper carries both halves so they can keep their
+               separate max-height transitions while sitting at one absolute
+               anchor. ── */
+            '<div class="mcj-drop">' +
+                '<div class="mcj-header">' +
+                    '<span>// JUKEBOX //</span>' +
+                    '<button class="mcj-minimize" aria-label="minimize">\u2014</button>' +
+                '</div>' +
+                '<div class="mcj-window">' +
+                    '<div class="mcj-expanded-inner">' +
+                        '<div class="mcj-vinyl"></div>' +
+                        '<div class="mcj-info">' +
+                            '<div class="mcj-title">\u2014</div>' +
+                            '<div class="mcj-artist">\u2014</div>' +
+                            '<div class="mcj-time">0:00 / 0:00</div>' +
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-                '<div class="mcj-progress-wrap">' +
-                    '<div class="mcj-progress"><div class="mcj-progress-fill"></div></div>' +
-                '</div>' +
-                '<div class="mcj-controls">' +
-                    '<button class="mcj-btn mcj-btn-skip" aria-label="previous track">\u25C0\u25C0</button>' +
-                    '<button class="mcj-btn mcj-btn-play" aria-label="play">\u25B6</button>' +
-                    '<button class="mcj-btn mcj-btn-skip" aria-label="next track">\u25B6\u25B6</button>' +
-                    '<div class="mcj-vol-wrap">' +
-                        '<button class="mcj-btn mcj-mute" aria-label="mute">\u266A</button>' +
-                        '<input type="range" class="mcj-vol" min="0" max="100" value="70" aria-label="volume">' +
-                        '<span class="mcj-vol-label">70</span>' +
+                    '<div class="mcj-progress-wrap">' +
+                        '<div class="mcj-progress"><div class="mcj-progress-fill"></div></div>' +
                     '</div>' +
+                    '<div class="mcj-controls">' +
+                        '<button class="mcj-btn mcj-btn-skip" aria-label="previous track">\u25C0\u25C0</button>' +
+                        '<button class="mcj-btn mcj-btn-play" aria-label="play">\u25B6</button>' +
+                        '<button class="mcj-btn mcj-btn-skip" aria-label="next track">\u25B6\u25B6</button>' +
+                        '<div class="mcj-vol-wrap">' +
+                            '<button class="mcj-btn mcj-mute" aria-label="mute">\u266A</button>' +
+                            '<input type="range" class="mcj-vol" min="0" max="100" value="70" aria-label="volume">' +
+                            '<span class="mcj-vol-label">70</span>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="mcj-link"><a href="' + jukeboxHref + '">OPEN JUKEBOX \u2192</a></div>' +
                 '</div>' +
-                '<div class="mcj-link"><a href="' + jukeboxHref + '">OPEN JUKEBOX \u2192</a></div>' +
             '</div>';
 
-        document.body.appendChild(widgetEl);
+        // Before the links, so it lands in the dead centre of the bar: the gap
+        // between the brand and the section links. insertBefore with a null
+        // reference appends, which is the right fallback for a nav built
+        // without a .nav-links list. The nav survives SPA swaps, so the widget
+        // does too - the router's re-inject stays as belt-and-braces.
+        nav.insertBefore(widgetEl, nav.querySelector('.nav-links'));
 
         /* ── CACHE REFS ── */
+        barLabel = widgetEl.querySelector('.mcj-bar-label');
         expandedPlayBtn = widgetEl.querySelector('.mcj-btn-play');
         expandedMuteBtn = widgetEl.querySelector('.mcj-mute');
         expandedTitle = widgetEl.querySelector('.mcj-title');
