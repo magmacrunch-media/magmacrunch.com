@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>crunchscope — magmacrunch media</title>
+    <meta name="theme-color" content="#ff6b2b">
+    <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <!-- Press Start 2P and Courier Prime are self-hosted by the shell. VT323,
          for the readouts and the .sys-stat chips, is the one face fetched
@@ -285,5 +287,6 @@
     <script src="js/lab.js?v=183a049b"></script>
     <!-- Last: it reads the effect registry the files above fill in. -->
     <script src="js/title.js?v=053b22eb"></script>
+    <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js");}</script>
 </body>
 </html>

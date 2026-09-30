@@ -1,0 +1,22 @@
+{
+  "name": "CRUNCH//SCOPE",
+  "short_name": "crunchscope",
+  "description": "A signal chain for images, played like an instrument",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ff6b2b",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
