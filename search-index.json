@@ -3,15 +3,15 @@
     "t": "magmacrunch media",
     "c": "page",
     "u": "/index.html",
-    "d": "music, visual art, archives, arcade games, and more",
-    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise"
+    "d": "An independent record label and creative collective. Music, film, video games, web tools, writing, and an archive of the people who made them.",
+    "b": "magmacrunch media magmacrunch media est. 2023 sometimes it's quite melodious; other times it's noise magmacrunch media is an independent record label and creative collective, founded in 2023 across Pennsylvania, California and New Hampshire. We release our own music, films, video games, web tools and writing, and we keep an archive of the people who made them. More about us . music releases & jukebox visual film & collage archive who played what arcade browser games press experimental writing ware tools & toys about who we are guestbook say hi"
   },
   {
     "t": "about",
     "c": "page",
     "u": "/home/about.html",
     "d": "magmacrunch media",
-    "b": "about — magmacrunch media home › about music collective & independent record label ✦ no-budget music videos ✦ archive ✦ music publishing ✦ video games ✦ press ✦ web tools ✦ photography ✦ collage // about // __ __ /\\ \\ /\\ \\ __ ___ ___ __ __ ___ ___ __ ___ _ __ __ __ ___ ___\\ \\ \\___ ___ ___ __ \\_\\ \\/\\_\\ __ /' __` __`\\ /'__`\\ /'_ `\\ /' __` __`\\ /'__`\\ /'___\\/\\`'__\\/\\ \\/\\ \\ /' _ `\\ /'___\\ \\ _ `\\ /' __` __`\\ /'__`\\ /'_` \\/\\ \\ /'__`\\ /\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\L\\ \\/\\ \\/\\ \\/\\ \\/\\ \\L\\.\\_/\\ \\__/\\ \\ \\/ \\ \\ \\_\\ \\/\\ \\/\\ \\/\\ \\__/\\ \\ \\ \\ \\ /\\ \\/\\ \\/\\ \\/\\ __//\\ \\L\\ \\ \\ \\/\\ \\L\\.\\_ \\ \\_\\ \\_\\ \\_\\ \\__/.\\_\\ \\____ \\..."
+    "b": "about — magmacrunch media home › about music collective & independent record label ✦ no-budget music videos ✦ archive ✦ music publishing ✦ video games ✦ press ✦ web tools ✦ photography ✦ collage // about // what this is how it works who we are get in touch artists labels & friends magmacrunch media since 2023 \"sometimes it's quite melodious; other times it's noise\" what this is Magmacrunch media is a creative collective that produces music, film, video games, web tools, writing, and more. Based across the United States in Pennsylvania, California, and New Hampshire, magmacrunch was founded in ..."
   },
   {
     "t": "guestbook",
@@ -193,7 +193,7 @@
     "c": "page",
     "u": "/press/index.html",
     "d": "journals / lyrics / press",
-    "b": "press — magmacrunch media home › press // press // // submissions // send submissions to info@magmacrunch.com"
+    "b": "press — magmacrunch media home › press // press // coming soon // submissions // send submissions to info@magmacrunch.com"
   },
   {
     "t": "scientific",
@@ -235,7 +235,7 @@
     "c": "page",
     "u": "/ware/dev/index.html",
     "d": "game engines, scripting language, & memory course",
-    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & memory course ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ HYPNOPOMPIA iOS shell for the arcade games · Game Center plugin · store tooling ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
+    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & educational tools ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ HYPNOPOMPIA iOS shell for the arcade games · Game Center plugin · store tooling ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
   },
   {
     "t": "Reverse Osmosis Reversed",

@@ -202,6 +202,16 @@
         }
         footer span { color: #c02828 !important; }
 
+        .coming-soon {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(10px, 2vw, 14px);
+            color: #666;
+            letter-spacing: 0.12em;
+            margin-top: 24px;
+            margin-bottom: 32px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
         @media (max-width: 640px) {
             .page-title { font-size: 14px; }
         }
