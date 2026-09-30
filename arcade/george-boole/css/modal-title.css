@@ -320,6 +320,15 @@ body .title-screen .title-subtitle {
     display: inline-block;
     margin-bottom: 24px;
     animation: titleFloat 4s ease-in-out infinite;
+    /* Out of step with .title-main, which runs the same 4s float. They are
+       siblings rather than nested, so the transforms never compounded, but
+       they started together and so moved as one rigid block sliding up and
+       down -- which is the opposite of the drift the animation is named for.
+       A NEGATIVE delay starts it mid-cycle instead of holding still for 1.3s
+       first, so there is no pause and no jump on load. 1.3s is not a third of
+       the period by accident: it puts the portrait near the top of its travel
+       when the title is near the middle. */
+    animation-delay: -1.3s;
 }
 
 .title-portrait {
@@ -349,13 +358,22 @@ body .title-screen .title-subtitle {
     );
     opacity: 0;
     pointer-events: none;
-    animation: glint 4s ease-in-out infinite;
+    /* 7s against the portrait's 4s float, deliberately coprime-ish: at 4s the
+       glint was phase-locked to the bob and fired at the same point of every
+       one, which is what made a random-looking flash feel like a metronome.
+       These two now only realign every 28s.
+
+       The keyframe percentages moved with the duration to keep the flash the
+       length it was. It was visible from 85% to 95% of 4s, about 0.4s; at 7s
+       the same percentages would have stretched it to 0.7s, which is a slow
+       wipe rather than a glint. 91% to 97% of 7s is 0.42s. */
+    animation: glint 7s ease-in-out infinite;
 }
 
 @keyframes glint {
-    0%, 85%, 100% { opacity: 0; transform: translateX(-30%); }
-    90% { opacity: 1; transform: translateX(30%); }
-    95% { opacity: 0; transform: translateX(50%); }
+    0%, 91%, 100% { opacity: 0; transform: translateX(-30%); }
+    94% { opacity: 1; transform: translateX(30%); }
+    97% { opacity: 0; transform: translateX(50%); }
 }
 
 /* ---- FLOATING GATES ---- */
