@@ -21,6 +21,15 @@
 // section is an <h4> and its siblings, so a section added to the rules is
 // paginated with the rest and needs nothing here. There is no rule content in
 // this file, only the decision about how much of it to show at once.
+//
+// Chapters are the same idea one level up. Twenty-one pages is a number that
+// discourages on sight, and the panel serves two people who want different
+// halves of it: somebody meeting binary for the first time, and somebody who
+// is already playing and wants the overflow rule. A block carrying
+// data-chapter starts one, and from there a chapter is a run of pages that
+// counts from 1, says its own name, and names its neighbour on the button
+// that would leave it. Which blocks carry the attribute is a question about
+// the rules, so it is answered in the markup, like everything else here.
 
 (function () {
     'use strict';
@@ -36,10 +45,12 @@
 
     let blocks = [];        // the rules, in order, outside the DOM until placed
     let pages = [];
+    let chapters = [];      // [{ name, first, last }], page indices, in order
     let current = 0;
     let holder = null;
     let nav = null;
     let label = null;
+    let chapterLabel = null;
     let prev = null;
     let next = null;
     let laidOutFor = 0;     // the panel height the current pagination was built for
@@ -59,7 +70,32 @@
         if (!pages.length) return;
         current = Math.max(0, Math.min(index, pages.length - 1));
         pages.forEach((page, i) => page.classList.toggle('is-current', i === current));
-        label.textContent = `${current + 1} / ${pages.length}`;
+
+        // Where a page sits in its own chapter, not in the panel. "3 / 8 ·
+        // basics" is a promise the reader can hold; "3 / 21" is a warning.
+        const at = chapters.findIndex((c) => current >= c.first && current <= c.last);
+        const here = at === -1 ? null : chapters[at];
+        if (here && chapters.length > 1) {
+            label.textContent = `${current - here.first + 1} / ${here.last - here.first + 1}`;
+        } else {
+            label.textContent = `${current + 1} / ${pages.length}`;
+        }
+        if (chapterLabel) {
+            chapterLabel.textContent = here && chapters.length > 1 ? here.name : '';
+        }
+
+        // At a seam the button that crosses it says what is on the other side,
+        // so the primer ends on "the game" rather than on another "next". The
+        // same naming the panel's own back button uses.
+        const before = here && at > 0 ? chapters[at - 1] : null;
+        const after = here && at < chapters.length - 1 ? chapters[at + 1] : null;
+        prev.textContent = before && current === here.first
+            ? `← ${before.name}`
+            : '← prev';
+        next.textContent = after && current === here.last
+            ? `${after.name} →`
+            : 'next →';
+
         prev.disabled = current === 0;
         next.disabled = current === pages.length - 1;
 
@@ -145,12 +181,14 @@
 
     function paginate(available) {
         pages = [];
+        chapters = [];
         holder.textContent = '';
 
         let page = null;
         let used = 0;
         let heading = null;
         let pageHasHeading = false;
+        let chapter = '';
 
         const startPage = (continued) => {
             page = el('section', 'rules-page');
@@ -171,6 +209,16 @@
         };
 
         for (const block of blocks) {
+            // A chapter mark always breaks the page, whatever room is left on
+            // the current one, and clears the heading so the first page of a
+            // chapter can never open with "(cont.)" from the chapter before.
+            const mark = block.node.dataset && block.node.dataset.chapter;
+            if (mark && mark !== chapter) {
+                chapter = mark;
+                page = null;
+                heading = null;
+            }
+
             if (block.heading) heading = block.node;
 
             const needsPage = !page
@@ -181,6 +229,14 @@
             page.appendChild(block.node);
             used += block.height;
             if (block.heading) pageHasHeading = true;
+
+            const at = pages.length - 1;
+            const open = chapters[chapters.length - 1];
+            if (open && open.name === chapter) {
+                open.last = at;
+            } else {
+                chapters.push({ name: chapter, first: at, last: at });
+            }
         }
     }
 
@@ -228,10 +284,20 @@
         }
         blocks = expanded;
 
+        // A rotation repaginates, and page 7 of the old pagination is not page
+        // 7 of the new one, so this has always landed the reader back at the
+        // start. With chapters that would be the start of the *panel* -- turn
+        // an iPad while reading the overflow rule and arrive in the primer,
+        // which reads like the rules having thrown you out. The page is still
+        // lost; the chapter need not be.
+        const wasIn = (chapters.find((c) => current >= c.first && current <= c.last) || {}).name;
+
         paginate(available);
         if (holder) holder.classList.remove('is-measuring');
         laidOutFor = window.innerHeight;
-        show(0);
+
+        const back = wasIn && chapters.find((c) => c.name === wasIn);
+        show(back ? back.first : 0);
     }
 
     function build() {
@@ -245,8 +311,20 @@
         holder = el('div', 'rules-pages');
         panel.insertBefore(holder, buttons);
 
+        // The chapter's name rides in the top bar, beside the way out. It was
+        // in the pager row with the count, and it did not fit: "1/13 · the
+        // game" between two buttons wants 362px against the 290 a phone has,
+        // so all three shrank to their narrowest and wrapped inside
+        // themselves -- "NEXT" above its own arrow. Up here the bar is one
+        // short button and a row of empty space.
+        const topbar = panel.querySelector('.instructions-topbar');
+        if (topbar) {
+            chapterLabel = el('span', 'rules-chapter', '');
+            topbar.appendChild(chapterLabel);
+        }
+
         nav = el('div', 'rules-nav');
-        prev = el('button', 'rules-nav-btn', '← back');
+        prev = el('button', 'rules-nav-btn', '← prev');
         prev.type = 'button';
         label = el('span', 'rules-nav-count');
         next = el('button', 'rules-nav-btn', 'next →');
@@ -306,6 +384,11 @@
         },
         get pages() {
             return pages.length;
+        },
+        /** The chapter the current page is in, and how long it is. */
+        get chapter() {
+            const c = chapters.find((x) => current >= x.first && current <= x.last);
+            return c ? { name: c.name, page: current - c.first + 1, pages: c.last - c.first + 1 } : null;
         },
         show: (n) => show(n - 1),
 

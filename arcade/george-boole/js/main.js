@@ -347,12 +347,64 @@ document.addEventListener('DOMContentLoaded', async () => {
             difficultyModal.dataset.from = 'lore';
             difficultyModal.classList.add('active');
         };
+
+        // ---- The how-to-play screen as a menu, over a live game ----
+        //
+        // It always was the menu -- your bests, settings, the full rules, the
+        // codex and the credits all hang off it -- but a game in progress put
+        // it out of reach, because its continue button went straight to mode
+        // selection and picking a mode destroys the running game. So the one
+        // screen holding everything, including the only "back to title" in the
+        // game, was reachable before your first game and after you lost, and at
+        // no other time. The strip under the board grew a third link to work
+        // around that; the comment there says so.
+        //
+        // It carries a `from` now, the way difficultyModal already did for
+        // exactly this reason, and the continue button offers the board back
+        // instead. Note the mode picker is then not reachable from here, which
+        // is the point: "new game" on the board is where you go to throw a game
+        // away, and it asks in its own words.
+        const loreContinueBtn = document.getElementById('loreContinue');
+        const loreLabel = loreContinueBtn && loreContinueBtn.querySelector('span');
+        const LORE_ONWARD = 'SELECT MODE \u2192';
+
+        const showLore = (from) => {
+            if (from) {
+                loreScreen.dataset.from = from;
+            } else {
+                delete loreScreen.dataset.from;
+            }
+            if (loreLabel) {
+                loreLabel.textContent = from === 'game' ? '\u2190 BACK TO GAME' : LORE_ONWARD;
+            }
+            loreScreen.classList.add('active');
+        };
+
+        // The continue button and the spacebar, which have to agree. Leaving
+        // the card clears `from`, so the next visit gets the mode picker back.
+        const leaveLore = () => {
+            if (loreScreen.dataset.from !== 'game') {
+                showDifficulty();
+                return;
+            }
+            loreScreen.classList.remove('active');
+            delete loreScreen.dataset.from;
+            if (loreLabel) loreLabel.textContent = LORE_ONWARD;
+        };
+
+        // The door from the board. It sits in the controls row rather than on
+        // the rules strip: that row is this game's own navigation, and the
+        // strip is reference material.
+        const toggleMenu = document.getElementById('toggleMenu');
+        if (toggleMenu) {
+            toggleMenu.addEventListener('click', () => showLore('game'));
+        }
         
         // Click handler for start button (title → lore)
         document.getElementById('startButton').addEventListener('click', startGame);
         
         // Click handler for continue button (lore → difficulty)
-        document.getElementById('loreContinue').addEventListener('click', showDifficulty);
+        if (loreContinueBtn) loreContinueBtn.addEventListener('click', leaveLore);
         
         // Spacebar handler: title screen OR lore screen
         document.addEventListener('keydown', (e) => {
@@ -362,7 +414,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     startGame();
                 } else if (loreScreen.classList.contains('active')) {
                     e.preventDefault();
-                    showDifficulty();
+                    leaveLore();
                 }
             }
         });
@@ -394,29 +446,51 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // "full rules" on the how-to-play screen. Same shape as the two quick
-        // actions above: the instructions modal stacks below the lore screen
-        // (z-index 2100 against 3000), so the lore screen has to step aside
-        // and be put back when the modal closes.
-        // Two doors into the one rules panel: "full rules" opens at how the
-        // board works, and "new to binary?" opens at the primer three sections
-        // earlier. Asked for by heading rather than page number, because the
-        // numbers shift every time a section is added and a stale number would
-        // land a first-time player on whatever happened to be there.
-        const openRules = (section) => {
-            loreScreen.classList.remove('active');
-            returnToLoreScreen = true;
-            const instructionsModal = document.getElementById('instructionsModal');
-            instructionsModal.classList.add('active');
-            const instructionsContent = instructionsModal.querySelector('.instructions-content');
-            if (instructionsContent) {
-                instructionsContent.scrollTop = 0;
+        // The only place the rules panel opens, so the back button's label and
+        // the scroll reset are set once rather than in each of the four buttons
+        // that reach it. That label names a destination, and which destination
+        // depends on where the panel was opened from: the how-to-play screen, or
+        // the board mid-game.
+        const openInstructions = (section) => {
+            const modal = document.getElementById('instructionsModal');
+            const back = document.getElementById('instructionsBack');
+            if (back) {
+                back.textContent = returnToLoreScreen
+                    ? '← how to play'
+                    : '← back to game';
+            }
+            modal.classList.add('active');
+            const content = modal.querySelector('.instructions-content');
+            if (content) {
+                content.scrollTop = 0;
             }
             // The pager measures on first open, so the page it is asked for has
             // to be asked for after the panel is on screen and has a height.
             if (section && window.BooleRules) {
-                requestAnimationFrame(() => window.BooleRules.showSection(section));
+                requestAnimationFrame(() => {
+                    if (window.BooleRules.showSection(section)) return;
+                    // The heading was reworded and this call was not. Page one
+                    // beats the page the last reader happened to leave open, and
+                    // the warning is so it cannot stay silent: asking by heading
+                    // was the whole point, because page numbers drift.
+                    console.warn('rules: no section matching "%s"', section);
+                    window.BooleRules.show(1);
+                });
             }
+        };
+
+        // "full rules" on the how-to-play screen. The instructions modal stacks
+        // below the lore screen (z-index 2100 against 3000), so the lore screen
+        // has to step aside and be put back when the modal closes.
+        // Two doors into the one rules panel: "full rules" opens at how the
+        // board works, and "new to binary?" opens at the primer. Asked for by
+        // heading rather than page number, because the numbers shift every time
+        // a section is added and a stale number would land a first-time player
+        // on whatever happened to be there.
+        const openRules = (section) => {
+            loreScreen.classList.remove('active');
+            returnToLoreScreen = true;
+            openInstructions(section);
         };
 
         const loreFullRules = document.getElementById('loreFullRules');
@@ -490,17 +564,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
         
-        // How to play link in mobile rules strip
+        // How to play, from the rules strip under the board on a phone.
+        // returnToLoreScreen is left alone: closing this should put the player
+        // back on the board they were playing, which is what the back button
+        // will say.
         const howToPlayLink = document.getElementById('howToPlayLink');
         if (howToPlayLink) {
-            howToPlayLink.addEventListener('click', () => {
-                const instructionsModal = document.getElementById('instructionsModal');
-                instructionsModal.classList.add('active');
-                const instructionsContent = instructionsModal.querySelector('.instructions-content');
-                if (instructionsContent) {
-                    instructionsContent.scrollTop = 0;
-                }
-            });
+            // At GOAL, not at page one: page one is the primer now, and
+            // somebody mid-game reaching for the rules has met a bit already.
+            howToPlayLink.addEventListener('click', () => openInstructions('goal'));
         }
 
         let scoreboardOpen = false;
@@ -627,16 +699,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('closeInstructions').addEventListener('click', closeInstructionsModal);
 
         // The same action as "close", pinned to the top of the panel so leaving
-        // does not mean scrolling to the end of the rules first.
+        // does not mean paging to the end of the rules first. Unlike "close" it
+        // says where it goes, and openInstructions above sets the word.
         const instructionsBack = document.getElementById('instructionsBack');
         if (instructionsBack) {
             instructionsBack.addEventListener('click', closeInstructionsModal);
         }
-
-        document.getElementById('instructionsToSettings').addEventListener('click', () => {
-            document.getElementById('instructionsModal').classList.remove('active');
-            document.getElementById('settingsModal').classList.add('active');
-        });
 
         document.getElementById('instructionsModal').addEventListener('click', (e) => {
             if (e.target.id === 'instructionsModal') {
@@ -667,15 +735,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
         });
 
-        // The menu, from a finished game. The rules screen is this game's
-        // menu -- your bests, settings, the full rules, the codex and the
-        // credits all hang off it -- so one button reaches all of them.
+        // The menu, from a finished game. Through showLore with no `from`,
+        // because there is no board to go back to: the card's button should
+        // offer mode selection here, and the same button offers the board back
+        // when "menu" opened it mid-game.
         const gameOverMenu = document.getElementById('gameOverMenu');
         if (gameOverMenu) {
             gameOverMenu.addEventListener('click', () => {
                 document.getElementById('gameOver').classList.remove('active');
                 document.getElementById('difficultyModal').classList.remove('active');
-                loreScreen.classList.add('active');
+                showLore();
             });
         }
 
@@ -733,17 +802,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
-        // Side panel "full rules" link opens instructions modal
+        // The same link on the desktop side panel, and the same reasoning.
         const sidePanelHowToPlay = document.getElementById('sidePanelHowToPlay');
         if (sidePanelHowToPlay) {
-            sidePanelHowToPlay.addEventListener('click', () => {
-                const instructionsModal = document.getElementById('instructionsModal');
-                instructionsModal.classList.add('active');
-                const instructionsContent = instructionsModal.querySelector('.instructions-content');
-                if (instructionsContent) {
-                    instructionsContent.scrollTop = 0;
-                }
-            });
+            sidePanelHowToPlay.addEventListener('click', () => openInstructions('goal'));
         }
 
         // Music toggle
@@ -820,11 +882,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         document.getElementById('closeCredits').addEventListener('click', closeCreditsModal);
-
-        document.getElementById('creditsToSettings').addEventListener('click', () => {
-            document.getElementById('creditsModal').classList.remove('active');
-            document.getElementById('settingsModal').classList.add('active');
-        });
 
         document.getElementById('creditsModal').addEventListener('click', (e) => {
             if (e.target.id === 'creditsModal') closeCreditsModal();

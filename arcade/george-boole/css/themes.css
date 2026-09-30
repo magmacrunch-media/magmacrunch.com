@@ -1,5 +1,34 @@
 /* Theme System for Different Bit Modes */
 
+/* The button rules below are scoped to `.container`, and that scope is the
+   whole point of them rather than tidiness.
+
+   main.js sets `data-theme` on <body> when a game starts and NOTHING EVER
+   REMOVES IT -- it is the only mention of the attribute in all of js/. So the
+   theme outlives the game, and an unscoped `body[data-theme="x"] button` rule
+   repainted every button on every screen for the rest of the page's life:
+   open the menu after playing 6-bit and its buttons came up in the arcade
+   cabinet's red and orange, over the top of the design modal-lore.css
+   deliberately drew to match the title screen. It won on specificity, (0,1,2)
+   against a bare class, and it also reached the buttons that DO carry an id,
+   for every property their own rule happens not to set.
+
+   `.container` is the game itself: the board, the score and four HUD buttons
+   (toggleMenu, toggleScoreboard, newGame, toggleSettings). Every other button
+   in this game -- 31 of them, across the title screen, the menu, the
+   difficulty picker, game over, settings, the scoreboard and the credits --
+   sits in an overlay that is a direct child of <body> and a sibling of
+   .container. So this scope themes exactly the buttons that live with the
+   board and leaves the overlays to their own stylesheets.
+
+   Clearing `data-theme` on the way out would NOT have been the same fix, and
+   would have been wrong: the menu opens over a themed board that is still
+   there behind it, so dropping the attribute would restyle the game while the
+   player is looking at the menu. The theme is correct; its reach was not.
+
+   Note 4-bit (snes) never had this bug, for no better reason than that it is
+   the one theme with no button rule. */
+
 /* ============================================
    2-BIT MODE - GAME BOY GREEN MONOCHROME
    ============================================ */
@@ -36,7 +65,7 @@ body[data-theme="gameboy"] .score {
     text-shadow: 2px 2px 0px #0f380f;
 }
 
-body[data-theme="gameboy"] button {
+body[data-theme="gameboy"] .container button {
     background: linear-gradient(180deg, #306230 0%, #0f380f 100%);
     border-color: #9bbc0f;
     color: #9bbc0f;
@@ -45,7 +74,7 @@ body[data-theme="gameboy"] button {
         0 0 15px rgba(155, 188, 15, 0.4);
 }
 
-body[data-theme="gameboy"] button:hover {
+body[data-theme="gameboy"] .container button:hover {
     background: linear-gradient(180deg, #476247 0%, #306230 100%);
     box-shadow: 
         0 6px 0 #0f380f,
@@ -114,7 +143,7 @@ body[data-theme="nes"] .score {
     text-shadow: 2px 2px 0px #8b6914;
 }
 
-body[data-theme="nes"] button {
+body[data-theme="nes"] .container button {
     background: linear-gradient(180deg, #ff6347 0%, #8b0000 100%);
     border-color: #ffd700;
     color: #ffffff;
@@ -188,7 +217,7 @@ body[data-theme="genesis"] .score {
     text-shadow: 2px 2px 0px #1e3a8a;
 }
 
-body[data-theme="genesis"] button {
+body[data-theme="genesis"] .container button {
     background: linear-gradient(180deg, #4169e1 0%, #1e3a8a 100%);
     border-color: #ffd700;
     color: #ffffff;
@@ -259,7 +288,7 @@ body[data-theme="arcade"] .score {
         0 0 10px rgba(255, 165, 0, 0.8);
 }
 
-body[data-theme="arcade"] button {
+body[data-theme="arcade"] .container button {
     background: linear-gradient(180deg, #cc2200 0%, #880000 100%);
     border-color: #ffa500;
     color: #ffd080;
@@ -268,7 +297,7 @@ body[data-theme="arcade"] button {
         0 0 15px rgba(204, 34, 0, 0.5);
 }
 
-body[data-theme="arcade"] button:hover {
+body[data-theme="arcade"] .container button:hover {
     background: linear-gradient(180deg, #dd3300 0%, #aa1100 100%);
     box-shadow: 
         0 6px 0 #1a0800,
@@ -339,7 +368,7 @@ body[data-theme="neogeo"] .score {
     text-shadow: 2px 2px 0px #8b008b;
 }
 
-body[data-theme="neogeo"] button {
+body[data-theme="neogeo"] .container button {
     background: linear-gradient(180deg, #ff1493 0%, #c71585 100%);
     border-color: #00ffff;
     color: #ffffff;
@@ -406,7 +435,7 @@ body[data-theme="ps1"] .score {
     text-shadow: 2px 2px 0px #000000;
 }
 
-body[data-theme="ps1"] button {
+body[data-theme="ps1"] .container button {
     background: linear-gradient(180deg, #808080 0%, #505050 100%);
     border-color: #ffd700;
     color: #ffd700;
@@ -482,7 +511,7 @@ body[data-theme="matrix"] .score {
     text-shadow: 2px 2px 0px #000000;
 }
 
-body[data-theme="matrix"] button {
+body[data-theme="matrix"] .container button {
     background: linear-gradient(180deg, #003300 0%, #001a00 100%);
     border-color: #00ff00;
     color: #00ff00;

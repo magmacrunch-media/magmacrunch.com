@@ -4,7 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>George Boole</title>
-    
+    <meta name="theme-color" content="#8a2be2">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- The sharing card. This lives HERE, in the game repo, and not in the
+         website's arcade/george-boole/ copy, because scripts/sync-game.mjs
+         replaces that folder wholesale (rmSync then cpSync) every time anybody
+         runs `make sync-george-boole`. A card added to the copy is deleted by
+         the next sync, silently, and the page goes back to unfurling as a bare
+         URL. The image itself is the website's, committed at og/, and is
+         referenced absolutely because a relative og:image does not resolve for
+         most scrapers.
+
+         Safe for the App Store bundle: hypnopompia's sweepSelfContained() only
+         refuses an https: URL on a script, link, img, source, video or audio
+         tag's src/href, and this is a meta tag's content. Verified by running
+         package.mjs, which still reports "self-contained yes". -->
+    <meta property="og:title" content="GEORGE BOOLE · magmacrunch media">
+    <meta property="og:description" content="Slide tiles, learn logic. A puzzle game where the tiles combine through AND, OR, XOR and NOT, with a primer for anyone new to binary.">
+    <meta property="og:image" content="https://magmacrunch.com/og/arcade-george-boole.png?v=1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="magmacrunch media">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -37,7 +62,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../shared/arcade-base.css?v=de5e0d7b">
     <link rel="stylesheet" href="css/base.css?v=1008a258">
-    <link rel="stylesheet" href="css/themes.css?v=97c2703d">
+    <link rel="stylesheet" href="css/themes.css?v=c634b661">
     <link rel="stylesheet" href="css/container.css?v=a30fdcef">
     <link rel="stylesheet" href="css/game.css?v=3eaa3eb3">
     <link rel="stylesheet" href="css/modal-title.css?v=2ad178ce">
@@ -45,7 +70,7 @@
     <link rel="stylesheet" href="css/modal-difficulty.css?v=2cea08f0">
     <link rel="stylesheet" href="css/modal-scoreboard.css?v=0ae5f201">
     <link rel="stylesheet" href="css/modal-settings.css?v=52d3c30a">
-    <link rel="stylesheet" href="css/modal-misc.css?v=b7074cbd">
+    <link rel="stylesheet" href="css/modal-misc.css?v=ab024f8c">
     <link rel="stylesheet" href="css/responsive.css?v=f0fe00bb">
     <link rel="stylesheet" href="css/gates.css?v=71f1f693">
     <link rel="stylesheet" href="css/side-panels.css?v=750ad1a6">
@@ -137,8 +162,19 @@
                 <!-- Bit mode displayed here -->
             </div>
             
+            <!-- "menu" is the way back to the how-to-play screen, which is
+                 this game's menu and which a game in progress used to put out
+                 of reach entirely: nothing on this board reached it, and
+                 "back to title" lives on it, so starting a game took both
+                 away until you lost. See showLore() in js/main.js.
+
+                 "high scores" became "scores" to make room. Four buttons share
+                 this row at flex: 1, which at 375px is about 73px of text
+                 apiece after the padding, and at the 7px these drop to on a
+                 phone the longer label wrapped to two lines. -->
             <div class="controls">
-                <button id="toggleScoreboard">high scores</button>
+                <button id="toggleMenu">menu</button>
+                <button id="toggleScoreboard">scores</button>
                 <button id="newGame">new game</button>
                 <button id="toggleSettings">settings</button>
             </div>
@@ -157,11 +193,14 @@
                     <span class="gate-tag" data-gate="and"><b>&and;</b> AND</span>
                     <span class="gate-tag" data-gate="not"><b>&not;</b> NOT</span>
                 </div>
-                <!-- Three, not two. Once a game starts the lore card is out of
-                     reach -- its continue button goes to difficulty selection,
-                     so sending a player back to it mid-game would offer to
-                     throw their game away -- and credits was the one thing on
-                     it with no other door. -->
+                <!-- Three, not two. The reason given here was that the lore
+                     card was out of reach once a game started, so credits had
+                     no other door. That is no longer true: "menu" above the
+                     board reaches the card, and its continue button offers the
+                     game back rather than offering to throw it away. These
+                     three stay anyway, because one tap from the board beats
+                     two through the menu for the things a player reaches for
+                     while playing. -->
                 <div class="rules-row">
                     <span class="rule-link" id="howToPlayLink">full rules &rarr;</span>
                     <span class="rule-link" id="stripCodexLink">gate codex &rarr;</span>
@@ -470,50 +509,21 @@
 
     <div class="instructions-modal" id="instructionsModal">
         <div class="instructions-content" style="max-width: 650px; max-height: 85vh; overflow-y: auto; padding: 35px; padding-right: 20px;">
-            <!-- Pinned to the top of the scrolling panel. The only other way
-                 out is "close", after roughly 170 lines of rules. -->
+            <!-- Pinned to the top of the panel, and it names where it goes
+                 rather than saying "back". The pager at the foot of the panel
+                 has a back button too, styled from the same rule so the two
+                 read as one set, and for a while both said the same word while
+                 doing entirely different things: this one leaves the rules, that
+                 one turns a page. Both are on screen at once and both are live
+                 from page two on, so the label was all that told them apart, and
+                 it did not. The lore screen's "left-arrow title" is the
+                 convention being followed here; js/main.js sets the word,
+                 because this panel opens from two places and goes back to
+                 whichever one it came from. -->
             <div class="instructions-topbar">
-                <button class="modal-back" id="instructionsBack" type="button">&larr; back</button>
+                <button class="modal-back" id="instructionsBack" type="button">&larr; how to play</button>
             </div>
             <h3 style="margin-bottom: 25px;">full rules</h3>
-            
-            <div class="info-box" style="background: rgba(138, 43, 226, 0.15); padding: 15px; margin-bottom: 20px; border-left: 4px solid #8a2be2;">
-                <p style="font-size: 11px; line-height: 1.8; margin: 0;">Just as in <em>2048</em>, <strong style="color: #00ffff;">use arrow keys or swipe</strong> to move tiles on a 4 by 4 grid in any direction.</p>
-            </div>
-            
-            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
-            
-            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">GOAL: SURVIVE & SCORE!</h4>
-            <ul style="font-size: 11px; line-height: 1.9; margin: 8px 0 8px 20px; padding: 0; list-style: none;">
-                <li style="margin-bottom: 6px; color: rgba(255, 255, 255, 0.95);">• collect points through operations</li>
-                <li style="margin-bottom: 6px; color: rgba(255, 255, 255, 0.95);">• survive as long as possible, reach a high score</li>
-                <li style="margin-bottom: 6px; color: rgba(255, 255, 255, 0.95);">• game ends when the board fills with no moves</li>
-            </ul>
-            <p style="font-size: 11px; line-height: 1.9; margin-bottom: 8px;">
-                As a warm up, play <strong style="color: #ffff00;"><em>2048 (actually, 2^N)</em></strong> at magmacrunch.com/arcade!
-            </p>
-            
-            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
-            
-            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">BOOLEAN LOGIC RULES</h4>
-            
-            <div class="rule-box" style="background: rgba(255, 255, 0, 0.08); padding: 12px; margin-bottom: 15px; border-left: 3px solid #ffff00;">
-                <p style="margin: 0 0 8px 0; font-size: 11px;"><strong style="color: #ffff00;">same + same = same</strong> <span style="color: #00ff00; opacity: 0.9;">(idempotence)</span></p>
-                <ul style="font-size: 10px; line-height: 1.7; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
-                    <li style="margin-bottom: 4px;">→ 1 + 1 = 1 <span style="opacity: 0.8;">(consolidates, awards points)</span></li>
-                    <li style="margin-bottom: 4px;">→ 2 + 2 = 2 <span style="opacity: 0.8;">(merges to same, no doubling!)</span></li>
-                    <li style="margin-bottom: 4px;">→ 7 + 7 = 7 <span style="opacity: 0.8;">(Boolean logic: A<span class="glyph">∨</span>A = A)</span></li>
-                </ul>
-            </div>
-            
-            <div class="rule-box" style="background: rgba(255, 0, 255, 0.08); padding: 12px; margin-bottom: 15px; border-left: 3px solid #ff00ff;">
-                <p style="margin: 0 0 8px 0; font-size: 11px;"><strong style="color: #ff00ff;">different numbers need gates</strong></p>
-                <p style="font-size: 10px; line-height: 1.7; margin: 0; color: rgba(255, 255, 255, 0.95);">
-                    e.g., you <strong>cannot</strong> merge 1 + 2 directly; you must use tiles with <strong>logic gates (<span class="glyph">⊕</span> <span class="glyph">∨</span> <span class="glyph">∧</span> <span class="glyph">¬</span>)</strong>.
-                </p>
-            </div>
-            
-            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
             
             <!-- ── For somebody who has never met a logic gate ──────────────
                  Everything after this point assumed the reader already knew
@@ -525,9 +535,25 @@
                  the thing it explains.
 
                  So: four lamps, then one worked sum done a column at a time.
-                 It is a section like any other, which means rules-pages.js
-                 paginates it with the rest and it needs nothing added there. -->
-            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">NEW TO THIS? START WITH COUNTING</h4>
+
+                 These three sections used to sit in the middle of the panel,
+                 between "different numbers need gates" and the gate reference
+                 that explains gates in terms of bits -- which is to say, after
+                 the rules that need them and before the rules that assume them.
+                 Eight of the twenty-one pages, in the way of a player who
+                 already knows this and out of reach of one who does not.
+
+                 They are a chapter now, and they are first. The data-chapter
+                 on the heading below is the whole of the mechanism: js/rules-
+                 pages.js breaks a page there, counts pages within the chapter
+                 rather than across the panel, and labels the pager's buttons
+                 with the chapter on either side at the seam. "full rules" on
+                 the how-to-play screen still opens at GOAL, so somebody who
+                 came to check the overflow rule never walks through any of
+                 this; "new to binary?" opens here at page 1 of 8. A section
+                 added between two marks joins whichever chapter it lands in
+                 and needs nothing here. -->
+            <h4 data-chapter="basics" style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">NEW TO THIS? START WITH COUNTING</h4>
 
             <div class="rule-box" style="background: rgba(0, 255, 255, 0.06); padding: 12px; margin-bottom: 15px; border-left: 3px solid #00ffff;">
                 <p style="margin: 0 0 10px 0; font-size: 10px; line-height: 1.7; color: rgba(255, 255, 255, 0.95);">
@@ -668,8 +694,50 @@
                     <span style="font-family: monospace; color: #00ff00;"><span class="glyph">¬</span>5</span>
                     is 0101 flipped to 1010, which is <strong style="color: #00ff00;">10</strong>.
                 </p>
+                <p style="margin: 10px 0 0 0; font-size: 10px; line-height: 1.7; color: #00ff00;">
+                    That is all of binary and all four gates. Everything past
+                    here is the game.
+                </p>
             </div>
 
+            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
+            
+            <div class="info-box" data-chapter="the game" style="background: rgba(138, 43, 226, 0.15); padding: 15px; margin-bottom: 20px; border-left: 4px solid #8a2be2;">
+                <p style="font-size: 11px; line-height: 1.8; margin: 0;">Just as in <em>2048</em>, <strong style="color: #00ffff;">use arrow keys or swipe</strong> to move tiles on a 4 by 4 grid in any direction.</p>
+            </div>
+            
+            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
+            
+            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">GOAL: SURVIVE & SCORE!</h4>
+            <ul style="font-size: 11px; line-height: 1.9; margin: 8px 0 8px 20px; padding: 0; list-style: none;">
+                <li style="margin-bottom: 6px; color: rgba(255, 255, 255, 0.95);">• collect points through operations</li>
+                <li style="margin-bottom: 6px; color: rgba(255, 255, 255, 0.95);">• survive as long as possible, reach a high score</li>
+                <li style="margin-bottom: 6px; color: rgba(255, 255, 255, 0.95);">• game ends when the board fills with no moves</li>
+            </ul>
+            <p style="font-size: 11px; line-height: 1.9; margin-bottom: 8px;">
+                As a warm up, play <strong style="color: #ffff00;"><em>2048 (actually, 2^N)</em></strong> at magmacrunch.com/arcade!
+            </p>
+            
+            <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
+            
+            <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">BOOLEAN LOGIC RULES</h4>
+            
+            <div class="rule-box" style="background: rgba(255, 255, 0, 0.08); padding: 12px; margin-bottom: 15px; border-left: 3px solid #ffff00;">
+                <p style="margin: 0 0 8px 0; font-size: 11px;"><strong style="color: #ffff00;">same + same = same</strong> <span style="color: #00ff00; opacity: 0.9;">(idempotence)</span></p>
+                <ul style="font-size: 10px; line-height: 1.7; margin: 0; margin-left: 15px; padding: 0; list-style: none; color: rgba(255, 255, 255, 0.95);">
+                    <li style="margin-bottom: 4px;">→ 1 + 1 = 1 <span style="opacity: 0.8;">(consolidates, awards points)</span></li>
+                    <li style="margin-bottom: 4px;">→ 2 + 2 = 2 <span style="opacity: 0.8;">(merges to same, no doubling!)</span></li>
+                    <li style="margin-bottom: 4px;">→ 7 + 7 = 7 <span style="opacity: 0.8;">(Boolean logic: A<span class="glyph">∨</span>A = A)</span></li>
+                </ul>
+            </div>
+            
+            <div class="rule-box" style="background: rgba(255, 0, 255, 0.08); padding: 12px; margin-bottom: 15px; border-left: 3px solid #ff00ff;">
+                <p style="margin: 0 0 8px 0; font-size: 11px;"><strong style="color: #ff00ff;">different numbers need gates</strong></p>
+                <p style="font-size: 10px; line-height: 1.7; margin: 0; color: rgba(255, 255, 255, 0.95);">
+                    e.g., you <strong>cannot</strong> merge 1 + 2 directly; you must use tiles with <strong>logic gates (<span class="glyph">⊕</span> <span class="glyph">∨</span> <span class="glyph">∧</span> <span class="glyph">¬</span>)</strong>.
+                </p>
+            </div>
+            
             <div class="section-divider" style="height: 3px; background: linear-gradient(90deg, transparent, #8a2be2, transparent); margin: 25px 0;"></div>
 
             <h4 style="font-size: 13px; margin: 15px 0 10px 0; color: #ffff00; text-shadow: 2px 2px 0 #999900;">LOGIC GATES</h4>
@@ -809,9 +877,13 @@
                 </p>
             </div>
             
+            <!-- One control, not two. "settings" sat here: a sideways jump
+                 parked beside an exit, reaching a panel that the back button at
+                 the top of this one already reaches in two taps. Five controls
+                 were on screen at once and now there are four, two of them the
+                 pager. -->
             <div class="modal-btn-row" style="margin-top: 25px; display: flex; gap: 10px;">
                 <button id="closeInstructions">close</button>
-                <button id="instructionsToSettings">settings</button>
             </div>
         </div>
     </div>
@@ -897,9 +969,10 @@
 
             <p><strong>last updated:</strong><br>September 17, 2026</p>
             
+            <!-- As in the rules panel: no sideways jump to settings. It is on
+                 the how-to-play screen this closes back to, and on the board. -->
             <div class="modal-btn-row" style="margin-top: 25px; display: flex; gap: 10px;">
                 <button id="closeCredits">close</button>
-                <button id="creditsToSettings">settings</button>
             </div>
         </div>
     </div>
@@ -915,14 +988,15 @@
     <script src="js/game.js?v=8311982c"></script>
     <script src="js/math-overlay.js?v=44ff0d30"></script>
     <script src="js/codex.js?v=e5f34bee"></script>
-    <script src="js/rules-pages.js?v=b4a3b413"></script>
-    <script src="js/main.js?v=038c8092"></script>
+    <script src="js/rules-pages.js?v=0d0d01f3"></script>
+    <script src="js/main.js?v=452b33db"></script>
 
 <link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
 <script src="../shared/adenosine-chat.js?v=4a6b886b"></script>
 <script src="../shared/chat-server.js?v=2efa8028"></script>
 <script>const { ChatWidget } = AdChat;</script>
 <script>ChatWidget.connect(MC_CHAT_OPTS);</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js");}</script>
 
 </body>
 </html>
