@@ -87,6 +87,32 @@ h1 {
     margin-bottom: 10px;
 }
 
+/* On a tablet these four buttons sit in the path of an upward swipe, and ten
+   pixels is not a gap.
+ *
+ * A touch that is not cancelled is followed by a synthesised click, dispatched
+ * where the finger LIFTED. So a swipe that carried past the top of the board
+ * clicked whatever was there, and on a 13-inch iPad -- 560px board, these
+ * buttons ten pixels above it -- that was the menu opening and closing by
+ * itself. The real fix is in adenosine's input handling, which never prevented
+ * the default on touchend; this is the half that lives here.
+ *
+ * 36px is chosen against the engine's 30px SWIPE_THRESHOLD rather than by eye.
+ * A touch starting anywhere on the board and lifting on one of these has now
+ * travelled more than 36px, which is past the threshold, which means
+ * onTouchMove has already called preventDefault and the click never happens --
+ * so this covers the short drags even on a bundle without the engine fix. It
+ * has to stay larger than that threshold to keep that property.
+ *
+ * Scoped to coarse pointers with room to spare: a mouse does not swipe, and a
+ * phone in landscape is 956px wide with no vertical space to give away, which
+ * is why the height is in the query and not just the width. */
+@media (pointer: coarse) and (min-width: 700px) and (min-height: 700px) {
+    .controls {
+        margin-bottom: 36px;
+    }
+}
+
 .controls button {
     flex: 1;
 }
