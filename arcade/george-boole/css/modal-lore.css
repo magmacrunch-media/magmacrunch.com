@@ -256,8 +256,13 @@
    button at the top left lands underneath "how to play". */
 .lore-back {
     display: block;
-    margin: -14px 0 4px -6px;
-    padding: 6px 8px;
+    /* Under the continue button now, not tucked into the top-left corner, so
+       the margins run the other way: a gap above to separate it from the
+       button it must not be mistaken for, none below, and full width so the
+       label centres under it rather than hanging off one side. */
+    width: 100%;
+    margin: 14px 0 0;
+    padding: 8px;
     background: none;
     border: 0;
     color: rgba(255, 255, 255, 0.55);
