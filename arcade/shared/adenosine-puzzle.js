@@ -441,12 +441,18 @@ var AdPuzzle = (() => {
       }
       callbacks.onDrag?.({ dx, dy, direction, committed });
     }
+    function overBoard(x, y) {
+      if (!boardElement) return true;
+      const r = boardElement.getBoundingClientRect();
+      return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+    }
     function onTouchEnd(e) {
       if (!callbacks.isActive()) return;
-      if (!committed) {
-        const touch = e.changedTouches[0];
-        const direction = directionOf(touch.clientX - touchStartX, touch.clientY - touchStartY);
-        if (direction) callbacks.onMove(direction);
+      const touch = e.changedTouches[0];
+      const direction = directionOf(touch.clientX - touchStartX, touch.clientY - touchStartY);
+      if (!committed && direction) callbacks.onMove(direction);
+      if (direction || committed || !overBoard(touch.clientX, touch.clientY)) {
+        e.preventDefault();
       }
       committed = false;
       callbacks.onDragEnd?.();
