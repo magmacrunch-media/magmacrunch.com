@@ -104,10 +104,22 @@ h1 {
  * so this covers the short drags even on a bundle without the engine fix. It
  * has to stay larger than that threshold to keep that property.
  *
- * Scoped to coarse pointers with room to spare: a mouse does not swipe, and a
- * phone in landscape is 956px wide with no vertical space to give away, which
- * is why the height is in the query and not just the width. */
-@media (pointer: coarse) and (min-width: 700px) and (min-height: 700px) {
+ * Scoped by size alone, and the pointer is deliberately NOT in the query.
+ * It was, as `(pointer: coarse)`, on the reasoning that a mouse does not
+ * swipe. That is wrong twice. An iPad with a Magic Keyboard or a trackpad
+ * reports `pointer: fine`, so the guard would switch itself off on exactly the
+ * setup most likely to have the big screen; and it is false in the iOS
+ * Simulator too, which is how this was caught -- the rule shipped in the
+ * bundle, the buttons did not move a pixel, and the capture proved it.
+ * `any-pointer: coarse` would fix the first half and still leave a clause that
+ * cannot be checked here.
+ *
+ * Nothing needs the pointer anyway. The height and width already exclude every
+ * phone, including landscape, where 956px of width comes with no vertical
+ * space to give away -- which is why the height is in the query and not only
+ * the width. A desktop window this size has room for the gap and reads better
+ * with it. */
+@media (min-width: 700px) and (min-height: 700px) {
     .controls {
         margin-bottom: 36px;
     }
