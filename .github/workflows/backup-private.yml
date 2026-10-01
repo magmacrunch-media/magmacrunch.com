@@ -87,7 +87,7 @@ jobs:
           #
           # which names neither the secret nor the paste, and sits under a step
           # called "Mint a short-lived token" so it reads as an App or
-          # installation problem. Every run from 2026-09-18 to 2026-10-01 died
+          # installation problem. Every run from 2026-09-18 to 2026-09-30 died
           # that way, and by then it was the third time the org key had been
           # stored as a bare body. The emptiness check above was no help: the
           # value was there, it just was not a key.
