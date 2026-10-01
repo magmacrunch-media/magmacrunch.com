@@ -15,20 +15,49 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
 (function () {
     'use strict';
 
-    /* ── TRACK LIST ── */
-    const TRACKS = [
-        { title: "Reverse Osmosis Reversed", artist: "Juanito Thompson", file: "music/jukebox/songs/Juanito Thompson - That Definitely Did Destroy Me - 01 Reverse Osmosis Reversed.ogg", duration: "4:51" },
-        { title: "Heavy Water", artist: "The Four B's", file: "music/jukebox/songs/The Four B's - Greatest Hits '12-'14 - 08 Heavy Water.ogg", duration: "5:03" },
-        { title: "Somewhere", artist: "C.P. Rutledge", file: "music/jukebox/songs/C.P. Rutledge - Somewhere.ogg", duration: "4:15" },
-        { title: "Birds", artist: "Texas Hold'Em Lava Dome", file: "music/jukebox/songs/Texas Hold'Em Lava Dome - Birds - 01 Birds.ogg", duration: "4:47" },
-        { title: "A January Gathering", artist: "Bears Crossing", file: "music/jukebox/songs/Bears Crossing - A January Gathering.ogg", duration: "2:34" },
-        { title: "Neopolitan Mood", artist: "James R. McCoy", file: "music/jukebox/songs/James R. McCoy - Neopolitan Mood.ogg", duration: "3:16" },
-        { title: "makemecookies! x4.", artist: "Jimmi", file: "music/jukebox/songs/Jimmi - JIMMI - 07 makemecookies! x4.ogg", duration: "0:51" },
-        { title: "Millstone Woods May 2018", artist: "Dag Henderson", file: "music/jukebox/songs/Dag Henderson - Millstone Woods May 2018.ogg", duration: "3:38" },
-        { title: "The End", artist: "Jon McCoy", file: "music/jukebox/songs/Jon McCoy - The End.ogg", duration: "3:26" },
-        { title: "Qikiqtarjuaq", artist: "Juanito Thompson", file: "music/jukebox/songs/Juanito Thompson - It's Twenty-Fourteen - 01 Qikiqtarjuaq.ogg", duration: "6:20" },
-        { title: "Everything is falling all together, all at once, even the universe", artist: "The Four B's", file: "music/jukebox/songs/The Four B's - Greatest Hits '12-'14 - 05 Everything is falling all together, all at once, even the universe.ogg", duration: "4:28" }
-    ];
+    /* ── TRACK LIST ──
+       Fetched from music/jukebox/songs.json, which music/jukebox/app.js also
+       reads: one manifest, not two. It was two until 2026-09-30 - a hardcoded
+       array here, kept in step by hand from the admin tool's "COPY TRACKS JS"
+       button - and it had drifted two tracks behind. "The Jovian Humanitarian
+       Conflict" and "cave diving (not even once)" played on the jukebox page
+       and did not exist here.
+
+       The missing tracks were the visible half. The worse half is that the
+       handoff in localStorage keys the current track by INDEX, so two lists
+       disagreeing meant crossing between the widget and the page resumed a
+       different song at the previous one's timestamp: index 6 here was
+       "makemecookies! x4." and index 6 there was "The Jovian Humanitarian
+       Conflict". Sharing the manifest makes the indices agree, and saving an
+       id beside the index (see saveState) is what stops a reorder from
+       reintroducing it - the admin tool reorders by drag, so that is a normal
+       edit rather than a hypothetical one. ── */
+    let TRACKS = [];
+    let tracksReady = null;
+
+    // Origin-absolute, like every other path in this file. nav.js injects the
+    // widget into pages at every depth, so a relative fetch would resolve
+    // against the page and 404 everywhere but the site root: the same trap
+    // app.js carries a comment about, in the other direction.
+    function loadTracks() {
+        if (tracksReady) return tracksReady;
+        tracksReady = fetch(new URL('music/jukebox/songs.json', location.origin).pathname)
+            .then((r) => (r.ok ? r.json() : []))
+            .then((data) => {
+                TRACKS = data.filter((s) => !s.hidden).map((s) => ({
+                    // The bare filename is the identity, and it is what both
+                    // sides of the handoff write. `duration` is deliberately
+                    // not carried over: the manifest's is a hand-typed string
+                    // and this widget reads the real one off the audio element.
+                    id: s.file,
+                    title: s.title,
+                    artist: s.artist,
+                    file: 'music/jukebox/songs/' + s.file
+                }));
+            })
+            .catch(() => { TRACKS = []; });
+        return tracksReady;
+    }
 
     const STORAGE_KEY = 'mc-jukebox';
     const EXPANDED_KEY = 'mcj_expanded';
@@ -65,8 +94,10 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
 
     function saveState() {
         try {
+            const track = currentTrack >= 0 ? TRACKS[currentTrack] : null;
             localStorage.setItem(STORAGE_KEY, JSON.stringify({
                 track: currentTrack,
+                id: track ? track.id : null,
                 time: audio ? audio.currentTime : 0,
                 playing: isPlaying,
                 volume: volume,
@@ -80,6 +111,41 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
             const raw = localStorage.getItem(STORAGE_KEY);
             return raw ? JSON.parse(raw) : null;
         } catch (e) { return null; }
+    }
+
+    /* ── RESOLVING THE SAVED TRACK ──
+       `id` is the bare filename and is authoritative. `track` is the old
+       index-only form and stays as the fallback, so a visitor whose stored
+       state was written before 2026-09-30 still resumes rather than starting
+       over. Both sides write both. ── */
+    function resolveSavedTrack(state) {
+        if (state.id) {
+            const i = TRACKS.findIndex((t) => t.id === state.id);
+            if (i >= 0) return i;
+        }
+        if (state.track >= 0 && state.track < TRACKS.length) return state.track;
+        return -1;
+    }
+
+    // Runs once, and only once the manifest has arrived: resolving the saved
+    // track needs the list. createWidget calls it too early on purpose (the
+    // widget must not wait on a fetch), where the TRACKS guard turns it into a
+    // no-op and boot's continuation does the real work.
+    let restored = false;
+
+    function restorePlayback() {
+        if (restored || !TRACKS.length) return;
+        restored = true;
+        const state = loadState();
+        if (!state) return;
+        volume = state.volume != null ? state.volume : 0.7;
+        muted = state.muted || false;
+        const idx = resolveSavedTrack(state);
+        if (idx < 0) return;
+        currentTrack = idx;
+        if (state.playing) {
+            playTrack(currentTrack, state.time || 0);
+        }
     }
 
     /* ── PLAYBACK ── */
@@ -473,17 +539,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         } catch (e) {}
 
         // Playback state
-        const state = loadState();
-        if (state) {
-            volume = state.volume != null ? state.volume : 0.7;
-            muted = state.muted || false;
-            if (state.track >= 0 && state.track < TRACKS.length) {
-                currentTrack = state.track;
-                if (state.playing) {
-                    playTrack(currentTrack, state.time || 0);
-                }
-            }
-        }
+        restorePlayback();
 
         updateUI();
     }
@@ -530,13 +586,26 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         });
     }
 
-    /* ── INIT ── */
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', createWidget);
-    } else {
+    /* ── INIT ──
+       The widget is built as soon as the DOM is ready and the manifest is
+       awaited separately, so a slow or failed songs.json leaves an inert pill
+       rather than no pill at all. Idempotent throughout: createWidget guards
+       on its own element, loadTracks memoises, restorePlayback runs once. ── */
+    function boot() {
         createWidget();
+        loadTracks().then(() => {
+            if (!widgetEl) return;
+            restorePlayback();
+            updateUI();
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
     }
 
     /* ── EXPOSE FOR SPA ROUTER ── */
-    window.__initJukeboxPlayer = createWidget;
+    window.__initJukeboxPlayer = boot;
 })();

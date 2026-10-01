@@ -66,15 +66,36 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
     bindEvents();
   }
 
+  /* ── RESOLVING THE SAVED TRACK ──
+     `id` is the song's filename, and it is what makes the handoff survive the
+     two players holding different lists or the same list in a different order.
+     It was an index alone until 2026-09-30, while assets/jukebox.js carried a
+     hardcoded copy of the playlist that had drifted two tracks behind this
+     one: an index saved there named a different song here, from position 6
+     onwards, and it resumed at the previous song's timestamp. Both lists now
+     come from songs.json, so the indices agree again, and `id` is what keeps
+     them agreeing the next time somebody reorders the manifest.
+
+     `track` stays as the fallback for state written before that. ── */
+  function resolveSavedTrack(saved) {
+    if (saved.id) {
+      var i = JUKEBOX_SONGS.findIndex(function (s) { return s.file === saved.id; });
+      if (i >= 0) return i;
+    }
+    if (saved.track >= 0 && saved.track < JUKEBOX_SONGS.length) return saved.track;
+    return -1;
+  }
+
   /* ── RESTORE STATE FROM MINI-PLAYER ── */
   function restoreState() {
     try {
       var saved = JSON.parse(localStorage.getItem(MC_STORAGE_KEY));
       if (!saved) return;
       if (saved.volume != null && player) player.volume = saved.volume;
-      if (saved.track >= 0 && saved.track < JUKEBOX_SONGS.length) {
-        currentIdx = saved.track;
-        playingIdx = saved.track;
+      var idx = resolveSavedTrack(saved);
+      if (idx >= 0) {
+        currentIdx = idx;
+        playingIdx = idx;
         renderNowPlaying();
         renderSongList();
         if (saved.muted) player.volume = 0;
@@ -86,7 +107,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
                 player.currentTime = saved.time;
               }
               npElapsed.textContent = fmtTime(player.currentTime);
-              var song = JUKEBOX_SONGS[saved.track];
+              var song = JUKEBOX_SONGS[idx];
               npDuration.textContent = song.duration || fmtTime(player.duration);
               player.play().catch(function () {});
               setPlayingState(true);
@@ -94,10 +115,10 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
               startMcSaveInterval();
               updateMediaSession();
             }, { once: true });
-            player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.href).pathname);
+            player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[idx].file, location.href).pathname);
             player.load();
           } else {
-            player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.href).pathname);
+            player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[idx].file, location.href).pathname);
             player.play().catch(function () {});
             setPlayingState(true);
             syncToMiniPlayer();
@@ -105,7 +126,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
             updateMediaSession();
           }
         } else {
-          player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[saved.track].file, location.href).pathname);
+          player.src = audioSrc(new URL('songs/' + JUKEBOX_SONGS[idx].file, location.href).pathname);
         }
       }
     } catch (e) {}
@@ -119,8 +140,10 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
         var prev = JSON.parse(localStorage.getItem(MC_STORAGE_KEY));
         if (prev && typeof prev.muted === 'boolean') prevMuted = prev.muted;
       } catch (e) {}
+      var song = playingIdx >= 0 ? JUKEBOX_SONGS[playingIdx] : null;
       localStorage.setItem(MC_STORAGE_KEY, JSON.stringify({
         track: playingIdx,
+        id: song ? song.file : null,
         time: player ? player.currentTime : 0,
         playing: isPlaying,
         volume: player ? player.volume : 0.7,
