@@ -63,7 +63,7 @@ jobs:
       # expands to the empty string and the failure surfaces later wearing the
       # face of a different problem, which is how crunch-c sent an empty Bearer
       # header for three weeks. Name it here instead.
-      - name: Check the App credentials are present
+      - name: Check the App credentials are present and parseable
         env:
           APP_ID: ${{ secrets.RELEASE_APP_ID }}
           APP_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
@@ -75,6 +75,42 @@ jobs:
             echo "the mirror is behind, not corrupted."
             exit 1
           fi
+
+          # Present is not the same as parseable, and this check exists because
+          # the distinction cost 13 days of backups. A PEM pasted into GitHub's
+          # secret form without its -----BEGIN and -----END lines is accepted
+          # and stored; the failure then surfaces in the NEXT step as
+          #
+          #   Failed to create token for "..." (attempt 1): Invalid keyData
+          #   DOMException [DataError]: Invalid keyData
+          #       at importDerKey (node:internal/crypto/webcrypto_util:139:11)
+          #
+          # which names neither the secret nor the paste, and sits under a step
+          # called "Mint a short-lived token" so it reads as an App or
+          # installation problem. Every run from 2026-09-18 to 2026-10-01 died
+          # that way, and by then it was the third time the org key had been
+          # stored as a bare body. The emptiness check above was no help: the
+          # value was there, it just was not a key.
+          #
+          # Set it from the file, never by paste, so the bytes cannot be
+          # reshaped in transit:
+          #
+          #   gh secret set RELEASE_APP_PRIVATE_KEY --org magmacrunch-media \
+          #     --visibility all < key.pem
+          #
+          # PowerShell has no '<' redirection, so there:
+          #   Get-Content key.pem -Raw | gh secret set ...
+          case "$APP_KEY" in
+            "-----BEGIN "*"-----END "*) ;;
+            *)
+              echo "::error::RELEASE_APP_PRIVATE_KEY is set but is not a PEM: no -----BEGIN/-----END armour."
+              echo "This is a malformed value, not a missing one, so it is almost certainly a PEM"
+              echo "body pasted without its armour lines. Re-set it from the .pem file:"
+              echo "  gh secret set RELEASE_APP_PRIVATE_KEY --org magmacrunch-media --visibility all < key.pem"
+              echo "Nothing is lost meanwhile: the mirror is behind, not corrupted."
+              exit 1
+              ;;
+          esac
 
       - name: Mint a short-lived token for the mirror
         id: app-token
