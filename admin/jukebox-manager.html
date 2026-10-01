@@ -563,8 +563,6 @@
             <div class="toolbar-divider"></div>
             <div class="toolbar-group">
                 <button id="btn-export-json" class="btn btn-green btn-sm">EXPORT JSON</button>
-                <button id="btn-copy-tracks" class="btn btn-purple btn-sm">COPY TRACKS JS</button>
-                <button id="btn-copy-jukebox" class="btn btn-orange btn-sm">COPY JUKEBOX_SONGS JS</button>
             </div>
             <div class="toolbar-divider"></div>
             <div class="toolbar-group">
@@ -590,8 +588,6 @@
             <h2 class="export-title">EXPORT</h2>
             <div class="export-buttons">
                 <button id="btn-export-json-lg" class="btn btn-green">DOWNLOAD songs.json</button>
-                <button id="btn-copy-tracks-lg" class="btn btn-purple">COPY TRACKS JS</button>
-                <button id="btn-copy-jukebox-lg" class="btn btn-orange">COPY JUKEBOX_SONGS JS</button>
             </div>
         </div>
     </main>
@@ -616,23 +612,25 @@
     (function() {
         'use strict';
 
-        /* ── Default song data (embedded from songs.json) ── */
-        const DEFAULT_SONGS = [
-            { title: "Reverse Osmosis Reversed", artist: "Juanito Thompson", file: "Juanito Thompson - That Definitely Did Destroy Me - 01 Reverse Osmosis Reversed.ogg", duration: "4:51", hidden: false },
-            { title: "Heavy Water", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 08 Heavy Water.ogg", duration: "5:03", hidden: false },
-            { title: "Somewhere", artist: "C.P. Rutledge", file: "C.P. Rutledge - Somewhere.ogg", duration: "4:15", hidden: false },
-            { title: "Birds", artist: "Texas Hold'Em Lava Dome", file: "Texas Hold'Em Lava Dome - Birds - 01 Birds.ogg", duration: "4:47", hidden: false },
-            { title: "A January Gathering", artist: "Bears Crossing", file: "Bears Crossing - A January Gathering.ogg", duration: "2:34", hidden: false },
-            { title: "Neopolitan Mood", artist: "James R. McCoy", file: "James R. McCoy - Neopolitan Mood.ogg", duration: "3:16", hidden: false },
-            { title: "The Jovian Humanitarian Conflict", artist: "Jimmi", file: "Jimmi - JIMMI - 02 The Jovian Humanitarian Conflict.ogg", duration: "2:15", hidden: false },
-            { title: "makemecookies! x4.", artist: "Jimmi", file: "Jimmi - JIMMI - 07 makemecookies! x4.ogg", duration: "0:51", hidden: false },
-            { title: "Millstone Woods May 2018", artist: "Dag Henderson", file: "Dag Henderson - Millstone Woods May 2018.ogg", duration: "3:38", hidden: false },
-            { title: "The End", artist: "Jon McCoy", file: "Jon McCoy - The End.ogg", duration: "3:26", hidden: false },
-            { title: "Qikiqtarjuaq", artist: "Juanito Thompson", file: "Juanito Thompson - It's Twenty-Fourteen - 01 Qikiqtarjuaq.ogg", duration: "6:20", hidden: false },
-            { title: "Everything is falling all together, all at once, even the universe", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 05 Everything is falling all together, all at once, even the universe.ogg", duration: "4:28", hidden: false }
-        ];
+        /* ── Song data ──
+           Fetched from music/jukebox/songs.json, the manifest the site itself
+           serves. This was an embedded DEFAULT_SONGS array until 2026-09-30,
+           described in its own comment as "embedded from songs.json" - and it
+           had drifted a track behind, missing "cave diving (not even once)".
+           An editor seeded with a stale list is worse than one seeded with
+           nothing: every export writes the staleness back over the manifest.
 
-        let songs = JSON.parse(JSON.stringify(DEFAULT_SONGS));
+           Editing still goes out through DOWNLOAD songs.json, so this tool
+           reads the live list and hands back a replacement for it. ── */
+        let songs = [];
+
+        function fetchSongs() {
+            return fetch('../music/jukebox/songs.json', { cache: 'no-store' })
+                .then(function (r) {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                });
+        }
 
         /* ── DOM refs ── */
         const songList = document.getElementById('song-list');
@@ -819,55 +817,20 @@
             showToast('Downloaded songs.json');
         }
 
-        /* ── Generate TRACKS JS for jukebox.js ── */
-        function generateTracksJs() {
-            const lines = songs.map(function(s) {
-                const path = 'music/jukebox/songs/' + s.file;
-                return '        { title: ' + JSON.stringify(s.title) +
-                       ', artist: ' + JSON.stringify(s.artist) +
-                       ', file: ' + JSON.stringify(path) +
-                       ', duration: ' + JSON.stringify(s.duration) + ' }';
-            });
-            return 'const TRACKS = [\n' + lines.join(',\n') + '\n    ];';
-        }
+        /* ── The two "COPY ... JS" generators were removed on 2026-09-30 ──
+           They produced a `const TRACKS = [...]` to paste into
+           assets/jukebox.js and a `const JUKEBOX_SONGS = [...]` to paste into
+           music/jukebox/index.html. Neither array exists any more: both
+           players read songs.json directly. The buttons went with them,
+           because a generator whose output has nowhere to go is how the
+           playlist came to exist in four places and disagree in two of them.
 
-        /* ── Generate JUKEBOX_SONGS JS for index.html ── */
-        function generateJukeboxSongsJs() {
-            const lines = songs.map(function(s) {
-                return '    { title: ' + JSON.stringify(s.title) +
-                       ', artist: ' + JSON.stringify(s.artist) +
-                       ', file: ' + JSON.stringify(s.file) +
-                       ', duration: ' + JSON.stringify(s.duration) + ' }';
-            });
-            return 'const JUKEBOX_SONGS = [\n' + lines.join(',\n') + '\n];';
-        }
-
-        /* ── Copy to clipboard ── */
-        function copyToClipboard(text, label) {
-            navigator.clipboard.writeText(text).then(function() {
-                showToast('Copied ' + label + ' to clipboard');
-            }, function() {
-                showToast('Copy failed', true);
-            });
-        }
+           DOWNLOAD songs.json is the whole export path now. ── */
 
         /* ── Button bindings ── */
         document.getElementById('btn-export-json').addEventListener('click', downloadJson);
         document.getElementById('btn-export-json-lg').addEventListener('click', downloadJson);
 
-        document.getElementById('btn-copy-tracks').addEventListener('click', function() {
-            copyToClipboard(generateTracksJs(), 'TRACKS JS');
-        });
-        document.getElementById('btn-copy-tracks-lg').addEventListener('click', function() {
-            copyToClipboard(generateTracksJs(), 'TRACKS JS');
-        });
-
-        document.getElementById('btn-copy-jukebox').addEventListener('click', function() {
-            copyToClipboard(generateJukeboxSongsJs(), 'JUKEBOX_SONGS JS');
-        });
-        document.getElementById('btn-copy-jukebox-lg').addEventListener('click', function() {
-            copyToClipboard(generateJukeboxSongsJs(), 'JUKEBOX_SONGS JS');
-        });
 
         document.getElementById('btn-add').addEventListener('click', function() {
             songs.push({ title: 'New Song', artist: 'Artist', file: 'filename.ogg', duration: '0:00', hidden: false });
@@ -877,15 +840,28 @@
         });
 
         document.getElementById('btn-reset').addEventListener('click', function() {
-            showConfirm('Reset all songs to defaults? This will discard your changes.', function() {
-                songs = JSON.parse(JSON.stringify(DEFAULT_SONGS));
-                render();
-                showToast('Reset to defaults');
+            showConfirm('Reload the published song list? This will discard your changes.', function() {
+                fetchSongs().then(function (data) {
+                    songs = data;
+                    render();
+                    showToast('Reloaded ' + songs.length + ' songs from songs.json');
+                }).catch(function (err) {
+                    showToast('Could not read songs.json: ' + err.message, true);
+                });
             });
         });
 
-        /* ── Init ── */
+        /* ── Init ──
+           Render once with an empty list so the page is not blank while the
+           manifest is in flight, then again with it. A failure says so rather
+           than leaving an editor that looks like an empty playlist. ── */
         render();
+        fetchSongs().then(function (data) {
+            songs = data;
+            render();
+        }).catch(function (err) {
+            showToast('Could not read songs.json: ' + err.message, true);
+        });
     })();
     </script>
 </body>

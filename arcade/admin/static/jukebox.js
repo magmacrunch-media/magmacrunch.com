@@ -6,24 +6,19 @@
 (function() {
     'use strict';
 
-    // ── Default song data ─────────────────────────────────────────────────
+    // ── Song data ─────────────────────────────────────────────────────────
+    //
+    // Empty until the server answers `jukebox_load`, which it does on every
+    // connect. This was a hardcoded DEFAULT_SONGS array until 2026-09-30, and
+    // it had drifted a track behind the manifest, missing "cave diving (not
+    // even once)" - so a disconnected tab showed 12 songs that looked exactly
+    // like a loaded list, and SAVE wrote them over the 13 on the server.
+    //
+    // Empty is the honest pre-connect state, and `guardNonEmpty` below is what
+    // makes it safe: a tool that has loaded nothing must not be able to save
+    // nothing over something.
 
-    const DEFAULT_SONGS = [
-        { title: "Reverse Osmosis Reversed", artist: "Juanito Thompson", file: "Juanito Thompson - That Definitely Did Destroy Me - 01 Reverse Osmosis Reversed.ogg", duration: "4:51", hidden: false },
-        { title: "Heavy Water", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 08 Heavy Water.ogg", duration: "5:03", hidden: false },
-        { title: "Somewhere", artist: "C.P. Rutledge", file: "C.P. Rutledge - Somewhere.ogg", duration: "4:15", hidden: false },
-        { title: "Birds", artist: "Texas Hold'Em Lava Dome", file: "Texas Hold'Em Lava Dome - Birds - 01 Birds.ogg", duration: "4:47", hidden: false },
-        { title: "A January Gathering", artist: "Bears Crossing", file: "Bears Crossing - A January Gathering.ogg", duration: "2:34", hidden: false },
-        { title: "Neopolitan Mood", artist: "James R. McCoy", file: "James R. McCoy - Neopolitan Mood.ogg", duration: "3:16", hidden: false },
-        { title: "The Jovian Humanitarian Conflict", artist: "Jimmi", file: "Jimmi - JIMMI - 02 The Jovian Humanitarian Conflict.ogg", duration: "2:15", hidden: false },
-        { title: "makemecookies! x4.", artist: "Jimmi", file: "Jimmi - JIMMI - 07 makemecookies! x4.ogg", duration: "0:51", hidden: false },
-        { title: "Millstone Woods May 2018", artist: "Dag Henderson", file: "Dag Henderson - Millstone Woods May 2018.ogg", duration: "3:38", hidden: false },
-        { title: "The End", artist: "Jon McCoy", file: "Jon McCoy - The End.ogg", duration: "3:26", hidden: false },
-        { title: "Qikiqtarjuaq", artist: "Juanito Thompson", file: "Juanito Thompson - It's Twenty-Fourteen - 01 Qikiqtarjuaq.ogg", duration: "6:20", hidden: false },
-        { title: "Everything is falling all together, all at once, even the universe", artist: "The Four B's", file: "The Four B's - Greatest Hits '12-'14 - 05 Everything is falling all together, all at once, even the universe.ogg", duration: "4:28", hidden: false }
-    ];
-
-    let songs = JSON.parse(JSON.stringify(DEFAULT_SONGS));
+    let songs = [];
     let dragSrcIndex = null;
 
     // ── DOM refs ──────────────────────────────────────────────────────────
@@ -33,8 +28,6 @@
     const fileInput = document.getElementById('jb-file-input');
     const btnImport = document.getElementById('jb-btn-import');
     const btnExportJson = document.getElementById('jb-btn-export-json');
-    const btnCopyTracks = document.getElementById('jb-btn-copy-tracks');
-    const btnCopyJukebox = document.getElementById('jb-btn-copy-jukebox');
     const btnSave = document.getElementById('jb-btn-save');
     const btnDeploy = document.getElementById('jb-btn-deploy');
     const btnReset = document.getElementById('jb-btn-reset');
@@ -180,49 +173,37 @@
         window.OPS.toast('Downloaded songs.json');
     }
 
-    // ── Generate TRACKS JS ────────────────────────────────────────────────
-
-    function generateTracksJs() {
-        const lines = songs.map(function(s) {
-            const path = 'music/jukebox/songs/' + s.file;
-            return '        { title: ' + JSON.stringify(s.title) +
-                   ', artist: ' + JSON.stringify(s.artist) +
-                   ', file: ' + JSON.stringify(path) +
-                   ', duration: ' + JSON.stringify(s.duration) + ' }';
-        });
-        return 'const TRACKS = [\n' + lines.join(',\n') + '\n    ];';
-    }
-
-    // ── Generate JUKEBOX_SONGS JS ────────────────────────────────────────
-
-    function generateJukeboxSongsJs() {
-        const lines = songs.map(function(s) {
-            return '    { title: ' + JSON.stringify(s.title) +
-                   ', artist: ' + JSON.stringify(s.artist) +
-                   ', file: ' + JSON.stringify(s.file) +
-                   ', duration: ' + JSON.stringify(s.duration) + ' }';
-        });
-        return 'const JUKEBOX_SONGS = [\n' + lines.join(',\n') + '\n];';
-    }
-
-    // ── Copy to clipboard ─────────────────────────────────────────────────
-
-    function copyToClipboard(text, label) {
-        navigator.clipboard.writeText(text).then(function() {
-            window.OPS.toast('Copied ' + label + ' to clipboard');
-        }, function() {
-            window.OPS.toast('Copy failed', true);
-        });
-    }
+    // ── The two "COPY ... JS" generators were removed on 2026-09-30 ───────
+    //
+    // They produced a `const TRACKS = [...]` to paste into assets/jukebox.js
+    // and a `const JUKEBOX_SONGS = [...]` to paste into
+    // music/jukebox/index.html. Neither array exists any more: both players
+    // read songs.json directly. The buttons went with them, because a
+    // generator whose output has nowhere to go is how the playlist came to
+    // exist in four places and disagree in two of them.
+    //
+    // EXPORT JSON, SAVE LOCAL and SAVE & DEPLOY are the export paths now.
 
     // ── Server persistence ────────────────────────────────────────────────
 
+    // An empty list reaching the server would overwrite the real one, and the
+    // pre-connect state is empty by design (see above). Refuse rather than
+    // ask: there is no legitimate reason to publish a playlist with no songs
+    // in it, and if there ever is, deleting the manifest is the way to say so.
+    function guardNonEmpty(what) {
+        if (songs.length > 0) return true;
+        window.OPS.toast('Nothing loaded, so there is nothing to ' + what, true);
+        return false;
+    }
+
     function saveToServer() {
+        if (!guardNonEmpty('save')) return;
         window.OPS.send({ action: 'jukebox_save', songs: songs, token: window.OPS.authToken });
         window.OPS.toast('Saved to server');
     }
 
     function deployToGitHub() {
+        if (!guardNonEmpty('deploy')) return;
         btnDeploy.disabled = true;
         btnDeploy.textContent = 'DEPLOYING...';
         window.OPS.send({
@@ -266,8 +247,6 @@
     // ── Button bindings ───────────────────────────────────────────────────
 
     btnExportJson.addEventListener('click', downloadJson);
-    btnCopyTracks.addEventListener('click', () => copyToClipboard(generateTracksJs(), 'TRACKS JS'));
-    btnCopyJukebox.addEventListener('click', () => copyToClipboard(generateJukeboxSongsJs(), 'JUKEBOX_SONGS JS'));
     btnSave.addEventListener('click', saveToServer);
     btnDeploy.addEventListener('click', deployToGitHub);
 
@@ -277,11 +256,14 @@
         songList.scrollTop = songList.scrollHeight;
     });
 
+    // Reload from the server rather than from a hardcoded list. "Defaults"
+    // used to mean the embedded DEFAULT_SONGS array, so RESET discarded your
+    // changes AND silently reverted the playlist to whatever was hardcoded
+    // when the file was last edited, which by 2026-09-30 was a track behind.
+    // The server's copy is the only thing that can honestly be reverted to.
     btnReset.addEventListener('click', function() {
-        window.OPS.confirm('Reset all songs to defaults? This will discard your changes.', '', function() {
-            songs = JSON.parse(JSON.stringify(DEFAULT_SONGS));
-            render();
-            window.OPS.toast('Reset to defaults');
+        window.OPS.confirm('Reload the saved song list? This will discard your changes.', '', function() {
+            loadFromServer();
         });
     });
 
