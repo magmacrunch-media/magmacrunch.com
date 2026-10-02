@@ -31,6 +31,10 @@
     <script src="kit/dom.js?v=1d063261"></script>
     <script src="kit/menu.js?v=cd5cd9a0"></script>
     <script src="bridge.js?v=6a34f249"></script>
+    <!-- Immediately after bridge.js and well before core/tier.js, which is the
+         only ordering this file has: it stands aside if Tauri already installed
+         a filesystem, and tier.js reads the result to decide the build. -->
+    <script src="fsa.js?v=31a8aa1c"></script>
 </head>
 <body>
     <div class="mobile-notice">
@@ -624,7 +628,7 @@
     <!-- first: bridge.js in <head> has already decided whether there is a
          filesystem, and this turns that one boolean into the capability table
          the ui/ files below ask. -->
-    <script src="core/tier.js?v=dc53965a"></script>
+    <script src="core/tier.js?v=75e8e551"></script>
     <script src="core/color.js?v=7c3a8d1d"></script>
     <script src="core/draw.js?v=6107b978"></script>
     <script src="core/select.js?v=e752f32c"></script>
@@ -657,7 +661,7 @@
     <script src="sprites-ui.js?v=949bacd1"></script>
     <script src="mesh-ui.js?v=ff9a4882"></script>
     <!-- after editor.js: reads the state accessor it defines at the bottom -->
-    <script src="project-ui.js?v=cb84bd01"></script>
+    <script src="project-ui.js?v=a04e50b0"></script>
     <!-- after project-ui.js: exporting a target reads the current project -->
     <script src="targets-ui.js?v=796c30af"></script>
     <!-- last: dispatches to both of the above -->
