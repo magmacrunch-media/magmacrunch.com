@@ -28,6 +28,32 @@ if (!existsSync(FONT_PATH)) {
 }
 GlobalFonts.registerFromPath(FONT_PATH, 'Press Start 2P')
 
+// The title face. Built by FONT//LITHO and published here by its `npm run
+// publish`; `npm run publish:check` there is what notices if this copy drifts.
+//
+// It is a separate face rather than a larger setting of Press Start 2P because
+// a pixel font is only crisp at a whole multiple of its design grid. Press
+// Start 2P is drawn on 8px, so the 42px title this used to set was 5.25x and
+// the rasteriser antialiased every edge. Litho Display is drawn on 16px and the
+// title is 64px, which is exactly 4x.
+//
+// 64 rather than 48, and the difference is cap height rather than point size.
+// Press Start 2P fills its em, so 42px of it is a 43px capital; Litho Display's
+// cap is 11 of its 16 rows, so 48px of it would be a 33px capital and the title
+// would quietly shrink by a quarter. 64px puts it back at 44px. The widest
+// title, GEORGE BOOLE, is 416px of the 1100px available.
+//
+// The smaller text below stays on Press Start 2P deliberately: at 14px and 10px
+// an 8px grid is the right one, and a 16px face would be rendered BELOW its
+// design size, where a 1px stem turns to grey.
+const TITLE_FONT_PATH = join(ROOT, 'fonts', 'LithoDisplay-Regular.ttf')
+if (!existsSync(TITLE_FONT_PATH)) {
+  console.error('Font not found at', TITLE_FONT_PATH)
+  console.error('Run `npm run publish` in apps/font-litho to place it')
+  process.exit(1)
+}
+GlobalFonts.registerFromPath(TITLE_FONT_PATH, 'Litho Display')
+
 // ---------------------------------------------------------------------------
 // Logo
 // ---------------------------------------------------------------------------
@@ -139,18 +165,29 @@ function drawAccentBar(ctx, color) {
   ctx.shadowBlur = 0
 }
 
+const TITLE_PX = 64
+
+// Leading, derived rather than fixed. The two baselines were 60px apart,
+// which was safe only because Press Start 2P has no descender at all: its
+// 'g' sits on the baseline. Litho Display has a real one, 3 of its 16 rows,
+// so at 64px the 'g' of "magmacrunch" reached y=192 while the 'd' of
+// "media" started at y=188, and the home card's two lines overlapped by 4px.
+// 1.2em clears it by 13px. Deriving it means changing TITLE_PX cannot
+// quietly reintroduce the collision.
+const TITLE_LEAD = Math.round(TITLE_PX * 1.2)
+
 function drawTitle(ctx, title, color) {
   const lines = title.split('\n')
   ctx.shadowColor = color
   ctx.shadowBlur = 30
   ctx.fillStyle = color
-  ctx.font = '42px "Press Start 2P"'
+  ctx.font = `${TITLE_PX}px "Litho Display"`
 
   if (lines.length === 1) {
     ctx.fillText(lines[0], 60, 200)
   } else {
     ctx.fillText(lines[0], 60, 180)
-    ctx.fillText(lines[1], 60, 240)
+    ctx.fillText(lines[1], 60, 180 + TITLE_LEAD)
   }
   ctx.shadowBlur = 0
 }
