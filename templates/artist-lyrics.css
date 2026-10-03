@@ -15,7 +15,7 @@ main .breadcrumb { position: relative; top: auto; left: auto; z-index: 10; margi
    same elements as `main .breadcrumb a` and friends -- one element more
    specific than a bare `.breadcrumb a` -- so without the `main` these rules
    lost to it regardless of load order, and every song page rendered the
-   archive's generic grey links and cyan current crumb instead of the artist's
+   archive's generic gray links and cyan current crumb instead of the artist's
    section accent. At equal specificity the later sheet wins, and every page
    that links this template links it after archive.css. */
 main .breadcrumb { color: var(--dim); }

@@ -13,7 +13,7 @@ const Renderer = {
      * wherever there is room for it.
      *
      * The canvas is 480x270 stretched to fill the viewport, so at a non-integer
-     * scale some game pixels land two screen pixels wide and their neighbours
+     * scale some game pixels land two screen pixels wide and their neighbors
      * one - a visible shimmer as the cave scrolls past. Snapping to an integer
      * scale fixes it, but only above 2x: rounding 1.6x down to 1x would shrink
      * the game to a stamp in the middle of the screen, a worse trade than an
@@ -36,7 +36,7 @@ const Renderer = {
 
     /**
      * Soft radial glow. Filling an arc() at a flat low alpha does not read as
-     * light - it reads as a grey disc with a hard rim. Three stops is the
+     * light - it reads as a gray disc with a hard rim. Three stops is the
      * cheapest thing that actually looks lit.
      */
     glow(ctx, x, y, radius, rgb, alpha) {

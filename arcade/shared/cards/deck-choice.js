@@ -12,7 +12,7 @@
  * needs no change in any of them beyond loading this file.
  *
  * THE OVERRIDE CALLS THE ORIGINAL FIRST. getHTML() does more than draw: it sets
- * .card, .face-up/.face-down, the colour class, and data-suit/data-rank, and
+ * .card, .face-up/.face-down, the color class, and data-suit/data-rank, and
  * the games read all of those to lay out and animate a table. Rebuilding the
  * element here would mean keeping a second copy of that in step forever. So the
  * stock element is built, and only what is INSIDE it is replaced — a deck
@@ -73,7 +73,7 @@
      * A pack's SVG, sized to whatever box the game's CSS gave the card.
      *
      * The width and height attributes are REMOVED, not overridden. They are
-     * millimetres — the pack is drawn at the real size of a real card — and a
+     * millimeters — the pack is drawn at the real size of a real card — and a
      * card element here is a hundred-odd pixels, so leaving them would draw a
      * card two and a half times the size of the table it is on. Dropping them
      * lets the viewBox do the scaling it is for.

@@ -402,7 +402,7 @@
 /* ══ Responsive ══ */
 @media (max-width: 900px) {
     /* Stacked, the two columns are taller than the viewport, so the screen
-       scrolls rather than centring — centring a column taller than its box
+       scrolls rather than centering — centering a column taller than its box
        pushes the top of the board off the screen and clips the hand off the
        bottom, which is what used to happen here. */
     .game-layout {

@@ -303,7 +303,7 @@ const MODULES = [
       {
         name: "input_snapshot",
         signature: "const InputPad *input_snapshot(int player)",
-        description: "A player's whole frame as a value, or NULL for an out-of-range player. Valid until the next input_scan(), so copy it to keep it. Recognising patterns across kept frames \u2014 a quarter-circle, a buffer window \u2014 stays with the game.",
+        description: "A player's whole frame as a value, or NULL for an out-of-range player. Valid until the next input_scan(), so copy it to keep it. Recognizing patterns across kept frames \u2014 a quarter-circle, a buffer window \u2014 stays with the game.",
         example: "buffer[head] = *input_snapshot(p);\nhead = (head + 1) % BUFFER_FRAMES;"
       },
       {
@@ -1030,7 +1030,7 @@ const MODULES = [
       {
         name: "ui_draw_text_centered_in",
         signature: "void ui_draw_text_centered_in(int design_x, int design_y, int design_w, int design_h, const char *text, unsigned int design_size, u32 color)",
-        description: "Centre text inside a design-space rectangle, both horizontally and vertically.",
+        description: "Center text inside a design-space rectangle, both horizontally and vertically.",
         example: 'ui_draw_text_centered_in(200, 200, 240, 80, "OK", 16, COLOR_WHITE);'
       },
       {
@@ -1066,25 +1066,25 @@ const MODULES = [
       {
         name: "ui_set_shadow_color",
         signature: "void ui_set_shadow_color(u32 color)",
-        description: "Colour of the drop shadow under every string this module draws. Defaults to black, which is right for light text on a dark background and wrong under a dark glyph on a pale panel — there it turns the letter into a smudge. Set once at startup, like the overscan.",
+        description: "Color of the drop shadow under every string this module draws. Defaults to black, which is right for light text on a dark background and wrong under a dark glyph on a pale panel — there it turns the letter into a smudge. Set once at startup, like the overscan.",
         example: 'ui_set_shadow_color(RGBA(60, 0, 0, 255));  /* warm, for a pale card face */'
       },
       {
         name: "ui_get_shadow_color",
         signature: "u32 ui_get_shadow_color(void)",
-        description: "The current shadow colour. Useful for saving and restoring it around one oddly-coloured panel rather than changing it globally.",
+        description: "The current shadow color. Useful for saving and restoring it around one oddly-colored panel rather than changing it globally.",
         example: 'u32 saved = ui_get_shadow_color();\nui_set_shadow_color(panel_bg);\nui_draw_text_centered_in(x, y, w, h, "A", 24, fg);\nui_set_shadow_color(saved);'
       },
       {
         name: "ui_set_border_color",
         signature: "void ui_set_border_color(u32 color)",
-        description: "Colour of ui_draw_border(). Defaults to cyan, which reads as another program's chrome on a game with its own palette.",
+        description: "Color of ui_draw_border(). Defaults to cyan, which reads as another program's chrome on a game with its own palette.",
         example: 'ui_set_border_color(RGBA(107, 0, 0, 255));  /* lava, not cyan */'
       },
       {
         name: "ui_get_border_color",
         signature: "u32 ui_get_border_color(void)",
-        description: "The current border colour.",
+        description: "The current border color.",
         example: "u32 border = ui_get_border_color();"
       }
     ]

@@ -85,7 +85,7 @@
         }
         /* The shadow stack is the cereal box's palette, not the homepage's.
            This page's animation is the box (animations/cereal.js), whose
-           colours are pink #FF3D6E, edge #FF6CB2, the cyan band #00F5FF, milk
+           colors are pink #FF3D6E, edge #FF6CB2, the cyan band #00F5FF, milk
            #F5E6D0 and box black #09090C -- so the masthead steps through those
            rather than through the lava reds the homepage title uses. */
         .masthead-title {
@@ -210,11 +210,11 @@
             text-shadow: 0 0 10px rgba(255,224,58,0.3);
         }
 
-        /* ── CENTRED ASCII ──
+        /* ── CENTERED ASCII ──
            The "founded by" credit was float: right at clamp(2px, 0.5vw, 5px),
            which rendered it 139px wide in a 799px column -- 17% of the width,
            and floated beside nothing, because the element after it is a heading
-           that clears. Centred and sized to the column instead, by the same
+           that clears. Centered and sized to the column instead, by the same
            --cols arithmetic the artist strips use: 0.6 is Courier Prime's
            advance in em, so 100cqw / cols / 0.6 is the size that exactly fills
            the width, and the cap stops it growing past a comfortable measure. */
@@ -508,7 +508,7 @@
 
            The clamp stays as the first declaration. A browser without container
            queries cannot parse cqw/cqh, drops the second declaration whole, and
-           keeps the old behaviour. */
+           keeps the old behavior. */
         .link-strip-inner pre {
             font-family: 'Courier Prime', monospace;
             font-size: clamp(2px, 0.5vw, 5px);

@@ -61,7 +61,7 @@ import { LESSONS } from "./lessons.js";
   // Routing
   // ----------------------------------------------------------
 
-  /** Resolve ?m=&e= to a lesson index, tolerating anything unrecognised. */
+  /** Resolve ?m=&e= to a lesson index, tolerating anything unrecognized. */
   function indexFromLocation() {
     const params = new URLSearchParams(window.location.search);
     const module = params.get("m");

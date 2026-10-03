@@ -10,7 +10,7 @@
  *
  * So a release bumps nothing here, and the site keeps serving the previous
  * build to every visitor — with no error, because the old version is still on
- * the CDN and still works. A playground demonstrating behaviour the installed
+ * the CDN and still works. A playground demonstrating behavior the installed
  * package no longer has is worse than none, which is the same reason the other
  * two sync scripts exist.
  *

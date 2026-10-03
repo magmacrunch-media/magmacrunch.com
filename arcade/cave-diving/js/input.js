@@ -84,7 +84,7 @@ const Input = {
         const lift = (e) => {
             if (e.pointerId === this.steerId) {
                 // Null, not zero: the diver coasts on release instead of
-                // snapping its facing to centre.
+                // snapping its facing to center.
                 this.steerId = null; this.steerFrom = null; this.touchAxis = null;
             }
             if (e.pointerId === this.strokeId) { this.strokeId = null; }

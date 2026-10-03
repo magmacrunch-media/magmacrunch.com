@@ -2,7 +2,7 @@
  * and a table that reads them.
  *
  * The array is computed once in render() and handed to everything that draws.
- * That is not an optimisation, it is the page's only claim: if the tone panel
+ * That is not an optimization, it is the page's only claim: if the tone panel
  * and the grating panel ever got their own copies, the agreement between them
  * would be an artefact of this file rather than a fact about the maths.
  */

@@ -68,7 +68,7 @@
 }
 
 /* The lane is the wood; the holes are drilled into it. It used to be
-   var(--bg-dark), the same colour as --hole-bg, so the holes read as an empty
+   var(--bg-dark), the same color as --hole-bg, so the holes read as an empty
    strip with faint outlines. */
 .board-lane {
     display: flex;

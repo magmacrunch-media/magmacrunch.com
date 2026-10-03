@@ -83,7 +83,7 @@ World.prototype.appendSlice = function (seg, t) {
     const s = last ? last.s + SLICE : this.camAlong;
     const half = this.passageHalf(seg);
 
-    // The centreline wanders as a damped random walk over a slow sine. The
+    // The centerline wanders as a damped random walk over a slow sine. The
     // sine alone is too regular to read as rock; the walk alone drifts into a
     // corner and stays there.
     this.wanderV += (this.rng() - 0.5) * 0.9;
@@ -143,7 +143,7 @@ World.prototype.update = function (dt, dtMs, f, sfx) {
             if (sfx) sfx.collapse();
         }
         this.setAxisFor(seg);
-        // The passage MUST be rebuilt here. Slices carry a centre and a half
+        // The passage MUST be rebuilt here. Slices carry a center and a half
         // width in cross-axis pixels, and the cross axis is 480 wide in a shaft
         // but 270 in a squeeze - so a slice generated for one reads as nonsense
         // in the other, and the walls land off screen until it retires. The

@@ -3,7 +3,7 @@
 
    Chrome (reset, header, glitch title, tool nav, footer) comes from
    ware/shell/app-shell.css, linked ahead of this file. This file owns the
-   palette and the reference list. Same six base colours as
+   palette and the reference list. Same six base colors as
    ware/hologram/index.html, so the two pages read as one project.
 
    app-shell.css reads --bg, --surface, --border, --text, --dim and --accent

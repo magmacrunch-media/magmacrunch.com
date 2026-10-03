@@ -39,7 +39,7 @@
  * sessions' pages that 0a184c6b recorded as still unfixed, all fall out of that.
  *
  * "The tree the commit will record" is the index git points the hook at.
- * `git diff --cached`, `git ls-files` and `git cat-file` all honour
+ * `git diff --cached`, `git ls-files` and `git cat-file` all honor
  * GIT_INDEX_FILE, including the temporary index a scoped commit builds.
  *
  * ── Repairs ──

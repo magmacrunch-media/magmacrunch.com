@@ -141,7 +141,7 @@ function dive(seed, opts) {
  *
  * Middle of the passage by default, the free lane beside a protrusion when
  * there is one, and a detour when air is low or a pearl is cheap. Steering to
- * the geometric centre and nothing else is what a bad player does, and it fails
+ * the geometric center and nothing else is what a bad player does, and it fails
  * this game on purpose - so the pilot has to be at least this good for the air
  * budget to mean anything.
  */
@@ -157,7 +157,7 @@ function think(world, player, entities, o) {
 
     // Only the NEAREST protrusion. Folding every rock in the lookahead window
     // into one lane collapses it whenever two rocks face each other from
-    // opposite walls, and the fallback then aims at the geometric centre -
+    // opposite walls, and the fallback then aims at the geometric center -
     // which is to say, straight back into one of them.
     let near = null, nearD = Infinity;
     for (const r of entities.rocks) {

@@ -64,7 +64,7 @@ Entities.prototype.spawnAhead = function (world, seg, f) {
     const span = b.hi - b.lo;
     // Two caps, not one. CLEARANCE_MIN is the hard floor - the diver plus room
     // to correct. HALF_SPAN is the softer one: a protrusion deeper than half
-    // the passage puts the centreline INSIDE the rock, so the obvious line
+    // the passage puts the centerline INSIDE the rock, so the obvious line
     // through the cave becomes the wrong one and the passage stops reading as
     // navigable at all. Without it the simulated baseline diver ground along
     // the rock the whole way down and drowned 14 seconds in.

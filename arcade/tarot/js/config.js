@@ -45,7 +45,7 @@ const CARD_POINTS = {
 const TRUMP_COUNT = 21;
 const EXCUSE_NUMBER = 0; // The Excuse/Fool (unnumbered)
 
-// Oudlers (honours) — these lower the point threshold
+// Oudlers (honors) — these lower the point threshold
 const OUDLERS = [1, 21, 0]; // Petit (1), Monde (21), Excuse (0)
 
 // Points needed to win based on number of oudlers held

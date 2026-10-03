@@ -33,7 +33,7 @@
  * reference resolves and which trees are skipped are shared with
  * check-game-stamps.mjs, which applies the same rule to the game repos the
  * generated arcade folders are copied from, and with check-staged-stamps.mjs.
- * Why the digest normalises newlines before hashing is explained there.
+ * Why the digest normalizes newlines before hashing is explained there.
  *
  * ── Scope ──
  *
@@ -238,7 +238,7 @@ if (missing.length || stale.length) {
   if (stale.length) {
     console.error(
       `\nA stale stamp means visitors keep the cached old file, so the change never\n` +
-      `reaches them. Set each stamp to the file's normalised digest:\n\n` +
+      `reaches them. Set each stamp to the file's normalized digest:\n\n` +
       stale.map(s => `  ${s.href}?v=${s.actual}   (in ${s.page})`).join('\n') +
       `\n\nFix all of them with:  npm run fix:cachebust` +
       `\nRecompute one with:    node scripts/check-cache-busters.mjs --digest <file>`

@@ -22,7 +22,7 @@ const SCREENSHOTS_DIR = join(__dirname, 'screenshots');
  *   port     this game's lobby is revealed by a socket message rather than by
  *            the click itself, so it needs its server.py listening on this port.
  *            The page is loaded with ?server=localhost:<port> — every one of
- *            these games honours that override, and adenosine-multiplayer
+ *            these games honors that override, and adenosine-multiplayer
  *            allowlists localhost. Skipped when nothing is listening, so a run
  *            without game servers reports honestly instead of failing.
  *   joined   must be non-empty once joined. Proves the join actually round-
@@ -239,7 +239,7 @@ async function checkLobby(page, game) {
  * So it sends a message first, which is the smallest thing that registers, and
  * then makes the same two assertions. That also puts ensureRegistered() under
  * test, which is the path every real participant now takes and the one 0.6.0
- * moved the behaviour onto.
+ * moved the behavior onto.
  *
  * What it deliberately does not assert is the other half of that change — that
  * a passive visitor stays unregistered. From the DOM, "connected but not

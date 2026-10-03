@@ -342,13 +342,13 @@ window.NAV_CONFIG = {
    games don't load nav.js, so they're
    automatically excluded.
 
-   The widget is a pill in the dead centre of the
+   The widget is a pill in the dead center of the
    nav bar - the gap between the brand and the
    section links - whose panel drops from the bar
    like a dropdown. Not on touch: the widget wires
    up MediaSession, so once a track is playing the
    lock screen carries the controls. And not under
-   900px, where the centre gap is not wide enough
+   900px, where the center gap is not wide enough
    to hold the pill (brand + padding + the eight
    section links come to ~670px). The nav's own
    'jukebox' link still reaches music/jukebox/ on

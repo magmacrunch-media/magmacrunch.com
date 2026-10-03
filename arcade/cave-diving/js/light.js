@@ -99,7 +99,7 @@ const Light = {
      *
      * `lamp` is {x, y, dirX, dirY, radius} in canvas pixels, with x/y already
      * resolved from the sprite's own lamp pixel by pixels.diverPose - not
-     * guessed from the diver's centre, which detaches the cone from the lamp
+     * guessed from the diver's center, which detaches the cone from the lamp
      * as soon as facing changes.
      *
      * `extra` is any other light in the frame: an air pocket's shimmer, a

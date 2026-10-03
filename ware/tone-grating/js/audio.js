@@ -11,7 +11,7 @@
  *
  * because the modulation index is defined as beta = peak frequency deviation
  * divided by modulator frequency. Setting the gain to the deviation in Hz is
- * what makes the slider labelled beta actually mean beta, rather than meaning
+ * what makes the slider labeled beta actually mean beta, rather than meaning
  * "some depth that looks about right". Get this wrong and the page still makes
  * a pleasant noise while quietly ceasing to demonstrate anything.
  *

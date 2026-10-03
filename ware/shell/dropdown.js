@@ -105,7 +105,7 @@
         list.style.setProperty('--dd-room', Math.max(MIN_ROOM, below) + 'px');
     }
 
-    /* Attach open/close and selection behaviour to one dropdown.
+    /* Attach open/close and selection behavior to one dropdown.
        onSelect receives the chosen option's data-value.
 
        opts.markActive (default true) moves the .active class to the chosen

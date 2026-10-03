@@ -676,11 +676,11 @@
        The common album layout is one photo filling the square with text over
        it, and getting there by hand meant dragging a corner handle past the
        canvas edge — where the handle is no longer on screen to grab — and then
-       nudging the image back to centre. COVER does it in one click.
+       nudging the image back to center. COVER does it in one click.
 
        COVER scales the short side to the canvas and lets the long side hang
        off both edges equally; the canvas clips it, which is the crop. CONTAIN
-       scales the long side to fit so the whole image is visible. Both centre
+       scales the long side to fit so the whole image is visible. Both center
        the result, and both keep the aspect ratio — a non-square photo cannot
        fill a square without either cropping or letterboxing, so the choice is
        which one you want rather than something to be solved.

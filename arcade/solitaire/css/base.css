@@ -25,7 +25,7 @@
     --desktop-lo:   #001e1e;
 
     /* ── Window chrome — classic silver ─────────────────── */
-    --chrome-bg:    #c0c0c0;   /* Win3.1 / Win95 grey */
+    --chrome-bg:    #c0c0c0;   /* Win3.1 / Win95 gray */
     --chrome-light: #e0e0e0;
     --chrome-dark:  #808080;
     --chrome-hilit: #ffffff;
@@ -237,7 +237,7 @@ body.game-active a.mc-back {
 .suit-cyan  { color: var(--cyan); }
 .red-suit   { color: var(--suit-red); }
 
-/* ── Base buttons — Win3.1 raised grey ───────────────────── */
+/* ── Base buttons — Win3.1 raised gray ───────────────────── */
 button {
     font-family: 'Orbitron', sans-serif;
     font-size: 8px;

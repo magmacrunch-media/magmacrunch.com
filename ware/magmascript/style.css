@@ -269,7 +269,7 @@ main {
 
 /* One run paints up to three streams: what the program printed, the
    "spooked:" warnings it raised on stderr (overflow, ancient weeds), and the
-   fault that stopped it. Colours match the console-line palette below. */
+   fault that stopped it. Colors match the console-line palette below. */
 .out-stdout,
 .out-warn,
 .out-error {

@@ -13,7 +13,7 @@
 
    Tokens, all with defaults matching album-art-maker:
      --dd-border-w   border width on the trigger and the option list
-     --dd-accent     open/hover colour
+     --dd-accent     open/hover color
      --dd-glow       accent at low alpha, for the box-shadow
      --dd-tint       accent at very low alpha, for option hover/active fills
      --dd-font-size  trigger label size (options are always 7px)

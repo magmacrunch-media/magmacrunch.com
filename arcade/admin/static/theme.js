@@ -272,7 +272,7 @@
                 {var:'--bbc-green',value:'#507840',label:'Green'},{var:'--bbc-green-light',value:'#80a858',label:'Green Light'},
                 {var:'--bbc-bridge-cool',value:'#6898a0',label:'Bridge Cool'},{var:'--bbc-bridge-warm',value:'#d09888',label:'Bridge Warm'},
                 {var:'--bbc-cream',value:'#f0e8d8',label:'Cream'},{var:'--bbc-sea-mist',value:'#c8e0d8',label:'Sea Mist'},
-                {var:'--bbc-warm-grey',value:'#7a6858',label:'Warm Grey'},{var:'--bbc-mauve',value:'#a07888',label:'Mauve'},
+                {var:'--bbc-warm-grey',value:'#7a6858',label:'Warm Gray'},{var:'--bbc-mauve',value:'#a07888',label:'Mauve'},
                 {var:'--bbc-sage',value:'#3a5840',label:'Sage'},{var:'--bbc-apricot',value:'#f0c0a0',label:'Apricot'},
                 {var:'--bbc-bg',value:'#070906',label:'BG'}
             ],
@@ -338,7 +338,7 @@
                 {var:'--jm-deep-cool',value:'#383e48',label:'Deep Cool'},{var:'--jm-mid-cool',value:'#6070a0',label:'Mid Cool'},
                 {var:'--jm-light-cool',value:'#c0ccd8',label:'Light Cool'},{var:'--jm-deep-warm',value:'#786050',label:'Deep Warm'},
                 {var:'--jm-pale-warm',value:'#f0e8d8',label:'Pale Warm'},{var:'--jm-deep-sage',value:'#587868',label:'Deep Sage'},
-                {var:'--jm-muted-rose',value:'#c8a8a8',label:'Muted Rose'},{var:'--jm-blue-grey',value:'#6a7088',label:'Blue Grey'},
+                {var:'--jm-muted-rose',value:'#c8a8a8',label:'Muted Rose'},{var:'--jm-blue-grey',value:'#6a7088',label:'Blue Gray'},
                 {var:'--jm-near-white',value:'#f5f0ec',label:'Near White'},{var:'--jm-periwinkle',value:'#9090b8',label:'Periwinkle'},
                 {var:'--jm-pale-sage',value:'#b0c8b8',label:'Pale Sage'},{var:'--jm-dusty-plum',value:'#786878',label:'Dusty Plum'},
                 {var:'--jm-near-black',value:'#0e1014',label:'Near Black'}

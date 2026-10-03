@@ -57,14 +57,14 @@ const CONFIG = {
 
     PLAYER_SPRITE_W: 16,
     PLAYER_SPRITE_H: 12,
-    // Hit box is smaller than the sprite and centred - the margin favours the
+    // Hit box is smaller than the sprite and centered - the margin favours the
     // player, the way jovian's contact boxes do. Fins and tank do not kill.
     PLAYER_W: 12,
     PLAYER_H: 8,
     get PLAYER_HALF() { return this.PLAYER_W / 2; },
 
     // Where the diver sits on the scroll axis, as a fraction of the canvas.
-    // Ahead of centre so most of the lamp cone shows the way you are going.
+    // Ahead of center so most of the lamp cone shows the way you are going.
     RAIL_POS: 0.38,
 
     // ── Air ───────────────────────────────────────────────────────────
@@ -88,7 +88,7 @@ const CONFIG = {
     // Half-angle of the bright cone. 0.40 rad is a ~46-degree beam, which is
     // a headlamp. The first pass used 0.85 and the two cones together spread
     // 166 degrees, which is not a beam at all - it read as a round blob
-    // centred on the diver and gave away no facing whatsoever.
+    // centered on the diver and gave away no facing whatsoever.
     LAMP_CONE: 0.40,
     LAMP_HALO: 26,           // always-lit radius around the diver
     // Darkness is not opacity 1. Hazards stay faintly readable outside the
@@ -126,7 +126,7 @@ const CONFIG = {
     get CLEARANCE_MIN() { return this.PLAYER_W + this.CLEARANCE_MARGIN; },
 
     // Deepest a wall protrusion may reach, as a fraction of the passage. See
-    // entities.js: this is what keeps the centreline a usable line.
+    // entities.js: this is what keeps the centerline a usable line.
     PROTRUSION_MAX_SPAN: 0.5,
     // Spacing between hazards, in frames of scroll. 42 was one rock every
     // 0.7s - four on screen at once in a shaft - and a competent simulated

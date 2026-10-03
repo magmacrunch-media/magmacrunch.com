@@ -212,7 +212,7 @@
       const baseG = LIQ_TOP[1] + (LIQ_BOT[1] - LIQ_TOP[1]) * t;
       const baseB = LIQ_TOP[2] + (LIQ_BOT[2] - LIQ_TOP[2]) * t;
 
-      // Underlight centred on the crater row. It has to fade downward as
+      // Underlight centered on the crater row. It has to fade downward as
       // well as up: cutting it off flat at the crater drew a hard horizontal
       // seam across the liquid either side of the mountain.
       const reach = y <= CRATER_TOP ? GLOW_REACH : GLOW_REACH * 0.45;
@@ -380,7 +380,7 @@
       const p = b.phase + frame * b.speed;
       const y = mid + Math.sin(p) * amp;
       const x = CENTER + Math.sin(p * b.swaySpeed) * b.sway;
-      // Squash on the way up, stretch on the way down: cheap wax behaviour.
+      // Squash on the way up, stretch on the way down: cheap wax behavior.
       const stretch = 1 + Math.cos(p) * 0.28;
       const r = b.rBase * (1 + Math.sin(p * 1.7) * 0.18);
 

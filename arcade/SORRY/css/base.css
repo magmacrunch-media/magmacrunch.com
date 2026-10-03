@@ -62,7 +62,7 @@ body {
   overflow-x: hidden;
 }
 
-/* During gameplay remove body padding so no grey gap shows around the board */
+/* During gameplay remove body padding so no gray gap shows around the board */
 body.game-active {
   padding: 0;
   background: #000;

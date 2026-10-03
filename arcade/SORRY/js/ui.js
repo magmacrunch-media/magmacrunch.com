@@ -440,7 +440,7 @@ function _lightenHex(hex, lightness) {
   var hueDeg = h * 360;
 
   // Target: medium lightness (0.68–0.78) with healthy saturation so tiles are
-  // clearly coloured but don't obscure pawns.
+  // clearly colored but don't obscure pawns.
   // For nearly-identical hues (e.g. Cherry vs Watermelon both at ~350°), we use
   // the original color's OWN lightness as a tiebreaker — darker source → darker tint,
   // lighter source → lighter tint — giving visual separation even at the same hue.
@@ -744,7 +744,7 @@ function showGameView() {
   var mcBack = document.querySelector('.mc-back');
   if (mcBack) mcBack.style.display = 'none';
 
-  // Remove body padding so no grey/dark gap surrounds the game area
+  // Remove body padding so no gray/dark gap surrounds the game area
   document.body.classList.add('game-active');
 
   // Inject in-game color-change button next to the color badge (non-spectators only)
@@ -1023,7 +1023,7 @@ Multiplayer.onLobbyUpdate = function(data) {
 
   // Sync _selectedColor from server: if we've joined but our local _selectedColor
   // doesn't match what the server assigned (e.g. auto-assign on join, or a successful
-  // change_color), update it so our own swatch is never wrongly greyed out.
+  // change_color), update it so our own swatch is never wrongly grayed out.
   if (_hasJoined && !_isSpectator) {
     var myName = Multiplayer.getMyName();
     var myInfo = playersInfo.find(function(p) { return p.name === myName; });

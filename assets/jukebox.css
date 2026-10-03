@@ -4,9 +4,9 @@
    ═══════════════════════════════════════════════ */
 
 /* ── ROOT CONTAINER ──
-   A flex child of the nav, in the dead centre of the bar. flex-grow - not
+   A flex child of the nav, in the dead center of the bar. flex-grow - not
    the nav's own auto margins, which resolve after it - takes the whole gap
-   between the brand and the section links, so the pill centres in the space
+   between the brand and the section links, so the pill centers in the space
    that is actually there and its label truncates rather than colliding with
    the links. Stretched to the nav's full height so the drop panel anchors to
    the bar's bottom edge, the same edge the nav dropdowns hang from. */
@@ -126,7 +126,7 @@
 
 /* ── DROP PANEL ──
    The same pattern as a nav dropdown: absolutely anchored below the 48px bar,
-   centred on the pill's container. 300px at the centre of the window cannot
+   centered on the pill's container. 300px at the center of the window cannot
    clip above ~640px, and below 900px the widget is not shown at all - see the
    NARROW block at the foot of this file. One wrapper carries header + window
    so both keep their separate max-height transitions at a single anchor. ── */
@@ -469,7 +469,7 @@ body:has(main .jukebox) .mcj {
 /* ── NARROW ──
    nav.js no longer loads the widget under 900px or on a coarse pointer, so
    this block is reached only by a desktop window dragged narrow after the
-   page loaded. The centre gap between the brand and the eight section links
+   page loaded. The center gap between the brand and the eight section links
    is not wide enough to hold the pill below 900px (brand + padding + links
    come to ~670px), so it hides rather than squeezing the links. ── */
 @media (max-width: 900px) {

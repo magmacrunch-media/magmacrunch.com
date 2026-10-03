@@ -7,7 +7,7 @@
  * the shell draws the chrome and each app picks the palette — but it means the
  * contract is enforced by nothing. A `var()` with no fallback and no definition
  * does not fall back to black or to inherit; the whole declaration is dropped.
- * An app that forgets --dim loses every dim-coloured label and the page still
+ * An app that forgets --dim loses every dim-colored label and the page still
  * renders, still deploys, and still looks plausible.
  *
  * This repo has already paid for the un-guarded version of exactly this shape.
@@ -111,11 +111,11 @@ if (checked === 0) {
 
 if (failed) {
   console.error(
-    `\n${failed} page(s) load the shell without honouring its token contract.\n` +
+    `\n${failed} page(s) load the shell without honoring its token contract.\n` +
     `Define the missing properties on :root in that app's own stylesheet, which\n` +
     `loads after the shell. An undefined var() drops the whole declaration.`
   );
   process.exit(1);
 }
 
-console.log(`\nAll ${checked} shell page(s) honour the token contract.`);
+console.log(`\nAll ${checked} shell page(s) honor the token contract.`);

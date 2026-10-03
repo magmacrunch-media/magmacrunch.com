@@ -301,7 +301,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
     }
 
     /* ── NOW-PLAYING READOUT ──
-       The centre of the nav is dead space: at 1440px the brand ends at x=159
+       The center of the nav is dead space: at 1440px the brand ends at x=159
        and the links begin at x=932. A line of text there says what the site is
        doing in the site's own masthead, which a pill in the bottom corner
        cannot - that corner is where support bubbles and cookie banners live,
@@ -403,7 +403,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
             /* ── COLLAPSED PILL ──
                The disc alone says nothing. It carried a label until 79ddd5c4
                stripped the collapsed bar to a bare 48px square, and at that
-               size the vinyl reads as a grey circle to anyone who has not been
+               size the vinyl reads as a gray circle to anyone who has not been
                told. Restored 2026-09-26. Moved into the nav 2026-09-27, and
                the label now doubles as the now-playing readout - see
                updateBarLabel. ── */
@@ -448,7 +448,7 @@ var audioSrc = function (path) { return path.replace(/\.ogg$/, AUDIO_EXT); };
                 '</div>' +
             '</div>';
 
-        // Before the links, so it lands in the dead centre of the bar: the gap
+        // Before the links, so it lands in the dead center of the bar: the gap
         // between the brand and the section links. insertBefore with a null
         // reference appends, which is the right fallback for a nav built
         // without a .nav-links list. The nav survives SPA swaps, so the widget

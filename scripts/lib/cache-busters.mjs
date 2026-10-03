@@ -28,7 +28,7 @@ import { createHash } from 'node:crypto';
 import { posix } from 'node:path';
 
 /**
- * First 8 hex of sha256 over the content with newlines normalised to LF.
+ * First 8 hex of sha256 over the content with newlines normalized to LF.
  *
  * .gitattributes deliberately pins only the files the Pi executes (*.sh, *.py,
  * *.yml, *.conf) to LF. .js and .css are left to each clone's core.autocrlf, so
@@ -132,8 +132,8 @@ export const GENERATED = new Set(['visual/tv/channels.js']);
  * there as the quoted attribute value, so repeated hrefs on a page each get
  * their own correct stamp.
  *
- * Written back as read. digest() normalises CRLF to LF to hash, which is right
- * for hashing and would be wrong here: writing a normalised string back would
+ * Written back as read. digest() normalizes CRLF to LF to hash, which is right
+ * for hashing and would be wrong here: writing a normalized string back would
  * silently convert a CRLF page to LF and bury a one-token change under a
  * whole-file diff.
  */

@@ -298,7 +298,7 @@
             Renderer.glow(ctx, lampPos.x, lampPos.y, CONFIG.LAMP_HALO * 1.6, '255,243,196', 0.16);
         }
 
-        // Ambient darkness is high from the first metre - it is a cave, and a
+        // Ambient darkness is high from the first meter - it is a cave, and a
         // lit cave that gradually dims is a worse read than a dark one that
         // stays dark. What actually shrinks with depth is the LAMP RADIUS.
         // The first pass scaled ambient by seg.dark directly and gave the

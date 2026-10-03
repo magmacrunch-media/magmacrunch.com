@@ -105,7 +105,7 @@ function mainCheckout(root) {
  * Beside this repo is the documented layout and what a fresh clone gets; a
  * wider tree instead groups repos by kind, putting the games under games/ while
  * this repo sits in web/ -- so both have to resolve, or the browser version
- * becomes undeployable the moment anyone reorganises.
+ * becomes undeployable the moment anyone reorganizes.
  *
  * GAME_REPOS names a directory holding every checkout, which is what CI
  * has: the workflow checks each repo out under one path, and neither sibling

@@ -5,7 +5,7 @@
 
 /* Both faces, self-hosted, so this page needs no Google Fonts round trip.
    `display=swap` was on the CDN URL these replaced, so `font-display: swap`
-   keeps the behaviour it had rather than quietly changing it. (The iOS bundle
+   keeps the behavior it had rather than quietly changing it. (The iOS bundle
    of makemecookies uses `block` instead, deliberately and for its own reason,
    which is written down there.)
 

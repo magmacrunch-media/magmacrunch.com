@@ -45,7 +45,7 @@ GlobalFonts.registerFromPath(FONT_PATH, 'Press Start 2P')
 //
 // The smaller text below stays on Press Start 2P deliberately: at 14px and 10px
 // an 8px grid is the right one, and a 16px face would be rendered BELOW its
-// design size, where a 1px stem turns to grey.
+// design size, where a 1px stem turns to gray.
 const TITLE_FONT_PATH = join(ROOT, 'fonts', 'LithoDisplay-Regular.ttf')
 if (!existsSync(TITLE_FONT_PATH)) {
   console.error('Font not found at', TITLE_FONT_PATH)

@@ -59,7 +59,7 @@ body.game-active .mc-back {
 
 canvas {
     /* Everything is drawn on a 480x270 grid and scaled up. Smoothing turns the
-       rock edges and the lamp cone into a grey wash. */
+       rock edges and the lamp cone into a gray wash. */
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     display: block;

@@ -31,7 +31,7 @@ const PAL = {
 /**
  * Blit a string-row sprite at integer pixel coordinates.
  * `flipX` / `flipY` mirror it without touching the transform stack, so the
- * grid stays exact. `over` recolours single characters for one call.
+ * grid stays exact. `over` recolors single characters for one call.
  *
  * `only` restricts the blit to the characters it contains. That exists for the
  * darkness: the visor and the lamp are drawn a second time ABOVE the mask, so

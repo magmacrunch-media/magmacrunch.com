@@ -130,7 +130,7 @@ main .breadcrumb-place .current { color: var(--green); }
    every hero: the selector wants .artist-header between .artist-hero and
    .sub-nav, and svfp, thld and juanito-thompson nest .sub-nav straight in
    .hero-inner, so those three wrapped while the other eighteen squashed
-   their buttons into a single row. Three behaviours for one component.
+   their buttons into a single row. Three behaviors for one component.
    The cause is handled at the source instead -- every hero preloads
    PressStart2P-Regular.woff2, so the font is present at first paint and
    there is no swap left to reflow. All archive pages now wrap. */
