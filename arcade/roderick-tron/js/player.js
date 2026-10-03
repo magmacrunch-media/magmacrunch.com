@@ -81,12 +81,33 @@ Player.prototype.update = function (dt) {
     if (this.invincible > 0) this.invincible -= dt;
     if (this.shootCooldown > 0) this.shootCooldown -= dt;
     if (this.shakeFrames > 0) this.shakeFrames -= dt;
-    if (Input.jump()) this.jumpBuffer = CONFIG.JUMP_BUFFER_FRAMES;
+    // Read the edge ONCE. Input.jump() is wasPressed(), which clears the flag
+    // as it reports it, so a second call in the same update always returns
+    // false — which is exactly what the drop-through check below used to do,
+    // and why holding down and pressing jump on a one-way platform did
+    // nothing at all.
+    const jumpPressed = Input.jump();
+    if (jumpPressed) this.jumpBuffer = CONFIG.JUMP_BUFFER_FRAMES;
 
     // ── Roll ──────────────────────────────────────────────
     // Committal on purpose: it locks facing and steering for its duration, so
     // the reward for the extra distance is that you had to mean it.
-    if (Input.roll() && !this.rolling && this.rollCooldown <= 0 && this.grounded) {
+    // `coyote > 0` rather than `grounded`, and it is not a forgiveness tweak —
+    // it is a bug fix. A body at rest or running on flat brick alternates
+    // grounded true/false EVERY FRAME: gravity sinks it 0.44px, too little for
+    // the bottom-1 row of tileRange to reach the floor tile, so the next step
+    // snaps it back. Gating the roll on `grounded` therefore threw away 53% of
+    // roll presses at random — measured, 56 accepted out of 120 frames of
+    // running — and the roll is the move the seven-tile gap in ROOFTOP REQUIEM
+    // cannot be crossed without.
+    //
+    // coyote is refreshed on every one of those landings, so it stays positive
+    // across the flicker and reads "on the ground, or only just off it", which
+    // is the question actually being asked. It also lets a roll start inside
+    // the coyote window off a real ledge, which is the technique this game
+    // already documents rather than a new one.
+    if (Input.roll() && !this.rolling && this.rollCooldown <= 0
+            && (this.grounded || this.coyote > 0)) {
         this.rolling = true;
         this.rollTimer = CONFIG.ROLL_FRAMES;
         if (dir !== 0) this.facing = dir;
@@ -192,7 +213,7 @@ Player.prototype.update = function (dt) {
     this.map.moveX(this.box, this.vx * dt);
 
     const wasGrounded = this.grounded;
-    const dropping = Input.down() && Input.jump();
+    const dropping = Input.down() && jumpPressed;
     const land = this.map.moveY(this.box, this.vy * dt, dropping);
 
     if (land.ground) {
