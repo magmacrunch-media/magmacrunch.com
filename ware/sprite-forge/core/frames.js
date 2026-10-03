@@ -60,7 +60,7 @@ window.SpriteForge.frames = (function () {
     /**
      * Can the frame at `index` move by `delta`?
      *
-     * The buttons ask this to grey themselves out. It is deliberately a
+     * The buttons ask this to gray themselves out. It is deliberately a
      * separate question from reorder's null: a disabled button is the answer
      * given BEFORE the click, and an editor that lets you press a thing that
      * cannot work has already wasted the press.
@@ -150,7 +150,7 @@ window.SpriteForge.frames = (function () {
      *
      * Both directions: onion skinning is as much about the pose you are heading
      * for as the one you came from, and the editor tints them apart rather than
-     * leaving you to guess which grey is which.
+     * leaving you to guess which gray is which.
      *
      * Wraps, because these animations loop — the frame before the first IS the
      * last, and lining the two up is exactly the join a walk cycle lives or
@@ -179,7 +179,7 @@ window.SpriteForge.frames = (function () {
         // frames the other has already claimed — on four frames, three steps
         // back is one step forward. Without this they are ghosted twice, at two
         // different alphas, which is a frame that looks more solid than its
-        // neighbours for no reason on screen.
+        // neighbors for no reason on screen.
         const seen = new Set([index]);
         for (let dist = 1; dist <= reach; dist++) {
             const alpha = ONION_ALPHA * (reach - dist + 1) / reach;

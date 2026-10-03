@@ -1,6 +1,6 @@
 // menu.js — what this app's menu items mean.
 //
-// The bar's behaviour — open, close, hover-to-switch, Escape, the state
+// The bar's behavior — open, close, hover-to-switch, Escape, the state
 // refresh on every open — moved to MagmaKit.menu in magma-kit 0.2.0, extracted
 // from THIS file once album//art became the second app with a menu bar. The
 // reasoning that put it in the page rather than in the OS went with it.
@@ -8,7 +8,7 @@
 // What is left is the only part that was ever about sprites: the actions map,
 // and the two predicates that say when an item is dead.
 //
-// IT STILL OWNS NO BEHAVIOUR. Every item routes to something that already
+// IT STILL OWNS NO BEHAVIOR. Every item routes to something that already
 // exists, and the View items proxy the toolbar buttons they name BY CLICKING
 // THEM — so the menu never becomes a second implementation of a toggle that
 // can drift from the button.
@@ -66,7 +66,7 @@
         if (action === 'edit:undo') return { disabled: !E().canUndo() };
         if (action === 'edit:redo') return { disabled: !E().canRedo() };
         // The four that need something selected, and the one that needs
-        // something copied. Greying them is the menu saying what the toast
+        // something copied. Graying them is the menu saying what the toast
         // would have had to say after the click.
         if (action === 'edit:cut' || action === 'edit:copy'
             || action === 'edit:delete' || action === 'edit:select-none')

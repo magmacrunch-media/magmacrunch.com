@@ -16,7 +16,7 @@
 // the size of the marquee, which is almost never what was meant. Delete is how
 // you punch a hole, and it says so.
 //
-// **A move clips, it does not wrap.** core/sheet.js's neighbour in the editor,
+// **A move clips, it does not wrap.** core/sheet.js's neighbor in the editor,
 // shiftFrame, rotates the whole frame and pixels come back round the other
 // side; that is a frame-wide operation and wrapping is its point. Dragging a
 // region off the edge loses what goes over, the way dragging anything off a

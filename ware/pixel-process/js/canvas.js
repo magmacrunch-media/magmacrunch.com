@@ -136,7 +136,7 @@
 
     /* The graticule: the grid an oscilloscope draws over its screen so a
        signal can be read against it. Ten divisions each way, dotted, with the
-       centre axes solid and ticked at a fifth of a division, the way a scope
+       center axes solid and ticked at a fifth of a division, the way a scope
        face is marked.
 
        It is drawn on the DISPLAY canvas, after the picture, and never on the
@@ -164,19 +164,19 @@
      *
      * So one division is a fixed number of pixels, ten across the SHORTER
      * side, and the longer side gets however many fit. The grid is drawn
-     * outward from the centre, as a scope's is: the centre lines are the axes
+     * outward from the center, as a scope's is: the center lines are the axes
      * and everything is measured from them, which also puts the partial cells
-     * at the edges where they belong rather than leaving the axes off centre.
+     * at the edges where they belong rather than leaving the axes off center.
      */
     var DIVISIONS = 10;   // across the shorter side
-    var SUBDIVS = 5;      // ticks per division on the centre axes
+    var SUBDIVS = 5;      // ticks per division on the center axes
 
     function drawGraticule() {
         if (!graticuleOn) return;
         var W = displayCanvas.width, H = displayCanvas.height;
         var g = displayCtx;
         var div = Math.min(W, H) / DIVISIONS;
-        if (div < 4) return;   // too small to read; a grey wash would be worse
+        if (div < 4) return;   // too small to read; a gray wash would be worse
 
         var cx = Math.round(W / 2) + 0.5, cy = Math.round(H / 2) + 0.5;
         var k, at;

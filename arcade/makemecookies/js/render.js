@@ -61,7 +61,7 @@ function wantsAttention(st, i) {
 }
 
 /**
- * One number and one colour per station: how full, and how worried.
+ * One number and one color per station: how full, and how worried.
  * This single bar is what makes five simultaneous timers legible — the
  * machines themselves are scenery.
  */
@@ -152,7 +152,7 @@ function drawShiftBar(ctx, st) {
 // Each station sits on the pixel grid at a fixed origin. Keeping these as
 // constants rather than deriving them per frame means a sprite never
 // half-steps between grid cells when a bay is resized.
-// The machines are drawn at a coarser grid than the things travelling
+// The machines are drawn at a coarser grid than the things traveling
 // between them. At PIXEL they left the top third of every bay empty; at MACH
 // they fill it, and the items stay at PIXEL so a ball is never wider than
 // ITEM_GAP and two on the belt cannot visually overlap.

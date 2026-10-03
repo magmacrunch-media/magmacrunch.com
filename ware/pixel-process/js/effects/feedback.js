@@ -17,7 +17,7 @@
        255. Dropping it removes a quarter of the memory and a quarter of the
        work.
 
-       The three colour channels never interact. The spatial transform is
+       The three color channels never interact. The spatial transform is
        identical for all of them and the blend is per channel, so they can run
        one at a time over a buffer a third the size, which is also far kinder to
        cache.

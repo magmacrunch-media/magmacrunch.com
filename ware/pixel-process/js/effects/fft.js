@@ -10,7 +10,7 @@
      * the rest of the picture copied through untouched. On a 1024 by 768 image
      * that filtered one corner. It read luminance only and folded the result
      * back in as a ratio, which cannot be right for a high pass, where the
-     * filtered signal is centred on zero and the ratio becomes a division by
+     * filtered signal is centered on zero and the ratio becomes a division by
      * noise.
      *
      * This covers the whole image. Both sides are padded out to their own next
@@ -30,7 +30,7 @@
      *
      * ## Luminance is applied as a difference, not a ratio
      *
-     * In luma mode the filtered luminance is added to each colour channel as a
+     * In luma mode the filtered luminance is added to each color channel as a
      * signed delta. That works for every filter type, keeps hue, and never
      * divides by a pixel that is legitimately near zero. RGB mode filters the
      * three channels independently and costs three transforms.
@@ -172,7 +172,7 @@
      *
      * The spectrum is left where the transform puts it, DC at index 0 and
      * frequencies wrapping at the midpoint, rather than being shifted to the
-     * centre and shifted back afterwards. That saves two full passes over the
+     * center and shifted back afterwards. That saves two full passes over the
      * plane, and a wrapped index gives up its radius just as easily. */
     function filterPlane(w2, h2, type, cut, wid, gain) {
         fft2d(reBuf, imBuf, w2, h2, false);
@@ -309,7 +309,7 @@
     /* ── SPECTRUM ──
      *
      * Not a filter: it replaces the picture with its own frequency content, DC
-     * in the middle, low frequencies near the centre and high ones out at the
+     * in the middle, low frequencies near the center and high ones out at the
      * edges. Magnitudes span several orders of magnitude, so it is drawn on a
      * log scale and normalized to its own maximum. On a linear scale it is one
      * bright dot at DC and nothing else.
@@ -337,7 +337,7 @@
              * DC is the sum of every pixel, so for a 256 square image of
              * ordinary brightness it is around eight million while a strong
              * frequency component is a few thousand. Dividing by it crushes the
-             * entire display: measured on colour bars, the drawn spectrum came
+             * entire display: measured on color bars, the drawn spectrum came
              * back with a mean of 1 out of 255, which is a black rectangle with
              * a couple of lit pixels in it. Correct, and useless.
              *
@@ -459,7 +459,7 @@
         spatial: null,
         defaults: { angle: 90, spread: 25, mode: 0, channels: 0 },
         fn: function(src, dst, p, w, h) {
-            var centre = (p.angle * Math.PI) / 180;
+            var center = (p.angle * Math.PI) / 180;
             var spread = Math.max(0.01, (p.spread * Math.PI) / 180);
             var remove = p.mode ? 1 : 0;
             var HALF_PI = Math.PI / 2;
@@ -474,7 +474,7 @@
                         if (dx === 0 && dy === 0) continue; // DC always survives
 
                         // Fold the angle difference into -90..90 degrees.
-                        var diff = Math.atan2(dy, dx) - centre;
+                        var diff = Math.atan2(dy, dx) - center;
                         diff = ((diff % Math.PI) + Math.PI + HALF_PI) % Math.PI - HALF_PI;
                         diff = Math.abs(diff);
 

@@ -55,7 +55,7 @@ window.SpriteForge.mesh = (function () {
                 pts.push(p);
                 // On a unit sphere about the origin the vertex normal IS the
                 // position. At a pole w is 0 and the position is (0, +-1, 0),
-                // which still normalises.
+                // which still normalizes.
                 normals.push(norm(p));
                 uvs.push([u, v]);
             }

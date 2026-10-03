@@ -6,7 +6,7 @@
 // ── Cards and hand evaluation ────────────────────────────────
 // All of it now comes from AdCards (../shared/adenosine-cards.js):
 //   - AdCards.HandEvaluator replaces the old js/hand-eval.js. Verified
-//     behaviourally identical over 20,000 random 2-7 card hands.
+//     behaviorally identical over 20,000 random 2-7 card hands.
 //   - AdCards.HAND_RANKS and AdCards.HAND_POINTS hold the values that used to be
 //     declared here; they match exactly.
 //   - Card constants (SUITS, RANKS, SUIT_SYMBOLS, SUIT_COLORS, RANK_VALUES) were

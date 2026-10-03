@@ -3,7 +3,7 @@
 // JSON, and deliberately diffable, because these files get checked into game
 // repos next to the art they produce. Frames are rows of single characters
 // indexing a shared key, the same encoding core/templates.js uses and for the
-// same stated reason: a recolour should be a one-line diff, not a rewritten
+// same stated reason: a recolor should be a one-line diff, not a rewritten
 // blob, and a reviewer should be able to see the sprite in the file.
 //
 // The key is shared across every sprite in the project rather than per-sprite,
@@ -48,14 +48,14 @@ window.SpriteForge.project = (function () {
     }
 
     /**
-     * Every colour the project would have to name, palette first.
+     * Every color the project would have to name, palette first.
      *
      * The pixels unioned with the palette, because neither alone is the whole
      * answer. Harvesting from pixels alone would drop an unused swatch the user
-     * deliberately mixed; taking the palette alone would drop a colour that
+     * deliberately mixed; taking the palette alone would drop a color that
      * reached the canvas by import or REPLACE and never entered it.
      *
-     * Separate from serialize() so the app can ask how many colours a project
+     * Separate from serialize() so the app can ask how many colors a project
      * is carrying without trying to encode it and catching the failure.
      */
     function colorsOf(p) {
@@ -71,15 +71,15 @@ window.SpriteForge.project = (function () {
      * The `limit` most useful swatches of a project's palette.
      *
      * The editor has a fixed number of palette slots and a .forge may carry
-     * more colours than that: the import script writes up to the key's width.
+     * more colors than that: the import script writes up to the key's width.
      * Something has to be left out, and taking the first `limit` would leave
      * the swatches describing the order the file happens to list them in
      * rather than the art. The ones the pixels actually use come first,
      * commonest first, so what is on screen is what you can reach for. Slots
      * left over go to swatches nothing has used yet, in their own order —
-     * those are colours somebody mixed on purpose, and there is room.
+     * those are colors somebody mixed on purpose, and there is room.
      *
-     * Only the palette is cut. The pixels keep every colour they had; the key
+     * Only the palette is cut. The pixels keep every color they had; the key
      * holds far more than the palette does, and losing art to a display limit
      * would be the wrong trade entirely.
      */
@@ -101,11 +101,11 @@ window.SpriteForge.project = (function () {
     }
 
     /**
-     * The same project with every colour rewritten through `map`.
+     * The same project with every color rewritten through `map`.
      *
-     * Palette, slots and pixels together, because a colour that moves has to
-     * move everywhere. A swatch left behind would draw a colour nothing else
-     * in the project uses, and a slot left behind would recolour nothing.
+     * Palette, slots and pixels together, because a color that moves has to
+     * move everywhere. A swatch left behind would draw a color nothing else
+     * in the project uses, and a slot left behind would recolor nothing.
      *
      * `palette` overrides what the swatches become, for the caller that is
      * replacing them outright rather than moving them.
@@ -127,14 +127,14 @@ window.SpriteForge.project = (function () {
     }
 
     /**
-     * The same project drawn in `palette`, every colour snapped to its nearest
+     * The same project drawn in `palette`, every color snapped to its nearest
      * entry.
      *
      * A theme used to replace the swatches and leave every pixel where it was,
      * which meant the palette stopped describing the art the moment it was
-     * applied, and the project quietly carried both sets of colours. Nearest
+     * applied, and the project quietly carried both sets of colors. Nearest
      * rather than by index: these themes are arbitrary lists, so swatch 5 and
-     * theme colour 5 have nothing to do with each other, while nearest keeps
+     * theme color 5 have nothing to do with each other, while nearest keeps
      * a dark outline dark and the art readable. It also answers for pixels
      * that were never in the palette and for a theme of a different length.
      */
@@ -147,22 +147,22 @@ window.SpriteForge.project = (function () {
     }
 
     /**
-     * The same project using at most `limit` colours, by snapping the ones it
+     * The same project using at most `limit` colors, by snapping the ones it
      * drops onto the nearest ones it keeps.
      *
      * The ceiling is real and reachable without doing anything wrong. The
      * palette is shared across the whole project but the pixels are not bound
      * to it: importing a PNG into each of three sprites, or applying a theme
-     * between drawing sessions, leaves colours behind in sprites nothing is
-     * pointing at any more. Three thirty-two-colour imports is ninety-six, and
+     * between drawing sessions, leaves colors behind in sprites nothing is
+     * pointing at any more. Three thirty-two-color imports is ninety-six, and
      * the key holds eighty-nine.
      *
      * The palette survives whole — those are swatches somebody mixed on
      * purpose, and it is never bigger than the key. What is left of the budget
-     * goes to the commonest colours in the pixels, counted across every sprite,
+     * goes to the commonest colors in the pixels, counted across every sprite,
      * so the ones carrying the art outrank a stray pixel. Slots are remapped
-     * with everything else: a slot still pointing at a dropped colour would
-     * recolour nothing.
+     * with everything else: a slot still pointing at a dropped color would
+     * recolor nothing.
      *
      * Nothing is reduced unless it has to be — a project already inside the
      * limit comes back unchanged, by identity.
@@ -190,14 +190,14 @@ window.SpriteForge.project = (function () {
         const snap = {};
         for (const hex of inPixels) if (!kept.has(hex)) snap[hex] = nearestHex(hex, keep);
         // The palette is filtered rather than mapped: a swatch that did not fit
-        // would otherwise come back as a second copy of its nearest neighbour.
+        // would otherwise come back as a second copy of its nearest neighbor.
         return remap(p, snap, p.palette.filter(h => kept.has(h)));
     }
 
     /**
      * Project -> plain object ready for JSON.stringify.
      *
-     * Refuses rather than truncates when the colours will not fit. The key is
+     * Refuses rather than truncates when the colors will not fit. The key is
      * the only thing naming a pixel, so dropping one would blank part of a
      * sprite in a file that reported itself saved. reduce() is the way through,
      * and it is the caller's to offer because it changes the art.
@@ -206,7 +206,7 @@ window.SpriteForge.project = (function () {
         const colors = colorsOf(p);
         if (colors.length > ALPHABET.length)
             throw new Error(
-                `project uses ${colors.length} colours; the .forge key holds ${ALPHABET.length}`);
+                `project uses ${colors.length} colors; the .forge key holds ${ALPHABET.length}`);
 
         const key = {}, charOf = {};
         colors.forEach((hex, i) => { key[ALPHABET[i]] = hex; charOf[hex] = ALPHABET[i]; });
@@ -254,7 +254,7 @@ window.SpriteForge.project = (function () {
         for (const [ch, hex] of Object.entries(key)) {
             if (ch.length !== 1) errs.push(`key ${JSON.stringify(ch)} is not a single character`);
             if (ch === TRANSPARENT) errs.push(`key uses "${TRANSPARENT}", which is reserved for transparent`);
-            if (!/^#[0-9a-fA-F]{6}$/.test(hex)) errs.push(`key '${ch}' is ${JSON.stringify(hex)}, not a #rrggbb colour`);
+            if (!/^#[0-9a-fA-F]{6}$/.test(hex)) errs.push(`key '${ch}' is ${JSON.stringify(hex)}, not a #rrggbb color`);
         }
 
         (o.sprites || []).forEach((s, si) => {

@@ -7,7 +7,7 @@
 //
 // An element carries an opaque ref ('img7'). The bytes live here, keyed by
 // that ref. This indirection is the single most important decision in any
-// import path, and it is not a later optimisation.
+// import path, and it is not a later optimization.
 //
 // album//art measured what happens without it, and wrote the numbers down:
 // with the base64 payload ON the element, one 1600x1600 photo cost 11.2 MB per

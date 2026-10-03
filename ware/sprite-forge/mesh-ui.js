@@ -66,7 +66,7 @@
         // box beside the canvas, and appending it pushed the label past the
         // width the dock can spare and ellipsised the note instead.
         label.textContent = `surface — ${mesh.SHAPES[kind].note}`;
-        // Not while it is being typed into: draw() normalises the offset into
+        // Not while it is being typed into: draw() normalizes the offset into
         // the image width, and rewriting the box mid-keystroke would eat the
         // second digit of "32". Only on a change, because this runs on every
         // animation tick.

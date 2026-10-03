@@ -223,7 +223,7 @@
 
        js/preset.js needs to record what the picture was made from and put
        it back later, and until now that lived in `lastGenerator`, the seed
-       box and two colour pickers, none of which it could reach. An uploaded
+       box and two color pickers, none of which it could reach. An uploaded
        image reports itself as `image` and carries no pixels: a preset is a
        few hundred bytes of description and is not the place to put a photo,
        so applying one keeps whatever image is already loaded. */

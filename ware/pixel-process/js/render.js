@@ -194,7 +194,7 @@
         busy = false;
 
         // Anything but the newest render is stale. Only one request is ever in
-        // flight, so this is belt and braces rather than the main defence.
+        // flight, so this is belt and braces rather than the main defense.
         if (m.id === nextId) {
             Canvas.display(new ImageData(new Uint8ClampedArray(m.pixels), m.w, m.h));
             UI.updateStat(m.failures);

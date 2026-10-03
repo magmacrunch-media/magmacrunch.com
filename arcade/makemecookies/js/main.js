@@ -12,7 +12,7 @@ AdRPG.initCanvas(canvas);
 
 // ?debug turns the end-of-shift card into a readout. It exists because the
 // tuning was fitted by simulating shifts, and a simulated player is a perfect
-// prioritiser who never burns anything — so the numbers that matter most
+// prioritizer who never burns anything — so the numbers that matter most
 // (overmixed batches for readyMs, burnt trays for goldenMs) are exactly the
 // ones a bot cannot produce. This is how a real shift answers back.
 const DEBUG = new URLSearchParams(location.search).has('debug');
@@ -655,7 +655,7 @@ function setupListeners() {
  * by somebody remembering to re-export a PNG.
  *
  * The backing store is sized in WHOLE cells, and that is the only part
- * here with a way to go wrong: `sprite()` fills a run of same-coloured
+ * here with a way to go wrong: `sprite()` fills a run of same-colored
  * cells as one rect, so a fractional cell size lands those rects on
  * fractional pixels and leaves hairline seams between the runs. CSS then
  * scales the result to whatever the card has room for, which is safe

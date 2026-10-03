@@ -140,7 +140,7 @@ const TIDY_BONUS   = { threshold: 50, points: 250, label: 'TIDY' };
 //   *     8 cookies   a ~1100ms hand
 //
 // The bot ships 30 at 140ms and the oven's theoretical ceiling is ~33, so
-// three stars is about 73% of what a perfect prioritiser manages. It never
+// three stars is about 73% of what a perfect prioritizer manages. It never
 // plans, never holds a tray past four and never reads the HUD, so a human at
 // the same reaction time scores higher on about the same cookies -- which is
 // why the stars key on the count and the leaderboard keeps the score.

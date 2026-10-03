@@ -5,7 +5,7 @@
 // nothing else. A card cannot promise a rider something the physics does not
 // deliver, because the same multiplier draws the bar and drives the ride.
 //
-// Bars are RELATIVE, centred on 1.0. Two mappings are wrong before this one:
+// Bars are RELATIVE, centered on 1.0. Two mappings are wrong before this one:
 //
 //   round(mult * 10)   is what the board cards used to do, and it puts a 1.0
 //                      multiplier at a full bar — STANDARD, CRUISER and CARVER

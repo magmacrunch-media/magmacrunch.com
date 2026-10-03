@@ -8,7 +8,7 @@ const Renderer = {
      *
      * The canvas is 480x270 stretched to fill the viewport, so on anything
      * that is not an exact multiple some game pixels land two screen pixels
-     * wide and their neighbours one — a shimmer that is mild on a platformer
+     * wide and their neighbors one — a shimmer that is mild on a platformer
      * and severe here, because the whole frame is streaming toward the camera
      * at once. Snapping to an integer scale fixes it, but only above 2x:
      * rounding 1.6x down to 1x would shrink the game to a stamp.
@@ -36,7 +36,7 @@ const Renderer = {
         this.shake = Math.min(12, this.shake + amount);
     },
 
-    /** A coloured full-frame flash. Used for hits and for friendly fire. */
+    /** A colored full-frame flash. Used for hits and for friendly fire. */
     addFlash(amount, rgb) {
         this.flashAmount = Math.min(1, this.flashAmount + amount);
         this.flashColor = rgb || '255,255,255';
@@ -50,7 +50,7 @@ const Renderer = {
     /**
      * Offset to translate the frame by. Alternating sign per frame rather than
      * a random walk, so the shake reads as a rattle and cannot wander off
-     * centre and stay there.
+     * center and stay there.
      */
     shakeOffset(frame) {
         if (this.shake <= 0) return { x: 0, y: 0 };
@@ -63,7 +63,7 @@ const Renderer = {
 
     /**
      * Soft radial glow. Filling an arc at a flat low alpha does not read as
-     * light — it reads as a grey disc with a hard rim.
+     * light — it reads as a gray disc with a hard rim.
      */
     glow(ctx, x, y, radius, rgb, alpha) {
         if (radius <= 0) return;

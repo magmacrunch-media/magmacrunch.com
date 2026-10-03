@@ -1,6 +1,6 @@
 // ui/platform.js — what the keyboard is called here.
 //
-// The BEHAVIOUR is already right on every platform and none of it lives in
+// The BEHAVIOR is already right on every platform and none of it lives in
 // this file: MagmaKit.keys resolves `ctrl` from `ctrlKey || metaKey`, so Cmd+S
 // and Ctrl+S have always been the same binding. What is wrong on a Mac is only
 // what the app SAYS — "Ctrl+S" on a machine with no Ctrl key people use, and

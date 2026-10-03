@@ -49,7 +49,7 @@
    The app icon's cookie, on the card the app opens on. Painted from
    SPR_COOKIE_BIG into a canvas rather than shipped as a PNG or an SVG,
    which buys three things: it is the same table the icon script reads,
-   so the two cannot drift; it recolours with the game when the palette
+   so the two cannot drift; it recolors with the game when the palette
    moves; and it adds no asset to stamp, to sync, or for the bundle to
    go looking for.
 
@@ -119,7 +119,7 @@
 }
 
 /* The one that is actually the title: full size, full glow, and butter rather
-   than pink, which is where the X4's colour goes now the X4 is gone. */
+   than pink, which is where the X4's color goes now the X4 is gone. */
 .title-main .e4 {
   font-size: clamp(17px, 5vw, 42px);
   color: var(--butter);
@@ -266,12 +266,12 @@
   /* The mark rejoins the flow here, and this is a fix for a class rather
      than for the cookie that exposed it. Pinned to the floor it is
      absolutely positioned, so nothing in the card above can see it: the
-     flex column centres its content against a container that appears
+     flex column centers its content against a container that appears
      empty at the bottom, and whatever is last simply runs underneath.
 
      There was 29px of clearance before the cookie, which read as fine
      and was luck. The cookie costs 32px of it (64px of content, halved
-     by centring) and on an 812x375 phone with the home-indicator inset
+     by centering) and on an 812x375 phone with the home-indicator inset
      the buttons ended up 3px OVER the mark. The next thing added to this
      card would have found the same trap with no warning.
 

@@ -73,7 +73,7 @@
 
     /** A picker the user dismissed throws AbortError. Every caller in the UI
      *  treats a falsy return as "cancelled", so that is what it becomes; any
-     *  other failure is real and keeps travelling. */
+     *  other failure is real and keeps traveling. */
     const cancelled = (e) => e && (e.name === 'AbortError' || e.name === 'NotAllowedError');
 
     /* Writing to a handle from showOpenFilePicker needs readwrite, which the

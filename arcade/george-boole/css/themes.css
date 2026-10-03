@@ -676,7 +676,7 @@ body[data-theme="neogeo"] .tile[data-intensity="3"] { background: #bb0066; }
 body[data-theme="neogeo"] .tile[data-intensity="4"] { background: #0088aa; }
 body[data-theme="neogeo"] .tile[data-intensity="5"] { background: #00aacc; }
 
-/* PS1: very dark grey → charcoal → silver → near-white; gold text on dark, dark text on light */
+/* PS1: very dark gray → charcoal → silver → near-white; gold text on dark, dark text on light */
 body[data-theme="ps1"] .tile[data-intensity="1"] { background: #252525; color: #ffd700; }
 body[data-theme="ps1"] .tile[data-intensity="2"] { background: #404040; color: #ffd700; }
 body[data-theme="ps1"] .tile[data-intensity="3"] { background: #606060; color: #1a1a1a; }

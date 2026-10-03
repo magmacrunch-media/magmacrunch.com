@@ -31,7 +31,7 @@
        Callers roll the seed; these functions never invent one. An omitted
        seed is 0, which is a real image rather than a random one, and that is
        deliberate: a generator that quietly reseeded itself when asked for
-       nothing would be the old behaviour wearing the new signature. */
+       nothing would be the old behavior wearing the new signature. */
     var generators = {
         'white-noise': function(w, h, seed) {
             var rng = Chain.rng((seed | 0) * 24571 + 15485);

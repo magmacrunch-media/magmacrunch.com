@@ -5,7 +5,7 @@
 // the format magnolia reads out of a game's sprites/ directory and the one
 // texastoast's SpriteSheet(path, w, h) slices, so one sheet feeds both.
 //
-// Everything that only transforms data now lives in core/ — colour and the
+// Everything that only transforms data now lives in core/ — color and the
 // shade ramp, shape rasterisation and flood fill, and the sheet codec. This
 // file owns the canvas, the widgets and the mutable editor state, and nothing
 // else. core/ never reaches back into it.
@@ -36,7 +36,7 @@ const TR = window.SpriteForge.transform;
 // The two ui/ modules that load after this one, read at call time and never
 // captured: they do not exist yet while this file is being evaluated. Both are
 // the project rather than the sprite — sprites-ui holds every sprite that is
-// not on the canvas, project-ui owns the dialogs — and a recolour or a theme is
+// not on the canvas, project-ui owns the dialogs — and a recolor or a theme is
 // a project's business. Absent in a build without them, and every caller here
 // falls back to doing its own half alone.
 const spritesUI = () => window.SpriteForge.spritesUI;
@@ -122,7 +122,7 @@ let holds = [1];
 let frameCache = [];            // 1:1 offscreen canvas per frame, for previews
 // Set when a character template is loaded: { id, slots: {name: baseHex},
 // steps: {name: [shadeSteps]} }. Slot identity is not stored per pixel, so this
-// is how a recolour knows which hexes belong to which part of the character.
+// is how a recolor knows which hexes belong to which part of the character.
 let activeTemplate = null;
 
 const canvas = document.getElementById('frame-canvas');
@@ -189,7 +189,7 @@ function updateFrameLabel() {
 }
 
 /**
- * Greys out the frame buttons that cannot do anything from here.
+ * Grays out the frame buttons that cannot do anything from here.
  *
  * Called from updateFrameLabel rather than from the seven places that change
  * the list, because that is already the one function all seven end in — and a
@@ -214,7 +214,7 @@ function updateFrameButtons() {
 
 // ── Undo / Redo ─────────────────────────────────────────
 
-// Carries the palette as well as the pixels: recolouring changes both together,
+// Carries the palette as well as the pixels: recoloring changes both together,
 // and an undo that restored one without the other would leave the swatches
 // describing art that is no longer there.
 function currentState() {
@@ -249,7 +249,7 @@ const history = MagmaKit.history.create({
   snapshot: currentState,
   restore,
   // The state being left has to carry the sprite list whenever the state being
-  // entered does, or undoing a recolour would strand redo with no way back to
+  // entered does, or undoing a recolor would strand redo with no way back to
   // it.
   leaving: (s) => {
     const now = currentState();
@@ -261,7 +261,7 @@ const history = MagmaKit.history.create({
 
 function snapshot() { history.push(); }
 
-// A recolour reaches every sprite, so its undo entry has to carry every sprite.
+// A recolor reaches every sprite, so its undo entry has to carry every sprite.
 // Only these entries do: a stroke changes one sprite and snapshotting the rest
 // on every mousedown would put the whole project on the stack a hundred times
 // over. The cost is paid by the operations that earn it.
@@ -375,8 +375,8 @@ function render() {
     ctx.setLineDash([]); ctx.globalAlpha = 1;
   }
   // The marquee, last of the overlays and before the origin cross, so it sits
-  // over the grid. Two strokes rather than one: a single colour disappears
-  // against art of that colour, and a selection you cannot see is worse than
+  // over the grid. Two strokes rather than one: a single color disappears
+  // against art of that color, and a selection you cannot see is worse than
   // none. The dark line under the dashes is what makes the light ones read.
   const marquee = marqueeStart && lastMarquee ? lastMarquee : selection;
   if (marquee) {
@@ -422,7 +422,7 @@ function cachedFrame(i) {
 // eventually shows somebody last week's art.
 const onionScratch = document.createElement('canvas');
 
-/** `cachedFrame(i)` with a colour cast over its opaque pixels. */
+/** `cachedFrame(i)` with a color cast over its opaque pixels. */
 function tintedFrame(i, tint) {
   const src = cachedFrame(i);
   if (onionScratch.width !== src.width) onionScratch.width = src.width;
@@ -432,7 +432,7 @@ function tintedFrame(i, tint) {
   c.clearRect(0, 0, onionScratch.width, onionScratch.height);
   c.drawImage(src, 0, 0);
   // source-atop keeps the fill inside what is already drawn, so transparent
-  // pixels stay transparent and the tint does not become a coloured rectangle.
+  // pixels stay transparent and the tint does not become a colored rectangle.
   c.globalCompositeOperation = 'source-atop';
   c.globalAlpha = ONION_TINT;
   c.fillStyle = tint;
@@ -471,7 +471,7 @@ function renderSheet() {
   if (stripFrom !== null && stripTo !== null && stripTo !== stripFrom) {
     const bx = stripTo * frameW * scale + 1, bw = frameW * scale - 2, bh = frameH * scale - 2;
     // Two strokes, like the canvas marquee and for the same reason: #ff3d6e is
-    // a palette colour — it is the app's own accent and it is in the vendored
+    // a palette color — it is the app's own accent and it is in the vendored
     // themes — so a single rose line vanishes over rose art, which is exactly
     // the frame somebody is most likely to be dragging around.
     sheetCtx.lineWidth = 2;
@@ -934,10 +934,10 @@ function renderPalette() {
       div.style.backgroundColor = e.target.value;
       if (idx === selectedSwatch) { selectedColor = e.target.value; updateColorChip(); }
     });
-    // Click chooses the colour to draw with; double-click opens the picker to
+    // Click chooses the color to draw with; double-click opens the picker to
     // change what the swatch is. They were the same gesture and the picker won
     // every time, so the palette could be edited but not used.
-    div.title = 'Click to draw with this colour — double-click to change it';
+    div.title = 'Click to draw with this color — double-click to change it';
     div.addEventListener('click', () => {
       selectedSwatch = idx; selectedColor = palette[idx];
       if (!['pencil', 'fill', 'line', 'rect', 'ellipse'].includes(tool)) setTool('pencil');
@@ -977,19 +977,19 @@ document.getElementById('ramp-btn').addEventListener('click', () => {
   renderPalette(); updatePaletteActive();
 });
 
-// ── Recolour ────────────────────────────────────────────
+// ── Recolor ────────────────────────────────────────────
 
-// Rewrites a set of colours across the whole project and the palette in one
-// pass and one undo step, so a slot recolour that touches several shades is
+// Rewrites a set of colors across the whole project and the palette in one
+// pass and one undo step, so a slot recolor that touches several shades is
 // still a single Ctrl+Z. Returns whether anything actually changed.
 //
 // Every sprite, not just the one on screen. The palette is the project's — one
 // set of swatches across every sprite is the point of the format's shared key —
 // so a REPLACE that stopped at the live sprite would leave the others drawn in
-// a colour the palette no longer has, and the project carrying both.
+// a color the palette no longer has, and the project carrying both.
 //
 // It does not ask, the way applying a theme does, because this is a tool aimed
-// at one colour and used over and over while drawing, and a dialog every time
+// at one color and used over and over while drawing, and a dialog every time
 // would be unusable. It does not need to: the undo entry carries the other
 // sprites, so Ctrl+Z takes all of it back.
 function applyColorMap(map) {
@@ -1000,7 +1000,7 @@ function applyColorMap(map) {
 
   const hits = frames.some(f => f.some(row => row.some(px => px && lookup[px])));
   const inPalette = palette.some(c => lookup[c]);
-  // Asked as well, because the colour may live only in a sprite that is not on
+  // Asked as well, because the color may live only in a sprite that is not on
   // screen: picking it off this canvas is not the one way to select it.
   const elsewhere = !!su && su.usesAny(lookup);
   if (!hits && !inPalette && !elsewhere) return false;
@@ -1144,7 +1144,7 @@ document.getElementById('frame-dup').addEventListener('click', () => {
  * thing rather than shuffling what is under a fixed pointer.
  *
  * A move that would change nothing comes back null from core/frames.js and is
- * dropped here, so no undo entry is pushed for it. The buttons are greyed at
+ * dropped here, so no undo entry is pushed for it. The buttons are grayed at
  * the ends anyway; this is the second line, for the drag, which can be let go
  * anywhere.
  */
@@ -1371,7 +1371,7 @@ function renderTemplateGrid() {
   }
 }
 
-// Slot swatches: recolouring one rewrites every shade it uses across all frames.
+// Slot swatches: recoloring one rewrites every shade it uses across all frames.
 function renderSlots() {
   slotList.innerHTML = '';
   if (!activeTemplate) {
@@ -1428,7 +1428,7 @@ document.getElementById('template-btn').addEventListener('click', () => {
   templateUI.open();
 });
 
-// ── Replace colour ──────────────────────────────────────
+// ── Replace color ──────────────────────────────────────
 
 document.getElementById('replace-btn').addEventListener('click', () => {
   const to = document.getElementById('replace-color').value.toLowerCase();
@@ -1482,18 +1482,18 @@ document.getElementById('import-confirm').addEventListener('click', () => {
     }
     frameIndex = 0; frameCache = [];
     // The imported pixels are not the template's any more, so slot identity is
-    // gone; keeping it would let a recolour rewrite unrelated colours.
+    // gone; keeping it would let a recolor rewrite unrelated colors.
     activeTemplate = null; renderSlots();
     origin.x = Math.min(origin.x, w); origin.y = Math.min(origin.y, h);
     const truncated = sliced.truncated
       ? ` (image not evenly divisible by ${w}×${h} — trailing pixels dropped)` : '';
-    // sheet.js snaps the colours it could not keep onto the nearest one it
+    // sheet.js snaps the colors it could not keep onto the nearest one it
     // did, so this is a change to the pixels the user is now looking at and
     // has to be said out loud rather than left in the export header. A
-    // full-colour photograph loses hundreds of colours here.
+    // full-color photograph loses hundreds of colors here.
     const snapped = sliced.colors > sliced.palette.length
-      ? ` (${sliced.colors} colours reduced to ${sliced.palette.length})` : '';
-    if (snapped) Toast.show(`${sliced.colors} COLOURS SNAPPED TO ${sliced.palette.length}`);
+      ? ` (${sliced.colors} colors reduced to ${sliced.palette.length})` : '';
+    if (snapped) Toast.show(`${sliced.colors} COLORS SNAPPED TO ${sliced.palette.length}`);
     exportOutput.value = `// imported ${frames.length} frame${frames.length === 1 ? '' : 's'} of ${w}×${h} from ${file.name}${snapped}${truncated}`;
     syncOriginInputs(); sizeCanvas(); render(); renderSheet(); updateFrameLabel();
     importModal.close();
@@ -1614,17 +1614,17 @@ document.addEventListener('keydown', (e) => {
   KEY_ACTIONS[action]();
 });
 
-// ── Colour themes ───────────────────────────────────────
+// ── Color themes ───────────────────────────────────────
 //
-// A theme is a named list of colours: the set vendored from MAGMA//OPS in
+// A theme is a named list of colors: the set vendored from MAGMA//OPS in
 // core/ops-themes.js, plus any you save here. Loading one swaps the swatches
-// you draw *from* and leaves every placed pixel alone — recolouring what is
+// you draw *from* and leaves every placed pixel alone — recoloring what is
 // already drawn is what REPLACE and the template slots do.
 //
 // Yours live in localStorage rather than the .forge file, because a palette
 // you like is a fact about you and not about one sprite. The .forge file
 // carries its own palette regardless, so opening a project still restores the
-// colours it was drawn with.
+// colors it was drawn with.
 
 const THEME_KEY = 'spriteforge.themes';
 const PAL = window.SpriteForge.palettes;
@@ -1653,8 +1653,8 @@ function renderThemes(selectId) {
     for (const t of group.themes) {
       const opt = document.createElement('option');
       opt.value = t.id;
-      // The count is the useful number at a glance: a four-colour Game Boy
-      // theme and a twenty-seven colour Pop Art are different tools.
+      // The count is the useful number at a glance: a four-color Game Boy
+      // theme and a twenty-seven color Pop Art are different tools.
       opt.textContent = `${t.name} (${t.colors.length})`;
       og.append(opt);
     }
@@ -1676,18 +1676,18 @@ async function applyTheme(id) {
   // Nothing usable is not a palette. Assigning it would leave selectedColor
   // undefined, and drawing would then write undefined into the frames and on
   // into the .forge file.
-  if (!colors.length) { Toast.show('THAT THEME HAS NO USABLE COLOURS'); return; }
+  if (!colors.length) { Toast.show('THAT THEME HAS NO USABLE COLORS'); return; }
 
-  // A theme is the project's, not this sprite's, so recolouring is answered
+  // A theme is the project's, not this sprite's, so recoloring is answered
   // over in project-ui.js where the sprite list and the dialogs are. It comes
-  // back false when it did not recolour — declined, nothing drawn, or no
+  // back false when it did not recolor — declined, nothing drawn, or no
   // project layer at all — and then this does what applying a theme has
-  // always done and swaps the swatches on their own. When it did recolour it
+  // always done and swaps the swatches on their own. When it did recolor it
   // has already put the new palette in through setSprite, and doing it again
   // here would cost a second undo step for nothing.
   const ui = projectUI();
-  const recoloured = ui && ui.retheme ? await ui.retheme(colors, t.name) : false;
-  if (!recoloured) {
+  const recolored = ui && ui.retheme ? await ui.retheme(colors, t.name) : false;
+  if (!recolored) {
     snapshot();
     palette = colors;
     selectedSwatch = 0;
@@ -1906,7 +1906,7 @@ window.SpriteForge.editor = {
       selectedSwatch = 0; selectedColor = palette[0];
     }
     // Slot identity only survives when the file carried it. Inventing one would
-    // let a recolour rewrite colours that never belonged to that slot.
+    // let a recolor rewrite colors that never belonged to that slot.
     activeTemplate = slots ? { id: templateId, label: templateId || 'project', slots, steps: {} } : null;
     redrawEverything();
   },
@@ -1944,14 +1944,14 @@ window.SpriteForge.editor = {
   // The Edit menu drives the same two functions Ctrl+Z and Ctrl+Y do. They go
   // through this seam rather than the menu reaching for the module scope,
   // which is the point of having one door. canUndo/canRedo are what let the
-  // menu grey its own items out instead of offering a no-op.
+  // menu gray its own items out instead of offering a no-op.
   undo, redo,
   canUndo() { return history.canUndo(); },
   canRedo() { return history.canRedo(); },
 
   // The selection, through the same door. The Edit menu drives exactly what
   // Ctrl+X/C/V and Delete do, and hasSelection/hasClipboard are what let it
-  // grey an item rather than offer a click that answers with a toast.
+  // gray an item rather than offer a click that answers with a toast.
   cut: cutSelection,
   copy: () => { if (copySelection()) Toast.show('COPIED'); },
   paste: pasteClipboard,

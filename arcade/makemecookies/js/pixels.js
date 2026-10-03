@@ -36,7 +36,7 @@ const PAL = {
   B: '#2A1A12',   // burnt
   W: '#EAD9EC',   // near-white
   n: '#26122A',   // panel dark
-  X: '#F2D8A7',   // recolourable: overridden per call
+  X: '#F2D8A7',   // recolorable: overridden per call
 };
 
 /**
@@ -107,7 +107,7 @@ const SPR_HOPPER = [
 const HOPPER_BOX = { col: 3, row: 2, w: 20, h: 9 };
 
 // ── 2 · MIXER ────────────────────────────────────────────────────────
-// 28 x 20. Bowl interior is roughly rows 10-16, centred on col 14.
+// 28 x 20. Bowl interior is roughly rows 10-16, centered on col 14.
 const SPR_MIXER = [
   '.........SSSSSSSSSS.........',
   '.........SHHHHHHHHS.........',
@@ -133,11 +133,11 @@ const SPR_MIXER = [
 
 // The whisk is four frames of half-width rather than a rotation: on a
 // pixel grid a rotated line shimmers, but a bar stepping in and out of
-// the centre reads cleanly as spin.
+// the center reads cleanly as spin.
 const WHISK_HALF = [5, 3, 1, 3];
 
 // ── 4 · OVEN ─────────────────────────────────────────────────────────
-// 32 x 24. The door glass is 'W', recoloured per phase by the caller.
+// 32 x 24. The door glass is 'W', recolored per phase by the caller.
 const SPR_OVEN = [
   'SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS',
   'SHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHS',
@@ -196,7 +196,7 @@ const SPR_BOX = [
 ];
 
 // ── Items on the line ────────────────────────────────────────────────
-// 'X' is recoloured per call so one ball serves dough and overmixed dough.
+// 'X' is recolored per call so one ball serves dough and overmixed dough.
 const SPR_BALL = [
   '..XXXX..',
   '.XXXXXX.',
@@ -277,7 +277,7 @@ const SPR_SPLAT = [
 // Lit from the top left like every sprite above, but with the light kept
 // to arcs near the rim rather than split across the disc: a straight
 // boundary through the middle of a round thing reads as a fold, not as
-// shading, so the middle stays one colour and the shape stays round.
+// shading, so the middle stays one color and the shape stays round.
 const SPR_COOKIE_BIG = [
   '..........KKKKK..........',
   '.......KKKtttttK.........',

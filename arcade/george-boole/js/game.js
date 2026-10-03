@@ -212,7 +212,7 @@ class BooleBoard {
         // setTimeout rather than _setTimeout: checkGameOver() clears the
         // pending-timeout list when it probes a full board, and losing this
         // one would leave every tile on a transform-only transition, silently
-        // dropping the colour fades.
+        // dropping the color fades.
         clearTimeout(this._settleTimer);
         this._settleTimer = setTimeout(() => {
             for (const tile of this.tiles) tile.style.transition = '';

@@ -19,7 +19,7 @@
     --cyan:      #00f5ff;
     --panel-w:   240px;
 
-    /* Sprite pixels sit on a checker, so the title carries the colour
+    /* Sprite pixels sit on a checker, so the title carries the color
        instead of the workspace. */
     --title-color:   var(--rose);
     --title-glow:    0 0 8px rgba(255,61,110,0.4);
@@ -57,7 +57,7 @@ body {
     overflow: auto;
 }
 
-/* margin:auto rather than align-items/justify-content, which centre by
+/* margin:auto rather than align-items/justify-content, which center by
    overflowing equally in both directions and put the top-left of an
    oversized canvas out of reach of its own scrollbars. */
 #canvas-stage > #frame-canvas { margin: auto; }
@@ -415,8 +415,8 @@ kbd {
 
 /* The picker for a swatch, invisible and lying over it.
    It must not be the click target. Covering the whole swatch meant every
-   click landed here and opened the OS colour picker, so a swatch could be
-   edited and never actually chosen — selecting a colour to draw with was
+   click landed here and opened the OS color picker, so a swatch could be
+   edited and never actually chosen — selecting a color to draw with was
    impossible. It stays in the layout rather than display:none because
    opening the picker means click()ing this element, and a display:none
    input cannot be clicked. */
@@ -798,7 +798,7 @@ input[type="file"]::file-selector-button:hover { border-color: var(--dim); }
 /* The glitch is two animated copies of the wordmark stacked behind it,
    running for as long as the window is open. That reads as personality on a
    landing page and as a distraction eight hours into drawing a sprite sheet.
-   Dropping the layers keeps the colour and the typeface — the app still looks
+   Dropping the layers keeps the color and the typeface — the app still looks
    like itself, it just stops flickering at the user. */
 .desktop h1.glitch::before,
 .desktop h1.glitch::after {
@@ -855,7 +855,7 @@ input[type="file"]::file-selector-button:hover { border-color: var(--dim); }
 .desktop .menu-title:hover { color: var(--text); background: var(--surface); }
 
 /* The open title takes the accent, and the drop below it is topped with the
-   same colour, so the two read as one shape rather than a button and a box
+   same color, so the two read as one shape rather than a button and a box
    that happen to be near each other. */
 .desktop .menu.open .menu-title {
     color: var(--bg);
@@ -910,15 +910,15 @@ input[type="file"]::file-selector-button:hover { border-color: var(--dim); }
     color: var(--bg);
 }
 
-/* Greyed rather than hidden: an Undo that vanishes when the stack is empty
+/* Grayed rather than hidden: an Undo that vanishes when the stack is empty
    moves Redo up under the cursor, and the menu changes shape as you use it. */
 .desktop .menu-drop button:disabled {
     color: var(--dim);
     cursor: default;
 }
 
-/* The shortcut hint. Dim, and it inherits the hover colour so it does not
-   stay grey on a rose row. */
+/* The shortcut hint. Dim, and it inherits the hover color so it does not
+   stay gray on a rose row. */
 .desktop .menu-drop button i {
     font-style: normal;
     font-size: 0.7rem;
@@ -1005,7 +1005,7 @@ input[type="file"]::file-selector-button:hover { border-color: var(--dim); }
 #target-kind:focus,
 #palette-theme:focus { outline: 1px solid var(--accent); }
 
-/* ── Colour themes ────────────────────────────────────────
+/* ── Color themes ────────────────────────────────────────
    In the COLOR panel: a theme swaps the swatches you draw from. */
 #palette-theme optgroup {
     font-family: 'Press Start 2P', monospace;

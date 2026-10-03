@@ -66,7 +66,7 @@ const CONFIG = {
     SHIP_X_RANGE: 168,   // half-width of the box the ship may occupy
 
     // Contacts fly in a band around y = 0 (see the spawn spread in
-    // entities.js), so the ship's box is centred a little below that rather
+    // entities.js), so the ship's box is centered a little below that rather
     // than well under it. The first tuning rested the ship at y = 40 with a
     // -34..96 box, which put it below everything it was meant to shoot: an
     // aim-bot flown against it drifted to y = -24 and stayed there, which is
@@ -125,7 +125,7 @@ const CONFIG = {
 
     // The transponder. Aid convoys squawk a steady double-blink; hostiles are
     // dark. Drawn at a constant screen size at every depth, so this channel is
-    // readable from the frame a contact spawns — unlike silhouette or colour.
+    // readable from the frame a contact spawns — unlike silhouette or color.
     // BLINK_PERIOD is the full cycle in 60fps frames: 30 = 2Hz.
     BLINK_PERIOD: 30,
     BLINK_ON_1: 6,       // frames 0..6 lit
@@ -151,7 +151,7 @@ const CONFIG = {
     // option, including the option to stop shooting.
     Z_PING: 900,
 
-    // Silhouettes become readable around here; colour is the last channel and
+    // Silhouettes become readable around here; color is the last channel and
     // never the only one.
     Z_SHAPE_READABLE: 410,
 
@@ -214,7 +214,7 @@ const CONFIG = {
 
     // The cloud deck's bands recycle over their own depth span rather than
     // Z_FAR. Tied to Z_FAR they stopped well short of the horizon and left the
-    // far third of the deck as a flat wall of colour; running them out to 3200
+    // far third of the deck as a flat wall of color; running them out to 3200
     // lets them converge into the haze the way the rails do.
     DECK_Z_SPAN: 3200,
 
@@ -253,7 +253,7 @@ const CONFIG = {
     //
     // Warm ammonia bands over a cold void. Aid amber against hostile magenta:
     // never red/green, and the two differ in luminance as well as hue so the
-    // distinction survives being read in greyscale.
+    // distinction survives being read in grayscale.
     COLORS: {
         void:         '#05060f',
         voidHaze:     '#0d1230',

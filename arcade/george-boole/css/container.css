@@ -99,7 +99,7 @@ h1 {
  *
  * 36px is chosen against the engine's 30px SWIPE_THRESHOLD rather than by eye.
  * A touch starting anywhere on the board and lifting on one of these has now
- * travelled more than 36px, which is past the threshold, which means
+ * traveled more than 36px, which is past the threshold, which means
  * onTouchMove has already called preventDefault and the click never happens --
  * so this covers the short drags even on a bundle without the engine fix. It
  * has to stay larger than that threshold to keep that property.

@@ -75,7 +75,7 @@ const Project = {
      * Shots run parallel to the z axis from the ship's plane, so this is a 2D
      * test in the z = 0 frame and does not involve the screen at all. Doing it
      * in world space is what keeps aiming honest at every depth: a target that
-     * looks centred under the reticle is centred, rather than being easier to
+     * looks centered under the reticle is centered, rather than being easier to
      * hit up close because its sprite is bigger.
      *
      * A box rather than a radius because every sprite here is wider than it is

@@ -356,8 +356,8 @@ console.log('\ndt invariance — the same wall-clock time, three step sizes');
     near(c.x, a.x, 1.8, 'ship x agrees between 60Hz and 240Hz');
     near(b.y, a.y, 1.2, 'ship y agrees between 60Hz and 120Hz');
     near(c.y, a.y, 1.8, 'ship y agrees between 60Hz and 240Hz');
-    near(b.d, a.d, 0.5, 'distance travelled agrees between 60Hz and 120Hz');
-    near(c.d, a.d, 0.5, 'distance travelled agrees between 60Hz and 240Hz');
+    near(b.d, a.d, 0.5, 'distance traveled agrees between 60Hz and 120Hz');
+    near(c.d, a.d, 0.5, 'distance traveled agrees between 60Hz and 240Hz');
 
     // Contact depth is what everything else is measured against, so it gets its
     // own check with no player input in play at all.
@@ -628,7 +628,7 @@ console.log('\nflight');
     ok(Math.abs(g3.player.x) <= C.SHIP_X_RANGE + 0.001, 'the ship cannot leave the rail sideways');
     ok(g3.player.y <= C.SHIP_Y_MAX + 0.001, 'the ship cannot leave the rail vertically');
 
-    // The gun honours its cooldown rather than firing every frame.
+    // The gun honors its cooldown rather than firing every frame.
     const g4 = makeGame(34);
     let shots = 0;
     for (let i = 0; i < 90; i++) if (g4.player.update(0, 0, true, 1)) shots++;

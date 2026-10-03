@@ -83,7 +83,7 @@ function shortHash(buf) {
   // working tree holds the same files as CRLF, so hashing them as-is stamps a
   // value no visitor's copy can ever produce -- the stamp stops identifying the
   // thing it exists to identify, and every build flips it back and forth
-  // depending on which machine ran last. Normalising first makes the stamp
+  // depending on which machine ran last. Normalizing first makes the stamp
   // identical everywhere and equal to the one already committed, so this fix
   // rewrites nothing on a Linux checkout.
   //

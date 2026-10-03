@@ -22,7 +22,7 @@
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
-const { findSurfaces, analyse } = require('./reachability.js');
+const { findSurfaces, analyze } = require('./reachability.js');
 
 const JS_DIR = path.join(__dirname, '..', 'js');
 const FILES = ['config.js', 'levels.js', 'tilemap.js', 'sfx.js', 'renderer.js', 'player.js', 'entities.js', 'world.js'];
@@ -443,7 +443,7 @@ console.log('\nevery level is completable:');
                 entities: vm.runInContext('new Entities(__map)', g.ctx),
             }),
         };
-        const r = analyse(env);
+        const r = analyze(env);
         const name = 'level ' + (i + 1) + ' (' + g.map.name + ')';
 
         ok(r.start >= 0, name + ': the spawn lands on a real surface');

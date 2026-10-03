@@ -77,7 +77,7 @@ const CONFIG = {
     // looked right, read right in the level file, and lifted nobody.
     UPDRAFT_LIFT: 0.98,
     UPDRAFT_MAX_RISE: 2.6,      // terminal upward speed inside a column
-    UPDRAFT_DRIFT: 0.06,        // gentle sideways settling toward the centre
+    UPDRAFT_DRIFT: 0.06,        // gentle sideways settling toward the center
 
     // ── Coal trolley ──────────────────────────────────────
     // The mine cart of this rooftop. A sub-mode rather than a device: while you

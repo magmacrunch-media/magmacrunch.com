@@ -8,7 +8,7 @@
 //    scanline; a strip of Segoe UI across the top of it would look like a
 //    different program wearing the window."
 //
-// IT OWNS NO BEHAVIOUR, and that is the whole design. Every item names an
+// IT OWNS NO BEHAVIOR, and that is the whole design. Every item names an
 // action and the app's `actions` map routes it to something that already
 // exists. Items that mirror a control carry `data-toggles="<id>"` and are
 // dispatched by CLICKING that control, so a menu can never become a second
@@ -16,7 +16,7 @@
 //
 // The MARKUP and the CSS stay in the app: the bar's look is the app's
 // typography, and the kit does not ship chrome. What the kit owns is the
-// open/close/hover/sync behaviour that all of it needs and none of it should
+// open/close/hover/sync behavior that all of it needs and none of it should
 // write twice.
 
 (function () {
@@ -91,7 +91,7 @@
                 });
             }
             /* Once one menu is open, sliding across the bar switches between
-               them without another click — the one behaviour every real menu
+               them without another click — the one behavior every real menu
                bar has and no plain <details> gives you for free. */
             menu.addEventListener('mouseenter', function () {
                 if (open && open !== menu) show(menu);

@@ -39,7 +39,7 @@
    value=1: #0f380f  value=2: #306230  value=4(max): #8bac0f
 
    Gate choices: step outside the green family entirely.
-   XOR  — teal-grey  (no green component, reads as foreign)
+   XOR  — teal-gray  (no green component, reads as foreign)
    OR   — warm buff/tan (not yellow-green, closer to cream)
    AND  — slate blue  (completely out of palette)
    NOT  — near-black with lime text (inverted GB feel)
@@ -97,7 +97,7 @@ body[data-theme="nes"] .gate-tile[data-gate="not"] {
 /* ============================================
    SNES THEME (4-BIT)
    Tile ramp (game.css generic):
-     1–3:   grey  4–7: tan/brown  8: orange-gold
+     1–3:   gray  4–7: tan/brown  8: orange-gold
      9–15:  orange  16: orange-red  32: red
      64: hot-pink/magenta (#ff0080)
      65–127: hot-pink → purple (#8a2be2)
@@ -241,8 +241,8 @@ body[data-theme="neogeo"] .gate-tile[data-gate="not"] {
 
 /* ============================================
    PS1 THEME (8-BIT)
-   Tile ramp (metallic grey → colour burst):
-     2: dark grey  4: mid grey  8: #8a8a8a  16: #a0a0a0
+   Tile ramp (metallic gray → color burst):
+     2: dark gray  4: mid gray  8: #8a8a8a  16: #a0a0a0
      32: #c0c0c0 (silver)  64: #e0e0e0 (near-white)
      128: gold #ffd700  256: #ff8c00  512: #ff4500
      1024: #ff1493  2048: #9400d3  4096: #4b0082
@@ -250,7 +250,7 @@ body[data-theme="neogeo"] .gate-tile[data-gate="not"] {
 
    intensity: #252525 → silver gradient
 
-   Collisions to avoid: grey family (all darks to silver),
+   Collisions to avoid: gray family (all darks to silver),
    gold (#ffd700), orange (#ff8c00), red (#ff4500),
    pink (#ff1493), purple (#9400d3, #4b0082),
    blues (#0000cd, #1e90ff), teal (#00ced1)
@@ -342,7 +342,7 @@ body[data-theme="matrix"] .gate-tile[data-gate="not"] {
     padding: 6px;
 }
 
-/* Grey SNES-default tiles (values 1-4) have low-contrast white text;
+/* Gray SNES-default tiles (values 1-4) have low-contrast white text;
    give the binary a bright accent color so it stands out */
 .tile[data-value="1"] .tile-binary,
 .tile[data-value="2"] .tile-binary,

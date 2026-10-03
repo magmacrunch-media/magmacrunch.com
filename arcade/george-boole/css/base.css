@@ -15,7 +15,7 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    /* `safe` is the whole point: centre when the layout fits, and behave as
+    /* `safe` is the whole point: center when the layout fits, and behave as
        flex-start when it does not, so a viewport shorter than the game can
        still reach the top of it. Without it, a tall iPad pins the game to the
        top with 600px of gradient under it, and plain `center` would trade that

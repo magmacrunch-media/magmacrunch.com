@@ -85,7 +85,7 @@
     color: var(--hostile);
 }
 
-/* The escort rule. Same warning colour the in-game link and countdown use, so
+/* The escort rule. Same warning color the in-game link and countdown use, so
    the key and the playfield agree about what "urgent" looks like. */
 .iff-mark.warn {
     color: var(--hostile);

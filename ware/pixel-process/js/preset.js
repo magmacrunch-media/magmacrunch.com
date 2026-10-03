@@ -15,7 +15,7 @@
      *
      * The interesting part is what sits between the two. A chain drawn purely
      * at random is mostly mud: effects that cancel, parameters at the ends of
-     * their ranges, thresholds that flatten the image to two colours. Taste
+     * their ranges, thresholds that flatten the image to two colors. Taste
      * narrows the ranges, but taste cannot be checked. So every generated chain
      * is RENDERED against a standard probe image and measured, and one that
      * does not visibly change the picture, or that flattens it, is rejected and
@@ -36,9 +36,9 @@
      * chain for everyone, and the comment here claimed the cost of judging on
      * a representative image rather than yours was small, on the grounds that
      * flattening is a property of the chain rather than the picture. Six rolls
-     * rendered over a greyscale perlin source settled that: two of the six came
+     * rendered over a grayscale perlin source settled that: two of the six came
      * out flat blue and solid black, having cleared the bar comfortably on a
-     * colourful probe. A third of rolls being duds is not a small cost.
+     * colorful probe. A third of rolls being duds is not a small cost.
      *
      * So the bar is measured where it matters. What is given up is that a seed
      * now names a chain only for a given source, since the search rejects
@@ -98,7 +98,7 @@
     /* Narrower than the sliders allow, and only where the full range is a
      * worse place to land at random than a subset of it. Everything not listed
      * samples its declared slider range, so a new effect needs no entry here
-     * and gets sane behaviour by default. An enum is always sampled uniformly
+     * and gets sane behavior by default. An enum is always sampled uniformly
      * over its options; taste does not apply to a choice of axis.
      *
      * This is the one file in the tool where a judgement about what looks good
@@ -134,7 +134,7 @@
     /* The bar, set from the measured distribution rather than guessed.
      *
      * `changed` is the mean absolute difference from the probe across the
-     * colour channels: did this do anything at all. `spread` is the standard
+     * color channels: did this do anything at all. `spread` is the standard
      * deviation of the output's luminance: is there still a picture here, or
      * has it gone flat.
      *
@@ -307,7 +307,7 @@
      * did not.
      *
      * Mixing instead means a rejection moves the search somewhere unrelated,
-     * so neighbouring seeds stay independent while the whole thing stays
+     * so neighboring seeds stay independent while the whole thing stays
      * deterministic.
      */
     function searchSeed(seed, attempt) {
@@ -340,7 +340,7 @@
 
      * This is the other half of the dice, and the more useful half once you
      * have something you half like. Every numeric parameter drifts by up to an
-     * eighth of its range, so the result is recognisably the same look; an enum
+     * eighth of its range, so the result is recognizably the same look; an enum
      * flips outright now and then, because there is no such thing as drifting
      * halfway between a horizontal and a vertical sort. About a third of the
      * time one structural change lands as well, an effect dropped, added or

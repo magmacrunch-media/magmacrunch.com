@@ -748,7 +748,7 @@ footer {
 }
 
 /* Scaled by CSS rather than by drawImage: the canvas is 384x72 and nearest
-   neighbour is the whole look, so the browser does the upscale for free. */
+   neighbor is the whole look, so the browser does the upscale for free. */
 .title-canvas {
     display: block;
     width: min(560px, 86vw);

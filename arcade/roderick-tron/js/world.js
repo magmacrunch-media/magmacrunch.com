@@ -6,7 +6,7 @@
  *
  * The dead zone is what stops every hop shoving the view around; the lookahead
  * is what buys reaction time at speed, by showing more of the direction being
- * travelled than the one behind.
+ * traveled than the one behind.
  */
 function Camera(map) {
     this.map = map;
@@ -177,7 +177,7 @@ World.prototype.drawMid = function (ctx, cam) {
  *
  * Without it the canal houses read as geometry at the same depth as the
  * rooftops — their gables sat at play-surface height and looked landable. A
- * wash of the sky colour pushes them back where they belong.
+ * wash of the sky color pushes them back where they belong.
  */
 World.prototype.drawHaze = function (ctx) {
     const g = ctx.createLinearGradient(0, 0, 0, CONFIG.CANVAS_H);

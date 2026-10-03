@@ -44,7 +44,7 @@
        housekeeping — it is the only way to send anything ALONGSIDE a raw body.
 
        A payload that IS bytes (an ArrayBuffer, a view, or an Array) is sent as
-       application/octet-stream instead of being serialised. That matters for
+       application/octet-stream instead of being serialized. That matters for
        anything large: a Uint8Array reached through an object becomes a JSON
        array of numbers, which deck-press measured at 1.3 GB of heap and 100 MB
        of wire for 50 MB of image data, before Rust had seen any of it.
@@ -53,7 +53,7 @@
        `options.headers` is where a command's other arguments go, and dropping
        this parameter put them out of reach: deck-press framed its path into the
        front of the body instead, a wire format it should not have had to
-       invent. Tauri deserialises `headers` into the map behind
+       invent. Tauri deserializes `headers` into the map behind
        `tauri::ipc::Request::headers()`.
 
        **A header value must be visible ASCII.** Tauri builds it with

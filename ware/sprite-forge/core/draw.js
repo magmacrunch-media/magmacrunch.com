@@ -53,7 +53,7 @@ window.SpriteForge.draw = (function () {
 
     /**
      * Four-way flood fill, mutating `grid` in place. Bounds come from the grid
-     * itself, so a caller cannot desynchronise them from the pixels the way the
+     * itself, so a caller cannot desynchronize them from the pixels the way the
      * old frameW/frameH globals could.
      */
     function floodFill(grid, x, y, from, to) {

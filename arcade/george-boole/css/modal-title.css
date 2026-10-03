@@ -177,12 +177,12 @@
     will-change: text-shadow;
 }
 
-/* The title screen keeps its own colours whatever mode was last played.
+/* The title screen keeps its own colors whatever mode was last played.
  *
  * `.title-large` is an <h1>, and every theme in themes.css styles the element:
  * `body[data-theme="ps1"] h1` is specificity 0-1-2, which outranks the 0-1-0 of
  * `.title-large` above. So picking 8-BIT set data-theme="ps1", and the title
- * screen came back gold instead of cyan. Nobody changed a colour; the mode did.
+ * screen came back gold instead of cyan. Nobody changed a color; the mode did.
  *
  * It only became visible when the game gained a way back to the title (6ed17b8),
  * which is why it looks new. Scoped to .title-screen so the themes keep every
@@ -220,10 +220,10 @@ body .title-screen .title-subtitle {
 }
 
 /* The start button is drawn like one of the game's own tiles rather than like
-   a web button: one flat colour, a pixel bevel (the same light-top-left,
+   a web button: one flat color, a pixel bevel (the same light-top-left,
    dark-bottom-right inset .tile uses), a hard 1-bit outline and a solid drop
    instead of a soft glow. The last version stacked a purple gradient, a cyan
-   border, yellow text and a pulsing blur, and three competing colours under a
+   border, yellow text and a pulsing blur, and three competing colors under a
    glow read as a web page rather than a game -- which in the App Store build is
    the first thing a reviewer sees.
 
@@ -407,11 +407,11 @@ body .title-screen .title-subtitle {
         transform: translateY(100vh) rotate(0deg);
     }
     /* 0.8, not 0.3, and the difference is a multiplication that was easy to
-       miss: the colours above are already rgba(..., 0.3), so an 0.3 here put
+       miss: the colors above are already rgba(..., 0.3), so an 0.3 here put
        the glyphs on screen at an effective 0.09 alpha. On a phone that is two
        faint marks in a corner rather than an atmosphere -- they read as
        something left behind rather than something drifting. 0.8 against the
-       colours' own 0.3 lands at about 0.24, which is visible without
+       colors' own 0.3 lands at about 0.24, which is visible without
        competing with the binary rain or the title. */
     10% {
         opacity: 0.8;

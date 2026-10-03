@@ -1,14 +1,14 @@
-// palettes.js — colour themes: the ones vendored from MAGMA//OPS, and yours.
+// palettes.js — color themes: the ones vendored from MAGMA//OPS, and yours.
 //
-// A theme here is only a named list of colours. It is not the app's own
+// A theme here is only a named list of colors. It is not the app's own
 // styling, and nothing in this file touches a pixel: it normalizes, validates
 // and looks up, and that is all.
 //
 // Applying one is a different question and is not answered here. It used to
 // replace the swatches you draw *from* and leave every pixel where it was,
 // which meant the palette stopped describing the art the moment it was applied
-// and the project quietly carried both sets of colours. It now offers to
-// redraw the whole project in the theme, snapping each colour to the nearest
+// and the project quietly carried both sets of colors. It now offers to
+// redraw the whole project in the theme, snapping each color to the nearest
 // one the theme has — core/project.js retheme() does the work and
 // ui/project-ui.js asks the question, because it is the layer that knows every
 // sprite rather than just the one on screen.
@@ -55,7 +55,7 @@ window.SpriteForge.palettes = (function () {
         if (!Array.isArray(theme.colors))
             throw new Error(`${theme.name}: colors is not a list`);
         if (!normalize(theme.colors).length)
-            throw new Error(`${theme.name}: no usable colours`);
+            throw new Error(`${theme.name}: no usable colors`);
         return theme;
     }
 
@@ -77,7 +77,7 @@ window.SpriteForge.palettes = (function () {
      * custom() validates on the way in, but nothing validated what came back
      * out, and this list is read while the editor is still starting up. One
      * malformed entry — or a stored value that is not a list at all — used to
-     * throw there and take the rest of initialisation with it, leaving an app
+     * throw there and take the rest of initialization with it, leaving an app
      * with no canvas and no way back except clearing site data. Anything that
      * would not load is dropped instead of carried.
      */

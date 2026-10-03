@@ -344,7 +344,7 @@
             ctx.globalAlpha = 0.35 + near * 0.65;
 
             if (c.kind === 'aid') {
-                // A cross: readable as a shape, not only as a colour.
+                // A cross: readable as a shape, not only as a color.
                 ctx.fillStyle = C.aid;
                 ctx.fillRect(px - 3, y - 1, 7, 2);
                 ctx.fillRect(px - 1, y - 3, 2, 7);

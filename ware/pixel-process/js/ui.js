@@ -98,7 +98,7 @@
         var marks = detents || 11;
         for (var i = 0; i < marks; i++) {
             var deg = -SWEEP / 2 + i * SWEEP / (marks - 1);
-            // The ends and, on a plain scale, the centre.
+            // The ends and, on a plain scale, the center.
             var major = i === 0 || i === marks - 1 || (!detents && i === 5);
             var a = polar(major ? 40 : 43, deg), b = polar(49, deg);
             svg.appendChild(svgEl('line', {
@@ -593,12 +593,12 @@
      * different order are a different picture. Pointer events are one code
      * path for mouse, pen and touch.
      *
-     * The card is moved in the DOM as the pointer passes each neighbour's
+     * The card is moved in the DOM as the pointer passes each neighbor's
      * midpoint, and the chain is told the resulting order once, on release
      * (Chain.setOrder). Shuffling the model on every move would re-render the
      * panel under the pointer several times a second.
      *
-     * A drag only begins after the pointer has travelled a few pixels, so a
+     * A drag only begins after the pointer has traveled a few pixels, so a
      * tap on the header still selects the card rather than nudging it, and
      * `touch-action: none` on the header is what stops the panel scrolling
      * away underneath a drag that has begun.
@@ -635,7 +635,7 @@
         /* Where the card belongs, decided once from one snapshot of the
            layout: the first card whose middle is below the pointer, and the
            end of the list if there is none.
-           Swapping with a neighbour and then looking again does not work,
+           Swapping with a neighbor and then looking again does not work,
            however carefully it is bounded. Each swap moves every other card,
            so the next look finds the pointer on the far side of a midpoint
            and swaps back: dragging upwards oscillated and settled exactly

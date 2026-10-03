@@ -11,7 +11,7 @@ const Input = {
 
     // Touch steering, in the same -1..1 space as the keys. null when no drag
     // is active, so a lifted thumb lets the ship coast rather than snapping to
-    // centre.
+    // center.
     touchAxis: null,
     touchFiring: false,
 

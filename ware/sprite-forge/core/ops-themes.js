@@ -1,4 +1,4 @@
-// ops-themes.js — colour themes vendored from MAGMA//OPS.
+// ops-themes.js — color themes vendored from MAGMA//OPS.
 //
 // GENERATED. Do not edit by hand: run
 //
@@ -6,7 +6,7 @@
 //
 // Source: magmacrunch-ops/dashboard/static/theme.js, where these are CSS
 // variable sets for the ops dashboard and the website sections. Here the
-// variable names are dropped and what is left is a list of colours to draw
+// variable names are dropped and what is left is a list of colors to draw
 // with. Themes with an empty palette are not carried across, and a hex that
 // appears twice in one theme is carried once.
 //

@@ -95,7 +95,7 @@ World.prototype.drawStars = function (ctx) {
  *
  * Bands are horizontal slabs of a fixed palette rather than a gradient: at
  * 270px tall a smooth ramp turns to mud, and Jupiter reads as Jupiter because
- * of the banding, not the colour.
+ * of the banding, not the color.
  */
 World.prototype.drawGiant = function (ctx) {
     const C = CONFIG.COLORS;

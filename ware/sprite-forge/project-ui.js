@@ -112,7 +112,7 @@
      * Ask the user a yes/no question, however this build can.
      *
      * The Tauri dialog when there is one, the browser's own otherwise: the
-     * theme recolour runs in the web build too, where there is no fs at all,
+     * theme recolor runs in the web build too, where there is no fs at all,
      * and a question nobody can answer would turn that into a feature that
      * silently does nothing. False when neither exists, because every caller
      * here is asking permission to change the art.
@@ -145,19 +145,19 @@
         // A file may carry more swatches than the editor has slots for, so the
         // palette is trimmed to the ones the art actually uses rather than to
         // whichever the file listed first. Only the swatches: every pixel keeps
-        // its colour, and the key holds far more than the palette shows.
+        // its color, and the key holds far more than the palette shows.
         const palette = P.paletteFor(project, editor.MAX_SWATCHES);
         editor.setSprite(project.sprites[0], palette, project.slots, project.template);
         if (spritesUI()) spritesUI().load(project.sprites);
     }
 
     /**
-     * Offer to bring a project inside the key's colour limit, and do it if the
+     * Offer to bring a project inside the key's color limit, and do it if the
      * user agrees.
      *
      * The limit is reachable without doing anything wrong: the palette is
      * shared but the pixels are not bound to it, so importing a PNG into each
-     * of three sprites is ninety-six colours against a key that holds
+     * of three sprites is ninety-six colors against a key that holds
      * eighty-nine. Before this, that project simply could not be saved, and the
      * only advice available was the count.
      *
@@ -169,9 +169,9 @@
      */
     async function offerReduce(project, colors) {
         const limit = P.ALPHABET.length;
-        const question = `This project uses ${colors} colours and the .forge key holds ${limit}. `
+        const question = `This project uses ${colors} colors and the .forge key holds ${limit}. `
             + `Reduce it to ${limit} by merging the ${colors - limit} least-used into their `
-            + `nearest neighbours, and save?`;
+            + `nearest neighbors, and save?`;
         if (!await ask(question)) return null;
 
         // Which sprite is being edited is not the save's business to change.
@@ -179,7 +179,7 @@
         const reduced = P.reduce(project, limit);
         adoptProject(reduced);
         restoreActive(reduced, was);
-        toast(`reduced ${colors} colours to ${P.colorsOf(reduced).length}`);
+        toast(`reduced ${colors} colors to ${P.colorsOf(reduced).length}`);
         return reduced;
     }
 
@@ -188,14 +188,14 @@
      *
      * A theme applies to the palette, and the palette is the project's rather
      * than the sprite on screen's — one set of swatches across every sprite is
-     * the stated point of the format's shared key. So a recolour that stopped
-     * at the active sprite would leave the others drawn in colours no swatch
+     * the stated point of the format's shared key. So a recolor that stopped
+     * at the active sprite would leave the others drawn in colors no swatch
      * points at any more, which is both wrong on its face and the way projects
      * used to drift past what the key can hold.
      *
      * Which is also why it asks first. Undo lives in the editor and covers the
      * sprite it is showing, so Ctrl+Z after this brings back that sprite and
-     * the old swatches while the rest stay recoloured. Rewriting art in sprites
+     * the old swatches while the rest stay recolored. Rewriting art in sprites
      * that are not on screen, irreversibly, is not something a dropdown should
      * do to someone who has not been told.
      *
@@ -203,21 +203,21 @@
      * does not, which is exactly what applying a theme did before. The question
      * says so, and the caller does that half.
      *
-     * Returns whether it recoloured, so the caller knows whether the palette
+     * Returns whether it recolored, so the caller knows whether the palette
      * still needs swapping.
      */
     async function retheme(palette, label) {
         if (!palette || !palette.length) return false;
         const project = currentProject();
 
-        // Nothing drawn, or drawn entirely in colours the theme already has:
+        // Nothing drawn, or drawn entirely in colors the theme already has:
         // there is nothing to ask about and nothing to move.
         const moving = P.colorsOf(project).filter(c => !palette.includes(c));
         if (!moving.length) return false;
 
         const n = project.sprites.length;
         const question = `Redraw ${n === 1 ? 'this sprite' : `all ${n} sprites`} in `
-            + `${label || 'this theme'}? ${moving.length} colour${moving.length === 1 ? '' : 's'} `
+            + `${label || 'this theme'}? ${moving.length} color${moving.length === 1 ? '' : 's'} `
             + `will move to the nearest one it has. Undo only covers the sprite on screen. `
             + `Cancel to change the swatches and leave the art alone.`;
         if (!await ask(question)) return false;
@@ -226,7 +226,7 @@
         const next = P.retheme(project, palette);
         adoptProject(next);
         restoreActive(next, was);
-        toast(`recoloured ${n} sprite${n === 1 ? '' : 's'}`);
+        toast(`recolored ${n} sprite${n === 1 ? '' : 's'}`);
         return true;
     }
 
@@ -259,7 +259,7 @@
         if (colors > P.ALPHABET.length) {
             const reduced = await offerReduce(project, colors);
             if (!reduced) {
-                toast(`${colors} colours; the .forge key holds ${P.ALPHABET.length}`);
+                toast(`${colors} colors; the .forge key holds ${P.ALPHABET.length}`);
                 return null;
             }
             project = reduced;
@@ -316,9 +316,9 @@
                 : `opened ${sprite.name}`);
             // Said rather than left to be noticed: the swatches on screen are
             // not all of the ones the file carries, and a REPLACE aimed at a
-            // colour that did not fit has nothing to aim with.
+            // color that did not fit has nothing to aim with.
             if (project.palette.length > editor.MAX_SWATCHES)
-                toast(`palette holds ${project.palette.length} colours; `
+                toast(`palette holds ${project.palette.length} colors; `
                     + `showing the ${editor.MAX_SWATCHES} most used`);
             return true;
         } catch (e) {
@@ -495,7 +495,7 @@
         path: () => currentPath,
         currentProject,
         // save/open are the tier-appropriate ones, so the File menu and the
-        // sidebar reach the same behaviour the keyboard does.
+        // sidebar reach the same behavior the keyboard does.
         open: openProject, save: saveProject, saveAs: doSaveAs, newProject: doNew,
         // The bytes themselves, and the two LITE halves by name. encode() is
         // published because it is the whole of what "can this be saved" means,

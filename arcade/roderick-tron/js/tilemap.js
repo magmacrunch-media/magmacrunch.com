@@ -132,7 +132,7 @@ Tilemap.prototype.overlapsUpdraft = function (x, y, w, h) {
     return this.overlaps(x, y, w, h, isUpdraftTile);
 };
 
-/** Horizontal centre of the updraft column this box is in, or null. */
+/** Horizontal center of the updraft column this box is in, or null. */
 Tilemap.prototype.updraftCentre = function (x, y, w, h) {
     const r = this.tileRange(x, y, w, h);
     for (let ty = r[1]; ty <= r[3]; ty++) {

@@ -25,7 +25,7 @@
              * whole image, silently, with no warning anywhere.
              *
              * Found by looking at a montage of generated chains and asking why
-             * two of six were solid colours. The test suite was green: every
+             * two of six were solid colors. The test suite was green: every
              * resolution case it had used 512 or 1024, which are 2x and 4x the
              * reference, so the scaled offsets stayed whole and the bug could
              * not fire. There is a non-integer factor in there now.

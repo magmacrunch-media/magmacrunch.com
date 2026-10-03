@@ -5,7 +5,7 @@
 //
 // The premise only works if refusing to shoot is a decision rather than a
 // gamble. At spawn depth a convoy hull is under 6px wide, so silhouette cannot
-// carry the read, and colour alone excludes anyone who cannot separate amber
+// carry the read, and color alone excludes anyone who cannot separate amber
 // from magenta. So a contact announces itself on four channels that come
 // legible in this order:
 //
@@ -13,13 +13,13 @@
 //                            a CONSTANT screen size, so it does not shrink
 //                            away. Aid convoys squawk a double-blink; hostiles
 //                            are dark. This is the channel the fairness test
-//                            is written against, and it is motion, not colour.
+//                            is written against, and it is motion, not color.
 //   2. HUD contact strip   — drawn in main.js from listContacts() below, so a
 //                            cluttered frame never hides the answer.
 //   3. Silhouette          — from Z_SHAPE_READABLE inward: convoys are blunt
 //                            and slab-sided with a bar across; hostiles are
 //                            angular deltas.
-//   4. Colour              — last, and never alone. Amber vs magenta, chosen
+//   4. Color              — last, and never alone. Amber vs magenta, chosen
 //                            to differ in luminance as well as hue.
 //
 // Everything here stores WORLD coordinates and converts at draw and collision
@@ -258,7 +258,7 @@ Entities.prototype.fire = function (player) {
  * Advance shots and resolve hits.
  *
  * The test is done in world space at the shot's own depth, not on screen, so
- * a target centred under the reticle is centred at every distance. Doing it on
+ * a target centered under the reticle is centered at every distance. Doing it on
  * screen would make near targets easier to hit purely because their sprites
  * are bigger, which would quietly punish holding fire — exactly backwards for
  * this game.

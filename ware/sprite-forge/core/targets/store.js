@@ -10,7 +10,7 @@
 // two together are its identity: the same repo can legitimately be both a
 // GameMaker target and an adenosine one, but exporting adenosine sheets into
 // the same root twice is a mistake worth refusing rather than a configuration
-// worth honouring.
+// worth honoring.
 //
 // Pure, like the rest of core/: no DOM, no filesystem. The shell reads and
 // writes the bytes; everything here is text in, object out.

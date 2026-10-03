@@ -55,7 +55,7 @@
 
     /* The wordmark, once, into an ImageData the animation re-reads every frame.
 
-       Filled opaque and in the overlay's own background colour rather than
+       Filled opaque and in the overlay's own background color rather than
        left transparent: every effect writes alpha 255 and reads its source as
        opaque, so a transparent background would come through as a black slab
        the moment the first effect ran. */
@@ -89,7 +89,7 @@
      *
      * A real CRT collapses to a bright line when it loses deflection and
      * opens back out as it comes up, so this is the same thing in reverse:
-     * the wordmark is squeezed to a couple of pixels at the centre, expands
+     * the wordmark is squeezed to a couple of pixels at the center, expands
      * to full height, and the beam line that carried it fades as it goes. The
      * brightness overshoots on the way, because a tube does.
      *

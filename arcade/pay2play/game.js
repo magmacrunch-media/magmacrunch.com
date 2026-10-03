@@ -392,7 +392,7 @@ const CONSOLATION = 0;
 
 const ATTENTION_DECAY = 2;     // attention lost per second once a result has landed
 const DECAY_GRACE_MS = 1200;   // a beat to enjoy a result before interest starts to slide
-const DECAY_DT_CAP = 0.25;     // largest frame delta honoured, in seconds (see decayTick)
+const DECAY_DT_CAP = 0.25;     // largest frame delta honored, in seconds (see decayTick)
 const FADE_NOTICE_FLOOR = 40;  // below this, a decline is not worth remarking on
 const ATTENTION_HIGH = 50;     // still hot when you walked away
 const DEBT_DEEP = 30;          // cents; still roughly fifty spins, at the steeper post-slip edge

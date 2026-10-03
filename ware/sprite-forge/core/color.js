@@ -1,9 +1,9 @@
 // color.js — hex/RGB/HSL conversion and the pixel-art shade ramp.
 //
 // Extracted from the editor unchanged. It is in core/ because three things
-// outside the DOM need it: templates.js resolves a slot's base colour to its
+// outside the DOM need it: templates.js resolves a slot's base color to its
 // shades, sheet.js needs hex -> RGB to compose a PNG, and the .forge loader
-// needs to recognise a palette entry. None of them can reach into the editor.
+// needs to recognize a palette entry. None of them can reach into the editor.
 //
 // Pure, no DOM, no state beyond one memo cache.
 
@@ -11,7 +11,7 @@ window.SpriteForge = window.SpriteForge || {};
 window.SpriteForge.color = (function () {
 
     // Memoised because a single frame render calls this once per opaque pixel,
-    // and a 128x128 frame is 16k lookups of a few dozen distinct colours.
+    // and a 128x128 frame is 16k lookups of a few dozen distinct colors.
     const rgbCache = {};
 
     function hexToRgb(hex) {
@@ -49,18 +49,18 @@ window.SpriteForge.color = (function () {
             .map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('');
     }
 
-    // One shade of a colour, as a step on a pixel-art ramp: shadows shift hue
+    // One shade of a color, as a step on a pixel-art ramp: shadows shift hue
     // toward blue and gain saturation, highlights shift toward yellow and lose
     // it.
     //
     // Step 0 returns the base string itself rather than round-tripping through
-    // HSL. Exact-string hex lookups depend on it — slot recolouring, palette
+    // HSL. Exact-string hex lookups depend on it — slot recoloring, palette
     // membership and the .forge key all compare hexes with === — so this makes
     // identity a guarantee of the code rather than a property of the arithmetic.
     //
     // The inherited comment here claimed the round trip drifts (#f0c090 coming
     // back as #f0c08f). It does not: hslToHex rounds to the nearest byte, and a
-    // sweep of 140,608 sampled colours plus every colour this project uses
+    // sweep of 140,608 sampled colors plus every color this project uses
     // round-trips exactly. The short circuit is kept anyway — it is free, and
     // it means a future change to hslToHex cannot quietly break the invariant.
     function shadeHex(base, step) {
@@ -79,9 +79,9 @@ window.SpriteForge.color = (function () {
      *
      * Plain RGB rather than a perceptual space, on purpose: the caller that
      * needs this is snapping an imported PNG onto swatches harvested from that
-     * same PNG, so every candidate is already one of the image's own colours
+     * same PNG, so every candidate is already one of the image's own colors
      * and the nearest of them is nearest under any metric worth the arithmetic.
-     * Ties go to the earlier entry, which is the commonest colour when the
+     * Ties go to the earlier entry, which is the commonest color when the
      * palette came from sheet.js.
      *
      * Returns null for an empty palette — there is no nearest anything.

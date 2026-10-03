@@ -428,7 +428,7 @@ Entities.prototype.drawTrolley = function (ctx, t, camX, camY) {
     const y = Math.round(t.y - camY);
     const C = CONFIG.COLORS;
 
-    // Wheels turn with distance travelled, so a stopped cart has still wheels.
+    // Wheels turn with distance traveled, so a stopped cart has still wheels.
     const spin = Math.floor(t.x / 5) % 2;
 
     ctx.fillStyle = C.trolleyIron;

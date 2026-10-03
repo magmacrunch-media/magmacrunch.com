@@ -17,12 +17,12 @@
     <link rel="stylesheet" href="../shell/fonts.css?v=08818834">
     <link rel="stylesheet" href="../shell/app-shell.css?v=2eb63ac6">
     <link rel="stylesheet" href="../shell/toast.css?v=2c51118f">
-    <link rel="stylesheet" href="css/style.css?v=7503280a">
+    <link rel="stylesheet" href="css/style.css?v=fb0d209a">
 </head>
 <body>
     <!-- The title screen. Its wordmark is not written here: js/title.js reads
          the <h1> below and draws it, so the app's name stays in one place and
-         a rename stays cheap. The canvas is sized and labelled by that file
+         a rename stays cheap. The canvas is sized and labeled by that file
          too. -->
     <div class="title-screen" id="titleScreen">
         <div class="title-inner">
@@ -264,29 +264,29 @@
 
     <script src="../shell/toast.js?v=d87a2776"></script>
     <script src="../shell/dropdown.js?v=2aa77ebe"></script>
-    <script src="js/canvas.js?v=da81b5cf"></script>
+    <script src="js/canvas.js?v=f999ce51"></script>
     <script src="js/chain.js?v=5b362bdc"></script>
-    <script src="js/generators.js?v=fe23af02"></script>
-    <script src="js/effects/channels.js?v=2757f65d"></script>
+    <script src="js/generators.js?v=f2e49cb8"></script>
+    <script src="js/effects/channels.js?v=6ad998ab"></script>
     <script src="js/effects/sort.js?v=fd949ab6"></script>
     <script src="js/effects/displace.js?v=b372d3ac"></script>
     <script src="js/effects/corrupt.js?v=987639f6"></script>
-    <script src="js/effects/fft.js?v=c54abb6d"></script>
-    <script src="js/effects/feedback.js?v=b7fd05b3"></script>
+    <script src="js/effects/fft.js?v=3194a438"></script>
+    <script src="js/effects/feedback.js?v=2210a612"></script>
     <!-- After the effects: SPECTRUM mode uses the transform fft.js exposes
          as Chain.fft, and before canvas.js repaints anything real. -->
-    <script src="js/meter.js?v=bc5e633f"></script>
-    <script src="js/ui.js?v=c1ef81c3"></script>
-    <script src="js/app.js?v=5cd0e962"></script>
+    <script src="js/meter.js?v=e5fed789"></script>
+    <script src="js/ui.js?v=6a9cd34e"></script>
+    <script src="js/app.js?v=16f4d115"></script>
     <!-- After app.js: it reads the page's own script tags to find the
          stamped core files, and hands them to a worker. -->
-    <script src="js/render.js?v=eb43f82d"></script>
+    <script src="js/render.js?v=1147d332"></script>
     <!-- preset.js is the logic and lab.js the buttons; both need Chain,
          Canvas and UI to exist, so they follow app.js. -->
-    <script src="js/preset.js?v=36a0f008"></script>
+    <script src="js/preset.js?v=dc5c3382"></script>
     <script src="js/lab.js?v=183a049b"></script>
     <!-- Last: it reads the effect registry the files above fill in. -->
-    <script src="js/title.js?v=053b22eb"></script>
+    <script src="js/title.js?v=ded209c5"></script>
     <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js");}</script>
 </body>
 </html>

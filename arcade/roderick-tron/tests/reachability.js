@@ -302,7 +302,7 @@ function plans(dir, runUp) {
  * because a letter you cannot get to is as much a bug as an exit you cannot
  * get to — which pickups sit out of reach.
  */
-function analyse(env) {
+function analyze(env) {
     const { CONFIG, map } = env;
     if (!env.pickups) {
         const TILE0 = CONFIG.TILE;
@@ -434,4 +434,4 @@ function analyse(env) {
     return { start, reached, exitReached, surfaces, edges, unreachablePickups, survivableRides };
 }
 
-module.exports = { findSurfaces, surfaceUnder, analyse, swingAngles };
+module.exports = { findSurfaces, surfaceUnder, analyze, swingAngles };

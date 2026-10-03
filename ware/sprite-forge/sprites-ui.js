@@ -92,15 +92,15 @@
         render();
     }
 
-    // ── recolouring the sprites you are not looking at ──────
+    // ── recoloring the sprites you are not looking at ──────
     //
-    // The palette is the project's, so a recolour is too: REPLACE and a slot
-    // change rewrite one set of colours everywhere, not just on the sprite
+    // The palette is the project's, so a recolor is too: REPLACE and a slot
+    // change rewrite one set of colors everywhere, not just on the sprite
     // that happens to be on screen. The editor rewrites its own live frames
     // and calls these for the rest.
 
     /**
-     * Whether any stored sprite uses one of `map`'s colours.
+     * Whether any stored sprite uses one of `map`'s colors.
      *
      * Asked before anything is written, because the editor has to know whether
      * there is a change to make before it takes an undo snapshot: a REPLACE
@@ -113,7 +113,7 @@
     }
 
     /**
-     * Rewrite `map`'s colours across every stored sprite. Returns how many
+     * Rewrite `map`'s colors across every stored sprite. Returns how many
      * changed, so the caller can say what it did.
      *
      * Skips the live one: the editor maps its own frames in the same pass, and

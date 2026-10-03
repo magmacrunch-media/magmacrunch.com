@@ -8,7 +8,7 @@ const Renderer = {
      *
      * The canvas is 480x270 and stretched to fill the viewport, so on anything
      * that is not an exact multiple some game pixels land two screen pixels wide
-     * and their neighbours one — a visible shimmer as the world scrolls past.
+     * and their neighbors one — a visible shimmer as the world scrolls past.
      * Snapping to an integer scale fixes that, but only above 2x: rounding a
      * 1.6x-sized window down to 1x would shrink the game to a stamp in the
      * middle of the screen, which is a worse trade than an uneven pixel.
@@ -30,7 +30,7 @@ const Renderer = {
 
     /**
      * Soft radial glow. Filling an arc() at a flat low alpha does not read as
-     * light — it reads as a grey disc with a hard rim, which is what the moon
+     * light — it reads as a gray disc with a hard rim, which is what the moon
      * halo and every gas lamp looked like before this existed.
      */
     glow(ctx, x, y, radius, rgb, alpha) {

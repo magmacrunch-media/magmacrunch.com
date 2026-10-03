@@ -107,12 +107,12 @@ header .byline {
   background: var(--butter);
   box-shadow: var(--glow-butter);
   /* Width is set every frame from the clock, so it must not be animated -
-     a transition on it would lag the music. Colour may be. */
+     a transition on it would lag the music. Color may be. */
   transition: background-color 180ms linear, box-shadow 180ms linear;
 }
 
 /* The last ten seconds, which is the threshold the number turned red at.
-   The pulse is what replaces being able to read the digits: a colour is a
+   The pulse is what replaces being able to read the digits: a color is a
    state, a blink is a clock. */
 .shift-fill.urgent {
   background: #FF3B3B;

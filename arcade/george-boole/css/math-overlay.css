@@ -27,8 +27,8 @@
     animation: pointRise 1s steps(10) forwards;
 }
 
-/* The rules strip and side panel colours (game.css .gate-tag), which the codex
-   uses too, so a gate is the same colour everywhere it is named. */
+/* The rules strip and side panel colors (game.css .gate-tag), which the codex
+   uses too, so a gate is the same color everywhere it is named. */
 .point-label[data-gate="xor"] { color: #00ffff; }
 .point-label[data-gate="or"]  { color: #ffe03a; }
 .point-label[data-gate="and"] { color: #39ff6e; }

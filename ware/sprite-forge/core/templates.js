@@ -2,10 +2,10 @@
 //
 // Pre-drawn characters to start from, in a form that stays reviewable in a
 // diff: each frame is rows of single characters, and each character maps to
-// [slotName, shadeStep] rather than to a literal colour.
+// [slotName, shadeStep] rather than to a literal color.
 //
-// The indirection is what makes a template customisable. A slot carries one
-// base colour and its shading is derived from it, so recolouring "shirt"
+// The indirection is what makes a template customizable. A slot carries one
+// base color and its shading is derived from it, so recoloring "shirt"
 // recomputes that slot's whole ramp instead of asking the user to hand-match
 // three hexes. Steps run -2 (deep shadow) to +2 (highlight); 0 is the base.
 //
@@ -154,10 +154,10 @@ window.CharacterTemplates = (function () {
     // only thing identifying the character, and the 2px neck that replaced it
     // read as a goatee rather than as a neck. Narrowed won.
     //
-    // Colours are seeded from what draw_dag.gml already used, so this is a
+    // Colors are seeded from what draw_dag.gml already used, so this is a
     // redraw of the same character rather than a new one: coat (52,73,94),
     // scarf (149,165,166), hair (93,64,55), skin (244,213,181). The buttons are
-    // the one deliberate change — draw_dag painted them the same grey as the
+    // the one deliberate change — draw_dag painted them the same gray as the
     // scarf, which reads as noise; brass gives one warm accent against the
     // olive drab of the room.
 
@@ -379,7 +379,7 @@ window.CharacterTemplates = (function () {
                 }
             });
         });
-        // Two slots resolving to the same hex would make recolouring one of them
+        // Two slots resolving to the same hex would make recoloring one of them
         // silently move the other, so this is a correctness check, not a nicety.
         if (shade) {
             const seen = {};

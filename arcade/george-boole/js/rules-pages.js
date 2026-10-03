@@ -27,7 +27,7 @@
 // halves of it: somebody meeting binary for the first time, and somebody who
 // is already playing and wants the overflow rule. A block carrying
 // data-chapter starts one, and from there a chapter is a run of pages that
-// counts from 1, says its own name, and names its neighbour on the button
+// counts from 1, says its own name, and names its neighbor on the button
 // that would leave it. Which blocks carry the attribute is a question about
 // the rules, so it is answered in the markup, like everything else here.
 

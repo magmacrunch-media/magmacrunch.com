@@ -54,20 +54,20 @@ window.SpriteForge.sheet = (function () {
      * Slices a decoded image into frames, left-to-right then top-to-bottom.
      *
      * Returns { frames, palette, colors, truncated } — palette is the distinct
-     * colours ordered by how many pixels use them, so the commonest colour
-     * lands in swatch 0, and `colors` is how many distinct colours the image
+     * colors ordered by how many pixels use them, so the commonest color
+     * lands in swatch 0, and `colors` is how many distinct colors the image
      * held before maxSwatches was applied. `truncated` reports that the image
      * was not evenly divisible and trailing pixels were dropped, rather than
      * failing: a sheet with a stray row of guide pixels is still worth
      * importing.
      *
-     * maxSwatches reduces the pixels as well as the palette: the colours that
+     * maxSwatches reduces the pixels as well as the palette: the colors that
      * do not make the cut are snapped to the nearest one that did, so every
      * pixel returned is a palette entry. It cannot only truncate the palette.
      * project.js builds the .forge key from the pixels unioned with the
      * palette, so truncating the palette alone left the pixels holding every
-     * colour of the original: a full-colour PNG imported cleanly and then
-     * could not be saved at all, because the key holds 89 colours.
+     * color of the original: a full-color PNG imported cleanly and then
+     * could not be saved at all, because the key holds 89 colors.
      *
      * Pixels below 50% alpha become transparent and partial alpha is dropped —
      * the grids this editor works in have no intermediate alpha at all.
@@ -95,7 +95,7 @@ window.SpriteForge.sheet = (function () {
         const ordered = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
         const palette = ordered.slice(0, maxSwatches || Infinity);
 
-        // Only the dropped colours get an entry; a kept colour falls through to
+        // Only the dropped colors get an entry; a kept color falls through to
         // itself, and that identity matters because the palette, the slot
         // machinery and the .forge key all compare hexes with ===.
         const snap = {};

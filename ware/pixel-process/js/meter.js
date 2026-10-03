@@ -25,7 +25,7 @@
  *
  * ## Cost
  *
- * Both modes work from at most ANALYSE x ANALYSE samples, point-sampled. A
+ * Both modes work from at most ANALYZE x ANALYZE samples, point-sampled. A
  * histogram of a 12MP image would otherwise walk 48MB on every knob movement,
  * and a 2D FFT at full size is seconds. At 128 the transform is 16k points
  * and the whole update is a few milliseconds, which is what makes it
@@ -34,7 +34,7 @@
 (function () {
     'use strict';
 
-    var ANALYSE = 128;            // samples per side, and the FFT size
+    var ANALYZE = 128;            // samples per side, and the FFT size
     var KEY = 'signalchain:meter'; // "<mode>" or "off"
     var BINS = 64;                 // spectrum curve points
 
@@ -55,7 +55,7 @@
             r[pr]++; g[pg]++; b[pb]++;
             /* Rec. 601 luma, the same weighting the effects use, ROUNDED
                rather than truncated. The three coefficients sum to one only
-               in decimal: in binary a flat grey 128 comes to
+               in decimal: in binary a flat gray 128 comes to
                127.99999999999999, and truncating put every flat field one
                level below where it belongs. */
             var y = Math.min(255, Math.round(0.299 * pr + 0.587 * pg + 0.114 * pb));
@@ -137,7 +137,7 @@
      *
      * The mean is removed first, so DC does not sit as a single enormous spike
      * at zero and flatten everything else; that is the same reason SPECTRUM
-     * the effect normalises excluding DC. Frequency is a fraction of Nyquist,
+     * the effect normalizes excluding DC. Frequency is a fraction of Nyquist,
      * so the curve means the same thing at any working size, and bins are
      * averaged over the ring at that radius, which is what makes it one curve
      * rather than a picture.
@@ -184,12 +184,12 @@
         /* Where inside its bin the peak really sits: the magnitude-weighted
            mean radius of what that bin holds, which for a single tone is
            exactly the tone's frequency.
-           Reporting the bin centre instead is a real error and not a rounding
+           Reporting the bin center instead is a real error and not a rounding
            one, because it is biased the same way every time: a 32 pixel
            pattern falls at the left edge of its bin and reads as 31.
-           Interpolating between neighbouring bins does not fix it either,
+           Interpolating between neighboring bins does not fix it either,
            which the suite showed before this replaced it -- a pure tone puts
-           everything in one bin and leaves its neighbours equal, so there is
+           everything in one bin and leaves its neighbors equal, so there is
            no shape to fit and the correction comes out as zero. */
         var peak = sums[peakBin] > 0
             ? radSums[peakBin] / sums[peakBin]
@@ -293,7 +293,7 @@
      * The curve LIFTS at an empty bin rather than running along the bottom of
      * the screen to the next one. A joined-up line spends most of its length
      * at zero on any picture that does not use every level, and with three
-     * channels drawn in turn the last one painted owned that line: on colour
+     * channels drawn in turn the last one painted owned that line: on color
      * bars it read as a blue border around the monitor rather than as a
      * measurement. A bin with nothing in it now draws nothing.
      *
@@ -301,7 +301,7 @@
      * therefore invisible, so it is drawn as a spike from the axis. Those are
      * exactly the bins worth seeing: a posterised picture is nothing else.
      */
-    function plotCounts(counts, max, colour, fill) {
+    function plotCounts(counts, max, color, fill) {
         var h = screen.height;
         /* Inset by a pixel at each end. Levels 0 and 255 are drawn at the
            very edge otherwise, and those are exactly the two bins that matter
@@ -312,7 +312,7 @@
         var i, v, x, y;
 
         /* Log, not linear and not square root. A picture with few levels in
-           it -- colour bars, a posterised chain -- puts nearly every pixel in
+           it -- color bars, a posterised chain -- puts nearly every pixel in
            a handful of bins, and against that peak the rest of the picture is
            a flat line at the axis on either of the other two scales. Log
            shows a bin holding one pixel in a thousand. */
@@ -325,7 +325,7 @@
                 ctx.lineTo(x0 + i / 255 * w, h - v * (h - 2) - 1);
             }
             ctx.lineTo(x0 + w, h);
-            ctx.fillStyle = colour;
+            ctx.fillStyle = color;
             ctx.fill();
             return;
         }
@@ -349,7 +349,7 @@
             }
         }
 
-        ctx.strokeStyle = colour;
+        ctx.strokeStyle = color;
         // With the device ratio, not one pixel: a hairline on a 3x phone
         // screen is a third of the width it is on a desktop, and the
         // histogram of a picture with few levels is nothing but hairlines.
@@ -399,7 +399,7 @@
     }
 
     /** One curve of dB against frequency, -60 dB at the floor. */
-    function plotCurve(curve, colour, width) {
+    function plotCurve(curve, color, width) {
         var w = screen.width, h = screen.height, i;
         ctx.beginPath();
         for (i = 0; i < curve.length; i++) {
@@ -408,7 +408,7 @@
             var y = h - v * (h - 2) - 1;
             if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
         }
-        ctx.strokeStyle = colour;
+        ctx.strokeStyle = color;
         ctx.lineWidth = width;
         ctx.stroke();
     }
@@ -426,7 +426,7 @@
            number that is true whichever way the image is turned: "the loudest
            repeating detail is every 32 pixels". */
         var period = spec.peak > 0 ? 2 * pitchPx / spec.peak : Infinity;
-        readout.textContent = period > 4 * ANALYSE * pitchPx
+        readout.textContent = period > 4 * ANALYZE * pitchPx
             ? 'PEAK --'
             : 'PEAK ' + (period < 10 ? period.toFixed(1) : Math.round(period)) + ' PX';
     }
@@ -467,12 +467,12 @@
     function update(source, sourceData) {
         if (!on || !source || !source.width || !source.height) return;
 
-        /* One pitch for both axes: the longer side gets ANALYSE samples and
+        /* One pitch for both axes: the longer side gets ANALYZE samples and
            the shorter gets proportionally fewer, so a 640x480 picture is
            sampled 128 x 96 rather than squashed into a square. Point-sampled,
            never smoothed, because a smoothed downscale invents levels that
            are not in the picture, which is a lie in a measurement. */
-        var n = ANALYSE;
+        var n = ANALYZE;
         var pitch = Math.max(source.width, source.height) / n;
         var nx = Math.max(1, Math.min(n, Math.round(source.width / pitch)));
         var ny = Math.max(1, Math.min(n, Math.round(source.height / pitch)));

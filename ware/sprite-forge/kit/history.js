@@ -17,7 +17,7 @@
      commits only if something actually changed, so one Ctrl+Z undoes the
      whole stroke and no-op clicks don't pollute the stack.
    - `leaving(target)` hook: when the state being restored carries extra
-     baggage (sprite-forge's project-wide recolours carry the whole sprite
+     baggage (sprite-forge's project-wide recolors carry the whole sprite
      list), the state pushed to the other stack may need to carry it too, or
      undoing strands redo with no way back. The default is a plain snapshot.
    - revision() counts every mutation the stack has seen — push, undo, redo —
@@ -60,7 +60,7 @@
         /* The pending snapshot is boxed, not held bare: a state that happens
            to be falsy (0, '', null) must still commit.
 
-           IDEMPOTENT, and that is the point. A colour picker fires `input`
+           IDEMPOTENT, and that is the point. A color picker fires `input`
            continuously through a drag and a range slider does the same, so
            every consumer drives this from an event that repeats. Re-snapshotting
            on each call would capture the already-dragged state and a single

@@ -51,7 +51,7 @@ body {
 
 canvas {
     /* The rail is a stream of hard-edged pixels toward the camera; smoothing
-       it turns the deck bands into a grey wash. */
+       it turns the deck bands into a gray wash. */
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     display: block;

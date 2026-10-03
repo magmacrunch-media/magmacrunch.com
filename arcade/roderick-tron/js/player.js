@@ -197,13 +197,13 @@ Player.prototype.update = function (dt) {
     // flings.
     if (this.map.overlapsUpdraft(this.box.x, this.box.y, this.box.w, this.box.h)) {
         this.vy = Math.max(this.vy - CONFIG.UPDRAFT_LIFT * dt, -CONFIG.UPDRAFT_MAX_RISE);
-        const centre = this.map.updraftCentre(this.box.x, this.box.y, this.box.w, this.box.h);
-        if (centre !== null) {
+        const center = this.map.updraftCentre(this.box.x, this.box.y, this.box.w, this.box.h);
+        if (center !== null) {
             // Settles him toward the middle, so a column is a place you ride
             // rather than one you keep sliding out of.
             const mid = this.box.x + this.box.w / 2;
-            this.box.x += Math.sign(centre - mid)
-                * Math.min(Math.abs(centre - mid), CONFIG.UPDRAFT_DRIFT * dt);
+            this.box.x += Math.sign(center - mid)
+                * Math.min(Math.abs(center - mid), CONFIG.UPDRAFT_DRIFT * dt);
         }
         this.inUpdraft = true;
     } else {
@@ -367,7 +367,7 @@ Player.prototype.draw = function (ctx, camX, camY) {
 
     if (this.rolling) {
         // A tucked ball. The spin is read off world position, so it rolls at
-        // the speed it is actually travelling.
+        // the speed it is actually traveling.
         const spin = Math.floor(this.box.x / 4) % 4;
         ctx.fillStyle = C.robotCoat;
         ctx.fillRect(x, y, 14, 14);

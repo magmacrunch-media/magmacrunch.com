@@ -123,21 +123,21 @@
     font-size: 22px !important;
 }
 
-/* The examples' colours, pinned to the 4-bit (SNES) palette.
+/* The examples' colors, pinned to the 4-bit (SNES) palette.
 
-   Every tile colour in this game is scoped to a theme --
+   Every tile color in this game is scoped to a theme --
    body[data-theme="snes"] .tile[data-value="5"] and so on -- and the body has
    no theme until a mode is picked. So on this screen, which comes first, real
-   tile markup renders as transparent numbers and grey gates, and the pictures
+   tile markup renders as transparent numbers and gray gates, and the pictures
    teach nothing. After a game the body carries that mode's theme instead, so
-   the examples would change colour depending on what was last played.
+   the examples would change color depending on what was last played.
 
    Values read from the SNES theme with getComputedStyle on the real markup, not
    retyped from themes.css. Every declaration here is !important, deliberately:
-   the themes set gate colours with !important and number-tile text through
+   the themes set gate colors with !important and number-tile text through
    more specific intensity rules, so anything weaker let the 8-bit theme repaint
    half the examples after an 8-bit game. These illustrate 4-bit play; they are
-   not live tiles, so nothing is meant to restyle them. Text colour is set on
+   not live tiles, so nothing is meant to restyle them. Text color is set on
    each value's own rule as well as the shared one: 3 is the 2-bit ceiling, and
    the Game Boy theme restyles the max tile at higher specificity. */
 .lore-screen .lore-eq .tile {
@@ -206,7 +206,7 @@
     margin: 0 2px;
 }
 
-/* The overflow payout, in the colours of the overflow banner game.js shows. */
+/* The overflow payout, in the colors of the overflow banner game.js shows. */
 .lore-bonus {
     display: inline-flex;
     align-items: center;
@@ -252,14 +252,14 @@
 }
 
 /* Its own row above the heading rather than pinned in the corner: the
-   heading is centred across the full width, so an absolutely positioned
+   heading is centered across the full width, so an absolutely positioned
    button at the top left lands underneath "how to play". */
 .lore-back {
     display: block;
     /* Under the continue button now, not tucked into the top-left corner, so
        the margins run the other way: a gap above to separate it from the
        button it must not be mistaken for, none below, and full width so the
-       label centres under it rather than hanging off one side. */
+       label centers under it rather than hanging off one side. */
     width: 100%;
     margin: 14px 0 0;
     padding: 8px;
@@ -314,7 +314,7 @@
 /* =============================================
    BUTTONS
    Drawn like the title screen's start button, and like the tiles: a flat
-   colour, a pixel bevel, a hard outline and a solid drop the button sits down
+   color, a pixel bevel, a hard outline and a solid drop the button sits down
    into when pressed. SELECT MODE is the primary action and gets the start
    button's cyan; the two quick actions are dark tiles, so there is one obvious
    thing to press on the screen.

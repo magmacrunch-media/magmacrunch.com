@@ -2,7 +2,7 @@
 // The ship: flight, banking, guns, invincibility.
 //
 // The ship never leaves the z = 0 plane, so its x/y are world units measured
-// from the rail's centre line and need no projection — the one thing in the
+// from the rail's center line and need no projection — the one thing in the
 // game drawn without going through Project. Everything else is drawn relative
 // to it.
 
@@ -71,7 +71,7 @@ Player.prototype.update = function (axisX, axisY, wantsFire, dt) {
     return false;
 };
 
-/** Where a shot leaves the ship. The nose, not the centre. */
+/** Where a shot leaves the ship. The nose, not the center. */
 Player.prototype.muzzle = function () {
     return { x: this.x, y: this.y - 2 };
 };

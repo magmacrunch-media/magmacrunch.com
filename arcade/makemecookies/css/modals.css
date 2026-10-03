@@ -188,7 +188,7 @@
 .credits-value a { color: var(--sprinkle); }
 /* Butter, and no glow. The glow is the HUD's voice -- a score, a bonus, a
    number lighting up -- and on a song title in a paragraph of body text it
-   read as a highlighter pen rather than as neon. Colour alone is enough to
+   read as a highlighter pen rather than as neon. Color alone is enough to
    mark the two things in here worth marking. */
 .credits-value strong { color: var(--butter); }
 .modal-footer {
@@ -215,9 +215,9 @@
     margin: 14px auto;
   }
 
-  /* Taller controls can push a card past a short landscape viewport. Centring
+  /* Taller controls can push a card past a short landscape viewport. Centering
      with align-items would then clip the top beyond reach - the usual flexbox
-     trap - so switch to flex-start and let auto margins do the centring while
+     trap - so switch to flex-start and let auto margins do the centering while
      there is room, and scrolling take over when there is not. */
   .modal-overlay {
     align-items: flex-start;
