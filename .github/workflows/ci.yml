@@ -67,16 +67,28 @@ jobs:
       #   makemecookies  moonlight-drift  texas-holdem-lava-dome
       #   jovian-humanitarian-conflict  roderick-tron
       #
-      # george-boole is still public, so it is still checked here. When it
-      # follows, this step goes too and this job stops covering any game at
-      # all, which is the moment to decide whether a deploy key or the release
-      # App should read them instead of letting the whole check move to the dev
-      # box by default.
+      # george-boole is the exception, and from 2026-10-03 it is an exception
+      # that survives its own flip: it has a read-only DEPLOY KEY here, so this
+      # step keeps working whether that repo is public or private. That is the
+      # answer to the question this comment used to leave open, and it is the
+      # better one. The five above lost their coverage; this one does not have
+      # to.
       - name: Check out george-boole
         uses: actions/checkout@v7
         with:
           repository: magmacrunch-media/george-boole
           path: game-repos/george-boole
+          # Read-only deploy key, so this step SURVIVES george-boole going
+          # private instead of having to be deleted like the five above it.
+          # That is the better outcome: a name on GAME_REPOS_OPTIONAL is a game
+          # whose cache-busters this job no longer checks, and this job was one
+          # flip away from checking none at all.
+          #
+          # The same trick would bring the other five back under coverage, each
+          # needing its own read-only key on that game held here. Worth doing if
+          # this check is meant to mean anything in CI rather than only on the
+          # dev box.
+          ssh-key: ${{ secrets.GEORGE_BOOLE_DEPLOY_KEY }}
 
       # GAME_REPOS is also the assertion that the repos are there. Without it the
       # check skips when it finds none, which is right for a clone that was never
@@ -92,12 +104,16 @@ jobs:
       # that can read it is available here.
       #
       # Five names joined this line on 2026-10-03, the day those games were
-      # privatised, and that is the standing cost of privatising a game this
-      # site serves: its cache-buster check moves from CI to the dev box. The
-      # list is now longer than the covered set, which is the signal that this
-      # job is close to checking nothing. Worth weighing before george-boole
-      # follows, because that one has FOUR versions to keep in step and would
-      # leave this job with no game at all.
+      # privatised, and that WAS going to be the standing cost of privatising a
+      # game this site serves: its cache-buster check moving from CI to the dev
+      # box. The list is longer than the covered set, which is the signal that
+      # this job is close to checking nothing.
+      #
+      # IT DOES NOT HAVE TO BE THE COST. george-boole gained a deploy key the
+      # same day and keeps its checkout through its own flip, and the identical
+      # trick would bring these five back: one read-only key per game, held
+      # here. Each name on this line is now a decision not taken rather than a
+      # limit, and george-boole is the worked example sitting directly above.
       #
       # very-long-boards is on this line and is NOT private; it is public and has
       # been throughout. The sentence above claimed otherwise until 2026-10-03.
