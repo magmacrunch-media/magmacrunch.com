@@ -82,12 +82,10 @@ jobs:
           repository: magmacrunch-media/jovian-humanitarian-conflict
           path: game-repos/jovian-humanitarian-conflict
 
-      - name: Check out makemecookies
-        uses: actions/checkout@v7
-        with:
-          repository: magmacrunch-media/makemecookies
-          path: game-repos/makemecookies
-
+      # NO makemecookies STEP. It went private on 2026-10-03, and a workflow's
+      # GITHUB_TOKEN reaches only the repo it runs in, so a checkout here would
+      # fail outright rather than skip. It is named in GAME_REPOS_OPTIONAL
+      # below instead, which is the hole this file already had a shape for.
       - name: Check out roderick-tron
         uses: actions/checkout@v7
         with:
@@ -100,12 +98,23 @@ jobs:
       # failed makes this job fail rather than pass over nothing.
       #
       # GAME_REPOS_OPTIONAL is the hole, and it is spelled out rather than
-      # tolerated. very-long-boards and pay2play are private repos, and a
+      # tolerated. pay2play and makemecookies are private repos, and a
       # workflow's GITHUB_TOKEN reaches only the repo it runs in, so there are no
       # checkout steps for them above. The check names them in the log on every
       # run and says they are not covered. Drop a name from this line and add its
       # checkout back once that repo is public, or once a token that can read it
       # is available here.
+      #
+      # makemecookies joined this line on 2026-10-03, the day it was privatised,
+      # and that is the standing cost of privatising any game this site serves:
+      # its cache-buster check moves from CI to the dev box. Worth knowing before
+      # george-boole follows, because that one has FOUR versions to keep in step.
+      #
+      # very-long-boards is on this line and is NOT private; it is public and has
+      # been throughout. The sentence above claimed otherwise until 2026-10-03.
+      # So it could have a checkout step and be covered here, and the only reason
+      # it is not is that nobody has added one. Left alone rather than fixed
+      # blind: check it actually has a web/ before adding the step.
       #
       # They are still covered where every repo is on disk: `npm run check` on
       # the dev box checks them like any other.
@@ -118,7 +127,7 @@ jobs:
       - name: Check the game repos' cache-busters
         env:
           GAME_REPOS: ${{ github.workspace }}/game-repos
-          GAME_REPOS_OPTIONAL: very-long-boards,pay2play
+          GAME_REPOS_OPTIONAL: very-long-boards,pay2play,makemecookies
         run: npm run check:gamestamps
 
   test-python:
