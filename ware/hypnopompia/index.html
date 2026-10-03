@@ -266,6 +266,42 @@
       border-top: 1px solid #33304a;
     }
     footer span { color: var(--hp-accent); }
+
+    /* -- Source access --------------------------------- */
+
+    /* The repository is private, so the page carries the way to ask rather
+       than a link that 404s for everyone who is not signed in. */
+    .src-note {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .src-note-box {
+      border: 1px solid #33304a;
+      border-left: 3px solid var(--hp-accent);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .02);
+      padding: .9rem 1rem;
+    }
+
+    .src-note-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--hp-accent);
+      letter-spacing: 0.05em;
+      margin-bottom: .6rem;
+    }
+
+    .src-note p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #9d99b5;
+    }
+
+    .src-note p + p { margin-top: .5rem; }
+    .src-note a { color: var(--hp-accent); }
   </style>
 </head>
 <body>
@@ -291,7 +327,7 @@
       reinvent: a plugin, a project, a pipeline and a checklist that fails loudly.</p>
 
     <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/hypnopompia" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:info@magmacrunch.com?subject=hypnopompia">contact</a>
     </div>
   </div>
 
@@ -381,6 +417,17 @@ node tools/check-game-center.mjs ../../games/&lt;game&gt;/ios
 node tools/check-launch-crop.mjs ../../games/&lt;game&gt;/ios</code></pre>
 
     <p class="about-license">PolyForm Noncommercial 1.0.0 &middot; Copyright 2026 magmacrunch media</p>
+  </div>
+
+  <div class="src-note">
+    <div class="src-note-box">
+      <div class="src-note-label">// source access //</div>
+      <p>hypnopompia is developed in-house and is not publicly distributed.
+        It ships inside the App Store builds it exists for, rather than on
+        its own.</p>
+      <p>For source access, licensing, or anything else, email
+        <a href="mailto:info@magmacrunch.com?subject=hypnopompia">info@magmacrunch.com</a>.</p>
+    </div>
   </div>
 
   <footer>

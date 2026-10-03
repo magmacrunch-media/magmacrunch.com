@@ -475,6 +475,42 @@
       border-top: 1px solid #33304a;
     }
     footer span { color: #7cc7ff; }
+
+    /* -- Source access --------------------------------- */
+
+    /* The repository is private, so the page carries the way to ask rather
+       than a link that 404s for everyone who is not signed in. */
+    .src-note {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .src-note-box {
+      border: 1px solid #33304a;
+      border-left: 3px solid #c45fff;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .02);
+      padding: .9rem 1rem;
+    }
+
+    .src-note-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #c45fff;
+      letter-spacing: 0.05em;
+      margin-bottom: .6rem;
+    }
+
+    .src-note p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #9d99b5;
+    }
+
+    .src-note p + p { margin-top: .5rem; }
+    .src-note a { color: #c45fff; }
   </style>
 </head>
 <body>
@@ -501,10 +537,10 @@
       <h2>Modules Reference</h2>
       <p>The public C API across twelve modules. Structs, constants and every function the umbrella header exposes.</p>
     </a>
-    <a href="https://github.com/magmacrunch-media/hologram/wiki" class="tool-card" target="_blank" rel="noopener">
-      <div class="icon">&#128214;</div>
-      <h2>Wiki</h2>
-      <p>The full reference, including the shader constraints that shape how the GPU walk is written.</p>
+    <a href="mailto:info@magmacrunch.com?subject=hologram" class="tool-card">
+      <div class="icon">&#9993;</div>
+      <h2>Get in touch</h2>
+      <p>The engine is not publicly distributed. Email for source access, licensing, or the deeper reference.</p>
     </a>
   </div>
 
@@ -742,7 +778,7 @@
     <pre><code>build.bat          # Windows: every example into build\
 build.bat test     # builds and runs the host tests
 ./build.sh test    # the same, on Linux or macOS</code></pre>
-    <p>Run the examples from the repository root. They read <code>shaders\trace.hlsl</code> at
+    <p>Run the examples from the source root. They read <code>shaders\trace.hlsl</code> at
       startup, so you can edit the tracer and relaunch without recompiling.</p>
 
     <h3>a scene is a literal</h3>
@@ -761,9 +797,8 @@ build.bat test     # builds and runs the host tests
     <p>Named after the Dag Henderson track "hologram of a dream", published by magmacrunch music.</p>
 
     <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/hologram" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/magmacrunch-media/hologram/wiki" target="_blank" rel="noopener">Wiki</a>
       <a href="reference.html">Reference</a>
+      <a href="mailto:info@magmacrunch.com?subject=hologram">contact</a>
     </div>
 
     <p class="about-license">PolyForm Noncommercial 1.0.0 &#183; Copyright 2026 magmacrunch media.
@@ -771,6 +806,17 @@ build.bat test     # builds and runs the host tests
       This differs deliberately from magmacrunch's Apache-2.0 2D engines: those are infrastructure
       for anyone, while hologram is the optics engine under magmacrunch's own games. Vendored sokol
       headers, by Andre Weissflog, keep their zlib licence.</p>
+  </div>
+
+  <div class="src-note">
+    <div class="src-note-box">
+      <div class="src-note-label">// source access //</div>
+      <p>hologram is developed in-house and is not publicly distributed.
+        The modules reference covers the public C API, and the gallery
+        above shows what the tracer renders.</p>
+      <p>For source access, licensing, or anything else, email
+        <a href="mailto:info@magmacrunch.com?subject=hologram">info@magmacrunch.com</a>.</p>
+    </div>
   </div>
 
   <footer>

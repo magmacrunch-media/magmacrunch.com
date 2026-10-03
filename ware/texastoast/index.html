@@ -315,6 +315,42 @@
       border-top: 1px solid #33304a;
     }
     footer span { color: #ffe03a; }
+
+    /* -- Source access --------------------------------- */
+
+    /* The repository is private, so the page carries the way to ask rather
+       than a link that 404s for everyone who is not signed in. */
+    .src-note {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .src-note-box {
+      border: 1px solid #33304a;
+      border-left: 3px solid #ffe03a;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .02);
+      padding: .9rem 1rem;
+    }
+
+    .src-note-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #ffe03a;
+      letter-spacing: 0.05em;
+      margin-bottom: .6rem;
+    }
+
+    .src-note p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #9d99b5;
+    }
+
+    .src-note p + p { margin-top: .5rem; }
+    .src-note a { color: #ffe03a; }
   </style>
 </head>
 <body>
@@ -348,9 +384,8 @@
       the Magma Hub exists.</p>
 
     <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/texastoast" target="_blank" rel="noopener">GitHub</a>
       <a href="https://pypi.org/project/texastoast/" target="_blank" rel="noopener">PyPI</a>
-      <a href="https://github.com/magmacrunch-media/texastoast/wiki" target="_blank" rel="noopener">Docs</a>
+      <a href="reference.html">Docs</a>
       <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
     </div>
   </div>
@@ -508,6 +543,17 @@ update = fn(dt) {
 }</code></pre>
 
     <p class="about-license">Apache-2.0 · Copyright 2026 magmacrunch media</p>
+  </div>
+
+  <div class="src-note">
+    <div class="src-note-box">
+      <div class="src-note-label">// source access //</div>
+      <p>texastoast installs from PyPI above, and the playground runs the
+        real engine in your browser. The engine source is not public.</p>
+      <p>For source access, licensing, the hardware dev kit, or anything else,
+        email
+        <a href="mailto:info@magmacrunch.com?subject=texastoast">info@magmacrunch.com</a>.</p>
+    </div>
   </div>
 
   <footer>

@@ -297,6 +297,42 @@
       border-top: 1px solid #33304a;
     }
     footer span { color: #7cc7ff; }
+
+    /* -- Source access --------------------------------- */
+
+    /* The repository is private, so the page carries the way to ask rather
+       than a link that 404s for everyone who is not signed in. */
+    .src-note {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .src-note-box {
+      border: 1px solid #33304a;
+      border-left: 3px solid #7cc7ff;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .02);
+      padding: .9rem 1rem;
+    }
+
+    .src-note-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #7cc7ff;
+      letter-spacing: 0.05em;
+      margin-bottom: .6rem;
+    }
+
+    .src-note p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #9d99b5;
+    }
+
+    .src-note p + p { margin-top: .5rem; }
+    .src-note a { color: #7cc7ff; }
   </style>
 </head>
 <body>
@@ -319,8 +355,7 @@
       terminal or browser.</p>
 
     <div class="about-links">
-      <a href="https://github.com/magmacrunch-media/magmascript" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/magmacrunch-media/magmascript/wiki" target="_blank" rel="noopener">Docs</a>
+      <a href="reference.html">Docs</a>
       <a href="https://pypi.org/project/magmascript/" target="_blank" rel="noopener">PyPI</a>
       <a href="https://magmacrunch.com" target="_blank" rel="noopener">magmacrunch.com</a>
     </div>
@@ -404,6 +439,17 @@
 magmascript repl</code></pre>
 
     <p class="about-license">MIT · Copyright 2026 magmacrunch media</p>
+  </div>
+
+  <div class="src-note">
+    <div class="src-note-box">
+      <div class="src-note-label">// source access //</div>
+      <p>magmascript installs from PyPI or homebrew above, and the
+        playground runs the real interpreter in your browser. The
+        interpreter source is not public.</p>
+      <p>For source access, licensing, or anything else, email
+        <a href="mailto:info@magmacrunch.com?subject=magmascript">info@magmacrunch.com</a>.</p>
+    </div>
   </div>
 
   <footer>
