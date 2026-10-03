@@ -117,6 +117,26 @@
     text-shadow: 1px 1px 0px #006600;
 }
 
+/* The decimal line is a reading; the bits are the operation.
+ *
+ * `1 XOR 2 = 3` is not true of the numerals. XOR is defined on bits, and that
+ * equation holds only because 0001 XOR 0010 = 0011. In base 10 alone it is a
+ * category error in a game whose whole subject is that the two notations are
+ * the same number, and the tiles already get this right by printing both.
+ *
+ * Four-bit, because the lore screen's example tiles are four-bit and these
+ * examples hold at any width. NOT is the exception and carries the width it
+ * quotes, since inverting depends on how many lamps there are.
+ */
+.gate-ref-example .bits {
+    display: block;
+    font-size: 7px;
+    color: rgba(0, 255, 0, 0.55);
+    text-shadow: none;
+    letter-spacing: 0.5px;
+    margin: 0 0 3px 0;
+}
+
 .gate-ref-usage {
     font-size: 6px;
     color: rgba(0, 255, 255, 0.7);

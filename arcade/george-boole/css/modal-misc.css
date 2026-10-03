@@ -509,3 +509,20 @@
         letter-spacing: 1px;
     }
 }
+
+/* Bits under the decimal reading, on the gate cards in the full rules, and
+   inline where a NOT is quoted mid-sentence. Same reason as the side panel's
+   .bits: a gate symbol between two base-10 numerals is false as written, and
+   the equation only holds once the operands are bits. */
+.instructions-content .bits {
+    display: block;
+    font-size: 9px;
+    color: rgba(0, 255, 0, 0.55);
+    letter-spacing: 0.5px;
+    margin: 1px 0 4px 0;
+}
+
+.instructions-content .bits-inline {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.6);
+}

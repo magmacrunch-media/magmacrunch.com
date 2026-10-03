@@ -71,10 +71,10 @@
     <link rel="stylesheet" href="css/modal-difficulty.css?v=2cea08f0">
     <link rel="stylesheet" href="css/modal-scoreboard.css?v=0ae5f201">
     <link rel="stylesheet" href="css/modal-settings.css?v=52d3c30a">
-    <link rel="stylesheet" href="css/modal-misc.css?v=ab024f8c">
+    <link rel="stylesheet" href="css/modal-misc.css?v=3c46fce5">
     <link rel="stylesheet" href="css/responsive.css?v=f0fe00bb">
     <link rel="stylesheet" href="css/gates.css?v=71f1f693">
-    <link rel="stylesheet" href="css/side-panels.css?v=750ad1a6">
+    <link rel="stylesheet" href="css/side-panels.css?v=81928961">
     <link rel="stylesheet" href="css/math-overlay.css?v=2b2e3275">
     <link rel="stylesheet" href="css/codex.css?v=95488567">
 </head>
@@ -219,7 +219,7 @@
                     <div class="gate-ref-symbol">&#x2295;</div>
                     <div class="gate-ref-name">XOR</div>
                     <div class="gate-ref-desc">exclusive or &mdash; sets each bit where the inputs differ</div>
-                    <div class="gate-ref-example">1 &oplus; 2 = 3<br>2 &oplus; 3 = 1</div>
+                    <div class="gate-ref-example">1 &oplus; 2 = 3<span class="bits">0001 &oplus; 0010 = 0011</span>2 &oplus; 3 = 1<span class="bits">0010 &oplus; 0011 = 0001</span></div>
                     <div class="gate-ref-usage">sandwich: [num][&oplus;][num]</div>
                 </div>
 
@@ -227,7 +227,7 @@
                     <div class="gate-ref-symbol">&#x2228;</div>
                     <div class="gate-ref-name">OR</div>
                     <div class="gate-ref-desc">bitwise or &mdash; sets any bit that is 1 in either input</div>
-                    <div class="gate-ref-example">1 &or; 2 = 3<br>4 &or; 3 = 7</div>
+                    <div class="gate-ref-example">1 &or; 2 = 3<span class="bits">0001 &or; 0010 = 0011</span>4 &or; 3 = 7<span class="bits">0100 &or; 0011 = 0111</span></div>
                     <div class="gate-ref-usage">sandwich: [num][&or;][num]</div>
                 </div>
 
@@ -235,7 +235,7 @@
                     <div class="gate-ref-symbol">&#x2227;</div>
                     <div class="gate-ref-name">AND</div>
                     <div class="gate-ref-desc">bitwise and &mdash; keeps only shared bits</div>
-                    <div class="gate-ref-example">3 &and; 2 = 2<br>7 &and; 4 = 4</div>
+                    <div class="gate-ref-example">3 &and; 2 = 2<span class="bits">0011 &and; 0010 = 0010</span>7 &and; 4 = 4<span class="bits">0111 &and; 0100 = 0100</span></div>
                     <div class="gate-ref-usage">sandwich: [num][&and;][num]</div>
                 </div>
 
@@ -243,7 +243,7 @@
                     <div class="gate-ref-symbol">&#xAC;</div>
                     <div class="gate-ref-name">NOT</div>
                     <div class="gate-ref-desc">inverts all bits &mdash; unary, acts on one number</div>
-                    <div class="gate-ref-example">&not;1 = 2 (2-bit)<br>&not;8 = 7 (4-bit)</div>
+                    <div class="gate-ref-example">&not;1 = 2 (2-bit)<span class="bits">&not;01 = 10</span>&not;8 = 7 (4-bit)<span class="bits">&not;1000 = 0111</span></div>
                     <div class="gate-ref-usage">slide into any tile</div>
                 </div>
 
@@ -762,25 +762,25 @@
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">⊕</div>
                     <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>XOR</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">sets bits where inputs differ</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">⊕</span>2=3, 2<span class="glyph">⊕</span>3=1</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">⊕</span>2=3<span class="bits">0001<span class="glyph">⊕</span>0010=0011</span>2<span class="glyph">⊕</span>3=1<span class="bits">0010<span class="glyph">⊕</span>0011=0001</span></div>
                 </div>
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∨</div>
                     <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>OR</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">sets any bit that is 1 in either</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">∨</span>2=3, 4<span class="glyph">∨</span>3=7</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">1<span class="glyph">∨</span>2=3<span class="bits">0001<span class="glyph">∨</span>0010=0011</span>4<span class="glyph">∨</span>3=7<span class="bits">0100<span class="glyph">∨</span>0011=0111</span></div>
                 </div>
                 <div class="gate-card" style="background: rgba(0, 255, 255, 0.08); padding: 10px; border: 2px solid rgba(0, 255, 255, 0.3);">
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.6);">∧</div>
                     <div style="font-size: 11px; color: #00ffff; margin: 4px 0 5px 0;"><strong>AND</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">keeps bits that are 1 in both</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">3<span class="glyph">∧</span>2=2, 7<span class="glyph">∧</span>4=4</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;">3<span class="glyph">∧</span>2=2<span class="bits">0011<span class="glyph">∧</span>0010=0010</span>7<span class="glyph">∧</span>4=4<span class="bits">0111<span class="glyph">∧</span>0100=0100</span></div>
                 </div>
                 <div class="gate-card" style="background: rgba(255, 215, 0, 0.08); padding: 10px; border: 2px solid rgba(255, 215, 0, 0.5);">
                     <div class="gate-glyph" style="font-size: 24px; line-height: 1.1; color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.6);">¬</div>
                     <div style="font-size: 11px; color: #ffd700; margin: 4px 0 5px 0;"><strong>NOT</strong></div>
                     <div style="font-size: 10px; line-height: 1.6; color: rgba(255, 255, 255, 0.9);">flips every bit, on one number</div>
-                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="glyph">¬</span>1=2 (2-bit), <span class="glyph">¬</span>8=7 (4-bit)</div>
+                    <div style="font-size: 10px; color: #00ff00; margin-top: 5px;"><span class="glyph">¬</span>1=2 (2-bit)<span class="bits"><span class="glyph">¬</span>01 = 10</span><span class="glyph">¬</span>8=7 (4-bit)<span class="bits"><span class="glyph">¬</span>1000 = 0111</span></div>
                     <div style="font-size: 10px; color: #ff4444; margin-top: 4px;"><span class="glyph">¬</span>max = OVERFLOW</div>
                 </div>
             </div>
@@ -819,8 +819,8 @@
                         • bitwise operations never exceed the maximum, but <strong style="color: #ffd700;"><span class="glyph">¬</span> NOT of the max value is 0</strong>, and no tile can hold 0<br>
                         • that tile disappears (clears space) and awards a <strong style="color: #ffff00;">3× max value bonus</strong><br>
                         • this is the only way to overflow<br>
-                        • e.g., in 2-bit: <span class="glyph">¬</span>3 → <strong style="color: #00ff00;">overflow! +9 pts</strong><br>
-                        • e.g., in 4-bit: <span class="glyph">¬</span>15 → <strong style="color: #00ff00;">overflow! +45 pts</strong>
+                        • e.g., in 2-bit: <span class="glyph">¬</span>3 <span class="bits-inline">(¬11 = 00)</span> → <strong style="color: #00ff00;">overflow! +9 pts</strong><br>
+                        • e.g., in 4-bit: <span class="glyph">¬</span>15 <span class="bits-inline">(¬1111 = 0000)</span> → <strong style="color: #00ff00;">overflow! +45 pts</strong>
                     </p>
                 </div>
             </div>
