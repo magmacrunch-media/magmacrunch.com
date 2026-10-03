@@ -58,39 +58,25 @@ jobs:
         with:
           node-version: 22
 
-      - name: Check out moonlight-drift
-        uses: actions/checkout@v7
-        with:
-          repository: magmacrunch-media/moonlight-drift
-          path: game-repos/moonlight-drift
-
+      # ONE CHECKOUT STEP LEFT, and that is not an accident. A workflow's
+      # GITHUB_TOKEN reaches only the repo it runs in, so a step here can only
+      # fetch a PUBLIC game repo; a private one fails the step outright rather
+      # than skipping it. Five games were privatised on 2026-10-03 and their
+      # steps went with them, to GAME_REPOS_OPTIONAL below:
+      #
+      #   makemecookies  moonlight-drift  texas-holdem-lava-dome
+      #   jovian-humanitarian-conflict  roderick-tron
+      #
+      # george-boole is still public, so it is still checked here. When it
+      # follows, this step goes too and this job stops covering any game at
+      # all, which is the moment to decide whether a deploy key or the release
+      # App should read them instead of letting the whole check move to the dev
+      # box by default.
       - name: Check out george-boole
         uses: actions/checkout@v7
         with:
           repository: magmacrunch-media/george-boole
           path: game-repos/george-boole
-
-      - name: Check out texas-holdem-lava-dome
-        uses: actions/checkout@v7
-        with:
-          repository: magmacrunch-media/texas-holdem-lava-dome
-          path: game-repos/texas-holdem-lava-dome
-
-      - name: Check out jovian-humanitarian-conflict
-        uses: actions/checkout@v7
-        with:
-          repository: magmacrunch-media/jovian-humanitarian-conflict
-          path: game-repos/jovian-humanitarian-conflict
-
-      # NO makemecookies STEP. It went private on 2026-10-03, and a workflow's
-      # GITHUB_TOKEN reaches only the repo it runs in, so a checkout here would
-      # fail outright rather than skip. It is named in GAME_REPOS_OPTIONAL
-      # below instead, which is the hole this file already had a shape for.
-      - name: Check out roderick-tron
-        uses: actions/checkout@v7
-        with:
-          repository: magmacrunch-media/roderick-tron
-          path: game-repos/roderick-tron
 
       # GAME_REPOS is also the assertion that the repos are there. Without it the
       # check skips when it finds none, which is right for a clone that was never
@@ -98,17 +84,20 @@ jobs:
       # failed makes this job fail rather than pass over nothing.
       #
       # GAME_REPOS_OPTIONAL is the hole, and it is spelled out rather than
-      # tolerated. pay2play and makemecookies are private repos, and a
-      # workflow's GITHUB_TOKEN reaches only the repo it runs in, so there are no
-      # checkout steps for them above. The check names them in the log on every
-      # run and says they are not covered. Drop a name from this line and add its
-      # checkout back once that repo is public, or once a token that can read it
-      # is available here.
+      # tolerated. Everything on that line but very-long-boards is a private
+      # repo, and a workflow's GITHUB_TOKEN reaches only the repo it runs in, so
+      # there are no checkout steps for them above. The check names them in the
+      # log on every run and says they are not covered. Drop a name from this
+      # line and add its checkout back once that repo is public, or once a token
+      # that can read it is available here.
       #
-      # makemecookies joined this line on 2026-10-03, the day it was privatised,
-      # and that is the standing cost of privatising any game this site serves:
-      # its cache-buster check moves from CI to the dev box. Worth knowing before
-      # george-boole follows, because that one has FOUR versions to keep in step.
+      # Five names joined this line on 2026-10-03, the day those games were
+      # privatised, and that is the standing cost of privatising a game this
+      # site serves: its cache-buster check moves from CI to the dev box. The
+      # list is now longer than the covered set, which is the signal that this
+      # job is close to checking nothing. Worth weighing before george-boole
+      # follows, because that one has FOUR versions to keep in step and would
+      # leave this job with no game at all.
       #
       # very-long-boards is on this line and is NOT private; it is public and has
       # been throughout. The sentence above claimed otherwise until 2026-10-03.
@@ -127,7 +116,7 @@ jobs:
       - name: Check the game repos' cache-busters
         env:
           GAME_REPOS: ${{ github.workspace }}/game-repos
-          GAME_REPOS_OPTIONAL: very-long-boards,pay2play,makemecookies
+          GAME_REPOS_OPTIONAL: very-long-boards,pay2play,makemecookies,moonlight-drift,texas-holdem-lava-dome,jovian-humanitarian-conflict,roderick-tron
         run: npm run check:gamestamps
 
   test-python:
