@@ -31,6 +31,11 @@ jobs:
           repository: magmacrunch-media/crunch-c
           path: crunch-c
           ref: ${{ github.event.client_payload.sha || 'main' }}
+          # Read-only deploy key, so this keeps resolving if crunch-c goes
+          # private. A workflow's GITHUB_TOKEN reaches only the repo it runs
+          # in, and this weekly cron is the only working path keeping the
+          # lesson pages current while crunch-c's own dispatch is broken.
+          ssh-key: ${{ secrets.CRUNCH_C_DEPLOY_KEY }}
 
       - uses: actions/setup-python@v7
         with:
