@@ -186,6 +186,9 @@
         .t-hologram   { --accent:#c45fff; --a2:#9040d0; --a3:#6030a0; --ink:#e8d0ff; } /* purple */
         .t-hypnopompia { --accent:#b98cf5; --a2:#9060d0; --a3:#7040b0; --ink:#e0d0f8; } /* lavender */
         .t-crunch-c   { --accent:#7cc7ff; --a2:#4090d0; --a3:#2060a0; --ink:#d0e8ff; } /* blue */
+        /* Daffodil gold: the trumpet rather than the petal, so it stays clear
+           of t-texastoast's #ffe03a above and t-album-art's amber below. */
+        .t-daffodil   { --accent:#ffbe0b; --a2:#e09200; --a3:#b07400; --ink:#fff0c0; } /* daffodil gold */
         .t-crunchscope { --accent:#ff8c42; --a2:#e06020; --a3:#c04010; --ink:#ffe0c0; } /* orange */
         .t-tone-grating { --accent:#35e0d0; --a2:#20b0a0; --a3:#108080; --ink:#d0f8f0; } /* teal */
         .t-sprite-forge { --accent:#ff3d6e; --a2:#e02050; --a3:#c01040; --ink:#ffd0e0; } /* rose */

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>daffodil — magmacrunch media</title>
+    <meta name="description" content="A C99 heightfield terrain engine that renders real-world georeferenced landscape at 1:1 from LiDAR elevation data. Measured, not authored.">
+    <meta property="og:title" content="daffodil — magmacrunch media">
+    <meta property="og:description" content="A C99 heightfield terrain engine: real-world landscape at 1:1, measured rather than authored.">
+    <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:site_name" content="magmacrunch media">
+    <meta property="og:locale" content="en_US">
+    <link rel="icon" type="image/x-icon" href="../../favicon.ico">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Courier+Prime:wght@400;700&display=swap">
+    <link rel="stylesheet" href="../../style.css?v=53e9e146">
+    <style>
+    /* ── Palette ───────────────────────────────────────── */
+
+    /* Two tones off the flower rather than one: the perianth is the pale
+       outer petal, the corona the deeper trumpet at its centre. The title
+       runs between them. Neither is style.css's --yellow (#ffe03a), which
+       texastoast's page already owns. */
+    :root {
+      --daf-petal:  #ffe27a;
+      --daf-corona: #ffbe0b;
+      --daf-deep:   #e09200;
+    }
+
+    body {
+      background: #14141b;
+      background-image: none;
+      color: #e8e6f0;
+      font-family: 'Courier Prime', monospace;
+    }
+
+    a { color: var(--daf-corona); }
+
+    /* ── Hero ──────────────────────────────────────────── */
+
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1.5rem 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      margin-bottom: .75rem;
+      /* Solid fallback first: a browser without background-clip:text keeps
+         this and never paints transparent glyphs. */
+      color: var(--daf-corona);
+      background: linear-gradient(100deg,
+        #fff3bd 0%, var(--daf-petal) 28%, var(--daf-corona) 62%, var(--daf-deep) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      /* text-shadow would draw behind transparent glyphs and show through the
+         gradient, so the pixel shadow is a drop-shadow filter instead. */
+      filter: drop-shadow(3px 3px 0 #1c1b26);
+    }
+
+    .hero .tagline {
+      font-size: 13px;
+      color: #9d99b5;
+      margin-bottom: 1.25rem;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      justify-content: center;
+    }
+
+    .badge {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: #9d99b5;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .4rem .6rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Lead ──────────────────────────────────────────── */
+
+    .lead {
+      max-width: 600px;
+      margin: 0 auto 2.75rem;
+      padding: 0 1.5rem;
+      font-size: 13px;
+      line-height: 1.7;
+      color: #b8b4cc;
+    }
+
+    .lead p { margin-bottom: .6rem; }
+    .lead p:last-child { margin-bottom: 0; }
+    .lead strong { color: #e8e6f0; }
+    .lead code { font-family: 'Courier Prime', monospace; font-size: 12px; }
+    .lead .about-links { margin: 1.25rem 0 0; }
+
+    /* ── Gallery ───────────────────────────────────────── */
+
+    .gallery {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .gallery h2,
+    .features h2,
+    .about h2 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--daf-corona);
+      letter-spacing: 0.05em;
+      margin-bottom: .75rem;
+    }
+
+    .gallery .lede {
+      font-size: 12px;
+      line-height: 1.7;
+      color: #9d99b5;
+      margin-bottom: 1.5rem;
+    }
+
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .shot {
+      border: 1px solid #33304a;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #1c1b26;
+    }
+
+    /* The frames are 512x256 and are never scaled up past their own pixels:
+       this is a flat-shaded rasterizer and a blurred upscale would misreport
+       what it draws. */
+    .shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 512px;
+      margin: 0 auto;
+      image-rendering: auto;
+      border-bottom: 1px solid #33304a;
+    }
+
+    .shot-body { padding: .85rem 1rem 1rem; }
+
+    .shot-body h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 9px;
+      font-weight: 400;
+      color: #e8e6f0;
+      margin-bottom: .5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .shot-body p {
+      font-size: 12px;
+      line-height: 1.65;
+      color: #9d99b5;
+      margin: 0;
+    }
+
+    .shot-body .counts {
+      display: block;
+      margin-top: .5rem;
+      font-size: 11px;
+      color: #6f6b86;
+    }
+
+    /* ── Features ──────────────────────────────────────── */
+
+    .features {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: .75rem;
+    }
+
+    .feat-item {
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .7rem .85rem;
+    }
+
+    .feat-item strong {
+      display: block;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      font-weight: 400;
+      color: var(--daf-petal);
+      margin-bottom: .4rem;
+      letter-spacing: 0.05em;
+    }
+
+    .feat-item span {
+      font-size: 12px;
+      line-height: 1.6;
+      color: #9d99b5;
+    }
+
+    /* ── About ─────────────────────────────────────────── */
+
+    .about {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+      font-size: 12px;
+      color: #9d99b5;
+      line-height: 1.6;
+    }
+
+    .about h3 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px; font-weight: 400;
+      color: #e8e6f0;
+      margin: 1.5rem 0 .5rem;
+      letter-spacing: 0.05em;
+    }
+
+    .about p { margin-bottom: .5rem; }
+
+    .about pre {
+      background: #1c1b26;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .6rem .75rem;
+      overflow-x: auto;
+      margin-bottom: .5rem;
+    }
+
+    .about code {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--daf-corona);
+    }
+
+    .about-label {
+      color: #666;
+      font-size: 11px;
+      margin-bottom: .25rem;
+    }
+
+    .about-license {
+      color: #555;
+      font-size: 11px;
+      margin-top: 1rem;
+    }
+
+    .about-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0 .75rem;
+    }
+
+    .about-links a {
+      color: var(--daf-corona);
+      text-decoration: none;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      padding: .4rem .6rem;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      transition: border-color .15s;
+    }
+    .about-links a:hover { border-color: var(--daf-corona); }
+
+    /* ── Source access ─────────────────────────────────── */
+
+    /* The repository is private, so the page carries the way to ask rather
+       than a link that 404s for everyone who is not signed in. */
+    .src-note {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 1.5rem;
+    }
+
+    .src-note-box {
+      border: 1px solid #33304a;
+      border-left: 3px solid var(--daf-corona);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .02);
+      padding: .9rem 1rem;
+    }
+
+    .src-note-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--daf-corona);
+      letter-spacing: 0.05em;
+      margin-bottom: .6rem;
+    }
+
+    .src-note p {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.7;
+      color: #9d99b5;
+    }
+
+    .src-note p + p { margin-top: .5rem; }
+    .src-note a { color: var(--daf-corona); }
+
+    /* ── Rules ─────────────────────────────────────────── */
+
+    .petal-rule {
+      max-width: 900px;
+      margin: 0 auto 2.5rem;
+      border: 0;
+      border-top: 1px solid #33304a;
+    }
+
+    footer {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      border-top: 1px solid #33304a;
+    }
+    footer span { color: var(--daf-corona); }
+
+    @media (max-width: 480px) {
+      .shots { grid-template-columns: 1fr; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .about-links { gap: .6rem; }
+      .about-links a { padding: .55rem .9rem; min-height: 44px; display: inline-flex; align-items: center; }
+    }
+
+    /* ── Override style.css conflicts ──────────────────── */
+    .tool-nav {
+      margin-top: 48px;
+      padding: 8px 24px;
+      border-bottom: 1px solid #33304a;
+      background: #14141b;
+    }
+    .tool-nav .back-link {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: #9d99b5;
+      text-decoration: none;
+      border: 1px solid #33304a;
+      border-radius: 6px;
+      padding: .4rem .6rem;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tool-nav .back-link:hover {
+      color: #e8e6f0;
+      border-color: var(--daf-corona);
+    }
+  </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../"></nav>
+
+<div class="tool-nav">
+    <a href="../dev/" class="back-link">&larr; developer tools</a>
+</div>
+
+  <div class="hero">
+    <h1>daffodil</h1>
+    <p class="tagline">heightfield terrain engine &middot; real-world landscape at 1:1</p>
+    <div class="badges">
+      <span class="badge">v0.1.0-dev</span>
+      <span class="badge">PolyForm Noncommercial</span>
+      <span class="badge">C99 + sokol</span>
+    </div>
+  </div>
+
+  <div class="lead">
+    <p>A C99 heightfield terrain engine by <a href="https://magmacrunch.com">magmacrunch media</a>.
+      daffodil draws ground that was <strong>measured rather than authored</strong>: it consumes a
+      heightfield produced offline from LiDAR elevation data, reprojected, tiled and written as raw
+      float32 metres, and its job is to render that faithfully and let you walk on it.</p>
+
+    <p>There is no sculpting, no procedural generation and no terrain editor, because the landscape
+      is not the engine's to invent. Sibling to <a href="../magnolia/">magnolia</a>, the other C99
+      engine here, and to <a href="../hologram/">hologram</a>, which solves the opposite problem.
+      Built for Block Island Simulator, which is the island below.</p>
+
+    <div class="about-links">
+      <a href="mailto:info@magmacrunch.com?subject=daffodil">contact</a>
+    </div>
+  </div>
+
+  <hr class="petal-rule">
+
+  <div class="gallery">
+    <h2>what it draws</h2>
+    <p class="lede">Every frame below is a regression baseline, not a promotional render. Eight
+      fixed views are photographed headless under software GL and compared pixel for pixel with
+      the committed copy, and what each view drew is compared with a triangle budget, so these are
+      reproducible by construction rather than posed. The counts are that budget, read off the
+      same frame. Flat shading is the renderer, not a placeholder.</p>
+
+    <div class="shots">
+
+      <div class="shot">
+        <img src="img/island-lod.png" width="512" height="256" loading="lazy"
+             alt="Green rolling island seen from a height, scattered trees and a pond inland, the sea closing the horizon on both sides">
+        <div class="shot-body">
+          <h3>the island at range</h3>
+          <p>Chunked level of detail across the whole island at 1:1. 110,440 trees stand where the
+            lidar measured them, drawn instanced in a single draw call and tinted onto the ground
+            itself once they are too far away to draw. LOD is a tenfold triangle reduction overall:
+            1.87 M in the worst measured view against 18.7 M with every tile at full resolution.
+            <span class="counts">761,344 terrain triangles &middot; 1,395 trees &middot; 2,988 shrub clumps</span></p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/old-harbor.png" width="512" height="256" loading="lazy"
+             alt="Old Harbor from above: hotels along a street, a car park full of parked cars, green lawn and the beach curving away east">
+        <div class="shot-body">
+          <h3>Old Harbor</h3>
+          <p>The town as one paved sheet with streets cut through it. 612 buildings stand solid,
+            with real openings into their rooms rather than windows painted on, and the walker
+            collides with them. Roads carry their own surface rather than being stripes on grass.
+            <span class="counts">1,020,416 terrain triangles &middot; 602,418 paving &middot; 574 trees</span></p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/great-salt-pond.png" width="512" height="256" loading="lazy"
+             alt="A sheltered pond with a marina of finger docks reaching into it, sandy shore to the left, open sea beyond the far bank">
+        <div class="shot-body">
+          <h3>water, and where it meets land</h3>
+          <p>The sheltered shores, the marina and the sea's edge in one frame. Water depth, the
+            tide and the shoreline are the hardest thing in the engine to get right, which is why
+            this view is one of the eight: it is a place something once went wrong, and it is
+            photographed every build so it cannot go wrong again unnoticed.
+            <span class="counts">1,048,832 terrain triangles &middot; 190,194 paving &middot; 650 trees</span></p>
+        </div>
+      </div>
+
+      <div class="shot">
+        <img src="img/town-night.png" width="512" height="256" loading="lazy"
+             alt="The same town after dark, a line of lit windows and street lamps along the shore under a near-black sky with faint stars">
+        <div class="shot-body">
+          <h3>22:00, and properly dark</h3>
+          <p>Lit by the real sun for a given date and time, going properly dark after it sets, with
+            moonlight from the real moon and 8,404 catalogued stars in their actual places. Two
+            lighthouses flash their published characteristics; street lamps light the road under
+            them. Some windows are lit and some are not, and none of them flickers.
+            <span class="counts">963,328 terrain triangles &middot; 634,082 paving &middot; 489 trees</span></p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="petal-rule">
+
+  <div class="features">
+    <h2>what is in it</h2>
+    <div class="feat-grid">
+      <div class="feat-item">
+        <strong>terrain</strong>
+        <span>Chunked heightfield at 2 m posts, LOD by distance, seams provably invisible rather than approximately so</span>
+      </div>
+      <div class="feat-item">
+        <strong>solar &amp; lunar</strong>
+        <span>Real sun and moon positions for a date, time and place; the night is as dark as it actually is</span>
+      </div>
+      <div class="feat-item">
+        <strong>stars</strong>
+        <span>8,404 catalogued stars drawn where they really are for the hour on the clock</span>
+      </div>
+      <div class="feat-item">
+        <strong>shadows</strong>
+        <span>Cascaded shadow maps, with an atlas that defaults smaller on GLES3 than the floor allows</span>
+      </div>
+      <div class="feat-item">
+        <strong>structures</strong>
+        <span>Buildings with interiors you can enter, walls that stop you, doors that are openings</span>
+      </div>
+      <div class="feat-item">
+        <strong>vegetation</strong>
+        <span>Trees, shrub clumps and grass tufts from measured positions, instanced and impostored by range</span>
+      </div>
+      <div class="feat-item">
+        <strong>water</strong>
+        <span>Sea and ponds, tide, current, shoreline and the swim transition at its edge</span>
+      </div>
+      <div class="feat-item">
+        <strong>walker</strong>
+        <span>Walks, swims and rides; a bicycle and a moped, each with its own handling</span>
+      </div>
+      <div class="feat-item">
+        <strong>environment</strong>
+        <span>Sky, weather, rain, birds, boats and the ferry working its real crossing</span>
+      </div>
+      <div class="feat-item">
+        <strong>audio</strong>
+        <span>Mixer, sample bank, WAV loading and a small synth, in-engine rather than bolted on</span>
+      </div>
+      <div class="feat-item">
+        <strong>capture</strong>
+        <span>Reads a frame back on every backend, which is what makes a visual claim checkable at all</span>
+      </div>
+      <div class="feat-item">
+        <strong>gles_budget</strong>
+        <span>Audits the whole scene against GLES3's guaranteed minimums, with no GPU and no display</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="about">
+    <h2>the terrain contract</h2>
+    <p>daffodil does not produce heightfield data; it reads it. The producing pipeline lives in the
+      consuming game's repository, in Python, and the two halves agree through a manifest file
+      rather than through shared code. A tile is raw little-endian float32, row-major, and its
+      sample values are <strong>metres above local mean sea level</strong>.</p>
+
+    <pre><code>DAFFODIL_TILE_SAMPLES   257     // 512/2 + 1
+DAFFODIL_TILE_METRES    512.0f
+DAFFODIL_POST_METRES    2.0f</code></pre>
+
+    <p>There is no height scale constant and no decode step: reading a tile is one <code>fread</code>
+      into a <code>float*</code>. A scale constant is a thing two languages can disagree about, and
+      this way they cannot. The <code>+1</code> in the sample count is load-bearing too, because it
+      makes adjacent tiles share their edge row exactly.</p>
+
+    <h3>measured against the specification, not against a box</h3>
+    <p>The engine's demands are checked against OpenGL ES 3.0's <em>guaranteed minimums</em> rather
+      than against whatever GPU is to hand. Fitting inside the floor means fitting on any conformant
+      device, so a failure on real hardware is a driver problem rather than a design one. The audit
+      runs with no GPU and no display, which means it runs over ssh.</p>
+
+    <p>It says nothing about speed. Not one of those limits is a rate, and the island reported
+      <code>ok</code> on every line while drawing at three frames a second on the one GLES3 GPU it
+      has met. <strong>Fits is not plays</strong>, and the two are worth keeping apart.</p>
+
+    <h3>targets</h3>
+    <p>Windows / D3D11 &middot; Linux / OpenGL &middot; macOS / Metal &middot; Raspberry Pi 4 and 5
+      / GLES3. One rasterizer, four backends, and a frame can be read back on all of them.</p>
+
+    <h3>the name</h3>
+    <p>After the Daffodil cabin at Twin Maples on Block Island, which is the first ground it
+      renders, and after Juanito Thompson's
+      <a href="../../music/music-videos.html">&ldquo;Daffodil &amp; Sweet Pea&rdquo;</a>.</p>
+
+    <p class="about-license">PolyForm Noncommercial 1.0.0 &middot; Copyright 2026 magmacrunch media.
+      Any noncommercial purpose is permitted, and commercial use is reserved to magmacrunch media.
+      Vendored sokol headers, by Andre Weissflog, keep their zlib licence.</p>
+  </div>
+
+  <div class="src-note">
+    <div class="src-note-box">
+      <div class="src-note-label">// source access //</div>
+      <p>daffodil is developed in-house and is not publicly distributed. This page and the frames
+        above are the public account of it.</p>
+      <p>For source access, licensing, or anything else, email
+        <a href="mailto:info@magmacrunch.com?subject=daffodil">info@magmacrunch.com</a>.</p>
+    </div>
+  </div>
+
+  <footer>
+      &copy; 2026 <span>magmacrunch media</span>
+  </footer>
+
+  <script src="../../nav.js?v=d551fe4b"></script>
+</body>
+</html>
