@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>daffodil — magmacrunch media</title>
-    <meta name="description" content="A C99 heightfield terrain engine that renders real-world georeferenced landscape at 1:1 from LiDAR elevation data. Measured, not authored.">
+    <meta name="description" content="A C99 heightfield terrain engine that renders real-world georeferenced landscape at 1:1 from LiDAR elevation data. Measured, not invented.">
     <meta property="og:title" content="daffodil — magmacrunch media">
-    <meta property="og:description" content="A C99 heightfield terrain engine: real-world landscape at 1:1, measured rather than authored.">
+    <meta property="og:description" content="A C99 heightfield terrain engine: real-world landscape at 1:1, measured, not invented.">
     <meta property="og:image" content="https://magmacrunch.com/og/ware.png?v=1">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -21,7 +21,7 @@
     /* ── Palette ───────────────────────────────────────── */
 
     /* Two tones off the flower rather than one: the perianth is the pale
-       outer petal, the corona the deeper trumpet at its centre. The title
+       outer petal, the corona the deeper trumpet at its center. The title
        runs between them. Neither is style.css's --yellow (#ffe03a), which
        texastoast's page already owns. */
     :root {
@@ -387,14 +387,14 @@
 
   <div class="lead">
     <p>A C99 heightfield terrain engine by <a href="https://magmacrunch.com">magmacrunch media</a>.
-      daffodil draws ground that was <strong>measured rather than authored</strong>: it consumes a
-      heightfield produced offline from LiDAR elevation data, reprojected, tiled and written as raw
-      float32 metres, and its job is to render that faithfully and let you walk on it.</p>
+      daffodil draws real ground: it reads a heightfield built offline from LiDAR elevation data,
+      reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you
+      walk on it. The landscape is <strong>surveyed, not sculpted</strong>.</p>
 
-    <p>There is no sculpting, no procedural generation and no terrain editor, because the landscape
-      is not the engine's to invent. Sibling to <a href="../magnolia/">magnolia</a>, the other C99
-      engine here, and to <a href="../hologram/">hologram</a>, which solves the opposite problem.
-      Built for Block Island Simulator, which is the island below.</p>
+    <p>There is no procedural generation and no terrain editor, because the ground is not the
+      engine's to invent. Sibling to <a href="../magnolia/">magnolia</a>, the other C99 engine
+      here, and to <a href="../hologram/">hologram</a>, which solves the opposite problem. Built
+      for Block Island Simulator, which is the island below.</p>
 
     <div class="about-links">
       <a href="mailto:info@magmacrunch.com?subject=daffodil">contact</a>
@@ -457,7 +457,7 @@
         <div class="shot-body">
           <h3>22:00, and properly dark</h3>
           <p>Lit by the real sun for a given date and time, going properly dark after it sets, with
-            moonlight from the real moon and 8,404 catalogued stars in their actual places. Two
+            moonlight from the real moon and 8,404 stars from a real catalog in their actual places. Two
             lighthouses flash their published characteristics; street lamps light the road under
             them. Some windows are lit and some are not, and none of them flickers.
             <span class="counts">963,328 terrain triangles &middot; 634,082 paving &middot; 489 trees</span></p>
@@ -482,7 +482,7 @@
       </div>
       <div class="feat-item">
         <strong>stars</strong>
-        <span>8,404 catalogued stars drawn where they really are for the hour on the clock</span>
+        <span>8,404 stars from a real catalog, drawn where they actually are for the hour on the clock</span>
       </div>
       <div class="feat-item">
         <strong>shadows</strong>
@@ -528,7 +528,7 @@
     <p>daffodil does not produce heightfield data; it reads it. The producing pipeline lives in the
       consuming game's repository, in Python, and the two halves agree through a manifest file
       rather than through shared code. A tile is raw little-endian float32, row-major, and its
-      sample values are <strong>metres above local mean sea level</strong>.</p>
+      sample values are <strong>meters above local mean sea level</strong>.</p>
 
     <pre><code>DAFFODIL_TILE_SAMPLES   257     // 512/2 + 1
 DAFFODIL_TILE_METRES    512.0f
@@ -560,7 +560,7 @@ DAFFODIL_POST_METRES    2.0f</code></pre>
 
     <p class="about-license">PolyForm Noncommercial 1.0.0 &middot; Copyright 2026 magmacrunch media.
       Any noncommercial purpose is permitted, and commercial use is reserved to magmacrunch media.
-      Vendored sokol headers, by Andre Weissflog, keep their zlib licence.</p>
+      Vendored sokol headers, by Andre Weissflog, keep their zlib license.</p>
   </div>
 
   <div class="src-note">

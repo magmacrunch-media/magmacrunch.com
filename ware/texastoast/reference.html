@@ -314,7 +314,7 @@ pip install "texastoast[audio]"      # pygame-ce, for a real sound mixer</code><
       <li><code>.error</code>, the exception that stopped the loop, if one did.</li>
       <li><code>start()</code> / <code>stop()</code>, the loop reschedules itself via <code>after()</code>.</li>
     </ul>
-    <div class="note">Two behaviours worth knowing: <code>dt</code> is clamped to
+    <div class="note">Two behaviors worth knowing: <code>dt</code> is clamped to
       <code>MAX_DT = 0.1</code> so a background tab or a slow frame cannot explode your physics,
       and after <code>max_consecutive_errors</code> failing frames in a row the loop stops and
       re-raises from <code>start()</code> instead of logging the same traceback thirty times a second.</div>
@@ -426,7 +426,7 @@ entities.sorted_by_y()               # by feet line (y + height)
 entities.clear()
 len(entities), iter(entities), npc in entities</code></pre>
     <div class="note">Adds and removes during <code>update()</code> are deferred until the pass ends.
-      Mutating the member list mid-iteration skips the removed entity's neighbour, the classic
+      Mutating the member list mid-iteration skips the removed entity's neighbor, the classic
       first bug of every entity system.</div>
   </section>
 

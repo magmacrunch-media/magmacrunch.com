@@ -95,7 +95,7 @@
             <div class="fn"><code class="sig">HoloV3 <b>hv3_sub</b>(HoloV3 a, HoloV3 b);</code>
                 <p class="fn-desc">Component-wise difference.</p></div>
             <div class="fn"><code class="sig">HoloV3 <b>hv3_mul</b>(HoloV3 a, HoloV3 b);</code>
-                <p class="fn-desc">Component-wise product, which is how colours multiply.</p></div>
+                <p class="fn-desc">Component-wise product, which is how colors multiply.</p></div>
             <div class="fn"><code class="sig">HoloV3 <b>hv3_scale</b>(HoloV3 a, float s);</code>
                 <p class="fn-desc">Every component times s.</p></div>
             <div class="fn"><code class="sig">float <b>hv3_dot</b>(HoloV3 a, HoloV3 b);</code>
@@ -227,7 +227,7 @@ typedef struct {
                     usual answer and it need not be orthogonal to the view.</p></div>
             <div class="fn"><code class="sig">HoloRay <b>holo_camera_ray</b>(const HoloCamera *cam, float u, float v);</code>
                 <p class="fn-desc">The ray through (u, v) on the image, both in [0,1): u runs left to
-                    right and v top to bottom, matching the display's uv. Sample pixel centres as
+                    right and v top to bottom, matching the display's uv. Sample pixel centers as
                     ((x + 0.5) / w, (y + 0.5) / h).</p></div>
         </section>
 
@@ -244,7 +244,7 @@ typedef struct {
                 rather than random because the CPU and the GPU must trace exactly the same rays for the
                 oracle diff to mean anything.</p>
             <p class="module-desc">Each sample traces the whole scene with n(lambda) in the glass. The
-                results are weighted by the CIE 1931 colour matching functions, in the
+                results are weighted by the CIE 1931 color matching functions, in the
                 Wyman-Sloan-Shirley analytic fits, and mapped to sRGB, normalized so a flat spectrum
                 lands on exact white: hue structure from the human eye, white point from the engine.</p>
 
@@ -260,7 +260,7 @@ typedef struct {
                     is the pixel. The weights sum to exactly (1,1,1) across i.</p></div>
             <div class="fn"><code class="sig">float <b>holo_albedo_at</b>(HoloV3 rgb, float lambda_um);</code>
                 <p class="fn-desc">A material's, or the sky's, reflectance at one wavelength, read from
-                    its RGB colour through three smooth bands. Neutral colours are exact. That round trip
+                    its RGB color through three smooth bands. Neutral colors are exact. That round trip
                     is not colorimetry, so a red albedo will not survive to the exact same red, but the
                     physics being showcased does not pass through it at all.</p></div>
             <div class="fn"><code class="sig">float <b>holo_ior_at</b>(float ior_d, float cauchy_b, float lambda_um);</code>
@@ -329,12 +329,12 @@ typedef struct {
                 <span class="module-file">source/cpu_trace.h</span>
                 <span class="module-count">5 functions</span>
             </div>
-            <p class="module-desc">The CPU reference tracer, hologram's oracle. Every optical behaviour
+            <p class="module-desc">The CPU reference tracer, hologram's oracle. Every optical behavior
                 lands here first, in plain testable C, before it lands in a shader. GPU frames are then
                 diffed against images this file renders. It is allowed to be slow and obliged to be
                 right.</p>
             <p class="module-desc">A material is three shares that sum to at most 1: mirror (metallic
-                reflection, tinted by albedo, because silver is a colour too), transmit (glass), and the
+                reflection, tinted by albedo, because silver is a color too), transmit (glass), and the
                 matte remainder (Lambert). Glass brings its own reflection, since the Fresnel equations
                 split the transmit share between refraction and an untinted dielectric reflection angle
                 by angle. A sphere's glass is a volume, so rays bend in and out and can be trapped by
@@ -430,14 +430,14 @@ typedef struct {
             </div>
 
             <div class="fn"><code class="sig">HoloV3 <b>holo_trace_ray</b>(const HoloScene *scene, HoloRay ray);</code>
-                <p class="fn-desc">The colour a single ray sees, mirror bounces included. RGB light, so
+                <p class="fn-desc">The color a single ray sees, mirror bounces included. RGB light, so
                     glass refracts at its D-line index and dispersion is invisible.</p></div>
             <div class="fn"><code class="sig">float <b>holo_trace_lambda</b>(const HoloScene *scene, HoloRay ray, float lambda_um);</code>
                 <p class="fn-desc">The intensity a single ray sees at one wavelength: albedos read through
                     holo_albedo_at, glass refracting at n(lambda). The walk, its caps and its culls are
                     the same as holo_trace_ray's, and one wavelength at a time is the only difference.</p></div>
             <div class="fn"><code class="sig">HoloV3 <b>holo_trace_ray_spectral</b>(const HoloScene *scene, HoloRay ray);</code>
-                <p class="fn-desc">The colour a single ray sees spectrally: HOLO_WAVELENGTHS traces of
+                <p class="fn-desc">The color a single ray sees spectrally: HOLO_WAVELENGTHS traces of
                     holo_trace_lambda, folded through the CIE weights. Where no dispersive glass is struck
                     this agrees with holo_trace_ray on neutral scenes; where it is, wavelengths part ways
                     and fringes are real.</p></div>
