@@ -235,7 +235,7 @@
     "c": "page",
     "u": "/ware/dev/index.html",
     "d": "game engines, scripting language, & memory course",
-    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & educational tools ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ HYPNOPOMPIA iOS shell for the arcade games · Game Center plugin · store tooling ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEXASTOAST RPG engine · I2C hardware bridge · Python ▶"
+    "b": "developer tools — ware — magmacrunch media home › ware › developer tools // developer tools // game engines, scripting language, & educational tools ADENOSINE game engine collection for the magmacrunch web arcade ▶ CRUNCH-C learn C memory management without segfaults · 18 lessons in your browser ▶ DAFFODIL heightfield terrain engine · real-world landscape at 1:1 · C ▶ HOLOGRAM optics-first 3D engine · spectral ray tracer · C ▶ HYPNOPOMPIA iOS shell for the arcade games · Game Center plugin · store tooling ▶ MAGMASCRIPT python-inspired mini language ▶ MAGNOLIA wii homebrew game engine · C ▶ TEX..."
   },
   {
     "t": "Reverse Osmosis Reversed",
@@ -2034,7 +2034,7 @@
     "c": "tool",
     "u": "/ware/adenosine/",
     "d": "lightweight web game engines · try every package live",
-    "b": "adenosine — magmacrunch media ← developer tools adenosine lightweight game engines by magmacrunch media A collection of lightweight web game engines by magmacrunch media . TypeScript and JavaScript, zero runtime dependencies, built for browsers. Powering the magmacrunch web arcade since 2026. GitHub npm magmacrunch.com ▶ Playground Try every package live. Code editor with syntax highlighting, pre-loaded examples, and console output. ▢ Tile Map Editor Draw tile maps for the RPG engine. Paint, fill, export JSON, preview with AdRPG. ✎ Theme Customizer Customize CSS colors for cards, puzzle, chat,..."
+    "b": "adenosine — magmacrunch media ← developer tools adenosine lightweight game engines by magmacrunch media A collection of lightweight web game engines by magmacrunch media . TypeScript and JavaScript, zero runtime dependencies, built for browsers. Powering the magmacrunch web arcade since 2026. npm contact magmacrunch.com ▶ Playground Try every package live. Code editor with syntax highlighting, pre-loaded examples, and console output. ▢ Tile Map Editor Draw tile maps for the RPG engine. Paint, fill, export JSON, preview with AdRPG. ✎ Theme Customizer Customize CSS colors for cards, puzzle, chat..."
   },
   {
     "t": "album art maker",
@@ -2051,32 +2051,39 @@
     "b": "crunch-c — magmacrunch media crunch-c learn C memory management without segfaults Every memory error is caught and explained. No segfaults. No undefined behavior. Just C's behavior, narrated. ▶ Start the course What you'll learn Loading modules… How it works In C, memory mistakes cause segfaults, crashes and security vulnerabilities. Here the same mistakes are caught and named: quicksand at line 5, column 9 | 5 | val = p.peek(i32) | ^ this ground was scorched at line 4 (garrisoned at line 1) You learn what C does, and why it is dangerous, without the danger. The lessons run in your browser — t..."
   },
   {
+    "t": "daffodil",
+    "c": "tool",
+    "u": "/ware/daffodil/",
+    "d": "A C99 heightfield terrain engine: real-world landscape at 1:1, measured, not invented.",
+    "b": "daffodil — magmacrunch media ← developer tools daffodil heightfield terrain engine · real-world landscape at 1:1 v0.1.0-dev PolyForm Noncommercial C99 + sokol A C99 heightfield terrain engine by magmacrunch media . daffodil draws real ground: it reads a heightfield built offline from LiDAR elevation data, reprojected, tiled and written as raw float32 meters, then renders it faithfully and lets you walk on it. The landscape is surveyed, not sculpted . There is no procedural generation and no terrain editor, because the ground is not the engine's to invent. Sibling to magnolia , the other C99 en..."
+  },
+  {
     "t": "hologram",
     "c": "tool",
     "u": "/ware/hologram/",
     "d": "optics-first 3D game engine: a spectral ray tracer where light obeys physics",
-    "b": "hologram — magmacrunch media ← developer tools hologram an optics-first 3D game engine: a spectral ray tracer where light obeys physics v0.1.0 PolyForm Noncommercial C99 + HLSL/GLSL/MSL 📚 Modules Reference The public C API across twelve modules. Structs, constants and every function the umbrella header exposes. 📖 Wiki The full reference, including the shader constraints that shape how the GPU walk is written. what it does that other engines don't Every effect below is computed from the physics rather than approximated by a shader trick, and every one is pinned by a host test against its clos..."
+    "b": "hologram — magmacrunch media ← developer tools hologram an optics-first 3D game engine: a spectral ray tracer where light obeys physics v0.1.0 PolyForm Noncommercial C99 + HLSL/GLSL/MSL 📚 Modules Reference The public C API across twelve modules. Structs, constants and every function the umbrella header exposes. ✉ Get in touch The engine is not publicly distributed. Email for source access, licensing, or the deeper reference. what it does that other engines don't Every effect below is computed from the physics rather than approximated by a shader trick, and every one is pinned by a host test a..."
   },
   {
     "t": "hypnopompia",
     "c": "tool",
     "u": "/ware/hypnopompia/",
     "d": "the iOS shell for magmacrunch arcade games: Game Center plugin, bundle pipeline, store tooling",
-    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the store tooling, by magmacrunch media . It is to iOS what magnolia is to the Wii: the part that is the same every time. It runs no game logic. A game’s rules live in that game’s repo, once per platform. This holds what every App Store build needs and no game should have to reinvent: a plugin, a project, a pipeline and a checklist that fails loudly. GitHub what is here native/ The Game Center plugin and ..."
+    "b": "hypnopompia — magmacrunch media ← developer tools hypnopompia the iOS shell for magmacrunch arcade games The Capacitor and Xcode half of an App Store build, the native Game Center plugin, and the store tooling, by magmacrunch media . It is to iOS what magnolia is to the Wii: the part that is the same every time. It runs no game logic. A game’s rules live in that game’s repo, once per platform. This holds what every App Store build needs and no game should have to reinvent: a plugin, a project, a pipeline and a checklist that fails loudly. contact what is here native/ The Game Center plugin and..."
   },
   {
     "t": "magmascript",
     "c": "tool",
     "u": "/ware/magmascript/",
     "d": "a Python-inspired mini language for magmacrunch infrastructure",
-    "b": "magmascript — magmacrunch media ← developer tools magmascript a Python-inspired mini language for magmacrunch infrastructure A Python-inspired mini scripting language by magmacrunch media . Write .mgs scripts that combine general-purpose programming with infrastructure automation via the domain bridge. Tree-walk interpreter, no compilation step, runs in your terminal or browser. GitHub Docs PyPI magmacrunch.com ▶ Playground Write and run .mgs scripts in-browser with Pyodide. 14 examples, syntax highlighting, console output. 📖 Language Reference Syntax cheat sheet: variables, functions, classe..."
+    "b": "magmascript — magmacrunch media ← developer tools magmascript a Python-inspired mini language for magmacrunch infrastructure A Python-inspired mini scripting language by magmacrunch media . Write .mgs scripts that combine general-purpose programming with infrastructure automation via the domain bridge. Tree-walk interpreter, no compilation step, runs in your terminal or browser. Docs PyPI magmacrunch.com ▶ Playground Write and run .mgs scripts in-browser with Pyodide. 14 examples, syntax highlighting, console output. 📖 Language Reference Syntax cheat sheet: variables, functions, classes, cont..."
   },
   {
     "t": "magnolia",
     "c": "tool",
     "u": "/ware/magnolia/",
     "d": "lightweight C engine for Wii homebrew score-attack games",
-    "b": "magnolia — magmacrunch media ← developer tools magnolia lightweight C engine for Wii homebrew games A lightweight C engine for Wii homebrew by magmacrunch media . It handles initialization, input, rendering, scoring, audio, and the game state shell, so you only write the gameplay. Built with devkitPPC and GRRLIB . GitHub 📚 API Reference 153 functions across 12 modules. Interactive search, module tabs, code examples with syntax highlighting. 🛠 Scaffold Generate a new game project with the magnolia engine pre-configured. coming soon modules core Engine init, SD mount, asset paths renderer Vide..."
+    "b": "magnolia — magmacrunch media ← developer tools magnolia lightweight C engine for Wii homebrew games A lightweight C engine for Wii homebrew by magmacrunch media . It handles initialization, input, rendering, scoring, audio, and the game state shell, so you only write the gameplay. Built with devkitPPC and GRRLIB . API reference contact 📚 API Reference 153 functions across 12 modules. Interactive search, module tabs, code examples with syntax highlighting. 🛠 Scaffold Generate a new game project with the magnolia engine pre-configured. coming soon modules core Engine init, SD mount, asset path..."
   },
   {
     "t": "media//search",
