@@ -176,7 +176,15 @@ ssh jake@100.74.172.4 "tail -50 ~/arcade/logs/check-services.log"
 
 - **Cron**: Every 30 minutes
 - **Checks**: Ports 8765–8774 (games), 8783 (counter) via `nc -z`
-- **Excludes**: Admin (8780, localhost-only), Private (8782, firewall-blocked)
+- **Excludes**: Admin (8780, localhost-only), Private (8782, see below)
+
+`firewall-blocked` is what this line used to say about 8782, and it is only half
+true. ufw allows 22, 80 and 443 and nothing else, so the port is genuinely
+blocked from the LAN and from the internet: measured 2026-10-04 from a machine on
+the same LAN, `192.168.1.16:8782` times out while `:80` answers. **Tailscale does
+not go through ufw**, so `100.74.172.4:8782` answers 200 from any device on the
+tailnet. Blocked from outside, open to your own machines, which is a reasonable
+place to be as long as nobody reads the old wording and stops checking.
 - **Reporting**: Posts to GitHub Discussion + Discord webhook on failure
 
 ### Generate archive stubs

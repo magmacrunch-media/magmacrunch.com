@@ -164,8 +164,12 @@ The manifest has two arrays and the difference is load-bearing:
 - `dashboard_only` — units that exist on the Pi but are neither started nor
   probed. Only `admin/server.py` reads it. `arcade-private` (8782) sits here
   because `private/server.py` reads its port from `config.json` rather than
-  `--port`, and because 8782 is not proxied by nginx and nothing has confirmed
-  the unit is enabled — probing it would invent a "service down" alert.
+  `--port`, and because 8782 is not proxied by nginx. The unit **is** enabled and
+  active, confirmed 2026-10-04; this used to say nothing had confirmed that, and
+  believing it is part of why the service ran for months on DEFAULT_CONFIG with
+  the password `changeme`, its `config.json` having never been created. Probing
+  it over the tailnet would work, since 8782 answers there; it is left in
+  `dashboard_only` because the port still comes from config rather than `--port`.
 
 `arcade-admin` is in neither array. It is the dashboard's own process, so
 `admin/server.py` hardcodes it into `VALID_UNITS`: restartable by name, never
