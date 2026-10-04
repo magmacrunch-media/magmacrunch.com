@@ -1,0 +1,10 @@
+{
+  "_comment": "Copy to config.json, which .gitignore excludes. password_secret must be generated per install and must never be committed: python -c \"import secrets; print(secrets.token_hex(32))\"",
+  "port": 8782,
+  "bind": "0.0.0.0",
+  "password_mode": "auto",
+  "password_secret": "REPLACE-ME-WITH-A-GENERATED-HEX-SECRET",
+  "password": "unused when password_mode is auto",
+  "session_ttl_hours": 24,
+  "routes": {}
+}

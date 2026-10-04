@@ -27,6 +27,26 @@ from threading import Thread
 
 import websockets
 
+# The private arcade's daily password, loaded from that server's own module so
+# there is one implementation rather than two. Imported by path because the two
+# services are separate programs that share a parent directory and nothing else.
+def _load_daily_password():
+    import importlib.util
+    path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "..", "private", "daily_password.py"
+    )
+    spec = importlib.util.spec_from_file_location("arcade_daily_password", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.daily_password
+
+
+try:
+    _private_daily_password = _load_daily_password()
+except Exception as _exc:  # the dashboard still runs; that one panel reports it
+    def _private_daily_password(_secret, _exc=_exc):
+        raise RuntimeError(f"daily_password.py could not be loaded: {_exc}")
+
 from magmascript import GHClient, MC1Client, PIClient
 
 # ── Config ────────────────────────────────────────────────────────────────────
@@ -1247,9 +1267,16 @@ async def ws_handler(websocket):
                     continue
 
                 if private_config.get("password_mode") == "auto":
-                    from datetime import datetime
-                    today = datetime.now()
-                    current_pw = f"lava{today.strftime('%m%d')}"
+                    # Derived by the private server's own module rather than
+                    # reimplemented here. This used to be a second copy of the
+                    # algorithm, which is how a dashboard starts showing a
+                    # password the server no longer accepts.
+                    try:
+                        current_pw = _private_daily_password(
+                            private_config.get("password_secret")
+                        )
+                    except Exception as exc:
+                        current_pw = f"(unavailable: {exc})"
                     mode = "auto"
                 else:
                     current_pw = "(set in config — not shown for security)"

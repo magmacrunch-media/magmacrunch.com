@@ -14,8 +14,11 @@ import hmac
 import json
 import os
 import secrets
+import sys
 import time
 from datetime import datetime
+
+from daily_password import daily_password, SecretMissing
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs, urlparse
 
@@ -34,9 +37,12 @@ CONFIG = {}
 # ── Daily password generation ──────────────────────────────────────────────────
 
 def generate_daily_password():
-    """Generate a simple daily password: lava + MMDD (e.g. lava0724)."""
-    today = datetime.now()
-    return f"lava{today.strftime('%m%d')}"
+    """Today's password, derived from the secret in config.json.
+
+    See daily_password.py for why the secret is read from config rather than
+    written here: this file is public and the secret must not be.
+    """
+    return daily_password(CONFIG.get("password_secret"))
 
 def get_effective_password():
     """Return the password to use for auth checks."""
@@ -336,7 +342,17 @@ def main():
     print(f"  Server:   http://localhost:{port}")
     print(f"  Auth:     ENABLED")
     if CONFIG.get("password_mode") == "auto":
-        print(f"  Password: {generate_daily_password()} (auto-rotates daily)")
+        # Fail here rather than at the first login attempt: a server that
+        # started and cannot authenticate anybody is worse than one that
+        # refused to start and said why.
+        try:
+            print(f"  Password: {generate_daily_password()} (auto-rotates daily)")
+        except SecretMissing as exc:
+            print("")
+            print("  REFUSING TO START")
+            print(f"  {exc}")
+            print("")
+            sys.exit(2)
     else:
         print(f"  Password: (set in config)")
     print(f"  Routes:   {', '.join(CONFIG.get('routes', {}).keys())}")
