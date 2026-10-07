@@ -83,6 +83,50 @@ if (!chosenSource) {
   noteAudioProblem('This browser cannot play the music format. The shift still runs.');
 }
 
+// ── The music switch ─────────────────────────────────────────────────
+//
+// MUTED, NEVER PAUSED, and that is the whole of the care this needs. The
+// shift is timed off the song: updateShift reads
+//
+//     !music.paused && music.currentTime > 0 ? music.currentTime * 1000 : 0
+//
+// so pausing the element drops the game onto its wall-clock fallback, and
+// the four RUSH waves are scheduled against the track. A player who turned
+// the music off would quietly be playing a differently timed game, and the
+// bug would read as "rush feels wrong" rather than as anything to do with
+// this button. `muted` leaves the element playing silently, so the clock and
+// the rush schedule are untouched and only the sound goes.
+//
+// It also leaves music.volume alone, which matters because three other
+// places write it: 0.55 at startup and on each shift, and 0.25 while the
+// inspector ducks it. Those keep working and cannot fight this, because
+// muted and volume are independent on a media element. Had this been built
+// on volume, the inspector would have un-muted the game.
+var MUSIC_KEY = 'makemecookies_music';
+
+function musicWanted() {
+  // Default ON. A new player should hear the game it was built around, and
+  // the switch is one tap away on the card they are already looking at.
+  // Reading can throw outright in private mode rather than returning null,
+  // which is why this is wrapped rather than defaulted.
+  try { return localStorage.getItem(MUSIC_KEY) !== 'off'; } catch (e) { return true; }
+}
+
+function applyMusicPref(on) {
+  music.muted = !on;
+  try { localStorage.setItem(MUSIC_KEY, on ? 'on' : 'off'); } catch (e) { /* private mode */ }
+  document.querySelectorAll('[data-music-toggle]').forEach(function (b) {
+    // Only the ON/OFF span is rewritten, never the button's whole text. The
+    // word MUSIC stays put in the markup and the span reserves the width of
+    // the longer state, so the label changes without the centred row it sits
+    // in shifting sideways. Writing b.textContent here would delete the span
+    // and bring the jog back.
+    var state = b.querySelector('.music-state');
+    if (state) state.textContent = on ? 'ON' : 'OFF';
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  });
+}
+
 music.addEventListener('error', () => {
   const c = music.error && music.error.code;
   noteAudioProblem('Music could not load' + (c ? ' (media error ' + c + ')' : '')
@@ -639,6 +683,16 @@ function setupListeners() {
   // both guarded by `running`, so they do nothing before a shift has started
   // and the one handler serves both entrances.
   wire('btn-credits-title', () => { showModal('modal-credits'); pauseForModal(); });
+  // Neither of these pauses the shift, unlike every other button on the row.
+  // Turning the sound off mid-rush is not a request to stop playing, and a
+  // modal-style pause here would cost the player the seconds they were trying
+  // to save by not opening a menu in the first place.
+  const toggleMusic = () => applyMusicPref(!musicWanted());
+  wire('btn-music', toggleMusic);
+  wire('btn-music-title', toggleMusic);
+  // Both buttons start from storage rather than from the markup, which says
+  // MUSIC ON only so that the page reads correctly before this runs.
+  applyMusicPref(musicWanted());
   wire('btn-close-credits', () => {
     hideModal('modal-credits');
     if (finished) toTitle(); else resumeFromModal();

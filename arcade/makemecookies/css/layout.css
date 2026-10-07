@@ -186,6 +186,26 @@ header .byline {
   cursor: pointer;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
+
+/* The music switch is the only button here whose label changes length, and it
+   sits in a CENTRED row, so ON -> OFF would shift every button beside it
+   sideways on every press.
+
+   The reserve goes on the SPAN rather than the button, and in ch rather than
+   px, because a px floor on the button is wrong as soon as anything moves: the
+   landscape block changes .btn's padding from 11px 16px to 7px 10px, and with
+   box-sizing: border-box a single min-width cannot be right in both. A width
+   measured in the font tracks the font instead.
+
+   3ch covers OFF, which is one character wider than ON, and the 6px is the
+   letter-spacing those three characters carry, which is a fixed 2px each and
+   so does not scale with ch. ON then sits inside a box sized for OFF and the
+   row never moves. */
+.music-state {
+  display: inline-block;
+  min-width: calc(3ch + 6px);
+  text-align: left;
+}
 .btn:hover {
   background: var(--frosting);
   color: var(--bg);
