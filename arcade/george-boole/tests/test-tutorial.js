@@ -130,10 +130,47 @@ assertEqual(T.lampsOf(6, 4), [0, 1, 1, 0], '6 is 0110');
 assertEqual(T.lampsOf(11, 4), [1, 0, 1, 1], '11 is 1011');
 assertEqual(T.bitsOf(5, 4), '0101', '5 renders as 0101');
 
-// Every lamps task must be reachable, and reachable in 4-bit.
-T.lessonById('lamps').tasks.forEach((task) => {
-    assert(task.want >= 0 && task.want <= 15, `lamps task ${task.want} fits 4 bits`);
-    assert(T.lampsSolved(task, T.lampsOf(task.want, 4)), `lamps task ${task.want} is solvable`);
+// The working, which is the thing a beginner actually reads.
+assertEqual(T.sumLine([0,0,0,0]).expr, 'nothing lit', 'no lamps reads as nothing lit');
+assertEqual(T.sumLine([0,0,0,0]).sum, 0, 'and sums to 0');
+assertEqual(T.sumLine([0,1,1,0]).expr, '4 + 2', '0110 shows its working');
+assertEqual(T.sumLine([0,1,1,0]).sum, 6, 'and sums to 6');
+assertEqual(T.sumLine([1,1,1,1]).expr, '8 + 4 + 2 + 1', 'every lamp shows four terms');
+assertEqual(T.sumLine([0,0,0,1]).expr, '1', 'one lamp is one term');
+
+const lampTasks = T.lessonById('lamps').tasks;
+
+/**
+ * The first step must ask for nothing.
+ *
+ * This lesson opened on "make 6" and taught nothing: the arithmetic that
+ * answers it appeared only in the success message, after it had been solved.
+ * The explore step is the fix and it has to stay first, so it is asserted
+ * rather than left to whoever edits the list next.
+ */
+assert(lampTasks[0].explore === true, 'the lamps lesson opens on a step with no target');
+assert(!T.lampsSolved(lampTasks[0], [0,0,0,0]), 'which is not already cleared');
+assert(T.lampsSolved(lampTasks[0], [0,0,0,1]), 'and is cleared by lighting any lamp');
+assert(lampTasks.filter((t) => t.explore).length === 1, 'and there is exactly one of it');
+
+// The targets ramp by how much arithmetic they need. The first real one must
+// be a single lamp, so the first thing ever asked for needs no addition at all.
+const targets = lampTasks.filter((t) => !t.explore).map((t) => t.want);
+assertEqual(targets[0], 1, 'the first target is one lamp and no sum');
+assert(targets.every((w, i) => i === 0 || w > targets[i - 1]),
+    `targets ascend (${targets.join(' -> ')})`);
+targets.forEach((want, i) => {
+    const task = lampTasks.filter((t) => !t.explore)[i];
+    assert(want >= 1 && want <= 15, `lamps target ${want} fits 4 bits`);
+    assert(T.lampsSolved(task, T.lampsOf(want, 4)), `lamps target ${want} is solvable`);
+    assert(!T.lampsSolved(task, [0,0,0,0]), `lamps target ${want} is not solved before a tap`);
+    // A note must add something the sum does not. The readout shows the
+    // working now, so a note of "4 + 2" on the task whose answer is 4 + 2
+    // reads as a stutter, which is what they all used to be.
+    if (task.note) {
+        assert(task.note !== T.sumLine(T.lampsOf(want, 4)).expr,
+            `lamps target ${want}: the note does not repeat the sum`);
+    }
 });
 console.log(`  ${passed} passed\n`);
 

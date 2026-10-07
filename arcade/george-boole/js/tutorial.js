@@ -139,14 +139,35 @@
             id: 'lamps',
             kind: 'lamps',
             title: 'four lamps',
-            lead: 'A tile is four lamps. Each is worth double the one on its right.',
+            lead: 'A tile is four lamps. Tap one to light it, and the lit ones add up.',
             bits: 4,
-            // Chosen to need a different shape of answer each time: 6 is two
-            // middle lamps, 11 needs the gap at 4, 15 is all of them.
+            // The first version opened on "make 6" and taught nothing: the
+            // arithmetic that answers it, 4 + 2, appeared only in the success
+            // message, AFTER it had been solved. That is the fault the rules
+            // panel's own comment levels at the codex -- the explanation
+            // behind the thing it explains -- rebuilt here by accident.
+            //
+            // So the first step asks for nothing. Tap a lamp, watch the number
+            // move, and the mechanic is met before any question is. It cannot
+            // be failed, which is the point: a player who does not yet know
+            // what a bit is has nothing to be wrong about yet.
+            //
+            // Then the targets ramp by how much arithmetic they need rather
+            // than by size: 1 is a single tap and no sum at all, 3 is two
+            // neighbours, 6 is a sum with a gap in it, 15 is all four. 11 was
+            // in here and is gone -- 8 + 2 + 1 is three terms and a gap, which
+            // is harder than 15 and was sitting before it.
+            //
+            // A note has to say something the sum does not. They used to read
+            // "2 + 1" and "4 + 2", which was useful when the readout showed
+            // only `0011 = 3` and became a stutter the moment it started
+            // showing the working: "4 + 2 = 6 , 4 + 2".
             tasks: [
-                { want: 6, note: '4 + 2' },
-                { want: 11, note: '8 + 2 + 1' },
-                { want: 15, note: 'every lamp lit, and the most 4-bit can hold' },
+                { explore: true },
+                { want: 1, note: 'one tap, no adding' },
+                { want: 3 },
+                { want: 6, note: 'the 8 and the 1 stay dark' },
+                { want: 15, note: 'the most four lamps can hold' },
             ],
             done: 'That is binary. Nothing else about it is harder than this.',
         },
@@ -236,8 +257,30 @@
         return LESSONS.find((l) => l.id === id) || null;
     }
 
-    /** Is this lamp arrangement the answer to this lamps task? */
+    /**
+     * The lit lamps as the sum they make, for showing the working.
+     *
+     * `4 + 2 = 6` is the idea; `0110 = 6` is the notation for it, and a player
+     * who does not know binary cannot read the second to learn the first. Both
+     * are shown, the arithmetic first.
+     */
+    function sumLine(lamps) {
+        const terms = WEIGHTS.filter((w, i) => lamps[i]);
+        return {
+            terms: terms,
+            expr: terms.length ? terms.join(' + ') : 'nothing lit',
+            sum: terms.reduce((a, b) => a + b, 0),
+        };
+    }
+
+    /**
+     * Is this lamp arrangement the answer to this lamps task?
+     *
+     * The explore step is answered by any lamp at all, so it cannot be got
+     * wrong -- see the note on LESSONS[0].tasks.
+     */
     function lampsSolved(task, lamps) {
+        if (task.explore) return lamps.some((on) => on === 1);
         return lampSum(lamps) === task.want;
     }
 
@@ -258,7 +301,7 @@
     root.BooleTutorial = {
         LESSONS, GATE_CODE, GATE_SYMBOL, GATE_ORDER, WEIGHTS,
         maxFor, lampSum, lampsOf, bitsOf, oneBit, applyGate, gatesProducing,
-        lessonById, lampsSolved, oneBitSolved,
+        lessonById, lampsSolved, oneBitSolved, sumLine,
     };
 
     if (typeof document === 'undefined' || typeof document.createElement !== 'function') return;
@@ -460,36 +503,70 @@
         const current = lesson();
         const task = current.tasks[step];
         const lamps = [0, 0, 0, 0];
+        let touched = false;
 
         const rig = el('div', 'tut-lamps');
         const row = el('div', 'tut-lamp-row');
         const readout = el('div', 'tut-readout');
 
+        // The sum, written out, above the binary rather than instead of it.
+        const sumRow = el('div', 'tut-readout-sumrow');
+        const exprEl = el('span', 'tut-readout-expr');
+        const eqEl = el('span', 'tut-readout-eq', '=');
+        const sumEl = el('span', 'tut-readout-sum', '0');
+        sumRow.appendChild(exprEl);
+        sumRow.appendChild(eqEl);
+        sumRow.appendChild(sumEl);
+        const bitsEl = el('div', 'tut-readout-bits', '0000');
+        readout.appendChild(sumRow);
+        readout.appendChild(bitsEl);
+
         function refresh() {
-            const sum = lampSum(lamps);
-            readout.innerHTML = '';
-            readout.appendChild(el('span', 'tut-readout-bits', lamps.join('')));
-            readout.appendChild(el('span', 'tut-readout-eq', '='));
-            readout.appendChild(el('span', 'tut-readout-sum', String(sum)));
+            const line = sumLine(lamps);
+            exprEl.textContent = line.expr;
+            exprEl.classList.toggle('is-empty', line.terms.length === 0);
+            sumEl.textContent = String(line.sum);
+            bitsEl.textContent = lamps.join('');
+
             const solved = lampsSolved(task, lamps);
             readout.classList.toggle('is-solved', solved);
+
+            if (task.explore) {
+                // No target, so nothing to get wrong. The step is cleared by
+                // having touched a lamp at all.
+                if (touched) {
+                    setTask('✓ that is a tile. Light a few more if you like, then carry on.', true);
+                } else {
+                    setTask('tap a lamp to light it', false);
+                }
+                return;
+            }
+
             if (solved) {
                 sfx('merge');
                 buzz('solved');
-                setTask('✓ ' + task.want + ' is ' + lamps.join('') + (task.note ? ', ' + task.note : ''), true);
+                setTask('✓ ' + line.expr + ' = ' + task.want
+                    + (task.note ? ' · ' + task.note : ''), true);
             } else {
-                setTask('make ' + task.want, false);
+                setTask('tap the lamps to make ' + task.want, false);
             }
         }
 
         WEIGHTS.forEach((weight, i) => {
             const lamp = button('tut-lamp');
             lamp.dataset.weight = String(weight);
+            lamp.dataset.on = '0';
             lamp.setAttribute('aria-label', 'lamp worth ' + weight);
             lamp.appendChild(el('span', 'tut-lamp-weight', String(weight)));
+            // A bulb rather than a digit as the main thing: four numbered
+            // boxes do not read as something to press, and "lamps" is the
+            // word every screen after this one uses. The bit stays, small,
+            // underneath, because it is what the binary row is made of.
+            lamp.appendChild(el('span', 'tut-lamp-bulb'));
             lamp.appendChild(el('span', 'tut-lamp-bit', '0'));
             lamp.addEventListener('click', () => {
                 lamps[i] = lamps[i] ? 0 : 1;
+                touched = true;
                 lamp.dataset.on = lamps[i] ? '1' : '0';
                 lamp.querySelector('.tut-lamp-bit').textContent = String(lamps[i]);
                 sfx('move');
