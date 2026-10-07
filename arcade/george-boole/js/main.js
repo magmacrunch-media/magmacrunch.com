@@ -498,10 +498,39 @@ document.addEventListener('DOMContentLoaded', async () => {
             loreFullRules.addEventListener('click', () => openRules('goal'));
         }
 
+        // The primer, played rather than read. This button used to open the
+        // rules panel at its `basics` chapter, which is eight pages of prose
+        // that explains binary well and lets nobody touch a lamp; js/tutorial.js
+        // is the same four beats as four interactions. The chapter is still the
+        // reference and is still one tap away -- from "full rules" below, and
+        // from "read it instead" inside the primer itself, so neither audience
+        // is sent through the other's door.
+        //
+        // openRules() is still the fallback. A build without tutorial.js, or
+        // one where it threw on load, keeps the behaviour this button had
+        // rather than becoming a button that does nothing.
         const loreBasics = document.getElementById('loreBasics');
         if (loreBasics) {
-            loreBasics.addEventListener('click', () => openRules('start with counting'));
+            loreBasics.addEventListener('click', () => {
+                if (window.BooleTutorial && window.BooleTutorial.open) {
+                    loreScreen.classList.remove('active');
+                    returnToLoreScreen = true;
+                    window.BooleTutorial.open();
+                    return;
+                }
+                openRules('start with counting');
+            });
         }
+
+        // Leaving the primer goes back where the codex goes back to. Without
+        // this, closing it left an empty board behind it -- the same bug
+        // js/codex.js records against boole:codex-closed, and the same fix.
+        document.addEventListener('boole:primer-closed', () => {
+            if (returnToLoreScreen) {
+                returnToLoreScreen = false;
+                loreScreen.classList.add('active');
+            }
+        });
 
         // Setup difficulty selection
         const difficultyButtons = document.querySelectorAll('.difficulty-btn');

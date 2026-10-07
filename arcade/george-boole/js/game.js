@@ -23,6 +23,11 @@ const OVERLAY_SELECTOR = [
     '.credits-modal.active',
     '.scoreboard-modal.active',
     '.codex-modal.active',
+    // The primer's own screen. Lesson 4 hands the real board over to a
+    // scripted game and REMOVES this class to do it, deliberately, so input
+    // reaches the board; while the screen is up the board underneath it must
+    // stay unplayable, which is what the rest of this list is for.
+    '.tutorial-screen.active',
     '.initials-prompt.active',
     '.game-over.active',
 ].join(', ');

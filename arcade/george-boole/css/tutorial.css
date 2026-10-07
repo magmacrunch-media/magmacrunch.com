@@ -1,0 +1,659 @@
+/* =============================================
+   THE PRIMER
+   Drawn by js/tutorial.js. Gate colors are the codex's and the side panel's
+   (game.css .gate-tag), so a gate reads the same everywhere it is named:
+   XOR cyan, OR yellow, AND green, NOT gold.
+
+   Explicit rgba pairs rather than color-mix(), for the reason codex.css gives:
+   the app targets iOS 15 and color-mix() arrived in Safari 16.2, before which
+   the whole declaration is dropped and the borders silently vanish.
+   ============================================= */
+
+.tutorial-screen {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.88);
+    /* Beside the codex (3200): both open from the how-to-play screen (3000),
+       which stays where it is underneath. */
+    z-index: 3250;
+}
+
+.tutorial-screen.active {
+    display: flex;
+}
+
+.tutorial-content {
+    position: relative;
+    width: 92%;
+    max-width: 540px;
+    max-height: 88vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 20px 24px;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+    border: 4px solid #0f0f1e;
+    box-shadow: 0 0 0 4px #8a2be2, 0 0 0 8px #00ffff, 0 0 40px rgba(138, 43, 226, 0.9);
+    font-family: 'Press Start 2P', monospace;
+    color: #ffffff;
+}
+
+/* Pinned, like the codex's and the full rules' back bar: the panel scrolls
+   under it. */
+.tutorial-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 0 12px;
+    margin-bottom: 4px;
+    background: #1c1c31;
+    border-bottom: 2px solid rgba(138, 43, 226, 0.45);
+}
+
+.tutorial-title {
+    margin: 0;
+    font-size: 13px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    color: #00ffff;
+    text-shadow: 2px 2px 0 #0066cc;
+}
+
+/* container.css gives every <button> a purple gradient, glow and hover lift.
+   Cleared here exactly as codex.css clears it for its own back button. */
+.tutorial-back {
+    padding: 9px 12px;
+    background: #2a2a4a;
+    border: 0;
+    color: #00ffff;
+    font-family: inherit;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: inset 3px 3px 0 #4a4a78, inset -3px -3px 0 #16162a, 0 0 0 3px #0a0a14, 0 4px 0 3px #0a0a14;
+    transition: transform 0.08s steps(2);
+}
+
+.tutorial-back:hover {
+    background: #34345a;
+    transform: none;
+    box-shadow: inset 3px 3px 0 #4a4a78, inset -3px -3px 0 #16162a, 0 0 0 3px #0a0a14, 0 4px 0 3px #0a0a14;
+}
+
+.tutorial-back:active {
+    transform: translateY(4px);
+    box-shadow: inset 3px 3px 0 #16162a, inset -3px -3px 0 #4a4a78, 0 0 0 3px #0a0a14, 0 0 0 3px #0a0a14;
+}
+
+/* ---- progress ---- */
+
+.tutorial-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 12px 0 14px;
+}
+
+.tutorial-dot {
+    width: 10px;
+    height: 10px;
+    background: #2a2a4a;
+    box-shadow: 0 0 0 2px #0a0a14;
+}
+
+.tutorial-dot.is-done {
+    background: #39ff6e;
+    box-shadow: 0 0 0 2px #0a0a14, 0 0 8px rgba(57, 255, 110, 0.7);
+}
+
+.tutorial-dot.is-current {
+    background: #00ffff;
+    box-shadow: 0 0 0 2px #0a0a14, 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.tutorial-lead {
+    margin: 0 0 16px;
+    font-size: 10px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.tutorial-body {
+    margin-bottom: 16px;
+}
+
+/* The task line. Its own colour when answered, because this is the only thing
+   on the screen that says whether the player has got it. */
+.tutorial-task {
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 0 2px rgba(138, 43, 226, 0.45);
+    font-size: 10px;
+    line-height: 1.7;
+    color: #ffff00;
+}
+
+.tutorial-task.is-solved {
+    color: #39ff6e;
+    box-shadow: inset 0 0 0 2px rgba(57, 255, 110, 0.55);
+}
+
+.tutorial-foot {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tutorial-next {
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #8a2be2 0%, #5a1a9a 100%);
+    border: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 0 3px #0a0a14, 0 5px 0 3px #0a0a14;
+    transition: transform 0.08s steps(2);
+}
+
+.tutorial-next:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 3px #0a0a14, 0 0 0 3px #0a0a14;
+}
+
+/* Disabled rather than hidden: the player can see there is a way on and that
+   it is waiting for them, which is the whole prompt. */
+.tutorial-next:disabled {
+    background: #2a2a4a;
+    color: rgba(255, 255, 255, 0.35);
+    cursor: default;
+    transform: none;
+    box-shadow: 0 0 0 3px #0a0a14, 0 5px 0 3px #0a0a14;
+}
+
+.tutorial-read {
+    padding: 10px 12px;
+    background: transparent;
+    border: 0;
+    color: rgba(0, 255, 255, 0.8);
+    font-family: inherit;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: lowercase;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.tutorial-read:hover {
+    color: #00ffff;
+    background: transparent;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ---- lesson 1: four lamps ---- */
+
+.tut-lamps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.tut-lamp-row {
+    display: flex;
+    gap: 10px;
+}
+
+.tut-lamp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    /* Comfortably over the 44px Apple asks for: this is the one control in the
+       game a player meets before they know what anything does. */
+    width: 58px;
+    padding: 12px 0;
+    background: #16162a;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 2px rgba(138, 43, 226, 0.4), 0 0 0 3px #0a0a14;
+    transition: background 0.1s steps(2);
+}
+
+.tut-lamp-weight {
+    font-size: 9px;
+    color: #ffd700;
+}
+
+.tut-lamp-bit {
+    font-size: 18px;
+    line-height: 1;
+    color: #4a4a78;
+}
+
+.tut-lamp[data-on="1"] {
+    background: rgba(0, 255, 255, 0.16);
+    box-shadow: inset 0 0 0 2px rgba(0, 255, 255, 0.7), 0 0 0 3px #0a0a14, 0 0 14px rgba(0, 255, 255, 0.45);
+}
+
+.tut-lamp[data-on="1"] .tut-lamp-bit {
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.tut-readout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 0 0 2px rgba(138, 43, 226, 0.45);
+}
+
+.tut-readout-bits {
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: #00ffff;
+}
+
+.tut-readout-eq {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tut-readout-sum {
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.tut-readout.is-solved {
+    box-shadow: inset 0 0 0 2px rgba(57, 255, 110, 0.65);
+}
+
+.tut-readout.is-solved .tut-readout-sum {
+    color: #39ff6e;
+    text-shadow: 0 0 12px rgba(57, 255, 110, 0.7);
+}
+
+/* ---- lesson 2: one lamp against one lamp ---- */
+
+.tut-onebit {
+    --gate: #00ffff;
+    --gate-line: rgba(0, 255, 255, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+}
+
+.tut-onebit[data-gate="xor"] { --gate: #00ffff; --gate-line: rgba(0, 255, 255, 0.45); }
+.tut-onebit[data-gate="or"]  { --gate: #ffe03a; --gate-line: rgba(255, 224, 58, 0.45); }
+.tut-onebit[data-gate="and"] { --gate: #39ff6e; --gate-line: rgba(57, 255, 110, 0.45); }
+.tut-onebit[data-gate="not"] { --gate: #ffd700; --gate-line: rgba(255, 215, 0, 0.45); }
+
+.tut-onebit-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tut-bit {
+    width: 52px;
+    height: 52px;
+    background: #16162a;
+    border: 0;
+    font-family: inherit;
+    font-size: 20px;
+    color: #4a4a78;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 2px rgba(138, 43, 226, 0.4), 0 0 0 3px #0a0a14;
+}
+
+.tut-bit[data-on="1"] {
+    background: rgba(0, 255, 255, 0.16);
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    box-shadow: inset 0 0 0 2px rgba(0, 255, 255, 0.7), 0 0 0 3px #0a0a14;
+}
+
+.tut-onebit-glyph {
+    font-size: 24px;
+    color: var(--gate);
+    text-shadow: 0 0 12px var(--gate-line);
+}
+
+.tut-onebit-eq {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Not a button: the output is the rule's answer, not something to be set. */
+.tut-onebit-out {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+    color: #4a4a78;
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 0 0 2px var(--gate-line);
+}
+
+.tut-onebit-out[data-on="1"] {
+    color: var(--gate);
+    text-shadow: 0 0 12px var(--gate);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.tut-truth {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+}
+
+.tut-onebit[data-gate="not"] .tut-truth {
+    grid-template-columns: 1fr;
+    max-width: 180px;
+}
+
+.tut-truth-row {
+    padding: 8px 10px;
+    background: rgba(0, 0, 0, 0.25);
+    font-family: monospace;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(138, 43, 226, 0.25);
+}
+
+/* Where the player is standing. The whole point of the live table. */
+.tut-truth-row.is-here {
+    color: var(--gate);
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 0 0 2px var(--gate-line);
+}
+
+/* ---- lesson 3: a whole number ---- */
+
+.tut-number {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tut-work {
+    padding: 14px 12px;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 0 2px rgba(138, 43, 226, 0.45);
+}
+
+.tut-bitrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: monospace;
+}
+
+.tut-bitrow-label {
+    width: 20px;
+    font-size: 16px;
+    color: #ff00ff;
+    text-align: center;
+}
+
+.tut-bitrow-cells {
+    display: flex;
+    gap: 6px;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+.tut-bitcell {
+    width: 18px;
+    text-align: center;
+    color: #4a4a78;
+}
+
+.tut-bitcell[data-on="1"] {
+    color: #00ffff;
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+}
+
+.tut-bitcell.is-weight {
+    font-size: 11px;
+    color: #ffd700;
+}
+
+.tut-bitrow-dec {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.tut-bitrow-op .tut-bitrow-cells {
+    color: #8a2be2;
+    letter-spacing: 2px;
+}
+
+.tut-bitrow-result .tut-bitcell[data-on="1"] {
+    color: #39ff6e;
+    text-shadow: 0 0 10px rgba(57, 255, 110, 0.7);
+}
+
+/* Before a gate is picked there is no answer to show, so the row reads as
+   waiting rather than as four zeroes that mean something. */
+.tut-bitrow-result.is-pending {
+    opacity: 0.25;
+}
+
+.tut-gates {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+/* NOT is the only gate offered for a one-tile question, so it gets a column of
+   its own rather than a third of a row. A data attribute and not :has(), which
+   arrived in Safari 15.4 while this app targets iOS 15 -- the same reason
+   codex.css spells its colours out instead of using color-mix(). */
+.tut-gates[data-only="not"] {
+    grid-template-columns: 1fr;
+    max-width: 140px;
+}
+
+.tut-gate {
+    --gate: #00ffff;
+    --gate-line: rgba(0, 255, 255, 0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 6px;
+    background: #16162a;
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 2px var(--gate-line), 0 0 0 3px #0a0a14;
+}
+
+.tut-gate[data-gate="xor"] { --gate: #00ffff; --gate-line: rgba(0, 255, 255, 0.45); }
+.tut-gate[data-gate="or"]  { --gate: #ffe03a; --gate-line: rgba(255, 224, 58, 0.45); }
+.tut-gate[data-gate="and"] { --gate: #39ff6e; --gate-line: rgba(57, 255, 110, 0.45); }
+.tut-gate[data-gate="not"] { --gate: #ffd700; --gate-line: rgba(255, 215, 0, 0.45); }
+
+.tut-gate-glyph {
+    font-size: 22px;
+    line-height: 1;
+    color: var(--gate);
+}
+
+.tut-gate-name {
+    font-size: 8px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.tut-gate.is-picked {
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 3px var(--gate), 0 0 0 3px #0a0a14, 0 0 16px var(--gate-line);
+}
+
+.tut-gate:hover {
+    background: #22223c;
+    transform: none;
+}
+
+/* ---- finish ---- */
+
+.tut-finish {
+    padding: 16px 14px;
+    background: rgba(57, 255, 110, 0.08);
+    box-shadow: inset 0 0 0 2px rgba(57, 255, 110, 0.4);
+}
+
+.tut-finish-line {
+    margin: 0 0 12px;
+    font-size: 10px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.tut-finish-line:last-child {
+    margin-bottom: 0;
+}
+
+/* ---- lesson 4: the strip over the real board ---- */
+
+/* Pinned to the bottom rather than drawn over the board, because the board is
+   what the player has to be able to see and swipe. Above the board's own
+   chrome and below every modal, so opening the rules or the picker from a
+   lesson still covers it. */
+.tutorial-strip {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    padding: 14px 18px calc(14px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    background: linear-gradient(0deg, #15152b 0%, rgba(26, 26, 46, 0.97) 100%);
+    border-top: 3px solid #8a2be2;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.7);
+    font-family: 'Press Start 2P', monospace;
+    z-index: 2150;
+}
+
+.tutorial-strip.active {
+    display: block;
+}
+
+.tutorial-strip-text {
+    margin: 0 0 10px;
+    font-size: 9px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.tutorial-strip-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.tutorial-strip-do {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #ffff00;
+    text-shadow: 2px 2px 0 #999900;
+}
+
+/* A wrong move is corrected, not punished: amber rather than red, and the
+   board is put back for another go. */
+.tutorial-strip.is-nudge .tutorial-strip-do {
+    color: #ffa94d;
+    text-shadow: 2px 2px 0 #7a4a10;
+}
+
+.tutorial-strip-count {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.tutorial-strip-quit {
+    margin-left: auto;
+    padding: 6px 9px;
+    background: #2a2a4a;
+    border: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-family: inherit;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 0 2px #0a0a14;
+}
+
+.tutorial-strip-quit:hover {
+    background: #34345a;
+    color: #ffffff;
+    transform: none;
+    box-shadow: 0 0 0 2px #0a0a14;
+}
+
+/* While a lesson is running the board must not offer the ordinary ways out.
+   #newGame in particular would replace the scripted board with a random one
+   under a strip still prompting for the script's next move, and MENU and the
+   mode picker leave the same wreckage. The strip's own "leave" is the way out.
+
+   These are the real class names, checked in the page rather than guessed: the
+   first version of this rule named .game-header-actions and .rules-strip,
+   neither of which exists, so it hid nothing and looked like it worked. */
+body.tutorial-active .controls,
+body.tutorial-active .mobile-rules-strip,
+body.tutorial-active .side-panel {
+    display: none;
+}
+
+/* The strip is tall, so the board needs room above it on a phone. */
+@media (max-height: 740px) {
+    .tutorial-strip-text {
+        font-size: 8px;
+        line-height: 1.7;
+    }
+}
+
+@media (max-width: 420px) {
+    .tut-lamp {
+        width: 48px;
+    }
+
+    .tut-bit,
+    .tut-onebit-out {
+        width: 44px;
+        height: 44px;
+        font-size: 17px;
+    }
+
+    .tut-truth-row {
+        font-size: 11px;
+        padding: 7px 8px;
+    }
+
+    .tut-bitrow-cells {
+        font-size: 13px;
+    }
+}
