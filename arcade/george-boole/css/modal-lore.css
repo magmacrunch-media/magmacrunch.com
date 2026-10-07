@@ -401,3 +401,100 @@
     outline: 3px dashed #ff00ff;
     outline-offset: 8px;
 }
+
+/* =============================================
+   THE MAIN MENU
+   This screen carries the scores, the settings, the rules and the way into
+   the game. It was called "how to play" and opened with three worked
+   examples, so it read as documentation standing between the player and the
+   game. The two things anybody comes here to do are first now, and the same
+   size as each other.
+   ============================================= */
+
+.menu-primary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.menu-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 20px 10px;
+    border: 0;
+    font-family: 'Press Start 2P', monospace;
+    cursor: pointer;
+    box-shadow: 0 0 0 3px #0a0a14, 0 5px 0 3px #0a0a14;
+    transition: transform 0.08s steps(2);
+}
+
+.menu-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 3px #0a0a14, 0 0 0 3px #0a0a14;
+}
+
+.menu-btn-label {
+    font-size: 15px;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.menu-btn-sub {
+    font-size: 8px;
+    line-height: 1.5;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* LEARN is cyan, the colour the primer uses throughout and the one entry on
+   the mode list that starts no board. PLAY is the violet every other way into
+   the game already is. They are deliberately the same SIZE: a new player and
+   a returning one are both being offered the thing they came for. */
+.menu-learn {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.22) 0%, rgba(0, 128, 160, 0.5) 100%);
+}
+
+.menu-learn .menu-btn-label {
+    color: #00ffff;
+    text-shadow: 2px 2px 0 #004455;
+}
+
+.menu-play {
+    background: linear-gradient(135deg, #8a2be2 0%, #5a1a9a 100%);
+}
+
+.menu-play .menu-btn-label {
+    color: #ffffff;
+    text-shadow: 2px 2px 0 #3a0a6a;
+}
+
+.menu-divider {
+    height: 3px;
+    margin: 20px 0 16px;
+    background: linear-gradient(90deg, transparent, #8a2be2, transparent);
+}
+
+/* Below the divider the screen is what it always was, and now says so: a
+   heading, the controls line, and the examples. */
+.lore-screen .menu-divider + .lore-title {
+    margin-top: 0;
+}
+
+@media (max-width: 380px) {
+    .menu-btn {
+        padding: 16px 6px;
+    }
+
+    .menu-btn-label {
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+
+    .menu-btn-sub {
+        font-size: 7px;
+    }
+}

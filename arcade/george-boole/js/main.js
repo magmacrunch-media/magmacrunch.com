@@ -511,9 +511,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         // openRules() is still the fallback. A build without tutorial.js, or
         // one where it threw on load, keeps the behaviour this button had
         // rather than becoming a button that does nothing.
-        const loreBasics = document.getElementById('loreBasics');
-        if (loreBasics) {
-            loreBasics.addEventListener('click', () => {
+        // LEARN, on the menu. It was a small text link reading "new to binary?"
+        // under three worked examples; it is one of the two primary buttons
+        // now, beside PLAY and the same size as it.
+        const menuLearn = document.getElementById('menuLearn');
+        if (menuLearn) {
+            menuLearn.addEventListener('click', () => {
                 if (window.BooleTutorial && window.BooleTutorial.open) {
                     loreScreen.classList.remove('active');
                     returnToLoreScreen = true;
