@@ -508,6 +508,13 @@
         back.addEventListener('click', close);
         bar.appendChild(back);
         bar.appendChild(el('h3', 'tutorial-title', 'learn binary'));
+        // The running total. It is in the top bar rather than at the end
+        // because a score you only see once it is over is a receipt, not a
+        // reason to keep going.
+        scoreEl = el('div', 'tutorial-score');
+        scoreEl.appendChild(el('span', 'tutorial-score-label', 'POINTS'));
+        scoreEl.appendChild(el('span', 'tutorial-score-value', '0'));
+        bar.appendChild(scoreEl);
         panel.appendChild(bar);
 
         dotsEl = el('div', 'tutorial-dots');
@@ -576,6 +583,55 @@
      * stale advance skips a step nobody saw.
      */
     let stepTimers = [];
+
+    // ── scoring ─────────────────────────────────────────────────────────────
+    //
+    // The primer pays, and it pays by the game's own rule rather than by an
+    // invented one: a gate is worth the decimal value of its result. So the
+    // lamps lesson pays the number you built, the whole-number lesson pays
+    // what the gate produced, and the board lesson pays whatever the real
+    // BooleBoard scored, because by then it IS the real BooleBoard.
+    //
+    // Learning a gate is the exception at a flat GATE_BONUS: a one-bit result
+    // is 0 or 1, and paying a player one point for understanding XOR is worse
+    // than paying them nothing. It is the codex's idea -- a gate discovered is
+    // worth something on its own -- rather than a number pulled from the air.
+
+    const GATE_BONUS = 10;
+
+    let runScore = 0;
+    let scoreEl = null;
+
+    function setScore(n) {
+        runScore = n;
+        if (scoreEl) scoreEl.querySelector('.tutorial-score-value').textContent = String(runScore);
+    }
+
+    /**
+     * Pay for something, and show it being paid.
+     *
+     * The label is the real board's: "+6" floating off the thing that earned
+     * it. Silent when `points` is 0, because a chip reading "+0" is a reward
+     * that tells you that you got nothing.
+     */
+    function award(points, node) {
+        if (!points) return;
+        setScore(runScore + points);
+        if (scoreEl) {
+            scoreEl.classList.add('is-paid');
+            later(() => scoreEl.classList.remove('is-paid'), 600);
+        }
+        if (!node || typeof node.getBoundingClientRect !== 'function') return;
+        const chip = el('div', 'tut-pop', '+' + points);
+        const r = node.getBoundingClientRect();
+        chip.style.left = (r.left + r.width / 2) + 'px';
+        chip.style.top = r.top + 'px';
+        document.body.appendChild(chip);
+        // Removed on a timer rather than on animationend: a reduced-motion
+        // browser may run no animation at all and never fire the event, which
+        // would leave the chip on screen for ever.
+        setTimeout(() => chip.remove(), 1000);
+    }
 
     function later(fn, ms) {
         const id = setTimeout(fn, ms);
@@ -719,6 +775,10 @@
             lampEls.forEach((l) => l.classList.remove('is-hint', 'is-asking'));
             readout.classList.add('is-solved');
             if (targetEl) targetEl.classList.add('is-met');
+            // You are paid what you made. On the one-lamp step that is 1,
+            // which is the smallest honest payment there is and exactly right
+            // for the smallest thing in the game.
+            award(lampSum(lamps), readout);
             sfx('merge');
             buzz('solved');
             // A beat to see it land, then on. No button, because there is
@@ -859,6 +919,7 @@
             clearStepTimers();
             lampEls.forEach((l) => l.classList.remove('is-asking', 'is-hint'));
             rig.classList.add('is-solved');
+            award(GATE_BONUS, rig.querySelector('.tut-gate-head'));
             sfx('merge');
             buzz('solved');
             later(advance, 1100);
@@ -1062,13 +1123,16 @@
         if (unary) picker.dataset.only = 'not';
         const gateEls = [];
 
-        function finish() {
+        function finish(value) {
             if (done) return;
             done = true;
             clearStepTimers();
             gateEls.forEach((b) => b.classList.remove('is-asking', 'is-hint'));
             if (targetEl) targetEl.classList.add('is-met');
             rig.classList.add('is-solved');
+            // The game's own rule, stated by being paid: a gate is worth the
+            // decimal value of its result.
+            award(value, rig.querySelector('.tut-work'));
             sfx('merge');
             buzz('solved');
             later(advance, 1200);
@@ -1089,7 +1153,7 @@
                 const value = showResult(name);
                 showColumns(name);
                 sfx('move');
-                if (task.explore || value === task.want) finish();
+                if (task.explore || value === task.want) finish(value);
             });
             gateEls.push(btn);
             picker.appendChild(btn);
@@ -1216,6 +1280,9 @@
                 }
                 return;
             }
+            // The board scored this itself, with the game's real rules. No
+            // separate tariff here: by this lesson it IS the game.
+            award(board.score, document.getElementById('gameBoard'));
             sfx('merge');
             buzz('solved');
             at++;
@@ -1303,7 +1370,13 @@
         renderDots();
 
         const card = el('div', 'tut-finish');
-        card.appendChild(el('p', 'tut-finish-line', 'Four lamps, four rules, one board.'));
+        // The total, large, before anything else. It is the whole argument
+        // that this was a mode and not a manual.
+        const tally = el('div', 'tut-finish-score');
+        tally.appendChild(el('span', 'tut-finish-score-value', String(runScore)));
+        tally.appendChild(el('span', 'tut-finish-score-label', 'POINTS'));
+        card.appendChild(tally);
+        card.appendChild(el('p', 'tut-finish-line', 'Scored before you started.'));
         card.appendChild(el('p', 'tut-finish-line', 'The overflow is the move worth chasing: NOT the biggest tile, and it pays three times the maximum.'));
         bodyEl.appendChild(card);
 
@@ -1356,6 +1429,7 @@
             index = first === -1 ? 0 : first;
         }
         step = 0;
+        setScore(0);
         screen.classList.add('active');
         renderLesson();
     }
