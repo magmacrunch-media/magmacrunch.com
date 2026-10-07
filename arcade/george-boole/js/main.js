@@ -10,6 +10,8 @@ function getScoreboardDefault() {
 
 // Track if we opened instructions from difficulty modal
 let returnToLoreScreen = false;
+// Set when LEARN is picked off the mode list, so leaving it goes back there.
+let returnToPicker = false;
 
 /**
  * Settings that survive a reload. Wrapped because localStorage throws in
@@ -526,6 +528,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         // this, closing it left an empty board behind it -- the same bug
         // js/codex.js records against boole:codex-closed, and the same fix.
         document.addEventListener('boole:primer-closed', () => {
+            // Back where it was opened from. Leaving LEARN lands on the mode
+            // list it was picked off, not on the how-to-play screen, which is
+            // somewhere the player may never have been.
+            if (returnToPicker) {
+                returnToPicker = false;
+                difficultyModal.dataset.from = 'lore';
+                difficultyModal.classList.add('active');
+                return;
+            }
             if (returnToLoreScreen) {
                 returnToLoreScreen = false;
                 loreScreen.classList.add('active');
@@ -540,6 +551,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const difficulty = btn.dataset.difficulty;
                 const target = parseInt(btn.dataset.target);
                 const theme = btn.dataset.theme || 'snes';
+
+                // LEARN is a mode on this list and not a game: it starts no
+                // board, so it returns before any of the below.
+                //
+                // It must not touch lastPlayedDifficulty either. That key is
+                // what getScoreboardDefault() opens the scoreboard on, and
+                // 'tutorial' is not a column there -- the board would come up
+                // on a mode that has no scores and never will.
+                if (difficulty === 'tutorial') {
+                    difficultyModal.classList.remove('active');
+                    if (window.BooleTutorial && window.BooleTutorial.open) {
+                        returnToLoreScreen = false;
+                        returnToPicker = true;
+                        window.BooleTutorial.open();
+                    } else {
+                        // No tutorial.js in this build: fall back to the rules
+                        // rather than to a button that does nothing.
+                        openInstructions('start with counting');
+                    }
+                    return;
+                }
+
                 currentDifficulty = difficulty;
                 localStorage.setItem('lastPlayedDifficulty', difficulty);
                 

@@ -156,9 +156,25 @@ assert(lampTasks.filter((t) => t.explore).length === 1, 'and there is exactly on
 // The targets ramp by how much arithmetic they need. The first real one must
 // be a single lamp, so the first thing ever asked for needs no addition at all.
 const targets = lampTasks.filter((t) => !t.explore).map((t) => t.want);
-assertEqual(targets[0], 1, 'the first target is one lamp and no sum');
-assert(targets.every((w, i) => i === 0 || w > targets[i - 1]),
-    `targets ascend (${targets.join(' -> ')})`);
+
+// The lesson grows from one lamp to four, because that is where binary starts:
+// a lamp is on or off. Four weighted lamps is the fourth thing about it, and
+// opening there asks for place value, doubling and the two digits at once.
+const widths = lampTasks.map((t) => t.width || 4);
+assertEqual(widths[0], 1, 'it opens on a single lamp');
+assert(widths.every((w, i) => i === 0 || w >= widths[i - 1]),
+    `the lamp count never shrinks (${widths.join(' -> ')})`);
+assert(widths[widths.length - 1] === 4, 'and reaches four by the end');
+lampTasks.forEach((t) => {
+    const w = t.width || 4;
+    if (t.explore) return;
+    assert(t.want >= 1 && t.want <= Math.pow(2, w) - 1,
+        `target ${t.want} fits in ${w} lamp(s)`);
+});
+assertEqual(T.lampSum([1]), 1, 'one lamp lit is 1');
+assertEqual(T.lampSum([1, 1]), 3, 'two lamps lit is 3');
+assertEqual(T.lampSum([1, 0]), 2, 'the left of two is worth 2');
+assertEqual(T.sumLine([1, 1]).expr, '2 + 1', 'two lamps show their working');
 targets.forEach((want, i) => {
     const task = lampTasks.filter((t) => !t.explore)[i];
     assert(want >= 1 && want <= 15, `lamps target ${want} fits 4 bits`);
@@ -212,21 +228,43 @@ oneBitTasks.forEach((task) => {
     assert(reachable > 0, `onebit ${task.gate} want=${task.want} is reachable`);
     assert(!T.oneBitSolved(task, 0, 0),
         `onebit ${task.gate} is not already solved before the player touches it`);
-    // Every gate the lesson shows has to have a plain-words meaning, because
-    // the header names the gate and says what it does whenever it changes.
-    assert(typeof T.GATE_MEANING[task.gate] === 'string' && T.GATE_MEANING[task.gate].length,
-        `onebit ${task.gate} has a stated meaning`);
-    // A task that asks for something must say what to DO, not only what to
-    // reach: "light the output" is a goal, "tap the inputs so..." is an
-    // instruction, and a beginner needs the verb.
+    /**
+     * Every task must have a goal the player can SEE.
+     *
+     * This replaces an assertion that each task stated a verb, which was the
+     * right invariant while the tasks had sentences. They no longer do: the
+     * pulse is the instruction and the goal is a ghost.
+     *
+     * A ghost can only ever say "this should be LIT", because dark is what an
+     * untouched lamp already looks like. So a task is drawable only if it pins
+     * its inputs or wants a lit output. One that wanted a dark output and
+     * pinned nothing would render no goal anywhere and be silently unplayable,
+     * with no text left to fall back on -- which is what makes this worth
+     * asserting rather than eyeballing.
+     */
     if (!task.explore) {
-        assert(/\b(tap|turn)\b/.test(task.ask), `onebit ${task.gate} states a verb: "${task.ask}"`);
+        assert(!!task.inputs || task.want === 1,
+            `onebit ${task.gate} has a goal that can be drawn`);
     }
 });
 
-// Every gate gets a meaning, not just the ones a task happens to use.
+// NOT before XOR. One input and a flip is the smallest gate there is, and
+// meeting it first is the same argument as meeting one lamp before four; XOR
+// is the subtle one and goes last.
+const gateOrder = oneBitTasks.map((t) => t.gate);
+assertEqual(gateOrder[0], 'NOT', 'NOT is introduced first');
+assert(gateOrder.indexOf('NOT') < gateOrder.indexOf('XOR'), 'and before XOR');
+assertEqual(gateOrder[gateOrder.length - 1], 'XOR', 'XOR is last');
+
+// Every gate the lesson shows still has to be NAMED and have a glyph. That is
+// vocabulary: XOR is a word nobody infers by tapping, and the name and the
+// symbol are the only things left on a wordless screen that must be told.
 T.GATE_ORDER.forEach((g) => {
-    assert(typeof T.GATE_MEANING[g] === 'string', `${g} has a meaning`);
+    assert(typeof T.GATE_SYMBOL[g] === 'string' && T.GATE_SYMBOL[g].length,
+        `${g} has a glyph to draw`);
+});
+gateOrder.forEach((g) => {
+    assert(T.GATE_ORDER.indexOf(g) !== -1, `${g} is a gate the game knows`);
 });
 console.log(`  ${passed} passed\n`);
 

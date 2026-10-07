@@ -67,28 +67,32 @@
     const GATE_SYMBOL = { XOR: '⊕', OR: '∨', AND: '∧', NOT: '¬' };
     const GATE_ORDER = ['XOR', 'OR', 'AND', 'NOT'];
 
-    // The rules chapter's own wording, so a gate reads the same in the primer
-    // as in the panel it is a second door to. Shown beside the gate's name
-    // whenever a lesson switches gate: the glyph changing is not an
-    // announcement, and a player who does not notice is answering a question
-    // about a rule they think they already met.
-    const GATE_MEANING = {
-        XOR: 'on when they differ',
-        OR: 'on if either is on',
-        AND: 'on only if both are on',
-        NOT: 'one lamp in, flipped',
-    };
+    /**
+     * Lamp weights, most significant first, for a row of `width` lamps.
+     *
+     * Variable because the first lesson now starts at ONE lamp and grows. Four
+     * weighted lamps is not the beginning of binary, it is the fourth thing
+     * about it: the beginning is that a lamp is on or off, and that is a bit.
+     * Opening on 8 4 2 1 asks somebody to accept place value, doubling and the
+     * digits 0/1 in one breath.
+     */
+    function weightsFor(width) {
+        const out = [];
+        for (let k = width - 1; k >= 0; k--) out.push(Math.pow(2, k));
+        return out;
+    }
 
-    // Lamp weights, most significant first, for a 4-bit tile.
-    const WEIGHTS = [8, 4, 2, 1];
+    // The full row, kept for the callers that only ever mean four.
+    const WEIGHTS = weightsFor(4);
 
     function maxFor(bits) {
         return Math.pow(2, bits) - 1;
     }
 
-    /** The lit lamps, added up. `lamps` is [8,4,2,1] order, 1 for on. */
+    /** The lit lamps, added up. `lamps` is most-significant-first, 1 for on. */
     function lampSum(lamps) {
-        return lamps.reduce((sum, on, i) => sum + (on ? WEIGHTS[i] : 0), 0);
+        const w = weightsFor(lamps.length);
+        return lamps.reduce((sum, on, i) => sum + (on ? w[i] : 0), 0);
     }
 
     /** A value as its lamps, [8,4,2,1] order. */
@@ -150,8 +154,8 @@
         {
             id: 'lamps',
             kind: 'lamps',
-            title: 'four lamps',
-            lead: 'A tile is four lamps. Tap one to light it, and the lit ones add up.',
+            title: 'on and off',
+            lead: 'Binary has two digits, 0 and 1. That is the whole alphabet.',
             bits: 4,
             // The first version opened on "make 6" and taught nothing: the
             // arithmetic that answers it, 4 + 2, appeared only in the success
@@ -174,12 +178,25 @@
             // "2 + 1" and "4 + 2", which was useful when the readout showed
             // only `0011 = 3` and became a stutter the moment it started
             // showing the working: "4 + 2 = 6 , 4 + 2".
+            // Starts at ONE lamp, because that is where binary starts. Four
+            // weighted lamps is the fourth thing about it, not the first, and
+            // opening on 8 4 2 1 asks somebody to take place value, doubling
+            // and the two digits all in one breath. The word "tile" is gone
+            // from here too: it is the game's word for a thing the player has
+            // not seen yet, so it explained nothing and sounded like jargon,
+            // which it was. Tiles are introduced on the board, where there are
+            // some.
+            //
+            // `width` is how many lamps the step shows, and it grows.
             tasks: [
-                { explore: true },
-                { want: 1, note: 'one tap, no adding' },
-                { want: 3 },
-                { want: 6, note: 'the 8 and the 1 stay dark' },
-                { want: 15, note: 'the most four lamps can hold' },
+                { explore: true, width: 1,
+                  lead: 'One lamp. Off is 0, on is 1. That is a bit, and binary is nothing but these.' },
+                { width: 2, want: 3, note: 'both on',
+                  lead: 'Two lamps. The left is worth 2, the right 1, and the lit ones add up.' },
+                { width: 2, want: 2, note: 'the 1 stays dark' },
+                { width: 4, want: 6, note: 'the 8 and the 1 stay dark',
+                  lead: 'Four lamps now. Each is worth double the one on its right.' },
+                { width: 4, want: 15, note: 'the most four lamps can hold' },
             ],
             done: 'That is binary. Nothing else about it is harder than this.',
         },
@@ -206,12 +223,25 @@
             // Opens on a step that asks for nothing, for the same reason the
             // lamps lesson does: poke the two inputs, watch the output follow,
             // and the rule has been met before anybody is examined on it.
+            // NOT first, and it gets the explore step to itself: one input,
+            // one output, and the output is simply the opposite. That is the
+            // smallest gate there is, and meeting it before XOR is the same
+            // argument as meeting one lamp before four. XOR is last because
+            // "on when they differ" is the subtle one, not the typical one.
+            //
+            // Which end carries the ghost is forced by what a ghost can show.
+            // It can say "this should be lit" and cannot say "this should be
+            // dark", because dark is what an untouched lamp already looks
+            // like. So a task that wants a dark output pins its INPUT instead
+            // and lets the output follow. OR pins both inputs for a second
+            // reason: asked only for a lit output it would accept the same
+            // 0,1 that XOR just took, and the one fact worth knowing about OR
+            // is the row where the two of them disagree.
             tasks: [
-                { explore: true, gate: 'XOR' },
-                { gate: 'XOR', want: 1, ask: 'tap the inputs so the output lights' },
-                { gate: 'AND', want: 1, ask: 'tap the inputs so the output lights' },
-                { gate: 'OR', want: 1, inputs: [1, 1], ask: 'turn BOTH inputs on, where XOR went dark' },
-                { gate: 'NOT', want: 0, ask: 'tap the input so the output goes dark' },
+                { explore: true, gate: 'NOT' },
+                { gate: 'AND', want: 1 },
+                { gate: 'OR', want: 1, inputs: [1, 1] },
+                { gate: 'XOR', want: 1 },
             ],
             done: 'Four rules, and that is all of them.',
         },
@@ -230,12 +260,19 @@
             // before it: tap any gate, watch all four columns answer at once.
             // Guessing which gate makes 6 is a fair question only once you
             // have seen a gate do anything at all to a whole number.
+            // NOT leads here too, on one tile, because flipping four lamps
+            // at once is the easiest whole-number gate to watch happen.
+            //
+            // It is NOT 5 rather than the old NOT 15, which made 0 and was the
+            // overflow in miniature. That belongs to the board lesson, where
+            // it clears a tile and pays 45 points, and having it twice spent
+            // the game's best moment on a screen that cannot score.
             tasks: [
                 { explore: true, a: 5, b: 3 },
-                { a: 5, b: 3, want: 6, answer: 'XOR' },
-                { a: 5, b: 3, want: 7, answer: 'OR' },
+                { a: 5, b: null, want: 10, answer: 'NOT' },
                 { a: 5, b: 3, want: 1, answer: 'AND' },
-                { a: 15, b: null, want: 0, answer: 'NOT' },
+                { a: 5, b: 3, want: 7, answer: 'OR' },
+                { a: 5, b: 3, want: 6, answer: 'XOR' },
             ],
             done: 'The last one made 0000. No tile can hold 0, so that tile clears.',
         },
@@ -288,7 +325,7 @@
      * are shown, the arithmetic first.
      */
     function sumLine(lamps) {
-        const terms = WEIGHTS.filter((w, i) => lamps[i]);
+        const terms = weightsFor(lamps.length).filter((w, i) => lamps[i]);
         return {
             terms: terms,
             expr: terms.length ? terms.join(' + ') : 'nothing lit',
@@ -358,7 +395,6 @@
         LESSONS, GATE_CODE, GATE_SYMBOL, GATE_ORDER, WEIGHTS,
         maxFor, lampSum, lampsOf, bitsOf, oneBit, applyGate, gatesProducing,
         lessonById, lampsSolved, oneBitSolved, numberSolved, sumLine, columnWork,
-        GATE_MEANING,
     };
 
     if (typeof document === 'undefined' || typeof document.createElement !== 'function') return;
@@ -531,6 +567,40 @@
         nextBtn.disabled = !solvedNow;
     }
 
+    /**
+     * Timers belonging to the step on screen.
+     *
+     * A quiet step runs on delays -- the pulse that starts, the hint that
+     * arrives, the advance after a match -- and every one of them has to die
+     * when the step is replaced, or a hint fires over the next screen and a
+     * stale advance skips a step nobody saw.
+     */
+    let stepTimers = [];
+
+    function later(fn, ms) {
+        const id = setTimeout(fn, ms);
+        stepTimers.push(id);
+        return id;
+    }
+
+    function clearStepTimers() {
+        stepTimers.forEach(clearTimeout);
+        stepTimers = [];
+    }
+
+    /**
+     * Hide the prose furniture for a step that teaches without it.
+     *
+     * The lamps lesson spent 38 words saying that a lamp is on or off, next to
+     * a lamp that says it by lighting up. A quiet step shows the apparatus, a
+     * target to aim at and nothing else: no lead, no instruction, no success
+     * sentence, no NEXT, because it advances itself when the thing it wanted
+     * has happened.
+     */
+    function setQuiet(on) {
+        screen.classList.toggle('is-quiet', !!on);
+    }
+
     function lesson() {
         return LESSONS[index];
     }
@@ -556,17 +626,61 @@
 
     // ── lesson 1: four lamps ────────────────────────────────────────────────
 
+    /**
+     * Lesson one, taught without sentences.
+     *
+     * The prose version spent 38 words establishing that a lamp is on or off,
+     * beside a lamp that demonstrates it by lighting up. So this step has no
+     * lead, no instruction, no success line and no NEXT button. What it has is
+     * a lamp that pulses until it is touched, a number underneath that follows
+     * it, and -- once there is arithmetic to do -- a target to aim at.
+     *
+     * Three things carry what the writing used to:
+     *
+     *  - The pulse is the instruction. A control that is asking to be pressed
+     *    does not need a line of text saying to press it.
+     *  - The target is a numeral, not a request. "make 6" becomes a ghosted 6
+     *    that fills in when the lamps add up to it.
+     *  - Completion is the reaction, not a sentence: the readout goes green, a
+     *    sound fires, and the step advances itself.
+     *
+     * The explore step ends once both states have been seen. The lamp starts
+     * off, so in practice that is one tap -- they arrive having seen 0 and
+     * leave having seen 1, which is the whole of what the step is for.
+     *
+     * The one concession to text is the hint: after a while stuck, the lamp
+     * that belongs in the answer pulses. Still no words, and it cannot give
+     * the whole thing away, because it only ever points at one.
+     */
     function renderLamps() {
         const current = lesson();
         const task = current.tasks[step];
-        const lamps = [0, 0, 0, 0];
+        const width = task.width || 4;
+        const weights = weightsFor(width);
+        const lamps = weights.map(() => 0);
+        const seen = { on: false, off: true };   // the lamp starts off
         let touched = false;
+        let done = false;
+
+        setQuiet(true);
+        if (task.lead) leadEl.textContent = task.lead;
 
         const rig = el('div', 'tut-lamps');
-        const row = el('div', 'tut-lamp-row');
-        const readout = el('div', 'tut-readout');
 
-        // The sum, written out, above the binary rather than instead of it.
+        // The goal, as a number rather than as a request. Absent on the
+        // explore step, which has nothing to aim at on purpose.
+        let targetEl = null;
+        if (!task.explore) {
+            targetEl = el('div', 'tut-target');
+            targetEl.appendChild(el('span', 'tut-target-value', String(task.want)));
+            rig.appendChild(targetEl);
+        }
+
+        const row = el('div', 'tut-lamp-row');
+        row.dataset.width = String(width);
+
+        const readout = el('div', 'tut-readout');
+        readout.dataset.width = String(width);
         const sumRow = el('div', 'tut-readout-sumrow');
         const exprEl = el('span', 'tut-readout-expr');
         const eqEl = el('span', 'tut-readout-eq', '=');
@@ -574,99 +688,158 @@
         sumRow.appendChild(exprEl);
         sumRow.appendChild(eqEl);
         sumRow.appendChild(sumEl);
-        const bitsEl = el('div', 'tut-readout-bits', '0000');
+        const bitsEl = el('div', 'tut-readout-bits', lamps.join(''));
         readout.appendChild(sumRow);
         readout.appendChild(bitsEl);
 
-        function refresh() {
-            const line = sumLine(lamps);
-            exprEl.textContent = line.expr;
-            exprEl.classList.toggle('is-empty', line.terms.length === 0);
-            sumEl.textContent = String(line.sum);
-            bitsEl.textContent = lamps.join('');
+        const lampEls = [];
 
-            const solved = lampsSolved(task, lamps);
-            readout.classList.toggle('is-solved', solved);
-
-            if (task.explore) {
-                // No target, so nothing to get wrong. The step is cleared by
-                // having touched a lamp at all.
-                if (touched) {
-                    setTask('✓ that is a tile. Light a few more if you like, then carry on.', true);
-                } else {
-                    setTask('tap a lamp to light it', false);
-                }
-                return;
+        /** Which lamp, if any, the player still needs. Used by the hint. */
+        function missingLamp() {
+            if (task.explore) return -1;
+            const want = lampsOf(task.want, width);
+            for (let i = 0; i < width; i++) {
+                if (want[i] !== lamps[i]) return i;
             }
-
-            if (solved) {
-                sfx('merge');
-                buzz('solved');
-                setTask('✓ ' + line.expr + ' = ' + task.want
-                    + (task.note ? ' · ' + task.note : ''), true);
-            } else {
-                setTask('tap the lamps to make ' + task.want, false);
-            }
+            return -1;
         }
 
-        WEIGHTS.forEach((weight, i) => {
+        function armHint() {
+            later(() => {
+                if (done) return;
+                const i = missingLamp();
+                if (i >= 0) lampEls[i].classList.add('is-hint');
+            }, 7000);
+        }
+
+        function finish() {
+            if (done) return;
+            done = true;
+            clearStepTimers();
+            lampEls.forEach((l) => l.classList.remove('is-hint', 'is-asking'));
+            readout.classList.add('is-solved');
+            if (targetEl) targetEl.classList.add('is-met');
+            sfx('merge');
+            buzz('solved');
+            // A beat to see it land, then on. No button, because there is
+            // nothing left to decide.
+            later(advance, 1100);
+        }
+
+        function refresh() {
+            const line = sumLine(lamps);
+
+            if (width === 1) {
+                // One lamp has nothing to add up, and the content of the step
+                // is that it carries one of two states.
+                exprEl.textContent = lamps[0] ? 'on' : 'off';
+                exprEl.classList.remove('is-empty');
+                sumEl.textContent = lamps[0] ? '1' : '0';
+                bitsEl.textContent = lamps[0] ? 'true' : 'false';
+            } else {
+                exprEl.textContent = line.expr;
+                exprEl.classList.toggle('is-empty', line.terms.length === 0);
+                sumEl.textContent = String(line.sum);
+                bitsEl.textContent = lamps.join('');
+            }
+
+            if (done) return;
+
+            if (task.explore) {
+                if (seen.on && seen.off) finish();
+                return;
+            }
+            if (lampsSolved(task, lamps)) finish();
+        }
+
+        weights.forEach((weight, i) => {
             const lamp = button('tut-lamp');
             lamp.dataset.weight = String(weight);
             lamp.dataset.on = '0';
-            lamp.setAttribute('aria-label', 'lamp worth ' + weight);
+            lamp.setAttribute('aria-label', width === 1
+                ? 'lamp' : 'lamp worth ' + weight);
             lamp.appendChild(el('span', 'tut-lamp-weight', String(weight)));
-            // A bulb rather than a digit as the main thing: four numbered
-            // boxes do not read as something to press, and "lamps" is the
-            // word every screen after this one uses. The bit stays, small,
-            // underneath, because it is what the binary row is made of.
             lamp.appendChild(el('span', 'tut-lamp-bulb'));
             lamp.appendChild(el('span', 'tut-lamp-bit', '0'));
             lamp.addEventListener('click', () => {
+                if (done) return;
                 lamps[i] = lamps[i] ? 0 : 1;
-                touched = true;
+                if (lamps[i]) seen.on = true; else seen.off = true;
+                if (!touched) {
+                    touched = true;
+                    lampEls.forEach((l) => l.classList.remove('is-asking'));
+                }
+                lamp.classList.remove('is-hint');
                 lamp.dataset.on = lamps[i] ? '1' : '0';
                 lamp.querySelector('.tut-lamp-bit').textContent = String(lamps[i]);
                 sfx('move');
                 refresh();
             });
+            lampEls.push(lamp);
             row.appendChild(lamp);
         });
 
         rig.appendChild(row);
         rig.appendChild(readout);
         bodyEl.appendChild(rig);
+
+        // The pulse IS the instruction. On the explore step every lamp asks;
+        // afterwards the player knows what a lamp is and only the hint pulses.
+        if (task.explore) {
+            lampEls.forEach((l) => l.classList.add('is-asking'));
+        } else {
+            armHint();
+        }
+
         refresh();
     }
 
     // ── lesson 2: one lamp against one lamp ─────────────────────────────────
 
+    /**
+     * Lesson two, taught without sentences.
+     *
+     * Same three mechanisms as the lamps lesson. The inputs pulse until
+     * touched, the goal is drawn rather than requested, and a match reacts and
+     * advances itself instead of printing a tick.
+     *
+     * The goal here is a GHOST: whatever the task pins is drawn in the state
+     * it wants at low opacity, and fills solid when the player gets there. A
+     * socket showing a faint lit lamp says "this should be on" without a line
+     * of text, which is what "light the output" used to cost.
+     *
+     * Note which end gets ghosted and why. A ghost can show "should be lit"
+     * and cannot show "should be dark", because dark is what an untouched lamp
+     * already looks like. So a task wanting a dark OUTPUT pins the INPUT
+     * instead -- NOT is the case -- and the output simply follows.
+     *
+     * The gate's one-line meaning is gone. The truth table underneath states
+     * the rule completely and lights the row the player is standing on, so the
+     * sentence was a worse copy of the thing directly below it.
+     */
     function renderOneBit() {
         const current = lesson();
         const task = current.tasks[step];
         const unary = task.gate === 'NOT';
         const inputs = [0, 0];
         let touched = false;
+        let done = false;
+
+        setQuiet(true);
 
         const rig = el('div', 'tut-onebit');
         rig.dataset.gate = task.gate.toLowerCase();
 
-        // Which gate this is, said out loud. The lesson changes gate between
-        // tasks and the only signal used to be the glyph quietly becoming a
-        // different glyph, so a player could answer a question about AND still
-        // thinking they were looking at XOR.
+        // The gate, named. This is vocabulary: XOR is a word nobody infers by
+        // tapping, so it is the one thing here that still has to be told.
         const head = el('div', 'tut-gate-head');
         head.appendChild(el('span', 'tut-gate-head-glyph', GATE_SYMBOL[task.gate]));
         head.appendChild(el('span', 'tut-gate-head-name', task.gate));
-        head.appendChild(el('span', 'tut-gate-head-meaning', GATE_MEANING[task.gate]));
         rig.appendChild(head);
 
         const line = el('div', 'tut-onebit-line');
         const out = el('span', 'tut-onebit-out', '0');
 
-        // The gate's own table, with the row the player is standing on lit as
-        // they move. The static version of this is four cards of text in the
-        // rules; the point of it here is that it is theirs. Built before the
-        // lamps so one refresh() can update both.
         const table = el('div', 'tut-truth');
         const rows = unary ? [[0], [1]] : [[0, 0], [0, 1], [1, 0], [1, 1]];
         rows.forEach((pair) => {
@@ -678,6 +851,19 @@
             table.appendChild(r);
         });
 
+        const lampEls = [];
+
+        function finish() {
+            if (done) return;
+            done = true;
+            clearStepTimers();
+            lampEls.forEach((l) => l.classList.remove('is-asking', 'is-hint'));
+            rig.classList.add('is-solved');
+            sfx('merge');
+            buzz('solved');
+            later(advance, 1100);
+        }
+
         function refresh() {
             const value = oneBit(task.gate, inputs[0], unary ? 0 : inputs[1]);
             out.textContent = String(value);
@@ -688,29 +874,22 @@
                 r.classList.toggle('is-here', r.dataset.key === key);
             });
 
-            const shown = unary
-                ? GATE_SYMBOL.NOT + ' ' + inputs[0] + ' = ' + value
-                : inputs[0] + ' ' + GATE_SYMBOL[task.gate] + ' ' + inputs[1] + ' = ' + value;
+            // A ghost that has been reached stops being a ghost.
+            lampEls.forEach((l, i) => {
+                if (l.dataset.want === undefined) return;
+                l.classList.toggle('is-met', String(inputs[i]) === l.dataset.want);
+            });
+            if (out.dataset.want !== undefined) {
+                out.classList.toggle('is-met', String(value) === out.dataset.want);
+            }
+
+            if (done) return;
 
             if (task.explore) {
-                rig.classList.toggle('is-solved', touched);
-                if (touched) {
-                    setTask('✓ ' + shown + ' · that row is lit below. Try the others, then carry on.', true);
-                } else {
-                    setTask('tap an input and watch the output follow', false);
-                }
+                if (touched) finish();
                 return;
             }
-
-            const solved = oneBitSolved(task, inputs[0], inputs[1]);
-            rig.classList.toggle('is-solved', solved);
-            if (solved) {
-                sfx('merge');
-                buzz('solved');
-                setTask('✓ ' + shown, true);
-            } else {
-                setTask(task.ask, false);
-            }
+            if (oneBitSolved(task, inputs[0], inputs[1])) finish();
         }
 
         function inputLamp(i) {
@@ -718,14 +897,22 @@
             lamp.dataset.on = '0';
             lamp.textContent = '0';
             lamp.setAttribute('aria-label', 'input ' + (i + 1));
+            // Ghost it if this task pins it.
+            if (task.inputs && task.inputs[i] !== undefined) {
+                lamp.dataset.want = String(task.inputs[i]);
+            }
             lamp.addEventListener('click', () => {
+                if (done) return;
                 inputs[i] = inputs[i] ? 0 : 1;
                 touched = true;
+                lampEls.forEach((l) => l.classList.remove('is-asking'));
+                lamp.classList.remove('is-hint');
                 lamp.dataset.on = inputs[i] ? '1' : '0';
                 lamp.textContent = String(inputs[i]);
                 sfx('move');
                 refresh();
             });
+            lampEls.push(lamp);
             return lamp;
         }
 
@@ -738,33 +925,71 @@
             line.appendChild(inputLamp(1));
         }
         line.appendChild(el('span', 'tut-onebit-eq', '='));
+
+        // The output is ghosted only when the task pins it AND the state it
+        // wants is "lit": see the note at the top about dark being invisible.
+        if (!task.explore && !task.inputs && task.want === 1) {
+            out.dataset.want = '1';
+        }
         line.appendChild(out);
         rig.appendChild(line);
-        // The table is the teaching, so say what it is. Unlabelled it reads as
-        // four more numbers rather than as the complete rule, and the lit row
-        // reads as decoration rather than as where the player is standing.
-        rig.appendChild(el('p', 'tut-truth-cap',
-            unary ? 'the whole rule, both rows. Yours is lit:'
-                  : 'the whole rule, all four rows. Yours is lit:'));
         rig.appendChild(table);
 
         bodyEl.appendChild(rig);
+
+        // The pulse is the instruction, on the explore step and afterwards as
+        // the stuck-hint. It points at an input the task wants moved, never at
+        // the whole answer.
+        if (task.explore) {
+            lampEls.forEach((l) => l.classList.add('is-asking'));
+        } else {
+            later(() => {
+                if (done) return;
+                const wrong = lampEls.find((l, i) =>
+                    l.dataset.want !== undefined && String(inputs[i]) !== l.dataset.want);
+                (wrong || lampEls[0]).classList.add('is-hint');
+            }, 7000);
+        }
+
         refresh();
     }
 
     // ── lesson 3: a whole number ────────────────────────────────────────────
 
+    /**
+     * Lesson three, taught without sentences.
+     *
+     * The goal is the ghosted numeral the lamps lesson uses, so "which gate
+     * turns 5 and 3 into 6?" is just a 6 to aim at. The gate buttons pulse
+     * until one is tried, and a wrong pick is not told off: the result and the
+     * column working appear for whatever was picked, which is more use than a
+     * sentence saying it was wrong, and the target stays unfilled.
+     *
+     * The per-column breakdown stays, because it is the point of the lesson
+     * and it is not prose: a gate does not know what 5 is, it runs the same
+     * one-bit rule the lesson before taught, once per column, with nothing
+     * carrying. Its caption is gone -- four boxes each reading `1 (+) 0 = 1`
+     * under a weight do not need a line of text introducing them.
+     */
     function renderNumber() {
         const current = lesson();
         const task = current.tasks[step];
         const bits = current.bits;
         const unary = task.b === null || task.b === undefined;
-        let picked = null;
-        const operandText = unary ? String(task.a) : task.a + ' and ' + task.b;
+        let done = false;
+
+        setQuiet(true);
 
         const rig = el('div', 'tut-number');
 
-        /** One operand as its lamp columns, with the weights above. */
+        // The goal, as a number rather than a question.
+        let targetEl = null;
+        if (!task.explore) {
+            targetEl = el('div', 'tut-target');
+            targetEl.appendChild(el('span', 'tut-target-value', String(task.want)));
+            rig.appendChild(targetEl);
+        }
+
         function bitRow(value, label, role) {
             const r = el('div', 'tut-bitrow tut-bitrow-' + role);
             r.appendChild(el('span', 'tut-bitrow-label', label));
@@ -783,7 +1008,7 @@
         const weights = el('div', 'tut-bitrow tut-bitrow-weights');
         weights.appendChild(el('span', 'tut-bitrow-label', ''));
         const wcells = el('span', 'tut-bitrow-cells');
-        WEIGHTS.forEach((w) => wcells.appendChild(el('span', 'tut-bitcell is-weight', String(w))));
+        weightsFor(bits).forEach((w) => wcells.appendChild(el('span', 'tut-bitcell is-weight', String(w))));
         weights.appendChild(wcells);
         weights.appendChild(el('span', 'tut-bitrow-dec', ''));
         work.appendChild(weights);
@@ -802,14 +1027,7 @@
         work.appendChild(resultRow);
         rig.appendChild(work);
 
-        // The point of the whole lesson, written out: a gate does not know
-        // what 5 is. It runs the SAME one-bit rule the lesson before taught,
-        // once per column, and nothing carries between them. Without this the
-        // table above is four columns of bits changing for reasons the player
-        // has to infer.
-        const colsCap = el('p', 'tut-cols-cap', 'the same rule, once per column:');
         const cols = el('div', 'tut-cols');
-        rig.appendChild(colsCap);
         rig.appendChild(cols);
 
         function showColumns(gate) {
@@ -842,49 +1060,52 @@
 
         const picker = el('div', 'tut-gates');
         if (unary) picker.dataset.only = 'not';
+        const gateEls = [];
+
+        function finish() {
+            if (done) return;
+            done = true;
+            clearStepTimers();
+            gateEls.forEach((b) => b.classList.remove('is-asking', 'is-hint'));
+            if (targetEl) targetEl.classList.add('is-met');
+            rig.classList.add('is-solved');
+            sfx('merge');
+            buzz('solved');
+            later(advance, 1200);
+        }
+
         GATE_ORDER.forEach((name) => {
             // NOT takes one operand, so it is not an answer to a two-tile
             // question and the other three are not answers to a one-tile one.
-            // Offering a gate that cannot apply teaches the wrong thing.
             if (unary !== (name === 'NOT')) return;
             const btn = button('tut-gate');
             btn.dataset.gate = name.toLowerCase();
             btn.appendChild(el('span', 'tut-gate-glyph', GATE_SYMBOL[name]));
             btn.appendChild(el('span', 'tut-gate-name', name));
             btn.addEventListener('click', () => {
-                picked = name;
-                picker.querySelectorAll('.tut-gate').forEach((b) => {
-                    b.classList.toggle('is-picked', b.dataset.gate === name.toLowerCase());
-                });
+                if (done) return;
+                gateEls.forEach((b) => b.classList.remove('is-picked', 'is-asking', 'is-hint'));
+                btn.classList.add('is-picked');
                 const value = showResult(name);
                 showColumns(name);
-
-                if (task.explore) {
-                    sfx('move');
-                    rig.classList.add('is-solved');
-                    setTask('✓ ' + name + ' turns ' + operandText + ' into ' + value
-                        + ' · four columns, no carrying. Try the others, then carry on.', true);
-                    return;
-                }
-
-                if (value === task.want) {
-                    sfx('merge');
-                    buzz('solved');
-                    rig.classList.add('is-solved');
-                    setTask('✓ ' + name + ' makes ' + task.want, true);
-                } else {
-                    rig.classList.remove('is-solved');
-                    setTask(name + ' makes ' + value + ', not ' + task.want + '. Try another.', false);
-                }
+                sfx('move');
+                if (task.explore || value === task.want) finish();
             });
+            gateEls.push(btn);
             picker.appendChild(btn);
         });
         rig.appendChild(picker);
-
         bodyEl.appendChild(rig);
-        setTask(task.explore
-            ? 'tap a gate and watch all four columns'
-            : 'tap the gate that turns ' + operandText + ' into ' + task.want, false);
+
+        if (task.explore) {
+            gateEls.forEach((b) => b.classList.add('is-asking'));
+        } else {
+            later(() => {
+                if (done) return;
+                const right = gateEls.find((b) => b.dataset.gate === String(task.answer).toLowerCase());
+                if (right) right.classList.add('is-hint');
+            }, 9000);
+        }
     }
 
     // ── lesson 4: the real board ────────────────────────────────────────────
@@ -1107,6 +1328,10 @@
 
     function renderLesson() {
         const current = lesson();
+        // Whatever the last step armed dies with it: a hint that fires over
+        // the next screen, or a stale auto-advance, skips a step nobody saw.
+        clearStepTimers();
+        setQuiet(false);
         bodyEl.innerHTML = '';
         leadEl.textContent = current.lead;
         renderDots();

@@ -9,6 +9,25 @@ html {
     -ms-text-size-adjust: 100%;
 }
 
+/* Double-tapping a web view zooms it, and this game is nothing but controls
+   you tap repeatedly: toggling a lamp twice in the primer, or changing your
+   mind on the mode list, IS a double tap, and the page lurches to 2x under
+   your thumb.
+ *
+ * `touch-action: manipulation` turns off the double-tap-to-zoom gesture on an
+ * element while leaving scrolling and pinch-to-zoom alone, so nothing an adult
+ * actually wants is taken away. Every control in the game is a <button>,
+ * including the primer's lamps, input bits and gate pickers, so this one
+ * selector reaches all of them.
+ *
+ * Not `user-scalable=no` on the viewport: iOS has ignored that since 10,
+ * deliberately, because it also removes pinch-zoom from people who need it.
+ * #gameBoard sets `touch-action: none` separately and keeps it -- the board
+ * reads raw swipes and wants no browser gesture handling at all. */
+button {
+    touch-action: manipulation;
+}
+
 body {
     font-family: 'Press Start 2P', cursive;
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);

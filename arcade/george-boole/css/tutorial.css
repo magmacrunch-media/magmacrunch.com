@@ -243,12 +243,28 @@
    no bulb character, and the four gate symbols already have to be drawn by
    hand for the same reason. */
 .tut-lamp-bulb {
-    width: 22px;
-    height: 22px;
+    position: relative;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background: #10101f;
-    box-shadow: inset 0 0 0 2px #3a3a60;
-    transition: background 0.1s steps(2), box-shadow 0.1s steps(2);
+    background: radial-gradient(circle at 38% 34%, #23233f 0%, #101020 62%, #0a0a14 100%);
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.8), 0 0 0 3px #2a2a48, 0 0 0 5px #0a0a14;
+    transition: background 0.08s steps(2), box-shadow 0.08s steps(2);
+}
+
+/* The filament. Dim and grey while off, so the lamp reads as a lamp that is
+   off rather than as an empty circle, and blazes when lit. */
+.tut-lamp-bulb::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 9px;
+    height: 3px;
+    margin: -1px 0 0 -4px;
+    background: #3a3a60;
+    border-radius: 1px;
+    transition: background 0.08s steps(2), box-shadow 0.08s steps(2);
 }
 
 .tut-lamp-bit {
@@ -262,13 +278,53 @@
     box-shadow: inset 0 0 0 2px rgba(0, 255, 255, 0.7), 0 0 0 3px #0a0a14, 0 0 14px rgba(0, 255, 255, 0.45);
 }
 
+/* Lit: the glass glows from the filament outward and throws light past the
+   glass, which is what sells it as a lamp rather than a filled circle. */
 .tut-lamp[data-on="1"] .tut-lamp-bulb {
-    background: #00ffff;
-    box-shadow: inset 0 0 0 2px #aaffff, 0 0 14px rgba(0, 255, 255, 0.9);
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #9bffff 26%, #00e5e5 62%, #00a0a8 100%);
+    box-shadow:
+        inset 0 0 6px rgba(255, 255, 255, 0.95),
+        0 0 0 3px #1d6a72,
+        0 0 0 5px #0a0a14,
+        0 0 18px rgba(0, 255, 255, 0.85),
+        0 0 34px rgba(0, 255, 255, 0.45);
+}
+
+.tut-lamp[data-on="1"] .tut-lamp-bulb::after {
+    background: #ffffff;
+    box-shadow: 0 0 7px 2px rgba(255, 255, 255, 0.95);
 }
 
 .tut-lamp[data-on="1"] .tut-lamp-bit {
     color: #00ffff;
+}
+
+/* On a single-lamp step the lamp is the whole screen, so it gets the room to
+   read as one. */
+.tut-lamp-row[data-width="1"] .tut-lamp {
+    width: 96px;
+    padding: 18px 0;
+}
+
+.tut-lamp-row[data-width="1"] .tut-lamp-bulb {
+    width: 52px;
+    height: 52px;
+}
+
+.tut-lamp-row[data-width="1"] .tut-lamp-bulb::after {
+    width: 16px;
+    height: 4px;
+    margin: -2px 0 0 -8px;
+}
+
+.tut-lamp-row[data-width="1"] .tut-lamp-bit {
+    font-size: 13px;
+}
+
+/* One lamp has no place value to show, so the weight would just read "1" and
+   invite the wrong idea: the point of that step is on or off, not worth-one. */
+.tut-lamp-row[data-width="1"] .tut-lamp-weight {
+    display: none;
 }
 
 /* The working, not the notation. `4 + 2 = 6` is the idea a beginner needs;
@@ -368,11 +424,6 @@
     color: var(--gate);
 }
 
-.tut-gate-head-meaning {
-    font-size: 9px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.75);
-}
 
 .tut-onebit-line {
     display: flex;
@@ -792,5 +843,135 @@ body.tutorial-active .side-panel {
 
     .tut-bitrow-cells {
         font-size: 13px;
+    }
+}
+
+/* ---- LEARN on the mode list ---- */
+
+/* It sits with 2-BIT and GAUNTLET and has to read as one of them, not as a
+   help link that wandered in. Cyan rather than a bit-mode colour, because it
+   is the one entry that starts no board. */
+.difficulty-btn.learn-mode {
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.18) 0%, rgba(138, 43, 226, 0.3) 100%);
+    border-color: #00ffff;
+}
+
+.difficulty-btn.learn-mode .diff-label {
+    color: #00ffff;
+    text-shadow: 2px 2px 0 #0066cc;
+}
+
+.difficulty-btn.learn-mode .diff-subtitle {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* On the one-lamp step the third line is "true"/"false" rather than a bit
+   pattern, so it reads as a word and not as notation. */
+.tut-readout[data-width="1"] .tut-readout-bits {
+    letter-spacing: 1px;
+    color: #ffd700;
+}
+
+/* ---- a step that teaches without sentences ---- */
+
+/* The prose furniture, hidden on a quiet step. The lead, the instruction, the
+   success line and the NEXT button are all replaced by things that happen:
+   the lamp pulses, the target fills, the step advances itself. */
+.tutorial-screen.is-quiet .tutorial-lead,
+.tutorial-screen.is-quiet .tutorial-task,
+.tutorial-screen.is-quiet .tutorial-next {
+    display: none;
+}
+
+/* NEXT goes and "read it instead" stays. The button is meaningless on a step
+   that advances itself, but the way out to the written rules is the one piece
+   of text the wordless version must not take away: somebody who would rather
+   read still has to be able to. */
+
+/* The pulse IS the instruction: a control asking to be pressed needs no line
+   of text saying to press it. Stops on first touch, and never starts at all
+   for anybody who has asked not to be moved at. */
+@keyframes tut-ask {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.06); }
+}
+
+.tut-lamp.is-asking,
+.tut-lamp.is-hint {
+    animation: tut-ask 1.3s ease-in-out infinite;
+}
+
+.tut-lamp.is-asking .tut-lamp-bulb,
+.tut-lamp.is-hint .tut-lamp-bulb {
+    box-shadow:
+        inset 0 2px 3px rgba(0, 0, 0, 0.8),
+        0 0 0 3px #3d6f74,
+        0 0 0 5px #0a0a14,
+        0 0 16px rgba(0, 255, 255, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tut-lamp.is-asking,
+    .tut-lamp.is-hint {
+        animation: none;
+    }
+}
+
+/* The goal, as a numeral rather than a request. "make 6" became a 6. */
+.tut-target {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    padding: 10px 18px;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 0, 0.35);
+}
+
+.tut-target-value {
+    font-size: 30px;
+    line-height: 1;
+    color: rgba(255, 255, 0, 0.55);
+    text-shadow: 0 0 10px rgba(255, 255, 0, 0.2);
+}
+
+/* Met: it stops being a goal and becomes an answer. */
+.tut-target.is-met {
+    box-shadow: inset 0 0 0 3px rgba(57, 255, 110, 0.8), 0 0 22px rgba(57, 255, 110, 0.35);
+}
+
+.tut-target.is-met .tut-target-value {
+    color: #39ff6e;
+    text-shadow: 0 0 16px rgba(57, 255, 110, 0.85);
+}
+
+/* ---- ghost goals ---- */
+
+/* A goal drawn rather than requested: the socket shows the state it wants, at
+   low opacity, and goes solid when the player gets there. It can only ever
+   mean "this should be LIT" -- dark is what an untouched lamp already looks
+   like -- which is why a task wanting a dark output pins its input instead. */
+.tut-bit[data-want="1"]:not(.is-met),
+.tut-onebit-out[data-want="1"]:not(.is-met) {
+    color: rgba(0, 255, 255, 0.3);
+    box-shadow: inset 0 0 0 2px rgba(0, 255, 255, 0.3);
+    background: rgba(0, 255, 255, 0.04);
+}
+
+.tut-bit.is-met,
+.tut-onebit-out.is-met {
+    box-shadow: inset 0 0 0 2px rgba(57, 255, 110, 0.75), 0 0 0 3px #0a0a14;
+}
+
+/* The gate pickers ask to be pressed the same way a lamp does. */
+.tut-gate.is-asking,
+.tut-gate.is-hint {
+    animation: tut-ask 1.3s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tut-gate.is-asking,
+    .tut-gate.is-hint {
+        animation: none;
     }
 }
