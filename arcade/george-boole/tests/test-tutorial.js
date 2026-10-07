@@ -194,7 +194,15 @@ assertEqual([T.oneBit('NOT',0,0), T.oneBit('NOT',1,0)], [1,0], 'NOT table');
 // nothing to do and no way to tell a finished task from a broken one. Found by
 // playing it rather than by running this file, which is why the assertion is
 // here now.
-T.lessonById('onebit').tasks.forEach((task) => {
+const oneBitTasks = T.lessonById('onebit').tasks;
+
+// Same rule as the lamps lesson: the first step asks for nothing.
+assert(oneBitTasks[0].explore === true, 'the one-bit lesson opens on a step with no target');
+assert(!T.oneBitSolved(oneBitTasks[0], 0, 0), 'which is not already cleared');
+assert(T.oneBitSolved(oneBitTasks[0], 1, 0), 'and is cleared by touching an input');
+assert(oneBitTasks.filter((t) => t.explore).length === 1, 'and there is exactly one of it');
+
+oneBitTasks.forEach((task) => {
     let reachable = 0;
     for (let a = 0; a < 2; a++) {
         for (let b = 0; b < 2; b++) {
@@ -204,6 +212,21 @@ T.lessonById('onebit').tasks.forEach((task) => {
     assert(reachable > 0, `onebit ${task.gate} want=${task.want} is reachable`);
     assert(!T.oneBitSolved(task, 0, 0),
         `onebit ${task.gate} is not already solved before the player touches it`);
+    // Every gate the lesson shows has to have a plain-words meaning, because
+    // the header names the gate and says what it does whenever it changes.
+    assert(typeof T.GATE_MEANING[task.gate] === 'string' && T.GATE_MEANING[task.gate].length,
+        `onebit ${task.gate} has a stated meaning`);
+    // A task that asks for something must say what to DO, not only what to
+    // reach: "light the output" is a goal, "tap the inputs so..." is an
+    // instruction, and a beginner needs the verb.
+    if (!task.explore) {
+        assert(/\b(tap|turn)\b/.test(task.ask), `onebit ${task.gate} states a verb: "${task.ask}"`);
+    }
+});
+
+// Every gate gets a meaning, not just the ones a task happens to use.
+T.GATE_ORDER.forEach((g) => {
+    assert(typeof T.GATE_MEANING[g] === 'string', `${g} has a meaning`);
 });
 console.log(`  ${passed} passed\n`);
 
@@ -219,12 +242,52 @@ assertEqual(T.applyGate('NOT', 3, null, 2), 0, 'NOT 3 = 0 in 2-bit');
 
 // The lesson asks "which gate makes n". If two gates make n, the wrong answer
 // is marked wrong for a player who was right.
-T.lessonById('number').tasks.forEach((task) => {
-    const bits = T.lessonById('number').bits;
+const numberLesson = T.lessonById('number');
+
+// And again: the first step asks for nothing. Guessing which gate makes 6 is
+// a fair question only once a gate has been seen to do anything at all.
+assert(numberLesson.tasks[0].explore === true, 'the whole-number lesson opens on a step with no target');
+assert(!T.numberSolved(numberLesson.tasks[0], null, 4), 'which is not cleared before a gate is tapped');
+assert(T.numberSolved(numberLesson.tasks[0], 'AND', 4), 'and is cleared by tapping any gate');
+assert(numberLesson.tasks.filter((t) => t.explore).length === 1, 'and there is exactly one of it');
+
+numberLesson.tasks.filter((t) => !t.explore).forEach((task) => {
+    const bits = numberLesson.bits;
     const producing = T.gatesProducing(task.a, task.b, task.want, bits);
     assertEqual(producing, [task.answer],
         `${task.a}${task.b === null ? '' : ' and ' + task.b} -> ${task.want} is ${task.answer} alone`);
+    assert(T.numberSolved(task, task.answer, bits), `${task.answer} clears its own task`);
 });
+
+/**
+ * The column working, which is the sentence this lesson exists to make.
+ *
+ * A gate does not know what 5 is: it runs the same one-bit rule the lesson
+ * before taught, once per column, and nothing carries. So the columns must
+ * reassemble into exactly the whole-number answer, every gate, every operand.
+ */
+for (let a = 0; a <= 15; a++) {
+    for (let b = 0; b <= 15; b++) {
+        T.GATE_ORDER.forEach((gate) => {
+            if (gate === 'NOT') return;
+            const cols = T.columnWork(gate, a, b, 4);
+            const rebuilt = cols.reduce((n, c) => n + (c.result ? c.weight : 0), 0);
+            if (rebuilt !== T.applyGate(gate, a, b, 4)) {
+                failed++;
+                console.error(`  FAIL: ${a} ${gate} ${b}: columns rebuild ${rebuilt}`);
+            }
+        });
+    }
+}
+passed++;  // the 1024-case sweep above, counted once
+assertEqual(T.columnWork('XOR', 5, 3, 4).map((c) => c.result), [0, 1, 1, 0],
+    '5 XOR 3 is 0110 column by column');
+assertEqual(T.columnWork('XOR', 5, 3, 4).map((c) => c.weight), [8, 4, 2, 1],
+    'and the columns are weighted 8 4 2 1, left to right');
+assertEqual(T.columnWork('NOT', 15, null, 4).map((c) => c.result), [0, 0, 0, 0],
+    'NOT 15 clears every column');
+assert(T.columnWork('NOT', 5, null, 4).every((c) => c.b === null),
+    'a unary gate reports no second operand');
 console.log(`  ${passed} passed\n`);
 
 // ── The board lesson, against a real BooleBoard ─────────────────────────────

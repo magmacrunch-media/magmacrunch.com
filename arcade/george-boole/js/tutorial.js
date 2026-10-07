@@ -67,6 +67,18 @@
     const GATE_SYMBOL = { XOR: '⊕', OR: '∨', AND: '∧', NOT: '¬' };
     const GATE_ORDER = ['XOR', 'OR', 'AND', 'NOT'];
 
+    // The rules chapter's own wording, so a gate reads the same in the primer
+    // as in the panel it is a second door to. Shown beside the gate's name
+    // whenever a lesson switches gate: the glyph changing is not an
+    // announcement, and a player who does not notice is answering a question
+    // about a rule they think they already met.
+    const GATE_MEANING = {
+        XOR: 'on when they differ',
+        OR: 'on if either is on',
+        AND: 'on only if both are on',
+        NOT: 'one lamp in, flipped',
+    };
+
     // Lamp weights, most significant first, for a 4-bit tile.
     const WEIGHTS = [8, 4, 2, 1];
 
@@ -190,11 +202,16 @@
             // a second reason: asked only for a lit output it would accept the
             // same 0,1 that XOR just took, and the one fact worth knowing
             // about OR is the row where the two of them disagree.
+            //
+            // Opens on a step that asks for nothing, for the same reason the
+            // lamps lesson does: poke the two inputs, watch the output follow,
+            // and the rule has been met before anybody is examined on it.
             tasks: [
-                { gate: 'XOR', want: 1, ask: 'light the output' },
-                { gate: 'AND', want: 1, ask: 'light the output' },
-                { gate: 'OR', want: 1, inputs: [1, 1], ask: 'light the output with BOTH lamps on, where XOR would go dark' },
-                { gate: 'NOT', want: 0, ask: 'leave the output dark' },
+                { explore: true, gate: 'XOR' },
+                { gate: 'XOR', want: 1, ask: 'tap the inputs so the output lights' },
+                { gate: 'AND', want: 1, ask: 'tap the inputs so the output lights' },
+                { gate: 'OR', want: 1, inputs: [1, 1], ask: 'turn BOTH inputs on, where XOR went dark' },
+                { gate: 'NOT', want: 0, ask: 'tap the input so the output goes dark' },
             ],
             done: 'Four rules, and that is all of them.',
         },
@@ -208,7 +225,13 @@
             // different, so each answer is unique -- asserted in the tests.
             // The fourth is the overflow in miniature, met here as arithmetic
             // before the board makes it worth 45 points.
+            //
+            // And it opens on a step that asks for nothing, like the two
+            // before it: tap any gate, watch all four columns answer at once.
+            // Guessing which gate makes 6 is a fair question only once you
+            // have seen a gate do anything at all to a whole number.
             tasks: [
+                { explore: true, a: 5, b: 3 },
                 { a: 5, b: 3, want: 6, answer: 'XOR' },
                 { a: 5, b: 3, want: 7, answer: 'OR' },
                 { a: 5, b: 3, want: 1, answer: 'AND' },
@@ -292,16 +315,50 @@
      * and OR's 1,1 is the one that separates it from XOR.
      */
     function oneBitSolved(task, a, b) {
+        // The explore step is answered by touching an input at all.
+        if (task.explore) return a === 1 || b === 1;
         const second = task.gate === 'NOT' ? 0 : b;
         if (oneBit(task.gate, a, second) !== task.want) return false;
         if (!task.inputs) return true;
         return a === task.inputs[0] && (task.gate === 'NOT' || b === task.inputs[1]);
     }
 
+    /** Has this gate answered the whole-number task? Explore takes any gate. */
+    function numberSolved(task, gate, bits) {
+        if (!gate) return false;
+        if (task.explore) return true;
+        return applyGate(gate, task.a, task.b, bits) === task.want;
+    }
+
+    /**
+     * One gate on a whole number, written out as the one-bit sums it is.
+     *
+     * This is the sentence the whole lesson exists to make: a gate does not
+     * know what 5 is, it runs the SAME rule the lesson before taught, once per
+     * column, and nothing carries between them. Returned left to right, which
+     * is the order the columns are drawn in.
+     */
+    function columnWork(gate, a, b, bits) {
+        const unary = b === null || b === undefined;
+        const out = [];
+        for (let k = bits - 1; k >= 0; k--) {
+            const ab = (a >> k) & 1;
+            const bb = unary ? 0 : (b >> k) & 1;
+            out.push({
+                weight: Math.pow(2, k),
+                a: ab,
+                b: unary ? null : bb,
+                result: oneBit(gate, ab, bb),
+            });
+        }
+        return out;
+    }
+
     root.BooleTutorial = {
         LESSONS, GATE_CODE, GATE_SYMBOL, GATE_ORDER, WEIGHTS,
         maxFor, lampSum, lampsOf, bitsOf, oneBit, applyGate, gatesProducing,
-        lessonById, lampsSolved, oneBitSolved, sumLine,
+        lessonById, lampsSolved, oneBitSolved, numberSolved, sumLine, columnWork,
+        GATE_MEANING,
     };
 
     if (typeof document === 'undefined' || typeof document.createElement !== 'function') return;
@@ -588,9 +645,20 @@
         const task = current.tasks[step];
         const unary = task.gate === 'NOT';
         const inputs = [0, 0];
+        let touched = false;
 
         const rig = el('div', 'tut-onebit');
         rig.dataset.gate = task.gate.toLowerCase();
+
+        // Which gate this is, said out loud. The lesson changes gate between
+        // tasks and the only signal used to be the glyph quietly becoming a
+        // different glyph, so a player could answer a question about AND still
+        // thinking they were looking at XOR.
+        const head = el('div', 'tut-gate-head');
+        head.appendChild(el('span', 'tut-gate-head-glyph', GATE_SYMBOL[task.gate]));
+        head.appendChild(el('span', 'tut-gate-head-name', task.gate));
+        head.appendChild(el('span', 'tut-gate-head-meaning', GATE_MEANING[task.gate]));
+        rig.appendChild(head);
 
         const line = el('div', 'tut-onebit-line');
         const out = el('span', 'tut-onebit-out', '0');
@@ -620,17 +688,28 @@
                 r.classList.toggle('is-here', r.dataset.key === key);
             });
 
+            const shown = unary
+                ? GATE_SYMBOL.NOT + ' ' + inputs[0] + ' = ' + value
+                : inputs[0] + ' ' + GATE_SYMBOL[task.gate] + ' ' + inputs[1] + ' = ' + value;
+
+            if (task.explore) {
+                rig.classList.toggle('is-solved', touched);
+                if (touched) {
+                    setTask('✓ ' + shown + ' · that row is lit below. Try the others, then carry on.', true);
+                } else {
+                    setTask('tap an input and watch the output follow', false);
+                }
+                return;
+            }
+
             const solved = oneBitSolved(task, inputs[0], inputs[1]);
             rig.classList.toggle('is-solved', solved);
             if (solved) {
                 sfx('merge');
                 buzz('solved');
-                const shown = unary
-                    ? GATE_SYMBOL.NOT + ' ' + inputs[0] + ' = ' + value
-                    : inputs[0] + ' ' + GATE_SYMBOL[task.gate] + ' ' + inputs[1] + ' = ' + value;
                 setTask('✓ ' + shown, true);
             } else {
-                setTask(task.gate + ': ' + task.ask, false);
+                setTask(task.ask, false);
             }
         }
 
@@ -641,6 +720,7 @@
             lamp.setAttribute('aria-label', 'input ' + (i + 1));
             lamp.addEventListener('click', () => {
                 inputs[i] = inputs[i] ? 0 : 1;
+                touched = true;
                 lamp.dataset.on = inputs[i] ? '1' : '0';
                 lamp.textContent = String(inputs[i]);
                 sfx('move');
@@ -660,6 +740,12 @@
         line.appendChild(el('span', 'tut-onebit-eq', '='));
         line.appendChild(out);
         rig.appendChild(line);
+        // The table is the teaching, so say what it is. Unlabelled it reads as
+        // four more numbers rather than as the complete rule, and the lit row
+        // reads as decoration rather than as where the player is standing.
+        rig.appendChild(el('p', 'tut-truth-cap',
+            unary ? 'the whole rule, both rows. Yours is lit:'
+                  : 'the whole rule, all four rows. Yours is lit:'));
         rig.appendChild(table);
 
         bodyEl.appendChild(rig);
@@ -672,8 +758,9 @@
         const current = lesson();
         const task = current.tasks[step];
         const bits = current.bits;
-        const unary = task.b === null;
+        const unary = task.b === null || task.b === undefined;
         let picked = null;
+        const operandText = unary ? String(task.a) : task.a + ' and ' + task.b;
 
         const rig = el('div', 'tut-number');
 
@@ -715,6 +802,29 @@
         work.appendChild(resultRow);
         rig.appendChild(work);
 
+        // The point of the whole lesson, written out: a gate does not know
+        // what 5 is. It runs the SAME one-bit rule the lesson before taught,
+        // once per column, and nothing carries between them. Without this the
+        // table above is four columns of bits changing for reasons the player
+        // has to infer.
+        const colsCap = el('p', 'tut-cols-cap', 'the same rule, once per column:');
+        const cols = el('div', 'tut-cols');
+        rig.appendChild(colsCap);
+        rig.appendChild(cols);
+
+        function showColumns(gate) {
+            cols.innerHTML = '';
+            columnWork(gate, task.a, unary ? null : task.b, bits).forEach((c) => {
+                const item = el('div', 'tut-col');
+                item.dataset.on = String(c.result);
+                item.appendChild(el('span', 'tut-col-weight', String(c.weight)));
+                item.appendChild(el('span', 'tut-col-sum', c.b === null
+                    ? GATE_SYMBOL[gate] + ' ' + c.a + ' = ' + c.result
+                    : c.a + ' ' + GATE_SYMBOL[gate] + ' ' + c.b + ' = ' + c.result));
+                cols.appendChild(item);
+            });
+        }
+
         function showResult(gate) {
             const value = applyGate(gate, task.a, unary ? null : task.b, bits);
             opLabel.textContent = GATE_SYMBOL[gate];
@@ -747,6 +857,16 @@
                     b.classList.toggle('is-picked', b.dataset.gate === name.toLowerCase());
                 });
                 const value = showResult(name);
+                showColumns(name);
+
+                if (task.explore) {
+                    sfx('move');
+                    rig.classList.add('is-solved');
+                    setTask('✓ ' + name + ' turns ' + operandText + ' into ' + value
+                        + ' · four columns, no carrying. Try the others, then carry on.', true);
+                    return;
+                }
+
                 if (value === task.want) {
                     sfx('merge');
                     buzz('solved');
@@ -762,10 +882,9 @@
         rig.appendChild(picker);
 
         bodyEl.appendChild(rig);
-        const ask = unary
-            ? 'which gate turns ' + task.a + ' into ' + task.want + '?'
-            : 'which gate turns ' + task.a + ' and ' + task.b + ' into ' + task.want + '?';
-        setTask(ask, false);
+        setTask(task.explore
+            ? 'tap a gate and watch all four columns'
+            : 'tap the gate that turns ' + operandText + ' into ' + task.want, false);
     }
 
     // ── lesson 4: the real board ────────────────────────────────────────────
