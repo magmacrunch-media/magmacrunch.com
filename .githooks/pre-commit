@@ -131,6 +131,20 @@ command -v node >/dev/null 2>&1 || {
 # `-i <paths>` against its lock file (`index.lock`), which git then installs as
 # the real index — either can be staged into. `git commit -- <paths>` runs them
 # against a temporary index, which cannot.
+# THE EM DASH GUARD, and it has to run HERE rather than from .git/hooks. This
+# repo sets core.hooksPath to .githooks, so git runs this file and never the one
+# no-em-dash.sh --install-all writes into .git/hooks: that install reported "ok"
+# for a hook git does not run. It also has to come BEFORE the exec below, which
+# replaces this shell and would never return to anything appended after it.
+#
+# Tested for rather than assumed, because this file is TRACKED and the path is
+# this machine's. On a checkout without that tree the guard is simply absent,
+# which must not fail somebody else's commit.
+dev_guard=/c/magma/dev/no-em-dash.sh
+if [ -x "$dev_guard" ]; then
+	"$dev_guard" || exit 1
+fi
+
 case "$(basename "${GIT_INDEX_FILE:-index}")" in
 	index | index.lock) exec node scripts/check-staged-stamps.mjs --stage ;;
 	*)                  exec node scripts/check-staged-stamps.mjs ;;
