@@ -16,7 +16,21 @@ arcade/admin/github-token.json
 # 200 at magmacrunch.com/AGENTS.md. This repo is public, so it reads on GitHub
 # either way. What the rule did do was make every *new* AGENTS.md invisible to
 # git, which is how arcade/SORRY/AGENTS.md went six weeks unnoticed.
-wiki/
+# `wiki/` is TRACKED, and was ignored from 2026-07-25 to 2026-10-11 by b165d33a,
+# whose message says only "Add wiki/ to .gitignore". Nothing under `wiki/` had
+# ever been tracked before that, and `wiki-old-backup/` sits right beside it, so
+# the rule was keeping a nested working COPY out of the repo rather than
+# deciding this repo should hold no documentation.
+#
+# It holds it now. The 48 pages under `wiki/` are the source for the published
+# wiki, matching `engines/texastoast` and `libs/magmascript`. The clone that
+# pushes them is a sibling, `../magmacrunch.com.wiki`, and never a subdirectory
+# here -- which is the arrangement the old rule was protecting, and still is.
+#
+# `dev\wiki-status.py` is what stops the two diverging. This repo is public, so
+# its wiki is a real reader surface and the two must agree in BOTH directions;
+# CLAUDE.md records 17 pages drifting both ways the last time a loose copy of
+# this wiki existed with nothing checking it.
 wiki-old-backup/
 mcp-server/.venv/
 __pycache__/
