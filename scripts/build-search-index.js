@@ -178,7 +178,6 @@ function parseMainPages() {
     { file: 'press/index.html', title: 'Press Hub', desc: 'Journals and writing' },
     { file: 'press/scientific/index.html', title: 'Scientific Journal', desc: 'Academic writing and physics' },
     { file: 'press/experimental/index.html', title: 'Experimental Journal', desc: 'Experimental and literary writing' },
-    { file: 'press/lyrics/index.html', title: 'Lyrics', desc: 'Song lyrics by artist' },
     { file: 'ware/index.html', title: 'Ware Hub', desc: 'Software — creative utilities & developer tools' },
     { file: 'ware/utilities/index.html', title: 'Creative Utilities', desc: 'Browser-based tools for art, media & image processing' },
     { file: 'ware/dev/index.html', title: 'Developer Tools', desc: 'Game engines, scripting language & C API reference' },
@@ -188,6 +187,10 @@ function parseMainPages() {
     const filePath = path.join(ROOT, p.file);
     if (!fs.existsSync(filePath)) continue;
     const html = fs.readFileSync(filePath, 'utf8');
+    // The three crawling loops honour this; this one listed its pages by hand
+    // and did not, so a listed page that became a redirect stub would be
+    // indexed under the stub's own title.
+    if (isNoindex(html)) continue;
     const title = extractTitle(html) || p.title;
     const body = extractBodyText(html);
     // The page's own description wins over the one listed below. Those are
