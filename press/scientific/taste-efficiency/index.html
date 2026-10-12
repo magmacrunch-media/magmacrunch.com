@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media</title>
+    <meta name="description" content="Author's version of McCoy, McEntaffer &amp; Miles (2020), ApJ 891, 114, with the 2022 erratum applied: EUV and soft x-ray diffraction efficiency of a blazed reflection grating made by TASTE, measured at the Advanced Light Source.">
+    <meta property="og:title" content="EUV and soft x-ray efficiency of a TASTE grating · magmacrunch press">
+    <meta property="og:description" content="Author's version of McCoy, McEntaffer &amp; Miles (2020), ApJ 891, 114, with the 2022 erratum applied.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="magmacrunch media">
+    <meta property="og:locale" content="en_US">
+    <link rel="icon" type="image/x-icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../style.css?v=53e9e146">
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'all',
+        processEscapes: true,
+        macros: {
+          vb: ['{\\mathbf{#1}}', 1],
+          vu: ['{\\hat{#1}}', 1],
+          dv: ['\\frac{\\mathrm{d} #1}{\\mathrm{d} #2}', 2],
+          pdv: ['\\frac{\\partial #1}{\\partial #2}', 2],
+          dd: ['\\mathrm{d}#1', 1],
+          expval: ['\\langle #1 \\rangle', 1],
+          comm: ['[#1, #2]', 2],
+          ket: ['|#1\\rangle', 1],
+          bra: ['\\langle #1|', 1],
+          braket: ['\\langle #1 | #2 \\rangle', 2],
+          dyad: ['|#1\\rangle\\langle #1|', 1],
+          norm: ['\\|#1\\|', 1],
+          abs: ['|#1|', 1],
+          matrixel: ['\\langle #1 | #2 | #3 \\rangle', 3]
+        }
+      },
+      loader: {load: ['[tex]/physics']}
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --nav-accent: #c02828;
+            --nav-glow: rgba(192,40,40,0.4);
+            --nav-brand: #c02828;
+            --nav-brand-glow: rgba(192,40,40,0.6);
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #f0e4c8;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 72px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #888; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c02828; }
+        .breadcrumb .sep { margin: 0 8px; color: #333; }
+        .breadcrumb .current { color: #c02828; }
+
+        .article-header {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .article-type {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #f0e4c8;
+            background: #c02828;
+            display: inline-block;
+            padding: 3px 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .article-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(10px, 2vw, 15px);
+            color: #f0e4c8;
+            letter-spacing: 0.06em;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .article-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .article-meta .author { color: #c02828; font-weight: 700; }
+
+        .article-body {
+            width: min(700px, 90vw);
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .article-body h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #c02828;
+            letter-spacing: 0.08em;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .article-body p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.85;
+            color: #c8c0a8;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .article-body p:first-of-type::first-letter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
+            float: left;
+            line-height: 0.85;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: #c02828;
+        }
+
+        .article-body a {
+            color: #c02828;
+            text-decoration: underline;
+            text-decoration-color: rgba(192,40,40,0.3);
+        }
+        .article-body a:hover { color: #e88080; }
+
+        .article-body strong { color: #f0e4c8; }
+        .article-body em { color: #888; }
+
+        /* ── EQUATIONS ── */
+        .equation {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .article-body .mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+
+        /* ── FIGURES ── */
+        figure {
+            margin: 28px 0;
+            text-align: center;
+        }
+
+        figure img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            image-rendering: auto;
+        }
+
+        figcaption {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .article-end {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .article-end span { color: #c02828; font-size: 12px; }
+
+        .article-back {
+            display: inline-block;
+            margin-top: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #c02828;
+            text-decoration: none;
+            border: 2px solid #c02828;
+            padding: 8px 16px;
+            transition: all 0.15s;
+        }
+        .article-back:hover {
+            background: #c02828;
+            color: #1a1a1a;
+        }
+
+        footer {
+            background: #111 !important;
+            border-top-color: #333 !important;
+            color: #666 !important;
+        }
+        footer span { color: #c02828 !important; }
+
+        @media (max-width: 640px) {
+            .article-title { font-size: 10px; }
+            .article-body p { font-size: 13px; }
+            .article-body h2 { font-size: 9px; }
+            .equation { overflow-x: auto; }
+        }
+    
+        /* ── additions for a figure-heavy paper ── */
+        figure {
+            margin: 34px 0;
+            animation: fadeUp 0.5s ease both;
+        }
+        figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin: 0 auto 10px;
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        figcaption {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #9a8f7d;
+            text-align: left;
+        }
+
+        .provenance {
+            border: 1px solid #333;
+            border-left: 3px solid #c02828;
+            background: #1f1f1f;
+            padding: 18px 20px;
+            margin-bottom: 40px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            line-height: 1.85;
+            color: #9a8f7d;
+            animation: fadeUp 0.5s ease both;
+        }
+        .provenance .prov-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .provenance a { color: #f0e4c8; }
+        .provenance a:hover { color: #c02828; }
+        .provenance p { margin: 0 0 9px; }
+        .provenance p:last-child { margin-bottom: 0; }
+
+        .abstract {
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            padding: 20px 0;
+            margin-bottom: 36px;
+            font-style: italic;
+            color: #c9bda8;
+        }
+        .abstract .prov-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 12px;
+            font-style: normal;
+        }
+
+        h3.endmatter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            margin: 44px 0 16px;
+        }
+        ol.refs, ol.notes {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            color: #9a8f7d;
+            padding-left: 22px;
+        }
+        ol.refs li, ol.notes li { margin-bottom: 9px; }
+        ol.refs { list-style: none; padding-left: 0; }
+        ol.refs li { padding-left: 20px; text-indent: -20px; }
+        sup.fn a { color: #c02828; text-decoration: none; padding: 0 1px; }
+        .fnback { font-size: 10px; color: #666; }
+        :target { scroll-margin-top: 80px; }
+        .equation { overflow-x: auto; overflow-y: hidden; }
+
+        /* cone puts a drop cap on the first paragraph in .article-body. Here
+           that paragraph is the provenance note, so the cap is moved to the
+           first paragraph of the paper proper. */
+        .article-body .provenance p::first-letter,
+        .article-body .abstract p::first-letter,
+        .article-body figcaption::first-letter {
+            font-family: inherit;
+            font-size: inherit;
+            float: none;
+            line-height: inherit;
+            margin: 0;
+            color: inherit;
+        }
+        .article-body p.lede::first-letter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
+            float: left;
+            line-height: 0.85;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: #c02828;
+        }
+    
+        figure { margin: 34px 0; animation: fadeUp 0.5s ease both; }
+        figure img { display:block; width:100%; height:auto; margin:0 auto 10px;
+                     background:#fff; padding:10px; border:1px solid #333; }
+        figcaption { font-family:'Courier Prime',monospace; font-size:12px;
+                     line-height:1.75; color:#9a8f7d; text-align:left; }
+        .provenance { border:1px solid #333; border-left:3px solid #c02828;
+                      background:#1f1f1f; padding:18px 20px; margin-bottom:40px;
+                      font-family:'Courier Prime',monospace; font-size:12px;
+                      line-height:1.85; color:#9a8f7d; animation:fadeUp 0.5s ease both; }
+        .provenance .prov-label { font-family:'Press Start 2P',monospace; font-size:7px;
+                      color:#c02828; letter-spacing:0.1em; display:block; margin-bottom:12px; }
+        .provenance a { color:#f0e4c8; }
+        .provenance a:hover { color:#c02828; }
+        .provenance p { margin:0 0 9px; }
+        .provenance p:last-child { margin-bottom:0; }
+        .abstract { border-top:1px solid #333; border-bottom:1px solid #333;
+                    padding:20px 0; margin-bottom:36px; font-style:italic; color:#c9bda8; }
+        .abstract .prov-label { font-family:'Press Start 2P',monospace; font-size:7px;
+                    color:#c02828; letter-spacing:0.1em; display:block;
+                    margin-bottom:12px; font-style:normal; }
+        h3.endmatter { font-family:'Press Start 2P',monospace; font-size:9px;
+                    color:#c02828; letter-spacing:0.1em; margin:44px 0 16px; }
+        ol.refs { font-family:'Courier Prime',monospace; font-size:12px; line-height:1.8;
+                    color:#9a8f7d; list-style:none; padding-left:0; }
+        ol.refs li { margin-bottom:9px; padding-left:28px; position:relative; }
+        ol.refs li .rn { position:absolute; left:0; color:#c02828; }
+        sup.cite a { color:#c02828; text-decoration:none; padding:0 1px; }
+        .eqno { float:right; color:#9a8f7d; font-family:'Courier Prime',monospace; }
+        :target { scroll-margin-top:80px; }
+        .equation { overflow-x:auto; overflow-y:hidden; }
+        .article-body .provenance p::first-letter,
+        .article-body .abstract p::first-letter,
+        .article-body figcaption::first-letter {
+            font-family:inherit; font-size:inherit; float:none;
+            line-height:inherit; margin:0; color:inherit; }
+        .article-body p.lede::first-letter {
+            font-family:'Press Start 2P',monospace; font-size:2.2em; float:left;
+            line-height:0.85; margin-right:8px; margin-top:4px; color:#c02828; }
+    
+        .erratum { border:1px solid #6a5a2a; border-left:3px solid #c9a227;
+                   background:#241f14; padding:18px 20px; margin:0 0 40px;
+                   font-family:'Courier Prime',monospace; font-size:12px;
+                   line-height:1.85; color:#b8ad92; }
+        .erratum .prov-label { color:#c9a227; }
+        .erratum a { color:#f0e4c8; }
+        .erratum a:hover { color:#c9a227; }
+        .erratum p { margin:0 0 9px; }
+        .erratum ul { margin:0 0 9px; padding-left:20px; }
+        .erratum li { margin-bottom:7px; }
+        .erratum .applies { color:#e0d4b0; }
+        .erratum .noapply { color:#8a8068; }
+        sup.err a { color:#c9a227; text-decoration:none; font-size:9px;
+                    letter-spacing:0.04em; }
+        p.erratum-inline { font-family:'Courier Prime',monospace !important;
+                    font-size:11px !important; color:#9a8f7d !important;
+                    border-left:2px solid #c9a227; padding-left:12px;
+                    margin:-8px 0 20px !important; text-align:left !important; }
+        p.erratum-inline::first-letter { font-family:inherit !important;
+                    font-size:inherit !important; float:none !important;
+                    margin:0 !important; color:inherit !important; }
+        figure.tablewrap table { width:100%; border-collapse:collapse;
+                    font-family:'Courier Prime',monospace; font-size:12px;
+                    color:#c8c0a8; }
+        figure.tablewrap th { text-align:left; color:#c02828; font-weight:400;
+                    border-bottom:1px solid #555; padding:7px 8px; }
+        figure.tablewrap td { border-bottom:1px solid #2a2a2a; padding:6px 8px;
+                    vertical-align:top; }
+        figure.tablewrap { overflow-x:auto; }
+        /* cone's drop cap targets the first p among its siblings, so the
+           erratum block's opening paragraph was getting one too. */
+        .article-body .erratum p::first-letter {
+            font-family:inherit; font-size:inherit; float:none;
+            line-height:inherit; margin:0; color:inherit; }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../">home</a>
+        <span class="sep">›</span>
+        <a href="../../../press/">press</a>
+        <span class="sep">›</span>
+        <a href="../">scientific</a>
+        <span class="sep">›</span>
+        <span class="current">EUV and soft x-ray efficiency of a TASTE grating</span>
+    </div>
+
+    <div class="article-header">
+        <div class="article-type">paper</div>
+        <h1 class="article-title">Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by thermally activated selective topography equilibration</h1>
+        <div class="article-meta">
+            <span class="author">jake mccoy</span>, randall mcentaffer, drew miles<br>
+            the pennsylvania state university<br>
+            2020
+        </div>
+    </div>
+
+    <div class="article-body">
+
+    <div class="provenance">
+        <span class="prov-label">// this version //</span>
+        <p><strong>Published by IOP Publishing for the AAS.</strong> This paper
+        appeared in <em>The Astrophysical Journal</em>, published by
+        <a href="https://iopscience.iop.org/journal/0004-637X" rel="noopener">IOP
+        Publishing</a> on behalf of the American Astronomical Society. That
+        published article is the version of record, and it is the one to cite:</p>
+        <p style="padding-left:16px;border-left:1px solid #333;">McCoy, J. A.,
+        McEntaffer, R. L. &amp; Miles, D. M. (2020) Extreme ultraviolet and soft
+        X-ray diffraction efficiency of a blazed reflection grating fabricated by
+        thermally activated selective topography equilibration.
+        <em>The Astrophysical Journal</em> <strong>891</strong>, 114.
+        IOP Publishing / AAS.
+        <a href="https://doi.org/10.3847/1538-4357/ab76d3" rel="noopener">doi:10.3847/1538-4357/ab76d3</a></p>
+        <p><strong>What this page is.</strong> The authors' own manuscript,
+        rendered from the LaTeX source submitted to arXiv. It is not IOP
+        Publishing's typeset version and carries none of the publisher's styling;
+        AAS's <code>aastex63.cls</code> and <code>aasjournal.bst</code> are not
+        reproduced here. Preprint:
+        <a href="https://arxiv.org/abs/2003.06449" rel="noopener">arXiv:2003.06449</a>
+        (<a href="https://arxiv.org/pdf/2003.06449" rel="noopener">PDF</a>),
+        <a href="https://doi.org/10.48550/arXiv.2003.06449" rel="noopener">doi:10.48550/arXiv.2003.06449</a></p>
+    </div>
+
+    <div class="erratum" id="erratum">
+        <span class="prov-label">// erratum, and what it changes here //</span>
+        <p>A 2022 erratum corrects the published article. It is open access
+        under
+        <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>,
+        and is quoted and applied here on that basis:</p>
+        <p style="padding-left:16px;border-left:1px solid #6a5a2a;">McCoy, J. A.,
+        McEntaffer, R. L. &amp; Miles, D. M. (2022) Erratum:
+        &ldquo;Extreme Ultraviolet and Soft X-Ray Diffraction Efficiency of a
+        Blazed Reflection Grating Fabricated by Thermally Activated Selective
+        Topography Equilibration&rdquo; (2020 ApJ, 891, 114).
+        <em>The Astrophysical Journal</em> <strong>926</strong>, 105.
+        &copy; 2022 The Author(s), published by the American Astronomical Society.
+        <a href="https://doi.org/10.3847/1538-4357/ac4b63" rel="noopener">doi:10.3847/1538-4357/ac4b63</a></p>
+        <p>It lists four corrections. This page is built from the authors'
+        manuscript rather than from the published article, and
+        <strong>only two of the four describe anything wrong with the
+        manuscript</strong>. Each was checked against the source:</p>
+        <ul>
+        <li class="applies"><strong>Applied.</strong> The equation for the roll
+        angle $\phi$ is given here in the erratum's corrected form,
+        $\phi = \arcsin(\Delta x_0 / r) - \alpha$. The manuscript has the
+        small-angle form, $\sin(\phi) = \Delta x_0/r - \sin(\alpha)$, which
+        the erratum notes holds approximately for small $\phi$ and does not
+        affect the reported results. The value in Table 1 was derived with the
+        corrected form.</li>
+        <li class="applies"><strong>Applied.</strong> A sentence in
+        <a href="#sec:coating">Section 2.3</a> is given in the erratum's revised
+        wording. The manuscript attributed a thicker coating to the difference in
+        surface composition; the erratum attributes it instead to the EBPVD
+        process producing a nonconformal coating dependent on the chamber
+        geometry. Marked in the text.</li>
+        <li class="noapply"><strong>Does not apply.</strong> The erratum fixes a
+        missing space between &ldquo;for&rdquo; and
+        &ldquo;$n$&rdquo; in the grating equation. The manuscript's source is
+        already correctly spaced, so the fault belongs to the published
+        typesetting rather than to the paper.</li>
+        <li class="noapply"><strong>Does not apply.</strong> The erratum notes
+        that $\phi$ and the yaw angle $\varphi$ are swapped throughout the
+        <em>online</em> edition, and says the PDF prints them correctly. The
+        manuscript's source distinguishes them correctly, and so does this
+        page.</li>
+        </ul>
+        <p>One thing the erratum does not mention: its corrected grating
+        equation reads &ldquo;for $n = \pm 1, \pm 2, \pm 3 \ldots$&rdquo;,
+        dropping the $n = 0$ case the manuscript includes. The manuscript's form
+        is kept here.</p>
+    </div>
+
+    <div class="abstract">
+        <span class="prov-label">// abstract //</span>
+        Future observatories utilizing reflection grating spectrometers for extreme ultraviolet (EUV) and soft x-ray (SXR) spectroscopy require high-fidelity gratings with both blazed groove facets and custom groove layouts that are often fanned or feature a slight curvature. While fabrication procedures centering on wet anisotropic etching in mono-crystalline silicon produce highly-efficient blazed gratings, the precision of a non-parallel groove layout is limited by the cubic structure of the silicon crystal. This motivates the pursuit of alternative techniques to grating manufacture, namely thermally activated selective topography equilibration (TASTE), which uses grayscale electron-beam lithography to pattern multi-leveled structures in resist followed by an optimized polymer thermal reflow to smooth the 3D patterns into continuous surface relief profiles. Using TASTE, a mold for a reflection grating with a periodicity of 400 nm and grooves resembling an asymmetric sawtooth was patterned in 130 nm-thick poly(methyl methacrylate) resist on a silicon substrate over a 50 mm by 7.5 mm area. This structure was coated with 15 nm of gold by electron-beam physical vapor deposition using titanium as an adhesion layer and then tested for EUV and SXR diffraction efficiency at beamline 6.3.2 of the Advanced Light Source synchrotron facility. Results demonstrate a quasi-blaze response characteristic of a $27^{\circ}$ blaze angle with groove facets smooth to 1.5 nm RMS. Absolute peak order efficiency ranges from 75% to 25% while total relative efficiency measures $\gtrapprox$90% across the measured bandpass of 15.5 nm $> \lambda >$ 1.55 nm.
+    </div>
+
+<h2 id="sec:introduction">1. Introduction</h2>
+
+<p class="lede">Instrumentation currently under development for spectroscopy at extreme ultraviolet (EUV) and soft x-ray (SXR) wavelengths ($\lambda \approx 40$ – 0.5 nm) calls for blazed reflection gratings with sawtooth-shaped grooves and custom groove layouts to achieve both high spectral sensitivity and high spectral resolving power, $\lambda / \Delta \lambda$, in a grazing-incidence telescope. With a main scientific objective of measuring the diffuse, highly-ionized baryonic content in galactic halos and the intergalactic medium through SXR absorption spectroscopy of active galactic nuclei, the <em>Lynx X-ray Observatory</em> is one of four flagship mission concepts considered for the 2020 Astrophysics Decadal Survey (<a href="#ref-Gaskin19">Gaskin et al. 2019</a>). In a similar manner to the <em>Reflection Grating Spectrometer (RGS)</em> on board <em>XMM-Newton</em> (<a href="#ref-denHerder01">den Herder et al. 2001</a>), an x-ray reflection grating spectrometer suitable for <em>Lynx</em> requires several thousand identical blazed gratings with fanned groove layouts stacked and aligned into modular arrays to intercept SXR radiation coming to a focus in a Wolter-I telescope (<a href="#ref-McEntaffer19">McEntaffer 2019</a>). On the other hand, the <em>Extreme-Ultraviolet Stellar Characterization for Atmospheric Physics and Evolution (ESCAPE)</em> mission concept incorporates two blazed gratings with curved groove layouts that play a similar role for EUV radiation in a Hettrick-Bowyer-I telescope with the goal of characterizing high-energy radiation in habitable zones surrounding M-dwarfs and their impact on the atmospheres of exoplanets (<a href="#ref-France19">France et al. 2019</a>).</p>
+
+<p>A main challenge from the standpoint of grating fabrication in any case is the realization of a lithographic process that can generate non-parallel groove layouts with high fidelity while also maintaining blazed grooves that enable high diffraction efficiency. In particular, sensitivity requirements for <em>Lynx</em> require that the sum of all propagating orders exceeds 40% diffraction efficiency across the SXR bandpass while <em>ESCAPE</em> baselines single-order diffraction efficiency of $\sim$60% in the EUV (<a href="#ref-McEntaffer19">McEntaffer 2019</a>; <a href="#ref-France19">France et al. 2019</a>).</p>
+
+<p>The state-of-the-art for blazed gratings that perform with high diffraction efficiency at EUV and SXR wavelengths are those fabricated by wet anisotropic etching in mono-crystalline silicon, where typically either interference lithography (<a href="#ref-Franke97">Franke et al. 1997</a>; <a href="#ref-Chang03">Chang 2003</a>) or electron-beam lithography (<a href="#ref-Voronov11">Voronov et al. 2011</a>; <a href="#ref-Miles18">Miles et al. 2018</a>) is used to define a groove layout in resist before the pattern is transferred into the underlying silicon crystal structure to produce atomically-smooth sawtooth facets. However, interference lithography faces severe limitations in its ability to pattern non-parallel layouts and even with the direct-write capabilities of electron-beam lithography, the cubic structure of mono-crystalline silicon prevents the formation of fanned or curved grooves with smooth and continuous triangular facets. Additionally, these anisotropic etching processes demand precise alignment between the groove layout in resist and the crystallographic planes of silicon to produce a high-fidelity grating. An alternative to these methods of grating manufacture is thermally activated selective topography equilibration (TASTE), which combines grayscale electron-beam lithography (GEBL) and polymer thermal reflow to produce smooth, 3D surface relief profiles in poly(methyl methacrylate) (PMMA) or other thermoplastic resists such as ZEP520A and mr-PosEBR (<a href="#ref-Schleunitz14">Schleunitz et al. 2014</a>; <a href="#ref-Kirchner16">Kirchner et al. 2016</a>; <a href="#ref-Pfirrmann16">Pfirrmann et al. 2016</a>). Through optimization of TASTE, repeating staircase patterns in PMMA fabricated by GEBL can be equilibrated into wedgelike structures by selective thermal reflow to provide a template for a blazed grating with groove spacing on the order of hundreds of nanometers (<a href="#ref-McCoy18">McCoy et al. 2018</a>). With no dependence on the crystallographic structure of the substrate, TASTE has the potential for realizing reflection gratings that feature both a blazed surface topography and a non-parallel groove layout, thereby enabling high sensitivity and high $\lambda / \Delta \lambda$ in an EUV/SXR spectrometer.</p>
+
+<p>This paper presents diffraction efficiency measurements of a grating prototype fabricated using TASTE that emulates a blazed grating with a uniform groove spacing of 400 nm and a blaze angle of $\sim$27$^{\circ}$. Gathered at beamline 6.3.2 for EUV and SXR reflectometry of the Advanced Light Source (ALS) synchrotron facility at Lawrence Berkeley National Laboratory<a href="http://cxro.lbl.gov/als632/" rel="noopener">http://cxro.lbl.gov/als632/</a> (<a href="#ref-Underwood96">Underwood et al. 1996</a>; <a href="#ref-Gullikson01">Gullikson et al. 2001</a>), these measurements characterize the efficiency response of the grating in an extreme off-plane mount at a graze angle of $\sim$1.5$^{\circ}$ to enable total external reflection at SXR wavelengths. These results serve as the first demonstration of TASTE being used for EUV/SXR grating technology and provide a baseline for further experimentation with gratings that feature non-parallel grooves. Both the beamline test campaign and the grating prototype fabrication procedure are described in <a href="#sec:experiment">Section 2</a>, with all processing for grating fabrication and materials characterization carried out at the Pennsylvania State University (PSU) Materials Research Institute.<a href="https://www.mri.psu.edu" rel="noopener">https://www.mri.psu.edu</a> The beamline measurements are presented in <a href="#sec:results">Section 3</a> and discussed in <a href="#sec:discussion">Section 4</a> before conclusions and a summary are provided in <a href="#sec:summary">Section 5</a>.</p>
+
+<h2 id="sec:experiment">2. Experiment and Grating Fabrication</h2>
+
+<p>This section introduces the beamline test procedure used to measure EUV and SXR diffraction efficiency and details how the grating prototype was fabricated. Based on the geometrical considerations for this test campaign outlined in <a href="#sec:als_testing">Section 2.1</a>, the grating grooves were patterned in PMMA on a silicon wafer using the TASTE procedure described in <a href="#sec:taste_procedure">Section 2.2</a> and then coated with gold for EUV and SXR reflectivity as discussed in <a href="#sec:coating">Section 2.3</a>.</p>
+
+<h3 id="sec:als_testing">2.1. Diffraction Efficiency Testing at the Advanced Light Source (ALS)</h3>
+
+<p>Beamline 6.3.2 of the ALS provides a station for EUV and SXR reflectometry where a highly coherent, tunable beam of monochromatic radiation with wavelength 40 nm $\gtrapprox \lambda \gtrapprox$ 1 nm under high vacuum is incident onto a stage-mounted optic while a photodiode detector is used to measure the intensity of outgoing radiation. Using this laboratory facility, absolute diffraction efficiency of a grating as a function of $\lambda$, defined as the intensity ratio between the $n^{\text{th}}$ diffracted order and the unobstructed beam</p>
+
+<div class="equation" id="eq:diffraction_efficiency">
+$$
+\mathcal{E}_n \! \left( \lambda \right)  \equiv \frac{\mathcal{I}_n \! \left( \lambda \right)}{\mathcal{I}_{\text{inc}} \! \left( \lambda \right)} ,
+$$
+</div>
+
+<p>can be determined experimentally following the test procedures outlined by <a href="#ref-Miles18">Miles et al.</a> (2018), where the photodiode detector mounted on vertical goniometric and horizontal linear staging at a distance $L \approx 235$ mm away from the point of incidence on the grating is used to measure $\mathcal{I}_n \! \left( \lambda \right)$ for each propagating order and $\mathcal{I}_{\text{inc}} \! \left( \lambda \right)$. The grating prototype described in this paper was designed specifically for taking diffraction efficiency measurements at this beamline in a grazing-incidence, extreme off-plane mount where the incident radiation is nearly parallel to the groove direction and propagating orders are confined to the surface of a cone with a small opening angle (<a href="#ref-Cash91">Cash 1991</a>). The locations of orders for radiation of wavelength $\lambda$ diffracting from a grating with a groove spacing $d$ are described by the generalized grating equation (<a href="#ref-Neviere78">Neviere et al. 1978</a>)</p>
+
+<div class="equation" id="eq:off-plane_incidence_orders">
+$$
+\sin \left( \alpha \right) + \sin \left( \beta \right) = \frac{n \lambda}{d \sin \left( \gamma \right)} \quad \text{for } n = 0, \pm 1, \pm 2, \pm 3 ...
+$$
+</div>
+
+<p>where, as illustrated in the left panel of <a href="#fig:conical_reflection">Figure 1</a>, $\gamma$ is the half-opening angle of the cone, $\alpha$ is the azimuthal incidence angle and $\beta$ is the azimuthal diffracted angle of the $n^{\text{th}}$ diffracted order.</p>
+
+<figure id="fig:conical_reflection">
+        <img src="grat_geo_fix.jpg" alt="Figure 1" loading="lazy">
+        <figcaption>Figure 1. Geometry for a reflection grating producing a conical diffraction pattern. In an extreme off-plane mount, the incoming radiation is nearly parallel to the groove direction where the half-angle of the cone opening, $\gamma$, is on the order of a degree while the azimuthal incidence angle, $\alpha$, can take on any value to match the blaze angle, $\delta$, in Littrow configuration while also maintaining an incidence angle on the groove facets, $\zeta$, that is smaller than the critical angle for total external reflection at extreme ultraviolet and soft x-ray wavelengths. At a distance $L$ away from the point of incidence on the grating, diffracted orders are each separated by a distance $\lambda L / d$ along the direction of grating periodicity (<em>i.e.</em>, the dispersion direction), where $d$ is the groove spacing. Figure taken from <a href="#ref-McCoy18">McCoy et al.</a> (2018).</figcaption>
+</figure>
+
+<p>The testing methodology adopted from <a href="#ref-Miles18">Miles et al.</a> (2018) relies on the radius of the diffracted arc, given by</p>
+
+<div class="equation" id="eq:arc_radius">
+$$
+r = L \sin \left( \gamma \right) ,
+$$
+</div>
+
+<p>being smaller than the 10 mm by 10 mm collecting area of the photodiode detector used at the beamline. With propagating orders being dispersed a distance from $0^{\text{th}}$ order along the cross-groove direction given by</p>
+
+<div class="equation" id="eq:linear_dispersion">
+$$
+x_n = \frac{n \lambda L}{d}
+$$
+</div>
+
+<p>as shown in in <a href="#fig:conical_reflection">Figure 1</a>, which is in this case on the order of millimeters, a vertical, 0.5 mm-wide slit masking the detector is installed to enable the intensity of each diffracted order, $\mathcal{I}_n \! \left( \lambda \right)$, to be measured in isolation as the diffracted arc is scanned along the direction of the horizontal linear staging. Moreover, $\mathcal{I}_{\text{inc}} \! \left( \lambda \right)$ is measured in a similar fashion when the grating is moved out of the path of the beam using controllable staging. In this way, diffraction efficiency according to <a href="#eq:diffraction_efficiency">Equation 1</a> can be measured at EUV and SXR wavelengths by repeating this process for many values of $\lambda$ using the tunable beam provided by the ALS.</p>
+
+<p>As described in <a href="#sec:taste_procedure">Section 2.2</a>, the groove spacing of the grating prototype was designed to be $d=400$ nm while the angle of the sawtooth facets achieved by TASTE in 130 nm-thick PMMA yields a blaze angle of $\delta \sim 27^{\circ}$. To enable an effective blaze response from the grating so that $\mathcal{E}_n \! \left( \lambda \right)$ is concentrated in a particular part of the spectrum, $\alpha$ and $\gamma$ should be set such that only the shallow side of the asymmetric, sawtooth-shaped grooves is illuminated (<a href="#ref-Loewen97">Loewen &amp; Popov 1997</a>). Radiation is incident on these sawtooth facets at an angle $\zeta$ as illustrated in the right panel of <a href="#fig:conical_reflection">Figure 1</a>, which must be smaller than the critical angle for total external reflection (<a href="#ref-Attwood17">Attwood &amp; Sakdinawat 2017</a>) and is related to $\alpha$ and $\gamma$ through the following relation:</p>
+
+<div class="equation" id="eq:angle_on_groove">
+$$
+\sin \left( \zeta \right) = \sin \left( \gamma \right) \cos \left( \delta - \alpha \right) .
+$$
+</div>
+
+<p>The result in principle is that radiation is preferentially diffracted to an angle $\beta = 2 \delta - \alpha$ so that the blaze wavelength for the $n^{\text{th}}$ propagating order is</p>
+
+<div class="equation" id="eq:blaze_wavelength">
+$$
+\lambda_b = \frac{d \sin \left( \gamma \right)}{n} \left[ \sin \left( \alpha \right) + \sin \left( 2 \delta - \alpha \right)  \right] .
+$$
+</div>
+
+<p>At the beamline, $\alpha$ and $\gamma$ are controlled through the movement of stage rotations along principal axes relative to the surface of the grating substrate. Referencing the Cartesian coordinate system drawn in <a href="#fig:grating_angles">Figure 2</a>, the stage-controllable angles are rotations about the $x$ and $y$ axes.</p>
+
+<figure id="fig:grating_angles">
+        <img src="grat_geo_angles.jpg" alt="Figure 2" loading="lazy">
+        <figcaption>Figure 2. Angles relevant for beamline diffraction efficiency testing. Grating incidence angles $\alpha \equiv \angle ACB$ and $\gamma \equiv \angle AIC$ illustrated in <a href="#fig:conical_reflection">Figure 1</a> are controlled through the adjustment of principal axis angles $\eta \equiv \angle CIB$ and $\varphi \equiv \angle AIB$ at beamline 6.3.2 of the Advanced Light Source.</figcaption>
+</figure>
+
+<p>Rotations about the $x$ axis at the point of incidence are tied to the graze angle relative to the surface of the grating, $\eta$, defined by the relation</p>
+
+<div class="equation" id="eq:graze_angle">
+$$
+\sin \left( \eta \right) = \sin \left( \gamma \right) \cos \left( \alpha \right) ,
+$$
+</div>
+
+<p>whereas rotations about the $y$ axis represent grating yaw, $\varphi$, which is related to $\alpha$ and $\eta$ by</p>
+
+<div class="equation" id="eq:yaw_angle">
+$$
+\sin \left( \varphi \right) = \tan \left( \alpha \right) \tan \left( \eta \right) ,
+$$
+</div>
+
+<p>where $\varphi = 90^{\circ}$ corresponds to an exact in-plane mount with $\sin \left( \gamma \right) = 1$. Additionally, the orientation of the grating relative to the $z$ axis is characterized by the roll angle, $\phi$, which serves to rotate order locations about the center of the diffracted arc. This angle, not shown in <a href="#fig:grating_angles">Figure 2</a>, remains fixed nominally at $\phi = 0^{\circ}$ but like $\eta$ and $\varphi$, it must be constrained to measure $\alpha$ and $\gamma$ accurately; this is addressed in <a href="#sec:results">Section 3</a>.</p>
+
+<p>To satisfy the blaze condition for the grating prototype and the testing methodology requirement that $\gamma \lessapprox 2^{\circ}$ comfortably, the grating prototype was designed for use at a nominal graze angle of $\eta = 1.5^{\circ}$ in a Littrow configuration, where $\alpha = \beta = \delta \approx 27^{\circ}$ and $\zeta = \gamma \approx 1.7^{\circ}$ by equations<a href="#eq:angle_on_groove">Equation 5</a> and<a href="#eq:graze_angle">Equation 7</a>. In this configuration, diffraction efficiency is expected to be maximized and <a href="#eq:blaze_wavelength">Equation 6</a> for the blaze wavelength becomes</p>
+
+<div class="equation" id="eq:blaze_wavelength_littrow">
+$$
+\lambda_b = \frac{2 d \sin \left( \gamma \right) \sin \left( \delta \right) }{n} \approx \frac{11~\text{nm}}{n}.
+$$
+</div>
+
+<p>Meanwhile, <a href="#eq:yaw_angle">Equation 8</a> yields $\varphi \approx 0.8^{\circ}$ so that for $\phi \approx 0^{\circ}$, the grating dispersion direction is virtually parallel to the direction of the horizontal linear stage motion. Because the incident beam is then nearly parallel with both the groove direction and the surface of the grating substrate, the grooves of the grating prototype must be long enough to encompass the incident beam in projection at the chosen grazing-incidence angle of $\eta = 1.5^{\circ}$. With knowledge that the cross-sectional size of the beam at the ALS is $\lessapprox 0.5$ mm as it is incident on an optic, the grating prototype was designed to be 50 mm along the groove direction and 7.5 mm along the dispersion direction as to allow the beam to be positioned on the grooved area with relative ease. Considering the EUV/SXR wavelengths at which there exist propagating orders in this geometry and the separation of these orders defined by <a href="#eq:linear_dispersion">Equation 4</a> with $d=400$ nm and $L \approx 235$ mm relative to the 0.5 mm slit width, diffraction efficiency testing at the ALS was restricted to 15.5 nm $> \lambda >$ 1.55 nm, or equivalently, photon energies ranging from 80 eV to 800 eV.</p>
+
+<h3 id="sec:taste_procedure">2.2. Thermally Activated Selective Topography Equilibration (TASTE)</h3>
+
+<p>The surface relief mold for the grating prototype was fabricated by TASTE in $130$ nm-thick PMMA coated on a silicon wafer at the Nanofabrication Laboratory of the PSU Materials Research Institute.<a href="https://www.mri.psu.edu/nanofabrication-lab" rel="noopener">https://www.mri.psu.edu/nanofabrication-lab</a> As described by <a href="#ref-Schleunitz14">Schleunitz et al.</a> (2014), TASTE consists of two main processes: grayscale electron-beam lithography (GEBL) to pattern multi-level structures in a thermoplastic resist such as PMMA and selective thermal reflow to equilibrate the topography into smooth, sloped surfaces. Both of these components depend on local modification of the average molecular weight in the resist, $M_w$, by lithographic exposure to high-energy electrons. The structural formula for PMMA is drawn in <a href="#fig:PMMA">Figure 3</a>, where methyl methacrylate (MMA) monomers (C$_5$O$_2$H$_8$) are bonded together at the sites marked by brackets to form long polymer chains that constitute the resist as an amorphous material.</p>
+
+<figure id="fig:PMMA">
+        <img src="PMMA.png" alt="Figure 3" loading="lazy">
+        <figcaption>Figure 3. Structural chemical composition of poly(methyl methacrylate) (PMMA). The average molecular weight ($M_w$) of PMMA resist depends directly on the typical length of these polymer chains, which is indicated by the degree of polymerization, $n$ (<em>i.e.</em>, the number of MMA monomers bonded together).</figcaption>
+</figure>
+
+<p>The quantity $M_w$ is therefore dependent on the typical length of these polymer chains; more precisely, it is defined as the weight-averaged molar mass of the PMMA molecules making up the resist. A local reduction in $M_w$ occurs in positive-tone resists such as PMMA when high-energy electron exposure induces polymer chain scission by breaking bonds between monomers (<a href="#ref-Dobisz00">Dobisz et al. 2000</a>). For the processing described in this paper, the 130 nm-thick resist film was attained by spin-coating PMMA with $M_w = 950$ kg mol$^{-1}$ diluted 3% in anisole (MicroChem Corp.) on a clean, dehydrated, polished silicon wafer 100 mm in diameter and 0.5 mm thick (Virginia Semiconductor, Inc.) at 3 krpm using a dynamic dispense followed by a solvent bake-out.Both the dehydration bake and the solvent bake were performed at $180^{\circ}$C for 3 minutes by hotplate. Lithographic electron-beam exposure, quantified as electron dose, $D$, was carried out using a Raith EBPG5200 system<a href="https://www.raith.com/products/ebpg5200.html" rel="noopener">https://www.raith.com/products/ebpg5200.html</a> with a 100 kV accelerating voltage at the PSU Nanofabrication Laboratory.</p>
+
+<p>In standard electron-beam lithography, resist is exposed with a fixed, sufficiently large dose $D$ and therefore $M_w$ is locally reduced to a high degree. With a 100 kV accelerating voltage, electrons are energetic enough to forward-scatter through the resist with negligible intensity loss over a 130 nm thickness and therefore $M_w$ can be considered to be uniform throughout the depth of the resist film. This causes exposed resist to be soluble for wet development so that it can be etched down to the substrate while unexposed resist remains virtually intact. In constrast to this process, which produces a bi-level topography in resist, GEBL relies on a lateral gradient of $M_w$ imparted in the resist to produce a multi-level topography following a timed wet development (<a href="#ref-Stauffer92">Stauffer et al. 1992</a>).</p>
+
+<figure id="fig:TASTE_diagram">
+        <img src="GEBL_properties.png" alt="Figure 4" loading="lazy">
+        <figcaption>Figure 4. Physical properties of PMMA resist processed by grayscale electron-beam lithography (GEBL) that enable thermally activated selective topography equilibration. Dose-modulated electron exposure gives rise to a lateral gradient in average molecular weight ($M_w$) so that varying resist thicknesses result from $M_w$-dependent etch rates that occur during wet development. The GEBL-fabricated structure exhibits a lateral gradient in glass-liquid transition temperature ($T_g$), enabling selective thermal reflow. These illustrations neglect the effect of lateral development, which gives rise to tilted surfaces and rounded corners on the staircase steps.</figcaption>
+</figure>
+
+<p>Illustrated in <a href="#fig:TASTE_diagram">Figure 4</a>, this is achieved using a dose-modulated electron exposure where doses $D_1 < D_2 < D_3$ give rise to local average molecular weights $M_{w,1} > M_{w,2} > M_{w,3}$, and if $D_3$ is large enough to clear the resist, local resist thicknesses $h_1 > h_2 > h_3 = 0$ following wet development. Unexposed portions of the resist (<em>i.e.</em>, top steps of the staircase topography) in principle retain the original molecular weight of the polymer, $M_{w,0}$, and the coated resist thickness, $h_0$. While these portions of the resist may be inadvertently dosed by the proximity effect of electrons back-scattering through the substrate (<a href="#ref-Pavkovich86">Pavkovich 1986</a>), the GEBL principles discussed here hold provided that there is sufficient contrast in $M_w$ following dose-modulated electron exposure and that an appropriate wet development recipe is adopted. Also dependent on $M_w$ is the polymer glass-liquid transition temperature, $T_g$, such that local average molecular weights $M_{w,0} > M_{w,1} > M_{w,2}$ correspond to $T_{g,0} > T_{g,1} > T_{g,2}$, where $T_{g,0}$ is the transition temperature of unexposed resist. Owing to the thermoplastic nature of the resist, the stepped structure produced by GEBL can be heated globally to a temperature $T_{\text{reflow}}$ such that electron-exposed resist is allowed to equilibrate in a molten state according to a time-dependent visco-elastic creep process while unexposed resist remains in its glass state (<a href="#ref-Schleunitz10">Schleunitz &amp; Schift 2010</a>; <a href="#ref-Kirchner14">Kirchner et al. 2014</a>). In this way, selective thermal reflow can be achieved through heating the substrate by hotplate to a temperature $T_{g,0} > T_{\text{reflow}} > T_{g,1}$ and a stepped topography can be equilibrated into a sloped, sawtooth-like topography to serve as a surface relief mold for a blazed grating through optimization of GEBL parameters, $T_{\text{reflow}}$ and heating time.</p>
+
+<p>GEBL processing for fabrication of the grating prototype surface relief mold is outlined in <a href="#fig:TASTE_diagram">Figure 4</a>: the staircase topography features two electron-exposed steps, a cleared area and an unexposed step, all of equal width consistent with a periodicity of $d = 400$ nm (<em>i.e.</em>, $w_0 = w_1 = w_2 = w_3 = 100$ nm). Electron dosing for GEBL was performed according to the resist contrast curve provided by <a href="#ref-McCoy18">McCoy et al.</a> (2018), which is based on a room-temperature development recipe consisting of 2 minutes in a 1:1 mixture of methyl isobutyl ketone (MIBK) and isopropyl alcohol (IPA) followed by a 30-second rinse in IPA and a high-purity nitrogen blow-dry. This contrast curve is shown in <a href="#fig:resist_contrast">Figure 5</a>, where post-development PMMA thickness as measured by spectroscopic ellipsometry is plotted as a function of electron dose, $D$.</p>
+
+<figure id="fig:resist_contrast">
+        <img src="resist_contrast.png" alt="Figure 5" loading="lazy">
+        <figcaption>Figure 5. Resist contrast data for 130 nm-thick, 950 kg mol$^{-1}$ PMMA developed at room temperature using 1:1 methyl isobutyl ketone (MIBK) and isopropyl alcohol (IPA) for 2 minutes followed by a 30-second IPA rinse and a nitrogen blow dry. Figure taken from <a href="#ref-McCoy18">McCoy et al.</a> (2018).</figcaption>
+</figure>
+
+<p>These data were processed using the three-dimensional proximity effect correction (3DPEC) algorithm included in the Layout Beamer software package developed by GenISys GmbH<a href="https://genisys-gmbh.com/beamer.html" rel="noopener">https://genisys-gmbh.com/beamer.html</a> (<a href="#ref-Unal10">Unal et al. 2010</a>) to generate a dose-corrected layout appropriate for achieving exposed staircase steps with $h_1 \approx 0.66 h_0$ and $h_2 \approx 0.33 h_0$, where $h_0 \approx 130$ nm is the spin-coat thickness. Electron exposure for GEBL was carried out using an 8 nA beam current and a 400 $\micron$ aperture with a beam step size and a writing grid resolution of 10 nm, which is comparable to the beam spot size realized by the EBPG5200 under these conditions. These beam conditions differ from the recipe described in <a href="#ref-McCoy18">McCoy et al.</a> (2018), which was limited by the 25 MHz EBPG5200 clock frequency at the time of publication.</p>
+
+<p>Using the GEBL process outlined above, test patterns were exposed, developed and characterized by atomic force microscopy (AFM) to verify that the previously-reported staircase topography could be readily reproduced using the increased value for beam current enabled by a clock frequency upgrade to the EBPG5200.</p>
+
+<figure id="fig:TASTE_AFMs">
+        <img src="grayscale_AFM.jpg" alt="Figure 6" loading="lazy">
+        <img src="reflow_AFM.jpg" alt="Figure 6" loading="lazy">
+        <figcaption>Figure 6. Atomic force micrographs of the GEBL-processed resist (<em>top</em>) and the resist following thermal reflow (<em>bottom</em>).</figcaption>
+</figure>
+
+<p>In an identical fashion to <a href="#ref-McCoy18">McCoy et al.</a> (2018), all AFM was carried out at the PSU Materials Characterization Laboratory<a href="https://www.mri.psu.edu/materials-characterization-lab" rel="noopener">https://www.mri.psu.edu/materials-characterization-lab</a> with a Bruker Icon instrument equipped with a SCANASYST-AIR tip over 2 $\micron$ in the direction of grating periodicity at 512 samples per line to yield a 3.9 nm pixel size using 's PeakForce Tapping$^{\text{TM}}$ mode. A scan of the GEBL pattern exposed using an 8 nA beam current and a 400 $\micron$ aperture is shown in the top panel of <a href="#fig:TASTE_AFMs">Figure 6</a>, where it is verified that the topography appears virtually indistinguishable from the previous result obtained using a 1 nA beam current and a 200 $\micron$ aperture. Next, thermal reflow experimentation on test samples was carried out using an automated hotplate tool on a resist stabilization system built by Fusion Semiconductor, where from the results reported by <a href="#ref-McCoy18">McCoy et al.</a> (2018), it is expected that the optimum value for $T_{\text{reflow}}$ is near 120$^{\circ}$C. Through a series of reflow tests, it was found that $T_{\text{reflow}} = 116^{\circ}$C applied for a duration of 30 minutesDue to the 999-second time-out of the Fusion Semiconductor automated hotplate tool, thermal reflow was carried out in two consecutive 15-minute intervals. produced a topography that most closely resembled a sawtooth; an AFM of a test pattern treated this way is shown in the bottom panel of <a href="#fig:TASTE_AFMs">Figure 6</a>. Based on these results, a 7.5 mm by 50 mm area was exposed for GEBL using a 300 $\micron$ by 300 $\micron$ mainfield with 10-nm resolution, a 4 $\micron$ by 4 $\micron$ subfield with 5-nm resolution and Large Rectangle Fine Trapezoid (LRFT) fracturing in Layout Beamer.</p>
+
+<figure id="fig:uncoated_grating_pic">
+        <img src="uncoated_grating_photo.jpg" alt="Figure 7" loading="lazy">
+        <figcaption>Figure 7. Surface relief mold for the grating prototype patterned in 130 nm-thick PMMA coated on a 4-inch silicon wafer using TASTE. The grating measures 50 mm in the groove direction and 7.5 m in the dispersion direction.</figcaption>
+</figure>
+
+<p>Under these conditions, the EBPG5200 exposure duration (including tool overhead) was $\lessapprox 20$ hours. The grating mold resulting from the entire TASTE process patterned on a 4-inch wafer is pictured in <a href="#fig:uncoated_grating_pic">Figure 7</a>.</p>
+
+<h3 id="sec:coating">2.3. Coating for Extreme Ultraviolet (EUV) and Soft X-ray (SXR) Reflectivity</h3>
+
+<p>While achieving an effective blaze response from the grating prototype hinges on the shape of the sawtooth facets produced by TASTE, absolute diffraction efficiency is also dependent on the reflectivity of the sawtooth facets at a nominal incidence angle $\zeta \approx 1.7^{\circ}$ as discussed in <a href="#sec:als_testing">Section 2.1</a>. Having an overcoating on the grating surface relief mold described in <a href="#sec:taste_procedure">Section 2.2</a> is important not only for avoiding prominent absorption edges of carbon and oxygen in PMMA but also for preventing potential resist modification by the EUV/SXR beam during diffraction efficiency testing. Using data provided by the Center for X-ray Optics (CXRO) at Lawrence Berkeley National Laboratory,<a href="http://henke.lbl.gov/optical_constants/" rel="noopener">http://henke.lbl.gov/optical_constants/</a> the Fresnel reflectivity of gold at a grazing-incidence angle of $\zeta = 1.7^{\circ}$ is plotted in the left panel of <a href="#fig:Au_refl_attn">Figure 8</a> as a function of photon energy ranging from 80 eV to 800 eV. With $\tilde{\nu}$ as the complex index of refraction of gold, Fresnel reflectivity for a wavefront with transverse electric polarization is given by</p>
+
+<div class="equation" id="eq:fresnel">
+$$
+\mathcal{R}_F = \left\| \frac{\sin \left( \zeta \right) - \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)}}{\sin \left( \zeta \right) + \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)}} \right\|^2 ,
+$$
+</div>
+
+<p>which is approximately equal to the corresponding Fresnel reflectivity for transverse magnetic polarization for grazing-incidence EUV/SXR radiation (<a href="#ref-Attwood17">Attwood &amp; Sakdinawat 2017</a>).</p>
+
+<figure id="fig:Au_refl_attn">
+        <img src="reflectivity.png" alt="Figure 8" loading="lazy">
+        <img src="attn_depth.png" alt="Figure 8" loading="lazy">
+        <figcaption>Figure 8. <em>Left</em>: Fresnel reflectivity ($\mathcal{R}_F$ given by <a href="#eq:fresnel">Equation 10</a>) for perfectly smooth, thick gold mirror at a $1.7^{\circ}$ grazing incidence angle. <em>Right</em>: Attenuation depth ($\mathcal{D}_{\perp}$ given by <a href="#eq:attn_depth">Equation 11</a>) in gold at a $1.7^{\circ}$ grazing incidence angle. Data obtained from the Center for X-ray Optics at Lawrence-Berkeley National Laboratory.</figcaption>
+</figure>
+
+<p>Due to this broadband response over the wavelength range for diffraction efficiency testing, 15.5 nm $> \lambda >$ 1.55 nm, gold was chosen as the reflective overcoat for the grating. To prevent further reflections at underlaying material interfaces from occurring, the thickness of the gold coating should be chosen appropriately. The distance normal to a surface at which radiation loses $1/\mathrm{e}$ of its original intensity is given by the attenuation depth (<a href="#ref-Gibaud2009">Gibaud &amp; Vignaud 2009</a>)</p>
+
+<div class="equation" id="eq:attn_depth">
+$$
+\mathcal{D}_{\perp} = \frac{1}{2 \, \text{Im} \! \left[ \tilde{k}_{\perp} \right]} = \frac{\lambda}{4 \pi \, \text{Im} \! \left[ \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)} \right]} ,
+$$
+</div>
+
+<p>where $\tilde{k}_{\perp} = k_0 \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)}$ is the component normal to the surface of the wave vector in gold at a grazing-incidence angle $\zeta$ and $\text{Im} \! \left[ \tilde{k}_{\perp} \right]$ is the imaginary component of $\tilde{k}_{\perp}$. From this quantity, which is plotted in the right panel of <a href="#fig:Au_refl_attn">Figure 8</a> as a function of photon energy using CXRO data, a 15 nm-thick layer deposited on the grating surface relief mold in principle is sufficient to prevent further reflections at underlaying material interfaces from occurring. However, because gold is non-reactive toward PMMA, a thin film of an oxidizing metal such as chromium or titanium must be first deposited on the patterned resist to promote wetting and adhesion for the top, reflective layer (<a href="#ref-Trolier-McKinstry17">Trolier-McKinstry &amp; Newnham 2017</a>). Ideally, the result is a gold coating that maintains the fidelity of the sawtooth topography while also realizing blazed groove facets with surface roughness, $\sigma$, low enough to reduce non-specular scatter at EUV and SXR wavelengths as much as possible. According to the Fraunhofer criterion for a smooth surface, given by (<a href="#ref-Beckmann63">Beckmann &amp; Spizzichino 1963</a>)</p>
+
+<div class="equation" id="eq:roughness_inequality">
+$$
+\sigma < \frac{\lambda}{32 \sin \left( \zeta \right)} ,
+$$
+</div>
+
+<p>$\sigma$ should be on the level of 1 nm RMS to satisfy this condition for 15.5 nm $> \lambda >$ 1.55 nm.</p>
+
+<p>Deposition for the grating overcoating was performed by electron-beam physical vapor deposition (EBPVD) using a Kurt J.\ Lesker Lab-18 system at the PSU Nanofabrication Laboratory. First, a 5 nm-thick film of titanium was deposited on the patterned TASTE wafer as described in <a href="#sec:taste_procedure">Section 2.2</a> at a previously-determined rate of 0.5 s$^{-1}$ under high vacuum. This allows titanium and some of the oxygen present in PMMA to form a thin oxide layer between the resist surface and the titanium coating, providing a wetted, metallic surface for the gold layer to adhere to. Without breaking vacuum, the gold was then deposited at a rate of 1.0 s$^{-1}$ to achieve a layer $\sim$15 nm thick.</p>
+
+<figure id="fig:coating_AFM">
+        <img src="coating_AFM.jpg" alt="Figure 9" loading="lazy">
+        <figcaption>Figure 9. Atomic force micrograph of the grating prototype grooves following electron-beam physical vapor deposition of gold using titanium as an adhesion layer on PMMA.</figcaption>
+</figure>
+
+<p>The final, coated grating prototype appears under AFM as a sawtooth topography very similar to the uncoated, TASTE-processed resist from <a href="#fig:TASTE_AFMs">Figure 6</a>. This image of the coated grating grooves, taken using the same AFM methodology described in <a href="#sec:taste_procedure">Section 2.2</a>, is shown in <a href="#fig:coating_AFM">Figure 9</a>.</p>
+
+<figure id="fig:coating_SEM">
+        <img src="coated_SEM.jpg" alt="Figure 10" loading="lazy">
+        <figcaption>Figure 10. Field emission scanning electron micrograph of the gold-coated grating prototype grooves.</figcaption>
+</figure>
+
+<p>Moreover, these coated grooves were imaged over a larger area by field emission scanning electron microscopy using a Zeiss Leo 1530 system at the Nanofabrication Laboratory of the PSU Materials Research Institute. This micrograph, taken at a 0.5 kV electron accelerating voltage, is shown in <a href="#fig:coating_SEM">Figure 10</a>. From the gathered AFM data, $\sigma$ on the groove facets measures about 1.5 nm RMS using the NanoScope Analysis software package provided by whereas prior to the coating but after thermal reflow, $\sigma \approx 1.25$ nm RMS on PMMA. While the blaze angle measures $\delta \approx 27^{\circ}$ as expected, the groove depth measures about 10 nm less than the uncoated resist shown in <a href="#fig:TASTE_AFMs">Figure 6</a>. Moreover, the bottom plateau of the coated grooves appears slightly widened relative to the bottom plateau of the bare, TASTE-processed resist, where the surface of the silicon substrate is exposed, suggesting that the EBPVD process produces a nonconformal coating on the grating grooves to a level dependent on the EBPVD chamber geometry.<sup class="err"><a href="#erratum" title="corrected by the 2022 erratum">erratum</a></sup> However, because these regions are to a high degree shadowed to the incoming radiation in a near-Littrow configuration, this is not expected to have a large impact on diffraction efficiency.</p>
+
+<h2 id="sec:results">3. Testing Results</h2>
+
+<p>Following the methodology outlined in <a href="#sec:als_testing">Section 2.1</a> and detailed by <a href="#ref-Miles18">Miles et al.</a> (2018), the grating prototype was tested for EUV and SXR diffraction efficiency at beamline 6.3.2 of the ALS. <a href="#fig:test_chamber">Figure 11</a> shows the gold-coated grating prototype installed inside the beamline test chamber in an extreme off-plane mount, where the dispersion direction, $x$, is roughly parallel with the direction of horizontal stage motion for the photodiode detector, which is seen masked with a 0.5 mm-wide vertical slit.</p>
+
+<figure id="fig:test_chamber">
+        <img src="test_chamber_edit.jpg" alt="Figure 11" loading="lazy">
+        <figcaption>Figure 11. Grating prototype installed inside the test chamber of beamline 6.3.2 for extreme ultraviolet and soft x-ray reflectometry at the Advanced Light Source of Lawrence-Berkeley National Laboratory.</figcaption>
+</figure>
+
+<p>The grating was first oriented at a yaw angle of $\varphi \approx 0^{\circ}$ with graze and roll angles, $\eta$ and $\phi$ respectively, being approximately zero as measured by the tilt of the optic mount using a spirit level. The graze angle was then adjusted to the nominal test value of $1.5^{\circ}$ by using the goniometric stage motion of the photodiode to ensure that the angle between the direct beam and the reflected beam is roughly $2 \eta \approx 3^{\circ}$. Next, all grating geometric angles introduced in <a href="#sec:als_testing">Section 2.1</a> were determined experimentally through analyzing the arc of diffraction as sampled by the photodiode. While the $x$-positions of propagating orders can be determined by sampling the diffracted arc along the horizontal direction of the detector staging, their positions along the cross-dispersion direction, $y$, require knowledge of the system throw, $L \approx 235$ mm, to map the goniometric angle associated with the stage motion, $\Theta$, to a $y$-coordinate using $y = L \sin \left( \Theta \right)$. Thus with a measured value for $L$, the diffracted arc can be fit to a circle to determine values for the arc radius, $r$, as well as the $x-y$ coordinates of the arc center. By comparing these to the positions of the direct beam and $0^{\text{th}}$ order as they fall on the diffracted arc, the orientation of the grating relative to the incident beam and the photodiode staging could be determined experimentally. From these measurements, the grating was set to a near Littrow configuration by adjusting $\varphi$ to ensure that $\alpha \approx 27^{\circ}$ and $\gamma \approx 1.7^{\circ}$ at a graze angle of $\eta \approx 1.5^{\circ}$.</p>
+
+<p>The throw of the system at the location of $0^{\text{th}}$ order was measured to be $L = 233.0 \pm 1.4$ mm by comparing the known detector length of 10 mm to the angular size of the detector as measured by a goniometric scan of the beam. In principle, $L$ changes as the the detector moves along the direction $x$ with focal corrections on the order of tens of micrometers within 10 mm of travel. However, for the analysis and discussion that follows, these corrections are ignored so that order locations are mapped using $x$ and $y = L \sin \left( \Theta \right)$ with $L$ fixed at the measured value. In the final test geometry, the diffracted arc was mapped using data gathered at 450 eV and 500 eV in steps of 50 $\micron$ along the $x$-direction of the photodiode staging.</p>
+
+<figure id="fig:arc_fit">
+        <img src="arc_fit.png" alt="Figure 12" loading="lazy">
+        <figcaption>Figure 12. Diffracted arc for the beamline test configuration mapped using data gathered at 450 eV and 500 eV and fit to a circle. Grayed regions represent one standard deviation uncertainty.</figcaption>
+</figure>
+
+<p>By fitting these data to a half-circle as shown in <a href="#fig:arc_fit">Figure 12</a>, the arc radius was measured as $r = 7.03 \pm 0.12$ mm and from $r = L \sin \left( \gamma \right)$ by <a href="#eq:arc_radius">Equation 3</a>, the cone opening half-angle for the diffraction pattern was determined to be $\gamma = 1.73 \pm 0.03^{\circ}$. Next, the azimuthal incidence angle, $\alpha$, was measured independently of the roll angle using</p>
+
+<div class="equation" id="eq:exp_alpha">
+$$
+\sin \left( \alpha \right) = \frac{\Delta x_{\text{dir}}}{r} ,
+$$
+</div>
+
+<p>where $\Delta x_{\text{dir}}$ is the $x$-distance between the direct beam (not shown in <a href="#fig:arc_fit">Figure 12</a>) and the center of the diffracted arc determined from the fit. With a measured value of $\alpha = 23.4 \pm 0.6^{\circ}$, the roll angle was constrained as $\phi = 1.14 \pm 0.04^{\circ}$ using</p>
+
+<div class="equation" id="eq:exp_roll">
+$$
+\phi = \arcsin \left( \frac{\Delta x_0}{r} \right) - \alpha ,
+$$
+</div>
+<p class="erratum-inline">This equation is as corrected by the <a href="#erratum">2022 erratum</a>. The manuscript and the published article give the small-angle form, $\sin(\phi) = \Delta x_0 / r - \sin(\alpha)$.</p>
+
+<p>where $\Delta x_0$ is the $x$-distance between $0^{\text{th}}$ order and the center of the diffracted arc. Using this result and $\Delta y_0$, the $y$-distance between $0^{\text{th}}$ order and the center of the diffracted arc, a graze angle of $\eta \approx 1.5^{\circ}$ was verified through</p>
+
+<div class="equation" id="eq:exp_eta">
+$$
+\sin \left( \eta \right) = \frac{\Delta y_0}{L \cos \left( \phi \right)}
+$$
+</div>
+
+<p>to give $\eta = 1.56 \pm 0.04^{\circ}$.</p>
+
+<figure class="tablewrap" id="tab:arc_params">
+<table><thead><tr><th>ll@ parameter</th><th>measured value</th></tr></thead><tbody><tr><td>system throw ($L$)</td><td>$232.0 \pm 1.4$ mm</td></tr><tr><td>arc radius ($r$)</td><td>$7.03 \pm 0.12$ mm</td></tr><tr><td>$x$-distance between direct beam and arc center ($\Delta x_{\text{dir}}$)</td><td>$2.80 \pm 0.05$ mm</td></tr><tr><td>$x$-distance between 0$^{\text{th}}$ order and arc center ($\Delta x_0$)</td><td>$2.92 \pm 0.05$ mm</td></tr><tr><td>$y$-distance between 0$^{\text{th}}$ order and arc center ($\Delta y_0$)</td><td>$6.33 \pm 0.14$ mm</td></tr><tr><td>cone opening half-angle ($\gamma$) by <a href="#eq:arc_radius">Equation 3</a></td><td>$1.73 \pm 0.03^{\circ}$</td></tr><tr><td>azimuthal incidence angle ($\alpha$) by <a href="#eq:exp_alpha">Equation 13</a></td><td>$23.4 \pm 0.6^{\circ}$</td></tr><tr><td>roll (rotation about $z$-axis; $\phi$) by <a href="#eq:exp_roll">Equation 14</a></td><td>$1.14 \pm 0.04^{\circ}$</td></tr><tr><td>graze (rotation about $x$-axis; $\eta$) by <a href="#eq:exp_eta">Equation 15</a></td><td>$1.56 \pm 0.04^{\circ}$</td></tr><tr><td>yaw (rotation about $y$-axis; $\varphi$) by <a href="#eq:exp_yaw">Equation 16</a></td><td>$0.69 \pm 0.01^{\circ}$</td></tr></tbody></table>
+<figcaption>Table 1. Measured parameters for the diffracted arc in test configuration at beamline 6.3.2 of the Advanced Light Source.</figcaption>
+</figure>
+
+<p>Finally, grating yaw was measured using</p>
+
+<div class="equation" id="eq:exp_yaw">
+$$
+\sin \left( \varphi \right) = \frac{\Delta x_{\text{dir}}}{L \cos \left( \eta \right)}
+$$
+</div>
+
+<p>to yield $\varphi = 0.69 \pm 0.01^{\circ}$. Summarized in <a href="#tab:arc_params">Table 1</a>, these measurements indicate a near-Littrow test configuration at $\eta \approx 1.5^{\circ}$ for a blaze angle of $\delta \approx 27^{\circ}$.</p>
+
+<p>In the test geometry discussed above, diffraction efficiency data were gathered as a function of photon energy where for each measurement, both the diffracted arc and the direct beam were scanned along the $x$-direction in 50 $\micron$ increments. From these measurements, absolute diffraction efficiency (<em>i.e.</em>, $\mathcal{E}_n = \mathcal{I}_n / \mathcal{I}_{\text{inc}}$ given by <a href="#eq:diffraction_efficiency">Equation 1</a>) was calculated by identifying the maximum of each diffracted order and the direct beam, taking three intensity measurements around the centroid and then dividing each order by the direct beam after subtracting out the appropriate noise floors. Contributions to this noise include dark current from the photodiode detector, which was measured using the photodiode readout in the absence of the EUV/SXR beam, and additionally, diffuse scatter arising from surface roughness on the groove facets. The latter, which in principle only affects $\mathcal{I}_n$, was estimated using the continuum level in between order maxima and was found to be significant only for photon energies starting at 600 eV where it contributed to $\mathcal{E}_n$ on the level of a percent or less for each propagating order. These diffraction efficiency measurements were performed in 20 eV steps, first from 440 to 800 eV and then from 80 to 420 eV. For the latter set of measurements, the triple-mirror order sorter at the beamline is required to maintain a spectrally pure beam provided by the monochromator (<a href="#ref-Gullikson01">Gullikson et al. 2001</a>).</p>
+
+<figure id="fig:abs_eff">
+        <img src="absolute_efficiency_data.jpg" alt="Figure 13" loading="lazy">
+        <figcaption>Figure 13. Absolute diffraction efficiency measurements taken at the Advanced Light Source compared to the Fresnel reflectivity of gold, $\mathcal{R}_{F}$. Total diffraction efficiency below 240 eV misses contributions from orders 2 and 3 on the order of a few percent.</figcaption>
+</figure>
+
+<p>Although the implementation of the order sorter is expected to shift slightly the position of the beam on the grating, and hence the measured parameters listed in <a href="#tab:arc_params">Table 1</a>, the effect is small and not apparent in the measured absolute efficiency data, which are shown in <a href="#fig:abs_eff">Figure 13</a> compared to the Fresnel reflectivity of gold, $\mathcal{R}_{F}$, at $\zeta = 1.73^{\circ} \approx \gamma$ using <a href="#eq:fresnel">Equation 10</a>. However, as indicated most clearly by the sharp cut-off in the measured $n=2$ curve at 160 eV, the beam shift evidently caused measurements of propagating orders of $n=2$ and $n=3$ with large diffracted angle, $\beta$, to be missed by the photodiode during data collection. These data nonetheless show that peak order efficiency ranges from about 75% down to 25% as photon energy, and order number, increase. The total diffraction efficiency, defined as $\mathcal{E}_{\text{tot}} \equiv \sum_n \mathcal{E}_n$ for all propagating orders with $n \neq 0$, is also plotted in <a href="#fig:abs_eff">Figure 13</a> but due to the missing $n=2$ and $n=3$ measurements in the EUV, this curve underestimates the true total diffraction efficiency for photon energies smaller than 240 eV. Moreover, relative efficiency was calculated by dividing each $\mathcal{E}_n$ measurement from <a href="#fig:abs_eff">Figure 13</a> by $\mathcal{R}_{F}$.</p>
+
+<figure id="fig:rel_eff">
+        <img src="relative_efficiency_fix.jpg" alt="Figure 14" loading="lazy">
+        <figcaption>Figure 14. Relative diffraction efficiency calculated by dividing the absolute diffraction efficiency from <a href="#fig:abs_eff">Figure 13</a> by the Fresnel reflectivity of gold, $\mathcal{R}_{F}$. Total diffraction efficiency below 240 eV misses contributions from orders 2 and 3 on the order of a few percent.</figcaption>
+</figure>
+
+<p>This result is plotted in <a href="#fig:rel_eff">Figure 14</a> where total relative diffraction efficiency, $\mathcal{E}_{\text{tot}} / \mathcal{R}_{F}$, ranges from about 95% to 88% as photon energy increases from 240 eV to 800 eV, where all propagating orders are accounted for.</p>
+
+<h2 id="sec:discussion">4. Discussion</h2>
+
+<p>The beamline measurements presented in <a href="#sec:results">Section 3</a> indicate that the grating prototype yields an approximate blaze response at EUV and SXR wavelengths in a near-Littrow configuration. This is evidenced by the total diffraction efficiency shown in Figures<a href="#fig:abs_eff">Figure 13</a> and<a href="#fig:rel_eff">Figure 14</a> being dominated by single orders with positive $n$ and peak positions close to those predicted by <a href="#eq:blaze_wavelength_littrow">Equation 9</a> for the blaze wavelength. However, along with the peak orders that resemble a blaze response, propagating orders of lower $n$ each contribute to the total absolute efficiency at a level of about 10%. Thus toward the blue end of the measured bandpass where a relatively large number of propagating orders exist by <a href="#eq:off-plane_incidence_orders">Equation 2</a>, peak-order diffraction efficiency is comparatively low and comprises a smaller fraction of $\mathcal{E}_{\text{tot}}$. This suggests that diffracted orders gradually become suppressed with increasing $n$ due to an imperfect sawtooth topography generated by the TASTE process outlined in <a href="#sec:taste_procedure">Section 2.2</a>. That is, while an idealistic blazed grating exhibits a sharp sawtooth topography, the grating prototype features a quasi-flat apex produced by the 100 nm-wide, top staircase step in the GEBL pattern that is nominally unexposed to high-energy electrons and hence largely unaffected by the thermal reflow process.</p>
+
+<p>In addition to an imperfect sawtooth topography, peak-order diffraction efficiency, especially toward the blue end of the spectrum, is impacted by $\lambda$-dependent losses that arise from surface roughness on the groove facets. This is gleaned from analyzing the total relative response from the grating, defined as $\left( \mathcal{E}_{\text{tot}} + \mathcal{E}_0 \right) / \mathcal{R}_{F}$, where $\mathcal{R}_{F}$ is the Fresnel reflectivity of gold at the angle $\zeta$ introduced in <a href="#sec:als_testing">Section 2.1</a>. Due to the short, nano-scale attenuation depth of gold at grazing incidence as discussed in <a href="#sec:coating">Section 2.3</a>, it is justified to treat the grating overcoat material as an infinitely-thick layer of gold using EUV and SXR optical constants provided by CXRO. The grating's total relative response is plotted in <a href="#fig:rough_eff">Figure 15</a> over the range of measured photon energies that include all propagating orders, where the data show a monotonic decrease from about 96% down to 88% as wavelength decreases, suggesting that $\lambda$-dependent losses are occurring. This is to be compared with the specular reflectivity of a hypothetical mirror flat relative to $\mathcal{R}_{F}$ such that its total relative response is 100% in the absence of surface roughness. In the regime of total external reflection, the reduced specular reflectivity from a rough surface, $\mathcal{R}_{\text{rough}}$, is described approximately by the Nevot-Croce factor (<a href="#ref-Nevot80">Nevot &amp; Croce 1980</a>; <a href="#ref-deBoer95">de Boer 1995</a>; <a href="#ref-Gibaud2009">Gibaud &amp; Vignaud 2009</a>). For a thick slab of gold with complex index of refraction $\tilde{\nu}$ and RMS surface roughness $\sigma$, this factor is given by</p>
+
+<div class="equation" id="eq:nc_factor">
+$$
+\frac{\mathcal{R}_{\text{rough}}}{\mathcal{R}_{F}} = \left\| \mathrm{e}^{-2 k_{\perp} \tilde{k}_{\perp} \sigma^2 } \right\|^2 = \mathrm{e}^{-4 \sigma^2 k_0^2 \sin \left( \zeta \right) \, \text{Re} \left[ \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)} \right]} ,
+$$
+</div>
+
+<p>where, as described in <a href="#sec:coating">Section 2.3</a>, $k_{\perp} = k_0 \sin \left( \zeta \right)$ and $\tilde{k}_{\perp} = k_0 \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)}$ are the components of the wave vector normal to the surface in vacuum and gold, respectively, with $k_0 \equiv 2 \pi / \lambda$. Moreover, $\text{Re} \! \left[ \sqrt{\tilde{\nu}^2 - \cos^2 \left( \zeta \right)} \right]$ represents the real part of $\tilde{k}_{\perp} / k_0$.</p>
+
+<p>As described by <a href="#ref-deBoer95">de Boer</a> (1995), the Nevot-Croce factor defined by <a href="#eq:nc_factor">Equation 17</a> is valid for small roughness features taking on a Gaussian height distribution with $k_{\perp} \sigma \ll 1$ so that using $\sigma \approx 1.5$ nm RMS as measured by AFM and $\zeta = 1.73^{\circ}$, this condition is satisfied for</p>
+
+<div class="equation" id="eq:rough_condition">
+$$
+\lambda \gg 2 \pi \sigma \sin \left( \zeta \right) \approx 0.3 \text{ nm} .
+$$
+</div>
+
+<p>Additionally, derivations of the Nevot-Croce factor assume a surface correlation length, $\xi$, satisfying $\xi k^2_{\perp} \ll k_0$. Keeping $\xi$, which represents the lateral size scale of roughness features, as an unknown, this yields</p>
+
+<div class="equation" id="eq:corr_condition">
+$$
+\lambda \gg 2 \pi \xi \sin^2 \left( \zeta \right) \approx 0.006 \xi .
+$$
+</div>
+
+<p>If equations<a href="#eq:rough_condition">Equation 18</a> and<a href="#eq:corr_condition">Equation 19</a> are fulfilled, diffuse scatter in vacuum can in principle be neglected and $\lambda$-dependent losses attributed to absorption as radiation scatters into the medium. Otherwise, radiation of wavelength $\lambda$ is able to diffract from roughness spatial frequencies on the order of $\xi^{-1}$, producing diffuse scatter that can be detected by the photodiode, in which case details of the roughness power spectrum are required to obtain a more accurate expression for $\mathcal{R}_{\text{rough}}$ (<a href="#ref-deBoer95">de Boer 1995</a>; <a href="#ref-Wen15">Wen et al. 2015</a>). Because this information is not known for the groove facets on the grating prototype, <a href="#eq:nc_factor">Equation 17</a> was taken to approximate the total relative response from the grating prototype in the presence of surface roughness. This is plotted in <a href="#fig:rough_eff">Figure 15</a>, where it is seen that the data closely match the Nevot-Croce factor with the experimentally-determined values of $\zeta \approx \gamma = 1.73^{\circ}$ and $\sigma \approx 1.5$ nm RMS.</p>
+
+<figure id="fig:rough_eff">
+        <img src="total_eff_rough_factor.png" alt="Figure 15" loading="lazy">
+        <figcaption>Figure 15. Total grating response, defined as the sum of total diffraction efficiency and zero order, plotted relative to the reflectivity of gold. Overlaid is the Nevot-Croce factor given by <a href="#eq:nc_factor">Equation 17</a> for $\zeta = 1.73^{\circ}$ and $\sigma = 1.5$ nm RMS, which indicates the theoretical specular reflectivity of a rough surface relative to Fresnel reflectivity.</figcaption>
+</figure>
+
+<p>This supports the idea that surface roughness on the groove facets is responsible for the losses in the grating's total response over the measured bandpass that encompasses all propagating orders. Although the detection of diffuse scatter for photon energies 600 eV and higher as described in <a href="#sec:results">Section 3</a> suggests that the conditions for the Nevot-Croce factor to be valid are not strictly fulfilled at these relatively short wavelengths, <a href="#fig:rough_eff">Figure 15</a> indicates that <a href="#eq:nc_factor">Equation 17</a> is a decent approximation across the bandpass considered. However, future diffraction efficiency test campaigns should better quantify diffuse scatter due to surface roughness in a similar manner to x-ray reflectivity experiments that aim to characterize surfaces, materials and interfacial roughness (<a href="#ref-Gay1999">Gay &amp; Lapena 1999</a>; <a href="#ref-Baumbach1999">Baumbach &amp; Mikulik 1999</a>).</p>
+
+<p>To investigate the impact that an imperfect sawtooth topography with an unpointed apex has on the measured diffraction efficiency, absolute diffraction efficiency was modeled according to vector diffraction theory. This was handled using the software package PCGrate-SX version 6.1,<a href="https://www.pcgrate.com/loadpurc/download" rel="noopener">https://www.pcgrate.com/loadpurc/download</a> which solves the Helmholtz equation through the integral method for a custom grating boundary and incidence angles input by the user (<a href="#ref-Goray10">Goray &amp; Schmidt 2010</a>). Based on the findings of <a href="#ref-Marlowe16">Marlowe et al.</a> (2016), which verify a lack of polarization sensitivity for SXR gratings used in extreme off-plane mounts, PCGrate-SX calculations were carried out assuming a perfectly conducting grating boundary with perfectly smooth groove facets and an incident wavefront with transverse electric polarization. While perfect conductivity combined with the absence of surface roughness implies a lossless response from the grating grooves, PCGrate-SX modulates the predicted diffraction efficiency by the reflectivity of a user-input, stratified medium defined by optical constants and custom layer thicknesses. Taking the grating material to be an infinitely-thick layer of gold as discussed above, the edge-on groove shape of the grating prototype was approximated as an acute trapezoid with a near-vertical lateral side opposite a slope that emulates the active blaze facet. Additionally, a flat bottom portion was included to represent the cleared portion of the resist described in <a href="#sec:taste_procedure">Section 2.2</a>.</p>
+
+<figure id="fig:model_eff">
+        <img src="absolute_efficiency_model_wav.jpg" alt="Figure 16" loading="lazy">
+        <figcaption>Figure 16. Absolute diffraction efficiency from <a href="#fig:abs_eff">Figure 13</a> compared to theoretical diffraction efficiency modeled using the PCGrate-SX software package. Modeled data are multiplied by the Nevot-Croce factor given by <a href="#eq:nc_factor">Equation 17</a> for $\zeta = 1.73^{\circ}$ and $\sigma = 1.5$ nm RMS.</figcaption>
+</figure>
+
+<p>Using the nominal values of $\alpha$ and $\gamma$ listed in <a href="#tab:arc_params">Table 1</a> for grating incidence angles and $d=400$ nm for the groove spacing, a series of PCGrate-SX calculations were performed for a range of trapezoids with slightly-varying dimensions close to those measured by AFM in <a href="#fig:coating_AFM">Figure 9</a>. The model matching the measured data most closely was one with a blaze angle of $\delta = 27^{\circ}$, a groove depth of 120 nm, a flat-top width of 77 nm and bottom-width of 85 nm. These predicted data, modulated by the Nevot-Croce factor from <a href="#fig:rough_eff">Figure 15</a>, are plotted as a function of $\lambda$ in <a href="#fig:model_eff">Figure 16</a> and compared to the measured diffraction efficiency, $\mathcal{E}_n$, for orders $n=0$ through $n=7$.</p>
+
+<p><a href="#fig:model_eff">Figure 16</a> shows that the measured peak order positions match roughly those predicted by the model, demonstrating that the grating prototype has an efficiency response similar to that of a blazed grating with $d=400$ nm and $\delta = 27^{\circ}$ at the experimentally-determined incidence angles of $\alpha = 23.4^{\circ}$ and $\gamma = 1.73^{\circ}$. However, the amplitudes of the peak orders generally fall short of the model with the apparent exceptions of $n=3$ and $n=4$. This phenomenon seems to be due in part to the mismatches that exist between the measured data and the model for secondary diffraction peaks, suggesting that the groove shape trapezoidal approximation is not sufficient to reproduce these results to a high degree of accuracy. The grating prototype grooves likely have an apex that is slightly rounded as a result of the thermal reflow process but this is difficult to verify through AFM because the shape of the SCANASYST-AIR tip is convolved with the true grating topography in the micrographs shown in Figures<a href="#fig:TASTE_AFMs">Figure 6</a> and<a href="#fig:coating_AFM">Figure 9</a>. Nonetheless, rounding of corners or other deviations from an ideal acute trapezoid are expected to have an impact on the distribution of diffraction efficiency among orders. <a href="#fig:model_eff">Figure 16</a> also shows that measured peak order efficiency becomes increasingly diminished relative to the model as order number increases beyond $n=4$, which is consistent with the observation already mentioned that the relatively large number of orders at short $\lambda$ each contribute substantially to the total efficiency, $\mathcal{E}_{\text{tot}}$, while the peak order comprises a relatively smaller fraction. This is another indication of there being groove shape imperfections that diminish the grating prototype's blaze response. A possible explanation beyond rounded corners at the apex is irregularity or non-flatness of the sloped surfaces of the grating grooves across the prototype. In principle this could be caused in part by a non-uniform spin coat thickness but it is expected that the imperfect blazed grating topography produced by TASTE process described in <a href="#sec:taste_procedure">Section 2.2</a> is the largest contributor to this issue.</p>
+
+<h2 id="sec:summary">5. Summary and Conclusions</h2>
+
+<p>A prototype for a reflection grating with a groove spacing of 400 nm was fabricated at the PSU Materials Research Institute by generating an approximate sawtooth topography in 130 nm-thick PMMA resist coated on a silicon wafer through the process of TASTE and then coating the grating grooves with a thin layer of gold via EBPVD for EUV and SXR reflectivity. Diffraction efficiency measurements spanning 15.5 nm $> \lambda >$ 1.55 nm in a grazing incidence, extreme off-plane mount collected at beamline 6.3.2 of the ALS demonstrate that the grating behaves approximately as a blazed grating with groove cross-sections shaped like an acute trapezoid and a blaze angle of $\delta \approx 27^{\circ}$. The total response from the grating relative to the reflectivity of the gold overcoat measures between 96% and 88% in the SXR, with losses attributed to absorption and diffuse scatter from grating facets with 1.5 nm RMS surface roughness. However, even with losses accounted for, the blaze response is observed to diminish for peak orders with $n=5$ and greater. While this phenomenon is a result of the TASTE process yielding an imperfect sawtooth topography, these results show that TASTE is a promising fabrication technique for the manufacture of custom reflection gratings for EUV and SXR spectroscopy.</p>
+
+<p>An especially important feature of the TASTE process is its ability to define a sawtooth-like topography over a layout defined by electron-beam lithography while also avoiding the dependences on crystallographic structure that exist in processes that use anisotropic wet etching to provide a grating blaze (<a href="#ref-Franke97">Franke et al. 1997</a>; <a href="#ref-Chang03">Chang 2003</a>; <a href="#ref-McEntaffer13">McEntaffer et al. 2013</a>; <a href="#ref-Miles18">Miles et al. 2018</a>). This is particularly advantageous for realizing fanned, curved or other variable-line-space groove layouts that are required for achieving high spectral resolving power, $\lambda / \Delta \lambda$, while also having blazed groove facets that enable high spectral sensitivity. With total absolute diffraction efficiency exceeding 40% in the SXR bandpass, these results show that gratings fabricated by TASTE are capable of meeting <em>Lynx</em> requirements in terms of spectral sensitivity. Additionally, an absolute efficiency of 75% in first order at 160 eV gives an indication that TASTE can realize a highly-efficient grating for EUV spectroscopy with modification of grating parameters. However, further work in nanofabrication and spectral resolving power testing is required to determine to what degree TASTE is able to make improvements in these areas of technological development. In particular, producing gratings with groove spacing significantly smaller than 400 nm that maintain a satisfactory sawtooth topography is challenging from the standpoint of fabrication by TASTE. This last item is crucial for SXR reflection gratings that often call for groove spacings near 160 nm and is the subject of a forthcoming publication (<a href="#ref-McCurdy19">McCurdy et al. 2019</a>).</p>
+
+    <h3 class="endmatter">// acknowledgments //</h3>
+    <p>This research was supported by NASA Space Technology Research Fellowship under grant no.\ NNX16AP92H and used resources of the Nanofabrication Laboratory and the Materials Characterization Laboratory at the Penn State Materials Research Institute in addition to the Advanced Light Source, which is a DOE Office of Science User Facility under contract no.\ DE-AC02-05CH11231. Special thanks to Chad Eichfeld and Michael Labella at the Penn State Materials Research Institute and Eric Gullikson at the Advanced Light Source.</p>
+
+    <h3 class="endmatter">// references //</h3>
+    <ol class="refs">
+<li id="ref-Attwood17">Attwood, D., &amp; Sakdinawat, A. 2017, X-Rays and Extreme Ultraviolet Radiation: Principles and Applications, 2nd edn. (Cambridge University Press) <a href="https://doi.org/10.1017/CBO9781107477629" rel="noopener">doi:10.1017/CBO9781107477629</a></li>
+<li id="ref-Baumbach1999">Baumbach, T., &amp; Mikulik, P. 1999, in X-ray and Neutron Reflectivity: Principles and Applications (Springer), 232–280</li>
+<li id="ref-Beckmann63">Beckmann, P., &amp; Spizzichino, A. 1963, The scattering of electromagnetic waves from rough surfaces, International series of monographs on electromagnetic waves (Pergamon Press; [distributed in the Western Hemisphere by Macmillan, New York])</li>
+<li id="ref-Cash91">Cash, Jr., W. C. 1991, Applied Optics, 30, 1749 <a href="https://doi.org/10.1364/AO.30.001749" rel="noopener">doi:10.1364/AO.30.001749</a></li>
+<li id="ref-Chang03">Chang, C.-H. 2003, Journal of Vacuum Science Technology B: Microelectronics and Nanometer Structures, 21, 2755 <a href="https://doi.org/10.1116/1.1627814" rel="noopener">doi:10.1116/1.1627814</a></li>
+<li id="ref-deBoer95">de Boer, D. K. G. 1995, Phys. Rev. B, 51, 5297 <a href="https://doi.org/10.1103/PhysRevB.51.5297" rel="noopener">doi:10.1103/PhysRevB.51.5297</a></li>
+<li id="ref-denHerder01">den Herder, J. W., Brinkman, A. C., Kahn, S. M., et al. 2001, Astronomy &amp; Astrophysics, 365, L7 <a href="https://doi.org/10.1051/0004-6361:20000058" rel="noopener">doi:10.1051/0004-6361:20000058</a></li>
+<li id="ref-Dobisz00">Dobisz, E. A., Brandow, S. L., Bass, R., &amp; Mitterender, J. 2000, Journal of Vacuum Science Technology B: Microelectronics and Nanometer Structures, 18, 107 <a href="https://doi.org/10.1116/1.591242" rel="noopener">doi:10.1116/1.591242</a></li>
+<li id="ref-France19">France, K., Fleming, B. T., Drake, J. J., et al. 2019, in UV, X-Ray, and Gamma-Ray Space Instrumentation for Astronomy XXI, ed. O. H. Siegmund, Vol. 11118, International Society for Optics and Photonics (SPIE), 38 – 51 <a href="https://doi.org/10.1117/12.2526859" rel="noopener">doi:10.1117/12.2526859</a></li>
+<li id="ref-Franke97">Franke, A. E., Schattenburg, M. L., Gullikson, E. M., et al. 1997, Journal of Vacuum Science Technology B: Microelectronics and Nanometer Structures, 15, 2940 <a href="https://doi.org/10.1116/1.589759" rel="noopener">doi:10.1116/1.589759</a></li>
+<li id="ref-Gaskin19">Gaskin, J. A., Swartz, D. A., Vikhlinin, A., et al. 2019, Journal of Astronomical Telescopes, Instruments, and Systems, 5, 021001 <a href="https://doi.org/10.1117/1.JATIS.5.2.021001" rel="noopener">doi:10.1117/1.JATIS.5.2.021001</a></li>
+<li id="ref-Gay1999">Gay, J.-M., &amp; Lapena, L. 1999, Experiments on Solid Surfaces (Berlin, Heidelberg: Springer Berlin Heidelberg), 217–231 <a href="https://doi.org/10.1007/3-540-48696-8_7" rel="noopener">doi:10.1007/3-540-48696-8_7</a></li>
+<li id="ref-Gibaud2009">Gibaud, A., &amp; Vignaud, G. 2009, Specular Reflectivity from Smooth and Rough Surfaces, ed. J. Daillant &amp; A. Gibaud (Berlin, Heidelberg: Springer Berlin Heidelberg), 85–131 <a href="https://doi.org/10.1007/978-3-540-88588-7_3" rel="noopener">doi:10.1007/978-3-540-88588-7_3</a></li>
+<li id="ref-Goray10">Goray, L. I., &amp; Schmidt, G. 2010, J. Opt. Soc. Am. A, 27, 585 <a href="https://doi.org/10.1364/JOSAA.27.000585" rel="noopener">doi:10.1364/JOSAA.27.000585</a></li>
+<li id="ref-Gullikson01">Gullikson, E. M., Mrowka, S., &amp; Kaufmann, B. B. 2001, Recent developments in EUV reflectometry at the Advanced Light Source <a href="https://doi.org/10.1117/12.436712" rel="noopener">doi:10.1117/12.436712</a></li>
+<li id="ref-Kirchner14">Kirchner, R., Schleunitz, A., &amp; Schift, H. 2014, Journal of Micromechanics and Microengineering, 24, 055010 <a href="https://doi.org/10.1088/0960-1317/24/5/055010" rel="noopener">doi:10.1088/0960-1317/24/5/055010</a></li>
+<li id="ref-Kirchner16">Kirchner, R., Guzenko, V., Vartiainen, I., Chidambaram, N., &amp; Schift, H. 2016, Microelectronic Engineering, 153, 71 <a href="http://dx.doi.org/10.1016/j.mee.2016.01.017" rel="noopener">doi:http://dx.doi.org/10.1016/j.mee.2016.01.017</a></li>
+<li id="ref-Loewen97">Loewen, E. G., &amp; Popov, E. 1997, Diffraction gratings and applications</li>
+<li id="ref-Marlowe16">Marlowe, H., McEntaffer, R. L., Tutt, J. H., et al. 2016, Applied Optics, 55, 5548 <a href="https://doi.org/10.1364/AO.55.005548" rel="noopener">doi:10.1364/AO.55.005548</a></li>
+<li id="ref-McCoy18">McCoy, J., McEntaffer, R., &amp; Eichfeld, C. 2018, Journal of Vacuum Science and Technology B:Nanotechnology and Microelectronics, 36 <a href="https://doi.org/10.1116/1.5048197" rel="noopener">doi:10.1116/1.5048197</a></li>
+<li id="ref-McCurdy19">McCurdy, R. C., McEntaffer, R. L., McCoy, J. A., &amp; Miles, D. M. 2019, in Optics for EUV, X-Ray, and Gamma-Ray Astronomy IX, ed. S. L. O'Dell &amp; G. Pareschi, Vol. 11119, International Society for Optics and Photonics (SPIE), 257 – 265 <a href="https://doi.org/10.1117/12.2530052" rel="noopener">doi:10.1117/12.2530052</a></li>
+<li id="ref-McEntaffer19">McEntaffer, R. 2019, Journal of Astronomical Telescopes, Instruments, and Systems, 5 <a href="https://doi.org/10.1117/1.JATIS.5.2.021002" rel="noopener">doi:10.1117/1.JATIS.5.2.021002</a></li>
+<li id="ref-McEntaffer13">McEntaffer, R., DeRoo, C., Schultz, T., et al. 2013, Experimental Astronomy, 36, 389 <a href="https://doi.org/10.1007/s10686-013-9338-1" rel="noopener">doi:10.1007/s10686-013-9338-1</a></li>
+<li id="ref-Miles18">Miles, D. M., McCoy, J. A., McEntaffer, R. L., et al. 2018, The Astrophysical Journal, 869, 95 <a href="https://doi.org/10.3847/1538-4357/aaec73" rel="noopener">doi:10.3847/1538-4357/aaec73</a></li>
+<li id="ref-Neviere78">Neviere, M., Maystre, D., &amp; Hunter, W. R. 1978, Journal of the Optical Society of America (1917-1983), 68, 1106</li>
+<li id="ref-Nevot80">Nevot, L., &amp; Croce, P. 1980, Revue de Physique appliqu\'ee, 15, 761</li>
+<li id="ref-Pavkovich86">Pavkovich, J. M. 1986, Journal of Vacuum Science Technology B: Microelectronics and Nanometer Structures, 4, 159 <a href="https://doi.org/10.1116/1.583369" rel="noopener">doi:10.1116/1.583369</a></li>
+<li id="ref-Pfirrmann16">Pfirrmann, S., Kirchner, R., Lohse, O., et al. 2016, in Proceedings of the SPIE, Vol. 9779, Advances in Patterning Materials and Processes XXXIII, 977925 <a href="https://doi.org/10.1117/12.2219165" rel="noopener">doi:10.1117/12.2219165</a></li>
+<li id="ref-Schleunitz10">Schleunitz, A., &amp; Schift, H. 2010, Journal of Micromechanics and Microengineering, 20, 095002 <a href="https://doi.org/10.1088/0960-1317/20/9/095002" rel="noopener">doi:10.1088/0960-1317/20/9/095002</a></li>
+<li id="ref-Schleunitz14">Schleunitz, A., Guzenko, V. A., Messerschmidt, M., et al. 2014, Nano Convergence, 1, 7 <a href="https://doi.org/10.1186/s40580-014-0007-5" rel="noopener">doi:10.1186/s40580-014-0007-5</a></li>
+<li id="ref-Stauffer92">Stauffer, J. M., Oppliger, Y., Regnault, P., Baraldi, L., &amp; Gale, M. T. 1992, Journal of Vacuum Science Technology B: Microelectronics and Nanometer Structures, 10, 2526 <a href="https://doi.org/10.1116/1.586051" rel="noopener">doi:10.1116/1.586051</a></li>
+<li id="ref-Trolier-McKinstry17">Trolier-McKinstry, S., &amp; Newnham, R. E. 2017, Materials Engineering: Bonding, Structure, and Structure-Property Relationships (Cambridge University Press) <a href="https://doi.org/10.1017/9781316217818" rel="noopener">doi:10.1017/9781316217818</a></li>
+<li id="ref-Unal10">Unal, N., Mahalu, D., Raslin, O., et al. 2010, Microelectronic Engineering, 87, 940 <a href="https://doi.org/10.1016/j.mee.2009.12.002" rel="noopener">doi:https://doi.org/10.1016/j.mee.2009.12.002</a></li>
+<li id="ref-Underwood96">Underwood, J. H., Gullikson, E. M., Koike, M., et al. 1996, Review of Scientific Instruments, 67, 3372 <a href="https://doi.org/10.1063/1.1147338" rel="noopener">doi:10.1063/1.1147338</a></li>
+<li id="ref-Voronov11">Voronov, D. L., Anderson, E. H., Cambie, R., et al. 2011, Optics Express, 19, 6320 <a href="https://doi.org/10.1364/OE.19.006320" rel="noopener">doi:10.1364/OE.19.006320</a></li>
+<li id="ref-Wen15">Wen, M., Kozhevnikov, I. V., &amp; Wang, Z. 2015, Opt. Express, 23, 24220 <a href="https://doi.org/10.1364/OE.23.024220" rel="noopener">doi:10.1364/OE.23.024220</a></li>
+    </ol>
+
+    </div>
+
+    <div class="article-end">
+        <span>✦</span><br>
+        <a href="../" class="article-back">← back to scientific</a>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js?v=7ed1a268"></script>
+<script>window.addEventListener("pageshow",function(e){if(e.persisted)location.reload();});</script>
+</body>
+</html>

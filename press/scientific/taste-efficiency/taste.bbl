@@ -1,0 +1,199 @@
+\begin{thebibliography}{}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\href{#1}{#1}}
+\providecommand{\dodoi}[1]{doi:~\href{http://doi.org/#1}{\nolinkurl{#1}}}
+\providecommand{\doeprint}[1]{\href{http://ascl.net/#1}{\nolinkurl{http://ascl.net/#1}}}
+\providecommand{\doarXiv}[1]{\href{https://arxiv.org/abs/#1}{\nolinkurl{https://arxiv.org/abs/#1}}}
+
+\bibitem[{Attwood \& Sakdinawat(2017)}]{Attwood17}
+Attwood, D., \& Sakdinawat, A. 2017, X-Rays and Extreme Ultraviolet Radiation:
+  Principles and Applications, 2nd edn. (Cambridge University Press),
+  \dodoi{10.1017/CBO9781107477629}
+
+\bibitem[{Baumbach \& Mikulik(1999)}]{Baumbach1999}
+Baumbach, T., \& Mikulik, P. 1999, in X-ray and Neutron Reflectivity:
+  Principles and Applications (Springer), 232--280
+
+\bibitem[{Beckmann \& Spizzichino(1963)}]{Beckmann63}
+Beckmann, P., \& Spizzichino, A. 1963, The scattering of electromagnetic waves
+  from rough surfaces, International series of monographs on electromagnetic
+  waves (Pergamon Press; [distributed in the Western Hemisphere by Macmillan,
+  New York])
+
+\bibitem[{{Cash}(1991)}]{Cash91}
+{Cash}, Jr., W.~C. 1991, \ao, 30, 1749, \dodoi{10.1364/AO.30.001749}
+
+\bibitem[{{Chang}(2003)}]{Chang03}
+{Chang}, C.-H. 2003, Journal of Vacuum Science Technology B: Microelectronics
+  and Nanometer Structures, 21, 2755, \dodoi{10.1116/1.1627814}
+
+\bibitem[{de~Boer(1995)}]{deBoer95}
+de~Boer, D. K.~G. 1995, Phys. Rev. B, 51, 5297,
+  \dodoi{10.1103/PhysRevB.51.5297}
+
+\bibitem[{{den Herder} {et~al.}(2001){den Herder}, {Brinkman}, {Kahn},
+  {Branduardi-Raymont}, {Thomsen}, {Aarts}, {Audard}, {Bixler}, {den Boggende},
+  {Cottam}, {Decker}, {Dubbeldam}, {Erd}, {Goulooze}, {G{\"u}del}, {Guttridge},
+  {Hailey}, {Janabi}, {Kaastra}, {de Korte}, {van Leeuwen}, {Mauche},
+  {McCalden}, {Mewe}, {Naber}, {Paerels}, {Peterson}, {Rasmussen}, {Rees},
+  {Sakelliou}, {Sako}, {Spodek}, {Stern}, {Tamura}, {Tandy}, {de Vries},
+  {Welch}, \& {Zehnder}}]{denHerder01}
+{den Herder}, J.~W., {Brinkman}, A.~C., {Kahn}, S.~M., {et~al.} 2001, \aap,
+  365, L7, \dodoi{10.1051/0004-6361:20000058}
+
+\bibitem[{{Dobisz} {et~al.}(2000){Dobisz}, {Brandow}, {Bass}, \&
+  {Mitterender}}]{Dobisz00}
+{Dobisz}, E.~A., {Brandow}, S.~L., {Bass}, R., \& {Mitterender}, J. 2000,
+  Journal of Vacuum Science Technology B: Microelectronics and Nanometer
+  Structures, 18, 107, \dodoi{10.1116/1.591242}
+
+\bibitem[{France {et~al.}(2019)France, Fleming, Drake, Mason, Youngblood,
+  Bourrier, Fossati, Froning, Koskinen, Kruczek, Lipscy, McEntaffer, Romaine,
+  Siegmund, \& Wilkinson}]{France19}
+France, K., Fleming, B.~T., Drake, J.~J., {et~al.} 2019, in UV, X-Ray, and
+  Gamma-Ray Space Instrumentation for Astronomy XXI, ed. O.~H. Siegmund, Vol.
+  11118, International Society for Optics and Photonics (SPIE), 38 -- 51,
+  \dodoi{10.1117/12.2526859}
+
+\bibitem[{{Franke} {et~al.}(1997){Franke}, {Schattenburg}, {Gullikson},
+  {Cottam}, {Kahn}, \& {Rasmussen}}]{Franke97}
+{Franke}, A.~E., {Schattenburg}, M.~L., {Gullikson}, E.~M., {et~al.} 1997,
+  Journal of Vacuum Science Technology B: Microelectronics and Nanometer
+  Structures, 15, 2940, \dodoi{10.1116/1.589759}
+
+\bibitem[{{Gaskin} {et~al.}(2019){Gaskin}, {Swartz}, {Vikhlinin}, {{\"O}zel},
+  {Gelmis}, {Arenberg}, {Bandler}, {Bautz}, {Civitani}, {Dominguez}, {Eckart},
+  {Falcone}, {Figueroa-Feliciano}, {Freeman}, {G{\"u}nther}, {Havey},
+  {Heilmann}, {Kilaru}, {Kraft}, {McCarley}, {McEntaffer}, {Pareschi},
+  {Purcell}, {Reid}, {Schattenburg}, {Schwartz}, {Schwartz}, {Tananbaum},
+  {Tremblay}, {Zhang}, \& {Zuhone}}]{Gaskin19}
+{Gaskin}, J.~A., {Swartz}, D.~A., {Vikhlinin}, A., {et~al.} 2019, Journal of
+  Astronomical Telescopes, Instruments, and Systems, 5, 021001,
+  \dodoi{10.1117/1.JATIS.5.2.021001}
+
+\bibitem[{Gay \& Lapena(1999)}]{Gay1999}
+Gay, J.-M., \& Lapena, L. 1999, Experiments on Solid Surfaces (Berlin,
+  Heidelberg: Springer Berlin Heidelberg), 217--231,
+  \dodoi{10.1007/3-540-48696-8_7}
+
+\bibitem[{Gibaud \& Vignaud(2009)}]{Gibaud2009}
+Gibaud, A., \& Vignaud, G. 2009, Specular Reflectivity from Smooth and Rough
+  Surfaces, ed. J.~Daillant \& A.~Gibaud (Berlin, Heidelberg: Springer Berlin
+  Heidelberg), 85--131, \dodoi{10.1007/978-3-540-88588-7_3}
+
+\bibitem[{Goray \& Schmidt(2010)}]{Goray10}
+Goray, L.~I., \& Schmidt, G. 2010, J. Opt. Soc. Am. A, 27, 585,
+  \dodoi{10.1364/JOSAA.27.000585}
+
+\bibitem[{Gullikson {et~al.}(2001)Gullikson, Mrowka, \& Kaufmann}]{Gullikson01}
+Gullikson, E.~M., Mrowka, S., \& Kaufmann, B.~B. 2001, Recent developments in
+  EUV reflectometry at the Advanced Light Source, \dodoi{10.1117/12.436712}
+
+\bibitem[{Kirchner {et~al.}(2016)Kirchner, Guzenko, Vartiainen, Chidambaram, \&
+  Schift}]{Kirchner16}
+Kirchner, R., Guzenko, V., Vartiainen, I., Chidambaram, N., \& Schift, H. 2016,
+  Microelectronic Engineering, 153, 71 ,
+  \dodoi{http://dx.doi.org/10.1016/j.mee.2016.01.017}
+
+\bibitem[{{Kirchner} {et~al.}(2014){Kirchner}, {Schleunitz}, \&
+  {Schift}}]{Kirchner14}
+{Kirchner}, R., {Schleunitz}, A., \& {Schift}, H. 2014, Journal of
+  Micromechanics and Microengineering, 24, 055010,
+  \dodoi{10.1088/0960-1317/24/5/055010}
+
+\bibitem[{{Loewen} \& {Popov}(1997)}]{Loewen97}
+{Loewen}, E.~G., \& {Popov}, E. 1997, {Diffraction gratings and applications}
+
+\bibitem[{{Marlowe} {et~al.}(2016){Marlowe}, {McEntaffer}, {Tutt}, {DeRoo},
+  {Miles}, {Goray}, {Soltwisch}, {Scholze}, {Herrero}, \& {Laubis}}]{Marlowe16}
+{Marlowe}, H., {McEntaffer}, R.~L., {Tutt}, J.~H., {et~al.} 2016, \ao, 55,
+  5548, \dodoi{10.1364/AO.55.005548}
+
+\bibitem[{McCoy {et~al.}(2018)McCoy, McEntaffer, \& Eichfeld}]{McCoy18}
+McCoy, J., McEntaffer, R., \& Eichfeld, C. 2018, Journal of Vacuum Science and
+  Technology B:Nanotechnology and Microelectronics, 36,
+  \dodoi{10.1116/1.5048197}
+
+\bibitem[{McCurdy {et~al.}(2019)McCurdy, McEntaffer, McCoy, \&
+  Miles}]{McCurdy19}
+McCurdy, R.~C., McEntaffer, R.~L., McCoy, J.~A., \& Miles, D.~M. 2019, in
+  Optics for EUV, X-Ray, and Gamma-Ray Astronomy IX, ed. S.~L. O'Dell \&
+  G.~Pareschi, Vol. 11119, International Society for Optics and Photonics
+  (SPIE), 257 -- 265, \dodoi{10.1117/12.2530052}
+
+\bibitem[{McEntaffer(2019)}]{McEntaffer19}
+McEntaffer, R. 2019, Journal of Astronomical Telescopes, Instruments, and
+  Systems, 5, \dodoi{10.1117/1.JATIS.5.2.021002}
+
+\bibitem[{{McEntaffer} {et~al.}(2013){McEntaffer}, {DeRoo}, {Schultz},
+  {Gantner}, {Tutt}, {Holland}, {O'Dell}, {Gaskin}, {Kolodziejczak}, {Zhang},
+  {Chan}, {Biskach}, {McClelland}, {Iazikov}, {Wang}, \&
+  {Koecher}}]{McEntaffer13}
+{McEntaffer}, R., {DeRoo}, C., {Schultz}, T., {et~al.} 2013, Experimental
+  Astronomy, 36, 389, \dodoi{10.1007/s10686-013-9338-1}
+
+\bibitem[{Miles {et~al.}(2018)Miles, McCoy, McEntaffer, Eichfeld, Lavallee,
+  Labella, Drawl, Liu, DeRoo, \& Steiner}]{Miles18}
+Miles, D.~M., McCoy, J.~A., McEntaffer, R.~L., {et~al.} 2018, The Astrophysical
+  Journal, 869, 95, \dodoi{10.3847/1538-4357/aaec73}
+
+\bibitem[{{Neviere} {et~al.}(1978){Neviere}, {Maystre}, \&
+  {Hunter}}]{Neviere78}
+{Neviere}, M., {Maystre}, D., \& {Hunter}, W.~R. 1978, Journal of the Optical
+  Society of America (1917-1983), 68, 1106
+
+\bibitem[{Nevot \& Croce(1980)}]{Nevot80}
+Nevot, L., \& Croce, P. 1980, Revue de Physique appliqu{\'e}e, 15, 761
+
+\bibitem[{{Pavkovich}(1986)}]{Pavkovich86}
+{Pavkovich}, J.~M. 1986, Journal of Vacuum Science Technology B:
+  Microelectronics and Nanometer Structures, 4, 159, \dodoi{10.1116/1.583369}
+
+\bibitem[{{Pfirrmann} {et~al.}(2016){Pfirrmann}, {Kirchner}, {Lohse},
+  {Guzenko}, {Voigt}, {Harder}, {Kolander}, {Schift}, \&
+  {Gr{\"u}tzner}}]{Pfirrmann16}
+{Pfirrmann}, S., {Kirchner}, R., {Lohse}, O., {et~al.} 2016, in \procspie, Vol.
+  9779, Advances in Patterning Materials and Processes XXXIII, 977925,
+  \dodoi{10.1117/12.2219165}
+
+\bibitem[{{Schleunitz} {et~al.}(2014){Schleunitz}, {Guzenko}, {Messerschmidt},
+  {Atasoy}, {Kirchner}, \& {Schift}}]{Schleunitz14}
+{Schleunitz}, A., {Guzenko}, V.~A., {Messerschmidt}, M., {et~al.} 2014, Nano
+  Convergence, 1, 7, \dodoi{10.1186/s40580-014-0007-5}
+
+\bibitem[{{Schleunitz} \& {Schift}(2010)}]{Schleunitz10}
+{Schleunitz}, A., \& {Schift}, H. 2010, Journal of Micromechanics and
+  Microengineering, 20, 095002, \dodoi{10.1088/0960-1317/20/9/095002}
+
+\bibitem[{{Stauffer} {et~al.}(1992){Stauffer}, {Oppliger}, {Regnault},
+  {Baraldi}, \& {Gale}}]{Stauffer92}
+{Stauffer}, J.~M., {Oppliger}, Y., {Regnault}, P., {Baraldi}, L., \& {Gale},
+  M.~T. 1992, Journal of Vacuum Science Technology B: Microelectronics and
+  Nanometer Structures, 10, 2526, \dodoi{10.1116/1.586051}
+
+\bibitem[{Trolier-McKinstry \& Newnham(2017)}]{Trolier-McKinstry17}
+Trolier-McKinstry, S., \& Newnham, R.~E. 2017, Materials Engineering: Bonding,
+  Structure, and Structure-Property Relationships (Cambridge University Press),
+  \dodoi{10.1017/9781316217818}
+
+\bibitem[{Unal {et~al.}(2010)Unal, Mahalu, Raslin, Ritter, Sambale, \&
+  Hofmann}]{Unal10}
+Unal, N., Mahalu, D., Raslin, O., {et~al.} 2010, Microelectronic Engineering,
+  87, 940 , \dodoi{https://doi.org/10.1016/j.mee.2009.12.002}
+
+\bibitem[{Underwood {et~al.}(1996)Underwood, Gullikson, Koike, Batson, Denham,
+  Franck, Tackaberry, \& Steele}]{Underwood96}
+Underwood, J.~H., Gullikson, E.~M., Koike, M., {et~al.} 1996, Review of
+  Scientific Instruments, 67, 3372, \dodoi{10.1063/1.1147338}
+
+\bibitem[{{Voronov} {et~al.}(2011){Voronov}, {Anderson}, {Cambie}, {Cabrini},
+  {Dhuey}, {Goray}, {Gullikson}, {Salmassi}, {Warwick}, {Yashchuk}, \&
+  {Padmore}}]{Voronov11}
+{Voronov}, D.~L., {Anderson}, E.~H., {Cambie}, R., {et~al.} 2011, Optics
+  Express, 19, 6320, \dodoi{10.1364/OE.19.006320}
+
+\bibitem[{Wen {et~al.}(2015)Wen, Kozhevnikov, \& Wang}]{Wen15}
+Wen, M., Kozhevnikov, I.~V., \& Wang, Z. 2015, Opt. Express, 23, 24220,
+  \dodoi{10.1364/OE.23.024220}
+
+\end{thebibliography}

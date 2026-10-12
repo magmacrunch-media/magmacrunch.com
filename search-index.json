@@ -193,14 +193,14 @@
     "c": "page",
     "u": "/press/index.html",
     "d": "journals / lyrics / press",
-    "b": "press — magmacrunch media home › press // press // a diy publishing house for essays, poetry, fiction, and experimental writing // journals // scientific journal science & technology · 4 pieces ▶ experimental journal experimental writing · 1 piece ▶ // submissions // send submissions to info@magmacrunch.com"
+    "b": "press — magmacrunch media home › press // press // a diy publishing house for essays, poetry, fiction, and experimental writing // journals // scientific journal science & technology · 5 pieces ▶ experimental journal experimental writing · 1 piece ▶ // submissions // send submissions to info@magmacrunch.com"
   },
   {
     "t": "scientific",
     "c": "page",
     "u": "/press/scientific/index.html",
     "d": "Academic writing and physics",
-    "b": "scientific — press — magmacrunch media home › press › scientific // scientific // a journal of science & technology essays on physics, mathematics, and the machinery of the universe. // pieces // Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equilibration (TASTE) paper mccoy et al. · 2018 ▶ A primer for telemetry interfacing in accordance with NASA standards using low cost FPGAs paper mccoy et al. · 2016 ▶ On the Quantum Nature of Photons essay jake mccoy · sep 2024 ▶ Why is off-plane diffraction conical? essay jake mccoy · 2022 ▶"
+    "b": "scientific — press — magmacrunch media home › press › scientific // scientific // a journal of science & technology essays on physics, mathematics, and the machinery of the universe. // pieces // Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by TASTE paper mccoy et al. · 2020 ▶ Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equilibration (TASTE) paper mccoy et al. · 2018 ▶ A primer for telemetry interfacing in accordance with NASA standards using low cost FPGAs paper mccoy et al. · 2016 ..."
   },
   {
     "t": "experimental",
@@ -1902,6 +1902,13 @@
     "u": "/press/scientific/photon-quantum.html",
     "d": "Scientific journal",
     "b": "On the Quantum Nature of Photons — press — magmacrunch media home › press › scientific › On the Quantum Nature of Photons essay On the Quantum Nature of Photons jake mccoy september 2024 Classical Harmonic Oscillator The Hamiltonian for a 1D harmonic oscillator with mass $m$ and angular frequency $\\omega$ can be written in terms of position, $x$, and momentum, $p_x$, in phase space as $$ H = \\frac{p_x^2}{2 m} + \\frac{1}{2} m \\omega^2 x^2 . $$ Hamilton's equations give $$ \\dot{x} = \\frac{\\partial H}{\\partial p_x} = \\frac{p_x}{m} \\quad \\text{and} \\quad \\dot{p_x} = -\\frac{\\partial H}{\\partial x} ..."
+  },
+  {
+    "t": "EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media",
+    "c": "press",
+    "u": "/press/scientific/taste-efficiency/index.html",
+    "d": "Scientific journal",
+    "b": "EUV and soft x-ray efficiency of a TASTE grating · press · magmacrunch media home › press › scientific › EUV and soft x-ray efficiency of a TASTE grating paper Extreme ultraviolet and soft x-ray diffraction efficiency of a blazed reflection grating fabricated by thermally activated selective topography equilibration jake mccoy , randall mcentaffer, drew miles the pennsylvania state university 2020 // this version // Published by IOP Publishing for the AAS. This paper appeared in The Astrophysical Journal , published by IOP Publishing on behalf of the American Astronomical Society. That publish..."
   },
   {
     "t": "X-ray reflection gratings by TASTE · press · magmacrunch media",
