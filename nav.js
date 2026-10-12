@@ -704,18 +704,34 @@ document.querySelectorAll('nav a[href]').forEach(a => {
             // Special handling: MathJax config — merge macros without destroying runtime
             if (t.includes('MathJax') && t.includes('tex')) {
                 try {
-                    const valueStr = t.replace(/MathJax\s*=\s*/, '');
+                    // The trailing semicolon has to go. Every page writes the
+                    // config as `MathJax = {...};`, and stripping only the
+                    // assignment leaves `return ({...};)`, which is a
+                    // SyntaxError -- so the whole config was thrown away by
+                    // the catch below and MathJax started on its DEFAULTS.
+                    // Those do not treat $...$ as an inline delimiter, which
+                    // is why arriving at a maths page through the nav showed
+                    // every inline expression as raw source while the display
+                    // equations, delimited $$...$$, rendered fine. Reloading
+                    // ran the page's own script and looked like a fix.
+                    const valueStr = t
+                        .replace(/^[\s;]*(?:window\.)?MathJax\s*=\s*/, '')
+                        .replace(/[\s;]+$/, '');
                     // Deliberate. The SPA swaps pages without a reload, so a fetched
                     // page inline <script> has to be executed here or its config never
                     // applies -- this is the feature, not an oversight. The content is
                     // our own pages rather than anything a visitor supplies.
                     // eslint-disable-next-line no-new-func
                     const cfg = new Function('return (' + valueStr + ')')();
-                    if (MathJax.config && MathJax.config.tex) {
+                    // window.MathJax, not a bare MathJax: arriving from a page
+                    // with no maths leaves the identifier undeclared, and a
+                    // bare read throws ReferenceError into the same catch.
+                    const mj = window.MathJax;
+                    if (mj && mj.config && mj.config.tex) {
                         // MathJax already loaded — merge macros into running config
                         if (cfg && cfg.tex && cfg.tex.macros) {
-                            if (!MathJax.config.tex.macros) MathJax.config.tex.macros = {};
-                            Object.assign(MathJax.config.tex.macros, cfg.tex.macros);
+                            if (!mj.config.tex.macros) mj.config.tex.macros = {};
+                            Object.assign(mj.config.tex.macros, cfg.tex.macros);
                         }
                     } else {
                         // MathJax not yet loaded — set config for CDN script to read
