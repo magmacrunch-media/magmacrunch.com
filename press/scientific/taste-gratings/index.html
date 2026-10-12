@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X-ray reflection gratings by TASTE · press · magmacrunch media</title>
+    <meta name="description" content="Author's version of McCoy, McEntaffer &amp; Eichfeld (2018), J. Vac. Sci. Technol. B 36, 06JA01: blazed X-ray reflection grating topographies patterned in PMMA by grayscale electron-beam lithography and thermal reflow.">
+    <meta property="og:title" content="X-ray reflection gratings by TASTE · magmacrunch press">
+    <meta property="og:description" content="Author's version of McCoy, McEntaffer &amp; Eichfeld (2018), J. Vac. Sci. Technol. B 36, 06JA01.">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="magmacrunch media">
+    <meta property="og:locale" content="en_US">
+    <link rel="icon" type="image/x-icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../style.css?v=53e9e146">
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        tags: 'all',
+        processEscapes: true,
+        macros: {
+          vb: ['{\\mathbf{#1}}', 1],
+          vu: ['{\\hat{#1}}', 1],
+          dv: ['\\frac{\\mathrm{d} #1}{\\mathrm{d} #2}', 2],
+          pdv: ['\\frac{\\partial #1}{\\partial #2}', 2],
+          dd: ['\\mathrm{d}#1', 1],
+          expval: ['\\langle #1 \\rangle', 1],
+          comm: ['[#1, #2]', 2],
+          ket: ['|#1\\rangle', 1],
+          bra: ['\\langle #1|', 1],
+          braket: ['\\langle #1 | #2 \\rangle', 2],
+          dyad: ['|#1\\rangle\\langle #1|', 1],
+          norm: ['\\|#1\\|', 1],
+          abs: ['|#1|', 1],
+          matrixel: ['\\langle #1 | #2 | #3 \\rangle', 3]
+        }
+      },
+      loader: {load: ['[tex]/physics']}
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    <style>
+        :root {
+            --nav-accent: #c02828;
+            --nav-glow: rgba(192,40,40,0.4);
+            --nav-brand: #c02828;
+            --nav-brand-glow: rgba(192,40,40,0.6);
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #f0e4c8;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 72px 20px 60px;
+        }
+
+        .breadcrumb {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 0.1em;
+            margin-top: -8px;
+            margin-bottom: 24px;
+            align-self: flex-start;
+        }
+        .breadcrumb a { color: #888; text-decoration: none; transition: color 0.15s; }
+        .breadcrumb a:hover { color: #c02828; }
+        .breadcrumb .sep { margin: 0 8px; color: #333; }
+        .breadcrumb .current { color: #c02828; }
+
+        .article-header {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .article-type {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #f0e4c8;
+            background: #c02828;
+            display: inline-block;
+            padding: 3px 10px;
+            letter-spacing: 0.1em;
+            margin-bottom: 20px;
+        }
+
+        .article-title {
+            font-family: 'Press Start 2P', monospace;
+            font-size: clamp(10px, 2vw, 15px);
+            color: #f0e4c8;
+            letter-spacing: 0.06em;
+            line-height: 1.8;
+            margin-bottom: 16px;
+        }
+
+        .article-meta {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .article-meta .author { color: #c02828; font-weight: 700; }
+
+        .article-body {
+            width: min(700px, 90vw);
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+
+        .article-body h2 {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            color: #c02828;
+            letter-spacing: 0.08em;
+            margin-top: 40px;
+            margin-bottom: 16px;
+            line-height: 1.8;
+        }
+
+        .article-body p {
+            font-family: 'Courier Prime', monospace;
+            font-size: 14px;
+            line-height: 1.85;
+            color: #c8c0a8;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        .article-body p:first-of-type::first-letter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
+            float: left;
+            line-height: 0.85;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: #c02828;
+        }
+
+        .article-body a {
+            color: #c02828;
+            text-decoration: underline;
+            text-decoration-color: rgba(192,40,40,0.3);
+        }
+        .article-body a:hover { color: #e88080; }
+
+        .article-body strong { color: #f0e4c8; }
+        .article-body em { color: #888; }
+
+        /* ── EQUATIONS ── */
+        .equation {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .article-body .mjx-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
+
+        /* ── FIGURES ── */
+        figure {
+            margin: 28px 0;
+            text-align: center;
+        }
+
+        figure img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            image-rendering: auto;
+        }
+
+        figcaption {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .article-end {
+            width: min(700px, 90vw);
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .article-end span { color: #c02828; font-size: 12px; }
+
+        .article-back {
+            display: inline-block;
+            margin-top: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            color: #c02828;
+            text-decoration: none;
+            border: 2px solid #c02828;
+            padding: 8px 16px;
+            transition: all 0.15s;
+        }
+        .article-back:hover {
+            background: #c02828;
+            color: #1a1a1a;
+        }
+
+        footer {
+            background: #111 !important;
+            border-top-color: #333 !important;
+            color: #666 !important;
+        }
+        footer span { color: #c02828 !important; }
+
+        @media (max-width: 640px) {
+            .article-title { font-size: 10px; }
+            .article-body p { font-size: 13px; }
+            .article-body h2 { font-size: 9px; }
+            .equation { overflow-x: auto; }
+        }
+    
+        /* ── additions for a figure-heavy paper ── */
+        figure {
+            margin: 34px 0;
+            animation: fadeUp 0.5s ease both;
+        }
+        figure img {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin: 0 auto 10px;
+            background: #f0e4c8;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        figcaption {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            line-height: 1.75;
+            color: #9a8f7d;
+            text-align: left;
+        }
+
+        .provenance {
+            border: 1px solid #333;
+            border-left: 3px solid #c02828;
+            background: #1f1f1f;
+            padding: 18px 20px;
+            margin-bottom: 40px;
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            line-height: 1.85;
+            color: #9a8f7d;
+            animation: fadeUp 0.5s ease both;
+        }
+        .provenance .prov-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 12px;
+        }
+        .provenance a { color: #f0e4c8; }
+        .provenance a:hover { color: #c02828; }
+        .provenance p { margin: 0 0 9px; }
+        .provenance p:last-child { margin-bottom: 0; }
+
+        .abstract {
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            padding: 20px 0;
+            margin-bottom: 36px;
+            font-style: italic;
+            color: #c9bda8;
+        }
+        .abstract .prov-label {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 7px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 12px;
+            font-style: normal;
+        }
+
+        h3.endmatter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 9px;
+            color: #c02828;
+            letter-spacing: 0.1em;
+            margin: 44px 0 16px;
+        }
+        ol.refs, ol.notes {
+            font-family: 'Courier Prime', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+            color: #9a8f7d;
+            padding-left: 22px;
+        }
+        ol.refs li, ol.notes li { margin-bottom: 9px; }
+        ol.refs { list-style: none; padding-left: 0; }
+        ol.refs li { padding-left: 20px; text-indent: -20px; }
+        sup.fn a { color: #c02828; text-decoration: none; padding: 0 1px; }
+        .fnback { font-size: 10px; color: #666; }
+        :target { scroll-margin-top: 80px; }
+        .equation { overflow-x: auto; overflow-y: hidden; }
+
+        /* cone puts a drop cap on the first paragraph in .article-body. Here
+           that paragraph is the provenance note, so the cap is moved to the
+           first paragraph of the paper proper. */
+        .article-body .provenance p::first-letter,
+        .article-body .abstract p::first-letter,
+        .article-body figcaption::first-letter {
+            font-family: inherit;
+            font-size: inherit;
+            float: none;
+            line-height: inherit;
+            margin: 0;
+            color: inherit;
+        }
+        .article-body p.lede::first-letter {
+            font-family: 'Press Start 2P', monospace;
+            font-size: 2.2em;
+            float: left;
+            line-height: 0.85;
+            margin-right: 8px;
+            margin-top: 4px;
+            color: #c02828;
+        }
+    
+        figure { margin: 34px 0; animation: fadeUp 0.5s ease both; }
+        figure img { display:block; width:100%; height:auto; margin:0 auto 10px;
+                     background:#f0e4c8; padding:10px; border:1px solid #333; }
+        figcaption { font-family:'Courier Prime',monospace; font-size:12px;
+                     line-height:1.75; color:#9a8f7d; text-align:left; }
+        .provenance { border:1px solid #333; border-left:3px solid #c02828;
+                      background:#1f1f1f; padding:18px 20px; margin-bottom:40px;
+                      font-family:'Courier Prime',monospace; font-size:12px;
+                      line-height:1.85; color:#9a8f7d; animation:fadeUp 0.5s ease both; }
+        .provenance .prov-label { font-family:'Press Start 2P',monospace; font-size:7px;
+                      color:#c02828; letter-spacing:0.1em; display:block; margin-bottom:12px; }
+        .provenance a { color:#f0e4c8; }
+        .provenance a:hover { color:#c02828; }
+        .provenance p { margin:0 0 9px; }
+        .provenance p:last-child { margin-bottom:0; }
+        .abstract { border-top:1px solid #333; border-bottom:1px solid #333;
+                    padding:20px 0; margin-bottom:36px; font-style:italic; color:#c9bda8; }
+        .abstract .prov-label { font-family:'Press Start 2P',monospace; font-size:7px;
+                    color:#c02828; letter-spacing:0.1em; display:block;
+                    margin-bottom:12px; font-style:normal; }
+        h3.endmatter { font-family:'Press Start 2P',monospace; font-size:9px;
+                    color:#c02828; letter-spacing:0.1em; margin:44px 0 16px; }
+        ol.refs { font-family:'Courier Prime',monospace; font-size:12px; line-height:1.8;
+                    color:#9a8f7d; list-style:none; padding-left:0; }
+        ol.refs li { margin-bottom:9px; padding-left:28px; position:relative; }
+        ol.refs li .rn { position:absolute; left:0; color:#c02828; }
+        sup.cite a { color:#c02828; text-decoration:none; padding:0 1px; }
+        .eqno { float:right; color:#9a8f7d; font-family:'Courier Prime',monospace; }
+        :target { scroll-margin-top:80px; }
+        .equation { overflow-x:auto; overflow-y:hidden; }
+        .article-body .provenance p::first-letter,
+        .article-body .abstract p::first-letter,
+        .article-body figcaption::first-letter {
+            font-family:inherit; font-size:inherit; float:none;
+            line-height:inherit; margin:0; color:inherit; }
+        .article-body p.lede::first-letter {
+            font-family:'Press Start 2P',monospace; font-size:2.2em; float:left;
+            line-height:0.85; margin-right:8px; margin-top:4px; color:#c02828; }
+    </style>
+</head>
+<body>
+
+<nav id="auto-nav" data-depth="../../../"></nav>
+
+<main>
+
+    <div class="breadcrumb">
+        <a href="../../../">home</a>
+        <span class="sep">›</span>
+        <a href="../../../press/">press</a>
+        <span class="sep">›</span>
+        <a href="../">scientific</a>
+        <span class="sep">›</span>
+        <span class="current">X-ray reflection gratings by TASTE</span>
+    </div>
+
+    <div class="article-header">
+        <div class="article-type">paper</div>
+        <h1 class="article-title">Fabrication of astronomical X-ray reflection gratings using thermally activated selective topography equilibration (TASTE)</h1>
+        <div class="article-meta">
+            <span class="author">jake mccoy</span>, randall mcentaffer, chad eichfeld<br>
+            the pennsylvania state university<br>
+            2018
+        </div>
+    </div>
+
+    <div class="article-body">
+
+    <div class="provenance">
+        <span class="prov-label">// this version //</span>
+        <p><strong>Published by AIP Publishing for the AVS.</strong> This paper
+        appeared in the <em>Journal of Vacuum Science &amp; Technology B</em>,
+        published by <a href="https://pubs.aip.org/avs/jvb" rel="noopener">AIP
+        Publishing</a> on behalf of the AVS, in a special issue for the 62nd
+        EIPBN conference. That published article is the version of record, and
+        it is the one to cite:</p>
+        <p style="padding-left:16px;border-left:1px solid #333;">McCoy, J. A.,
+        McEntaffer, R. L. &amp; Eichfeld, C. M. (2018) Fabrication of
+        astronomical X-ray reflection gratings using thermally activated
+        selective topography equilibration.
+        <em>Journal of Vacuum Science &amp; Technology B</em>
+        <strong>36</strong>, 06JA01. AIP Publishing / AVS.
+        <a href="https://doi.org/10.1116/1.5048197" rel="noopener">doi:10.1116/1.5048197</a></p>
+        <p><strong>What this page is, and how far to trust it.</strong> Unlike
+        the other papers here, this one has no LaTeX source and never did: the
+        publisher asked for a Word document. So this page is a
+        <em>reconstruction</em> of the authors' own manuscript, rebuilt from the
+        PDF posted to arXiv, not a rendering of source. Its text was checked
+        back against that PDF word by word and agrees to 99.98%, the remainder
+        being a trademark symbol. It is not AIP Publishing's typeset version
+        and carries none of the publisher's styling. Where this page and the
+        PDF disagree, <strong>the PDF is right</strong>:</p>
+        <p>The manuscript as submitted:
+        <a href="mccoy-2018-taste.pdf">mccoy-2018-taste.pdf</a> (1.2 MB) ·
+        <a href="https://arxiv.org/abs/2102.12359" rel="noopener">arXiv:2102.12359</a> ·
+        <a href="https://doi.org/10.48550/arXiv.2102.12359" rel="noopener">doi:10.48550/arXiv.2102.12359</a></p>
+        <p>The work was carried out at the Penn State Materials Research
+        Institute and supported by a NASA Space Technology Research Fellowship
+        under grant NNX16AP92H.</p>
+    </div>
+
+    <div class="abstract">
+        <span class="prov-label">// abstract //</span>
+        Thermally activated selective topography equilibration (TASTE) enables the creation of 3D structures in resist using grayscale electron-beam lithography followed by a thermal treatment to induce a selective polymer reflow. A blazed grating topography can be created by reflowing repeating staircase patterns in resist into wedge-like structures. Motivated by astronomical applications, such patterns with periodicities 840 nm and 400 nm have been fabricated in 130 nm-thick PMMA using TASTE to provide a base for X-ray reflection gratings. A path forward to integrate this alternative blazing technique into grating fabrication recipes is discussed.
+    </div>
+
+<h2 id="sec0">I. Introduction</h2>
+<p class="lede">Common practice of electron-beam lithography (EBL) is to create bi-level structures in a film of polymeric resist, where high-energy electrons are used to alter local average polymer molecular weight $M_{w}$. For positive-tone resists such as poly(methyl methacrylate) (PMMA), these binary patterns are produced when $M_{w}$ is reduced upon electron exposure<sup class="cite"><a href="#ref-1">1</a></sup>, causing the polymer to be etched away during wet development. In contrast, multi-level structures can be patterned in resist using grayscale EBL<sup class="cite"><a href="#ref-2">2</a></sup> (GEBL). Here, dose-modulated electron exposure imparts a range of locally modified $M_{w}$ in the resist, resulting in correspondingly varying developer solubility. Using a timed development, multi-level structures can be attained as resist is etched down to a thickness that depends on local $M_{w}$. However, 3D topographies can only be approximated using multi-level steps in GEBL; thermally activated selective topography equilibration<sup class="cite"><a href="#ref-3">3</a>, <a href="#ref-4">4</a>, <a href="#ref-5">5</a></sup> (TASTE) is a technique based on the principle that reduced $M_{w}$ from electron exposure also results in a lowered polymer glass-liquid transition temperature $T_{g}$, above which resist is able to flow according to a time-dependent visco-elastic creep process<sup class="cite"><a href="#ref-6">6</a></sup>. Using TASTE, a wafer featuring a GEBL pattern can be heated such that electron-exposed resist is allowed to equilibrate in a molten state while unexposed resist stays in its glass state. In this way, micron-scale 3D patterns such as sloped structures have been fabricated in PMMA<sup class="cite"><a href="#ref-5">5</a></sup>, ZEP520<sup class="cite"><a href="#ref-7">7</a></sup> and mr-PosEBR<sup class="cite"><a href="#ref-8">8</a></sup>.</p>
+<p>Next-generation reflection gratings for astronomical X-ray spectroscopy demand custom architectures to enable sensitive observations with high spectral resolving power ($R= \lambda /\Delta \lambda$) in the soft X-ray regime ($\lambda = 6 -62 \text{\AA}$). Spectrometers for this application typically consist of planar gratings that are stacked and aligned into modular arrays to intercept the radiation coming to a focus in a Wolter-I telescope,<sup class="cite"></sup>where a detector, such as a CCD camera, placed at the focal plane is used to image the dispersed spectrum<sup class="cite"><a href="#ref-9">9</a>, <a href="#ref-10">10</a>, <a href="#ref-11">11</a></sup>. To achieve high $R$, gratings with periodicities on the order of hundreds of nanometers require precise variable-line-space groove layouts to match the focal length of the telescope<sup class="cite"><a href="#ref-12">12</a></sup> and blazed topographies to maximize diffraction efficiency for a particular band of interest. Standard approach is to define a groove layout in resist using lithography followed by processing to provide a blaze, such as wet anisotropic etching or directional ion milling. As an alternative to these methods, TASTE can be used to pattern a blazed grating structure directly in resist over a custom layout. This paper explores the feasibility of using TASTE to generate blazed topographies suitable for X-ray grating spectroscopy and discusses several options to produce functional reflection gratings from such a template.</p>
+<h2 id="sec3">Ii. Experimental</h2>
+<p>Fabrication of blazed grating patterns with periodicities 840 nm and 400 nm in ~130 nm-thick PMMA is described in the following: carried out at the Nanofabrication Laboratory at the Pennsylvania State University (PSU) Materials Research Institute, methods consist of GEBL to create multi-level staircase structures, spectroscopic ellipsometry (SE) for resist contrast data collection, and thermal reflow by hotplate to smooth exposed resist into a sawtooth topography. Patterns were examined using atomic force microscopy (AFM; Bruker Icon) at the PSU Materials Characterization Laboratory.</p>
+<h2 id="sec5">A. Grayscale lithography</h2>
+<p>Practicing GEBL requires knowledge of resist contrast to map electron dose to remaining film thickness for a given development recipe. Therefore, it is important to control resist conditions throughout process development. All patterns were created in PMMA (MicroChem Corp.) with $M_{w}= 950$ kg mol<sup class="cite"><a href="#ref-1">1</a></sup>. For each test sample, a clean, polished 4" Si wafer, purchased from Virginia Semiconductor, Inc., was dehydration- baked at 180°C prior to spin coating. The resist, diluted 3% in Anisole, was spun at 3 krpm using a dynamic dispense to yield a 130 nm thickness as measured by SE. Following coating, wafers were baked again at 180°C for 3 minutes to remove residual Anisole from the resist. Electron exposure was performed at 100 kV using a Raith EBPG5200 system with data preparation facilitated using the Layout BEAMER software package (GenISys GmbH). Samples were developed at room temperature for 2 minutes in a 1:1 mixture of methyl isobutyl ketone (MIBK) and isopropyl alcohol (IPA), followed by a 30-second IPA bath and a nitrogen blow-dry. To allow solvent-induced gel and resist swelling to subside, test samples were not characterized using SE or AFM until ~24 hours post development.</p>
+<p>Resist contrast data collection requires the fabrication and analysis of a pattern designed to probe resist thickness as a function of electron dose. The layout of this pattern, shown in Fig. 1, consists of alignment markers for automated SE data acquisition (large crosses) and a 5 by 5 array of 250 µm-wide squares dosed to a range of values using BEAMER. Starting with 50 µC/cm<sup class="cite"><a href="#ref-2">2</a></sup>, the pattern was exposed using a 30 nA beam with a 200 µm aperture to dose each square in 7% increments. To measure the resist thickness in each square, SE data were gathered at the center of each square using a focused M-2000 ellipsometer (J.A. Woollam). Using Woollam's CompleteEASE software, data were fit to a transparent film model for PMMA over 450 nm&lt;$\lambda$&lt;1000 nm using Cauchy's equation:</p>
+<div class="equation">
+$$
+n(\lambda ) = A+ B/\lambda _{2} + C/\lambda _{4}
+$$
+</div>
+<p>(1) where $n$ is index of refraction and $A$, $B$ and $C$ are fit parameters. As As $n$ is expected to change with electron exposure, $A$ and $B$ were fit for each measurement, keeping $C$=0. From these fits, resist thickness was extracted and plotted against electron dose, shown in Fig. 2. This resist contrast curve served as the basis for GEBL in 130 nm-thick PMMA under these conditions.</p>
+<figure id="fig1">
+        <img src="fig1.png" alt="Figure 1" loading="lazy">
+        <figcaption>Figure 1. (Color online) A layout is defined for resist contrast data collection using Tanner L-Edit software where an array of 25 squares, each 250 µm in width, is assigned to a range of values using Layout BEAMER.</figcaption>
+</figure>
+<figure id="fig2">
+        <img src="fig2.png" alt="Figure 2" loading="lazy">
+        <figcaption>Figure 2. Resist contrast for 130 nm-thick PMMA developed at room temperature using 1:1 MIBK/IPA for 2 minutes and IPA for 30 s: the center of each square of the pattern shown in Fig. 1 is measured using spectroscopic ellipsometry and a film thickness is extracted. Resist contrast is plotted as remaining resist thickness as a function of electron dose.</figcaption>
+</figure>
+<p>Standard approach for GEBL process development was to draw computer aided design (CAD) for multi-level layouts, mapping design layer to intended resist thickness. Though a contrast curve gives remaining resist thickness as a function of electron dose by definition, proximity effect correction<sup class="cite"><a href="#ref-13">13</a></sup> (PEC) must be carried out to attain accurate GEBL structures. This was handled using BEAMER's 3DPEC algorithm<sup class="cite"><a href="#ref-14">14</a></sup>, which uses input resist contrast data and a point spread function for electron backscattering in silicon, determined through Monte Carlo simulation, to calculate how dose is distributed for PEC. The result is a relative dose-corrected layout fractured into 100 layers; this is exported to EBPG5200 machine format as 100 pattern generator (PG) shapes. Patterns exposed in this way used a 1 nA beam current, a 200 µm aperture and a 10 nm beam step size (BSS).</p>
+<p>Due to the added overhead associated with switching between PG shapes, an alternative approach utilizing EBPG sequencing was also pursued. Unique to EBPG systems, sequencing is a set of commands that defines a series of lines and beam jumps to be executed as a custom, subfield-sized PG shape. This shape can be patterned over an arbritrary area using an array of subfield-sized rectangles defined in CAD. Though sequencing is limited to lines and jumps at a single user-input electron dose, dose modulation can be emulated using overlapping beams (see Fig. 3). In this way, GEBL patterns were produced by generating sequencing code for a 4 µm-large custom PG shape to approximate the dose-corrected layout from 3DPEC. However, at the edges of a grating area, extra dose is needed for PEC; this is not compensating for using this approach. Patterns exposed in this way used beam currents ~25 nA, a 400 µm aperture and a 40 nm BSS. The input electron dose was determined through analysis of dose test arrays and the highest possible beam current (considering limitations imposed by the 25 MHz EBPG5200 clock frequency) was used to write each pattern.</p>
+<figure id="fig3">
+        <img src="fig3.jpg" alt="Figure 3" loading="lazy">
+        <figcaption>Figure 3. (Color online) Two approaches to pattern generation for grayscale electron-beam lithography: a) Experimentally determined resist contrast data are input into Layout BEAMER where the 3DPEC algorithm is used to generate a dose-corrected layout. Each dose is a different pattern generator shape, represented here with colorscale. b) Code for EBPG5200 sequencing defines a custom subfield-sized pattern generator shape consisting of a series of lines and beam jumps. Lines are programmed to overlap to varying degrees to emulate dose modulation achieved using the 3DPEC approach.</figcaption>
+</figure>
+<p>Using these two GEBL approaches, multi-level staircase structures with 840 nm and 400 nm periodicities were patterned in resist. In general, the width of staircase steps were designed to be comparable to the spin coat thickness of 130 nm. A series of GEBL test samples were written over 0.5 mm by 2 mm areas featuring the following patterns:</p>
+<p>A) 6-level staircase: each step is 140 nm wide to give a 840 nm periodicity</p>
+<p>B) 4-level staircase: each step is 100 nm wide to give a 400 nm periodicity</p>
+<p>C) 4-level staircase: width of the top step is reduced to 40 nm; remaining levels</p>
+<p>are 120 nm wide to give a periodicity of 400 nm</p>
+<p>D) Emulation of pattern C attained through EBPG5200 sequencing In principle, the staircase steps intermediate between the top step and the exposed substrate will equilibrate into sloped surfaces using an optimized thermal treatment. The width of the top step in patterns C and D was reduced in an effort to minimize flat area atop groove structures in the final product. Ideally, grooves are sharp, triangular sawtooth facets to provide an effective blazed grating response.</p>
+<h2 id="sec21">B. Thermal reflow</h2>
+<p>All thermal reflow experimentation was carried using an automated hotplate on a resist stabilization system built by Fusion Semiconductor. The tool, which accepts 4" wafers, was used to heat test samples in a controllable and reproducible way. A series of identical GEBL samples were fabricated and reflowed under different conditions to probe the temperature-time parameter space for TASTE. Using a short heating time (20 s), samples were treated using s range of temperatures around the expected $T_{g}$ for PMMA (110-130°C). Conversely, samples were heated for different durations (20 s, 60 s, 120 s) while holding temperature constant at 120°C. Each sample was allowed to cool on the cassette rack of the automated hotplate tool after heating.</p>
+<h2 id="sec23">Iii. Results</h2>
+<p>Untreated GEBL structures in PMMA for patterns A-D are seen under AFM in Fig. 4. Using Brukers' PeakForce Tapping<sup>TM</sup>mode, patterns were scanned over 2 µm at 512 samples per line to give a 3.9 nm AFM pixel size. In patterns A and B, staircase steps are equal in width and the overall structure height is comparable to the initial spin coat thickness as measured by AFM. However, due to the narrowed width of the top step in patterns C and D, the overall structure height is reduced to about 75% of the original film thickness. Patterns A-C were fabricated using the BEAMER 3DPEC approach, where a 1 mm<sup class="cite"><a href="#ref-2">2</a></sup> area is exposed in ~20 minutes using the EBPG5200. In contrast, pattern D over the same area can be written using EBPG5200 sequencing in ~1 minute. Although pattern C exhibits higher noise than pattern D under AFM, the end result after thermal reflow should be comparable. For this reason, the EBPG5200 sequencing approach is valuable for patterning GEBL over large areas, where it is imperative for write time to be minimized.</p>
+<figure id="fig4">
+        <img src="fig4.jpg" alt="Figure 4" loading="lazy">
+        <figcaption>Figure 4. (Color online) Grayscale electron-beam lithography (GEBL) in 130 nm-thick PMMA examined under atomic force microscopy. Patterns A-C were attained through the standard 3DPEC approach while pattern D is a result from the EBPG5200 sequencing approach: a) Pattern A: GEBL with 6 levels where each are 140 nm wide to give a 840 nm periodicity. b) Pattern B: GEBL with 4 levels where each are 100 nm wide to give a 400 nm periodicity. c) Pattern C: GEBL with 4 levels where the width of the top level is reduced to 40 nm; remaining levels are 120 nm wide to give a periodicity of 400 nm. d) Pattern D: same as pattern C but attained using EBPG sequencing.</figcaption>
+</figure>
+<p>Thermal reflow results for pattern A are shown in Fig. 5. This includes six AFM scans: three samples treated at 110°C, 120°C and 130°C keeping heating time constant at 20 s, and conversely, three samples heated with durations of 20 s, 60 s and 120 s holding temperature at 120°C. Analogous AFM scans of pattern C are shown in Fig. 6. These results demonstrate the principle of TASTE: stepped surfaces of resist begin to smooth into inclines with an appropriate thermal treatment. However, only a small sample of the temperature-time parameter space for TASTE has been explored. Reflow temperature should be optimized such that intermediate steps are able to flow while the top step is unaffected; this is to achieve a sharp sawtooth by avoiding groove rounding effects. Meanwhile, heating duration should also be optimized to allow flowing resist to equilibrate into smooth, sloped surfaces. Preffered temperature-time parameters will depend on the intitial GEBL structure. Shown in Fig. 5, a small reflow effect at 110°C is seen in the intermediate steps of pattern A. The effect becomes more pronounced at 120°C while at 130°C, the entire structure, including the top step, is affected. At 120°C, the intermediate steps become increasingly smooth as reflow time reaches 120 s, at which point equilibration is not yet reached. This suggests that the optimum temperature for TASTE of pattern A is close to 120°C while the optimum reflow duration may be greater than 120 s. Shown in Fig. 6, a similar effect is observed for pattern C. However, the optimum reflow temperature here may be slightly lower as the narrowed top step is expected to have a reduced $M_{w}$ relative to that of pattern A. This is evidenced by the ~25% reduction in structure height relative to the original film thickness and the slight rounding effects observed at 120°C for a 120 s duration, which reflect a slightly lowered $T_{g}$ as compared to pattern A.</p>
+<p>Although not exhaustive, these results show that a process window exists to transform a staircase structure into the desired wedge shape using thermal reflow. Future investigations for TASTE will include repeating these hotplate experiments over matrices of finer temperature increments and heating longer durations. For example, for pattern A, this might consist of treating samples at 116°C, 118°C, 120°C, 122°C and 124°C for durations of 100 s, 110 s, 120 s, 130 s and 140 s. As the optimum reflow temperature for pattern C is expected to be slightly reduced, an appropriate test matrix for this pattern might be 112°C, 114°C, 116°C, 118°C and 120°C over similar durations. If the desired results are not found within these parameter spaces, lower temperatures with even longer heating durations may be explored.</p>
+<figure id="fig5">
+        <img src="fig5.jpg" alt="Figure 5" loading="lazy">
+        <figcaption>Figure 5. (Color online) Thermal reflow results for grayscale electron-beam lithography in 130 nm-thick PMMA with 6 levels: each are 140 nm wide to give a 840 nm periodicity. a) Intitial GEBL pattern. b) Thermal reflow at various temperatures with constant heating duration. c) Thermal reflow at constant temperature with various heating durations.</figcaption>
+</figure>
+<figure id="fig6">
+        <img src="fig6.jpg" alt="Figure 6" loading="lazy">
+        <figcaption>Figure 6. (Color online) Thermal reflow results for grayscale electron-beam lithography in 130 nm-thick PMMA with 4 levels: width of the top level is reduced to 40 nm; remaining levels are 120 nm wide to give a periodicity of 400 nm. a) Intitial GEBL pattern. b) 21 Thermal reflow at various temperatures with constant heating duration. c) Thermal reflow at constant temperature with various heating durations.</figcaption>
+</figure>
+<p>In addition to the overall topography achieved using TASTE, surface roughness and EBL field stitching are of importance in grating fabrication. The TASTE results have sloped surfaces with RMS roughness of a few nanometers as measured by AFM; ideally, this roughness would be reduced with better optimized thermal reflow conditions. For patterns written using a 300 µm mainfield for the EBPG5200, field stitch boundaries are observable post reflow under AFM (see Fig. 7). Along the groove direction, the field stitch manifests itself as added facet roughness, which may be improved under the appropriate reflow conditions. Controlling field stitching along the cross-groove direction is also important to avoid irregularities in groove spacing. These parameters will be explored in more detail in a forthcoming publication.</p>
+<figure id="fig7">
+        <img src="fig7.jpg" alt="Figure 7" loading="lazy">
+        <figcaption>Figure 7. (Color online) Grayscale electron-beam lithography in 130 nm-thick PMMA with 4 levels thermally treated at 120°C for 60 s: a) near the center of a 300 µm EBPG mainfield and b) at a field stitch boundary.</figcaption>
+</figure>
+<h2 id="sec32">Iv. Discussion</h2>
+<p>The blazed topography of choice depends on the grating geometry employed; a general case is shown in Fig. 8 where groove spacing $d$ determines the locations of diffracted orders for a wavelength $\lambda$ through the generalized grating equation:</p>
+<div class="equation">
+$$
+\sin (\alpha ) + \sin (\beta ) = n \lambda /dsin(\gamma )
+$$
+</div>
+<p>(2) Here, $\alpha$ is the polar incidence angle, $\beta$ is the polar diffracted angle for a diffracted order $n$ and $\gamma$ is the half-cone opening angle between the incident beam and the groove direction. Moreover, for a grating with blaze angle $\delta$, radiation is preferentially diffracted to $\beta = 2 \delta -\alpha$ and the blaze wavelength for order $n$ is given by:</p>
+<p>$\lambda _{blaze}= d \sin  (\gamma )(\sin (\alpha ) + \sin (2 \delta - \alpha ))/n$.</p>
+<p>(3) X-ray reflection gratings are typically designed for use at grazing incidence angles where the angle of incident radiation relative to the plane defined by the blazed groove facet is on the order of a few degrees. This angle $\zeta$ is given by:</p>
+<p>$\sin (\zeta ) = \sin  (\gamma )\cos  (\delta -\alpha )$.</p>
+<p>(4) Gratings are commonly used in an in-plane mount where the groove direction is perpendicular to incoming radiation and hence $\sin (\gamma ) = 1$. This geometry necessitates shallow $\delta$, large $\alpha$ and $d$ on the order of several hundred nanometers. Another option is to orient grating grooves to be quasi-parallel to incoming radiation so that $\gamma \lessapprox 2^\circ$. This extreme off-plane mount has several attractive features including minimal groove shadowing and the ability to tightly pack gratings into an array<sup class="cite"><a href="#ref-15">15</a></sup>. In this geometry, $d$ on the order of a few hundred nanometers or less is required while there is more freedom for $\delta$ and $\alpha$ (typically, Littrow configuration is used:$\alpha = \beta = \delta$). Mid to steep $\delta$ is desirable to preferentially disperse radiation to high $n$, where large dispersion can be attained.</p>
+<figure id="fig8">
+        <img src="fig8.jpg" alt="Figure 8" loading="lazy">
+        <figcaption>Figure 8. (Color online) Grating geometry: many applications utilize an in-plane geometry where sin(𝛾) = 1 but off-plane geometries with 𝛾⪅2° are beneficial for grazing- incidence spectrometers with modular grating arrays. For a given throw 𝐿, diffracted orders lay on an arc with radius r = 𝐿 sin(𝛾) and grating dispersion 𝑥 is proportional to wavelength λ, order number 𝑛 and inversely proportional to the groove spacing 𝑑. Gratings are blazed to a sawtooth profile with facet angle 𝛿. The angle at which radiation is incident on blazed groove facets, 𝜁, must be kept small for grazing-incidence applications, regardless of the geometry employed.</figcaption>
+</figure>
+<p>Results show a path forward for fabricating X-ray reflection gratings using TASTE. Patterns at $d= 840$ nm yield $\delta \sim 10^\circ$ and are more suitable for in-plane applications while patterns at $d= 400$ nm provide a base for off-plane gratings with $\delta \sim 25^\circ$. However, such a topography in resist on its own is not ready to be used directly as an X-ray reflection grating. Instead, the pattern should be stabilized and coated with a metal for soft X-ray reflectivity; owing to small X-ray attenuation depth at grazing incidence, only 10-20 nm of deposition is required. As untreated PMMA is susceptible to damage from physical vapor deposition processes, extra processing is needed to functionalize the pattern for spectroscopy. This may include one of the following options:</p>
+<p>1) Transfer the pattern into Si with a dry etch and coat the substrate with a metal</p>
+<p>to produce a single grating</p>
+<p>2) Cross-link PMMA through UV exposure and coat the cured resist with a metal</p>
+<p>to produce a single grating</p>
+<p>3) Transfer the pattern into Si with a dry etch, use the etched substrate as a direct</p>
+<p>stamp for nanoimprint lithography<sup class="cite"><a href="#ref-16">16</a>, <a href="#ref-17">17</a></sup> (NIL), and coat the resulting imprints</p>
+<p>with a metal to produce many grating replicas</p>
+<p>4) Transfer the pattern into Si with a dry etch, use the etched substrate for the</p>
+<p>construction of a composite stamp for substrate conformal imprint</p>
+<p>lithography<sup class="cite"><a href="#ref-18">18</a></sup> (SCIL), and coat the resulting imprints with a metal to produce</p>
+<p>many grating replicas</p>
+<p>5) Construct a composite stamp for SCIL directly from the resist and coat the</p>
+<p>resulting imprints with a metal to produce many grating replicas</p>
+<p>The path forward for grating fabrication will depend on the application. The TASTE results presented here have sloped surfaces with RMS roughness $\sigma$ of a few nanometers as measured by AFM. Because the Rayleigh scattering criterion for a smooth surface demands $4\pi \sigma \sin (\zeta ) < 0.1 \lambda$, dry etch induced roughness is a concern. However, transferring the pattern into Si opens up the door for resist modification, such as sequential infiltration synthesis to increase the etch selectivity of PMMA<sup class="cite"><a href="#ref-19">19</a></sup>; this would allow the creation of groove facets with a steepened $\delta$ relative to what is directly patterned with TASTE.  On the other hand, if many gratings are required to populate modular grating arrays, rather than directly fabricating each using TASTE it is more cost- effective to fabricate a master grating and produce replicas using imprint lithography. For large-area gratings, it is beneficial to utilize the EBPG5200 sequencing approach, where EBL write times are reduced by a factor of ~20 relative to the BEAMER 3DPEC approach. Moreover, large-area patterns pose challenges for imprint lithography: for NIL, the quality of the contact between the mold and the substrate requires careful monitoring to ensure an even contact distribution across the entire grating surface to avoid defects borne out of trapped air pockets during imprinting. Some of these problems may be evaded using SCIL, where a flexible composite stamp is able to conform globally to the bow of the substrate and locally around particulate contaminants that may be present during imprinting.</p>
+<h2 id="sec56">V. Summary And Conclusions</h2>
+<p>Using GEBL, staircase strucutes with periodicity $d= 840$ nm and $d= 400$ nm were fabricated in 130 nm-thick PMMA and through a thermal treatment, these patterns were smoothed into 3D wedge-like structures to generate blazed grating topographies. Further optimization of the TASTE process for large-area, replicated gratings will be presented in forthcoming publications. These gratings will also be tested for spectral resolving power and diffraction efficiency to determine experimentally if TASTE can be used to push the state-of-the-art for X-ray diffraction gratings.</p>
+
+    <h3 class="endmatter">// acknowledgments //</h3>
+    <p>This research used resources of the Nanofabrication Laboratory and the Materials Characterization Laboratory at the Penn State Materials Research Institute and was supported by a NASA Space Technology Research Fellowship (NSTRF) under grant NNX16AP92H.</p>
+
+    <h3 class="endmatter">// references //</h3>
+    <ol class="refs">
+<li id="ref-1"><span class="rn">1</span>E. A. Dobisz, S. L. Brandow, R. Bass, and J. Mitterender, J. Vac. Sci. Technol. B 18, 107 (2000).</li>
+<li id="ref-2"><span class="rn">2</span>J. M. Stauffer, Y. Oppliger, P. Regnault, L. Baraldi, and M. T. Gale, J. Vac. Sci. Technol. B 10, 2526 (1992).</li>
+<li id="ref-3"><span class="rn">3</span>A. Schleunitz, and H. Schift, J. Micromech. Microeng. 20, 095002 (2010).</li>
+<li id="ref-4"><span class="rn">4</span>A. Schleunitz, V. A. Guzenko, A. Schander, M. Vogler, and H. Schift, J. Vac. Sci. Technol. B 29, 06F302 (2011).</li>
+<li id="ref-5"><span class="rn">5</span>A. Schleunitz, V. A. Guzenko, M. Messerschmidt, H. Atasoy, R. Kirchner and H. Schift, Nano Convergence 1, 1 (2014).</li>
+<li id="ref-6"><span class="rn">6</span>R. Kirchner, A. Schleunitz and H. Schift, Microelectron. Eng. 24, 055010 (2014).</li>
+<li id="ref-7"><span class="rn">7</span>R. Kirchner, V. A. Guzenko, I. Vartiainen, N. Chidambaram and H. Schift, J. Micromech. Microeng. 153, 71 (2016). 19</li>
+<li id="ref-8"><span class="rn">8</span>S. Pfirrmann, R. Kirchner, O. Lohse, V. A. Guzenko, A. Voigt, I. Harder, A. Kolander, H. Schift and G. Grützner, Proc. SPIE 9779, 977925 (2016).</li>
+<li id="ref-9"><span class="rn">9</span>R. McEntaffer, C. DeRoo, T. Schultz, B. Gantner, J. Tutt, A. Holland, S. O’Dell, J. Gaskin, J. Kolodziejczak, W. W. Zhang, K. Chan, M. Biskach, R. McClelland, D. Iazikov, X. Wang and L. Koecher, Exp. Astron. 36, 389 (2013).</li>
+<li id="ref-10"><span class="rn">10</span>C. T. DeRoo, R. L. McEntaffer, D. M. Miles, T. J. Peterson, H. Marlowe, J. H. Tutt, B. D. Donovan, D. Menz, V. Burwitz, G. Hartner, R. Allured, R. K. Smith, R. Günther, A. Yanson, G. Vacanti, M. Ackermann, J. Astron. Telesc. Instrum. Syst. 2, 025001 (2016).</li>
+<li id="ref-11"><span class="rn">11</span>B. D. Donovan, R. L. McEntaffer, J. H. Tutt, C. T. DeRoo, R. Allured, J. A. Gaskin, J. J. Kolodziejczak, Appl. Opt. 57, 454 (2018).</li>
+<li id="ref-12"><span class="rn">12</span>W. C. Cash, Jr., Appl. Opt. 22, 3971 (1983).</li>
+<li id="ref-13"><span class="rn">13</span>J. M. Pavkovich, J. Vac. Sci. Technol. B 4, 159 (1986).</li>
+<li id="ref-14"><span class="rn">14</span>N. Unal, D. Mahalu, O. Raslin, D. Ritter, C. Sambale and U. Hofmann, Microelectron. Eng. 87, 5-8, 940 (2010).</li>
+<li id="ref-15"><span class="rn">15</span>W. C. Cash, Jr., Appl. Opt. 30, 1749 (1991).</li>
+<li id="ref-16"><span class="rn">16</span>S. Y. Chou, P. R. Krauss, and P. J. Renstrom, J. Vac. Sci. Technol. B 14, 4129 (1996).</li>
+<li id="ref-17"><span class="rn">17</span>J. Haisma, M. Verheijen, K. van den Heuvel, and J. van den Berg, J. Vac. Sci. Technol. B 14, 4124 (1996).</li>
+<li id="ref-18"><span class="rn">18</span>M. A. Verschuuren, M. Megens, Y. Ni, H. van Sprang, and A. Polman, Adv. Opt. Technol. 6, 243 (2017).</li>
+<li id="ref-19"><span class="rn">19</span>Y. C. Tseng, Q. Peng, L. E. Ocola, D. A. Czaplewski, J. W. Elam and S. B. Darling, J. Vac. Sci. Technol. B 29, 06FG01 (2011).</li>
+    </ol>
+
+    </div>
+
+    <div class="article-end">
+        <span>✦</span><br>
+        <a href="../" class="article-back">← back to scientific</a>
+    </div>
+
+</main>
+
+<footer>
+    &copy; 2026 <span>magmacrunch media</span>
+</footer>
+
+<script src="../../../nav.js?v=f087caa1"></script>
+<script>window.addEventListener("pageshow",function(e){if(e.persisted)location.reload();});</script>
+</body>
+</html>
