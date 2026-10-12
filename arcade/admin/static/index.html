@@ -214,18 +214,15 @@
                                 <tr><td>8772</td><td>Chinese Checkers</td><td>✳ Multiplayer (2-6p)</td></tr>
                                 <tr><td>8773</td><td>Parchisi</td><td>🎲 Multiplayer (2-4p)</td></tr>
                                 <tr><td>8774</td><td>Aggravation</td><td>😤 Multiplayer (2-6p)</td></tr>
-                                <tr><td>8780</td><td>MAGMA//OPS</td><td>📊 Admin dashboard</td></tr>
-                                <tr><td>8781</td><td>OPS WebSocket</td><td>🔌 Live logs, status</td></tr>
-                                <tr><td>8782</td><td>Private Auth</td><td>🔒 Password gate</td></tr>
                             </table>
                         </div>
                         <div class="server-ref-card">
                             <h3 class="server-ref-label">ARCHITECTURE</h3>
                             <div class="server-ref-diagram">
-                                <div class="ref-line"><span class="ref-label">HOST</span> Raspberry Pi — 192.168.1.16</div>
-                                <div class="ref-line"><span class="ref-label">TAILSCALE</span> 100.74.172.4 (VPN access)</div>
+                                <div class="ref-line"><span class="ref-label">HOST</span> Raspberry Pi on the LAN</div>
+                                <div class="ref-line"><span class="ref-label">TAILSCALE</span> VPN access</div>
                                 <div class="ref-line"><span class="ref-label">PUBLIC</span> magmacrunch.duckdns.org</div>
-                                <div class="ref-line"><span class="ref-label">OS</span> Debian 13 (trixie)</div>
+                                <div class="ref-line"><span class="ref-label">OS</span> Debian</div>
                                 <div class="ref-line"><span class="ref-label">RUNTIME</span> Python 3 + websockets lib</div>
                                 <div class="ref-line"><span class="ref-label">SERVICES</span> systemd — auto-start on boot</div>
                                 <div class="ref-line"><span class="ref-label">AUTH</span> Password gate per service</div>
@@ -250,18 +247,16 @@
                                 <div class="ref-line"><code>sudo systemctl status 'arcade-*'</code></div>
                                 <div class="ref-line"><code>sudo systemctl restart arcade-chat</code></div>
                                 <div class="ref-line"><code>journalctl -u arcade-* -f</code></div>
-                                <div class="ref-line"><code>ssh jake@192.168.1.16</code></div>
-                                <div class="ref-line"><code>rsync -avz arcade/ jake@192.168.1.16:~/arcade/</code></div>
                             </div>
                         </div>
                         <div class="server-ref-card">
                             <h3 class="server-ref-label">SECURITY</h3>
                             <div class="server-ref-diagram">
-                                <div class="ref-line"><span class="ref-label">FIREWALL</span> UFW — deny incoming, allow SSH/HTTP/HTTPS/games/admin</div>
+                                <div class="ref-line"><span class="ref-label">FIREWALL</span> UFW, deny incoming by default</div>
                                 <div class="ref-line"><span class="ref-label">SSH</span> Key-only auth, fail2ban active</div>
                                 <div class="ref-line"><span class="ref-label">SSL</span> Let's Encrypt (magmacrunch.duckdns.org), auto-renew 2x daily</div>
                                 <div class="ref-line"><span class="ref-label">HEADERS</span> HSTS, X-Frame-Options, X-Content-Type-Options</div>
-                                <div class="ref-line"><span class="ref-label">AUTH</span> Admin dashboard (8780) + private arcade (8782) password-protected</div>
+                                <div class="ref-line"><span class="ref-label">AUTH</span> Password gate per admin service</div>
                                 <div class="ref-line"><span class="ref-label">PERMS</span> Config files mode 600 (owner-only)</div>
                                 <div class="ref-line"><span class="ref-label">SERVICES</span> systemd — auto-start, restart on crash</div>
                                 <div class="ref-line"><span class="ref-label">UPDATED</span> Jul 23 2026</div>
@@ -727,7 +722,7 @@
     <script src="mc1.js?v=0566bf0b"></script>
     <script src="jukebox.js?v=85168efd"></script>
     <script src="theme.js?v=d7969a6c"></script>
-    <script src="accounts.js?v=72e5ff9d"></script>
+    <script src="accounts.js?v=976d25fb"></script>
     <script src="api.js?v=d35f65c8"></script>
     <script src="tv.js?v=6290bfed"></script>
     <script src="favicons.js?v=ff06a259"></script>

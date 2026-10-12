@@ -67,9 +67,9 @@
                 { platform: 'DuckDNS', handle: 'magmacrunch.duckdns.org', url: 'https://www.duckdns.org/', notes: 'Dynamic DNS for Pi' },
                 { platform: 'Cloudflare', handle: 'magmacrunch.com', url: 'https://dash.cloudflare.com/', notes: 'DNS, CDN, email routing' },
                 { platform: 'GitHub Pages', handle: 'magmacrunch-media.github.io', url: 'https://magmacrunch-media.github.io/magmacrunch.com/', notes: 'Website hosting' },
-                { platform: 'Tailscale', handle: 'magmacrunchmedia@gmail.com', url: 'https://login.tailscale.com/', notes: 'Admin access VPN' },
-                { platform: 'Raspberry Pi', handle: '192.168.1.16 / 100.74.172.4', url: null, notes: 'Game servers, MAGMA//OPS' },
-                { platform: 'MAGMA//OPS', handle: 'port 8780', url: null, notes: 'Admin dashboard' },
+                { platform: 'Tailscale', handle: 'admin VPN', url: 'https://login.tailscale.com/', notes: 'Access via the Tailscale console' },
+                { platform: 'Raspberry Pi', handle: 'arcade host', url: null, notes: 'Game servers, MAGMA//OPS' },
+                { platform: 'MAGMA//OPS', handle: 'admin dashboard', url: null, notes: 'Runs on the Pi' },
                 { platform: 'Formsubmit.co', handle: 'guestbook forms', url: 'https://formsubmit.co/', notes: 'Email form delivery' }
             ]
         }
