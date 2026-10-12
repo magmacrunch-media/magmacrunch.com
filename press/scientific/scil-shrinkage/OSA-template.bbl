@@ -1,0 +1,170 @@
+\begin{thebibliography}{10}
+\newcommand{\enquote}[1]{``#1''}
+
+\bibitem{McEntaffer13}
+R.~{McEntaffer}, C.~{DeRoo}, T.~{Schultz}, B.~{Gantner}, J.~{Tutt},
+  A.~{Holland}, S.~{O'Dell}, J.~{Gaskin}, J.~{Kolodziejczak}, W.~W. {Zhang},
+  K.-W. {Chan}, M.~{Biskach}, R.~{McClelland}, D.~{Iazikov}, X.~{Wang}, and
+  L.~{Koecher}, \enquote{{First results from a next-generation off-plane X-ray
+  diffraction grating},} {\protect\JournalTitle{Experimental Astronomy}}
+  \textbf{36}, 389--405 (2013).
+
+\bibitem{Miles18}
+D.~M. Miles, J.~A. McCoy, R.~L. McEntaffer, C.~M. Eichfeld, G.~Lavallee,
+  M.~Labella, W.~Drawl, B.~Liu, C.~T. DeRoo, and T.~Steiner,
+  \enquote{Fabrication and diffraction efficiency of a large-format, replicated
+  x-ray reflection grating,} {\protect\JournalTitle{The Astrophysical Journal}}
+  \textbf{869}, 95 (2018).
+
+\bibitem{McEntaffer19}
+{{McEntaffer}, R.}, \enquote{{Reflection grating concept for the Lynx X-Ray
+  Grating Spectrograph},} {\protect\JournalTitle{Journal of Astronomical
+  Telescopes, Instruments, and Systems}} \textbf{5} (2019).
+
+\bibitem{Haisma96}
+J.~{Haisma}, M.~{Verheijen}, K.~{van den Heuvel}, and J.~{van den Berg},
+  \enquote{{Mold-assisted nanolithography: A process for reliable pattern
+  replication},} {\protect\JournalTitle{Journal of Vacuum Science Technology B:
+  Microelectronics and Nanometer Structures}} \textbf{14}, 4124--4128 (1996).
+
+\bibitem{Chang03}
+C.-H. {Chang}, \enquote{{Fabrication of sawtooth diffraction gratings using
+  nanoimprint lithography},} {\protect\JournalTitle{Journal of Vacuum Science
+  Technology B: Microelectronics and Nanometer Structures}} \textbf{21}, 2755
+  (2003).
+
+\bibitem{McCoy20}
+J.~A. McCoy, R.~L. McEntaffer, and D.~M. Miles, \enquote{Extreme ultraviolet
+  and soft x-ray diffraction efficiency of a blazed reflection grating
+  fabricated by thermally activated selective topography equilibration,}
+  {\protect\JournalTitle{The Astrophysical Journal}} \textbf{891}, 114 (2020).
+
+\bibitem{Neviere78}
+M.~{Neviere}, D.~{Maystre}, and W.~R. {Hunter}, \enquote{{On the use of
+  classical and conical diffraction mountings for xuv gratings.}}
+  {\protect\JournalTitle{Journal of the Optical Society of America
+  (1917-1983)}} \textbf{68}, 1106--1113 (1978).
+
+\bibitem{Schift10}
+H.~Schift and A.~Kristensen, \emph{Nanoimprint Lithography -- Patterning of
+  Resists Using Molding} (Springer Berlin Heidelberg, Berlin, Heidelberg,
+  2010), pp. 271--312.
+
+\bibitem{Miles19b}
+D.~M. {Miles}, R.~M. {McEntaffer}, J.~H. {Tutt}, T.~{Anderson}, M.~{Weiss},
+  L.~{Baker}, J.~{Weston}, B.~{O'Meara}, R.~C. {McCurdy}, B.~{Myers}, and
+  F.~{Gris{\'e}}, \enquote{{An introduction to the Rockets for Extended-source
+  X-ray Spectroscopy},}  (2019), p. 111180B.
+
+\bibitem{Tutt18}
+J.~H. {Tutt}, R.~L. {McEntaffer}, B.~{Donovan}, T.~B. {Schultz}, M.~P.
+  {Biskach}, K.-W. {Chan}, J.~D. {Kearney}, J.~R. {Mazzarella}, R.~S.
+  {McClelland }, R.~E. {Riveros}, T.~T. {Saha}, M.~{Hlinka}, W.~W. {Zhang},
+  M.~R. {Soman}, A.~D. {Holland}, M.~R. {Lewis}, K.~{Holland}, and N.~J.
+  {Murray}, \enquote{{The Off-plane Grating Rocket Experiment (OGRE) system
+  overview},}  (2018), p. 106996H.
+
+\bibitem{Verschuuren17}
+M.~A. {Verschuuren}, M.~{Megens}, Y.~{Ni}, H.~{van Sprang}, and A.~{Polman},
+  \enquote{{Large area nanoimprint by substrate conformal imprint lithography
+  (SCIL)},} {\protect\JournalTitle{Advanced Optical Technologies}} \textbf{6},
+  243--264 (2017).
+
+\bibitem{Verschuuren18}
+M.~A. Verschuuren, J.~McCoy, R.~P. Huber, R.~van Brakel, M.~Paans, and
+  R.~Voorkamp, \enquote{{AutoSCIL 200mm tooling in production, x-ray optics,
+  and cell growth templates},} in \emph{Novel Patterning Technologies 2018,}
+  vol. 10584 E.~M. Panning, ed., International Society for Optics and Photonics
+  (SPIE, 2018), pp. 185 -- 197.
+
+\bibitem{Verschuuren19}
+M.~A. Verschuuren, M.~W. Knight, M.~Megens, and A.~Polman, \enquote{Nanoscale
+  spatial limitations of large-area substrate conformal imprint lithography,}
+  {\protect\JournalTitle{Nanotechnology}} \textbf{30}, 345301 (2019).
+
+\bibitem{scil_nano}
+\url{https://www.scil-nano.com}.
+
+\bibitem{Miles19}
+D.~M. Miles, S.~V. Hull, T.~B. Schultz, J.~H. Tutt, M.~Wages, B.~D. Donovan,
+  R.~L. McEntaffer, A.~D. Falcone, T.~B. Anderson, E.~Bray, D.~N. Burrows,
+  T.~Chattopadhyay, C.~M. Eichfeld, N.~Empson, F.~Grisé, C.~R. Hillman, J.~A.
+  McCoy, M.~McQuaide, B.~J. Myers, T.~Steiner, M.~A. Verschuuren,
+  D.~Yastishock, and N.~Zhang, \enquote{{Water Recovery X-Ray Rocket grating
+  spectrometer},} {\protect\JournalTitle{Journal of Astronomical Telescopes,
+  Instruments, and Systems}} \textbf{5}, 1 -- 11 (2019).
+
+\bibitem{Ji10}
+R.~Ji, M.~Hornung, M.~A. Verschuuren, R.~van~de Laar, J.~van Eekelen,
+  U.~Plachetka, M.~Moeller, and C.~Moormann, \enquote{{UV enhanced substrate
+  conformal imprint lithography (UV-SCIL) technique for photonic crystals
+  patterning in LED manufacturing},} {\protect\JournalTitle{Microelectronic
+  Engineering}} \textbf{87}, 963 -- 967 (2010). The 35th International
+  Conference on Micro- and Nano-Engineering (MNE).
+
+\bibitem{Shibata10}
+M.~Shibata, A.~Horiba, Y.~Nagaoka, H.~Kawata, M.~Yasuda, and Y.~Hirai,
+  \enquote{{Process-simulation system for UV-nanoimprint lithography},}
+  {\protect\JournalTitle{Journal of Vacuum Science \& Technology B}}
+  \textbf{28}, C6M108--C6M113 (2010).
+
+\bibitem{Horiba_2012}
+A.~Horiba, M.~Yasuda, H.~Kawata, M.~Okada, S.~Matsui, and Y.~Hirai,
+  \enquote{Impact of resist shrinkage and its correction in nanoimprint
+  lithography,} {\protect\JournalTitle{Japanese Journal of Applied Physics}}
+  \textbf{51}, 06FJ06 (2012).
+
+\bibitem{als632}
+\url{http://cxro.lbl.gov/als632/}.
+
+\bibitem{Gullikson01}
+E.~M. Gullikson, S.~Mrowka, and B.~B. Kaufmann, \enquote{{Recent developments
+  in EUV reflectometry at the Advanced Light Source},}  (2001).
+
+\bibitem{Underwood96}
+J.~H. Underwood, E.~M. Gullikson, M.~Koike, P.~J. Batson, P.~E. Denham, K.~D.
+  Franck, R.~E. Tackaberry, and W.~F. Steele, \enquote{Calibration and
+  standards beamline 6.3.2 at the advanced light source,}
+  {\protect\JournalTitle{Review of Scientific Instruments}} \textbf{67},
+  3372--3372 (1996).
+
+\bibitem{psu_mri}
+\url{https://www.mri.psu.edu/}.
+
+\bibitem{Zhuang07}
+Y.~Zhuang, O.~Hansen, T.~Knieling, C.~Wang, P.~Rombach, W.~Lang, W.~Benecke,
+  M.~Kehlenbeck, and J.~Koblitz, \enquote{{Vapor Phase Self-assembled
+  Monolayers for Anti-stiction Applications in MEMS},} {\protect\JournalTitle{I
+  E E E Journal of Microelectromechanical Systems}} \textbf{16}, 1451--1460
+  (2007).
+
+\bibitem{Tutt16}
+J.~H. {Tutt}, R.~L. {McEntaffer}, H.~{Marlowe}, D.~M. {Miles}, T.~J.
+  {Peterson}, C.~T. {DeRoo}, F.~{Scholze}, and C.~{Laubis},
+  \enquote{{Diffraction Efficiency Testing of Sinusoidal and Blazed Off-Plane
+  Reflection Gratings},} {\protect\JournalTitle{Journal of Astronomical
+  Instrumentation}} \textbf{5}, 1650009 (2016).
+
+\bibitem{Marlowe16}
+H.~{Marlowe}, R.~L. {McEntaffer}, J.~H. {Tutt}, C.~T. {DeRoo}, D.~M. {Miles},
+  L.~I. {Goray}, V.~{Soltwisch}, F.~{Scholze}, A.~F. {Herrero}, and
+  C.~{Laubis}, \enquote{{Modeling and empirical characterization of the
+  polarization response of off-plane reflection gratings},}
+  {\protect\JournalTitle{Applied Optics}} \textbf{55}, 5548 (2016).
+
+\bibitem{Attwood17}
+D.~Attwood and A.~Sakdinawat, \emph{X-Rays and Extreme Ultraviolet Radiation:
+  Principles and Applications} (Cambridge University Press, 2017), 2nd ed.
+
+\bibitem{cxro_data}
+\url{http://henke.lbl.gov/optical_constants/}.
+
+\bibitem{pcgrate}
+\url{https://www.pcgrate.com/loadpurc/download}.
+
+\bibitem{Goray10}
+L.~I. Goray and G.~Schmidt, \enquote{Solving conical diffraction grating
+  problems with integral equations,} {\protect\JournalTitle{J. Opt. Soc. Am.
+  A}} \textbf{27}, 585--597 (2010).
+
+\end{thebibliography}
