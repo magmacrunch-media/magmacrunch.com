@@ -24,15 +24,93 @@ window.CounterClient = (function () {
 
     // ── Host detection ──────────────────────────────────────────────────────
 
-    function _getWsUrl() {
+    // The allowlist is a security control, not convenience, and it is the one
+    // MC_CHAT_OPTS carries for the chat socket -- arcade/shared/chat-server.js,
+    // reasoning in docs/ops/chat-system.md under "Which host the widget dials".
+    // Without it a crafted link aims a visitor's socket at a host of the
+    // sender's choosing.
+    //
+    // The counter leaks less than chat does: it sends no credentials and
+    // replays no saved identity, so there is no session to hand over. What an
+    // unrestricted ?counter-server= still gives away is the visit itself --
+    // the page load gets counted by, and the fact of it disclosed to, whatever
+    // host the link named -- and on an https: page it was a mixed-content
+    // ws:// besides. Same shape, lower stakes, same control. arcade/index.html
+    // carries the same note at its status probe, which had this bug and was
+    // fixed for the same reason; nav.js loads this on every page.
+    //
+    // Permitted hosts mirror chat's: loopback, the page's own hostname, and the
+    // backend this branch would have dialled anyway. Anything else is ignored
+    // and the branch default stands.
+
+    var WS_SCHEME = (function () {
         try {
-            var param = new URLSearchParams(window.location.search).get('counter-server');
-            if (param) return 'ws://' + param;
+            return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+        } catch (e) {
+            return 'ws://';
+        }
+    })();
+
+    // The host the socket will REALLY open, read off the URL parser rather than
+    // by splitting the string. chat's copy of this splits on '/' and then ':',
+    // which hands back the wrong answer for a value carrying userinfo:
+    //
+    //   ?counter-server=magmacrunch.duckdns.org:8783@evil.example.com
+    //
+    // splits to 'magmacrunch.duckdns.org', passes an allowlist holding that
+    // name, and then connects to evil.example.com, because everything before
+    // the '@' is credentials. So this deliberately does NOT mirror
+    // arcade/shared/adenosine-chat.js byte for byte -- do not harmonise it back
+    // to that version, which has the gap. '' on an unparseable value, which
+    // matches no allowlist entry.
+    function _hostOf(addr) {
+        var s = String(addr);
+        if (!/^wss?:\/\//.test(s)) s = 'ws://' + s;
+        try {
+            return new URL(s).hostname;
+        } catch (e) {
+            return '';
+        }
+    }
+
+    function _isAllowedHost(addr, allowlist) {
+        var host = _hostOf(addr);
+        var allowed = ['localhost', '127.0.0.1'];
+        try {
+            if (window.location.hostname) allowed.push(window.location.hostname);
+        } catch (e) {}
+        allowed = allowed.concat(allowlist);
+        for (var i = 0; i < allowed.length; i++) {
+            if (host === allowed[i]) return true;
+        }
+        return false;
+    }
+
+    function _getWsUrl() {
+        var h = '';
+        try {
+            h = window.location.hostname;
         } catch (e) {}
 
-        var h = window.location.hostname;
-        if (h === 'localhost' || h === '127.0.0.1') return 'ws://192.168.1.16:8783';
-        return 'wss://magmacrunch.duckdns.org/counter';
+        // Local dev: the page is served from this machine, the counter is not.
+        var dev = (h === 'localhost' || h === '127.0.0.1');
+        var url = dev ? 'ws://192.168.1.16:8783' : 'wss://magmacrunch.duckdns.org/counter';
+        var allowlist = dev ? ['192.168.1.16'] : ['magmacrunch.duckdns.org'];
+
+        try {
+            var param = new URLSearchParams(window.location.search).get('counter-server');
+            if (param && _isAllowedHost(param, allowlist)) {
+                // Scheme from the page rather than a hardcoded ws://, so an
+                // allowlisted override on an https: page is not blocked as
+                // mixed content before it connects.
+                return /^wss?:\/\//.test(param) ? param : WS_SCHEME + param;
+            }
+            if (param) {
+                console.warn('[CounterClient] ignoring ?counter-server= override for non-allowlisted host: ' + _hostOf(param));
+            }
+        } catch (e) {}
+
+        return url;
     }
 
     // ── State ───────────────────────────────────────────────────────────────
