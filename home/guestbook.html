@@ -16,6 +16,7 @@
     <link rel="icon" type="image/x-icon" href="../favicon.ico">
     <link rel="stylesheet" href="../style.css?v=53e9e146">
     <link rel="stylesheet" href="guestbook.css">
+    <link rel="stylesheet" href="../assets/counter.css?v=ac448052">
 </head>
 <body>
 
@@ -62,6 +63,12 @@ __ejm\___/________dwb`---`____________________________________________
 
     </div>
 
+    <!-- Site-wide visitor count. Rendered here and nowhere else, which is
+         what docs/ops/scores-counter.md always said -- but the element it
+         named existed in no HTML file in the repo, so the counter had been
+         incrementing into a file that nothing on the site displayed. -->
+    <div class="counter-wrap"><div id="hit-counter"></div></div>
+
 </main>
 
 <footer>
@@ -69,6 +76,16 @@ __ejm\___/________dwb`---`____________________________________________
 </footer>
 
 <script src="../nav.js?v=7ed1a268"></script>
+<!-- nav.js lazy-loads counter-client.js on every page and calls increment(),
+     but skips that injection when the tag is already present. This page also
+     DISPLAYS the count, so it loads the script itself, which means increment()
+     has to be called here or a visitor landing directly on the guestbook would
+     never be counted. increment() is debounced per session, so this is safe. -->
+<script src="../assets/counter-client.js?v=39a3071d"></script>
+<script>
+    CounterClient.display('#hit-counter');
+    CounterClient.increment();
+</script>
 <script>
     // ── Google Apps Script backend (unchanged from original) ──
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIKFyhLKbCR3VnOzl1vkKu8vQdWw8ENmUiHVgTBGSlQLYeTMn7hDiANlGbZACGElvc/exec';

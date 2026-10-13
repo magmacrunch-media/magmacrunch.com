@@ -227,3 +227,11 @@
             .page-title { font-size: 13px; }
             .ascii-art { font-size: 6.5px; }
         }
+
+/* ── Visitor counter ──
+   .hit-counter (assets/counter.css) is inline-block, so the centring has
+   to come from its container. */
+.counter-wrap {
+    text-align: center;
+    margin: 40px 0 16px;
+}

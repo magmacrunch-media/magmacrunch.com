@@ -65,12 +65,17 @@ jobs:
         run: |
           SSH_CMD="ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY"
           $SSH_CMD jake@100.74.172.4 "rm -rf ~/arcade/node_modules ~/arcade/.git ~/arcade/__pycache__ ~/arcade/venv"
+          # The two excludes below are live state the Pi owns, not source.
+          # count.json is committed as {"count": 0}, so without its exclude
+          # every push to main tarred a zero over the real count and the
+          # site-wide visitor counter restarted from nothing on each deploy.
           tar czf - \
             --exclude='node_modules' \
             --exclude='.git' \
             --exclude='*.pyc' \
             --exclude='__pycache__' \
             --exclude='scores/*.json' \
+            --exclude='counter/count.json' \
             --exclude='venv' \
             arcade/ | $SSH_CMD jake@100.74.172.4 "cd ~ && tar xzf -"
 
