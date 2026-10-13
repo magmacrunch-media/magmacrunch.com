@@ -250,13 +250,15 @@
 </script>
 <script src="../animations/server.js?v=7557c1d2"></script>
 
-<link rel="stylesheet" href="shared/chat-widget.css?v=21d22238">
-<script src="shared/adenosine-chat.js?v=4a6b886b"></script>
+<!-- chat-server.js alone, with no widget. MC_CHAT_OPTS is the one place
+     that decides which host is the chat backend, and the status probe
+     below dials it to light the MULTIPLAYER ONLINE dot. The widget itself
+     is gone from this page: a hub listing solo games is not a shared
+     present moment, and chat now loads only on the multiplayer games. -->
 <script src="shared/chat-server.js?v=2efa8028"></script>
-<script>const { ChatWidget } = AdChat;</script>
 <script>
 // ─────────────────────────────────────────────────────────
-// SERVER STATUS + GLOBAL CHAT (using adenosine-chat)
+// SERVER STATUS
 // ─────────────────────────────────────────────────────────
 (function() {
     // ── Server Status ──────────────────────────────────────
@@ -297,9 +299,6 @@
     checkStatus();
     // Check status every 30 seconds
     setInterval(checkStatus, 30000);
-
-    // ── Connect chat using adenosine-chat ──────────
-    ChatWidget.connect(MC_CHAT_OPTS);
 })();
 </script>
 
