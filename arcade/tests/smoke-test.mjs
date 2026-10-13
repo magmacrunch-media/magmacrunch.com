@@ -37,7 +37,7 @@ const GAMES = [
   { name: 'checkers', path: 'checkers', lobby: { open: '#onlineBtn' } },
   { name: 'chess', path: 'chess', lobby: { open: '#multiplayerBtn' } },
   { name: 'chinese-checkers', path: 'chinese-checkers', lobby: { open: '#onlineBtn' } },
-  { name: 'cribbage', path: 'cribbage', lobby: { open: '#multiplayerBtn' } },
+  { name: 'cribbage', path: 'cribbage', lobby: { open: '#multiplayerBtn' }, chat: true },
   { name: 'fifteen-puzzle', path: 'fifteen-puzzle' },
   { name: 'george-boole', path: 'george-boole' },
   { name: 'klotski', path: 'klotski' },
@@ -51,7 +51,7 @@ const GAMES = [
   { name: 'solitaire_THLD', path: 'solitaire_THLD' },
   { name: 'SORRY', path: 'SORRY', lobby: { dismiss: '#title-overlay', name: '#name-input', open: '#join-btn', overlay: '#lobby-overlay', port: 8765, joined: '#player-list' } },
   { name: 'tarot', path: 'tarot' },
-  { name: 'tetris', path: 'tetris', chat: true },
+  { name: 'tetris', path: 'tetris' },
   { name: 'threes', path: 'threes' },
   { name: 'very-long-boards', path: 'very-long-boards' },
 ];
@@ -67,9 +67,16 @@ const hasLobby = (g) => Boolean(g.lobby);
  * same backend everywhere, so checking it once is the honest amount of coverage
  * and 24 sockets to the chat server is not.
  *
- * It sits on a game with no `lobby` on purpose. Both adenosine-multiplayer and
- * adenosine-chat read the same `?server=` parameter, so a page carrying both
- * checks could only point one of them at a local server.
+ * It sits on a game nothing else points `?server=` at. Both
+ * adenosine-multiplayer and adenosine-chat read that one parameter, so a page
+ * whose lobby ALSO needs a local server could only point one of them at it.
+ *
+ * That is narrower than "a game with no lobby", which is what this said until
+ * 2026-10-13, and the difference matters: only a lobby declaring a `port`
+ * claims the parameter, and six of the nine lobby games declare none. The
+ * wider rule cost this check its home when chat was restricted to the
+ * multiplayer games, because it left no page with chat and no lobby at all --
+ * CI went red on tetris, whose widget had just been removed under it.
  */
 const hasChat = (g) => Boolean(g.chat);
 
