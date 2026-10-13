@@ -83,7 +83,11 @@
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-content">
-            <img class="loading-portrait" src="img/boole-pixel.png" alt="" width="96" height="96">
+            <!-- Dropped from the website build by site/package.mjs, like the
+                 title portrait. Without this the drawn Boole flashed up on
+                 the loading screen of the version whose whole point is not
+                 to have him, for the half-second before the plain title
+                 screen replaced it. -->
             <h1>george boole</h1>
             <div class="loading-spinner"></div>
             <p>loading...</p>
@@ -1019,7 +1023,20 @@
                  put it back to scrolling. -->
             <h3><img class="credits-mark" src="img/mc-logo.png" alt="" width="26" height="32">credits</h3>
 
-            <p><strong>game by:</strong><br>Jake A. McCoy for <a href="https://magmacrunch.com">magmacrunch media</a></p>
+            <!-- THE HOUSE, NOT A PERSON. `magmacrunch media` is what
+                 hypnopompia's HOUSE.md prescribes for a credits line, and a
+                 byline naming one developer stopped being true the moment a
+                 second person contributed. A house credit covers everyone who
+                 works on it without needing a line added each time, which is
+                 the point of having one.
+
+                 Not "magmacrunch media, LLC": HOUSE.md records that comma as
+                 one D&B inserts and the registration does not have, and `LLC`
+                 belongs to the App Store seller name, nowhere else.
+
+                 The music credit below is a third party's attribution rather
+                 than a house byline, and stays as it is. -->
+            <p><strong>game by:</strong><br><a href="https://magmacrunch.com">magmacrunch media</a></p>
             
             <!-- The artist's own hub rather than one album page: it is the link the
                      artist maintains, so it survives a move between platforms,
