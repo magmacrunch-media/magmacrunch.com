@@ -5117,6 +5117,11 @@
       "source": "home/donate.css"
     },
     {
+      "name": "nav-brand",
+      "value": "#ff9bb4",
+      "source": "home/email-list.css"
+    },
+    {
       "name": "nav-glow",
       "value": "rgba(57,255,110,0.4)",
       "source": "home/guestbook.css"
