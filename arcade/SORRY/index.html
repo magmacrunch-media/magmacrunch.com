@@ -432,13 +432,8 @@
 <script src="js/game-state.js?v=08ff42b7"></script>
 <script src="js/board-renderer.js?v=5c92b664"></script>
 <script src="js/multiplayer.js?v=f17f4d08"></script>
-<link rel="stylesheet" href="../shared/chat-widget.css?v=21d22238">
-<script src="../shared/adenosine-chat.js?v=4a6b886b"></script>
-<script src="../shared/chat-server.js?v=2efa8028"></script>
-<script>const { ChatWidget } = AdChat;</script>
-<script>ChatWidget.connect(MC_CHAT_OPTS);</script>
 <script src="js/audio.js?v=89248a24"></script>
-<script src="js/ui.js?v=d6ea4aa0"></script>
+<script src="js/ui.js?v=16e340af"></script>
 <script>
 // ── Modal helpers ─────────────────────────────────────────────────────────────
 function openModal(id) {
@@ -463,7 +458,6 @@ document.addEventListener('keydown', function(e) {
 // ── Quit game ─────────────────────────────────────────────────────────────────
 function doQuitGame() {
   closeModal('quit-confirm-modal');
-  ChatWidget.disconnect();
   if (typeof Multiplayer !== 'undefined' && Multiplayer.isConnected()) {
     Multiplayer.quit();
   }

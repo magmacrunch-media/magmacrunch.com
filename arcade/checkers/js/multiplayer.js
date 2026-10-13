@@ -98,11 +98,6 @@ var Multiplayer = (function() {
 
         console.log('[MP] Game started. My side:', mySide);
 
-        // Auto-join room chat
-        if (_roomCode && typeof Chat !== 'undefined') {
-            ChatWidget.joinRoom(_roomCode);
-        }
-
         if (onGameStart) {
             onGameStart(state, mySide);
         }
@@ -141,10 +136,6 @@ var Multiplayer = (function() {
     MP.onDisconnected = function() {
         if (isActive) {
             isActive = false;
-            // Leave room chat
-            if (_roomCode && typeof Chat !== 'undefined') {
-                ChatWidget.leaveRoom(_roomCode);
-            }
             if (onStateUpdate) {
                 onStateUpdate({ type: 'disconnected' });
             }
@@ -154,10 +145,6 @@ var Multiplayer = (function() {
     MP.onPlayerQuit = function(msg) {
         if (isActive) {
             isActive = false;
-            // Leave room chat
-            if (_roomCode && typeof Chat !== 'undefined') {
-                ChatWidget.leaveRoom(_roomCode);
-            }
             if (onGameEnd) {
                 onGameEnd(true, msg.name, null);
             }

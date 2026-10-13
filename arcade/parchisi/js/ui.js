@@ -346,7 +346,6 @@ var UI = (function() {
 
     function handleQuit() {
         if (confirm(I18n.t('confirmQuit'))) {
-            ChatWidget.disconnect();
             Network.quit();
             showStartScreen();
         }
@@ -388,7 +387,6 @@ var UI = (function() {
         els.startScreen.style.display = 'flex';
         els.gameScreen.style.display = 'none';
         els.lobbyOverlay.style.display = 'none';
-        ChatWidget.disconnect();
     }
 
     function showLobby() {
@@ -407,7 +405,6 @@ var UI = (function() {
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'flex';
         }
-        ChatWidget.connect(MC_CHAT_OPTS);
     }
 
     function showDice(dice) {

@@ -199,7 +199,6 @@
         roomCodeInput.value = '';
 
         Multiplayer.connect();
-        ChatWidget.connect(MC_CHAT_OPTS);
     }
 
     function hideLobby() {
@@ -496,7 +495,6 @@
         if (document.getElementById('gameChat')) {
             document.getElementById('gameChat').style.display = 'none';
         }
-        ChatWidget.disconnect();
         isMultiplayerMode = false;
     }
 
